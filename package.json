@@ -1,5 +1,6 @@
 {
   "name": "toolblip",
+  "description": "Free client-side web developer tools — JSON formatter, Base64, UUID generator, and more. Astro static site deployed on Cloudflare Pages.",
   "type": "module",
   "version": "0.0.1",
   "engines": {

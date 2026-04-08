@@ -1,43 +1,71 @@
-# Astro Starter Kit: Minimal
+# Toolblip
 
-```sh
-npm create astro@latest -- --template minimal
+Free, client-side web developer tools at [toolblip.com](https://toolblip.com). Every tool runs entirely in the browser — no backend, no uploads, no account required.
+
+## What it is
+
+Toolblip is a collection of utility tools aimed at developers and technical users. All processing happens client-side using JavaScript and the browser's native APIs. Nothing leaves the user's device.
+
+Current tools:
+
+- Word Counter
+- Character Counter
+- JSON Formatter (format, validate, minify)
+- Base64 Encode / Decode
+- Case Converter (camelCase, snake_case, UPPERCASE, etc.)
+- URL Encode / Decode
+- Image Cropper
+- UUID Generator (v4, uses `crypto.randomUUID`)
+- Remove Duplicate Lines
+- Markdown to HTML (live split-pane preview)
+
+## Current stage
+
+Pre-launch. The static site is live at toolblip.com and deployed via Cloudflare Pages. There is no backend; all tool logic runs in the browser. A Laravel API backend is planned for a future phase (auth, saved history, user settings).
+
+## Project structure
+
 ```
-
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
 /
-├── public/
+├── public/                  # Static assets
 ├── src/
-│   └── pages/
-│       └── index.astro
+│   ├── components/          # Shared Astro components (e.g. ToolCard)
+│   ├── layouts/             # BaseLayout, ToolLayout
+│   ├── pages/
+│   │   ├── index.astro      # Homepage with tool grid
+│   │   ├── tools/           # One directory per tool (slug/index.astro)
+│   │   ├── privacy.astro
+│   │   └── terms.astro
+│   └── styles/
+│       └── global.css
+├── functions/               # Cloudflare Pages Functions (_middleware.ts)
+├── astro.config.mjs
+├── wrangler.toml
 └── package.json
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Astro is configured for `output: 'static'`. Each tool lives at `/tools/<slug>/`. The `functions/` directory is a Cloudflare Pages Function layer (currently middleware only) that is separate from the Astro build.
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## Local development
 
-Any static assets, like images, can be placed in the `public/` directory.
+```sh
+npm install
+npm run dev       # http://localhost:4321
+npm run build     # builds to ./dist
+npm run preview   # preview the dist build locally
+```
 
-## 🧞 Commands
+Requires Node >= 22.12.0.
 
-All commands are run from the root of the project, from a terminal:
+## Deploy
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+Deployed to Cloudflare Pages. The `wrangler.toml` sets `pages_build_output_dir = "./dist"`. Pushes to the main branch trigger an automatic build and deploy via the Cloudflare Pages Git integration. No manual deploy step is needed.
 
-## 👀 Want to learn more?
+## Near-term roadmap
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- Additional tools (diff viewer, regex tester, color picker, etc.)
+- SEO and meta improvements per-tool
+- Laravel 11 API backend (Supabase Postgres)
+- Google + email authentication
+- Saved tool history per user
+- User settings and preferences
