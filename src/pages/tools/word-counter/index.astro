@@ -1,0 +1,129 @@
+---
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: 'How does the word counter work?', acceptedAnswer: { '@type': 'Answer', text: 'The word counter splits your text by whitespace and punctuation to count words, then counts individual characters, sentences (splits on . ! ?), paragraphs (splits on blank lines), and estimates reading time at 200 words per minute.' } },
+    { '@type': 'Question', name: 'Is my text sent to a server?', acceptedAnswer: { '@type': 'Answer', text: 'No. All counting happens entirely in your browser using JavaScript. Your text never leaves your device.' } },
+    { '@type': 'Question', name: 'What counts as a word?', acceptedAnswer: { '@type': 'Answer', text: 'Any sequence of non-whitespace characters separated by spaces or newlines. Numbers and hyphenated words count as single words.' } },
+    { '@type': 'Question', name: 'How is reading time calculated?', acceptedAnswer: { '@type': 'Answer', text: 'Reading time uses an average reading speed of 200 words per minute, which is typical for general online content.' } },
+    { '@type': 'Question', name: 'Can I use this for SEO meta descriptions?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. The character counter (with spaces) is what matters for meta descriptions. Aim for 120–160 characters.' } },
+    { '@type': 'Question', name: 'Does it work with non-English text?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. The word counter works with any Unicode text, including Arabic, Chinese, and other scripts.' } },
+  ],
+};
+---
+
+<ToolLayout
+  title="Word Counter Online Free — Toolblip"
+  description="Count words, characters, sentences, paragraphs, and reading time instantly. 100% client-side — nothing leaves your browser."
+  toolSlug="word-counter"
+  category="text"
+>
+  <Fragment slot="jsonld">
+    <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
+  </Fragment>
+
+  <!-- Tool UI -->
+  <textarea
+    id="wc-input"
+    class="w-full h-48 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-green-500 placeholder-gray-500"
+    placeholder="Paste or type your text here..."
+  ></textarea>
+
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4" id="wc-stats">
+    <div class="bg-gray-800 border border-gray-700 rounded-lg p-3 text-center">
+      <div class="text-2xl font-bold text-green-400" id="wc-words">0</div>
+      <div class="text-xs text-gray-400 mt-1">Words</div>
+    </div>
+    <div class="bg-gray-800 border border-gray-700 rounded-lg p-3 text-center">
+      <div class="text-2xl font-bold text-blue-400" id="wc-chars">0</div>
+      <div class="text-xs text-gray-400 mt-1">Characters</div>
+    </div>
+    <div class="bg-gray-800 border border-gray-700 rounded-lg p-3 text-center">
+      <div class="text-2xl font-bold text-purple-400" id="wc-sentences">0</div>
+      <div class="text-xs text-gray-400 mt-1">Sentences</div>
+    </div>
+    <div class="bg-gray-800 border border-gray-700 rounded-lg p-3 text-center">
+      <div class="text-2xl font-bold text-yellow-400" id="wc-reading">0 min</div>
+      <div class="text-xs text-gray-400 mt-1">Reading time</div>
+    </div>
+  </div>
+
+  <div class="flex justify-between mt-3 text-sm text-gray-500">
+    <span>Paragraphs: <span id="wc-paragraphs" class="text-gray-300">0</span></span>
+    <span>Chars (no spaces): <span id="wc-chars-no-spaces" class="text-gray-300">0</span></span>
+    <button id="wc-copy" class="text-green-400 hover:text-green-300 transition-colors">Copy stats</button>
+  </div>
+
+  <script>
+    const input = document.getElementById('wc-input') as HTMLTextAreaElement;
+    const words = document.getElementById('wc-words')!;
+    const chars = document.getElementById('wc-chars')!;
+    const sentences = document.getElementById('wc-sentences')!;
+    const reading = document.getElementById('wc-reading')!;
+    const paragraphs = document.getElementById('wc-paragraphs')!;
+    const charsNoSpaces = document.getElementById('wc-chars-no-spaces')!;
+    const copyBtn = document.getElementById('wc-copy')!;
+
+    function update() {
+      const text = input.value;
+      const wordCount = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+      const charCount = text.length;
+      const charNoSpace = text.replace(/\s/g, '').length;
+      const sentenceCount = text.trim() === '' ? 0 : (text.match(/[.!?]+/g) || []).length;
+      const paraCount = text.trim() === '' ? 0 : text.split(/\n\s*\n/).filter(p => p.trim()).length || (text.trim() ? 1 : 0);
+      const mins = Math.ceil(wordCount / 200);
+
+      words.textContent = wordCount.toLocaleString();
+      chars.textContent = charCount.toLocaleString();
+      charsNoSpaces.textContent = charNoSpace.toLocaleString();
+      sentences.textContent = sentenceCount.toLocaleString();
+      paragraphs.textContent = paraCount.toLocaleString();
+      reading.textContent = mins < 1 ? '< 1 min' : `${mins} min`;
+    }
+
+    input.addEventListener('input', update);
+
+    copyBtn.addEventListener('click', () => {
+      const stats = `Words: ${words.textContent}\nCharacters: ${chars.textContent}\nSentences: ${sentences.textContent}\nParagraphs: ${paragraphs.textContent}\nReading time: ${reading.textContent}`;
+      navigator.clipboard.writeText(stats).then(() => {
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => { copyBtn.textContent = 'Copy stats'; }, 2000);
+      });
+    });
+  </script>
+
+  <div slot="description">
+    <h2 class="text-lg font-semibold text-white mb-2">About this tool</h2>
+    <p class="text-gray-400 text-sm leading-relaxed">
+      The Toolblip word counter gives you instant statistics on any text — word count, character count (with and without spaces), sentence count, paragraph count, and estimated reading time. Everything runs in your browser. Your text is never sent to any server.
+    </p>
+    <p class="text-gray-400 text-sm leading-relaxed mt-2">
+      Reading time is calculated at 200 words per minute, a standard rate for online content. Use the character count to check meta descriptions (aim for 120–160 characters) or Twitter posts (280 character limit).
+    </p>
+  </div>
+
+  <div slot="faq">
+    <h2 class="text-lg font-semibold text-white mb-4 mt-8">Frequently asked questions</h2>
+    <div class="space-y-4">
+      {faqJsonLd.mainEntity.map((item) => (
+        <details class="border border-gray-800 rounded-lg">
+          <summary class="px-4 py-3 text-sm font-medium text-gray-200 cursor-pointer hover:text-white">{item.name}</summary>
+          <p class="px-4 pb-3 text-sm text-gray-400">{item.acceptedAnswer.text}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+
+  <div slot="related">
+    <h2 class="text-lg font-semibold text-white mb-3 mt-8">Related tools</h2>
+    <div class="flex flex-wrap gap-2">
+      <a href="/tools/character-counter/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Character Counter</a>
+      <a href="/tools/case-converter/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Case Converter</a>
+      <a href="/tools/remove-duplicate-lines/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Remove Duplicate Lines</a>
+      <a href="/tools/markdown-to-html/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Markdown to HTML</a>
+    </div>
+  </div>
+</ToolLayout>

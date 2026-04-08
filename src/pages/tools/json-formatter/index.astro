@@ -1,0 +1,113 @@
+---
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="JSON Formatter & Validator Online Free — Toolblip"
+  description="Format, validate, and minify JSON instantly. Error highlighting with line numbers. Choose 2 or 4 space indentation. 100% client-side."
+  toolSlug="json-formatter"
+  category="developer"
+>
+  <div class="flex gap-2 mb-3">
+    <button id="jf-format" class="bg-green-600 hover:bg-green-500 text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors">Format</button>
+    <button id="jf-minify" class="bg-gray-700 hover:bg-gray-600 text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors">Minify</button>
+    <div class="flex items-center gap-2 ml-auto text-sm text-gray-400">
+      Indent:
+      <label class="flex items-center gap-1 cursor-pointer"><input type="radio" name="indent" value="2" checked class="accent-green-500"> 2</label>
+      <label class="flex items-center gap-1 cursor-pointer"><input type="radio" name="indent" value="4" class="accent-green-500"> 4</label>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <div>
+      <div class="text-xs text-gray-500 mb-1">Input</div>
+      <textarea
+        id="jf-input"
+        class="w-full h-64 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none focus:border-green-500 placeholder-gray-500"
+        placeholder='{"key": "value"}'
+      ></textarea>
+    </div>
+    <div>
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-xs text-gray-500">Output</span>
+        <button id="jf-copy" class="text-xs text-green-400 hover:text-green-300 transition-colors">Copy</button>
+      </div>
+      <textarea
+        id="jf-output"
+        readonly
+        class="w-full h-64 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none"
+        placeholder="Formatted JSON will appear here..."
+      ></textarea>
+    </div>
+  </div>
+
+  <div id="jf-error" class="hidden mt-2 text-sm text-red-400 bg-red-900/20 border border-red-800 rounded-lg px-3 py-2"></div>
+
+  <script>
+    const inputEl = document.getElementById('jf-input') as HTMLTextAreaElement;
+    const outputEl = document.getElementById('jf-output') as HTMLTextAreaElement;
+    const errorEl = document.getElementById('jf-error')!;
+    const copyBtn = document.getElementById('jf-copy')!;
+    const formatBtn = document.getElementById('jf-format')!;
+    const minifyBtn = document.getElementById('jf-minify')!;
+
+    function getIndent() {
+      return parseInt((document.querySelector('input[name="indent"]:checked') as HTMLInputElement)?.value ?? '2');
+    }
+
+    function showError(msg: string) {
+      errorEl.textContent = msg;
+      errorEl.classList.remove('hidden');
+      outputEl.value = '';
+    }
+
+    function hideError() { errorEl.classList.add('hidden'); }
+
+    function parse() {
+      const raw = inputEl.value.trim();
+      if (!raw) { outputEl.value = ''; hideError(); return null; }
+      try { const parsed = JSON.parse(raw); hideError(); return parsed; }
+      catch (e: any) { showError(`Invalid JSON: ${e.message}`); return null; }
+    }
+
+    formatBtn.addEventListener('click', () => {
+      const parsed = parse();
+      if (parsed !== null) outputEl.value = JSON.stringify(parsed, null, getIndent());
+    });
+
+    minifyBtn.addEventListener('click', () => {
+      const parsed = parse();
+      if (parsed !== null) outputEl.value = JSON.stringify(parsed);
+    });
+
+    copyBtn.addEventListener('click', () => {
+      if (!outputEl.value) return;
+      navigator.clipboard.writeText(outputEl.value).then(() => {
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => { copyBtn.textContent = 'Copy'; }, 2000);
+      });
+    });
+
+    // Auto-format on paste
+    inputEl.addEventListener('paste', () => {
+      setTimeout(() => {
+        const parsed = parse();
+        if (parsed !== null) outputEl.value = JSON.stringify(parsed, null, getIndent());
+      }, 10);
+    });
+  </script>
+
+  <div slot="description">
+    <h2 class="text-lg font-semibold text-white mb-2">About this tool</h2>
+    <p class="text-gray-400 text-sm leading-relaxed">Paste JSON to format (pretty-print) or minify it. Invalid JSON shows an error with the exact message from the parser. Choose 2 or 4 space indentation. Output auto-copies to clipboard with one click.</p>
+  </div>
+
+  <div slot="related">
+    <h2 class="text-lg font-semibold text-white mb-3 mt-8">Related tools</h2>
+    <div class="flex flex-wrap gap-2">
+      <a href="/tools/base64/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Base64 Encode/Decode</a>
+      <a href="/tools/url-encode/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">URL Encode/Decode</a>
+      <a href="/tools/uuid-generator/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">UUID Generator</a>
+    </div>
+  </div>
+</ToolLayout>

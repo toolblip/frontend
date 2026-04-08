@@ -1,0 +1,86 @@
+---
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="UUID Generator Online Free — Toolblip"
+  description="Generate UUID v4 values instantly using your browser's crypto API. Generate 1 to 50 at once. Copy all or individually."
+  toolSlug="uuid-generator"
+  category="developer"
+>
+  <div class="flex flex-wrap gap-3 items-center mb-4">
+    <div class="flex items-center gap-2 text-sm text-gray-400">
+      Count:
+      {[1,5,10,50].map(n => (
+        <label class="flex items-center gap-1 cursor-pointer">
+          <input type="radio" name="uuid-count" value={n} checked={n === 1} class="accent-green-500"> {n}
+        </label>
+      ))}
+    </div>
+    <label class="flex items-center gap-2 text-sm text-gray-400 cursor-pointer ml-auto">
+      <input type="checkbox" id="uuid-upper" class="accent-green-500"> Uppercase
+    </label>
+    <button id="uuid-generate" class="bg-green-600 hover:bg-green-500 text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors">Generate</button>
+    <button id="uuid-copy-all" class="bg-gray-700 hover:bg-gray-600 text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors">Copy all</button>
+  </div>
+
+  <div id="uuid-list" class="space-y-2"></div>
+
+  <script>
+    const list = document.getElementById('uuid-list')!;
+    const upper = document.getElementById('uuid-upper') as HTMLInputElement;
+
+    function generate() {
+      const count = parseInt((document.querySelector('input[name="uuid-count"]:checked') as HTMLInputElement)?.value ?? '1');
+      const uuids = Array.from({ length: count }, () => {
+        let id = crypto.randomUUID();
+        return upper.checked ? id.toUpperCase() : id;
+      });
+
+      list.innerHTML = '';
+      uuids.forEach(uuid => {
+        const row = document.createElement('div');
+        row.className = 'flex items-center gap-2 bg-gray-800 border border-gray-700 rounded-lg px-3 py-2';
+        row.innerHTML = `
+          <code class="flex-1 text-sm font-mono text-gray-100">${uuid}</code>
+          <button class="text-xs text-green-400 hover:text-green-300 transition-colors copy-single shrink-0">Copy</button>
+        `;
+        row.querySelector('.copy-single')!.addEventListener('click', () => {
+          navigator.clipboard.writeText(uuid).then(() => {
+            const btn = row.querySelector('.copy-single')!;
+            btn.textContent = 'Copied!';
+            setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+          });
+        });
+        list.appendChild(row);
+      });
+    }
+
+    document.getElementById('uuid-generate')!.addEventListener('click', generate);
+    document.getElementById('uuid-copy-all')!.addEventListener('click', () => {
+      const all = [...list.querySelectorAll('code')].map(c => c.textContent).join('\n');
+      if (!all) return;
+      navigator.clipboard.writeText(all).then(() => {
+        const btn = document.getElementById('uuid-copy-all')!;
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = 'Copy all'; }, 2000);
+      });
+    });
+
+    // Generate one UUID on load
+    generate();
+  </script>
+
+  <div slot="description">
+    <h2 class="text-lg font-semibold text-white mb-2">About this tool</h2>
+    <p class="text-gray-400 text-sm leading-relaxed">Uses <code class="text-green-400">crypto.randomUUID()</code> — the Web Crypto API built into every modern browser. This is a cryptographically secure random source. UUIDs generated here are indistinguishable from server-generated ones.</p>
+  </div>
+
+  <div slot="related">
+    <h2 class="text-lg font-semibold text-white mb-3 mt-8">Related tools</h2>
+    <div class="flex flex-wrap gap-2">
+      <a href="/tools/json-formatter/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">JSON Formatter</a>
+      <a href="/tools/base64/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Base64 Encode/Decode</a>
+    </div>
+  </div>
+</ToolLayout>

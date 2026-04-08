@@ -1,0 +1,92 @@
+---
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Character Counter Online Free — Toolblip"
+  description="Count characters with Twitter, LinkedIn, and meta tag limit indicators. Live update as you type. 100% client-side."
+  toolSlug="character-counter"
+  category="text"
+>
+  <textarea
+    id="cc-input"
+    class="w-full h-40 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-green-500 placeholder-gray-500"
+    placeholder="Type or paste your text here..."
+  ></textarea>
+
+  <div class="grid grid-cols-2 gap-3 mt-4">
+    <div class="bg-gray-800 border border-gray-700 rounded-lg p-3 text-center">
+      <div class="text-2xl font-bold text-green-400" id="cc-with-spaces">0</div>
+      <div class="text-xs text-gray-400 mt-1">Characters (with spaces)</div>
+    </div>
+    <div class="bg-gray-800 border border-gray-700 rounded-lg p-3 text-center">
+      <div class="text-2xl font-bold text-blue-400" id="cc-no-spaces">0</div>
+      <div class="text-xs text-gray-400 mt-1">Characters (no spaces)</div>
+    </div>
+  </div>
+
+  <div class="mt-4 space-y-3">
+    {[
+      { label: 'Twitter / X', limit: 280, id: 'lim-twitter' },
+      { label: 'LinkedIn post', limit: 700, id: 'lim-linkedin' },
+      { label: 'Meta title', limit: 60, id: 'lim-title' },
+      { label: 'Meta description', limit: 160, id: 'lim-desc' },
+    ].map(({ label, limit, id }) => (
+      <div>
+        <div class="flex justify-between text-xs text-gray-400 mb-1">
+          <span>{label}</span>
+          <span id={`${id}-count`}>0 / {limit}</span>
+        </div>
+        <div class="h-1.5 bg-gray-800 rounded-full overflow-hidden">
+          <div id={`${id}-bar`} class="h-full bg-green-500 rounded-full transition-all" style="width:0%"></div>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <script>
+    const input = document.getElementById('cc-input') as HTMLTextAreaElement;
+    const withSpaces = document.getElementById('cc-with-spaces')!;
+    const noSpaces = document.getElementById('cc-no-spaces')!;
+
+    const limits = [
+      { id: 'lim-twitter', limit: 280 },
+      { id: 'lim-linkedin', limit: 700 },
+      { id: 'lim-title', limit: 60 },
+      { id: 'lim-desc', limit: 160 },
+    ];
+
+    function update() {
+      const text = input.value;
+      const len = text.length;
+      const noSpace = text.replace(/\s/g, '').length;
+
+      withSpaces.textContent = len.toLocaleString();
+      noSpaces.textContent = noSpace.toLocaleString();
+
+      limits.forEach(({ id, limit }) => {
+        const count = document.getElementById(`${id}-count`)!;
+        const bar = document.getElementById(`${id}-bar`)!;
+        const pct = Math.min(100, (len / limit) * 100);
+        count.textContent = `${len} / ${limit}`;
+        bar.style.width = `${pct}%`;
+        bar.style.backgroundColor = pct > 100 ? '#ef4444' : pct > 85 ? '#f59e0b' : '#22c55e';
+      });
+    }
+
+    input.addEventListener('input', update);
+  </script>
+
+  <div slot="description">
+    <h2 class="text-lg font-semibold text-white mb-2">About this tool</h2>
+    <p class="text-gray-400 text-sm leading-relaxed">Track character limits for Twitter (280), LinkedIn (700), meta titles (60), and meta descriptions (160) as you type. The color-coded progress bars turn yellow at 85% and red when you exceed the limit.</p>
+  </div>
+
+  <div slot="related">
+    <h2 class="text-lg font-semibold text-white mb-3 mt-8">Related tools</h2>
+    <div class="flex flex-wrap gap-2">
+      <a href="/tools/word-counter/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Word Counter</a>
+      <a href="/tools/case-converter/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Case Converter</a>
+    </div>
+  </div>
+</ToolLayout>
