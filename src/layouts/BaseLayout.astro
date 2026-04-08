@@ -59,7 +59,9 @@ const gaId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
         </a>
         <nav class="flex items-center gap-6 text-sm">
           <a href="/tools" class="text-gray-400 hover:text-white transition-colors">All Tools</a>
-          <a href="/login" class="text-gray-400 hover:text-white transition-colors">Sign in</a>
+          <span id="nav-auth">
+            <a href="/login" class="text-gray-400 hover:text-white transition-colors">Sign in</a>
+          </span>
         </nav>
       </div>
     </header>
@@ -95,6 +97,41 @@ const gaId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
         </div>
       </div>
     </div>
+
+    <script>
+      // Auth nav state
+      (function () {
+        function getCookie(name) {
+          const match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+          return match ? decodeURIComponent(match[1]) : null;
+        }
+
+        const session = getCookie('tb_session');
+        if (!session) return;
+
+        let email = '';
+        try {
+          const userRaw = getCookie('tb_user');
+          if (userRaw) email = JSON.parse(userRaw).email ?? '';
+        } catch {}
+
+        const label = email.length > 20 ? email.slice(0, 20) + '…' : email;
+
+        const navAuth = document.getElementById('nav-auth');
+        if (!navAuth) return;
+        navAuth.innerHTML =
+          '<span class="text-gray-400 text-sm">' + (label || 'Account') + '</span>' +
+          '<button id="nav-logout" class="ml-4 text-gray-500 hover:text-white transition-colors text-sm">Sign out</button>';
+
+        document.getElementById('nav-logout')?.addEventListener('click', async () => {
+          await fetch('https://api.toolblip.com/api/auth/logout', { method: 'POST', credentials: 'include' }).catch(() => {});
+          for (const n of ['tb_session', 'tb_user']) {
+            document.cookie = n + '=; Max-Age=0; path=/';
+          }
+          window.location.href = '/';
+        });
+      })();
+    </script>
 
     <script>
       // Cookie consent
