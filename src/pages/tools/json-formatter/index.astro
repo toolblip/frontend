@@ -1,5 +1,18 @@
 ---
 import ToolLayout from '../../../layouts/ToolLayout.astro';
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: 'What is JSON formatting?', acceptedAnswer: { '@type': 'Answer', text: 'JSON formatting (also called pretty-printing) takes compact or minified JSON and adds indentation and line breaks to make it readable. A minified API response like {"name":"Alice","age":30} becomes properly indented with each key on its own line.' } },
+    { '@type': 'Question', name: 'What is JSON minification?', acceptedAnswer: { '@type': 'Answer', text: 'Minification removes all unnecessary whitespace from JSON. The result is a single-line string with no spaces or newlines. Minified JSON is smaller in file size and faster to transmit over a network, but harder for humans to read.' } },
+    { '@type': 'Question', name: 'Is my JSON sent to a server?', acceptedAnswer: { '@type': 'Answer', text: 'No. All formatting, minifying, and validation happens entirely in your browser using JavaScript. Your JSON never leaves your device. This makes the tool safe for confidential data like API keys or user records.' } },
+    { '@type': 'Question', name: 'Why does JSON validation fail with a helpful error message?', acceptedAnswer: { '@type': 'Answer', text: 'When JSON is invalid, the browser\'s JSON.parse() function throws an error with a message describing what went wrong — for example "Unexpected token" with the position in the string. This tool surfaces that exact error message so you can find and fix the problem quickly.' } },
+    { '@type': 'Question', name: 'What is the difference between 2-space and 4-space indentation?', acceptedAnswer: { '@type': 'Answer', text: '2-space indentation uses two spaces per nesting level and produces more compact output. 4-space indentation is more readable for deeply nested structures. Most style guides (Prettier, ESLint defaults) use 2 spaces for JSON.' } },
+    { '@type': 'Question', name: 'Can I use this to validate JSON before submitting an API request?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Paste your request body here and click Format — if the JSON is invalid, you\'ll see the exact error. If it formats successfully, the JSON is syntactically valid.' } },
+  ],
+};
 ---
 
 <ToolLayout
@@ -8,6 +21,10 @@ import ToolLayout from '../../../layouts/ToolLayout.astro';
   toolSlug="json-formatter"
   category="developer"
 >
+  <Fragment slot="jsonld">
+    <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
+  </Fragment>
+
   <div class="flex gap-2 mb-3">
     <button id="jf-format" class="bg-green-600 hover:bg-green-500 text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors">Format</button>
     <button id="jf-minify" class="bg-gray-700 hover:bg-gray-600 text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors">Minify</button>
@@ -99,7 +116,35 @@ import ToolLayout from '../../../layouts/ToolLayout.astro';
 
   <div slot="description">
     <h2 class="text-lg font-semibold text-white mb-2">About this tool</h2>
-    <p class="text-gray-400 text-sm leading-relaxed">Paste JSON to format (pretty-print) or minify it. Invalid JSON shows an error with the exact message from the parser. Choose 2 or 4 space indentation. Output auto-copies to clipboard with one click.</p>
+    <p class="text-gray-400 text-sm leading-relaxed">
+      Paste JSON to format (pretty-print) it with proper indentation, or minify it to remove all whitespace. Invalid JSON shows an exact error message from the parser so you can fix it immediately. Choose 2 or 4 space indentation depending on your style guide.
+    </p>
+    <p class="text-gray-400 text-sm leading-relaxed mt-2">
+      The tool auto-formats on paste, so you can drop in a minified API response and immediately see the structure. Everything runs in your browser — your JSON is never sent to any server, making it safe to use with API keys, user data, or configuration files.
+    </p>
+  </div>
+
+  <div slot="how-to-use">
+    <h2 class="text-lg font-semibold text-white mb-3 mt-8">How to use</h2>
+    <ol class="list-decimal list-inside space-y-2 text-gray-400 text-sm leading-relaxed">
+      <li>Paste your JSON into the Input box on the left. It auto-formats on paste.</li>
+      <li>Click <strong class="text-gray-200">Format</strong> to pretty-print, or <strong class="text-gray-200">Minify</strong> to collapse to one line.</li>
+      <li>Choose <strong class="text-gray-200">2</strong> or <strong class="text-gray-200">4</strong> space indentation using the radio buttons.</li>
+      <li>If the JSON is invalid, an error message appears below the input with the exact issue.</li>
+      <li>Click <strong class="text-gray-200">Copy</strong> to copy the formatted or minified output.</li>
+    </ol>
+  </div>
+
+  <div slot="faq">
+    <h2 class="text-lg font-semibold text-white mb-4 mt-8">Frequently asked questions</h2>
+    <div class="space-y-4">
+      {faqJsonLd.mainEntity.map((item) => (
+        <details class="border border-gray-800 rounded-lg">
+          <summary class="px-4 py-3 text-sm font-medium text-gray-200 cursor-pointer hover:text-white">{item.name}</summary>
+          <p class="px-4 pb-3 text-sm text-gray-400">{item.acceptedAnswer.text}</p>
+        </details>
+      ))}
+    </div>
   </div>
 
   <div slot="related">

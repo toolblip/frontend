@@ -1,5 +1,18 @@
 ---
 import ToolLayout from '../../../layouts/ToolLayout.astro';
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: 'What is URL encoding?', acceptedAnswer: { '@type': 'Answer', text: 'URL encoding (also called percent-encoding) converts characters that are not safe in a URL into a percent sign followed by two hexadecimal digits. For example, a space becomes %20, and & becomes %26. This makes strings safe to include in URLs without breaking their structure.' } },
+    { '@type': 'Question', name: 'What is the difference between component and full URL encoding?', acceptedAnswer: { '@type': 'Answer', text: 'Component mode (encodeURIComponent) encodes everything including ?, &, /, and =. Use this for individual query parameter values — for example, when building a URL like example.com?redirect=https%3A%2F%2Fother.com. Full URL mode (encodeURI) preserves URL structure characters like :, /, ?, &, and # and only encodes unsafe characters. Use this when encoding a complete URL.' } },
+    { '@type': 'Question', name: 'Is my text sent to a server?', acceptedAnswer: { '@type': 'Answer', text: 'No. All encoding and decoding happens entirely in your browser using JavaScript. Your text never leaves your device.' } },
+    { '@type': 'Question', name: 'When should I use URL encoding?', acceptedAnswer: { '@type': 'Answer', text: 'Use URL encoding when embedding user input into a URL query string, when building redirect URLs that contain other URLs as parameters, or when passing special characters (spaces, accents, symbols) in URL components. Most HTTP libraries handle this automatically, but manual encoding is sometimes needed for edge cases.' } },
+    { '@type': 'Question', name: 'What characters are safe in a URL without encoding?', acceptedAnswer: { '@type': 'Answer', text: 'Unreserved characters are safe without encoding: letters (A–Z, a–z), digits (0–9), and the symbols - _ . ~. All other characters should be percent-encoded in query strings and path segments.' } },
+    { '@type': 'Question', name: 'Is URL encoding the same as Base64 encoding?', acceptedAnswer: { '@type': 'Answer', text: 'No. URL encoding converts individual characters to percent-encoded sequences. Base64 converts binary data to a different character set (A–Z, a–z, 0–9, +, /). They serve different purposes. URL encoding is for making text safe in URLs. Base64 is for encoding binary data as printable ASCII.' } },
+  ],
+};
 ---
 
 <ToolLayout
@@ -8,6 +21,10 @@ import ToolLayout from '../../../layouts/ToolLayout.astro';
   toolSlug="url-encode"
   category="developer"
 >
+  <Fragment slot="jsonld">
+    <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
+  </Fragment>
+
   <div class="flex gap-2 mb-3 flex-wrap">
     <button id="url-encode-btn" class="bg-green-600 hover:bg-green-500 text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors">Encode</button>
     <button id="url-decode-btn" class="bg-gray-700 hover:bg-gray-600 text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors">Decode</button>
@@ -66,7 +83,34 @@ import ToolLayout from '../../../layouts/ToolLayout.astro';
 
   <div slot="description">
     <h2 class="text-lg font-semibold text-white mb-2">About this tool</h2>
-    <p class="text-gray-400 text-sm leading-relaxed"><strong class="text-gray-200">Component mode</strong> uses <code class="text-green-400">encodeURIComponent</code> — encodes everything including <code class="text-green-400">?</code>, <code class="text-green-400">&</code>, <code class="text-green-400">/</code>, and <code class="text-green-400">=</code>. Use this for individual query parameter values. <strong class="text-gray-200">Full URL mode</strong> uses <code class="text-green-400">encodeURI</code> — preserves URL structure characters and only encodes unsafe characters.</p>
+    <p class="text-gray-400 text-sm leading-relaxed">
+      Encode and decode URLs directly in your browser. <strong class="text-gray-200">Component mode</strong> uses <code class="text-green-400">encodeURIComponent</code> and encodes everything including <code class="text-green-400">?</code>, <code class="text-green-400">&</code>, <code class="text-green-400">/</code>, and <code class="text-green-400">=</code>. Use this for individual query parameter values. <strong class="text-gray-200">Full URL mode</strong> uses <code class="text-green-400">encodeURI</code> and preserves URL structure characters, encoding only unsafe characters.
+    </p>
+    <p class="text-gray-400 text-sm leading-relaxed mt-2">
+      Common use cases include encoding redirect URLs as query parameters, building API request URLs with special characters in search terms, and decoding percent-encoded strings from browser developer tools or log files. Nothing is sent to any server.
+    </p>
+  </div>
+
+  <div slot="how-to-use">
+    <h2 class="text-lg font-semibold text-white mb-3 mt-8">How to use</h2>
+    <ol class="list-decimal list-inside space-y-2 text-gray-400 text-sm leading-relaxed">
+      <li>Paste your text or URL into the Input box on the left.</li>
+      <li>Select <strong class="text-gray-200">Component</strong> mode for query parameter values, or <strong class="text-gray-200">Full URL</strong> mode for complete URLs.</li>
+      <li>Click <strong class="text-gray-200">Encode</strong> to percent-encode, or <strong class="text-gray-200">Decode</strong> to convert back to plain text.</li>
+      <li>Click <strong class="text-gray-200">Copy</strong> to copy the result.</li>
+    </ol>
+  </div>
+
+  <div slot="faq">
+    <h2 class="text-lg font-semibold text-white mb-4 mt-8">Frequently asked questions</h2>
+    <div class="space-y-4">
+      {faqJsonLd.mainEntity.map((item) => (
+        <details class="border border-gray-800 rounded-lg">
+          <summary class="px-4 py-3 text-sm font-medium text-gray-200 cursor-pointer hover:text-white">{item.name}</summary>
+          <p class="px-4 pb-3 text-sm text-gray-400">{item.acceptedAnswer.text}</p>
+        </details>
+      ))}
+    </div>
   </div>
 
   <div slot="related">
@@ -74,6 +118,7 @@ import ToolLayout from '../../../layouts/ToolLayout.astro';
     <div class="flex flex-wrap gap-2">
       <a href="/tools/base64/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Base64 Encode/Decode</a>
       <a href="/tools/json-formatter/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">JSON Formatter</a>
+      <a href="/tools/uuid-generator/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">UUID Generator</a>
     </div>
   </div>
 </ToolLayout>
