@@ -1,0 +1,74 @@
+---
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="Remove Duplicate Lines Online Free — Toolblip"
+  description="Paste text and remove duplicate lines instantly. Case-sensitive or case-insensitive. Shows how many duplicates were removed."
+  toolSlug="remove-duplicate-lines"
+  category="text"
+>
+  <div class="flex gap-3 items-center mb-3 flex-wrap">
+    <label class="flex items-center gap-2 text-sm text-gray-400 cursor-pointer">
+      <input type="checkbox" id="rdl-case" class="accent-green-500"> Case-sensitive
+    </label>
+    <button id="rdl-run" class="bg-green-600 hover:bg-green-500 text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors">Remove duplicates</button>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <div>
+      <div class="text-xs text-gray-500 mb-1">Input</div>
+      <textarea id="rdl-input" class="w-full h-56 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none focus:border-green-500 placeholder-gray-500" placeholder="Paste lines here..."></textarea>
+    </div>
+    <div>
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-xs text-gray-500">Output <span id="rdl-info" class="text-gray-600"></span></span>
+        <button id="rdl-copy" class="text-xs text-green-400 hover:text-green-300 transition-colors">Copy</button>
+      </div>
+      <textarea id="rdl-output" readonly class="w-full h-56 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none" placeholder="Deduplicated lines appear here..."></textarea>
+    </div>
+  </div>
+
+  <script>
+    const input = document.getElementById('rdl-input') as HTMLTextAreaElement;
+    const output = document.getElementById('rdl-output') as HTMLTextAreaElement;
+    const info = document.getElementById('rdl-info')!;
+    const caseSensitive = document.getElementById('rdl-case') as HTMLInputElement;
+
+    document.getElementById('rdl-run')!.addEventListener('click', () => {
+      const lines = input.value.split('\n');
+      const seen = new Set<string>();
+      const unique = lines.filter(line => {
+        const key = caseSensitive.checked ? line : line.toLowerCase();
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+      const removed = lines.length - unique.length;
+      output.value = unique.join('\n');
+      info.textContent = removed > 0 ? `— ${removed} duplicate${removed === 1 ? '' : 's'} removed` : '';
+    });
+
+    document.getElementById('rdl-copy')!.addEventListener('click', () => {
+      if (!output.value) return;
+      navigator.clipboard.writeText(output.value).then(() => {
+        const btn = document.getElementById('rdl-copy')!;
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+      });
+    });
+  </script>
+
+  <div slot="description">
+    <h2 class="text-lg font-semibold text-white mb-2">About this tool</h2>
+    <p class="text-gray-400 text-sm leading-relaxed">Paste any list of lines and click "Remove duplicates" to get a deduplicated result. Toggle case-sensitivity to treat "Apple" and "apple" as the same or different. The tool preserves the original order of first occurrences.</p>
+  </div>
+
+  <div slot="related">
+    <h2 class="text-lg font-semibold text-white mb-3 mt-8">Related tools</h2>
+    <div class="flex flex-wrap gap-2">
+      <a href="/tools/word-counter/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Word Counter</a>
+      <a href="/tools/case-converter/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Case Converter</a>
+    </div>
+  </div>
+</ToolLayout>

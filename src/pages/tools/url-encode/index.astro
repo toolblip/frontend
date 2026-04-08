@@ -1,0 +1,79 @@
+---
+import ToolLayout from '../../../layouts/ToolLayout.astro';
+---
+
+<ToolLayout
+  title="URL Encode & Decode Online Free — Toolblip"
+  description="Encode and decode URLs or URL components instantly in your browser. Choose full URL or component encoding. No server."
+  toolSlug="url-encode"
+  category="developer"
+>
+  <div class="flex gap-2 mb-3 flex-wrap">
+    <button id="url-encode-btn" class="bg-green-600 hover:bg-green-500 text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors">Encode</button>
+    <button id="url-decode-btn" class="bg-gray-700 hover:bg-gray-600 text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors">Decode</button>
+    <div class="flex items-center gap-3 ml-auto text-sm text-gray-400">
+      Mode:
+      <label class="flex items-center gap-1 cursor-pointer"><input type="radio" name="url-mode" value="component" checked class="accent-green-500"> Component</label>
+      <label class="flex items-center gap-1 cursor-pointer"><input type="radio" name="url-mode" value="full" class="accent-green-500"> Full URL</label>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+    <div>
+      <div class="text-xs text-gray-500 mb-1">Input</div>
+      <textarea id="url-input" class="w-full h-48 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none focus:border-green-500 placeholder-gray-500" placeholder="URL or text to encode/decode..."></textarea>
+    </div>
+    <div>
+      <div class="flex items-center justify-between mb-1">
+        <span class="text-xs text-gray-500">Output</span>
+        <button id="url-copy" class="text-xs text-green-400 hover:text-green-300 transition-colors">Copy</button>
+      </div>
+      <textarea id="url-output" readonly class="w-full h-48 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none" placeholder="Result appears here..."></textarea>
+    </div>
+  </div>
+  <div id="url-error" class="hidden mt-2 text-sm text-red-400 bg-red-900/20 border border-red-800 rounded-lg px-3 py-2"></div>
+
+  <script>
+    const input = document.getElementById('url-input') as HTMLTextAreaElement;
+    const output = document.getElementById('url-output') as HTMLTextAreaElement;
+    const errorEl = document.getElementById('url-error')!;
+
+    function getMode() { return (document.querySelector('input[name="url-mode"]:checked') as HTMLInputElement)?.value ?? 'component'; }
+
+    document.getElementById('url-encode-btn')!.addEventListener('click', () => {
+      errorEl.classList.add('hidden');
+      try {
+        output.value = getMode() === 'full' ? encodeURI(input.value) : encodeURIComponent(input.value);
+      } catch(e: any) { errorEl.textContent = `Error: ${e.message}`; errorEl.classList.remove('hidden'); }
+    });
+
+    document.getElementById('url-decode-btn')!.addEventListener('click', () => {
+      errorEl.classList.add('hidden');
+      try {
+        output.value = getMode() === 'full' ? decodeURI(input.value) : decodeURIComponent(input.value);
+      } catch(e: any) { errorEl.textContent = `Error: ${e.message}`; errorEl.classList.remove('hidden'); }
+    });
+
+    document.getElementById('url-copy')!.addEventListener('click', () => {
+      if (!output.value) return;
+      navigator.clipboard.writeText(output.value).then(() => {
+        const btn = document.getElementById('url-copy')!;
+        btn.textContent = 'Copied!';
+        setTimeout(() => { btn.textContent = 'Copy'; }, 2000);
+      });
+    });
+  </script>
+
+  <div slot="description">
+    <h2 class="text-lg font-semibold text-white mb-2">About this tool</h2>
+    <p class="text-gray-400 text-sm leading-relaxed"><strong class="text-gray-200">Component mode</strong> uses <code class="text-green-400">encodeURIComponent</code> — encodes everything including <code class="text-green-400">?</code>, <code class="text-green-400">&</code>, <code class="text-green-400">/</code>, and <code class="text-green-400">=</code>. Use this for individual query parameter values. <strong class="text-gray-200">Full URL mode</strong> uses <code class="text-green-400">encodeURI</code> — preserves URL structure characters and only encodes unsafe characters.</p>
+  </div>
+
+  <div slot="related">
+    <h2 class="text-lg font-semibold text-white mb-3 mt-8">Related tools</h2>
+    <div class="flex flex-wrap gap-2">
+      <a href="/tools/base64/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Base64 Encode/Decode</a>
+      <a href="/tools/json-formatter/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">JSON Formatter</a>
+    </div>
+  </div>
+</ToolLayout>
