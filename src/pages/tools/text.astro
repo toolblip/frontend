@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ToolCard from '../../components/ToolCard.astro';
+
+const tools = [
+  { name: 'Word Counter', slug: 'word-counter', description: 'Count words, characters, sentences, and reading time instantly.', emoji: '📝' },
+  { name: 'Character Counter', slug: 'character-counter', description: 'Count characters with Twitter, LinkedIn, and meta tag limit indicators.', emoji: '🔢' },
+  { name: 'Case Converter', slug: 'case-converter', description: 'Convert text between UPPERCASE, lowercase, camelCase, snake_case, and more.', emoji: '✏️' },
+  { name: 'Remove Duplicate Lines', slug: 'remove-duplicate-lines', description: 'Paste text, remove duplicate lines in one click. Case-sensitive option included.', emoji: '🗑️' },
+  { name: 'Markdown to HTML', slug: 'markdown-to-html', description: 'Convert Markdown to HTML with a live split-pane preview.', emoji: '📄' },
+];
+---
+
+<BaseLayout
+  title="Text Tools — Toolblip"
+  description="Free browser-based text tools. Word counter, character counter, case converter, duplicate line remover, Markdown to HTML — 100% client-side."
+>
+  <section class="py-12 px-4 border-b border-gray-800">
+    <div class="max-w-6xl mx-auto">
+      <h1 class="text-3xl font-bold text-white mb-2">Text Tools</h1>
+      <p class="text-gray-400">
+        Manipulate, count, and convert text — all in your browser.
+      </p>
+    </div>
+  </section>
+
+  <section class="py-10 px-4">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {tools.map((tool) => (
+          <ToolCard
+            name={tool.name}
+            slug={tool.slug}
+            description={tool.description}
+            emoji={tool.emoji}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

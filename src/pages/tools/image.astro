@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ToolCard from '../../components/ToolCard.astro';
+
+const tools = [
+  { name: 'Image Cropper', slug: 'image-cropper', description: 'Crop images to any ratio or preset size — passport, 16:9, square, and more.', emoji: '✂️' },
+];
+---
+
+<BaseLayout
+  title="Image & Media Tools — Toolblip"
+  description="Free browser-based image and media tools. Crop, resize, and transform images — 100% client-side, nothing leaves your browser."
+>
+  <section class="py-12 px-4 border-b border-gray-800">
+    <div class="max-w-6xl mx-auto">
+      <h1 class="text-3xl font-bold text-white mb-2">Image &amp; Media Tools</h1>
+      <p class="text-gray-400">
+        Process images right in your browser — no upload, no server.
+      </p>
+    </div>
+  </section>
+
+  <section class="py-10 px-4">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {tools.map((tool) => (
+          <ToolCard
+            name={tool.name}
+            slug={tool.slug}
+            description={tool.description}
+            emoji={tool.emoji}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

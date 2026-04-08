@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Page Not Found — Toolblip"
+  description="The page you're looking for doesn't exist. Head back to Toolblip and find the tool you need."
+>
+  <section class="py-24 px-4 text-center">
+    <div class="max-w-xl mx-auto">
+      <p class="text-6xl font-bold text-gray-700 mb-4">404</p>
+      <h1 class="text-2xl font-bold text-white mb-3">Page not found</h1>
+      <p class="text-gray-400 mb-8">
+        That page doesn't exist. Try one of these popular tools instead.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-3 justify-center mb-8">
+        <a href="/tools/json-formatter/" class="bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-200 text-sm font-medium px-4 py-2.5 rounded-lg transition-colors">
+          📋 JSON Formatter
+        </a>
+        <a href="/tools/word-counter/" class="bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-200 text-sm font-medium px-4 py-2.5 rounded-lg transition-colors">
+          📝 Word Counter
+        </a>
+        <a href="/tools/base64/" class="bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-200 text-sm font-medium px-4 py-2.5 rounded-lg transition-colors">
+          🔐 Base64
+        </a>
+        <a href="/tools/uuid-generator/" class="bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-200 text-sm font-medium px-4 py-2.5 rounded-lg transition-colors">
+          🔑 UUID Generator
+        </a>
+      </div>
+
+      <a href="/" class="text-green-400 hover:text-green-300 text-sm transition-colors">
+        ← Back to all tools
+      </a>
+    </div>
+  </section>
+</BaseLayout>

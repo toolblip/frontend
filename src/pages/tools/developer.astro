@@ -1,0 +1,40 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ToolCard from '../../components/ToolCard.astro';
+
+const tools = [
+  { name: 'JSON Formatter', slug: 'json-formatter', description: 'Format, validate, and minify JSON with error highlighting.', emoji: '📋' },
+  { name: 'Base64 Encode / Decode', slug: 'base64', description: 'Encode and decode Base64 text or files instantly in your browser.', emoji: '🔐' },
+  { name: 'URL Encode / Decode', slug: 'url-encode', description: 'Encode and decode URLs or URL components for safe use in links.', emoji: '🔗' },
+  { name: 'UUID Generator', slug: 'uuid-generator', description: "Generate one or many UUID v4 values using your browser's crypto API.", emoji: '🔑' },
+];
+---
+
+<BaseLayout
+  title="Developer Tools — Toolblip"
+  description="Free browser-based developer tools. JSON formatter, Base64 encoder, URL encoder, UUID generator — 100% client-side, nothing leaves your browser."
+>
+  <section class="py-12 px-4 border-b border-gray-800">
+    <div class="max-w-6xl mx-auto">
+      <h1 class="text-3xl font-bold text-white mb-2">Developer Tools</h1>
+      <p class="text-gray-400">
+        Utilities for developers — encode, format, generate. All client-side.
+      </p>
+    </div>
+  </section>
+
+  <section class="py-10 px-4">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {tools.map((tool) => (
+          <ToolCard
+            name={tool.name}
+            slug={tool.slug}
+            description={tool.description}
+            emoji={tool.emoji}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
