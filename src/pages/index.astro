@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ToolCard from '../components/ToolCard.astro';
+
+const tools = [
+  { name: 'Word Counter', slug: 'word-counter', description: 'Count words, characters, sentences, and reading time instantly.', emoji: '📝' },
+  { name: 'Character Counter', slug: 'character-counter', description: 'Count characters with Twitter, LinkedIn, and meta tag limit indicators.', emoji: '🔢' },
+  { name: 'JSON Formatter', slug: 'json-formatter', description: 'Format, validate, and minify JSON with error highlighting.', emoji: '📋' },
+  { name: 'Base64 Encode / Decode', slug: 'base64', description: 'Encode and decode Base64 text or files instantly in your browser.', emoji: '🔐' },
+  { name: 'Case Converter', slug: 'case-converter', description: 'Convert text between UPPERCASE, lowercase, camelCase, snake_case, and more.', emoji: '✏️' },
+  { name: 'URL Encode / Decode', slug: 'url-encode', description: 'Encode and decode URLs or URL components for safe use in links.', emoji: '🔗' },
+  { name: 'Image Cropper', slug: 'image-cropper', description: 'Crop images to any ratio or preset size — passport, 16:9, square, and more.', emoji: '✂️' },
+  { name: 'UUID Generator', slug: 'uuid-generator', description: 'Generate one or many UUID v4 values using your browser\'s crypto API.', emoji: '🔑' },
+  { name: 'Remove Duplicate Lines', slug: 'remove-duplicate-lines', description: 'Paste text, remove duplicate lines in one click. Case-sensitive option included.', emoji: '🗑️' },
+  { name: 'Markdown to HTML', slug: 'markdown-to-html', description: 'Convert Markdown to HTML with a live split-pane preview.', emoji: '📄' },
+];
+---
+
+<BaseLayout
+  title="Toolblip — Free Online Tools, No Account Required"
+  description="Browser-based utility tools that run 100% client-side. No uploads, no tracking, no account needed. Word counter, JSON formatter, Base64, UUID generator, and more."
+>
+  <!-- Hero -->
+  <section class="py-16 px-4 text-center border-b border-gray-800">
+    <div class="max-w-3xl mx-auto">
+      <h1 class="text-4xl sm:text-5xl font-bold text-white mb-4 tracking-tight">
+        Every tool you need —<br />
+        <span class="text-green-400">no account, no server, no BS.</span>
+      </h1>
+      <p class="text-lg text-gray-400 mb-8 max-w-xl mx-auto">
+        100% client-side. Nothing leaves your browser. No sign-up. Always free.
+      </p>
+      <div class="flex flex-wrap justify-center gap-3 text-sm">
+        <span class="flex items-center gap-1.5 bg-gray-800 border border-gray-700 px-3 py-1.5 rounded-full text-gray-300">
+          <span class="text-green-400">✓</span> Private by default
+        </span>
+        <span class="flex items-center gap-1.5 bg-gray-800 border border-gray-700 px-3 py-1.5 rounded-full text-gray-300">
+          <span class="text-green-400">✓</span> Zero upload
+        </span>
+        <span class="flex items-center gap-1.5 bg-gray-800 border border-gray-700 px-3 py-1.5 rounded-full text-gray-300">
+          <span class="text-green-400">✓</span> Works offline
+        </span>
+        <span class="flex items-center gap-1.5 bg-gray-800 border border-gray-700 px-3 py-1.5 rounded-full text-gray-300">
+          <span class="text-green-400">✓</span> No ads on tools
+        </span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tools grid -->
+  <section class="py-12 px-4">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-lg font-semibold text-gray-300 mb-6">All Tools</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {tools.map((tool) => (
+          <ToolCard
+            name={tool.name}
+            slug={tool.slug}
+            description={tool.description}
+            emoji={tool.emoji}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust section -->
+  <section class="py-12 px-4 border-t border-gray-800">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="text-xl font-semibold text-white mb-3">Built for developers who care about privacy</h2>
+      <p class="text-gray-400 text-sm leading-relaxed max-w-xl mx-auto">
+        Every tool on Toolblip runs entirely in your browser using JavaScript and WebAssembly. Your files, text, and data never leave your device. There is no backend processing your inputs.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

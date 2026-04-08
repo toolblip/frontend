@@ -1,0 +1,133 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogImage?: string;
+}
+
+const { title, description, canonical, ogImage } = Astro.props;
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toString();
+const siteName = 'Toolblip';
+const gaId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
+---
+
+<!doctype html>
+<html lang="en" class="bg-gray-950 text-gray-100 antialiased">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content={siteName} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- JSON-LD slot -->
+    <slot name="jsonld" />
+
+    <!-- GA4 (consent-gated — only loads after cookie consent) -->
+    {gaId && (
+      <script define:vars={{ gaId }}>
+        window.__GA_ID = gaId;
+      </script>
+    )}
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <!-- Nav -->
+    <header class="border-b border-gray-800 bg-gray-950/80 backdrop-blur sticky top-0 z-50">
+      <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+        <a href="/" class="text-lg font-bold text-white tracking-tight hover:text-green-400 transition-colors">
+          Toolblip
+        </a>
+        <nav class="flex items-center gap-6 text-sm">
+          <a href="/tools" class="text-gray-400 hover:text-white transition-colors">All Tools</a>
+          <a href="/login" class="text-gray-400 hover:text-white transition-colors">Sign in</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Page content -->
+    <main class="flex-1">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 mt-16 py-8">
+      <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+        <span>&copy; {new Date().getFullYear()} Toolblip — 100% client-side, nothing leaves your browser.</span>
+        <nav class="flex gap-5">
+          <a href="/about" class="hover:text-gray-300 transition-colors">About</a>
+          <a href="/privacy" class="hover:text-gray-300 transition-colors">Privacy</a>
+          <a href="/terms" class="hover:text-gray-300 transition-colors">Terms</a>
+          <a href="/donate" class="hover:text-gray-300 transition-colors">Donate</a>
+        </nav>
+      </div>
+    </footer>
+
+    <!-- Cookie consent banner -->
+    <div id="cookie-banner" class="hidden fixed bottom-0 inset-x-0 z-50 bg-gray-900 border-t border-gray-700 p-4">
+      <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center gap-4 text-sm">
+        <p class="text-gray-300 flex-1">
+          We use analytics cookies to understand how tools are used. No personal data is sold or shared.
+          <a href="/privacy" class="underline text-green-400 ml-1">Privacy policy</a>
+        </p>
+        <div class="flex gap-3 shrink-0">
+          <button id="consent-accept" class="bg-green-500 hover:bg-green-400 text-black font-medium px-4 py-1.5 rounded-lg text-sm transition-colors">Accept</button>
+          <button id="consent-decline" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-1.5 rounded-lg text-sm transition-colors">Decline</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Cookie consent
+      const CONSENT_KEY = 'tb_consent';
+      const banner = document.getElementById('cookie-banner');
+      const acceptBtn = document.getElementById('consent-accept');
+      const declineBtn = document.getElementById('consent-decline');
+
+      const stored = localStorage.getItem(CONSENT_KEY);
+      if (!stored) banner?.classList.remove('hidden');
+
+      acceptBtn?.addEventListener('click', () => {
+        localStorage.setItem(CONSENT_KEY, 'granted');
+        banner?.classList.add('hidden');
+        if (window.__GA_ID) loadGA(window.__GA_ID);
+      });
+      declineBtn?.addEventListener('click', () => {
+        localStorage.setItem(CONSENT_KEY, 'denied');
+        banner?.classList.add('hidden');
+      });
+
+      if (stored === 'granted' && window.__GA_ID) loadGA(window.__GA_ID);
+
+      function loadGA(id) {
+        const s = document.createElement('script');
+        s.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
+        s.async = true;
+        document.head.appendChild(s);
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ window.dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', id);
+      }
+    </script>
+  </body>
+</html>
