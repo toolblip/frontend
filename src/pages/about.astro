@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="About Toolblip — Free Browser-Based Developer Tools"
+  description="Toolblip is a collection of free developer tools that run entirely in your browser. No uploads. No tracking. No account required."
+>
+  <div class="max-w-3xl mx-auto px-4 py-16">
+    <h1 class="text-3xl font-bold text-white mb-8">About Toolblip</h1>
+
+    <div class="prose prose-invert max-w-none space-y-8 text-gray-300">
+      <section>
+        <p>
+          Toolblip is a growing collection of free, instant-use tools built for developers and technical people. No uploads, no accounts, no tracking. You open a tool, use it, and move on. Everything runs right in your browser.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-semibold text-white mb-3">How it works</h2>
+        <p>
+          Every tool on Toolblip is client-side JavaScript. Your data never leaves your device. When you format JSON, encode a string to Base64, or run a word count, all of that processing happens locally in your browser tab. Nothing is sent to a server. There are no API calls, no background uploads, no analytics payloads. Your input stays on your machine.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-semibold text-white mb-3">Why we built it</h2>
+        <p>
+          Most online developer tools want something from you: an email address, a file upload to their server, or at minimum a few tracking cookies. We got tired of it. We wanted tools that are fast, private, and just work. No sign-up walls, no "paste your JSON here and we'll send it to our API," no consent banners. Just the tool, in your browser, doing the thing you came for.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-semibold text-white mb-3">Open source and free</h2>
+        <p>
+          Toolblip is free to use. There are no paywalls on the core tools, and we plan to keep it that way. If you want to save your favorite tools across devices, there is an optional free account you can create. No credit card, no trial period. <a href="/signup" class="text-green-400 hover:underline">Sign up free</a> if that sounds useful to you.
+        </p>
+      </section>
+
+      <section>
+        <h2 class="text-xl font-semibold text-white mb-3">Get in touch</h2>
+        <p>
+          Toolblip is open source. If you find a bug, want to request a tool, or just want to say hello, head over to <a href="https://github.com/toolblip/toolblip" class="text-green-400 hover:underline" target="_blank" rel="noopener">github.com/toolblip/toolblip</a>. Feedback and contributions are always welcome.
+        </p>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
