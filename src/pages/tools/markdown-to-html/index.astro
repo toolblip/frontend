@@ -51,12 +51,17 @@ const faqJsonLd = {
   </div>
 
   <script>
-    // Load marked.js lazily
+    // Load marked.js lazily from CDN
     let markedLoaded = false;
     async function ensureMarked() {
       if (markedLoaded) return;
-      const { marked } = await import('https://cdn.jsdelivr.net/npm/marked@12/src/marked.esm.js');
-      (window as any).__marked = marked;
+      await new Promise<void>((res, rej) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
+        s.onload = () => res();
+        s.onerror = rej;
+        document.head.appendChild(s);
+      });
       markedLoaded = true;
     }
 
@@ -68,7 +73,7 @@ const faqJsonLd = {
 
     async function convert() {
       await ensureMarked();
-      const html = (window as any).__marked(input.value);
+      const html = (window as any).marked.parse(input.value);
       output.value = html;
       rendered.innerHTML = html;
     }
