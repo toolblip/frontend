@@ -18,17 +18,17 @@ const faqJsonLd = {
   mainEntity: [
     { '@type': 'Question', name: 'Is my image uploaded to a server?', acceptedAnswer: { '@type': 'Answer', text: 'No. Your image is loaded directly in the browser using the File API and processed on your device using the Canvas API. Nothing is uploaded to any server. You can use this tool offline once the page has loaded.' } },
     { '@type': 'Question', name: 'What image formats are supported?', acceptedAnswer: { '@type': 'Answer', text: 'You can upload PNG, JPG/JPEG, WebP, and GIF files. The cropped output is always saved as PNG. To get a JPG output, use an image converter tool after cropping.' } },
-    { '@type': 'Question', name: 'What are the passport photo presets?', acceptedAnswer: { '@type': 'Answer', text: 'The Passport 35x45mm preset uses a 35:45 (7:9) aspect ratio — the standard size required for most European and international passports. The 2x2 inch preset is for US passport photos and many US visa applications. The 51x51mm preset is a common visa photo size for several countries. All presets maintain the correct ratio during cropping — you still need to resize/print to the exact dimensions.' } },
-    { '@type': 'Question', name: 'Can I crop a GIF?', acceptedAnswer: { '@type': 'Answer', text: 'Yes, you can upload a GIF, but the output will be a still PNG of the first frame. Animated GIF cropping is not supported — the browser canvas API does not preserve animation.' } },
+    { '@type': 'Question', name: 'What are the passport photo presets?', acceptedAnswer: { '@type': 'Answer', text: 'The Passport 35x45mm preset uses a 35:45 (7:9) aspect ratio  -  the standard size required for most European and international passports. The 2x2 inch preset is for US passport photos and many US visa applications. The 51x51mm preset is a common visa photo size for several countries. All presets maintain the correct ratio during cropping  -  you still need to resize/print to the exact dimensions.' } },
+    { '@type': 'Question', name: 'Can I crop a GIF?', acceptedAnswer: { '@type': 'Answer', text: 'Yes, you can upload a GIF, but the output will be a still PNG of the first frame. Animated GIF cropping is not supported  -  the browser canvas API does not preserve animation.' } },
     { '@type': 'Question', name: 'How do I download the cropped image?', acceptedAnswer: { '@type': 'Answer', text: 'Click "Crop & Download" after adjusting the crop area. The browser will download a PNG file named with a timestamp (e.g. cropped-1712345678.png).' } },
-    { '@type': 'Question', name: 'What library does this use?', acceptedAnswer: { '@type': 'Answer', text: 'This tool uses Cropper.js, a lightweight JavaScript image cropping library. It loads from CDN when you drop an image — not on page load — so it has no impact on initial page performance.' } },
+    { '@type': 'Question', name: 'What library does this use?', acceptedAnswer: { '@type': 'Answer', text: 'This tool uses Cropper.js, a lightweight JavaScript image cropping library. It loads from CDN when you drop an image  -  not on page load  -  so it has no impact on initial page performance.' } },
   ],
 };
 ---
 
 <ToolLayout
-  title="Image Cropper Online Free — Toolblip"
-  description="Crop images to any ratio or preset size — passport, 16:9, square, and more. Pure canvas, no uploads. Download the cropped image instantly."
+  title="Image Cropper Online Free  -  Toolblip"
+  description="Crop images to any ratio or preset size  -  passport, 16:9, square, and more. Pure canvas, no uploads. Download the cropped image instantly."
   toolSlug="image-cropper"
   category="image"
 >
@@ -140,7 +140,7 @@ const faqJsonLd = {
       Crop any image to a custom ratio or a preset size directly in your browser. Drag and drop or browse to upload a PNG, JPG, WebP, or GIF. Use the crop handles to adjust the area, pick a preset ratio, then click "Crop & Download" to save the result.
     </p>
     <p class="text-gray-400 text-sm leading-relaxed mt-2">
-      Passport photo presets cover the most common international sizes: 35x45mm (most European passports), 2x2 inch (US passport and many US visa applications), and 51x51mm. The crop aspect ratio matches the required proportions — print or resize to the exact dimensions as required by your country's photo guidelines.
+      Passport photo presets cover the most common international sizes: 35x45mm (most European passports), 2x2 inch (US passport and many US visa applications), and 51x51mm. The crop aspect ratio matches the required proportions  -  print or resize to the exact dimensions as required by your country's photo guidelines.
     </p>
     <p class="text-gray-400 text-sm leading-relaxed mt-2">
       Your image never leaves your device. The entire cropping operation happens locally using the browser canvas API. Cropper.js loads lazily from CDN only when you drop an image, so it has no impact on page load time.

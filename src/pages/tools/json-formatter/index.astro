@@ -8,15 +8,15 @@ const faqJsonLd = {
     { '@type': 'Question', name: 'What is JSON formatting?', acceptedAnswer: { '@type': 'Answer', text: 'JSON formatting (also called pretty-printing) takes compact or minified JSON and adds indentation and line breaks to make it readable. A minified API response like {"name":"Alice","age":30} becomes properly indented with each key on its own line.' } },
     { '@type': 'Question', name: 'What is JSON minification?', acceptedAnswer: { '@type': 'Answer', text: 'Minification removes all unnecessary whitespace from JSON. The result is a single-line string with no spaces or newlines. Minified JSON is smaller in file size and faster to transmit over a network, but harder for humans to read.' } },
     { '@type': 'Question', name: 'Is my JSON sent to a server?', acceptedAnswer: { '@type': 'Answer', text: 'No. All formatting, minifying, and validation happens entirely in your browser using JavaScript. Your JSON never leaves your device. This makes the tool safe for confidential data like API keys or user records.' } },
-    { '@type': 'Question', name: 'Why does JSON validation fail with a helpful error message?', acceptedAnswer: { '@type': 'Answer', text: 'When JSON is invalid, the browser\'s JSON.parse() function throws an error with a message describing what went wrong — for example "Unexpected token" with the position in the string. This tool surfaces that exact error message so you can find and fix the problem quickly.' } },
+    { '@type': 'Question', name: 'Why does JSON validation fail with a helpful error message?', acceptedAnswer: { '@type': 'Answer', text: 'When JSON is invalid, the browser\'s JSON.parse() function throws an error with a message describing what went wrong  -  for example "Unexpected token" with the position in the string. This tool surfaces that exact error message so you can find and fix the problem quickly.' } },
     { '@type': 'Question', name: 'What is the difference between 2-space and 4-space indentation?', acceptedAnswer: { '@type': 'Answer', text: '2-space indentation uses two spaces per nesting level and produces more compact output. 4-space indentation is more readable for deeply nested structures. Most style guides (Prettier, ESLint defaults) use 2 spaces for JSON.' } },
-    { '@type': 'Question', name: 'Can I use this to validate JSON before submitting an API request?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Paste your request body here and click Format — if the JSON is invalid, you\'ll see the exact error. If it formats successfully, the JSON is syntactically valid.' } },
+    { '@type': 'Question', name: 'Can I use this to validate JSON before submitting an API request?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Paste your request body here and click Format  -  if the JSON is invalid, you\'ll see the exact error. If it formats successfully, the JSON is syntactically valid.' } },
   ],
 };
 ---
 
 <ToolLayout
-  title="JSON Formatter & Validator Online Free — Toolblip"
+  title="JSON Formatter & Validator Online Free  -  Toolblip"
   description="Format, validate, and minify JSON instantly. Error highlighting with line numbers. Choose 2 or 4 space indentation. 100% client-side."
   toolSlug="json-formatter"
   category="developer"
@@ -120,7 +120,7 @@ const faqJsonLd = {
       Paste JSON to format (pretty-print) it with proper indentation, or minify it to remove all whitespace. Invalid JSON shows an exact error message from the parser so you can fix it immediately. Choose 2 or 4 space indentation depending on your style guide.
     </p>
     <p class="text-gray-400 text-sm leading-relaxed mt-2">
-      The tool auto-formats on paste, so you can drop in a minified API response and immediately see the structure. Everything runs in your browser — your JSON is never sent to any server, making it safe to use with API keys, user data, or configuration files.
+      The tool auto-formats on paste, so you can drop in a minified API response and immediately see the structure. Everything runs in your browser  -  your JSON is never sent to any server, making it safe to use with API keys, user data, or configuration files.
     </p>
   </div>
 

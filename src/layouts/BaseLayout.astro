@@ -43,7 +43,7 @@ const gaId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
     <!-- JSON-LD slot -->
     <slot name="jsonld" />
 
-    <!-- GA4 (consent-gated — only loads after cookie consent) -->
+    <!-- GA4 (consent-gated  -  only loads after cookie consent) -->
     {gaId && (
       <script define:vars={{ gaId }}>
         window.__GA_ID = gaId;
@@ -74,7 +74,7 @@ const gaId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
     <!-- Footer -->
     <footer class="border-t border-gray-800 mt-16 py-8">
       <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
-        <span>&copy; {new Date().getFullYear()} Toolblip — 100% client-side, nothing leaves your browser.</span>
+        <span>&copy; {new Date().getFullYear()} Toolblip  -  100% client-side, nothing leaves your browser.</span>
         <nav class="flex gap-5">
           <a href="/about" class="hover:text-gray-300 transition-colors">About</a>
           <a href="/privacy" class="hover:text-gray-300 transition-colors">Privacy</a>

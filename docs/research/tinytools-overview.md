@@ -1,4 +1,4 @@
-# Tinytools to Toolblip — Origin Summary
+# Tinytools to Toolblip  -  Origin Summary
 
 This note preserves the useful high-level context from the original `tinytools` research repo.
 

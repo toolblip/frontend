@@ -16,7 +16,7 @@ const faqJsonLd = {
 ---
 
 <ToolLayout
-  title="Remove Duplicate Lines Online Free — Toolblip"
+  title="Remove Duplicate Lines Online Free  -  Toolblip"
   description="Paste text and remove duplicate lines instantly. Case-sensitive or case-insensitive. Shows how many duplicates were removed."
   toolSlug="remove-duplicate-lines"
   category="text"
@@ -63,7 +63,7 @@ const faqJsonLd = {
       });
       const removed = lines.length - unique.length;
       output.value = unique.join('\n');
-      info.textContent = removed > 0 ? `— ${removed} duplicate${removed === 1 ? '' : 's'} removed` : '';
+      info.textContent = removed > 0 ? ` -  ${removed} duplicate${removed === 1 ? '' : 's'} removed` : '';
     });
 
     document.getElementById('rdl-copy')!.addEventListener('click', () => {
@@ -82,7 +82,7 @@ const faqJsonLd = {
       Paste any list of lines and click "Remove duplicates" to get a deduplicated result. The tool keeps the first occurrence of each line and removes all subsequent copies. Toggle case-sensitivity to treat "Apple" and "apple" as the same or different. The output shows how many duplicates were removed.
     </p>
     <p class="text-gray-400 text-sm leading-relaxed mt-2">
-      Common uses include cleaning email lists, keyword lists, URL lists from site crawls, log file entries, and code import statements. Everything runs locally in your browser — your text is never sent to any server.
+      Common uses include cleaning email lists, keyword lists, URL lists from site crawls, log file entries, and code import statements. Everything runs locally in your browser  -  your text is never sent to any server.
     </p>
   </div>
 
