@@ -1,6 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import SponsorSlot from '../components/SponsorSlot.astro';
+import UsageLimitPopup from '../components/UsageLimitPopup.astro';
 
 interface Props {
   title: string;
@@ -71,6 +72,7 @@ const softwareJsonLd = {
     <!-- Tool content -->
     <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-8">
       <slot />
+      <UsageLimitPopup toolName={title} />
     </div>
 
     <!-- Ad slot: below tool -->
@@ -91,3 +93,23 @@ const softwareJsonLd = {
     <slot name="related" />
   </div>
 </BaseLayout>
+
+<script>
+  import { incrementUsage, GUEST_DAILY_LIMIT } from '../lib/usage';
+
+  const DISMISSED_KEY = 'tb_popup_dismissed';
+
+  function showPopupIfEligible() {
+    if (sessionStorage.getItem(DISMISSED_KEY)) return;
+    const popup = document.getElementById('usage-limit-popup');
+    if (popup) popup.classList.remove('hidden');
+  }
+
+  // Expose global tracker for individual tool pages to call after each tool action
+  (window as any).__tbTrackUse = function (slug: string) {
+    const newCount = incrementUsage(slug);
+    if (newCount >= GUEST_DAILY_LIMIT) {
+      showPopupIfEligible();
+    }
+  };
+</script>
