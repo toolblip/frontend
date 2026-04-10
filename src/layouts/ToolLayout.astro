@@ -51,15 +51,15 @@ const softwareJsonLd = {
   </Fragment>
 
   <!-- Breadcrumb -->
-  <div class="border-b border-gray-800 bg-gray-900/40">
+  <nav aria-label="Breadcrumb" class="border-b border-gray-800 bg-gray-900/40">
     <div class="max-w-4xl mx-auto px-4 py-2 text-sm text-gray-500 flex gap-2">
       <a href="/" class="hover:text-gray-300 transition-colors">Home</a>
       <span>/</span>
       <a href="/tools" class="hover:text-gray-300 transition-colors">Tools</a>
       <span>/</span>
-      <span class="text-gray-300">{title}</span>
+      <span class="text-gray-300" aria-current="page">{title}</span>
     </div>
-  </div>
+  </nav>
 
   <div class="max-w-4xl mx-auto px-4 py-8">
     <!-- Tool header -->
@@ -70,10 +70,10 @@ const softwareJsonLd = {
     <SponsorSlot sponsor={crontinel} position="above" />
 
     <!-- Tool content -->
-    <div class="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-8">
+    <section aria-label="Tool" class="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-8">
       <slot />
       <UsageLimitPopup toolName={title} />
-    </div>
+    </section>
 
     <!-- Ad slot: below tool -->
     <SponsorSlot sponsor={crontinel} position="below" />

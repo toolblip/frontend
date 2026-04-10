@@ -26,22 +26,24 @@ const faqJsonLd = {
   </Fragment>
 
   <div class="flex gap-2 mb-3 items-center flex-wrap">
-    <div class="flex rounded-lg overflow-hidden border border-gray-700 text-sm">
-      <button id="mth-tab-split" class="px-3 py-1.5 bg-green-600 text-white">Split</button>
-      <button id="mth-tab-preview" class="px-3 py-1.5 bg-gray-700 text-gray-300 hover:bg-gray-600">Preview</button>
-      <button id="mth-tab-html" class="px-3 py-1.5 bg-gray-700 text-gray-300 hover:bg-gray-600">HTML</button>
+    <div role="tablist" aria-label="View mode" class="flex rounded-lg overflow-hidden border border-gray-700 text-sm">
+      <button id="mth-tab-split" role="tab" aria-selected="true" class="px-3 py-1.5 bg-green-600 text-white">Split</button>
+      <button id="mth-tab-preview" role="tab" aria-selected="false" class="px-3 py-1.5 bg-gray-700 text-gray-300 hover:bg-gray-600">Preview</button>
+      <button id="mth-tab-html" role="tab" aria-selected="false" class="px-3 py-1.5 bg-gray-700 text-gray-300 hover:bg-gray-600">HTML</button>
     </div>
     <button id="mth-copy" class="ml-auto text-xs text-green-400 hover:text-green-300 transition-colors">Copy HTML</button>
   </div>
 
   <div id="mth-split" class="grid grid-cols-2 gap-3">
     <div>
-      <div class="text-xs text-gray-500 mb-1">Markdown</div>
-      <textarea id="mth-input" class="w-full h-72 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none focus:border-green-500" placeholder="# Hello, world&#10;&#10;Type **Markdown** here..."></textarea>
+      <label for="mth-input" class="text-xs text-gray-500 mb-1 block">Markdown</label>
+      <textarea id="mth-input" aria-label="Markdown input" class="w-full h-72 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none focus:border-green-500" placeholder="# Hello, world&#10;&#10;Type **Markdown** here..."></textarea>
     </div>
     <div>
       <div class="text-xs text-gray-500 mb-1">HTML output</div>
-      <textarea id="mth-output" readonly class="w-full h-72 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none"></textarea>
+      <div aria-live="polite" aria-atomic="true">
+        <textarea id="mth-output" readonly aria-label="HTML output" class="w-full h-72 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none"></textarea>
+      </div>
     </div>
   </div>
 
@@ -86,6 +88,7 @@ const faqJsonLd = {
         btn.className = t === active
           ? 'px-3 py-1.5 bg-green-600 text-white'
           : 'px-3 py-1.5 bg-gray-700 text-gray-300 hover:bg-gray-600';
+        btn.setAttribute('aria-selected', t === active ? 'true' : 'false');
       });
 
       splitPane.classList.toggle('hidden', active !== 'split');

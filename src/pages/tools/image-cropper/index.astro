@@ -38,7 +38,7 @@ const faqJsonLd = {
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" />
 
-  <div id="ic-drop" class="border-2 border-dashed border-gray-600 hover:border-green-500 rounded-xl p-8 text-center cursor-pointer transition-colors mb-4" id="ic-dropzone">
+  <div id="ic-drop" role="button" tabindex="0" aria-label="Upload image - click or drag and drop" class="border-2 border-dashed border-gray-600 hover:border-green-500 rounded-xl p-8 text-center cursor-pointer transition-colors mb-4">
     <div class="text-gray-400 text-sm">
       <div class="text-3xl mb-2">🖼️</div>
       <p>Drop an image here or <label for="ic-file" class="text-green-400 hover:underline cursor-pointer">browse</label></p>
@@ -52,6 +52,7 @@ const faqJsonLd = {
       {presets.map(({ label, ratio }) => (
         <button
           data-ratio={ratio ?? 'free'}
+          aria-pressed="false"
           class="text-xs bg-gray-700 hover:bg-gray-600 border border-gray-600 px-3 py-1.5 rounded-lg text-gray-200 transition-colors preset-btn"
         >{label}</button>
       ))}
@@ -104,14 +105,21 @@ const faqJsonLd = {
       if (file?.type.startsWith('image/')) loadImage(file);
     });
     dropzone.addEventListener('click', () => fileInput.click());
+    dropzone.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); }
+    });
 
     document.querySelectorAll('.preset-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         if (!cropper) return;
         const ratio = (btn as HTMLElement).dataset.ratio;
         cropper.setAspectRatio(ratio === 'free' ? NaN : parseFloat(ratio!));
-        document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('bg-green-600', 'border-green-500'));
+        document.querySelectorAll('.preset-btn').forEach(b => {
+          b.classList.remove('bg-green-600', 'border-green-500');
+          b.setAttribute('aria-pressed', 'false');
+        });
         btn.classList.add('bg-green-600', 'border-green-500');
+        btn.setAttribute('aria-pressed', 'true');
       });
     });
 

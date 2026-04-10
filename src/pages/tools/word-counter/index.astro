@@ -26,13 +26,15 @@ const faqJsonLd = {
   </Fragment>
 
   <!-- Tool UI -->
+  <label for="wc-input" class="sr-only">Text input</label>
   <textarea
     id="wc-input"
+    aria-label="Text input"
     class="w-full h-48 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-green-500 placeholder-gray-500"
     placeholder="Paste or type your text here..."
   ></textarea>
 
-  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4" id="wc-stats">
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4" id="wc-stats" aria-live="polite" aria-atomic="true">
     <div class="bg-gray-800 border border-gray-700 rounded-lg p-3 text-center">
       <div class="text-2xl font-bold text-green-400" id="wc-words">0</div>
       <div class="text-xs text-gray-400 mt-1">Words</div>
@@ -54,7 +56,7 @@ const faqJsonLd = {
   <div class="flex justify-between mt-3 text-sm text-gray-500">
     <span>Paragraphs: <span id="wc-paragraphs" class="text-gray-300">0</span></span>
     <span>Chars (no spaces): <span id="wc-chars-no-spaces" class="text-gray-300">0</span></span>
-    <button id="wc-copy" class="text-green-400 hover:text-green-300 transition-colors">Copy stats</button>
+    <button id="wc-copy" aria-label="Copy stats to clipboard" class="text-green-400 hover:text-green-300 transition-colors">Copy stats</button>
   </div>
 
   <script>

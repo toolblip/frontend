@@ -17,7 +17,7 @@ const faqJsonLd = {
 
 <ToolLayout
   title="Base64 Encode & Decode Online Free  -  Toolblip"
-  description="Encode and decode Base64 text instantly in your browser. URL-safe Base64 option included. No uploads, no server."
+  description="Encode and decode Base64 text instantly in your browser. URL-safe Base64 option included. No uploads, no server, 100% client-side."
   toolSlug="base64"
   category="developer"
 >
@@ -35,18 +35,20 @@ const faqJsonLd = {
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
     <div>
-      <div class="text-xs text-gray-500 mb-1">Input</div>
-      <textarea id="b64-input" class="w-full h-48 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none focus:border-green-500 placeholder-gray-500" placeholder="Text to encode or Base64 to decode..."></textarea>
+      <label for="b64-input" class="text-xs text-gray-500 mb-1 block">Input</label>
+      <textarea id="b64-input" aria-label="Text to encode or Base64 to decode" class="w-full h-48 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none focus:border-green-500 placeholder-gray-500" placeholder="Text to encode or Base64 to decode..."></textarea>
     </div>
     <div>
       <div class="flex items-center justify-between mb-1">
         <span class="text-xs text-gray-500">Output</span>
-        <button id="b64-copy" class="text-xs text-green-400 hover:text-green-300 transition-colors">Copy</button>
+        <button id="b64-copy" aria-label="Copy encoded or decoded result" class="text-xs text-green-400 hover:text-green-300 transition-colors">Copy</button>
       </div>
-      <textarea id="b64-output" readonly class="w-full h-48 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none" placeholder="Result appears here..."></textarea>
+      <div aria-live="polite" aria-atomic="true">
+        <textarea id="b64-output" readonly aria-label="Encoded or decoded output" class="w-full h-48 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none" placeholder="Result appears here..."></textarea>
+      </div>
     </div>
   </div>
-  <div id="b64-error" class="hidden mt-2 text-sm text-red-400 bg-red-900/20 border border-red-800 rounded-lg px-3 py-2"></div>
+  <div id="b64-error" role="alert" class="hidden mt-2 text-sm text-red-400 bg-red-900/20 border border-red-800 rounded-lg px-3 py-2"></div>
 
   <script>
     const inputEl = document.getElementById('b64-input') as HTMLTextAreaElement;

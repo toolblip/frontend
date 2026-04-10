@@ -34,15 +34,15 @@ const faqJsonLd = {
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
     <div>
-      <div class="text-xs text-gray-500 mb-1">Input</div>
-      <textarea id="rdl-input" class="w-full h-56 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none focus:border-green-500 placeholder-gray-500" placeholder="Paste lines here..."></textarea>
+      <label for="rdl-input" class="text-xs text-gray-500 mb-1 block">Input</label>
+      <textarea id="rdl-input" aria-label="Lines to deduplicate" class="w-full h-56 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none focus:border-green-500 placeholder-gray-500" placeholder="Paste lines here..."></textarea>
     </div>
     <div>
       <div class="flex items-center justify-between mb-1">
-        <span class="text-xs text-gray-500">Output <span id="rdl-info" class="text-gray-600"></span></span>
-        <button id="rdl-copy" class="text-xs text-green-400 hover:text-green-300 transition-colors">Copy</button>
+        <span class="text-xs text-gray-500">Output <span id="rdl-info" aria-live="polite" class="text-gray-600"></span></span>
+        <button id="rdl-copy" aria-label="Copy deduplicated lines" class="text-xs text-green-400 hover:text-green-300 transition-colors">Copy</button>
       </div>
-      <textarea id="rdl-output" readonly class="w-full h-56 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none" placeholder="Deduplicated lines appear here..."></textarea>
+      <textarea id="rdl-output" readonly aria-label="Deduplicated lines output" class="w-full h-56 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none" placeholder="Deduplicated lines appear here..."></textarea>
     </div>
   </div>
 

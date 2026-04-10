@@ -36,7 +36,8 @@ const faqJsonLd = {
     <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
   </Fragment>
 
-  <textarea id="case-input" class="w-full h-32 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-green-500 placeholder-gray-500" placeholder="Type or paste your text here..."></textarea>
+  <label for="case-input" class="sr-only">Text input</label>
+  <textarea id="case-input" aria-label="Text input" class="w-full h-32 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-green-500 placeholder-gray-500" placeholder="Type or paste your text here..."></textarea>
 
   <div class="flex flex-wrap gap-2 mt-3">
     {cases.map(({ label, id }) => (
@@ -47,9 +48,11 @@ const faqJsonLd = {
   <div class="mt-3">
     <div class="flex items-center justify-between mb-1">
       <span class="text-xs text-gray-500">Output</span>
-      <button id="case-copy" class="text-xs text-green-400 hover:text-green-300 transition-colors">Copy</button>
+      <button id="case-copy" aria-label="Copy converted text" class="text-xs text-green-400 hover:text-green-300 transition-colors">Copy</button>
     </div>
-    <textarea id="case-output" readonly class="w-full h-32 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none" placeholder="Result appears here..."></textarea>
+    <div aria-live="polite" aria-atomic="true">
+      <textarea id="case-output" readonly aria-label="Converted output" class="w-full h-32 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none" placeholder="Result appears here..."></textarea>
+    </div>
   </div>
 
   <script>

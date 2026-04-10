@@ -17,7 +17,7 @@ const faqJsonLd = {
 
 <ToolLayout
   title="UUID Generator Online Free  -  Toolblip"
-  description="Generate UUID v4 values instantly using your browser's crypto API. Generate 1 to 50 at once. Copy all or individually."
+  description="Generate UUID v4 values instantly using your browser's crypto API. Generate 1 to 50 at once. Copy all or one at a time. 100% client-side."
   toolSlug="uuid-generator"
   category="developer"
 >
@@ -41,7 +41,7 @@ const faqJsonLd = {
     <button id="uuid-copy-all" class="bg-gray-700 hover:bg-gray-600 text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors">Copy all</button>
   </div>
 
-  <div id="uuid-list" class="space-y-2"></div>
+  <div id="uuid-list" aria-live="polite" aria-atomic="true" class="space-y-2"></div>
 
   <script>
     const list = document.getElementById('uuid-list')!;
@@ -60,7 +60,7 @@ const faqJsonLd = {
         row.className = 'flex items-center gap-2 bg-gray-800 border border-gray-700 rounded-lg px-3 py-2';
         row.innerHTML = `
           <code class="flex-1 text-sm font-mono text-gray-100">${uuid}</code>
-          <button class="text-xs text-green-400 hover:text-green-300 transition-colors copy-single shrink-0">Copy</button>
+          <button class="text-xs text-green-400 hover:text-green-300 transition-colors copy-single shrink-0" aria-label="Copy UUID ${uuid}">Copy</button>
         `;
         row.querySelector('.copy-single')!.addEventListener('click', () => {
           navigator.clipboard.writeText(uuid).then(() => {
