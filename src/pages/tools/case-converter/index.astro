@@ -68,7 +68,7 @@ const faqJsonLd = {
       lower: t => t.toLowerCase(),
       title: t => words(t).map(w => w[0].toUpperCase() + w.slice(1).toLowerCase()).join(' '),
       sentence: t => t.toLowerCase().replace(/(^\s*\w|[.!?]\s+\w)/g, c => c.toUpperCase()),
-      camel: t => { const w = words(t); return w[0].toLowerCase() + w.slice(1).map(w => w[0].toUpperCase() + w.slice(1).toLowerCase()).join(''); },
+      camel: t => { const w = words(t); if (w.length === 0) return ''; return w[0].toLowerCase() + w.slice(1).map(w => w[0].toUpperCase() + w.slice(1).toLowerCase()).join(''); },
       pascal: t => words(t).map(w => w[0].toUpperCase() + w.slice(1).toLowerCase()).join(''),
       snake: t => words(t).map(w => w.toLowerCase()).join('_'),
       kebab: t => words(t).map(w => w.toLowerCase()).join('-'),

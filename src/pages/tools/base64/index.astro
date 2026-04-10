@@ -57,7 +57,13 @@ const faqJsonLd = {
     const urlSafe = document.getElementById('b64-urlsafe') as HTMLInputElement;
 
     function toUrlSafe(s: string) { return s.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
-    function fromUrlSafe(s: string) { return s.replace(/-/g, '+').replace(/_/g, '/'); }
+    function fromUrlSafe(s: string) {
+      let t = s.replace(/-/g, '+').replace(/_/g, '/');
+      const pad = t.length % 4;
+      if (pad === 2) t += '==';
+      else if (pad === 3) t += '=';
+      return t;
+    }
 
     document.getElementById('b64-encode')!.addEventListener('click', () => {
       errorEl.classList.add('hidden');

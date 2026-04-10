@@ -73,8 +73,20 @@ const faqJsonLd = {
     const splitPane = document.getElementById('mth-split')!;
     const previewPane = document.getElementById('mth-preview-pane')!;
 
+    const errorEl = document.createElement('div');
+    errorEl.className = 'hidden mt-2 text-sm text-red-400 bg-red-900/20 border border-red-800 rounded-lg px-3 py-2';
+    errorEl.setAttribute('role', 'alert');
+    input.parentNode!.parentNode!.insertBefore(errorEl, input.parentNode!.nextSibling);
+
     async function convert() {
-      await ensureMarked();
+      try {
+        await ensureMarked();
+      } catch {
+        errorEl.textContent = 'Failed to load the Markdown library. Please check your connection and try again.';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+      errorEl.classList.add('hidden');
       const html = (window as any).marked.parse(input.value);
       output.value = html;
       rendered.innerHTML = html;

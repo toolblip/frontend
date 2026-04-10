@@ -84,8 +84,20 @@ const faqJsonLd = {
     const workspace = document.getElementById('ic-workspace')!;
     const imgEl = document.getElementById('ic-image') as HTMLImageElement;
 
+    const errorEl = document.createElement('div');
+    errorEl.className = 'hidden mt-2 text-sm text-red-400 bg-red-900/20 border border-red-800 rounded-lg px-3 py-2';
+    errorEl.setAttribute('role', 'alert');
+    dropzone.parentNode!.insertBefore(errorEl, dropzone.nextSibling);
+
     async function loadImage(file: File) {
-      await loadCropper();
+      try {
+        await loadCropper();
+      } catch {
+        errorEl.textContent = 'Failed to load the cropping library. Please check your connection and try again.';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+      errorEl.classList.add('hidden');
       const url = URL.createObjectURL(file);
       imgEl.src = url;
       workspace.classList.remove('hidden');
@@ -126,7 +138,8 @@ const faqJsonLd = {
     document.getElementById('ic-crop')!.addEventListener('click', () => {
       if (!cropper) return;
       const canvas = cropper.getCroppedCanvas();
-      canvas.toBlob((blob: Blob) => {
+      canvas.toBlob((blob: Blob | null) => {
+        if (!blob) return;
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = `cropped-${Date.now()}.png`;
