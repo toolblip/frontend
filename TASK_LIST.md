@@ -56,3 +56,36 @@
 - [ ] Test on mobile
 - [ ] Performance audit (Lighthouse)
 - [ ] Submit to directories (TinyTools, etc.)
+
+---
+
+## SEO (Long-term, start slow)
+
+### Foundation
+- [ ] Set up Google Search Console for toolblip.com
+- [ ] Verify site ownership in GSC
+- [ ] Submit sitemap.xml to GSC (Vercel supports this)
+- [ ] Set up Bing Webmaster Tools
+- [ ] Check canonical URLs on all Next.js pages
+- [ ] Ensure each page has unique meta title + description
+
+### Content (directory + blog, start with 3 cornerstone pieces)
+- [ ] Write: "What is an MCP Server? A Practical Guide for Developers"
+- [ ] Write: "How to Connect Claude Code to Toolblip in 5 Minutes"
+- [ ] Write: "Top 10 MCP Servers Every Developer Should Know About"
+- [ ] Add blog to Next.js (MDX support via next-mdx-remote)
+- [ ] Ensure each post has OG tags + Twitter cards
+- [ ] Add FAQ schema to directory listing pages
+
+### Technical SEO
+- [ ] Fix any GSC coverage errors (404s, soft 404s)
+- [ ] Check Core Web Vitals in GSC
+- [ ] Ensure sitemap.xml lists all public pages
+- [ ] Verify robots.txt is complete
+- [ ] Add next-sitemap package for dynamic sitemap
+
+### Off-page SEO (start 1/month)
+- [ ] Submit to MCP/directory listings (MCP.run, Smithery, etc.)
+- [ ] Submit to dev tool directories (TinyTools, toolblip self-submit)
+- [ ] Post in r/programming or r/devtools (helpful, not promo)
+- [ ] Build 1-2 contextual backlinks per month via genuine outreach
