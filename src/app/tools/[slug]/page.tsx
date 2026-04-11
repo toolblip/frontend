@@ -1,7 +1,18 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 
-// Tool metadata
+// Dynamically import client components (no SSR needed for these tools)
+const toolComponents: Record<string, React.ComponentType> = {
+  'word-counter': dynamic(() => import('@/components/tools/WordCounterClient')),
+  'character-counter': dynamic(() => import('@/components/tools/CharacterCounterClient')),
+  'uuid-generator': dynamic(() => import('@/components/tools/UuidGeneratorClient')),
+  'case-converter': dynamic(() => import('@/components/tools/CaseConverterClient')),
+  'base64': dynamic(() => import('@/components/tools/Base64Client')),
+  'remove-duplicate-lines': dynamic(() => import('@/components/tools/RemoveDuplicateLinesClient')),
+  // Remaining tools: placeholders added as components are migrated
+};
+
 const toolsMeta: Record<string, {
   title: string;
   description: string;
@@ -96,6 +107,8 @@ export default async function ToolPage({ params }: Props) {
     notFound();
   }
 
+  const ToolComponent = toolComponents[slug];
+
   return (
     <>
       {/* Breadcrumb */}
@@ -127,17 +140,22 @@ export default async function ToolPage({ params }: Props) {
           aria-label="Tool"
           className="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-8"
         >
-          {/* Placeholder — tool component loaded dynamically by slug */}
-          <div id="tool-container" data-slug={slug} />
-          <p className="text-gray-500 text-sm mt-4 text-center">
-            Tool loading... (client component for {slug})
-          </p>
+          {ToolComponent ? (
+            <ToolComponent />
+          ) : (
+            <div className="bg-yellow-900/20 border border-yellow-700/50 rounded-xl p-6 text-center">
+              <span className="text-2xl mb-2 block">🚧</span>
+              <p className="text-yellow-200 text-sm">
+                This tool is being migrated. Interactive version coming soon.
+              </p>
+            </div>
+          )}
         </section>
 
-        {/* Coming soon notice */}
-        <div className="bg-yellow-900/20 border border-yellow-700/50 rounded-xl p-4 text-sm text-yellow-200">
-          ⚡ This tool is being migrated from Astro to Next.js. Full interactive UI coming soon.
-        </div>
+        {/* Privacy note */}
+        <p className="text-xs text-gray-600 text-center">
+          🔒 100% client-side — your data never leaves your browser
+        </p>
       </div>
     </>
   );
