@@ -6,11 +6,14 @@ import dynamic from 'next/dynamic';
 const toolComponents: Record<string, React.ComponentType> = {
   'word-counter': dynamic(() => import('@/components/tools/WordCounterClient')),
   'character-counter': dynamic(() => import('@/components/tools/CharacterCounterClient')),
-  'uuid-generator': dynamic(() => import('@/components/tools/UuidGeneratorClient')),
-  'case-converter': dynamic(() => import('@/components/tools/CaseConverterClient')),
+  'json-formatter': dynamic(() => import('@/components/tools/JsonFormatterClient')),
   'base64': dynamic(() => import('@/components/tools/Base64Client')),
+  'case-converter': dynamic(() => import('@/components/tools/CaseConverterClient')),
+  'url-encode': dynamic(() => import('@/components/tools/UrlEncodeClient')),
+  'image-cropper': dynamic(() => import('@/components/tools/ImageCropperClient')),
+  'uuid-generator': dynamic(() => import('@/components/tools/UuidGeneratorClient')),
   'remove-duplicate-lines': dynamic(() => import('@/components/tools/RemoveDuplicateLinesClient')),
-  // Remaining tools: placeholders added as components are migrated
+  'markdown-to-html': dynamic(() => import('@/components/tools/MarkdownToHtmlClient')),
 };
 
 const toolsMeta: Record<string, {
