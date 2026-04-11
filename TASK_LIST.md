@@ -28,7 +28,7 @@
 - [ ] Build GET /api/mcp/servers endpoint
 - [x] ~~Build directory page in Next.js~~ ✅
 - [ ] Add search functionality (frontend + backend)
-- [ ] Add tool detail pages
+- [x] ~~Add tool detail pages~~ ✅ (static pages generated, interactive components pending)
 - [ ] Deploy and verify
 
 ## Phase 4: Auth (for Pro features)
