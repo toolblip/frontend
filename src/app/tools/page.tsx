@@ -12,9 +12,10 @@ const allTools = [
   { name: 'Remove Duplicate Lines', slug: 'remove-duplicate-lines', description: 'Paste text, remove duplicate lines in one click. Case-sensitive option included.', emoji: '🗑️', category: 'Text' },
   { name: 'Markdown to HTML', slug: 'markdown-to-html', description: 'Convert Markdown to HTML with a live split-pane preview.', emoji: '📄', category: 'Developer' },
   { name: 'YAML to JSON', slug: 'yaml-to-json', description: 'Convert YAML to JSON instantly with pretty-print, compact output, and custom indent size.', emoji: '🔄', category: 'Conversion' },
+  { name: 'Percentage Calculator', slug: 'percentage-calculator', description: 'Calculate percentages, percentage change, tips, and discounts instantly.', emoji: '%', category: 'Math' },
 ];
 
-const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion'];
+const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math'];
 
 export const metadata = {
   title: 'All Tools',
