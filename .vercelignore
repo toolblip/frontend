@@ -1,0 +1,13 @@
+# Astro / Cloudflare Pages files
+functions/
+src/pages/
+src/layouts/
+src/styles/
+astro.config.mjs
+wrangler.toml
+public/
+dist/
+
+# Other
+.too
+*.log
