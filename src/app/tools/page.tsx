@@ -14,6 +14,7 @@ const allTools = [
   { name: 'YAML to JSON', slug: 'yaml-to-json', description: 'Convert YAML to JSON instantly with pretty-print, compact output, and custom indent size.', emoji: '🔄', category: 'Conversion' },
   { name: 'Percentage Calculator', slug: 'percentage-calculator', description: 'Calculate percentages, percentage change, tips, and discounts instantly.', emoji: '%', category: 'Math' },
   { name: 'Cron Expression Parser', slug: 'cron-parser', description: 'Parse and validate cron expressions with human-readable descriptions and next 5 run times.', emoji: '⏱️', category: 'Developer' },
+  { name: 'Screen Resolution Tester', slug: 'screen-resolution-tester', description: 'Test any screen resolution or viewport size with device presets, custom dimensions, and a live scaled preview.', emoji: '🖥️', category: 'Developer' },
 ];
 
 const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math'];
