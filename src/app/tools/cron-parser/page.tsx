@@ -1,0 +1,63 @@
+import Link from 'next/link';
+import dynamic from 'next/dynamic';
+import type { Metadata } from 'next';
+
+export const toolMeta = {
+  name:        'Cron Expression Parser',
+  description: 'Parse and validate cron expressions, see a human-readable schedule description, and preview the next 5 run times. 100% client-side.',
+  category:    'developer',
+};
+
+export const metadata: Metadata = {
+  title:       `${toolMeta.name} | Toolblip`,
+  description: toolMeta.description,
+};
+
+const CronParserClient = dynamic(
+  () => import('@/components/tools/CronParserClient'),
+  { ssr: false },
+);
+
+export default function CronParserPage() {
+  return (
+    <>
+      {/* Breadcrumb */}
+      <nav aria-label="Breadcrumb" className="border-b border-gray-800 bg-gray-900/40">
+        <div className="max-w-4xl mx-auto px-4 py-2 text-sm text-gray-500 flex gap-2">
+          <Link href="/" className="hover:text-gray-300 transition-colors">Home</Link>
+          <span>/</span>
+          <Link href="/tools" className="hover:text-gray-300 transition-colors">Tools</Link>
+          <span>/</span>
+          <span className="text-gray-300" aria-current="page">{toolMeta.name}</span>
+        </div>
+      </nav>
+
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center gap-3 mb-2">
+            <span className="text-3xl">⏱️</span>
+            <h1 className="text-2xl font-bold text-white">{toolMeta.name}</h1>
+          </div>
+          <p className="text-gray-400">{toolMeta.description}</p>
+          <span className="inline-block mt-2 text-xs text-gray-500 bg-gray-800 px-2 py-0.5 rounded">
+            Developer
+          </span>
+        </div>
+
+        {/* Tool */}
+        <section
+          aria-label="Cron expression parser tool"
+          className="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-8"
+        >
+          <CronParserClient />
+        </section>
+
+        {/* Privacy */}
+        <p className="text-xs text-gray-600 text-center">
+          🔒 100% client-side — your data never leaves your browser
+        </p>
+      </div>
+    </>
+  );
+}
