@@ -155,7 +155,7 @@ Functions:
 - regex_escape(text: string) -> string
 ```
 
-**Implementation:** TypeScript, published as an npm package (`@toolblip/mcp-server-tools`). Implements the MCP transport protocol using the `@modelcontextprotocol/sdk`.
+**Implementation:** TypeScript, published as an npm package (`@toolblip/tools`). Implements the MCP transport protocol using the `@modelcontextprotocol/sdk`.
 
 **Who uses it:** AI coding assistants that want to offer utility functions without calling external APIs. Any AI agent that needs encoding/decoding/hashing on the fly.
 
@@ -184,7 +184,7 @@ Functions (query-like):
 - search_color(name: string) -> { name: string, hex: string, rgb: string }
 ```
 
-**Implementation:** TypeScript, local JSON data files + a fast lookup layer. Published as `@toolblip/mcp-server-reference`. Ships as a single static bundle -- no runtime dependencies.
+**Implementation:** TypeScript, local JSON data files + a fast lookup layer. Published as `@toolblip/reference`. Ships as a single static bundle -- no runtime dependencies.
 
 **Who uses it:** AI models that need accurate reference data without hallucinating. Writing assistants, coding assistants, and research agents.
 
@@ -209,7 +209,7 @@ Functions:
 - count_tools(filters?: object) -> number
 ```
 
-**Implementation:** Node.js, reads from a JSON manifest of the directory (regenerated at build time from the directory database). Published as `@toolblip/mcp-server-directory`.
+**Implementation:** Node.js, reads from a JSON manifest of the directory (regenerated at build time from the directory database). Published as `@toolblip/directory`.
 
 **Who uses it:** AI agents that want to recommend tools to users. AI assistants building workflows that need to discover third-party services.
 
@@ -262,13 +262,13 @@ Example in Claude Desktop's `claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
-    "toolblip-tools": {
+    "@toolblip/tools": {
       "command": "npx",
-      "args": ["-y", "@toolblip/mcp-server-tools"]
+      "args": ["-y", "@toolblip/tools"]
     },
-    "toolblip-reference": {
+    "@toolblip/reference": {
       "command": "npx",
-      "args": ["-y", "@toolblip/mcp-server-reference"]
+      "args": ["-y", "@toolblip/reference"]
     }
   }
 }
@@ -278,10 +278,10 @@ Example in Claude Desktop's `claude_desktop_config.json`:
 
 | Server | Priority | Est. Build | Notes |
 |--------|:--------:|:----------:|-------|
-| `toolblip-tools` | P0 | 1 week | Most directly useful. Mirrors the existing web tools. |
-| `toolblip-reference` | P0 | 3-4 days | Pure data, no logic. Fastest to build. |
-| `toolblip-directory` | P1 | 1 week | Needs directory data to exist first (build after first 50 directory entries). |
-| `toolblip-webhooks` | P2 | Deferred | Only after Toolblip has real infrastructure to monitor. |
+| `@toolblip/tools` | P0 | 1 week | Most directly useful. Mirrors the existing web tools. Published to npm at `@toolblip/tools`. |
+| `@toolblip/reference` | P0 | 3-4 days | Pure data, no logic. Fastest to build. Published to npm at `@toolblip/reference`. |
+| `@toolblip/directory` | P1 | 1 week | Needs directory data to exist first (build after first 50 directory entries). Published to npm at `@toolblip/directory`. |
+| `@toolblip/webhooks` | P2 | Deferred | Only after Toolblip has real infrastructure to monitor. Published to npm at `@toolblip/webhooks`. |
 
 **Total MCP engineering investment: ~3 weeks.**
 
