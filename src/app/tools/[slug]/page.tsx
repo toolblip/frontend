@@ -14,6 +14,7 @@ const toolComponents: Record<string, React.ComponentType> = {
   'uuid-generator': dynamic(() => import('@/components/tools/UuidGeneratorClient')),
   'remove-duplicate-lines': dynamic(() => import('@/components/tools/RemoveDuplicateLinesClient')),
   'markdown-to-html': dynamic(() => import('@/components/tools/MarkdownToHtmlClient')),
+  'yaml-to-json': dynamic(() => import('@/components/tools/YamlToJsonClient')),
 };
 
 const toolsMeta: Record<string, {
@@ -81,6 +82,12 @@ const toolsMeta: Record<string, {
     description: 'Convert Markdown to HTML with a live split-pane preview.',
     emoji: '📄',
     category: 'Developer',
+  },
+  'yaml-to-json': {
+    title: 'YAML to JSON',
+    description: 'Convert YAML to JSON instantly with pretty-print, compact output, and custom indent size. 100% client-side — nothing leaves your browser.',
+    emoji: '🔄',
+    category: 'Conversion',
   },
 };
 
