@@ -2,10 +2,10 @@
 
 ## Phase 1: Foundation
 
-- [ ] Create Next.js repo from scratch (migrate from Astro)
-- [ ] Set up project structure (src/app/, src/components/, src/lib/)
-- [ ] Configure env vars (NEXT_PUBLIC_API_URL, NEXT_PUBLIC_APP_URL)
-- [ ] Deploy to Vercel (verify build works)
+- [x] ~~Create Next.js repo from scratch (migrate from Astro)~~ ✅
+- [x] ~~Set up project structure (src/app/, src/components/, src/lib/)~~ ✅
+- [x] ~~Configure env vars (NEXT_PUBLIC_API_URL, NEXT_PUBLIC_APP_URL)~~ ✅
+- [ ] Deploy to Vercel (verify build works) — code ready, requires Vercel auth
 - [ ] Connect custom domain (toolblip.com) via Vercel
 - [ ] Set up Cloudflare CDN/DNS (verify SSL, proxy to Vercel)
 - [ ] Verify Vercel → Railway API calls work (CORS)
@@ -26,7 +26,7 @@
 - [ ] Create mcp_servers DB table + migration
 - [ ] Build GET /api/tools endpoint
 - [ ] Build GET /api/mcp/servers endpoint
-- [ ] Build directory page in Next.js
+- [x] ~~Build directory page in Next.js~~ ✅
 - [ ] Add search functionality (frontend + backend)
 - [ ] Add tool detail pages
 - [ ] Deploy and verify
