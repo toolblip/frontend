@@ -113,134 +113,90 @@ Organized by tool type and use case:
 
 ## MCP Server Strategy
 
-### What Toolblip MCP Servers Are
+### What Toolblip MCP Server Is
 
-Toolblip MCP servers are first-party server implementations that expose Toolblip's functionality and data via the Model Context Protocol. AI models and AI agents can connect to these servers to:
-- Execute utility functions (format conversion, encoding, hashing, etc.)
+Toolblip publishes a single first-party MCP server package: `@toolblip/mcp`. It exposes Toolblip's functionality and data via the Model Context Protocol. AI models and AI agents can connect to it to:
+- Execute utility functions (format conversion, encoding, hashing, image processing, PDF manipulation)
 - Query curated reference data (HTTP status codes, MIME types, regex cheatsheets)
 - Search the Toolblip directory programmatically
 
-### Why Build MCP Servers
+### Why Build a Single MCP Server
 
 1. **AI agents are the next browser.** Just as web browsers became the dominant interface for humans, AI agents will become the dominant interface for machine tasks. Toolblip's utility is useful to humans today; making it consumable by AI future-proofs the product.
 2. **Distribution via AI platforms.** MCP servers listed in the Toolblip directory become installable by any AI platform that supports MCP (Claude Desktop, Cursor, Copilot, etc.). This is free distribution to every AI user.
 3. **Data and reference layer.** Not everything on Toolblip is a function. HTTP status codes, MIME types, regex syntax references -- these are static reference data that AI models can retrieve from an MCP server, keeping them accurate and up-to-date without training.
+4. **One package to publish, one package to maintain.** Consolidating into a single npm package simplifies versioning, releases, and consumer configuration.
 
-### MCP Servers to Build
+### Package Structure
 
-#### Server 1: `toolblip-tools` -- The Utility Function Server
+The `@toolblip/mcp` package is a single TypeScript npm package that exposes three capability areas:
 
-**What it does:** Exposes Toolblip's first-party tools as MCP functions.
-
-**Interface:**
+**Tool Utilities** -- Functions for encoding, hashing, formatting, conversion, and more:
 ```
-Functions:
-- base64_encode(text: string) -> string
-- base64_decode(text: string) -> string
-- url_encode(text: string) -> string
-- url_decode(text: string) -> string
-- sha256_hash(text: string) -> string
-- md5_hash(text: string) -> string
-- uuid_generate() -> string
-- json_format(jsonString: string, indent?: number) -> string
-- json_minify(jsonString: string) -> string
-- html_escape(text: string) -> string
-- html_unescape(text: string) -> string
-- unix_timestamp_to_date(timestamp: number) -> string
-- date_to_unix_timestamp(dateString: string) -> number
-- csv_to_json(csv: string) -> string
-- yaml_to_json(yaml: string) -> string
-- xml_to_json(xml: string) -> string
-- regex_test(pattern: string, text: string) -> { matches: boolean, groups: string[] }
-- regex_escape(text: string) -> string
+- base64_encode / base64_decode
+- url_encode / url_decode
+- sha256_hash / md5_hash
+- uuid_generate
+- json_format / json_minify
+- html_escape / html_unescape
+- unix_timestamp_to_date / date_to_unix_timestamp
+- csv_to_json / yaml_to_json / xml_to_json
+- regex_test / regex_escape
 ```
 
-**Implementation:** TypeScript, published as an npm package (`@toolblip/tools`). Implements the MCP transport protocol using the `@modelcontextprotocol/sdk`.
-
-**Who uses it:** AI coding assistants that want to offer utility functions without calling external APIs. Any AI agent that needs encoding/decoding/hashing on the fly.
-
----
-
-#### Server 2: `toolblip-reference` -- The Reference Data Server
-
-**What it does:** Serves curated reference data that AI models can query.
-
-**Interface:**
+**Image Tools** -- Canvas-based image manipulation:
 ```
-Resources (read-only):
-- http-status-codes://              -- All HTTP status codes with descriptions
-- mime-types://                     -- Complete MIME type reference
-- regex-cheatsheet://                -- Regex syntax quick reference
-- ascii-table://                     -- ASCII character table
-- color-names://                    -- CSS color names with hex values
-- country-codes://                  -- ISO 3166-1 country codes
-- timezones://                      -- IANA timezone list
-- unicode-emojis://                 -- Emoji name to Unicode mapping
-
-Functions (query-like):
-- search_http_status_code(code: number) -> { code: number, phrase: string, description: string }
-- search_mime_type(type: string) -> { mime: string, extensions: string[], description: string }
-- lookup_country_code(code: string) -> { name: string, alpha2: string, alpha3: string }
-- search_color(name: string) -> { name: string, hex: string, rgb: string }
+- image_crop / image_resize / image_compress
+- image_format_convert (WebP, JPG, PNG, HEIC)
+- image_to_base64 / base64_to_image
+- qr_generate / qr_read
 ```
 
-**Implementation:** TypeScript, local JSON data files + a fast lookup layer. Published as `@toolblip/reference`. Ships as a single static bundle -- no runtime dependencies.
+**PDF Tools** -- pdf-lib-based PDF manipulation:
+```
+- pdf_merge / pdf_split / pdf_rotate
+- pdf_add_watermark / pdf_reorder_pages
+- pdf_to_images / images_to_pdf
+```
 
-**Who uses it:** AI models that need accurate reference data without hallucinating. Writing assistants, coding assistants, and research agents.
-
----
-
-#### Server 3: `toolblip-directory` -- The Directory Search Server
-
-**What it does:** Exposes the Toolblip directory as an MCP resource and function set, allowing AI agents to search and recommend tools.
-
-**Interface:**
+**Reference Data** -- Read-only resources and query functions:
 ```
 Resources:
-- directory://tools                  -- Full directory as a structured resource
-- directory://mcp-servers           -- MCP server-only subset
-- directory://featured               -- Featured/pinned entries
+- http-status-codes://
+- mime-types://
+- regex-cheatsheet://
+- ascii-table://
+- color-names://
+- country-codes://
+- timezones://
+- unicode-emojis://
 
 Functions:
-- search_tools(query: string, filters?: { type?: string, category?: string, pricing?: string }) -> DirectoryEntry[]
-- get_tool(slug: string) -> DirectoryEntry
-- get_mcp_servers(category?: string) -> DirectoryEntry[]
-- get_similar_tools(slug: string) -> DirectoryEntry[]
-- count_tools(filters?: object) -> number
+- search_http_status_code / search_mime_type
+- lookup_country_code / search_color
 ```
 
-**Implementation:** Node.js, reads from a JSON manifest of the directory (regenerated at build time from the directory database). Published as `@toolblip/directory`.
-
-**Who uses it:** AI agents that want to recommend tools to users. AI assistants building workflows that need to discover third-party services.
-
----
-
-#### Server 4: `toolblip-webhooks` -- The Monitoring Server
-
-**What it does:** Not a web tool, but an MCP server that wraps Toolblip's own infrastructure for AI consumption. Exposes monitoring and alerting data for tools (uptime, usage stats, error rates) as MCP resources.
-
-**Why:** As Toolblip scales, users will want to monitor tool availability programmatically. An MCP server lets AI agents detect tool failures and route around them automatically.
-
-**Interface:**
+**Directory Search** -- Toolblip directory access:
 ```
 Resources:
-- status://uptime                    -- Per-tool uptime percentage
-- status://latency                   -- P50/P95 response time per tool
-- status://errors                    -- Recent error rates per tool
+- directory://tools
+- directory://mcp-servers
+- directory://featured
 
 Functions:
-- get_tool_status(slug: string) -> ToolStatus
-- list_degraded_tools() -> ToolStatus[]
-- get_incident_history(days?: number) -> Incident[]
+- search_tools / get_tool
+- get_mcp_servers / get_similar_tools
 ```
 
-**Implementation:** Deferred -- build after the static site has uptime to monitor.
+**Implementation:** TypeScript, published as `@toolblip/mcp` on npm. Implements the MCP transport protocol using the `@modelcontextprotocol/sdk`. Ships as a single static bundle with embedded reference data.
+
+**Who uses it:** AI coding assistants that want utility functions, reference data, and directory search without calling external APIs. Any AI agent that needs encoding, conversion, or tool discovery on the fly.
 
 ---
 
-### How AI Models Consume Toolblip MCP Servers
+### How AI Models Consume `@toolblip/mcp`
 
-The MCP protocol allows any MCP-compatible AI model or platform to connect to Toolblip's servers. Here is the consumption flow:
+The MCP protocol allows any MCP-compatible AI model or platform to connect to Toolblip's server. Here is the consumption flow:
 
 ```
 1. Developer / User installs Toolblip MCP server:
@@ -262,13 +218,9 @@ Example in Claude Desktop's `claude_desktop_config.json`:
 ```json
 {
   "mcpServers": {
-    "@toolblip/tools": {
+    "@toolblip/mcp": {
       "command": "npx",
-      "args": ["-y", "@toolblip/tools"]
-    },
-    "@toolblip/reference": {
-      "command": "npx",
-      "args": ["-y", "@toolblip/reference"]
+      "args": ["-y", "@toolblip/mcp"]
     }
   }
 }
@@ -276,16 +228,13 @@ Example in Claude Desktop's `claude_desktop_config.json`:
 
 ### MCP Server Roadmap
 
-| Server | Priority | Est. Build | Notes |
-|--------|:--------:|:----------:|-------|
-| `@toolblip/tools` | P0 | 1 week | Most directly useful. Mirrors the existing web tools. Published to npm at `@toolblip/tools`. |
-| `@toolblip/reference` | P0 | 3-4 days | Pure data, no logic. Fastest to build. Published to npm at `@toolblip/reference`. |
-| `@toolblip/directory` | P1 | 1 week | Needs directory data to exist first (build after first 50 directory entries). Published to npm at `@toolblip/directory`. |
-| `@toolblip/webhooks` | P2 | Deferred | Only after Toolblip has real infrastructure to monitor. Published to npm at `@toolblip/webhooks`. |
+| Package | Priority | Est. Build | Notes |
+|---------|:--------:|:----------:|-------|
+| `@toolblip/mcp` | P0 | 2-3 weeks | Single unified package. All tool utilities, reference data, and directory search in one npm package. Published to npm at `@toolblip/mcp`. |
 
-**Total MCP engineering investment: ~3 weeks.**
+**Total MCP engineering investment: ~2-3 weeks.**
 
-MCP servers are TypeScript/npm packages. They can be built in parallel with the web tool roadmap (they share no code but do share the same product context).
+`@toolblip/mcp` is a TypeScript/npm package. It can be built in parallel with the web tool roadmap (they share no code but do share the same product context).
 
 ---
 
