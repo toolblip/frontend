@@ -3,6 +3,7 @@
   "/_not-found/page": "/_not-found",
   "/about/page": "/about",
   "/advertise/page": "/advertise",
+  "/api-docs/page": "/api-docs",
   "/blog/[slug]/page": "/blog/[slug]",
   "/blog/page": "/blog",
   "/directory/page": "/directory",

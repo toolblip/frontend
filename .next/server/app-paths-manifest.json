@@ -3,6 +3,7 @@
   "/_not-found/page": "app/_not-found/page.js",
   "/about/page": "app/about/page.js",
   "/advertise/page": "app/advertise/page.js",
+  "/api-docs/page": "app/api-docs/page.js",
   "/blog/[slug]/page": "app/blog/[slug]/page.js",
   "/blog/page": "app/blog/page.js",
   "/directory/page": "app/directory/page.js",
