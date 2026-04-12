@@ -1,8 +1,15 @@
 {
   "/_global-error/page": "/_global-error",
   "/_not-found/page": "/_not-found",
+  "/about/page": "/about",
+  "/advertise/page": "/advertise",
   "/directory/page": "/directory",
+  "/donate/page": "/donate",
+  "/login/page": "/login",
   "/page": "/",
+  "/privacy/page": "/privacy",
+  "/signup/page": "/signup",
+  "/terms/page": "/terms",
   "/tools/[slug]/page": "/tools/[slug]",
   "/tools/page": "/tools"
 }
