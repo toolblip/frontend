@@ -1,81 +1,89 @@
 ---
-title: "哈希生成器完整指南：MD5、SHA-1、SHA-256 完整对比"
-description: "哈希生成器是开发者的必备工具。本文介绍什么是哈希函数、常见算法（MD5/SHA-1/SHA-256/SHA-512）的区别、安全考虑，以及如何在代码中使用哈希。"
+title: "Hash Generator Guide: MD5, SHA-1, SHA-256, and When to Use Each"
+description: "A complete guide to hash generation: what cryptographic hashes are, how MD5/SHA-1/SHA-256 differ in security and speed, and why you should never use MD5 for passwords."
 slug: hash-generator-guide
 date: 2026-04-15
-category: 开发者工具
-tags: [哈希, MD5, SHA, 加密, 安全, 开发工具]
+category: Developer Tools
+tags: [Hash, MD5, SHA, Encryption, Security]
 author: Toolblip Team
 readingTime: 6 min
 ---
 
-# 哈希生成器完整指南：MD5、SHA-1、SHA-256 完整对比
+# Hash Generator Guide: MD5, SHA-1, SHA-256, and When to Use Each
 
-**哈希生成器**（Hash Generator）是开发者日常使用的重要工具。它将任意长度的输入通过数学算法转换为固定长度的字符串，称为**哈希值**（或摘要）。
+A **hash generator** takes any input — a password, a file, a string — and produces a fixed-length string called a **hash** (or digest). Hashes are fundamental to cryptography, data integrity, and password storage.
 
-## 什么是哈希函数？
+## What Makes a Good Hash Function?
 
-哈希函数是单向加密函数：
+- **One-way** — you can compute hash(input) easily, but you can't recover input from hash
+- **Deterministic** — same input always produces the same output
+- **Fixed length** — regardless of input size, output is always the same length
+- **Collision-resistant** — extremely unlikely for two different inputs to produce the same hash
+- **Avalanche effect** — tiny input change → completely different output
 
-- **固定输出长度** — 无论输入多长，输出始终是固定长度
-- **不可逆** — 无法从哈希值反推原始输入
-- **确定性** — 相同输入总是产生相同哈希
-- **雪崩效应** — 输入微小变化，输出完全不同
+## The Algorithms Compared
 
-## 常见哈希算法对比
+| Algorithm | Output | Speed | Security | Use Case |
+|-----------|--------|-------|----------|----------|
+| **MD5** | 128-bit (32 hex chars) | Very fast | ⚠️ Broken | File checksums only (not passwords) |
+| **SHA-1** | 160-bit (40 hex chars) | Fast | ⚠️ Deprecated | Legacy systems only |
+| **SHA-256** | 256-bit (64 hex chars) | Medium | ✅ Safe | Passwords, digital signatures |
+| **SHA-384** | 384-bit (96 hex chars) | Slower | ✅ Safe | High-security applications |
+| **SHA-512** | 512-bit (128 hex chars) | Slowest | ✅ Safe | Maximum security needs |
 
-| 算法 | 输出长度 | 安全性 | 速度 | 适用场景 |
-|------|---------|--------|------|---------|
-| **MD5** | 128位 (32字符) | ⚠️ 已破解 | 很快 | 校验（已不建议用于安全） |
-| **SHA-1** | 160位 (40字符) | ⚠️ 已破解 | 快 | 旧系统兼容 |
-| **SHA-256** | 256位 (64字符) | ✅ 安全 | 中等 | 密码存储、数字签名 |
-| **SHA-384** | 384位 (96字符) | ✅ 安全 | 较慢 | 高安全场景 |
-| **SHA-512** | 512位 (128字符) | ✅ 安全 | 慢 | 最高安全需求 |
+## Why MD5 Is Dangerous for Passwords
 
-## MD5 为什么不该用于密码
-
-MD5 已被**碰撞攻击**破解 — 攻击者可以构造两个不同输入产生相同哈希值。2012年，Stuxnet 病毒就利用了 MD5 碰撞。
+MD5 was cracked in 2004 — attackers can create two different inputs with the same hash (**collision attack**). By 2012, Stuxnet used MD5 collisions to forge Windows certificates.
 
 ```javascript
-// ❌ 永远不要这样存密码
-const hash = md5(password); // 被彩虹表秒破
+// ❌ Never store passwords this way
+const hash = md5(password); // Crackable in milliseconds with rainbow tables
 
-// ✅ 用 SHA-256 + salt
+// ✅ Use SHA-256 with a salt
 const hash = sha256(password + unique_salt);
 ```
 
-## SHA-256 的实际应用
+## Common Real-World Uses
 
-### 1. 密码存储
-```php
-// Laravel 默认使用 bcrypt，但可以添加 SHA-256 层
-$hash = hash('sha256', $password . $salt);
-```
-
-### 2. 文件完整性校验
+### 1. File Integrity Checksums
 ```bash
-# 下载文件后验证 SHA-256
-sha256sum example-file.zip
-# 对比官方提供的哈希值
+# Downloaded a file? Verify its hash
+sha256sum large-file.zip
+# Compare against the hash published on the website
 ```
 
-### 3. 区块链和数字签名
-比特币使用 SHA-256，以太坊使用 Keccak-256（SHA-3 系列）。
+### 2. Password Storage (with salt)
+```php
+// PHP / Laravel
+$hash = hash('sha256', $password . $env_salt);
+```
 
-## 为什么有多个 SHA 算法？
+### 3. Digital Signatures & Blockchain
+Bitcoin uses SHA-256. Ethereum uses Keccak-256 (SHA-3 family).
 
-SHA 家族由美国国家安全局（NSA）设计：
+### 4. Git Commits
+Every Git commit is identified by a SHA-1 hash of its contents.
 
-- **SHA-1** — 160位，2017年被 Chrome/Firefox 废弃
-- **SHA-256** — 256位，目前最流行的安全哈希
-- **SHA-384/512** — 更长，适合极高安全需求
+## The SHA Family Explained
 
-## 使用哈希生成器
+The SHA family was designed by the NSA:
 
-👉 **[哈希生成器 →](/tools/hash-generator)**
+- **SHA-1** — 160 bits. Deprecated by Google, Chrome, Firefox. Should not be used for anything new.
+- **SHA-256** — 256 bits. The current standard for most security applications.
+- **SHA-384/512** — Longer hashes for financial, government, and military-grade security.
 
-输入任意文本，选择算法，即可生成对应哈希值。支持：
+## Quick Reference
 
-- MD5、SHA-1、SHA-256、SHA-384、SHA-512
-- 实时计算，无需服务器
-- 批量处理多个输入
+| Input | MD5 | SHA-256 |
+|-------|-----|---------|
+| `"hello"` | `5d41402...` | `2cf24db...` |
+| `"Hello"` | `8b1a995...` | `185f8db...` |
+| `""` | `d41d8cd...` | `e3b0c44...` |
+
+Note how a single character change (`hello` → `Hello`) produces a completely different hash — that's the avalanche effect.
+
+## How to Generate Hashes
+
+👉 **[Hash Generator →](/tools/hash-generator)**
+
+Generate MD5, SHA-1, SHA-256, SHA-384, or SHA-512 hashes instantly. All computation happens locally in your browser — nothing is sent to any server.

@@ -1,38 +1,38 @@
 ---
-title: "YAML 入门指南：JSON 开发者视角"
-description: "YAML 和 JSON 哪个更好？这篇从 JSON 开发者视角介绍 YAML 的基本语法、数据类型、缩进规则，以及何时该用 YAML 而不是 JSON。"
-slug: yaml-beginners-guide
+title: "YAML for JSON Developers: A Practical Introduction"
+description: "YAML and JSON look similar but have key differences. This guide covers YAML basics, syntax gotchas, when to use YAML vs JSON, and how to convert between them."
+slug: yaml-for-json-developers
 date: 2026-04-15
-category: 开发者工具
-tags: [YAML, JSON, 配置文件, DevOps, Kubernetes]
+category: Developer Tools
+tags: [YAML, JSON, Configuration, DevOps, Kubernetes]
 author: Toolblip Team
 readingTime: 5 min
 ---
 
-# YAML 入门指南：JSON 开发者视角
+# YAML for JSON Developers: A Practical Introduction
 
-如果你用过 JSON，学习 YAML 会非常自然 — 但有几个关键区别需要注意。
+If you work with APIs or configuration files, you've likely encountered YAML. Docker Compose, Kubernetes, GitHub Actions, Ansible — all use YAML. This guide gets you productive fast.
 
-## YAML vs JSON：核心区别
+## YAML vs JSON at a Glance
 
-| 特性 | JSON | YAML |
-|------|------|------|
-| 注释 | ❌ 不支持 | ✅ 支持 |
-| 尾部逗号 | ❌ 不允许 | ✅ 允许 |
-| 引号 | 字符串必须引 | 通常不需要 |
-| 缩进 | 任意空白 | **必须空格**（不能用 Tab） |
-| 类型转换 | 字符串 vs 数字 | 自动识别类型 |
+| Feature | JSON | YAML |
+|---------|------|------|
+| Comments | ❌ | ✅ |
+| Trailing commas | ❌ | ✅ |
+| Quotes for strings | Required for special chars | Usually optional |
+| Indentation | Any whitespace | **Spaces only** (no tabs!) |
+| Type inference | Limited | Automatic |
 
-## 基本语法
+## Basic Syntax
 
-### 对象
+### Objects
 ```yaml
-# JSON: { "name": "Toolblip", "version": "1.0" }
+# JSON equivalent: { "name": "Toolblip", "version": "1.0" }
 name: Toolblip
 version: "1.0"
 ```
 
-### 数组/列表
+### Arrays / Lists
 ```yaml
 # JSON: { "tools": ["JSON Formatter", "Base64", "Cron"] }
 tools:
@@ -41,68 +41,52 @@ tools:
   - Cron
 ```
 
-### 嵌套
+### Nested Structures
 ```yaml
 server:
   host: api.toolblip.com
   port: 443
   ssl: true
+  tags:
+    - production
+    - api
 ```
 
-### 多行字符串
-```yaml
-description: |
-  这是一个
-  多行字符串
-  保留换行
+## The Pitfalls
 
-description2: >
-  这是另一个
-  多行字符串
-  折叠为单行
-```
+### 1. Tabs Are Forbidden
 
-## 自动类型识别
-
-YAML 会自动推断类型：
+YAML parsers expect spaces only. If your editor uses tabs, you're going to have a bad time.
 
 ```yaml
-string: hello        # → "hello"
-number: 42           # → 42
-float: 3.14          # → 3.14
-boolean: true        # → true
-null_value: ~        # → null
-date: 2026-04-15     # → Date 对象
-```
-
-⚠️ **小心隐式转换：**
-```yaml
-# ⚠️ YAML 会把 "yes" 解析为 true！
-answer: yes          # → true (布尔值)
-
-# ✅ 字符串时用引号
-answer: "yes"        # → "yes"
-```
-
-## 常见问题
-
-### 1. Tab vs 空格
-
-YAML **只允许空格**，不允许 Tab。配置编辑器时务必设置「用空格替代 Tab」。
-
-### 2. 冒号后的空格
-
-```yaml
-# ❌ 错误
-name:Toolblip
-
-# ✅ 正确
+# ❌ Tab indentation will fail
 name: Toolblip
+	version: 1.0
+
+# ✅ Spaces only
+name: Toolblip
+version: 1.0
 ```
 
-### 3. 多文档
+### 2. Type Coercion Can Bite You
 
-一个文件可以包含多个 YAML 文档，用 `---` 分隔：
+YAML auto-converts values to types — sometimes unexpectedly.
+
+```yaml
+# ⚠️ "yes" becomes boolean true
+answer: yes         # → true (boolean!)
+
+# ✅ Use quotes for strings
+answer: "yes"       # → "yes" (string)
+```
+
+### 3. The `?` Question Mark
+
+Used when you need to specify both day-of-month and day-of-week without conflict (like cron expressions).
+
+## Multi-Document Files
+
+One YAML file can contain multiple documents separated by `---`:
 
 ```yaml
 ---
@@ -113,35 +97,34 @@ app: backend
 env: staging
 ```
 
-## YAML 适用场景
+## When to Use YAML vs JSON
 
-✅ **配置文件**（优于 JSON）：
-- Docker Compose
-- Kubernetes manifests
-- GitHub Actions
-- Ansible playbooks
-- Rails `config/database.yml`
+**Use YAML for:**
+- Configuration files (Docker, Kubernetes, GitHub Actions)
+- Human-edited files where comments add value
+- Files that benefit from cleaner, more readable syntax
 
-❌ **API 请求体**（用 JSON）：
-- REST API 请求/响应
-- 配置文件远程传输
+**Use JSON for:**
+- API request/response bodies
+- Data exchange between systems
+- Machine-readable files where every byte matters
 
-## JSON ↔ YAML 互相转换
+## Convert Between YAML and JSON
 
-👉 **[YAML ↔ JSON 转换器 →](/tools/yaml-converter)**
+👉 **[YAML ↔ JSON Converter →](/tools/yaml-converter)**
 
-粘贴 JSON 转 YAML，或粘贴 YAML 转 JSON。支持验证语法。
+Paste YAML → get JSON, or paste JSON → get YAML. Also validates syntax before converting.
 
-## Python / JavaScript 用法
+## Python and JavaScript
 
 ```python
 # Python
 import yaml
 
 with open('config.yaml') as f:
-    config = yaml.safe_load(f)
+    config = yaml.safe_load(f)  # safe_load prevents code execution
 
-# 安全加载（防止代码注入）
+# Always use safe_load with untrusted input
 yaml.safe_load(user_input)
 ```
 
@@ -152,6 +135,12 @@ import yaml from 'js-yaml';
 const config = yaml.load(fs.readFileSync('config.yaml', 'utf8'));
 ```
 
----
+## Key Takeaways
 
-YAML 是现代开发的重要组成部分。记住：缩进用空格、注释可用、小心隐式类型转换 —— 就能安全使用它。
+1. **Spaces only** — no tabs, ever
+2. **Quotes protect strings** from accidental type conversion
+3. **Comments are free** — use them in configuration files
+4. **Automatic types** — `yes`/`no` become booleans, `42` becomes a number
+5. **`---` separates documents** in multi-document files
+
+YAML is a superpower for configuration. Once you know the gotchas, it's much more readable than JSON for human-edited files.
