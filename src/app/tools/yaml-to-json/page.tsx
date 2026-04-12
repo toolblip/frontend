@@ -13,9 +13,21 @@ export const toolMeta = {
   category: 'conversion',
 };
 
+const canonicalUrl = `https://toolblip.com/tools/yaml-to-json/`;
+
 export const metadata = {
   title: 'YAML to JSON Converter | Toolblip',
   description: toolMeta.description,
+  alternates: { canonical: canonicalUrl },
+  openGraph: {
+    title: toolMeta.name,
+    description: toolMeta.description,
+    images: [{ url: 'https://toolblip.com/og-default.png' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@HarunRRayhan',
+  },
 };
 
 export default function YamlToJsonPage() {

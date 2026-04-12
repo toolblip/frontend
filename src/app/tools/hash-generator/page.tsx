@@ -13,9 +13,23 @@ export const toolMeta = {
   category: 'security',
 };
 
-export const metadata = {
+import type { Metadata } from 'next';
+
+const canonicalUrl = `https://toolblip.com/tools/hash-generator/`;
+
+export const metadata: Metadata = {
   title: 'Hash Generator | Toolblip',
   description: toolMeta.description,
+  alternates: { canonical: canonicalUrl },
+  openGraph: {
+    title: toolMeta.name,
+    description: toolMeta.description,
+    images: [{ url: 'https://toolblip.com/og-default.png' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@HarunRRayhan',
+  },
 };
 
 export default function HashGeneratorPage() {

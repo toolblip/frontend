@@ -10,6 +10,24 @@ export const toolMeta = {
   category: 'developer',
 };
 
+
+const canonicalUrl = `https://toolblip.com/tools/uuid-generator/`;
+
+export const metadata = {
+  title: `${toolMeta.name} | Toolblip`,
+  description: toolMeta.description,
+  alternates: { canonical: canonicalUrl },
+  openGraph: {
+    title: toolMeta.name,
+    description: toolMeta.description,
+    images: [{ url: 'https://toolblip.com/og-default.png' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@HarunRRayhan',
+  },
+};
+
 // ─── UUID v7 implementation ───────────────────────────────────────────────────
 
 function generateUuidV7(): string {

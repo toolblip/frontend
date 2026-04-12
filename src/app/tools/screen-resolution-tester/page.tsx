@@ -12,6 +12,23 @@ export const toolMeta = {
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+const canonicalUrl = `https://toolblip.com/tools/screen-resolution-tester/`;
+
+export const metadata = {
+  title: `${toolMeta.name} | Toolblip`,
+  description: toolMeta.description,
+  alternates: { canonical: canonicalUrl },
+  openGraph: {
+    title: toolMeta.name,
+    description: toolMeta.description,
+    images: [{ url: 'https://toolblip.com/og-default.png' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@HarunRRayhan',
+  },
+};
+
 interface DevicePreset {
   label: string;
   width: number;

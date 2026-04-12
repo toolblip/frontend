@@ -13,9 +13,23 @@ export const toolMeta = {
   category: 'css',
 };
 
-export const metadata = {
+import type { Metadata } from 'next';
+
+const canonicalUrl = `https://toolblip.com/tools/css-gradient-generator/`;
+
+export const metadata: Metadata = {
   title: 'CSS Gradient Generator | Toolblip',
   description: toolMeta.description,
+  alternates: { canonical: canonicalUrl },
+  openGraph: {
+    title: toolMeta.name,
+    description: toolMeta.description,
+    images: [{ url: 'https://toolblip.com/og-default.png' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@HarunRRayhan',
+  },
 };
 
 export default function CssGradientGeneratorPage() {

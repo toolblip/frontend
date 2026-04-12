@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
+import type { Metadata } from 'next';
 
 // Dynamically import client components (no SSR needed for these tools)
 const toolComponents: Record<string, React.ComponentType> = {
@@ -99,13 +100,24 @@ export async function generateStaticParams() {
   return Object.keys(toolsMeta).map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: Props) {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const meta = toolsMeta[slug];
   if (!meta) return {};
+  const canonicalUrl = `https://toolblip.com/tools/${slug}/`;
   return {
     title: `${meta.title} | Toolblip`,
     description: meta.description,
+    alternates: { canonical: canonicalUrl },
+    openGraph: {
+      title: meta.title,
+      description: meta.description,
+      images: [{ url: 'https://toolblip.com/og-default.png' }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      site: '@HarunRRayhan',
+    },
   };
 }
 

@@ -14,9 +14,21 @@ export const toolMeta = {
   category: 'conversion',
 };
 
+const canonicalUrl = `https://toolblip.com/tools/image-format-converter/`;
+
 export const metadata: Metadata = {
   title: `${toolMeta.name} | Toolblip`,
   description: toolMeta.description,
+  alternates: { canonical: canonicalUrl },
+  openGraph: {
+    title: toolMeta.name,
+    description: toolMeta.description,
+    images: [{ url: 'https://toolblip.com/og-default.png' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@HarunRRayhan',
+  },
 };
 
 export default function ImageFormatConverterPage() {

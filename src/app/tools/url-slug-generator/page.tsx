@@ -9,6 +9,23 @@ export const toolMeta = {
   category: 'web',
 };
 
+const canonicalUrl = `https://toolblip.com/tools/url-slug-generator/`;
+
+export const metadata = {
+  title: `${toolMeta.name} | Toolblip`,
+  description: toolMeta.description,
+  alternates: { canonical: canonicalUrl },
+  openGraph: {
+    title: toolMeta.name,
+    description: toolMeta.description,
+    images: [{ url: 'https://toolblip.com/og-default.png' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@HarunRRayhan',
+  },
+};
+
 // ─── Slug logic ───────────────────────────────────────────────────────────────
 
 type Separator = '-' | '_';
