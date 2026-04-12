@@ -20,7 +20,6 @@
     "js-yaml": "^4.1.1",
     "marked": "^18.0.0",
     "next": "^16.2.3",
-    "next-sitemap": "^4.2.3",
     "postcss": "^8.5.9",
     "postcss-preset-env": "^11.2.0",
     "react": "^19.2.5",
