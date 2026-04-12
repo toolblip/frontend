@@ -1,43 +1,115 @@
-# Astro Starter Kit: Minimal
+# Toolblip
 
-```sh
-npm create astro@latest -- --template minimal
+Free browser-based developer tools. 100% client-side, nothing leaves your browser.
+
+## Tech Stack
+
+- **Frontend:** Next.js 16 (App Router)
+- **Styling:** Tailwind CSS v4
+- **Backend:** Laravel 11 + Sanctum (separate repo: [toolblip-api](https://github.com/toolblip/toolblip-api))
+- **Hosting:** Vercel (frontend) + Railway (API)
+- **DNS/CDN:** Cloudflare
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 22+
+- `NEXT_PUBLIC_API_URL` pointing to the API backend
+
+### Local Development
+
+```bash
+# Install dependencies
+npm install
+
+# Copy environment variables
+cp .env.example .env.local
+
+# Start dev server
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Open [http://localhost:3000](http://localhost:3000).
 
-## 🚀 Project Structure
+### Production Build
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```bash
+npm run build
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+Output goes to `.next/`. Deploy to Vercel:
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+```bash
+npm i -g vercel
+vercel --prod
+```
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Environment Variables
 
-## 🧞 Commands
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `NEXT_PUBLIC_API_URL` | Laravel API base URL | `https://api.toolblip.com` |
+| `NEXT_PUBLIC_APP_URL` | Frontend base URL | `https://toolblip.com` |
+| `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Google Analytics 4 ID (optional) | — |
 
-All commands are run from the root of the project, from a terminal:
+## Project Structure
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+```
+src/
+├── app/                    # Next.js App Router pages
+│   ├── blog/              # Blog (markdown files in /blog)
+│   ├── tools/
+│   │   ├── page.tsx       # Tools listing
+│   │   └── [slug]/        # Individual tool pages
+│   ├── login/
+│   ├── signup/
+│   └── directory/
+├── components/tools/       # React client components (one per tool)
+└── lib/
+    ├── api.ts             # API client
+    ├── auth.ts            # Auth helpers
+    └── usage.ts           # Client-side usage tracking
+```
 
-## 👀 Want to learn more?
+## API
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+The Laravel API lives in [toolblip/toolblip-api](https://github.com/toolblip/toolblip-api).
+
+API documentation: [api.toolblip.com](https://api.toolblip.com/docs)
+
+## Deployment
+
+### Vercel (Frontend)
+
+Connect the GitHub repo to Vercel. Environment variables are configured in the Vercel dashboard.
+
+### Cloudflare DNS
+
+```
+toolblip.com  → CNAME → cname.vercel.com  (proxied)
+www           → CNAME → cname.vercel.com  (proxied)
+```
+
+SSL mode: **Full (strict)**
+
+## Blog
+
+Blog posts live in `/blog/*.md`. Frontmatter:
+
+```yaml
+---
+title: Post Title
+description: SEO description
+slug: url-slug
+date: 2026-04-12
+category: Guide
+tags: [Tag1, Tag2]
+author: Author Name
+readingTime: 5 min
+---
+```
+
+## License
+
+MIT
