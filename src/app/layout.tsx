@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import Script from 'next/script';
+import CookieBanner from '@/components/CookieBanner';
+import Analytics from '@/components/Analytics';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -27,20 +29,6 @@ export default function RootLayout({
     <html lang="en" className="bg-gray-950 text-gray-100 antialiased">
       <head>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
-              strategy="lazyOnload"
-            />
-            <Script id="ga4" strategy="lazyOnload">
-              {`window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}');`}
-            </Script>
-          </>
-        )}
       </head>
       <body className="min-h-screen flex flex-col">
         <a
@@ -95,32 +83,9 @@ export default function RootLayout({
           </div>
         </footer>
 
+        <Analytics />
         {/* Cookie consent banner */}
-        <div
-          id="cookie-banner"
-          className="hidden fixed bottom-0 inset-x-0 z-50 bg-gray-900 border-t border-gray-700 p-4"
-        >
-          <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center gap-4 text-sm">
-            <p className="text-gray-300 flex-1">
-              We use analytics cookies to understand how tools are used. No personal data is sold or shared.{' '}
-              <a href="/privacy" className="underline text-green-400 ml-1">Privacy policy</a>
-            </p>
-            <div className="flex gap-3 shrink-0">
-              <button
-                id="consent-accept"
-                className="bg-green-500 hover:bg-green-400 text-black font-medium px-4 py-1.5 rounded-lg text-sm transition-colors"
-              >
-                Accept
-              </button>
-              <button
-                id="consent-decline"
-                className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-1.5 rounded-lg text-sm transition-colors"
-              >
-                Decline
-              </button>
-            </div>
-          </div>
-        </div>
+        <CookieBanner />
       </body>
     </html>
   );
