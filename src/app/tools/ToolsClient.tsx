@@ -60,7 +60,7 @@ export default function ToolsClient() {
           type="search"
           value={query}
           onChange={e => setQuery(e.target.value)}
-          placeholder="Search tools..."
+          placeholder="Search tools..." aria-label="Search tools by name, description, or category"
           className="w-full bg-gray-900 border border-gray-700 text-white rounded-lg px-4 py-3 pl-10 placeholder-gray-500 focus:outline-none focus:border-green-600 transition-colors"
         />
         <svg

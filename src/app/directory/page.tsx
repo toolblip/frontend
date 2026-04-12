@@ -48,6 +48,7 @@ export default function DirectoryPage() {
           {categories.map((cat) => (
             <button
               key={cat.name}
+              aria-label={"Filter by " + cat.name}
               className="bg-gray-900 border border-gray-800 hover:border-green-600 rounded-xl p-4 text-left transition-all group"
             >
               <span className="text-2xl block mb-2">{cat.emoji}</span>
@@ -97,9 +98,9 @@ export default function DirectoryPage() {
           ))}
         </div>
 
-        <p className="text-center text-gray-500 text-sm mt-6">
+        <p className="text-center text-gray-400 text-sm mt-6">
           More servers coming soon. Want to add one?{' '}
-          <button className="text-green-400 hover:text-green-300 transition-colors">
+          <button aria-label="Submit a server to the directory" className="text-green-400 hover:text-green-300 underline transition-colors">
             Submit a server
           </button>
         </p>
