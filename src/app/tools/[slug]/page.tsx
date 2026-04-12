@@ -16,6 +16,14 @@ const toolComponents: Record<string, React.ComponentType> = {
   'remove-duplicate-lines': dynamic(() => import('@/components/tools/RemoveDuplicateLinesClient')),
   'markdown-to-html': dynamic(() => import('@/components/tools/MarkdownToHtmlClient')),
   'yaml-to-json': dynamic(() => import('@/components/tools/YamlToJsonClient')),
+  'cron-parser': dynamic(() => import('@/components/tools/CronParserClient')),
+  'css-border-radius-generator': dynamic(() => import('@/components/tools/CssBorderRadiusGeneratorClient')),
+  'css-gradient-generator': dynamic(() => import('@/components/tools/CssGradientGeneratorClient')),
+  'hash-generator': dynamic(() => import('@/components/tools/HashGeneratorClient')),
+  'image-format-converter': dynamic(() => import('@/components/tools/ImageFormatConverterClient')),
+  'percentage-calculator': dynamic(() => import('@/components/tools/PercentageCalculatorClient')),
+  'screen-resolution-tester': dynamic(() => import('@/components/tools/ScreenResolutionTesterClient')),
+  'url-slug-generator': dynamic(() => import('@/components/tools/UrlSlugGeneratorClient')),
 };
 
 const toolsMeta: Record<string, {
@@ -89,6 +97,54 @@ const toolsMeta: Record<string, {
     description: 'Convert YAML to JSON instantly with pretty-print, compact output, and custom indent size. 100% client-side — nothing leaves your browser.',
     emoji: '🔄',
     category: 'Conversion',
+  },
+  'cron-parser': {
+    title: 'Cron Expression Parser',
+    description: 'Parse and validate cron expressions with human-readable descriptions and next 5 run times.',
+    emoji: '⏱️',
+    category: 'Developer',
+  },
+  'css-border-radius-generator': {
+    title: 'CSS Border Radius Generator',
+    description: 'Visually generate CSS border-radius values with per-corner controls, live preview, and one-click copy.',
+    emoji: '⬜',
+    category: 'CSS',
+  },
+  'css-gradient-generator': {
+    title: 'CSS Gradient Generator',
+    description: 'Create linear, radial, and conic CSS gradients with a live preview, color stops, angle control, and preset library.',
+    emoji: '🌈',
+    category: 'CSS',
+  },
+  'hash-generator': {
+    title: 'Hash Generator',
+    description: "Generate MD5, SHA-1, SHA-256, and SHA-512 hashes using your browser's native crypto API.",
+    emoji: '#',
+    category: 'Developer',
+  },
+  'image-format-converter': {
+    title: 'Image Format Converter',
+    description: 'Convert images between JPEG, PNG, WebP, and AVIF with quality control and side-by-side preview.',
+    emoji: '🖼️',
+    category: 'Image',
+  },
+  'percentage-calculator': {
+    title: 'Percentage Calculator',
+    description: 'Calculate percentages, percentage change, tips, and discounts instantly.',
+    emoji: '%',
+    category: 'Math',
+  },
+  'screen-resolution-tester': {
+    title: 'Screen Resolution Tester',
+    description: 'Test any screen resolution or viewport size with device presets, custom dimensions, and a live scaled preview.',
+    emoji: '🖥️',
+    category: 'Developer',
+  },
+  'url-slug-generator': {
+    title: 'URL Slug Generator',
+    description: 'Convert any text into URL-friendly slugs with customizable separator and length limit.',
+    emoji: '🔗',
+    category: 'Developer',
   },
 };
 

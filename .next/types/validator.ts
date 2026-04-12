@@ -63,73 +63,10 @@ type LayoutConfig<Route extends LayoutRoutes = LayoutRoutes> = {
   type __Unused = __Check
 }
 
-// Validate ../../src/app/tools/cron-parser/page.tsx
-{
-  type __IsExpected<Specific extends AppPageConfig<"/tools/cron-parser">> = Specific
-  const handler = {} as typeof import("../../src/app/tools/cron-parser/page.js")
-  type __Check = __IsExpected<typeof handler>
-  // @ts-ignore
-  type __Unused = __Check
-}
-
-// Validate ../../src/app/tools/css-gradient-generator/page.tsx
-{
-  type __IsExpected<Specific extends AppPageConfig<"/tools/css-gradient-generator">> = Specific
-  const handler = {} as typeof import("../../src/app/tools/css-gradient-generator/page.js")
-  type __Check = __IsExpected<typeof handler>
-  // @ts-ignore
-  type __Unused = __Check
-}
-
-// Validate ../../src/app/tools/hash-generator/page.tsx
-{
-  type __IsExpected<Specific extends AppPageConfig<"/tools/hash-generator">> = Specific
-  const handler = {} as typeof import("../../src/app/tools/hash-generator/page.js")
-  type __Check = __IsExpected<typeof handler>
-  // @ts-ignore
-  type __Unused = __Check
-}
-
 // Validate ../../src/app/tools/page.tsx
 {
   type __IsExpected<Specific extends AppPageConfig<"/tools">> = Specific
   const handler = {} as typeof import("../../src/app/tools/page.js")
-  type __Check = __IsExpected<typeof handler>
-  // @ts-ignore
-  type __Unused = __Check
-}
-
-// Validate ../../src/app/tools/percentage-calculator/page.tsx
-{
-  type __IsExpected<Specific extends AppPageConfig<"/tools/percentage-calculator">> = Specific
-  const handler = {} as typeof import("../../src/app/tools/percentage-calculator/page.js")
-  type __Check = __IsExpected<typeof handler>
-  // @ts-ignore
-  type __Unused = __Check
-}
-
-// Validate ../../src/app/tools/url-slug-generator/page.tsx
-{
-  type __IsExpected<Specific extends AppPageConfig<"/tools/url-slug-generator">> = Specific
-  const handler = {} as typeof import("../../src/app/tools/url-slug-generator/page.js")
-  type __Check = __IsExpected<typeof handler>
-  // @ts-ignore
-  type __Unused = __Check
-}
-
-// Validate ../../src/app/tools/uuid-generator/page.tsx
-{
-  type __IsExpected<Specific extends AppPageConfig<"/tools/uuid-generator">> = Specific
-  const handler = {} as typeof import("../../src/app/tools/uuid-generator/page.js")
-  type __Check = __IsExpected<typeof handler>
-  // @ts-ignore
-  type __Unused = __Check
-}
-
-// Validate ../../src/app/tools/yaml-to-json/page.tsx
-{
-  type __IsExpected<Specific extends AppPageConfig<"/tools/yaml-to-json">> = Specific
-  const handler = {} as typeof import("../../src/app/tools/yaml-to-json/page.js")
   type __Check = __IsExpected<typeof handler>
   // @ts-ignore
   type __Unused = __Check
