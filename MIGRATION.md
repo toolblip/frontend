@@ -56,28 +56,27 @@ src/
 
 ## Migration Phases
 
-### Phase 1: Static Marketing Pages
-**Priority: High | Effort: Low | Risk: Low**
+### ✅ Phase 1: Static Marketing Pages — DONE
 
-Copy-paste these pages — they're mostly static HTML with Tailwind:
+All pages migrated:
 
-| Page | Astro File | Next.js Route | Notes |
-|------|-----------|---------------|-------|
-| Homepage | `pages/index.astro` | `app/page.tsx` | Already done (Next.js) |
-| About | `pages/about.astro` | `app/about/page.tsx` | Static text |
-| Privacy | `pages/privacy.astro` | `app/privacy/page.tsx` | Static text |
-| Terms | `pages/terms.astro` | `app/terms/page.tsx` | Static text |
-| Donate | `pages/donate.astro` | `app/donate/page.tsx` | Static text |
-| Advertise | `pages/advertise.astro` | `app/advertise/page.tsx` | Static text |
-| 404 | `pages/404.astro` | `app/not-found.tsx` | Next.js special file |
+| Page | Next.js Route | Status |
+|------|---------------|--------|
+| About | `app/about/page.tsx` | ✅ |
+| Privacy | `app/privacy/page.tsx` | ✅ |
+| Terms | `app/terms/page.tsx` | ✅ |
+| Donate | `app/donate/page.tsx` | ✅ |
+| Advertise | `app/advertise/page.tsx` | ✅ |
+| 404 | `app/not-found.tsx` | ✅ |
 
-**What to copy:** Page content and Tailwind classes
-**What changes:** `<BaseLayout>` → `<RootLayout>` children pattern; Astro component syntax → JSX
+### ✅ Phase 2: Auth Pages — DONE
 
-### Phase 2: Auth Pages (Login + Signup)
-**Priority: High | Effort: Medium | Risk: Medium**
+Both pages created as client components:
 
-Both pages have working forms that call the Laravel API.
+| Page | Next.js Route | Status |
+|------|---------------|--------|
+| Login | `app/login/page.tsx` | ✅ |
+| Signup | `app/signup/page.tsx` | ✅ |
 
 | Page | Next.js Route | Key Logic |
 |------|---------------|-----------|
@@ -94,26 +93,31 @@ Both pages have working forms that call the Laravel API.
 
 **Post-login redirect:** Set cookie `tb_session=token` and redirect to `/`
 
-### Phase 3: Directory + Next.js Polish
-**Priority: Medium | Effort: Low | Risk: Low**
+### ✅ Phase 3: Directory — Already Done
 
-- `app/directory/page.tsx` already exists and works
-- Move tool data fetching from static hardcoded array → API call to `/api/tools`
-- Add search/filter UI connecting to `getTools()` from `lib/api.ts`
+`app/directory/page.tsx` was already built in the initial Next.js scaffold.
 
-### Phase 4: Cleanup
-**Priority: Low | Effort: Low | Risk: Low**
+### ⏳ Phase 4: Cleanup — Pending
+
+**Do this after verifying auth works in Next.js:**
 
 Delete migrated Astro files:
 ```
-src/pages/           ← entire directory
-src/layouts/        ← entire directory
+src/pages/           ← entire directory (stale, migrated)
+src/layouts/        ← entire directory (BaseLayout, ToolLayout)
 src/components/
-  ToolCard.astro    ← delete
-  SponsorCard.astro  ← delete
-  SponsorSlot.astro  ← delete
-  UsageLimitPopup.astro ← delete
+  ToolCard.astro    ← stale
+  SponsorCard.astro  ← stale
+  SponsorSlot.astro  ← stale
+  UsageLimitPopup.astro ← stale
+  SponsorSlot.astro  ← stale
 ```
+
+**Do NOT delete:**
+- `src/components/tools/*.tsx` — all 19 React client components
+- `src/lib/` — API client, auth, usage tracking
+- `public/` — assets
+- `blog/` — markdown blog posts
 
 ---
 
