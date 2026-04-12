@@ -82,15 +82,15 @@ export default function RootLayout({
 
         {/* Footer */}
         <footer className="border-t border-gray-800 mt-16 py-8">
-          <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+          <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-400">
             <span>
               &copy; {new Date().getFullYear()} Toolblip — 100% client-side, nothing leaves your browser.
             </span>
             <nav aria-label="Footer navigation" className="flex gap-5">
-              <a href="/about" className="hover:text-gray-300 transition-colors">About</a>
-              <a href="/privacy" className="hover:text-gray-300 transition-colors">Privacy</a>
-              <a href="/terms" className="hover:text-gray-300 transition-colors">Terms</a>
-              <a href="/donate" className="hover:text-gray-300 transition-colors">Donate</a>
+              <a href="/about" className="hover:text-gray-200 transition-colors">About</a>
+              <a href="/privacy" className="hover:text-gray-200 transition-colors">Privacy</a>
+              <a href="/terms" className="hover:text-gray-200 transition-colors">Terms</a>
+              <a href="/donate" className="hover:text-gray-200 transition-colors">Donate</a>
             </nav>
           </div>
         </footer>

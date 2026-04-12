@@ -88,7 +88,7 @@ export default function BlogPage() {
                 {post.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="text-xs text-gray-500 bg-gray-800 px-2 py-0.5 rounded"
+                    className="text-xs text-gray-300 bg-gray-700 px-2 py-0.5 rounded"
                   >
                     {tag}
                   </span>

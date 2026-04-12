@@ -90,8 +90,8 @@ export default function ToolsClient() {
             onClick={() => setActiveCategory(cat)}
             className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
               activeCategory === cat
-                ? 'bg-green-600 text-white'
-                : 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white'
+                ? 'bg-green-700 text-white'
+                : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
             }`}
           >
             {cat}
@@ -126,7 +126,7 @@ export default function ToolsClient() {
                   <p className="text-sm text-gray-400 mt-1 leading-relaxed line-clamp-2">
                     {tool.description}
                   </p>
-                  <span className="inline-block mt-2 text-xs text-gray-500 bg-gray-800 px-2 py-0.5 rounded">
+                  <span className="inline-block mt-2 text-xs text-gray-300 bg-gray-700 px-2 py-0.5 rounded">
                     {tool.category}
                   </span>
                 </div>

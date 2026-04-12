@@ -82,7 +82,7 @@ export default function DirectoryPage() {
                   <h3 className="font-semibold text-white group-hover:text-green-400 transition-colors">
                     {server.name}
                   </h3>
-                  <span className="inline-block mt-1 text-xs text-gray-500 bg-gray-800 px-2 py-0.5 rounded">
+                  <span className="inline-block mt-1 text-xs text-gray-300 bg-gray-700 px-2 py-0.5 rounded">
                     {server.category}
                   </span>
                   <p className="text-sm text-gray-400 mt-2 leading-relaxed">
