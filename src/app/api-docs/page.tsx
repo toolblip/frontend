@@ -37,7 +37,7 @@ export default function ApiDocsPage() {
 
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-5 mb-6">
           <p className="text-xs text-gray-500 mb-2">Example request</p>
-          <pre className="text-sm text-gray-300 overflow-x-auto">
+          <pre className="text-sm text-gray-300 overflow-x-auto whitespace-pre-wrap break-words">
             <code>{`Authorization: Bearer tb_your_token_here`}</code>
           </pre>
         </div>
@@ -69,7 +69,7 @@ export default function ApiDocsPage() {
 
         <div className="mt-6 bg-gray-900 border border-gray-800 rounded-xl p-5">
           <h4 className="text-white text-sm font-medium mb-3">Query parameters for /tools</h4>
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-0">
             <thead>
               <tr className="text-gray-500 text-xs text-left border-b border-gray-800">
                 <th className="pb-2 font-medium">Parameter</th>
@@ -148,7 +148,7 @@ export default function ApiDocsPage() {
         </h2>
 
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-0">
             <thead>
               <tr className="text-gray-500 text-xs text-left border-b border-gray-800">
                 <th className="pb-2 font-medium">Tier</th>
@@ -185,7 +185,7 @@ export default function ApiDocsPage() {
         </p>
 
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-          <pre className="text-sm text-gray-300 overflow-x-auto">
+          <pre className="text-sm text-gray-300 overflow-x-auto whitespace-pre-wrap break-words">
 {`{
   "error": {
     "code": "VALIDATION_ERROR",
@@ -198,7 +198,7 @@ export default function ApiDocsPage() {
 
         <div className="mt-6 bg-gray-900 border border-gray-800 rounded-xl p-5">
           <h4 className="text-white text-sm font-medium mb-3">Error codes</h4>
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-0">
             <thead>
               <tr className="text-gray-500 text-xs text-left border-b border-gray-800">
                 <th className="pb-2 font-medium">Code</th>

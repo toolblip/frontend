@@ -20,8 +20,8 @@ export default function HomePage() {
       {/* Hero */}
       <section className="py-16 px-4 text-center border-b border-gray-800">
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4 tracking-tight">
-            Every tool you need — <br />
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 tracking-tight">
+            Every tool you need —{' '}
             <span className="text-green-400">no account, no server, no BS.</span>
           </h1>
           <p className="text-lg text-gray-400 mb-8 max-w-xl mx-auto">

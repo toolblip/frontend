@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function AdvertisePage() {
   return (
-    <div className="max-w-2xl mx-auto px-4 py-16">
+    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
       <h1 className="text-3xl font-bold text-white mb-4">Advertise on Toolblip</h1>
       <p className="text-gray-400 mb-10">
         Toolblip is a growing collection of free developer tools used by developers every day.

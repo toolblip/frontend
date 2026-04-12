@@ -62,7 +62,7 @@ export default async function BlogPostPage({ params }: Props) {
   const { html, data } = post;
 
   return (
-    <article className="max-w-2xl mx-auto px-4 py-16">
+    <article className="max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
       {/* Back link */}
       <Link
         href="/blog"

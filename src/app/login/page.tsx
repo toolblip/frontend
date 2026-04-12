@@ -36,7 +36,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto px-4 py-16">
+    <div className="max-w-md mx-auto px-4 sm:px-6 py-10 sm:py-16">
       <h1 className="text-2xl font-bold text-white mb-8 text-center">Sign in</h1>
 
       <a
