@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -26,6 +27,20 @@ export default function RootLayout({
     <html lang="en" className="bg-gray-950 text-gray-100 antialiased">
       <head>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
+              strategy="lazyOnload"
+            />
+            <Script id="ga4" strategy="lazyOnload">
+              {`window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}');`}
+            </Script>
+          </>
+        )}
       </head>
       <body className="min-h-screen flex flex-col">
         <a
