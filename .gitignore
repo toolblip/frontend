@@ -30,3 +30,15 @@ pnpm-debug.log*
 .idea/
 .browser/
 .browser/
+
+# OpenClaw workspace files (agent-specific, not project files)
+SOUL.md
+AGENTS.md
+MEMORY.md
+TOOLS.md
+HEARTBEAT.md
+IDENTITY.md
+BOOTSTRAP.md
+DREAMS.md
+memory/
+.openclaw/
