@@ -1,4 +1,7 @@
 import Link from 'next/link';
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
 
 const tools = [
   { name: 'Word Counter', slug: 'word-counter', description: 'Count words, characters, sentences, and reading time instantly.', emoji: '📝' },
@@ -14,7 +17,30 @@ const tools = [
   { name: 'Percentage Calculator', slug: 'percentage-calculator', description: 'Calculate percentages, percentage change, tips, and discounts instantly.', emoji: '%' },
 ];
 
+function getRecentPosts() {
+  const blogDir = path.join(process.cwd(), 'blog');
+  if (!fs.existsSync(blogDir)) return [];
+  return fs
+    .readdirSync(blogDir)
+    .filter((f) => f.endsWith('.md'))
+    .map((file) => {
+      const raw = fs.readFileSync(path.join(blogDir, file), 'utf-8');
+      const { data } = matter(raw);
+      return {
+        slug: (data.slug as string) || file.replace('.md', ''),
+        title: data.title as string,
+        description: data.description as string,
+        date: (data.date as string) || (data.publishDate as string) || '',
+        category: (data.category as string) || 'Developer Tools',
+        readingTime: (data.readingTime as string) || '5 min',
+      };
+    })
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 3);
+}
+
 export default function HomePage() {
+  const recentPosts = getRecentPosts();
   return (
     <>
       {/* Hero */}
@@ -101,6 +127,38 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Blog section */}
+      {recentPosts.length > 0 && (
+        <section className="py-12 px-4 border-t border-gray-800">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-lg font-semibold text-gray-300">From the Blog</h2>
+              <Link
+                href="/blog"
+                className="text-sm text-green-400 hover:text-green-300 transition-colors"
+              >
+                View all →
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {recentPosts.map((post) => (
+                <Link
+                  key={post.slug}
+                  href={`/blog/${post.slug}`}
+                  className="group block bg-gray-900 border border-gray-800 hover:border-gray-700 rounded-xl p-4 transition-colors"
+                >
+                  <span className="text-xs text-green-400 font-medium">{post.category}</span>
+                  <h3 className="text-white font-medium mt-1 mb-2 line-clamp-2 group-hover:text-green-400 transition-colors">
+                    {post.title}
+                  </h3>
+                  <p className="text-xs text-gray-500">{post.readingTime} read · {new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Trust section */}
       <section className="py-12 px-4 border-t border-gray-800">
