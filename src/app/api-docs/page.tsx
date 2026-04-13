@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import CodeBlock from '@/components/ui/CodeBlock';
 
 export const metadata: Metadata = {
   title: 'API Documentation',
@@ -37,9 +38,7 @@ export default function ApiDocsPage() {
 
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-5 mb-6">
           <p className="text-xs text-gray-500 mb-2">Example request</p>
-          <pre className="text-sm text-gray-300 overflow-x-auto whitespace-pre-wrap break-words">
-            <code>{`Authorization: Bearer tb_your_token_here`}</code>
-          </pre>
+          <CodeBlock code="Authorization: Bearer tb_your_token_here" />
         </div>
 
         <h3 className="text-white font-medium mb-4 text-sm">Endpoints</h3>
@@ -185,15 +184,15 @@ export default function ApiDocsPage() {
         </p>
 
         <div className="bg-gray-900 border border-gray-800 rounded-xl p-5">
-          <pre className="text-sm text-gray-300 overflow-x-auto whitespace-pre-wrap break-words">
-{`{
+          <CodeBlock
+            code={`{
   "error": {
     "code": "VALIDATION_ERROR",
     "message": "The email field is required.",
     "details": {}
   }
 }`}
-          </pre>
+          />
         </div>
 
         <div className="mt-6 bg-gray-900 border border-gray-800 rounded-xl p-5">
