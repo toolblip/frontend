@@ -31,6 +31,8 @@ const toolsMeta: Record<string, {
   description: string;
   emoji: string;
   category: string;
+  howToUse?: string[];
+  faqs?: { question: string; answer: string }[];
 }> = {
   'word-counter': {
     title: 'Word Counter',
@@ -49,12 +51,52 @@ const toolsMeta: Record<string, {
     description: 'Format, validate, and minify JSON with error highlighting.',
     emoji: '📋',
     category: 'Developer',
+    howToUse: [
+      'Paste or type your JSON into the input area.',
+      'The formatter instantly validates whether your JSON is syntactically correct.',
+      'If valid, the output shows properly indented JSON with syntax highlighting.',
+      'Use the minify button to compress the JSON to a single line.',
+      'Use the copy button to copy the result to your clipboard.',
+    ],
+    faqs: [
+      {
+        question: 'Does this send my JSON to a server?',
+        answer: 'No. All processing happens entirely in your browser using JavaScript. Nothing is transmitted, stored, or logged.',
+      },
+      {
+        question: 'What happens if my JSON has errors?',
+        answer: 'The formatter highlights the line and character position of the error, making it easy to spot and fix typos.',
+      },
+      {
+        question: 'Can I format already-minified JSON?',
+        answer: 'Yes. Paste any minified or compact JSON and it will be formatted with proper indentation immediately.',
+      },
+    ],
   },
   'base64': {
     title: 'Base64 Encode / Decode',
     description: 'Encode and decode Base64 text or files instantly in your browser.',
     emoji: '🔐',
     category: 'Encoder',
+    howToUse: [
+      'Paste or type your text into the input area.',
+      'Click Encode to convert to Base64, or Decode to convert from Base64.',
+      'Copy the result with one click.',
+    ],
+    faqs: [
+      {
+        question: 'Is Base64 encryption?',
+        answer: 'No. Base64 is an encoding scheme, not encryption. It is reversible by design and should never be used to hide sensitive data. Anyone can decode a Base64 string.',
+      },
+      {
+        question: 'Why does my encoded string end with = or ==?',
+        answer: 'Base64 uses a 64-character alphabet. Since it works on 3-byte chunks, strings whose length is not divisible by 3 are padded with = characters. This is normal and the decoder handles it automatically.',
+      },
+      {
+        question: 'Can I encode binary files?',
+        answer: 'Yes. This tool supports file upload and will Base64-encode the file contents, which you can then use in JSON, XML, or email attachments.',
+      },
+    ],
   },
   'case-converter': {
     title: 'Case Converter',
@@ -234,6 +276,59 @@ export default async function ToolPage({ params }: Props) {
         <p className="text-xs text-gray-600 text-center">
           🔒 100% client-side — your data never leaves your browser
         </p>
+
+        {/* How to Use */}
+        {meta.howToUse && meta.howToUse.length > 0 && (
+          <section aria-labelledby="how-to-heading" className="mt-10 pt-8 border-t border-gray-800">
+            <h2 id="how-to-heading" className="text-lg font-semibold text-white mb-4">How to Use</h2>
+            <ol className="space-y-2">
+              {meta.howToUse.map((step, i) => (
+                <li key={i} className="flex gap-3 text-sm text-gray-300">
+                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-green-900/50 border border-green-700 flex items-center justify-center text-green-400 text-xs font-medium">
+                    {i + 1}
+                  </span>
+                  {step}
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+
+        {/* FAQ */}
+        {meta.faqs && meta.faqs.length > 0 && (
+          <section aria-labelledby="faq-heading" className="mt-10 pt-8 border-t border-gray-800">
+            <h2 id="faq-heading" className="text-lg font-semibold text-white mb-4">FAQ</h2>
+            <dl className="space-y-4">
+              {meta.faqs.map((faq, i) => (
+                <div key={i}>
+                  <dt className="text-sm font-medium text-white mb-1">{faq.question}</dt>
+                  <dd className="text-sm text-gray-400 leading-relaxed">{faq.answer}</dd>
+                </div>
+              ))}
+            </dl>
+          </section>
+        )}
+
+        {/* FAQ JSON-LD */}
+        {meta.faqs && meta.faqs.length > 0 && (
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                '@context': 'https://schema.org',
+                '@type': 'FAQPage',
+                mainEntity: meta.faqs.map((faq) => ({
+                  '@type': 'Question',
+                  name: faq.question,
+                  acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: faq.answer,
+                  },
+                })),
+              }),
+            }}
+          />
+        )}
       </div>
     </>
   );

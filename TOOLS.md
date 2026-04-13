@@ -1,40 +1,43 @@
-# TOOLS.md - Local Notes
+# TOOLS.md - Toolblip
 
-Skills define _how_ tools work. This file is for _your_ specifics — the stuff that's unique to your setup.
+## Browser Profile
 
-## What Goes Here
+Use **Toolblip Browser** (port 9225) for Toolblip work.
 
-Things like:
+**Profile:** `Default`
+**user-data-dir:** `~/.openclaw/browser/toolblip/user-data`
+**profile-directory:** `Default`
+**CDP port:** 9225
 
-- Camera names and locations
-- SSH hosts and aliases
-- Preferred voices for TTS
-- Speaker/room names
-- Device nicknames
-- Anything environment-specific
-
-## Examples
-
-```markdown
-### Cameras
-
-- living-room → Main area, 180° wide angle
-- front-door → Entrance, motion-triggered
-
-### SSH
-
-- home-server → 192.168.1.100, user: admin
-
-### TTS
-
-- Preferred voice: "Nova" (warm, slightly British)
-- Default speaker: Kitchen HomePod
+### Quick Launch
+```bash
+open -a "Toolblip Browser"
 ```
 
-## Why Separate?
+Or from terminal:
+```bash
+"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+  --user-data-dir="$HOME/.openclaw/browser/toolblip/user-data" \
+  --no-first-run --no-service-initialize \
+  --remote-debugging-port=9225 --remote-allow-origins='*' \
+  --disable-popups --no-default-browser-check \
+  --profile-directory="Default"
+```
 
-Skills are shared. Your setup is yours. Keeping them apart means you can update skills without losing your notes, and share skills without leaking your infrastructure.
+### CDP WS URL
+`ws://127.0.0.1:9225/devtools/page/<id>`
 
----
+## Other Browser Apps
 
-Add whatever helps you do your job. This is your cheat sheet.
+| App | Port | Use for |
+|-----|------|---------|
+| Crontinel Browser | 9224 | Crontinel project |
+| Amazing Browser | 9226 | AmazingPlugins |
+| Reddit Browser | 9227 | Reddit marketing |
+| OpenClaw Browser | 9223 | OpenClaw config |
+
+## Model Preferences
+
+**Primary:** `minimax-portal/MiniMax-M2.7-highspeed`
+**Backup:** `zai/glm-5.1`
+**For coding:** Always use `zai/glm-5.1`
