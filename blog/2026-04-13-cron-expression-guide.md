@@ -1,12 +1,21 @@
 ---
-title: "Cron Expressions Explained: A Practical Field Guide"
-description: "Cron expressions look like line noise until you learn to read them. Once you do, you'll spot mistakes before they cause missed jobs, wrong deployments, or 3am pages."
+title: 'Cron Expressions Explained: A Practical Field Guide'
+description: >-
+  Cron expressions look like line noise until you learn to read them. Once you
+  do, you'll spot mistakes before they cause missed jobs, wrong deployments, or
+  3am pages.
 slug: cron-expressions-explained
-date: 2026-04-13
+date: 2026-04-13T00:00:00.000Z
 category: Guide
-tags: [Cron, Scheduling, DevOps, Laravel, cron jobs]
+tags:
+  - Cron
+  - Scheduling
+  - DevOps
+  - Laravel
+  - cron jobs
 author: Toolblip Team
 readingTime: 7 min
+featuredImage: 'https://api.radtx.com/gradient/6b7280-374151/1200/630'
 ---
 
 # Cron Expressions Explained: A Practical Field Guide

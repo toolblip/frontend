@@ -1,12 +1,21 @@
 ---
-title: "YAML for JSON Developers: A Practical Introduction"
-description: "YAML and JSON look similar but have key differences. This guide covers YAML basics, syntax gotchas, when to use YAML vs JSON, and how to convert between them."
+title: 'YAML for JSON Developers: A Practical Introduction'
+description: >-
+  YAML and JSON look similar but have key differences. This guide covers YAML
+  basics, syntax gotchas, when to use YAML vs JSON, and how to convert between
+  them.
 slug: yaml-for-json-developers
-date: 2026-04-15
+date: 2026-04-15T00:00:00.000Z
 category: Developer Tools
-tags: [YAML, JSON, Configuration, DevOps, Kubernetes]
+tags:
+  - YAML
+  - JSON
+  - Configuration
+  - DevOps
+  - Kubernetes
 author: Toolblip Team
 readingTime: 5 min
+featuredImage: 'https://api.radtx.com/gradient/0ea5e9-8b5cf6/1200/630'
 ---
 
 # YAML for JSON Developers: A Practical Introduction

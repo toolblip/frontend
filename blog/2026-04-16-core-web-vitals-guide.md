@@ -1,12 +1,20 @@
 ---
-title: "Core Web Vitals for Developers: What Actually Matters in 2026"
-description: "LCP, INP, CLS — Google's Core Web Vitals are now confirmed ranking factors. Here's what each metric means, what causes poor scores, and how to fix them."
+title: 'Core Web Vitals for Developers: What Actually Matters in 2026'
+description: >-
+  LCP, INP, CLS — Google's Core Web Vitals are now confirmed ranking factors.
+  Here's what each metric means, what causes poor scores, and how to fix them.
 slug: core-web-vitals-guide
-date: 2026-04-16
+date: 2026-04-16T00:00:00.000Z
 category: Performance
-tags: [Performance, Core Web Vitals, SEO, Web Development, UX]
+tags:
+  - Performance
+  - Core Web Vitals
+  - SEO
+  - Web Development
+  - UX
 author: Toolblip Team
 readingTime: 6 min
+featuredImage: 'https://api.radtx.com/gradient/6b7280-374151/1200/630'
 ---
 
 # Core Web Vitals for Developers: What Actually Matters in 2026

@@ -1,12 +1,18 @@
 ---
-title: "Cron 表达式速查表：5分钟掌握定时任务调度"
-description: "Cron 表达式是 Linux 定时任务的核心。本文提供完整的 cron 格式说明、常用示例、工具验证方法，附赠速查表供日常参考。"
+title: Cron 表达式速查表：5分钟掌握定时任务调度
+description: Cron 表达式是 Linux 定时任务的核心。本文提供完整的 cron 格式说明、常用示例、工具验证方法，附赠速查表供日常参考。
 slug: cron-expression-cheatsheet
-date: 2026-04-15
+date: 2026-04-15T00:00:00.000Z
 category: 开发者工具
-tags: [Cron, 定时任务, Linux, 调度, DevOps]
+tags:
+  - Cron
+  - 定时任务
+  - Linux
+  - 调度
+  - DevOps
 author: Toolblip Team
 readingTime: 4 min
+featuredImage: 'https://api.radtx.com/gradient/6b7280-374151/1200/630'
 ---
 
 # Cron 表达式速查表：5分钟掌握定时任务调度

@@ -1,12 +1,21 @@
 ---
-title: "The Complete Character Limit Reference for Every Platform"
-description: "Twitter/X: 280, LinkedIn: 3000, Instagram: 2200, TikTok: 150, YouTube: 5000. Here's every character limit that matters for social media managers and developers."
+title: The Complete Character Limit Reference for Every Platform
+description: >-
+  Twitter/X: 280, LinkedIn: 3000, Instagram: 2200, TikTok: 150, YouTube: 5000.
+  Here's every character limit that matters for social media managers and
+  developers.
 slug: social-media-character-limits
-date: 2026-04-14
+date: 2026-04-14T00:00:00.000Z
 category: Reference
-tags: [Social Media, Twitter, LinkedIn, Marketing, Character Counter]
+tags:
+  - Social Media
+  - Twitter
+  - LinkedIn
+  - Marketing
+  - Character Counter
 author: Toolblip Team
 readingTime: 4 min
+featuredImage: 'https://api.radtx.com/gradient/6b7280-374151/1200/630'
 ---
 
 # The Complete Character Limit Reference for Every Platform

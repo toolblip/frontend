@@ -1,12 +1,19 @@
 ---
-title: "Regex Tester: The Developer's Essential Debugging Tool"
-description: "Test and debug regular expressions in real-time with instant matches, syntax highlighting, and pattern explanations. Learn how to use regex effectively."
-publishDate: "2026-04-17"
+title: 'Regex Tester: The Developer''s Essential Debugging Tool'
+description: >-
+  Test and debug regular expressions in real-time with instant matches, syntax
+  highlighting, and pattern explanations. Learn how to use regex effectively.
+publishDate: '2026-04-17'
 slug: regex-tester-guide
 readingTime: 7 min
-author: "Harun R Rayhan"
-tags: ["regex", "developer-tools", "debugging", "javascript"]
-category: "Developer Tools"
+author: Harun R Rayhan
+tags:
+  - regex
+  - developer-tools
+  - debugging
+  - javascript
+category: Developer Tools
+featuredImage: 'https://api.radtx.com/gradient/0ea5e9-8b5cf6/1200/630'
 ---
 
 Regular expressions — regex — are one of the most powerful tools in a developer's toolkit. They're also notoriously difficult to get right without a good testing environment. A single misplaced character can turn a precise match into a wildcard nightmare.

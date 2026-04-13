@@ -1,12 +1,21 @@
 ---
-title: "How to Create URL Slugs: A Complete Guide for Developers"
-description: "URL slugs are the part of a URL that identifies a specific page. Learn the rules for creating clean, SEO-friendly slugs, common mistakes to avoid, and how to generate them automatically."
+title: 'How to Create URL Slugs: A Complete Guide for Developers'
+description: >-
+  URL slugs are the part of a URL that identifies a specific page. Learn the
+  rules for creating clean, SEO-friendly slugs, common mistakes to avoid, and
+  how to generate them automatically.
 slug: how-to-create-url-slugs
-date: 2026-04-14
+date: 2026-04-14T00:00:00.000Z
 category: Guide
-tags: [SEO, URL, Web Development, Laravel, Django]
+tags:
+  - SEO
+  - URL
+  - Web Development
+  - Laravel
+  - Django
 author: Toolblip Team
 readingTime: 5 min
+featuredImage: 'https://api.radtx.com/gradient/6b7280-374151/1200/630'
 ---
 
 # How to Create URL Slugs: A Complete Guide for Developers

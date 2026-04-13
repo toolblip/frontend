@@ -1,12 +1,20 @@
 ---
-title: "URL Structure and SEO: How to Build URLs That Rank"
-description: "Your URL structure affects search rankings more than most people realize. Learn the rules for SEO-friendly URLs, common mistakes, and how to fix existing URLs without hurting your rankings."
+title: 'URL Structure and SEO: How to Build URLs That Rank'
+description: >-
+  Your URL structure affects search rankings more than most people realize.
+  Learn the rules for SEO-friendly URLs, common mistakes, and how to fix
+  existing URLs without hurting your rankings.
 slug: url-structure-seo-guide
-date: 2026-04-16
+date: 2026-04-16T00:00:00.000Z
 category: SEO
-tags: [SEO, URL Structure, Web Development, Rankings]
+tags:
+  - SEO
+  - URL Structure
+  - Web Development
+  - Rankings
 author: Toolblip Team
 readingTime: 5 min
+featuredImage: 'https://api.radtx.com/gradient/f97316-facc15/1200/630'
 ---
 
 # URL Structure and SEO: How to Build URLs That Rank

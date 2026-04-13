@@ -1,12 +1,21 @@
 ---
-title: "Hash Generator Guide: MD5, SHA-1, SHA-256, and When to Use Each"
-description: "A complete guide to hash generation: what cryptographic hashes are, how MD5/SHA-1/SHA-256 differ in security and speed, and why you should never use MD5 for passwords."
+title: 'Hash Generator Guide: MD5, SHA-1, SHA-256, and When to Use Each'
+description: >-
+  A complete guide to hash generation: what cryptographic hashes are, how
+  MD5/SHA-1/SHA-256 differ in security and speed, and why you should never use
+  MD5 for passwords.
 slug: hash-generator-guide
-date: 2026-04-15
+date: 2026-04-15T00:00:00.000Z
 category: Developer Tools
-tags: [Hash, MD5, SHA, Encryption, Security]
+tags:
+  - Hash
+  - MD5
+  - SHA
+  - Encryption
+  - Security
 author: Toolblip Team
 readingTime: 6 min
+featuredImage: 'https://api.radtx.com/gradient/0ea5e9-8b5cf6/1200/630'
 ---
 
 # Hash Generator Guide: MD5, SHA-1, SHA-256, and When to Use Each

@@ -1,13 +1,23 @@
 ---
-title: "The Complete Guide to HTTP Status Codes in 2026"
-description: "Every HTTP status code explained. From 100 to 511 — what each code means, when to use it, and what the client should do next."
-slug: "http-status-codes-guide"
-date: "2026-04-17"
-category: "Developer Tools"
-tags: ["http", "api", "web-development", "rest", "debugging"]
-author: "Toolblip Team"
-readingTime: "8 min"
-descriptionSEO: "Complete HTTP status code reference guide. 1xx to 5xx explained with examples. Learn what every HTTP code means and when to use it in your API."
+title: The Complete Guide to HTTP Status Codes in 2026
+description: >-
+  Every HTTP status code explained. From 100 to 511 — what each code means, when
+  to use it, and what the client should do next.
+slug: http-status-codes-guide
+date: '2026-04-17'
+category: Developer Tools
+tags:
+  - http
+  - api
+  - web-development
+  - rest
+  - debugging
+author: Toolblip Team
+readingTime: 8 min
+descriptionSEO: >-
+  Complete HTTP status code reference guide. 1xx to 5xx explained with examples.
+  Learn what every HTTP code means and when to use it in your API.
+featuredImage: 'https://api.radtx.com/gradient/0ea5e9-8b5cf6/1200/630'
 ---
 
 Every developer hits an unexpected `403` or `429` at some point and wastes time guessing what happened. HTTP status codes are a shared language between servers and clients — learning them properly saves hours of debugging and makes your APIs better.

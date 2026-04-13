@@ -1,12 +1,21 @@
 ---
-title: "JWT Decoder: Inspect and Validate JSON Web Tokens"
-description: "Decode and inspect JSON Web Tokens (JWT) in real-time. View header, payload, and signature without a server. Learn what JWTs contain and how to validate them."
-publishDate: "2026-04-17"
+title: 'JWT Decoder: Inspect and Validate JSON Web Tokens'
+description: >-
+  Decode and inspect JSON Web Tokens (JWT) in real-time. View header, payload,
+  and signature without a server. Learn what JWTs contain and how to validate
+  them.
+publishDate: '2026-04-17'
 slug: jwt-decoder-guide
 readingTime: 6 min
-author: "Harun R Rayhan"
-tags: ["jwt", "authentication", "developer-tools", "security", "javascript"]
-category: "Authentication"
+author: Harun R Rayhan
+tags:
+  - jwt
+  - authentication
+  - developer-tools
+  - security
+  - javascript
+category: Authentication
+featuredImage: 'https://api.radtx.com/gradient/f59e0b-ef4444/1200/630'
 ---
 
 If you work with modern web applications, you've seen JWTs — those long strings of dots-separated base64 that show up in browser storage, API responses, and auth headers. But what do they actually contain? And how do you inspect one without sending it to a third-party service?

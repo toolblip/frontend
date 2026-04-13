@@ -1,12 +1,21 @@
 ---
-title: "Unix Timestamp Converter: From Epoch to Human-Readable Dates"
-description: "Convert Unix timestamps to readable dates and back instantly. Learn what the Unix epoch is, how timestamps work across timezones, and why every developer should understand them."
-publishDate: "2026-04-17"
+title: 'Unix Timestamp Converter: From Epoch to Human-Readable Dates'
+description: >-
+  Convert Unix timestamps to readable dates and back instantly. Learn what the
+  Unix epoch is, how timestamps work across timezones, and why every developer
+  should understand them.
+publishDate: '2026-04-17'
 slug: unix-timestamp-converter
 readingTime: 5 min
-author: "Harun R Rayhan"
-tags: ["unix-timestamp", "datetime", "developer-tools", "javascript", "python"]
-category: "Developer Tools"
+author: Harun R Rayhan
+tags:
+  - unix-timestamp
+  - datetime
+  - developer-tools
+  - javascript
+  - python
+category: Developer Tools
+featuredImage: 'https://api.radtx.com/gradient/0ea5e9-8b5cf6/1200/630'
 ---
 
 Every server, every database, every logging system eventually touches a Unix timestamp. Yet developers constantly misread them, misconvert them, and lose hours debugging timezone bugs caused by timestamp confusion.

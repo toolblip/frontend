@@ -1,13 +1,20 @@
 ---
-title: "How to Connect Claude Code to Toolblip in 5 Minutes"
-description: "Give Claude Code access to every Toolblip developer tool — JSON formatter, Base64 encoder, regex tester, and more — via the MCP protocol."
+title: How to Connect Claude Code to Toolblip in 5 Minutes
+description: >-
+  Give Claude Code access to every Toolblip developer tool — JSON formatter,
+  Base64 encoder, regex tester, and more — via the MCP protocol.
 slug: connect-claude-code-to-toolblip
-date: 2026-04-12
+date: 2026-04-12T00:00:00.000Z
 category: Tutorial
-tags: [MCP, Claude Code, Tutorial, Developer Tools]
+tags:
+  - MCP
+  - Claude Code
+  - Tutorial
+  - Developer Tools
 author: Toolblip Team
 readingTime: 5 min
 coverImage: /images/blog/connect-claude-code-cover.png
+featuredImage: 'https://api.radtx.com/gradient/6b7280-374151/1200/630'
 ---
 
 # How to Connect Claude Code to Toolblip in 5 Minutes

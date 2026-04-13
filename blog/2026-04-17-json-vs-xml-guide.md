@@ -1,13 +1,24 @@
 ---
-title: "JSON vs XML: When to Use Each Format in 2026"
-description: "JSON and XML are both data formats, but they serve different purposes. Learn the key differences, pros and cons, and when to choose each one for your next project."
-slug: "json-vs-xml-guide"
-date: "2026-04-17"
-category: "Developer Tools"
-tags: ["json", "xml", "api", "data-format", "web-development"]
-author: "Toolblip Team"
-readingTime: "7 min"
-descriptionSEO: "JSON vs XML comparison. When to use JSON vs XML for APIs, config files, and data storage. Pros, cons, and real-world examples for developers."
+title: 'JSON vs XML: When to Use Each Format in 2026'
+description: >-
+  JSON and XML are both data formats, but they serve different purposes. Learn
+  the key differences, pros and cons, and when to choose each one for your next
+  project.
+slug: json-vs-xml-guide
+date: '2026-04-17'
+category: Developer Tools
+tags:
+  - json
+  - xml
+  - api
+  - data-format
+  - web-development
+author: Toolblip Team
+readingTime: 7 min
+descriptionSEO: >-
+  JSON vs XML comparison. When to use JSON vs XML for APIs, config files, and
+  data storage. Pros, cons, and real-world examples for developers.
+featuredImage: 'https://api.radtx.com/gradient/0ea5e9-8b5cf6/1200/630'
 ---
 
 Every developer encounters both JSON and XML at some point. They both encode structured data, both are human-readable, and both have their place in modern software. So when should you reach for each one?

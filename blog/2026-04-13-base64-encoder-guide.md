@@ -1,12 +1,21 @@
 ---
-title: "Base64 Encoding Explained: What It Is and When to Use It"
-description: "Base64 is everywhere in web development — API tokens, data URLs, email attachments. Here's exactly what it is, how it works, and the most common mistakes developers make with it."
+title: 'Base64 Encoding Explained: What It Is and When to Use It'
+description: >-
+  Base64 is everywhere in web development — API tokens, data URLs, email
+  attachments. Here's exactly what it is, how it works, and the most common
+  mistakes developers make with it.
 slug: base64-encoding-explained
-date: 2026-04-13
+date: 2026-04-13T00:00:00.000Z
 category: Guide
-tags: [Base64, Encoding, Web Development, APIs, Data URLs]
+tags:
+  - Base64
+  - Encoding
+  - Web Development
+  - APIs
+  - Data URLs
 author: Toolblip Team
 readingTime: 6 min
+featuredImage: 'https://api.radtx.com/gradient/6b7280-374151/1200/630'
 ---
 
 # Base64 Encoding Explained: What It Is and When to Use It

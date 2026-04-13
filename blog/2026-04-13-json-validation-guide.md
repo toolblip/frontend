@@ -1,12 +1,21 @@
 ---
-title: "JSON Validation: How to Find and Fix Broken JSON Fast"
-description: "Every developer has pasted JSON into a validator and gotten a cryptic error. Here's how to read JSON error messages, understand common mistakes, and validate JSON programmatically."
+title: 'JSON Validation: How to Find and Fix Broken JSON Fast'
+description: >-
+  Every developer has pasted JSON into a validator and gotten a cryptic error.
+  Here's how to read JSON error messages, understand common mistakes, and
+  validate JSON programmatically.
 slug: json-validation-guide
-date: 2026-04-13
+date: 2026-04-13T00:00:00.000Z
 category: Guide
-tags: [JSON, Validation, API, Debugging, Developer Tools]
+tags:
+  - JSON
+  - Validation
+  - API
+  - Debugging
+  - Developer Tools
 author: Toolblip Team
 readingTime: 5 min
+featuredImage: 'https://api.radtx.com/gradient/6b7280-374151/1200/630'
 ---
 
 # JSON Validation: How to Find and Fix Broken JSON Fast

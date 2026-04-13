@@ -42,9 +42,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: post.data.title,
       description: post.data.description,
       type: 'article',
-      publishedTime: post.data.date,
+      publishedTime: post.data.date || post.data.publishDate,
       authors: [post.data.author],
-      images: post.data.coverImage ? [{ url: post.data.coverImage }] : [],
+      images: post.data.featuredImage ? [{ url: post.data.featuredImage }] : [],
     },
     twitter: {
       card: 'summary_large_image',
@@ -79,8 +79,8 @@ export default async function BlogPostPage({ params }: Props) {
           </span>
           <span>{data.readingTime} read</span>
           <span>·</span>
-          <time dateTime={data.date}>
-            {new Date(data.date).toLocaleDateString('en-US', {
+          <time dateTime={data.date || data.publishDate}>
+            {new Date(data.date || data.publishDate).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'long',
               day: 'numeric',

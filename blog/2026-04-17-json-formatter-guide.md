@@ -1,10 +1,19 @@
 ---
-title: "JSON Formatter: Debug Your API Responses Like a Pro"
-description: "A JSON formatter makes messy API responses readable. Learn how Toolblip's JSON formatter works, what makes a good formatter, and how to debug JSON errors quickly."
-publishDate: "2026-04-17"
+title: 'JSON Formatter: Debug Your API Responses Like a Pro'
+description: >-
+  A JSON formatter makes messy API responses readable. Learn how Toolblip's JSON
+  formatter works, what makes a good formatter, and how to debug JSON errors
+  quickly.
+publishDate: '2026-04-17'
 slug: json-formatter-guide
 readingTime: 6 min
-tags: ["json", "developer-tools", "api", "debugging", "formatter"]
+tags:
+  - json
+  - developer-tools
+  - api
+  - debugging
+  - formatter
+featuredImage: 'https://api.radtx.com/gradient/6b7280-374151/1200/630'
 ---
 
 You know the pain. You open a fetch response in your browser DevTools and see:

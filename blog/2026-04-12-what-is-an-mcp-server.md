@@ -1,13 +1,20 @@
 ---
-title: "What is an MCP Server? A Practical Guide for Developers"
-description: "Learn what Model Context Protocol servers are, why they matter for AI-powered development, and how to start using them today."
+title: What is an MCP Server? A Practical Guide for Developers
+description: >-
+  Learn what Model Context Protocol servers are, why they matter for AI-powered
+  development, and how to start using them today.
 slug: what-is-an-mcp-server
-date: 2026-04-12
+date: 2026-04-12T00:00:00.000Z
 category: Guide
-tags: [MCP, AI, Developer Tools, Claude]
+tags:
+  - MCP
+  - AI
+  - Developer Tools
+  - Claude
 author: Toolblip Team
 readingTime: 8 min
 coverImage: /images/blog/mcp-server-guide-cover.png
+featuredImage: 'https://api.radtx.com/gradient/6b7280-374151/1200/630'
 ---
 
 # What is an MCP Server? A Practical Guide for Developers

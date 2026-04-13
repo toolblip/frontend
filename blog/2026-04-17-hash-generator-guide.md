@@ -1,12 +1,21 @@
 ---
-title: "Hash Generator: MD5, SHA-1, SHA-256, and SHA-512 Explained"
-description: "Generate cryptographic hashes in your browser. Understand the difference between MD5, SHA-1, SHA-256, and SHA-512, and learn when to use each one."
-publishDate: "2026-04-17"
+title: 'Hash Generator: MD5, SHA-1, SHA-256, and SHA-512 Explained'
+description: >-
+  Generate cryptographic hashes in your browser. Understand the difference
+  between MD5, SHA-1, SHA-256, and SHA-512, and learn when to use each one.
+publishDate: '2026-04-17'
 slug: hash-generator-guide
 readingTime: 7 min
-author: "Harun R Rayhan"
-tags: ["hash", "cryptography", "security", "md5", "sha256", "developer-tools"]
-category: "Cryptography"
+author: Harun R Rayhan
+tags:
+  - hash
+  - cryptography
+  - security
+  - md5
+  - sha256
+  - developer-tools
+category: Cryptography
+featuredImage: 'https://api.radtx.com/gradient/6366f1-ec4899/1200/630'
 ---
 
 A hash function takes any input — a password, a file, a string — and produces a fixed-length string of characters called a **digest** or **hash**. The same input always produces the same output. But the process is **one-way**: you can't reverse a hash back to the original input.

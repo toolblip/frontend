@@ -1,13 +1,23 @@
 ---
-title: "Understanding UUID Versions and When to Use Each One"
-description: "UUIDs are everywhere in software, but not all UUIDs are created equal. Learn the differences between v1, v4, v5, and v7 — and when to use each."
-slug: "uuid-versions-guide"
-date: "2026-04-17"
-category: "Developer Tools"
-tags: ["uuid", "databases", "javascript", "api-design", "distributed-systems"]
-author: "Toolblip Team"
-readingTime: "6 min"
-descriptionSEO: "UUID v1 vs v4 vs v5 vs v7 explained. When to use each UUID version, pros and cons, and JavaScript implementation examples."
+title: Understanding UUID Versions and When to Use Each One
+description: >-
+  UUIDs are everywhere in software, but not all UUIDs are created equal. Learn
+  the differences between v1, v4, v5, and v7 — and when to use each.
+slug: uuid-versions-guide
+date: '2026-04-17'
+category: Developer Tools
+tags:
+  - uuid
+  - databases
+  - javascript
+  - api-design
+  - distributed-systems
+author: Toolblip Team
+readingTime: 6 min
+descriptionSEO: >-
+  UUID v1 vs v4 vs v5 vs v7 explained. When to use each UUID version, pros and
+  cons, and JavaScript implementation examples.
+featuredImage: 'https://api.radtx.com/gradient/0ea5e9-8b5cf6/1200/630'
 ---
 
 If you've ever generated a UUID and wondered what all those numbers mean — you're not alone. UUIDs (Universally Unique Identifiers) look like random strings, but there's real structure behind them. Understanding that structure helps you choose the right version for your system.
