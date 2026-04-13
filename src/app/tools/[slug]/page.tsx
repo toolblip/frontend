@@ -163,6 +163,26 @@ const toolsMeta: Record<string, {
     description: "Generate MD5, SHA-1, SHA-256, and SHA-512 hashes using your browser's native crypto API.",
     emoji: '#',
     category: 'Developer',
+    howToUse: [
+      'Paste or type your text into the input area.',
+      'Select the hash algorithm you need: MD5, SHA-1, SHA-256, or SHA-512.',
+      'The hash is computed instantly as you type.',
+      'Copy the result with one click.',
+    ],
+    faqs: [
+      {
+        question: 'Is this safe to use for passwords?',
+        answer: 'This tool generates plain hashes, not salted hashes. For password storage, use bcrypt, Argon2, or scrypt with a per-user salt. Plain SHA-256 is not suitable for password storage.',
+      },
+      {
+        question: 'Is my text sent to any server?',
+        answer: 'No. All hashing is done locally in your browser using the Web Crypto API. Nothing is transmitted over the network.',
+      },
+      {
+        question: 'Which algorithm should I use?',
+        answer: 'SHA-256 is the current standard for most use cases. MD5 and SHA-1 are cryptographically broken and should only be used for non-security purposes like quick file checksums.',
+      },
+    ],
   },
   'image-format-converter': {
     title: 'Image Format Converter',
