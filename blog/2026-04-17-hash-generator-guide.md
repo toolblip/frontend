@@ -4,7 +4,9 @@ description: "Generate cryptographic hashes in your browser. Understand the diff
 publishDate: "2026-04-17"
 slug: hash-generator-guide
 readingTime: 7 min
+author: "Harun R Rayhan"
 tags: ["hash", "cryptography", "security", "md5", "sha256", "developer-tools"]
+category: "Cryptography"
 ---
 
 A hash function takes any input — a password, a file, a string — and produces a fixed-length string of characters called a **digest** or **hash**. The same input always produces the same output. But the process is **one-way**: you can't reverse a hash back to the original input.

@@ -4,7 +4,9 @@ description: "Generate placeholder text instantly with a Lorem Ipsum generator. 
 publishDate: "2026-04-17"
 slug: lorem-ipsum-generator-guide
 readingTime: 5 min
+author: "Harun R Rayhan"
 tags: ["lorem-ipsum", "design", "mockups", "typography", "placeholder-text"]
+category: "Design"
 ---
 
 If you've ever opened a design mockup and seen words like "Lorem ipsum dolor sit amet, consectetur adipiscing elit," you've encountered Lorem Ipsum. Despite looking like meaningless Latin gibberish, it's the universal placeholder text in design and development workflows worldwide.

@@ -4,7 +4,9 @@ description: "Decode and inspect JSON Web Tokens (JWT) in real-time. View header
 publishDate: "2026-04-17"
 slug: jwt-decoder-guide
 readingTime: 6 min
+author: "Harun R Rayhan"
 tags: ["jwt", "authentication", "developer-tools", "security", "javascript"]
+category: "Authentication"
 ---
 
 If you work with modern web applications, you've seen JWTs — those long strings of dots-separated base64 that show up in browser storage, API responses, and auth headers. But what do they actually contain? And how do you inspect one without sending it to a third-party service?

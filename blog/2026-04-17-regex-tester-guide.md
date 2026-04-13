@@ -4,7 +4,9 @@ description: "Test and debug regular expressions in real-time with instant match
 publishDate: "2026-04-17"
 slug: regex-tester-guide
 readingTime: 7 min
+author: "Harun R Rayhan"
 tags: ["regex", "developer-tools", "debugging", "javascript"]
+category: "Developer Tools"
 ---
 
 Regular expressions — regex — are one of the most powerful tools in a developer's toolkit. They're also notoriously difficult to get right without a good testing environment. A single misplaced character can turn a precise match into a wildcard nightmare.

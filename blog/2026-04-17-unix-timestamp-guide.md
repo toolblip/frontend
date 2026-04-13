@@ -4,7 +4,9 @@ description: "Convert Unix timestamps to readable dates and back instantly. Lear
 publishDate: "2026-04-17"
 slug: unix-timestamp-converter
 readingTime: 5 min
+author: "Harun R Rayhan"
 tags: ["unix-timestamp", "datetime", "developer-tools", "javascript", "python"]
+category: "Developer Tools"
 ---
 
 Every server, every database, every logging system eventually touches a Unix timestamp. Yet developers constantly misread them, misconvert them, and lose hours debugging timezone bugs caused by timestamp confusion.
