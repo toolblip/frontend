@@ -39,12 +39,52 @@ const toolsMeta: Record<string, {
     description: 'Count words, characters, sentences, paragraphs, and reading time instantly. 100% client-side — nothing leaves your browser.',
     emoji: '📝',
     category: 'Text',
+    howToUse: [
+      'Paste or type your text into the input area.',
+      'The word counter updates in real time as you type.',
+      'It shows word count, character count (with/without spaces), sentence count, paragraph count, and estimated reading time.',
+      'Copy the result with one click.',
+    ],
+    faqs: [
+      {
+        question: 'Does this send my text to a server?',
+        answer: 'No. All processing happens entirely in your browser using JavaScript. Nothing is transmitted, stored, or logged.',
+      },
+      {
+        question: 'Does it count words in code?',
+        answer: 'Yes. The word counter counts all space-separated tokens, including code snippets, hashtags, and special characters.',
+      },
+      {
+        question: 'How is reading time calculated?',
+        answer: 'Reading time assumes an average adult reading speed of 200 words per minute.',
+      },
+    ],
   },
   'character-counter': {
     title: 'Character Counter',
     description: 'Count characters with Twitter, LinkedIn, and meta tag limit indicators.',
     emoji: '🔢',
     category: 'Text',
+    howToUse: [
+      'Paste or type your text into the input area.',
+      'The character count updates in real time as you type.',
+      'Each social platform limit is highlighted as you approach or exceed it.',
+      'Copy the result with one click.',
+    ],
+    faqs: [
+      {
+        question: 'What social media limits does it show?',
+        answer: 'Twitter/X (280 characters), Instagram (2,200 characters), LinkedIn (3,000 characters), Facebook (63,206 characters), and meta description (160 characters).',
+      },
+      {
+        question: 'Does it count spaces and newlines?',
+        answer: 'Yes. You can see both the total character count (with spaces) and the character count without spaces and newlines.',
+      },
+      {
+        question: 'Is my text sent to a server?',
+        answer: 'No. All character counting happens locally in your browser. Nothing is transmitted or stored.',
+      },
+    ],
   },
   'json-formatter': {
     title: 'JSON Formatter',
@@ -199,6 +239,26 @@ const toolsMeta: Record<string, {
     description: 'Convert YAML to JSON instantly with pretty-print, compact output, and custom indent size. 100% client-side — nothing leaves your browser.',
     emoji: '🔄',
     category: 'Conversion',
+    howToUse: [
+      'Paste your YAML into the input area.',
+      'The converter instantly validates your YAML and converts it to JSON.',
+      'Use the copy button to copy the result.',
+      'Toggle compact mode to output minified JSON.',
+    ],
+    faqs: [
+      {
+        question: 'Does this send my YAML to a server?',
+        answer: 'No. All conversion happens in your browser using a JavaScript YAML parser. Nothing leaves your device.',
+      },
+      {
+        question: 'Can I convert JSON back to YAML?',
+        answer: 'This tool converts YAML to JSON. For the reverse, use our JSON to YAML converter.',
+      },
+      {
+        question: 'What happens if my YAML has errors?',
+        answer: 'The converter shows the error message with the line number where the YAML parsing failed.',
+      },
+    ],
   },
   'cron-parser': {
     title: 'Cron Expression Parser',
