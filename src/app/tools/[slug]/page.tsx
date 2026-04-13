@@ -103,36 +103,96 @@ const toolsMeta: Record<string, {
     description: 'Convert text between UPPERCASE, lowercase, camelCase, snake_case, and more.',
     emoji: '✏️',
     category: 'Text',
+    faqs: [
+      {
+        question: 'What case formats are supported?',
+        answer: 'UPPERCASE, lowercase, Title Case, Sentence case, camelCase, PascalCase, snake_case, SCREAMING_SNAKE_CASE, kebab-case, and SCREAMING-KEBAB-CASE.',
+      },
+      {
+        question: 'Does this modify my original text?',
+        answer: 'No. The conversion is displayed as output — your original text remains unchanged until you copy the converted result.',
+      },
+    ],
   },
   'url-encode': {
     title: 'URL Encode / Decode',
     description: 'Encode and decode URLs or URL components for safe use in links.',
     emoji: '🔗',
     category: 'Encoder',
+    faqs: [
+      {
+        question: 'When should I URL-encode a string?',
+        answer: 'URL-encode strings before embedding them in a query parameter. Spaces become %20, ampersands become %26, and special characters are percent-encoded so they do not break URL parsing.',
+      },
+      {
+        question: 'What is the difference between encoding the full URL and just a component?',
+        answer: 'Encoding a full URL would double-encode characters that already have meaning in URLs (like :// and /). Encode individual query values, not the entire URL.',
+      },
+    ],
   },
   'image-cropper': {
     title: 'Image Cropper',
     description: 'Crop images to any ratio or preset size — passport, 16:9, square, and more.',
     emoji: '✂️',
     category: 'Image',
+    faqs: [
+      {
+        question: 'What image formats are supported?',
+        answer: 'JPEG, PNG, WebP, GIF, and SVG input. The output downloads as PNG by default.',
+      },
+      {
+        question: 'Are images uploaded to a server?',
+        answer: 'No. All processing happens in your browser using the Canvas API. Your images never leave your device.',
+      },
+    ],
   },
   'uuid-generator': {
     title: 'UUID Generator',
     description: "Generate one or many UUID v4 values using your browser's crypto API.",
     emoji: '🔑',
     category: 'Developer',
+    faqs: [
+      {
+        question: 'What UUID version does this generate?',
+        answer: 'UUID v4 by default (random). You can also generate UUID v7 (time-sortable) which is better for database primary keys.',
+      },
+      {
+        question: 'Are these UUIDs truly random?',
+        answer: 'Yes. UUIDs are generated using the Web Crypto API, which provides cryptographically secure random numbers.',
+      },
+    ],
   },
   'remove-duplicate-lines': {
     title: 'Remove Duplicate Lines',
     description: 'Paste text, remove duplicate lines in one click. Case-sensitive option included.',
     emoji: '🗑️',
     category: 'Text',
+    faqs: [
+      {
+        question: 'Does this preserve the original order of lines?',
+        answer: 'Yes. The first occurrence of each unique line is kept in its original position.',
+      },
+      {
+        question: 'Is the comparison case-sensitive?',
+        answer: "By default yes. A case-insensitive option is available if you need to treat 'Hello' and 'hello' as duplicates.",
+      },
+    ],
   },
   'markdown-to-html': {
     title: 'Markdown to HTML',
     description: 'Convert Markdown to HTML with a live split-pane preview.',
     emoji: '📄',
     category: 'Developer',
+    faqs: [
+      {
+        question: 'Is my Markdown sent to a server?',
+        answer: 'No. All conversion uses a JavaScript Markdown parser running entirely in your browser.',
+      },
+      {
+        question: 'What Markdown flavor is supported?',
+        answer: 'Standard CommonMark Markdown including tables, task lists, footnotes, and GFM (GitHub Flavored Markdown) extensions.',
+      },
+    ],
   },
   'yaml-to-json': {
     title: 'YAML to JSON',
@@ -189,24 +249,64 @@ const toolsMeta: Record<string, {
     description: 'Convert images between JPEG, PNG, WebP, and AVIF with quality control and side-by-side preview.',
     emoji: '🖼️',
     category: 'Image',
+    faqs: [
+      {
+        question: 'Does converting to JPEG reduce image quality?',
+        answer: 'JPEG is a lossy format. High quality (80–90%) is usually indistinguishable from the original. PNG to JPEG conversion will always lose some quality.',
+      },
+      {
+        question: 'Which format should I use?',
+        answer: 'Use PNG for graphics and transparency. Use JPEG for photographs. Use WebP or AVIF for the best compression-to-quality ratio in web contexts.',
+      },
+    ],
   },
   'percentage-calculator': {
     title: 'Percentage Calculator',
     description: 'Calculate percentages, percentage change, tips, and discounts instantly.',
     emoji: '%',
     category: 'Math',
+    faqs: [
+      {
+        question: 'How do I calculate percentage change?',
+        answer: 'Enter the original value and the new value. The formula is ((new - original) / original) × 100.',
+      },
+      {
+        question: 'Can I calculate a reverse percentage?',
+        answer: 'Yes. Given a result and a percentage, the calculator can find the original number. For example, 25 is 20% of what number? → 125.',
+      },
+    ],
   },
   'screen-resolution-tester': {
     title: 'Screen Resolution Tester',
     description: 'Test any screen resolution or viewport size with device presets, custom dimensions, and a live scaled preview.',
     emoji: '🖥️',
     category: 'Developer',
+    faqs: [
+      {
+        question: 'Does this actually change my screen resolution?',
+        answer: 'No. It displays a visual grid and dimension information at actual pixels — it does not modify your operating system display settings.',
+      },
+      {
+        question: 'What device presets are available?',
+        answer: 'Common presets include iPhone SE, iPhone 14, Pixel 7, Samsung Galaxy S23, iPad, and various laptop/desktop resolutions.',
+      },
+    ],
   },
   'url-slug-generator': {
     title: 'URL Slug Generator',
     description: 'Convert any text into URL-friendly slugs with customizable separator and length limit.',
     emoji: '🔗',
     category: 'Developer',
+    faqs: [
+      {
+        question: 'What characters are allowed in a URL slug?',
+        answer: 'Lowercase letters (a–z), numbers (0–9), and hyphens. All other characters are either replaced with the separator or stripped.',
+      },
+      {
+        question: 'Can I change the separator from hyphen to underscore?',
+        answer: 'Yes. You can set any separator character or string, including underscore, space, or nothing.',
+      },
+    ],
   },
 };
 
