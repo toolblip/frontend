@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import PasswordStrength from '@/components/ui/PasswordStrength';
 
 export default function SignupForm() {
   const [email, setEmail] = useState('');
@@ -123,6 +124,7 @@ export default function SignupForm() {
             onChange={(e) => setPassword(e.target.value)}
             className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-green-500 transition-colors"
           />
+          <PasswordStrength password={password} />
         </div>
 
         <div>

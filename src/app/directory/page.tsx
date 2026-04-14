@@ -14,16 +14,116 @@ const categories = [
   { name: 'Utilities', emoji: '🛠️', description: 'Search, API clients, general-purpose tools' },
 ];
 
-// Placeholder servers for initial deployment (replace with API data when backend is ready)
-const placeholderServers = [
-  { slug: 'filesystem', name: 'Filesystem', description: 'Read, write, and manage local files via MCP protocol.', category: 'Filesystem', url: '#' },
-  { slug: 'brave-search', name: 'Brave Search', description: 'Web search via Brave Search API, with local and global result support.', category: 'Utilities', url: '#' },
-  { slug: 'sqlite', name: 'SQLite', description: 'Query and manage SQLite databases with full SQL support.', category: 'Data', url: '#' },
-  { slug: 'github', name: 'GitHub', description: 'Interact with GitHub repositories, issues, PRs, and workflows.', category: 'Code', url: '#' },
-  { slug: 'slack', name: 'Slack', description: 'Post messages, manage channels, and query Slack workspaces.', category: 'Communication', url: '#' },
-  { slug: 'puppeteer', name: 'Puppeteer', description: 'Browser automation and web scraping via headless Chrome.', category: 'Browser', url: '#' },
-  { slug: 'memory', name: 'Memory', description: 'Persistent key-value storage for agent memory and context.', category: 'Utilities', url: '#' },
-  { slug: 'aws-kb-retrieval', name: 'AWS KB Retrieval', description: 'Query AWS Knowledge Base for contextual document retrieval.', category: 'Data', url: '#' },
+// Seed data — replace with API data when backend is ready
+const servers = [
+  {
+    slug: 'filesystem',
+    name: 'Filesystem',
+    description: 'Read, write, and manage local files via the MCP protocol. Supports glob patterns, directory traversal, and atomic writes.',
+    category: 'Filesystem',
+    url: 'https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem',
+    stars: 1200,
+    official: true,
+  },
+  {
+    slug: 'brave-search',
+    name: 'Brave Search',
+    description: 'Web search via the Brave Search API. Supports local and global results, news, and image search with customizable freshness filters.',
+    category: 'Utilities',
+    url: 'https://github.com/modelcontextprotocol/servers/tree/main/src/brave-search',
+    stars: 890,
+    official: true,
+  },
+  {
+    slug: 'github',
+    name: 'GitHub',
+    description: 'Full GitHub API integration — repositories, issues, pull requests, reviews, workflows, and file contents. Supports GraphQL and REST.',
+    category: 'Code',
+    url: 'https://github.com/modelcontextprotocol/servers/tree/main/src/github',
+    stars: 2100,
+    official: true,
+  },
+  {
+    slug: 'slack',
+    name: 'Slack',
+    description: 'Post messages, manage channels, search history, and handle webhooks. Supports block kit formatting and threaded replies.',
+    category: 'Communication',
+    url: 'https://github.com/modelcontextprotocol/servers/tree/main/src/slack',
+    stars: 760,
+    official: true,
+  },
+  {
+    slug: 'memory',
+    name: 'Memory',
+    description: 'Persistent key-value store for agent memory and context. Uses SQLite under the hood — no external database required.',
+    category: 'Utilities',
+    url: 'https://github.com/modelcontextprotocol/servers/tree/main/src/memory',
+    stars: 1500,
+    official: true,
+  },
+  {
+    slug: 'sqlite',
+    name: 'SQLite',
+    description: 'Query and manage SQLite databases with full SQL support. Includes schema inspection, query execution, and transaction support.',
+    category: 'Data',
+    url: 'https://github.com/modelcontextprotocol/servers/tree/main/src/sqlite',
+    stars: 640,
+    official: true,
+  },
+  {
+    slug: 'puppeteer',
+    name: 'Puppeteer',
+    description: 'Headless Chrome automation for browser tasks — screenshot capture, PDF generation, form submission, and web scraping with full JS execution.',
+    category: 'Browser',
+    url: 'https://github.com/modelcontextprotocol/servers/tree/main/src/puppeteer',
+    stars: 930,
+    official: true,
+  },
+  {
+    slug: 'aws-kb-retrieval',
+    name: 'AWS KB Retrieval',
+    description: 'Query Amazon Bedrock Knowledge Bases for contextual document retrieval. Supports semantic search across PDFs, Markdown, and HTML.',
+    category: 'Data',
+    url: 'https://github.com/modelcontextprotocol/servers/tree/main/src/aws-kb-retrieval-server',
+    stars: 340,
+    official: true,
+  },
+  {
+    slug: 'sentry',
+    name: 'Sentry',
+    description: 'Monitor and manage Sentry issues, events, and projects. Fetch stack traces, assign issues, and resolve errors programmatically.',
+    category: 'Utilities',
+    url: 'https://github.com/modelcontextprotocol/servers/tree/main/src/sentry',
+    stars: 280,
+    official: true,
+  },
+  {
+    slug: 'everart',
+    name: 'EverArt',
+    description: 'AI image generation powered by Stability AI. Generate, edit, and transform images using text prompts with style and composition controls.',
+    category: 'Utilities',
+    url: 'https://github.com/modelcontextprotocol/servers/tree/main/src/everart',
+    stars: 190,
+    official: true,
+  },
+  {
+    slug: 'openapi',
+    name: 'OpenAPI',
+    description: 'Interact with any REST API via its OpenAPI/Swagger spec. Generates typed tool calls from schema — no manual HTTP wiring needed.',
+    category: 'Utilities',
+    url: 'https://github.com/modelcontextprotocol/servers/tree/main/src/openapi',
+    stars: 420,
+    official: true,
+  },
+  {
+    slug: 'google-maps',
+    name: 'Google Maps',
+    description: 'Places search, directions, distance matrix, elevation, and geocoding. Includes timezone lookups and address autocomplete.',
+    category: 'Utilities',
+    url: 'https://github.com/modelcontextprotocol/servers/tree/main/src/google-maps',
+    stars: 510,
+    official: true,
+  },
 ];
 
 export default function DirectoryPage() {
@@ -64,7 +164,7 @@ export default function DirectoryPage() {
       <section>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
-            All Servers ({placeholderServers.length})
+            All Servers ({servers.length})
           </h2>
           <button className="text-sm text-green-400 hover:text-green-300 transition-colors">
             Submit a server →
@@ -72,7 +172,7 @@ export default function DirectoryPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {placeholderServers.map((server) => (
+          {servers.map((server) => (
             <a
               key={server.slug}
               href={server.url}
