@@ -43,7 +43,7 @@ const gaId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
     <!-- JSON-LD slot -->
     <slot name="jsonld" />
 
-    <!-- GA4 (consent-gated — only loads after cookie consent) -->
+    <!-- GA4 (consent-gated  -  only loads after cookie consent) -->
     {gaId && (
       <script define:vars={{ gaId }}>
         window.__GA_ID = gaId;
@@ -51,30 +51,36 @@ const gaId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
     )}
   </head>
   <body class="min-h-screen flex flex-col">
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2 focus:bg-green-600 focus:text-white focus:rounded-lg focus:text-sm focus:font-medium">Skip to content</a>
     <!-- Nav -->
     <header class="border-b border-gray-800 bg-gray-950/80 backdrop-blur sticky top-0 z-50">
       <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
         <a href="/" class="text-lg font-bold text-white tracking-tight hover:text-green-400 transition-colors">
           Toolblip
         </a>
-        <nav class="flex items-center gap-6 text-sm">
+        <nav aria-label="Main navigation" class="flex items-center gap-6 text-sm">
           <a href="/tools" class="text-gray-400 hover:text-white transition-colors">All Tools</a>
+          <span id="nav-auth">
+            <a href="/login" class="text-gray-400 hover:text-white transition-colors">Sign in</a>
+          </span>
         </nav>
       </div>
     </header>
 
     <!-- Page content -->
-    <main class="flex-1">
+    <main id="main-content" class="flex-1">
       <slot />
     </main>
 
     <!-- Footer -->
     <footer class="border-t border-gray-800 mt-16 py-8">
       <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
-        <span>&copy; {new Date().getFullYear()} Toolblip — 100% client-side, nothing leaves your browser.</span>
-        <nav class="flex gap-5">
+        <span>&copy; {new Date().getFullYear()} Toolblip  -  100% client-side, nothing leaves your browser.</span>
+        <nav aria-label="Footer navigation" class="flex gap-5">
+          <a href="/about" class="hover:text-gray-300 transition-colors">About</a>
           <a href="/privacy" class="hover:text-gray-300 transition-colors">Privacy</a>
           <a href="/terms" class="hover:text-gray-300 transition-colors">Terms</a>
+          <a href="/donate" class="hover:text-gray-300 transition-colors">Donate</a>
         </nav>
       </div>
     </footer>
@@ -92,6 +98,41 @@ const gaId = import.meta.env.PUBLIC_GA_MEASUREMENT_ID;
         </div>
       </div>
     </div>
+
+    <script>
+      // Auth nav state
+      (function () {
+        function getCookie(name) {
+          const match = document.cookie.match(new RegExp('(?:^|; )' + name + '=([^;]*)'));
+          return match ? decodeURIComponent(match[1]) : null;
+        }
+
+        const session = getCookie('tb_session');
+        if (!session) return;
+
+        let email = '';
+        try {
+          const userRaw = getCookie('tb_user');
+          if (userRaw) email = JSON.parse(userRaw).email ?? '';
+        } catch {}
+
+        const label = email.length > 20 ? email.slice(0, 20) + '…' : email;
+
+        const navAuth = document.getElementById('nav-auth');
+        if (!navAuth) return;
+        navAuth.innerHTML =
+          '<span class="text-gray-400 text-sm">' + (label || 'Account') + '</span>' +
+          '<button id="nav-logout" class="ml-4 text-gray-500 hover:text-white transition-colors text-sm">Sign out</button>';
+
+        document.getElementById('nav-logout')?.addEventListener('click', async () => {
+          await fetch('https://api.toolblip.com/api/auth/logout', { method: 'POST', credentials: 'include' }).catch(() => {});
+          for (const n of ['tb_session', 'tb_user']) {
+            document.cookie = n + '=; Max-Age=0; path=/';
+          }
+          window.location.href = '/';
+        });
+      })();
+    </script>
 
     <script>
       // Cookie consent

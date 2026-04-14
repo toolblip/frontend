@@ -1,105 +1,28 @@
 ---
 import ToolLayout from '../../../layouts/ToolLayout.astro';
 
-const faqEntries = [
-  {
-    q: "What does a JSON formatter do?",
-    a: "A JSON formatter takes raw or compressed JSON and adds consistent indentation and line breaks so you can actually read it. This tool parses your input with the browser's native JSON.parse, then re-serializes it with your chosen indent level."
-  },
-  {
-    q: "What is the difference between formatting and minifying JSON?",
-    a: "Formatting (pretty-printing) adds whitespace, indentation, and newlines to make JSON human-readable. Minifying strips all unnecessary whitespace to produce the smallest possible output. Both operations preserve the data exactly as-is."
-  },
-  {
-    q: "How does JSON validation work here?",
-    a: "When you click Format or Minify, the tool runs JSON.parse on your input. If parsing fails, you get the exact error message from the JavaScript engine, including the character position where it broke. Valid JSON is re-serialized to the output panel."
-  },
-  {
-    q: "Does it support nested objects and arrays?",
-    a: "Yes. Any valid JSON structure works, including deeply nested objects, arrays of arrays, mixed types, and large documents. The formatter handles the full JSON spec."
-  },
-  {
-    q: "Is it safe to paste sensitive or private JSON?",
-    a: "Yes. Everything runs client-side in your browser. Your JSON is never sent to a server, never logged, and never stored. Close the tab and it is gone."
-  },
-  {
-    q: "Is there a size or character limit?",
-    a: "There is no hard limit set by the tool. Practical limits depend on your browser and available memory. Most browsers handle several megabytes of JSON without issues."
-  },
-  {
-    q: "What do the error messages mean?",
-    a: "Error messages come directly from your browser's JSON parser. Common ones include 'Unexpected token' (syntax error at a specific position), 'Unexpected end of JSON input' (truncated or incomplete data), and 'Expected property name' (missing quotes around keys)."
-  },
-  {
-    q: "How is this different from using jq on the command line?",
-    a: "jq is a query and transformation language for JSON. This tool focuses on formatting, minifying, and validating. If you just need to pretty-print or check syntax, this is faster than opening a terminal. For filtering or reshaping data, jq is the better choice."
-  }
-];
-
 const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": faqEntries.map(e => ({
-    "@type": "Question",
-    "name": e.q,
-    "acceptedAnswer": {
-      "@type": "Answer",
-      "text": e.a
-    }
-  }))
-};
-
-const softwareJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "name": "JSON Formatter & Validator",
-  "url": "https://toolblip.com/tools/json-formatter/",
-  "applicationCategory": "DeveloperApplication",
-  "operatingSystem": "Any (browser-based)",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "description": "Format, validate, and minify JSON instantly in your browser. Highlights errors, supports 2 or 4-space indent. Free, no sign-up."
-};
-
-const breadcrumbJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://toolblip.com/"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Tools",
-      "item": "https://toolblip.com/tools/"
-    },
-    {
-      "@type": "ListItem",
-      "position": 3,
-      "name": "JSON Formatter",
-      "item": "https://toolblip.com/tools/json-formatter/"
-    }
-  ]
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: 'What is JSON formatting?', acceptedAnswer: { '@type': 'Answer', text: 'JSON formatting (also called pretty-printing) takes compact or minified JSON and adds indentation and line breaks to make it readable. A minified API response like {"name":"Alice","age":30} becomes properly indented with each key on its own line.' } },
+    { '@type': 'Question', name: 'What is JSON minification?', acceptedAnswer: { '@type': 'Answer', text: 'Minification removes all unnecessary whitespace from JSON. The result is a single-line string with no spaces or newlines. Minified JSON is smaller in file size and faster to transmit over a network, but harder for humans to read.' } },
+    { '@type': 'Question', name: 'Is my JSON sent to a server?', acceptedAnswer: { '@type': 'Answer', text: 'No. All formatting, minifying, and validation happens entirely in your browser using JavaScript. Your JSON never leaves your device. This makes the tool safe for confidential data like API keys or user records.' } },
+    { '@type': 'Question', name: 'Why does JSON validation fail with a helpful error message?', acceptedAnswer: { '@type': 'Answer', text: 'When JSON is invalid, the browser\'s JSON.parse() function throws an error with a message describing what went wrong  -  for example "Unexpected token" with the position in the string. This tool surfaces that exact error message so you can find and fix the problem quickly.' } },
+    { '@type': 'Question', name: 'What is the difference between 2-space and 4-space indentation?', acceptedAnswer: { '@type': 'Answer', text: '2-space indentation uses two spaces per nesting level and produces more compact output. 4-space indentation is more readable for deeply nested structures. Most style guides (Prettier, ESLint defaults) use 2 spaces for JSON.' } },
+    { '@type': 'Question', name: 'Can I use this to validate JSON before submitting an API request?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. Paste your request body here and click Format  -  if the JSON is invalid, you\'ll see the exact error. If it formats successfully, the JSON is syntactically valid.' } },
+  ],
 };
 ---
 
 <ToolLayout
-  title="JSON Formatter & Validator Online Free — Toolblip"
-  description="Format, validate, and minify JSON instantly in your browser. Highlights errors, supports 2 or 4-space indent. Free — no sign-up."
+  title="JSON Formatter & Validator Online Free  -  Toolblip"
+  description="Format, validate, and minify JSON instantly. Error highlighting with line numbers. Choose 2 or 4 space indentation. 100% client-side."
   toolSlug="json-formatter"
   category="developer"
 >
   <Fragment slot="jsonld">
     <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
-    <script type="application/ld+json" set:html={JSON.stringify(softwareJsonLd)} />
-    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
   </Fragment>
 
   <div class="flex gap-2 mb-3">
@@ -114,9 +37,10 @@ const breadcrumbJsonLd = {
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
     <div>
-      <div class="text-xs text-gray-500 mb-1">Input</div>
+      <label for="jf-input" class="text-xs text-gray-500 mb-1 block">Input</label>
       <textarea
         id="jf-input"
+        aria-label="JSON input"
         class="w-full h-64 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none focus:border-green-500 placeholder-gray-500"
         placeholder='{"key": "value"}'
       ></textarea>
@@ -124,18 +48,21 @@ const breadcrumbJsonLd = {
     <div>
       <div class="flex items-center justify-between mb-1">
         <span class="text-xs text-gray-500">Output</span>
-        <button id="jf-copy" class="text-xs text-green-400 hover:text-green-300 transition-colors">Copy</button>
+        <button id="jf-copy" aria-label="Copy formatted JSON" class="text-xs text-green-400 hover:text-green-300 transition-colors">Copy</button>
       </div>
-      <textarea
-        id="jf-output"
-        readonly
-        class="w-full h-64 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none"
-        placeholder="Formatted JSON will appear here..."
-      ></textarea>
+      <div aria-live="polite" aria-atomic="true">
+        <textarea
+          id="jf-output"
+          readonly
+          aria-label="Formatted JSON output"
+          class="w-full h-64 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none"
+          placeholder="Formatted JSON will appear here..."
+        ></textarea>
+      </div>
     </div>
   </div>
 
-  <div id="jf-error" class="hidden mt-2 text-sm text-red-400 bg-red-900/20 border border-red-800 rounded-lg px-3 py-2"></div>
+  <div id="jf-error" role="alert" class="hidden mt-2 text-sm text-red-400 bg-red-900/20 border border-red-800 rounded-lg px-3 py-2"></div>
 
   <script>
     const inputEl = document.getElementById('jf-input') as HTMLTextAreaElement;
@@ -191,35 +118,34 @@ const breadcrumbJsonLd = {
     });
   </script>
 
-  <div slot="howto">
-    <h2 class="text-lg font-semibold text-white mb-3">How to use</h2>
-    <ol class="text-gray-400 text-sm leading-relaxed space-y-2 list-decimal list-inside">
-      <li>Paste or type your JSON into the input panel on the left. The tool also auto-formats when you paste.</li>
-      <li>Pick your indent size (2 or 4 spaces) using the radio buttons in the toolbar.</li>
-      <li>Click <strong class="text-white">Format</strong> to pretty-print the JSON, or <strong class="text-white">Minify</strong> to strip all whitespace.</li>
-      <li>If the JSON is invalid, an error message appears below the panels with the exact parse failure and position.</li>
-      <li>Click <strong class="text-white">Copy</strong> above the output panel to copy the result to your clipboard.</li>
-    </ol>
+  <div slot="description">
+    <h2 class="text-lg font-semibold text-white mb-2">About this tool</h2>
+    <p class="text-gray-400 text-sm leading-relaxed">
+      Paste JSON to format (pretty-print) it with proper indentation, or minify it to remove all whitespace. Invalid JSON shows an exact error message from the parser so you can fix it immediately. Choose 2 or 4 space indentation depending on your style guide.
+    </p>
+    <p class="text-gray-400 text-sm leading-relaxed mt-2">
+      The tool auto-formats on paste, so you can drop in a minified API response and immediately see the structure. Everything runs in your browser  -  your JSON is never sent to any server, making it safe to use with API keys, user data, or configuration files.
+    </p>
   </div>
 
-  <div slot="description">
-    <h2 class="text-lg font-semibold text-white mb-2">JSON formatter online: format, validate, and minify</h2>
-    <div class="text-gray-400 text-sm leading-relaxed space-y-3">
-      <p>This json formatter online tool takes raw JSON and turns it into something readable. Paste a minified API response, a config file, or any JSON blob, and it pretty-prints it with consistent indentation. You can choose between 2-space and 4-space indent depending on your preference or project style.</p>
-      <p>The minify mode does the opposite: it strips every unnecessary space, newline, and tab to give you the smallest valid JSON string. Useful when you need to stuff JSON into a URL parameter, a single-line config value, or anywhere size matters.</p>
-      <p>Validation happens automatically. When you click Format or Minify, the tool parses your input using the browser's built-in JSON parser. If something is wrong, you get the exact error message with the character position where parsing failed. No vague "invalid input" messages. You see the same error you would get in a browser console, which makes it straightforward to find and fix the problem.</p>
-      <p>Everything runs in your browser. Your JSON never leaves your machine, never hits a server, and is never stored or logged anywhere. This matters when you are working with tokens, credentials, user data, or anything you would not want in someone else's logs.</p>
-      <p>The tool auto-formats on paste, so you can skip the extra click in most cases. Output copies to clipboard with one button. No accounts, no rate limits, no ads.</p>
-    </div>
+  <div slot="how-to-use">
+    <h2 class="text-lg font-semibold text-white mb-3 mt-8">How to use</h2>
+    <ol class="list-decimal list-inside space-y-2 text-gray-400 text-sm leading-relaxed">
+      <li>Paste your JSON into the Input box on the left. It auto-formats on paste.</li>
+      <li>Click <strong class="text-gray-200">Format</strong> to pretty-print, or <strong class="text-gray-200">Minify</strong> to collapse to one line.</li>
+      <li>Choose <strong class="text-gray-200">2</strong> or <strong class="text-gray-200">4</strong> space indentation using the radio buttons.</li>
+      <li>If the JSON is invalid, an error message appears below the input with the exact issue.</li>
+      <li>Click <strong class="text-gray-200">Copy</strong> to copy the formatted or minified output.</li>
+    </ol>
   </div>
 
   <div slot="faq">
     <h2 class="text-lg font-semibold text-white mb-4 mt-8">Frequently asked questions</h2>
     <div class="space-y-4">
-      {faqEntries.map(entry => (
-        <details class="group">
-          <summary class="text-sm font-medium text-gray-200 cursor-pointer hover:text-white transition-colors">{entry.q}</summary>
-          <p class="text-gray-400 text-sm leading-relaxed mt-2 pl-4">{entry.a}</p>
+      {faqJsonLd.mainEntity.map((item) => (
+        <details class="border border-gray-800 rounded-lg">
+          <summary class="px-4 py-3 text-sm font-medium text-gray-200 cursor-pointer hover:text-white">{item.name}</summary>
+          <p class="px-4 pb-3 text-sm text-gray-400">{item.acceptedAnswer.text}</p>
         </details>
       ))}
     </div>
@@ -230,7 +156,7 @@ const breadcrumbJsonLd = {
     <div class="flex flex-wrap gap-2">
       <a href="/tools/base64/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Base64 Encode/Decode</a>
       <a href="/tools/url-encode/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">URL Encode/Decode</a>
-      <a href="/tools/markdown-to-html/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Markdown to HTML</a>
+      <a href="/tools/uuid-generator/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">UUID Generator</a>
     </div>
   </div>
 </ToolLayout>

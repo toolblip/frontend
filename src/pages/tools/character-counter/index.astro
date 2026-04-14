@@ -1,20 +1,39 @@
 ---
 import ToolLayout from '../../../layouts/ToolLayout.astro';
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: 'How many characters does Twitter allow?', acceptedAnswer: { '@type': 'Answer', text: 'Twitter (now X) allows 280 characters per tweet. URLs count as 23 characters regardless of their actual length. This tool counts the raw character count, so keep in mind URLs will be shortened by Twitter automatically.' } },
+    { '@type': 'Question', name: 'What is the LinkedIn post character limit?', acceptedAnswer: { '@type': 'Answer', text: 'LinkedIn posts support up to 3,000 characters, but the preview cuts off at around 210 characters before a "see more" link appears. This tool tracks the 700-character mark as the recommended readable length for posts that display fully without truncation.' } },
+    { '@type': 'Question', name: 'How long should a meta title be?', acceptedAnswer: { '@type': 'Answer', text: 'Google typically displays the first 50–60 characters of a page title. This tool uses 60 as the recommended limit. Titles longer than 60 characters may be truncated in search results.' } },
+    { '@type': 'Question', name: 'What is the ideal meta description length?', acceptedAnswer: { '@type': 'Answer', text: 'Meta descriptions between 120 and 160 characters tend to display fully in Google search results. Longer descriptions get truncated. This tool shows a 160-character limit indicator.' } },
+    { '@type': 'Question', name: 'Is my text sent to a server?', acceptedAnswer: { '@type': 'Answer', text: 'No. All character counting happens entirely in your browser using JavaScript. Your text never leaves your device.' } },
+    { '@type': 'Question', name: 'What is the difference between characters with and without spaces?', acceptedAnswer: { '@type': 'Answer', text: 'Characters with spaces counts every character including whitespace. Characters without spaces counts only non-whitespace characters. Most platform limits count all characters including spaces.' } },
+  ],
+};
 ---
 
 <ToolLayout
-  title="Character Counter Online Free — Toolblip"
-  description="Count characters with Twitter, LinkedIn, and meta tag limit indicators. Live update as you type. 100% client-side."
+  title="Character Counter Online Free  -  Toolblip"
+  description="Count characters with Twitter, LinkedIn, and meta description limit indicators. Live update as you type. 100% client-side, nothing leaves your browser."
   toolSlug="character-counter"
   category="text"
 >
+  <Fragment slot="jsonld">
+    <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
+  </Fragment>
+
+  <label for="cc-input" class="sr-only">Text input</label>
   <textarea
     id="cc-input"
+    aria-label="Text input"
     class="w-full h-40 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-green-500 placeholder-gray-500"
     placeholder="Type or paste your text here..."
   ></textarea>
 
-  <div class="grid grid-cols-2 gap-3 mt-4">
+  <div class="grid grid-cols-2 gap-3 mt-4" aria-live="polite" aria-atomic="true">
     <div class="bg-gray-800 border border-gray-700 rounded-lg p-3 text-center">
       <div class="text-2xl font-bold text-green-400" id="cc-with-spaces">0</div>
       <div class="text-xs text-gray-400 mt-1">Characters (with spaces)</div>
@@ -34,11 +53,19 @@ import ToolLayout from '../../../layouts/ToolLayout.astro';
     ].map(({ label, limit, id }) => (
       <div>
         <div class="flex justify-between text-xs text-gray-400 mb-1">
-          <span>{label}</span>
+          <span id={`${id}-label`}>{label}</span>
           <span id={`${id}-count`}>0 / {limit}</span>
         </div>
-        <div class="h-1.5 bg-gray-800 rounded-full overflow-hidden">
-          <div id={`${id}-bar`} class="h-full bg-green-500 rounded-full transition-all" style="width:0%"></div>
+        <div
+          id={`${id}-bar`}
+          role="progressbar"
+          aria-valuemin={0}
+          aria-valuemax={limit}
+          aria-valuenow={0}
+          aria-labelledby={`${id}-label`}
+          class="h-1.5 bg-gray-800 rounded-full overflow-hidden"
+        >
+          <div class="h-full bg-green-500 rounded-full transition-all" style="width:0%"></div>
         </div>
       </div>
     ))}
@@ -66,11 +93,13 @@ import ToolLayout from '../../../layouts/ToolLayout.astro';
 
       limits.forEach(({ id, limit }) => {
         const count = document.getElementById(`${id}-count`)!;
-        const bar = document.getElementById(`${id}-bar`)!;
+        const progressbar = document.getElementById(`${id}-bar`)!;
+        const bar = progressbar.querySelector('div') as HTMLElement;
         const pct = Math.min(100, (len / limit) * 100);
         count.textContent = `${len} / ${limit}`;
         bar.style.width = `${pct}%`;
         bar.style.backgroundColor = pct > 100 ? '#ef4444' : pct > 85 ? '#f59e0b' : '#22c55e';
+        progressbar.setAttribute('aria-valuenow', String(len));
       });
     }
 
@@ -79,7 +108,34 @@ import ToolLayout from '../../../layouts/ToolLayout.astro';
 
   <div slot="description">
     <h2 class="text-lg font-semibold text-white mb-2">About this tool</h2>
-    <p class="text-gray-400 text-sm leading-relaxed">Track character limits for Twitter (280), LinkedIn (700), meta titles (60), and meta descriptions (160) as you type. The color-coded progress bars turn yellow at 85% and red when you exceed the limit.</p>
+    <p class="text-gray-400 text-sm leading-relaxed">
+      This character counter tracks your text length against the limits that matter: Twitter (280), LinkedIn posts (700 visible characters), meta titles (60), and meta descriptions (160). Progress bars turn yellow at 85% capacity and red when you exceed the limit.
+    </p>
+    <p class="text-gray-400 text-sm leading-relaxed mt-2">
+      Copywriters use it to draft social posts that fit without truncation. SEO professionals use it to write meta titles and descriptions that display fully in search results. All counting happens locally in your browser  -  nothing is sent to any server.
+    </p>
+  </div>
+
+  <div slot="how-to-use">
+    <h2 class="text-lg font-semibold text-white mb-3 mt-8">How to use</h2>
+    <ol class="list-decimal list-inside space-y-2 text-gray-400 text-sm leading-relaxed">
+      <li>Type or paste your text into the input box above.</li>
+      <li>Character counts update instantly as you type.</li>
+      <li>Watch the progress bars  -  they turn yellow near the limit and red when exceeded.</li>
+      <li>Trim your text until all relevant indicators are in the green zone.</li>
+    </ol>
+  </div>
+
+  <div slot="faq">
+    <h2 class="text-lg font-semibold text-white mb-4 mt-8">Frequently asked questions</h2>
+    <div class="space-y-4">
+      {faqJsonLd.mainEntity.map((item) => (
+        <details class="border border-gray-800 rounded-lg">
+          <summary class="px-4 py-3 text-sm font-medium text-gray-200 cursor-pointer hover:text-white">{item.name}</summary>
+          <p class="px-4 pb-3 text-sm text-gray-400">{item.acceptedAnswer.text}</p>
+        </details>
+      ))}
+    </div>
   </div>
 
   <div slot="related">
@@ -87,6 +143,7 @@ import ToolLayout from '../../../layouts/ToolLayout.astro';
     <div class="flex flex-wrap gap-2">
       <a href="/tools/word-counter/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Word Counter</a>
       <a href="/tools/case-converter/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Case Converter</a>
+      <a href="/tools/remove-duplicate-lines/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Remove Duplicate Lines</a>
     </div>
   </div>
 </ToolLayout>

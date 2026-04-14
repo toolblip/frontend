@@ -1,30 +1,49 @@
 ---
 import ToolLayout from '../../../layouts/ToolLayout.astro';
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: 'What Markdown syntax is supported?', acceptedAnswer: { '@type': 'Answer', text: 'This tool uses marked.js, which supports GitHub Flavored Markdown (GFM): headings (#, ##, ###), bold (**text**), italic (*text*), links ([label](url)), images, code blocks (``` triple backtick), inline code (`code`), blockquotes (>), ordered and unordered lists, horizontal rules (---), and tables.' } },
+    { '@type': 'Question', name: 'Is my text sent to a server?', acceptedAnswer: { '@type': 'Answer', text: 'No. Conversion happens entirely in your browser using marked.js, a JavaScript library. Your Markdown is never sent to any server.' } },
+    { '@type': 'Question', name: 'What is marked.js?', acceptedAnswer: { '@type': 'Answer', text: 'marked.js is a fast, lightweight Markdown parser written in JavaScript. It supports the CommonMark specification and GitHub Flavored Markdown extensions. It loads lazily from CDN on first use, so it does not affect page load time.' } },
+    { '@type': 'Question', name: 'Can I use the output HTML directly in a website?', acceptedAnswer: { '@type': 'Answer', text: 'Yes, the HTML output is standard HTML that can be pasted directly into a web page. However, if the Markdown content comes from user input, sanitize the HTML before rendering it to avoid XSS vulnerabilities.' } },
+    { '@type': 'Question', name: 'What is the difference between Split, Preview, and HTML modes?', acceptedAnswer: { '@type': 'Answer', text: 'Split mode shows Markdown input and HTML output side by side. Preview mode shows the rendered HTML as styled web content. HTML mode shows only the raw HTML output in a single pane.' } },
+    { '@type': 'Question', name: 'Does it support tables?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. marked.js supports GitHub Flavored Markdown tables. Use pipes (|) and hyphens (---) to define table columns and rows. The HTML output will include a proper <table> element.' } },
+  ],
+};
 ---
 
 <ToolLayout
-  title="Markdown to HTML Converter Online Free — Toolblip"
+  title="Markdown to HTML Converter Online Free  -  Toolblip"
   description="Convert Markdown to HTML with a live split-pane editor and rendered preview. Uses marked.js. No uploads, 100% client-side."
   toolSlug="markdown-to-html"
   category="developer"
 >
+  <Fragment slot="jsonld">
+    <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
+  </Fragment>
+
   <div class="flex gap-2 mb-3 items-center flex-wrap">
-    <div class="flex rounded-lg overflow-hidden border border-gray-700 text-sm">
-      <button id="mth-tab-split" class="px-3 py-1.5 bg-green-600 text-white">Split</button>
-      <button id="mth-tab-preview" class="px-3 py-1.5 bg-gray-700 text-gray-300 hover:bg-gray-600">Preview</button>
-      <button id="mth-tab-html" class="px-3 py-1.5 bg-gray-700 text-gray-300 hover:bg-gray-600">HTML</button>
+    <div role="tablist" aria-label="View mode" class="flex rounded-lg overflow-hidden border border-gray-700 text-sm">
+      <button id="mth-tab-split" role="tab" aria-selected="true" class="px-3 py-1.5 bg-green-600 text-white">Split</button>
+      <button id="mth-tab-preview" role="tab" aria-selected="false" class="px-3 py-1.5 bg-gray-700 text-gray-300 hover:bg-gray-600">Preview</button>
+      <button id="mth-tab-html" role="tab" aria-selected="false" class="px-3 py-1.5 bg-gray-700 text-gray-300 hover:bg-gray-600">HTML</button>
     </div>
     <button id="mth-copy" class="ml-auto text-xs text-green-400 hover:text-green-300 transition-colors">Copy HTML</button>
   </div>
 
   <div id="mth-split" class="grid grid-cols-2 gap-3">
     <div>
-      <div class="text-xs text-gray-500 mb-1">Markdown</div>
-      <textarea id="mth-input" class="w-full h-72 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none focus:border-green-500" placeholder="# Hello, world&#10;&#10;Type **Markdown** here..."></textarea>
+      <label for="mth-input" class="text-xs text-gray-500 mb-1 block">Markdown</label>
+      <textarea id="mth-input" aria-label="Markdown input" class="w-full h-72 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none focus:border-green-500" placeholder="# Hello, world&#10;&#10;Type **Markdown** here..."></textarea>
     </div>
     <div>
       <div class="text-xs text-gray-500 mb-1">HTML output</div>
-      <textarea id="mth-output" readonly class="w-full h-72 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none"></textarea>
+      <div aria-live="polite" aria-atomic="true">
+        <textarea id="mth-output" readonly aria-label="HTML output" class="w-full h-72 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none"></textarea>
+      </div>
     </div>
   </div>
 
@@ -34,12 +53,17 @@ import ToolLayout from '../../../layouts/ToolLayout.astro';
   </div>
 
   <script>
-    // Load marked.js lazily
+    // Load marked.js lazily from CDN
     let markedLoaded = false;
     async function ensureMarked() {
       if (markedLoaded) return;
-      const { marked } = await import('https://cdn.jsdelivr.net/npm/marked@12/src/marked.esm.js');
-      (window as any).__marked = marked;
+      await new Promise<void>((res, rej) => {
+        const s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
+        s.onload = () => res();
+        s.onerror = rej;
+        document.head.appendChild(s);
+      });
       markedLoaded = true;
     }
 
@@ -49,9 +73,21 @@ import ToolLayout from '../../../layouts/ToolLayout.astro';
     const splitPane = document.getElementById('mth-split')!;
     const previewPane = document.getElementById('mth-preview-pane')!;
 
+    const errorEl = document.createElement('div');
+    errorEl.className = 'hidden mt-2 text-sm text-red-400 bg-red-900/20 border border-red-800 rounded-lg px-3 py-2';
+    errorEl.setAttribute('role', 'alert');
+    input.parentNode!.parentNode!.insertBefore(errorEl, input.parentNode!.nextSibling);
+
     async function convert() {
-      await ensureMarked();
-      const html = (window as any).__marked(input.value);
+      try {
+        await ensureMarked();
+      } catch {
+        errorEl.textContent = 'Failed to load the Markdown library. Please check your connection and try again.';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+      errorEl.classList.add('hidden');
+      const html = (window as any).marked.parse(input.value);
       output.value = html;
       rendered.innerHTML = html;
     }
@@ -64,6 +100,7 @@ import ToolLayout from '../../../layouts/ToolLayout.astro';
         btn.className = t === active
           ? 'px-3 py-1.5 bg-green-600 text-white'
           : 'px-3 py-1.5 bg-gray-700 text-gray-300 hover:bg-gray-600';
+        btn.setAttribute('aria-selected', t === active ? 'true' : 'false');
       });
 
       splitPane.classList.toggle('hidden', active !== 'split');
@@ -97,7 +134,35 @@ import ToolLayout from '../../../layouts/ToolLayout.astro';
 
   <div slot="description">
     <h2 class="text-lg font-semibold text-white mb-2">About this tool</h2>
-    <p class="text-gray-400 text-sm leading-relaxed">Converts GitHub-flavored Markdown to HTML using <a href="https://marked.js.org" class="text-green-400 hover:underline" target="_blank" rel="noopener">marked.js</a>. Switch between split-pane editing, rendered preview, or HTML-only output. The library loads lazily on first use — no impact on page load time.</p>
+    <p class="text-gray-400 text-sm leading-relaxed">
+      Convert Markdown to HTML using <a href="https://marked.js.org" class="text-green-400 hover:underline" target="_blank" rel="noopener">marked.js</a>, which supports GitHub Flavored Markdown including tables, code fences, and strikethrough. Type Markdown on the left and see the HTML output on the right in real time.
+    </p>
+    <p class="text-gray-400 text-sm leading-relaxed mt-2">
+      Switch between Split mode (side-by-side editing), Preview mode (rendered HTML as styled content), and HTML mode (raw HTML output only). The marked.js library loads lazily from CDN on first use, so it has no impact on page load time. Everything runs in your browser  -  nothing is uploaded.
+    </p>
+  </div>
+
+  <div slot="how-to-use">
+    <h2 class="text-lg font-semibold text-white mb-3 mt-8">How to use</h2>
+    <ol class="list-decimal list-inside space-y-2 text-gray-400 text-sm leading-relaxed">
+      <li>Type or paste your Markdown into the left pane.</li>
+      <li>The HTML output updates automatically as you type.</li>
+      <li>Click <strong class="text-gray-200">Preview</strong> to see the rendered output as styled HTML.</li>
+      <li>Click <strong class="text-gray-200">HTML</strong> to see the full-width raw HTML output.</li>
+      <li>Click <strong class="text-gray-200">Copy HTML</strong> to copy the output to your clipboard.</li>
+    </ol>
+  </div>
+
+  <div slot="faq">
+    <h2 class="text-lg font-semibold text-white mb-4 mt-8">Frequently asked questions</h2>
+    <div class="space-y-4">
+      {faqJsonLd.mainEntity.map((item) => (
+        <details class="border border-gray-800 rounded-lg">
+          <summary class="px-4 py-3 text-sm font-medium text-gray-200 cursor-pointer hover:text-white">{item.name}</summary>
+          <p class="px-4 pb-3 text-sm text-gray-400">{item.acceptedAnswer.text}</p>
+        </details>
+      ))}
+    </div>
   </div>
 
   <div slot="related">
@@ -105,6 +170,7 @@ import ToolLayout from '../../../layouts/ToolLayout.astro';
     <div class="flex flex-wrap gap-2">
       <a href="/tools/word-counter/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Word Counter</a>
       <a href="/tools/json-formatter/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">JSON Formatter</a>
+      <a href="/tools/character-counter/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Character Counter</a>
     </div>
   </div>
 </ToolLayout>

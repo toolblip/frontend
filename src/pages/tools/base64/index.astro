@@ -1,13 +1,30 @@
 ---
 import ToolLayout from '../../../layouts/ToolLayout.astro';
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: 'What is Base64 encoding?', acceptedAnswer: { '@type': 'Answer', text: 'Base64 is an encoding scheme that converts binary data into a string of ASCII characters. It maps every 3 bytes of input into 4 printable characters using a 64-character alphabet (A–Z, a–z, 0–9, +, /). The result is safe to transmit as text in emails, JSON, HTML attributes, and URLs.' } },
+    { '@type': 'Question', name: 'What is URL-safe Base64?', acceptedAnswer: { '@type': 'Answer', text: 'Standard Base64 uses + and / which have special meaning in URLs. URL-safe Base64 replaces + with - and / with _, and omits the trailing = padding. Use URL-safe mode when embedding Base64 in a URL query string or path segment.' } },
+    { '@type': 'Question', name: 'Is my text or data sent to a server?', acceptedAnswer: { '@type': 'Answer', text: 'No. All encoding and decoding happens entirely in your browser using JavaScript. Nothing leaves your device.' } },
+    { '@type': 'Question', name: 'Can I encode binary files?', acceptedAnswer: { '@type': 'Answer', text: 'This tool encodes text input. To encode a binary file, you would need a tool that accepts file uploads and reads the file as bytes first. For text, this tool covers all common use cases.' } },
+    { '@type': 'Question', name: 'Why does the Base64 output sometimes end with ==?', acceptedAnswer: { '@type': 'Answer', text: 'Base64 encodes 3 bytes at a time into 4 characters. If the input length is not divisible by 3, padding characters (=) are added to make the output length a multiple of 4. One = means 1 extra byte, == means 2 extra bytes.' } },
+    { '@type': 'Question', name: 'Is Base64 the same as encryption?', acceptedAnswer: { '@type': 'Answer', text: 'No. Base64 is an encoding, not encryption. It has no secret key and provides no security. Anyone can decode Base64. Use it for safe data transport, not for hiding sensitive information.' } },
+  ],
+};
 ---
 
 <ToolLayout
-  title="Base64 Encode & Decode Online Free — Toolblip"
-  description="Encode and decode Base64 text instantly in your browser. URL-safe Base64 option included. No uploads, no server."
+  title="Base64 Encode & Decode Online Free  -  Toolblip"
+  description="Encode and decode Base64 text instantly in your browser. URL-safe Base64 option included. No uploads, no server, 100% client-side."
   toolSlug="base64"
   category="developer"
 >
+  <Fragment slot="jsonld">
+    <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
+  </Fragment>
+
   <div class="flex gap-2 mb-3">
     <button id="b64-encode" class="bg-green-600 hover:bg-green-500 text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors">Encode</button>
     <button id="b64-decode" class="bg-gray-700 hover:bg-gray-600 text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors">Decode</button>
@@ -18,18 +35,20 @@ import ToolLayout from '../../../layouts/ToolLayout.astro';
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
     <div>
-      <div class="text-xs text-gray-500 mb-1">Input</div>
-      <textarea id="b64-input" class="w-full h-48 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none focus:border-green-500 placeholder-gray-500" placeholder="Text to encode or Base64 to decode..."></textarea>
+      <label for="b64-input" class="text-xs text-gray-500 mb-1 block">Input</label>
+      <textarea id="b64-input" aria-label="Text to encode or Base64 to decode" class="w-full h-48 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none focus:border-green-500 placeholder-gray-500" placeholder="Text to encode or Base64 to decode..."></textarea>
     </div>
     <div>
       <div class="flex items-center justify-between mb-1">
         <span class="text-xs text-gray-500">Output</span>
-        <button id="b64-copy" class="text-xs text-green-400 hover:text-green-300 transition-colors">Copy</button>
+        <button id="b64-copy" aria-label="Copy encoded or decoded result" class="text-xs text-green-400 hover:text-green-300 transition-colors">Copy</button>
       </div>
-      <textarea id="b64-output" readonly class="w-full h-48 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none" placeholder="Result appears here..."></textarea>
+      <div aria-live="polite" aria-atomic="true">
+        <textarea id="b64-output" readonly aria-label="Encoded or decoded output" class="w-full h-48 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none" placeholder="Result appears here..."></textarea>
+      </div>
     </div>
   </div>
-  <div id="b64-error" class="hidden mt-2 text-sm text-red-400 bg-red-900/20 border border-red-800 rounded-lg px-3 py-2"></div>
+  <div id="b64-error" role="alert" class="hidden mt-2 text-sm text-red-400 bg-red-900/20 border border-red-800 rounded-lg px-3 py-2"></div>
 
   <script>
     const inputEl = document.getElementById('b64-input') as HTMLTextAreaElement;
@@ -38,7 +57,13 @@ import ToolLayout from '../../../layouts/ToolLayout.astro';
     const urlSafe = document.getElementById('b64-urlsafe') as HTMLInputElement;
 
     function toUrlSafe(s: string) { return s.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); }
-    function fromUrlSafe(s: string) { return s.replace(/-/g, '+').replace(/_/g, '/'); }
+    function fromUrlSafe(s: string) {
+      let t = s.replace(/-/g, '+').replace(/_/g, '/');
+      const pad = t.length % 4;
+      if (pad === 2) t += '==';
+      else if (pad === 3) t += '=';
+      return t;
+    }
 
     document.getElementById('b64-encode')!.addEventListener('click', () => {
       errorEl.classList.add('hidden');
@@ -70,7 +95,37 @@ import ToolLayout from '../../../layouts/ToolLayout.astro';
 
   <div slot="description">
     <h2 class="text-lg font-semibold text-white mb-2">About this tool</h2>
-    <p class="text-gray-400 text-sm leading-relaxed">Encode any text to Base64 or decode Base64 back to text. The URL-safe option replaces <code class="text-green-400">+</code> with <code class="text-green-400">-</code> and <code class="text-green-400">/</code> with <code class="text-green-400">_</code>, making the output safe to use in URLs and filenames without percent-encoding.</p>
+    <p class="text-gray-400 text-sm leading-relaxed">
+      This Base64 encoder and decoder runs entirely in your browser. Paste any text into the input box, click Encode to get Base64, or paste a Base64 string and click Decode to get the original text back. No data is sent to any server.
+    </p>
+    <p class="text-gray-400 text-sm leading-relaxed mt-2">
+      The URL-safe option replaces the standard <code class="text-green-400">+</code> with <code class="text-green-400">-</code> and <code class="text-green-400">/</code> with <code class="text-green-400">_</code>, and strips trailing <code class="text-green-400">=</code> padding. Use URL-safe Base64 when embedding encoded data in a URL query parameter or path segment, where the standard characters would need percent-encoding.
+    </p>
+    <p class="text-gray-400 text-sm leading-relaxed mt-2">
+      Common uses for Base64 encoding include embedding images as data URIs in CSS and HTML, passing binary content in JSON payloads, storing credentials in HTTP Basic Auth headers, and encoding attachments in email (MIME). Decoding Base64 is equally common when reading API responses, JWT payloads, or config values stored as encoded strings.
+    </p>
+  </div>
+
+  <div slot="how-to-use">
+    <h2 class="text-lg font-semibold text-white mb-3 mt-8">How to use</h2>
+    <ol class="list-decimal list-inside space-y-2 text-gray-400 text-sm leading-relaxed">
+      <li>Paste your text into the Input box on the left.</li>
+      <li>Click <strong class="text-gray-200">Encode</strong> to convert it to Base64, or click <strong class="text-gray-200">Decode</strong> to convert Base64 back to text.</li>
+      <li>Enable <strong class="text-gray-200">URL-safe</strong> if the output will be used in a URL or query string.</li>
+      <li>Click <strong class="text-gray-200">Copy</strong> to copy the result to your clipboard.</li>
+    </ol>
+  </div>
+
+  <div slot="faq">
+    <h2 class="text-lg font-semibold text-white mb-4 mt-8">Frequently asked questions</h2>
+    <div class="space-y-4">
+      {faqJsonLd.mainEntity.map((item) => (
+        <details class="border border-gray-800 rounded-lg">
+          <summary class="px-4 py-3 text-sm font-medium text-gray-200 cursor-pointer hover:text-white">{item.name}</summary>
+          <p class="px-4 pb-3 text-sm text-gray-400">{item.acceptedAnswer.text}</p>
+        </details>
+      ))}
+    </div>
   </div>
 
   <div slot="related">
@@ -78,6 +133,7 @@ import ToolLayout from '../../../layouts/ToolLayout.astro';
     <div class="flex flex-wrap gap-2">
       <a href="/tools/url-encode/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">URL Encode/Decode</a>
       <a href="/tools/json-formatter/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">JSON Formatter</a>
+      <a href="/tools/uuid-generator/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">UUID Generator</a>
     </div>
   </div>
 </ToolLayout>

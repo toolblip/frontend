@@ -11,55 +11,30 @@ const faqJsonLd = {
     { '@type': 'Question', name: 'How is reading time calculated?', acceptedAnswer: { '@type': 'Answer', text: 'Reading time uses an average reading speed of 200 words per minute, which is typical for general online content.' } },
     { '@type': 'Question', name: 'Can I use this for SEO meta descriptions?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. The character counter (with spaces) is what matters for meta descriptions. Aim for 120–160 characters.' } },
     { '@type': 'Question', name: 'Does it work with non-English text?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. The word counter works with any Unicode text, including Arabic, Chinese, and other scripts.' } },
-    { '@type': 'Question', name: 'How many words should a blog post be?', acceptedAnswer: { '@type': 'Answer', text: 'It depends on the topic. Short blog posts run 600 to 800 words. Long-form articles that target search traffic typically fall between 1,500 and 2,500 words. Academic essays vary by assignment, but 1,000 to 3,000 words is common for undergraduate work. Use this word counter to track your progress as you write.' } },
-    { '@type': 'Question', name: 'Is there a character or word limit to what I can paste?', acceptedAnswer: { '@type': 'Answer', text: 'There is no hard limit set by the tool. Since everything runs in your browser, the practical limit depends on your device memory. Most modern browsers handle several hundred thousand words without issues. If you notice slowness, try splitting your text into smaller chunks.' } },
-  ],
-};
-
-const softwareAppJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'SoftwareApplication',
-  name: 'Word Counter',
-  applicationCategory: 'UtilitiesApplication',
-  operatingSystem: 'Web Browser',
-  offers: {
-    '@type': 'Offer',
-    price: 0,
-    priceCurrency: 'USD',
-  },
-};
-
-const breadcrumbJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://toolblip.com/' },
-    { '@type': 'ListItem', position: 2, name: 'Tools', item: 'https://toolblip.com/tools/' },
-    { '@type': 'ListItem', position: 3, name: 'Word Counter', item: 'https://toolblip.com/tools/word-counter/' },
   ],
 };
 ---
 
 <ToolLayout
-  title="Word Counter Online Free — Toolblip"
-  description="Count words, characters, sentences, paragraphs, and reading time instantly. Free word counter that works in your browser — no sign-up required."
+  title="Word Counter Online Free  -  Toolblip"
+  description="Count words, characters, sentences, paragraphs, and reading time instantly. 100% client-side  -  nothing leaves your browser."
   toolSlug="word-counter"
   category="text"
 >
   <Fragment slot="jsonld">
     <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
-    <script type="application/ld+json" set:html={JSON.stringify(softwareAppJsonLd)} />
-    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} />
   </Fragment>
 
   <!-- Tool UI -->
+  <label for="wc-input" class="sr-only">Text input</label>
   <textarea
     id="wc-input"
+    aria-label="Text input"
     class="w-full h-48 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-green-500 placeholder-gray-500"
     placeholder="Paste or type your text here..."
   ></textarea>
 
-  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4" id="wc-stats">
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-4" id="wc-stats" aria-live="polite" aria-atomic="true">
     <div class="bg-gray-800 border border-gray-700 rounded-lg p-3 text-center">
       <div class="text-2xl font-bold text-green-400" id="wc-words">0</div>
       <div class="text-xs text-gray-400 mt-1">Words</div>
@@ -81,7 +56,7 @@ const breadcrumbJsonLd = {
   <div class="flex justify-between mt-3 text-sm text-gray-500">
     <span>Paragraphs: <span id="wc-paragraphs" class="text-gray-300">0</span></span>
     <span>Chars (no spaces): <span id="wc-chars-no-spaces" class="text-gray-300">0</span></span>
-    <button id="wc-copy" class="text-green-400 hover:text-green-300 transition-colors">Copy stats</button>
+    <button id="wc-copy" aria-label="Copy stats to clipboard" class="text-green-400 hover:text-green-300 transition-colors">Copy stats</button>
   </div>
 
   <script>
@@ -122,30 +97,24 @@ const breadcrumbJsonLd = {
     });
   </script>
 
-  <div slot="howto">
-    <h2 class="text-lg font-semibold text-white mb-3 mt-8">How to use</h2>
-    <ol class="list-decimal list-inside space-y-2 text-gray-400 text-sm leading-relaxed">
-      <li>Paste or type your text into the input box above.</li>
-      <li>Word count, character count, sentences, paragraphs, and reading time update as you type.</li>
-      <li>Check the "Chars (no spaces)" stat if you need a count without whitespace.</li>
-      <li>Click "Copy stats" to copy all counts to your clipboard for quick reference.</li>
-    </ol>
-  </div>
-
   <div slot="description">
     <h2 class="text-lg font-semibold text-white mb-2">About this tool</h2>
     <p class="text-gray-400 text-sm leading-relaxed">
-      This word counter online free tool gives you instant statistics on any text you paste or type: word count, character count (with and without spaces), sentence count, paragraph count, and estimated reading time. Everything runs locally in your browser. Your text is never sent to any server, and there is nothing to install or sign up for.
+      The Toolblip word counter gives you instant statistics on any text  -  word count, character count (with and without spaces), sentence count, paragraph count, and estimated reading time. Everything runs in your browser. Your text is never sent to any server.
     </p>
     <p class="text-gray-400 text-sm leading-relaxed mt-2">
-      Reading time is calculated at 200 words per minute, a standard rate for online content. Use the character count to check meta descriptions (aim for 120 to 160 characters), Twitter/X posts (280 character limit), or LinkedIn summaries. The word count is useful for hitting assignment targets on essays, reports, and cover letters.
+      Reading time is calculated at 200 words per minute, a standard rate for online content. Use the character count to check meta descriptions (aim for 120–160 characters) or Twitter posts (280 character limit).
     </p>
-    <p class="text-gray-400 text-sm leading-relaxed mt-2">
-      Writers and editors use this to verify blog post length before publishing. A typical short blog post runs 600 to 800 words, while long-form content targeting search rankings usually lands between 1,500 and 2,500 words. If you are writing a college essay with a strict word limit, paste your draft here to get an accurate count without relying on your text editor.
-    </p>
-    <p class="text-gray-400 text-sm leading-relaxed mt-2">
-      Social media managers also find the character counter useful when drafting posts. Different platforms enforce different limits, and checking character count before posting avoids truncated text or failed submissions. Since this word counter runs entirely client-side, you can use it on any device with a browser, including phones and tablets.
-    </p>
+  </div>
+
+  <div slot="how-to-use">
+    <h2 class="text-lg font-semibold text-white mb-3 mt-8">How to use</h2>
+    <ol class="list-decimal list-inside space-y-2 text-gray-400 text-sm leading-relaxed">
+      <li>Paste or type your text into the input box above.</li>
+      <li>Word count, character count, sentences, paragraphs, and reading time update instantly as you type.</li>
+      <li>Check "Chars (no spaces)" if you need a count without whitespace.</li>
+      <li>Click <strong class="text-gray-200">Copy stats</strong> to copy all counts to your clipboard for quick reference.</li>
+    </ol>
   </div>
 
   <div slot="faq">

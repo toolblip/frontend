@@ -2,54 +2,28 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout
-  title="About Toolblip — Free Browser-Based Developer Tools"
-  description="Toolblip is a collection of free developer tools that run entirely in your browser. No uploads. No tracking. No account required."
->
-  <div class="max-w-3xl mx-auto px-4 py-16">
+<BaseLayout title="About Toolblip  -  Free Browser-Based Developer Tools" description="Toolblip is a collection of free developer and productivity tools that run entirely in your browser. No servers, no uploads, no accounts required.">
+  <div class="max-w-2xl mx-auto px-4 py-16">
     <h1 class="text-3xl font-bold text-white mb-8">About Toolblip</h1>
 
-    <div class="prose prose-invert max-w-none space-y-8 text-gray-300">
-      <section>
-        <p>
-          Toolblip is a growing collection of free, instant-use tools built for developers and technical people. No uploads, no accounts, no tracking. You open a tool, use it, and move on. Everything runs right in your browser.
-        </p>
-      </section>
+    <div class="space-y-6 text-gray-300 leading-relaxed">
+      <p>
+        Toolblip is a collection of free developer and productivity tools that run entirely in your browser.
+        There are no servers, no uploads, and no accounts required. You paste your data in, get your result out, and nothing leaves your machine.
+      </p>
 
-      <section>
-        <h2 class="text-xl font-semibold text-white mb-3">How it works</h2>
-        <p>
-          Every tool on Toolblip is client-side JavaScript. Your data never leaves your device. When you format JSON, encode a string to Base64, or run a word count, all of that processing happens locally in your browser tab. Nothing is sent to a server. There are no API calls, no background uploads, no analytics payloads. Your input stays on your machine.
-        </p>
-      </section>
+      <p>
+        Privacy-first is not a marketing phrase here. Every tool on Toolblip processes data locally using JavaScript.
+        Base64 encoding, JSON formatting, text conversion, image manipulation  -  all of it happens client-side.
+        The only analytics collected are cookieless page-view stats via Cloudflare, and optional Google Analytics loaded only after you give consent.
+      </p>
 
-      <section>
-        <h2 class="text-xl font-semibold text-white mb-3">Why we built it</h2>
-        <p>
-          Most online developer tools want something from you: an email address, a file upload to their server, or at minimum a few tracking cookies. We got tired of it. We wanted tools that are fast, private, and just work. No sign-up walls, no "paste your JSON here and we'll send it to our API," no consent banners. Just the tool, in your browser, doing the thing you came for.
-        </p>
-      </section>
-
-      <section>
-        <h2 class="text-xl font-semibold text-white mb-3">Open source and free</h2>
-        <p>
-          Toolblip is free to use. There are no paywalls on the core tools, and we plan to keep it that way. If you want to save your favorite tools across devices, there is an optional free account you can create. No credit card, no trial period. <a href="/signup" class="text-green-400 hover:underline">Sign up free</a> if that sounds useful to you.
-        </p>
-      </section>
-
-      <section>
-        <h2 class="text-xl font-semibold text-white mb-3">Who built this</h2>
-        <p>
-          Toolblip is built and maintained by a solo developer — <a href="https://x.com/HarunRRayhan" class="text-green-400 hover:underline" target="_blank" rel="noopener">Harun R Rayhan</a>. If Toolblip saves you time on the regular, you can support it via <a href="/donate" class="text-green-400 hover:underline">a small donation</a> or by <a href="/advertise" class="text-green-400 hover:underline">sponsoring a tool page</a>. Both go directly toward keeping the site online and adding new tools.
-        </p>
-      </section>
-
-      <section>
-        <h2 class="text-xl font-semibold text-white mb-3">Get in touch</h2>
-        <p>
-          Toolblip is open source. If you find a bug, want to request a tool, or just want to say hello, head over to <a href="https://github.com/toolblip/toolblip" class="text-green-400 hover:underline" target="_blank" rel="noopener">github.com/toolblip/toolblip</a>. Feedback and contributions are always welcome.
-        </p>
-      </section>
+      <p>
+        Toolblip is built and maintained by <a href="https://github.com/HarunRRayhan" class="text-green-400 hover:text-green-300 transition-colors">Harun R Rayhan</a>.
+        He also builds <a href="https://crontinel.com" class="text-green-400 hover:text-green-300 transition-colors">Crontinel</a>,
+        a Laravel cron and queue monitoring tool for production apps.
+        Both projects share the same goal: useful software that respects the people using it.
+      </p>
     </div>
   </div>
 </BaseLayout>

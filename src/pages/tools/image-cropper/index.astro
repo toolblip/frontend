@@ -11,17 +11,34 @@ const presets = [
   { label: '2×2 inch', ratio: 1 },
   { label: 'Visa 51×51mm', ratio: 1 },
 ];
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: 'Is my image uploaded to a server?', acceptedAnswer: { '@type': 'Answer', text: 'No. Your image is loaded directly in the browser using the File API and processed on your device using the Canvas API. Nothing is uploaded to any server. You can use this tool offline once the page has loaded.' } },
+    { '@type': 'Question', name: 'What image formats are supported?', acceptedAnswer: { '@type': 'Answer', text: 'You can upload PNG, JPG/JPEG, WebP, and GIF files. The cropped output is always saved as PNG. To get a JPG output, use an image converter tool after cropping.' } },
+    { '@type': 'Question', name: 'What are the passport photo presets?', acceptedAnswer: { '@type': 'Answer', text: 'The Passport 35x45mm preset uses a 35:45 (7:9) aspect ratio  -  the standard size required for most European and international passports. The 2x2 inch preset is for US passport photos and many US visa applications. The 51x51mm preset is a common visa photo size for several countries. All presets maintain the correct ratio during cropping  -  you still need to resize/print to the exact dimensions.' } },
+    { '@type': 'Question', name: 'Can I crop a GIF?', acceptedAnswer: { '@type': 'Answer', text: 'Yes, you can upload a GIF, but the output will be a still PNG of the first frame. Animated GIF cropping is not supported  -  the browser canvas API does not preserve animation.' } },
+    { '@type': 'Question', name: 'How do I download the cropped image?', acceptedAnswer: { '@type': 'Answer', text: 'Click "Crop & Download" after adjusting the crop area. The browser will download a PNG file named with a timestamp (e.g. cropped-1712345678.png).' } },
+    { '@type': 'Question', name: 'What library does this use?', acceptedAnswer: { '@type': 'Answer', text: 'This tool uses Cropper.js, a lightweight JavaScript image cropping library. It loads from CDN when you drop an image  -  not on page load  -  so it has no impact on initial page performance.' } },
+  ],
+};
 ---
 
 <ToolLayout
-  title="Image Cropper Online Free — Toolblip"
-  description="Crop images to any ratio or preset size — passport, 16:9, square, and more. Pure canvas, no uploads. Download the cropped image instantly."
+  title="Image Cropper Online Free  -  Toolblip"
+  description="Crop images to any ratio or preset size  -  passport, 16:9, square, and more. Pure canvas, no uploads. Download the cropped image instantly."
   toolSlug="image-cropper"
   category="image"
 >
+  <Fragment slot="jsonld">
+    <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
+  </Fragment>
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" />
 
-  <div id="ic-drop" class="border-2 border-dashed border-gray-600 hover:border-green-500 rounded-xl p-8 text-center cursor-pointer transition-colors mb-4" id="ic-dropzone">
+  <div id="ic-drop" role="button" tabindex="0" aria-label="Upload image - click or drag and drop" class="border-2 border-dashed border-gray-600 hover:border-green-500 rounded-xl p-8 text-center cursor-pointer transition-colors mb-4">
     <div class="text-gray-400 text-sm">
       <div class="text-3xl mb-2">🖼️</div>
       <p>Drop an image here or <label for="ic-file" class="text-green-400 hover:underline cursor-pointer">browse</label></p>
@@ -35,6 +52,7 @@ const presets = [
       {presets.map(({ label, ratio }) => (
         <button
           data-ratio={ratio ?? 'free'}
+          aria-pressed="false"
           class="text-xs bg-gray-700 hover:bg-gray-600 border border-gray-600 px-3 py-1.5 rounded-lg text-gray-200 transition-colors preset-btn"
         >{label}</button>
       ))}
@@ -66,8 +84,20 @@ const presets = [
     const workspace = document.getElementById('ic-workspace')!;
     const imgEl = document.getElementById('ic-image') as HTMLImageElement;
 
+    const errorEl = document.createElement('div');
+    errorEl.className = 'hidden mt-2 text-sm text-red-400 bg-red-900/20 border border-red-800 rounded-lg px-3 py-2';
+    errorEl.setAttribute('role', 'alert');
+    dropzone.parentNode!.insertBefore(errorEl, dropzone.nextSibling);
+
     async function loadImage(file: File) {
-      await loadCropper();
+      try {
+        await loadCropper();
+      } catch {
+        errorEl.textContent = 'Failed to load the cropping library. Please check your connection and try again.';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+      errorEl.classList.add('hidden');
       const url = URL.createObjectURL(file);
       imgEl.src = url;
       workspace.classList.remove('hidden');
@@ -87,21 +117,29 @@ const presets = [
       if (file?.type.startsWith('image/')) loadImage(file);
     });
     dropzone.addEventListener('click', () => fileInput.click());
+    dropzone.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); }
+    });
 
     document.querySelectorAll('.preset-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         if (!cropper) return;
         const ratio = (btn as HTMLElement).dataset.ratio;
         cropper.setAspectRatio(ratio === 'free' ? NaN : parseFloat(ratio!));
-        document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('bg-green-600', 'border-green-500'));
+        document.querySelectorAll('.preset-btn').forEach(b => {
+          b.classList.remove('bg-green-600', 'border-green-500');
+          b.setAttribute('aria-pressed', 'false');
+        });
         btn.classList.add('bg-green-600', 'border-green-500');
+        btn.setAttribute('aria-pressed', 'true');
       });
     });
 
     document.getElementById('ic-crop')!.addEventListener('click', () => {
       if (!cropper) return;
       const canvas = cropper.getCroppedCanvas();
-      canvas.toBlob((blob: Blob) => {
+      canvas.toBlob((blob: Blob | null) => {
+        if (!blob) return;
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = `cropped-${Date.now()}.png`;
@@ -119,13 +157,45 @@ const presets = [
 
   <div slot="description">
     <h2 class="text-lg font-semibold text-white mb-2">About this tool</h2>
-    <p class="text-gray-400 text-sm leading-relaxed">Drag and drop any image to crop it to an exact ratio or preset size. The cropper uses the browser's canvas API — your image never leaves your device. Cropper.js loads lazily from CDN only when you drop an image.</p>
+    <p class="text-gray-400 text-sm leading-relaxed">
+      Crop any image to a custom ratio or a preset size directly in your browser. Drag and drop or browse to upload a PNG, JPG, WebP, or GIF. Use the crop handles to adjust the area, pick a preset ratio, then click "Crop & Download" to save the result.
+    </p>
+    <p class="text-gray-400 text-sm leading-relaxed mt-2">
+      Passport photo presets cover the most common international sizes: 35x45mm (most European passports), 2x2 inch (US passport and many US visa applications), and 51x51mm. The crop aspect ratio matches the required proportions  -  print or resize to the exact dimensions as required by your country's photo guidelines.
+    </p>
+    <p class="text-gray-400 text-sm leading-relaxed mt-2">
+      Your image never leaves your device. The entire cropping operation happens locally using the browser canvas API. Cropper.js loads lazily from CDN only when you drop an image, so it has no impact on page load time.
+    </p>
+  </div>
+
+  <div slot="how-to-use">
+    <h2 class="text-lg font-semibold text-white mb-3 mt-8">How to use</h2>
+    <ol class="list-decimal list-inside space-y-2 text-gray-400 text-sm leading-relaxed">
+      <li>Drop an image onto the upload area, or click to browse and select a file.</li>
+      <li>Use the crop handles to adjust the selection. Drag the crop box to reposition it.</li>
+      <li>Optionally click a preset ratio button (1:1, 16:9, Passport, etc.) to lock the aspect ratio.</li>
+      <li>Click <strong class="text-gray-200">Crop & Download</strong> to save the cropped image as a PNG.</li>
+      <li>Click <strong class="text-gray-200">Reset</strong> to start over with a new image.</li>
+    </ol>
+  </div>
+
+  <div slot="faq">
+    <h2 class="text-lg font-semibold text-white mb-4 mt-8">Frequently asked questions</h2>
+    <div class="space-y-4">
+      {faqJsonLd.mainEntity.map((item) => (
+        <details class="border border-gray-800 rounded-lg">
+          <summary class="px-4 py-3 text-sm font-medium text-gray-200 cursor-pointer hover:text-white">{item.name}</summary>
+          <p class="px-4 pb-3 text-sm text-gray-400">{item.acceptedAnswer.text}</p>
+        </details>
+      ))}
+    </div>
   </div>
 
   <div slot="related">
     <h2 class="text-lg font-semibold text-white mb-3 mt-8">Related tools</h2>
     <div class="flex flex-wrap gap-2">
-      <a href="/tools/base64/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Image to Base64</a>
+      <a href="/tools/base64/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Base64 Encode/Decode</a>
+      <a href="/tools/word-counter/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Word Counter</a>
     </div>
   </div>
 </ToolLayout>

@@ -2,66 +2,66 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout
-  title="Privacy Policy — Toolblip"
-  description="Toolblip privacy policy. All tools run client-side in your browser. No data is collected or transmitted."
->
-  <div class="max-w-3xl mx-auto px-4 py-16">
-    <h1 class="text-3xl font-bold text-white mb-8">Privacy Policy</h1>
-    <p class="text-gray-400 text-sm mb-8">Last updated: April 2026</p>
+<BaseLayout title="Privacy Policy  -  Toolblip" description="Toolblip tools run 100% in your browser. Nothing you paste or upload is sent to any server. No account required. Read the full privacy policy.">
+  <div class="max-w-2xl mx-auto px-4 py-16">
+    <h1 class="text-3xl font-bold text-white mb-2">Privacy Policy</h1>
+    <p class="text-gray-500 text-sm mb-10">Effective April 2026</p>
 
-    <div class="prose prose-invert max-w-none space-y-8 text-gray-300">
+    <div class="space-y-10 text-gray-300 leading-relaxed">
+
       <section>
-        <h2 class="text-xl font-semibold text-white mb-3">No data leaves your browser</h2>
+        <h2 class="text-lg font-semibold text-white mb-3">The short version</h2>
         <p>
-          Every tool on Toolblip runs entirely in your browser using JavaScript. Text, files, images,
-          and any other inputs you provide are processed locally on your device. Nothing is sent to
-          our servers or any third party.
+          Toolblip tools run 100% in your browser. Nothing you paste or upload is sent to any server.
+          No account is required to use any free tool.
         </p>
       </section>
 
       <section>
-        <h2 class="text-xl font-semibold text-white mb-3">Analytics (optional)</h2>
+        <h2 class="text-lg font-semibold text-white mb-3">Cookies</h2>
+        <ul class="space-y-3 list-none">
+          <li>
+            <span class="text-white font-medium">tb_usage</span>  -  stores your daily tool usage count in your browser only.
+            This number never leaves your device. It is a functional cookie and is not used for tracking.
+          </li>
+          <li>
+            <span class="text-white font-medium">tb_session</span>  -  set by the Toolblip API if you create an account.
+            Used only to keep you signed in. Not present if you use Toolblip without an account.
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 class="text-lg font-semibold text-white mb-3">Analytics</h2>
         <p>
-          With your consent, we use Google Analytics 4 to understand which tools are used and how
-          traffic reaches the site. This collects anonymized usage data (page views, approximate
-          location by country, browser type). No personal data is sold or shared. You can decline
-          analytics via the cookie banner — the site works fully without it.
+          Toolblip uses Cloudflare Web Analytics for basic page-view statistics. It is cookieless and does not track individuals.
+          Google Analytics is also available on the site but only loads after you click "Accept" on the cookie banner.
+          If you click "Decline" or ignore the banner, Google Analytics is never loaded.
         </p>
       </section>
 
       <section>
-        <h2 class="text-xl font-semibold text-white mb-3">Cookies</h2>
+        <h2 class="text-lg font-semibold text-white mb-3">Data processing</h2>
         <p>
-          We store a single preference key (<code class="text-green-400 text-sm">tb_consent</code>)
-          in localStorage to remember your analytics choice. No tracking cookies are set without
-          your consent.
+          All tool operations happen in your browser using JavaScript. Text, images, and other content you work with
+          are never transmitted to Toolblip servers. There is no server-side processing for free tools.
         </p>
       </section>
 
       <section>
-        <h2 class="text-xl font-semibold text-white mb-3">No account required</h2>
+        <h2 class="text-lg font-semibold text-white mb-3">Data sharing</h2>
         <p>
-          Toolblip does not require registration. We do not collect names, email addresses, or any
-          personally identifying information.
+          Toolblip does not sell, rent, or share your data with third parties.
         </p>
       </section>
 
       <section>
-        <h2 class="text-xl font-semibold text-white mb-3">Third-party services</h2>
+        <h2 class="text-lg font-semibold text-white mb-3">Contact</h2>
         <p>
-          The site is hosted on Cloudflare Pages. Cloudflare may log request metadata (IP address,
-          user agent) for security and network purposes, governed by
-          <a href="https://www.cloudflare.com/privacypolicy/" class="text-green-400 hover:underline" target="_blank" rel="noopener">Cloudflare's privacy policy</a>.
+          Questions? Email <a href="mailto:harun@toolblip.com" class="text-green-400 hover:text-green-300 transition-colors">harun@toolblip.com</a>.
         </p>
       </section>
 
-      <section>
-        <h2 class="text-xl font-semibold text-white mb-3">Contact</h2>
-        <p>
-          Questions about this policy? Email <a href="mailto:privacy@toolblip.com" class="text-green-400 hover:underline">privacy@toolblip.com</a>.
-        </p>
-      </section>
     </div>
   </div>
 </BaseLayout>
