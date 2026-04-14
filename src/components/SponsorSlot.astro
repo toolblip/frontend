@@ -1,0 +1,35 @@
+---
+import SponsorCard from './SponsorCard.astro';
+
+interface Sponsor {
+  name: string;
+  tagline: string;
+  url: string;
+  color: string;
+  logoSvg?: string;
+}
+
+interface Props {
+  sponsor?: Sponsor;
+  position?: 'above' | 'below';
+}
+
+const { sponsor, position = 'above' } = Astro.props;
+const marginClass = position === 'above' ? 'mb-6' : 'mb-8';
+---
+
+<div class={marginClass}>
+  {sponsor ? (
+    <SponsorCard
+      name={sponsor.name}
+      tagline={sponsor.tagline}
+      url={sponsor.url}
+      color={sponsor.color}
+      logoSvg={sponsor.logoSvg}
+    />
+  ) : (
+    <div class="rounded-xl border border-dashed border-gray-700 bg-gray-900/40 p-4 text-center text-sm text-gray-600">
+      Want your product here? <a href="/advertise" class="text-gray-500 hover:text-gray-400 transition-colors">/advertise</a>
+    </div>
+  )}
+</div>

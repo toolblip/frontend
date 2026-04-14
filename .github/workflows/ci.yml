@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main, feat/**]
+  pull_request:
+    branches: [main, feat/**]
+
+env:
+  NEXT_PUBLIC_API_URL: https://api.toolblip.com
+  NEXT_PUBLIC_APP_URL: https://toolblip.com
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Verify build output
+        run: |
+          test -d .next || exit 1
+          test -f .next/BUILD_ID || exit 1
+          echo "Build successful"
