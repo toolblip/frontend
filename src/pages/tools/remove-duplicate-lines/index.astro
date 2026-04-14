@@ -1,30 +1,13 @@
 ---
 import ToolLayout from '../../../layouts/ToolLayout.astro';
-
-const faqJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [
-    { '@type': 'Question', name: 'Does the tool preserve the original order of lines?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. The tool keeps the first occurrence of each line and removes all subsequent duplicates. The order of unique lines in the output matches their original order in the input.' } },
-    { '@type': 'Question', name: 'What does case-sensitive mode do?', acceptedAnswer: { '@type': 'Answer', text: 'In case-sensitive mode (the checkbox is checked), "Apple" and "apple" are treated as different lines and both are kept. In case-insensitive mode (unchecked, the default), "Apple" and "apple" are treated as duplicates and only the first occurrence is kept.' } },
-    { '@type': 'Question', name: 'What happens to blank lines?', acceptedAnswer: { '@type': 'Answer', text: 'Blank lines are treated as regular lines. Multiple consecutive blank lines are reduced to one blank line (the first occurrence). A single blank line is kept as-is.' } },
-    { '@type': 'Question', name: 'Is there a line limit?', acceptedAnswer: { '@type': 'Answer', text: 'There is no hard line limit. The tool runs in your browser using JavaScript and can handle large inputs. For very large files (hundreds of thousands of lines), performance depends on your device.' } },
-    { '@type': 'Question', name: 'Is my text sent to a server?', acceptedAnswer: { '@type': 'Answer', text: 'No. All processing happens entirely in your browser. Your text never leaves your device.' } },
-    { '@type': 'Question', name: 'What are common use cases for removing duplicate lines?', acceptedAnswer: { '@type': 'Answer', text: 'Common uses include deduplicating email lists, keyword lists, URL lists from crawls, log file entries, CSV rows, and code imports. Developers also use it to clean up machine-generated lists before further processing.' } },
-  ],
-};
 ---
 
 <ToolLayout
-  title="Remove Duplicate Lines Online Free  -  Toolblip"
+  title="Remove Duplicate Lines Online Free — Toolblip"
   description="Paste text and remove duplicate lines instantly. Case-sensitive or case-insensitive. Shows how many duplicates were removed."
   toolSlug="remove-duplicate-lines"
   category="text"
 >
-  <Fragment slot="jsonld">
-    <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
-  </Fragment>
-
   <div class="flex gap-3 items-center mb-3 flex-wrap">
     <label class="flex items-center gap-2 text-sm text-gray-400 cursor-pointer">
       <input type="checkbox" id="rdl-case" class="accent-green-500"> Case-sensitive
@@ -34,15 +17,15 @@ const faqJsonLd = {
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
     <div>
-      <label for="rdl-input" class="text-xs text-gray-500 mb-1 block">Input</label>
-      <textarea id="rdl-input" aria-label="Lines to deduplicate" class="w-full h-56 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none focus:border-green-500 placeholder-gray-500" placeholder="Paste lines here..."></textarea>
+      <div class="text-xs text-gray-500 mb-1">Input</div>
+      <textarea id="rdl-input" class="w-full h-56 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none focus:border-green-500 placeholder-gray-500" placeholder="Paste lines here..."></textarea>
     </div>
     <div>
       <div class="flex items-center justify-between mb-1">
-        <span class="text-xs text-gray-500">Output <span id="rdl-info" aria-live="polite" class="text-gray-600"></span></span>
-        <button id="rdl-copy" aria-label="Copy deduplicated lines" class="text-xs text-green-400 hover:text-green-300 transition-colors">Copy</button>
+        <span class="text-xs text-gray-500">Output <span id="rdl-info" class="text-gray-600"></span></span>
+        <button id="rdl-copy" class="text-xs text-green-400 hover:text-green-300 transition-colors">Copy</button>
       </div>
-      <textarea id="rdl-output" readonly aria-label="Deduplicated lines output" class="w-full h-56 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none" placeholder="Deduplicated lines appear here..."></textarea>
+      <textarea id="rdl-output" readonly class="w-full h-56 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm font-mono resize-y focus:outline-none" placeholder="Deduplicated lines appear here..."></textarea>
     </div>
   </div>
 
@@ -63,7 +46,7 @@ const faqJsonLd = {
       });
       const removed = lines.length - unique.length;
       output.value = unique.join('\n');
-      info.textContent = removed > 0 ? ` -  ${removed} duplicate${removed === 1 ? '' : 's'} removed` : '';
+      info.textContent = removed > 0 ? `— ${removed} duplicate${removed === 1 ? '' : 's'} removed` : '';
     });
 
     document.getElementById('rdl-copy')!.addEventListener('click', () => {
@@ -78,34 +61,7 @@ const faqJsonLd = {
 
   <div slot="description">
     <h2 class="text-lg font-semibold text-white mb-2">About this tool</h2>
-    <p class="text-gray-400 text-sm leading-relaxed">
-      Paste any list of lines and click "Remove duplicates" to get a deduplicated result. The tool keeps the first occurrence of each line and removes all subsequent copies. Toggle case-sensitivity to treat "Apple" and "apple" as the same or different. The output shows how many duplicates were removed.
-    </p>
-    <p class="text-gray-400 text-sm leading-relaxed mt-2">
-      Common uses include cleaning email lists, keyword lists, URL lists from site crawls, log file entries, and code import statements. Everything runs locally in your browser  -  your text is never sent to any server.
-    </p>
-  </div>
-
-  <div slot="how-to-use">
-    <h2 class="text-lg font-semibold text-white mb-3 mt-8">How to use</h2>
-    <ol class="list-decimal list-inside space-y-2 text-gray-400 text-sm leading-relaxed">
-      <li>Paste your list of lines into the Input box on the left.</li>
-      <li>Check <strong class="text-gray-200">Case-sensitive</strong> if "Apple" and "apple" should be treated as different lines.</li>
-      <li>Click <strong class="text-gray-200">Remove duplicates</strong>. The output appears on the right with a count of duplicates removed.</li>
-      <li>Click <strong class="text-gray-200">Copy</strong> to copy the deduplicated list to your clipboard.</li>
-    </ol>
-  </div>
-
-  <div slot="faq">
-    <h2 class="text-lg font-semibold text-white mb-4 mt-8">Frequently asked questions</h2>
-    <div class="space-y-4">
-      {faqJsonLd.mainEntity.map((item) => (
-        <details class="border border-gray-800 rounded-lg">
-          <summary class="px-4 py-3 text-sm font-medium text-gray-200 cursor-pointer hover:text-white">{item.name}</summary>
-          <p class="px-4 pb-3 text-sm text-gray-400">{item.acceptedAnswer.text}</p>
-        </details>
-      ))}
-    </div>
+    <p class="text-gray-400 text-sm leading-relaxed">Paste any list of lines and click "Remove duplicates" to get a deduplicated result. Toggle case-sensitivity to treat "Apple" and "apple" as the same or different. The tool preserves the original order of first occurrences.</p>
   </div>
 
   <div slot="related">
@@ -113,7 +69,6 @@ const faqJsonLd = {
     <div class="flex flex-wrap gap-2">
       <a href="/tools/word-counter/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Word Counter</a>
       <a href="/tools/case-converter/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Case Converter</a>
-      <a href="/tools/character-counter/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Character Counter</a>
     </div>
   </div>
 </ToolLayout>

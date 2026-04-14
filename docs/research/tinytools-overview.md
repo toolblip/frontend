@@ -1,42 +1,32 @@
-# Tinytools to Toolblip  -  Origin Summary
+# Tiny Tools — Research
 
-This note preserves the useful high-level context from the original `tinytools` research repo.
+## Concept
+Large collection of free browser-based tools. Reference: tinywow.com, ilovepdf.com, smallpdf.com.
 
-## Origin
-`toolblip` is the continuation of the earlier `tinytools` concept.
-The domain, brand, and live project direction changed, but the core research basis carried over.
+## Business model
+- Free tier (most tools, ad-supported)
+- Paid tier (higher limits, no ads, bulk processing)
+- Guest subscriptions (one-time purchase for heavy use)
+- Display ads for free users (Google AdSense / direct deals)
+- SEO as primary growth channel — each tool = its own landing page
 
-## Original concept
-Large collection of free browser-based tools. Reference set: TinyWow, iLovePDF, Smallpdf, and adjacent utility sites.
+## Status
+Research phase — no code yet.
 
-## Original business model assumptions
-- Free tier for most tools
-- Paid tier for higher limits, bulk usage, and a cleaner experience
-- Optional one-time purchase path for heavier usage
-- Display ads for free users where appropriate
-- SEO-led distribution, with each tool treated as a landing page
+## Research questions
+- Which tool categories have high search volume + weak competition?
+- What stack supports hundreds of browser-based tools efficiently? (likely: Astro/Next.js front, WASM for heavy processing, edge functions)
+- What's the minimum viable tool count to launch and rank?
+- Ad revenue benchmarks for tool sites (RPM, fill rate)?
+- Freemium conversion benchmarks for similar tools?
+- How to structure URLs for SEO? (/tools/compress-pdf, /tools/resize-image, etc.)
 
-## Original research questions that still matter
-- Which tool categories have strong demand with weaker competition?
-- What stack supports many browser-based tools efficiently?
-- What is the smallest credible launch set?
-- What are realistic monetization benchmarks for utility-tool traffic?
-- How should tool URLs and content structure support discoverability?
+## Build philosophy
+- Slow build — ship 5-10 tools, get traffic, add more
+- Each tool is an SEO landing page
+- WASM for client-side processing (no server costs for free users)
+- Progressive enhancement — works without JS for basic features
 
-## Build philosophy worth keeping
-- Start small, then expand
-- Treat each tool page as a useful standalone landing page
-- Prefer client-side processing where it reduces infra cost
-- Keep progressive enhancement in mind for reliability and reach
-
-## Migrated source material
-The detailed research from `tinytools` lives in this folder:
-- `build-plan-2026.md`
-- `competitor-deep-dive-2026.md`
-- `domain-research-2026.md`
-- `market-analysis-2026.md`
-- `tool-ideas-extended.md`
-- `tool-opportunities-extended.md`
-
-## Archival note
-`tinytools` should be treated as archived. New work belongs in `toolblip`.
+## Directories
+- `research/` — competitor analysis, keyword research, tool ideas
+- `ideas/` — tool concepts ranked by SEO opportunity

@@ -1,30 +1,13 @@
 ---
 import ToolLayout from '../../../layouts/ToolLayout.astro';
-
-const faqJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [
-    { '@type': 'Question', name: 'What is a UUID?', acceptedAnswer: { '@type': 'Answer', text: 'A UUID (Universally Unique Identifier) is a 128-bit identifier formatted as 32 hexadecimal characters in five groups: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx. They are designed to be unique across systems without a central authority. UUIDs are widely used as primary keys in databases, file names, API identifiers, and distributed systems.' } },
-    { '@type': 'Question', name: 'What is UUID v4?', acceptedAnswer: { '@type': 'Answer', text: 'UUID v4 is randomly generated. All 128 bits are random except for 4 bits that indicate the version (4) and 2 bits that indicate the variant. It is the most commonly used UUID version because it requires no coordination between machines and has a vanishingly small probability of collision.' } },
-    { '@type': 'Question', name: 'Are the UUIDs generated here cryptographically secure?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. This tool uses crypto.randomUUID() from the Web Crypto API, which is cryptographically secure. It uses the same entropy source as window.crypto.getRandomValues(), making the output suitable for security-sensitive use cases.' } },
-    { '@type': 'Question', name: 'Is my data sent to a server?', acceptedAnswer: { '@type': 'Answer', text: 'No. UUID generation happens entirely in your browser using the built-in Web Crypto API. Nothing is sent to any server.' } },
-    { '@type': 'Question', name: 'Can two generated UUIDs be the same?', acceptedAnswer: { '@type': 'Answer', text: 'Theoretically yes, but the probability is astronomically small. UUID v4 has 122 random bits, giving approximately 5.3 × 10^36 possible values. The probability of generating a duplicate even after generating 1 billion UUIDs per second for 100 years is effectively zero.' } },
-    { '@type': 'Question', name: 'Should I use uppercase or lowercase UUIDs?', acceptedAnswer: { '@type': 'Answer', text: 'By convention, UUIDs are written in lowercase. However, UUID comparison is case-insensitive per the RFC 4122 standard. Some systems (like Microsoft SQL Server) store UUIDs in uppercase. Use the toggle to match the format required by your system.' } },
-  ],
-};
 ---
 
 <ToolLayout
-  title="UUID Generator Online Free  -  Toolblip"
-  description="Generate UUID v4 values instantly using your browser's crypto API. Generate 1 to 50 at once. Copy all or one at a time. 100% client-side."
+  title="UUID Generator Online Free — Toolblip"
+  description="Generate UUID v4 values instantly using your browser's crypto API. Generate 1 to 50 at once. Copy all or individually."
   toolSlug="uuid-generator"
   category="developer"
 >
-  <Fragment slot="jsonld">
-    <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
-  </Fragment>
-
   <div class="flex flex-wrap gap-3 items-center mb-4">
     <div class="flex items-center gap-2 text-sm text-gray-400">
       Count:
@@ -41,7 +24,7 @@ const faqJsonLd = {
     <button id="uuid-copy-all" class="bg-gray-700 hover:bg-gray-600 text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors">Copy all</button>
   </div>
 
-  <div id="uuid-list" aria-live="polite" aria-atomic="true" class="space-y-2"></div>
+  <div id="uuid-list" class="space-y-2"></div>
 
   <script>
     const list = document.getElementById('uuid-list')!;
@@ -60,7 +43,7 @@ const faqJsonLd = {
         row.className = 'flex items-center gap-2 bg-gray-800 border border-gray-700 rounded-lg px-3 py-2';
         row.innerHTML = `
           <code class="flex-1 text-sm font-mono text-gray-100">${uuid}</code>
-          <button class="text-xs text-green-400 hover:text-green-300 transition-colors copy-single shrink-0" aria-label="Copy UUID ${uuid}">Copy</button>
+          <button class="text-xs text-green-400 hover:text-green-300 transition-colors copy-single shrink-0">Copy</button>
         `;
         row.querySelector('.copy-single')!.addEventListener('click', () => {
           navigator.clipboard.writeText(uuid).then(() => {
@@ -90,34 +73,7 @@ const faqJsonLd = {
 
   <div slot="description">
     <h2 class="text-lg font-semibold text-white mb-2">About this tool</h2>
-    <p class="text-gray-400 text-sm leading-relaxed">
-      Generate UUID v4 values instantly using your browser's built-in <code class="text-green-400">crypto.randomUUID()</code> function. This is a cryptographically secure source  -  the same API used by servers and security libraries. UUIDs generated here are indistinguishable from server-generated ones.
-    </p>
-    <p class="text-gray-400 text-sm leading-relaxed mt-2">
-      Use the count selector to generate 1, 5, 10, or 50 UUIDs at once. Toggle uppercase if your database or system requires it. Copy individual UUIDs with the per-row copy button, or copy the entire batch with "Copy all" to paste into a spreadsheet or test fixture. Nothing is sent to any server.
-    </p>
-  </div>
-
-  <div slot="how-to-use">
-    <h2 class="text-lg font-semibold text-white mb-3 mt-8">How to use</h2>
-    <ol class="list-decimal list-inside space-y-2 text-gray-400 text-sm leading-relaxed">
-      <li>Select how many UUIDs you want: 1, 5, 10, or 50.</li>
-      <li>Toggle <strong class="text-gray-200">Uppercase</strong> if your system requires uppercase UUIDs.</li>
-      <li>Click <strong class="text-gray-200">Generate</strong> to produce the UUIDs.</li>
-      <li>Click <strong class="text-gray-200">Copy</strong> next to any UUID to copy it individually, or <strong class="text-gray-200">Copy all</strong> to copy the entire batch.</li>
-    </ol>
-  </div>
-
-  <div slot="faq">
-    <h2 class="text-lg font-semibold text-white mb-4 mt-8">Frequently asked questions</h2>
-    <div class="space-y-4">
-      {faqJsonLd.mainEntity.map((item) => (
-        <details class="border border-gray-800 rounded-lg">
-          <summary class="px-4 py-3 text-sm font-medium text-gray-200 cursor-pointer hover:text-white">{item.name}</summary>
-          <p class="px-4 pb-3 text-sm text-gray-400">{item.acceptedAnswer.text}</p>
-        </details>
-      ))}
-    </div>
+    <p class="text-gray-400 text-sm leading-relaxed">Uses <code class="text-green-400">crypto.randomUUID()</code> — the Web Crypto API built into every modern browser. This is a cryptographically secure random source. UUIDs generated here are indistinguishable from server-generated ones.</p>
   </div>
 
   <div slot="related">
@@ -125,7 +81,6 @@ const faqJsonLd = {
     <div class="flex flex-wrap gap-2">
       <a href="/tools/json-formatter/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">JSON Formatter</a>
       <a href="/tools/base64/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Base64 Encode/Decode</a>
-      <a href="/tools/url-encode/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">URL Encode/Decode</a>
     </div>
   </div>
 </ToolLayout>

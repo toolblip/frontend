@@ -1,7 +1,7 @@
-# Tool Opportunities Extended  -  April 2026
+# Tool Opportunities Extended — April 2026
 *Research compiled: April 7, 2026. Builds on market-analysis-2026.md, build-plan-2026.md, competitor-deep-dive-2026.md.*
 
-All tools listed here are 100% client-side  -  no server required. Estimated search volumes are global monthly figures from Semrush/Ahrefs data as of early 2026. KD = Keyword Difficulty (0-100 scale). Tools already in the launch set (first 10) are marked accordingly.
+All tools listed here are 100% client-side — no server required. Estimated search volumes are global monthly figures from Semrush/Ahrefs data as of early 2026. KD = Keyword Difficulty (0-100 scale). Tools already in the launch set (first 10) are marked accordingly.
 
 ---
 
@@ -14,9 +14,9 @@ All tools listed here are 100% client-side  -  no server required. Estimated sea
 
 ---
 
-## SECTION 1  -  LOW COMPETITION (KD 0-20)
+## SECTION 1 — LOW COMPETITION (KD 0-20)
 
-### 1A. Image Tools  -  Low Competition
+### 1A. Image Tools — Low Competition
 
 | # | Tool Name | URL Slug | Est. Monthly Searches | KD | Client-Side Only | Browser API / Library |
 |---|---|---|---|---|---|---|
@@ -36,7 +36,7 @@ All tools listed here are 100% client-side  -  no server required. Estimated sea
 | 14 | Remove Image Background | `/tools/remove-background` | 600K-1.2M | 20 | Yes | `@imgly/background-removal` (WASM + ONNX ML model, fully browser-side) |
 | 15 | Image Compress Online | `/tools/compress-image` | 800K-1.5M | 20 | Yes | `browser-image-compression` (pure JS); Squoosh WASM codecs for better quality |
 
-### 1B. PDF Tools  -  Low Competition
+### 1B. PDF Tools — Low Competition
 
 | # | Tool Name | URL Slug | Est. Monthly Searches | KD | Client-Side Only | Browser API / Library |
 |---|---|---|---|---|---|---|
@@ -47,7 +47,7 @@ All tools listed here are 100% client-side  -  no server required. Estimated sea
 | 20 | Extract Text from PDF | `/tools/extract-text-from-pdf` | 80K-150K | 14 | Yes | `PDF.js` (text layer extraction) |
 | 21 | PDF to Grayscale | `/tools/pdf-to-grayscale` | 20K-40K | 8 | Yes | `pdf-lib` + `PDF.js` render-to-canvas → desaturate → re-embed |
 
-### 1C. Text Tools  -  Low Competition
+### 1C. Text Tools — Low Competition
 
 | # | Tool Name | URL Slug | Est. Monthly Searches | KD | Client-Side Only | Browser API / Library |
 |---|---|---|---|---|---|---|
@@ -63,7 +63,7 @@ All tools listed here are 100% client-side  -  no server required. Estimated sea
 | 31 | Text Diff / Compare Text | `/tools/text-diff` | 150K-300K | 15 | Yes | `diff` npm library (Myers diff algorithm, pure JS) |
 | 32 | Markdown to HTML | `/tools/markdown-to-html` | 100K-200K | 15 | Yes | `marked` npm library + `DOMPurify` for XSS sanitization |
 
-### 1D. Developer Tools  -  Low Competition
+### 1D. Developer Tools — Low Competition
 
 | # | Tool Name | URL Slug | Est. Monthly Searches | KD | Client-Side Only | Browser API / Library |
 |---|---|---|---|---|---|---|
@@ -86,7 +86,7 @@ All tools listed here are 100% client-side  -  no server required. Estimated sea
 | 49 | XML to JSON | `/tools/xml-to-json` | 80K-150K | 14 | Yes | `fast-xml-parser` npm library (pure JS) |
 | 50 | Morse Code Translator | `/tools/morse-code` | 60K-120K | 9 | Yes | Pure JS (static lookup map) |
 
-### 1E. Math / Number Tools  -  Low Competition
+### 1E. Math / Number Tools — Low Competition
 
 | # | Tool Name | URL Slug | Est. Monthly Searches | KD | Client-Side Only | Browser API / Library |
 |---|---|---|---|---|---|---|
@@ -98,7 +98,7 @@ All tools listed here are 100% client-side  -  no server required. Estimated sea
 | 56 | Random Number Generator | `/tools/random-number-generator` | 200K-400K | 15 | Yes | `crypto.getRandomValues()` for cryptographic randomness |
 | 57 | Unit Converter (Length / Weight / Temp / Speed) | `/tools/unit-converter` | 500K-1M | 20 | Yes | Pure JS (conversion factor tables) |
 
-### 1F. File Tools  -  Low Competition
+### 1F. File Tools — Low Competition
 
 | # | Tool Name | URL Slug | Est. Monthly Searches | KD | Client-Side Only | Browser API / Library |
 |---|---|---|---|---|---|---|
@@ -108,9 +108,9 @@ All tools listed here are 100% client-side  -  no server required. Estimated sea
 
 ---
 
-## SECTION 2  -  MEDIUM COMPETITION (KD 21-40)
+## SECTION 2 — MEDIUM COMPETITION (KD 21-40)
 
-### 2A. Image Tools  -  Medium Competition
+### 2A. Image Tools — Medium Competition
 
 | # | Tool Name | URL Slug | Est. Monthly Searches | KD | Client-Side Only | Browser API / Library |
 |---|---|---|---|---|---|---|
@@ -123,7 +123,7 @@ All tools listed here are 100% client-side  -  no server required. Estimated sea
 | 67 | Social Media Image Resizer | `/tools/social-media-image-resizer` | 150K-300K | 25 | Yes | Canvas API with preset sizes (1080x1080, 1200x630, 1280x720, etc.) |
 | 68 | YouTube Thumbnail Maker / Resizer | `/tools/youtube-thumbnail-resizer` | 200K-400K | 28 | Yes | Canvas API (resize to 1280x720) |
 
-### 2B. PDF Tools  -  Medium Competition
+### 2B. PDF Tools — Medium Competition
 
 | # | Tool Name | URL Slug | Est. Monthly Searches | KD | Client-Side Only | Browser API / Library |
 |---|---|---|---|---|---|---|
@@ -132,14 +132,14 @@ All tools listed here are 100% client-side  -  no server required. Estimated sea
 | 71 | Compress PDF | `/tools/compress-pdf` | 4M-6M | 38 | Mostly | `pdf-lib` for basic; WASM-based for better compression ratio |
 | 72 | Remove Pages from PDF | `/tools/remove-pages-from-pdf` | 300K-600K | 22 | Yes | `pdf-lib` |
 
-### 2C. Text Tools  -  Medium Competition
+### 2C. Text Tools — Medium Competition
 
 | # | Tool Name | URL Slug | Est. Monthly Searches | KD | Client-Side Only | Browser API / Library |
 |---|---|---|---|---|---|---|
 | 73 | Word Counter | `/tools/word-counter` | 2M-3M | 30 | Yes | Pure JS (`.split(/\s+/).filter(Boolean).length`) |
 | 74 | Character Counter | `/tools/character-counter` | 600K-1M | 22 | Yes | Pure JS (`.length`) |
 
-### 2D. Developer Tools  -  Medium Competition
+### 2D. Developer Tools — Medium Competition
 
 | # | Tool Name | URL Slug | Est. Monthly Searches | KD | Client-Side Only | Browser API / Library |
 |---|---|---|---|---|---|---|
@@ -153,21 +153,21 @@ All tools listed here are 100% client-side  -  no server required. Estimated sea
 | 82 | Favicon Generator | `/tools/favicon-generator` | 100K-200K | 25 | Yes | Canvas API (render image at 16x16, 32x32, 48x48 + ICO packaging via pure JS) |
 | 83 | Markdown to PDF | `/tools/markdown-to-pdf` | 80K-150K | 22 | Yes | `marked` + `html2canvas` + `jsPDF` (all pure JS) |
 
-### 2E. Color Tools  -  Medium Competition
+### 2E. Color Tools — Medium Competition
 
 | # | Tool Name | URL Slug | Est. Monthly Searches | KD | Client-Side Only | Browser API / Library |
 |---|---|---|---|---|---|---|
 | 84 | Color Blindness Simulator | `/tools/color-blindness-simulator` | 30K-60K | 22 | Yes | Canvas `getImageData` + color matrix transformations (pure JS) |
 | 85 | Color Name Finder | `/tools/color-name-finder` | 50K-100K | 21 | Yes | Pure JS (nearest-neighbor search against `color-name` npm dataset) |
 
-### 2F. Math / Number Tools  -  Medium Competition
+### 2F. Math / Number Tools — Medium Competition
 
 | # | Tool Name | URL Slug | Est. Monthly Searches | KD | Client-Side Only | Browser API / Library |
 |---|---|---|---|---|---|---|
 | 86 | Scientific Calculator | `/tools/scientific-calculator` | 400K-800K | 35 | Yes | Pure JS (`Math` API) |
 | 87 | Loan / Mortgage Calculator | `/tools/loan-calculator` | 600K-1.2M | 38 | Yes | Pure JS (compound interest formula) |
 
-### 2G. Social Media Tools  -  Medium Competition
+### 2G. Social Media Tools — Medium Competition
 
 | # | Tool Name | URL Slug | Est. Monthly Searches | KD | Client-Side Only | Browser API / Library |
 |---|---|---|---|---|---|---|
@@ -178,9 +178,9 @@ All tools listed here are 100% client-side  -  no server required. Estimated sea
 
 ---
 
-## SECTION 3  -  HIGH COMPETITION (KD 41+)
+## SECTION 3 — HIGH COMPETITION (KD 41+)
 
-*Build these for completeness, internal linking, and long-tail variants  -  not as primary acquisition drivers at launch. The volume is too large to ignore, but a new domain will not rank for the head terms. Target secondary keyword angles (e.g., "compress pdf without quality loss", "merge pdf offline browser").*
+*Build these for completeness, internal linking, and long-tail variants — not as primary acquisition drivers at launch. The volume is too large to ignore, but a new domain will not rank for the head terms. Target secondary keyword angles (e.g., "compress pdf without quality loss", "merge pdf offline browser").*
 
 | # | Tool Name | URL Slug | Est. Monthly Searches | KD | Client-Side Only | Browser API / Library |
 |---|---|---|---|---|---|---|
@@ -215,35 +215,35 @@ All tools listed here are 100% client-side  -  no server required. Estimated sea
 These are the tools NOT already in the first 10 that offer the best traffic-per-build-effort ratio:
 
 ### Tier A: Build immediately after launch (Weeks 2-4)
-1. **HEIC to JPG**  -  300-600K/month, KD 20, 4 hours to build (heic2any.js)
-2. **WebP to JPG**  -  200-400K/month, KD 18, 2 hours (Canvas API)
-3. **Rotate PDF**  -  200-400K/month, KD 20, 3 hours (pdf-lib)
-4. **Lorem Ipsum Generator**  -  300-600K/month, KD 15, 2 hours (pure JS)
-5. **Percentage Calculator**  -  800K-1.5M/month, KD 18, 3 hours (pure JS)
-6. **Age Calculator**  -  600K-1.2M/month, KD 18, 3 hours (pure JS)
-7. **Unit Converter**  -  500K-1M/month, KD 20, 5 hours (pure JS, multiple units)
-8. **Base64 image support**  -  extend existing base64 tool, add image-to-base64 separately
+1. **HEIC to JPG** — 300-600K/month, KD 20, 4 hours to build (heic2any.js)
+2. **WebP to JPG** — 200-400K/month, KD 18, 2 hours (Canvas API)
+3. **Rotate PDF** — 200-400K/month, KD 20, 3 hours (pdf-lib)
+4. **Lorem Ipsum Generator** — 300-600K/month, KD 15, 2 hours (pure JS)
+5. **Percentage Calculator** — 800K-1.5M/month, KD 18, 3 hours (pure JS)
+6. **Age Calculator** — 600K-1.2M/month, KD 18, 3 hours (pure JS)
+7. **Unit Converter** — 500K-1M/month, KD 20, 5 hours (pure JS, multiple units)
+8. **Base64 image support** — extend existing base64 tool, add image-to-base64 separately
 
 ### Tier B: Build in first 60 days
-9. **Image to PDF**  -  300-600K/month, KD 18, 3 hours (pdf-lib)
-10. **PDF to Image**  -  400-800K/month, KD 20, 4 hours (PDF.js + Canvas)
-11. **Resize Image**  -  1-2M/month, KD 35, 4 hours (Canvas API; target long-tail: "resize image to 1mb")
-12. **Compress Image**  -  800K-1.5M/month, KD 20, 4 hours (browser-image-compression)
-13. **Crop Image**  -  400-800K/month, KD 28, already have Cropper.js from image cropper
-14. **Hash Generator**  -  150-300K/month, KD 14, 2 hours (Web Crypto API)
-15. **Text Diff**  -  150-300K/month, KD 15, 3 hours (diff npm lib)
-16. **Unix Timestamp Converter**  -  100-200K/month, KD 12, 2 hours (pure JS)
-17. **JWT Decoder**  -  100-200K/month, KD 14, 2 hours (pure JS, no library needed)
-18. **CSV to JSON / JSON to CSV**  -  250-500K/month combined, KD 14, 3 hours (papaparse)
+9. **Image to PDF** — 300-600K/month, KD 18, 3 hours (pdf-lib)
+10. **PDF to Image** — 400-800K/month, KD 20, 4 hours (PDF.js + Canvas)
+11. **Resize Image** — 1-2M/month, KD 35, 4 hours (Canvas API; target long-tail: "resize image to 1mb")
+12. **Compress Image** — 800K-1.5M/month, KD 20, 4 hours (browser-image-compression)
+13. **Crop Image** — 400-800K/month, KD 28, already have Cropper.js from image cropper
+14. **Hash Generator** — 150-300K/month, KD 14, 2 hours (Web Crypto API)
+15. **Text Diff** — 150-300K/month, KD 15, 3 hours (diff npm lib)
+16. **Unix Timestamp Converter** — 100-200K/month, KD 12, 2 hours (pure JS)
+17. **JWT Decoder** — 100-200K/month, KD 14, 2 hours (pure JS, no library needed)
+18. **CSV to JSON / JSON to CSV** — 250-500K/month combined, KD 14, 3 hours (papaparse)
 
 ### Tier C: 60-90 days (completes category coverage)
-19. **Remove image background**  -  600K-1.2M/month, KD 20, 6 hours (@imgly/background-removal WASM)
-20. **Social media image resizer**  -  bundle: Instagram/Twitter/LinkedIn/YouTube in one tool
-21. **Cron parser**  -  80-150K/month, KD 12, 2 hours (cronstrue)  -  on-brand with Crontinel
-22. **Regex tester**  -  400-800K/month, KD 25, 4 hours (pure JS)
-23. **YAML to JSON / JSON to YAML**  -  90-180K/month combined, KD 12, 2 hours (js-yaml)
-24. **SVG to PNG**  -  150-300K/month, KD 14, 2 hours (Canvas API)
-25. **Color Palette Generator**  -  80-150K/month, KD 22, 3 hours (color-thief.js)
+19. **Remove image background** — 600K-1.2M/month, KD 20, 6 hours (@imgly/background-removal WASM)
+20. **Social media image resizer** — bundle: Instagram/Twitter/LinkedIn/YouTube in one tool
+21. **Cron parser** — 80-150K/month, KD 12, 2 hours (cronstrue) — on-brand with Crontinel
+22. **Regex tester** — 400-800K/month, KD 25, 4 hours (pure JS)
+23. **YAML to JSON / JSON to YAML** — 90-180K/month combined, KD 12, 2 hours (js-yaml)
+24. **SVG to PNG** — 150-300K/month, KD 14, 2 hours (Canvas API)
+25. **Color Palette Generator** — 80-150K/month, KD 22, 3 hours (color-thief.js)
 
 ---
 
@@ -273,29 +273,29 @@ These are the tools NOT already in the first 10 that offer the best traffic-per-
 | bcryptjs | `bcryptjs` | ~20KB | Htpasswd Generator |
 | spark-md5 | `spark-md5` | ~8KB | MD5 Hash (SHA-256 uses native Web Crypto API) |
 
-**Key note on @imgly/background-removal:** The WASM model is ~6MB but loads lazily (only when user triggers the tool). It runs a real ML segmentation model (ONNX Runtime) entirely in the browser with no server call. This is the strongest differentiator in the image category  -  competitors like remove.bg and Adobe Firefly require cloud APIs.
+**Key note on @imgly/background-removal:** The WASM model is ~6MB but loads lazily (only when user triggers the tool). It runs a real ML segmentation model (ONNX Runtime) entirely in the browser with no server call. This is the strongest differentiator in the image category — competitors like remove.bg and Adobe Firefly require cloud APIs.
 
 ### Tools That Cannot Be 100% Client-Side (Exceptions)
 
 Only one tool in the entire catalogue has a hard server dependency:
-- **PDF to Word (scanned PDFs):** Real OCR that produces DOCX output requires a server-side process (Tesseract.js in the browser works for basic extraction, but quality is far below cloud OCR for scanned documents). Workaround: offer the tool for text-layer PDFs only and clearly label it "Works for text PDFs  -  not scanned documents." This covers ~60% of use cases and is still valuable.
+- **PDF to Word (scanned PDFs):** Real OCR that produces DOCX output requires a server-side process (Tesseract.js in the browser works for basic extraction, but quality is far below cloud OCR for scanned documents). Workaround: offer the tool for text-layer PDFs only and clearly label it "Works for text PDFs — not scanned documents." This covers ~60% of use cases and is still valuable.
 
 Everything else listed in this document is genuinely 100% client-side.
 
 ### SEO Quick-Win Stack Ranking
 
-Sorted by (search volume × (1 - KD/100))  -  a proxy for "traffic opportunity score" weighted for achievability:
+Sorted by (search volume × (1 - KD/100)) — a proxy for "traffic opportunity score" weighted for achievability:
 
-1. Percentage Calculator  -  score: 1.23M (800K × 0.82)
-2. Age Calculator  -  score: 0.98M (600K × 0.82)
-3. Unit Converter  -  score: 0.60M (500K × 0.80)
-4. HEIC to JPG  -  score: 0.56M (350K × 0.80)
-5. Lorem Ipsum Generator  -  score: 0.51M (450K × 0.85)
-6. WebP to JPG  -  score: 0.49M (300K × 0.82)
-7. Remove Duplicate Lines  -  score: 0.27M (150K × 0.90)  -  already in launch set
-8. Rotate PDF  -  score: 0.24M (300K × 0.80)
-9. Image to PDF  -  score: 0.41M (450K × 0.82)
-10. PDF to Image  -  score: 0.48M (600K × 0.80)
+1. Percentage Calculator — score: 1.23M (800K × 0.82)
+2. Age Calculator — score: 0.98M (600K × 0.82)
+3. Unit Converter — score: 0.60M (500K × 0.80)
+4. HEIC to JPG — score: 0.56M (350K × 0.80)
+5. Lorem Ipsum Generator — score: 0.51M (450K × 0.85)
+6. WebP to JPG — score: 0.49M (300K × 0.82)
+7. Remove Duplicate Lines — score: 0.27M (150K × 0.90) — already in launch set
+8. Rotate PDF — score: 0.24M (300K × 0.80)
+9. Image to PDF — score: 0.41M (450K × 0.82)
+10. PDF to Image — score: 0.48M (600K × 0.80)
 
 ---
 

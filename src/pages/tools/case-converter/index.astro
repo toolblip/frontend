@@ -11,33 +11,15 @@ const cases = [
   { label: 'snake_case', id: 'snake' },
   { label: 'kebab-case', id: 'kebab' },
 ];
-
-const faqJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: [
-    { '@type': 'Question', name: 'What is the difference between camelCase and PascalCase?', acceptedAnswer: { '@type': 'Answer', text: 'Both formats join words without spaces. camelCase starts with a lowercase letter (e.g. myVariableName). PascalCase starts with an uppercase letter (e.g. MyVariableName). camelCase is common for variables and functions in JavaScript, while PascalCase is used for class names and React components.' } },
-    { '@type': 'Question', name: 'What is snake_case used for?', acceptedAnswer: { '@type': 'Answer', text: 'snake_case uses underscores to separate words, all in lowercase. It is the standard naming convention in Python (for variables, functions, and file names), SQL column names, and shell script variables.' } },
-    { '@type': 'Question', name: 'What is kebab-case used for?', acceptedAnswer: { '@type': 'Answer', text: 'kebab-case uses hyphens to separate words, all in lowercase. It is used for CSS class names, HTML attributes, URL slugs, and some configuration file keys. It is also called spinal-case or lisp-case.' } },
-    { '@type': 'Question', name: 'Can I convert camelCase input directly to snake_case?', acceptedAnswer: { '@type': 'Answer', text: 'Yes. The converter intelligently splits camelCase and PascalCase inputs by detecting transitions between lowercase and uppercase letters before converting. So "myVariableName" converts correctly to "my_variable_name" in one click.' } },
-    { '@type': 'Question', name: 'Is my text sent to a server?', acceptedAnswer: { '@type': 'Answer', text: 'No. All conversion happens in your browser using JavaScript. Your text never leaves your device.' } },
-    { '@type': 'Question', name: 'What is Title Case?', acceptedAnswer: { '@type': 'Answer', text: 'Title Case capitalizes the first letter of every word (e.g. "The Quick Brown Fox"). It is used for article headlines, book titles, and page headings. This tool capitalizes every word, including articles and prepositions.' } },
-  ],
-};
 ---
 
 <ToolLayout
-  title="Case Converter Online Free  -  Toolblip"
+  title="Case Converter Online Free — Toolblip"
   description="Convert text between UPPERCASE, lowercase, Title Case, camelCase, PascalCase, snake_case, kebab-case, and more. One click."
   toolSlug="case-converter"
   category="text"
 >
-  <Fragment slot="jsonld">
-    <script type="application/ld+json" set:html={JSON.stringify(faqJsonLd)} />
-  </Fragment>
-
-  <label for="case-input" class="sr-only">Text input</label>
-  <textarea id="case-input" aria-label="Text input" class="w-full h-32 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-green-500 placeholder-gray-500" placeholder="Type or paste your text here..."></textarea>
+  <textarea id="case-input" class="w-full h-32 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-green-500 placeholder-gray-500" placeholder="Type or paste your text here..."></textarea>
 
   <div class="flex flex-wrap gap-2 mt-3">
     {cases.map(({ label, id }) => (
@@ -48,11 +30,9 @@ const faqJsonLd = {
   <div class="mt-3">
     <div class="flex items-center justify-between mb-1">
       <span class="text-xs text-gray-500">Output</span>
-      <button id="case-copy" aria-label="Copy converted text" class="text-xs text-green-400 hover:text-green-300 transition-colors">Copy</button>
+      <button id="case-copy" class="text-xs text-green-400 hover:text-green-300 transition-colors">Copy</button>
     </div>
-    <div aria-live="polite" aria-atomic="true">
-      <textarea id="case-output" readonly aria-label="Converted output" class="w-full h-32 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none" placeholder="Result appears here..."></textarea>
-    </div>
+    <textarea id="case-output" readonly class="w-full h-32 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none" placeholder="Result appears here..."></textarea>
   </div>
 
   <script>
@@ -68,7 +48,7 @@ const faqJsonLd = {
       lower: t => t.toLowerCase(),
       title: t => words(t).map(w => w[0].toUpperCase() + w.slice(1).toLowerCase()).join(' '),
       sentence: t => t.toLowerCase().replace(/(^\s*\w|[.!?]\s+\w)/g, c => c.toUpperCase()),
-      camel: t => { const w = words(t); if (w.length === 0) return ''; return w[0].toLowerCase() + w.slice(1).map(w => w[0].toUpperCase() + w.slice(1).toLowerCase()).join(''); },
+      camel: t => { const w = words(t); return w[0].toLowerCase() + w.slice(1).map(w => w[0].toUpperCase() + w.slice(1).toLowerCase()).join(''); },
       pascal: t => words(t).map(w => w[0].toUpperCase() + w.slice(1).toLowerCase()).join(''),
       snake: t => words(t).map(w => w.toLowerCase()).join('_'),
       kebab: t => words(t).map(w => w.toLowerCase()).join('-'),
@@ -93,41 +73,13 @@ const faqJsonLd = {
 
   <div slot="description">
     <h2 class="text-lg font-semibold text-white mb-2">About this tool</h2>
-    <p class="text-gray-400 text-sm leading-relaxed">
-      Convert between 8 common text cases with a single click. The converter intelligently handles mixed input  -  it detects camelCase, PascalCase, snake_case, and kebab-case inputs and splits them correctly before applying the target case. This means you can chain conversions freely without cleaning up the input first.
-    </p>
-    <p class="text-gray-400 text-sm leading-relaxed mt-2">
-      Developers use this to quickly rename variables between naming conventions when working across different languages or frameworks. Writers use Title Case and Sentence case for headlines and copywriting. Paste any text and click the conversion you need.
-    </p>
-  </div>
-
-  <div slot="how-to-use">
-    <h2 class="text-lg font-semibold text-white mb-3 mt-8">How to use</h2>
-    <ol class="list-decimal list-inside space-y-2 text-gray-400 text-sm leading-relaxed">
-      <li>Paste or type your text into the input box above.</li>
-      <li>Click any case button  -  UPPERCASE, lowercase, Title Case, camelCase, etc.</li>
-      <li>The converted text appears instantly in the Output box below.</li>
-      <li>Click <strong class="text-gray-200">Copy</strong> to copy the result to your clipboard.</li>
-    </ol>
-  </div>
-
-  <div slot="faq">
-    <h2 class="text-lg font-semibold text-white mb-4 mt-8">Frequently asked questions</h2>
-    <div class="space-y-4">
-      {faqJsonLd.mainEntity.map((item) => (
-        <details class="border border-gray-800 rounded-lg">
-          <summary class="px-4 py-3 text-sm font-medium text-gray-200 cursor-pointer hover:text-white">{item.name}</summary>
-          <p class="px-4 pb-3 text-sm text-gray-400">{item.acceptedAnswer.text}</p>
-        </details>
-      ))}
-    </div>
+    <p class="text-gray-400 text-sm leading-relaxed">Convert between 8 common text cases with a single click. The converter intelligently splits camelCase, PascalCase, snake_case, and kebab-case inputs before reconverting, so you can chain conversions freely.</p>
   </div>
 
   <div slot="related">
     <h2 class="text-lg font-semibold text-white mb-3 mt-8">Related tools</h2>
     <div class="flex flex-wrap gap-2">
       <a href="/tools/word-counter/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Word Counter</a>
-      <a href="/tools/character-counter/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Character Counter</a>
       <a href="/tools/remove-duplicate-lines/" class="text-sm bg-gray-800 hover:bg-gray-700 border border-gray-700 px-3 py-1.5 rounded-lg text-gray-300 hover:text-white transition-colors">Remove Duplicate Lines</a>
     </div>
   </div>

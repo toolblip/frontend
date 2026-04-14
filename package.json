@@ -1,34 +1,22 @@
 {
   "name": "toolblip",
+  "description": "Free client-side web developer tools — JSON formatter, Base64, UUID generator, and more. Astro static site deployed on Cloudflare Pages.",
   "type": "module",
   "version": "0.0.1",
   "engines": {
     "node": ">=22.12.0"
   },
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
   },
   "dependencies": {
-    "@tailwindcss/postcss": "^4.2.2",
-    "@types/node": "^25.6.0",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
-    "gray-matter": "^4.0.3",
-    "js-yaml": "^4.1.1",
-    "marked": "^18.0.0",
-    "next": "^16.2.3",
-    "postcss": "^8.5.9",
-    "postcss-preset-env": "^11.2.0",
-    "react": "^19.2.5",
-    "react-dom": "^19.2.5",
-    "tailwindcss": "^4.2.2",
-    "typescript": "^6.0.2"
-  },
-  "devDependencies": {
-    "@types/js-yaml": "^4.0.9",
-    "@types/marked": "^5.0.2"
+    "@astrojs/cloudflare": "^13.1.7",
+    "@astrojs/sitemap": "^3.7.2",
+    "@tailwindcss/vite": "^4.2.2",
+    "astro": "^6.1.4",
+    "tailwindcss": "^4.2.2"
   }
 }

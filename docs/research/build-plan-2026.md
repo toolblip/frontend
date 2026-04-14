@@ -1,4 +1,4 @@
-# Tinytools  -  Build Plan 2026
+# Tinytools — Build Plan 2026
 *Research compiled: April 7, 2026. Based on market-analysis-2026.md, competitor-deep-dive-2026.md, domain-research-2026.md.*
 
 ---
@@ -11,7 +11,7 @@
 
 ---
 
-## 1. Technical Implementation Plan  -  Per Tool
+## 1. Technical Implementation Plan — Per Tool
 
 ### Browser APIs and Libraries for Each Launch Tool
 
@@ -55,7 +55,7 @@ Nothing in the first 10 tools requires a server. Every tool in the launch set is
 These are not in the launch set but are the natural next additions that benefit from WASM:
 - **Image format conversion** (HEIC to JPG, WebP to JPG): `heic2any` is pure JS but slow on large files; WASM-compiled libvips is faster
 - **PDF manipulation** (rotate PDF, compress PDF): `pdf-lib` is pure JS and handles basic ops fine; WASM becomes relevant for compression quality
-- **Background removal**: `@imgly/background-removal` runs a WASM ML model fully in-browser  -  viable post-launch addition
+- **Background removal**: `@imgly/background-removal` runs a WASM ML model fully in-browser — viable post-launch addition
 - **Image compression**: `squoosh` (Google) uses WASM codecs; `browser-image-compression` is a pure-JS fallback
 
 For the 10 launch tools: no WASM needed.
@@ -72,20 +72,20 @@ A tool page has a predictable layout: hero/tool area above fold, instructional c
 
 ```
 [HEADER / NAV]
-[H1 + Tool Description  -  2-3 sentences]
-[TOOL INTERFACE  -  input/output/button]          ← NO ADS HERE
-[LEADERBOARD AD  -  728x90 or responsive]        ← Place here: after tool, before content
-[HOW TO USE  -  3-4 steps]
-[IN-CONTENT AD  -  336x280 or responsive]        ← Place here: mid-content, after step 2-3
-[FAQ SECTION  -  5-7 Q&As]
+[H1 + Tool Description — 2-3 sentences]
+[TOOL INTERFACE — input/output/button]          ← NO ADS HERE
+[LEADERBOARD AD — 728x90 or responsive]        ← Place here: after tool, before content
+[HOW TO USE — 3-4 steps]
+[IN-CONTENT AD — 336x280 or responsive]        ← Place here: mid-content, after step 2-3
+[FAQ SECTION — 5-7 Q&As]
 [RELATED TOOLS GRID]
-[IN-CONTENT AD  -  300x250]                      ← Place here: after FAQ, before footer
+[IN-CONTENT AD — 300x250]                      ← Place here: after FAQ, before footer
 [FOOTER]
 ```
 
 **Key rules:**
-1. Never place ads inside or overlapping the tool interface  -  Google rejects this as accidental click bait and it destroys UX
-2. The first ad appears below the fold of the tool interaction  -  users have engaged before seeing the ad
+1. Never place ads inside or overlapping the tool interface — Google rejects this as accidental click bait and it destroys UX
+2. The first ad appears below the fold of the tool interaction — users have engaged before seeing the ad
 3. Sidebar ads (300x600 wide skyscraper) work on desktop if the tool content is narrow and you have space; they don't exist on mobile
 4. On mobile, stick to responsive ads that collapse to 320x50 or 300x250
 
@@ -99,7 +99,7 @@ A tool page has a predictable layout: hero/tool area above fold, instructional c
 | Wide Skyscraper | 160x600 | Sidebar on desktop only; high CPM for tech audience |
 | Responsive Ad | Auto | Let Google optimize size; generally best for mobile |
 
-**For a new site launching with AdSense:** Use 2-3 responsive display ads per page initially. Google's auto ads feature can be enabled temporarily to let Google find optimal placements  -  run it for 2-4 weeks, then hardcode the positions that worked and disable auto ads (which can slow page load).
+**For a new site launching with AdSense:** Use 2-3 responsive display ads per page initially. Google's auto ads feature can be enabled temporarily to let Google find optimal placements — run it for 2-4 weeks, then hardcode the positions that worked and disable auto ads (which can slow page load).
 
 ### RPM Expectations for This Tool Set
 
@@ -120,18 +120,18 @@ Blended estimate at launch: **$4-7 RPM**. This is with AdSense. Moving to Ezoic 
 **Content policies to watch:**
 - Ads cannot be placed in a way that encourages accidental clicks (near buttons, in scroll paths)
 - Pages must have substantial content beyond just the tool (the "how to use" + FAQ sections cover this)
-- No ads on pages with very thin content  -  this is why the content skeleton below the tool matters
-- Tool pages with only an input field and output box with no supporting content may be flagged as "low value"  -  the content sections protect against this
+- No ads on pages with very thin content — this is why the content skeleton below the tool matters
+- Tool pages with only an input field and output box with no supporting content may be flagged as "low value" — the content sections protect against this
 
 **Core Web Vitals and AdSense:** Google's PageSpeed Insights score affects both ad RPM (better UX → higher CPM bids from advertisers) and organic rankings. Astro's static output + Cloudflare Pages CDN should keep LCP under 2.5s. Lazy-load all ads with `loading="lazy"` attribute on ad slots. Do not load ads in the critical rendering path.
 
 **AdSense approval for a new site:** Requires:
 - At least 10-15 pages of real content (10 tool pages qualify)
-- A privacy policy page (required  -  mention client-side processing)
+- A privacy policy page (required — mention client-side processing)
 - A contact/about page
 - No copyrighted content, no misleading tools
 - Site must be live for at least 2-4 weeks before applying (some accounts approved faster, some take up to 2 months)
-- No minimum traffic requirement officially, but very low traffic sites can be rejected  -  aim to have 500+ monthly visitors before applying
+- No minimum traffic requirement officially, but very low traffic sites can be rejected — aim to have 500+ monthly visitors before applying
 
 ---
 
@@ -240,7 +240,7 @@ export const tools: Tool[] = [
 
 **The approach that works at scale:**
 
-1. **Static pages at build time:** Each tool page is a static `.astro` file. At 100 tools, this is 100 files  -  manageable. Alternatively, use Astro's dynamic routes (`src/pages/tools/[slug].astro`) with `getStaticPaths()` reading from `tools.ts`. The dynamic route approach makes adding tools faster (add to registry, done).
+1. **Static pages at build time:** Each tool page is a static `.astro` file. At 100 tools, this is 100 files — manageable. Alternatively, use Astro's dynamic routes (`src/pages/tools/[slug].astro`) with `getStaticPaths()` reading from `tools.ts`. The dynamic route approach makes adding tools faster (add to registry, done).
 
 2. **Dynamic routes example:**
 ```astro
@@ -254,18 +254,18 @@ export async function getStaticPaths() {
 ```
 This generates 100 static pages from one template file. The tradeoff: less per-tool customization in the page template. In practice, 80% of tools fit the same template; the 20% that need custom layouts get their own `.astro` file.
 
-3. **Tool search/filtering:** Use a Preact or React island for the search UI. At build time, generate a JSON search index from `tools.ts` and import it into the island. The island filters client-side  -  no server needed, no API call. Fuse.js (~10KB) handles fuzzy search well.
+3. **Tool search/filtering:** Use a Preact or React island for the search UI. At build time, generate a JSON search index from `tools.ts` and import it into the island. The island filters client-side — no server needed, no API call. Fuse.js (~10KB) handles fuzzy search well.
 
 4. **Category pages:** Each category (`/tools/text/`, `/tools/developer/`) is a static page that reads from `tools.ts` to list its tools. Auto-generates when a new tool is added to the registry.
 
-5. **Sitemap:** Use `@astrojs/sitemap`  -  it auto-generates from all static pages at build time. Zero maintenance.
+5. **Sitemap:** Use `@astrojs/sitemap` — it auto-generates from all static pages at build time. Zero maintenance.
 
 6. **SEO metadata per tool:** Pass `tool.keywords`, `tool.description`, and `tool.title` as props to `ToolLayout.astro`, which sets all `<meta>` tags from those props.
 
 ### Handling Images / OG Images
 
 For OG images (Twitter/LinkedIn preview cards), use one of:
-- Static OG images per tool (fast, no build complexity)  -  create a template in Figma, export per tool
+- Static OG images per tool (fast, no build complexity) — create a template in Figma, export per tool
 - `@vercel/og` or Satori + Cloudflare Workers for dynamic OG image generation at request time
 - For launch: static OG images are fine. Dynamic can come later.
 
@@ -277,7 +277,7 @@ For OG images (Twitter/LinkedIn preview cards), use one of:
 
 ```
 URL:      /tools/word-counter
-Title:    Word Counter  -  Free Online Word & Character Count | [Brand]
+Title:    Word Counter — Free Online Word & Character Count | [Brand]
 Meta:     Count words, characters, sentences, and reading time instantly. Free, 
           works in your browser, no signup required.
 
@@ -306,7 +306,7 @@ estimate reading time. Paste or type your text below.</p>
 [IN-CONTENT AD]
 
 <h2>Related Tools</h2>
-[TOOL CARD GRID  -  Character Counter, Case Converter, Remove Duplicate Lines]
+[TOOL CARD GRID — Character Counter, Case Converter, Remove Duplicate Lines]
 ```
 
 ### H1 Pattern
@@ -319,20 +319,20 @@ The H1 should match the primary keyword exactly or nearly:
 - "URL Encoder / Decoder" (covers both)
 - "Image Cropper" (exact match, also targets "crop image online" via intro text)
 
-Do not add "Online" or "Free" to the H1  -  those belong in the title tag and intro text, not the H1. The H1 should be clean and match the tool name.
+Do not add "Online" or "Free" to the H1 — those belong in the title tag and intro text, not the H1. The H1 should be clean and match the tool name.
 
 ### Title Tag Pattern
 
 ```
-[Primary Keyword]  -  Free, [Benefit], [Feature] | [Brand]
+[Primary Keyword] — Free, [Benefit], [Feature] | [Brand]
 ```
 
 Examples:
-- `Word Counter  -  Free Word & Character Count Online | Tinytools`
-- `JSON Formatter  -  Validate & Beautify JSON Online | Tinytools`
-- `Base64 Encode / Decode  -  Free Online Converter | Tinytools`
-- `UUID Generator  -  Free v4 UUID Generator Online | Tinytools`
-- `Remove Duplicate Lines  -  Free Text Cleaner | Tinytools`
+- `Word Counter — Free Word & Character Count Online | Tinytools`
+- `JSON Formatter — Validate & Beautify JSON Online | Tinytools`
+- `Base64 Encode / Decode — Free Online Converter | Tinytools`
+- `UUID Generator — Free v4 UUID Generator Online | Tinytools`
+- `Remove Duplicate Lines — Free Text Cleaner | Tinytools`
 
 Title tag max: 60 characters before Google truncates. Brand name at the end, separated by pipe.
 
@@ -344,8 +344,8 @@ No signup required, works in your browser.
 ```
 
 Examples:
-- `Count words, characters, and sentences in real time. Free word counter tool  -  no ads on the tool, no signup, works instantly in your browser.`
-- `Format, validate, and beautify JSON online. Highlights errors, auto-indents your code. Free JSON formatter  -  no data sent to servers.`
+- `Count words, characters, and sentences in real time. Free word counter tool — no ads on the tool, no signup, works instantly in your browser.`
+- `Format, validate, and beautify JSON online. Highlights errors, auto-indents your code. Free JSON formatter — no data sent to servers.`
 
 Target: 145-155 characters. Include primary keyword in first 50 characters.
 
@@ -384,7 +384,7 @@ Also add `BreadcrumbList` schema for the category breadcrumb:
 }
 ```
 
-FAQ schema is optional but high-value  -  Google can render FAQ rich snippets in search results, which increases CTR by 20-30%:
+FAQ schema is optional but high-value — Google can render FAQ rich snippets in search results, which increases CTR by 20-30%:
 
 ```json
 {
@@ -406,9 +406,9 @@ FAQ schema is optional but high-value  -  Google can render FAQ rich snippets in
 ### Internal Linking Structure
 
 Every tool page links to:
-1. **Related tools** (3-4 tools in the same category or with overlapping use cases)  -  shown in a grid below the FAQ
-2. **Category hub** (e.g., "See all Text Tools →")  -  builds crawl depth for the category page
-3. **Homepage** via the nav logo  -  breadcrumb anchor text
+1. **Related tools** (3-4 tools in the same category or with overlapping use cases) — shown in a grid below the FAQ
+2. **Category hub** (e.g., "See all Text Tools →") — builds crawl depth for the category page
+3. **Homepage** via the nav logo — breadcrumb anchor text
 
 Category hub pages link to:
 1. Every tool in that category (complete list with descriptions)
@@ -451,7 +451,7 @@ This creates a 3-level internal link hierarchy: Homepage → Category Hub → To
 - [ ] Google AdSense account created (apply with the site live; approval takes 1-4 weeks)
 - [ ] AdSense auto ads temporarily enabled during approval review period
 - [ ] Once approved: replace auto ads with manual hardcoded placements (2-3 per page)
-- [ ] Privacy policy covers AdSense cookie consent (required for EU visitors  -  add a simple cookie consent banner or use Cloudflare's Zaraz for consent management)
+- [ ] Privacy policy covers AdSense cookie consent (required for EU visitors — add a simple cookie consent banner or use Cloudflare's Zaraz for consent management)
 
 **Legal / Brand:**
 - [ ] Domain registered (verify toolflare.com or chosen domain via Porkbun/Namecheap first)
@@ -483,7 +483,7 @@ This creates a 3-level internal link hierarchy: Homepage → Category Hub → To
 - [ ] Monitor Google Search Console for crawl errors and indexing status daily for first week
 - [ ] Check Core Web Vitals in Search Console (takes 2-4 weeks to populate)
 - [ ] Publish 1 new tool per week (start with the easiest: resize image, lorem ipsum, hash generator)
-- [ ] Respond to GitHub issues  -  even 1-2 early users reporting bugs or requesting features signals the site is alive to Google
+- [ ] Respond to GitHub issues — even 1-2 early users reporting bugs or requesting features signals the site is alive to Google
 - [ ] Check AdSense for policy violations if using auto ads
 - [ ] Apply for Ezoic once monthly sessions reach 10,000
 

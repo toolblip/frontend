@@ -1,7 +1,7 @@
 /**
  * Cloudflare Pages middleware.
  * Proxies /api/* and /sanctum/* to the Laravel API at api.toolblip.com.
- * This is a CF Pages Function  -  it runs at the edge, not in Astro.
+ * This is a CF Pages Function — it runs at the edge, not in Astro.
  */
 
 const API_BASE = 'https://api.toolblip.com';
