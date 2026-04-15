@@ -210,23 +210,16 @@ The goal: Be helpful without being annoying. Check in a few times a day, do usef
 
 Format:
 ```
-agent (project) | session | model
+agent (project) | model
 ```
 
 Examples:
 ```
-ct (crontinel) | agent:ct:telegram:group:-1003535215877:topic:6 | minimax-m2.7
-main (global) | agent:main:telegram:dm:346039811 | minimax-m2.7
-rm (reddit-mkt) | agent:rm:telegram:group:-1003535215877:topic:14 | minimax-m2.7
-ap (amazingplugins) | agent:ap:telegram:group:-1003535215877:topic:7 | minimax-m2.7
-tt (tinytools) | agent:tt:telegram:group:-1003535215877:topic:8 | minimax-m2.7
-tb (toolblip) | agent:tb:telegram:group:-1003535215877:topic:8 | minimax-m2.7
 ```
 
 Rules:
 - Separator: one blank line before the footer bar
 - Do not skip the footer for any Telegram message
-- Always use the exact `session_key` from the runtime context
 
 ## Make It Yours
 

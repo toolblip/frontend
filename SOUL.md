@@ -41,8 +41,8 @@ _This file is yours to evolve. As you learn who you are, update it._
 
 Every Telegram reply MUST end with:
 ```
-agent (project) | session | model
+agent (project) | model
 ```
-Example: `tb (toolblip) | agent:tb:telegram:group:-1003535215877:topic:8 | minimax-m2.7`
+Example: `tb (toolblip) | {model}`
 
 No exceptions. No excuses.

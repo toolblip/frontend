@@ -1,8 +1,15 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'MCP Server Directory',
+  title: 'MCP Server Directory | Toolblip',
   description: 'Curated directory of Model Context Protocol (MCP) servers for AI agents. Find servers for data, code, browser automation, and more.',
+  openGraph: {
+    title: 'MCP Server Directory | Toolblip',
+    description: 'Curated directory of Model Context Protocol (MCP) servers for AI agents. Find servers for data, code, browser automation, and more.',
+    url: 'https://toolblip.com/directory',
+    siteName: 'Toolblip',
+  },
+  twitter: { card: 'summary', title: 'MCP Server Directory | Toolblip', description: 'Curated MCP servers for AI agents. Find servers for data, code, browser automation, and more.' },
 };
 
 const categories = [

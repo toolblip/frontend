@@ -3,8 +3,15 @@ import Link from 'next/link';
 import CodeBlock from '@/components/ui/CodeBlock';
 
 export const metadata: Metadata = {
-  title: 'API Documentation',
+  title: 'API Documentation | Toolblip',
   description: 'Toolblip REST API documentation. Free access to developer tools, MCP server registry, and user authentication. Base URL: https://api.toolblip.com/api/v1',
+  openGraph: {
+    title: 'API Documentation | Toolblip',
+    description: 'Toolblip REST API documentation. Free access to developer tools, MCP server registry, and user authentication.',
+    url: 'https://toolblip.com/api-docs',
+    siteName: 'Toolblip',
+  },
+  twitter: { card: 'summary', title: 'API Documentation | Toolblip', description: 'Toolblip REST API docs. Free developer tools and MCP server registry.' },
 };
 
 export default function ApiDocsPage() {
