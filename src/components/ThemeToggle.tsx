@@ -36,17 +36,12 @@ export default function ThemeToggle() {
         onClick={() => setOpen((o) => !o)}
         aria-label="Change theme"
         aria-expanded={open}
-        className="flex items-center gap-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-gray-300 dark:border-gray-600 rounded-lg px-2.5 py-1.5 bg-white dark:bg-gray-800 transition-colors"
-      >
-        <span dangerouslySetInnerHTML={{ __html: icons[theme] }} />
-        <span className="hidden sm:inline">{labels[theme]}</span>
-        <svg className={`w-3 h-3 transition-transform ${open ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-          <polyline points="6 9 12 15 18 9" />
-        </svg>
-      </button>
+        className="flex items-center justify-center w-9 h-9 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-gray-300 dark:border-gray-600 rounded-lg hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
+        dangerouslySetInnerHTML={{ __html: icons[theme] }}
+      />
 
       {open && (
-        <div className="absolute right-0 mt-1.5 w-32 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-1 z-50">
+        <div className="absolute right-0 mt-1.5 w-36 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-1 z-50">
           {(['light', 'system', 'dark'] as const).map((t) => (
             <button
               key={t}
@@ -64,7 +59,7 @@ export default function ThemeToggle() {
               {labels[t]}
               {theme === t && (
                 <svg className="w-3.5 h-3.5 ml-auto" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
+                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
               )}
             </button>
