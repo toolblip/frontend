@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 };
 
 const BASE_URL = 'https://toolblip-api-production.up.railway.app';
-const SWIFT_URL = `https://api.toolblip.com`;
+const SWIFT_URL = 'https://api.toolblip.com';
 
 export default function ApiDocsPage() {
   return (
@@ -69,7 +69,7 @@ export default function ApiDocsPage() {
           {[
             { num: '01', label: 'Authentication' },
             { num: '02', label: 'Tools' },
-            { num: '03', label: 'Quick Links' },
+            { num: '03', label: 'Rate Limits' },
           ].map(({ num, label }) => (
             <li key={num}>
               <a href={`#section-${num}`} className="text-sm text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-mono">
@@ -186,7 +186,7 @@ export default function ApiDocsPage() {
       ══════════════════════════════════════════ */}
       <SectionHeader number="02" title="Tools" />
       <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-        Browse all developer tools in the Toolblip registry. Public — no authentication required.
+        Browse all developer tools in the Toolblip registry. All tools endpoints are public — no authentication required.
       </p>
 
       <div className="space-y-2 mb-10">
@@ -199,31 +199,32 @@ export default function ApiDocsPage() {
         method="GET"
         path="/api/tools"
         requiresAuth={false}
-        description="Returns a paginated list of all tools. Public — no authentication required."
+        description="Returns all tools. The outer wrapper is keyed as 'tools'."
         response={`{
-  "data": [
-    {
-      "id": 1,
-      "slug": "claude-code",
-      "name": "Claude Code",
-      "description": "AI coding assistant by Anthropic",
-      "category": "AI",
-      "is_pro": false,
-      "emoji": "🤖",
-      "created_at": "2026-01-01T00:00:00Z"
-    },
-    {
-      "id": 2,
-      "slug": "cursor",
-      "name": "Cursor",
-      "description": "AI-first code editor built around pair programming",
-      "category": "AI",
-      "is_pro": true,
-      "emoji": "💻",
-      "created_at": "2026-01-15T00:00:00Z"
-    }
-  ],
-  "total": 2
+  "tools": {
+    "tools": [
+      {
+        "id": 1,
+        "slug": "claude-code",
+        "name": "Claude Code",
+        "description": "AI coding assistant by Anthropic",
+        "category": "AI",
+        "is_pro": false,
+        "emoji": "🤖",
+        "created_at": "2026-01-01T00:00:00Z"
+      },
+      {
+        "id": 2,
+        "slug": "cursor",
+        "name": "Cursor",
+        "description": "AI-first code editor built around pair programming",
+        "category": "AI",
+        "is_pro": true,
+        "emoji": "💻",
+        "created_at": "2026-01-15T00:00:00Z"
+      }
+    ]
+  }
 }`}
         curl={`curl -X GET ${BASE_URL}/api/tools`}
       />
@@ -235,7 +236,7 @@ export default function ApiDocsPage() {
         requiresAuth={false}
         description="Fetch a single tool by its URL-friendly slug identifier. Returns 404 if not found."
         response={`{
-  "data": {
+  "tool": {
     "id": 1,
     "slug": "claude-code",
     "name": "Claude Code",
@@ -250,39 +251,11 @@ export default function ApiDocsPage() {
       />
 
       {/* ══════════════════════════════════════════
-          SECTION 03 — Quick Links
+          SECTION 03 — Rate Limits
       ══════════════════════════════════════════ */}
-      <SectionHeader number="03" title="Quick Links" />
+      <SectionHeader number="03" title="Rate Limits" />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <Link
-          href="/tools"
-          className="group flex items-center justify-between bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-green-500 dark:hover:border-green-600 rounded-xl px-5 py-4 transition-all duration-200"
-        >
-          <div>
-            <p className="text-gray-900 dark:text-white text-sm font-medium">Browse Tools</p>
-            <p className="text-gray-400 dark:text-gray-500 text-xs mt-0.5">Explore the full catalog</p>
-          </div>
-          <span className="text-green-600 dark:text-green-400 text-xs font-mono group-hover:translate-x-1 transition-transform">
-            GET /api/tools →
-          </span>
-        </Link>
-        <Link
-          href="/directory"
-          className="group flex items-center justify-between bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-green-500 dark:hover:border-green-600 rounded-xl px-5 py-4 transition-all duration-200"
-        >
-          <div>
-            <p className="text-gray-900 dark:text-white text-sm font-medium">MCP Directory</p>
-            <p className="text-gray-400 dark:text-gray-500 text-xs mt-0.5">Browse MCP servers</p>
-          </div>
-          <span className="text-green-600 dark:text-green-400 text-xs font-mono group-hover:translate-x-1 transition-transform">
-            /directory →
-          </span>
-        </Link>
-      </div>
-
-      {/* ── Rate Limiting note ── */}
-      <div className="mt-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4 flex gap-4 items-start">
+      <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4 flex gap-4 items-start mb-10">
         <div className="text-amber-500 mt-0.5 shrink-0">⚡</div>
         <div>
           <p className="text-sm font-semibold text-amber-900 dark:text-amber-300">Rate Limits</p>
