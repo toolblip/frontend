@@ -2,13 +2,10 @@ import { MetadataRoute } from 'next';
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: [
-      {
-        userAgent: '*',
-        allow: '/',
-        disallow: ['/api/'],
-      },
-    ],
-    sitemap: `${process.env.NEXT_PUBLIC_APP_URL || 'https://toolblip.com'}/sitemap.xml`,
+    rules: {
+      userAgent: '*',
+      allow: '/',
+    },
+    sitemap: 'https://toolblip.com/sitemap.xml',
   };
 }

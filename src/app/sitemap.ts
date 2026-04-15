@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { tools } from '@/data/tools';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://toolblip.com';
@@ -10,28 +11,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: baseUrl, priority: 1.0, changeFrequency: 'daily' },
     { url: `${baseUrl}/tools`, priority: 0.9, changeFrequency: 'weekly' },
     { url: `${baseUrl}/directory`, priority: 0.8, changeFrequency: 'weekly' },
-    { url: `${baseUrl}/blog`, priority: 0.7, changeFrequency: 'daily' },
-    { url: `${baseUrl}/api-docs`, priority: 0.6, changeFrequency: 'monthly' },
     { url: `${baseUrl}/about`, priority: 0.6, changeFrequency: 'monthly' },
     { url: `${baseUrl}/login`, priority: 0.5, changeFrequency: 'monthly' },
     { url: `${baseUrl}/signup`, priority: 0.5, changeFrequency: 'monthly' },
-    { url: `${baseUrl}/privacy`, priority: 0.4, changeFrequency: 'yearly' },
-    { url: `${baseUrl}/terms`, priority: 0.4, changeFrequency: 'yearly' },
-    { url: `${baseUrl}/donate`, priority: 0.4, changeFrequency: 'monthly' },
-    { url: `${baseUrl}/advertise`, priority: 0.4, changeFrequency: 'monthly' },
+    { url: `${baseUrl}/blog`, priority: 0.7, changeFrequency: 'daily' },
   ];
 
-  const tools = [
-    'word-counter', 'character-counter', 'json-formatter', 'base64',
-    'case-converter', 'url-encode', 'image-cropper', 'uuid-generator',
-    'remove-duplicate-lines', 'markdown-to-html', 'cron-parser',
-    'css-gradient-generator', 'css-border-radius-generator', 'hash-generator',
-    'percentage-calculator', 'screen-resolution-tester', 'url-slug-generator',
-    'yaml-to-json', 'image-format-converter',
-  ];
-
-  const toolPages: MetadataRoute.Sitemap = tools.map((slug) => ({
-    url: `${baseUrl}/tools/${slug}`,
+  const toolPages: MetadataRoute.Sitemap = tools.map((tool) => ({
+    url: `${baseUrl}/tools/${tool.slug}`,
     priority: 0.8,
     changeFrequency: 'monthly' as const,
   }));
