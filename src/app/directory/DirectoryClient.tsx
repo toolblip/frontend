@@ -2,9 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { tools } from '@/data/tools';
-
-const DISPLAY_CATEGORIES = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS'] as const;
+import { tools, categories } from '@/data/tools';
 
 export default function DirectoryClient() {
   const [search, setSearch] = useState('');
@@ -56,7 +54,7 @@ export default function DirectoryClient() {
 
       {/* Category tabs */}
       <div className="flex flex-wrap gap-2 mb-6">
-        {DISPLAY_CATEGORIES.map((cat) => (
+        {categories.map((cat) => (
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
