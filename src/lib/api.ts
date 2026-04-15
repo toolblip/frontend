@@ -1,4 +1,4 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.toolblip.com';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://toolblip-api-production.up.railway.app';
 
 interface RequestOptions {
   method?: string;
@@ -22,7 +22,6 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
     method,
     headers,
     body: body ? JSON.stringify(body) : undefined,
-    credentials: 'include',
   });
 
   if (!response.ok) {
