@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import type { Metadata } from 'next';
+import ShareButtons from '@/components/ShareButtons';
 
 const toolComponents: Record<string, React.ComponentType> = {
   'word-counter': dynamic(() => import('@/components/tools/WordCounterClient')),
@@ -284,6 +285,9 @@ export default async function ToolPage({ params }: Props) {
           <span className="inline-block mt-2 text-xs text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
             {meta.category}
           </span>
+          <div className="mt-3">
+            <ShareButtons toolName={meta.title} />
+          </div>
         </div>
 
         {/* Tool UI */}
