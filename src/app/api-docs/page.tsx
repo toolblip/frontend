@@ -22,19 +22,17 @@ const BASE_URL = 'https://toolblip-api-production.up.railway.app';
 const SWIFT_URL = 'https://api.toolblip.com';
 
 const ENDPOINTS = [
-  // Auth
-  { method: 'POST', path: '/api/auth/register', auth: false, group: 'auth' },
-  { method: 'POST', path: '/api/auth/login', auth: false, group: 'auth' },
-  { method: 'POST', path: '/api/auth/logout', auth: true, group: 'auth' },
-  { method: 'GET', path: '/api/auth/user', auth: true, group: 'auth' },
-  // Tools
-  { method: 'GET', path: '/api/tools', auth: false, group: 'tools' },
-  { method: 'GET', path: '/api/tools/{slug}', auth: false, group: 'tools' },
+  { method: 'GET',    path: '/api/tools',           auth: false, desc: 'List all tools'        },
+  { method: 'GET',    path: '/api/tools/:slug',      auth: false, desc: 'Get a single tool'      },
+  { method: 'POST',   path: '/api/auth/register',   auth: false, desc: 'Create account'         },
+  { method: 'POST',   path: '/api/auth/login',       auth: false, desc: 'Sign in'               },
+  { method: 'POST',   path: '/api/auth/logout',      auth: true,  desc: 'Revoke session'        },
+  { method: 'GET',    path: '/api/auth/user',        auth: true,  desc: 'Current user'          },
 ] as const;
 
 export default function ApiDocsPage() {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-16">
+    <div className="max-w-5xl mx-auto px-4 py-16">
 
       {/* ── Hero ── */}
       <header className="mb-16">
@@ -42,37 +40,37 @@ export default function ApiDocsPage() {
           REST API v1
         </div>
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-3">API Documentation</h1>
-        <p className="text-gray-500 dark:text-gray-400 text-base max-w-xl">
+        <p className="text-gray-500 dark:text-gray-400 text-base max-w-2xl">
           Free REST API for browsing developer tools and managing user authentication.
           No API key required — register an account and go.
         </p>
 
         <div className="mt-6 flex flex-wrap gap-3">
-          <UrlChip label="Base URL" url={BASE_URL} available />
-          <UrlChip label="Swift URL" url={SWIFT_URL} available={false} />
+          <BaseUrlChip label="Base URL" url={BASE_URL} available />
+          <BaseUrlChip label="Swift URL" url={SWIFT_URL} available={false} />
         </div>
       </header>
 
       {/* ── Quick Reference ── */}
       <section className="mb-14">
-        <h2 className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest font-semibold mb-4">
-          Quick Reference
-        </h2>
-        <div className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+        <SectionTitle>Quick Reference</SectionTitle>
+        <div className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden mt-3">
           <table className="w-full text-sm">
             <thead>
               <tr className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
                 <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-20">Method</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Endpoint</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-28">Auth</th>
+                <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Description</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
-              {ENDPOINTS.map(({ method, path, auth }) => (
+              {ENDPOINTS.map(({ method, path, auth, desc }) => (
                 <tr key={path} className="bg-white dark:bg-gray-950 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
                   <td className="px-4 py-3"><MethodBadge method={method} /></td>
                   <td className="px-4 py-3 font-mono text-xs text-gray-700 dark:text-gray-300">{path}</td>
                   <td className="px-4 py-3">{auth ? <AuthBadge /> : <PublicBadge />}</td>
+                  <td className="px-4 py-3 text-xs text-gray-500 dark:text-gray-400">{desc}</td>
                 </tr>
               ))}
             </tbody>
@@ -106,7 +104,7 @@ export default function ApiDocsPage() {
               Pass it as a header:
             </p>
             <div className="mt-3 bg-white/60 dark:bg-black/20 rounded-lg px-3 py-2 font-mono text-xs text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-700">
-              Authorization: Bearer tb_xxxxxxxxxxxxxxxx
+              Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx
             </div>
           </div>
         </div>
@@ -117,12 +115,14 @@ export default function ApiDocsPage() {
       ══════════════════════════════════════════ */}
       <section className="mb-14">
         <SectionTitle>Auth Endpoints</SectionTitle>
-        <div className="space-y-8 mt-4">
+        <div className="space-y-6 mt-4">
 
+          {/* POST /api/auth/register */}
           <EndpointDetail
             method="POST"
             path="/api/auth/register"
             requiresAuth={false}
+            status={201}
             description="Create a new user account. Returns the user object and a Bearer token."
             requestBody={`{
   "name": "Harun",
@@ -141,18 +141,15 @@ export default function ApiDocsPage() {
 }`}
             curl={`curl -X POST ${BASE_URL}/api/auth/register \\
   -H "Content-Type: application/json" \\
-  -d '{
-    "name": "Harun",
-    "email": "harun@example.com",
-    "password": "secret123",
-    "password_confirmation": "secret123"
-  }'`}
+  -d '{"name":"Harun","email":"harun@example.com","password":"secret123","password_confirmation":"secret123"}'`}
           />
 
+          {/* POST /api/auth/login */}
           <EndpointDetail
             method="POST"
             path="/api/auth/login"
             requiresAuth={false}
+            status={200}
             description="Sign in with email and password. Returns the user object and a Bearer token."
             requestBody={`{
   "email": "harun@example.com",
@@ -169,16 +166,15 @@ export default function ApiDocsPage() {
 }`}
             curl={`curl -X POST ${BASE_URL}/api/auth/login \\
   -H "Content-Type: application/json" \\
-  -d '{
-    "email": "harun@example.com",
-    "password": "secret123"
-  }'`}
+  -d '{"email":"harun@example.com","password":"secret123"}'`}
           />
 
+          {/* POST /api/auth/logout */}
           <EndpointDetail
             method="POST"
             path="/api/auth/logout"
             requiresAuth={true}
+            status={200}
             description="Revoke the current Bearer token, invalidating the session."
             response={`{
   "message": "Logged out successfully"
@@ -187,10 +183,12 @@ export default function ApiDocsPage() {
   -H "Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx"`}
           />
 
+          {/* GET /api/auth/user */}
           <EndpointDetail
             method="GET"
             path="/api/auth/user"
             requiresAuth={true}
+            status={200}
             description="Retrieve the currently authenticated user."
             response={`{
   "user": {
@@ -216,13 +214,15 @@ export default function ApiDocsPage() {
           All tools endpoints are public — no authentication required.
         </p>
 
-        <div className="space-y-8">
+        <div className="space-y-6">
 
+          {/* GET /api/tools */}
           <EndpointDetail
             method="GET"
             path="/api/tools"
             requiresAuth={false}
-            description="Returns all tools in the registry, wrapped in a 'tools' key."
+            status={200}
+            description="Returns a paginated list of all tools in the registry."
             response={`{
   "tools": {
     "tools": [
@@ -252,10 +252,12 @@ export default function ApiDocsPage() {
             curl={`curl -X GET ${BASE_URL}/api/tools`}
           />
 
+          {/* GET /api/tools/:slug */}
           <EndpointDetail
             method="GET"
-            path="/api/tools/{slug}"
+            path="/api/tools/:slug"
             requiresAuth={false}
+            status={200}
             description="Fetch a single tool by its URL-friendly slug identifier. Returns 404 if not found."
             response={`{
   "tool": {
@@ -291,6 +293,36 @@ export default function ApiDocsPage() {
         </div>
       </section>
 
+      {/* ── Error Responses ── */}
+      <section className="mb-14">
+        <SectionTitle>Error Responses</SectionTitle>
+        <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5 mt-3">
+          <CodeBlock code={`{
+  "message": "The given data was invalid.",
+  "errors": {
+    "email": ["The email field is required."],
+    "password": ["The password field is required."]
+  }
+}`} />
+          <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs font-mono">
+            {[
+              { code: 400, label: 'Bad Request',    color: 'text-red-500'    },
+              { code: 401, label: 'Unauthorized',   color: 'text-red-500'    },
+              { code: 403, label: 'Forbidden',      color: 'text-amber-500'  },
+              { code: 404, label: 'Not Found',     color: 'text-gray-500'   },
+              { code: 422, label: 'Validation Error', color: 'text-yellow-500' },
+              { code: 429, label: 'Too Many Requests', color: 'text-amber-500' },
+              { code: 500, label: 'Server Error',   color: 'text-red-600'    },
+            ].map(({ code, label, color }) => (
+              <div key={code} className="flex items-center gap-2">
+                <span className={`font-bold ${color}`}>{code}</span>
+                <span className="text-gray-500 dark:text-gray-400">{label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── Footer ── */}
       <footer className="mt-20 pt-8 border-t border-gray-200 dark:border-gray-800 text-center">
         <p className="text-gray-400 dark:text-gray-500 text-xs">
@@ -320,15 +352,15 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 
 const METHOD_COLORS: Record<string, string> = {
   GET:    'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400',
-  POST:   'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400',
+  POST:   'bg-blue-100  dark:bg-blue-900/30  text-blue-700  dark:text-blue-400',
   PUT:    'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400',
   PATCH:  'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400',
-  DELETE: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400',
+  DELETE: 'bg-red-100   dark:bg-red-900/30   text-red-700   dark:text-red-400',
 };
 
 function MethodBadge({ method }: { method: string }) {
   return (
-    <span className={`${METHOD_COLORS[method]} text-xs font-mono font-bold px-2 py-0.5 rounded inline-block`}>
+    <span className={`${METHOD_COLORS[method] ?? ''} text-xs font-mono font-bold px-2 py-0.5 rounded inline-block`}>
       {method}
     </span>
   );
@@ -354,6 +386,7 @@ interface EndpointDetailProps {
   method: string;
   path: string;
   requiresAuth: boolean;
+  status: number;
   description: string;
   requestBody?: string;
   response: string;
@@ -364,6 +397,7 @@ function EndpointDetail({
   method,
   path,
   requiresAuth,
+  status,
   description,
   requestBody,
   response,
@@ -372,19 +406,22 @@ function EndpointDetail({
   return (
     <div className="border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
       {/* Header */}
-      <div className="bg-gray-50 dark:bg-gray-900 px-5 py-4 flex items-center gap-3 border-b border-gray-200 dark:border-gray-800">
-        <span className={`${METHOD_COLORS[method]} text-xs font-mono font-bold px-2 py-0.5 rounded shrink-0`}>
+      <div className="bg-gray-50 dark:bg-gray-900 px-5 py-4 flex items-center gap-3 border-b border-gray-200 dark:border-gray-800 flex-wrap">
+        <span className={`${METHOD_COLORS[method] ?? ''} text-xs font-mono font-bold px-2 py-0.5 rounded shrink-0`}>
           {method}
         </span>
         <code className="text-gray-900 dark:text-white text-sm font-mono">{path}</code>
         {requiresAuth && <AuthBadge />}
+        <span className="ml-auto text-xs font-mono text-gray-400 dark:text-gray-500">
+          → {status}
+        </span>
       </div>
 
       {/* Body */}
-      <div className="p-5">
-        <p className="text-gray-500 dark:text-gray-400 text-sm mb-5">{description}</p>
+      <div className="p-5 space-y-4">
+        <p className="text-gray-500 dark:text-gray-400 text-sm">{description}</p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {requestBody ? (
             <Card label="Request body">
               <CodeBlock code={requestBody} />
@@ -416,7 +453,7 @@ function Card({ label, children }: { label: string; children: React.ReactNode })
   );
 }
 
-function UrlChip({ label, url, available }: { label: string; url: string; available: boolean }) {
+function BaseUrlChip({ label, url, available }: { label: string; url: string; available: boolean }) {
   return (
     <div className="flex items-center gap-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg px-3 py-2">
       <span className={`text-xs font-semibold ${available ? 'text-green-600 dark:text-green-400' : 'text-gray-400 dark:text-gray-600'}`}>
