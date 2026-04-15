@@ -204,6 +204,30 @@ Think of it like a human reviewing their journal and updating their mental model
 
 The goal: Be helpful without being annoying. Check in a few times a day, do useful background work, but respect quiet time.
 
+## 📊 Response Footer
+
+**Every message you send in Telegram must end with a status bar on the last line.**
+
+Format:
+```
+agent (project) | session | model
+```
+
+Examples:
+```
+ct (crontinel) | agent:ct:telegram:group:-1003535215877:topic:6 | minimax-m2.7
+main (global) | agent:main:telegram:dm:346039811 | minimax-m2.7
+rm (reddit-mkt) | agent:rm:telegram:group:-1003535215877:topic:14 | minimax-m2.7
+ap (amazingplugins) | agent:ap:telegram:group:-1003535215877:topic:7 | minimax-m2.7
+tt (tinytools) | agent:tt:telegram:group:-1003535215877:topic:8 | minimax-m2.7
+tb (toolblip) | agent:tb:telegram:group:-1003535215877:topic:8 | minimax-m2.7
+```
+
+Rules:
+- Separator: one blank line before the footer bar
+- Do not skip the footer for any Telegram message
+- Always use the exact `session_key` from the runtime context
+
 ## Make It Yours
 
 This is a starting point. Add your own conventions, style, and rules as you figure out what works.
