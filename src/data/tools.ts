@@ -14,7 +14,7 @@ export const tools: Tool[] = [
   { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-generator', description: 'Generate placeholder Lorem Ipsum text in paragraphs, sentences, or list format.', emoji: '📜', category: 'Text' },
   { name: 'Grammar Checker', slug: 'grammar-checker', description: 'Check spelling and grammar errors in your text with suggestions and corrections.', emoji: '✅', category: 'Text' },
   { name: 'Readability Score', slug: 'readability-score', description: 'Calculate Flesch-Kincaid and other readability scores for your text content.', emoji: '📊', category: 'Text' },
-  { name: 'Text Sorter', slug: 'text-sorter', description: 'Sort lines alphabetically, reverse, case-insensitive, or by length in one click.', emoji: '🔃', category: 'Text' },
+  { name: 'TextSorter', slug: 'text-sorter', description: 'Sort lines alphabetically, reverse, case-insensitive, or by length in one click.', emoji: '🔃', category: 'Text' },
   { name: 'JSON Formatter', slug: 'json-formatter', description: 'Format, validate, and minify JSON with error highlighting.', emoji: '📋', category: 'Developer' },
   { name: 'Base64 Encode / Decode', slug: 'base64', description: 'Encode and decode Base64 text or files instantly in your browser.', emoji: '🔐', category: 'Encoder' },
   { name: 'URL Encode / Decode', slug: 'url-encode', description: 'Encode and decode URLs or URL components for safe use in links.', emoji: '🔗', category: 'Encoder' },
