@@ -6,6 +6,8 @@ import { tools } from '@/data/tools';
 
 const featuredTools = tools.slice(0, 11);
 
+const categories = ['Text', 'Developer', 'Conversion', 'Image', 'Color', 'Encoder', 'CSS', 'SEO', 'Math'];
+
 function getRecentPosts() {
   const blogDir = path.join(process.cwd(), 'blog');
   if (!fs.existsSync(blogDir)) return [];
@@ -55,6 +57,87 @@ export default function HomePage() {
               >
                 <span className="text-green-600 dark:text-green-400">&#10003;</span> {label}
               </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How it works */}
+      <section className="py-8 px-4 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
+        <div className="max-w-3xl mx-auto">
+          <p className="text-center text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-5">
+            How it works
+          </p>
+          <div className="flex items-center justify-center gap-4 sm:gap-8 flex-wrap">
+            {[
+              { step: '1', icon: '🔧', title: 'Pick a tool', desc: 'Choose from 35+ free tools' },
+              { step: '2', icon: '📋', title: 'Paste your data', desc: 'Nothing is uploaded anywhere' },
+              { step: '3', icon: '✨', title: 'Get your result', desc: 'Instantly, in your browser' },
+            ].map(({ step, icon, title, desc }) => (
+              <div key={step} className="flex items-center gap-3">
+                <div className="flex flex-col items-center text-center min-w-[80px]">
+                  <span className="text-2xl mb-1">{icon}</span>
+                  <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">{title}</span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 leading-snug">{desc}</span>
+                </div>
+                {step !== '3' && (
+                  <span className="text-gray-300 dark:text-gray-600 text-lg hidden sm:block">→</span>
+                )}
+              </div>
+            ))}
+          </div>
+          <p className="text-center text-xs text-gray-400 dark:text-gray-500 mt-5">
+            No servers. No uploads. Nothing leaves your browser.
+          </p>
+        </div>
+      </section>
+
+      {/* Category quick-access */}
+      <section className="py-6 px-4 border-b border-gray-200 dark:border-gray-800">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-wrap gap-2 justify-center">
+            {categories.map((cat) => (
+              <Link
+                key={cat}
+                href={`/tools?category=${cat}`}
+                className="px-3 py-1.5 text-xs sm:text-sm font-medium bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-green-500 dark:hover:border-green-600 hover:text-green-600 dark:hover:text-green-400 text-gray-600 dark:text-gray-300 rounded-full transition-all capitalize"
+              >
+                {cat}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Why Toolblip */}
+      <section className="py-10 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+            {[
+              {
+                icon: '🔒',
+                title: 'Private',
+                desc: 'Your data never leaves your browser. No servers, no tracking, no logs.',
+              },
+              {
+                icon: '⚡',
+                title: 'Fast',
+                desc: 'Runs instantly in your browser tab. No waiting for server responses.',
+              },
+              {
+                icon: '🎁',
+                title: 'Free',
+                desc: 'No signup, no paywall, no limits. Every tool is free, forever.',
+              },
+            ].map(({ icon, title, desc }) => (
+              <div
+                key={title}
+                className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5 text-center"
+              >
+                <span className="text-2xl mb-2 block">{icon}</span>
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">{title}</h3>
+                <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{desc}</p>
+              </div>
             ))}
           </div>
         </div>
