@@ -35,17 +35,17 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
 // Tools
 export async function getTools(params?: { category?: string; page?: number }) {
   const query = new URLSearchParams(params as Record<string, string>).toString();
-  return apiRequest<{ data: Tool[]; total: number }>(`/api/tools${query ? `?${query}` : ''}`);
+  return apiRequest<{ tools: { tools: Tool[] } }>(`/api/tools${query ? `?${query}` : ''}`);
 }
 
 export async function getTool(slug: string) {
-  return apiRequest<{ data: Tool }>(`/api/tools/${slug}`);
+  return apiRequest<{ tool: Tool }>(`/api/tools/${slug}`);
 }
 
 // MCP Servers
 export async function getMcpServers(params?: { category?: string; page?: number }) {
   const query = new URLSearchParams(params as Record<string, string>).toString();
-  return apiRequest<{ data: McpServer[]; total: number }>(`/api/mcp/servers${query ? `?${query}` : ''}`);
+  return apiRequest<{ servers: { servers: McpServer[] } }>(`/api/mcp/servers${query ? `?${query}` : ''}`);
 }
 
 // Auth
@@ -64,7 +64,7 @@ export async function register(name: string, email: string, password: string) {
 }
 
 export async function getMe() {
-  return apiRequest<{ user: User }>('/api/auth/me');
+  return apiRequest<{ user: User }>('/api/auth/user');
 }
 
 // Types

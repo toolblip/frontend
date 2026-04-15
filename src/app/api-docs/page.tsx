@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import CodeBlock from '@/components/ui/CodeBlock';
 
 export const metadata: Metadata = {
@@ -21,6 +20,13 @@ export const metadata: Metadata = {
 
 const BASE_URL = 'https://toolblip-api-production.up.railway.app';
 const SWIFT_URL = 'https://api.toolblip.com';
+
+const SECTIONS = [
+  { num: '01', label: 'Authentication' },
+  { num: '02', label: 'Tools' },
+  { num: '03', label: 'MCP Servers' },
+  { num: '04', label: 'Rate Limits' },
+] as const;
 
 export default function ApiDocsPage() {
   return (
@@ -60,20 +66,18 @@ export default function ApiDocsPage() {
         </div>
       </header>
 
-      {/* ══════════════════════════════════════════
-          TABLE OF CONTENTS
-      ══════════════════════════════════════════ */}
-      <nav className="mb-12 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+      {/* ── Table of Contents ── */}
+      <nav className="mb-14 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
         <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest font-semibold mb-3">On this page</p>
         <ol className="space-y-1.5">
-          {[
-            { num: '01', label: 'Authentication' },
-            { num: '02', label: 'Tools' },
-            { num: '03', label: 'Rate Limits' },
-          ].map(({ num, label }) => (
+          {SECTIONS.map(({ num, label }) => (
             <li key={num}>
-              <a href={`#section-${num}`} className="text-sm text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-mono">
-                <span className="text-gray-400 dark:text-gray-600">{num}</span> {label}
+              <a
+                href={`#section-${num}`}
+                className="text-sm text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-mono flex items-center gap-2"
+              >
+                <span className="text-gray-400 dark:text-gray-600">{num}</span>
+                <span className="text-gray-700 dark:text-gray-300 font-sans">{label}</span>
               </a>
             </li>
           ))}
@@ -85,7 +89,7 @@ export default function ApiDocsPage() {
       ══════════════════════════════════════════ */}
       <SectionHeader number="01" title="Authentication" />
 
-      <div className="space-y-2 mb-10">
+      <div className="space-y-2 mb-12">
         <EndpointRow method="POST" path="/api/auth/register" auth={false} description="Create a new account" />
         <EndpointRow method="POST" path="/api/auth/login" auth={false} description="Sign in and receive a Bearer token" />
         <EndpointRow method="POST" path="/api/auth/logout" auth={true} description="Revoke the current token" />
@@ -189,9 +193,9 @@ export default function ApiDocsPage() {
         Browse all developer tools in the Toolblip registry. All tools endpoints are public — no authentication required.
       </p>
 
-      <div className="space-y-2 mb-10">
+      <div className="space-y-2 mb-12">
         <EndpointRow method="GET" path="/api/tools" auth={false} description="List all tools" />
-        <EndpointRow method="GET" path="/api/tools/{slug}" auth={false} description="Get a single tool by its slug" />
+        <EndpointRow method="GET" path="/api/tools/{slug}" auth={false} description="Get a single tool by slug" />
       </div>
 
       <EndpointDetail
@@ -199,7 +203,7 @@ export default function ApiDocsPage() {
         method="GET"
         path="/api/tools"
         requiresAuth={false}
-        description="Returns all tools. The outer wrapper is keyed as 'tools'."
+        description="Returns all tools in the registry, wrapped in a 'tools' key."
         response={`{
   "tools": {
     "tools": [
@@ -251,17 +255,84 @@ export default function ApiDocsPage() {
       />
 
       {/* ══════════════════════════════════════════
-          SECTION 03 — Rate Limits
+          SECTION 03 — MCP Servers
       ══════════════════════════════════════════ */}
-      <SectionHeader number="03" title="Rate Limits" />
+      <SectionHeader number="03" title="MCP Servers" />
+      <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
+        Discover MCP (Model Context Protocol) servers. All MCP endpoints are public — no authentication required.
+      </p>
+
+      <div className="space-y-2 mb-12">
+        <EndpointRow method="GET" path="/api/mcp/servers" auth={false} description="List all MCP servers" />
+        <EndpointRow method="GET" path="/api/mcp/servers/{slug}" auth={false} description="Get a single MCP server by slug" />
+      </div>
+
+      <EndpointDetail
+        id="list-mcp-servers"
+        method="GET"
+        path="/api/mcp/servers"
+        requiresAuth={false}
+        description="Returns all MCP servers in the registry, wrapped in a 'servers' key."
+        response={`{
+  "servers": {
+    "servers": [
+      {
+        "id": 1,
+        "slug": "filesystem",
+        "name": "Filesystem",
+        "description": "MCP server for local filesystem operations",
+        "category": "utilities",
+        "url": "https://github.com/modelcontextprotocol/servers/tree/main/filesystem",
+        "created_at": "2026-01-01T00:00:00Z"
+      },
+      {
+        "id": 2,
+        "slug": "github",
+        "name": "GitHub",
+        "description": "MCP server for the GitHub API",
+        "category": "integrations",
+        "url": "https://github.com/modelcontextprotocol/servers/tree/main/github",
+        "created_at": "2026-01-10T00:00:00Z"
+      }
+    ]
+  }
+}`}
+        curl={`curl -X GET ${BASE_URL}/api/mcp/servers`}
+      />
+
+      <EndpointDetail
+        id="get-mcp-server"
+        method="GET"
+        path="/api/mcp/servers/{slug}"
+        requiresAuth={false}
+        description="Fetch a single MCP server by its URL-friendly slug identifier. Returns 404 if not found."
+        response={`{
+  "server": {
+    "id": 1,
+    "slug": "filesystem",
+    "name": "Filesystem",
+    "description": "MCP server for local filesystem operations",
+    "category": "utilities",
+    "url": "https://github.com/modelcontextprotocol/servers/tree/main/filesystem",
+    "created_at": "2026-01-01T00:00:00Z"
+  }
+}`}
+        curl={`curl -X GET ${BASE_URL}/api/mcp/servers/filesystem`}
+      />
+
+      {/* ══════════════════════════════════════════
+          SECTION 04 — Rate Limits
+      ══════════════════════════════════════════ */}
+      <SectionHeader number="04" title="Rate Limits" />
 
       <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4 flex gap-4 items-start mb-10">
         <div className="text-amber-500 mt-0.5 shrink-0">⚡</div>
         <div>
           <p className="text-sm font-semibold text-amber-900 dark:text-amber-300">Rate Limits</p>
           <p className="text-sm text-amber-700 dark:text-amber-400 mt-0.5">
-            Authenticated endpoints: <strong>60 requests/minute</strong>. Public read endpoints are more generous. If you hit a limit, you'll receive a{' '}
-            <code className="font-mono text-xs bg-amber-100 dark:bg-amber-900/40 px-1 py-0.5 rounded">429 Too Many Requests</code> response. Back off and retry.
+            Authenticated endpoints: <strong>60 requests/minute</strong>. Public read endpoints are more generous. If you hit a limit, you&apos;ll receive a{' '}
+            <code className="font-mono text-xs bg-amber-100 dark:bg-amber-900/40 px-1 py-0.5 rounded">429 Too Many Requests</code>{' '}
+            response. Back off and retry.
           </p>
         </div>
       </div>
