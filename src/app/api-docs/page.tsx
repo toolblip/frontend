@@ -5,17 +5,12 @@ import CodeBlock from '@/components/ui/CodeBlock';
 export const metadata: Metadata = {
   title: 'API Documentation | Toolblip',
   description:
-    'Toolblip REST API documentation — free access to developer tools, MCP server registry, and user authentication.',
+    'Toolblip REST API — free endpoints for browsing developer tools, MCP server registry, and user authentication.',
   openGraph: {
     title: 'API Documentation | Toolblip',
-    description: 'Toolblip REST API documentation — free access to developer tools and MCP server registry.',
+    description: 'Toolblip REST API — free developer tools and MCP server registry.',
     url: 'https://toolblip.com/api-docs',
     siteName: 'Toolblip',
-  },
-  twitter: {
-    card: 'summary',
-    title: 'API Documentation | Toolblip',
-    description: 'Toolblip REST API docs — free developer tools and MCP server registry.',
   },
 };
 
@@ -24,7 +19,7 @@ const SWIFT_URL = 'api.toolblip.com';
 
 export default function ApiDocsPage() {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-16">
+    <div className="max-w-5xl mx-auto px-4 py-16">
 
       {/* ── Hero ── */}
       <header className="mb-16">
@@ -34,16 +29,14 @@ export default function ApiDocsPage() {
         <h1 className="text-4xl font-bold text-gray-900 dark:text-white mb-3">API Documentation</h1>
         <p className="text-gray-500 dark:text-gray-400 text-base max-w-xl">
           Free REST API for browsing developer tools and managing user authentication.
-          No API key required — just register and go.
+          No API key required — register an account and go.
         </p>
 
-        {/* Base URLs */}
-        <div className="mt-6 flex flex-wrap gap-4">
+        <div className="mt-6 flex flex-wrap gap-3">
           <UrlChip label="Base URL" url={BASE_URL} available />
           <UrlChip label="Swift URL" url={`https://${SWIFT_URL}`} available={false} />
         </div>
 
-        {/* Auth callout */}
         <div className="mt-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 flex gap-4 items-start">
           <div className="text-blue-500 mt-0.5 shrink-0">🔑</div>
           <div>
@@ -63,19 +56,42 @@ export default function ApiDocsPage() {
       </header>
 
       {/* ══════════════════════════════════════════
+          TABLE OF CONTENTS
+      ══════════════════════════════════════════ */}
+      <nav className="mb-12 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+        <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest font-semibold mb-3">On this page</p>
+        <ol className="space-y-1.5">
+          {[
+            { num: '01', label: 'Authentication' },
+            { num: '02', label: 'Tools' },
+            { num: '03', label: 'Quick Links' },
+          ].map(({ num, label }) => (
+            <li key={num}>
+              <a href={`#section-${num}`} className="text-sm text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-mono">
+                <span className="text-gray-400 dark:text-gray-600">{num}</span> {label}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+
+      {/* ══════════════════════════════════════════
           SECTION 01 — Authentication
       ══════════════════════════════════════════ */}
       <SectionHeader number="01" title="Authentication" />
 
-      <div className="space-y-3 mb-10">
+      <div className="space-y-2 mb-10">
         <EndpointRow method="POST" path="/api/auth/register" auth={false} description="Create a new account" />
-        <EndpointRow method="POST" path="/api/auth/login" auth={false} description="Sign in and receive a token" />
+        <EndpointRow method="POST" path="/api/auth/login" auth={false} description="Sign in and receive a Bearer token" />
         <EndpointRow method="POST" path="/api/auth/logout" auth={true} description="Revoke the current token" />
         <EndpointRow method="GET" path="/api/auth/user" auth={true} description="Get the authenticated user" />
       </div>
 
-      {/* ── Register ── */}
-      <EndpointDetail method="POST" path="/api/auth/register" requiresAuth={false}
+      <EndpointDetail
+        id="register"
+        method="POST"
+        path="/api/auth/register"
+        requiresAuth={false}
         description="Create a new user account. Returns the user object and a Bearer token."
         requestBody={`{
   "name": "Harun",
@@ -90,7 +106,7 @@ export default function ApiDocsPage() {
     "email": "harun@example.com",
     "is_pro": false
   },
-  "token": "YOUR_TOKEN_HERE"
+  "token": "tb_live_xxxxxxxxxxxxxxxx"
 }`}
         curl={`curl -X POST ${BASE_URL}/api/auth/register \\
   -H "Content-Type: application/json" \\
@@ -102,8 +118,11 @@ export default function ApiDocsPage() {
   }'`}
       />
 
-      {/* ── Login ── */}
-      <EndpointDetail method="POST" path="/api/auth/login" requiresAuth={false}
+      <EndpointDetail
+        id="login"
+        method="POST"
+        path="/api/auth/login"
+        requiresAuth={false}
         description="Sign in with email and password. Returns the user object and a Bearer token."
         requestBody={`{
   "email": "harun@example.com",
@@ -116,7 +135,7 @@ export default function ApiDocsPage() {
     "email": "harun@example.com",
     "is_pro": false
   },
-  "token": "YOUR_TOKEN_HERE"
+  "token": "tb_live_xxxxxxxxxxxxxxxx"
 }`}
         curl={`curl -X POST ${BASE_URL}/api/auth/login \\
   -H "Content-Type: application/json" \\
@@ -126,18 +145,24 @@ export default function ApiDocsPage() {
   }'`}
       />
 
-      {/* ── Logout ── */}
-      <EndpointDetail method="POST" path="/api/auth/logout" requiresAuth={true}
+      <EndpointDetail
+        id="logout"
+        method="POST"
+        path="/api/auth/logout"
+        requiresAuth={true}
         description="Revoke the current Bearer token, invalidating the session."
         response={`{
   "message": "Logged out successfully"
 }`}
         curl={`curl -X POST ${BASE_URL}/api/auth/logout \\
-  -H "Authorization: Bearer tb_your_token_here"`}
+  -H "Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx"`}
       />
 
-      {/* ── User ── */}
-      <EndpointDetail method="GET" path="/api/auth/user" requiresAuth={true}
+      <EndpointDetail
+        id="user"
+        method="GET"
+        path="/api/auth/user"
+        requiresAuth={true}
         description="Retrieve the currently authenticated user. Requires a valid Bearer token."
         response={`{
   "user": {
@@ -148,7 +173,7 @@ export default function ApiDocsPage() {
   }
 }`}
         curl={`curl -X GET ${BASE_URL}/api/auth/user \\
-  -H "Authorization: Bearer tb_your_token_here"`}
+  -H "Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx"`}
       />
 
       {/* ══════════════════════════════════════════
@@ -156,17 +181,20 @@ export default function ApiDocsPage() {
       ══════════════════════════════════════════ */}
       <SectionHeader number="02" title="Tools" />
       <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-        Browse all developer tools in the Toolblip registry. No authentication required.
+        Browse all developer tools in the Toolblip registry. Public — no authentication required.
       </p>
 
-      <div className="space-y-3 mb-10">
+      <div className="space-y-2 mb-10">
         <EndpointRow method="GET" path="/api/tools" auth={false} description="List all tools" />
-        <EndpointRow method="GET" path="/api/tools/{slug}" auth={false} description="Get a single tool by slug" />
+        <EndpointRow method="GET" path="/api/tools/{slug}" auth={false} description="Get a single tool by its slug" />
       </div>
 
-      {/* ── GET /api/tools ── */}
-      <EndpointDetail method="GET" path="/api/tools" requiresAuth={false}
-description="Returns a list of all tools. No authentication required."
+      <EndpointDetail
+        id="list-tools"
+        method="GET"
+        path="/api/tools"
+        requiresAuth={false}
+        description="Returns a paginated list of all tools. No authentication required."
         response={`{
   "tools": {
     "tools": [
@@ -179,6 +207,16 @@ description="Returns a list of all tools. No authentication required."
         "is_pro": false,
         "emoji": "🤖",
         "created_at": "2026-01-01T00:00:00Z"
+      },
+      {
+        "id": 2,
+        "slug": "cursor",
+        "name": "Cursor",
+        "description": "AI-first code editor built around pair programming",
+        "category": "AI",
+        "is_pro": true,
+        "emoji": "💻",
+        "created_at": "2026-01-15T00:00:00Z"
       }
     ]
   }
@@ -186,9 +224,12 @@ description="Returns a list of all tools. No authentication required."
         curl={`curl -X GET ${BASE_URL}/api/tools`}
       />
 
-      {/* ── GET /api/tools/{slug} ── */}
-      <EndpointDetail method="GET" path="/api/tools/{slug}" requiresAuth={false}
-description="Fetch a single tool by its URL-friendly slug identifier. Returns 404 if not found."
+      <EndpointDetail
+        id="get-tool"
+        method="GET"
+        path="/api/tools/{slug}"
+        requiresAuth={false}
+        description="Fetch a single tool by its URL-friendly slug identifier. Returns 404 if not found."
         response={`{
   "tool": {
     "id": 1,
@@ -256,7 +297,10 @@ description="Fetch a single tool by its URL-friendly slug identifier. Returns 40
 
 function SectionHeader({ number, title }: { number: string; title: string }) {
   return (
-    <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
+    <h2
+      id={`section-${number}`}
+      className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-3 scroll-mt-8"
+    >
       <span className="text-green-600 dark:text-green-400 text-sm font-mono bg-green-100 dark:bg-green-900/30 px-2 py-0.5 rounded">
         {number}
       </span>
@@ -301,6 +345,7 @@ function EndpointRow({
 }
 
 interface EndpointDetailProps {
+  id: string;
   method: string;
   path: string;
   requiresAuth: boolean;
@@ -311,6 +356,7 @@ interface EndpointDetailProps {
 }
 
 function EndpointDetail({
+  id,
   method,
   path,
   requiresAuth,
@@ -328,7 +374,7 @@ function EndpointDetail({
   };
 
   return (
-    <section className="mb-12">
+    <section id={id} className="mb-14 scroll-mt-8">
       {/* Method + path header */}
       <div className="flex items-center gap-3 mb-3">
         <span className={`${methodColors[method]} text-xs font-mono font-bold px-2 py-0.5 rounded`}>
@@ -352,7 +398,7 @@ function EndpointDetail({
           </Card>
         ) : (
           <Card label="Headers">
-            <CodeBlock code={`Authorization: Bearer tb_your_token_here`} />
+            <CodeBlock code={`Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx`} />
           </Card>
         )}
         <Card label="Response">
