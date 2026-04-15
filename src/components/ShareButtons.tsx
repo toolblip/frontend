@@ -12,7 +12,7 @@ export default function ShareButtons({ toolName, className }: Props) {
 
   const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
   const encodedUrl = encodeURIComponent(currentUrl);
-  const encodedTitle = encodeURIComponent(`${toolName} on @toolblip`);
+  const encodedTitle = encodeURIComponent(`Check out ${toolName} on @toolblip`);
 
   const handleCopyLink = async () => {
     try {
