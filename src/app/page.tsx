@@ -2,20 +2,9 @@ import Link from 'next/link';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { tools } from '@/data/tools';
 
-const tools = [
-  { name: 'Word Counter', slug: 'word-counter', description: 'Count words, characters, sentences, and reading time instantly.', emoji: '📝' },
-  { name: 'Character Counter', slug: 'character-counter', description: 'Count characters with Twitter, LinkedIn, and meta tag limit indicators.', emoji: '🔢' },
-  { name: 'JSON Formatter', slug: 'json-formatter', description: 'Format, validate, and minify JSON with error highlighting.', emoji: '📋' },
-  { name: 'Base64 Encode / Decode', slug: 'base64', description: 'Encode and decode Base64 text or files instantly in your browser.', emoji: '🔐' },
-  { name: 'Case Converter', slug: 'case-converter', description: 'Convert text between UPPERCASE, lowercase, camelCase, snake_case, and more.', emoji: '✏️' },
-  { name: 'URL Encode / Decode', slug: 'url-encode', description: 'Encode and decode URLs or URL components for safe use in links.', emoji: '🔗' },
-  { name: 'Image Cropper', slug: 'image-cropper', description: 'Crop images to any ratio or preset size. Passport, 16:9, square, and more.', emoji: '✂️' },
-  { name: 'UUID Generator', slug: 'uuid-generator', description: 'Generate UUID v4 values using your browser crypto API. One or many.', emoji: '🔑' },
-  { name: 'Remove Duplicate Lines', slug: 'remove-duplicate-lines', description: 'Paste text, remove duplicates in one click. Optional case-sensitive mode.', emoji: '🗑️' },
-  { name: 'Markdown to HTML', slug: 'markdown-to-html', description: 'Convert Markdown to HTML with a live split-pane preview.', emoji: '📄' },
-  { name: 'Percentage Calculator', slug: 'percentage-calculator', description: 'Calculate percentages, percentage change, tips, and discounts instantly.', emoji: '%' },
-];
+const featuredTools = tools.slice(0, 11);
 
 function getRecentPosts() {
   const blogDir = path.join(process.cwd(), 'blog');
@@ -86,7 +75,7 @@ export default function HomePage() {
             </Link>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-            {tools.map((tool) => (
+            {featuredTools.map((tool) => (
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
