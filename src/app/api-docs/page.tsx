@@ -166,7 +166,7 @@ export default function ApiDocsPage() {
 
       {/* ── GET /api/tools ── */}
       <EndpointDetail method="GET" path="/api/tools" requiresAuth={false}
-        description="Returns a paginated list of all tools. The response wraps tools in a nested { tools: { tools: [...] } } structure."
+description="Returns a list of all tools. No authentication required."
         response={`{
   "tools": {
     "tools": [
@@ -188,7 +188,7 @@ export default function ApiDocsPage() {
 
       {/* ── GET /api/tools/{slug} ── */}
       <EndpointDetail method="GET" path="/api/tools/{slug}" requiresAuth={false}
-        description="Fetch a single tool by its URL-friendly slug identifier."
+description="Fetch a single tool by its URL-friendly slug identifier. Returns 404 if not found."
         response={`{
   "tool": {
     "id": 1,
