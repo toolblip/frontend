@@ -110,8 +110,8 @@ export default function HomePage() {
       </section>
 
       {/* Why Toolblip */}
-      <section className="py-10 px-4">
-        <div className="max-w-6xl mx-auto">
+      <section className="py-8 px-4 border-b border-gray-200 dark:border-gray-800">
+        <div className="max-w-5xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             {[
               {
@@ -132,10 +132,10 @@ export default function HomePage() {
             ].map(({ icon, title, desc }) => (
               <div
                 key={title}
-                className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5 text-center"
+                className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 text-center"
               >
-                <span className="text-2xl mb-2 block">{icon}</span>
-                <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-1">{title}</h3>
+                <span className="text-2xl mb-1.5 block">{icon}</span>
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-0.5">{title}</h3>
                 <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{desc}</p>
               </div>
             ))}
@@ -247,17 +247,6 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* Trust section */}
-      <section className="py-10 px-4 border-t border-gray-200 dark:border-gray-800">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-3">
-            Built for people who care about privacy
-          </h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-xl mx-auto">
-            Every tool on Toolblip runs in your browser using JavaScript. Your data never goes to any server. There is no backend touching your inputs, ever.
-          </p>
-        </div>
-      </section>
     </>
   );
 }
