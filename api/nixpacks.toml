@@ -1,0 +1,11 @@
+[nixpacks]
+php_version = "83"
+
+[setup]
+  # Laravel requires these PHP extensions
+  packages = { "php83", "php83-fpm", "php83-mbstring", "php83-xml", "php83-curl", "php83-zip", "php83-dom", "php83-pdo", "php83-pgsql" }
+
+[start]
+# Override the default startup to use PHP built-in server
+# (not ideal for prod but works for small apps)
+cmd = "php -S 0.0.0.0:${PORT:-8080} -t public"
