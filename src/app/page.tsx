@@ -10,9 +10,9 @@ const tools = [
   { name: 'Base64 Encode / Decode', slug: 'base64', description: 'Encode and decode Base64 text or files instantly in your browser.', emoji: '🔐' },
   { name: 'Case Converter', slug: 'case-converter', description: 'Convert text between UPPERCASE, lowercase, camelCase, snake_case, and more.', emoji: '✏️' },
   { name: 'URL Encode / Decode', slug: 'url-encode', description: 'Encode and decode URLs or URL components for safe use in links.', emoji: '🔗' },
-  { name: 'Image Cropper', slug: 'image-cropper', description: 'Crop images to any ratio or preset size — passport, 16:9, square, and more.', emoji: '✂️' },
-  { name: 'UUID Generator', slug: 'uuid-generator', description: "Generate one or many UUID v4 values using your browser's crypto API.", emoji: '🔑' },
-  { name: 'Remove Duplicate Lines', slug: 'remove-duplicate-lines', description: 'Paste text, remove duplicate lines in one click. Case-sensitive option included.', emoji: '🗑️' },
+  { name: 'Image Cropper', slug: 'image-cropper', description: 'Crop images to any ratio or preset size. Passport, 16:9, square, and more.', emoji: '✂️' },
+  { name: 'UUID Generator', slug: 'uuid-generator', description: 'Generate UUID v4 values using your browser crypto API. One or many.', emoji: '🔑' },
+  { name: 'Remove Duplicate Lines', slug: 'remove-duplicate-lines', description: 'Paste text, remove duplicates in one click. Optional case-sensitive mode.', emoji: '🗑️' },
   { name: 'Markdown to HTML', slug: 'markdown-to-html', description: 'Convert Markdown to HTML with a live split-pane preview.', emoji: '📄' },
   { name: 'Percentage Calculator', slug: 'percentage-calculator', description: 'Calculate percentages, percentage change, tips, and discounts instantly.', emoji: '%' },
 ];
@@ -44,27 +44,27 @@ export default function HomePage() {
   return (
     <>
       {/* Hero */}
-      <section className="py-16 px-4 text-center border-b border-gray-800">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 tracking-tight">
-            Every tool you need —{' '}
-            <span className="text-green-400">no account, no server, no BS.</span>
+      <section className="py-14 px-4 text-center border-b border-gray-200 dark:border-gray-800 bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-gray-900">
+        <div className="max-w-2xl mx-auto">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight leading-tight">
+            The tools you actually use,{' '}
+            <span className="text-green-600 dark:text-green-400">free and instant.</span>
           </h1>
-          <p className="text-lg text-gray-400 mb-8 max-w-xl mx-auto">
-            100% client-side. Nothing leaves your browser. No sign-up. Always free.
+          <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400 mb-8 max-w-lg mx-auto leading-relaxed">
+            No sign-up. No uploads. No waiting. Everything runs in your browser, right here.
           </p>
-          <div className="flex flex-wrap justify-center gap-3 text-sm">
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 text-xs sm:text-sm">
             {[
-              { label: 'Private by default', icon: '✓' },
-              { label: 'Zero upload', icon: '✓' },
-              { label: 'Works offline', icon: '✓' },
-              { label: 'No ads on tools', icon: '✓' },
-            ].map(({ label, icon }) => (
+              { label: 'Private by default' },
+              { label: 'Zero upload to servers' },
+              { label: 'Works offline' },
+              { label: 'No ads' },
+            ].map(({ label }) => (
               <span
                 key={label}
-                className="flex items-center gap-1.5 bg-gray-800 border border-gray-700 px-3 py-1.5 rounded-full text-gray-300"
+                className="flex items-center gap-1.5 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-3 py-1.5 rounded-full text-gray-600 dark:text-gray-300"
               >
-                <span className="text-green-400">{icon}</span> {label}
+                <span className="text-green-600 dark:text-green-400">&#10003;</span> {label}
               </span>
             ))}
           </div>
@@ -72,31 +72,33 @@ export default function HomePage() {
       </section>
 
       {/* Tools grid */}
-      <section className="py-12 px-4">
+      <section className="py-10 px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold text-gray-300">All Tools</h2>
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">
+              All Tools
+            </h2>
             <Link
               href="/directory"
-              className="text-sm text-green-400 hover:text-green-300 transition-colors"
+              className="text-sm text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors"
             >
-              Browse directory →
+              Browse directory
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
             {tools.map((tool) => (
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="group bg-gray-900 border border-gray-800 hover:border-green-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-green-900/20"
+                className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-green-500 dark:hover:border-green-600 rounded-xl p-4 transition-all hover:shadow-md hover:shadow-green-100 dark:hover:shadow-green-900/20"
               >
                 <div className="flex items-start gap-3">
-                  <span className="text-2xl">{tool.emoji}</span>
+                  <span className="text-2xl flex-shrink-0">{tool.emoji}</span>
                   <div className="min-w-0">
-                    <h3 className="font-semibold text-white group-hover:text-green-400 transition-colors truncate">
+                    <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors truncate text-sm sm:text-base">
                       {tool.name}
                     </h3>
-                    <p className="text-sm text-gray-400 mt-1 leading-relaxed line-clamp-2">
+                    <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-0.5 leading-relaxed line-clamp-2">
                       {tool.description}
                     </p>
                   </div>
@@ -108,51 +110,64 @@ export default function HomePage() {
       </section>
 
       {/* MCP Directory callout */}
-      <section className="py-12 px-4 border-t border-gray-800">
+      <section className="py-10 px-4 border-t border-gray-200 dark:border-gray-800">
         <div className="max-w-6xl mx-auto">
-          <div className="bg-gradient-to-r from-green-900/30 to-blue-900/30 border border-green-700/50 rounded-2xl p-8 text-center">
-            <h2 className="text-xl font-semibold text-white mb-2">
-              Looking for MCP servers?
-            </h2>
-            <p className="text-gray-400 mb-4 text-sm max-w-lg mx-auto">
-              Explore our curated directory of Model Context Protocol servers for AI agents.
-              Find data connectors, code executors, browser automation, and more.
-            </p>
-            <Link
-              href="/directory"
-              className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-500 text-black font-medium px-5 py-2 rounded-lg text-sm transition-colors"
-            >
-              Browse MCP Directory →
-            </Link>
+          <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/50 dark:to-gray-900 border border-green-200 dark:border-green-800/50 rounded-2xl p-6 sm:p-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <div className="flex-1">
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-1.5">
+                  Looking for MCP servers?
+                </h2>
+                <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                  A curated directory of Model Context Protocol servers for AI agents. Data connectors, code executors, browser automation, and more.
+                </p>
+              </div>
+              <Link
+                href="/directory"
+                className="flex-shrink-0 inline-flex items-center gap-2 bg-green-600 hover:bg-green-500 text-white font-medium px-4 py-2 rounded-lg text-sm transition-colors whitespace-nowrap"
+              >
+                Browse directory
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Blog section */}
       {recentPosts.length > 0 && (
-        <section className="py-12 px-4 border-t border-gray-800">
+        <section className="py-10 px-4 border-t border-gray-200 dark:border-gray-800">
           <div className="max-w-6xl mx-auto">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-semibold text-gray-300">From the Blog</h2>
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">
+                From the Blog
+              </h2>
               <Link
                 href="/blog"
-                className="text-sm text-green-400 hover:text-green-300 transition-colors"
+                className="text-sm text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors"
               >
-                View all →
+                View all
               </Link>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               {recentPosts.map((post) => (
                 <Link
                   key={post.slug}
                   href={`/blog/${post.slug}`}
-                  className="group block bg-gray-900 border border-gray-800 hover:border-gray-700 rounded-xl p-4 transition-colors"
+                  className="group block bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 rounded-xl p-4 transition-colors"
                 >
-                  <span className="text-xs text-green-400 font-medium">{post.category}</span>
-                  <h3 className="text-white font-medium mt-1 mb-2 line-clamp-2 group-hover:text-green-400 transition-colors">
+                  <span className="text-xs font-medium text-green-600 dark:text-green-400">
+                    {post.category}
+                  </span>
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-white mt-1 mb-2 line-clamp-2 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors leading-snug">
                     {post.title}
                   </h3>
-                  <p className="text-xs text-gray-500">{post.readingTime} read · {new Date(post.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</p>
+                  <p className="text-xs text-gray-400">
+                    {post.readingTime} read &middot;{' '}
+                    {new Date(post.date).toLocaleDateString('en-US', {
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </p>
                 </Link>
               ))}
             </div>
@@ -161,14 +176,13 @@ export default function HomePage() {
       )}
 
       {/* Trust section */}
-      <section className="py-12 px-4 border-t border-gray-800">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-xl font-semibold text-white mb-3">
-            Built for developers who care about privacy
+      <section className="py-10 px-4 border-t border-gray-200 dark:border-gray-800">
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-3">
+            Built for people who care about privacy
           </h2>
-          <p className="text-gray-400 text-sm leading-relaxed max-w-xl mx-auto">
-            Every tool on Toolblip runs entirely in your browser using JavaScript and WebAssembly.
-            Your files, text, and data never leave your device. There is no backend processing your inputs.
+          <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-xl mx-auto">
+            Every tool on Toolblip runs in your browser using JavaScript. Your data never goes to any server. There is no backend touching your inputs, ever.
           </p>
         </div>
       </section>
