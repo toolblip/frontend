@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { tools } from '@/data/tools';
+import ShareButtons from '@/components/ShareButtons';
 
 export default function ToolDetailPage({ params }: { params: { slug: string } }) {
   const tool = tools.find(t => t.slug === params.slug);
@@ -32,6 +33,9 @@ export default function ToolDetailPage({ params }: { params: { slug: string } })
         <span className="inline-block mt-2 text-xs text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-2.5 py-1 rounded-full">
           {tool.category}
         </span>
+        <div className="mt-3">
+          <ShareButtons toolName={tool.name} />
+        </div>
       </div>
 
       {/* Tool UI */}
