@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 };
 
 const BASE_URL = 'https://toolblip-api-production.up.railway.app';
-const SWIFT_URL = 'api.toolblip.com';
+const SWIFT_URL = `https://${'api.toolblip.com'}`;
 
 export default function ApiDocsPage() {
   return (
@@ -39,7 +39,7 @@ export default function ApiDocsPage() {
 
         <div className="mt-6 flex flex-wrap gap-3">
           <UrlChip label="Base URL" url={BASE_URL} available />
-          <UrlChip label="Swift URL" url={`https://${SWIFT_URL}`} available={false} />
+          <UrlChip label="Swift URL" url={SWIFT_URL} available={false} />
         </div>
 
         <div className="mt-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 flex gap-4 items-start">
@@ -199,7 +199,7 @@ export default function ApiDocsPage() {
         method="GET"
         path="/api/tools"
         requiresAuth={false}
-        description="Returns a paginated list of all tools. No authentication required."
+        description="Returns a list of all tools. No authentication required."
         response={`{
   "tools": {
     "tools": [
