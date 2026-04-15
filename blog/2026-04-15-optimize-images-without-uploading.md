@@ -1,5 +1,6 @@
 ---
 title: "How to Optimize Images Without Uploading"
+emoji: "🖼️"
 description: "Crop, resize, convert, and compress images — all in your browser, without a single byte leaving your machine. Here's why browser-only image processing is the better way."
 date: "2026-04-15"
 slug: "optimize-images-without-uploading"

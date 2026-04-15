@@ -1,5 +1,6 @@
 ---
 title: "Top 5 Developer Tools You Should Bookmark"
+emoji: "🔖"
 description: "These are the tools that live in my browser bar. JSON formatter, Base64 encoder/decoder, regex tester, cron parser, and hash generator — here's why each one earns its spot."
 date: "2026-04-15"
 slug: "top-5-developer-tools-you-should-bookmark"
