@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 };
 
 const BASE_URL = 'https://toolblip-api-production.up.railway.app';
-const SWIFT_URL = `https://${'api.toolblip.com'}`;
+const SWIFT_URL = `https://api.toolblip.com`;
 
 export default function ApiDocsPage() {
   return (
@@ -199,32 +199,31 @@ export default function ApiDocsPage() {
         method="GET"
         path="/api/tools"
         requiresAuth={false}
-        description="Returns a list of all tools. No authentication required."
+        description="Returns a paginated list of all tools. Public — no authentication required."
         response={`{
-  "tools": {
-    "tools": [
-      {
-        "id": 1,
-        "slug": "claude-code",
-        "name": "Claude Code",
-        "description": "AI coding assistant by Anthropic",
-        "category": "AI",
-        "is_pro": false,
-        "emoji": "🤖",
-        "created_at": "2026-01-01T00:00:00Z"
-      },
-      {
-        "id": 2,
-        "slug": "cursor",
-        "name": "Cursor",
-        "description": "AI-first code editor built around pair programming",
-        "category": "AI",
-        "is_pro": true,
-        "emoji": "💻",
-        "created_at": "2026-01-15T00:00:00Z"
-      }
-    ]
-  }
+  "data": [
+    {
+      "id": 1,
+      "slug": "claude-code",
+      "name": "Claude Code",
+      "description": "AI coding assistant by Anthropic",
+      "category": "AI",
+      "is_pro": false,
+      "emoji": "🤖",
+      "created_at": "2026-01-01T00:00:00Z"
+    },
+    {
+      "id": 2,
+      "slug": "cursor",
+      "name": "Cursor",
+      "description": "AI-first code editor built around pair programming",
+      "category": "AI",
+      "is_pro": true,
+      "emoji": "💻",
+      "created_at": "2026-01-15T00:00:00Z"
+    }
+  ],
+  "total": 2
 }`}
         curl={`curl -X GET ${BASE_URL}/api/tools`}
       />
@@ -236,7 +235,7 @@ export default function ApiDocsPage() {
         requiresAuth={false}
         description="Fetch a single tool by its URL-friendly slug identifier. Returns 404 if not found."
         response={`{
-  "tool": {
+  "data": {
     "id": 1,
     "slug": "claude-code",
     "name": "Claude Code",
@@ -280,6 +279,18 @@ export default function ApiDocsPage() {
             /directory →
           </span>
         </Link>
+      </div>
+
+      {/* ── Rate Limiting note ── */}
+      <div className="mt-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4 flex gap-4 items-start">
+        <div className="text-amber-500 mt-0.5 shrink-0">⚡</div>
+        <div>
+          <p className="text-sm font-semibold text-amber-900 dark:text-amber-300">Rate Limits</p>
+          <p className="text-sm text-amber-700 dark:text-amber-400 mt-0.5">
+            Authenticated endpoints: <strong>60 requests/minute</strong>. Public read endpoints are more generous. If you hit a limit, you'll receive a{' '}
+            <code className="font-mono text-xs bg-amber-100 dark:bg-amber-900/40 px-1 py-0.5 rounded">429 Too Many Requests</code> response. Back off and retry.
+          </p>
+        </div>
       </div>
 
       {/* ── Footer ── */}
