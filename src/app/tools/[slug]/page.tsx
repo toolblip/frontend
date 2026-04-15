@@ -4,6 +4,7 @@ import { useState, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { tools } from '@/data/tools';
+import ShareButtons from '@/components/ShareButtons';
 
 // ─── Tool UIs ────────────────────────────────────────────────────────────────
 
@@ -438,6 +439,12 @@ export default function ToolDetailPage({ params }: { params: { slug: string } })
             {tool.category}
           </span>
         </div>
+      </div>
+
+      {/* Share */}
+      <div className="mt-4 pt-6 border-t border-gray-200 dark:border-gray-800">
+        <p className="text-xs text-gray-400 dark:text-gray-500 mb-3">Share this tool</p>
+        <ShareButtons toolName={tool.name} />
       </div>
 
       {/* Tool UI */}
