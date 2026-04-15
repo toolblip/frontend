@@ -43,3 +43,5 @@ DREAMS.md
 memory/
 .openclaw/
 .vercel/
+config/mcporter.json
+RAILWAY_TOKEN
