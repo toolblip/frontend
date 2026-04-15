@@ -35,6 +35,7 @@ export default function ApiDocsPage() {
         {/* Sidebar */}
         <aside className="w-52 shrink-0">
           <nav className="sticky top-24 space-y-1 text-sm">
+            <p className="px-3 text-xs font-semibold text-gray-300 dark:text-gray-600 uppercase tracking-wider mb-2">Guide</p>
             {[
               { id: 'overview',    label: 'Overview' },
               { id: 'auth',        label: 'Authentication' },
@@ -53,10 +54,10 @@ export default function ApiDocsPage() {
             <div className="pt-4 pb-2">
               <p className="px-3 text-xs font-semibold text-gray-300 dark:text-gray-600 uppercase tracking-wider">Endpoints</p>
             </div>
-            {ENDPOINTS.map(({ method, path }) => (
+            {ENDPOINTS.map(({ id, method, path }) => (
               <a
-                key={path}
-                href={`#${path.replace(/\//g, '-').replace(/:/g, '')}`}
+                key={id}
+                href={`#${id}`}
                 className="flex items-center gap-2 px-3 py-1.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
               >
                 <MethodPill method={method} />
@@ -71,7 +72,7 @@ export default function ApiDocsPage() {
 
           {/* ── Overview ── */}
           <section id="overview">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Overview</h2>
+            <SectionHeading>Overview</SectionHeading>
             <p className="text-gray-500 dark:text-gray-400 leading-relaxed mb-6">
               The Toolblip API is a free REST API for browsing developer tools and managing user authentication.
               All endpoints return JSON. No API key is required — register an account to get a Bearer token
@@ -85,8 +86,10 @@ export default function ApiDocsPage() {
                   https://toolblip-api-production.up.railway.app
                 </code>
               </div>
-              <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4">
-                <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">Swift URL <span className="text-gray-400 italic font-normal normal-case">(coming soon)</span></p>
+              <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:-border-gray-800 rounded-xl p-4">
+                <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">
+                  Canonical URL <span className="text-gray-400 italic font-normal normal-case ml-1">(SSL pending)</span>
+                </p>
                 <code className="text-sm font-mono text-gray-400 dark:text-gray-600 break-all line-through">
                   https://api.toolblip.com
                 </code>
@@ -104,8 +107,8 @@ export default function ApiDocsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
-                  {ENDPOINTS.map(({ method, path, auth, desc }) => (
-                    <tr key={path} className="bg-white dark:bg-gray-950 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
+                  {ENDPOINTS.map(({ id, method, path, auth, desc }) => (
+                    <tr key={id} className="bg-white dark:bg-gray-950 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
                       <td className="px-4 py-3"><MethodPill method={method} /></td>
                       <td className="px-4 py-3 font-mono text-xs text-gray-700 dark:text-gray-300">{path}</td>
                       <td className="px-4 py-3">{auth ? <LockPill /> : <PublicPill />}</td>
@@ -139,7 +142,7 @@ export default function ApiDocsPage() {
             <div className="space-y-8">
 
               <EndpointCard
-                id="api-auth-register"
+                id="auth-register"
                 method="POST"
                 path="/api/auth/register"
                 auth={false}
@@ -166,7 +169,7 @@ export default function ApiDocsPage() {
               />
 
               <EndpointCard
-                id="api-auth-login"
+                id="auth-login"
                 method="POST"
                 path="/api/auth/login"
                 auth={false}
@@ -191,7 +194,7 @@ export default function ApiDocsPage() {
               />
 
               <EndpointCard
-                id="api-auth-logout"
+                id="auth-logout"
                 method="POST"
                 path="/api/auth/logout"
                 auth={true}
@@ -205,7 +208,7 @@ export default function ApiDocsPage() {
               />
 
               <EndpointCard
-                id="api-auth-user"
+                id="auth-user"
                 method="GET"
                 path="/api/auth/user"
                 auth={true}
@@ -235,12 +238,12 @@ export default function ApiDocsPage() {
             <div className="space-y-8">
 
               <EndpointCard
-                id="api-tools"
+                id="tools-list"
                 method="GET"
                 path="/api/tools"
                 auth={false}
                 status={200}
-                description="Returns a list of all tools in the registry."
+                description="Returns a paginated list of all tools in the registry."
                 response={`{
   "tools": {
     "tools": [
@@ -271,7 +274,7 @@ export default function ApiDocsPage() {
               />
 
               <EndpointCard
-                id="api-tools-slug"
+                id="tools-detail"
                 method="GET"
                 path="/api/tools/:slug"
                 auth={false}
@@ -353,22 +356,22 @@ export default function ApiDocsPage() {
 // ─── Data ───────────────────────────────────────────────────
 
 const ENDPOINTS = [
-  { method: 'GET',  path: '/api/tools',          auth: false, desc: 'List all tools'   },
-  { method: 'GET',  path: '/api/tools/:slug',    auth: false, desc: 'Get a tool'       },
-  { method: 'POST', path: '/api/auth/register',  auth: false, desc: 'Create account'   },
-  { method: 'POST', path: '/api/auth/login',     auth: false, desc: 'Sign in'          },
-  { method: 'POST', path: '/api/auth/logout',    auth: true,  desc: 'Revoke session'   },
-  { method: 'GET',  path: '/api/auth/user',      auth: true,  desc: 'Current user'     },
+  { id: 'tools-list',   method: 'GET',  path: '/api/tools',         auth: false, desc: 'List all tools'   },
+  { id: 'tools-detail', method: 'GET',  path: '/api/tools/:slug',    auth: false, desc: 'Get a tool'       },
+  { id: 'auth-register',method: 'POST', path: '/api/auth/register',  auth: false, desc: 'Create account'   },
+  { id: 'auth-login',   method: 'POST', path: '/api/auth/login',     auth: false, desc: 'Sign in'          },
+  { id: 'auth-logout',  method: 'POST', path: '/api/auth/logout',    auth: true,  desc: 'Revoke session'   },
+  { id: 'auth-user',    method: 'GET',  path: '/api/auth/user',      auth: true,  desc: 'Current user'     },
 ] as const;
 
 const ERROR_CODES = [
-  { code: 400, label: 'Bad Request',         color: 'text-red-500'     },
-  { code: 401, label: 'Unauthorized',         color: 'text-red-500'     },
-  { code: 403, label: 'Forbidden',            color: 'text-amber-500'   },
-  { code: 404, label: 'Not Found',            color: 'text-gray-500'    },
-  { code: 422, label: 'Validation Error',     color: 'text-yellow-600'  },
-  { code: 429, label: 'Too Many Requests',    color: 'text-amber-500'   },
-  { code: 500, label: 'Server Error',         color: 'text-red-600'     },
+  { code: 400, label: 'Bad Request',        color: 'text-red-500'    },
+  { code: 401, label: 'Unauthorized',        color: 'text-red-500'    },
+  { code: 403, label: 'Forbidden',           color: 'text-amber-500'  },
+  { code: 404, label: 'Not Found',           color: 'text-gray-500'   },
+  { code: 422, label: 'Validation Error',    color: 'text-yellow-600' },
+  { code: 429, label: 'Too Many Requests',   color: 'text-amber-500'  },
+  { code: 500, label: 'Server Error',        color: 'text-red-600'   },
 ];
 
 // ─── Components ─────────────────────────────────────────────
@@ -447,12 +450,12 @@ function EndpointCard({ id, method, path, auth, status, description, body, respo
               <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wider font-semibold mb-3">Request body</p>
               <CodeBlock code={body} />
             </div>
-          ) : (
+          ) : auth ? (
             <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4">
               <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wider font-semibold mb-3">Headers</p>
               <CodeBlock code="Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx" />
             </div>
-          )}
+          ) : null}
           <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4">
             <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wider font-semibold mb-3">Response</p>
             <CodeBlock code={response} />
