@@ -4,188 +4,341 @@ import CodeBlock from '@/components/ui/CodeBlock';
 
 export const metadata: Metadata = {
   title: 'API Documentation | Toolblip',
-  description: 'Toolblip REST API documentation. Free access to developer tools, MCP server registry, and user authentication. Base URL: https://api.toolblip.com/api/v1',
+  description:
+    'Toolblip REST API documentation. Free access to developer tools, MCP server registry, and user authentication.',
   openGraph: {
     title: 'API Documentation | Toolblip',
     description: 'Toolblip REST API documentation. Free access to developer tools, MCP server registry, and user authentication.',
     url: 'https://toolblip.com/api-docs',
     siteName: 'Toolblip',
   },
-  twitter: { card: 'summary', title: 'API Documentation | Toolblip', description: 'Toolblip REST API docs. Free developer tools and MCP server registry.' },
+  twitter: {
+    card: 'summary',
+    title: 'API Documentation | Toolblip',
+    description: 'Toolblip REST API docs. Free developer tools and MCP server registry.',
+  },
 };
+
+const BASE_URL = 'https://toolblip-api-production.up.railway.app';
 
 export default function ApiDocsPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-16">
       <header className="mb-12">
+        <div className="inline-flex items-center gap-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-mono font-bold px-3 py-1 rounded-full mb-4">
+          REST API
+        </div>
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">API Documentation</h1>
-        <p className="text-gray-500 dark:text-gray-400">Free REST API for developer tools and MCP server registry.</p>
-        <div className="mt-4 flex items-center gap-4 text-sm">
-          <span className="text-gray-500 dark:text-gray-400">Base URL:</span>
+        <p className="text-gray-500 dark:text-gray-400 mb-4">
+          Free REST API for browsing developer tools and managing user authentication.
+        </p>
+        <div className="flex items-center gap-3 text-sm">
+          <span className="text-gray-500 dark:text-gray-400">Base URL</span>
           <code className="bg-gray-100 dark:bg-gray-800 text-green-600 dark:text-green-400 px-3 py-1 rounded text-xs font-mono">
-            https://api.toolblip.com/api/v1
+            {BASE_URL}
+          </code>
+        </div>
+        <div className="mt-3 flex items-center gap-3 text-sm">
+          <span className="text-gray-500 dark:text-gray-400">SSL URL</span>
+          <code className="bg-gray-100 dark:bg-gray-800 text-green-600 dark:text-green-400 px-3 py-1 rounded text-xs font-mono">
+            api.toolblip.com (coming soon)
           </code>
         </div>
       </header>
 
-      {/* Auth */}
-      <section className="mb-12">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-          <span className="text-green-600 dark:text-green-400 text-sm font-mono">01</span>
-          Authentication
-        </h2>
+      {/* ── Authentication ── */}
+      <section className="mb-14">
+        <SectionHeader number="01" title="Authentication" />
         <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
-          The API uses Bearer token authentication via Laravel Sanctum. Include your token in the{' '}
-          <code className="text-green-600 dark:text-green-400 text-xs font-mono">Authorization</code> header:
+          The API uses Bearer token authentication via Laravel Sanctum. After registering or logging in, you
+          receive a token. Include it in the{' '}
+          <code className="text-green-600 dark:text-green-400 text-xs font-mono bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded">
+            Authorization
+          </code>{' '}
+          header on all protected routes:
         </p>
         <div className="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5 mb-6">
-          <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">Example request</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider">Example header</p>
           <CodeBlock code="Authorization: Bearer tb_your_token_here" />
         </div>
-        <div className="space-y-4">
-          <EndpointRow method="POST" path="/auth/register" auth={false} description="Create a new account" />
-          <EndpointRow method="POST" path="/auth/login" auth={false} description="Sign in and receive a token" />
-          <EndpointRow method="POST" path="/auth/logout" auth={true} description="Revoke the current token" />
-          <EndpointRow method="GET" path="/auth/me" auth={true} description="Get the authenticated user" />
+        <div className="space-y-3">
+          <EndpointRow
+            method="POST"
+            path="/api/auth/register"
+            auth={false}
+            description="Create a new account"
+          />
+          <EndpointRow method="POST" path="/api/auth/login" auth={false} description="Sign in and receive a token" />
+          <EndpointRow method="POST" path="/api/auth/logout" auth={true} description="Revoke the current token" />
+          <EndpointRow method="GET" path="/api/auth/user" auth={true} description="Get the authenticated user" />
         </div>
       </section>
 
-      {/* Tools */}
-      <section className="mb-12">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-          <span className="text-green-600 dark:text-green-400 text-sm font-mono">02</span>
-          Tools
-        </h2>
+      {/* ── Auth: Register ── */}
+      <section className="mb-14">
+        <h3 className="text-sm font-mono font-bold text-gray-500 dark:text-gray-400 mb-4 uppercase tracking-wider">
+          POST /api/auth/register
+        </h3>
+        <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">Create a new user account.</p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+          <div className="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider">Request body</p>
+            <CodeBlock
+              code={`{
+  "name": "Harun",
+  "email": "harun@example.com",
+  "password": "secret123",
+  "password_confirmation": "secret123"
+}`}
+            />
+          </div>
+          <div className="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider">Response</p>
+            <CodeBlock
+              code={`{
+  "user": {
+    "id": 1,
+    "name": "Harun",
+    "email": "harun@example.com",
+    "is_pro": false
+  },
+  "token": "tb_1a2b3c4d5e..."
+}`}
+            />
+          </div>
+        </div>
+
+        <div className="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider">curl</p>
+          <CodeBlock
+            code={`curl -X POST ${BASE_URL}/api/auth/register \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "name": "Harun",
+    "email": "harun@example.com",
+    "password": "secret123",
+    "password_confirmation": "secret123"
+  }'`}
+          />
+        </div>
+      </section>
+
+      {/* ── Auth: Login ── */}
+      <section className="mb-14">
+        <h3 className="text-sm font-mono font-bold text-gray-500 dark:text-gray-400 mb-4 uppercase tracking-wider">
+          POST /api/auth/login
+        </h3>
+        <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">Sign in with your email and password.</p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+          <div className="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider">Request body</p>
+            <CodeBlock
+              code={`{
+  "email": "harun@example.com",
+  "password": "secret123"
+}`}
+            />
+          </div>
+          <div className="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider">Response</p>
+            <CodeBlock
+              code={`{
+  "user": {
+    "id": 1,
+    "name": "Harun",
+    "email": "harun@example.com",
+    "is_pro": false
+  },
+  "token": "tb_1a2b3c4d5e..."
+}`}
+            />
+          </div>
+        </div>
+
+        <div className="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider">curl</p>
+          <CodeBlock
+            code={`curl -X POST ${BASE_URL}/api/auth/login \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "email": "harun@example.com",
+    "password": "secret123"
+  }'`}
+          />
+        </div>
+      </section>
+
+      {/* ── Auth: Logout ── */}
+      <section className="mb-14">
+        <h3 className="text-sm font-mono font-bold text-gray-500 dark:text-gray-400 mb-4 uppercase tracking-wider">
+          POST /api/auth/logout
+        </h3>
+        <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
+          Revoke the current Bearer token. Requires authentication.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+          <div className="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider">Headers</p>
+            <CodeBlock code={`Authorization: Bearer tb_your_token_here`} />
+          </div>
+          <div className="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider">Response</p>
+            <CodeBlock code={`{ "message": "Logged out successfully" }`} />
+          </div>
+        </div>
+
+        <div className="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider">curl</p>
+          <CodeBlock
+            code={`curl -X POST ${BASE_URL}/api/auth/logout \\
+  -H "Authorization: Bearer tb_your_token_here"`}
+          />
+        </div>
+      </section>
+
+      {/* ── Auth: User ── */}
+      <section className="mb-14">
+        <h3 className="text-sm font-mono font-bold text-gray-500 dark:text-gray-400 mb-4 uppercase tracking-wider">
+          GET /api/auth/user
+        </h3>
+        <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
+          Retrieve the currently authenticated user. Requires authentication.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+          <div className="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider">Headers</p>
+            <CodeBlock code={`Authorization: Bearer tb_your_token_here`} />
+          </div>
+          <div className="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider">Response</p>
+            <CodeBlock
+              code={`{
+  "user": {
+    "id": 1,
+    "name": "Harun",
+    "email": "harun@example.com",
+    "is_pro": false
+  }
+}`}
+            />
+          </div>
+        </div>
+
+        <div className="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider">curl</p>
+          <CodeBlock
+            code={`curl -X GET ${BASE_URL}/api/auth/user \\
+  -H "Authorization: Bearer tb_your_token_here"`}
+          />
+        </div>
+      </section>
+
+      {/* ── Tools ── */}
+      <section className="mb-14">
+        <SectionHeader number="02" title="Tools" />
         <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
           Public endpoints for browsing Toolblip&apos;s developer tools. No authentication required.
         </p>
-        <div className="space-y-4">
-          <EndpointRow method="GET" path="/tools" auth={false} description="List all tools (paginated)" />
-          <EndpointRow method="GET" path="/tools/{slug}" auth={false} description="Get a single tool by slug" />
+        <div className="space-y-3 mb-8">
+          <EndpointRow method="GET" path="/api/tools" auth={false} description="List all tools" />
+          <EndpointRow method="GET" path="/api/tools/{slug}" auth={false} description="Get a single tool by slug" />
         </div>
-        <div className="mt-6 bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
-          <h4 className="text-gray-900 dark:text-white text-sm font-medium mb-3">Query parameters for /tools</h4>
-          <table className="w-full text-sm min-w-0">
-            <thead>
-              <tr className="text-gray-500 dark:text-gray-400 text-xs text-left border-b border-gray-200 dark:border-gray-800">
-                <th className="pb-2 font-medium">Parameter</th>
-                <th className="pb-2 font-medium">Type</th>
-                <th className="pb-2 font-medium">Description</th>
-              </tr>
-            </thead>
-            <tbody className="text-gray-600 dark:text-gray-300 text-xs">
-              <tr className="border-b border-gray-200 dark:border-gray-800"><td className="py-2 font-mono text-green-600 dark:text-green-400">category</td><td className="py-2">string</td><td className="py-2">Filter by category</td></tr>
-              <tr className="border-b border-gray-200 dark:border-gray-800"><td className="py-2 font-mono text-green-600 dark:text-green-400">search</td><td className="py-2">string</td><td className="py-2">Search name and description</td></tr>
-              <tr><td className="py-2 font-mono text-green-600 dark:text-green-400">page</td><td className="py-2">integer</td><td className="py-2">Page number (default: 1)</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
 
-      {/* MCP */}
-      <section className="mb-12">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-          <span className="text-green-600 dark:text-green-400 text-sm font-mono">03</span>
-          MCP Servers
-        </h2>
-        <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
-          Browse and submit MCP (Model Context Protocol) servers to the community registry.
-        </p>
-        <div className="space-y-4">
-          <EndpointRow method="GET" path="/mcp/servers" auth={false} description="List MCP servers (paginated)" />
-          <EndpointRow method="GET" path="/mcp/servers/{slug}" auth={false} description="Get a single MCP server" />
-          <EndpointRow method="POST" path="/mcp/servers/submit" auth={false} description="Submit a new MCP server (5/hour limit)" />
-        </div>
-      </section>
-
-      {/* API Keys */}
-      <section className="mb-12">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-          <span className="text-green-600 dark:text-green-400 text-sm font-mono">04</span>
-          API Keys
-        </h2>
-        <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
-          Create and manage personal API keys for programmatic access to your account.
-        </p>
-        <div className="space-y-4">
-          <EndpointRow method="GET" path="/keys" auth={true} description="List your API keys" />
-          <EndpointRow method="POST" path="/keys" auth={true} description="Create a new API key" />
-          <EndpointRow method="DELETE" path="/keys/{id}" auth={true} description="Revoke an API key" />
-        </div>
-        <div className="mt-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700/50 rounded-lg p-4">
-          <p className="text-yellow-700 dark:text-yellow-400 text-xs">
-            <strong>Note:</strong> The full API key is only returned once at creation. Store it securely — it cannot be retrieved again.
-          </p>
-        </div>
-      </section>
-
-      {/* Rate Limits */}
-      <section className="mb-12">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-          <span className="text-green-600 dark:text-green-400 text-sm font-mono">05</span>
-          Rate Limits
-        </h2>
-        <div className="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
-          <table className="w-full text-sm min-w-0">
-            <thead>
-              <tr className="text-gray-500 dark:text-gray-400 text-xs text-left border-b border-gray-200 dark:border-gray-800">
-                <th className="pb-2 font-medium">Tier</th><th className="pb-2 font-medium">Limit</th>
-              </tr>
-            </thead>
-            <tbody className="text-gray-600 dark:text-gray-300 text-xs">
-              <tr className="border-b border-gray-200 dark:border-gray-800"><td className="py-2">Unauthenticated</td><td className="py-2 font-mono text-green-600 dark:text-green-400">60 requests / minute</td></tr>
-              <tr className="border-b border-gray-200 dark:border-gray-800"><td className="py-2">Authenticated</td><td className="py-2 font-mono text-green-600 dark:text-green-400">300 requests / minute</td></tr>
-              <tr><td className="py-2">MCP submit</td><td className="py-2 font-mono text-green-600 dark:text-green-400">5 requests / hour</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      {/* Error Format */}
-      <section className="mb-12">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-          <span className="text-green-600 dark:text-green-400 text-sm font-mono">06</span>
-          Error Format
-        </h2>
+        {/* GET /api/tools */}
+        <h3 className="text-sm font-mono font-bold text-gray-500 dark:text-gray-400 mb-4 uppercase tracking-wider">
+          GET /api/tools
+        </h3>
         <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
-          All errors follow a consistent JSON structure:
+          Returns all tools. Response wraps tools in a nested{' '}
+          <code className="text-green-600 dark:text-green-400 text-xs font-mono bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded">
+            tools
+          </code>{' '}
+          key.
         </p>
-        <div className="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
-          <CodeBlock code={`{\n  "error": {\n    "code": "VALIDATION_ERROR",\n    "message": "The email field is required.",\n    "details": {}\n  }\n}`} />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+          <div className="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider">Response</p>
+            <CodeBlock
+              code={`{
+  "tools": {
+    "tools": [
+      {
+        "id": 1,
+        "slug": "claude-code",
+        "name": "Claude Code",
+        "description": "AI coding assistant",
+        "category": "AI",
+        "is_pro": false,
+        "emoji": "🤖",
+        "created_at": "2026-01-01T00:00:00Z"
+      }
+    ]
+  }
+}`}
+            />
+          </div>
+          <div className="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider">curl</p>
+            <CodeBlock code={`curl -X GET ${BASE_URL}/api/tools`} />
+          </div>
         </div>
-        <div className="mt-6 bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
-          <h4 className="text-gray-900 dark:text-white text-sm font-medium mb-3">Error codes</h4>
-          <table className="w-full text-sm min-w-0">
-            <thead>
-              <tr className="text-gray-500 dark:text-gray-400 text-xs text-left border-b border-gray-200 dark:border-gray-800">
-                <th className="pb-2 font-medium">Code</th><th className="pb-2 font-medium">HTTP Status</th>
-              </tr>
-            </thead>
-            <tbody className="text-gray-600 dark:text-gray-300 text-xs">
-              <tr className="border-b border-gray-200 dark:border-gray-800"><td className="py-2 font-mono text-red-600 dark:text-red-400">VALIDATION_ERROR</td><td className="py-2">422</td></tr>
-              <tr className="border-b border-gray-200 dark:border-gray-800"><td className="py-2 font-mono text-red-600 dark:text-red-400">AUTH_INVALID</td><td className="py-2">401</td></tr>
-              <tr className="border-b border-gray-200 dark:border-gray-800"><td className="py-2 font-mono text-red-600 dark:text-red-400">FORBIDDEN</td><td className="py-2">403</td></tr>
-              <tr className="border-b border-gray-200 dark:border-gray-800"><td className="py-2 font-mono text-red-600 dark:text-red-400">NOT_FOUND</td><td className="py-2">404</td></tr>
-              <tr className="border-b border-gray-200 dark:border-gray-800"><td className="py-2 font-mono text-red-600 dark:text-red-400">RATE_LIMITED</td><td className="py-2">429</td></tr>
-              <tr><td className="py-2 font-mono text-red-600 dark:text-red-400">SERVER_ERROR</td><td className="py-2">500</td></tr>
-            </tbody>
-          </table>
+
+        {/* GET /api/tools/{slug} */}
+        <h3 className="text-sm font-mono font-bold text-gray-500 dark:text-gray-400 mb-4 uppercase tracking-wider mt-10">
+          GET /api/tools/{'{slug}'}
+        </h3>
+        <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
+          Fetch a single tool by its slug identifier.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+          <div className="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider">Response</p>
+            <CodeBlock
+              code={`{
+  "tool": {
+    "id": 1,
+    "slug": "claude-code",
+    "name": "Claude Code",
+    "description": "AI coding assistant",
+    "category": "AI",
+    "is_pro": false,
+    "emoji": "🤖",
+    "created_at": "2026-01-01T00:00:00Z"
+  }
+}`}
+            />
+          </div>
+          <div className="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider">curl</p>
+            <CodeBlock code={`curl -X GET ${BASE_URL}/api/tools/claude-code`} />
+          </div>
         </div>
       </section>
 
-      {/* Try it */}
-      <section className="mb-12">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-          <span className="text-green-600 dark:text-green-400 text-sm font-mono">07</span>
-          Try It
-        </h2>
-        <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">Test the API directly from your browser:</p>
+      {/* ── Try It ── */}
+      <section className="mb-14">
+        <SectionHeader number="03" title="Try It" />
+        <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
+          Test the API directly from your browser — no token required for public endpoints.
+        </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <Link href="/tools" className="flex items-center justify-between bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-green-500 dark:hover:border-green-600 rounded-xl px-5 py-4 transition-colors">
+          <Link
+            href="/tools"
+            className="flex items-center justify-between bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-green-500 dark:hover:border-green-600 rounded-xl px-5 py-4 transition-colors"
+          >
             <span className="text-gray-900 dark:text-white text-sm font-medium">List tools</span>
-            <span className="text-green-600 dark:text-green-400 text-xs font-mono">GET /tools</span>
+            <span className="text-green-600 dark:text-green-400 text-xs font-mono">GET /api/tools</span>
           </Link>
-          <Link href="/directory" className="flex items-center justify-between bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-green-500 dark:hover:border-green-600 rounded-xl px-5 py-4 transition-colors">
+          <Link
+            href="/directory"
+            className="flex items-center justify-between bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-green-500 dark:hover:border-green-600 rounded-xl px-5 py-4 transition-colors"
+          >
             <span className="text-gray-900 dark:text-white text-sm font-medium">Browse MCP servers</span>
             <span className="text-green-600 dark:text-green-400 text-xs font-mono">Directory</span>
           </Link>
@@ -195,7 +348,10 @@ export default function ApiDocsPage() {
       <footer className="border-t border-gray-200 dark:border-gray-800 pt-8 text-center">
         <p className="text-gray-500 dark:text-gray-400 text-xs">
           Questions or issues?{' '}
-          <a href="mailto:harun@toolblip.com" className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300">
+          <a
+            href="mailto:harun@toolblip.com"
+            className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300"
+          >
             harun@toolblip.com
           </a>
         </p>
@@ -204,7 +360,26 @@ export default function ApiDocsPage() {
   );
 }
 
-function EndpointRow({ method, path, auth, description }: { method: string; path: string; auth: boolean; description: string }) {
+function SectionHeader({ number, title }: { number: string; title: string }) {
+  return (
+    <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+      <span className="text-green-600 dark:text-green-400 text-sm font-mono">{number}</span>
+      {title}
+    </h2>
+  );
+}
+
+function EndpointRow({
+  method,
+  path,
+  auth,
+  description,
+}: {
+  method: string;
+  path: string;
+  auth: boolean;
+  description: string;
+}) {
   const colors: Record<string, string> = {
     GET: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400',
     POST: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400',
