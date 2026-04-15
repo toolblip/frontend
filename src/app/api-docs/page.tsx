@@ -5,6 +5,13 @@ export const metadata: Metadata = {
   title: 'API Documentation | Toolblip',
   description:
     'Toolblip REST API — free endpoints for browsing developer tools, MCP server registry, and user authentication.',
+  openGraph: {
+    title: 'API Documentation | Toolblip',
+    description: 'Toolblip REST API — free endpoints for browsing developer tools, MCP server registry, and user authentication.',
+    url: 'https://toolblip.com/api-docs',
+    siteName: 'Toolblip',
+  },
+  twitter: { card: 'summary', title: 'API Documentation | Toolblip', description: 'Toolblip REST API — free endpoints for browsing developer tools, MCP server registry, and user authentication.' },
 };
 
 export default function ApiDocsPage() {
