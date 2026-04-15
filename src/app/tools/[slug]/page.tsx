@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { tools } from '@/data/tools';
 import type { Tool } from '@/data/tools';
 import Link from 'next/link';
+import ShareButtons from '@/components/ShareButtons';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -438,11 +439,15 @@ export default async function ToolPage({ params }: PageProps) {
         </div>
       </div>
 
-      <div className="flex items-center gap-3 mb-6">
+      <div className="flex items-center gap-3 mb-2">
         <span className="text-xs text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-2.5 py-1 rounded-full font-medium">
           {tool.category}
         </span>
         <p className="text-gray-500 dark:text-gray-400 text-sm">{tool.description}</p>
+      </div>
+
+      <div className="mb-6">
+        <ShareButtons toolName={tool.name} />
       </div>
 
       {/* Tool UI */}
