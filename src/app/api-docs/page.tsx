@@ -12,6 +12,11 @@ export const metadata: Metadata = {
     url: 'https://toolblip.com/api-docs',
     siteName: 'Toolblip',
   },
+  twitter: {
+    card: 'summary',
+    title: 'API Documentation | Toolblip',
+    description: 'Toolblip REST API — free developer tools and MCP server registry.',
+  },
 };
 
 const BASE_URL = 'https://toolblip-api-production.up.railway.app';

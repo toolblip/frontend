@@ -141,5 +141,9 @@ export const metadata = {
     url: 'https://toolblip.com/directory',
     siteName: 'Toolblip',
   },
-  twitter: { card: 'summary', title: 'Tool Directory | Toolblip', description: 'Browse all free browser-based tools on Toolblip. Text, developer, image, conversion, math, CSS tools and more.' },
+  twitter: {
+    card: 'summary',
+    title: 'Tool Directory | Toolblip',
+    description: 'Browse all free browser-based tools on Toolblip. Text, developer, image, conversion, math, CSS tools and more.',
+  },
 };
