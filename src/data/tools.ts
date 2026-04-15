@@ -45,4 +45,4 @@ export const tools: Tool[] = [
   { name: 'CSS Gradient Generator', slug: 'css-gradient-generator', description: 'Create linear, radial, and conic CSS gradients with a live preview, color stops, angle control, and preset library.', emoji: '🌈', category: 'CSS' },
 ];
 
-export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'SEO', 'Color', 'Conversion', 'Math', 'CSS'] as const;
+export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS'] as const;
