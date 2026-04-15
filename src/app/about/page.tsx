@@ -9,9 +9,9 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
-      <h1 className="text-3xl font-bold text-white mb-8">About Toolblip</h1>
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">About Toolblip</h1>
 
-      <div className="space-y-6 text-gray-300 leading-relaxed">
+      <div className="space-y-6 text-gray-600 dark:text-gray-300 leading-relaxed">
         <p>
           Toolblip is a collection of free developer and productivity tools that run entirely in your browser.
           There are no servers, no uploads, and no accounts required. You paste your data in, get your result out,
@@ -29,7 +29,7 @@ export default function AboutPage() {
           Toolblip is built and maintained by{' '}
           <a
             href="https://github.com/HarunRRayhan"
-            className="text-green-400 hover:text-green-300 transition-colors"
+            className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors"
           >
             Harun R Rayhan
           </a>

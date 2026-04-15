@@ -13,11 +13,11 @@ const allTools = [
   { name: 'URL Encode / Decode', slug: 'url-encode', description: 'Encode and decode URLs or URL components for safe use in links.', emoji: '🔗', category: 'Encoder' },
   { name: 'Image Cropper', slug: 'image-cropper', description: 'Crop images to any ratio or preset size — passport, 16:9, square, and more.', emoji: '✂️', category: 'Image' },
   { name: 'Image Format Converter', slug: 'image-format-converter', description: 'Convert images between JPEG, PNG, WebP, and AVIF with quality control and side-by-side preview.', emoji: '🖼️', category: 'Image' },
-  { name: 'UUID Generator', slug: 'uuid-generator', description: "Generate one or many UUID v4 values using your browser's crypto API.", emoji: '🔑', category: 'Developer' },
+  { name: 'UUID Generator', slug: 'uuid-generator', description: 'Generate one or many UUID v4 values using your browser\'s crypto API.', emoji: '🔑', category: 'Developer' },
   { name: 'Markdown to HTML', slug: 'markdown-to-html', description: 'Convert Markdown to HTML with a live split-pane preview.', emoji: '📄', category: 'Developer' },
   { name: 'YAML to JSON', slug: 'yaml-to-json', description: 'Convert YAML to JSON instantly with pretty-print, compact output, and custom indent size.', emoji: '🔄', category: 'Conversion' },
   { name: 'Cron Expression Parser', slug: 'cron-parser', description: 'Parse and validate cron expressions with human-readable descriptions and next 5 run times.', emoji: '⏱️', category: 'Developer' },
-  { name: 'Hash Generator', slug: 'hash-generator', description: "Generate MD5, SHA-1, SHA-256, and SHA-512 hashes using your browser's native crypto API.", emoji: '#', category: 'Developer' },
+  { name: 'Hash Generator', slug: 'hash-generator', description: 'Generate MD5, SHA-1, SHA-256, and SHA-512 hashes using your browser\'s native crypto API.', emoji: '#', category: 'Developer' },
   { name: 'Screen Resolution Tester', slug: 'screen-resolution-tester', description: 'Test any screen resolution or viewport size with device presets, custom dimensions, and a live scaled preview.', emoji: '🖥️', category: 'Developer' },
   { name: 'URL Slug Generator', slug: 'url-slug-generator', description: 'Convert any text into URL-friendly slugs with customizable separator and length limit.', emoji: '🔗', category: 'Developer' },
   { name: 'Percentage Calculator', slug: 'percentage-calculator', description: 'Calculate percentages, percentage change, tips, and discounts instantly.', emoji: '%', category: 'Math' },
@@ -34,12 +34,7 @@ export default function ToolsClient() {
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
     return allTools.filter(tool => {
-      const matchesQuery =
-        !q ||
-        tool.name.toLowerCase().includes(q) ||
-        tool.description.toLowerCase().includes(q) ||
-        tool.category.toLowerCase().includes(q) ||
-        tool.slug.toLowerCase().includes(q);
+      const matchesQuery = !q || tool.name.toLowerCase().includes(q) || tool.description.toLowerCase().includes(q) || tool.category.toLowerCase().includes(q) || tool.slug.toLowerCase().includes(q);
       const matchesCategory = activeCategory === 'All' || tool.category === activeCategory;
       return matchesQuery && matchesCategory;
     });
@@ -48,8 +43,8 @@ export default function ToolsClient() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-white mb-2">All Tools</h1>
-        <p className="text-gray-400">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">All Tools</h1>
+        <p className="text-gray-500 dark:text-gray-400">
           {allTools.length} free tools — 100% client-side, nothing leaves your browser.
         </p>
       </div>
@@ -60,23 +55,15 @@ export default function ToolsClient() {
           type="search"
           value={query}
           onChange={e => setQuery(e.target.value)}
-          placeholder="Search tools..." aria-label="Search tools by name, description, or category"
-          className="w-full bg-gray-900 border border-gray-700 text-white rounded-lg px-4 py-3 pl-10 placeholder-gray-500 focus:outline-none focus:border-green-600 transition-colors"
+          placeholder="Search tools..."
+          aria-label="Search tools by name, description, or category"
+          className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 pl-10 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-green-500 transition-colors"
         />
-        <svg
-          className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <circle cx="11" cy="11" r="8" />
-          <path d="m21 21-4.35-4.35" />
+        <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
         </svg>
         {query && (
-          <button
-            onClick={() => setQuery('')}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300"
-          >
+          <button onClick={() => setQuery('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300">
             ✕
           </button>
         )}
@@ -90,8 +77,8 @@ export default function ToolsClient() {
             onClick={() => setActiveCategory(cat)}
             className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
               activeCategory === cat
-                ? 'bg-green-700 text-white'
-                : 'bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white'
+                ? 'bg-green-600 text-white dark:bg-green-700 dark:text-white'
+                : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
             }`}
           >
             {cat}
@@ -101,10 +88,8 @@ export default function ToolsClient() {
 
       {/* Results count */}
       {(query || activeCategory !== 'All') && (
-        <p className="text-gray-500 text-sm mb-4">
-          {filtered.length === 0
-            ? 'No tools found'
-            : `${filtered.length} tool${filtered.length !== 1 ? 's' : ''} found`}
+        <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
+          {filtered.length === 0 ? 'No tools found' : `${filtered.length} tool${filtered.length !== 1 ? 's' : ''} found`}
         </p>
       )}
 
@@ -115,18 +100,18 @@ export default function ToolsClient() {
             <Link
               key={tool.slug}
               href={`/tools/${tool.slug}`}
-              className="group bg-gray-900 border border-gray-800 hover:border-green-600 rounded-xl p-4 transition-all hover:shadow-lg hover:shadow-green-900/20"
+              className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-green-500 dark:hover:border-green-600 rounded-xl p-4 transition-all"
             >
               <div className="flex items-start gap-3">
                 <span className="text-2xl">{tool.emoji}</span>
                 <div className="min-w-0">
-                  <h2 className="font-semibold text-white group-hover:text-green-400 transition-colors truncate">
+                  <h2 className="font-semibold text-gray-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors truncate text-sm sm:text-base">
                     {tool.name}
                   </h2>
-                  <p className="text-sm text-gray-400 mt-1 leading-relaxed line-clamp-2">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5 leading-relaxed line-clamp-2">
                     {tool.description}
                   </p>
-                  <span className="inline-block mt-2 text-xs text-gray-300 bg-gray-700 px-2 py-0.5 rounded">
+                  <span className="inline-block mt-2 text-xs text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
                     {tool.category}
                   </span>
                 </div>
@@ -136,13 +121,10 @@ export default function ToolsClient() {
         </div>
       ) : (
         <div className="text-center py-16">
-          <p className="text-gray-500 text-lg mb-2">
+          <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">
             No tools match &ldquo;{query}&rdquo;
           </p>
-          <button
-            onClick={() => { setQuery(''); setActiveCategory('All'); }}
-            className="text-green-400 hover:text-green-300 text-sm"
-          >
+          <button onClick={() => { setQuery(''); setActiveCategory('All'); }} className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 text-sm">
             Clear filters
           </button>
         </div>

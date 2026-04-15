@@ -34,12 +34,12 @@ export default function PasswordStrength({ password }: PasswordStrengthProps) {
           <div
             key={level}
             className={`h-1 flex-1 rounded-full transition-colors ${
-              score >= level ? color : 'bg-gray-700'
+              score >= level ? color : 'bg-gray-300 dark:bg-gray-700'
             }`}
           />
         ))}
       </div>
-      <p className={`text-xs ${score >= 3 ? 'text-green-400' : 'text-gray-400'}`}>
+      <p className={`text-xs ${score >= 3 ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`}>
         {label}
         {score < 2 && ' — use 8+ characters with letters and numbers'}
         {score >= 2 && score < 3 && ' — add symbols for a stronger password'}

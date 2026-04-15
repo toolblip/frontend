@@ -33,13 +33,13 @@ export default function CodeBlock({ code, language, title }: Props) {
   };
 
   return (
-    <div className="relative group">
+    <div className="relative group rounded-xl overflow-hidden border border-gray-700 dark:border-gray-800">
       {title && (
-        <div className="absolute top-0 left-0 right-0 bg-gray-800 px-4 py-1.5 rounded-t-lg border-b border-gray-700">
+        <div className="bg-gray-800 dark:bg-gray-800/80 px-4 py-1.5 border-b border-gray-700 dark:border-gray-700">
           <span className="text-xs text-gray-400">{title}</span>
         </div>
       )}
-      <div className="relative">
+      <div className="relative bg-gray-900">
         <button
           onClick={handleCopy}
           className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity text-xs text-gray-400 hover:text-green-400 bg-gray-800 border border-gray-700 px-2 py-1 rounded z-10"
@@ -47,7 +47,7 @@ export default function CodeBlock({ code, language, title }: Props) {
         >
           {copied ? '✓ Copied' : 'Copy'}
         </button>
-        <pre className={`${title ? 'pt-10' : ''} text-sm text-gray-300 overflow-x-auto whitespace-pre-wrap break-words bg-gray-900 border border-gray-800 rounded-xl p-5`}>
+        <pre className={`${title ? 'pt-8' : 'pt-4'} pb-4 px-4 text-sm text-gray-300 overflow-x-auto whitespace-pre-wrap break-words`}>
           <code className={language ? `language-${language}` : ''}>{code}</code>
         </pre>
       </div>

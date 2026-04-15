@@ -3,7 +3,6 @@ import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import type { Metadata } from 'next';
 
-// Dynamically import client components (no SSR needed for these tools)
 const toolComponents: Record<string, React.ComponentType> = {
   'word-counter': dynamic(() => import('@/components/tools/WordCounterClient')),
   'character-counter': dynamic(() => import('@/components/tools/CharacterCounterClient')),
@@ -46,18 +45,9 @@ const toolsMeta: Record<string, {
       'Copy the result with one click.',
     ],
     faqs: [
-      {
-        question: 'Does this send my text to a server?',
-        answer: 'No. All processing happens entirely in your browser using JavaScript. Nothing is transmitted, stored, or logged.',
-      },
-      {
-        question: 'Does it count words in code?',
-        answer: 'Yes. The word counter counts all space-separated tokens, including code snippets, hashtags, and special characters.',
-      },
-      {
-        question: 'How is reading time calculated?',
-        answer: 'Reading time assumes an average adult reading speed of 200 words per minute.',
-      },
+      { question: 'Does this send my text to a server?', answer: 'No. All processing happens entirely in your browser using JavaScript. Nothing is transmitted, stored, or logged.' },
+      { question: 'Does it count words in code?', answer: 'Yes. The word counter counts all space-separated tokens, including code snippets, hashtags, and special characters.' },
+      { question: 'How is reading time calculated?', answer: 'Reading time assumes an average adult reading speed of 200 words per minute.' },
     ],
   },
   'character-counter': {
@@ -72,18 +62,9 @@ const toolsMeta: Record<string, {
       'Copy the result with one click.',
     ],
     faqs: [
-      {
-        question: 'What social media limits does it show?',
-        answer: 'Twitter/X (280 characters), Instagram (2,200 characters), LinkedIn (3,000 characters), Facebook (63,206 characters), and meta description (160 characters).',
-      },
-      {
-        question: 'Does it count spaces and newlines?',
-        answer: 'Yes. You can see both the total character count (with spaces) and the character count without spaces and newlines.',
-      },
-      {
-        question: 'Is my text sent to a server?',
-        answer: 'No. All character counting happens locally in your browser. Nothing is transmitted or stored.',
-      },
+      { question: 'What social media limits does it show?', answer: 'Twitter/X (280), Instagram (2,200), LinkedIn (3,000), Facebook (63,206), and meta description (160).' },
+      { question: 'Does it count spaces and newlines?', answer: 'Yes. You can see both total characters and characters without spaces/newlines.' },
+      { question: 'Is my text sent to a server?', answer: 'No. All counting happens locally in your browser.' },
     ],
   },
   'json-formatter': {
@@ -91,26 +72,11 @@ const toolsMeta: Record<string, {
     description: 'Format, validate, and minify JSON with error highlighting.',
     emoji: '📋',
     category: 'Developer',
-    howToUse: [
-      'Paste or type your JSON into the input area.',
-      'The formatter instantly validates whether your JSON is syntactically correct.',
-      'If valid, the output shows properly indented JSON with syntax highlighting.',
-      'Use the minify button to compress the JSON to a single line.',
-      'Use the copy button to copy the result to your clipboard.',
-    ],
+    howToUse: ['Paste your JSON into the input area.', 'The formatter validates it instantly.', 'If valid, the output shows properly indented JSON with syntax highlighting.', 'Use minify to compress to a single line. Use copy to copy the result.'],
     faqs: [
-      {
-        question: 'Does this send my JSON to a server?',
-        answer: 'No. All processing happens entirely in your browser using JavaScript. Nothing is transmitted, stored, or logged.',
-      },
-      {
-        question: 'What happens if my JSON has errors?',
-        answer: 'The formatter highlights the line and character position of the error, making it easy to spot and fix typos.',
-      },
-      {
-        question: 'Can I format already-minified JSON?',
-        answer: 'Yes. Paste any minified or compact JSON and it will be formatted with proper indentation immediately.',
-      },
+      { question: 'Does this send my JSON to a server?', answer: 'No. All processing happens in your browser using JavaScript.' },
+      { question: 'What happens if my JSON has errors?', answer: 'The formatter highlights the line and character position of the error.' },
+      { question: 'Can I format already-minified JSON?', answer: 'Yes. Paste any compact JSON and it will be formatted immediately.' },
     ],
   },
   'base64': {
@@ -118,24 +84,11 @@ const toolsMeta: Record<string, {
     description: 'Encode and decode Base64 text or files instantly in your browser.',
     emoji: '🔐',
     category: 'Encoder',
-    howToUse: [
-      'Paste or type your text into the input area.',
-      'Click Encode to convert to Base64, or Decode to convert from Base64.',
-      'Copy the result with one click.',
-    ],
+    howToUse: ['Paste your text into the input area.', 'Click Encode to convert to Base64, or Decode to convert from Base64.', 'Copy the result with one click.'],
     faqs: [
-      {
-        question: 'Is Base64 encryption?',
-        answer: 'No. Base64 is an encoding scheme, not encryption. It is reversible by design and should never be used to hide sensitive data. Anyone can decode a Base64 string.',
-      },
-      {
-        question: 'Why does my encoded string end with = or ==?',
-        answer: 'Base64 uses a 64-character alphabet. Since it works on 3-byte chunks, strings whose length is not divisible by 3 are padded with = characters. This is normal and the decoder handles it automatically.',
-      },
-      {
-        question: 'Can I encode binary files?',
-        answer: 'Yes. This tool supports file upload and will Base64-encode the file contents, which you can then use in JSON, XML, or email attachments.',
-      },
+      { question: 'Is Base64 encryption?', answer: 'No. Base64 is an encoding scheme, not encryption. It is reversible by design.' },
+      { question: 'Why does my encoded string end with = or ==?', answer: 'Base64 pads strings whose length is not divisible by 3. The decoder handles it automatically.' },
+      { question: 'Can I encode binary files?', answer: 'Yes. This tool supports file upload and will Base64-encode the file contents.' },
     ],
   },
   'case-converter': {
@@ -144,14 +97,8 @@ const toolsMeta: Record<string, {
     emoji: '✏️',
     category: 'Text',
     faqs: [
-      {
-        question: 'What case formats are supported?',
-        answer: 'UPPERCASE, lowercase, Title Case, Sentence case, camelCase, PascalCase, snake_case, SCREAMING_SNAKE_CASE, kebab-case, and SCREAMING-KEBAB-CASE.',
-      },
-      {
-        question: 'Does this modify my original text?',
-        answer: 'No. The conversion is displayed as output — your original text remains unchanged until you copy the converted result.',
-      },
+      { question: 'What case formats are supported?', answer: 'UPPERCASE, lowercase, Title Case, Sentence case, camelCase, PascalCase, snake_case, SCREAMING_SNAKE_CASE, kebab-case, and SCREAMING-KEBAB-CASE.' },
+      { question: 'Does this modify my original text?', answer: 'No. The conversion is shown as output — your original stays unchanged until you copy.' },
     ],
   },
   'url-encode': {
@@ -160,14 +107,8 @@ const toolsMeta: Record<string, {
     emoji: '🔗',
     category: 'Encoder',
     faqs: [
-      {
-        question: 'When should I URL-encode a string?',
-        answer: 'URL-encode strings before embedding them in a query parameter. Spaces become %20, ampersands become %26, and special characters are percent-encoded so they do not break URL parsing.',
-      },
-      {
-        question: 'What is the difference between encoding the full URL and just a component?',
-        answer: 'Encoding a full URL would double-encode characters that already have meaning in URLs (like :// and /). Encode individual query values, not the entire URL.',
-      },
+      { question: 'When should I URL-encode a string?', answer: 'URL-encode strings before embedding them in a query parameter. Spaces become %20, ampersands become %26, and special characters are percent-encoded.' },
+      { question: 'What is the difference between encoding the full URL and just a component?', answer: 'Encoding a full URL would double-encode characters that already have meaning in URLs.' },
     ],
   },
   'image-cropper': {
@@ -176,14 +117,8 @@ const toolsMeta: Record<string, {
     emoji: '✂️',
     category: 'Image',
     faqs: [
-      {
-        question: 'What image formats are supported?',
-        answer: 'JPEG, PNG, WebP, GIF, and SVG input. The output downloads as PNG by default.',
-      },
-      {
-        question: 'Are images uploaded to a server?',
-        answer: 'No. All processing happens in your browser using the Canvas API. Your images never leave your device.',
-      },
+      { question: 'What image formats are supported?', answer: 'JPEG, PNG, WebP, GIF, and SVG input. The output downloads as PNG by default.' },
+      { question: 'Are images uploaded to a server?', answer: 'No. All processing happens in your browser using the Canvas API.' },
     ],
   },
   'uuid-generator': {
@@ -192,14 +127,8 @@ const toolsMeta: Record<string, {
     emoji: '🔑',
     category: 'Developer',
     faqs: [
-      {
-        question: 'What UUID version does this generate?',
-        answer: 'UUID v4 by default (random). You can also generate UUID v7 (time-sortable) which is better for database primary keys.',
-      },
-      {
-        question: 'Are these UUIDs truly random?',
-        answer: 'Yes. UUIDs are generated using the Web Crypto API, which provides cryptographically secure random numbers.',
-      },
+      { question: 'What UUID version does this generate?', answer: 'UUID v4 by default (random). You can also generate UUID v7 (time-sortable).' },
+      { question: 'Are these UUIDs truly random?', answer: 'Yes. UUIDs are generated using the Web Crypto API, which provides cryptographically secure random numbers.' },
     ],
   },
   'remove-duplicate-lines': {
@@ -208,14 +137,8 @@ const toolsMeta: Record<string, {
     emoji: '🗑️',
     category: 'Text',
     faqs: [
-      {
-        question: 'Does this preserve the original order of lines?',
-        answer: 'Yes. The first occurrence of each unique line is kept in its original position.',
-      },
-      {
-        question: 'Is the comparison case-sensitive?',
-        answer: "By default yes. A case-insensitive option is available if you need to treat 'Hello' and 'hello' as duplicates.",
-      },
+      { question: 'Does this preserve the original order of lines?', answer: 'Yes. The first occurrence of each unique line is kept in its original position.' },
+      { question: 'Is the comparison case-sensitive?', answer: "By default yes. A case-insensitive option is available." },
     ],
   },
   'markdown-to-html': {
@@ -224,40 +147,19 @@ const toolsMeta: Record<string, {
     emoji: '📄',
     category: 'Developer',
     faqs: [
-      {
-        question: 'Is my Markdown sent to a server?',
-        answer: 'No. All conversion uses a JavaScript Markdown parser running entirely in your browser.',
-      },
-      {
-        question: 'What Markdown flavor is supported?',
-        answer: 'Standard CommonMark Markdown including tables, task lists, footnotes, and GFM (GitHub Flavored Markdown) extensions.',
-      },
+      { question: 'Is my Markdown sent to a server?', answer: 'No. All conversion uses a JavaScript parser running entirely in your browser.' },
+      { question: 'What Markdown flavor is supported?', answer: 'Standard CommonMark Markdown including tables, task lists, footnotes, and GFM extensions.' },
     ],
   },
   'yaml-to-json': {
     title: 'YAML to JSON',
-    description: 'Convert YAML to JSON instantly with pretty-print, compact output, and custom indent size. 100% client-side — nothing leaves your browser.',
+    description: 'Convert YAML to JSON instantly with pretty-print, compact output, and custom indent size. 100% client-side.',
     emoji: '🔄',
     category: 'Conversion',
-    howToUse: [
-      'Paste your YAML into the input area.',
-      'The converter instantly validates your YAML and converts it to JSON.',
-      'Use the copy button to copy the result.',
-      'Toggle compact mode to output minified JSON.',
-    ],
+    howToUse: ['Paste your YAML into the input area.', 'The converter validates your YAML and converts it to JSON instantly.', 'Use the copy button to copy the result.', 'Toggle compact mode for minified JSON.'],
     faqs: [
-      {
-        question: 'Does this send my YAML to a server?',
-        answer: 'No. All conversion happens in your browser using a JavaScript YAML parser. Nothing leaves your device.',
-      },
-      {
-        question: 'Can I convert JSON back to YAML?',
-        answer: 'This tool converts YAML to JSON. For the reverse, use our JSON to YAML converter.',
-      },
-      {
-        question: 'What happens if my YAML has errors?',
-        answer: 'The converter shows the error message with the line number where the YAML parsing failed.',
-      },
+      { question: 'Does this send my YAML to a server?', answer: 'No. All conversion happens in your browser.' },
+      { question: 'What happens if my YAML has errors?', answer: 'The converter shows the error message with the line number.' },
     ],
   },
   'cron-parser': {
@@ -283,25 +185,11 @@ const toolsMeta: Record<string, {
     description: "Generate MD5, SHA-1, SHA-256, and SHA-512 hashes using your browser's native crypto API.",
     emoji: '#',
     category: 'Developer',
-    howToUse: [
-      'Paste or type your text into the input area.',
-      'Select the hash algorithm you need: MD5, SHA-1, SHA-256, or SHA-512.',
-      'The hash is computed instantly as you type.',
-      'Copy the result with one click.',
-    ],
+    howToUse: ['Paste or type your text into the input area.', 'Select the hash algorithm: MD5, SHA-1, SHA-256, or SHA-512.', 'The hash is computed instantly as you type.', 'Copy the result with one click.'],
     faqs: [
-      {
-        question: 'Is this safe to use for passwords?',
-        answer: 'This tool generates plain hashes, not salted hashes. For password storage, use bcrypt, Argon2, or scrypt with a per-user salt. Plain SHA-256 is not suitable for password storage.',
-      },
-      {
-        question: 'Is my text sent to any server?',
-        answer: 'No. All hashing is done locally in your browser using the Web Crypto API. Nothing is transmitted over the network.',
-      },
-      {
-        question: 'Which algorithm should I use?',
-        answer: 'SHA-256 is the current standard for most use cases. MD5 and SHA-1 are cryptographically broken and should only be used for non-security purposes like quick file checksums.',
-      },
+      { question: 'Is this safe to use for passwords?', answer: 'This tool generates plain hashes, not salted hashes. For password storage, use bcrypt, Argon2, or scrypt.' },
+      { question: 'Is my text sent to any server?', answer: 'No. All hashing is done locally in your browser using the Web Crypto API.' },
+      { question: 'Which algorithm should I use?', answer: 'SHA-256 is the current standard for most use cases. MD5 and SHA-1 are cryptographically broken for security purposes.' },
     ],
   },
   'image-format-converter': {
@@ -310,14 +198,8 @@ const toolsMeta: Record<string, {
     emoji: '🖼️',
     category: 'Image',
     faqs: [
-      {
-        question: 'Does converting to JPEG reduce image quality?',
-        answer: 'JPEG is a lossy format. High quality (80–90%) is usually indistinguishable from the original. PNG to JPEG conversion will always lose some quality.',
-      },
-      {
-        question: 'Which format should I use?',
-        answer: 'Use PNG for graphics and transparency. Use JPEG for photographs. Use WebP or AVIF for the best compression-to-quality ratio in web contexts.',
-      },
+      { question: 'Does converting to JPEG reduce image quality?', answer: 'JPEG is lossy. High quality (80-90%) is usually indistinguishable from the original.' },
+      { question: 'Which format should I use?', answer: 'PNG for graphics and transparency. JPEG for photographs. WebP or AVIF for the best compression-to-quality ratio in web contexts.' },
     ],
   },
   'percentage-calculator': {
@@ -326,14 +208,8 @@ const toolsMeta: Record<string, {
     emoji: '%',
     category: 'Math',
     faqs: [
-      {
-        question: 'How do I calculate percentage change?',
-        answer: 'Enter the original value and the new value. The formula is ((new - original) / original) × 100.',
-      },
-      {
-        question: 'Can I calculate a reverse percentage?',
-        answer: 'Yes. Given a result and a percentage, the calculator can find the original number. For example, 25 is 20% of what number? → 125.',
-      },
+      { question: 'How do I calculate percentage change?', answer: 'Enter the original value and the new value. The formula is ((new - original) / original) x 100.' },
+      { question: 'Can I calculate a reverse percentage?', answer: 'Yes. Given a result and a percentage, the calculator can find the original number.' },
     ],
   },
   'screen-resolution-tester': {
@@ -342,14 +218,8 @@ const toolsMeta: Record<string, {
     emoji: '🖥️',
     category: 'Developer',
     faqs: [
-      {
-        question: 'Does this actually change my screen resolution?',
-        answer: 'No. It displays a visual grid and dimension information at actual pixels — it does not modify your operating system display settings.',
-      },
-      {
-        question: 'What device presets are available?',
-        answer: 'Common presets include iPhone SE, iPhone 14, Pixel 7, Samsung Galaxy S23, iPad, and various laptop/desktop resolutions.',
-      },
+      { question: 'Does this actually change my screen resolution?', answer: 'No. It displays a visual grid and dimension information — it does not modify your OS display settings.' },
+      { question: 'What device presets are available?', answer: 'Common presets include iPhone SE, iPhone 14, Pixel 7, Samsung Galaxy S23, iPad, and various laptop/desktop resolutions.' },
     ],
   },
   'url-slug-generator': {
@@ -358,21 +228,13 @@ const toolsMeta: Record<string, {
     emoji: '🔗',
     category: 'Developer',
     faqs: [
-      {
-        question: 'What characters are allowed in a URL slug?',
-        answer: 'Lowercase letters (a–z), numbers (0–9), and hyphens. All other characters are either replaced with the separator or stripped.',
-      },
-      {
-        question: 'Can I change the separator from hyphen to underscore?',
-        answer: 'Yes. You can set any separator character or string, including underscore, space, or nothing.',
-      },
+      { question: 'What characters are allowed in a URL slug?', answer: 'Lowercase letters (a-z), numbers (0-9), and hyphens. All other characters are replaced or stripped.' },
+      { question: 'Can I change the separator from hyphen to underscore?', answer: 'Yes. You can set any separator character or string.' },
     ],
   },
 };
 
-type Props = {
-  params: Promise<{ slug: string }>;
-};
+type Props = { params: Promise<{ slug: string }> };
 
 export async function generateStaticParams() {
   return Object.keys(toolsMeta).map((slug) => ({ slug }));
@@ -382,43 +244,32 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const meta = toolsMeta[slug];
   if (!meta) return {};
-  const canonicalUrl = `https://toolblip.com/tools/${slug}/`;
   return {
     title: `${meta.title} | Toolblip`,
     description: meta.description,
-    alternates: { canonical: canonicalUrl },
-    openGraph: {
-      title: meta.title,
-      description: meta.description,
-      images: [{ url: 'https://toolblip.com/og-default.png' }],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      site: '@HarunRRayhan',
-    },
+    alternates: { canonical: `https://toolblip.com/tools/${slug}/` },
+    openGraph: { title: meta.title, description: meta.description, images: [{ url: 'https://toolblip.com/og-default.png' }] },
+    twitter: { card: 'summary_large_image', site: '@HarunRRayhan' },
   };
 }
 
 export default async function ToolPage({ params }: Props) {
   const { slug } = await params;
   const meta = toolsMeta[slug];
-
-  if (!meta) {
-    notFound();
-  }
+  if (!meta) notFound();
 
   const ToolComponent = toolComponents[slug];
 
   return (
     <>
       {/* Breadcrumb */}
-      <nav aria-label="Breadcrumb" className="border-b border-gray-800 bg-gray-900/40">
-        <div className="max-w-4xl mx-auto px-4 py-2 text-sm text-gray-500 flex gap-2">
-          <Link href="/" className="hover:text-gray-400 transition-colors">Home</Link>
+      <nav aria-label="Breadcrumb" className="border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/40">
+        <div className="max-w-4xl mx-auto px-4 py-2 text-sm text-gray-500 dark:text-gray-400 flex gap-2">
+          <Link href="/" className="hover:text-gray-700 dark:hover:text-gray-300 transition-colors">Home</Link>
           <span>/</span>
-          <Link href="/tools" className="hover:text-gray-300 transition-colors">Tools</Link>
+          <Link href="/tools" className="hover:text-gray-600 dark:hover:text-gray-300 transition-colors">Tools</Link>
           <span>/</span>
-          <span className="text-gray-300" aria-current="page">{meta.title}</span>
+          <span className="text-gray-600 dark:text-gray-300" aria-current="page">{meta.title}</span>
         </div>
       </nav>
 
@@ -427,10 +278,10 @@ export default async function ToolPage({ params }: Props) {
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
             <span className="text-3xl">{meta.emoji}</span>
-            <h1 className="text-2xl font-bold text-white">{meta.title}</h1>
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{meta.title}</h1>
           </div>
-          <p className="text-gray-400">{meta.description}</p>
-          <span className="inline-block mt-2 text-xs text-gray-300 bg-gray-700 px-2 py-0.5 rounded">
+          <p className="text-gray-500 dark:text-gray-400">{meta.description}</p>
+          <span className="inline-block mt-2 text-xs text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
             {meta.category}
           </span>
         </div>
@@ -438,14 +289,14 @@ export default async function ToolPage({ params }: Props) {
         {/* Tool UI */}
         <section
           aria-label="Tool"
-          className="bg-gray-900 border border-gray-800 rounded-xl p-6 mb-8"
+          className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6 mb-8"
         >
           {ToolComponent ? (
             <ToolComponent />
           ) : (
-            <div className="bg-yellow-900/20 border border-yellow-700/50 rounded-xl p-6 text-center">
+            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700/50 rounded-xl p-6 text-center">
               <span className="text-2xl mb-2 block">🚧</span>
-              <p className="text-yellow-200 text-sm">
+              <p className="text-yellow-700 dark:text-yellow-200 text-sm">
                 This tool is being migrated. Interactive version coming soon.
               </p>
             </div>
@@ -453,18 +304,18 @@ export default async function ToolPage({ params }: Props) {
         </section>
 
         {/* Privacy note */}
-        <p className="text-xs text-gray-600 text-center">
+        <p className="text-xs text-gray-400 dark:text-gray-500 text-center">
           🔒 100% client-side — your data never leaves your browser
         </p>
 
         {/* How to Use */}
         {meta.howToUse && meta.howToUse.length > 0 && (
-          <section aria-labelledby="how-to-heading" className="mt-10 pt-8 border-t border-gray-800">
-            <h2 id="how-to-heading" className="text-lg font-semibold text-white mb-4">How to Use</h2>
+          <section aria-labelledby="how-to-heading" className="mt-10 pt-8 border-t border-gray-200 dark:border-gray-800">
+            <h2 id="how-to-heading" className="text-lg font-semibold text-gray-900 dark:text-white mb-4">How to Use</h2>
             <ol className="space-y-2">
               {meta.howToUse.map((step, i) => (
-                <li key={i} className="flex gap-3 text-sm text-gray-300">
-                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-green-900/50 border border-green-700 flex items-center justify-center text-green-400 text-xs font-medium">
+                <li key={i} className="flex gap-3 text-sm text-gray-600 dark:text-gray-300">
+                  <span className="flex-shrink-0 w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/50 border border-green-200 dark:border-green-700 flex items-center justify-center text-green-700 dark:text-green-400 text-xs font-medium">
                     {i + 1}
                   </span>
                   {step}
@@ -476,13 +327,13 @@ export default async function ToolPage({ params }: Props) {
 
         {/* FAQ */}
         {meta.faqs && meta.faqs.length > 0 && (
-          <section aria-labelledby="faq-heading" className="mt-10 pt-8 border-t border-gray-800">
-            <h2 id="faq-heading" className="text-lg font-semibold text-white mb-4">FAQ</h2>
+          <section aria-labelledby="faq-heading" className="mt-10 pt-8 border-t border-gray-200 dark:border-gray-800">
+            <h2 id="faq-heading" className="text-lg font-semibold text-gray-900 dark:text-white mb-4">FAQ</h2>
             <dl className="space-y-4">
               {meta.faqs.map((faq, i) => (
                 <div key={i}>
-                  <dt className="text-sm font-medium text-white mb-1">{faq.question}</dt>
-                  <dd className="text-sm text-gray-400 leading-relaxed">{faq.answer}</dd>
+                  <dt className="text-sm font-medium text-gray-900 dark:text-white mb-1">{faq.question}</dt>
+                  <dd className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{faq.answer}</dd>
                 </div>
               ))}
             </dl>
@@ -500,10 +351,7 @@ export default async function ToolPage({ params }: Props) {
                 mainEntity: meta.faqs.map((faq) => ({
                   '@type': 'Question',
                   name: faq.question,
-                  acceptedAnswer: {
-                    '@type': 'Answer',
-                    text: faq.answer,
-                  },
+                  acceptedAnswer: { '@type': 'Answer', text: faq.answer },
                 })),
               }),
             }}
