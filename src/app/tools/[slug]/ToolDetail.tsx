@@ -3,6 +3,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import Link from 'next/link';
 import type { Tool } from '@/data/tools';
+import ShareButtons from '@/components/ShareButtons';
 
 // ─── Shared layout ───────────────────────────────────────────────────────────
 
@@ -541,6 +542,9 @@ export default function ToolDetail({ tool }: { tool: Tool }) {
           <span className="inline-block mt-2 text-xs font-medium text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-2.5 py-1 rounded-full border border-green-200 dark:border-green-800">
             {tool.category}
           </span>
+          <div className="mt-3">
+            <ShareButtons toolName={tool.name} />
+          </div>
         </div>
       </div>
 
