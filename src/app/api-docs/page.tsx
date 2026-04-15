@@ -21,16 +21,20 @@ export const metadata: Metadata = {
 const BASE_URL = 'https://toolblip-api-production.up.railway.app';
 const SWIFT_URL = 'https://api.toolblip.com';
 
-const SECTIONS = [
-  { num: '01', label: 'Authentication' },
-  { num: '02', label: 'Tools' },
-  { num: '03', label: 'MCP Servers' },
-  { num: '04', label: 'Rate Limits' },
+const ENDPOINTS = [
+  // Auth
+  { method: 'POST', path: '/api/auth/register', auth: false, group: 'auth' },
+  { method: 'POST', path: '/api/auth/login', auth: false, group: 'auth' },
+  { method: 'POST', path: '/api/auth/logout', auth: true, group: 'auth' },
+  { method: 'GET', path: '/api/auth/user', auth: true, group: 'auth' },
+  // Tools
+  { method: 'GET', path: '/api/tools', auth: false, group: 'tools' },
+  { method: 'GET', path: '/api/tools/{slug}', auth: false, group: 'tools' },
 ] as const;
 
 export default function ApiDocsPage() {
   return (
-    <div className="max-w-5xl mx-auto px-4 py-16">
+    <div className="max-w-4xl mx-auto px-4 py-16">
 
       {/* ── Hero ── */}
       <header className="mb-16">
@@ -47,68 +51,86 @@ export default function ApiDocsPage() {
           <UrlChip label="Base URL" url={BASE_URL} available />
           <UrlChip label="Swift URL" url={SWIFT_URL} available={false} />
         </div>
+      </header>
 
-        <div className="mt-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 flex gap-4 items-start">
-          <div className="text-blue-500 mt-0.5 shrink-0">🔑</div>
+      {/* ── Quick Reference ── */}
+      <section className="mb-14">
+        <h2 className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest font-semibold mb-4">
+          Quick Reference
+        </h2>
+        <div className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+                <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-20">Method</th>
+                <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Endpoint</th>
+                <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider w-28">Auth</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+              {ENDPOINTS.map(({ method, path, auth }) => (
+                <tr key={path} className="bg-white dark:bg-gray-950 hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors">
+                  <td className="px-4 py-3"><MethodBadge method={method} /></td>
+                  <td className="px-4 py-3 font-mono text-xs text-gray-700 dark:text-gray-300">{path}</td>
+                  <td className="px-4 py-3">{auth ? <AuthBadge /> : <PublicBadge />}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* ── Base URL ── */}
+      <section className="mb-14">
+        <SectionTitle>Base URL</SectionTitle>
+        <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 mt-3 font-mono text-sm text-gray-700 dark:text-gray-300">
+          {BASE_URL}
+        </div>
+        <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
+          Once SSL is ready, use <code className="font-mono bg-gray-100 dark:bg-gray-800 px-1 rounded">{SWIFT_URL}</code> instead.
+        </p>
+      </section>
+
+      {/* ── Authentication ── */}
+      <section className="mb-14">
+        <SectionTitle>Authentication</SectionTitle>
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-5 mt-3 flex gap-4 items-start">
+          <div className="text-blue-500 mt-0.5 shrink-0 text-lg">🔑</div>
           <div>
-            <p className="text-sm font-semibold text-blue-900 dark:text-blue-300">Bearer Token Authentication</p>
-            <p className="text-sm text-blue-700 dark:text-blue-400 mt-0.5">
+            <p className="text-sm font-semibold text-blue-900 dark:text-blue-300 mb-1">Bearer Token</p>
+            <p className="text-sm text-blue-700 dark:text-blue-400 leading-relaxed">
               Protected endpoints require a token from{' '}
               <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/40 px-1 py-0.5 rounded">/api/auth/register</code>{' '}
               or{' '}
               <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/40 px-1 py-0.5 rounded">/api/auth/login</code>.
-              Pass it as:{' '}
-              <code className="font-mono text-xs bg-blue-100 dark:bg-blue-900/40 px-1 py-0.5 rounded">
-                Authorization: Bearer tb_xxxx
-              </code>
+              Pass it as a header:
             </p>
+            <div className="mt-3 bg-white/60 dark:bg-black/20 rounded-lg px-3 py-2 font-mono text-xs text-blue-800 dark:text-blue-300 border border-blue-200 dark:border-blue-700">
+              Authorization: Bearer tb_xxxxxxxxxxxxxxxx
+            </div>
           </div>
         </div>
-      </header>
-
-      {/* ── Table of Contents ── */}
-      <nav className="mb-14 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5">
-        <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-widest font-semibold mb-3">On this page</p>
-        <ol className="space-y-1.5">
-          {SECTIONS.map(({ num, label }) => (
-            <li key={num}>
-              <a
-                href={`#section-${num}`}
-                className="text-sm text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-mono flex items-center gap-2"
-              >
-                <span className="text-gray-400 dark:text-gray-600">{num}</span>
-                <span className="text-gray-700 dark:text-gray-300 font-sans">{label}</span>
-              </a>
-            </li>
-          ))}
-        </ol>
-      </nav>
+      </section>
 
       {/* ══════════════════════════════════════════
-          SECTION 01 — Authentication
+          Auth Endpoints
       ══════════════════════════════════════════ */}
-      <SectionHeader number="01" title="Authentication" />
+      <section className="mb-14">
+        <SectionTitle>Auth Endpoints</SectionTitle>
+        <div className="space-y-8 mt-4">
 
-      <div className="space-y-2 mb-12">
-        <EndpointRow method="POST" path="/api/auth/register" auth={false} description="Create a new account" />
-        <EndpointRow method="POST" path="/api/auth/login" auth={false} description="Sign in and receive a Bearer token" />
-        <EndpointRow method="POST" path="/api/auth/logout" auth={true} description="Revoke the current token" />
-        <EndpointRow method="GET" path="/api/auth/user" auth={true} description="Get the authenticated user" />
-      </div>
-
-      <EndpointDetail
-        id="register"
-        method="POST"
-        path="/api/auth/register"
-        requiresAuth={false}
-        description="Create a new user account. Returns the user object and a Bearer token."
-        requestBody={`{
+          <EndpointDetail
+            method="POST"
+            path="/api/auth/register"
+            requiresAuth={false}
+            description="Create a new user account. Returns the user object and a Bearer token."
+            requestBody={`{
   "name": "Harun",
   "email": "harun@example.com",
   "password": "secret123",
   "password_confirmation": "secret123"
 }`}
-        response={`{
+            response={`{
   "user": {
     "id": 1,
     "name": "Harun",
@@ -117,7 +139,7 @@ export default function ApiDocsPage() {
   },
   "token": "tb_live_xxxxxxxxxxxxxxxx"
 }`}
-        curl={`curl -X POST ${BASE_URL}/api/auth/register \\
+            curl={`curl -X POST ${BASE_URL}/api/auth/register \\
   -H "Content-Type: application/json" \\
   -d '{
     "name": "Harun",
@@ -125,19 +147,18 @@ export default function ApiDocsPage() {
     "password": "secret123",
     "password_confirmation": "secret123"
   }'`}
-      />
+          />
 
-      <EndpointDetail
-        id="login"
-        method="POST"
-        path="/api/auth/login"
-        requiresAuth={false}
-        description="Sign in with email and password. Returns the user object and a Bearer token."
-        requestBody={`{
+          <EndpointDetail
+            method="POST"
+            path="/api/auth/login"
+            requiresAuth={false}
+            description="Sign in with email and password. Returns the user object and a Bearer token."
+            requestBody={`{
   "email": "harun@example.com",
   "password": "secret123"
 }`}
-        response={`{
+            response={`{
   "user": {
     "id": 1,
     "name": "Harun",
@@ -146,34 +167,32 @@ export default function ApiDocsPage() {
   },
   "token": "tb_live_xxxxxxxxxxxxxxxx"
 }`}
-        curl={`curl -X POST ${BASE_URL}/api/auth/login \\
+            curl={`curl -X POST ${BASE_URL}/api/auth/login \\
   -H "Content-Type: application/json" \\
   -d '{
     "email": "harun@example.com",
     "password": "secret123"
   }'`}
-      />
+          />
 
-      <EndpointDetail
-        id="logout"
-        method="POST"
-        path="/api/auth/logout"
-        requiresAuth={true}
-        description="Revoke the current Bearer token, invalidating the session."
-        response={`{
+          <EndpointDetail
+            method="POST"
+            path="/api/auth/logout"
+            requiresAuth={true}
+            description="Revoke the current Bearer token, invalidating the session."
+            response={`{
   "message": "Logged out successfully"
 }`}
-        curl={`curl -X POST ${BASE_URL}/api/auth/logout \\
+            curl={`curl -X POST ${BASE_URL}/api/auth/logout \\
   -H "Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx"`}
-      />
+          />
 
-      <EndpointDetail
-        id="user"
-        method="GET"
-        path="/api/auth/user"
-        requiresAuth={true}
-        description="Retrieve the currently authenticated user. Requires a valid Bearer token."
-        response={`{
+          <EndpointDetail
+            method="GET"
+            path="/api/auth/user"
+            requiresAuth={true}
+            description="Retrieve the currently authenticated user."
+            response={`{
   "user": {
     "id": 1,
     "name": "Harun",
@@ -181,30 +200,30 @@ export default function ApiDocsPage() {
     "is_pro": false
   }
 }`}
-        curl={`curl -X GET ${BASE_URL}/api/auth/user \\
+            curl={`curl -X GET ${BASE_URL}/api/auth/user \\
   -H "Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx"`}
-      />
+          />
+
+        </div>
+      </section>
 
       {/* ══════════════════════════════════════════
-          SECTION 02 — Tools
+          Tools Endpoints
       ══════════════════════════════════════════ */}
-      <SectionHeader number="02" title="Tools" />
-      <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-        Browse all developer tools in the Toolblip registry. All tools endpoints are public — no authentication required.
-      </p>
+      <section className="mb-14">
+        <SectionTitle>Tools Endpoints</SectionTitle>
+        <p className="text-gray-500 dark:text-gray-400 text-sm mt-2 mb-6">
+          All tools endpoints are public — no authentication required.
+        </p>
 
-      <div className="space-y-2 mb-12">
-        <EndpointRow method="GET" path="/api/tools" auth={false} description="List all tools" />
-        <EndpointRow method="GET" path="/api/tools/{slug}" auth={false} description="Get a single tool by slug" />
-      </div>
+        <div className="space-y-8">
 
-      <EndpointDetail
-        id="list-tools"
-        method="GET"
-        path="/api/tools"
-        requiresAuth={false}
-        description="Returns all tools in the registry, wrapped in a 'tools' key."
-        response={`{
+          <EndpointDetail
+            method="GET"
+            path="/api/tools"
+            requiresAuth={false}
+            description="Returns all tools in the registry, wrapped in a 'tools' key."
+            response={`{
   "tools": {
     "tools": [
       {
@@ -230,16 +249,15 @@ export default function ApiDocsPage() {
     ]
   }
 }`}
-        curl={`curl -X GET ${BASE_URL}/api/tools`}
-      />
+            curl={`curl -X GET ${BASE_URL}/api/tools`}
+          />
 
-      <EndpointDetail
-        id="get-tool"
-        method="GET"
-        path="/api/tools/{slug}"
-        requiresAuth={false}
-        description="Fetch a single tool by its URL-friendly slug identifier. Returns 404 if not found."
-        response={`{
+          <EndpointDetail
+            method="GET"
+            path="/api/tools/{slug}"
+            requiresAuth={false}
+            description="Fetch a single tool by its URL-friendly slug identifier. Returns 404 if not found."
+            response={`{
   "tool": {
     "id": 1,
     "slug": "claude-code",
@@ -251,91 +269,27 @@ export default function ApiDocsPage() {
     "created_at": "2026-01-01T00:00:00Z"
   }
 }`}
-        curl={`curl -X GET ${BASE_URL}/api/tools/claude-code`}
-      />
+            curl={`curl -X GET ${BASE_URL}/api/tools/claude-code`}
+          />
 
-      {/* ══════════════════════════════════════════
-          SECTION 03 — MCP Servers
-      ══════════════════════════════════════════ */}
-      <SectionHeader number="03" title="MCP Servers" />
-      <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-        Discover MCP (Model Context Protocol) servers. All MCP endpoints are public — no authentication required.
-      </p>
-
-      <div className="space-y-2 mb-12">
-        <EndpointRow method="GET" path="/api/mcp/servers" auth={false} description="List all MCP servers" />
-        <EndpointRow method="GET" path="/api/mcp/servers/{slug}" auth={false} description="Get a single MCP server by slug" />
-      </div>
-
-      <EndpointDetail
-        id="list-mcp-servers"
-        method="GET"
-        path="/api/mcp/servers"
-        requiresAuth={false}
-        description="Returns all MCP servers in the registry, wrapped in a 'servers' key."
-        response={`{
-  "servers": {
-    "servers": [
-      {
-        "id": 1,
-        "slug": "filesystem",
-        "name": "Filesystem",
-        "description": "MCP server for local filesystem operations",
-        "category": "utilities",
-        "url": "https://github.com/modelcontextprotocol/servers/tree/main/filesystem",
-        "created_at": "2026-01-01T00:00:00Z"
-      },
-      {
-        "id": 2,
-        "slug": "github",
-        "name": "GitHub",
-        "description": "MCP server for the GitHub API",
-        "category": "integrations",
-        "url": "https://github.com/modelcontextprotocol/servers/tree/main/github",
-        "created_at": "2026-01-10T00:00:00Z"
-      }
-    ]
-  }
-}`}
-        curl={`curl -X GET ${BASE_URL}/api/mcp/servers`}
-      />
-
-      <EndpointDetail
-        id="get-mcp-server"
-        method="GET"
-        path="/api/mcp/servers/{slug}"
-        requiresAuth={false}
-        description="Fetch a single MCP server by its URL-friendly slug identifier. Returns 404 if not found."
-        response={`{
-  "server": {
-    "id": 1,
-    "slug": "filesystem",
-    "name": "Filesystem",
-    "description": "MCP server for local filesystem operations",
-    "category": "utilities",
-    "url": "https://github.com/modelcontextprotocol/servers/tree/main/filesystem",
-    "created_at": "2026-01-01T00:00:00Z"
-  }
-}`}
-        curl={`curl -X GET ${BASE_URL}/api/mcp/servers/filesystem`}
-      />
-
-      {/* ══════════════════════════════════════════
-          SECTION 04 — Rate Limits
-      ══════════════════════════════════════════ */}
-      <SectionHeader number="04" title="Rate Limits" />
-
-      <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4 flex gap-4 items-start mb-10">
-        <div className="text-amber-500 mt-0.5 shrink-0">⚡</div>
-        <div>
-          <p className="text-sm font-semibold text-amber-900 dark:text-amber-300">Rate Limits</p>
-          <p className="text-sm text-amber-700 dark:text-amber-400 mt-0.5">
-            Authenticated endpoints: <strong>60 requests/minute</strong>. Public read endpoints are more generous. If you hit a limit, you&apos;ll receive a{' '}
-            <code className="font-mono text-xs bg-amber-100 dark:bg-amber-900/40 px-1 py-0.5 rounded">429 Too Many Requests</code>{' '}
-            response. Back off and retry.
-          </p>
         </div>
-      </div>
+      </section>
+
+      {/* ── Rate Limits ── */}
+      <section className="mb-14">
+        <SectionTitle>Rate Limits</SectionTitle>
+        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-5 mt-3 flex gap-4 items-start">
+          <div className="text-amber-500 mt-0.5 shrink-0 text-lg">⚡</div>
+          <div>
+            <p className="text-sm font-semibold text-amber-900 dark:text-amber-300 mb-1">Rate Limits</p>
+            <p className="text-sm text-amber-700 dark:text-amber-400 leading-relaxed">
+              Authenticated endpoints: <strong>60 requests/minute</strong>. Public read endpoints are more generous. If you hit a limit, you&apos;ll receive a{' '}
+              <code className="font-mono text-xs bg-amber-100 dark:bg-amber-900/40 px-1 py-0.5 rounded">429 Too Many Requests</code>{' '}
+              response. Back off and retry.
+            </p>
+          </div>
+        </div>
+      </section>
 
       {/* ── Footer ── */}
       <footer className="mt-20 pt-8 border-t border-gray-200 dark:border-gray-800 text-center">
@@ -355,57 +309,48 @@ export default function ApiDocsPage() {
 
 // ─── Components ────────────────────────────────────────────
 
-function SectionHeader({ number, title }: { number: string; title: string }) {
+function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h2
-      id={`section-${number}`}
-      className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-3 scroll-mt-8"
-    >
-      <span className="text-green-600 dark:text-green-400 text-sm font-mono bg-green-100 dark:bg-green-900/30 px-2 py-0.5 rounded">
-        {number}
-      </span>
-      {title}
+    <h2 className="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+      <span className="w-1 h-5 bg-green-500 rounded-full shrink-0" />
+      {children}
     </h2>
   );
 }
 
-function EndpointRow({
-  method,
-  path,
-  auth,
-  description,
-}: {
-  method: string;
-  path: string;
-  auth: boolean;
-  description: string;
-}) {
-  const colors: Record<string, string> = {
-    GET: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400',
-    POST: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400',
-    PUT: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400',
-    PATCH: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400',
-    DELETE: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400',
-  };
+const METHOD_COLORS: Record<string, string> = {
+  GET:    'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400',
+  POST:   'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400',
+  PUT:    'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400',
+  PATCH:  'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400',
+  DELETE: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400',
+};
 
+function MethodBadge({ method }: { method: string }) {
   return (
-    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 flex items-center gap-4">
-      <span className={`${colors[method] || ''} text-xs font-mono font-bold px-2 py-0.5 rounded shrink-0`}>
-        {method}
-      </span>
-      <code className="text-gray-700 dark:text-gray-300 text-xs font-mono shrink-0">{path}</code>
-      <span className="text-gray-500 dark:text-gray-400 text-xs flex-1">{description}</span>
-      {auth ? (
-        <span className="text-xs text-amber-600 dark:text-amber-400 shrink-0">🔒 auth</span>
-      ) : (
-        <span className="text-xs text-gray-400 dark:text-gray-600 shrink-0">public</span>
-      )}
-    </div>
+    <span className={`${METHOD_COLORS[method]} text-xs font-mono font-bold px-2 py-0.5 rounded inline-block`}>
+      {method}
+    </span>
+  );
+}
+
+function AuthBadge() {
+  return (
+    <span className="inline-flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 px-2 py-0.5 rounded">
+      🔒 auth
+    </span>
+  );
+}
+
+function PublicBadge() {
+  return (
+    <span className="inline-flex items-center gap-1 text-xs text-gray-400 dark:text-gray-600 bg-gray-50 dark:bg-gray-900 px-2 py-0.5 rounded">
+      public
+    </span>
   );
 }
 
 interface EndpointDetailProps {
-  id: string;
   method: string;
   path: string;
   requiresAuth: boolean;
@@ -416,7 +361,6 @@ interface EndpointDetailProps {
 }
 
 function EndpointDetail({
-  id,
   method,
   path,
   requiresAuth,
@@ -425,52 +369,41 @@ function EndpointDetail({
   response,
   curl,
 }: EndpointDetailProps) {
-  const methodColors: Record<string, string> = {
-    GET: 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400',
-    POST: 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400',
-    PUT: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400',
-    PATCH: 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400',
-    DELETE: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400',
-  };
-
   return (
-    <section id={id} className="mb-14 scroll-mt-8">
-      {/* Method + path header */}
-      <div className="flex items-center gap-3 mb-3">
-        <span className={`${methodColors[method]} text-xs font-mono font-bold px-2 py-0.5 rounded`}>
+    <div className="border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
+      {/* Header */}
+      <div className="bg-gray-50 dark:bg-gray-900 px-5 py-4 flex items-center gap-3 border-b border-gray-200 dark:border-gray-800">
+        <span className={`${METHOD_COLORS[method]} text-xs font-mono font-bold px-2 py-0.5 rounded shrink-0`}>
           {method}
         </span>
         <code className="text-gray-900 dark:text-white text-sm font-mono">{path}</code>
-        {requiresAuth && (
-          <span className="text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 px-2 py-0.5 rounded">
-            🔒 requires auth
-          </span>
-        )}
+        {requiresAuth && <AuthBadge />}
       </div>
 
-      <p className="text-gray-500 dark:text-gray-400 text-sm mb-5">{description}</p>
+      {/* Body */}
+      <div className="p-5">
+        <p className="text-gray-500 dark:text-gray-400 text-sm mb-5">{description}</p>
 
-      {/* Body + Response grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        {requestBody ? (
-          <Card label="Request body">
-            <CodeBlock code={requestBody} />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          {requestBody ? (
+            <Card label="Request body">
+              <CodeBlock code={requestBody} />
+            </Card>
+          ) : (
+            <Card label="Headers">
+              <CodeBlock code="Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx" />
+            </Card>
+          )}
+          <Card label="Response">
+            <CodeBlock code={response} />
           </Card>
-        ) : (
-          <Card label="Headers">
-            <CodeBlock code={`Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx`} />
-          </Card>
-        )}
-        <Card label="Response">
-          <CodeBlock code={response} />
+        </div>
+
+        <Card label="curl">
+          <CodeBlock code={curl} />
         </Card>
       </div>
-
-      {/* curl */}
-      <Card label="curl">
-        <CodeBlock code={curl} />
-      </Card>
-    </section>
+    </div>
   );
 }
 
