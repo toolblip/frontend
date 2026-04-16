@@ -36,7 +36,7 @@ export default function ThemeToggle() {
         onClick={() => setOpen((o) => !o)}
         aria-label="Change theme"
         aria-expanded={open}
-        className="flex items-center justify-center w-8 h-8 text-gray-400 hover:text-white transition-colors rounded-md hover:bg-white/10"
+        className="flex items-center justify-center w-9 h-9 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white border border-gray-300 dark:border-gray-600 rounded-lg hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
         dangerouslySetInnerHTML={{ __html: icons[theme] }}
       />
 

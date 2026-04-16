@@ -51,7 +51,7 @@ export default function RootLayout({
 
         <ThemeProvider>
         {/* Nav */}
-        <header className="bg-[#0f1117] sticky top-0 z-50">
+        <header className="bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50">
           <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
             {/* Logo */}
             <a href="/" className="flex items-center gap-2.5 flex-shrink-0">
@@ -60,16 +60,16 @@ export default function RootLayout({
 
             {/* Nav links - center */}
             <nav aria-label="Main navigation" className="hidden md:flex items-center gap-8 text-sm">
-              <a href="/tools" className="text-gray-400 hover:text-white transition-colors">
+              <a href="/tools" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
                 All Tools
               </a>
-              <a href="/directory" className="text-gray-400 hover:text-white transition-colors">
+              <a href="/directory" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
                 Directory
               </a>
-              <a href="/blog" className="text-gray-400 hover:text-white transition-colors">
+              <a href="/blog" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
                 Blog
               </a>
-              <a href="/api-docs" className="text-gray-400 hover:text-white transition-colors">
+              <a href="/api-docs" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">
                 API Docs
               </a>
             </nav>
