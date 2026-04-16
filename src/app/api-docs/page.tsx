@@ -15,6 +15,7 @@ export const metadata: Metadata = {
 };
 
 const BASE_URL = 'https://toolblip-api-production.up.railway.app';
+const CLEAN_URL = 'https://api.toolblip.com';
 
 export default function ApiDocsPage() {
   return (
@@ -27,7 +28,7 @@ export default function ApiDocsPage() {
             REST API v1
           </span>
           <h1 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Toolblip API Reference</h1>
-          <span className="ml-auto text-xs text-green-600 dark:text-green-400 font-mono font-semibold hidden sm:block">
+          <span className="ml-auto hidden sm:block text-xs font-mono text-green-600 dark:text-green-400 font-semibold">
             {BASE_URL}
           </span>
         </div>
@@ -40,12 +41,12 @@ export default function ApiDocsPage() {
           <nav className="sticky top-28 space-y-0.5 text-sm">
             <p className="px-3 py-2 text-[10px] font-bold text-gray-400 dark:text-gray-600 uppercase tracking-widest mb-2">On this page</p>
             {[
-              { id: 'overview',         label: 'Overview' },
+              { id: 'overview',        label: 'Overview' },
               { id: 'authentication',  label: 'Authentication' },
-              { id: 'tools',            label: 'Tools' },
-              { id: 'auth-endpoints',   label: 'Auth' },
-              { id: 'errors',           label: 'Errors' },
-              { id: 'rate-limits',      label: 'Rate Limits' },
+              { id: 'tools',           label: 'Tools' },
+              { id: 'auth-endpoints',  label: 'Auth' },
+              { id: 'errors',          label: 'Errors' },
+              { id: 'rate-limits',     label: 'Rate Limits' },
             ].map(({ id, label }) => (
               <a
                 key={id}
@@ -80,14 +81,15 @@ export default function ApiDocsPage() {
             <SectionHeading>Overview</SectionHeading>
             <p className="text-gray-500 dark:text-gray-400 leading-relaxed mb-8">
               The Toolblip API is a free REST API for browsing developer tools and managing user accounts.
-              All endpoints return JSON. No API key is required for public read endpoints — register an account to obtain a Bearer token for authenticated routes.
+              All endpoints return JSON. Public read endpoints require no authentication —
+              register an account to get a Bearer token for protected routes.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
               <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-2xl p-4">
                 <p className="text-[10px] font-bold text-green-700 dark:text-green-400 uppercase tracking-widest mb-2">Base URL (active)</p>
                 <code className="text-sm font-mono text-green-700 dark:text-green-400 break-all leading-relaxed">
-                  https://toolblip-api-production.up.railway.app
+                  {BASE_URL}
                 </code>
               </div>
               <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4">
@@ -95,7 +97,7 @@ export default function ApiDocsPage() {
                   Clean domain <span className="text-gray-400 italic font-normal normal-case ml-1">(SSL pending)</span>
                 </p>
                 <code className="text-sm font-mono text-gray-500 dark:text-gray-500 break-all leading-relaxed">
-                  https://api.toolblip.com
+                  {CLEAN_URL}
                 </code>
               </div>
             </div>
@@ -135,6 +137,7 @@ export default function ApiDocsPage() {
             </p>
             <CodeBlock
               code={`Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx`}
+              title="Header (all authenticated requests)"
             />
           </section>
 
@@ -154,33 +157,8 @@ export default function ApiDocsPage() {
                 path="/api/tools"
                 auth={false}
                 status={200}
-                description="Returns a paginated list of all tools in the registry."
-                response={`{
-  "tools": {
-    "tools": [
-      {
-        "id": 1,
-        "slug": "claude-code",
-        "name": "Claude Code",
-        "description": "AI coding assistant by Anthropic",
-        "category": "AI",
-        "is_pro": false,
-        "emoji": "🤖",
-        "created_at": "2026-01-01T00:00:00Z"
-      },
-      {
-        "id": 2,
-        "slug": "cursor",
-        "name": "Cursor",
-        "description": "AI-first code editor built around pair programming",
-        "category": "AI",
-        "is_pro": true,
-        "emoji": "💻",
-        "created_at": "2026-01-15T00:00:00Z"
-      }
-    ]
-  }
-}`}
+                description="Returns a list of all tools in the registry."
+                response={LIST_RESPONSE}
                 curl={`curl -X GET ${BASE_URL}/api/tools`}
               />
 
@@ -192,18 +170,7 @@ export default function ApiDocsPage() {
                 auth={false}
                 status={200}
                 description="Fetch a single tool by its slug. Returns 404 if not found."
-                response={`{
-  "tool": {
-    "id": 1,
-    "slug": "claude-code",
-    "name": "Claude Code",
-    "description": "AI coding assistant by Anthropic",
-    "category": "AI",
-    "is_pro": false,
-    "emoji": "🤖",
-    "created_at": "2026-01-01T00:00:00Z"
-  }
-}`}
+                response={TOOL_RESPONSE}
                 curl={`curl -X GET ${BASE_URL}/api/tools/claude-code`}
               />
 
@@ -224,21 +191,8 @@ export default function ApiDocsPage() {
                 auth={false}
                 status={201}
                 description="Create a new user account. Returns the user object and a Bearer token."
-                body={`{
-  "name": "Harun",
-  "email": "harun@example.com",
-  "password": "secret123",
-  "password_confirmation": "secret123"
-}`}
-                response={`{
-  "user": {
-    "id": 1,
-    "name": "Harun",
-    "email": "harun@example.com",
-    "is_pro": false
-  },
-  "token": "tb_live_xxxxxxxxxxxxxxxx"
-}`}
+                body={REGISTER_BODY}
+                response={REGISTER_RESPONSE}
                 curl={`curl -X POST ${BASE_URL}/api/auth/register \\
   -H "Content-Type: application/json" \\
   -d '{"name":"Harun","email":"harun@example.com","password":"secret123","password_confirmation":"secret123"}'`}
@@ -252,19 +206,8 @@ export default function ApiDocsPage() {
                 auth={false}
                 status={200}
                 description="Sign in with email and password. Returns the user object and a Bearer token."
-                body={`{
-  "email": "harun@example.com",
-  "password": "secret123"
-}`}
-                response={`{
-  "user": {
-    "id": 1,
-    "name": "Harun",
-    "email": "harun@example.com",
-    "is_pro": false
-  },
-  "token": "tb_live_xxxxxxxxxxxxxxxx"
-}`}
+                body={LOGIN_BODY}
+                response={REGISTER_RESPONSE}
                 curl={`curl -X POST ${BASE_URL}/api/auth/login \\
   -H "Content-Type: application/json" \\
   -d '{"email":"harun@example.com","password":"secret123"}'`}
@@ -293,14 +236,7 @@ export default function ApiDocsPage() {
                 auth={true}
                 status={200}
                 description="Retrieve the currently authenticated user."
-                response={`{
-  "user": {
-    "id": 1,
-    "name": "Harun",
-    "email": "harun@example.com",
-    "is_pro": false
-  }
-}`}
+                response={USER_RESPONSE}
                 curl={`curl -X GET ${BASE_URL}/api/auth/user \\
   -H "Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx"`}
               />
@@ -312,21 +248,20 @@ export default function ApiDocsPage() {
           <section id="errors" className="scroll-mt-20">
             <SectionHeading>Error Responses</SectionHeading>
             <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
-              All errors return a JSON body with a <InlineCode>message</InlineCode> field, and optionally
-              an <InlineCode>errors</InlineCode> object for validation failures.
+              All errors return a JSON body with a <InlineCode>message</InlineCode> field,
+              and optionally an <InlineCode>errors</InlineCode> object for validation failures.
             </p>
-            <div className="mb-6">
-              <CodeBlock
-                code={`{
+            <CodeBlock
+              code={`{
   "message": "The given data was invalid.",
   "errors": {
     "email": ["The email field is required."],
     "password": ["The password field is required."]
   }
 }`}
-              />
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              title="422 Unprocessable Entity"
+            />
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-6">
               {ERROR_CODES.map(({ code, label, color }) => (
                 <div key={code} className="flex items-center gap-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3">
                   <span className={`font-mono font-bold text-sm ${color}`}>{code}</span>
@@ -368,22 +303,95 @@ export default function ApiDocsPage() {
   );
 }
 
+// ─── Shared response snippets ───────────────────────────────
+
+const LIST_RESPONSE = `{
+  "tools": {
+    "tools": [
+      {
+        "id": 1,
+        "slug": "claude-code",
+        "name": "Claude Code",
+        "description": "AI coding assistant by Anthropic",
+        "category": "AI",
+        "is_pro": false,
+        "emoji": "🤖",
+        "created_at": "2026-01-01T00:00:00Z"
+      },
+      {
+        "id": 2,
+        "slug": "cursor",
+        "name": "Cursor",
+        "description": "AI-first code editor built around pair programming",
+        "category": "AI",
+        "is_pro": true,
+        "emoji": "💻",
+        "created_at": "2026-01-15T00:00:00Z"
+      }
+    ]
+  }
+}`;
+
+const TOOL_RESPONSE = `{
+  "tool": {
+    "id": 1,
+    "slug": "claude-code",
+    "name": "Claude Code",
+    "description": "AI coding assistant by Anthropic",
+    "category": "AI",
+    "is_pro": false,
+    "emoji": "🤖",
+    "created_at": "2026-01-01T00:00:00Z"
+  }
+}`;
+
+const REGISTER_BODY = `{
+  "name": "Harun",
+  "email": "harun@example.com",
+  "password": "secret123",
+  "password_confirmation": "secret123"
+}`;
+
+const LOGIN_BODY = `{
+  "email": "harun@example.com",
+  "password": "secret123"
+}`;
+
+const REGISTER_RESPONSE = `{
+  "user": {
+    "id": 1,
+    "name": "Harun",
+    "email": "harun@example.com",
+    "is_pro": false
+  },
+  "token": "tb_live_xxxxxxxxxxxxxxxx"
+}`;
+
+const USER_RESPONSE = `{
+  "user": {
+    "id": 1,
+    "name": "Harun",
+    "email": "harun@example.com",
+    "is_pro": false
+  }
+}`;
+
 // ─── Data ───────────────────────────────────────────────────
 
 const ENDPOINTS = [
-  { id: 'tools-list',    method: 'GET',  path: '/api/tools',           auth: false, desc: 'List all tools' },
-  { id: 'tools-detail',  method: 'GET',  path: '/api/tools/:slug',     auth: false, desc: 'Get a tool' },
-  { id: 'auth-register', method: 'POST', path: '/api/auth/register',   auth: false, desc: 'Create account' },
-  { id: 'auth-login',    method: 'POST', path: '/api/auth/login',       auth: false, desc: 'Sign in' },
-  { id: 'auth-logout',   method: 'POST', path: '/api/auth/logout',      auth: true,  desc: 'Revoke session' },
-  { id: 'auth-user',     method: 'GET',  path: '/api/auth/user',        auth: true,  desc: 'Current user' },
+  { id: 'tools-list',    method: 'GET',  path: '/api/tools',         auth: false, desc: 'List all tools' },
+  { id: 'tools-detail',  method: 'GET',  path: '/api/tools/{slug}', auth: false, desc: 'Get a tool' },
+  { id: 'auth-register', method: 'POST', path: '/api/auth/register', auth: false, desc: 'Create account' },
+  { id: 'auth-login',    method: 'POST', path: '/api/auth/login',    auth: false, desc: 'Sign in' },
+  { id: 'auth-logout',   method: 'POST', path: '/api/auth/logout',   auth: true,  desc: 'Revoke session' },
+  { id: 'auth-user',     method: 'GET',  path: '/api/auth/user',    auth: true,  desc: 'Current user' },
 ] as const;
 
 const ERROR_CODES = [
   { code: 400, label: 'Bad Request',       color: 'text-red-500'   },
-  { code: 401, label: 'Unauthorized',      color: 'text-red-500'   },
-  { code: 403, label: 'Forbidden',         color: 'text-amber-500' },
-  { code: 404, label: 'Not Found',         color: 'text-gray-500'  },
+  { code: 401, label: 'Unauthorized',     color: 'text-red-500'   },
+  { code: 403, label: 'Forbidden',        color: 'text-amber-500' },
+  { code: 404, label: 'Not Found',        color: 'text-gray-500'  },
   { code: 422, label: 'Validation Error', color: 'text-yellow-600'},
   { code: 429, label: 'Too Many Requests', color: 'text-amber-500' },
   { code: 500, label: 'Server Error',      color: 'text-red-600'   },
@@ -468,6 +476,7 @@ function EndpointCard({ id, method, path, auth, status, description, body, respo
 
         <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{description}</p>
 
+        {/* Body + Response side by side */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {body ? (
             <div>
@@ -486,6 +495,7 @@ function EndpointCard({ id, method, path, auth, status, description, body, respo
           </div>
         </div>
 
+        {/* curl */}
         <div>
           <p className="text-[10px] text-gray-400 dark:text-gray-600 uppercase tracking-widest font-bold mb-2 px-1">curl</p>
           <CodeBlock code={curl} />
