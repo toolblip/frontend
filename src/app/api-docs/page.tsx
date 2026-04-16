@@ -61,7 +61,15 @@ export default function ApiDocsPage() {
             <div className="pt-6 pb-2">
               <p className="px-3 py-2 text-[10px] font-bold text-gray-400 dark:text-gray-600 uppercase tracking-widest mb-2">Endpoints</p>
             </div>
-            {ENDPOINTS.map(({ id, method, path }) => (
+            {[
+              { id: 'tools-list',     method: 'GET',  path: '/api/tools'       },
+              { id: 'tools-detail',   method: 'GET',  path: '/api/tools/{slug}' },
+              { id: 'mcp-servers-list', method: 'GET', path: '/api/mcp/servers' },
+              { id: 'auth-register',  method: 'POST', path: '/api/auth/register' },
+              { id: 'auth-login',     method: 'POST', path: '/api/auth/login'    },
+              { id: 'auth-logout',    method: 'POST', path: '/api/auth/logout'   },
+              { id: 'auth-user',      method: 'GET',  path: '/api/auth/user'     },
+            ].map(({ id, method, path }) => (
               <a
                 key={id}
                 href={`#${id}`}
@@ -420,13 +428,13 @@ export default function ApiDocsPage() {
 // ─── Data ───────────────────────────────────────────────────
 
 const ENDPOINTS = [
-  { id: 'tools-list',     method: 'GET',  path: '/api/tools',          auth: false, desc: 'List all tools' },
-  { id: 'tools-detail',   method: 'GET',  path: '/api/tools/{slug}',   auth: false, desc: 'Get a tool' },
-  { id: 'mcp-servers',    method: 'GET',  path: '/api/mcp/servers',    auth: false, desc: 'List MCP servers' },
-  { id: 'auth-register',  method: 'POST', path: '/api/auth/register', auth: false, desc: 'Create account' },
-  { id: 'auth-login',     method: 'POST', path: '/api/auth/login',     auth: false, desc: 'Sign in' },
-  { id: 'auth-logout',    method: 'POST', path: '/api/auth/logout',    auth: true,  desc: 'Revoke session' },
-  { id: 'auth-user',      method: 'GET',  path: '/api/auth/user',      auth: true,  desc: 'Current user' },
+  { id: 'tools-list',       method: 'GET',  path: '/api/tools',          auth: false, desc: 'List all tools' },
+  { id: 'tools-detail',     method: 'GET',  path: '/api/tools/{slug}',   auth: false, desc: 'Get a tool' },
+  { id: 'mcp-servers-list', method: 'GET',  path: '/api/mcp/servers',    auth: false, desc: 'List MCP servers' },
+  { id: 'auth-register',    method: 'POST', path: '/api/auth/register',   auth: false, desc: 'Create account' },
+  { id: 'auth-login',       method: 'POST', path: '/api/auth/login',      auth: false, desc: 'Sign in' },
+  { id: 'auth-logout',      method: 'POST', path: '/api/auth/logout',    auth: true,  desc: 'Revoke session' },
+  { id: 'auth-user',        method: 'GET',  path: '/api/auth/user',      auth: true,  desc: 'Current user' },
 ] as const;
 
 const ERROR_CODES = [
