@@ -35,6 +35,11 @@ import UnitConverterClient from '@/components/tools/UnitConverterClient';
 import NumberBaseConverterClient from '@/components/tools/NumberBaseConverterClient';
 import ReadabilityScoreClient from '@/components/tools/ReadabilityScoreClient';
 import SerpPreviewClient from '@/components/tools/SerpPreviewClient';
+import GrammarCheckerClient from '@/components/tools/GrammarCheckerClient';
+import FaviconGeneratorClient from '@/components/tools/FaviconGeneratorClient';
+import ImageResizerClient from '@/components/tools/ImageResizerClient';
+import CronGeneratorClient from '@/components/tools/CronGeneratorClient';
+import HttpHeadersViewerClient from '@/components/tools/HttpHeadersViewerClient';
 
 // ─── Not Found ────────────────────────────────────────────────────────────────
 
@@ -133,6 +138,11 @@ function ToolRouter({ tool }: { tool: Tool }) {
     case 'meta-tag-generator':     return <MetaTagGeneratorClient />;
     case 'color-picker':          return <ColorPickerClient />;
     case 'serp-preview':           return <SerpPreviewClient />;
+    case 'grammar-checker':         return <GrammarCheckerClient />;
+    case 'favicon-generator':       return <FaviconGeneratorClient />;
+    case 'image-resizer':           return <ImageResizerClient />;
+    case 'cron-generator':          return <CronGeneratorClient />;
+    case 'http-headers-viewer':     return <HttpHeadersViewerClient />;
 
     default:                       return <ComingSoon toolName={tool.name} />;
   }

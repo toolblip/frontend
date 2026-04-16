@@ -1,0 +1,9 @@
+[build]
+builder = "NIXPACKS"
+
+[deploy]
+startCommand = "npm start"
+healthcareCommand = "curl -f http://localhost:3000"
+
+[alias]
+environment = "production"
