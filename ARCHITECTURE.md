@@ -5,16 +5,16 @@
 ```
 Cloudflare (CDN/DNS)
      ↓
-Vercel (Next.js frontend)
+Vercel (Next.js frontend)  →  https://toolblip.com
      ↓ API
-Railway (Laravel backend)
+Railway (Laravel backend)  →  https://api.toolblip.com
      ↓
 PostgreSQL + Redis
 ```
 
 - **Cloudflare** — DNS management, CDN, SSL termination, proxy layer
 - **Vercel** — Next.js frontend hosting, edge deployment, auto-scaling
-- **Railway** — Laravel API hosting, ephemeral compute, easy scaling
+- **Railway** — Laravel API hosting at api.toolblip.com (verified 2026-04-16)
 - **PostgreSQL** — primary relational database (users, tools, mcp_servers)
 - **Redis** — caching, rate limiting, session storage
 
