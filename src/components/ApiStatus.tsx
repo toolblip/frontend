@@ -33,7 +33,7 @@ export default function ApiStatus() {
   }, []);
 
   return (
-    <div className="flex items-center gap-1.5" title={`API: ${state === 'checking' ? 'Checking...' : state === 'online' ? 'Online' : 'Offline — browsing in guest mode'}`}>
+    <div className="flex items-center gap-1.5" title={`API: ${state === 'checking' ? 'Checking...' : state === 'online' ? 'Online' : 'Offline'}`}>
       <span
         className={`w-2 h-2 rounded-full inline-block ${
           state === 'checking'
@@ -44,7 +44,7 @@ export default function ApiStatus() {
         }`}
       />
       <span className="text-xs text-gray-400 dark:text-gray-500 hidden sm:inline">
-        {state === 'checking' ? 'Checking...' : state === 'online' ? 'API Online' : 'Guest Mode'}
+        {state === 'checking' ? 'Checking...' : state === 'online' ? 'API Online' : 'Offline'}
       </span>
     </div>
   );
