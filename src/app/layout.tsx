@@ -55,7 +55,8 @@ export default function RootLayout({
           <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
             {/* Logo */}
             <a href="/" className="flex items-center gap-2.5 flex-shrink-0">
-              <img src="/logos/logo.png" alt="Toolblip" className="h-7 w-auto object-contain" />
+              <img src="/logos/logo.png" alt="Toolblip" className="h-7 w-auto object-contain dark:hidden" />
+              <img src="/logos/logo-dark.png" alt="Toolblip" className="h-7 w-auto object-contain hidden dark:block" />
             </a>
 
             {/* Nav links - center */}

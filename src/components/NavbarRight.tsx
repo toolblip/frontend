@@ -35,7 +35,7 @@ export default function NavbarRight() {
       <div className="relative">
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="flex items-center gap-2 text-sm text-gray-300 hover:text-white transition-colors"
+          className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
           aria-expanded={menuOpen}
         >
           <span className="w-7 h-7 rounded-full bg-green-600 flex items-center justify-center text-white text-xs font-semibold uppercase">
@@ -48,13 +48,13 @@ export default function NavbarRight() {
         </button>
 
         {menuOpen && (
-          <div className="absolute right-0 mt-2 w-44 bg-[#1a1d27] border border-gray-700 rounded-lg shadow-xl py-1 z-50">
-            <div className="px-3 py-2 border-b border-gray-700">
-              <p className="text-xs text-gray-400 truncate">{user.email}</p>
+          <div className="absolute right-0 mt-2 w-44 bg-white dark:bg-[#1a1d27] border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-1 z-50">
+            <div className="px-3 py-2 border-b border-gray-200 dark:border-gray-700">
+              <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
             </div>
             <button
               onClick={handleLogout}
-              className="w-full text-left px-3 py-2 text-sm text-gray-300 hover:bg-white/5 hover:text-white transition-colors"
+              className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
             >
               Sign out
             </button>
@@ -69,7 +69,7 @@ export default function NavbarRight() {
     <div className="flex items-center gap-2">
       <Link
         href="/login"
-        className="text-sm text-gray-400 hover:text-white transition-colors px-3 py-1.5"
+        className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors px-3 py-1.5"
       >
         Sign in
       </Link>
