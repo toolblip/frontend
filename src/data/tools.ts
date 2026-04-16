@@ -11,7 +11,6 @@ export const tools: Tool[] = [
   { name: 'Character Counter', slug: 'character-counter', description: 'Count characters with Twitter, LinkedIn, and meta tag limit indicators.', emoji: '🔢', category: 'Text' },
   { name: 'Remove Duplicate Lines', slug: 'remove-duplicate-lines', description: 'Paste text, remove duplicate lines in one click. Case-sensitive option included.', emoji: '🗑️', category: 'Text' },
   { name: 'Case Converter', slug: 'case-converter', description: 'Convert text between UPPERCASE, lowercase, camelCase, snake_case, and more.', emoji: '✏️', category: 'Text' },
-  { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-generator', description: 'Generate placeholder Lorem Ipsum text in paragraphs, sentences, or list format.', emoji: '📜', category: 'Text' },
   { name: 'Grammar Checker', slug: 'grammar-checker', description: 'Check spelling and grammar errors in your text with suggestions and corrections.', emoji: '✅', category: 'Text' },
   { name: 'Readability Score', slug: 'readability-score', description: 'Calculate Flesch-Kincaid and other readability scores for your text content.', emoji: '📊', category: 'Text' },
   { name: 'TextSorter', slug: 'text-sorter', description: 'Sort lines alphabetically, reverse, case-insensitive, or by length in one click.', emoji: '🔃', category: 'Text' },
