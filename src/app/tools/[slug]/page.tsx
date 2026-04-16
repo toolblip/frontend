@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { tools } from '@/data/tools';
+import ShareButtons from '@/components/ShareButtons';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -32,6 +33,9 @@ export default async function ToolDetailPage({ params }: PageProps) {
         <p className="text-gray-500 dark:text-gray-400 text-base leading-relaxed">
           {tool.description}
         </p>
+        <div className="mt-3">
+          <ShareButtons toolName={tool.name} />
+        </div>
       </div>
 
       {/* Tool UI */}
