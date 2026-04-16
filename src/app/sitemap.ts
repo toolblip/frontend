@@ -2,28 +2,41 @@ import { MetadataRoute } from 'next';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
-import { tools } from '@/data/tools';
+
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://toolblip.com';
+
+// Tool slugs for sitemap — kept in sync with src/data/tools.ts
+const TOOL_SLUGS = [
+  'word-counter','character-counter','remove-duplicate-lines','case-converter',
+  'lorem-ipsum-generator','regex-tester','json-formatter','base64',
+  'url-encode','image-cropper','image-format-converter','uuid-generator',
+  'markdown-to-html','yaml-to-json','cron-parser','hash-generator',
+  'screen-resolution-tester','url-slug-generator','percentage-calculator',
+  'css-border-radius-generator','css-gradient-generator','jwt-decoder',
+  'http-status-codes','meta-tag-generator','color-picker','unit-converter',
+  'number-base-converter','text-sorter','readability-score','grammar-checker',
+  'favicon-generator','serp-preview','image-resizer','contrast-checker',
+  'unix-timestamp','random-string-generator',
+];
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://toolblip.com';
-
   const staticPages: MetadataRoute.Sitemap = [
-    { url: baseUrl, priority: 1.0, changeFrequency: 'daily' },
-    { url: `${baseUrl}/tools`, priority: 0.9, changeFrequency: 'weekly' },
-    { url: `${baseUrl}/directory`, priority: 0.8, changeFrequency: 'weekly' },
-    { url: `${baseUrl}/about`, priority: 0.6, changeFrequency: 'monthly' },
-    { url: `${baseUrl}/login`, priority: 0.5, changeFrequency: 'monthly' },
-    { url: `${baseUrl}/signup`, priority: 0.5, changeFrequency: 'monthly' },
-    { url: `${baseUrl}/blog`, priority: 0.7, changeFrequency: 'daily' },
+    { url: BASE_URL, priority: 1.0, changeFrequency: 'daily' },
+    { url: `${BASE_URL}/tools`, priority: 0.9, changeFrequency: 'weekly' },
+    { url: `${BASE_URL}/directory`, priority: 0.8, changeFrequency: 'weekly' },
+    { url: `${BASE_URL}/about`, priority: 0.6, changeFrequency: 'monthly' },
+    { url: `${BASE_URL}/login`, priority: 0.5, changeFrequency: 'monthly' },
+    { url: `${BASE_URL}/signup`, priority: 0.5, changeFrequency: 'monthly' },
+    { url: `${BASE_URL}/blog`, priority: 0.7, changeFrequency: 'daily' },
   ];
 
-  const toolPages: MetadataRoute.Sitemap = tools.map((tool) => ({
-    url: `${baseUrl}/tools/${tool.slug}`,
+  const toolPages: MetadataRoute.Sitemap = TOOL_SLUGS.map((slug) => ({
+    url: `${BASE_URL}/tools/${slug}`,
     priority: 0.8,
     changeFrequency: 'monthly' as const,
   }));
 
-  // Blog posts
+  // Blog posts from root blog/ directory
   const blogDir = path.join(process.cwd(), 'blog');
   const blogPosts: MetadataRoute.Sitemap = [];
 
@@ -34,7 +47,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       const { data } = matter(raw);
       if (data.slug) {
         blogPosts.push({
-          url: `${baseUrl}/blog/${data.slug}`,
+          url: `${BASE_URL}/blog/${data.slug}`,
           priority: 0.6,
           changeFrequency: 'monthly' as const,
           lastModified: data.date ? new Date(data.date) : undefined,
