@@ -3,6 +3,7 @@ title: "Top 5 Developer Tools You Should Bookmark"
 date: "2026-04-15"
 description: "Five browser-based tools that live in every developer bookmark bar — JSON formatter, Base64 encoder/decoder, regex tester, cron expression parser, and hash generator."
 slug: "top-5-developer-tools-to-bookmark"
+emoji: "🔖"
 category: "Developer Tools"
 tags: ["json", "base64", "regex", "cron", "hash", "bookmarks"]
 author: "Toolblip Team"
