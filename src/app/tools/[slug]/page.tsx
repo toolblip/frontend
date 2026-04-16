@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { tools } from '@/data/tools';
 import ToolUI from './ToolUI';
+import ShareButtons from '@/components/ShareButtons';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -51,6 +52,12 @@ export default async function ToolDetailPage({ params }: Props) {
             </span>
           </div>
         </div>
+      </div>
+
+      {/* Share */}
+      <div className="mb-10 border-t border-gray-100 dark:border-gray-800 pt-6">
+        <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-3">Share</p>
+        <ShareButtons toolName={tool.name} />
       </div>
 
       {/* Tool UI */}
