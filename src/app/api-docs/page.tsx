@@ -208,6 +208,43 @@ export default function ApiDocsPage() {
             </div>
           </section>
 
+          {/* ── MCP Servers ── */}
+          <section id="mcp-servers" className="scroll-mt-20">
+            <SectionHeading>MCP Servers</SectionHeading>
+            <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
+              All MCP server endpoints are public — no authentication required.
+            </p>
+
+            <div className="space-y-8">
+
+              <EndpointCard
+                id="mcp-servers"
+                method="GET"
+                path="/api/mcp/servers"
+                auth={false}
+                status={200}
+                description="Returns a paginated list of all available MCP servers."
+                response={`{
+  "servers": {
+    "servers": [
+      {
+        "id": 1,
+        "slug": "filesystem",
+        "name": "Filesystem",
+        "description": "Read and write local files via MCP protocol",
+        "category": "Utility",
+        "url": "https://example.com/servers/filesystem",
+        "created_at": "2026-01-01T00:00:00Z"
+      }
+    ]
+  }
+}`}
+                curl={`curl -X GET ${BASE_URL}/api/mcp/servers`}
+              />
+
+            </div>
+          </section>
+
           {/* ── Auth Endpoints ── */}
           <section id="auth-endpoints" className="scroll-mt-20">
             <SectionHeading>Auth</SectionHeading>
@@ -363,12 +400,13 @@ export default function ApiDocsPage() {
 // ─── Data ───────────────────────────────────────────────────
 
 const ENDPOINTS = [
-  { id: 'auth-register', method: 'POST', path: '/api/auth/register', auth: false, desc: 'Create account' },
-  { id: 'auth-login',   method: 'POST', path: '/api/auth/login',     auth: false, desc: 'Sign in' },
-  { id: 'auth-logout',  method: 'POST', path: '/api/auth/logout',    auth: true,  desc: 'Revoke session' },
-  { id: 'auth-user',    method: 'GET',  path: '/api/auth/user',      auth: true,  desc: 'Current user' },
-  { id: 'tools-list',   method: 'GET',  path: '/api/tools',         auth: false, desc: 'List all tools' },
-  { id: 'tools-detail', method: 'GET',  path: '/api/tools/:slug',   auth: false, desc: 'Get a tool' },
+  { id: 'auth-register',  method: 'POST', path: '/api/auth/register',      auth: false, desc: 'Create account' },
+  { id: 'auth-login',    method: 'POST', path: '/api/auth/login',          auth: false, desc: 'Sign in' },
+  { id: 'auth-logout',   method: 'POST', path: '/api/auth/logout',         auth: true,  desc: 'Revoke session' },
+  { id: 'auth-user',     method: 'GET',  path: '/api/auth/user',           auth: true,  desc: 'Current user' },
+  { id: 'tools-list',    method: 'GET',  path: '/api/tools',              auth: false, desc: 'List all tools' },
+  { id: 'tools-detail',  method: 'GET',  path: '/api/tools/:slug',        auth: false, desc: 'Get a tool' },
+  { id: 'mcp-servers',   method: 'GET',  path: '/api/mcp/servers',         auth: false, desc: 'List MCP servers' },
 ] as const;
 
 const ERROR_CODES = [
