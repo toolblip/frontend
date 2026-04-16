@@ -1,5 +1,6 @@
 ---
 title: "Top 5 Developer Tools You Should Bookmark"
+emoji: "🔖"
 date: "2026-04-15"
 description: "Five browser-based tools that belong in every developer's bookmark bar — from JSON formatting to cron expression parsing."
 slug: "top-5-developer-tools-you-should-bookmark"
