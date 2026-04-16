@@ -46,3 +46,8 @@ agent (project) | model
 Example: `tb (toolblip) | {model}`
 
 No exceptions. No excuses.
+
+
+## 🚫 No ACP Sessions
+
+Under NO circumstances may you start, spawn, or create any ACP (Auto-Coding Proxy) session, ACP harness, or Claude Code subprocess. ACP sessions hijack topic routing and break the multi-agent setup. If a task requires coding, use the exec tool directly with `claude --print` or normal agent tools. Never invoke `runtime:"acp"` or `sessions_spawn runtime:"acp"`.

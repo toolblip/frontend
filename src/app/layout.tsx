@@ -53,11 +53,8 @@ export default function RootLayout({
         {/* Nav */}
         <header className="border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-950/80 backdrop-blur sticky top-0 z-50">
           <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-            <a
-              href="/"
-              className="text-lg font-bold text-gray-900 dark:text-white tracking-tight hover:text-green-600 dark:hover:text-green-400 transition-colors"
-            >
-              Toolblip
+            <a href="/" className="flex items-center gap-2">
+              <img src="/logos/logo.png" alt="Toolblip" className="h-8 w-auto object-contain" />
             </a>
             <div className="flex items-center gap-4">
               <nav aria-label="Main navigation" className="flex items-center gap-5 text-sm">
