@@ -13,10 +13,10 @@ const TOOL_SLUGS = [
   'markdown-to-html','yaml-to-json','cron-parser','hash-generator',
   'screen-resolution-tester','url-slug-generator','percentage-calculator',
   'css-border-radius-generator','css-gradient-generator','jwt-decoder',
-  'http-status-codes','meta-tag-generator','color-picker','unit-converter',
-  'number-base-converter','text-sorter','readability-score','grammar-checker',
-  'favicon-generator','serp-preview','image-resizer','contrast-checker',
-  'unix-timestamp','random-string-generator',
+  'cron-generator','http-headers-viewer','port-scanner',
+  'meta-tag-generator','serp-preview','color-picker','contrast-checker',
+  'unit-converter','number-base-converter','text-sorter','readability-score',
+  'grammar-checker','favicon-generator','image-resizer',
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -50,7 +50,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
           url: `${BASE_URL}/blog/${data.slug}`,
           priority: 0.6,
           changeFrequency: 'monthly' as const,
-          lastModified: data.date ? new Date(data.date) : undefined,
+          lastModified: (data.date || data.publishDate) ? new Date((data.date || data.publishDate) as string) : undefined,
         });
       }
     }

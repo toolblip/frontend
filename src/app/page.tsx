@@ -2,7 +2,28 @@ import Link from 'next/link';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import type { Metadata } from 'next';
 import { tools } from '@/data/tools';
+
+export const metadata: Metadata = {
+  title: 'Toolblip — Free Online Developer Tools',
+  description:
+    'Free browser-based tools: word counter, JSON formatter, Base64, URL encoder, UUID generator, and more. 100% client-side — no uploads, no account needed.',
+  openGraph: {
+    title: 'Toolblip — Free Online Developer Tools',
+    description:
+      'Free browser-based tools: word counter, JSON formatter, Base64, URL encoder, UUID generator, and more. 100% client-side — no uploads, no account needed.',
+    url: 'https://toolblip.com',
+    siteName: 'Toolblip',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Toolblip — Free Online Developer Tools',
+    description:
+      'Free browser-based tools: word counter, JSON formatter, Base64, URL encoder, UUID generator, and more.',
+  },
+};
 
 const featuredTools = tools.slice(0, 11);
 
