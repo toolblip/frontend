@@ -25,6 +25,8 @@ export const tools: Tool[] = [
   { name: 'UUID Generator', slug: 'uuid-generator', description: "Generate one or many UUID v4 values using your browser's crypto API.", emoji: '🔑', category: 'Developer' },
   { name: 'Markdown to HTML', slug: 'markdown-to-html', description: 'Convert Markdown to HTML with a live split-pane preview.', emoji: '📄', category: 'Developer' },
   { name: 'YAML to JSON', slug: 'yaml-to-json', description: 'Convert YAML to JSON instantly with pretty-print, compact output, and custom indent size.', emoji: '🔄', category: 'Conversion' },
+  { name: 'JSON to YAML', slug: 'json-to-yaml', description: 'Convert JSON to YAML with customizable indent, flow mode, and compact output options.', emoji: '📝', category: 'Conversion' },
+  { name: 'HTML Encoder / Decoder', slug: 'html-encoder', description: 'Encode and decode HTML entities for safe display and source code embedding.', emoji: '🏷️', category: 'Encoder' },
   { name: 'Cron Expression Parser', slug: 'cron-parser', description: 'Parse and validate cron expressions with human-readable descriptions and next 5 run times.', emoji: '⏱️', category: 'Developer' },
   { name: 'Hash Generator', slug: 'hash-generator', description: "Generate MD5, SHA-1, SHA-256, and SHA-512 hashes using your browser's native crypto API.", emoji: '#️⃣', category: 'Developer' },
   { name: 'Screen Resolution Tester', slug: 'screen-resolution-tester', description: 'Test any screen resolution or viewport size with device presets, custom dimensions, and a live scaled preview.', emoji: '🖥️', category: 'Developer' },
