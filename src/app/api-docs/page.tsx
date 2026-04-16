@@ -86,9 +86,9 @@ export default function ApiDocsPage() {
                   https://toolblip-api-production.up.railway.app
                 </code>
               </div>
-              <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:-border-gray-800 rounded-xl p-4">
+              <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4">
                 <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">
-                  Canonical URL <span className="text-gray-400 italic font-normal normal-case ml-1">(SSL pending)</span>
+                  Canonical URL <span className="text-gray-400 italic font-normal normal-case ml-1">(SSL cert in progress)</span>
                 </p>
                 <code className="text-sm font-mono text-gray-400 dark:text-gray-600 break-all line-through">
                   https://api.toolblip.com
