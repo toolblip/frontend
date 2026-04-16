@@ -70,18 +70,51 @@ export default function HomePage() {
           </p>
           <div className="flex items-center justify-center gap-4 sm:gap-8 flex-wrap">
             {[
-              { step: '1', icon: '🔧', title: 'Pick a tool', desc: 'Choose from 35+ free tools' },
-              { step: '2', icon: '📋', title: 'Paste your data', desc: 'Nothing is uploaded anywhere' },
-              { step: '3', icon: '✨', title: 'Get your result', desc: 'Instantly, in your browser' },
-            ].map(({ step, icon, title, desc }) => (
-              <div key={step} className="flex items-center gap-3">
-                <div className="flex flex-col items-center text-center min-w-[80px]">
-                  <span className="text-2xl mb-1">{icon}</span>
-                  <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">{title}</span>
-                  <span className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 leading-snug">{desc}</span>
+              {
+                num: '01',
+                icon: (
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                ),
+                title: 'Pick a tool',
+                desc: '35+ free tools at your fingertips',
+              },
+              {
+                num: '02',
+                icon: (
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                ),
+                title: 'Paste your data',
+                desc: 'Nothing uploaded — ever',
+              },
+              {
+                num: '03',
+                icon: (
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                ),
+                title: 'Get your result',
+                desc: 'Instant, in your browser tab',
+              },
+            ].map(({ num, icon, title, desc }) => (
+              <div key={num} className="flex items-center gap-4 sm:gap-6">
+                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-2 sm:gap-3 text-center sm:text-left min-w-[140px]">
+                  <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400 flex items-center justify-center">
+                    {icon}
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-mono text-gray-400 dark:text-gray-500 block mb-0.5">{num}</span>
+                    <span className="text-sm font-semibold text-gray-800 dark:text-gray-100 block">{title}</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400 leading-snug">{desc}</span>
+                  </div>
                 </div>
-                {step !== '3' && (
-                  <span className="text-gray-300 dark:text-gray-600 text-lg hidden sm:block">→</span>
+                {num !== '03' && (
+                  <span className="text-gray-300 dark:text-gray-600 text-lg hidden sm:block flex-shrink-0">→</span>
                 )}
               </div>
             ))}
@@ -93,14 +126,14 @@ export default function HomePage() {
       </section>
 
       {/* Category quick-access */}
-      <section className="py-6 px-4 border-b border-gray-200 dark:border-gray-800">
+      <section className="py-5 px-4 border-b border-gray-200 dark:border-gray-800">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-wrap gap-2 justify-center">
             {categories.map((cat) => (
               <Link
                 key={cat}
                 href={`/tools?category=${cat}`}
-                className="px-3 py-1.5 text-xs sm:text-sm font-medium bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-green-500 dark:hover:border-green-600 hover:text-green-600 dark:hover:text-green-400 text-gray-600 dark:text-gray-300 rounded-full transition-all capitalize"
+                className="px-3 py-1.5 text-xs sm:text-sm font-medium bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 hover:border-green-500 dark:hover:border-green-600 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 text-gray-600 dark:text-gray-300 rounded-full transition-all capitalize"
               >
                 {cat}
               </Link>
@@ -115,26 +148,46 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             {[
               {
-                icon: '🔒',
+                icon: (
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                ),
+                iconBg: 'bg-green-100 dark:bg-green-900/40',
+                iconColor: 'text-green-600 dark:text-green-400',
                 title: 'Private',
                 desc: 'Your data never leaves your browser. No servers, no tracking, no logs.',
               },
               {
-                icon: '⚡',
+                icon: (
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                ),
+                iconBg: 'bg-yellow-100 dark:bg-yellow-900/40',
+                iconColor: 'text-yellow-600 dark:text-yellow-400',
                 title: 'Fast',
                 desc: 'Runs instantly in your browser tab. No waiting for server responses.',
               },
               {
-                icon: '🎁',
+                icon: (
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                ),
+                iconBg: 'bg-blue-100 dark:bg-blue-900/40',
+                iconColor: 'text-blue-600 dark:text-blue-400',
                 title: 'Free',
                 desc: 'No signup, no paywall, no limits. Every tool is free, forever.',
               },
-            ].map(({ icon, title, desc }) => (
+            ].map(({ icon, iconBg, iconColor, title, desc }) => (
               <div
                 key={title}
                 className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 text-center"
               >
-                <span className="text-2xl mb-1.5 block">{icon}</span>
+                <div className={`w-10 h-10 ${iconBg} ${iconColor} rounded-lg flex items-center justify-center mx-auto mb-2`}>
+                  {icon}
+                </div>
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-0.5">{title}</h3>
                 <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{desc}</p>
               </div>
