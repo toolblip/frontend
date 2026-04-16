@@ -22,7 +22,7 @@ export default function ApiDocsPage() {
 
       {/* ── Topbar ── */}
       <header className="sticky top-0 z-10 bg-white/90 dark:bg-[#0c0c0c]/90 backdrop-blur border-b border-gray-100 dark:border-gray-800">
-        <div className="max-w-6xl mx-auto px-6 py-3 flex items-center gap-3">
+        <div className="max-w-5xl mx-auto px-6 py-3 flex items-center gap-3">
           <span className="text-xs font-mono font-bold bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2.5 py-1 rounded-full">
             REST API v1
           </span>
@@ -33,19 +33,19 @@ export default function ApiDocsPage() {
         </div>
       </header>
 
-      <div className="max-w-6xl mx-auto px-6 py-12 flex gap-16">
+      <div className="max-w-5xl mx-auto px-6 py-12 flex gap-16">
 
         {/* ── Sidebar ── */}
-        <aside className="w-48 shrink-0 hidden md:block">
+        <aside className="w-44 shrink-0 hidden md:block">
           <nav className="sticky top-28 space-y-0.5 text-sm">
             <p className="px-3 py-2 text-[10px] font-bold text-gray-400 dark:text-gray-600 uppercase tracking-widest mb-2">On this page</p>
             {[
               { id: 'overview',         label: 'Overview' },
-              { id: 'authentication',   label: 'Authentication' },
-              { id: 'tools',             label: 'Tools' },
-              { id: 'auth-endpoints',    label: 'Auth' },
-              { id: 'errors',            label: 'Errors' },
-              { id: 'rate-limits',       label: 'Rate Limits' },
+              { id: 'authentication',  label: 'Authentication' },
+              { id: 'tools',            label: 'Tools' },
+              { id: 'auth-endpoints',   label: 'Auth' },
+              { id: 'errors',           label: 'Errors' },
+              { id: 'rate-limits',      label: 'Rate Limits' },
             ].map(({ id, label }) => (
               <a
                 key={id}
@@ -133,9 +133,9 @@ export default function ApiDocsPage() {
               <InlineCode>/api/auth/login</InlineCode>.
               Pass it in the <InlineCode>Authorization</InlineCode> header on every authenticated request.
             </p>
-            <div className="bg-gray-900 dark:bg-black border border-gray-800 dark:border-gray-800 rounded-2xl p-4 font-mono text-xs text-green-400 overflow-x-auto">
-              Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx
-            </div>
+            <CodeBlock
+              code={`Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx`}
+            />
           </section>
 
           {/* ── Tools ── */}
@@ -145,8 +145,9 @@ export default function ApiDocsPage() {
               All tools endpoints are public — no authentication required.
             </p>
 
-            <div className="space-y-8">
+            <div className="space-y-12">
 
+              {/* GET /api/tools */}
               <EndpointCard
                 id="tools-list"
                 method="GET"
@@ -183,6 +184,7 @@ export default function ApiDocsPage() {
                 curl={`curl -X GET ${BASE_URL}/api/tools`}
               />
 
+              {/* GET /api/tools/{slug} */}
               <EndpointCard
                 id="tools-detail"
                 method="GET"
@@ -208,49 +210,13 @@ export default function ApiDocsPage() {
             </div>
           </section>
 
-          {/* ── MCP Servers ── */}
-          <section id="mcp-servers" className="scroll-mt-20">
-            <SectionHeading>MCP Servers</SectionHeading>
-            <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-              All MCP server endpoints are public — no authentication required.
-            </p>
-
-            <div className="space-y-8">
-
-              <EndpointCard
-                id="mcp-servers"
-                method="GET"
-                path="/api/mcp/servers"
-                auth={false}
-                status={200}
-                description="Returns a paginated list of all available MCP servers."
-                response={`{
-  "servers": {
-    "servers": [
-      {
-        "id": 1,
-        "slug": "filesystem",
-        "name": "Filesystem",
-        "description": "Read and write local files via MCP protocol",
-        "category": "Utility",
-        "url": "https://example.com/servers/filesystem",
-        "created_at": "2026-01-01T00:00:00Z"
-      }
-    ]
-  }
-}`}
-                curl={`curl -X GET ${BASE_URL}/api/mcp/servers`}
-              />
-
-            </div>
-          </section>
-
           {/* ── Auth Endpoints ── */}
           <section id="auth-endpoints" className="scroll-mt-20">
             <SectionHeading>Auth</SectionHeading>
 
-            <div className="space-y-8">
+            <div className="space-y-12">
 
+              {/* POST /api/auth/register */}
               <EndpointCard
                 id="auth-register"
                 method="POST"
@@ -278,6 +244,7 @@ export default function ApiDocsPage() {
   -d '{"name":"Harun","email":"harun@example.com","password":"secret123","password_confirmation":"secret123"}'`}
               />
 
+              {/* POST /api/auth/login */}
               <EndpointCard
                 id="auth-login"
                 method="POST"
@@ -303,6 +270,7 @@ export default function ApiDocsPage() {
   -d '{"email":"harun@example.com","password":"secret123"}'`}
               />
 
+              {/* POST /api/auth/logout */}
               <EndpointCard
                 id="auth-logout"
                 method="POST"
@@ -317,6 +285,7 @@ export default function ApiDocsPage() {
   -H "Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx"`}
               />
 
+              {/* GET /api/auth/user */}
               <EndpointCard
                 id="auth-user"
                 method="GET"
@@ -346,14 +315,16 @@ export default function ApiDocsPage() {
               All errors return a JSON body with a <InlineCode>message</InlineCode> field, and optionally
               an <InlineCode>errors</InlineCode> object for validation failures.
             </p>
-            <div className="bg-gray-900 dark:bg-black border border-gray-800 dark:border-gray-800 rounded-2xl overflow-hidden mb-6">
-              <CodeBlock code={`{
+            <div className="mb-6">
+              <CodeBlock
+                code={`{
   "message": "The given data was invalid.",
   "errors": {
     "email": ["The email field is required."],
     "password": ["The password field is required."]
   }
-}`} />
+}`}
+              />
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {ERROR_CODES.map(({ code, label, color }) => (
@@ -400,23 +371,22 @@ export default function ApiDocsPage() {
 // ─── Data ───────────────────────────────────────────────────
 
 const ENDPOINTS = [
-  { id: 'auth-register',  method: 'POST', path: '/api/auth/register',      auth: false, desc: 'Create account' },
-  { id: 'auth-login',    method: 'POST', path: '/api/auth/login',          auth: false, desc: 'Sign in' },
-  { id: 'auth-logout',   method: 'POST', path: '/api/auth/logout',         auth: true,  desc: 'Revoke session' },
-  { id: 'auth-user',     method: 'GET',  path: '/api/auth/user',           auth: true,  desc: 'Current user' },
-  { id: 'tools-list',    method: 'GET',  path: '/api/tools',              auth: false, desc: 'List all tools' },
-  { id: 'tools-detail',  method: 'GET',  path: '/api/tools/:slug',        auth: false, desc: 'Get a tool' },
-  { id: 'mcp-servers',   method: 'GET',  path: '/api/mcp/servers',         auth: false, desc: 'List MCP servers' },
+  { id: 'tools-list',    method: 'GET',  path: '/api/tools',           auth: false, desc: 'List all tools' },
+  { id: 'tools-detail',  method: 'GET',  path: '/api/tools/:slug',     auth: false, desc: 'Get a tool' },
+  { id: 'auth-register', method: 'POST', path: '/api/auth/register',   auth: false, desc: 'Create account' },
+  { id: 'auth-login',    method: 'POST', path: '/api/auth/login',       auth: false, desc: 'Sign in' },
+  { id: 'auth-logout',   method: 'POST', path: '/api/auth/logout',      auth: true,  desc: 'Revoke session' },
+  { id: 'auth-user',     method: 'GET',  path: '/api/auth/user',        auth: true,  desc: 'Current user' },
 ] as const;
 
 const ERROR_CODES = [
   { code: 400, label: 'Bad Request',       color: 'text-red-500'   },
   { code: 401, label: 'Unauthorized',      color: 'text-red-500'   },
-  { code: 403, label: 'Forbidden',          color: 'text-amber-500' },
-  { code: 404, label: 'Not Found',          color: 'text-gray-500'  },
-  { code: 422, label: 'Validation Error',  color: 'text-yellow-600'},
-  { code: 429, label: 'Too Many Requests',  color: 'text-amber-500' },
-  { code: 500, label: 'Server Error',       color: 'text-red-600'   },
+  { code: 403, label: 'Forbidden',         color: 'text-amber-500' },
+  { code: 404, label: 'Not Found',         color: 'text-gray-500'  },
+  { code: 422, label: 'Validation Error', color: 'text-yellow-600'},
+  { code: 429, label: 'Too Many Requests', color: 'text-amber-500' },
+  { code: 500, label: 'Server Error',      color: 'text-red-600'   },
 ];
 
 // ─── Components ─────────────────────────────────────────────
