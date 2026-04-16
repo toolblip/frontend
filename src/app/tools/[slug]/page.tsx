@@ -1,67 +1,50 @@
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 import { tools } from '@/data/tools';
 import ToolUI from './ToolUI';
-import ShareButtons from '@/components/ShareButtons';
 
-interface Props {
+interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateMetadata({ params }: Props) {
+export async function generateStaticParams() {
+  return tools.map(tool => ({ slug: tool.slug }));
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const tool = tools.find(t => t.slug === slug);
-  if (!tool) return { title: 'Tool Not Found' };
+  if (!tool) return {};
   return {
     title: `${tool.name} — Toolblip`,
     description: tool.description,
   };
 }
 
-export default async function ToolDetailPage({ params }: Props) {
+export default async function ToolDetailPage({ params }: PageProps) {
   const { slug } = await params;
   const tool = tools.find(t => t.slug === slug);
+
   if (!tool) notFound();
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-10">
-      {/* Breadcrumb */}
-      <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-8">
-        <a
-          href="/tools"
-          className="hover:text-green-600 dark:hover:text-green-400 transition-colors"
-        >
-          All Tools
-        </a>
-        <span>/</span>
-        <span className="text-gray-900 dark:text-gray-200">{tool.name}</span>
-      </nav>
-
-      {/* Tool header */}
+      {/* Header */}
       <div className="mb-8">
-        <div className="flex items-start gap-4">
-          <span className="text-4xl leading-none mt-0.5">{tool.emoji}</span>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-              {tool.name}
-            </h1>
-            <p className="mt-1 text-gray-500 dark:text-gray-400 leading-relaxed">
-              {tool.description}
-            </p>
-            <span className="inline-block mt-2 text-xs font-medium text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950 px-2.5 py-1 rounded-full">
-              {tool.category}
-            </span>
-          </div>
+        <div className="flex items-center gap-3 mb-3">
+          <span className="text-4xl">{tool.emoji}</span>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{tool.name}</h1>
         </div>
-      </div>
-
-      {/* Share */}
-      <div className="mb-10 border-t border-gray-100 dark:border-gray-800 pt-6">
-        <p className="text-xs text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-3">Share</p>
-        <ShareButtons toolName={tool.name} />
+        <p className="text-gray-500 dark:text-gray-400 text-lg leading-relaxed mb-4">
+          {tool.description}
+        </p>
+        <span className="inline-block text-xs text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">
+          {tool.category}
+        </span>
       </div>
 
       {/* Tool UI */}
-      <ToolUI tool={tool} />
+      <ToolUI slug={slug} />
     </div>
   );
 }
