@@ -14,6 +14,8 @@ export const metadata: Metadata = {
   twitter: { card: 'summary', title: 'API Documentation | Toolblip', description: 'Toolblip REST API — free endpoints for browsing developer tools, MCP server registry, and user authentication.' },
 };
 
+const BASE_URL = 'https://toolblip-api-production.up.railway.app';
+
 export default function ApiDocsPage() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950">
@@ -25,7 +27,7 @@ export default function ApiDocsPage() {
           </span>
           <h1 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Toolblip API Reference</h1>
           <span className="ml-auto text-xs text-green-600 dark:text-green-400 font-mono font-semibold">
-            api.toolblip.com
+            {BASE_URL}
           </span>
         </div>
       </header>
@@ -35,12 +37,13 @@ export default function ApiDocsPage() {
         {/* Sidebar */}
         <aside className="w-52 shrink-0">
           <nav className="sticky top-24 space-y-1 text-sm">
-            <p className="px-3 text-xs font-semibold text-gray-300 dark:text-gray-600 uppercase tracking-wider mb-2">Guide</p>
+            <p className="px-3 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wider mb-2">Reference</p>
             {[
               { id: 'overview',    label: 'Overview' },
-              { id: 'auth',        label: 'Authentication' },
+              { id: 'auth-endpoints',  label: 'Auth' },
               { id: 'tools',       label: 'Tools' },
               { id: 'errors',      label: 'Errors' },
+              { id: 'rate-limits',label: 'Rate Limits' },
             ].map(({ id, label }) => (
               <a
                 key={id}
@@ -52,7 +55,7 @@ export default function ApiDocsPage() {
             ))}
 
             <div className="pt-4 pb-2">
-              <p className="px-3 text-xs font-semibold text-gray-300 dark:text-gray-600 uppercase tracking-wider">Endpoints</p>
+              <p className="px-3 text-xs font-semibold text-gray-400 dark:text-gray-600 uppercase tracking-wider">Endpoints</p>
             </div>
             {ENDPOINTS.map(({ id, method, path }) => (
               <a
@@ -74,24 +77,24 @@ export default function ApiDocsPage() {
           <section id="overview">
             <SectionHeading>Overview</SectionHeading>
             <p className="text-gray-500 dark:text-gray-400 leading-relaxed mb-6">
-              The Toolblip API is a free REST API for browsing developer tools and managing user authentication.
+              The Toolblip API is a free REST API for browsing developer tools and managing user accounts.
               All endpoints return JSON. No API key is required — register an account to get a Bearer token
               for protected endpoints.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
               <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4">
-                <p className="text-xs font-semibold text-green-700 dark:text-green-400 uppercase tracking-wider mb-2">Canonical Base URL</p>
+                <p className="text-xs font-semibold text-green-700 dark:text-green-400 uppercase tracking-wider mb-2">Base URL (active)</p>
                 <code className="text-sm font-mono text-green-700 dark:text-green-400 break-all">
-                  https://api.toolblip.com
+                  {BASE_URL}
                 </code>
               </div>
               <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4">
                 <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">
-                  Railway fallback <span className="text-gray-400 italic font-normal normal-case ml-1">(if needed)</span>
+                  Clean domain <span className="text-gray-400 italic font-normal normal-case ml-1">(SSL pending)</span>
                 </p>
                 <code className="text-sm font-mono text-gray-500 dark:text-gray-500 break-all">
-                  https://toolblip-api-production.up.railway.app
+                  https://api.toolblip.com
                 </code>
               </div>
             </div>
@@ -121,7 +124,7 @@ export default function ApiDocsPage() {
           </section>
 
           {/* ── Authentication ── */}
-          <section id="auth">
+          <section id="auth-overview">
             <SectionHeading>Authentication</SectionHeading>
             <p className="text-gray-500 dark:text-gray-400 leading-relaxed mb-5">
               Protected endpoints require a Bearer token obtained from{' '}
@@ -137,7 +140,7 @@ export default function ApiDocsPage() {
           </section>
 
           {/* ── Auth Endpoints ── */}
-          <section>
+          <section id="auth-endpoints">
             <SectionHeading>Auth Endpoints</SectionHeading>
             <div className="space-y-8">
 
@@ -163,7 +166,7 @@ export default function ApiDocsPage() {
   },
   "token": "tb_live_xxxxxxxxxxxxxxxx"
 }`}
-                curl={`curl -X POST https://api.toolblip.com/api/auth/register \\
+                curl={`curl -X POST ${BASE_URL}/api/auth/register \\
   -H "Content-Type: application/json" \\
   -d '{"name":"Harun","email":"harun@example.com","password":"secret123","password_confirmation":"secret123"}'`}
               />
@@ -188,7 +191,7 @@ export default function ApiDocsPage() {
   },
   "token": "tb_live_xxxxxxxxxxxxxxxx"
 }`}
-                curl={`curl -X POST https://api.toolblip.com/api/auth/login \\
+                curl={`curl -X POST ${BASE_URL}/api/auth/login \\
   -H "Content-Type: application/json" \\
   -d '{"email":"harun@example.com","password":"secret123"}'`}
               />
@@ -203,7 +206,7 @@ export default function ApiDocsPage() {
                 response={`{
   "message": "Logged out successfully"
 }`}
-                curl={`curl -X POST https://api.toolblip.com/api/auth/logout \\
+                curl={`curl -X POST ${BASE_URL}/api/auth/logout \\
   -H "Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx"`}
               />
 
@@ -222,7 +225,7 @@ export default function ApiDocsPage() {
     "is_pro": false
   }
 }`}
-                curl={`curl -X GET https://api.toolblip.com/api/auth/user \\
+                curl={`curl -X GET ${BASE_URL}/api/auth/user \\
   -H "Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx"`}
               />
 
@@ -243,7 +246,7 @@ export default function ApiDocsPage() {
                 path="/api/tools"
                 auth={false}
                 status={200}
-                description="Returns a paginated list of all tools in the registry."
+                description="Returns a list of all tools in the registry."
                 response={`{
   "tools": {
     "tools": [
@@ -270,7 +273,7 @@ export default function ApiDocsPage() {
     ]
   }
 }`}
-                curl={`curl -X GET https://api.toolblip.com/api/tools`}
+                curl={`curl -X GET ${BASE_URL}/api/tools`}
               />
 
               <EndpointCard
@@ -292,7 +295,7 @@ export default function ApiDocsPage() {
     "created_at": "2026-01-01T00:00:00Z"
   }
 }`}
-                curl={`curl -X GET https://api.toolblip.com/api/tools/claude-code`}
+                curl={`curl -X GET ${BASE_URL}/api/tools/claude-code`}
               />
 
             </div>
@@ -327,7 +330,7 @@ export default function ApiDocsPage() {
           </section>
 
           {/* ── Rate Limits ── */}
-          <section>
+          <section id="rate-limits">
             <SectionHeading>Rate Limits</SectionHeading>
             <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-5 flex gap-4 items-start">
               <span className="text-amber-500 mt-0.5 shrink-0 text-lg">⚡</span>
@@ -356,20 +359,20 @@ export default function ApiDocsPage() {
 // ─── Data ───────────────────────────────────────────────────
 
 const ENDPOINTS = [
-  { id: 'tools-list',   method: 'GET',  path: '/api/tools',         auth: false, desc: 'List all tools'   },
-  { id: 'tools-detail', method: 'GET',  path: '/api/tools/:slug',    auth: false, desc: 'Get a tool'       },
-  { id: 'auth-register',method: 'POST', path: '/api/auth/register',  auth: false, desc: 'Create account'   },
-  { id: 'auth-login',   method: 'POST', path: '/api/auth/login',     auth: false, desc: 'Sign in'          },
-  { id: 'auth-logout',  method: 'POST', path: '/api/auth/logout',    auth: true,  desc: 'Revoke session'   },
-  { id: 'auth-user',    method: 'GET',  path: '/api/auth/user',      auth: true,  desc: 'Current user'     },
+  { id: 'auth-register', method: 'POST', path: '/api/auth/register', auth: false, desc: 'Create account' },
+  { id: 'auth-login',   method: 'POST', path: '/api/auth/login',     auth: false, desc: 'Sign in' },
+  { id: 'auth-logout',  method: 'POST', path: '/api/auth/logout',    auth: true,  desc: 'Revoke session' },
+  { id: 'auth-user',    method: 'GET',  path: '/api/auth/user',      auth: true,  desc: 'Current user' },
+  { id: 'tools-list',   method: 'GET',  path: '/api/tools',         auth: false, desc: 'List all tools' },
+  { id: 'tools-detail', method: 'GET',  path: '/api/tools/:slug',    auth: false, desc: 'Get a tool' },
 ] as const;
 
 const ERROR_CODES = [
   { code: 400, label: 'Bad Request',        color: 'text-red-500'    },
-  { code: 401, label: 'Unauthorized',        color: 'text-red-500'    },
+  { code: 401, label: 'Unauthorized',       color: 'text-red-500'    },
   { code: 403, label: 'Forbidden',           color: 'text-amber-500'  },
   { code: 404, label: 'Not Found',           color: 'text-gray-500'   },
-  { code: 422, label: 'Validation Error',    color: 'text-yellow-600' },
+  { code: 422, label: 'Validation Error',   color: 'text-yellow-600' },
   { code: 429, label: 'Too Many Requests',   color: 'text-amber-500'  },
   { code: 500, label: 'Server Error',        color: 'text-red-600'   },
 ];
