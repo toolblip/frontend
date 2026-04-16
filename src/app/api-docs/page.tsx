@@ -24,7 +24,7 @@ export default function ApiDocsPage() {
             REST API v1
           </span>
           <h1 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Toolblip API Reference</h1>
-          <span className="ml-auto text-xs text-gray-400 dark:text-gray-600 font-mono">
+          <span className="ml-auto text-xs text-green-600 dark:text-green-400 font-mono font-semibold">
             api.toolblip.com
           </span>
         </div>
@@ -80,18 +80,18 @@ export default function ApiDocsPage() {
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-              <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4">
-                <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">Base URL (live)</p>
-                <code className="text-sm font-mono text-green-600 dark:text-green-400 break-all">
-                  https://toolblip-api-production.up.railway.app
+              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4">
+                <p className="text-xs font-semibold text-green-700 dark:text-green-400 uppercase tracking-wider mb-2">Canonical Base URL</p>
+                <code className="text-sm font-mono text-green-700 dark:text-green-400 break-all">
+                  https://api.toolblip.com
                 </code>
               </div>
               <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4">
                 <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-2">
-                  Canonical URL <span className="text-gray-400 italic font-normal normal-case ml-1">(SSL cert in progress)</span>
+                  Railway fallback <span className="text-gray-400 italic font-normal normal-case ml-1">(if needed)</span>
                 </p>
-                <code className="text-sm font-mono text-gray-400 dark:text-gray-600 break-all line-through">
-                  https://api.toolblip.com
+                <code className="text-sm font-mono text-gray-500 dark:text-gray-500 break-all">
+                  https://toolblip-api-production.up.railway.app
                 </code>
               </div>
             </div>
@@ -163,7 +163,7 @@ export default function ApiDocsPage() {
   },
   "token": "tb_live_xxxxxxxxxxxxxxxx"
 }`}
-                curl={`curl -X POST https://toolblip-api-production.up.railway.app/api/auth/register \\
+                curl={`curl -X POST https://api.toolblip.com/api/auth/register \\
   -H "Content-Type: application/json" \\
   -d '{"name":"Harun","email":"harun@example.com","password":"secret123","password_confirmation":"secret123"}'`}
               />
@@ -188,7 +188,7 @@ export default function ApiDocsPage() {
   },
   "token": "tb_live_xxxxxxxxxxxxxxxx"
 }`}
-                curl={`curl -X POST https://toolblip-api-production.up.railway.app/api/auth/login \\
+                curl={`curl -X POST https://api.toolblip.com/api/auth/login \\
   -H "Content-Type: application/json" \\
   -d '{"email":"harun@example.com","password":"secret123"}'`}
               />
@@ -203,7 +203,7 @@ export default function ApiDocsPage() {
                 response={`{
   "message": "Logged out successfully"
 }`}
-                curl={`curl -X POST https://toolblip-api-production.up.railway.app/api/auth/logout \\
+                curl={`curl -X POST https://api.toolblip.com/api/auth/logout \\
   -H "Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx"`}
               />
 
@@ -222,7 +222,7 @@ export default function ApiDocsPage() {
     "is_pro": false
   }
 }`}
-                curl={`curl -X GET https://toolblip-api-production.up.railway.app/api/auth/user \\
+                curl={`curl -X GET https://api.toolblip.com/api/auth/user \\
   -H "Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx"`}
               />
 
@@ -270,7 +270,7 @@ export default function ApiDocsPage() {
     ]
   }
 }`}
-                curl={`curl -X GET https://toolblip-api-production.up.railway.app/api/tools`}
+                curl={`curl -X GET https://api.toolblip.com/api/tools`}
               />
 
               <EndpointCard
@@ -292,7 +292,7 @@ export default function ApiDocsPage() {
     "created_at": "2026-01-01T00:00:00Z"
   }
 }`}
-                curl={`curl -X GET https://toolblip-api-production.up.railway.app/api/tools/claude-code`}
+                curl={`curl -X GET https://api.toolblip.com/api/tools/claude-code`}
               />
 
             </div>
