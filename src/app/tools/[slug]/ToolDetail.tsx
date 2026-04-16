@@ -24,6 +24,16 @@ import UrlSlugGeneratorClient from '@/components/tools/UrlSlugGeneratorClient';
 import PercentageCalculatorClient from '@/components/tools/PercentageCalculatorClient';
 import CssBorderRadiusGeneratorClient from '@/components/tools/CssBorderRadiusGeneratorClient';
 import CssGradientGeneratorClient from '@/components/tools/CssGradientGeneratorClient';
+import LoremIpsumGeneratorClient from '@/components/tools/LoremIpsumGeneratorClient';
+import RegexTesterClient from '@/components/tools/RegexTesterClient';
+import JwtDecoderClient from '@/components/tools/JwtDecoderClient';
+import MetaTagGeneratorClient from '@/components/tools/MetaTagGeneratorClient';
+import TextSorterClient from '@/components/tools/TextSorterClient';
+import ColorPickerClient from '@/components/tools/ColorPickerClient';
+import ContrastCheckerClient from '@/components/tools/ContrastCheckerClient';
+import UnitConverterClient from '@/components/tools/UnitConverterClient';
+import NumberBaseConverterClient from '@/components/tools/NumberBaseConverterClient';
+import ReadabilityScoreClient from '@/components/tools/ReadabilityScoreClient';
 
 // ─── Not Found ────────────────────────────────────────────────────────────────
 
@@ -109,6 +119,18 @@ function ToolRouter({ tool }: { tool: Tool }) {
     // Calculators
     case 'percentage-calculator':  return <PercentageCalculatorClient />;
     case 'screen-resolution-tester': return <ScreenResolutionTesterClient />;
+    case 'unit-converter':         return <UnitConverterClient />;
+    case 'number-base-converter':  return <NumberBaseConverterClient />;
+    case 'contrast-checker':       return <ContrastCheckerClient />;
+
+    // Text / utility
+    case 'lorem-ipsum-generator':  return <LoremIpsumGeneratorClient />;
+    case 'readability-score':      return <ReadabilityScoreClient />;
+    case 'text-sorter':           return <TextSorterClient />;
+    case 'regex-tester':          return <RegexTesterClient />;
+    case 'jwt-decoder':           return <JwtDecoderClient />;
+    case 'meta-tag-generator':     return <MetaTagGeneratorClient />;
+    case 'color-picker':          return <ColorPickerClient />;
 
     default:                       return <ComingSoon toolName={tool.name} />;
   }
