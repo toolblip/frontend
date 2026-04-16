@@ -4,6 +4,8 @@ import CookieBanner from '@/components/CookieBanner';
 import Analytics from '@/components/Analytics';
 import ThemeProvider from '@/components/ThemeProvider';
 import ThemeToggle from '@/components/ThemeToggle';
+import NavbarAuth from '@/components/NavbarAuth';
+import ApiStatus from '@/components/ApiStatus';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -71,14 +73,7 @@ export default function RootLayout({
                 >
                   All Tools
                 </a>
-                <span id="nav-auth">
-                  <a
-                    href="/login"
-                    className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
-                  >
-                    Sign in
-                  </a>
-                </span>
+                <NavbarAuth />
               </nav>
               <ThemeToggle />
             </div>
@@ -91,11 +86,14 @@ export default function RootLayout({
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-gray-200 dark:border-gray-800 mt-16 py-8">
+        <footer className="border-t border-gray-200 dark:border-gray-800 mt-16 py-6">
           <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500 dark:text-gray-400">
-            <span>
-              &copy; {new Date().getFullYear()} Toolblip. Built to stay out of your way.
-            </span>
+            <div className="flex items-center gap-4">
+              <span>
+                &copy; {new Date().getFullYear()} Toolblip. Built to stay out of your way.
+              </span>
+              <ApiStatus />
+            </div>
             <nav aria-label="Footer navigation" className="flex gap-5">
               <a href="/about" className="hover:text-gray-900 dark:hover:text-gray-200 transition-colors">
                 About
