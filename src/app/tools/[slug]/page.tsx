@@ -1,47 +1,50 @@
 import { notFound } from 'next/navigation';
-import type { Metadata } from 'next';
 import { tools } from '@/data/tools';
-import ToolDetail from './ToolDetail';
+import ToolUI from './ToolUI';
 
 interface Props {
   params: Promise<{ slug: string }>;
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
-  const tool = tools.find((t) => t.slug === slug);
-  if (!tool) return {};
-
-  const title = `${tool.name} — Free Online Tool`;
-  const description = tool.description;
-  const url = `https://toolblip.com/tools/${slug}`;
-
+  const tool = tools.find(t => t.slug === slug);
+  if (!tool) return { title: 'Tool Not Found' };
   return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      url,
-      siteName: 'Toolblip',
-      type: 'website',
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title,
-      description,
-    },
+    title: `${tool.name} — Toolblip`,
+    description: tool.description,
   };
-}
-
-export function generateStaticParams() {
-  return tools.map((t) => ({ slug: t.slug }));
 }
 
 export default async function ToolDetailPage({ params }: Props) {
   const { slug } = await params;
-  const tool = tools.find((t) => t.slug === slug);
+  const tool = tools.find(t => t.slug === slug);
   if (!tool) notFound();
 
-  return <ToolDetail tool={tool} />;
+  return (
+    <div className="max-w-3xl mx-auto px-4 py-8">
+      {/* Back link */}
+      <a
+        href="/tools"
+        className="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 mb-6 transition-colors"
+      >
+        ← All Tools
+      </a>
+
+      {/* Header */}
+      <div className="flex items-start gap-4 mb-8">
+        <span className="text-4xl">{tool.emoji}</span>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{tool.name}</h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">{tool.description}</p>
+          <span className="inline-block mt-2 text-xs text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
+            {tool.category}
+          </span>
+        </div>
+      </div>
+
+      {/* Tool UI */}
+      <ToolUI tool={tool} />
+    </div>
+  );
 }
