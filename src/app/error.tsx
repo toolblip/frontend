@@ -17,7 +17,7 @@ export default function Error({
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 py-20 sm:py-32 text-center">
       <p className="text-8xl sm:text-9xl font-bold text-red-500 dark:text-red-400 mb-6 select-none">
-        500
+        !
       </p>
       <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">
         Something went wrong
