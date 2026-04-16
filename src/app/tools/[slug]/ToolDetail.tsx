@@ -34,6 +34,7 @@ import ContrastCheckerClient from '@/components/tools/ContrastCheckerClient';
 import UnitConverterClient from '@/components/tools/UnitConverterClient';
 import NumberBaseConverterClient from '@/components/tools/NumberBaseConverterClient';
 import ReadabilityScoreClient from '@/components/tools/ReadabilityScoreClient';
+import SerpPreviewClient from '@/components/tools/SerpPreviewClient';
 
 // ─── Not Found ────────────────────────────────────────────────────────────────
 
@@ -131,6 +132,7 @@ function ToolRouter({ tool }: { tool: Tool }) {
     case 'jwt-decoder':           return <JwtDecoderClient />;
     case 'meta-tag-generator':     return <MetaTagGeneratorClient />;
     case 'color-picker':          return <ColorPickerClient />;
+    case 'serp-preview':           return <SerpPreviewClient />;
 
     default:                       return <ComingSoon toolName={tool.name} />;
   }
