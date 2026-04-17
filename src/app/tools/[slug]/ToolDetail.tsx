@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import type { Tool } from '@/data/tools';
+import { tools, type Tool } from '@/data/tools';
 import ShareButtons from '@/components/ShareButtons';
 
 // Wired-up tool components
@@ -40,6 +40,8 @@ import FaviconGeneratorClient from '@/components/tools/FaviconGeneratorClient';
 import ImageResizerClient from '@/components/tools/ImageResizerClient';
 import CronGeneratorClient from '@/components/tools/CronGeneratorClient';
 import HttpHeadersViewerClient from '@/components/tools/HttpHeadersViewerClient';
+import HtmlEncoderClient from '@/components/tools/HtmlEncoderClient';
+import JsonToYamlClient from '@/components/tools/JsonToYamlClient';
 
 // ─── Not Found ────────────────────────────────────────────────────────────────
 
@@ -143,6 +145,8 @@ function ToolRouter({ tool }: { tool: Tool }) {
     case 'image-resizer':           return <ImageResizerClient />;
     case 'cron-generator':          return <CronGeneratorClient />;
     case 'http-headers-viewer':     return <HttpHeadersViewerClient />;
+    case 'html-encoder':             return <HtmlEncoderClient />;
+    case 'json-to-yaml':             return <JsonToYamlClient />;
 
     default:                       return <ComingSoon toolName={tool.name} />;
   }
@@ -151,13 +155,34 @@ function ToolRouter({ tool }: { tool: Tool }) {
 // ─── Main export ──────────────────────────────────────────────────────────────
 
 export default function ToolDetail({ tool }: { tool: Tool }) {
+  const relatedTools = tools
+    .filter(t => t.category === tool.category && t.slug !== tool.slug)
+    .slice(0, 4);
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebApplication',
+    name: tool.name,
+    description: tool.description,
+    url: `https://toolblip.com/tools/${tool.slug}`,
+    applicationCategory: 'DeveloperApplication',
+    operatingSystem: 'Any',
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  };
+
   return (
     <div className="max-w-3xl mx-auto px-4 py-10">
+      {/* JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-8">
-        <Link href="/tools" className="hover:text-green-600 dark:hover:text-green-400 transition-colors">
-          All Tools
-        </Link>
+        <Link href="/" className="hover:text-green-600 dark:hover:text-green-400 transition-colors">Home</Link>
+        <span>/</span>
+        <Link href={`/tools?category=${encodeURIComponent(tool.category)}`} className="hover:text-green-600 dark:hover:text-green-400 transition-colors">{tool.category}</Link>
         <span>/</span>
         <span className="text-gray-900 dark:text-gray-200">{tool.name}</span>
       </nav>
@@ -185,6 +210,30 @@ export default function ToolDetail({ tool }: { tool: Tool }) {
       <div className="mt-10 pt-6 border-t border-gray-200 dark:border-gray-800">
         <ShareButtons toolName={tool.name} />
       </div>
+
+      {/* Related tools */}
+      {relatedTools.length > 0 && (
+        <div className="mt-10 pt-6 border-t border-gray-200 dark:border-gray-800">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Related tools</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {relatedTools.map(t => (
+              <Link
+                key={t.slug}
+                href={`/tools/${t.slug}`}
+                className="group flex items-center gap-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-green-500 dark:hover:border-green-600 rounded-xl p-3 transition-all"
+              >
+                <span className="text-xl flex-shrink-0">{t.emoji}</span>
+                <div className="min-w-0">
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 truncate">
+                    {t.name}
+                  </h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">{t.description}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,91 +1,66 @@
-# Toolblip MVP Task List
+# Toolblip Task List
 
-## Phase 1: Foundation
+## Phase 0: Ship It
+- [ ] Fix Railway frontend deployment (`toolblip.com` returns 502)
+- [ ] Verify `toolblip.com` serves correctly over HTTPS
+- [ ] Verify `api.toolblip.com` still responding
+- [ ] Set up Railway auto-deploy from GitHub `main` branch
+- [ ] Fix or replace Port Scanner tool (browser CORS limitation)
+- [ ] Test all 36 tools work on production
+- [ ] Mobile responsiveness audit — test every tool on mobile viewport
+- [ ] Verify 404 page works for invalid tool slugs
+- [ ] Verify `error.tsx` renders correctly (lucide-react installed)
+- [ ] Remove stale Vercel project / clean up old deployments
 
-- [x] ~~Create Next.js repo from scratch (migrate from Astro)~~ ✅
-- [x] ~~Set up project structure (src/app/, src/components/, src/lib/)~~ ✅
-- [x] ~~Configure env vars (NEXT_PUBLIC_API_URL, NEXT_PUBLIC_APP_URL)~~ ✅
-- [x] Deploy to Vercel ✅ — live at https://toolblip.vercel.app
-- [x] Connect custom domain (toolblip.com) via Vercel ✅ — https://toolblip.com
-- [ ] Set up Cloudflare CDN/DNS (verify SSL, proxy to Vercel)
-- [ ] Verify Vercel → Railway API calls work (CORS)
+## Phase 1: Polish & Core Pages
+### Homepage
+- [ ] Hero section with tagline + CTA ("36 Free Developer Tools. No signup. No tracking.")
+- [ ] Featured/popular tools grid (top 8-12)
+- [ ] Category quick-nav (Text, Developer, Image, CSS, SEO, Color, Conversion, Math)
+- [ ] "Why Toolblip?" section (free, no signup, client-side privacy, fast)
+- [ ] Footer: links, copyright, social
 
-## Phase 2: Backend MVP
+### Site Pages
+- [ ] `/about` — what is Toolblip, who's behind it, mission
+- [ ] `/privacy` — privacy policy (tools run client-side, minimal data)
+- [ ] `/terms` — terms of service
+- [ ] `/blog` — working blog index (can start with launch post)
+- [ ] `/api-docs` — public API documentation
+- [ ] `/directory` — full categorized tools directory (or redirect to `/tools`)
+- [ ] `/advertise` — advertising info placeholder
+- [ ] `/donate` — Ko-fi / Buy Me a Coffee link
 
-- [ ] Create Laravel API repo (toolblip-api)
-- [ ] Set up Laravel on Railway (Docker)
-- [ ] Configure PostgreSQL + Redis on Railway
-- [ ] Set up .env on Railway (CORS, APP_URL, DB)
-- [ ] Deploy Laravel to Railway
-- [ ] Connect api.toolblip.com CNAME to Railway
-- [ ] Verify SSL on api.toolblip.com
+### SEO Foundation
+- [ ] Dynamic `<title>` and `<meta description>` per tool page
+- [ ] Open Graph tags for social sharing (per tool)
+- [ ] Verify `sitemap.xml` includes all 36 tools
+- [ ] `robots.txt` — allow all
+- [ ] Structured data (JSON-LD WebApplication schema) per tool
+- [ ] Canonical URLs on all pages
+- [ ] Google Search Console — verify & submit sitemap
 
-## Phase 3: Directory (Core Feature)
+### UX Polish
+- [ ] Loading states for tools that fetch external data
+- [ ] Consistent copy-to-clipboard experience across all tools
+- [ ] Breadcrumbs on tool pages (Home > Category > Tool)
+- [ ] "Related tools" section on each tool page
+- [ ] Dark/light mode QA on ALL pages
+- [ ] Smooth page transitions / loading spinner
 
-- [ ] Create tools DB table + migration
-- [ ] Create mcp_servers DB table + migration
-- [ ] Build GET /api/tools endpoint
-- [ ] Build GET /api/mcp/servers endpoint
-- [x] ~~Build directory page in Next.js~~ ✅
-- [ ] Add search functionality (frontend + backend)
-- [x] ~~Add tool detail pages~~ ✅ (static pages generated, interactive components pending)
-- [ ] Deploy and verify
+## Phase 2: Content & Blog
+### Launch Content
+- [ ] "Introducing Toolblip" — launch blog post
+- [ ] "36 Free Online Developer Tools" — listicle post
+- [ ] "Top 10 CSS Tools Every Developer Needs" — niche post
+- [ ] "JSON Formatter: How to Pretty-Print JSON" — tool tutorial
+- [ ] "Regex Cheat Sheet + Online Tester" — SEO magnet post
 
-## Phase 4: Auth (for Pro features)
+### Content Strategy
+- [ ] One blog post per tool category (8 categories × 1 post)
+- [ ] Internal linking: each blog post links to relevant tools
+- [ ] Keyword-rich tool descriptions (target long-tail: "online json formatter", "css gradient generator", "color contrast checker")
 
-- [ ] Create users table + migration
-- [ ] Build /api/auth/register endpoint
-- [ ] Build /api/auth/login endpoint
-- [ ] Set up Sanctum tokens
-- [ ] Create login/register pages in Next.js
-- [ ] Add protected routes
-
-## Phase 5: MCP Package
-
-- [ ] Publish @toolblip/mcp to npm (check if already done)
-- [ ] Add tool definitions to MCP package
-- [ ] Add directory search to MCP package
-- [ ] Write README + integration docs
-
-## Phase 6: Polish + Launch
-
-- [ ] Add SEO meta tags to all pages
-- [ ] Add sitemap.xml + robots.txt
-- [ ] Add GA4 or Plausible analytics
-- [ ] Add OG tags + social previews
-- [ ] Test on mobile
-- [ ] Performance audit (Lighthouse)
-- [ ] Submit to directories (TinyTools, etc.)
-
----
-
-## SEO (Long-term, start slow)
-
-### Foundation
-- [ ] Set up Google Search Console for toolblip.com
-- [ ] Verify site ownership in GSC
-- [ ] Submit sitemap.xml to GSC (Vercel supports this)
-- [ ] Set up Bing Webmaster Tools
-- [ ] Check canonical URLs on all Next.js pages
-- [ ] Ensure each page has unique meta title + description
-
-### Content (directory + blog, start with 3 cornerstone pieces)
-- [ ] Write: "What is an MCP Server? A Practical Guide for Developers"
-- [ ] Write: "How to Connect Claude Code to Toolblip in 5 Minutes"
-- [ ] Write: "Top 10 MCP Servers Every Developer Should Know About"
-- [ ] Add blog to Next.js (MDX support via next-mdx-remote)
-- [ ] Ensure each post has OG tags + Twitter cards
-- [ ] Add FAQ schema to directory listing pages
-
-### Technical SEO
-- [ ] Fix any GSC coverage errors (404s, soft 404s)
-- [ ] Check Core Web Vitals in GSC
-- [ ] Ensure sitemap.xml lists all public pages
-- [ ] Verify robots.txt is complete
-- [ ] Add next-sitemap package for dynamic sitemap
-
-### Off-page SEO (start 1/month)
-- [ ] Submit to MCP/directory listings (MCP.run, Smithery, etc.)
-- [ ] Submit to dev tool directories (TinyTools, toolblip self-submit)
-- [ ] Post in r/programming or r/devtools (helpful, not promo)
-- [ ] Build 1-2 contextual backlinks per month via genuine outreach
+### Content Calendar
+- [ ] Week 1-2: Launch post + 3 category posts
+- [ ] Week 3-4: 3 more category posts
+- [ ] Month 2+: 1 post/week targeting specific tool keywords

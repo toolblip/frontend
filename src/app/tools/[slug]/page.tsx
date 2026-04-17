@@ -15,9 +15,23 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
   const tool = tools.find(t => t.slug === slug);
   if (!tool) return {};
+  const url = `https://toolblip.com/tools/${tool.slug}`;
   return {
-    title: `${tool.name} — Toolblip`,
+    title: `${tool.name} — Free Online Tool | Toolblip`,
     description: tool.description,
+    alternates: { canonical: url },
+    openGraph: {
+      title: `${tool.name} — Free Online Tool`,
+      description: tool.description,
+      url,
+      siteName: 'Toolblip',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary',
+      title: `${tool.name} — Free Online Tool | Toolblip`,
+      description: tool.description,
+    },
   };
 }
 
