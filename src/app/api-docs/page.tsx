@@ -1,75 +1,28 @@
+'use client';
+
 import type { Metadata } from 'next';
+import { useState } from 'react';
 import CodeBlock from '@/components/ui/CodeBlock';
 
-export const metadata: Metadata = {
-  title: 'API Documentation | Toolblip',
-  description:
-    'Toolblip REST API — free endpoints for browsing developer tools and user authentication.',
-  openGraph: {
-    title: 'API Documentation | Toolblip',
-    description:
-      'Toolblip REST API — free endpoints for browsing developer tools and user authentication.',
-    url: 'https://toolblip.com/api-docs',
-    siteName: 'Toolblip',
-  },
-  twitter: {
-    card: 'summary',
-    title: 'API Documentation | Toolblip',
-    description:
-      'Toolblip REST API — free endpoints for browsing developer tools and user authentication.',
-  },
-};
+// ─── Config ────────────────────────────────────────────────────────────────
 
-const BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL ?? 'https://toolblip-api-production.up.railway.app';
-const RAILWAY_URL = 'https://toolblip-api-production.up.railway.app';
+const BASE_URL = 'https://toolblip-api-production.up.railway.app';
+const API_READY_URL = 'api.toolblip.com'; // SSL pending
 
 const ENDPOINTS = [
-  {
-    id: 'tools-list',
-    method: 'GET',
-    path: '/api/tools',
-    auth: false,
-    desc: 'List all tools',
-  },
-  {
-    id: 'tools-detail',
-    method: 'GET',
-    path: '/api/tools/{slug}',
-    auth: false,
-    desc: 'Get a single tool',
-  },
-  {
-    id: 'auth-register',
-    method: 'POST',
-    path: '/api/auth/register',
-    auth: false,
-    desc: 'Create account',
-  },
-  {
-    id: 'auth-login',
-    method: 'POST',
-    path: '/api/auth/login',
-    auth: false,
-    desc: 'Sign in',
-  },
-  {
-    id: 'auth-logout',
-    method: 'POST',
-    path: '/api/auth/logout',
-    auth: true,
-    desc: 'Revoke session',
-  },
-  {
-    id: 'auth-user',
-    method: 'GET',
-    path: '/api/auth/user',
-    auth: true,
-    desc: 'Current authenticated user',
-  },
+  { id: 'tools-list',    method: 'GET',    path: '/api/tools',         auth: false, desc: 'List all tools'            },
+  { id: 'tools-detail',  method: 'GET',    path: '/api/tools/{slug}',  auth: false, desc: 'Get a single tool'          },
+  { id: 'auth-register', method: 'POST',   path: '/api/auth/register', auth: false, desc: 'Create account'            },
+  { id: 'auth-login',    method: 'POST',   path: '/api/auth/login',    auth: false, desc: 'Sign in'                  },
+  { id: 'auth-logout',   method: 'POST',   path: '/api/auth/logout',   auth: true,  desc: 'Revoke session'            },
+  { id: 'auth-user',     method: 'GET',    path: '/api/auth/user',     auth: true,  desc: 'Current authenticated user' },
 ] as const;
 
+// ─── Page ───────────────────────────────────────────────────────────────────
+
 export default function ApiDocsPage() {
+  const [activeSection, setActiveSection] = useState('overview');
+
   return (
     <div className="min-h-screen bg-white dark:bg-[#0c0c0c] text-gray-900 dark:text-gray-100">
 
@@ -97,17 +50,22 @@ export default function ApiDocsPage() {
               On this page
             </p>
             {[
-              { id: 'overview',       label: 'Overview' },
-              { id: 'authentication', label: 'Authentication' },
-              { id: 'tools',          label: 'Tools' },
-              { id: 'auth',           label: 'Auth' },
-              { id: 'errors',         label: 'Errors' },
-              { id: 'rate-limits',    label: 'Rate Limits' },
+              { id: 'overview',        label: 'Overview'        },
+              { id: 'authentication',  label: 'Authentication'  },
+              { id: 'tools',           label: 'Tools'           },
+              { id: 'auth',            label: 'Auth'            },
+              { id: 'errors',          label: 'Errors'          },
+              { id: 'rate-limits',     label: 'Rate Limits'     },
             ].map(({ id, label }) => (
               <a
                 key={id}
                 href={`#${id}`}
-                className="flex items-center gap-2 px-3 py-1.5 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
+                onClick={() => setActiveSection(id)}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors ${
+                  activeSection === id
+                    ? 'text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800 font-medium'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-900'
+                }`}
               >
                 {label}
               </a>
@@ -138,10 +96,7 @@ export default function ApiDocsPage() {
           <section id="overview" className="scroll-mt-20">
             <SectionHeading>Overview</SectionHeading>
             <p className="text-gray-500 dark:text-gray-400 leading-relaxed mb-8">
-              The Toolblip API is a free REST API for browsing developer tools and
-              managing user accounts. All endpoints return JSON. Public read endpoints
-              require no authentication — register an account to get a Bearer token for
-              protected routes.
+              The Toolblip API is a free REST API for browsing developer tools and managing user accounts. All endpoints return JSON. Public read endpoints require no authentication — register an account to get a Bearer token for protected routes.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
@@ -155,10 +110,10 @@ export default function ApiDocsPage() {
               </div>
               <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4">
                 <p className="text-[10px] font-bold text-gray-400 dark:text-gray-600 uppercase tracking-widest mb-2">
-                  Legacy fallback
+                  SSL-ready (pending)
                 </p>
                 <code className="text-sm font-mono text-gray-400 dark:text-gray-600 break-all leading-relaxed">
-                  {RAILWAY_URL}
+                  https://{API_READY_URL}
                 </code>
               </div>
             </div>
@@ -175,10 +130,7 @@ export default function ApiDocsPage() {
                 </thead>
                 <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                   {ENDPOINTS.map(({ id, method, path, auth, desc }) => (
-                    <tr
-                      key={id}
-                      className="bg-white dark:bg-[#0c0c0c] hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors"
-                    >
+                    <tr key={id} className="bg-white dark:bg-[#0c0c0c] hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors">
                       <td className="px-4 py-3"><MethodPill method={method} /></td>
                       <td className="px-4 py-3 font-mono text-xs text-gray-700 dark:text-gray-300">{path}</td>
                       <td className="px-4 py-3">{auth ? <LockPill /> : <PublicPill />}</td>
@@ -221,7 +173,7 @@ export default function ApiDocsPage() {
                 path="/api/tools"
                 auth={false}
                 status={200}
-                description="Returns a paginated list of all tools in the registry."
+                description="Returns a list of all tools in the registry."
                 response={`// 200 OK
 {
   "tools": {
@@ -292,7 +244,7 @@ export default function ApiDocsPage() {
                 path="/api/auth/register"
                 auth={false}
                 status={201}
-                description='Create a new user account. Returns the user object and a Bearer token. Send name, email, password, and password_confirmation in the request body.'
+                description="Create a new user account. Returns the user object and a Bearer token."
                 body={`{
   "name": "Harun",
   "email": "harun@example.com",
@@ -311,7 +263,12 @@ export default function ApiDocsPage() {
 }`}
                 curl={`curl -X POST "${BASE_URL}/api/auth/register" \\
   -H "Content-Type: application/json" \\
-  -d '{"name":"Harun","email":"harun@example.com","password":"secret123","password_confirmation":"secret123"}'`}
+  -d '{
+    "name": "Harun",
+    "email": "harun@example.com",
+    "password": "secret123",
+    "password_confirmation": "secret123"
+  }'`}
               />
 
               {/* POST /api/auth/login */}
@@ -419,10 +376,10 @@ export default function ApiDocsPage() {
               <span className="text-green-500 shrink-0 text-xl mt-0.5">⚡</span>
               <div>
                 <p className="text-sm font-semibold text-green-900 dark:text-green-300 mb-2">
-                  60 requests / minute
+                  60 requests / minute (authenticated)
                 </p>
                 <p className="text-sm text-green-700 dark:text-green-400 leading-relaxed">
-                  Authenticated endpoints. Public read endpoints have more generous limits.
+                  Public read endpoints have more generous limits.
                   When limited, the API returns{' '}
                   <InlineCode>429 Too Many Requests</InlineCode> — back off and retry.
                 </p>
@@ -451,13 +408,13 @@ export default function ApiDocsPage() {
 // ─── Data ───────────────────────────────────────────────────
 
 const ERROR_CODES = [
-  { code: 400, label: 'Bad Request',       color: 'text-red-500'    },
-  { code: 401, label: 'Unauthorized',      color: 'text-red-500'    },
-  { code: 403, label: 'Forbidden',         color: 'text-amber-500'  },
-  { code: 404, label: 'Not Found',         color: 'text-gray-500'   },
-  { code: 422, label: 'Validation Error',  color: 'text-yellow-600' },
-  { code: 429, label: 'Too Many Requests',  color: 'text-amber-500'  },
-  { code: 500, label: 'Server Error',      color: 'text-red-600'    },
+  { code: 400, label: 'Bad Request',      color: 'text-red-500'    },
+  { code: 401, label: 'Unauthorized',    color: 'text-red-500'    },
+  { code: 403, label: 'Forbidden',       color: 'text-amber-500'  },
+  { code: 404, label: 'Not Found',       color: 'text-gray-500'   },
+  { code: 422, label: 'Validation Error',color: 'text-yellow-600' },
+  { code: 429, label: 'Too Many Requests',color: 'text-amber-500'  },
+  { code: 500, label: 'Server Error',    color: 'text-red-600'    },
 ];
 
 // ─── Components ─────────────────────────────────────────────
