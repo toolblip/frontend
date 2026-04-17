@@ -8,22 +8,22 @@ const BASE_URL = 'https://toolblip-api-production.up.railway.app';
 const SSL_URL = 'api.toolblip.com';
 
 const ENDPOINTS = [
-  { id: 'tools-list',    method: 'GET',  path: '/api/tools',        auth: false, status: 200, desc: 'List all tools'                  },
-  { id: 'tools-detail',  method: 'GET',  path: '/api/tools/{slug}', auth: false, status: 200, desc: 'Get a single tool by slug'        },
-  { id: 'auth-register', method: 'POST', path: '/api/auth/register',auth: false, status: 201, desc: 'Create a new account'             },
-  { id: 'auth-login',    method: 'POST', path: '/api/auth/login',   auth: false, status: 200, desc: 'Sign in'                         },
-  { id: 'auth-logout',   method: 'POST', path: '/api/auth/logout',  auth: true,  status: 200, desc: 'Revoke current session'          },
-  { id: 'auth-user',     method: 'GET',  path: '/api/auth/user',    auth: true,  status: 200, desc: 'Get authenticated user'          },
+  { id: 'tools-list',    method: 'GET',    path: '/api/tools',         auth: false, status: 200, desc: 'List all tools'                     },
+  { id: 'tools-detail',  method: 'GET',    path: '/api/tools/{slug}',   auth: false, status: 200, desc: 'Get a single tool by slug'           },
+  { id: 'auth-register', method: 'POST',   path: '/api/auth/register',  auth: false, status: 201, desc: 'Create a new account'                },
+  { id: 'auth-login',    method: 'POST',   path: '/api/auth/login',     auth: false, status: 200, desc: 'Sign in'                            },
+  { id: 'auth-logout',   method: 'POST',   path: '/api/auth/logout',    auth: true,  status: 200, desc: 'Revoke the current session'         },
+  { id: 'auth-user',     method: 'GET',    path: '/api/auth/user',      auth: true,  status: 200, desc: 'Get the authenticated user'          },
 ] as const;
 
 const ERROR_CODES = [
-  { code: 400, label: 'Bad Request',      color: 'text-red-500'     },
-  { code: 401, label: 'Unauthorized',      color: 'text-red-500'     },
-  { code: 403, label: 'Forbidden',         color: 'text-amber-500'   },
-  { code: 404, label: 'Not Found',        color: 'text-gray-500'    },
-  { code: 422, label: 'Validation Error', color: 'text-yellow-600'  },
-  { code: 429, label: 'Too Many Requests', color: 'text-amber-500'  },
-  { code: 500, label: 'Server Error',      color: 'text-red-600'    },
+  { code: 400, label: 'Bad Request'       },
+  { code: 401, label: 'Unauthorized'      },
+  { code: 403, label: 'Forbidden'         },
+  { code: 404, label: 'Not Found'        },
+  { code: 422, label: 'Validation Error'  },
+  { code: 429, label: 'Too Many Requests' },
+  { code: 500, label: 'Server Error'      },
 ] as const;
 
 // ─── Page ───────────────────────────────────────────────────────────────────
@@ -36,7 +36,7 @@ export default function ApiDocsPage() {
 
       {/* ── Topbar ── */}
       <header className="sticky top-0 z-10 bg-white/90 dark:bg-[#0c0c0c]/90 backdrop-blur border-b border-gray-100 dark:border-gray-800">
-        <div className="max-w-5xl mx-auto px-6 py-3 flex items-center gap-3">
+        <div className="max-w-6xl mx-auto px-6 py-3 flex items-center gap-3">
           <span className="text-xs font-mono font-bold bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2.5 py-1 rounded-full">
             REST v1
           </span>
@@ -45,7 +45,7 @@ export default function ApiDocsPage() {
         </div>
       </header>
 
-      <div className="max-w-5xl mx-auto px-6 py-10 flex gap-14">
+      <div className="max-w-6xl mx-auto px-6 py-10 flex gap-16">
 
         {/* ── Sidebar ── */}
         <aside className="w-44 shrink-0 hidden md:block">
@@ -54,9 +54,9 @@ export default function ApiDocsPage() {
             {[
               { id: 'overview',       label: 'Overview'       },
               { id: 'authentication', label: 'Authentication' },
-              { id: 'tools',          label: 'Tools'           },
-              { id: 'auth',           label: 'Auth'            },
-              { id: 'errors',         label: 'Errors'          },
+              { id: 'tools',          label: 'Tools'          },
+              { id: 'auth',           label: 'Auth'           },
+              { id: 'errors',         label: 'Errors'         },
             ].map(({ id, label }) => (
               <a
                 key={id}
@@ -100,11 +100,11 @@ export default function ApiDocsPage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
               <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-4">
-                <p className="text-[10px] font-bold text-green-700 dark:text-green-400 uppercase tracking-widest mb-2">Base URL</p>
+                <p className="text-[10px] font-bold text-green-700 dark:text-green-400 uppercase tracking-widest mb-2">Base URL (production)</p>
                 <code className="text-sm font-mono text-green-700 dark:text-green-400 break-all">{BASE_URL}</code>
               </div>
               <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">SSL (pending)</p>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">SSL URL (pending)</p>
                 <code className="text-sm font-mono text-gray-400 break-all">https://{SSL_URL}</code>
               </div>
             </div>
@@ -137,19 +137,29 @@ export default function ApiDocsPage() {
           <section id="authentication" className="scroll-mt-16">
             <SectionHeading>Authentication</SectionHeading>
             <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-4">
-              All authenticated endpoints require a Bearer token. Obtain one from{' '}
+              Authenticated endpoints require a Bearer token. Obtain one from{' '}
               <InlineCode>/api/auth/register</InlineCode> or{' '}
-              <InlineCode>/api/auth/login</InlineCode>, then include it in every request:
+              <InlineCode>/api/auth/login</InlineCode>, then include it in every protected request:
             </p>
-            <CodeBlock code="Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx" title="Header — all authenticated requests" />
+            <CodeBlock
+              code="Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx"
+              title="Header — all authenticated requests"
+            />
+            <div className="mt-4 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl">
+              <p className="text-xs text-amber-700 dark:text-amber-400">
+                <strong>Keep your token secret.</strong> Never expose it in client-side code or public repositories. Tokens expire when you log out.
+              </p>
+            </div>
           </section>
 
           {/* ── Tools ── */}
           <section id="tools" className="scroll-mt-16">
             <SectionHeading>Tools</SectionHeading>
-            <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">All tools endpoints are public — no authentication required.</p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
+              All tools endpoints are public — no authentication required.
+            </p>
 
-            <div className="space-y-10">
+            <div className="space-y-12">
 
               <EndpointCard
                 id="tools-list"
@@ -157,7 +167,7 @@ export default function ApiDocsPage() {
                 path="/api/tools"
                 auth={false}
                 status={200}
-                description="Returns a list of all tools in the registry."
+                description="Returns a paginated list of all tools in the registry."
                 response={`// 200 OK
 {
   "tools": {
@@ -207,6 +217,11 @@ export default function ApiDocsPage() {
     "emoji": "🤖",
     "created_at": "2026-01-01T00:00:00Z"
   }
+}
+
+// 404 Not Found
+{
+  "message": "Tool not found"
 }`}
                 curl={`curl -X GET "${BASE_URL}/api/tools/claude-code"`}
               />
@@ -218,7 +233,7 @@ export default function ApiDocsPage() {
           <section id="auth" className="scroll-mt-16">
             <SectionHeading>Auth</SectionHeading>
 
-            <div className="space-y-10">
+            <div className="space-y-12">
 
               <EndpointCard
                 id="auth-register"
@@ -333,15 +348,15 @@ export default function ApiDocsPage() {
     "password": ["The password field is required."]
   }
 }`}
-              title="Validation error"
+              title="Validation error response"
             />
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-4">
-              {ERROR_CODES.map(({ code, label, color }) => (
+              {ERROR_CODES.map(({ code, label }) => (
                 <div
                   key={code}
                   className="flex items-center gap-2.5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg px-3 py-2"
                 >
-                  <span className={`font-mono font-bold text-sm ${color}`}>{code}</span>
+                  <span className="font-mono font-bold text-sm text-gray-700 dark:text-gray-300">{code}</span>
                   <span className="text-xs text-gray-500 dark:text-gray-400">{label}</span>
                 </div>
               ))}
@@ -366,7 +381,7 @@ export default function ApiDocsPage() {
   );
 }
 
-// ─── Data ───────────────────────────────────────────────────────────────────
+// ─── Method colors ───────────────────────────────────────────────────────────
 
 const METHOD_COLORS: Record<string, string> = {
   GET:    'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400',
@@ -418,6 +433,8 @@ function InlineCode({ children }: { children: React.ReactNode }) {
   );
 }
 
+// ─── Endpoint Card ─────────────────────────────────────────────────────────
+
 interface EndpointCardProps {
   id: string;
   method: string;
@@ -435,7 +452,7 @@ function EndpointCard({
 }: EndpointCardProps) {
   return (
     <div id={id} className="border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden scroll-mt-20">
-      {/* Header */}
+      {/* Header bar */}
       <div className="bg-gray-50 dark:bg-gray-900 px-5 py-3 flex items-center gap-3 border-b border-gray-200 dark:border-gray-800">
         <MethodPill method={method} />
         <code className="text-sm font-mono text-gray-800 dark:text-gray-200">{path}</code>
@@ -443,9 +460,13 @@ function EndpointCard({
         <span className="ml-auto text-xs font-mono text-gray-400 dark:text-gray-500">→ {status}</span>
       </div>
 
-      <div className="p-5 space-y-4">
+      {/* Body */}
+      <div className="p-5 space-y-5">
+
+        {/* Description */}
         <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{description}</p>
 
+        {/* Request body / headers + Response */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {body ? (
             <div>
@@ -464,6 +485,7 @@ function EndpointCard({
           </div>
         </div>
 
+        {/* curl */}
         <div>
           <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">curl</p>
           <CodeBlock code={curl} />
