@@ -4,18 +4,31 @@ import CodeBlock from '@/components/ui/CodeBlock';
 export const metadata: Metadata = {
   title: 'API Documentation | Toolblip',
   description:
-    'Toolblip REST API — free endpoints for browsing developer tools, MCP servers, and user authentication.',
+    'Toolblip REST API — free endpoints for browsing developer tools and user authentication.',
   openGraph: {
     title: 'API Documentation | Toolblip',
-    description: 'Toolblip REST API — free endpoints for browsing developer tools, MCP servers, and user authentication.',
+    description: 'Toolblip REST API — free endpoints for browsing developer tools and user authentication.',
     url: 'https://toolblip.com/api-docs',
     siteName: 'Toolblip',
   },
-  twitter: { card: 'summary', title: 'API Documentation | Toolblip', description: 'Toolblip REST API — free endpoints for browsing developer tools, MCP servers, and user authentication.' },
+  twitter: {
+    card: 'summary',
+    title: 'API Documentation | Toolblip',
+    description: 'Toolblip REST API — free endpoints for browsing developer tools and user authentication.',
+  },
 };
 
 const BASE_URL = 'https://toolblip-api-production.up.railway.app';
 const CLEAN_URL = 'https://api.toolblip.com';
+
+const ENDPOINTS = [
+  { id: 'tools-list',    method: 'GET',  path: '/api/tools',          auth: false, desc: 'List all tools' },
+  { id: 'tools-detail',  method: 'GET',  path: '/api/tools/{slug}',   auth: false, desc: 'Get a single tool' },
+  { id: 'auth-register', method: 'POST', path: '/api/auth/register',  auth: false, desc: 'Create account' },
+  { id: 'auth-login',    method: 'POST', path: '/api/auth/login',     auth: false, desc: 'Sign in' },
+  { id: 'auth-logout',   method: 'POST', path: '/api/auth/logout',    auth: true,  desc: 'Revoke session' },
+  { id: 'auth-user',     method: 'GET',  path: '/api/auth/user',     auth: true,  desc: 'Current authenticated user' },
+] as const;
 
 export default function ApiDocsPage() {
   return (
@@ -41,12 +54,11 @@ export default function ApiDocsPage() {
           <nav className="sticky top-28 space-y-0.5 text-sm">
             <p className="px-3 py-2 text-[10px] font-bold text-gray-400 dark:text-gray-600 uppercase tracking-widest mb-2">On this page</p>
             {[
-              { id: 'overview',        label: 'Overview' },
-              { id: 'authentication',  label: 'Authentication' },
-              { id: 'tools',           label: 'Tools' },
-              { id: 'mcp-servers',     label: 'MCP Servers' },
-              { id: 'auth-endpoints',  label: 'Auth' },
-              { id: 'errors',          label: 'Errors' },
+              { id: 'overview',       label: 'Overview' },
+              { id: 'authentication', label: 'Authentication' },
+              { id: 'tools',          label: 'Tools' },
+              { id: 'auth',           label: 'Auth' },
+              { id: 'errors',         label: 'Errors' },
               { id: 'rate-limits',    label: 'Rate Limits' },
             ].map(({ id, label }) => (
               <a
@@ -61,15 +73,7 @@ export default function ApiDocsPage() {
             <div className="pt-6 pb-2">
               <p className="px-3 py-2 text-[10px] font-bold text-gray-400 dark:text-gray-600 uppercase tracking-widest mb-2">Endpoints</p>
             </div>
-            {[
-              { id: 'tools-list',     method: 'GET',  path: '/api/tools'       },
-              { id: 'tools-detail',   method: 'GET',  path: '/api/tools/{slug}' },
-              { id: 'mcp-servers-list', method: 'GET', path: '/api/mcp/servers' },
-              { id: 'auth-register',  method: 'POST', path: '/api/auth/register' },
-              { id: 'auth-login',     method: 'POST', path: '/api/auth/login'    },
-              { id: 'auth-logout',    method: 'POST', path: '/api/auth/logout'   },
-              { id: 'auth-user',      method: 'GET',  path: '/api/auth/user'     },
-            ].map(({ id, method, path }) => (
+            {ENDPOINTS.map(({ id, method, path }) => (
               <a
                 key={id}
                 href={`#${id}`}
@@ -89,7 +93,7 @@ export default function ApiDocsPage() {
           <section id="overview" className="scroll-mt-20">
             <SectionHeading>Overview</SectionHeading>
             <p className="text-gray-500 dark:text-gray-400 leading-relaxed mb-8">
-              The Toolblip API is a free REST API for browsing developer tools, MCP servers, and managing user accounts.
+              The Toolblip API is a free REST API for browsing developer tools and managing user accounts.
               All endpoints return JSON. Public read endpoints require no authentication —
               register an account to get a Bearer token for protected routes.
             </p>
@@ -194,7 +198,7 @@ export default function ApiDocsPage() {
     ]
   }
 }`}
-                curl={`curl -X GET ${BASE_URL}/api/tools`}
+                curl={`curl -X GET "${BASE_URL}/api/tools"`}
               />
 
               {/* GET /api/tools/{slug} */}
@@ -218,53 +222,14 @@ export default function ApiDocsPage() {
     "created_at": "2026-01-01T00:00:00Z"
   }
 }`}
-                curl={`curl -X GET ${BASE_URL}/api/tools/claude-code`}
-              />
-
-            </div>
-          </section>
-
-          {/* ── MCP Servers ── */}
-          <section id="mcp-servers" className="scroll-mt-20">
-            <SectionHeading>MCP Servers</SectionHeading>
-            <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-              MCP (Model Context Protocol) server registry. All endpoints are public.
-            </p>
-
-            <div className="space-y-12">
-
-              {/* GET /api/mcp/servers */}
-              <EndpointCard
-                id="mcp-servers-list"
-                method="GET"
-                path="/api/mcp/servers"
-                auth={false}
-                status={200}
-                description="Returns a list of all available MCP servers. Supports optional query params: category, page."
-                response={`// 200 OK
-{
-  "servers": {
-    "servers": [
-      {
-        "id": 1,
-        "slug": "filesystem",
-        "name": "Filesystem",
-        "description": "Read and write local filesystem",
-        "category": "utilities",
-        "url": "https://example.com/filesystem",
-        "created_at": "2026-01-01T00:00:00Z"
-      }
-    ]
-  }
-}`}
-                curl={`curl -X GET ${BASE_URL}/api/mcp/servers`}
+                curl={`curl -X GET "${BASE_URL}/api/tools/claude-code"`}
               />
 
             </div>
           </section>
 
           {/* ── Auth Endpoints ── */}
-          <section id="auth-endpoints" className="scroll-mt-20">
+          <section id="auth" className="scroll-mt-20">
             <SectionHeading>Auth</SectionHeading>
 
             <div className="space-y-12">
@@ -293,7 +258,7 @@ export default function ApiDocsPage() {
   },
   "token": "tb_live_xxxxxxxxxxxxxxxx"
 }`}
-                curl={`curl -X POST ${BASE_URL}/api/auth/register \\
+                curl={`curl -X POST "${BASE_URL}/api/auth/register" \\
   -H "Content-Type: application/json" \\
   -d '{"name":"Harun","email":"harun@example.com","password":"secret123","password_confirmation":"secret123"}'`}
               />
@@ -320,7 +285,7 @@ export default function ApiDocsPage() {
   },
   "token": "tb_live_xxxxxxxxxxxxxxxx"
 }`}
-                curl={`curl -X POST ${BASE_URL}/api/auth/login \\
+                curl={`curl -X POST "${BASE_URL}/api/auth/login" \\
   -H "Content-Type: application/json" \\
   -d '{"email":"harun@example.com","password":"secret123"}'`}
               />
@@ -337,7 +302,7 @@ export default function ApiDocsPage() {
 {
   "message": "Logged out successfully"
 }`}
-                curl={`curl -X POST ${BASE_URL}/api/auth/logout \\
+                curl={`curl -X POST "${BASE_URL}/api/auth/logout" \\
   -H "Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx"`}
               />
 
@@ -358,7 +323,7 @@ export default function ApiDocsPage() {
     "is_pro": false
   }
 }`}
-                curl={`curl -X GET ${BASE_URL}/api/auth/user \\
+                curl={`curl -X GET "${BASE_URL}/api/auth/user" \\
   -H "Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx"`}
               />
 
@@ -404,7 +369,8 @@ export default function ApiDocsPage() {
                 </p>
                 <p className="text-sm text-green-700 dark:text-green-400 leading-relaxed">
                   Authenticated endpoints. Public read endpoints have more generous limits.
-                  When limited, the API returns <InlineCode>429 Too Many Requests</InlineCode> — back off and retry.
+                  When limited, the API returns{' '}
+                  <InlineCode>429 Too Many Requests</InlineCode> — back off and retry.
                 </p>
               </div>
             </div>
@@ -427,24 +393,14 @@ export default function ApiDocsPage() {
 
 // ─── Data ───────────────────────────────────────────────────
 
-const ENDPOINTS = [
-  { id: 'tools-list',       method: 'GET',  path: '/api/tools',          auth: false, desc: 'List all tools' },
-  { id: 'tools-detail',     method: 'GET',  path: '/api/tools/{slug}',   auth: false, desc: 'Get a tool' },
-  { id: 'mcp-servers-list', method: 'GET',  path: '/api/mcp/servers',    auth: false, desc: 'List MCP servers' },
-  { id: 'auth-register',    method: 'POST', path: '/api/auth/register',   auth: false, desc: 'Create account' },
-  { id: 'auth-login',       method: 'POST', path: '/api/auth/login',      auth: false, desc: 'Sign in' },
-  { id: 'auth-logout',      method: 'POST', path: '/api/auth/logout',    auth: true,  desc: 'Revoke session' },
-  { id: 'auth-user',        method: 'GET',  path: '/api/auth/user',      auth: true,  desc: 'Current user' },
-] as const;
-
 const ERROR_CODES = [
   { code: 400, label: 'Bad Request',        color: 'text-red-500'    },
-  { code: 401, label: 'Unauthorized',      color: 'text-red-500'    },
-  { code: 403, label: 'Forbidden',         color: 'text-amber-500'  },
-  { code: 404, label: 'Not Found',         color: 'text-gray-500'   },
-  { code: 422, label: 'Validation Error', color: 'text-yellow-600' },
-  { code: 429, label: 'Too Many Requests',  color: 'text-amber-500'  },
-  { code: 500, label: 'Server Error',      color: 'text-red-600'    },
+  { code: 401, label: 'Unauthorized',       color: 'text-red-500'    },
+  { code: 403, label: 'Forbidden',          color: 'text-amber-500'  },
+  { code: 404, label: 'Not Found',          color: 'text-gray-500'   },
+  { code: 422, label: 'Validation Error',   color: 'text-yellow-600' },
+  { code: 429, label: 'Too Many Requests',   color: 'text-amber-500'  },
+  { code: 500, label: 'Server Error',       color: 'text-red-600'    },
 ];
 
 // ─── Components ─────────────────────────────────────────────
