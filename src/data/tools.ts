@@ -45,6 +45,16 @@ export const tools: Tool[] = [
   { name: 'Percentage Calculator', slug: 'percentage-calculator', description: 'Calculate percentages, percentage change, tips, and discounts instantly.', emoji: '%️⃣', category: 'Math' },
   { name: 'CSS Border Radius Generator', slug: 'css-border-radius-generator', description: 'Visually generate CSS border-radius values with per-corner controls, live preview, and one-click copy.', emoji: '⬜', category: 'CSS' },
   { name: 'CSS Gradient Generator', slug: 'css-gradient-generator', description: 'Create linear, radial, and conic CSS gradients with a live preview, color stops, angle control, and preset library.', emoji: '🌈', category: 'CSS' },
+  { name: 'JSON to CSV', slug: 'json-to-csv', description: 'Convert JSON data to CSV format with custom delimiter and header row options.', emoji: '📊', category: 'Conversion' },
+  { name: 'XML Formatter', slug: 'xml-formatter', description: 'Format, validate, and prettify XML with syntax highlighting and error detection.', emoji: '📋', category: 'Developer' },
+  { name: 'SQL Prettifier', slug: 'sql-prettifier', description: 'Format and indent SQL queries with keyword highlighting and customizable style.', emoji: '🗄️', category: 'Developer' },
+  { name: 'JavaScript Minifier', slug: 'js-minifier', description: 'Minify JavaScript code by removing whitespace, comments, and optimizing for production.', emoji: '⚡', category: 'Developer' },
+  { name: 'CSS Preview', slug: 'css-preview', description: 'Preview CSS properties live with editable code and real-time rendered output.', emoji: '🎯', category: 'CSS' },
+  { name: 'Color Mixer', slug: 'color-mixer', description: 'Mix two or more colors to create new palettes with adjustable blend modes.', emoji: '🎨', category: 'Color' },
+  { name: 'Gradient Generator', slug: 'gradient-generator', description: 'Create beautiful multi-stop gradients for backgrounds, UI, and design projects.', emoji: '🌈', category: 'Color' },
+  { name: 'QR Code Generator', slug: 'qr-code-generator', description: 'Generate QR codes for URLs, text, WiFi credentials, and contact information.', emoji: '📱', category: 'Image' },
+  { name: 'Image Compressor', slug: 'image-compressor', description: 'Compress images to reduce file size while maintaining quality with side-by-side comparison.', emoji: '🗜️', category: 'Image' },
+  { name: 'Password Generator', slug: 'password-generator', description: 'Generate strong, random passwords with customizable length, characters, and complexity rules.', emoji: '🔑', category: 'Developer' },
 ];
 
-export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO'] as const;
+export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color'] as const;
