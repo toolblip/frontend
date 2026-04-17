@@ -1,6 +1,4 @@
 'use client';
-
-import type { Metadata } from 'next';
 import { useState } from 'react';
 import CodeBlock from '@/components/ui/CodeBlock';
 
