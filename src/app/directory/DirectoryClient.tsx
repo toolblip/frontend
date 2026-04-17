@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { tools } from '@/data/tools';
 
-const FILTER_CATEGORIES = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color'] as const;
+const FILTER_CATEGORIES = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS'] as const;
 type FilterCategory = (typeof FILTER_CATEGORIES)[number];
 
 export default function DirectoryClient() {
@@ -133,11 +133,9 @@ export default function DirectoryClient() {
                 <div className="flex items-start gap-3">
                   <span className="text-2xl flex-shrink-0">{tool.emoji}</span>
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors truncate text-sm sm:text-base">
-                        {tool.name}
-                      </h3>
-                    </div>
+                    <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors truncate text-sm sm:text-base">
+                      {tool.name}
+                    </h3>
                     <span className="inline-block text-[10px] font-medium uppercase tracking-wider text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-1.5 py-0.5 rounded-full mb-1.5">
                       {tool.category}
                     </span>
@@ -171,7 +169,8 @@ export default function DirectoryClient() {
               No tools found
             </h3>
             <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs mb-5">
-              No tools match &ldquo;{query}&rdquo;{activeCategory !== 'All' ? ` in ${activeCategory}` : ''}. Try a different search or category.
+              No tools match &ldquo;{query}&rdquo;
+              {activeCategory !== 'All' ? ` in ${activeCategory}` : ''}. Try a different search or category.
             </p>
             <button
               onClick={() => { setQuery(''); setActiveCategory('All'); }}
