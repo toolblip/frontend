@@ -1,5 +1,5 @@
-import { MetadataRoute } from 'next'
-import { tools } from '@/data/tools'
+import type { MetadataRoute } from 'next'
+import { tools } from './src/data/tools'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://toolblip.com'
@@ -18,7 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${baseUrl}/tools/${tool.slug}`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
-    priority: 0.7,
+    priority: 0.8,
   }))
 
   return [...staticRoutes, ...toolRoutes]
