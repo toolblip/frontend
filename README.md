@@ -113,3 +113,5 @@ readingTime: 5 min
 ## License
 
 MIT
+
+<!-- Railway API domain update: 2026-04-17T19:16:21Z -->
