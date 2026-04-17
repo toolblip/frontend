@@ -2,8 +2,6 @@
 builder = "NIXPACKS"
 
 [deploy]
-startCommand = "npm start"
-healthcareCommand = "curl -f http://localhost:3000"
-
-[alias]
-environment = "production"
+startCommand = "npm run build && npm start"
+healthcheckCommand = "curl -f http://localhost:3000"
+port = 3000
