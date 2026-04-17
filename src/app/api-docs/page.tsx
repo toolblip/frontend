@@ -8,12 +8,22 @@ const BASE_URL = 'https://toolblip-api-production.up.railway.app';
 const SSL_URL = 'api.toolblip.com';
 
 const ENDPOINTS = [
-  { id: 'tools-list',    method: 'GET',  path: '/api/tools',         auth: false, desc: 'List all tools'                       },
-  { id: 'tools-detail',  method: 'GET',  path: '/api/tools/{slug}',  auth: false, desc: 'Get a single tool by slug'             },
-  { id: 'auth-register', method: 'POST', path: '/api/auth/register', auth: false, desc: 'Create a new account'                 },
-  { id: 'auth-login',    method: 'POST', path: '/api/auth/login',    auth: false, desc: 'Sign in'                              },
-  { id: 'auth-logout',   method: 'POST', path: '/api/auth/logout',   auth: true,  desc: 'Revoke current session'               },
-  { id: 'auth-user',     method: 'GET',  path: '/api/auth/user',     auth: true,  desc: 'Get authenticated user'               },
+  { id: 'tools-list',    method: 'GET',  path: '/api/tools',        auth: false, status: 200, desc: 'List all tools'                  },
+  { id: 'tools-detail',  method: 'GET',  path: '/api/tools/{slug}', auth: false, status: 200, desc: 'Get a single tool by slug'        },
+  { id: 'auth-register', method: 'POST', path: '/api/auth/register',auth: false, status: 201, desc: 'Create a new account'             },
+  { id: 'auth-login',    method: 'POST', path: '/api/auth/login',   auth: false, status: 200, desc: 'Sign in'                         },
+  { id: 'auth-logout',   method: 'POST', path: '/api/auth/logout',  auth: true,  status: 200, desc: 'Revoke current session'          },
+  { id: 'auth-user',     method: 'GET',  path: '/api/auth/user',    auth: true,  status: 200, desc: 'Get authenticated user'          },
+] as const;
+
+const ERROR_CODES = [
+  { code: 400, label: 'Bad Request',      color: 'text-red-500'     },
+  { code: 401, label: 'Unauthorized',      color: 'text-red-500'     },
+  { code: 403, label: 'Forbidden',         color: 'text-amber-500'   },
+  { code: 404, label: 'Not Found',        color: 'text-gray-500'    },
+  { code: 422, label: 'Validation Error', color: 'text-yellow-600'  },
+  { code: 429, label: 'Too Many Requests', color: 'text-amber-500'  },
+  { code: 500, label: 'Server Error',      color: 'text-red-600'    },
 ] as const;
 
 // ─── Page ───────────────────────────────────────────────────────────────────
@@ -30,12 +40,8 @@ export default function ApiDocsPage() {
           <span className="text-xs font-mono font-bold bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2.5 py-1 rounded-full">
             REST v1
           </span>
-          <h1 className="text-sm font-semibold text-gray-700 dark:text-gray-300">
-            Toolblip API
-          </h1>
-          <span className="ml-auto hidden sm:block text-xs font-mono text-gray-400 font-medium">
-            {BASE_URL}
-          </span>
+          <h1 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Toolblip API</h1>
+          <span className="ml-auto hidden sm:block text-xs font-mono text-gray-400 font-medium">{BASE_URL}</span>
         </div>
       </header>
 
@@ -44,15 +50,13 @@ export default function ApiDocsPage() {
         {/* ── Sidebar ── */}
         <aside className="w-44 shrink-0 hidden md:block">
           <nav className="sticky top-24 space-y-0.5 text-sm">
-            <p className="px-3 py-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
-              Contents
-            </p>
+            <p className="px-3 py-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Contents</p>
             {[
               { id: 'overview',       label: 'Overview'       },
               { id: 'authentication', label: 'Authentication' },
-              { id: 'tools',          label: 'Tools'          },
-              { id: 'auth',           label: 'Auth'           },
-              { id: 'errors',         label: 'Errors'         },
+              { id: 'tools',          label: 'Tools'           },
+              { id: 'auth',           label: 'Auth'            },
+              { id: 'errors',         label: 'Errors'          },
             ].map(({ id, label }) => (
               <a
                 key={id}
@@ -69,9 +73,7 @@ export default function ApiDocsPage() {
             ))}
 
             <div className="pt-5 pb-1">
-              <p className="px-3 py-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
-                Endpoints
-              </p>
+              <p className="px-3 py-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Endpoints</p>
             </div>
             {ENDPOINTS.map(({ id, method, path }) => (
               <a
@@ -145,9 +147,7 @@ export default function ApiDocsPage() {
           {/* ── Tools ── */}
           <section id="tools" className="scroll-mt-16">
             <SectionHeading>Tools</SectionHeading>
-            <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-              All tools endpoints are public — no authentication required.
-            </p>
+            <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">All tools endpoints are public — no authentication required.</p>
 
             <div className="space-y-10">
 
@@ -157,7 +157,7 @@ export default function ApiDocsPage() {
                 path="/api/tools"
                 auth={false}
                 status={200}
-                description="Returns a paginated list of all tools in the registry."
+                description="Returns a list of all tools in the registry."
                 response={`// 200 OK
 {
   "tools": {
@@ -366,19 +366,16 @@ export default function ApiDocsPage() {
   );
 }
 
-// ─── Data ───────────────────────────────────────────────────
+// ─── Data ───────────────────────────────────────────────────────────────────
 
-const ERROR_CODES = [
-  { code: 400, label: 'Bad Request',       color: 'text-red-500'    },
-  { code: 401, label: 'Unauthorized',       color: 'text-red-500'    },
-  { code: 403, label: 'Forbidden',          color: 'text-amber-500'  },
-  { code: 404, label: 'Not Found',         color: 'text-gray-500'   },
-  { code: 422, label: 'Validation Error',  color: 'text-yellow-600' },
-  { code: 429, label: 'Too Many Requests',  color: 'text-amber-500'  },
-  { code: 500, label: 'Server Error',       color: 'text-red-600'   },
-];
+const METHOD_COLORS: Record<string, string> = {
+  GET:    'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400',
+  POST:   'bg-blue-100  dark:bg-blue-900/30  text-blue-700  dark:text-blue-400',
+  PUT:    'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400',
+  DELETE: 'bg-red-100   dark:bg-red-900/30   text-red-700   dark:text-red-400',
+};
 
-// ─── Components ─────────────────────────────────────────────
+// ─── Components ─────────────────────────────────────────────────────────────
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
@@ -388,13 +385,6 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
     </h2>
   );
 }
-
-const METHOD_COLORS: Record<string, string> = {
-  GET:    'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400',
-  POST:   'bg-blue-100  dark:bg-blue-900/30  text-blue-700  dark:text-blue-400',
-  PUT:    'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400',
-  DELETE: 'bg-red-100   dark:bg-red-900/30   text-red-700   dark:text-red-400',
-};
 
 function MethodPill({ method }: { method: string }) {
   return (
@@ -441,15 +431,7 @@ interface EndpointCardProps {
 }
 
 function EndpointCard({
-  id,
-  method,
-  path,
-  auth,
-  status,
-  description,
-  body,
-  response,
-  curl,
+  id, method, path, auth, status, description, body, response, curl,
 }: EndpointCardProps) {
   return (
     <div id={id} className="border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden scroll-mt-20">
@@ -458,9 +440,7 @@ function EndpointCard({
         <MethodPill method={method} />
         <code className="text-sm font-mono text-gray-800 dark:text-gray-200">{path}</code>
         {auth && <LockPill />}
-        <span className="ml-auto text-xs font-mono text-gray-400 dark:text-gray-500">
-          → {status}
-        </span>
+        <span className="ml-auto text-xs font-mono text-gray-400 dark:text-gray-500">→ {status}</span>
       </div>
 
       <div className="p-5 space-y-4">
