@@ -4,7 +4,7 @@ builder = "NIXPACKS"
 [deploy]
 startCommand = "npm start"
 healthcheckPath = "/"
-port = 0
+port = 8080
 
 [_variables]
 NODE_ENV = "production"
