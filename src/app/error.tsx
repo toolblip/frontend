@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import Link from 'next/link';
-import { Home, RefreshCw } from 'lucide-react';
+import { Home, RefreshCw, AlertTriangle } from 'lucide-react';
 
 export default function Error({
   error,
@@ -18,9 +18,11 @@ export default function Error({
   return (
     <div className="min-h-[70vh] flex items-center justify-center px-4">
       <div className="max-w-md w-full text-center">
-        <p className="text-[8rem] sm:text-[10rem] font-bold leading-none text-red-500 dark:text-red-400 select-none mb-2">
-          !
-        </p>
+        <div className="flex justify-center mb-4">
+          <div className="w-20 h-20 rounded-full bg-red-500/10 dark:bg-red-400/10 flex items-center justify-center">
+            <AlertTriangle className="w-10 h-10 text-red-500 dark:text-red-400" strokeWidth={1.5} />
+          </div>
+        </div>
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">
           Something went wrong
         </h1>

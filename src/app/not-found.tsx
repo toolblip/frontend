@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { Home, Search } from 'lucide-react';
+import { Home, Search, Compass } from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -11,9 +11,12 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <div className="min-h-[70vh] flex items-center justify-center justify-center px-4">
+    <div className="min-h-[70vh] flex items-center justify-center px-4">
       <div className="max-w-md w-full text-center">
-        <p className="text-[8rem] sm:text-[10rem] font-bold leading-none text-green-500 dark:text-green-400 select-none mb-2">
+        <div className="flex justify-center mb-2">
+          <Compass className="w-14 h-14 text-green-500 dark:text-green-400" strokeWidth={1.5} />
+        </div>
+        <p className="text-[6rem] sm:text-[8rem] font-bold leading-none text-green-500 dark:text-green-400 select-none mb-2">
           404
         </p>
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">
