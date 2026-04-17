@@ -3,8 +3,8 @@ builder = "NIXPACKS"
 
 [deploy]
 startCommand = "npm start"
-healthcheckCommand = "curl -f http://localhost:3000"
-port = 3000
+healthcheckPath = "/"
+port = 0
 
 [_variables]
 NODE_ENV = "production"
