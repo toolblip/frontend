@@ -6,7 +6,6 @@ node_modules
 *.log
 tsconfig.tsbuildinfo
 api/
-blog/
 public/logos/
 .memory/
 .skills/
