@@ -3,7 +3,7 @@ builder = "NIXPACKS"
 
 [deploy]
 startCommand = "npm start"
-healthcheckPath = "/api/health"
+healthcheckPath = "/frontend-health"
 healthcheckTimeout = 300
 port = 8080
 sleepApplication = false
