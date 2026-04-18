@@ -10,4 +10,3 @@ sleepApplication = false
 
 [_variables]
 NODE_ENV = "production"
-PORT = "8080"
