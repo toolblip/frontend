@@ -2,12 +2,6 @@
 
 import Link from 'next/link';
 import { Home, Search, Compass } from 'lucide-react';
-import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: '404 — Page Not Found',
-  description: 'The page you were looking for does not exist.',
-};
 
 export default function NotFound() {
   return (
