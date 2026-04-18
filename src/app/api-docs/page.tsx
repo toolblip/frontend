@@ -6,11 +6,11 @@ import CodeBlock from '@/components/ui/CodeBlock';
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ?? 'https://toolblip-api-production.up.railway.app';
-// Once SSL is provisioned use:
-// const API_URL = 'https://api.toolblip.com';
 
 const ENDPOINTS = [
+  // Tools
   {
+    group: 'Tools',
     id: 'tools-list',
     method: 'GET',
     path: '/api/tools',
@@ -19,6 +19,7 @@ const ENDPOINTS = [
     desc: 'List all tools',
   },
   {
+    group: 'Tools',
     id: 'tools-detail',
     method: 'GET',
     path: '/api/tools/{slug}',
@@ -26,7 +27,19 @@ const ENDPOINTS = [
     status: 200,
     desc: 'Get a single tool by slug',
   },
+  // MCP Servers
   {
+    group: 'MCP Servers',
+    id: 'mcp-servers-list',
+    method: 'GET',
+    path: '/api/mcp/servers',
+    auth: false,
+    status: 200,
+    desc: 'List all MCP servers',
+  },
+  // Auth
+  {
+    group: 'Auth',
     id: 'auth-register',
     method: 'POST',
     path: '/api/auth/register',
@@ -35,6 +48,7 @@ const ENDPOINTS = [
     desc: 'Create a new account',
   },
   {
+    group: 'Auth',
     id: 'auth-login',
     method: 'POST',
     path: '/api/auth/login',
@@ -43,6 +57,7 @@ const ENDPOINTS = [
     desc: 'Sign in',
   },
   {
+    group: 'Auth',
     id: 'auth-logout',
     method: 'POST',
     path: '/api/auth/logout',
@@ -51,6 +66,7 @@ const ENDPOINTS = [
     desc: 'Revoke the current session',
   },
   {
+    group: 'Auth',
     id: 'auth-user',
     method: 'GET',
     path: '/api/auth/user',
@@ -100,9 +116,9 @@ export default function ApiDocsPage() {
                 Toolblip REST API
               </h2>
               <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-xl">
-                Browse developer tools and manage user accounts. All responses are JSON. Public read
-                endpoints require no authentication — register or sign in to get a Bearer token
-                for protected routes.
+                Browse developer tools and manage user accounts. All responses are JSON.
+                Public read endpoints require no authentication — register or sign in to get a
+                Bearer token for protected routes.
               </p>
             </div>
             <div className="shrink-0">
@@ -115,17 +131,6 @@ export default function ApiDocsPage() {
                 </code>
               </div>
             </div>
-          </div>
-
-          {/* SSL transition note */}
-          <div className="mt-5 flex items-start gap-2.5 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg text-xs text-amber-700 dark:text-amber-400 max-w-xl">
-            <span className="shrink-0 mt-0.5">⚠️</span>
-            <span>
-              <strong>SSL pending:</strong> Currently pointing at{' '}
-              <code className="font-mono">toolblip-api-production.up.railway.app</code>. Once SSL is
-              provisioned, update <code className="font-mono">NEXT_PUBLIC_API_URL</code> to{' '}
-              <code className="font-mono">https://api.toolblip.com</code>.
-            </span>
           </div>
 
           {/* Quick nav pills */}
@@ -156,6 +161,7 @@ export default function ApiDocsPage() {
               { id: 'overview', label: 'Overview' },
               { id: 'authentication', label: 'Authentication' },
               { id: 'tools', label: 'Tools' },
+              { id: 'mcp-servers', label: 'MCP Servers' },
               { id: 'auth', label: 'Auth' },
               { id: 'errors', label: 'Errors' },
             ].map(({ id, label }) => (
@@ -200,7 +206,8 @@ export default function ApiDocsPage() {
 
             <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-6">
               The Toolblip API follows REST conventions. All endpoints return JSON. Read-only
-              tool endpoints are public; account management endpoints require authentication.
+              endpoints for tools and MCP servers are public; account management endpoints
+              require authentication via a Bearer token.
             </p>
 
             <div className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden mb-6">
@@ -214,10 +221,10 @@ export default function ApiDocsPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
-                  {ENDPOINTS.map(({ id, method, path, auth, desc }) => (
+                  {ENDPOINTS.map(({ id, method, path, auth, desc }, i) => (
                     <tr
                       key={id}
-                      className="bg-white dark:bg-[#0c0c0c] hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors"
+                      className={`bg-white dark:bg-[#0c0c0c] hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors ${i === 2 || i === 6 ? 'border-t border-gray-200 dark:border-gray-800' : ''}`}
                     >
                       <td className="px-4 py-3"><MethodPill method={method} /></td>
                       <td className="px-4 py-3 font-mono text-xs text-gray-700 dark:text-gray-300">{path}</td>
@@ -232,7 +239,7 @@ export default function ApiDocsPage() {
             <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl text-xs text-blue-700 dark:text-blue-400">
               <strong>JSON only.</strong> Every request must include{' '}
               <InlineCode>Accept: application/json</InlineCode> and{' '}
-              <InlineCode>Content-Type: application/json</InlineCode> (for POST/PUT bodies).
+              <InlineCode>Content-Type: application/json</InlineCode> (for POST/PUT/PATCH bodies).
             </div>
           </section>
 
@@ -250,8 +257,8 @@ export default function ApiDocsPage() {
               title="Header — all authenticated requests"
             />
             <div className="mt-4 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl text-xs text-amber-700 dark:text-amber-400">
-              <strong>Keep your token secret.</strong> Never expose it in client-side code or public
-              repositories. Tokens are revoked when you log out.
+              <strong>Keep your token secret.</strong> Never expose it in client-side code or
+              public repositories. Tokens are revoked when you log out.
             </div>
           </section>
 
@@ -270,8 +277,8 @@ export default function ApiDocsPage() {
                 path="/api/tools"
                 auth={false}
                 status={200}
-                description="Returns a list of all tools in the registry. Optionally filter by category using a query parameter."
-                query={`?category=AI&page=1`}
+                description="Returns a paginated list of all tools in the registry. Optionally filter by category or page through results."
+                query={`category=AI&page=1`}
                 response={`{
   "tools": {
     "tools": [
@@ -298,7 +305,7 @@ export default function ApiDocsPage() {
     ]
   }
 }`}
-                curl={`curl -X GET "${API_URL}/api/tools" \\
+                curl={`curl -X GET "${API_URL}/api/tools?category=AI&page=1" \\
   -H "Accept: application/json"`}
               />
 
@@ -325,6 +332,45 @@ export default function ApiDocsPage() {
   "message": "Tool not found"
 }`}
                 curl={`curl -X GET "${API_URL}/api/tools/claude-code" \\
+  -H "Accept: application/json"`}
+              />
+
+            </div>
+          </section>
+
+          {/* ── MCP Servers ── */}
+          <section id="mcp-servers" className="scroll-mt-16">
+            <SectionHeading>MCP Servers</SectionHeading>
+            <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
+              MCP (Model Context Protocol) servers are public — no authentication required.
+            </p>
+
+            <div className="space-y-10">
+
+              <EndpointCard
+                id="mcp-servers-list"
+                method="GET"
+                path="/api/mcp/servers"
+                auth={false}
+                status={200}
+                description="Returns a paginated list of all available MCP servers. Optionally filter by category or page through results."
+                query={`category=DevOps&page=1`}
+                response={`{
+  "servers": {
+    "servers": [
+      {
+        "id": 1,
+        "slug": "filesystem",
+        "name": "Filesystem",
+        "description": "Read and write files on the local system",
+        "category": "DevOps",
+        "url": "https://registry.toolblip.com/servers/filesystem",
+        "created_at": "2026-01-01T00:00:00Z"
+      }
+    ]
+  }
+}`}
+                curl={`curl -X GET "${API_URL}/api/mcp/servers?category=DevOps&page=1" \\
   -H "Accept: application/json"`}
               />
 
@@ -362,7 +408,7 @@ export default function ApiDocsPage() {
                 errorResponse={`{
   "message": "The given data was invalid.",
   "errors": {
-    "email": ["The email field is required."],
+    "email": ["The email has already been taken."],
     "password": ["The password must be at least 8 characters."]
   }
 }`}
@@ -459,7 +505,7 @@ export default function ApiDocsPage() {
   "message": "The given data was invalid.",
   "errors": {
     "email": ["The email field is required."],
-    "password": ["The password field is required."]
+    "password": ["The password must be at least 8 characters."]
   }
 }`}
               />
@@ -505,6 +551,7 @@ const METHOD_COLORS: Record<string, string> = {
   POST:   'bg-blue-100  dark:bg-blue-900/30  text-blue-700  dark:text-blue-400',
   PUT:    'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400',
   DELETE: 'bg-red-100   dark:bg-red-900/30   text-red-700   dark:text-red-400',
+  PATCH:  'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400',
 };
 
 // ─── Components ─────────────────────────────────────────────────────────────
