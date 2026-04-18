@@ -1,23 +1,24 @@
 import type { Metadata } from 'next';
+import ApiDocsPage from './page';
 
 export const metadata: Metadata = {
-  title: 'API Documentation | Toolblip',
+  title: 'API Docs | Toolblip',
   description:
-    'Toolblip REST API reference. Browse developer tools, register accounts, and manage sessions via the free Toolblip API. 60 req/min with authentication.',
+    'Toolblip REST API reference. Browse public developer tool endpoints, register for a Bearer token, and manage authenticated user accounts.',
   openGraph: {
-    title: 'API Documentation | Toolblip',
+    title: 'API Docs | Toolblip',
     description:
-      'Toolblip REST API reference. Browse developer tools, register accounts, and manage sessions via the free Toolblip API.',
+      'Toolblip REST API reference. Browse public developer tool endpoints, register for a Bearer token, and manage authenticated user accounts.',
     url: 'https://toolblip.com/api-docs',
     siteName: 'Toolblip',
   },
   twitter: {
     card: 'summary',
-    title: 'API Documentation | Toolblip',
-    description: 'Toolblip REST API reference. Free API for browsing developer tools and managing accounts.',
+    title: 'API Docs | Toolblip',
+    description: 'Toolblip REST API reference. Public tool endpoints, Bearer token auth, and user account management.',
   },
 };
 
-export default function ApiDocsLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+export default function ApiDocsLayout() {
+  return <ApiDocsPage />;
 }

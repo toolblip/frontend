@@ -75,7 +75,7 @@ const ERROR_CODES = [
 
 // ─── Page ───────────────────────────────────────────────────────────────────
 
-export default function ApiDocsPage() {
+export default function ApiDocsClient() {
   const [activeSection, setActiveSection] = useState('overview');
 
   return (
