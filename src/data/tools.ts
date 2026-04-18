@@ -73,6 +73,20 @@ export const tools: Tool[] = [
   { name: 'Countdown Timer', slug: 'countdown-timer', description: 'Set a countdown timer with custom duration, alerts, and sound notifications.', emoji: '⏰', category: 'Utility' },
   { name: 'Color Blindness Simulator', slug: 'color-blindness-simulator', description: 'Simulate how colors appear to people with different types of color vision deficiency.', emoji: '👁️', category: 'Color' },
   { name: 'HTML to Markdown', slug: 'html-to-markdown', description: 'Convert HTML to Markdown format with options to preserve links, images, and code blocks.', emoji: '📝', category: 'Conversion' },
+  { name: 'JSON Path Tester', slug: 'json-path-tester', description: 'Test JSONPath expressions against any JSON data and see matched results highlighted instantly.', emoji: '🔎', category: 'Developer' },
+  { name: 'XML to JSON', slug: 'xml-to-json', description: 'Convert XML to JSON with options for attribute handling, arrays, and pretty-print output.', emoji: '📋', category: 'Conversion' },
+  { name: 'JSON to XML', slug: 'json-to-xml', description: 'Convert JSON to XML with configurable root element, attribute prefixes, and indentation.', emoji: '📄', category: 'Conversion' },
+  { name: 'CSS Validator', slug: 'css-validator', description: 'Validate CSS against W3C standards and catch syntax errors, unsupported properties, and accessibility issues.', emoji: '🛠️', category: 'Developer' },
+  { name: 'HTML Validator', slug: 'html-validator', description: 'Validate HTML markup and catch missing tags, deprecated elements, and accessibility issues.', emoji: '✅', category: 'Developer' },
+  { name: 'Text to Handwriting', slug: 'text-to-handwriting', description: 'Convert plain text into handwritten-style text using a realistic cursive or print font.', emoji: '✍️', category: 'Text' },
+  { name: 'Email Validator', slug: 'email-validator', description: 'Validate email addresses for correct format and check domain MX records for deliverability.', emoji: '📧', category: 'Developer' },
+  { name: 'Credit Card Validator', slug: 'credit-card-validator', description: 'Validate credit card numbers using the Luhn algorithm and identify the card network.', emoji: '💳', category: 'Developer' },
+  { name: 'Random UUID v7', slug: 'random-uuid-v7', description: 'Generate time-ordered UUID v7 values suitable for database keys and distributed systems.', emoji: '🆔', category: 'Developer' },
+  { name: 'Random IP Address', slug: 'random-ip-address', description: 'Generate random IPv4 or IPv6 addresses for testing, mocking, and network simulations.', emoji: '🌐', category: 'Utility' },
+  { name: 'JSON Schema Validator', slug: 'json-schema-validator', description: 'Validate JSON data against a JSON Schema and get detailed error messages for each failure.', emoji: '📐', category: 'Developer' },
+  { name: 'Slug Permalink Checker', slug: 'slug-permalink-checker', description: 'Check URL slug availability and analyze permalink structure for SEO-friendly paths.', emoji: '🔗', category: 'SEO' },
+  { name: 'Keyword Density Checker', slug: 'keyword-density-checker', description: 'Analyze keyword frequency and density in text or HTML content for SEO optimization.', emoji: '📈', category: 'SEO' },
+  { name: 'Slideshow Generator', slug: 'slideshow-generator', description: 'Create HTML slideshows from markdown or text with transitions, themes, and keyboard navigation.', emoji: '🎞️', category: 'Utility' },
 ];
 
 
