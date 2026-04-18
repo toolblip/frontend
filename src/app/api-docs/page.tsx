@@ -5,6 +5,8 @@ import CodeBlock from '@/components/ui/CodeBlock';
 // ─── Config ────────────────────────────────────────────────────────────────
 
 const BASE_URL = 'https://toolblip-api-production.up.railway.app';
+// TODO: switch to https://api.toolblip.com once SSL is provisioned
+const FUTURE_BASE_URL = 'https://api.toolblip.com';
 
 const ENDPOINTS = [
   {
@@ -116,6 +118,10 @@ export default function ApiDocsClient() {
                 <code className="text-sm font-mono text-green-600 dark:text-green-400 break-all">
                   {BASE_URL}
                 </code>
+                <p className="text-[10px] text-gray-400 dark:text-gray-600 mt-1.5">
+                  <span className="font-semibold">Upcoming:</span> SSL pending →{' '}
+                  <InlineCode>{FUTURE_BASE_URL}</InlineCode>
+                </p>
               </div>
             </div>
           </div>
@@ -262,7 +268,7 @@ export default function ApiDocsClient() {
                 path="/api/tools"
                 auth={false}
                 status={200}
-                description="Returns a list of all tools in the registry."
+                description="Returns a list of all tools in the registry. The tools array is nested inside a \"tools\" key."
                 response={`{
   "tools": {
     "tools": [
