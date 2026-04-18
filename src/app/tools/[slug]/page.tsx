@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import ShareButtons from '@/components/ShareButtons';
 import { tools } from '@/data/tools';
 
 // ─── Tool UI Components ────────────────────────────────────────────────────
@@ -414,7 +415,7 @@ export default function ToolDetailPage({ params }: { params: { slug: string } })
       </nav>
 
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-6">
         <div className="flex items-center gap-3 mb-3">
           <span className="text-4xl">{tool.emoji}</span>
           <div>
@@ -424,7 +425,8 @@ export default function ToolDetailPage({ params }: { params: { slug: string } })
             </span>
           </div>
         </div>
-        <p className="text-gray-600 dark:text-gray-300 leading-relaxed">{tool.description}</p>
+        <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-3">{tool.description}</p>
+        <ShareButtons toolName={tool.name} />
       </div>
 
       {/* Tool UI */}
