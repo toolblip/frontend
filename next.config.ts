@@ -1,7 +1,8 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  output: 'standalone',
+  // Vercel handles output mode automatically
+  // No output: 'export' — keeps ISR/SSR capabilities on Vercel
 
   images: {
     // Allow images from any domain for tool screenshots etc.
