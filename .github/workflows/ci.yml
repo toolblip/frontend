@@ -7,7 +7,7 @@ on:
     branches: [main, feat/**]
 
 env:
-  NEXT_PUBLIC_API_URL: https://toolblip-api-production.up.railway.app
+  NEXT_PUBLIC_API_URL: https://api.toolblip.com
   NEXT_PUBLIC_APP_URL: https://toolblip.com
 
 jobs:
