@@ -55,6 +55,25 @@ export const tools: Tool[] = [
   { name: 'QR Code Generator', slug: 'qr-code-generator', description: 'Generate QR codes for URLs, text, WiFi credentials, and contact information.', emoji: '📱', category: 'Image' },
   { name: 'Image Compressor', slug: 'image-compressor', description: 'Compress images to reduce file size while maintaining quality with side-by-side comparison.', emoji: '🗜️', category: 'Image' },
   { name: 'Password Generator', slug: 'password-generator', description: 'Generate strong, random passwords with customizable length, characters, and complexity rules.', emoji: '🔑', category: 'Developer' },
+  { name: 'Text Diff', slug: 'text-diff', description: 'Compare two text blocks and highlight added, removed, and unchanged lines side by side.', emoji: '📄', category: 'Text' },
+  { name: 'Password Strength Checker', slug: 'password-strength-checker', description: 'Check password strength with entropy scoring and tips to make it more secure.', emoji: '🛡️', category: 'Developer' },
+  { name: 'Barcode Generator', slug: 'barcode-generator', description: 'Generate 1D barcodes (EAN, UPC, Code 128, Code 39) from any numeric or alphanumeric string.', emoji: '📊', category: 'Image' },
+  { name: 'Random Number Generator', slug: 'random-number-generator', description: 'Generate random integers or decimals within a custom range with optional unique values.', emoji: '🎲', category: 'Utility' },
+  { name: 'List Randomizer', slug: 'list-randomizer', description: 'Shuffle a list of items into a random order with one-click copy of results.', emoji: '🔀', category: 'Utility' },
+  { name: 'Fake Data Generator', slug: 'fake-data-generator', description: 'Generate realistic fake names, emails, addresses, and other data for testing and prototyping.', emoji: '🧪', category: 'Developer' },
+  { name: 'Hash Identifier', slug: 'hash-identifier', description: 'Identify unknown hash types (MD5, SHA-1, bcrypt, etc.) by analyzing the input string.', emoji: '🔎', category: 'Developer' },
+  { name: 'Uptime Calculator', slug: 'uptime-calculator', description: 'Calculate uptime percentage, downtime hours, and SLA compliance from any time period.', emoji: '📈', category: 'Utility' },
+  { name: 'JSON to TypeScript', slug: 'json-to-typescript', description: 'Convert JSON data into TypeScript interfaces and types with optional strict mode.', emoji: '📘', category: 'Developer' },
+  { name: 'Random String Generator', slug: 'random-string-generator', description: 'Generate random strings with custom character sets, length, and format for tokens and keys.', emoji: '🔣', category: 'Developer' },
+  { name: 'URL Parser', slug: 'url-parser', description: 'Parse URL components into protocol, domain, port, path, query, and fragment parts.', emoji: '🔗', category: 'Developer' },
+  { name: 'Text to Slug', slug: 'text-to-slug', description: 'Convert any phrase or title into a clean URL-friendly slug with customizable separator.', emoji: '✂️', category: 'Text' },
+  { name: 'Binary to Text', slug: 'binary-to-text', description: 'Convert binary strings to ASCII text and vice versa with instant encoding preview.', emoji: '0️⃣', category: 'Conversion' },
+  { name: 'Percentage Difference', slug: 'percentage-difference', description: 'Calculate percentage difference between two values with direction and absolute result options.', emoji: '📊', category: 'Math' },
+  { name: 'Age Calculator', slug: 'age-calculator', description: 'Calculate exact age in years, months, days, and total days from any birth date.', emoji: '🎂', category: 'Utility' },
+  { name: 'Countdown Timer', slug: 'countdown-timer', description: 'Set a countdown timer with custom duration, alerts, and sound notifications.', emoji: '⏰', category: 'Utility' },
+  { name: 'Color Blindness Simulator', slug: 'color-blindness-simulator', description: 'Simulate how colors appear to people with different types of color vision deficiency.', emoji: '👁️', category: 'Color' },
+  { name: 'HTML to Markdown', slug: 'html-to-markdown', description: 'Convert HTML to Markdown format with options to preserve links, images, and code blocks.', emoji: '📝', category: 'Conversion' },
 ];
 
-export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color'] as const;
+
+export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility'] as const;
