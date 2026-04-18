@@ -45,3 +45,4 @@ memory/
 .vercel/
 config/mcporter.json
 RAILWAY_TOKEN
+*.tsbuildinfo
