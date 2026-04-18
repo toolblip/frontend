@@ -270,7 +270,8 @@ export default function ApiDocsPage() {
                 path="/api/tools"
                 auth={false}
                 status={200}
-                description="Returns a paginated list of all tools in the registry."
+                description="Returns a list of all tools in the registry. Optionally filter by category using a query parameter."
+                query={`?category=AI&page=1`}
                 response={`{
   "tools": {
     "tools": [
@@ -297,7 +298,8 @@ export default function ApiDocsPage() {
     ]
   }
 }`}
-                curl={`curl -X GET "${API_URL}/api/tools"`}
+                curl={`curl -X GET "${API_URL}/api/tools" \\
+  -H "Accept: application/json"`}
               />
 
               <EndpointCard
@@ -322,7 +324,8 @@ export default function ApiDocsPage() {
                 errorResponse={`{
   "message": "Tool not found"
 }`}
-                curl={`curl -X GET "${API_URL}/api/tools/claude-code"`}
+                curl={`curl -X GET "${API_URL}/api/tools/claude-code" \\
+  -H "Accept: application/json"`}
               />
 
             </div>
@@ -364,6 +367,7 @@ export default function ApiDocsPage() {
   }
 }`}
                 curl={`curl -X POST "${API_URL}/api/auth/register" \\
+  -H "Accept: application/json" \\
   -H "Content-Type: application/json" \\
   -d '{"name":"Harun","email":"harun@example.com","password":"secret123","password_confirmation":"secret123"}'`}
               />
@@ -392,6 +396,7 @@ export default function ApiDocsPage() {
   "message": "Invalid credentials"
 }`}
                 curl={`curl -X POST "${API_URL}/api/auth/login" \\
+  -H "Accept: application/json" \\
   -H "Content-Type: application/json" \\
   -d '{"email":"harun@example.com","password":"secret123"}'`}
               />
@@ -407,6 +412,7 @@ export default function ApiDocsPage() {
   "message": "Logged out successfully"
 }`}
                 curl={`curl -X POST "${API_URL}/api/auth/logout" \\
+  -H "Accept: application/json" \\
   -H "Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx"`}
               />
 
@@ -426,6 +432,7 @@ export default function ApiDocsPage() {
   }
 }`}
                 curl={`curl -X GET "${API_URL}/api/auth/user" \\
+  -H "Accept: application/json" \\
   -H "Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx"`}
               />
 
@@ -552,6 +559,7 @@ interface EndpointCardProps {
   auth: boolean;
   status: number;
   description: string;
+  query?: string;
   body?: string;
   response: string;
   errorResponse?: string;
@@ -559,7 +567,7 @@ interface EndpointCardProps {
 }
 
 function EndpointCard({
-  id, method, path, auth, status, description, body, response, errorResponse, curl,
+  id, method, path, auth, status, description, query, body, response, errorResponse, curl,
 }: EndpointCardProps) {
   return (
     <div
@@ -583,6 +591,18 @@ function EndpointCard({
         <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
           {description}
         </p>
+
+        {/* Query params */}
+        {query && (
+          <div>
+            <div className="mb-2 px-1">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">
+                Query parameters
+              </p>
+            </div>
+            <CodeBlock code={`category  string  Filter by category (e.g. AI, DevOps, Analytics)\npage      number  Page number for pagination`} />
+          </div>
+        )}
 
         {/* Request body + Response */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
