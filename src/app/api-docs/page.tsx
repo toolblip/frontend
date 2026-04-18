@@ -1,5 +1,4 @@
 'use client';
-import { useState } from 'react';
 import CodeBlock from '@/components/ui/CodeBlock';
 
 // ─── Config ────────────────────────────────────────────────────────────────
@@ -78,19 +77,17 @@ const ERROR_CODES = [
 // ─── Page ───────────────────────────────────────────────────────────────────
 
 export default function ApiDocsClient() {
-  const [activeSection, setActiveSection] = useState('overview');
-
   return (
     <div className="min-h-screen bg-white dark:bg-[#0c0c0c] text-gray-900 dark:text-gray-100">
 
       {/* ── Topbar ── */}
       <header className="sticky top-0 z-10 bg-white/90 dark:bg-[#0c0c0c]/90 backdrop-blur border-b border-gray-100 dark:border-gray-800">
-        <div className="max-w-5xl mx-auto px-6 py-3 flex items-center gap-3">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
           <span className="text-[11px] font-mono font-bold bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2.5 py-1 rounded-full">
             REST v1
           </span>
           <h1 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Toolblip API</h1>
-          <span className="ml-auto hidden sm:block text-[11px] font-mono text-gray-400 truncate max-w-[260px]">
+          <span className="ml-auto hidden sm:block text-[11px] font-mono text-gray-400 truncate max-w-[240px]">
             {BASE_URL}
           </span>
         </div>
@@ -98,9 +95,9 @@ export default function ApiDocsClient() {
 
       {/* ── Hero ── */}
       <div className="border-b border-gray-100 dark:border-gray-800 bg-gradient-to-br from-gray-50 to-white dark:from-[#0c0c0c] dark:to-[#111]">
-        <div className="max-w-5xl mx-auto px-6 py-12">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-6">
-            <div className="flex-1">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-12">
+          <div className="flex flex-col sm:flex-row sm:items-start gap-6">
+            <div className="flex-1 min-w-0">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                 Toolblip REST API
               </h2>
@@ -142,13 +139,13 @@ export default function ApiDocsClient() {
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-6 py-10 flex gap-12">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 flex gap-8 lg:gap-12">
 
         {/* ── Sidebar ── */}
-        <aside className="w-40 shrink-0 hidden md:block">
-          <nav className="sticky top-24 space-y-0.5 text-sm">
+        <aside className="w-36 xl:w-44 shrink-0 hidden md:block">
+          <nav className="sticky top-20 space-y-0.5 text-sm max-h-[calc(100vh-5rem)] overflow-y-auto pb-8 pr-1">
             <p className="px-3 py-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
-              Contents
+              On this page
             </p>
             {[
               { id: 'overview', label: 'Overview' },
@@ -160,12 +157,7 @@ export default function ApiDocsClient() {
               <a
                 key={id}
                 href={`#${id}`}
-                onClick={() => setActiveSection(id)}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors text-xs ${
-                  activeSection === id
-                    ? 'text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800 font-semibold'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-900'
-                }`}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors text-xs text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-900"
               >
                 {label}
               </a>
@@ -190,7 +182,7 @@ export default function ApiDocsClient() {
         </aside>
 
         {/* ── Main content ── */}
-        <main className="flex-1 min-w-0 space-y-16">
+        <main className="flex-1 min-w-0 space-y-14 sm:space-y-16">
 
           {/* ── Overview ── */}
           <section id="overview" className="scroll-mt-16">
@@ -204,7 +196,7 @@ export default function ApiDocsClient() {
             <div className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden mb-6">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+                  <tr className="bg-gray-50 dark:bg-[#111] border-b border-gray-200 dark:border-gray-800">
                     <th className="text-left px-4 py-2.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest w-20">Method</th>
                     <th className="text-left px-4 py-2.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Endpoint</th>
                     <th className="text-left px-4 py-2.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest w-16">Auth</th>
@@ -212,10 +204,10 @@ export default function ApiDocsClient() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
-                  {ENDPOINTS.map(({ id, method, path, auth, desc }, i) => (
+                  {ENDPOINTS.map(({ method, path, auth, desc }) => (
                     <tr
-                      key={id}
-                      className={`bg-white dark:bg-[#0c0c0c] hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors ${i === 2 ? 'border-t border-gray-200 dark:border-gray-800' : ''}`}
+                      key={path}
+                      className="bg-white dark:bg-[#0c0c0c] hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors"
                     >
                       <td className="px-4 py-3"><MethodPill method={method} /></td>
                       <td className="px-4 py-3 font-mono text-xs text-gray-700 dark:text-gray-300">{path}</td>
@@ -260,7 +252,7 @@ export default function ApiDocsClient() {
               All tools endpoints are public — no authentication required.
             </p>
 
-            <div className="space-y-10">
+            <div className="space-y-8 sm:space-y-10">
 
               <EndpointCard
                 id="tools-list"
@@ -268,7 +260,7 @@ export default function ApiDocsClient() {
                 path="/api/tools"
                 auth={false}
                 status={200}
-                description="Returns a list of all tools in the registry. The tools array is nested inside a \"tools\" key."
+                description="Returns a list of all tools in the registry. The tools array is nested inside a &quot;tools&quot; key."
                 response={`{
   "tools": {
     "tools": [
@@ -332,7 +324,7 @@ export default function ApiDocsClient() {
           <section id="auth" className="scroll-mt-16">
             <SectionHeading>Auth</SectionHeading>
 
-            <div className="space-y-10">
+            <div className="space-y-8 sm:space-y-10">
 
               <EndpointCard
                 id="auth-register"
@@ -366,7 +358,12 @@ export default function ApiDocsClient() {
                 curl={`curl -X POST "${BASE_URL}/api/auth/register" \\
   -H "Accept: application/json" \\
   -H "Content-Type: application/json" \\
-  -d '{"name":"Harun","email":"harun@example.com","password":"secret123","password_confirmation":"secret123"}'`}
+  -d '{
+    "name": "Harun",
+    "email": "harun@example.com",
+    "password": "secret123",
+    "password_confirmation": "secret123"
+  }'`}
               />
 
               <EndpointCard
@@ -477,14 +474,23 @@ export default function ApiDocsClient() {
             </div>
           </section>
 
-          <footer className="pt-8 border-t border-gray-100 dark:border-gray-800 text-center">
+          <footer className="pt-10 border-t border-gray-100 dark:border-gray-800 text-center">
             <p className="text-gray-400 dark:text-gray-600 text-xs">
               Questions?{' '}
               <a
                 href="mailto:harun@toolblip.com"
-                className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors"
+                className="text-green-600 dark:text-green-400 hover:underline transition-colors"
               >
                 harun@toolblip.com
+              </a>
+              <span className="mx-2 text-gray-300 dark:text-gray-700">·</span>
+              <a
+                href="https://github.com/toolblip"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-green-600 dark:text-green-400 hover:underline transition-colors"
+              >
+                GitHub
               </a>
             </p>
           </footer>
