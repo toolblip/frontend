@@ -48,7 +48,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: post.title,
     description: post.description,
-    openGraph: { title: post.title, description: post.description, type: 'article', publishedTime: post.date, authors: [post.author], images: post.featuredImage ? [{ url: post.featuredImage }] : [] },
+    openGraph: { title: post.title, description: post.description, url: `https://toolblip.com/blog/${slug}`, siteName: 'Toolblip', type: 'article', publishedTime: post.date, authors: [post.author], images: post.featuredImage ? [{ url: post.featuredImage }] : [] },
     twitter: { card: 'summary_large_image', title: post.title, description: post.description },
   };
 }
