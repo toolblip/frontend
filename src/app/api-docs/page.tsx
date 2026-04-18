@@ -4,11 +4,9 @@ import CodeBlock from '@/components/ui/CodeBlock';
 
 // ─── Config ────────────────────────────────────────────────────────────────
 
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ?? 'https://toolblip-api-production.up.railway.app';
+const BASE_URL = 'https://toolblip-api-production.up.railway.app';
 
 const ENDPOINTS = [
-  // Tools
   {
     group: 'Tools',
     id: 'tools-list',
@@ -27,17 +25,6 @@ const ENDPOINTS = [
     status: 200,
     desc: 'Get a single tool by slug',
   },
-  // MCP Servers
-  {
-    group: 'MCP Servers',
-    id: 'mcp-servers-list',
-    method: 'GET',
-    path: '/api/mcp/servers',
-    auth: false,
-    status: 200,
-    desc: 'List all MCP servers',
-  },
-  // Auth
   {
     group: 'Auth',
     id: 'auth-register',
@@ -102,7 +89,7 @@ export default function ApiDocsPage() {
           </span>
           <h1 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Toolblip API</h1>
           <span className="ml-auto hidden sm:block text-[11px] font-mono text-gray-400 truncate max-w-[260px]">
-            {API_URL}
+            {BASE_URL}
           </span>
         </div>
       </header>
@@ -127,7 +114,7 @@ export default function ApiDocsPage() {
                   Base URL
                 </p>
                 <code className="text-sm font-mono text-green-600 dark:text-green-400 break-all">
-                  {API_URL}
+                  {BASE_URL}
                 </code>
               </div>
             </div>
@@ -161,7 +148,6 @@ export default function ApiDocsPage() {
               { id: 'overview', label: 'Overview' },
               { id: 'authentication', label: 'Authentication' },
               { id: 'tools', label: 'Tools' },
-              { id: 'mcp-servers', label: 'MCP Servers' },
               { id: 'auth', label: 'Auth' },
               { id: 'errors', label: 'Errors' },
             ].map(({ id, label }) => (
@@ -206,8 +192,7 @@ export default function ApiDocsPage() {
 
             <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-6">
               The Toolblip API follows REST conventions. All endpoints return JSON. Read-only
-              endpoints for tools and MCP servers are public; account management endpoints
-              require authentication via a Bearer token.
+              tool endpoints are public; account management endpoints require a Bearer token.
             </p>
 
             <div className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden mb-6">
@@ -224,7 +209,7 @@ export default function ApiDocsPage() {
                   {ENDPOINTS.map(({ id, method, path, auth, desc }, i) => (
                     <tr
                       key={id}
-                      className={`bg-white dark:bg-[#0c0c0c] hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors ${i === 2 || i === 6 ? 'border-t border-gray-200 dark:border-gray-800' : ''}`}
+                      className={`bg-white dark:bg-[#0c0c0c] hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors ${i === 2 ? 'border-t border-gray-200 dark:border-gray-800' : ''}`}
                     >
                       <td className="px-4 py-3"><MethodPill method={method} /></td>
                       <td className="px-4 py-3 font-mono text-xs text-gray-700 dark:text-gray-300">{path}</td>
@@ -277,8 +262,7 @@ export default function ApiDocsPage() {
                 path="/api/tools"
                 auth={false}
                 status={200}
-                description="Returns a paginated list of all tools in the registry. Optionally filter by category or page through results."
-                query={`category=AI&page=1`}
+                description="Returns a list of all tools in the registry."
                 response={`{
   "tools": {
     "tools": [
@@ -305,7 +289,7 @@ export default function ApiDocsPage() {
     ]
   }
 }`}
-                curl={`curl -X GET "${API_URL}/api/tools?category=AI&page=1" \\
+                curl={`curl -X GET "${BASE_URL}/api/tools" \\
   -H "Accept: application/json"`}
               />
 
@@ -315,7 +299,7 @@ export default function ApiDocsPage() {
                 path="/api/tools/{slug}"
                 auth={false}
                 status={200}
-                description="Fetch a single tool by its slug identifier. Returns a 404 if the tool does not exist."
+                description="Fetch a single tool by its slug identifier. Returns 404 if the tool does not exist."
                 response={`{
   "tool": {
     "id": 1,
@@ -331,46 +315,7 @@ export default function ApiDocsPage() {
                 errorResponse={`{
   "message": "Tool not found"
 }`}
-                curl={`curl -X GET "${API_URL}/api/tools/claude-code" \\
-  -H "Accept: application/json"`}
-              />
-
-            </div>
-          </section>
-
-          {/* ── MCP Servers ── */}
-          <section id="mcp-servers" className="scroll-mt-16">
-            <SectionHeading>MCP Servers</SectionHeading>
-            <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
-              MCP (Model Context Protocol) servers are public — no authentication required.
-            </p>
-
-            <div className="space-y-10">
-
-              <EndpointCard
-                id="mcp-servers-list"
-                method="GET"
-                path="/api/mcp/servers"
-                auth={false}
-                status={200}
-                description="Returns a paginated list of all available MCP servers. Optionally filter by category or page through results."
-                query={`category=DevOps&page=1`}
-                response={`{
-  "servers": {
-    "servers": [
-      {
-        "id": 1,
-        "slug": "filesystem",
-        "name": "Filesystem",
-        "description": "Read and write files on the local system",
-        "category": "DevOps",
-        "url": "https://registry.toolblip.com/servers/filesystem",
-        "created_at": "2026-01-01T00:00:00Z"
-      }
-    ]
-  }
-}`}
-                curl={`curl -X GET "${API_URL}/api/mcp/servers?category=DevOps&page=1" \\
+                curl={`curl -X GET "${BASE_URL}/api/tools/claude-code" \\
   -H "Accept: application/json"`}
               />
 
@@ -412,7 +357,7 @@ export default function ApiDocsPage() {
     "password": ["The password must be at least 8 characters."]
   }
 }`}
-                curl={`curl -X POST "${API_URL}/api/auth/register" \\
+                curl={`curl -X POST "${BASE_URL}/api/auth/register" \\
   -H "Accept: application/json" \\
   -H "Content-Type: application/json" \\
   -d '{"name":"Harun","email":"harun@example.com","password":"secret123","password_confirmation":"secret123"}'`}
@@ -441,7 +386,7 @@ export default function ApiDocsPage() {
                 errorResponse={`{
   "message": "Invalid credentials"
 }`}
-                curl={`curl -X POST "${API_URL}/api/auth/login" \\
+                curl={`curl -X POST "${BASE_URL}/api/auth/login" \\
   -H "Accept: application/json" \\
   -H "Content-Type: application/json" \\
   -d '{"email":"harun@example.com","password":"secret123"}'`}
@@ -457,7 +402,7 @@ export default function ApiDocsPage() {
                 response={`{
   "message": "Logged out successfully"
 }`}
-                curl={`curl -X POST "${API_URL}/api/auth/logout" \\
+                curl={`curl -X POST "${BASE_URL}/api/auth/logout" \\
   -H "Accept: application/json" \\
   -H "Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx"`}
               />
@@ -477,7 +422,7 @@ export default function ApiDocsPage() {
     "is_pro": false
   }
 }`}
-                curl={`curl -X GET "${API_URL}/api/auth/user" \\
+                curl={`curl -X GET "${BASE_URL}/api/auth/user" \\
   -H "Accept: application/json" \\
   -H "Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx"`}
               />
