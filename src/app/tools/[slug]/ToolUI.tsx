@@ -1,89 +1,178 @@
 'use client';
 
-import React, { useState, useCallback } from 'react';
-import { tools } from '@/data/tools';
+import { useState, useCallback, useEffect } from 'react';
+import type { Tool } from '@/data/tools';
 
-// ─── Word Counter ───────────────────────────────────────────────────────────
+/* ─── Shared UI components ─────────────────────────────────────────── */
+
+function CopyButton({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false);
+  const copy = async () => {
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+  return (
+    <button
+      onClick={copy}
+      className="px-3 py-1 text-xs font-medium bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 rounded transition-colors"
+    >
+      {copied ? '✓ Copied' : 'Copy'}
+    </button>
+  );
+}
+
+function OutputCard({ children, label }: { children: React.ReactNode; label?: string }) {
+  return (
+    <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4">
+      {label && (
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">{label}</span>
+        </div>
+      )}
+      {children}
+    </div>
+  );
+}
+
+function Textarea({ value, onChange, placeholder, className = '' }: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  className?: string;
+}) {
+  return (
+    <textarea
+      value={value}
+      onChange={e => onChange(e.target.value)}
+      placeholder={placeholder}
+      rows={5}
+      className={`w-full bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:border-green-500 transition-colors resize-y ${className}`}
+    />
+  );
+}
+
+function StatChip({ label, value }: { label: string; value: string | number }) {
+  return (
+    <div className="bg-gray-100 dark:bg-gray-800 rounded-lg px-3 py-1.5 text-center min-w-[72px]">
+      <div className="text-xs text-gray-500 dark:text-gray-400">{label}</div>
+      <div className="text-base font-semibold text-gray-900 dark:text-white">{value}</div>
+    </div>
+  );
+}
+
+function TabBar({ tabs, active, onChange }: {
+  tabs: string[];
+  active: string;
+  onChange: (t: string) => void;
+}) {
+  return (
+    <div className="flex gap-1 bg-gray-100 dark:bg-gray-900 p-1 rounded-lg w-fit mb-4">
+      {tabs.map(t => (
+        <button
+          key={t}
+          onClick={() => onChange(t)}
+          className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
+            active === t
+              ? 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-sm'
+              : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'
+          }`}
+        >
+          {t}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function ComingSoon({ toolSlug }: { toolSlug: string }) {
+  return (
+    <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-10 text-center">
+      <div className="text-5xl mb-4">🚧</div>
+      <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+        Tool UI Coming Soon
+      </h2>
+      <p className="text-gray-500 dark:text-gray-400 mb-6 max-w-sm mx-auto">
+        This tool&apos;s interactive UI is still being built. The core encoder/decoder logic is ready — functional UI arriving shortly.
+      </p>
+      <div className="inline-flex items-center gap-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3 text-sm text-gray-600 dark:text-gray-300 font-mono">
+        /tools/{toolSlug}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Tool-specific UIs ─────────────────────────────────────────────── */
+
 function WordCounterUI() {
   const [text, setText] = useState('');
   const stats = {
     words: text.trim() ? text.trim().split(/\s+/).length : 0,
     chars: text.length,
-    charsNoSpaces: text.replace(/\s/g, '').length,
+    charsNoSpace: text.replace(/\s/g, '').length,
     sentences: text.split(/[.!?]+/).filter(Boolean).length,
     paragraphs: text.split(/\n\n+/).filter(Boolean).length,
-    readingTime: Math.ceil(text.trim() ? text.trim().split(/\s+/).length / 200 : 0),
+    readTime: Math.max(1, Math.ceil(text.trim().split(/\s+/).length / 200)),
   };
 
   return (
     <div className="space-y-4">
-      <textarea
-        value={text}
-        onChange={e => setText(e.target.value)}
-        placeholder="Paste or type your text here..."
-        rows={6}
-        className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl px-4 py-3 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-green-500 transition-colors resize-y"
-      />
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <Textarea value={text} onChange={setText} placeholder="Paste or type your text here..." />
+      <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
         {[
           { label: 'Words', value: stats.words },
           { label: 'Characters', value: stats.chars },
-          { label: 'No Spaces', value: stats.charsNoSpaces },
+          { label: 'No Spaces', value: stats.charsNoSpace },
           { label: 'Sentences', value: stats.sentences },
           { label: 'Paragraphs', value: stats.paragraphs },
-          { label: 'Read Time', value: `${stats.readingTime} min` },
-        ].map(({ label, value }) => (
-          <div key={label} className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3 text-center">
-            <div className="text-2xl font-bold text-green-600 dark:text-green-400">{value}</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">{label}</div>
-          </div>
+          { label: 'Read Time', value: `${stats.readTime}m` },
+        ].map(s => (
+          <StatChip key={s.label} label={s.label} value={s.value} />
         ))}
       </div>
     </div>
   );
 }
 
-// ─── Character Counter ────────────────────────────────────────────────────
 function CharacterCounterUI() {
   const [text, setText] = useState('');
-  const len = text.length;
-
   const limits = [
-    { name: 'Twitter / X', limit: 280, color: 'border-black' },
-    { name: 'LinkedIn', limit: 3000, color: 'border-blue-600' },
-    { name: 'Meta Description', limit: 160, color: 'border-green-600' },
-    { name: 'Google Title', limit: 60, color: 'border-orange-500' },
+    { label: 'Twitter / X', max: 280 },
+    { label: 'LinkedIn', max: 3000 },
+    { label: 'Meta Description', max: 160 },
+    { label: 'Page Title', max: 60 },
   ];
+  const remaining = (max: number) => Math.max(0, max - text.length);
+  const pct = (max: number) => Math.min(100, (text.length / max) * 100);
 
   return (
     <div className="space-y-4">
-      <textarea
+      <Textarea
         value={text}
-        onChange={e => setText(e.target.value)}
-        placeholder="Type or paste your text here..."
-        rows={5}
-        className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl px-4 py-3 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-green-500 transition-colors resize-y"
+        onChange={setText}
+        placeholder="Type or paste text to count characters..."
+        className="min-h-[160px]"
       />
-      <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-center">
-        <span className="text-4xl font-bold text-gray-900 dark:text-white">{len}</span>
-        <span className="text-gray-500 dark:text-gray-400 text-sm ml-2">characters</span>
+      <div className="text-2xl font-bold text-gray-900 dark:text-white text-center">
+        {text.length} <span className="text-sm font-normal text-gray-500">characters</span>
       </div>
-      <div className="space-y-2">
-        {limits.map(({ name, limit, color }) => {
-          const pct = Math.min((len / limit) * 100, 100);
-          const over = len > limit;
+      <div className="space-y-3">
+        {limits.map(({ label, max }) => {
+          const r = remaining(max);
+          const p = pct(max);
+          const over = text.length > max;
           return (
-            <div key={name}>
-              <div className="flex justify-between text-xs mb-1">
-                <span className="text-gray-600 dark:text-gray-300">{name}</span>
-                <span className={over ? 'text-red-500 font-semibold' : 'text-gray-500 dark:text-gray-400'}>
-                  {len} / {limit}
+            <div key={label} className="space-y-1">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600 dark:text-gray-300">{label} ({max})</span>
+                <span className={`font-medium ${over ? 'text-red-500' : 'text-gray-900 dark:text-white'}`}>
+                  {r} left
                 </span>
               </div>
-              <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+              <div className="h-2 bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
                 <div
-                  className={`h-full rounded-full transition-all ${over ? 'bg-red-500' : pct > 80 ? 'bg-orange-400' : 'bg-green-500'}`}
-                  style={{ width: `${pct}%` }}
+                  className={`h-full rounded-full transition-all ${over ? 'bg-red-500' : p > 80 ? 'bg-amber-400' : 'bg-green-500'}`}
+                  style={{ width: `${Math.min(100, p)}%` }}
                 />
               </div>
             </div>
@@ -94,161 +183,101 @@ function CharacterCounterUI() {
   );
 }
 
-// ─── Case Converter ────────────────────────────────────────────────────────
 function CaseConverterUI() {
   const [text, setText] = useState('');
-  const [result, setResult] = useState('');
-
-  const convert = useCallback((style: string) => {
-    if (!text) { setResult(''); return; }
-    let out = '';
-    switch (style) {
-      case 'upper': out = text.toUpperCase(); break;
-      case 'lower': out = text.toLowerCase(); break;
-      case 'title': out = text.replace(/\w\S*/g, t => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase()); break;
-      case 'sentence': out = text.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, c => c.toUpperCase()); break;
-      case 'camel': {
-        const s = text.replace(/[^a-zA-Z0-9 ]/g, ' ').split(/\s+/);
-        out = s[0].toLowerCase() + s.slice(1).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join('');
-        break;
-      }
-      case 'snake': out = text.replace(/[^a-zA-Z0-9 ]/g, ' ').split(/\s+/).join('_').toLowerCase(); break;
-      case 'kebab': out = text.replace(/[^a-zA-Z0-9 ]/g, ' ').split(/\s+/).join('-').toLowerCase(); break;
-      case 'constant': out = text.replace(/[^a-zA-Z0-9 ]/g, ' ').split(/\s+/).join('_').toUpperCase(); break;
-      case 'swap': out = text.split('').map(c => c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()).join(''); break;
-      default: out = text;
-    }
-    setResult(out);
-  }, [text]);
-
-  const cases = [
-    { label: 'UPPERCASE', key: 'upper' },
-    { label: 'lowercase', key: 'lower' },
-    { label: 'Title Case', key: 'title' },
-    { label: 'Sentence case', key: 'sentence' },
-    { label: 'camelCase', key: 'camel' },
-    { label: 'snake_case', key: 'snake' },
-    { label: 'kebab-case', key: 'kebab' },
-    { label: 'CONSTANT_CASE', key: 'constant' },
-    { label: 'sWAP cASE', key: 'swap' },
+  const convert = (fn: (s: string) => string) => {
+    setText(fn(text));
+    navigator.clipboard.writeText(fn(text));
+  };
+  const variants: { label: string; fn: (s: string) => string }[] = [
+    { label: 'UPPERCASE', fn: s => s.toUpperCase() },
+    { label: 'lowercase', fn: s => s.toLowerCase() },
+    { label: 'Title Case', fn: s => s.replace(/\w\S*/g, t => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase()) },
+    { label: 'camelCase', fn: s => s.replace(/[-_\s]+(.)?/g, (_, c) => c ? c.toUpperCase() : '').replace(/^./, c => c.toLowerCase()) },
+    { label: 'snake_case', fn: s => s.trim().toLowerCase().replace(/[-_\s]+/g, '_').replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase() },
+    { label: 'kebab-case', fn: s => s.trim().toLowerCase().replace(/[-_\s]+/g, '-').replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase() },
+    { label: 'CONSTANT_CASE', fn: s => s.trim().toUpperCase().replace(/[-_\s]+/g, '_').replace(/([a-z])([A-Z])/g, '$1_$2').toUpperCase() },
+    { label: 'Sentence case', fn: s => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase() },
   ];
 
   return (
     <div className="space-y-4">
-      <textarea
-        value={text}
-        onChange={e => setText(e.target.value)}
-        placeholder="Enter text to convert..."
-        rows={4}
-        className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl px-4 py-3 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-green-500 transition-colors resize-y"
-      />
-      <div className="flex flex-wrap gap-2">
-        {cases.map(({ label, key }) => (
-          <button
-            key={key}
-            onClick={() => convert(key)}
-            className="px-3 py-1.5 bg-gray-100 dark:bg-gray-800 hover:bg-green-100 dark:hover:bg-green-900 text-gray-700 dark:text-gray-200 text-sm rounded-lg border border-gray-200 dark:border-gray-700 hover:border-green-400 dark:hover:border-green-600 transition-colors"
-          >
-            {label}
-          </button>
-        ))}
-      </div>
-      {result && (
-        <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">Result</span>
+      <Textarea value={text} onChange={setText} placeholder="Enter text to convert..." />
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        {variants.map(({ label, fn }) => {
+          const result = text ? fn(text) : '';
+          return (
             <button
-              onClick={() => navigator.clipboard.writeText(result)}
-              className="text-xs text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300"
+              key={label}
+              onClick={() => convert(fn)}
+              className="flex flex-col items-center gap-1 p-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-green-500 dark:hover:border-green-600 rounded-lg transition-colors text-center"
             >
-              Copy
+              <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">{label}</span>
+              <span className="text-sm text-gray-900 dark:text-white font-mono truncate w-full overflow-hidden text-ellipsis">
+                {result || '—'}
+              </span>
             </button>
-          </div>
-          <pre className="text-gray-900 dark:text-white text-sm break-all whitespace-pre-wrap">{result}</pre>
-        </div>
-      )}
+          );
+        })}
+      </div>
+      <p className="text-xs text-gray-400 dark:text-gray-500 text-center">Click any variant to copy to clipboard</p>
     </div>
   );
 }
 
-// ─── Base64 Encode / Decode ────────────────────────────────────────────────
 function Base64UI() {
+  const [mode, setMode] = useState<'encode' | 'decode'>('encode');
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [error, setError] = useState('');
-  const [mode, setMode] = useState<'encode' | 'decode'>('encode');
 
-  const process = () => {
+  const run = useCallback(() => {
     setError('');
     try {
       if (mode === 'encode') {
         setOutput(btoa(unescape(encodeURIComponent(input))));
       } else {
-        setOutput(decodeURIComponent(escape(atob(input))));
+        setOutput(decodeURIComponent(escape(atob(input.trim()))));
       }
     } catch {
-      setError('Invalid input for ' + (mode === 'encode' ? 'encoding' : 'decoding') + '.');
+      setError('Invalid input for ' + (mode === 'encode' ? 'encoding' : 'decoding'));
       setOutput('');
     }
-  };
+  }, [mode, input]);
+
+  useEffect(() => { run(); }, [run]);
 
   return (
     <div className="space-y-4">
-      <div className="flex gap-2 mb-2">
-        {(['encode', 'decode'] as const).map(m => (
-          <button
-            key={m}
-            onClick={() => { setMode(m); setOutput(''); setError(''); }}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              mode === m
-                ? 'bg-green-600 text-white'
-                : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-            }`}
-          >
-            {m === 'encode' ? 'Encode ↑' : 'Decode ↓'}
-          </button>
-        ))}
-      </div>
-      <textarea
-        value={input}
-        onChange={e => setInput(e.target.value)}
-        placeholder={mode === 'encode' ? 'Text to encode...' : 'Base64 to decode...'}
-        rows={4}
-        className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl px-4 py-3 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-green-500 transition-colors resize-y"
-      />
+      <TabBar tabs={['Encode', 'Decode']} active={mode === 'encode' ? 'Encode' : 'Decode'} onChange={t => { setMode(t === 'Encode' ? 'encode' : 'decode'); setError(''); }} />
+      <Textarea value={input} onChange={v => { setInput(v); }} placeholder={mode === 'encode' ? 'Text to encode...' : 'Base64 string to decode...'} />
       <button
-        onClick={process}
-        className="w-full bg-green-600 hover:bg-green-700 text-white rounded-xl px-4 py-3 font-medium transition-colors"
+        onClick={run}
+        className="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors"
       >
-        {mode === 'encode' ? 'Encode to Base64' : 'Decode from Base64'}
+        {mode === 'encode' ? 'Encode → Base64' : 'Decode ← Base64'}
       </button>
-      {error && <p className="text-red-500 text-sm">{error}</p>}
-      {output && (
-        <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">Output</span>
-            <button
-              onClick={() => navigator.clipboard.writeText(output)}
-              className="text-xs text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300"
-            >
-              Copy
-            </button>
+      {error ? (
+        <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm rounded-lg px-4 py-3">{error}</div>
+      ) : (
+        <OutputCard label="Output">
+          <div className="flex items-start justify-between gap-2">
+            <pre className="text-sm font-mono text-gray-900 dark:text-white whitespace-pre-wrap break-all flex-1">{output}</pre>
+            {output && <CopyButton text={output} />}
           </div>
-          <pre className="text-gray-900 dark:text-white text-sm break-all whitespace-pre-wrap">{output}</pre>
-        </div>
+        </OutputCard>
       )}
     </div>
   );
 }
 
-// ─── URL Encode / Decode ──────────────────────────────────────────────────
-function UrlEncodeUI() {
+function URLEncodeUI() {
+  const [mode, setMode] = useState<'encode' | 'decode'>('encode');
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [error, setError] = useState('');
-  const [mode, setMode] = useState<'encode' | 'decode'>('encode');
 
-  const process = () => {
+  const run = useCallback(() => {
     setError('');
     try {
       if (mode === 'encode') {
@@ -257,177 +286,119 @@ function UrlEncodeUI() {
         setOutput(decodeURIComponent(input));
       }
     } catch {
-      setError('Invalid input for decoding.');
+      setError('Invalid input for URL ' + (mode === 'encode' ? 'encoding' : 'decoding'));
       setOutput('');
     }
-  };
+  }, [mode, input]);
+
+  useEffect(() => { run(); }, [run]);
 
   return (
     <div className="space-y-4">
-      <div className="flex gap-2 mb-2">
-        {(['encode', 'decode'] as const).map(m => (
-          <button
-            key={m}
-            onClick={() => { setMode(m); setOutput(''); setError(''); }}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              mode === m
-                ? 'bg-green-600 text-white'
-                : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-            }`}
-          >
-            {m === 'encode' ? 'Encode ↑' : 'Decode ↓'}
-          </button>
-        ))}
-      </div>
-      <textarea
-        value={input}
-        onChange={e => setInput(e.target.value)}
-        placeholder={mode === 'encode' ? 'Text or URL to encode...' : 'Encoded URL to decode...'}
-        rows={4}
-        className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl px-4 py-3 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-green-500 transition-colors resize-y"
-      />
+      <TabBar tabs={['Encode', 'Decode']} active={mode === 'encode' ? 'Encode' : 'Decode'} onChange={t => { setMode(t === 'Encode' ? 'encode' : 'decode'); setError(''); }} />
+      <Textarea value={input} onChange={v => { setInput(v); }} placeholder={mode === 'encode' ? 'URL or text to encode...' : 'Encoded URL to decode...'} />
       <button
-        onClick={process}
-        className="w-full bg-green-600 hover:bg-green-700 text-white rounded-xl px-4 py-3 font-medium transition-colors"
+        onClick={run}
+        className="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors"
       >
-        {mode === 'encode' ? 'Encode URL' : 'Decode URL'}
+        {mode === 'encode' ? 'Encode URL →' : '← Decode URL'}
       </button>
-      {error && <p className="text-red-500 text-sm">{error}</p>}
-      {output && (
-        <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">Output</span>
-            <button
-              onClick={() => navigator.clipboard.writeText(output)}
-              className="text-xs text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300"
-            >
-              Copy
-            </button>
+      {error ? (
+        <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm rounded-lg px-4 py-3">{error}</div>
+      ) : (
+        <OutputCard label="Output">
+          <div className="flex items-start justify-between gap-2">
+            <pre className="text-sm font-mono text-gray-900 dark:text-white whitespace-pre-wrap break-all flex-1">{output}</pre>
+            {output && <CopyButton text={output} />}
           </div>
-          <pre className="text-gray-900 dark:text-white text-sm break-all whitespace-pre-wrap">{output}</pre>
-        </div>
+        </OutputCard>
       )}
     </div>
   );
 }
 
-// ─── JSON Formatter ────────────────────────────────────────────────────────
-function JsonFormatterUI() {
+function JSONFormatterUI() {
   const [input, setInput] = useState('');
+  const [indent, setIndent] = useState(2);
   const [output, setOutput] = useState('');
   const [error, setError] = useState('');
-  const [indent, setIndent] = useState(2);
+  const [mode, setMode] = useState<'format' | 'minify'>('format');
 
-  const format = () => {
+  const process = useCallback(() => {
     setError('');
+    if (!input.trim()) { setOutput(''); return; }
     try {
       const parsed = JSON.parse(input);
-      setOutput(JSON.stringify(parsed, null, indent));
+      if (mode === 'format') {
+        setOutput(JSON.stringify(parsed, null, indent));
+      } else {
+        setOutput(JSON.stringify(parsed));
+      }
     } catch (e) {
-      setError('Invalid JSON: ' + (e as Error).message);
+      setError('Invalid JSON: ' + (e instanceof Error ? e.message : 'parse error'));
       setOutput('');
     }
-  };
+  }, [input, indent, mode]);
 
-  const minify = () => {
-    setError('');
-    try {
-      const parsed = JSON.parse(input);
-      setOutput(JSON.stringify(parsed));
-    } catch (e) {
-      setError('Invalid JSON: ' + (e as Error).message);
-      setOutput('');
-    }
-  };
+  useEffect(() => { process(); }, [process]);
 
   return (
     <div className="space-y-4">
-      <textarea
+      <Textarea
         value={input}
-        onChange={e => setInput(e.target.value)}
-        placeholder='{"key": "value"}'
-        rows={6}
-        className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl px-4 py-3 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-green-500 transition-colors resize-y font-mono text-sm"
+        onChange={v => setInput(v)}
+        placeholder='{"name": "Toolblip", "tools": 50, "free": true}'
+        className="font-mono text-sm"
       />
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2">
-          <label className="text-sm text-gray-600 dark:text-gray-300">Indent:</label>
-          <select
-            value={indent}
-            onChange={e => setIndent(Number(e.target.value))}
-            className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-2 py-1 text-sm focus:outline-none focus:border-green-500"
-          >
-            <option value={2}>2 spaces</option>
-            <option value={4}>4 spaces</option>
-            <option value={1}>1 space</option>
-          </select>
-        </div>
-        <button onClick={format} className="flex-1 bg-green-600 hover:bg-green-700 text-white rounded-xl px-4 py-2 font-medium transition-colors text-sm">
-          Format
-        </button>
-        <button onClick={minify} className="flex-1 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-xl px-4 py-2 font-medium transition-colors text-sm">
-          Minify
+      <div className="flex items-center gap-4 flex-wrap">
+        <TabBar tabs={['Format', 'Minify']} active={mode === 'format' ? 'Format' : 'Minify'} onChange={t => setMode(t === 'Format' ? 'format' : 'minify')} />
+        {mode === 'format' && (
+          <div className="flex items-center gap-2">
+            <label className="text-sm text-gray-600 dark:text-gray-300">Indent:</label>
+            <select
+              value={indent}
+              onChange={e => setIndent(Number(e.target.value))}
+              className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded px-2 py-1 text-sm focus:outline-none focus:border-green-500"
+            >
+              {[2, 4, 8].map(n => <option key={n} value={n}>{n} spaces</option>)}
+            </select>
+          </div>
+        )}
+        <button onClick={process} className="ml-auto px-4 py-1.5 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors">
+          Process
         </button>
       </div>
-      {error && <p className="text-red-500 text-sm bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg px-3 py-2">{error}</p>}
-      {output && (
-        <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">Output</span>
-            <button
-              onClick={() => navigator.clipboard.writeText(output)}
-              className="text-xs text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300"
-            >
-              Copy
-            </button>
+      {error ? (
+        <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm rounded-lg px-4 py-3">{error}</div>
+      ) : (
+        <OutputCard label={mode === 'format' ? 'Formatted JSON' : 'Minified JSON'}>
+          <div className="flex items-start justify-between gap-2">
+            <pre className="text-sm font-mono text-gray-900 dark:text-white whitespace-pre-wrap break-all flex-1">{output}</pre>
+            {output && <CopyButton text={output} />}
           </div>
-          <pre className="text-gray-900 dark:text-white text-sm overflow-x-auto">{output}</pre>
-        </div>
+        </OutputCard>
       )}
     </div>
   );
 }
 
-// ─── Coming Soon ───────────────────────────────────────────────────────────
-function ComingSoonUI({ toolName }: { toolName: string }) {
-  return (
-    <div className="space-y-4">
-      <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-8 text-center">
-        <div className="text-5xl mb-4">🚧</div>
-        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Coming Soon</h3>
-        <p className="text-gray-500 dark:text-gray-400 mb-6">
-          The <strong>{toolName}</strong> tool is on our roadmap and will be available soon.
-        </p>
-        <div className="max-w-sm mx-auto">
-          <textarea
-            placeholder="Placeholder input (coming soon)..."
-            disabled
-            rows={4}
-            className="w-full bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-400 dark:text-gray-500 rounded-xl px-4 py-3 resize-none cursor-not-allowed opacity-60"
-          />
-          <div className="mt-4 bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm text-gray-400 dark:text-gray-500">
-            Output will appear here...
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+/* ─── Router ───────────────────────────────────────────────────────── */
 
-// ─── Router ────────────────────────────────────────────────────────────────
-const toolMap: Record<string, () => React.ReactNode> = {
-  'word-counter': () => <WordCounterUI />,
-  'character-counter': () => <CharacterCounterUI />,
-  'case-converter': () => <CaseConverterUI />,
-  'base64': () => <Base64UI />,
-  'url-encode': () => <UrlEncodeUI />,
-  'json-formatter': () => <JsonFormatterUI />,
+const TOOL_UIS: Record<string, React.ComponentType> = {
+  'word-counter': WordCounterUI,
+  'character-counter': CharacterCounterUI,
+  'case-converter': CaseConverterUI,
+  'base64': Base64UI,
+  'url-encode': URLEncodeUI,
+  'json-formatter': JSONFormatterUI,
 };
 
-export default function ToolUI({ slug }: { slug: string }) {
-  const Component = toolMap[slug];
-  if (Component) return Component();
-
-  const tool = tools.find(t => t.slug === slug);
-  return <ComingSoonUI toolName={tool?.name ?? slug} />;
+export default function ToolUI({ tool }: { tool: Tool }) {
+  const Component = TOOL_UIS[tool.slug];
+  if (!Component) return <ComingSoon toolSlug={tool.slug} />;
+  return (
+    <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
+      <Component />
+    </div>
+  );
 }
