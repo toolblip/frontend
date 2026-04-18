@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import Link from 'next/link';
 import matter from 'gray-matter';
 import type { Metadata } from 'next';
 import { tools } from '@/data/tools';
