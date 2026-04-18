@@ -3,9 +3,8 @@ builder = "NIXPACKS"
 
 [deploy]
 startCommand = "npm start"
-healthcheckPath = "/frontend-health"
+healthcheckCommand = "node -e \"const h=http=require('http');h.get('http://localhost:8080/',(r)=>process.exit(r.statusCode===200?0:1)).on('error',()=>process.exit(1))\""
 healthcheckTimeout = 300
-port = 8080
 sleepApplication = false
 
 [_variables]
