@@ -1,16 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { Home, Search, Compass } from 'lucide-react';
+import { Home, Search } from 'lucide-react';
 
 export default function NotFound() {
   return (
-    <div className="min-h-[70vh] flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4">
       <div className="max-w-md w-full text-center">
-        <div className="flex justify-center mb-2">
-          <Compass className="w-14 h-14 text-green-500 dark:text-green-400" strokeWidth={1.5} />
-        </div>
-        <p className="text-[6rem] sm:text-[8rem] font-bold leading-none text-green-500 dark:text-green-400 select-none mb-2">
+        <p className="text-[7rem] sm:text-[9rem] font-bold leading-none text-green-500 dark:text-green-400 select-none mb-2">
           404
         </p>
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">
