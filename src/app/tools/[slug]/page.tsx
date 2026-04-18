@@ -383,7 +383,7 @@ function ComingSoonTool({ slug }: { slug: string }) {
 
 // ─── Tool Registry ─────────────────────────────────────────────────────────
 
-type ToolComponent = () => JSX.Element;
+type ToolComponent = () => React.ReactElement;
 
 const toolComponents: Record<string, ToolComponent> = {
   'word-counter': WordCounterTool,
