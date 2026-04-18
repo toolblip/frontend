@@ -2,22 +2,9 @@ import { MetadataRoute } from 'next';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
+import { tools } from '@/data/tools';
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://toolblip.com';
-
-// Tool slugs for sitemap — kept in sync with src/data/tools.ts
-const TOOL_SLUGS = [
-  'word-counter','character-counter','remove-duplicate-lines','case-converter',
-  'lorem-ipsum-generator','regex-tester','json-formatter','base64',
-  'url-encode','image-cropper','image-format-converter','uuid-generator',
-  'markdown-to-html','yaml-to-json','cron-parser','hash-generator',
-  'screen-resolution-tester','url-slug-generator','percentage-calculator',
-  'css-border-radius-generator','css-gradient-generator','jwt-decoder',
-  'cron-generator','http-headers-viewer','port-scanner',
-  'meta-tag-generator','serp-preview','color-picker','contrast-checker',
-  'unit-converter','number-base-converter','text-sorter','readability-score',
-  'grammar-checker','favicon-generator','image-resizer',
-];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [
@@ -30,8 +17,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/blog`, priority: 0.7, changeFrequency: 'daily' },
   ];
 
-  const toolPages: MetadataRoute.Sitemap = TOOL_SLUGS.map((slug) => ({
-    url: `${BASE_URL}/tools/${slug}`,
+  const toolPages: MetadataRoute.Sitemap = tools.map((tool) => ({
+    url: `${BASE_URL}/tools/${tool.slug}`,
     priority: 0.8,
     changeFrequency: 'monthly' as const,
   }));
