@@ -108,7 +108,21 @@ export const tools: Tool[] = [
   { name: 'Color Harmony Generator', slug: 'color-harmony-generator', description: 'Generate complementary, analogous, triadic, and split-complementary color palettes from any base hue.', emoji: '🎨', category: 'Color' },
   { name: 'Open Graph Preview', slug: 'open-graph-preview', description: 'Preview how a URL looks when shared on Facebook, LinkedIn, and messaging apps.', emoji: '📤', category: 'SEO' },
   { name: 'Twitter Card Preview', slug: 'twitter-card-preview', description: 'Preview how a webpage appears when shared on Twitter with large or summary card.', emoji: '🐦', category: 'SEO' },
+  { name: 'Plagiarism Checker', slug: 'plagiarism-checker', description: 'Check text for plagiarism by scanning matching phrases and unique word patterns.', emoji: '🔏', category: 'Text' },
+  { name: 'Unicode Character Inspector', slug: 'unicode-character-inspector', description: 'Inspect Unicode characters — view code points, UTF-8 bytes, and HTML entities.', emoji: '🔣', category: 'Text' },
+  { name: 'Homoglyph Detector', slug: 'homoglyph-detector', description: 'Detect hidden homoglyph attacks in domain names and identifiers using lookalike characters.', emoji: '🎭', category: 'Developer' },
+  { name: 'Shell Command Reference', slug: 'shell-command-reference', description: 'Quick reference for common shell commands with syntax examples and practical use cases.', emoji: '💻', category: 'Developer' },
+  { name: 'JSON Path Evaluator', slug: 'json-path-evaluator', description: 'Evaluate JSONPath expressions against any JSON data and extract matched nodes.', emoji: '🌳', category: 'Developer' },
+  { name: 'API Endpoint Tester', slug: 'api-endpoint-tester', description: 'Send HTTP requests to any API endpoint and inspect the response with format options.', emoji: '🚀', category: 'Developer' },
+  { name: 'User Agent Parser', slug: 'user-agent-parser', description: 'Parse and identify browser, OS, and device from any User-Agent string instantly.', emoji: '🕵️', category: 'Developer' },
+  { name: 'SSL Certificate Checker', slug: 'ssl-certificate-checker', description: 'Check SSL certificate details, expiry date, and issuer for any HTTPS domain.', emoji: '🔒', category: 'Developer' },
+  { name: 'Backlink Checker', slug: 'backlink-checker', description: 'Analyze backlinks pointing to any URL — check domain authority and link attributes.', emoji: '🔗', category: 'SEO' },
+  { name: 'Keyword Generator', slug: 'keyword-generator', description: 'Generate relevant keyword suggestions from any seed term with search volume hints.', emoji: '🔑', category: 'SEO' },
+  { name: 'HTML to Plain Text', slug: 'html-to-plain-text', description: 'Strip HTML tags from any content and extract clean, readable plain text.', emoji: '📝', category: 'Conversion' },
+  { name: 'Physics Constants Reference', slug: 'physics-constants-reference', description: 'Browse common physics constants with units, symbols, and precise decimal values.', emoji: '🔬', category: 'Utility' },
 ];
+
+export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility'] as const;
 
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility'] as const;
