@@ -13,7 +13,7 @@ interface PostMeta {
 }
 
 function getAllPosts(): PostMeta[] {
-  const blogDir = path.join(process.cwd(), 'blog');
+  const blogDir = path.join(process.cwd(), 'src/content/blog');
   if (!fs.existsSync(blogDir)) return [];
   return fs.readdirSync(blogDir).filter((f) => f.endsWith('.md')).map((file) => {
     const raw = fs.readFileSync(path.join(blogDir, file), 'utf-8');

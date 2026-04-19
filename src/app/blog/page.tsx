@@ -30,7 +30,7 @@ interface Post {
 }
 
 function getPosts(): Post[] {
-  const blogDir = path.join(process.cwd(), 'blog');
+  const blogDir = path.join(process.cwd(), 'src/content/blog');
   if (!fs.existsSync(blogDir)) return [];
   return fs
     .readdirSync(blogDir)
