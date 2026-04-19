@@ -130,6 +130,21 @@ export const tools: Tool[] = [
   { name: 'Keyword Generator', slug: 'keyword-generator', description: 'Generate relevant keyword suggestions from any seed term with search volume hints.', emoji: '🔑', category: 'SEO' },
   { name: 'HTML to Plain Text', slug: 'html-to-plain-text', description: 'Strip HTML tags from any content and extract clean, readable plain text.', emoji: '📝', category: 'Conversion' },
   { name: 'Physics Constants Reference', slug: 'physics-constants-reference', description: 'Browse common physics constants with units, symbols, and precise decimal values.', emoji: '🔬', category: 'Utility' },
+  // --- New additions ---
+  { name: 'Text Sorter', slug: 'text-sorter', description: 'Sort lines of text alphabetically, reverse, by length, or numerically.', emoji: '📋', category: 'Text' },
+  { name: 'Emoji Finder', slug: 'emoji-finder', description: 'Search thousands of emojis by keyword and copy the raw Unicode character.', emoji: '😀', category: 'Text' },
+  { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-generator', description: 'Generate placeholder lorem ipsum text with paragraphs, sentences, words, or lists.', emoji: '📜', category: 'Text' },
+  { name: 'Placeholder Image Generator', slug: 'placeholder-image-generator', description: 'Generate placeholder images in any size with custom text, colors, and format.', emoji: '🖼️', category: 'Image' },
+  { name: 'Image Color Picker', slug: 'image-color-picker', description: 'Pick colors from any image and get HEX, RGB, HSL, and CSS values instantly.', emoji: '🎨', category: 'Image' },
+  { name: 'HEX to RGB', slug: 'hex-to-rgb', description: 'Convert HEX color codes to RGB and RGBA formats with live color preview.', emoji: '🎨', category: 'Color' },
+  { name: 'RGB to HEX', slug: 'rgb-to-hex', description: 'Convert RGB and RGBA values to HEX format with live color preview.', emoji: '🎨', category: 'Color' },
+  { name: 'HSL to HEX', slug: 'hsl-to-hex', description: 'Convert HSL color values to HEX with live color preview and CSS output.', emoji: '🎨', category: 'Color' },
+  { name: 'Slug Generator', slug: 'slug-generator', description: 'Generate URL-friendly slugs from any text with customizable separator and length.', emoji: '🔗', category: 'Developer' },
+  { name: 'JSON to CSV', slug: 'json-to-csv', description: 'Convert JSON arrays and objects to CSV format with custom delimiter and headers.', emoji: '📊', category: 'Conversion' },
+  { name: 'CSV to JSON', slug: 'csv-to-json', description: 'Convert CSV data to JSON with options for nested keys and array handling.', emoji: '📋', category: 'Conversion' },
+  { name: 'Timestamp Converter', slug: 'timestamp-converter', description: 'Convert between Unix timestamps, ISO 8601, and human-readable date formats.', emoji: '🕰️', category: 'Conversion' },
+  { name: 'Word Density Analyzer', slug: 'word-density-analyzer', description: 'Analyze word and phrase frequency in any text for SEO and content optimization.', emoji: '📈', category: 'SEO' },
+  { name: 'HTML Encoder', slug: 'html-encoder', description: 'Encode HTML special characters to entities and decode them back instantly.', emoji: '🏷️', category: 'Encoder' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility'] as const;
