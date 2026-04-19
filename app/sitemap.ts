@@ -1,9 +1,9 @@
-import type { MetadataRoute } from 'next';
-import { tools } from '@/data/tools';
+import type { MetadataRoute } from 'next'
+import { tools } from '@/data/tools'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://toolblip.com';
-  const now = new Date();
+  const baseUrl = 'https://toolblip.com'
+  const now = new Date()
 
   const staticPages: MetadataRoute.Sitemap = [
     {
@@ -22,13 +22,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/directory`,
       lastModified: now,
       changeFrequency: 'weekly',
-      priority: 0.7,
+      priority: 0.8,
     },
     {
       url: `${baseUrl}/about`,
       lastModified: now,
       changeFrequency: 'monthly',
-      priority: 0.6,
+      priority: 0.7,
     },
     {
       url: `${baseUrl}/login`,
@@ -48,14 +48,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'weekly',
       priority: 0.8,
     },
-  ];
+  ]
 
   const toolPages: MetadataRoute.Sitemap = tools.map((tool) => ({
     url: `${baseUrl}/tools/${tool.slug}`,
     lastModified: now,
-    changeFrequency: 'monthly' as const,
-    priority: 0.7,
-  }));
+    changeFrequency: 'weekly' as const,
+    priority: 0.6,
+  }))
 
-  return [...staticPages, ...toolPages];
+  return [...staticPages, ...toolPages]
 }
