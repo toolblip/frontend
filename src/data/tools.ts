@@ -87,6 +87,16 @@ export const tools: Tool[] = [
   { name: 'Slug Permalink Checker', slug: 'slug-permalink-checker', description: 'Check URL slug availability and analyze permalink structure for SEO-friendly paths.', emoji: '🔗', category: 'SEO' },
   { name: 'Keyword Density Checker', slug: 'keyword-density-checker', description: 'Analyze keyword frequency and density in text or HTML content for SEO optimization.', emoji: '📈', category: 'SEO' },
   { name: 'Slideshow Generator', slug: 'slideshow-generator', description: 'Create HTML slideshows from markdown or text with transitions, themes, and keyboard navigation.', emoji: '🎞️', category: 'Utility' },
+  { name: 'Plain Text Counter', slug: 'plain-text-counter', description: 'Count words and characters in plain text without formatting or special characters.', emoji: '📝', category: 'Text' },
+  { name: 'Anagram Generator', slug: 'anagram-generator', description: 'Generate all possible anagrams from any word or phrase with one click.', emoji: '🔤', category: 'Text' },
+  { name: 'Quote of the Day', slug: 'quote-of-the-day', description: 'Get an inspiring or random quote of the day with author attribution.', emoji: '💬', category: 'Text' },
+  { name: 'Word Frequency Analyzer', slug: 'word-frequency-analyzer', description: 'Analyze word frequency and density in any text for SEO and content insights.', emoji: '📊', category: 'Text' },
+  { name: 'Morse Code Translator', slug: 'morse-code-translator', description: 'Convert text to and from Morse code with audio playback and dot-dash display.', emoji: '📡', category: 'Conversion' },
+  { name: 'ROT13 Cipher', slug: 'rot13-cipher', description: 'Apply ROT13 substitution cipher to encode or decode text instantly.', emoji: '🔐', category: 'Conversion' },
+  { name: 'Unix Timestamp Converter', slug: 'unix-timestamp-converter', description: 'Convert Unix timestamps to human-readable dates and vice versa with timezone support.', emoji: '🕰️', category: 'Conversion' },
+  { name: 'Email Generator', slug: 'email-generator', description: 'Generate realistic email addresses with custom domains for testing and prototyping.', emoji: '📧', category: 'Developer' },
+  { name: 'Time Zone Converter', slug: 'time-zone-converter', description: 'Convert times between multiple timezones with daylight saving and current time display.', emoji: '🌍', category: 'Utility' },
+  { name: 'Random Fraction Generator', slug: 'random-fraction-generator', description: 'Generate random fractions, decimals, or mixed numbers within a custom range.', emoji: '➗', category: 'Math' },
 ];
 
 
