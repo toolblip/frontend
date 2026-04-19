@@ -97,6 +97,17 @@ export const tools: Tool[] = [
   { name: 'Email Generator', slug: 'email-generator', description: 'Generate realistic email addresses with custom domains for testing and prototyping.', emoji: '📧', category: 'Developer' },
   { name: 'Time Zone Converter', slug: 'time-zone-converter', description: 'Convert times between multiple timezones with daylight saving and current time display.', emoji: '🌍', category: 'Utility' },
   { name: 'Random Fraction Generator', slug: 'random-fraction-generator', description: 'Generate random fractions, decimals, or mixed numbers within a custom range.', emoji: '➗', category: 'Math' },
+  { name: 'ROT47 Cipher', slug: 'rot47-cipher', description: 'Apply ROT47 rotation to encode or decode text using the 94-character ASCII range.', emoji: '🔏', category: 'Conversion' },
+  { name: 'Hash Collision Finder', slug: 'hash-collision-finder', description: 'Find potential hash collisions for short inputs across MD5, SHA-1, and SHA-256.', emoji: '💥', category: 'Developer' },
+  { name: 'SemVer Checker', slug: 'semver-checker', description: 'Compare two semantic version strings and see which is greater, equal, or invalid.', emoji: '🏷️', category: 'Developer' },
+  { name: 'IPv6 Address Generator', slug: 'ipv6-generator', description: 'Generate random IPv6 addresses in full, compressed, or EUI-64 format for testing.', emoji: '🌍', category: 'Utility' },
+  { name: 'MAC Address Generator', slug: 'mac-address-generator', description: 'Generate random MAC addresses in OUI, EUI-48, or EUI-64 format for network testing.', emoji: '📡', category: 'Utility' },
+  { name: 'HTML Table Generator', slug: 'html-table-generator', description: 'Create styled HTML tables with custom rows, columns, borders, and striped or highlighted rows.', emoji: '📊', category: 'Developer' },
+  { name: 'Base64 Image Converter', slug: 'base64-image-converter', description: 'Convert images to Base64 data URLs or decode Base64 back to image files instantly.', emoji: '🖼️', category: 'Image' },
+  { name: 'Image Metadata Viewer', slug: 'image-metadata-viewer', description: 'Extract and view EXIF, IPTC, and XMP metadata from JPEG, PNG, and WebP images.', emoji: '📷', category: 'Image' },
+  { name: 'Color Harmony Generator', slug: 'color-harmony-generator', description: 'Generate complementary, analogous, triadic, and split-complementary color palettes from any base hue.', emoji: '🎨', category: 'Color' },
+  { name: 'Open Graph Preview', slug: 'open-graph-preview', description: 'Preview how a URL looks when shared on Facebook, LinkedIn, and messaging apps.', emoji: '📤', category: 'SEO' },
+  { name: 'Twitter Card Preview', slug: 'twitter-card-preview', description: 'Preview how a webpage appears when shared on Twitter with large or summary card.', emoji: '🐦', category: 'SEO' },
 ];
 
 
