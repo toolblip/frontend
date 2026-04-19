@@ -164,6 +164,7 @@ export default function ApiDocsClient() {
               { id: 'authentication', label: 'Authentication' },
               { id: 'tools', label: 'Tools' },
               { id: 'auth', label: 'Auth' },
+              { id: 'rate-limiting', label: 'Rate Limiting' },
               { id: 'errors', label: 'Errors' },
             ].map(({ id, label }) => (
               <a
@@ -260,9 +261,16 @@ export default function ApiDocsClient() {
           {/* ── Tools ── */}
           <section id="tools" className="scroll-mt-16">
             <SectionHeading>Tools</SectionHeading>
-            <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">
+            <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
               All tools endpoints are public — no authentication required.
             </p>
+
+            <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl text-xs text-blue-700 dark:text-blue-400">
+              <strong>Response envelope:</strong> Tool list responses wrap data in a{' '}
+              <InlineCode>tools</InlineCode> key — e.g.{' '}
+              <InlineCode>{'{ tools: { tools: [...] } }'}</InlineCode>. Single-tool responses wrap in{' '}
+              <InlineCode>{'{ tool: {...} }'}</InlineCode>.
+            </div>
 
             <div className="space-y-10 sm:space-y-12">
 
@@ -291,18 +299,9 @@ export default function ApiDocsClient() {
         "is_pro": false,
         "emoji": "🤖",
         "created_at": "2026-01-01T00:00:00Z"
-      },
-      {
-        "id": 2,
-        "slug": "cursor",
-        "name": "Cursor",
-        "description": "AI-first code editor built around pair programming",
-        "category": "AI",
-        "is_pro": true,
-        "emoji": "💻",
-        "created_at": "2026-01-15T00:00:00Z"
       }
-    ]
+    ],
+    "meta": { "current_page": 1, "per_page": 20, "total": 42 }
   }
 }`}
                 curl={`curl "${BASE_URL}/api/tools" \\
@@ -455,6 +454,29 @@ export default function ApiDocsClient() {
               />
 
             </div>
+          </section>
+
+          {/* ── Errors ── */}
+          {/* ── Rate Limiting ── */}
+          <section id="rate-limiting" className="scroll-mt-16">
+            <SectionHeading>Rate Limiting</SectionHeading>
+            <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-4">
+              Unauthenticated endpoints are limited to{' '}
+              <strong className="text-gray-700 dark:text-gray-300">60 requests per minute</strong> per IP.
+              Authenticated endpoints allow{' '}
+              <strong className="text-gray-700 dark:text-gray-300">300 requests per minute</strong>.
+            </p>
+            <CodeBlock
+              code={`HTTP/1.1 429 Too Many Requests
+Retry-After: 42
+X-RateLimit-Limit: 60
+X-RateLimit-Remaining: 0`}
+            />
+            <p className="text-gray-500 dark:text-gray-400 text-sm mt-4 leading-relaxed">
+              When the limit is exceeded the API returns{' '}
+              <InlineCode>429 Too Many Requests</InlineCode> with a{' '}
+              <InlineCode>Retry-After</InlineCode> header indicating seconds until the window resets.
+            </p>
           </section>
 
           {/* ── Errors ── */}
