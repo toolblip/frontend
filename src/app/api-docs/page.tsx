@@ -273,8 +273,12 @@ export default function ApiDocsClient() {
                 path="/api/tools"
                 auth={false}
                 status={200}
-                description="Returns a paginated list of all tools in the registry. The tools array is nested inside a &quot;tools&quot; key."
-                query={`category  string  Filter tools by category (e.g. AI, DevOps, Analytics)\npage      number  Page number for pagination (default: 1)\nper_page  number  Results per page (default: 20)`}
+                description="Returns a paginated list of all tools in the registry. The tools are nested inside a &quot;tools&quot; key."
+                query={[
+                  { name: 'category', type: 'string', desc: 'Filter by category (e.g. AI, DevOps, Analytics)' },
+                  { name: 'page', type: 'number', desc: 'Page number (default: 1)' },
+                  { name: 'per_page', type: 'number', desc: 'Results per page (default: 20)' },
+                ]}
                 response={`{
   "tools": {
     "tools": [
@@ -301,10 +305,9 @@ export default function ApiDocsClient() {
     ]
   }
 }`}
-                curl={`curl -G "${BASE_URL}/api/tools" \\
+                curl={`curl "${BASE_URL}/api/tools" \\
   -H "Accept: application/json" \\
-  --data-urlencode "category=AI" \\
-  --data-urlencode "page=1"`}
+  -G --data-urlencode "category=AI" --data-urlencode "page=1"`}
               />
 
               {/* GET /api/tools/:slug */}
@@ -330,7 +333,7 @@ export default function ApiDocsClient() {
                 errorResponse={`{
   "message": "Tool not found"
 }`}
-                curl={`curl -X GET "${BASE_URL}/api/tools/claude-code" \\
+                curl={`curl "${BASE_URL}/api/tools/claude-code" \\
   -H "Accept: application/json"`}
               />
 
@@ -446,7 +449,7 @@ export default function ApiDocsClient() {
     "is_pro": false
   }
 }`}
-                curl={`curl -X GET "${BASE_URL}/api/auth/user" \\
+                curl={`curl "${BASE_URL}/api/auth/user" \\
   -H "Accept: application/json" \\
   -H "Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx"`}
               />
@@ -577,6 +580,12 @@ function InlineCode({ children }: { children: React.ReactNode }) {
 
 // ─── Endpoint Card ─────────────────────────────────────────────────────────
 
+interface QueryParam {
+  name: string;
+  type: string;
+  desc: string;
+}
+
 interface EndpointCardProps {
   id: string;
   method: string;
@@ -584,7 +593,7 @@ interface EndpointCardProps {
   auth: boolean;
   status: number;
   description: string;
-  query?: string;
+  query?: QueryParam[];
   body?: string;
   response: string;
   errorResponse?: string;
@@ -617,19 +626,38 @@ function EndpointCard({
           {description}
         </p>
 
-        {/* Query params */}
-        {query && (
+        {/* Query params table */}
+        {query && query.length > 0 && (
           <div>
             <div className="mb-2 px-1">
               <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold">
                 Query parameters
               </p>
             </div>
-            <CodeBlock code={query} />
+            <div className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr className="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+                    <th className="text-left px-4 py-2 text-gray-400 font-bold uppercase tracking-widest w-28">Param</th>
+                    <th className="text-left px-4 py-2 text-gray-400 font-bold uppercase tracking-widest w-20">Type</th>
+                    <th className="text-left px-4 py-2 text-gray-400 font-bold uppercase tracking-widest">Description</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+                  {query.map(({ name, type, desc }) => (
+                    <tr key={name} className="bg-white dark:bg-[#0c0c0c]">
+                      <td className="px-4 py-2.5 font-mono text-gray-700 dark:text-gray-300">{name}</td>
+                      <td className="px-4 py-2.5 text-gray-400 dark:text-gray-500">{type}</td>
+                      <td className="px-4 py-2.5 text-gray-500 dark:text-gray-400">{desc}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 
-        {/* Request body + Response side by side */}
+        {/* Request body + Response side by side on md+ */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {body ? (
             <div>
