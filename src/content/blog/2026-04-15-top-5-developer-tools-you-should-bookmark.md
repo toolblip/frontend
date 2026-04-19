@@ -3,6 +3,7 @@ title: "Top 5 Developer Tools You Should Bookmark"
 date: "2026-04-15"
 description: "These are the utilities I open every single day. Save them — your future self will thank you."
 slug: "top-5-developer-tools-you-should-bookmark"
+emoji: "🔖"
 category: "Developer Tools"
 tags: ["productivity", "developer-tools", "bookmarks", "utilities"]
 author: "Toolblip Team"

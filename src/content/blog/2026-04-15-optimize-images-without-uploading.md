@@ -3,6 +3,7 @@ title: "How to Optimize Images Without Uploading"
 date: "2026-04-15"
 description: "Crop, resize, and convert images entirely in your browser. No servers, no uploads, no waiting."
 slug: "optimize-images-without-uploading"
+emoji: "🖼️"
 category: "Developer Tools"
 tags: ["images", "optimization", "browser-tools", "productivity"]
 author: "Toolblip Team"
