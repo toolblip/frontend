@@ -50,4 +50,6 @@ No exceptions. No excuses.
 
 ## 🚫 No ACP Sessions
 
-Under NO circumstances may you start, spawn, or create any ACP (Auto-Coding Proxy) session, ACP harness, or Claude Code subprocess. ACP sessions hijack topic routing and break the multi-agent setup. If a task requires coding, use the exec tool directly with `claude --print` or normal agent tools. Never invoke `runtime:"acp"` or `sessions_spawn runtime:"acp"`.
+Under NO circumstances may you start, spawn, or create any ACP (Auto-Coding Proxy) session. ACP sessions hijack topic routing and break the multi-agent setup.
+
+**For coding:** Use `ccbot` via exec — it's the preferred Claude Code wrapper. Do NOT use ACP sessions.
