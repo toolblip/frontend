@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { tools } from '@/data/tools';
 
-const FILTER_CATEGORIES = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility'] as const;
+const FILTER_CATEGORIES = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS'] as const;
 type FilterCategory = (typeof FILTER_CATEGORIES)[number];
 
 export default function DirectoryClient() {
@@ -18,8 +18,7 @@ export default function DirectoryClient() {
       const matchesQuery =
         !q ||
         tool.name.toLowerCase().includes(q) ||
-        tool.description.toLowerCase().includes(q) ||
-        tool.category.toLowerCase().includes(q);
+        tool.description.toLowerCase().includes(q);
       return matchesCategory && matchesQuery;
     });
   }, [query, activeCategory]);
@@ -63,7 +62,7 @@ export default function DirectoryClient() {
               placeholder="Search tools by name or keyword..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 text-sm bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
+              className="w-full pl-9 pr-9 py-2.5 text-sm bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
             />
             {query && (
               <button
