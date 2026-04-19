@@ -301,8 +301,10 @@ export default function ApiDocsClient() {
     ]
   }
 }`}
-                curl={`curl -X GET "${BASE_URL}/api/tools?category=AI&page=1" \\
-  -H "Accept: application/json"`}
+                curl={`curl -G "${BASE_URL}/api/tools" \\
+  -H "Accept: application/json" \\
+  --data-urlencode "category=AI" \\
+  --data-urlencode "page=1"`}
               />
 
               {/* GET /api/tools/:slug */}
