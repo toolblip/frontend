@@ -8,6 +8,17 @@ export interface Tool {
 
 export const tools: Tool[] = [
   { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-generator', description: 'Generate placeholder lorem ipsum text with customizable paragraphs, sentences, and word count.', emoji: '📜', category: 'Text' },
+  { name: 'Punctuation Fixer', slug: 'punctuation-fixer', description: 'Fix missing or incorrect punctuation marks and apply consistent spacing in text.', emoji: '✏️', category: 'Text' },
+  { name: 'Text Statistics', slug: 'text-statistics', description: 'Analyze text for syllable count, sentence length, and average word length.', emoji: '📊', category: 'Text' },
+  { name: 'JSON to Markdown Table', slug: 'json-to-markdown-table', description: 'Convert JSON arrays into formatted Markdown tables with headers and alignment.', emoji: '📋', category: 'Developer' },
+  { name: 'CSS Class Generator', slug: 'css-class-generator', description: 'Generate utility CSS classes for spacing, typography, colors, and flexbox layouts.', emoji: '🎨', category: 'Developer' },
+  { name: 'robots.txt Generator', slug: 'robots-txt-generator', description: 'Generate robots.txt file to control search engine crawler access to your site.', emoji: '🤖', category: 'SEO' },
+  { name: 'XML Sitemap Generator', slug: 'xml-sitemap-generator', description: 'Generate XML sitemaps for SEO to help search engines index your pages faster.', emoji: '🗺️', category: 'SEO' },
+  { name: 'Image Alt Text Generator', slug: 'image-alt-text-generator', description: 'Generate descriptive alt text for images to improve accessibility and SEO rankings.', emoji: '♿', category: 'SEO' },
+  { name: 'Color Palette Generator', slug: 'color-palette-generator', description: 'Generate complete color palettes from a single base color with hex and RGB codes.', emoji: '🎨', category: 'Color' },
+  { name: 'Image Aspect Ratio Calculator', slug: 'image-aspect-ratio-calculator', description: 'Calculate aspect ratios and find standard dimensions for any image size.', emoji: '📐', category: 'Image' },
+  { name: 'Hash from Text', slug: 'hash-from-text', description: 'Generate one-way hashes from any text input using multiple hashing algorithms.', emoji: '#️⃣', category: 'Developer' },
+  { name: 'URL Parameter Extractor', slug: 'url-parameter-extractor', description: 'Extract and decode all query parameters from a URL into a clean key-value list.', emoji: '🔗', category: 'Developer' }
   { name: 'Word Counter', slug: 'word-counter', description: 'Count words, characters, sentences, paragraphs, and reading time instantly.', emoji: '📝', category: 'Text' },
   { name: 'Character Counter', slug: 'character-counter', description: 'Count characters with Twitter, LinkedIn, and meta tag limit indicators.', emoji: '🔢', category: 'Text' },
   { name: 'Remove Duplicate Lines', slug: 'remove-duplicate-lines', description: 'Paste text, remove duplicate lines in one click. Case-sensitive option included.', emoji: '🗑️', category: 'Text' },
