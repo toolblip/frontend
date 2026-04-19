@@ -281,7 +281,7 @@ export default function ApiDocsClient() {
                 path="/api/tools"
                 auth={false}
                 status={200}
-                description="Returns a paginated list of all tools in the registry. The tools are nested inside a &quot;tools&quot; key."
+                description="Returns a paginated list of all tools in the registry. Tools are nested inside a &quot;tools&quot; key."
                 query={[
                   { name: 'category', type: 'string', desc: 'Filter by category (e.g. AI, DevOps, Analytics)' },
                   { name: 'page', type: 'number', desc: 'Page number (default: 1)' },
@@ -456,7 +456,6 @@ export default function ApiDocsClient() {
             </div>
           </section>
 
-          {/* ── Errors ── */}
           {/* ── Rate Limiting ── */}
           <section id="rate-limiting" className="scroll-mt-16">
             <SectionHeading>Rate Limiting</SectionHeading>
@@ -471,6 +470,7 @@ export default function ApiDocsClient() {
 Retry-After: 42
 X-RateLimit-Limit: 60
 X-RateLimit-Remaining: 0`}
+              title="Response — rate limit exceeded"
             />
             <p className="text-gray-500 dark:text-gray-400 text-sm mt-4 leading-relaxed">
               When the limit is exceeded the API returns{' '}
