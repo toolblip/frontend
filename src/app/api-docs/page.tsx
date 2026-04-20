@@ -1,4 +1,5 @@
 'use client';
+
 import CodeBlock from '@/components/ui/CodeBlock';
 
 // ─── Config ────────────────────────────────────────────────────────────────
@@ -298,10 +299,16 @@ export default function ApiDocsClient() {
         "category": "AI",
         "is_pro": false,
         "emoji": "🤖",
-        "created_at": "2026-01-01T00:00:00Z"
+        "created_at": "2026-01-01T00:00:00Z",
+        "updated_at": "2026-01-01T00:00:00Z"
       }
     ],
-    "meta": { "current_page": 1, "per_page": 20, "total": 42 }
+    "meta": {
+      "current_page": 1,
+      "per_page": 20,
+      "total": 42,
+      "last_page": 3
+    }
   }
 }`}
                 curl={`curl "${BASE_URL}/api/tools" \\
@@ -326,7 +333,8 @@ export default function ApiDocsClient() {
     "category": "AI",
     "is_pro": false,
     "emoji": "🤖",
-    "created_at": "2026-01-01T00:00:00Z"
+    "created_at": "2026-01-01T00:00:00Z",
+    "updated_at": "2026-01-01T00:00:00Z"
   }
 }`}
                 errorResponse={`{
