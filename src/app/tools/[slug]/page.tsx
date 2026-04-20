@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { tools } from '@/data/tools';
 import ToolUI from './ToolUI';
+import ShareButtons from '@/components/ShareButtons';
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -45,6 +46,11 @@ export default async function ToolDetailPage({ params }: Props) {
         <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
           {tool.description}
         </p>
+      </div>
+
+      {/* Share */}
+      <div className="mb-8">
+        <ShareButtons toolName={tool.name} />
       </div>
 
       {/* Tool UI */}
