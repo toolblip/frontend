@@ -3,15 +3,13 @@
 import Link from 'next/link';
 import { tools, type Tool } from '@/data/tools';
 import ShareButtons from '@/components/ShareButtons';
+import ToolUI from './ToolUI';
 
-// Wired-up tool components
-import WordCounterClient from '@/components/tools/WordCounterClient';
-import CharacterCounterClient from '@/components/tools/CharacterCounterClient';
+// ─── Tool registry (individual wired-up client components) ─────────────────────
+// The 6 core text/encoding tools use inline implementations in ToolUI.tsx.
+// Other tools use dedicated client components imported here.
+
 import RemoveDuplicateLinesClient from '@/components/tools/RemoveDuplicateLinesClient';
-import CaseConverterClient from '@/components/tools/CaseConverterClient';
-import JsonFormatterClient from '@/components/tools/JsonFormatterClient';
-import Base64Client from '@/components/tools/Base64Client';
-import UrlEncodeClient from '@/components/tools/UrlEncodeClient';
 import ImageCropperClient from '@/components/tools/ImageCropperClient';
 import ImageFormatConverterClient from '@/components/tools/ImageFormatConverterClient';
 import UuidGeneratorClient from '@/components/tools/UuidGeneratorClient';
@@ -43,95 +41,36 @@ import HttpHeadersViewerClient from '@/components/tools/HttpHeadersViewerClient'
 import HtmlEncoderClient from '@/components/tools/HtmlEncoderClient';
 import JsonToYamlClient from '@/components/tools/JsonToYamlClient';
 
-// ─── Not Found ────────────────────────────────────────────────────────────────
-
-function NotFound() {
-  return (
-    <div className="max-w-2xl mx-auto px-4 py-20 text-center">
-      <span className="text-6xl">🔍</span>
-      <h1 className="mt-4 text-2xl font-bold text-gray-900 dark:text-white">Tool not found</h1>
-      <p className="mt-2 text-gray-500 dark:text-gray-400">
-        This tool doesn&rsquo;t exist or may have been renamed.
-      </p>
-      <Link
-        href="/tools"
-        className="mt-6 inline-block bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors"
-      >
-        Browse all tools
-      </Link>
-    </div>
-  );
-}
-
-// ─── Coming Soon ──────────────────────────────────────────────────────────────
-
-function ComingSoon({ toolName }: { toolName: string }) {
-  return (
-    <div className="max-w-2xl mx-auto px-4 py-12 text-center">
-      <div className="bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-10">
-        <span className="text-5xl">🚧</span>
-        <h2 className="mt-4 text-xl font-bold text-gray-900 dark:text-white">Coming soon</h2>
-        <p className="mt-2 text-gray-500 dark:text-gray-400">
-          <strong>{toolName}</strong> is on our roadmap and will be available soon.
-        </p>
-        <div className="mt-6 flex flex-wrap gap-3 justify-center">
-          <Link
-            href="/tools"
-            className="bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors"
-          >
-            Browse all tools
-          </Link>
-          <Link
-            href="/directory"
-            className="bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 px-5 py-2.5 rounded-lg font-medium transition-colors"
-          >
-            Explore directory
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 // ─── Tool registry ─────────────────────────────────────────────────────────────
 
 function ToolRouter({ tool }: { tool: Tool }) {
   switch (tool.slug) {
-    // Text tools
-    case 'word-counter':          return <WordCounterClient />;
-    case 'character-counter':      return <CharacterCounterClient />;
-    case 'remove-duplicate-lines':  return <RemoveDuplicateLinesClient />;
-    case 'case-converter':         return <CaseConverterClient />;
-    case 'json-formatter':         return <JsonFormatterClient />;
+    // Core 6 — inline in ToolUI.tsx
+    case 'word-counter':
+    case 'character-counter':
+    case 'case-converter':
+    case 'base64':
+    case 'url-encode':
+    case 'json-formatter':
+      return <ToolUI slug={tool.slug} />;
 
-    // Encoding / conversion
-    case 'base64':                 return <Base64Client />;
-    case 'url-encode':             return <UrlEncodeClient />;
+    // Other wired-up tools
+    case 'remove-duplicate-lines':  return <RemoveDuplicateLinesClient />;
     case 'markdown-to-html':       return <MarkdownToHtmlClient />;
     case 'yaml-to-json':           return <YamlToJsonClient />;
-
-    // Developer tools
     case 'uuid-generator':         return <UuidGeneratorClient />;
     case 'hash-generator':         return <HashGeneratorClient />;
     case 'cron-parser':            return <CronParserClient />;
     case 'url-slug-generator':     return <UrlSlugGeneratorClient />;
-
-    // Image tools
     case 'image-cropper':          return <ImageCropperClient />;
     case 'image-format-converter':  return <ImageFormatConverterClient />;
-
-    // CSS tools
     case 'css-border-radius-generator': return <CssBorderRadiusGeneratorClient />;
     case 'css-gradient-generator':  return <CssGradientGeneratorClient />;
-
-    // Calculators
     case 'percentage-calculator':  return <PercentageCalculatorClient />;
     case 'screen-resolution-tester': return <ScreenResolutionTesterClient />;
     case 'unit-converter':         return <UnitConverterClient />;
     case 'number-base-converter':  return <NumberBaseConverterClient />;
     case 'contrast-checker':       return <ContrastCheckerClient />;
-
-    // Text / utility
     case 'lorem-ipsum-generator':  return <LoremIpsumGeneratorClient />;
     case 'readability-score':      return <ReadabilityScoreClient />;
     case 'text-sorter':           return <TextSorterClient />;
@@ -148,7 +87,19 @@ function ToolRouter({ tool }: { tool: Tool }) {
     case 'html-encoder':             return <HtmlEncoderClient />;
     case 'json-to-yaml':             return <JsonToYamlClient />;
 
-    default:                       return <ComingSoon toolName={tool.name} />;
+    default: return (
+      <div className="flex flex-col items-center justify-center py-16 text-center">
+        <span className="text-5xl mb-4">🚧</span>
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">Coming soon</h2>
+        <p className="text-gray-500 dark:text-gray-400 max-w-sm">
+          <strong>{tool.name}</strong> is on our roadmap and will be available soon.
+        </p>
+        <div className="mt-6 flex flex-wrap gap-3 justify-center">
+          <Link href="/tools" className="bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors">Browse all tools</Link>
+          <Link href="/directory" className="bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 px-5 py-2.5 rounded-lg font-medium transition-colors">Explore directory</Link>
+        </div>
+      </div>
+    );
   }
 }
 
