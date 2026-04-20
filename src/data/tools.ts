@@ -55,7 +55,7 @@ export const tools: Tool[] = [
   { name: 'Percentage Calculator', slug: 'percentage-calculator', description: 'Calculate percentages, percentage change, tips, and discounts instantly.', emoji: '%️⃣', category: 'Math' },
   { name: 'CSS Border Radius Generator', slug: 'css-border-radius-generator', description: 'Visually generate CSS border-radius values with per-corner controls, live preview, and one-click copy.', emoji: '⬜', category: 'CSS' },
   { name: 'CSS Gradient Generator', slug: 'css-gradient-generator', description: 'Create linear, radial, and conic CSS gradients with a live preview, color stops, angle control, and preset library.', emoji: '🌈', category: 'CSS' },
-  { name: 'JSON to CSV', slug: 'json-to-csv', description: 'Convert JSON data to CSV format with custom delimiter and header row options.', emoji: '📊', category: 'Conversion' },
+
   { name: 'XML Formatter', slug: 'xml-formatter', description: 'Format, validate, and prettify XML with syntax highlighting and error detection.', emoji: '📋', category: 'Developer' },
   { name: 'SQL Prettifier', slug: 'sql-prettifier', description: 'Format and indent SQL queries with keyword highlighting and customizable style.', emoji: '🗄️', category: 'Developer' },
   { name: 'JavaScript Minifier', slug: 'js-minifier', description: 'Minify JavaScript code by removing whitespace, comments, and optimizing for production.', emoji: '⚡', category: 'Developer' },
