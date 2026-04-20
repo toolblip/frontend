@@ -12,7 +12,6 @@ use Stripe\Checkout\Session as StripeSession;
 use Stripe\Customer;
 use Stripe\Subscription;
 use Stripe\Exception\SignatureVerificationException;
-use Illuminate\Support\Facades\URL;
 
 class SubscriptionController extends Controller
 {
@@ -24,25 +23,30 @@ class SubscriptionController extends Controller
     public function createCheckoutSession(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'plan' => ['required', 'in:monthly,yearly'],
+            'price_id' => ['required', 'string'],
             'success_url' => ['nullable', 'url'],
             'cancel_url' => ['nullable', 'url'],
         ]);
+
+        $priceId = $validated['price_id'];
+        $priceConfig = config("stripe.prices.{$priceId}");
+
+        if (!$priceConfig) {
+            return response()->json(['error' => 'Invalid price ID'], 400);
+        }
 
         /** @var User $user */
         $user = Auth::user();
 
         if ($user->isSubscribed()) {
-            return response()->json(['error' => 'Already subscribed'], 400);
+            return response()->json(['error' => 'Already subscribed. Manage in your account.'], 400);
         }
 
-        $priceId = $validated['plan'] === 'yearly'
-            ? config('stripe.yearly_price_id')
-            : config('stripe.monthly_price_id');
-
-        if (!$priceId) {
-            return response()->json(['error' => 'Price not configured'], 500);
-        }
+        $baseUrl = config('app.url');
+        $successUrl = $validated['success_url']
+            ?? ($baseUrl . '/account?session_id={CHECKOUT_SESSION_ID}');
+        $cancelUrl = $validated['cancel_url']
+            ?? ($baseUrl . '/pricing?cancelled=1');
 
         // Create or retrieve Stripe customer
         $customerId = $user->stripe_customer_id;
@@ -55,12 +59,6 @@ class SubscriptionController extends Controller
             $customerId = $customer->id;
             $user->update(['stripe_customer_id' => $customerId]);
         }
-
-        $baseUrl = config('app.url');
-        $successUrl = $validated['success_url']
-            ?? ($baseUrl . '/account?session_id={CHECKOUT_SESSION_ID}');
-        $cancelUrl = $validated['cancel_url']
-            ?? ($baseUrl . '/pricing?cancelled=1');
 
         $session = StripeSession::create([
             'customer' => $customerId,
@@ -75,11 +73,14 @@ class SubscriptionController extends Controller
             'success_url' => $successUrl,
             'cancel_url' => $cancelUrl,
             'subscription_data' => [
-                'metadata' => ['user_id' => $user->id],
+                'metadata' => [
+                    'user_id' => $user->id,
+                    'price_id' => $priceId,
+                ],
             ],
             'metadata' => [
                 'user_id' => $user->id,
-                'plan' => $validated['plan'],
+                'price_id' => $priceId,
             ],
         ]);
 
@@ -102,7 +103,6 @@ class SubscriptionController extends Controller
                 'customer' => $user->stripe_customer_id,
                 'return_url' => $returnUrl,
             ]);
-
             return response()->json(['url' => $session->url]);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
@@ -114,8 +114,28 @@ class SubscriptionController extends Controller
         /** @var User $user */
         $user = $request->user();
 
+        $tierConfig = null;
+        if ($user->subscription_id) {
+            // Look up the price_id from subscription metadata
+            try {
+                $subscription = \Stripe\Subscription::retrieve($user->subscription_id);
+                $priceId = $subscription->items->data[0]->price->id ?? null;
+                if ($priceId) {
+                    $tierConfig = config("stripe.tiers.{$priceId}");
+                }
+            } catch (\Exception $e) {
+                // ignore
+            }
+        }
+
         return response()->json([
             'is_pro' => $user->isSubscribed(),
+            'tier' => $tierConfig['tier'] ?? $user->subscription_tier ?? null,
+            'devices' => $tierConfig['devices'] ?? null,
+            'storage_gb' => $tierConfig['storage_gb'] ?? null,
+            'team_seats' => $tierConfig['team_seats'] ?? null,
+            'api_access' => $tierConfig['api_access'] ?? false,
+            'priority_support' => $tierConfig['priority_support'] ?? false,
             'plan_ends_at' => $user->plan_ends_at?->toIso8601String(),
             'subscription_status' => $user->subscription_status,
         ]);
@@ -144,8 +164,9 @@ class SubscriptionController extends Controller
             case 'checkout.session.completed': {
                 $session = $event->data->object;
                 $userId = $session->metadata['user_id'] ?? null;
+                $priceId = $session->metadata['price_id'] ?? null;
                 if ($userId && $session->subscription) {
-                    $this->activateSubscription($userId, $session->subscription);
+                    $this->activateSubscription($userId, $session->subscription, $priceId);
                 }
                 break;
             }
@@ -172,7 +193,7 @@ class SubscriptionController extends Controller
         return response()->json(['received' => true]);
     }
 
-    private function activateSubscription(int $userId, string $subscriptionId): void
+    private function activateSubscription(int $userId, string $subscriptionId, ?string $priceId): void
     {
         $user = User::find($userId);
         if (!$user) {
@@ -180,17 +201,25 @@ class SubscriptionController extends Controller
             return;
         }
 
-        $subscription = Subscription::retrieve($subscriptionId);
-        $planEnd = now()->addSeconds($subscription->items->data[0]->price->recurring->interval === 'year' ? 365 * 86400 : 30 * 86400);
+        $subscription = \Stripe\Subscription::retrieve($subscriptionId);
+        $priceId = $priceId ?: ($subscription->items->data[0]->price->id ?? null);
+
+        $tierConfig = $priceId ? config("stripe.tiers.{$priceId}") : null;
+
+        $interval = $subscription->items->data[0]->price->recurring->interval ?? 'month';
+        $planEnd = $interval === 'year'
+            ? now()->addYear()
+            : now()->addMonth();
 
         $user->update([
             'is_pro' => true,
             'subscription_id' => $subscriptionId,
             'subscription_status' => $subscription->status,
+            'subscription_tier' => $tierConfig['tier'] ?? 'pro',
             'plan_ends_at' => $planEnd,
         ]);
 
-        Log::info("Activated pro plan for user {$userId}");
+        Log::info("Activated {$tierConfig['tier']} plan for user {$userId} via price {$priceId}");
     }
 
     private function updateSubscription(object $subscription): void
@@ -200,13 +229,15 @@ class SubscriptionController extends Controller
             return;
         }
 
+        $priceId = $subscription->items->data[0]->price->id ?? null;
+        $tierConfig = $priceId ? config("stripe.tiers.{$priceId}") : null;
+
         $interval = $subscription->items->data[0]->price->recurring->interval ?? 'month';
-        $planEnd = $interval === 'year'
-            ? now()->addYear()
-            : now()->addMonth();
+        $planEnd = $interval === 'year' ? now()->addYear() : now()->addMonth();
 
         $user->update([
             'subscription_status' => $subscription->status,
+            'subscription_tier' => $tierConfig['tier'] ?? $user->subscription_tier,
             'plan_ends_at' => $planEnd,
             'is_pro' => in_array($subscription->status, ['active', 'trialing']),
         ]);
@@ -222,6 +253,7 @@ class SubscriptionController extends Controller
         $user->update([
             'is_pro' => false,
             'subscription_status' => 'cancelled',
+            'subscription_tier' => null,
             'plan_ends_at' => null,
         ]);
 

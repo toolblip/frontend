@@ -13,7 +13,8 @@ return new class extends Migration
             $table->string('stripe_customer_id')->nullable()->after('is_pro');
             $table->string('subscription_id')->nullable()->after('stripe_customer_id');
             $table->string('subscription_status')->nullable()->after('subscription_id');
-            $table->timestamp('plan_ends_at')->nullable()->after('subscription_status');
+            $table->string('subscription_tier')->nullable()->after('subscription_status');
+            $table->timestamp('plan_ends_at')->nullable()->after('subscription_tier');
         });
     }
 
