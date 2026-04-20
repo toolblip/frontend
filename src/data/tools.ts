@@ -144,6 +144,20 @@ export const tools: Tool[] = [
   { name: 'Timestamp Converter', slug: 'timestamp-converter', description: 'Convert between Unix timestamps, ISO 8601, and human-readable date formats.', emoji: '🕰️', category: 'Conversion' },
   { name: 'Word Density Analyzer', slug: 'word-density-analyzer', description: 'Analyze word and phrase frequency in any text for SEO and content optimization.', emoji: '📈', category: 'SEO' },
   { name: 'HTML Encoder', slug: 'html-encoder', description: 'Encode HTML special characters to entities and decode them back instantly.', emoji: '🏷️', category: 'Encoder' },
+  { name: 'Text Diff', slug: 'text-diff', description: 'Compare two text blocks and highlight added, removed, and unchanged lines side by side.', emoji: '📊', category: 'Text' },
+  { name: 'JSON Diff', slug: 'json-diff', description: 'Compare two JSON documents and highlight differences in structure and values.', emoji: '🔍', category: 'Developer' },
+  { name: 'JSON Path Evaluator', slug: 'json-path-evaluator', description: 'Evaluate JSONPath expressions against any JSON data and extract matched nodes.', emoji: '🌳', category: 'Developer' },
+  { name: 'JSON Schema Generator', slug: 'json-schema-generator', description: 'Infer a JSON Schema from sample JSON data with customizable strictness and required fields.', emoji: '📐', category: 'Developer' },
+  { name: 'GraphQL Playground', slug: 'graphql-playground', description: 'Query any public GraphQL endpoint with syntax highlighting, history, and variable support.', emoji: '🔮', category: 'Developer' },
+  { name: 'WebSocket Tester', slug: 'websocket-tester', description: 'Connect to a WebSocket server, send messages, and inspect real-time responses.', emoji: '🔌', category: 'Developer' },
+  { name: 'Ping Test', slug: 'ping-test', description: 'Ping any host and see response time, TTL, and status from your browser.', emoji: '📡', category: 'Network' },
+  { name: 'DNS Lookup', slug: 'dns-lookup', description: 'Query DNS records for any domain — A, AAAA, MX, TXT, CNAME, and more.', emoji: '🌐', category: 'Network' },
+  { name: 'LDAP Filter Generator', slug: 'ldap-filter-generator', description: 'Build and test LDAP search filters with a visual query builder and syntax validation.', emoji: '🔎', category: 'Developer' },
+  { name: 'IPA Phonetic Finder', slug: 'ipa-phonetic-finder', description: 'Convert words to IPA phonetic transcription with audio pronunciation guides.', emoji: '🔊', category: 'Text' },
+  { name: 'Speech to Text', slug: 'speech-to-text', description: 'Transcribe speech to text using your browser microphone with real-time output.', emoji: '🎙️', category: 'Text' },
+  { name: 'TSV to JSON', slug: 'tsv-to-json', description: 'Convert TSV (tab-separated) data to JSON with header row detection and type inference.', emoji: '📋', category: 'Conversion' },
+  { name: 'CSV to TSV', slug: 'csv-to-tsv', description: 'Convert CSV files to TSV format by replacing commas with tab characters.', emoji: '📊', category: 'Conversion' },
+  { name: 'TSV to CSV', slug: 'tsv-to-csv', description: 'Convert TSV (tab-separated) data to CSV format with proper escaping and delimiter options.', emoji: '📄', category: 'Conversion' },
 ];
 
-export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility'] as const;
+export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network'] as const;
