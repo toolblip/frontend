@@ -157,6 +157,19 @@ export const tools: Tool[] = [
   { name: 'TSV to JSON', slug: 'tsv-to-json', description: 'Convert TSV (tab-separated) data to JSON with header row detection and type inference.', emoji: '📋', category: 'Conversion' },
   { name: 'CSV to TSV', slug: 'csv-to-tsv', description: 'Convert CSV files to TSV format by replacing commas with tab characters.', emoji: '📊', category: 'Conversion' },
   { name: 'TSV to CSV', slug: 'tsv-to-csv', description: 'Convert TSV (tab-separated) data to CSV format with proper escaping and delimiter options.', emoji: '📄', category: 'Conversion' },
+  { name: 'English Grammar Checker', slug: 'english-grammar-checker', description: 'Check English grammar errors with detailed suggestions for punctuation, style, and clarity.', emoji: '✅', category: 'Text' },
+  { name: 'Typo Checker', slug: 'typo-checker', description: 'Detect and fix typos, misspellings, and common writing mistakes in any text instantly.', emoji: '✏️', category: 'Text' },
+  { name: 'Regex Pattern Generator', slug: 'regex-pattern-generator', description: 'Generate regex patterns from natural language descriptions for common use cases like emails and URLs.', emoji: '🔍', category: 'Developer' },
+  { name: 'JSON to Go Struct', slug: 'json-to-go-struct', description: 'Convert JSON data into Go struct definitions with field types and JSON tags automatically.', emoji: '🐹', category: 'Developer' },
+  { name: 'SVG Minifier', slug: 'svg-minifier', description: 'Minify SVG files by removing unnecessary attributes, comments, and whitespace while preserving visuals.', emoji: '✂️', category: 'Developer' },
+  { name: 'CSS to SCSS Converter', slug: 'css-to-scss', description: 'Convert plain CSS to SCSS with automatic nesting of selectors and conversion of variables.', emoji: '🎨', category: 'Developer' },
+  { name: 'Image Blur Hash Generator', slug: 'image-blur-hash-generator', description: 'Generate BlurHash placeholders for images — compact base64 strings for lazy loading and previews.', emoji: '🖼️', category: 'Image' },
+  { name: 'XML Sitemap Parser', slug: 'xml-sitemap-parser', description: 'Parse and analyze XML sitemaps to extract URLs, priorities, changefreq, and lastmod data.', emoji: '🗺️', category: 'SEO' },
+  { name: 'Robots.txt Analyzer', slug: 'robots-txt-analyzer', description: 'Analyze robots.txt files to check crawler directives, blocked paths, and sitemap references.', emoji: '🤖', category: 'SEO' },
+  { name: 'HSL to RGB Converter', slug: 'hsl-to-rgb', description: 'Convert HSL color values to RGB and HEX with a live color preview swatch.', emoji: '🎨', category: 'Color' },
+  { name: 'Roman Numeral Converter', slug: 'roman-numeral-converter', description: 'Convert numbers to Roman numerals and vice versa with validation and formatting.', emoji: '🔢', category: 'Conversion' },
+  { name: 'Fraction to Decimal', slug: 'fraction-to-decimal', description: 'Convert fractions and mixed numbers to decimal format with rounding and precision options.', emoji: '➗', category: 'Conversion' },
+  { name: 'Word Frequency Counter', slug: 'word-frequency-counter', description: 'Count how often each word appears in text with sorted frequency and percentage breakdown.', emoji: '📊', category: 'Text' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network'] as const;
