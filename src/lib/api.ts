@@ -93,6 +93,7 @@ export interface Subscription {
   devices: number | null;
   storage_gb: number | null;
   team_seats: number | null;
+  max_file_size_mb: number | null;
   api_access: boolean;
   priority_support: boolean;
   plan_ends_at: string | null;

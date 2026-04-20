@@ -19,11 +19,11 @@ return [
 
     // Feature limits per price tier
     'tiers' => [
-        'starter_monthly' => ['tier' => 'starter', 'billing' => 'monthly', 'devices' => 2, 'storage_gb' => 1],
-        'starter_yearly' => ['tier' => 'starter', 'billing' => 'yearly', 'devices' => 2, 'storage_gb' => 1],
-        'ultra_monthly' => ['tier' => 'ultra', 'billing' => 'monthly', 'devices' => 5, 'storage_gb' => 10, 'team_seats' => 3],
-        'ultra_yearly' => ['tier' => 'ultra', 'billing' => 'yearly', 'devices' => 5, 'storage_gb' => 10, 'team_seats' => 3],
-        'max_monthly' => ['tier' => 'max', 'billing' => 'monthly', 'devices' => 10, 'storage_gb' => 50, 'team_seats' => 10, 'api_access' => true, 'priority_support' => true],
-        'max_yearly' => ['tier' => 'max', 'billing' => 'yearly', 'devices' => 10, 'storage_gb' => 50, 'team_seats' => 10, 'api_access' => true, 'priority_support' => true],
+        'starter_monthly' => ['tier' => 'starter', 'billing' => 'monthly', 'devices' => 2, 'storage_gb' => 1, 'max_file_size_mb' => 10],
+        'starter_yearly' => ['tier' => 'starter', 'billing' => 'yearly', 'devices' => 2, 'storage_gb' => 1, 'max_file_size_mb' => 10],
+        'ultra_monthly' => ['tier' => 'ultra', 'billing' => 'monthly', 'devices' => 5, 'storage_gb' => 10, 'team_seats' => 3, 'max_file_size_mb' => 100],
+        'ultra_yearly' => ['tier' => 'ultra', 'billing' => 'yearly', 'devices' => 5, 'storage_gb' => 10, 'team_seats' => 3, 'max_file_size_mb' => 100],
+        'max_monthly' => ['tier' => 'max', 'billing' => 'monthly', 'devices' => 10, 'storage_gb' => 50, 'team_seats' => 10, 'api_access' => true, 'priority_support' => true, 'max_file_size_mb' => 500],
+        'max_yearly' => ['tier' => 'max', 'billing' => 'yearly', 'devices' => 10, 'storage_gb' => 50, 'team_seats' => 10, 'api_access' => true, 'priority_support' => true, 'max_file_size_mb' => 500],
     ],
 ];

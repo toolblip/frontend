@@ -134,6 +134,7 @@ class SubscriptionController extends Controller
             'devices' => $tierConfig['devices'] ?? null,
             'storage_gb' => $tierConfig['storage_gb'] ?? null,
             'team_seats' => $tierConfig['team_seats'] ?? null,
+            'max_file_size_mb' => $tierConfig['max_file_size_mb'] ?? null,
             'api_access' => $tierConfig['api_access'] ?? false,
             'priority_support' => $tierConfig['priority_support'] ?? false,
             'plan_ends_at' => $user->plan_ends_at?->toIso8601String(),
