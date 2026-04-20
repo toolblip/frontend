@@ -52,6 +52,13 @@ export default function NavbarRight() {
             <div className="px-3 py-2 border-b border-gray-200 dark:border-gray-700">
               <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
             </div>
+            <Link
+              href="/account"
+              className="block px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
+              onClick={() => setMenuOpen(false)}
+            >
+              Account
+            </Link>
             <button
               onClick={handleLogout}
               className="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors"
@@ -67,6 +74,12 @@ export default function NavbarRight() {
 
   return (
     <div className="flex items-center gap-2">
+      <Link
+        href="/pricing"
+        className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors px-3 py-1.5"
+      >
+        Pricing
+      </Link>
       <Link
         href="/login"
         className="text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors px-3 py-1.5"

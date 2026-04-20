@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 export default function LoginForm() {
@@ -8,6 +8,15 @@ export default function LoginForm() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [next, setNext] = useState('/');
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const nextParam = params.get('next');
+    if (nextParam && nextParam.startsWith('/')) {
+      setNext(nextParam);
+    }
+  }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -29,7 +38,7 @@ export default function LoginForm() {
       if (res.ok && data.token) {
         localStorage.setItem('toolblip_token', data.token);
         localStorage.setItem('toolblip_user', JSON.stringify(data.user));
-        window.location.href = '/';
+        window.location.href = next;
       } else {
         setError(data.message ?? 'Invalid email or password.');
       }

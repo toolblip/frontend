@@ -68,6 +68,12 @@ export default function NavbarAuth() {
             <div className="px-4 py-2 border-b border-gray-100 dark:border-gray-800">
               <p className="text-xs text-gray-500 truncate">{user.email}</p>
             </div>
+            <Link
+              href="/account"
+              className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            >
+              Account
+            </Link>
             <button
               onClick={handleLogout}
               className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"

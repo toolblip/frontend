@@ -67,6 +67,32 @@ export async function getMe() {
   return apiRequest<{ user: User }>('/api/auth/user');
 }
 
+// Subscription
+export async function getSubscription(token: string) {
+  return apiRequest<Subscription>('/api/subscription', { token });
+}
+
+export async function createCheckoutSession(plan: 'monthly' | 'yearly', token: string) {
+  return apiRequest<{ url: string }>('/api/subscription/checkout', {
+    method: 'POST',
+    body: { plan },
+    token,
+  });
+}
+
+export async function openCustomerPortal(token: string) {
+  return apiRequest<{ url: string }>('/api/subscription/portal', {
+    method: 'POST',
+    token,
+  });
+}
+
+export interface Subscription {
+  is_pro: boolean;
+  plan_ends_at: string | null;
+  subscription_status: string | null;
+}
+
 // Types
 export interface Tool {
   id: number;
