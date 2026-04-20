@@ -170,6 +170,22 @@ export const tools: Tool[] = [
   { name: 'Roman Numeral Converter', slug: 'roman-numeral-converter', description: 'Convert numbers to Roman numerals and vice versa with validation and formatting.', emoji: '🔢', category: 'Conversion' },
   { name: 'Fraction to Decimal', slug: 'fraction-to-decimal', description: 'Convert fractions and mixed numbers to decimal format with rounding and precision options.', emoji: '➗', category: 'Conversion' },
   { name: 'Word Frequency Counter', slug: 'word-frequency-counter', description: 'Count how often each word appears in text with sorted frequency and percentage breakdown.', emoji: '📊', category: 'Text' },
+  { name: 'Palindrome Checker', slug: 'palindrome-checker', description: 'Check if any word, phrase, or number reads the same forwards and backwards.', emoji: '🔄', category: 'Text' },
+  { name: 'Reading Time Calculator', slug: 'reading-time-calculator', description: 'Estimate how long it takes to read any text based on average reading speed.', emoji: '⏱️', category: 'Text' },
+  { name: 'Syllable Counter', slug: 'syllable-counter', description: 'Count syllables in any word or phrase using heuristic vowel group detection.', emoji: '🔤', category: 'Text' },
+  { name: 'URL Encoder', slug: 'url-encoder', description: 'Encode URLs and query parameters for safe transmission and proper formatting.', emoji: '🔗', category: 'Developer' },
+  { name: 'CSS Units Converter', slug: 'css-units-converter', description: 'Convert between CSS length units — px, rem, em, vw, vh, and more.', emoji: '📏', category: 'Developer' },
+  { name: 'Shell Command Generator', slug: 'shell-command-generator', description: 'Generate shell commands from plain English descriptions for bash, zsh, and fish.', emoji: '💻', category: 'Developer' },
+  { name: 'Image to Base64', slug: 'image-to-base64', description: 'Convert any image file to a Base64 data URL for embedding in HTML and CSS.', emoji: '🖼️', category: 'Image' },
+  { name: 'Favicon Checker', slug: 'favicon-checker', description: 'Check if a website has a proper favicon and preview all available sizes and formats.', emoji: '🌐', category: 'SEO' },
+  { name: 'Keyword Extractor', slug: 'keyword-extractor', description: 'Extract top keywords and key phrases from any text or webpage for SEO analysis.', emoji: '🔑', category: 'SEO' },
+  { name: 'HEX to HSL', slug: 'hex-to-hsl', description: 'Convert HEX color codes to HSL values with live color preview and CSS output.', emoji: '🎨', category: 'Color' },
+  { name: 'RGBA to HEX', slug: 'rgba-to-hex', description: 'Convert RGBA color values to HEX format with alpha transparency support.', emoji: '🎨', category: 'Color' },
+  { name: 'Temperature Converter', slug: 'temperature-converter', description: 'Convert temperatures between Celsius, Fahrenheit, and Kelvin instantly.', emoji: '🌡️', category: 'Conversion' },
+  { name: 'Length Converter', slug: 'length-converter', description: 'Convert length and distance between metric and imperial units — meters, feet, inches, and more.', emoji: '📏', category: 'Conversion' },
+  { name: 'Weight Converter', slug: 'weight-converter', description: 'Convert weight between kilograms, pounds, ounces, grams, and stone instantly.', emoji: '⚖️', category: 'Conversion' },
 ];
+
+export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network'] as const;
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network'] as const;
