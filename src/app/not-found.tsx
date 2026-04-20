@@ -7,10 +7,10 @@ export default function NotFound() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="max-w-md w-full text-center">
-        <p className="text-sm font-medium text-green-600 dark:text-green-400 uppercase tracking-widest mb-4">
+        <p className="text-xs font-semibold text-green-600 dark:text-green-400 uppercase tracking-[0.2em] mb-6">
           Oops!
         </p>
-        <p className="text-[7rem] sm:text-[9rem] font-bold leading-none text-green-500 dark:text-green-400 select-none mb-2">
+        <p className="text-[8rem] sm:text-[10rem] font-black leading-none text-green-500 dark:text-green-400 select-none mb-2 tracking-tighter">
           404
         </p>
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">
