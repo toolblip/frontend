@@ -146,7 +146,6 @@ export const tools: Tool[] = [
   { name: 'HTML Encoder', slug: 'html-encoder', description: 'Encode HTML special characters to entities and decode them back instantly.', emoji: '🏷️', category: 'Encoder' },
   { name: 'Text Diff', slug: 'text-diff', description: 'Compare two text blocks and highlight added, removed, and unchanged lines side by side.', emoji: '📊', category: 'Text' },
   { name: 'JSON Diff', slug: 'json-diff', description: 'Compare two JSON documents and highlight differences in structure and values.', emoji: '🔍', category: 'Developer' },
-  { name: 'JSON Path Evaluator', slug: 'json-path-evaluator', description: 'Evaluate JSONPath expressions against any JSON data and extract matched nodes.', emoji: '🌳', category: 'Developer' },
   { name: 'JSON Schema Generator', slug: 'json-schema-generator', description: 'Infer a JSON Schema from sample JSON data with customizable strictness and required fields.', emoji: '📐', category: 'Developer' },
   { name: 'GraphQL Playground', slug: 'graphql-playground', description: 'Query any public GraphQL endpoint with syntax highlighting, history, and variable support.', emoji: '🔮', category: 'Developer' },
   { name: 'WebSocket Tester', slug: 'websocket-tester', description: 'Connect to a WebSocket server, send messages, and inspect real-time responses.', emoji: '🔌', category: 'Developer' },
