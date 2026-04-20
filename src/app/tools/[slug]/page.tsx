@@ -3,6 +3,7 @@
 import { useState, useCallback, useMemo } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import ShareButtons from '@/components/ShareButtons';
 import { tools } from '@/data/tools';
 
 // ─── Tool registry ─────────────────────────────────────────────────────────────
@@ -453,6 +454,11 @@ export default async function ToolDetailPage({ params }: Props) {
             <span className="inline-block mt-3 text-xs font-medium text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900 px-3 py-1 rounded-full">
               {tool.category}
             </span>
+
+            {/* Share buttons */}
+            <div className="mt-4">
+              <ShareButtons toolName={tool.name} />
+            </div>
           </div>
         </div>
       </div>
