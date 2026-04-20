@@ -28,11 +28,13 @@ class SubscriptionController extends Controller
             'cancel_url' => ['nullable', 'url'],
         ]);
 
-        $priceId = $validated['price_id'];
-        $priceConfig = config("stripe.prices.{$priceId}");
+        $stripePriceId = $validated['price_id'];
 
-        if (!$priceConfig) {
-            return response()->json(['error' => 'Invalid price ID'], 400);
+        // Look up the plan by Stripe Price ID
+        $plan = \App\Models\Plan::where('stripe_id', $stripePriceId)->where('is_active', true)->first();
+
+        if (!$plan) {
+            return response()->json(['error' => 'Invalid plan'], 400);
         }
 
         /** @var User $user */
@@ -65,7 +67,7 @@ class SubscriptionController extends Controller
             'payment_method_types' => ['card'],
             'line_items' => [
                 [
-                    'price' => $priceId,
+                    'price' => $stripePriceId,
                     'quantity' => 1,
                 ],
             ],
@@ -75,12 +77,14 @@ class SubscriptionController extends Controller
             'subscription_data' => [
                 'metadata' => [
                     'user_id' => $user->id,
-                    'price_id' => $priceId,
+                    'plan_tier' => $plan->tier,
+                    'plan_id' => $plan->id,
                 ],
             ],
             'metadata' => [
                 'user_id' => $user->id,
-                'price_id' => $priceId,
+                'plan_tier' => $plan->tier,
+                'plan_id' => $plan->id,
             ],
         ]);
 
@@ -114,29 +118,22 @@ class SubscriptionController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        $tierConfig = null;
-        if ($user->subscription_id) {
-            // Look up the price_id from subscription metadata
-            try {
-                $subscription = \Stripe\Subscription::retrieve($user->subscription_id);
-                $priceId = $subscription->items->data[0]->price->id ?? null;
-                if ($priceId) {
-                    $tierConfig = config("stripe.tiers.{$priceId}");
-                }
-            } catch (\Exception $e) {
-                // ignore
-            }
+        $plan = null;
+        if ($user->subscription_tier) {
+            $plan = \App\Models\Plan::where('tier', $user->subscription_tier)
+                ->where('is_active', true)
+                ->first();
         }
 
         return response()->json([
             'is_pro' => $user->isSubscribed(),
-            'tier' => $tierConfig['tier'] ?? $user->subscription_tier ?? null,
-            'devices' => $tierConfig['devices'] ?? null,
-            'storage_gb' => $tierConfig['storage_gb'] ?? null,
-            'team_seats' => $tierConfig['team_seats'] ?? null,
-            'max_file_size_mb' => $tierConfig['max_file_size_mb'] ?? null,
-            'api_access' => $tierConfig['api_access'] ?? false,
-            'priority_support' => $tierConfig['priority_support'] ?? false,
+            'tier' => $user->subscription_tier,
+            'devices' => $plan?->devices,
+            'storage_gb' => $plan?->storage_gb,
+            'team_seats' => $plan?->team_seats,
+            'max_file_size_mb' => $plan?->max_file_size_mb,
+            'api_access' => $plan?->api_access ?? false,
+            'priority_support' => $plan?->priority_support ?? false,
             'plan_ends_at' => $user->plan_ends_at?->toIso8601String(),
             'subscription_status' => $user->subscription_status,
         ]);
@@ -203,9 +200,14 @@ class SubscriptionController extends Controller
         }
 
         $subscription = \Stripe\Subscription::retrieve($subscriptionId);
-        $priceId = $priceId ?: ($subscription->items->data[0]->price->id ?? null);
+        $stripePriceId = $subscription->items->data[0]->price->id ?? null;
 
-        $tierConfig = $priceId ? config("stripe.tiers.{$priceId}") : null;
+        // Look up plan from database
+        $plan = $stripePriceId
+            ? \App\Models\Plan::where('stripe_id', $stripePriceId)->first()
+            : null;
+
+        $tier = $plan?->tier ?? 'starter';
 
         $interval = $subscription->items->data[0]->price->recurring->interval ?? 'month';
         $planEnd = $interval === 'year'
@@ -216,11 +218,11 @@ class SubscriptionController extends Controller
             'is_pro' => true,
             'subscription_id' => $subscriptionId,
             'subscription_status' => $subscription->status,
-            'subscription_tier' => $tierConfig['tier'] ?? 'pro',
+            'subscription_tier' => $tier,
             'plan_ends_at' => $planEnd,
         ]);
 
-        Log::info("Activated {$tierConfig['tier']} plan for user {$userId} via price {$priceId}");
+        Log::info("Activated {$tier} plan for user {$userId}");
     }
 
     private function updateSubscription(object $subscription): void
@@ -230,15 +232,17 @@ class SubscriptionController extends Controller
             return;
         }
 
-        $priceId = $subscription->items->data[0]->price->id ?? null;
-        $tierConfig = $priceId ? config("stripe.tiers.{$priceId}") : null;
+        $stripePriceId = $subscription->items->data[0]->price->id ?? null;
+        $plan = $stripePriceId
+            ? \App\Models\Plan::where('stripe_id', $stripePriceId)->first()
+            : null;
 
         $interval = $subscription->items->data[0]->price->recurring->interval ?? 'month';
         $planEnd = $interval === 'year' ? now()->addYear() : now()->addMonth();
 
         $user->update([
             'subscription_status' => $subscription->status,
-            'subscription_tier' => $tierConfig['tier'] ?? $user->subscription_tier,
+            'subscription_tier' => $plan?->tier ?? $user->subscription_tier,
             'plan_ends_at' => $planEnd,
             'is_pro' => in_array($subscription->status, ['active', 'trialing']),
         ]);

@@ -1,101 +1,61 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://toolblip-api-production.up.railway.app';
 
-const PLANS = [
-  {
-    id: 'free',
-    name: 'Free',
-    priceMonthly: 0,
-    priceYearly: 0,
-    description: 'Get started with the basics.',
-    features: ['All tools available', '1 device', 'Client-side processing'],
-    cta: 'Get Started',
-    ctaHref: '/signup',
-    highlighted: false,
-    badge: null,
-  },
-  {
-    id: 'starter',
-    name: 'Starter',
-    priceMonthly: 4.99,
-    priceYearly: 49.99,
-    description: 'For power users who want more.',
-    features: [
-      'Everything in Free',
-      'No ads',
-      '2 devices',
-      '500 MB cloud storage',
-      'Up to 10 MB file processing',
-    ],
-    cta: 'Get Starter',
-    ctaHref: '/signup?plan=starter_monthly',
-    highlighted: false,
-    badge: null,
-  },
-  {
-    id: 'ultra',
-    name: 'Ultra',
-    priceMonthly: 19.99,
-    priceYearly: 199.99,
-    description: 'Most popular for individuals.',
-    features: [
-      'Everything in Starter',
-      '5 devices',
-      '10 GB cloud storage',
-      '3 team seats',
-      'Up to 100 MB file processing',
-    ],
-    cta: 'Get Ultra',
-    ctaHref: '/signup?plan=ultra_monthly',
-    highlighted: true,
-    badge: 'Most Popular',
-  },
-  {
-    id: 'max',
-    name: 'Max',
-    priceMonthly: 49.99,
-    priceYearly: 499.99,
-    description: 'For teams and power users.',
-    features: [
-      'Everything in Ultra',
-      '10 devices',
-      '50 GB cloud storage',
-      '10 team seats',
-      'API access',
-      'Priority support',
-      'Up to 500 MB file processing',
-    ],
-    cta: 'Get Max',
-    ctaHref: '/signup?plan=max_monthly',
-    highlighted: false,
-    badge: null,
-  },
-];
+interface Plan {
+  tier: string;
+  name: string;
+  description: string | null;
+  price_monthly: number;
+  price_yearly: number;
+  stripe_monthly_id: string | null;
+  stripe_yearly_id: string | null;
+  devices: number;
+  storage_gb: number;
+  max_file_size_mb: number;
+  team_seats: number;
+  api_access: boolean;
+  priority_support: boolean;
+  sort_order: number;
+}
 
 type BillingCycle = 'monthly' | 'yearly';
+
+const HIGHLIGHT_TIER = 'ultra'; // which tier gets the "Most Popular" badge
+
+function formatStorage(gb: number): string {
+  if (gb === 0) return '';
+  if (gb < 1) return `${gb * 1000} MB`;
+  return `${gb} GB`;
+}
+
+function formatFileSize(mb: number): string {
+  if (mb === 0) return '';
+  if (mb >= 1000) return `${mb / 1000} GB`;
+  return `${mb} MB`;
+}
 
 export default function PricingClient() {
   const [billing, setBilling] = useState<BillingCycle>('monthly');
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+  const [plans, setPlans] = useState<Plan[]>([]);
+  const [plansLoading, setPlansLoading] = useState(true);
 
   useEffect(() => {
-    const raw = localStorage.getItem('toolblip_user');
-    if (raw) {
-      try {
-        setUser(JSON.parse(raw) as { name: string; email: string });
-      } catch {
-        // ignore
-      }
-    }
+    fetch(`${API_BASE}/api/plans`)
+      .then((r) => r.json())
+      .then((data) => {
+        setPlans(data.plans || []);
+        setPlansLoading(false);
+      })
+      .catch(() => setPlansLoading(false));
   }, []);
 
-  async function handleUpgrade(planId: string, priceId: string) {
+  async function handleUpgrade(plan: Plan) {
     setError(null);
     const token = localStorage.getItem('toolblip_token');
 
@@ -104,7 +64,15 @@ export default function PricingClient() {
       return;
     }
 
-    setLoading(planId);
+    const stripePriceId =
+      billing === 'yearly' ? plan.stripe_yearly_id : plan.stripe_monthly_id;
+
+    if (!stripePriceId) {
+      setError('This plan is not available yet.');
+      return;
+    }
+
+    setLoading(plan.tier);
 
     try {
       const res = await fetch(`${API_BASE}/api/subscription/checkout`, {
@@ -112,9 +80,9 @@ export default function PricingClient() {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ price_id: priceId }),
+        body: JSON.stringify({ price_id: stripePriceId }),
       });
 
       const data = await res.json();
@@ -130,6 +98,14 @@ export default function PricingClient() {
       setError(err instanceof Error ? err.message : 'Something went wrong');
       setLoading(null);
     }
+  }
+
+  if (plansLoading) {
+    return (
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-20 text-center">
+        <div className="animate-pulse text-gray-400">Loading plans...</div>
+      </div>
+    );
   }
 
   return (
@@ -163,7 +139,9 @@ export default function PricingClient() {
             }`}
           >
             Yearly
-            <span className="ml-1.5 text-xs text-green-600 dark:text-green-400 font-semibold">2 months free</span>
+            <span className="ml-1.5 text-xs text-green-600 dark:text-green-400 font-semibold">
+              2 months free
+            </span>
           </button>
         </div>
       </div>
@@ -175,27 +153,54 @@ export default function PricingClient() {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-start">
-        {PLANS.map((plan) => {
-          const isLoading = loading === plan.id;
-          const price = billing === 'yearly' ? plan.priceYearly : plan.priceMonthly;
-          const priceId =
-            billing === 'yearly'
-              ? `${plan.id}_yearly`
-              : `${plan.id}_monthly`;
+        {plans.map((plan) => {
+          const isLoading = loading === plan.tier;
+          const price =
+            billing === 'yearly' ? plan.price_yearly : plan.price_monthly;
+          const isHighlighted = plan.tier === HIGHLIGHT_TIER;
+          const isFree = plan.tier === 'free';
+
+          // Build feature list dynamically from plan data
+          const features: string[] = [];
+
+          if (!isFree) {
+            features.push('Everything in Free');
+            features.push('No ads');
+          } else {
+            features.push('All tools available');
+            features.push('Client-side processing');
+          }
+
+          if (plan.devices > 0)
+            features.push(
+              `${plan.devices} device${plan.devices > 1 ? 's' : ''}`
+            );
+          if (plan.storage_gb > 0)
+            features.push(`${formatStorage(plan.storage_gb)} cloud storage`);
+          if (plan.max_file_size_mb > 0)
+            features.push(
+              `Up to ${formatFileSize(plan.max_file_size_mb)} file processing`
+            );
+          if (plan.team_seats > 0)
+            features.push(
+              `${plan.team_seats} team seat${plan.team_seats > 1 ? 's' : ''}`
+            );
+          if (plan.api_access) features.push('API access');
+          if (plan.priority_support) features.push('Priority support');
 
           return (
             <div
-              key={plan.id}
+              key={plan.tier}
               className={[
                 'relative rounded-2xl border p-5 flex flex-col',
-                plan.highlighted
+                isHighlighted
                   ? 'border-green-500 bg-green-50 dark:bg-green-900/10 shadow-lg ring-2 ring-green-500/20'
                   : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900',
               ].join(' ')}
             >
-              {plan.badge && (
+              {isHighlighted && (
                 <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-600 text-white text-xs font-semibold px-3 py-1 rounded-full whitespace-nowrap">
-                  {plan.badge}
+                  Most Popular
                 </span>
               )}
 
@@ -208,7 +213,11 @@ export default function PricingClient() {
                     ${price % 1 === 0 ? price : price.toFixed(2)}
                   </span>
                   <span className="text-gray-500 dark:text-gray-400 text-sm">
-                    {price === 0 ? '' : billing === 'yearly' ? '/yr' : '/mo'}
+                    {price === 0
+                      ? ''
+                      : billing === 'yearly'
+                        ? '/yr'
+                        : '/mo'}
                   </span>
                 </div>
                 {billing === 'yearly' && price > 0 && (
@@ -222,37 +231,50 @@ export default function PricingClient() {
               </div>
 
               <ul className="space-y-2.5 mb-5 flex-1">
-                {plan.features.map((feature) => (
-                  <li key={feature} className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300">
-                    <svg className="w-4 h-4 text-green-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                {features.map((feature) => (
+                  <li
+                    key={feature}
+                    className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300"
+                  >
+                    <svg
+                      className="w-4 h-4 text-green-500 shrink-0 mt-0.5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M5 13l4 4L19 7"
+                      />
                     </svg>
                     {feature}
                   </li>
                 ))}
               </ul>
 
-              {plan.id === 'free' ? (
+              {isFree ? (
                 <Link
-                  href={plan.ctaHref}
+                  href="/signup"
                   className="w-full block text-center px-4 py-2.5 rounded-lg font-medium border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors text-sm"
                 >
-                  {plan.cta}
+                  Get Started
                 </Link>
               ) : (
                 <button
-                  onClick={() => handleUpgrade(plan.id, priceId)}
+                  onClick={() => handleUpgrade(plan)}
                   disabled={isLoading}
                   className={[
                     'w-full px-4 py-2.5 rounded-lg font-medium transition-colors text-sm',
                     isLoading
                       ? 'bg-gray-400 cursor-not-allowed text-white'
-                      : plan.highlighted
-                      ? 'bg-green-600 hover:bg-green-700 text-white'
-                      : 'bg-gray-900 dark:bg-gray-100 hover:bg-gray-800 dark:hover:bg-gray-200 text-white dark:text-gray-900',
+                      : isHighlighted
+                        ? 'bg-green-600 hover:bg-green-700 text-white'
+                        : 'bg-gray-900 dark:bg-gray-100 hover:bg-gray-800 dark:hover:bg-gray-200 text-white dark:text-gray-900',
                   ].join(' ')}
                 >
-                  {isLoading ? 'Redirecting...' : plan.cta}
+                  {isLoading ? 'Redirecting...' : `Get ${plan.name}`}
                 </button>
               )}
             </div>
@@ -263,11 +285,18 @@ export default function PricingClient() {
       <div className="mt-10 text-center text-sm text-gray-400 dark:text-gray-500">
         <p>
           All prices in USD. Cancel anytime.{' '}
-          <Link href="/terms" className="underline hover:text-gray-600 dark:hover:text-gray-300">
+          <Link
+            href="/terms"
+            className="underline hover:text-gray-600 dark:hover:text-gray-300"
+          >
             Terms of Service
           </Link>
-          {' '}·{' '}
-          <Link href="/privacy" className="underline hover:text-gray-600 dark:hover:text-gray-300">
+          {' '}
+          ·{' '}
+          <Link
+            href="/privacy"
+            className="underline hover:text-gray-600 dark:hover:text-gray-300"
+          >
             Privacy Policy
           </Link>
         </p>
