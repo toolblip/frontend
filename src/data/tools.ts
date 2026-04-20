@@ -133,7 +133,6 @@ export const tools: Tool[] = [
   // --- New additions ---
   { name: 'Text Sorter', slug: 'text-sorter', description: 'Sort lines of text alphabetically, reverse, by length, or numerically.', emoji: '📋', category: 'Text' },
   { name: 'Emoji Finder', slug: 'emoji-finder', description: 'Search thousands of emojis by keyword and copy the raw Unicode character.', emoji: '😀', category: 'Text' },
-  { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-generator', description: 'Generate placeholder lorem ipsum text with paragraphs, sentences, words, or lists.', emoji: '📜', category: 'Text' },
   { name: 'Placeholder Image Generator', slug: 'placeholder-image-generator', description: 'Generate placeholder images in any size with custom text, colors, and format.', emoji: '🖼️', category: 'Image' },
   { name: 'Image Color Picker', slug: 'image-color-picker', description: 'Pick colors from any image and get HEX, RGB, HSL, and CSS values instantly.', emoji: '🎨', category: 'Image' },
   { name: 'HEX to RGB', slug: 'hex-to-rgb', description: 'Convert HEX color codes to RGB and RGBA formats with live color preview.', emoji: '🎨', category: 'Color' },
