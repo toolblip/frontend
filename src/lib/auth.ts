@@ -1,4 +1,4 @@
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://toolblip-api-production.up.railway.app';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.toolblip.com';
 
 export function isLoggedIn(): boolean {
   if (typeof window === 'undefined') return false;

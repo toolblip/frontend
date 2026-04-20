@@ -9,12 +9,16 @@ const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://toolblip.com';
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [
     { url: BASE_URL, priority: 1.0, changeFrequency: 'daily' },
-    { url: `${BASE_URL}/tools`, priority: 0.9, changeFrequency: 'weekly' },
-    { url: `${BASE_URL}/directory`, priority: 0.8, changeFrequency: 'weekly' },
+    { url: `${BASE_URL}/directory`, priority: 0.9, changeFrequency: 'weekly' },
+    { url: `${BASE_URL}/pricing`, priority: 0.8, changeFrequency: 'monthly' },
+    { url: `${BASE_URL}/account`, priority: 0.7, changeFrequency: 'monthly' },
     { url: `${BASE_URL}/about`, priority: 0.6, changeFrequency: 'monthly' },
+    { url: `${BASE_URL}/api-docs`, priority: 0.5, changeFrequency: 'monthly' },
     { url: `${BASE_URL}/login`, priority: 0.5, changeFrequency: 'monthly' },
     { url: `${BASE_URL}/signup`, priority: 0.5, changeFrequency: 'monthly' },
     { url: `${BASE_URL}/blog`, priority: 0.7, changeFrequency: 'daily' },
+    { url: `${BASE_URL}/terms`, priority: 0.3, changeFrequency: 'yearly' },
+    { url: `${BASE_URL}/privacy`, priority: 0.3, changeFrequency: 'yearly' },
   ];
 
   const toolPages: MetadataRoute.Sitemap = tools.map((tool) => ({

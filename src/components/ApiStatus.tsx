@@ -13,7 +13,7 @@ export default function ApiStatus() {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 5000);
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://toolblip-api-production.up.railway.app'}/api/tools`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://api.toolblip.com'}/api/tools`, {
           signal: controller.signal,
           cache: 'no-store',
         });

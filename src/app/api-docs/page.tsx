@@ -4,8 +4,7 @@ import CodeBlock from '@/components/ui/CodeBlock';
 
 // ─── Config ────────────────────────────────────────────────────────────────
 
-const BASE_URL = 'https://toolblip-api-production.up.railway.app';
-const FUTURE_BASE_URL = 'https://api.toolblip.com';
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.toolblip.com';
 
 const ENDPOINTS = [
   {
@@ -135,15 +134,8 @@ export default function ApiDocsClient() {
                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">
                   Base URL
                 </p>
-                <code className="block text-sm font-mono text-green-600 dark:text-green-400 break-all mb-3">
+                <code className="block text-sm font-mono text-green-600 dark:text-green-400 break-all">
                   {BASE_URL}
-                </code>
-                <div className="h-px bg-gray-100 dark:bg-gray-800 mb-3" />
-                <p className="text-[11px] text-gray-400 mb-1">
-                  <span className="font-semibold text-amber-500">Upcoming:</span> SSL pending →
-                </p>
-                <code className="text-xs font-mono text-gray-500 dark:text-gray-500 break-all">
-                  {FUTURE_BASE_URL}
                 </code>
               </div>
             </div>

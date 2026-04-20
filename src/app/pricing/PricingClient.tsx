@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://toolblip-api-production.up.railway.app';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.toolblip.com';
 
 interface Plan {
   tier: string;

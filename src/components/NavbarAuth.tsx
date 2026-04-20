@@ -28,7 +28,7 @@ export default function NavbarAuth() {
     const token = localStorage.getItem('toolblip_token');
     if (token) {
       try {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://toolblip-api-production.up.railway.app'}/api/auth/logout`, {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'https://api.toolblip.com'}/api/auth/logout`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
