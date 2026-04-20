@@ -4,9 +4,8 @@ import CodeBlock from '@/components/ui/CodeBlock';
 
 // ─── Config ────────────────────────────────────────────────────────────────
 
-// Primary base URL — Railway production deployment
-// (will switch to https://api.toolblip.com once SSL is provisioned)
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://toolblip-api-production.up.railway.app';
+const BASE_URL = 'https://toolblip-api-production.up.railway.app';
+// const BASE_URL = 'https://api.toolblip.com'; // switch once SSL is ready
 
 const ENDPOINTS = [
   {
@@ -81,7 +80,7 @@ export default function ApiDocsClient() {
   return (
     <div className="min-h-screen bg-white dark:bg-[#0c0c0c] text-gray-900 dark:text-gray-100">
 
-      {/* ── Sticky Topbar ── */}
+      {/* ── Sticky header ── */}
       <header className="sticky top-0 z-10 bg-white/90 dark:bg-[#0c0c0c]/90 backdrop-blur border-b border-gray-100 dark:border-gray-800">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
           <span className="text-[11px] font-mono font-bold bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2.5 py-1 rounded-full">
