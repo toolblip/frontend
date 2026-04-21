@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
+import { useSubscription } from '@/hooks/useSubscription';
+import { FileSizeError } from '@/components/FileSizeGuard';
 
 const PRESETS = [
   { label: '1:1 Square', ratio: 1 },
@@ -13,6 +15,7 @@ const PRESETS = [
 
 export default function ImageCropperClient() {
   const [image, setImage] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preset, setPreset] = useState(PRESETS[0]);
   const [cropping, setCropping] = useState(false);
   const [cropRect, setCropRect] = useState({ x: 0, y: 0, w: 0, h: 0 });
@@ -20,6 +23,8 @@ export default function ImageCropperClient() {
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
+  const { tier } = useSubscription();
+  const maxSizeMB = tier === 'free' ? 5 : tier === 'starter' ? 10 : tier === 'ultra' ? 100 : tier === 'max' ? 500 : 5;
 
   const loadImage = (file: File) => {
     const reader = new FileReader();
@@ -65,7 +70,7 @@ export default function ImageCropperClient() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) loadImage(file);
+    if (file) { setSelectedFile(file); loadImage(file); }
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -166,6 +171,7 @@ export default function ImageCropperClient() {
             className="hidden"
             aria-label="Upload image"
           />
+          <FileSizeError file={selectedFile} maxSizeMB={maxSizeMB} />
         </div>
       ) : (
         <div className="space-y-3">

@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useCallback, useRef, useEffect } from 'react';
+import { useSubscription } from '@/hooks/useSubscription';
+import { FileSizeError } from '@/components/FileSizeGuard';
 
 type OutputFormat = 'image/jpeg' | 'image/png' | 'image/webp' | 'image/avif';
 
@@ -45,6 +47,8 @@ export default function ImageFormatConverterClient() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const prevResultUrl = useRef<string | null>(null);
+  const { tier } = useSubscription();
+  const maxSizeMB = tier === 'free' ? 5 : tier === 'starter' ? 10 : tier === 'ultra' ? 100 : tier === 'max' ? 500 : 5;
 
   // Cleanup object URLs on unmount
   useEffect(() => {
@@ -188,6 +192,7 @@ export default function ImageFormatConverterClient() {
           {isDragging ? 'Drop image here' : 'Drop an image here or click to upload'}
         </p>
         <p className="text-gray-500 text-sm mt-1 pointer-events-none">JPEG · PNG · WebP · AVIF · GIF</p>
+        <FileSizeError file={sourceFile} maxSizeMB={maxSizeMB} />
       </div>
 
       {error && (

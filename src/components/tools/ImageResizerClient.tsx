@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import { useSubscription } from '@/hooks/useSubscription';
+import { FileSizeError } from '@/components/FileSizeGuard';
 
 export default function ImageResizerClient() {
   const [file, setFile] = useState<File | null>(null);
@@ -9,6 +11,8 @@ export default function ImageResizerClient() {
   const [height, setHeight] = useState(600);
   const [maintain, setMaintain] = useState(true);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { tier } = useSubscription();
+  const maxSizeMB = tier === 'free' ? 5 : tier === 'starter' ? 10 : tier === 'ultra' ? 100 : tier === 'max' ? 500 : 5;
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
@@ -51,6 +55,7 @@ export default function ImageResizerClient() {
           onChange={handleFile}
           className="w-full text-sm text-gray-500 dark:text-gray-400 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-green-600 file:text-white file:text-sm file:font-medium hover:file:bg-green-700 cursor-pointer"
         />
+        <FileSizeError file={file} maxSizeMB={maxSizeMB} />
       </div>
 
       {preview && (
