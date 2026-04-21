@@ -3,6 +3,8 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { tools } from '@/data/tools';
+import { useSubscription } from '@/hooks/useSubscription';
+import ProBadge from '@/components/ProBadge';
 
 const FILTER_CATEGORIES = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network'] as const;
 type FilterCategory = (typeof FILTER_CATEGORIES)[number];
@@ -10,6 +12,7 @@ type FilterCategory = (typeof FILTER_CATEGORIES)[number];
 export default function DirectoryClient() {
   const [query, setQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<FilterCategory>('All');
+  const { tier } = useSubscription();
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
@@ -34,6 +37,18 @@ export default function DirectoryClient() {
           <p className="text-sm text-gray-500 dark:text-gray-400">
             Browse all {tools.length} free browser-based tools. No signup, no uploads.
           </p>
+          {tier === 'free' && (
+            <Link
+              href="/pricing"
+              className="inline-flex items-center gap-1.5 mt-3 text-sm font-medium text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors"
+            >
+              <ProBadge size="sm" />
+              Upgrade for more power &amp; cloud storage
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          )}
         </div>
       </div>
 
@@ -138,6 +153,7 @@ export default function DirectoryClient() {
                     <span className="inline-block text-[10px] font-medium uppercase tracking-wider text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-1.5 py-0.5 rounded-full mb-1.5">
                       {tool.category}
                     </span>
+                    {tier === 'free' && <ProBadge size="sm" />}
                     <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2">
                       {tool.description}
                     </p>

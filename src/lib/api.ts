@@ -92,6 +92,7 @@ export async function openCustomerPortal(token: string) {
 export interface Subscription {
   is_pro: boolean;
   tier: string | null;
+  subscription_tier: string | null;
   devices: number | null;
   storage_gb: number | null;
   team_seats: number | null;
