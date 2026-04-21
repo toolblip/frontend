@@ -2,7 +2,7 @@
 
 import { useState, useRef, useCallback } from 'react';
 import { useSubscription } from '@/hooks/useSubscription';
-import { FileSizeError } from '@/components/FileSizeGuard';
+import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
 
 const PRESETS = [
   { label: '1:1 Square', ratio: 1 },
@@ -25,6 +25,8 @@ export default function ImageCropperClient() {
   const imgRef = useRef<HTMLImageElement | null>(null);
   const { tier } = useSubscription();
   const maxSizeMB = tier === 'free' ? 5 : tier === 'starter' ? 10 : tier === 'ultra' ? 100 : tier === 'max' ? 500 : 5;
+
+  const isOversized = selectedFile != null && selectedFile.size / (1024 * 1024) > maxSizeMB;
 
   const loadImage = (file: File) => {
     const reader = new FileReader();
@@ -67,6 +69,8 @@ export default function ImageCropperClient() {
     },
     []
   );
+
+
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -171,6 +175,7 @@ export default function ImageCropperClient() {
             className="hidden"
             aria-label="Upload image"
           />
+          <UpgradeNotice tier={tier} />
           <FileSizeError file={selectedFile} maxSizeMB={maxSizeMB} />
         </div>
       ) : (
@@ -187,9 +192,10 @@ export default function ImageCropperClient() {
             <button
               onClick={downloadCrop}
               className="bg-green-600 hover:bg-green-500 text-black font-medium px-4 py-2 rounded-lg text-sm transition-colors disabled:opacity-50"
-              disabled={cropRect.w === 0}
+              disabled={cropRect.w === 0 || isOversized}
+              title={isOversized ? 'File size exceeds your plan limit' : ''}
             >
-              Download Crop
+              {isOversized ? 'File Too Large' : 'Download Crop'}
             </button>
             <button
               onClick={() => { setImage(null); setCropRect({ x: 0, y: 0, w: 0, h: 0 }); }}

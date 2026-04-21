@@ -2,7 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { useSubscription } from '@/hooks/useSubscription';
-import { FileSizeError } from '@/components/FileSizeGuard';
+import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
 
 export default function ImageResizerClient() {
   const [file, setFile] = useState<File | null>(null);
@@ -13,6 +13,8 @@ export default function ImageResizerClient() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { tier } = useSubscription();
   const maxSizeMB = tier === 'free' ? 5 : tier === 'starter' ? 10 : tier === 'ultra' ? 100 : tier === 'max' ? 500 : 5;
+
+  const isOversized = file != null && file.size / (1024 * 1024) > maxSizeMB;
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
@@ -55,6 +57,7 @@ export default function ImageResizerClient() {
           onChange={handleFile}
           className="w-full text-sm text-gray-500 dark:text-gray-400 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-green-600 file:text-white file:text-sm file:font-medium hover:file:bg-green-700 cursor-pointer"
         />
+        <UpgradeNotice tier={tier} />
         <FileSizeError file={file} maxSizeMB={maxSizeMB} />
       </div>
 
@@ -108,9 +111,10 @@ export default function ImageResizerClient() {
           <div className="flex gap-3">
             <button
               onClick={resize}
-              className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors"
+              disabled={isOversized}
+              className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Resize &amp; Download
+              {isOversized ? 'File Too Large' : 'Resize & Download'}
             </button>
             <a href={preview} download className="px-4 py-2 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg text-sm text-gray-700 dark:text-gray-300 transition-colors">
               Download Original

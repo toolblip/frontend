@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useSubscription } from '@/hooks/useSubscription';
-import { FileSizeError } from '@/components/FileSizeGuard';
+import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
 
 type OutputFormat = 'image/jpeg' | 'image/png' | 'image/webp' | 'image/avif';
 
@@ -58,6 +58,7 @@ export default function ImageFormatConverterClient() {
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const isOversized = sourceFile != null && sourceFile.size / (1024 * 1024) > maxSizeMB;
   const handleFile = useCallback((file: File) => {
     if (!ACCEPTED_TYPES.includes(file.type)) {
       setError('Unsupported format. Please upload a JPEG, PNG, WebP, AVIF, or GIF image.');
@@ -270,11 +271,14 @@ export default function ImageFormatConverterClient() {
           {/* Convert button */}
           <button
             onClick={convert}
-            disabled={converting}
+            disabled={converting || isOversized}
+            title={isOversized ? 'File size exceeds your plan limit' : ''}
             className="w-full bg-green-600 hover:bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed text-black font-semibold py-3 rounded-lg transition-colors"
           >
-            {converting ? 'Converting…' : 'Convert Image'}
+            {isOversized ? 'File Too Large' : converting ? 'Converting…' : 'Convert Image'}
           </button>
+
+          <UpgradeNotice tier={tier} />
 
           {/* Before / After preview */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

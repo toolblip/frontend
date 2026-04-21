@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 interface FileSizeGuardProps {
   file: File | null;
   maxSizeMB: number | null;
@@ -12,6 +14,7 @@ export default function FileSizeGuard({ file, maxSizeMB, children }: FileSizeGua
 
   const sizeMB = file.size / (1024 * 1024);
   if (sizeMB > maxSizeMB) return null;
+
 
   return <>{children}</>;
 }
@@ -26,11 +29,29 @@ export function FileSizeError({ file, maxSizeMB }: { file: File | null; maxSizeM
       <p className="text-sm text-red-700 dark:text-red-400">
         <strong>File too large:</strong> Your current plan supports files up to{' '}
         <strong>{maxSizeMB}MB</strong>. This file is {(sizeMB).toFixed(1)}MB.{' '}
-        <a href="/pricing" className="underline hover:no-underline">
+        <Link href="/pricing" className="underline hover:no-underline">
           Upgrade to Pro
-        </a>{' '}
+        </Link>{' '}
         for larger file processing.
       </p>
+    </div>
+  );
+}
+
+export function UpgradeNotice({ tier }: { tier: string | null }) {
+  if (tier && tier !== 'free') return null;
+
+  return (
+    <div className="mt-2 p-3 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg flex items-center gap-2">
+      <span className="text-sm text-green-700 dark:text-green-400">
+        Want to process larger files?{' '}
+      </span>
+      <Link
+        href="/pricing"
+        className="text-sm font-medium text-green-700 dark:text-green-400 underline hover:no-underline"
+      >
+        Upgrade to Pro
+      </Link>
     </div>
   );
 }
