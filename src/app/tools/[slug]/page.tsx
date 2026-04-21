@@ -523,7 +523,7 @@ function ShareButtons({ toolName }: { toolName: string }) {
 
 // ─── Tool registry ────────────────────────────────────────────────────────────
 
-type ToolUIComponent = () => JSX.Element;
+type ToolUIComponent = () => React.ReactElement;
 
 const toolUIs: Record<string, ToolUIComponent> = {
   'word-counter': WordCounterUI,
