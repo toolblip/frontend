@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import ShareButtons from '@/components/ShareButtons';
 import { tools } from '@/data/tools';
 
 const toolMap = Object.fromEntries(tools.map(t => [t.slug, t]));
@@ -416,6 +417,11 @@ export default function ToolDetailPage({ params }: { params: { slug: string } })
       {/* Tool UI */}
       <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6">
         {ToolUI ? <ToolUI /> : <ComingSoonUI slug={params.slug} />}
+      </div>
+
+      {/* Share buttons */}
+      <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-800">
+        <ShareButtons toolName={tool.name} />
       </div>
 
       {/* Footer note */}
