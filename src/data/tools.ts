@@ -184,6 +184,20 @@ export const tools: Tool[] = [
   { name: 'Temperature Converter', slug: 'temperature-converter', description: 'Convert temperatures between Celsius, Fahrenheit, and Kelvin instantly.', emoji: '🌡️', category: 'Conversion' },
   { name: 'Length Converter', slug: 'length-converter', description: 'Convert length and distance between metric and imperial units — meters, feet, inches, and more.', emoji: '📏', category: 'Conversion' },
   { name: 'Weight Converter', slug: 'weight-converter', description: 'Convert weight between kilograms, pounds, ounces, grams, and stone instantly.', emoji: '⚖️', category: 'Conversion' },
+  { name: 'Sticky Notes', slug: 'sticky-notes', description: 'Create colorful digital sticky notes for reminders, to-do lists, and quick annotations.', emoji: '📝', category: 'Text' },
+  { name: 'Word Association', slug: 'word-association', description: 'Generate synonyms, antonyms, and related words for any input term instantly.', emoji: '🔤', category: 'Text' },
+  { name: 'Fake Text Generator', slug: 'fake-text-generator', description: 'Generate fake lorem ipsum, pangrams, placeholder text, and random sentences for design mockups.', emoji: '✍️', category: 'Text' },
+  { name: 'Duplicate Line Finder', slug: 'duplicate-line-finder', description: 'Find and highlight duplicate lines in text with one-click removal and line numbering.', emoji: '🔎', category: 'Text' },
+  { name: 'Environment File Parser', slug: 'env-parser', description: 'Parse and validate .env files, extract keys and values, and detect syntax errors.', emoji: '⚙️', category: 'Developer' },
+  { name: 'JSON to TypeScript Interface', slug: 'json-to-typescript-interface', description: 'Convert JSON to TypeScript interfaces with optional strict types, nullability, and readonly fields.', emoji: '📘', category: 'Developer' },
+  { name: 'SVG Favicon Generator', slug: 'svg-favicon-generator', description: 'Create SVG-based favicons from text, icons, or vector shapes with customizable colors and sizes.', emoji: '🌐', category: 'Image' },
+  { name: 'Image Optimizer', slug: 'image-optimizer', description: 'Optimize images for web by compressing JPEG, PNG, WebP, and AVIF with quality control.', emoji: '🗜️', category: 'Image' },
+  { name: 'Broken Link Checker', slug: 'broken-link-checker', description: 'Scan any webpage and identify broken or dead links with HTTP status codes.', emoji: '🔗', category: 'SEO' },
+  { name: 'Google Algorithm Update Tracker', slug: 'google-algorithm-tracker', description: 'Track major Google algorithm updates and see which SEO factors were impacted.', emoji: '📈', category: 'SEO' },
+  { name: 'Color Shade Generator', slug: 'color-shade-generator', description: 'Generate lighter and darker shades of any color for consistent design systems.', emoji: '🎨', category: 'Color' },
+  { name: 'Color Name Finder', slug: 'color-name-finder', description: 'Find the nearest named color for any HEX, RGB, or HSL value from color databases.', emoji: '🏷️', category: 'Color' },
+  { name: 'Currency Converter', slug: 'currency-converter', description: 'Convert amounts between currencies using up-to-date exchange rates in your browser.', emoji: '💱', category: 'Conversion' },
+  { name: 'ASCII Art Generator', slug: 'ascii-art-generator', description: 'Convert text or images into ASCII art with adjustable font size and character set.', emoji: '🎨', category: 'Text' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network'] as const;
