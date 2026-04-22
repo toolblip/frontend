@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { tools } from '@/data/tools';
 
-const TABS = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS'] as const;
+const TABS = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network'] as const;
 
 export default function DirectoryClient() {
   const [query, setQuery] = useState('');
@@ -22,6 +22,14 @@ export default function DirectoryClient() {
       return matchesTab && matchesSearch;
     });
   }, [query, activeTab]);
+
+  const tabCounts = useMemo(() => {
+    const counts: Record<string, number> = { All: tools.length };
+    for (const tool of tools) {
+      counts[tool.category] = (counts[tool.category] ?? 0) + 1;
+    }
+    return counts;
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
@@ -77,19 +85,31 @@ export default function DirectoryClient() {
 
           {/* Category tabs */}
           <div className="flex gap-1.5 overflow-x-auto pb-0.5 scrollbar-hide">
-            {TABS.map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`flex-shrink-0 px-3 py-1.5 text-xs sm:text-sm font-medium rounded-full transition-all ${
-                  activeTab === tab
-                    ? 'bg-green-600 text-white shadow-sm'
-                    : 'bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
-                }`}
-              >
-                {tab}
-              </button>
-            ))}
+            {TABS.map((tab) => {
+              const count = tabCounts[tab] ?? 0;
+              return (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-medium rounded-full transition-all ${
+                    activeTab === tab
+                      ? 'bg-green-600 text-white shadow-sm'
+                      : 'bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                  }`}
+                >
+                  <span>{tab}</span>
+                  <span
+                    className={`text-[10px] font-semibold px-1 py-0.5 rounded-full ${
+                      activeTab === tab
+                        ? 'bg-green-500 text-white'
+                        : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400'
+                    }`}
+                  >
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>
