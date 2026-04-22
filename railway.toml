@@ -1,0 +1,7 @@
+[railway]
+schema = "v2"
+
+[deploy]
+dockerfile = "Dockerfile"
+healthcheckPath = "/"
+healthcheckPort = 8080
