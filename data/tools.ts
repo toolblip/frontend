@@ -362,6 +362,23 @@ export const tools: Tool[] = [
   { name: 'Contrast Checker', slug: 'contrast-checker-v3', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail indicators.', emoji: '♿', category: 'Color' },
   { name: 'Unit Converter', slug: 'unit-converter-v3', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
   { name: 'Number Base Converter', slug: 'number-base-converter-v3', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly.', emoji: '🔢', category: 'Conversion' },
+
+  // --- New tools (2026-04-22 #7) ---
+  { name: 'cURL Generator', slug: 'curl-generator', description: 'Generate cURL commands from browser network requests with headers and body.', emoji: '🔗', category: 'Developer' },
+  { name: 'API Spec Generator', slug: 'api-spec-generator', description: 'Generate OpenAPI/Swagger specs from JSON sample data for API documentation.', emoji: '📄', category: 'Developer' },
+  { name: 'SSH Key Generator', slug: 'ssh-key-generator', description: 'Generate RSA, ECDSA, and Ed25519 SSH key pairs for server authentication.', emoji: '🔑', category: 'Developer' },
+  { name: 'JSON Validator', slug: 'json-validator', description: 'Validate JSON syntax and check for schema compliance with error line numbers.', emoji: '✅', category: 'Developer' },
+  { name: 'HTML Entities Reference', slug: 'html-entities-reference', description: 'Reference table for HTML named entities like &amp;, &lt;, &gt;, and numeric codes.', emoji: '🏷️', category: 'Developer' },
+  { name: 'JavaScript Beautifier', slug: 'js-beautifier', description: 'Format and indent JavaScript code with proper braces and semicolon placement.', emoji: '✨', category: 'Developer' },
+  { name: 'Text Reverser', slug: 'text-reverser', description: 'Reverse characters, words, or lines in any text with one-click copy output.', emoji: '🔄', category: 'Text' },
+  { name: 'Character Frequency Counter', slug: 'character-frequency-counter', description: 'Count character frequency in text for password analysis and cipher detection.', emoji: '🔤', category: 'Text' },
+  { name: 'Word Alphabetizer', slug: 'word-alphabetizer', description: 'Extract and alphabetically sort unique words from any text block.', emoji: '🔤', category: 'Text' },
+  { name: 'GIF Maker', slug: 'gif-maker', description: 'Create animated GIFs from multiple images or short video clips in your browser.', emoji: '🎞️', category: 'Image' },
+  { name: 'Image Clipper', slug: 'image-clipper', description: 'Remove backgrounds from images and cut out subjects with one-click extraction.', emoji: '✂️', category: 'Image' },
+  { name: 'Screenshot Maker', slug: 'screenshot-maker', description: 'Capture full-page screenshots of any URL with customizable viewport and delay.', emoji: '📸', category: 'Image' },
+  { name: 'Keyword Difficulty Checker', slug: 'keyword-difficulty-checker', description: 'Estimate SEO difficulty for keywords based on search result competition analysis.', emoji: '📊', category: 'SEO' },
+  { name: 'Page Speed Preview', slug: 'page-speed-preview', description: 'Estimate page load time and size breakdown for any URL on slow connections.', emoji: '⚡', category: 'SEO' },
+  { name: 'HSL to RGB', slug: 'hsl-to-rgb', description: 'Convert HSL color values to RGB and HEX with a live color preview swatch.', emoji: '🎨', category: 'Color' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network'] as const;
