@@ -9,15 +9,13 @@ const FALLBACK_URL = 'https://toolblip-api-production.up.railway.app';
 
 const API_VERSION = 'v1';
 
-// ─── Static data ───────────────────────────────────────────────────────────
-
 const ENDPOINTS = [
-  { group: 'Tools', id: 'tools-list',    method: 'GET',  path: '/api/tools',         auth: false, status: 200, desc: 'List all tools' },
-  { group: 'Tools', id: 'tools-detail',  method: 'GET',  path: '/api/tools/{slug}',   auth: false, status: 200, desc: 'Get a single tool by slug' },
-  { group: 'Auth',  id: 'auth-register',method: 'POST', path: '/api/auth/register',  auth: false, status: 201, desc: 'Create a new account' },
-  { group: 'Auth',  id: 'auth-login',    method: 'POST', path: '/api/auth/login',    auth: false, status: 200, desc: 'Sign in to your account' },
-  { group: 'Auth',  id: 'auth-logout',   method: 'POST', path: '/api/auth/logout',   auth: true,  status: 200, desc: 'Revoke the current session' },
-  { group: 'Auth',  id: 'auth-user',     method: 'GET',  path: '/api/auth/user',     auth: true,  status: 200, desc: 'Get the authenticated user' },
+  { id: 'tools-list',    method: 'GET',  path: '/api/tools',        auth: false, status: 200, desc: 'List all tools' },
+  { id: 'tools-detail',  method: 'GET',  path: '/api/tools/{slug}', auth: false, status: 200, desc: 'Get a single tool by slug' },
+  { id: 'auth-register', method: 'POST', path: '/api/auth/register', auth: false, status: 201, desc: 'Create a new account' },
+  { id: 'auth-login',   method: 'POST', path: '/api/auth/login',   auth: false, status: 200, desc: 'Sign in to your account' },
+  { id: 'auth-logout',  method: 'POST', path: '/api/auth/logout',  auth: true,  status: 200, desc: 'Revoke the current session' },
+  { id: 'auth-user',    method: 'GET',  path: '/api/auth/user',   auth: true,  status: 200, desc: 'Get the authenticated user' },
 ] as const;
 
 const ERROR_CODES = [
@@ -29,8 +27,6 @@ const ERROR_CODES = [
   { code: 429, label: 'Too Many Requests' },
   { code: 500, label: 'Server Error' },
 ] as const;
-
-// ─── Page ───────────────────────────────────────────────────────────────────
 
 export default function ApiDocsPage() {
   return (
@@ -66,7 +62,7 @@ export default function ApiDocsPage() {
               </h2>
               <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-xl mb-6">
                 Browse developer tools and manage user accounts. All responses are JSON.
-                Public read endpoints are open to everyone — register or sign in to get a Bearer token for protected routes.
+                Tool endpoints are public. Register or sign in to get a Bearer token for protected routes.
               </p>
 
               <div className="flex flex-wrap gap-2">
@@ -119,13 +115,15 @@ export default function ApiDocsPage() {
               On this page
             </p>
             {[
-              { id: 'overview',       label: 'Overview' },
-              { id: 'authentication', label: 'Authentication' },
-              { id: 'tools',          label: 'Tools' },
-              { id: 'auth',           label: 'Auth' },
-              { id: 'rate-limiting',  label: 'Rate Limiting' },
-              { id: 'errors',         label: 'Errors' },
-              { id: 'changelog',      label: 'Changelog' },
+              { id: 'overview',      label: 'Overview' },
+              { id: 'auth',          label: 'Authentication' },
+              { id: 'tools-list',    label: 'GET /api/tools' },
+              { id: 'tools-detail',  label: 'GET /api/tools/{slug}' },
+              { id: 'auth-register', label: 'POST /api/auth/register' },
+              { id: 'auth-login',   label: 'POST /api/auth/login' },
+              { id: 'auth-logout',  label: 'POST /api/auth/logout' },
+              { id: 'auth-user',    label: 'GET /api/auth/user' },
+              { id: 'errors',       label: 'Errors' },
             ].map(({ id, label }) => (
               <a
                 key={id}
@@ -133,22 +131,6 @@ export default function ApiDocsPage() {
                 className="flex items-center px-3 py-1.5 rounded-lg transition-colors text-xs text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-900"
               >
                 {label}
-              </a>
-            ))}
-
-            <div className="pt-5 pb-1">
-              <p className="px-3 py-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
-                Endpoints
-              </p>
-            </div>
-            {ENDPOINTS.map(({ id, method, path }) => (
-              <a
-                key={id}
-                href={`#${id}`}
-                className="flex items-center gap-2 px-3 py-1 text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-50 dark:hover:bg-gray-900 transition-colors"
-              >
-                <MethodPill method={method} />
-                <span className="font-mono text-[11px] truncate">{path}</span>
               </a>
             ))}
           </nav>
@@ -161,8 +143,8 @@ export default function ApiDocsPage() {
           <section id="overview" className="scroll-mt-16">
             <SectionHeading>Overview</SectionHeading>
             <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-6">
-              The Toolblip API follows REST conventions. All endpoints return JSON. Read-only
-              tool endpoints are public; account management endpoints require a Bearer token.
+              The Toolblip API follows REST conventions. All endpoints return JSON.
+              Public read endpoints are open to everyone — register or sign in to get a Bearer token for protected routes.
             </p>
 
             <div className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden mb-6">
@@ -196,7 +178,7 @@ export default function ApiDocsPage() {
           </section>
 
           {/* ── Authentication ── */}
-          <section id="authentication" className="scroll-mt-16">
+          <section id="auth" className="scroll-mt-16">
             <SectionHeading>Authentication</SectionHeading>
             <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-4">
               Authenticated endpoints require a Bearer token. Obtain one from{' '}
@@ -216,29 +198,21 @@ export default function ApiDocsPage() {
           </section>
 
           {/* ── Tools ── */}
-          <section id="tools" className="scroll-mt-16">
-            <SectionHeading>Tools</SectionHeading>
-            <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
-              All tools endpoints are public — no authentication required.
-            </p>
+          <div className="space-y-16 sm:space-y-20">
 
-            <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl text-xs text-blue-700 dark:text-blue-400">
-              <strong>Response envelope:</strong> List responses wrap data in a{' '}
-              <InlineCode>tools</InlineCode> key — e.g.{' '}
-              <InlineCode>{`{ tools: { tools: [...] } }`}</InlineCode>. Single-tool responses wrap in{' '}
-              <InlineCode>{`{ tool: {...} }`}</InlineCode>.
-            </div>
+            {/* GET /api/tools */}
+            <section id="tools-list" className="scroll-mt-16">
+              <SectionHeading>GET /api/tools</SectionHeading>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
+                Returns a paginated list of all tools. No authentication required.
+              </p>
 
-            <div className="space-y-10 sm:space-y-12">
-
-              {/* GET /api/tools */}
               <EndpointCard
-                id="tools-list"
                 method="GET"
                 path="/api/tools"
                 auth={false}
                 status={200}
-                description="Returns a paginated list of all tools in the registry."
+                description="List all tools in the registry."
                 query={[
                   { name: 'category', type: 'string', desc: 'Filter by category (e.g. AI, DevOps, Analytics)' },
                   { name: 'page', type: 'number', desc: 'Page number (default: 1)' },
@@ -270,15 +244,21 @@ export default function ApiDocsPage() {
                 curl={`curl "${BASE_URL}/api/tools?category=AI&page=1" \\
   -H "Accept: application/json"`}
               />
+            </section>
 
-              {/* GET /api/tools/:slug */}
+            {/* GET /api/tools/{slug} */}
+            <section id="tools-detail" className="scroll-mt-16">
+              <SectionHeading>{'GET /api/tools/{slug}'}</SectionHeading>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
+                Fetch a single tool by its slug identifier. Returns 404 if not found.
+              </p>
+
               <EndpointCard
-                id="tools-detail"
                 method="GET"
                 path="/api/tools/{slug}"
                 auth={false}
                 status={200}
-                description="Fetch a single tool by its slug identifier. Returns 404 if the tool does not exist."
+                description="Get a single tool by slug."
                 response={`{
   "tool": {
     "id": 1,
@@ -298,24 +278,26 @@ export default function ApiDocsPage() {
                 curl={`curl "${BASE_URL}/api/tools/claude-code" \\
   -H "Accept: application/json"`}
               />
+            </section>
 
-            </div>
-          </section>
+          </div>
 
-          {/* ── Auth ── */}
-          <section id="auth" className="scroll-mt-16">
-            <SectionHeading>Auth</SectionHeading>
+          {/* ── Auth Endpoints ── */}
+          <div className="space-y-16 sm:space-y-20">
 
-            <div className="space-y-10 sm:space-y-12">
+            {/* POST /api/auth/register */}
+            <section id="auth-register" className="scroll-mt-16">
+              <SectionHeading>POST /api/auth/register</SectionHeading>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
+                Create a new user account. Returns the user object and a Bearer token.
+              </p>
 
-              {/* POST /api/auth/register */}
               <EndpointCard
-                id="auth-register"
                 method="POST"
                 path="/api/auth/register"
                 auth={false}
                 status={201}
-                description="Create a new user account. Returns the user object and a Bearer token for use in authenticated requests."
+                description="Create a new user account."
                 body={`{
   "name": "Harun",
   "email": "harun@example.com",
@@ -348,15 +330,21 @@ export default function ApiDocsPage() {
     "password_confirmation": "secret123"
   }'`}
               />
+            </section>
 
-              {/* POST /api/auth/login */}
+            {/* POST /api/auth/login */}
+            <section id="auth-login" className="scroll-mt-16">
+              <SectionHeading>POST /api/auth/login</SectionHeading>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
+                Sign in with existing credentials. Returns the user object and a Bearer token.
+              </p>
+
               <EndpointCard
-                id="auth-login"
                 method="POST"
                 path="/api/auth/login"
                 auth={false}
                 status={200}
-                description="Sign in with existing credentials. Returns the user object and a Bearer token."
+                description="Sign in to your account."
                 body={`{
   "email": "harun@example.com",
   "password": "secret123"
@@ -378,15 +366,21 @@ export default function ApiDocsPage() {
   -H "Content-Type: application/json" \\
   -d '{"email":"harun@example.com","password":"secret123"}'`}
               />
+            </section>
 
-              {/* POST /api/auth/logout */}
+            {/* POST /api/auth/logout */}
+            <section id="auth-logout" className="scroll-mt-16">
+              <SectionHeading>POST /api/auth/logout</SectionHeading>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
+                Revoke the current Bearer token and end the session.
+              </p>
+
               <EndpointCard
-                id="auth-logout"
                 method="POST"
                 path="/api/auth/logout"
                 auth={true}
                 status={200}
-                description="Revoke the current Bearer token and end the session. The token can no longer be used after this call."
+                description="Revoke the current session token."
                 response={`{
   "message": "Logged out successfully"
 }`}
@@ -394,15 +388,21 @@ export default function ApiDocsPage() {
   -H "Accept: application/json" \\
   -H "Authorization: Bearer 1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"`}
               />
+            </section>
 
-              {/* GET /api/auth/user */}
+            {/* GET /api/auth/user */}
+            <section id="auth-user" className="scroll-mt-16">
+              <SectionHeading>GET /api/auth/user</SectionHeading>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mb-4">
+                Retrieve the currently authenticated user profile.
+              </p>
+
               <EndpointCard
-                id="auth-user"
                 method="GET"
                 path="/api/auth/user"
                 auth={true}
                 status={200}
-                description="Retrieve the currently authenticated user profile."
+                description="Get the authenticated user."
                 response={`{
   "user": {
     "id": 1,
@@ -415,40 +415,16 @@ export default function ApiDocsPage() {
   -H "Accept: application/json" \\
   -H "Authorization: Bearer 1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"`}
               />
+            </section>
 
-            </div>
-          </section>
-
-          {/* ── Rate Limiting ── */}
-          <section id="rate-limiting" className="scroll-mt-16">
-            <SectionHeading>Rate Limiting</SectionHeading>
-            <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-4">
-              Unauthenticated endpoints are limited to{' '}
-              <strong className="text-gray-700 dark:text-gray-300">60 requests per minute</strong> per IP.
-              Authenticated endpoints allow{' '}
-              <strong className="text-gray-700 dark:text-gray-300">300 requests per minute</strong>.
-            </p>
-            <CodeBlock
-              code={`HTTP/1.1 429 Too Many Requests
-Retry-After: 42
-X-RateLimit-Limit: 60
-X-RateLimit-Remaining: 0`}
-              title="Response — rate limit exceeded"
-            />
-            <p className="text-gray-500 dark:text-gray-400 text-sm mt-4 leading-relaxed">
-              When the limit is exceeded the API returns{' '}
-              <InlineCode>429 Too Many Requests</InlineCode> with a{' '}
-              <InlineCode>Retry-After</InlineCode> header indicating seconds until the window resets.
-            </p>
-          </section>
+          </div>
 
           {/* ── Errors ── */}
           <section id="errors" className="scroll-mt-16">
             <SectionHeading>Errors</SectionHeading>
             <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">
               All errors return a JSON body with a <InlineCode>message</InlineCode> field.
-              Validation failures (422) also include an <InlineCode>errors</InlineCode> object
-              mapping field names to arrays of error strings.
+              Validation failures (422) also include an <InlineCode>errors</InlineCode> object.
             </p>
 
             <div className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden mb-6">
@@ -478,37 +454,6 @@ X-RateLimit-Remaining: 0`}
                     {code}
                   </span>
                   <span className="text-xs text-gray-500 dark:text-gray-400">{label}</span>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* ── Changelog ── */}
-          <section id="changelog" className="scroll-mt-16">
-            <SectionHeading>Changelog</SectionHeading>
-            <div className="space-y-4">
-              {[
-                {
-                  version: '1.0.0',
-                  date: '2026-04-21',
-                  changes: ['Initial API release', 'Tools listing and detail endpoints', 'User authentication (register, login, logout, me)', 'Bearer token authentication'],
-                },
-              ].map(({ version, date, changes }) => (
-                <div key={version} className="border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
-                  <div className="bg-gray-50 dark:bg-gray-900 px-5 py-3 border-b border-gray-200 dark:border-gray-800 flex items-center gap-3">
-                    <span className="text-xs font-mono font-bold text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 px-2.5 py-1 rounded-full">
-                      v{version}
-                    </span>
-                    <span className="text-xs text-gray-400">{date}</span>
-                  </div>
-                  <ul className="px-5 py-3.5 space-y-1.5">
-                    {changes.map((change) => (
-                      <li key={change} className="text-sm text-gray-600 dark:text-gray-400 flex items-start gap-2">
-                        <span className="text-green-500 mt-1 shrink-0">•</span>
-                        {change}
-                      </li>
-                    ))}
-                  </ul>
                 </div>
               ))}
             </div>
@@ -601,7 +546,6 @@ interface QueryParam {
 }
 
 interface EndpointCardProps {
-  id: string;
   method: string;
   path: string;
   auth: boolean;
@@ -615,18 +559,15 @@ interface EndpointCardProps {
 }
 
 function EndpointCard({
-  id, method, path, auth, status, description, query, body, response, errorResponse, curl,
+  method, path, auth, status, description, query, body, response, errorResponse, curl,
 }: EndpointCardProps) {
   return (
-    <div
-      id={id}
-      className="border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden scroll-mt-20"
-    >
+    <div className="border border-gray-200 dark:border-gray-800 rounded-2xl overflow-hidden">
       {/* Header bar */}
       <div className="bg-gray-50 dark:bg-gray-900 px-5 py-3 flex items-center gap-3 border-b border-gray-200 dark:border-gray-800 flex-wrap sm:flex-nowrap">
         <MethodPill method={method} />
         <code className="text-sm font-mono text-gray-800 dark:text-gray-200">{path}</code>
-        {auth && <LockPill />}
+        {auth ? <LockPill /> : <PublicPill />}
         <span className="ml-auto text-[11px] font-mono text-gray-400 dark:text-gray-500 shrink-0">
           → {status}
         </span>
@@ -670,7 +611,7 @@ function EndpointCard({
           </div>
         )}
 
-        {/* Request body + Response side by side on md+ */}
+        {/* Request body + Response side by side */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {body ? (
             <div>
