@@ -415,6 +415,25 @@ export const tools: Tool[] = [
   { name: 'SERP Preview', slug: 'serp-preview-v5', description: 'See how a page title and description appear in Google search results.', emoji: '🔎', category: 'SEO' },
   { name: 'Color Picker', slug: 'color-picker-v5', description: 'Pick any color visually and get HEX, RGB, HSL, HSV, and CMYK values instantly.', emoji: '🎨', category: 'Color' },
   { name: 'Contrast Checker', slug: 'contrast-checker-v5', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail indicators.', emoji: '♿', category: 'Color' },
+
+  // --- New tools (2026-04-22 #10) ---
+  { name: 'Random Sentence Generator', slug: 'random-sentence-generator', description: 'Generate random meaningful sentences for placeholder text and writing practice.', emoji: '✍️', category: 'Text' },
+  { name: 'Random Paragraph Generator', slug: 'random-paragraph-generator', description: 'Generate random paragraphs of lorem ipsum text for design mockups and prototyping.', emoji: '📜', category: 'Text' },
+  { name: 'Readability Improver', slug: 'readability-improver', description: 'Simplify complex sentences and improve readability scores for any text content.', emoji: '📖', category: 'Text' },
+  { name: 'JSON Web Token Tester', slug: 'jwt-tester', description: 'Test and validate JWT tokens — decode header, payload, and verify signatures in real time.', emoji: '🎫', category: 'Developer' },
+  { name: 'Cron Schedule Checker', slug: 'cron-schedule-checker', description: 'Check cron schedules and get human-readable descriptions with the next 10 run times.', emoji: '⏰', category: 'Developer' },
+  { name: 'HTTP Request Builder', slug: 'http-request-builder', description: 'Build HTTP requests with custom headers, body, and authentication for API testing.', emoji: '📤', category: 'Developer' },
+  { name: 'Network Port Checker', slug: 'network-port-checker', description: 'Check if specific network ports are open on a remote host from your browser.', emoji: '🔌', category: 'Developer' },
+  { name: 'Icon Favicon Creator', slug: 'icon-favicon-creator', description: 'Create favicon icons from emoji, text, or SVG shapes with multiple size outputs.', emoji: '🌟', category: 'Image' },
+  { name: 'Photo Resize Tool', slug: 'photo-resize-tool', description: 'Resize photos to standard dimensions for social media, web, and mobile with preview.', emoji: '📷', category: 'Image' },
+  { name: 'SEO Tag Analyzer', slug: 'seo-tag-analyzer', description: 'Analyze and generate SEO meta tags, Open Graph, and Twitter Card tags with preview.', emoji: '🏷️', category: 'SEO' },
+  { name: 'SERP Snippet Preview', slug: 'serp-snippet-preview', description: 'Preview how your page appears in Google search snippets with character count alerts.', emoji: '🔍', category: 'SEO' },
+  { name: 'RGB HSL Color Picker', slug: 'rgb-hsl-color-picker', description: 'Pick colors visually and switch between HEX, RGB, RGBA, HSL, and HSLA formats.', emoji: '🎨', category: 'Color' },
+  { name: 'Color Contrast Auditor', slug: 'color-contrast-auditor', description: 'Audit color contrast ratios for WCAG 2.1 AA and AAA compliance with suggested fixes.', emoji: '♿', category: 'Color' },
+  { name: 'Metric Imperial Converter', slug: 'metric-imperial-converter', description: 'Convert between metric and imperial units for length, weight, and temperature.', emoji: '📏', category: 'Conversion' },
+  { name: 'Binary Decimal Hex Converter', slug: 'binary-decimal-hex-converter', description: 'Convert between binary, decimal, hexadecimal, and octal number systems instantly.', emoji: '🔢', category: 'Conversion' },
 ];
+
+export const categories
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network'] as const;
