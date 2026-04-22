@@ -4,7 +4,7 @@ schema = "v2"
 [deploy]
 builder = "docker"
 dockerfile = "Dockerfile"
-workspace = "/src"
+workspace = "/app"
 listen_inrailway = true
 
 [deploy.variables]
