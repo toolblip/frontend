@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { tools } from '@/data/tools';
 
@@ -9,11 +9,44 @@ const TABS = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Mat
 export default function DirectoryClient() {
   const [query, setQuery] = useState('');
   const [activeTab, setActiveTab] = useState<typeof TABS[number]>('All');
+  const [showTopBtn, setShowTopBtn] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(24);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Debounced search for performance
+  const [debouncedQuery, setDebouncedQuery] = useState('');
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedQuery(query), 150);
+    return () => clearTimeout(t);
+  }, [query]);
+
+  // Scroll-to-top button
+  useEffect(() => {
+    const handler = () => setShowTopBtn(window.scrollY > 600);
+    window.addEventListener('scroll', handler, { passive: true });
+    return () => window.removeEventListener('scroll', handler);
+  }, []);
+
+  const scrollToTop = useCallback(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
+  // Keyboard shortcut: / to focus search
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === '/' && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
 
   const filtered = useMemo(() => {
+    const q = debouncedQuery.trim().toLowerCase();
     return tools.filter((tool) => {
       const matchesTab = activeTab === 'All' || tool.category === activeTab;
-      const q = query.trim().toLowerCase();
       const matchesSearch =
         !q ||
         tool.name.toLowerCase().includes(q) ||
@@ -21,7 +54,7 @@ export default function DirectoryClient() {
         tool.category.toLowerCase().includes(q);
       return matchesTab && matchesSearch;
     });
-  }, [query, activeTab]);
+  }, [debouncedQuery, activeTab]);
 
   const tabCounts = useMemo(() => {
     const counts: Record<string, number> = { All: tools.length };
@@ -30,6 +63,18 @@ export default function DirectoryClient() {
     }
     return counts;
   }, []);
+
+  const displayedTools = filtered.slice(0, visibleCount);
+  const hasMore = filtered.length > visibleCount;
+
+  const loadMore = () => setVisibleCount((c) => c + 24);
+
+  const clearAll = () => {
+    setQuery('');
+    setActiveTab('All');
+    setVisibleCount(24);
+    inputRef.current?.focus();
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
@@ -46,7 +91,7 @@ export default function DirectoryClient() {
       </div>
 
       {/* Sticky controls */}
-      <div className="sticky top-0 z-10 bg-gray-50 dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800">
+      <div className="sticky top-0 z-10 bg-gray-50/95 dark:bg-gray-950/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
         <div className="max-w-6xl mx-auto px-4 py-3 space-y-3">
           {/* Search */}
           <div className="relative">
@@ -64,11 +109,12 @@ export default function DirectoryClient() {
               />
             </svg>
             <input
+              ref={inputRef}
               type="text"
-              placeholder="Search tools by name or description..."
+              placeholder="Search tools by name or description... (press / to focus)"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 text-sm bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-shadow"
+              className="w-full pl-9 pr-16 py-2.5 text-sm bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-shadow"
             />
             {query && (
               <button
@@ -81,6 +127,9 @@ export default function DirectoryClient() {
                 </svg>
               </button>
             )}
+            <kbd className="hidden sm:flex absolute right-3 top-1/2 -translate-y-1/2 items-center gap-1 text-[10px] text-gray-400 dark:text-gray-500 font-mono pointer-events-none mt-4">
+              /
+            </kbd>
           </div>
 
           {/* Category tabs */}
@@ -90,7 +139,10 @@ export default function DirectoryClient() {
               return (
                 <button
                   key={tab}
-                  onClick={() => setActiveTab(tab)}
+                  onClick={() => {
+                    setActiveTab(tab);
+                    setVisibleCount(24);
+                  }}
                   className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-medium rounded-full transition-all ${
                     activeTab === tab
                       ? 'bg-green-600 text-white shadow-sm'
@@ -99,7 +151,7 @@ export default function DirectoryClient() {
                 >
                   <span>{tab}</span>
                   <span
-                    className={`text-[10px] font-semibold px-1 py-0.5 rounded-full ${
+                    className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${
                       activeTab === tab
                         ? 'bg-green-500 text-white'
                         : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400'
@@ -117,13 +169,17 @@ export default function DirectoryClient() {
       {/* Results */}
       <div className="max-w-6xl mx-auto px-4 py-6">
         {/* Count bar */}
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-5">
           <p className="text-sm text-gray-500 dark:text-gray-400">
             Showing{' '}
-            <span className="font-medium text-gray-900 dark:text-gray-200">
-              {filtered.length}
+            <span className="font-semibold text-gray-900 dark:text-gray-200">
+              {displayedTools.length}
             </span>{' '}
-            {filtered.length === 1 ? 'tool' : 'tools'}
+            of{' '}
+            <span className="font-semibold text-gray-900 dark:text-gray-200">
+              {filtered.length}
+            </span>
+            {filtered.length === 1 ? ' tool' : ' tools'}
             {activeTab !== 'All' && (
               <span className="ml-1">
                 in <span className="font-medium text-green-600 dark:text-green-400">{activeTab}</span>
@@ -131,44 +187,78 @@ export default function DirectoryClient() {
             )}
             {query && (
               <span className="ml-1">
-                for <span className="font-medium text-gray-900 dark:text-gray-200">&ldquo;{query}&rdquo;</span>
+                for{' '}
+                <span className="font-medium text-gray-900 dark:text-gray-200">
+                  &ldquo;{query}&rdquo;
+                </span>
               </span>
             )}
           </p>
+          {(query || activeTab !== 'All') && (
+            <button
+              onClick={clearAll}
+              className="text-xs text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-medium transition-colors flex items-center gap-1"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+              Clear filters
+            </button>
+          )}
         </div>
 
         {/* Grid */}
         {filtered.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-            {filtered.map((tool) => (
-              <Link
-                key={tool.slug}
-                href={`/tools/${tool.slug}`}
-                className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-green-500 dark:hover:border-green-600 rounded-xl p-4 transition-all hover:shadow-md hover:shadow-green-100 dark:hover:shadow-green-900/20"
-              >
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl flex-shrink-0">{tool.emoji}</span>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors truncate text-sm sm:text-base">
-                        {tool.name}
-                      </h3>
-                    </div>
-                    <span className="inline-block text-[10px] font-medium uppercase tracking-wider text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-1.5 py-0.5 rounded-full mb-1">
-                      {tool.category}
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+              {displayedTools.map((tool, i) => (
+                <Link
+                  key={tool.slug}
+                  href={`/tools/${tool.slug}`}
+                  className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-green-500 dark:hover:border-green-600 rounded-xl p-4 transition-all duration-200 hover:shadow-md hover:shadow-green-100/50 dark:hover:shadow-green-900/20 hover:-translate-y-0.5"
+                  style={{ animationDelay: `${Math.min(i, 12) * 40}ms` }}
+                >
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl flex-shrink-0" role="img" aria-hidden="true">
+                      {tool.emoji}
                     </span>
-                    <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2">
-                      {tool.description}
-                    </p>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+                        <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors truncate text-sm sm:text-base">
+                          {tool.name}
+                        </h3>
+                      </div>
+                      <span className="inline-block text-[10px] font-semibold uppercase tracking-wider text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-1.5 py-0.5 rounded-full mb-1.5">
+                        {tool.category}
+                      </span>
+                      <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2">
+                        {tool.description}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </Link>
-            ))}
-          </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* Load more */}
+            {hasMore && (
+              <div className="flex justify-center mt-8">
+                <button
+                  onClick={loadMore}
+                  className="px-6 py-2.5 text-sm font-medium bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 rounded-xl hover:border-green-500 dark:hover:border-green-600 hover:text-green-600 dark:hover:text-green-400 transition-all"
+                >
+                  Load more tools
+                  <span className="ml-2 text-xs text-gray-400 dark:text-gray-500">
+                    ({filtered.length - visibleCount} remaining)
+                  </span>
+                </button>
+              </div>
+            )}
+          </>
         ) : (
           /* Empty state */
-          <div className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-2xl flex items-center justify-center mb-4">
+          <div className="flex flex-col items-center justify-center py-24 text-center">
+            <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-2xl flex items-center justify-center mb-5">
               <svg
                 className="w-8 h-8 text-gray-400"
                 fill="none"
@@ -183,27 +273,39 @@ export default function DirectoryClient() {
                 />
               </svg>
             </div>
-            <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-1">
+            <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-2">
               No tools found
             </h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs">
+            <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs mb-1">
               {query
-                ? `No results for &ldquo;${query}&rdquo;`
+                ? `No results for "${query}" in ${activeTab === 'All' ? 'any category' : activeTab}`
                 : `No tools in the ${activeTab} category yet`}
-              . Try a different search or category.
+            </p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mb-5">
+              Try a different search term or switch categories
             </p>
             <button
-              onClick={() => {
-                setQuery('');
-                setActiveTab('All');
-              }}
-              className="mt-4 text-sm text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-medium transition-colors"
+              onClick={clearAll}
+              className="px-5 py-2 text-sm font-medium bg-green-600 hover:bg-green-500 text-white rounded-lg transition-colors"
             >
-              Clear filters
+              Clear all filters
             </button>
           </div>
         )}
       </div>
+
+      {/* Scroll to top */}
+      <button
+        onClick={scrollToTop}
+        aria-label="Scroll to top"
+        className={`fixed bottom-6 right-6 w-10 h-10 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full shadow-lg flex items-center justify-center text-gray-500 hover:text-green-600 dark:hover:text-green-400 transition-all duration-300 ${
+          showTopBtn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+        }`}
+      >
+        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+        </svg>
+      </button>
     </div>
   );
 }
