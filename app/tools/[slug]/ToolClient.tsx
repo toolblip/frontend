@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { tools, type Tool } from '@/data/tools';
 import SquareCropClient from '@/components/tools/SquareCropClient';
 import CircleCropClient from '@/components/tools/CircleCropClient';
+import ShareButtons from '@/components/ShareButtons';
 
 /* ─── Copy button ──────────────────────────────────────────────────────────── */
 
@@ -487,44 +488,6 @@ const TOOL_UI_MAP: Record<string, React.ComponentType> = {
 function ToolUI({ tool }: { tool: Tool }) {
   const Component = TOOL_UI_MAP[tool.slug];
   return Component ? <Component /> : <ComingSoonUI />;
-}
-
-/* ─── Share buttons ─────────────────────────────────────────────────────────── */
-
-function ShareButtons({ toolName }: { toolName: string }) {
-  const [copied, setCopied] = useState(false);
-  const copy = () => {
-    navigator.clipboard.writeText(window.location.href).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    });
-  };
-  return (
-    <div className="flex flex-wrap gap-3">
-      <button
-        onClick={copy}
-        className="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-      >
-        {copied ? (
-          <>
-            <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-            Link copied!
-          </>
-        ) : (
-          <>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
-              />
-            </svg>
-            Share
-          </>
-        )}
-      </button>
-    </div>
-  );
 }
 
 /* ─── ToolClient ───────────────────────────────────────────────────────────── */
