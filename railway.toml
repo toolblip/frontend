@@ -1,0 +1,7 @@
+[deploy]
+healthcheckPath = "/frontend-health"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+
+[build]
+dockerfilePath = "Dockerfile.railway"
