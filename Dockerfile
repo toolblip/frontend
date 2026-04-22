@@ -7,6 +7,7 @@ COPY . .
 RUN npm run build -- --webpack
 
 FROM node:22-slim
+ARG REBUILD=2026-04-22T14:14:57Z
 WORKDIR /app
 RUN apt-get update && apt-get install -y nginx supervisor && rm -rf /var/lib/apt/lists/*
 COPY --from=builder /app/.next/standalone ./
