@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
 };
 
-const featuredTools = tools.slice(0, 11);
+const featuredTools = tools;
 
 const allCategories = Array.from(new Set(tools.map((t) => t.category).filter(Boolean))) as string[];
 
@@ -140,7 +140,10 @@ export default function HomePage() {
               </div>
             ))}
           </div>
-          <p className="text-center text-xs text-gray-400 dark:text-gray-500 mt-5">
+          <p className="text-center text-xs text-gray-400 dark:text-gray-500 mt-5 flex items-center justify-center gap-1.5">
+            <svg className="w-3.5 h-3.5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
             No servers. No uploads. Nothing leaves your browser.
           </p>
         </div>
@@ -150,15 +153,21 @@ export default function HomePage() {
       <section className="py-5 px-4 border-b border-gray-200 dark:border-gray-800">
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-wrap gap-2 justify-center">
-            {allCategories.map((cat) => (
-              <Link
-                key={cat}
-                href={`/tools?category=${cat}`}
-                className="px-3 py-1.5 text-xs sm:text-sm font-medium bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 hover:border-green-500 dark:hover:border-green-600 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 text-gray-600 dark:text-gray-300 rounded-full transition-all capitalize"
-              >
-                {cat}
-              </Link>
-            ))}
+            {allCategories.map((cat) => {
+              const count = tools.filter((t) => t.category === cat).length;
+              return (
+                <Link
+                  key={cat}
+                  href={`/tools?category=${cat}`}
+                  className="px-3 py-1.5 text-xs sm:text-sm font-medium bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 hover:border-green-500 dark:hover:border-green-600 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 text-gray-600 dark:text-gray-300 rounded-full transition-all capitalize flex items-center gap-1.5"
+                >
+                  <span>{cat}</span>
+                  <span className="text-[10px] bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded-full text-gray-400 dark:text-gray-500 font-normal">
+                    {count}
+                  </span>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
