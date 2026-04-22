@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background-color: #16a34a;
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid #22c55e;
+  outline-offset: 2px;
+}

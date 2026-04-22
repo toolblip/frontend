@@ -1,0 +1,11 @@
+[railway]
+schema = "v2"
+
+[deploy]
+builder = "docker"
+dockerfile = "Dockerfile"
+workspace = "/src"
+listen_inrailway = true
+
+[deploy.variables]
+PORT = "3000"

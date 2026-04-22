@@ -1,0 +1,29 @@
+---
+interface Props {
+  name: string;
+  slug: string;
+  description: string;
+  emoji: string;
+  isNew?: boolean;
+}
+
+const { name, slug, description, emoji, isNew = false } = Astro.props;
+---
+
+<a
+  href={`/tools/${slug}/`}
+  class="group flex flex-col gap-3 bg-gray-900 hover:bg-gray-800 border border-gray-800 hover:border-gray-700 rounded-xl p-5 transition-all"
+>
+  <div class="flex items-start justify-between">
+    <span class="text-3xl" role="img" aria-label={name}>{emoji}</span>
+    {isNew && (
+      <span class="text-xs font-medium bg-green-500/10 text-green-400 border border-green-500/20 px-2 py-0.5 rounded-full">
+        New
+      </span>
+    )}
+  </div>
+  <div>
+    <h3 class="font-semibold text-white group-hover:text-green-400 transition-colors">{name}</h3>
+    <p class="text-sm text-gray-400 mt-1 leading-snug">{description}</p>
+  </div>
+</a>

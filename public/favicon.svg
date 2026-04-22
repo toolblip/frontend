@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" rx="8" fill="#1a1a1a"/>
+  <!-- Left bars (heartbeat) -->
+  <rect x="2" y="18" width="2" height="6" rx="1" fill="#58D65D"/>
+  <rect x="6" y="12" width="2" height="12" rx="1" fill="#58D65D"/>
+  <rect x="10" y="8" width="2" height="16" rx="1" fill="#58D65D"/>
+  <rect x="14" y="14" width="2" height="10" rx="1" fill="#58D65D"/>
+  <!-- Waveform pulse inside square -->
+  <path d="M16 20 L18 12 L20 20 L22 16 L24 18" stroke="#58D65D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>

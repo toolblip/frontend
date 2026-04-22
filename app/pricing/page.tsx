@@ -1,0 +1,95 @@
+import type { Metadata } from 'next';
+import PricingClient from './PricingClient';
+
+export const metadata: Metadata = {
+  title: 'Pricing | Toolblip',
+  description:
+    'Upgrade to Toolblip for an ad-free experience. Free, Starter ($4.99/mo), Ultra ($19.99/mo), and Max ($49.99/mo) plans with no ads, cloud storage, and team features.',
+  openGraph: {
+    title: 'Pricing | Toolblip',
+    description: 'Upgrade to Toolblip for an ad-free experience. Plans starting at $4.99/month.',
+    url: 'https://toolblip.com/pricing',
+    siteName: 'Toolblip',
+    images: [
+      {
+        url: '/og-pricing.png',
+        width: 1200,
+        height: 630,
+        alt: 'Toolblip Pricing',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Pricing | Toolblip',
+    description: 'Upgrade to Toolblip for an ad-free experience. Plans starting at $4.99/month.',
+    images: ['/og-pricing.png'],
+  },
+};
+
+const faqSchema: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: 'Can I cancel my subscription anytime?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yes. You can cancel anytime from your account page. Your access continues until the end of the billing period.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Is there a free trial?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: "Toolblip Free lets you try all tools at no cost. Upgrade when you're ready for an ad-free experience with more storage and features.",
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'How does yearly billing work?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Yearly plans are billed as a single payment for 12 months at a 20% discount — equivalent to 10 months of the monthly price.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What payment methods do you accept?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'We accept all major credit and debit cards via Stripe. Subscriptions are billed monthly or annually.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'What is cloud storage used for?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Cloud storage lets you save processed files and results between sessions. All tools process files client-side by default.',
+      },
+    },
+    {
+      '@type': 'Question',
+      name: 'Can I share my plan with team members?',
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: 'Ultra plans include 3 team seats and Max plans include 10 team seats, allowing multiple users to collaborate under one account.',
+      },
+    },
+  ],
+};
+
+export default function PricingPage() {
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <PricingClient />
+    </>
+  );
+}
