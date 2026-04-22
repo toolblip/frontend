@@ -4,8 +4,8 @@ import CodeBlock from '@/components/ui/CodeBlock';
 
 // ─── Config ────────────────────────────────────────────────────────────────
 
-const BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || 'https://toolblip-api-production.up.railway.app';
+const BASE_URL = 'https://api.toolblip.com';
+const FALLBACK_URL = 'https://toolblip-api-production.up.railway.app';
 
 const API_VERSION = 'v1';
 
@@ -91,9 +91,18 @@ export default function ApiDocsPage() {
                 <code className="block text-sm font-mono text-green-600 dark:text-green-400 break-all">
                   {BASE_URL}
                 </code>
-                <p className="text-[10px] text-gray-400 mt-2">
-                  (migrates to api.toolblip.com once SSL is ready)
+                <p className="text-[10px] text-green-500 mt-1.5 flex items-center gap-1">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                  Production — SSL ✅
                 </p>
+                <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">
+                    Legacy fallback
+                  </p>
+                  <code className="block text-[11px] font-mono text-gray-400 break-all">
+                    {FALLBACK_URL}
+                  </code>
+                </div>
               </div>
             </div>
 
@@ -196,12 +205,13 @@ export default function ApiDocsPage() {
               <InlineCode>Authorization</InlineCode> header on every protected request:
             </p>
             <CodeBlock
-              code="Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx"
+              code="Authorization: Bearer 1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
               title="Header — all authenticated requests"
             />
             <div className="mt-4 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl text-xs text-amber-700 dark:text-amber-400">
               <strong>Keep your token secret.</strong> Never expose it in client-side code or
-              public repositories. Tokens are revoked when you log out.
+              public repositories. Store it securely (e.g. server-side session or encrypted storage).
+              Tokens are revoked when you log out — if compromised, log out immediately.
             </div>
           </section>
 
@@ -244,7 +254,7 @@ export default function ApiDocsPage() {
         "description": "AI coding assistant by Anthropic",
         "category": "AI",
         "is_pro": false,
-        "emoji": "\\ud83e\\udd16",
+        "emoji": "🤖",
         "created_at": "2026-01-01T00:00:00Z",
         "updated_at": "2026-01-01T00:00:00Z"
       }
@@ -277,7 +287,7 @@ export default function ApiDocsPage() {
     "description": "AI coding assistant by Anthropic",
     "category": "AI",
     "is_pro": false,
-    "emoji": "\\ud83e\\udd16",
+    "emoji": "🤖",
     "created_at": "2026-01-01T00:00:00Z",
     "updated_at": "2026-01-01T00:00:00Z"
   }
@@ -319,7 +329,7 @@ export default function ApiDocsPage() {
     "email": "harun@example.com",
     "is_pro": false
   },
-  "token": "tb_live_xxxxxxxxxxxxxxxx"
+  "token": "1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 }`}
                 errorResponse={`{
   "message": "The given data was invalid.",
@@ -358,7 +368,7 @@ export default function ApiDocsPage() {
     "email": "harun@example.com",
     "is_pro": false
   },
-  "token": "tb_live_xxxxxxxxxxxxxxxx"
+  "token": "1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 }`}
                 errorResponse={`{
   "message": "Invalid credentials"
@@ -382,7 +392,7 @@ export default function ApiDocsPage() {
 }`}
                 curl={`curl -X POST "${BASE_URL}/api/auth/logout" \\
   -H "Accept: application/json" \\
-  -H "Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx"`}
+  -H "Authorization: Bearer 1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"`}
               />
 
               {/* GET /api/auth/user */}
@@ -403,7 +413,7 @@ export default function ApiDocsPage() {
 }`}
                 curl={`curl "${BASE_URL}/api/auth/user" \\
   -H "Accept: application/json" \\
-  -H "Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx"`}
+  -H "Authorization: Bearer 1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"`}
               />
 
             </div>
@@ -678,7 +688,7 @@ function EndpointCard({
                   Headers
                 </p>
               </div>
-              <CodeBlock code="Authorization: Bearer tb_live_xxxxxxxxxxxxxxxx" />
+              <CodeBlock code="Authorization: Bearer 1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" />
             </div>
           ) : null}
 
