@@ -4,7 +4,7 @@ schema = "v2"
 [deploy]
 builder = "docker"
 dockerfile = "Dockerfile"
-healthcheckPath = "/frontend-health"
+healthcheckPath = "/api/frontend-health"
 healthcheckPort = 3000
 listen_inrailway = true
 

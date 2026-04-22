@@ -30,6 +30,8 @@ export const tools: Tool[] = [
   { name: 'Base64 Encode / Decode', slug: 'base64', description: 'Free online Base64 encoder and decoder. Encode text to Base64 or decode Base64 strings instantly. Convert files and images to data URLs. No signup, runs entirely in your browser.', emoji: '🔐', category: 'Encoder' },
   { name: 'URL Encode / Decode', slug: 'url-encode', description: 'Encode and decode URLs or URL components for safe use in links.', emoji: '🔗', category: 'Encoder' },
   { name: 'Image Cropper', slug: 'image-cropper', description: 'Crop images to any ratio or preset size — passport, 16:9, square, and more.', emoji: '✂️', category: 'Image' },
+  { name: 'Square Crop', slug: 'square-crop', description: 'Crop images to perfect squares for Instagram, Facebook, Twitter, and more. No upload required.', emoji: '◻️', category: 'Image' },
+  { name: 'Circle Crop', slug: 'circle-crop', description: 'Crop images into circles, ovals, and rounded squares. Transparent PNG output. No upload required.', emoji: '⭕', category: 'Image' },
   { name: 'Image Format Converter', slug: 'image-format-converter', description: 'Convert images between JPEG, PNG, WebP, and AVIF with quality control and side-by-side preview.', emoji: '🖼️', category: 'Image' },
   { name: 'Favicon Generator', slug: 'favicon-generator', description: 'Free online favicon generator. Create favicon.ico and app icons from any image, logo, or emoji. Get ICO, PNG, and SVG in multiple sizes. No signup.', emoji: '🌐', category: 'Image' },
   { name: 'Image Resizer', slug: 'image-resizer', description: 'Free online image resizer. Resize images to standard dimensions for social media, thumbnails, and OG images. Batch resize with aspect ratio lock. No upload needed.', emoji: '📐', category: 'Image' },

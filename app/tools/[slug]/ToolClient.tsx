@@ -3,6 +3,8 @@
 import { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { tools, type Tool } from '@/data/tools';
+import SquareCropClient from '@/components/tools/SquareCropClient';
+import CircleCropClient from '@/components/tools/CircleCropClient';
 
 /* ─── Copy button ──────────────────────────────────────────────────────────── */
 
@@ -478,6 +480,8 @@ const TOOL_UI_MAP: Record<string, React.ComponentType> = {
   'base64': Base64UI,
   'url-encode': URLEncodeUI,
   'json-formatter': JSONFormatterUI,
+  'square-crop': SquareCropClient,
+  'circle-crop': CircleCropClient,
 };
 
 function ToolUI({ tool }: { tool: Tool }) {
