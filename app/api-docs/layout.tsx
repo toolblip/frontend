@@ -1,24 +1,13 @@
 import type { Metadata } from 'next';
-import ApiDocsPage from './page';
 
 export const metadata: Metadata = {
   title: 'API Docs | Toolblip',
-  description:
-    'Toolblip REST API reference. Browse public developer tool endpoints, register for a Bearer token, and manage authenticated user accounts.',
+  description: 'Toolblip REST API reference. Browse developer tools, manage user accounts, and authenticate with Bearer tokens. Free, public read endpoints — no account required.',
   openGraph: {
     title: 'API Docs | Toolblip',
-    description:
-      'Toolblip REST API reference. Browse public developer tool endpoints, register for a Bearer token, and manage authenticated user accounts.',
+    description: 'Toolblip REST API reference. Browse developer tools, manage user accounts, and authenticate with Bearer tokens.',
     url: 'https://toolblip.com/api-docs',
     siteName: 'Toolblip',
   },
-  twitter: {
-    card: 'summary',
-    title: 'API Docs | Toolblip',
-    description: 'Toolblip REST API reference. Public tool endpoints, Bearer token auth, and user account management.',
-  },
+  twitter: { card: 'summary', title: 'API Docs | Toolblip', description: 'Toolblip REST API reference. Free public endpoints for browsing developer tools.' },
 };
-
-export default function ApiDocsLayout() {
-  return <ApiDocsPage />;
-}
