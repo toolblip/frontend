@@ -379,6 +379,25 @@ export const tools: Tool[] = [
   { name: 'Keyword Difficulty Checker', slug: 'keyword-difficulty-checker', description: 'Estimate SEO difficulty for keywords based on search result competition analysis.', emoji: '📊', category: 'SEO' },
   { name: 'Page Speed Preview', slug: 'page-speed-preview', description: 'Estimate page load time and size breakdown for any URL on slow connections.', emoji: '⚡', category: 'SEO' },
   { name: 'HSL to RGB', slug: 'hsl-to-rgb', description: 'Convert HSL color values to RGB and HEX with a live color preview swatch.', emoji: '🎨', category: 'Color' },
+
+  // --- New tools (2026-04-22 #8 - additional categories) ---
+  { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-generator-v4', description: 'Generate lorem ipsum placeholder text with customizable word count, paragraphs, and starting phrase.', emoji: '📜', category: 'Text' },
+  { name: 'Grammar Checker', slug: 'grammar-checker-v4', description: 'Check grammar and spelling errors with one-click fixes and detailed explanations.', emoji: '✅', category: 'Text' },
+  { name: 'Readability Score', slug: 'readability-score-v4', description: 'Calculate Flesch-Kincaid, SMOG, ARI, and Coleman-Liau readability grades for any text.', emoji: '📊', category: 'Text' },
+  { name: 'Text Sorter', slug: 'text-sorter-v4', description: 'Sort lines alphabetically, by length, numerically, reverse, or in random order.', emoji: '📋', category: 'Text' },
+  { name: 'Regex Tester', slug: 'regex-tester-v4', description: 'Test regex patterns with real-time match highlighting, capture groups, and replacements.', emoji: '🔍', category: 'Developer' },
+  { name: 'JWT Decoder', slug: 'jwt-decoder-v4', description: 'Decode JWT tokens and inspect header, payload, expiration, and signature segments.', emoji: '🎫', category: 'Developer' },
+  { name: 'Cron Expression Generator', slug: 'cron-generator-v4', description: 'Build cron schedules visually with point-and-click editor and human-readable output.', emoji: '🕐', category: 'Developer' },
+  { name: 'HTTP Headers Viewer', slug: 'http-headers-viewer-v4', description: 'View and debug HTTP request and response headers for any URL with timing info.', emoji: '📦', category: 'Developer' },
+  { name: 'Port Scanner', slug: 'port-scanner-v4', description: 'Scan common ports on a host to identify open services and running applications.', emoji: '🚪', category: 'Developer' },
+  { name: 'Favicon Generator', slug: 'favicon-generator-v4', description: 'Create favicon.ico, PNG, and SVG icons from any image or emoji with one click.', emoji: '🌐', category: 'Image' },
+  { name: 'Image Resizer', slug: 'image-resizer-v4', description: 'Resize images to exact pixel dimensions with aspect ratio lock and batch support.', emoji: '📐', category: 'Image' },
+  { name: 'Meta Tag Generator', slug: 'meta-tag-generator-v4', description: 'Generate SEO meta tags, Open Graph, and Twitter Card tags with live preview.', emoji: '🏷️', category: 'SEO' },
+  { name: 'SERP Preview', slug: 'serp-preview-v4', description: 'See how a page title and description appear in Google search results.', emoji: '🔎', category: 'SEO' },
+  { name: 'Color Picker', slug: 'color-picker-v4', description: 'Pick any color visually and get HEX, RGB, HSL, HSV, and CMYK values instantly.', emoji: '🎨', category: 'Color' },
+  { name: 'Contrast Checker', slug: 'contrast-checker-v4', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail indicators.', emoji: '♿', category: 'Color' },
+  { name: 'Unit Converter', slug: 'unit-converter-v4', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
+  { name: 'Number Base Converter', slug: 'number-base-converter-v4', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly.', emoji: '🔢', category: 'Conversion' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network'] as const;
