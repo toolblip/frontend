@@ -6,9 +6,10 @@ import ToolClient from './ToolClient';
 export async function generateMetadata({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
-  const tool = tools.find(t => t.slug === params.slug);
+  const { slug } = await params;
+  const tool = tools.find(t => t.slug === slug);
   if (!tool) return { title: 'Tool Not Found' };
 
   return {
@@ -29,12 +30,13 @@ export async function generateMetadata({
   };
 }
 
-export default function ToolPage({
+export default async function ToolPage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  const tool = tools.find(t => t.slug === params.slug);
+  const { slug } = await params;
+  const tool = tools.find(t => t.slug === slug);
 
   if (!tool) {
     notFound();
