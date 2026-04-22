@@ -18,7 +18,7 @@ RUN npm run build -- --webpack
 
 # Start standalone server
 ENV HOST=0.0.0.0
-ENV PORT=8080
-EXPOSE 8080
+ENV PORT=3000
+EXPOSE 3000
 CMD ["node", ".next/standalone/server.js"]
 # Force rebuild Wed Apr 22 16:49:48 +06 2026
