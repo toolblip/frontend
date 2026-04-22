@@ -434,6 +434,4 @@ export const tools: Tool[] = [
   { name: 'Binary Decimal Hex Converter', slug: 'binary-decimal-hex-converter', description: 'Convert between binary, decimal, hexadecimal, and octal number systems instantly.', emoji: '🔢', category: 'Conversion' },
 ];
 
-export const categories
-
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network'] as const;

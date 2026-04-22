@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { tools } from '@/data/tools';
-import ToolClient from './ToolClient';
+import ToolDetail from './ToolDetail';
 
 export async function generateMetadata({
   params,
@@ -42,5 +42,5 @@ export default async function ToolPage({
     notFound();
   }
 
-  return <ToolClient tool={tool} />;
+  return <ToolDetail tool={tool} />;
 }
