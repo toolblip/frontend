@@ -4,3 +4,5 @@ schema = "v2"
 [deploy]
 builder = "docker"
 dockerfile = "Dockerfile"
+healthcheckPath = "/"
+healthcheckPort = 8080
