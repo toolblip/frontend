@@ -19,3 +19,4 @@ RUN npm run build -- --webpack
 # Start standalone server
 ENV HOST=0.0.0.0
 CMD ["node", ".next/standalone/server.js"]
+# Force rebuild Wed Apr 22 16:49:48 +06 2026
