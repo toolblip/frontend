@@ -11,3 +11,7 @@ export const metadata: Metadata = {
   },
   twitter: { card: 'summary', title: 'Account | Toolblip', description: 'Manage your Toolblip subscription, billing, and profile settings.' },
 };
+
+export default function AccountLayout({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
+}

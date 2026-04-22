@@ -11,3 +11,7 @@ export const metadata: Metadata = {
   },
   twitter: { card: 'summary', title: 'API Docs | Toolblip', description: 'Toolblip REST API reference. Free public endpoints for browsing developer tools.' },
 };
+
+export default function ApiDocsLayout({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
+}
