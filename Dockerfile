@@ -17,4 +17,5 @@ COPY . .
 RUN npm run build -- --webpack
 
 # Start standalone server
+ENV HOST=0.0.0.0
 CMD ["node", ".next/standalone/server.js"]
