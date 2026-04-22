@@ -58,19 +58,22 @@ export default function HomePage() {
       {/* Hero */}
       <section className="py-14 px-4 text-center border-b border-gray-200 dark:border-gray-800 bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-gray-900">
         <div className="max-w-2xl mx-auto">
+          <div className="inline-flex items-center gap-2 bg-green-50 dark:bg-green-950/50 border border-green-200 dark:border-green-800/50 rounded-full px-3 py-1 mb-5">
+            <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+            <span className="text-xs font-medium text-green-700 dark:text-green-400">{tools.length}+ free tools — no signup needed</span>
+          </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight leading-tight">
-            The tools you actually use,{' '}
-            <span className="text-green-600 dark:text-green-400">free and instant.</span>
+            Browser-based tools,{' '}
+            <span className="text-green-600 dark:text-green-400">done right.</span>
           </h1>
           <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400 mb-8 max-w-lg mx-auto leading-relaxed">
-            No sign-up. No uploads. No waiting. Everything runs in your browser, right here.
+            JSON formatters, code generators, unit converters, and more. Everything client-side — your data never goes anywhere.
           </p>
           <div className="flex flex-wrap justify-center gap-2 sm:gap-3 text-xs sm:text-sm">
             {[
-              { label: 'Private by default' },
-              { label: 'Zero upload to servers' },
-              { label: 'Works offline' },
-              { label: 'No ads' },
+              { label: 'Private — data stays in your browser' },
+              { label: 'Instant — no server roundtrips' },
+              { label: 'Free — no signup or paywall' },
             ].map(({ label }) => (
               <span
                 key={label}
@@ -89,24 +92,23 @@ export default function HomePage() {
           <p className="text-center text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-5">
             How it works
           </p>
-          <div className="flex items-center justify-center gap-4 sm:gap-8 flex-wrap">
+          <div className="flex items-center justify-center gap-3 sm:gap-6 flex-wrap">
             {[
               {
                 num: '01',
                 icon: (
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 ),
                 title: 'Pick a tool',
-                desc: `${tools.length}+ free tools at your fingertips`,
+                desc: `${tools.length}+ tools for developers`,
               },
               {
                 num: '02',
                 icon: (
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
                 ),
                 title: 'Paste your data',
@@ -116,15 +118,15 @@ export default function HomePage() {
                 num: '03',
                 icon: (
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 ),
                 title: 'Get your result',
-                desc: 'Instant, in your browser tab',
+                desc: 'Instant, right in your tab',
               },
             ].map(({ num, icon, title, desc }) => (
-              <div key={num} className="flex items-center gap-4 sm:gap-6">
-                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-2 sm:gap-3 text-center sm:text-left min-w-[140px]">
+              <div key={num} className="flex items-center gap-3 sm:gap-5">
+                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-2 sm:gap-3 text-center sm:text-left">
                   <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400 flex items-center justify-center">
                     {icon}
                   </div>
@@ -175,6 +177,9 @@ export default function HomePage() {
       {/* Why Toolblip */}
       <section className="py-8 px-4 border-b border-gray-200 dark:border-gray-800">
         <div className="max-w-5xl mx-auto">
+          <p className="text-center text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-4">
+            Why Toolblip?
+          </p>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
             {[
               {
@@ -185,8 +190,8 @@ export default function HomePage() {
                 ),
                 iconBg: 'bg-green-100 dark:bg-green-900/40',
                 iconColor: 'text-green-600 dark:text-green-400',
-                title: 'Private',
-                desc: 'Your data never leaves your browser. No servers, no tracking, no logs.',
+                title: '100% Private',
+                desc: 'Your data never leaves your browser. No servers, no tracking, no logs — ever.',
               },
               {
                 icon: (
@@ -194,10 +199,10 @@ export default function HomePage() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 ),
-                iconBg: 'bg-yellow-100 dark:bg-yellow-900/40',
-                iconColor: 'text-yellow-600 dark:text-yellow-400',
-                title: 'Fast',
-                desc: 'Runs instantly in your browser tab. No waiting for server responses.',
+                iconBg: 'bg-amber-100 dark:bg-amber-900/40',
+                iconColor: 'text-amber-600 dark:text-amber-400',
+                title: 'Lightning Fast',
+                desc: 'Everything runs instantly in your browser tab. No waiting for server responses.',
               },
               {
                 icon: (
@@ -207,13 +212,13 @@ export default function HomePage() {
                 ),
                 iconBg: 'bg-blue-100 dark:bg-blue-900/40',
                 iconColor: 'text-blue-600 dark:text-blue-400',
-                title: 'Free',
-                desc: 'No signup, no paywall, no limits. Every tool is free, forever.',
+                title: 'Completely Free',
+                desc: 'No signup, no paywall, no limits. Open the page and start using tools immediately.',
               },
             ].map(({ icon, iconBg, iconColor, title, desc }) => (
               <div
                 key={title}
-                className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 text-center"
+                className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 text-center hover:border-green-200 dark:hover:border-green-800 transition-colors"
               >
                 <div className={`w-10 h-10 ${iconBg} ${iconColor} rounded-lg flex items-center justify-center mx-auto mb-2`}>
                   {icon}
