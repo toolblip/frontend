@@ -343,6 +343,27 @@ export const tools: Tool[] = [
   { name: 'YAML to TOML', slug: 'yaml-to-toml-v2', description: 'Convert YAML to TOML format with validation and pretty-print output.', emoji: '🔄', category: 'Conversion' },
   { name: 'TOML to JSON', slug: 'toml-to-json-v2', description: 'Convert TOML config files to JSON with instant validation.', emoji: '🔄', category: 'Conversion' },
   { name: 'SQL to JSON', slug: 'sql-to-json-v2', description: 'Convert SQL SELECT query results into formatted JSON arrays.', emoji: '🗄️', category: 'Conversion' },
+
+  // --- New tools (2026-04-22 #6) ---
+  { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-generator-v3', description: 'Generate customizable lorem ipsum text with options for paragraphs, sentences, words, and starting phrase.', emoji: '📜', category: 'Text' },
+  { name: 'Grammar Checker', slug: 'grammar-checker-v3', description: 'Check grammar and spelling with one-click fixes, explanations, and style suggestions.', emoji: '✅', category: 'Text' },
+  { name: 'Readability Score', slug: 'readability-score-v3', description: 'Calculate readability grades using Flesch-Kincaid, SMOG, ARI, and Coleman-Liau indices.', emoji: '📊', category: 'Text' },
+  { name: 'Text Sorter', slug: 'text-sorter-v3', description: 'Sort lines of text alphabetically, by length, numerically, or in random order.', emoji: '📋', category: 'Text' },
+  { name: 'Regex Tester', slug: 'regex-tester-v3', description: 'Test regex patterns with real-time match highlighting, groups, and replacements.', emoji: '🔍', category: 'Developer' },
+  { name: 'JWT Decoder', slug: 'jwt-decoder-v3', description: 'Decode JWT tokens and inspect header, payload, expiration, and signature segments.', emoji: '🎫', category: 'Developer' },
+  { name: 'Cron Expression Generator', slug: 'cron-generator-v3', description: 'Build cron schedules visually with a point-and-click editor and human-readable preview.', emoji: '🕐', category: 'Developer' },
+  { name: 'HTTP Headers Viewer', slug: 'http-headers-viewer-v3', description: 'View and debug HTTP request and response headers for any URL with timing info.', emoji: '📦', category: 'Developer' },
+  { name: 'Port Scanner', slug: 'port-scanner-v3', description: 'Scan common ports on a host to identify open services and running applications.', emoji: '🚪', category: 'Developer' },
+  { name: 'Favicon Generator', slug: 'favicon-generator-v3', description: 'Create favicon.ico, PNG, and SVG icons from any image or emoji with one click.', emoji: '🌐', category: 'Image' },
+  { name: 'Image Resizer', slug: 'image-resizer-v3', description: 'Resize images to exact pixel dimensions with aspect ratio lock and batch support.', emoji: '📐', category: 'Image' },
+  { name: 'Meta Tag Generator', slug: 'meta-tag-generator-v3', description: 'Generate SEO meta tags, Open Graph, and Twitter Card tags with live preview.', emoji: '🏷️', category: 'SEO' },
+  { name: 'SERP Preview', slug: 'serp-preview-v3', description: 'See how a page title and description appear in Google search results.', emoji: '🔎', category: 'SEO' },
+  { name: 'Color Picker', slug: 'color-picker-v3', description: 'Pick any color visually and get HEX, RGB, HSL, HSV, and CMYK values instantly.', emoji: '🎨', category: 'Color' },
+  { name: 'Contrast Checker', slug: 'contrast-checker-v3', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail indicators.', emoji: '♿', category: 'Color' },
+  { name: 'Unit Converter', slug: 'unit-converter-v3', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
+  { name: 'Number Base Converter', slug: 'number-base-converter-v3', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly.', emoji: '🔢', category: 'Conversion' },
 ];
+
+export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network'] as const;
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network'] as const;
