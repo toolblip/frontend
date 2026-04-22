@@ -1,0 +1,9 @@
+[phases.setup]
+nixpacks = "nodejs_22"
+
+[phases.build]
+# Force webpack for Next.js 16 (Turbopack has @/ alias bugs)
+build = "npm ci --omit=dev && npm run build -- --webpack"
+
+[start]
+start = "node .next/standalone/server.js"
