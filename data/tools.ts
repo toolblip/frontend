@@ -432,6 +432,25 @@ export const tools: Tool[] = [
   { name: 'Color Contrast Auditor', slug: 'color-contrast-auditor', description: 'Audit color contrast ratios for WCAG 2.1 AA and AAA compliance with suggested fixes.', emoji: '♿', category: 'Color' },
   { name: 'Metric Imperial Converter', slug: 'metric-imperial-converter', description: 'Convert between metric and imperial units for length, weight, and temperature.', emoji: '📏', category: 'Conversion' },
   { name: 'Binary Decimal Hex Converter', slug: 'binary-decimal-hex-converter', description: 'Convert between binary, decimal, hexadecimal, and octal number systems instantly.', emoji: '🔢', category: 'Conversion' },
+
+  // --- New tools (2026-04-22 #11 - additional Text/Dev/SEO/Color) ---
+  { name: 'Text Statistics Calculator', slug: 'text-statistics-calculator', description: 'Analyze text for word count, sentence count, avg word length, character breakdown, and density.', emoji: '📊', category: 'Text' },
+  { name: 'Grammar Checker V2', slug: 'grammar-checker-v2', description: 'Check grammar, spelling, and punctuation with detailed explanations and one-click corrections.', emoji: '✅', category: 'Text' },
+  { name: 'Readability Improver', slug: 'readability-improver', description: 'Simplify complex sentences and improve readability scores for any written content.', emoji: '📖', category: 'Text' },
+  { name: 'Text Redundancy Checker', slug: 'text-redundancy-checker', description: 'Detect repeated words, filler phrases, and unnecessary redundancy in text.', emoji: '🔁', category: 'Text' },
+  { name: 'Sentence Counter', slug: 'sentence-counter', description: 'Count sentences, words, and characters with average sentence length analysis.', emoji: '📝', category: 'Text' },
+  { name: 'Text Combinations Generator', slug: 'text-combinations-generator', description: 'Generate all two-word and three-word combinations from a list of words.', emoji: '🔤', category: 'Text' },
+  { name: 'English Collocations Checker', slug: 'english-collocations-checker', description: 'Check common English word pairings and phrases for natural-sounding writing.', emoji: '📖', category: 'Text' },
+  { name: 'Regex Pattern Generator V2', slug: 'regex-pattern-generator-v2', description: 'Generate regex patterns from natural language for emails, URLs, phones, and more.', emoji: '🔍', category: 'Developer' },
+  { name: 'JWT Token Tester', slug: 'jwt-token-tester', description: 'Test and validate JWT tokens — decode header, payload, and verify signatures in real time.', emoji: '🎫', category: 'Developer' },
+  { name: 'Cron Schedule Checker', slug: 'cron-schedule-checker', description: 'Check cron schedules and get human-readable descriptions with the next 10 run times.', emoji: '⏰', category: 'Developer' },
+  { name: 'HTTP Request Builder', slug: 'http-request-builder', description: 'Build HTTP requests with custom headers, body, and authentication for API testing.', emoji: '📤', category: 'Developer' },
+  { name: 'Favicon Generator V2', slug: 'favicon-generator-v2', description: 'Create favicon.ico and app icons from any image with multiple size outputs.', emoji: '🌐', category: 'Image' },
+  { name: 'Image Resizer V2', slug: 'image-resizer-v2', description: 'Resize images to exact pixel dimensions with aspect ratio lock and batch support.', emoji: '📐', category: 'Image' },
+  { name: 'SEO Meta Tag Analyzer', slug: 'seo-meta-tag-analyzer', description: 'Analyze and optimize SEO meta tags, Open Graph, and Twitter Card tags with suggestions.', emoji: '🏷️', category: 'SEO' },
+  { name: 'SERP Snippet Preview', slug: 'serp-snippet-preview', description: 'Preview how your page appears in Google search snippets with character count alerts.', emoji: '🔍', category: 'SEO' },
+  { name: 'Color Picker V2', slug: 'color-picker-v2', description: 'Pick any color visually and get HEX, RGB, HSL, HSV, and CMYK values instantly.', emoji: '🎨', category: 'Color' },
+  { name: 'Color Contrast Auditor', slug: 'color-contrast-auditor', description: 'Audit color contrast ratios for WCAG 2.1 AA and AAA compliance with suggested fixes.', emoji: '♿', category: 'Color' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network'] as const;
