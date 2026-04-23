@@ -889,6 +889,23 @@ export const tools: Tool[] = [
   { name: 'Color Luminance Checker', slug: 'color-luminance-checker', description: 'Check relative luminance and brightness of any color to predict contrast on light or dark backgrounds.', emoji: '💡', category: 'Color' },
   { name: 'Color Temperature Adjuster', slug: 'color-temperature-adjuster', description: 'Shift a color warmer (yellow/red) or cooler (blue) by adjusting its temperature value.', emoji: '🎨', category: 'Color' },
   { name: 'Angle Unit Converter', slug: 'angle-unit-converter', description: 'Convert angles between degrees, radians, gradians, and arcminutes instantly.', emoji: '📐', category: 'Conversion' },
+
+  // --- New tools (2026-04-24 #5) ---  
+  { name: 'Word Scramble Generator', slug: 'word-scramble-generator', description: 'Scramble letters in any word to create fun anagrams and puzzles.', emoji: '🔀', category: 'Text' },
+  { name: 'English Collocations Checker', slug: 'collocations-checker', description: 'Check if word pairs form natural English collocations and get alternatives.', emoji: '📖', category: 'Text' },
+  { name: 'Paragraph Counter', slug: 'paragraph-counter', description: 'Count paragraphs, sentences, and avg words per paragraph in any text.', emoji: '📝', category: 'Text' },
+  { name: 'CSV Generator', slug: 'csv-generator', description: 'Generate sample CSV data from a header row with customizable columns and row count.', emoji: '📊', category: 'Developer' },
+  { name: 'Cron Schedule Validator', slug: 'cron-validator', description: 'Validate cron expressions and see the next 10 scheduled run times instantly.', emoji: '⏰', category: 'Developer' },
+  { name: 'UUID Normalizer', slug: 'uuid-normalizer', description: 'Normalize UUID formats between v1, v4, and v7 with uppercase or lowercase output.', emoji: '🆔', category: 'Developer' },
+  { name: 'Mock API Response Generator', slug: 'mock-api-generator', description: 'Generate mock JSON API responses with customizable status codes, delays, and payloads.', emoji: '🔧', category: 'Developer' },
+  { name: 'PNG Compressor', slug: 'png-compressor', description: 'Compress PNG images to reduce file size while preserving transparency and quality.', emoji: '🗜️', category: 'Image' },
+  { name: 'Image Enlarger', slug: 'image-enlarger', description: 'Enlarge small images using AI-style upscaling directly in your browser.', emoji: '🔍', category: 'Image' },
+  { name: 'Backlink Analyzer', slug: 'backlink-analyzer', description: 'Analyze backlink profiles and see domain authority estimates for any URL.', emoji: '🔗', category: 'SEO' },
+  { name: 'Page Title Checker', slug: 'page-title-checker', description: 'Check page title length and quality for Google search result display optimization.', emoji: '🏷️', category: 'SEO' },
+  { name: 'RGBA to HEX Converter', slug: 'rgba-to-hex', description: 'Convert RGBA color values to HEX with alpha transparency support and live preview.', emoji: '🎨', category: 'Color' },
+  { name: 'Pressure Unit Converter', slug: 'pressure-converter', description: 'Convert between pascals, bars, PSI, atmospheres, and mmHg pressure units instantly.', emoji: '🌡️', category: 'Conversion' },
+  { name: 'Speed Unit Converter', slug: 'speed-converter', description: 'Convert between km/h, mph, m/s, knots, and feet per second instantly.', emoji: '⚡', category: 'Conversion' },
+  { name: 'Energy Unit Converter', slug: 'energy-converter', description: 'Convert between joules, calories, kilowatt-hours, and BTU energy units instantly.', emoji: '🔋', category: 'Conversion' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network'] as const;
