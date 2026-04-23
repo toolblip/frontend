@@ -22,12 +22,11 @@ RUN apk add --no-cache nginx supervisor
 
 WORKDIR /app
 
-# Next.js 15 standalone: server.js is in frontend/, .next artifacts stay at root
-COPY --from=builder /app/.next/standalone/frontend ./
-COPY --from=builder /app/.next/standalone/node_modules ./node_modules
-COPY --from=builder /app/.next ./next-build
-RUN mv next-build .next
+# Next.js 15 standalone: server.js, .env, .next, blog/, content/
+COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/public ./public
+# Install production deps (standalone doesn't bundle node_modules)
+RUN npm install --omit=dev
 
 # nginx: Railway routes to 8080, proxy to Node on 3000
 RUN echo 'server { listen 8080; server_name _; root /app/public; location / { proxy_pass http://127.0.0.1:3000; proxy_http_version 1.1; proxy_set_header Host $host; proxy_set_header X-Real-IP $remote_addr; } location /_next/static { proxy_pass http://127.0.0.1:3000; } }' \
