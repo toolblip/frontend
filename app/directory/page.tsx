@@ -21,5 +21,9 @@ export const metadata: Metadata = {
 };
 
 export default function DirectoryPage() {
-  return <DirectoryClient />;
+  return (
+    <>
+      <DirectoryClient />
+    </>
+  );
 }
