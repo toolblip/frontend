@@ -1,18 +1,10 @@
-import { createRequire } from 'module';
 import { fileURLToPath } from 'url';
-import { dirname, resolve } from 'path';
+import { dirname } from 'path';
 
-const require = createRequire(import.meta.url);
 const __dirname = dirname(fileURLToPath(import.meta.url));
-
-// The workspace root is one level up — that's where node_modules/next lives
-const workspaceRoot = resolve(__dirname, '..');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  turbopack: {
-    root: workspaceRoot,
-  },
   output: 'standalone',
   images: {
     remotePatterns: [

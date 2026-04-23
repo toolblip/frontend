@@ -22,8 +22,11 @@ RUN apk add --no-cache nginx supervisor
 
 WORKDIR /app
 
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
+# Next.js 15 standalone: server.js is in frontend/, .next artifacts stay at root
+COPY --from=builder /app/.next/standalone/frontend ./
+COPY --from=builder /app/.next/standalone/node_modules ./node_modules
+COPY --from=builder /app/.next ./next-build
+RUN mv next-build .next
 COPY --from=builder /app/public ./public
 
 # nginx: Railway routes to 8080, proxy to Node on 3000
