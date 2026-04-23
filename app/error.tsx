@@ -18,8 +18,8 @@ export default function Error({
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="max-w-md w-full text-center">
-        <div className="w-16 h-16 rounded-full bg-red-500/10 dark:bg-red-400/10 flex items-center justify-center mx-auto mb-6">
-          <AlertTriangle className="w-7 h-7 text-red-500 dark:text-red-400" />
+        <div className="w-16 h-16 rounded-full bg-[#58D65D]/10 flex items-center justify-center mx-auto mb-6">
+          <AlertTriangle className="w-7 h-7 text-[#58D65D]" />
         </div>
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">
           Something went wrong
@@ -30,7 +30,7 @@ export default function Error({
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link
             href="/"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white font-semibold py-2.5 px-6 rounded-lg transition-colors text-sm"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#58D65D] hover:bg-[#4bc44e] text-white font-semibold py-2.5 px-6 rounded-lg transition-colors text-sm"
           >
             <Home size={16} />
             Go home

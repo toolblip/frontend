@@ -1,13 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { Home, Search } from 'lucide-react';
+import { Home, Wrench } from 'lucide-react';
 
 export default function NotFound() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="max-w-md w-full text-center">
-        <p className="text-[8rem] sm:text-[10rem] font-black leading-none text-red-500 dark:text-red-400 select-none mb-2 tracking-tighter">
+        <p className="text-[8rem] sm:text-[10rem] font-black leading-none text-[#58D65D] dark:text-[#58D65D] select-none mb-2 tracking-tighter">
           404
         </p>
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">
@@ -19,7 +19,7 @@ export default function NotFound() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link
             href="/"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white font-semibold py-2.5 px-6 rounded-lg transition-colors text-sm"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#58D65D] hover:bg-[#4bc44e] text-white font-semibold py-2.5 px-6 rounded-lg transition-colors text-sm"
           >
             <Home size={16} />
             Go home
@@ -28,7 +28,7 @@ export default function NotFound() {
             href="/tools"
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-600 text-gray-700 dark:text-gray-300 font-medium py-2.5 px-6 rounded-lg transition-colors text-sm"
           >
-            <Search size={16} />
+            <Wrench size={16} />
             Browse tools
           </Link>
         </div>
