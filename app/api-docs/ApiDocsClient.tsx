@@ -1,20 +1,21 @@
 'use client';
 
+import { useState } from 'react';
 import CodeBlock from '@/components/ui/CodeBlock';
 
 // ─── Config ────────────────────────────────────────────────────────────────
 
-// Primary — Railway production (api.toolblip.com points here via Cloudflare CNAME)
+// Primary — Railway production; api.toolblip.com is the production alias
 const BASE_URL = 'https://toolblip-api-production.up.railway.app';
-const API_TOOLBLIP_URL = 'https://api.toolblip.com'; // production alias (SSL ready)
+const API_TOOLBLIP_URL = 'https://api.toolblip.com';
 
 const ENDPOINTS = [
-  { id: 'tools-list',    method: 'GET',  path: '/api/tools',          auth: false, status: 200, desc: 'List all tools' },
-  { id: 'tools-detail',  method: 'GET',  path: '/api/tools/{slug}',   auth: false, status: 200, desc: 'Get a single tool by slug' },
-  { id: 'auth-register', method: 'POST', path: '/api/auth/register', auth: false, status: 201, desc: 'Create a new account' },
-  { id: 'auth-login',    method: 'POST', path: '/api/auth/login',    auth: false, status: 200, desc: 'Sign in to your account' },
-  { id: 'auth-logout',   method: 'POST', path: '/api/auth/logout',   auth: true,  status: 200, desc: 'Revoke the current session' },
-  { id: 'auth-user',     method: 'GET',  path: '/api/auth/user',     auth: true,  status: 200, desc: 'Get the authenticated user' },
+  { id: 'tools-list',    method: 'GET',    path: '/api/tools',          auth: false, status: 200, desc: 'List all tools' },
+  { id: 'tools-detail', method: 'GET',    path: '/api/tools/{slug}',   auth: false, status: 200, desc: 'Get a single tool by slug' },
+  { id: 'auth-register',method: 'POST',   path: '/api/auth/register',  auth: false, status: 201, desc: 'Create a new account' },
+  { id: 'auth-login',   method: 'POST',   path: '/api/auth/login',     auth: false, status: 200, desc: 'Sign in to your account' },
+  { id: 'auth-logout',  method: 'POST',   path: '/api/auth/logout',    auth: true,  status: 200, desc: 'Revoke the current session' },
+  { id: 'auth-user',    method: 'GET',    path: '/api/auth/user',      auth: true,  status: 200, desc: 'Get the authenticated user' },
 ] as const;
 
 const ERROR_CODES = [
@@ -30,6 +31,8 @@ const ERROR_CODES = [
 // ─── Page ─────────────────────────────────────────────────────────────────
 
 export default function ApiDocsClient() {
+  const [activeSection, setActiveSection] = useState<string>('quick-start');
+
   return (
     <div className="min-h-screen bg-white dark:bg-[#090909] text-gray-900 dark:text-gray-100">
 
@@ -42,8 +45,8 @@ export default function ApiDocsClient() {
           <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Toolblip API</span>
           <div className="ml-auto flex items-center gap-3">
             <span className="hidden sm:block text-[11px] font-mono text-gray-400">{BASE_URL}</span>
-            <span className="flex items-center gap-1.5 text-[11px] text-red-600 dark:text-red-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+            <span className="flex items-center gap-1.5 text-[11px] text-green-600 dark:text-green-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
               Live
             </span>
           </div>
@@ -114,15 +117,20 @@ export default function ApiDocsClient() {
               { id: 'tools-list',    label: 'GET /api/tools' },
               { id: 'tools-detail',  label: 'GET /api/tools/{slug}' },
               { id: 'auth-register', label: 'POST /api/auth/register' },
-              { id: 'auth-login',    label: 'POST /api/auth/login' },
-              { id: 'auth-logout',   label: 'POST /api/auth/logout' },
-              { id: 'auth-user',     label: 'GET /api/auth/user' },
-              { id: 'errors',        label: 'Error Codes' },
+              { id: 'auth-login',   label: 'POST /api/auth/login' },
+              { id: 'auth-logout',  label: 'POST /api/auth/logout' },
+              { id: 'auth-user',    label: 'GET /api/auth/user' },
+              { id: 'errors',       label: 'Error Codes' },
             ].map(({ id, label }) => (
               <a
                 key={id}
                 href={`#${id}`}
-                className="flex items-center px-3 py-1.5 rounded-lg transition-colors text-xs text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-900"
+                onClick={() => setActiveSection(id)}
+                className={`flex items-center px-3 py-1.5 rounded-lg transition-colors text-xs ${
+                  activeSection === id
+                    ? 'text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800 font-medium'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-900'
+                }`}
               >
                 {label}
               </a>
@@ -193,7 +201,7 @@ export default function ApiDocsClient() {
             <CodeBlock
               code={`Authorization: Bearer 1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX`}
               title="Header — all authenticated requests"
-                              language="bash"
+              language="bash"
             />
             <div className="mt-4 p-4 bg-amber-50 dark:bg-amber-900/15 border border-amber-200 dark:border-amber-800/50 rounded-xl text-xs text-amber-700 dark:text-amber-400 leading-relaxed">
               <strong>Keep your token secret.</strong> Never expose it in client-side code or public repositories.
@@ -201,23 +209,24 @@ export default function ApiDocsClient() {
             </div>
           </section>
 
-          {/* ── Tools ── */}
-
-          {/* GET /api/tools */}
+          {/* ── GET /api/tools ── */}
           <section id="tools-list" className="scroll-mt-16">
             <EndpointHeader method="GET" path="/api/tools" auth={false} status={200} />
             <p className="text-gray-500 dark:text-gray-400 text-sm mb-5">
               Returns a paginated list of all tools. Public — no authentication required.
             </p>
 
-            <CodeBlock
-              code={`curl "${BASE_URL}/api/tools" \\
+            <div className="mb-4">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">curl</p>
+              <CodeBlock
+                code={`curl "${BASE_URL}/api/tools" \\
   -H "Accept: application/json"`}
-              title="Request — curl"
-                              language="bash"
-            />
+                title="Request"
+                language="bash"
+              />
+            </div>
 
-            <div className="mt-4">
+            <div className="mb-4">
               <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Query parameters</p>
               <div className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
                 <table className="w-full text-xs">
@@ -245,7 +254,7 @@ export default function ApiDocsClient() {
               </div>
             </div>
 
-            <div className="mt-4">
+            <div>
               <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Response — 200</p>
               <CodeBlock
                 code={`{
@@ -285,21 +294,24 @@ export default function ApiDocsClient() {
             </div>
           </section>
 
-          {/* GET /api/tools/{slug} */}
-          <section id="tools-detail" className="scroll-mmt-16">
+          {/* ── GET /api/tools/{slug} ── */}
+          <section id="tools-detail" className="scroll-mt-16">
             <EndpointHeader method="GET" path="/api/tools/{slug}" auth={false} status={200} />
             <p className="text-gray-500 dark:text-gray-400 text-sm mb-5">
               Fetch a single tool by its slug identifier. Returns 404 if not found.
             </p>
 
-            <CodeBlock
-              code={`curl "${BASE_URL}/api/tools/claude-code" \\
+            <div className="mb-4">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">curl</p>
+              <CodeBlock
+                code={`curl "${BASE_URL}/api/tools/claude-code" \\
   -H "Accept: application/json"`}
-              title="Request — curl"
-                              language="bash"
-            />
+                title="Request"
+                language="bash"
+              />
+            </div>
 
-            <div className="mt-4">
+            <div className="mb-4">
               <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Path parameters</p>
               <div className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
                 <table className="w-full text-xs">
@@ -319,7 +331,7 @@ export default function ApiDocsClient() {
               </div>
             </div>
 
-            <div className="mt-4">
+            <div className="mb-4">
               <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Response — 200</p>
               <CodeBlock
                 code={`{
@@ -338,7 +350,7 @@ export default function ApiDocsClient() {
               />
             </div>
 
-            <div className="mt-4">
+            <div>
               <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Error — 404</p>
               <CodeBlock
                 code={`{
@@ -349,14 +361,29 @@ export default function ApiDocsClient() {
             </div>
           </section>
 
-          {/* ── Auth Endpoints ── */}
-
-          {/* POST /api/auth/register */}
+          {/* ── POST /api/auth/register ── */}
           <section id="auth-register" className="scroll-mt-16">
             <EndpointHeader method="POST" path="/api/auth/register" auth={false} status={201} />
             <p className="text-gray-500 dark:text-gray-400 text-sm mb-5">
               Create a new user account. Returns the user object and a Bearer token.
             </p>
+
+            <div className="mb-4">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">curl</p>
+              <CodeBlock
+                code={`curl -X POST "${BASE_URL}/api/auth/register" \\
+  -H "Accept: application/json" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "name": "Harun",
+    "email": "harun@example.com",
+    "password": "secret123",
+    "password_confirmation": "secret123"
+  }'`}
+                title="Request"
+                language="bash"
+              />
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -368,7 +395,7 @@ export default function ApiDocsClient() {
   "password": "secret123",
   "password_confirmation": "secret123"
 }`}
-                                language="json"
+                  language="json"
                 />
               </div>
               <div>
@@ -383,25 +410,9 @@ export default function ApiDocsClient() {
   },
   "token": "1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 }`}
-                                language="json"
+                  language="json"
                 />
               </div>
-            </div>
-
-            <div className="mt-4">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Request — curl</p>
-              <CodeBlock
-                code={`curl -X POST "${BASE_URL}/api/auth/register" \\
-  -H "Accept: application/json" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "name": "Harun",
-    "email": "harun@example.com",
-    "password": "secret123",
-    "password_confirmation": "secret123"
-  }'`}
-                language="bash"
-              />
             </div>
 
             <div className="mt-4">
@@ -419,12 +430,24 @@ export default function ApiDocsClient() {
             </div>
           </section>
 
-          {/* POST /api/auth/login */}
+          {/* ── POST /api/auth/login ── */}
           <section id="auth-login" className="scroll-mt-16">
             <EndpointHeader method="POST" path="/api/auth/login" auth={false} status={200} />
             <p className="text-gray-500 dark:text-gray-400 text-sm mb-5">
               Sign in with existing credentials. Returns the user object and a Bearer token.
             </p>
+
+            <div className="mb-4">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">curl</p>
+              <CodeBlock
+                code={`curl -X POST "${BASE_URL}/api/auth/login" \\
+  -H "Accept: application/json" \\
+  -H "Content-Type: application/json" \\
+  -d '{"email":"harun@example.com","password":"secret123"}'`}
+                title="Request"
+                language="bash"
+              />
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -434,7 +457,7 @@ export default function ApiDocsClient() {
   "email": "harun@example.com",
   "password": "secret123"
 }`}
-                                language="json"
+                  language="json"
                 />
               </div>
               <div>
@@ -455,17 +478,6 @@ export default function ApiDocsClient() {
             </div>
 
             <div className="mt-4">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Request — curl</p>
-              <CodeBlock
-                code={`curl -X POST "${BASE_URL}/api/auth/login" \\
-  -H "Accept: application/json" \\
-  -H "Content-Type: application/json" \\
-  -d '{"email":"harun@example.com","password":"secret123"}'`}
-                language="bash"
-              />
-            </div>
-
-            <div className="mt-4">
               <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Error — 401</p>
               <CodeBlock
                 code={`{
@@ -476,19 +488,30 @@ export default function ApiDocsClient() {
             </div>
           </section>
 
-          {/* POST /api/auth/logout */}
+          {/* ── POST /api/auth/logout ── */}
           <section id="auth-logout" className="scroll-mt-16">
             <EndpointHeader method="POST" path="/api/auth/logout" auth={true} status={200} />
             <p className="text-gray-500 dark:text-gray-400 text-sm mb-5">
               Revoke the current Bearer token and end the session.
             </p>
 
+            <div className="mb-4">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">curl</p>
+              <CodeBlock
+                code={`curl -X POST "${BASE_URL}/api/auth/logout" \\
+  -H "Accept: application/json" \\
+  -H "Authorization: Bearer 1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"`}
+                title="Request"
+                language="bash"
+              />
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Headers</p>
                 <CodeBlock
                   code={`Authorization: Bearer 1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX`}
-                                  language="bash"
+                  language="bash"
                 />
               </div>
               <div>
@@ -497,23 +520,13 @@ export default function ApiDocsClient() {
                   code={`{
   "message": "Logged out successfully"
 }`}
-                                language="json"
+                  language="json"
                 />
               </div>
             </div>
 
-            <div className="mt-3 p-3 bg-amber-50 dark:bg-amber-900/15 border border-amber-200 dark:border-amber-800/50 rounded-xl text-xs text-amber-700 dark:text-amber-400 leading-relaxed">
+            <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-900/15 border border-amber-200 dark:border-amber-800/50 rounded-xl text-xs text-amber-700 dark:text-amber-400 leading-relaxed">
               <strong>Token revoked.</strong> The Bearer token used in this request is now permanently invalid.
-            </div>
-
-            <div className="mt-4">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Request — curl</p>
-              <CodeBlock
-                code={`curl -X POST "${BASE_URL}/api/auth/logout" \\
-  -H "Accept: application/json" \\
-  -H "Authorization: Bearer 1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"`}
-                language="bash"
-              />
             </div>
 
             <div className="mt-4">
@@ -527,19 +540,30 @@ export default function ApiDocsClient() {
             </div>
           </section>
 
-          {/* GET /api/auth/user */}
+          {/* ── GET /api/auth/user ── */}
           <section id="auth-user" className="scroll-mt-16">
             <EndpointHeader method="GET" path="/api/auth/user" auth={true} status={200} />
             <p className="text-gray-500 dark:text-gray-400 text-sm mb-5">
               Retrieve the currently authenticated user profile.
             </p>
 
+            <div className="mb-4">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">curl</p>
+              <CodeBlock
+                code={`curl "${BASE_URL}/api/auth/user" \\
+  -H "Accept: application/json" \\
+  -H "Authorization: Bearer 1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"`}
+                title="Request"
+                language="bash"
+              />
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Headers</p>
                 <CodeBlock
                   code={`Authorization: Bearer 1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX`}
-                                  language="bash"
+                  language="bash"
                 />
               </div>
               <div>
@@ -556,16 +580,6 @@ export default function ApiDocsClient() {
                   language="json"
                 />
               </div>
-            </div>
-
-            <div className="mt-4">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Request — curl</p>
-              <CodeBlock
-                code={`curl "${BASE_URL}/api/auth/user" \\
-  -H "Accept: application/json" \\
-  -H "Authorization: Bearer 1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"`}
-                language="bash"
-              />
             </div>
 
             <div className="mt-4">
