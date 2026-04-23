@@ -559,6 +559,23 @@ export const tools: Tool[] = [
   { name: 'SERP Preview', slug: 'serp-preview-api', description: 'See how a page title and description appear in Google search results.', emoji: '🔎', category: 'SEO' },
   { name: 'Color Picker', slug: 'color-picker-api', description: 'Pick any color visually and get HEX, RGB, HSL, HSV, and CMYK values instantly.', emoji: '🎨', category: 'Color' },
   { name: 'Contrast Checker', slug: 'contrast-checker-api', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail indicators.', emoji: '♿', category: 'Color' },
+
+  // --- New tools (2026-04-23 #5 - requested categories) ---
+  { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-quick', description: 'Generate lorem ipsum placeholder text with customizable word count and paragraph options.', emoji: '📜', category: 'Text' },
+  { name: 'Grammar Checker', slug: 'grammar-checker-quick', description: 'Check grammar and spelling with one-click fixes and detailed explanations for any text.', emoji: '✅', category: 'Text' },
+  { name: 'Readability Score', slug: 'readability-score-quick', description: 'Calculate Flesch-Kincaid and other readability indices for any written content.', emoji: '📊', category: 'Text' },
+  { name: 'Text Sorter', slug: 'text-sorter-quick', description: 'Sort lines alphabetically, by length, numerically, or in reverse order.', emoji: '📋', category: 'Text' },
+  { name: 'Regex Tester', slug: 'regex-tester-quick', description: 'Test regex patterns with real-time match highlighting and capture group display.', emoji: '🔍', category: 'Developer' },
+  { name: 'JWT Decoder', slug: 'jwt-decoder-quick', description: 'Decode JWT tokens and inspect header, payload, and expiration instantly.', emoji: '🎫', category: 'Developer' },
+  { name: 'Cron Expression Generator', slug: 'cron-generator-quick', description: 'Build cron schedules visually with point-and-click controls and human-readable output.', emoji: '🕐', category: 'Developer' },
+  { name: 'HTTP Headers Viewer', slug: 'http-headers-viewer-quick', description: 'View HTTP request and response headers for any URL with timing breakdown.', emoji: '📦', category: 'Developer' },
+  { name: 'Port Scanner', slug: 'port-scanner-quick', description: 'Scan common ports on a host to identify open services and running applications.', emoji: '🚪', category: 'Developer' },
+  { name: 'Favicon Generator', slug: 'favicon-generator-quick', description: 'Create favicon.ico and app icons from any image or emoji with multiple sizes.', emoji: '🌐', category: 'Image' },
+  { name: 'Image Resizer', slug: 'image-resizer-quick', description: 'Resize images to exact dimensions with aspect ratio lock and batch support.', emoji: '📐', category: 'Image' },
+  { name: 'Meta Tag Generator', slug: 'meta-tag-generator-quick', description: 'Generate SEO meta tags, Open Graph, and Twitter Card tags with live preview.', emoji: '🏷️', category: 'SEO' },
+  { name: 'SERP Preview', slug: 'serp-preview-quick', description: 'See how a page title and description appear in Google search results.', emoji: '🔎', category: 'SEO' },
+  { name: 'Color Picker', slug: 'color-picker-quick', description: 'Pick any color and get HEX, RGB, HSL, HSV, and CMYK values with a live preview.', emoji: '🎨', category: 'Color' },
+  { name: 'Contrast Checker', slug: 'contrast-checker-quick', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail indicators.', emoji: '♿', category: 'Color' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network'] as const;
