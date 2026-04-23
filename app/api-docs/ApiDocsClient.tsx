@@ -8,12 +8,14 @@ const BASE_URL = 'https://api.toolblip.com';
 const FALLBACK_URL = 'https://toolblip-api-production.up.railway.app';
 
 const ENDPOINTS = [
-  { id: 'tools-list',    method: 'GET',    path: '/api/tools',           auth: false, status: 200, desc: 'List all tools' },
-  { id: 'tools-detail',  method: 'GET',    path: '/api/tools/{slug}',    auth: false, status: 200, desc: 'Get a single tool by slug' },
-  { id: 'auth-register', method: 'POST',   path: '/api/auth/register',   auth: false, status: 201, desc: 'Create a new account' },
-  { id: 'auth-login',    method: 'POST',   path: '/api/auth/login',      auth: false, status: 200, desc: 'Sign in to your account' },
-  { id: 'auth-logout',   method: 'POST',   path: '/api/auth/logout',     auth: true,  status: 200, desc: 'Revoke the current session' },
-  { id: 'auth-user',     method: 'GET',    path: '/api/auth/user',       auth: true,  status: 200, desc: 'Get the authenticated user' },
+  { id: 'tools-list',       method: 'GET',    path: '/api/tools',                auth: false, status: 200, desc: 'List all tools' },
+  { id: 'tools-detail',     method: 'GET',    path: '/api/tools/{slug}',         auth: false, status: 200, desc: 'Get a single tool by slug' },
+  { id: 'mcp-servers-list', method: 'GET',    path: '/api/mcp/servers',          auth: false, status: 200, desc: 'List all MCP servers' },
+  { id: 'mcp-servers-detail', method: 'GET',  path: '/api/mcp/servers/{slug}',  auth: false, status: 200, desc: 'Get a single MCP server' },
+  { id: 'auth-register',    method: 'POST',   path: '/api/auth/register',        auth: false, status: 201, desc: 'Create a new account' },
+  { id: 'auth-login',       method: 'POST',   path: '/api/auth/login',           auth: false, status: 200, desc: 'Sign in to your account' },
+  { id: 'auth-logout',      method: 'POST',   path: '/api/auth/logout',          auth: true,  status: 200, desc: 'Revoke the current session' },
+  { id: 'auth-user',        method: 'GET',    path: '/api/auth/user',            auth: true,  status: 200, desc: 'Get the authenticated user' },
 ] as const;
 
 const ERROR_CODES = [
@@ -107,15 +109,17 @@ export default function ApiDocsClient() {
           <nav className="sticky top-20 space-y-0.5 text-sm max-h-[calc(100vh-5rem)] overflow-y-auto pb-8 pr-1">
             <p className="px-3 py-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">On this page</p>
             {[
-              { id: 'quick-start',   label: 'Quick Start' },
-              { id: 'auth',          label: 'Authentication' },
-              { id: 'tools-list',    label: 'GET /api/tools' },
-              { id: 'tools-detail',  label: 'GET /api/tools/{slug}' },
-              { id: 'auth-register', label: 'POST /api/auth/register' },
-              { id: 'auth-login',    label: 'POST /api/auth/login' },
-              { id: 'auth-logout',   label: 'POST /api/auth/logout' },
-              { id: 'auth-user',     label: 'GET /api/auth/user' },
-              { id: 'errors',        label: 'Error Codes' },
+              { id: 'quick-start',        label: 'Quick Start' },
+              { id: 'auth',           label: 'Authentication' },
+              { id: 'tools-list',      label: 'GET /api/tools' },
+              { id: 'tools-detail',    label: 'GET /api/tools/{slug}' },
+              { id: 'mcp-servers-list',  label: 'GET /api/mcp/servers' },
+              { id: 'mcp-servers-detail', label: 'GET /api/mcp/servers/{slug}' },
+              { id: 'auth-register',   label: 'POST /api/auth/register' },
+              { id: 'auth-login',      label: 'POST /api/auth/login' },
+              { id: 'auth-logout',     label: 'POST /api/auth/logout' },
+              { id: 'auth-user',       label: 'GET /api/auth/user' },
+              { id: 'errors',          label: 'Error Codes' },
             ].map(({ id, label }) => (
               <a
                 key={id}
@@ -331,6 +335,138 @@ export default function ApiDocsClient() {
                 <CodeBlock
                   code={`{
   "message": "Tool not found"
+}`}
+                />
+              </div>
+            </section>
+
+          </div>
+
+          {/* ── MCP Servers ── */}
+          <div className="space-y-14 sm:space-y-16">
+
+            {/* GET /api/mcp/servers */}
+            <section id="mcp-servers-list" className="scroll-mt-16">
+              <EndpointHeader method="GET" path="/api/mcp/servers" auth={false} status={200} />
+              <p className="text-gray-500 dark:text-gray-400 text-sm mb-5">
+                Returns a list of all available MCP (Model Context Protocol) servers. Public — no authentication required.
+              </p>
+
+              <CodeBlock
+                code={`curl "${BASE_URL}/api/mcp/servers?category=AI&page=1 \\\n  -H "Accept: application/json"`}
+                title="Request — curl"
+              />
+
+              <div className="mt-4">
+                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Query parameters</p>
+                <div className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="bg-gray-50 dark:bg-[#111] border-b border-gray-200 dark:border-gray-800">
+                        <th className="text-left px-4 py-2 text-gray-400 font-bold uppercase tracking-widest w-28">Param</th>
+                        <th className="text-left px-4 py-2 text-gray-400 font-bold uppercase tracking-widest w-20">Type</th>
+                        <th className="text-left px-4 py-2 text-gray-400 font-bold uppercase tracking-widest">Description</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+                      {[
+                        { name: 'category', type: 'string',  desc: 'Filter by category (e.g. AI, DevOps)' },
+                        { name: 'page',     type: 'number',  desc: 'Page number (default: 1)' },
+                        { name: 'per_page', type: 'number',  desc: 'Results per page (default: 20)' },
+                      ].map(({ name, type, desc }) => (
+                        <tr key={name} className="bg-white dark:bg-[#090909]">
+                          <td className="px-4 py-2.5 font-mono text-gray-700 dark:text-gray-300">{name}</td>
+                          <td className="px-4 py-2.5 text-gray-400 dark:text-gray-500">{type}</td>
+                          <td className="px-4 py-2.5 text-gray-500 dark:text-gray-400">{desc}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Response — 200</p>
+                <CodeBlock
+                  code={`{
+  "servers": {
+    "servers": [
+      {
+        "id": 1,
+        "slug": "filesystem-mcp",
+        "name": "Filesystem MCP",
+        "description": "Access and manage local files via MCP protocol",
+        "category": "DevOps",
+        "url": "https://github.com/toolblip/filesystem-mcp",
+        "created_at": "2026-01-01T00:00:00Z"
+      }
+    ],
+    "meta": {
+      "current_page": 1,
+      "per_page": 20,
+      "total": 12,
+      "last_page": 1
+    }
+  }
+}`}
+                />
+              </div>
+            </section>
+
+            {/* GET /api/mcp/servers/{slug} */}
+            <section id="mcp-servers-detail" className="scroll-mt-16">
+              <EndpointHeader method="GET" path="/api/mcp/servers/{slug}" auth={false} status={200} />
+              <p className="text-gray-500 dark:text-gray-400 text-sm mb-5">
+                Fetch a single MCP server by its slug. Returns 404 if not found.
+              </p>
+
+              <CodeBlock
+                code={`curl "${BASE_URL}/api/mcp/servers/filesystem-mcp" \\\n  -H "Accept: application/json"`}
+                title="Request — curl"
+              />
+
+              <div className="mt-4">
+                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Path parameters</p>
+                <div className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+                  <table className="w-full text-xs">
+                    <thead>
+                      <tr className="bg-gray-50 dark:bg-[#111] border-b border-gray-200 dark:border-gray-800">
+                        <th className="text-left px-4 py-2 text-gray-400 font-bold uppercase tracking-widest w-28">Param</th>
+                        <th className="text-left px-4 py-2 text-gray-400 font-bold uppercase tracking-widest">Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="bg-white dark:bg-[#090909]">
+                        <td className="px-4 py-2.5 font-mono text-gray-700 dark:text-gray-300">slug</td>
+                        <td className="px-4 py-2.5 text-gray-500 dark:text-gray-400">The unique slug identifier of the MCP server</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Response — 200</p>
+                <CodeBlock
+                  code={`{
+  "server": {
+    "id": 1,
+    "slug": "filesystem-mcp",
+    "name": "Filesystem MCP",
+    "description": "Access and manage local files via MCP protocol",
+    "category": "DevOps",
+    "url": "https://github.com/toolblip/filesystem-mcp",
+    "created_at": "2026-01-01T00:00:00Z"
+  }
+}`}
+                />
+              </div>
+
+              <div className="mt-4">
+                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Error — 404</p>
+                <CodeBlock
+                  code={`{
+  "message": "MCP server not found"
 }`}
                 />
               </div>
