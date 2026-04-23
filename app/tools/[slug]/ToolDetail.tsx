@@ -1,3 +1,5 @@
+'use client';
+
 import type { Tool } from '@/data/tools';
 import ShareButtons from '@/components/ShareButtons';
 import WordCounterClient from '@/components/tools/WordCounterClient';
