@@ -5,40 +5,27 @@ import CodeBlock from '@/components/ui/CodeBlock';
 
 // ─── Config ────────────────────────────────────────────────────────────────
 
-// Primary — api.toolblip.com (Cloudflare-proxied, SSL active)
-// Fallback — Railway production URL
 const BASE_URL = 'https://api.toolblip.com';
-const RAILWAY_URL = 'https://toolblip-api-production.up.railway.app';
 
 const ENDPOINTS = [
-  { id: 'tools-list',     method: 'GET',    path: '/api/tools',           auth: false, status: 200, desc: 'List all tools' },
-  { id: 'tools-detail',   method: 'GET',    path: '/api/tools/{slug}',    auth: false, status: 200, desc: 'Get a single tool' },
-  { id: 'auth-register',  method: 'POST',   path: '/api/auth/register',   auth: false, status: 201, desc: 'Create an account' },
-  { id: 'auth-login',     method: 'POST',   path: '/api/auth/login',      auth: false, status: 200, desc: 'Sign in' },
-  { id: 'auth-logout',    method: 'POST',   path: '/api/auth/logout',    auth: true,  status: 200, desc: 'Revoke session' },
-  { id: 'auth-user',      method: 'GET',    path: '/api/auth/user',      auth: true,  status: 200, desc: 'Get authenticated user' },
-] as const;
-
-const ERROR_CODES = [
-  { code: 400, label: 'Bad Request' },
-  { code: 401, label: 'Unauthorized' },
-  { code: 403, label: 'Forbidden' },
-  { code: 404, label: 'Not Found' },
-  { code: 422, label: 'Validation Error' },
-  { code: 429, label: 'Too Many Requests' },
-  { code: 500, label: 'Server Error' },
+  { id: 'tools-list',     method: 'GET',    path: '/api/tools',          auth: false, status: 200, label: 'List all tools' },
+  { id: 'tools-detail',  method: 'GET',    path: '/api/tools/{slug}',   auth: false, status: 200, label: 'Get single tool' },
+  { id: 'auth-register', method: 'POST',   path: '/api/auth/register',  auth: false, status: 201, label: 'Create account' },
+  { id: 'auth-login',    method: 'POST',   path: '/api/auth/login',     auth: false, status: 200, label: 'Sign in' },
+  { id: 'auth-logout',   method: 'POST',   path: '/api/auth/logout',    auth: true,  status: 200, label: 'Revoke session' },
+  { id: 'auth-user',     method: 'GET',    path: '/api/auth/user',      auth: true,  status: 200, label: 'Get authenticated user' },
 ] as const;
 
 const SECTIONS = [
-  { id: 'overview',    label: 'Overview' },
-  { id: 'auth',        label: 'Authentication' },
-  { id: 'tools-list',   label: 'GET /api/tools' },
-  { id: 'tools-detail',label: 'GET /api/tools/{slug}' },
-  { id: 'auth-register',label: 'POST /api/auth/register' },
-  { id: 'auth-login',  label: 'POST /api/auth/login' },
-  { id: 'auth-logout', label: 'POST /api/auth/logout' },
-  { id: 'auth-user',   label: 'GET /api/auth/user' },
-  { id: 'errors',      label: 'Error Codes' },
+  { id: 'overview',      label: 'Overview' },
+  { id: 'auth',          label: 'Authentication' },
+  { id: 'tools-list',    label: 'GET /api/tools' },
+  { id: 'tools-detail',  label: 'GET /api/tools/{slug}' },
+  { id: 'auth-register', label: 'POST /api/auth/register' },
+  { id: 'auth-login',    label: 'POST /api/auth/login' },
+  { id: 'auth-logout',   label: 'POST /api/auth/logout' },
+  { id: 'auth-user',     label: 'GET /api/auth/user' },
+  { id: 'errors',        label: 'Error Codes' },
 ] as const;
 
 // ─── Page ─────────────────────────────────────────────────────────────────
@@ -51,19 +38,15 @@ export default function ApiDocsClient() {
     observerRef.current = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
+          if (entry.isIntersecting) setActiveSection(entry.target.id);
         }
       },
-      { rootMargin: '-20% 0px -70% 0px', threshold: 0 }
+      { rootMargin: '-15% 0px -75% 0px', threshold: 0 }
     );
-
     for (const { id } of SECTIONS) {
-      const el = document.getElementById(id);
-      if (el) observerRef.current!.observe(el);
+      document.getElementById(id)?.setAttribute('tabindex', '-1');
+      observerRef.current?.observe(document.getElementById(id)!);
     }
-
     return () => observerRef.current?.disconnect();
   }, []);
 
@@ -72,14 +55,12 @@ export default function ApiDocsClient() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#090909] text-gray-900 dark:text-gray-100 font-sans">
+    <div className="min-h-screen bg-white dark:bg-[#090909] text-gray-900 dark:text-gray-100">
 
-      {/* ── Sticky top bar ── */}
+      {/* ── Top bar ── */}
       <header className="sticky top-0 z-30 bg-white/95 dark:bg-[#090909]/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-800/80">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
-          <span className="text-[11px] font-mono font-bold bg-red-500 text-white px-2.5 py-1 rounded-full">
-            REST v1
-          </span>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
+          <span className="text-[11px] font-mono font-bold bg-red-500 text-white px-2.5 py-1 rounded-full">REST v1</span>
           <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Toolblip API</span>
           <div className="ml-auto flex items-center gap-3">
             <code className="hidden sm:block text-[11px] font-mono text-gray-400">{BASE_URL}</code>
@@ -93,7 +74,7 @@ export default function ApiDocsClient() {
 
       {/* ── Hero ── */}
       <div className="bg-gray-50 dark:bg-[#0f0f0f] border-b border-gray-100 dark:border-gray-800/60">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-16 flex flex-col lg:flex-row lg:items-start gap-10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-16 flex flex-col lg:flex-row lg:items-start gap-10">
 
           {/* Intro */}
           <div className="flex-1 min-w-0">
@@ -101,8 +82,8 @@ export default function ApiDocsClient() {
               API Reference
             </h1>
             <p className="text-base text-gray-500 dark:text-gray-400 leading-relaxed max-w-xl mb-8">
-              HTTP REST API for browsing developer tools and managing user accounts. All responses are JSON.
-              Authenticate with a Bearer token to access protected endpoints.
+              HTTP REST API for browsing developer tools and managing user accounts.
+              All responses are JSON. Authenticate with a Bearer token to access protected endpoints.
             </p>
 
             {/* Endpoint pills */}
@@ -111,7 +92,10 @@ export default function ApiDocsClient() {
                 <button
                   key={id}
                   onClick={() => scrollTo(id)}
-                  className="inline-flex items-center gap-2 text-[11px] px-3 py-1.5 rounded-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:border-gray-300 dark:hover:border-gray-700 transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-full
+                    bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800
+                    text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white
+                    hover:border-gray-300 dark:hover:border-gray-700 transition-colors cursor-pointer"
                 >
                   <MethodPill method={method} />
                   <span className="font-mono">{path}</span>
@@ -130,9 +114,10 @@ export default function ApiDocsClient() {
                 SSL active — Cloudflare-proxied
               </p>
               <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Railway fallback</p>
-                <code className="block text-[11px] font-mono text-gray-500 dark:text-gray-600 break-all">{RAILWAY_URL}</code>
-                <p className="text-[10px] text-gray-400 mt-1">For environments that need direct IP access</p>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Production</p>
+                <code className="block text-[11px] font-mono text-gray-500 dark:text-gray-600 break-all">
+                  https://toolblip-api-production.up.railway.app
+                </code>
               </div>
             </div>
           </div>
@@ -141,10 +126,10 @@ export default function ApiDocsClient() {
       </div>
 
       {/* ── Body ── */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 flex gap-10 lg:gap-12">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 flex gap-10 lg:gap-12">
 
-        {/* Sidebar nav */}
-        <aside className="w-36 xl:w-48 shrink-0 hidden md:block">
+        {/* Sidebar */}
+        <aside className="w-36 xl:w-44 shrink-0 hidden md:block">
           <nav className="sticky top-20 space-y-0.5 text-sm max-h-[calc(100vh-6rem)] overflow-y-auto pb-8 pr-1">
             <p className="px-3 py-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">On this page</p>
             {SECTIONS.map(({ id, label }) => (
@@ -163,7 +148,7 @@ export default function ApiDocsClient() {
           </nav>
         </aside>
 
-        {/* Main content */}
+        {/* Main */}
         <main className="flex-1 min-w-0 space-y-16">
 
           {/* ── Overview ── */}
@@ -174,7 +159,7 @@ export default function ApiDocsClient() {
               {[
                 { icon: '🌐', title: 'Base URL', body: `All requests go to ${BASE_URL}` },
                 { icon: '🔐', title: 'Auth', body: 'Bearer token in Authorization header' },
-                { icon: '📦', title: 'Format', body: 'All responses are JSON. Always include Accept: application/json' },
+                { icon: '📦', title: 'Format', body: 'All responses are JSON. Always send Accept: application/json' },
               ].map(({ icon, title, body }) => (
                 <div key={title} className="p-4 bg-gray-50 dark:bg-[#0f0f0f] border border-gray-200 dark:border-gray-800 rounded-xl">
                   <span className="text-lg">{icon}</span>
@@ -185,7 +170,7 @@ export default function ApiDocsClient() {
             </div>
 
             <div className="p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 rounded-xl text-xs text-amber-700 dark:text-amber-400 leading-relaxed">
-              <strong>Rate limiting:</strong> Back off and retry with the Retry-After header if you hit 429.
+              <strong>Rate limiting:</strong> Back off and retry with the <InlineCode>Retry-After</InlineCode> header if you hit 429.
             </div>
 
             {/* Endpoint table */}
@@ -200,12 +185,12 @@ export default function ApiDocsClient() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
-                  {ENDPOINTS.map(({ method, path, auth, desc }) => (
+                  {ENDPOINTS.map(({ method, path, auth, label }) => (
                     <tr key={path} className="bg-white dark:bg-[#090909] hover:bg-gray-50 dark:hover:bg-gray-900/30 transition-colors">
                       <td className="px-4 py-3"><MethodPill method={method} /></td>
                       <td className="px-4 py-3 font-mono text-xs text-gray-700 dark:text-gray-300">{path}</td>
                       <td className="px-4 py-3">{auth ? <LockPill /> : <PublicPill />}</td>
-                      <td className="px-4 py-3 text-xs text-gray-500 dark:text-gray-400">{desc}</td>
+                      <td className="px-4 py-3 text-xs text-gray-500 dark:text-gray-400">{label}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -219,8 +204,7 @@ export default function ApiDocsClient() {
             <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-5">
               Protected endpoints require a Bearer token. Obtain one from{' '}
               <InlineCode>/api/auth/register</InlineCode> or{' '}
-              <InlineCode>/api/auth/login</InlineCode>, then include it in the{' '}
-              <InlineCode>Authorization</InlineCode> header on every authenticated request:
+              <InlineCode>/api/auth/login</InlineCode>, then include it in every authenticated request:
             </p>
             <CodeBlock
               code={`Authorization: Bearer 1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX`}
@@ -240,7 +224,7 @@ export default function ApiDocsClient() {
               Returns a paginated list of all tools. Public — no authentication required.
             </p>
 
-            <div className="mb-5">
+            <div className="mb-6">
               <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example request</p>
               <CodeBlock
                 code={`curl "${BASE_URL}/api/tools" \\
@@ -250,7 +234,7 @@ export default function ApiDocsClient() {
               />
             </div>
 
-            <div className="mb-5">
+            <div className="mb-6">
               <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Query parameters</p>
               <div className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
                 <table className="w-full text-xs">
@@ -315,7 +299,7 @@ export default function ApiDocsClient() {
               Fetch a single tool by its slug identifier. Returns 404 if not found.
             </p>
 
-            <div className="mb-5">
+            <div className="mb-6">
               <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example request</p>
               <CodeBlock
                 code={`curl "${BASE_URL}/api/tools/claude-code" \\
@@ -325,7 +309,7 @@ export default function ApiDocsClient() {
               />
             </div>
 
-            <div className="mb-5">
+            <div className="mb-6">
               <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Path parameters</p>
               <div className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
                 <table className="w-full text-xs">
@@ -345,7 +329,7 @@ export default function ApiDocsClient() {
               </div>
             </div>
 
-            <div className="mb-5">
+            <div className="mb-6">
               <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example response — 200</p>
               <CodeBlock
                 code={`{
@@ -382,7 +366,7 @@ export default function ApiDocsClient() {
               Create a new user account. Returns the user object and a Bearer token.
             </p>
 
-            <div className="mb-5">
+            <div className="mb-6">
               <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example request</p>
               <CodeBlock
                 code={`curl -X POST "${BASE_URL}/api/auth/register" \\
@@ -399,7 +383,7 @@ export default function ApiDocsClient() {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               <div>
                 <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Request body</p>
                 <CodeBlock
@@ -451,7 +435,7 @@ export default function ApiDocsClient() {
               Sign in with existing credentials. Returns the user object and a Bearer token.
             </p>
 
-            <div className="mb-5">
+            <div className="mb-6">
               <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example request</p>
               <CodeBlock
                 code={`curl -X POST "${BASE_URL}/api/auth/login" \\
@@ -463,7 +447,7 @@ export default function ApiDocsClient() {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               <div>
                 <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Request body</p>
                 <CodeBlock
@@ -509,7 +493,7 @@ export default function ApiDocsClient() {
               Revoke the current Bearer token and end the session.
             </p>
 
-            <div className="mb-5">
+            <div className="mb-6">
               <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example request</p>
               <CodeBlock
                 code={`curl -X POST "${BASE_URL}/api/auth/logout" \\
@@ -520,7 +504,7 @@ export default function ApiDocsClient() {
               />
             </div>
 
-            <div className="mb-5">
+            <div className="mb-6">
               <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Response — 200</p>
               <CodeBlock
                 code={`{
@@ -534,7 +518,7 @@ export default function ApiDocsClient() {
               <strong>Token revoked.</strong> The Bearer token used in this request is now permanently invalid.
             </div>
 
-            <div className="mt-5">
+            <div className="mt-6">
               <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error — 401</p>
               <CodeBlock
                 code={`{
@@ -552,7 +536,7 @@ export default function ApiDocsClient() {
               Retrieve the currently authenticated user profile.
             </p>
 
-            <div className="mb-5">
+            <div className="mb-6">
               <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example request</p>
               <CodeBlock
                 code={`curl "${BASE_URL}/api/auth/user" \\
@@ -563,7 +547,7 @@ export default function ApiDocsClient() {
               />
             </div>
 
-            <div className="mb-5">
+            <div className="mb-6">
               <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Response — 200</p>
               <CodeBlock
                 code={`{
@@ -597,12 +581,8 @@ export default function ApiDocsClient() {
               Validation failures (422) include an <InlineCode>errors</InlineCode> object.
             </p>
 
-            <div className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden mb-6">
-              <div className="bg-gray-50 dark:bg-[#111] px-5 py-3 border-b border-gray-200 dark:border-gray-800">
-                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                  Example — 422 Validation Error
-                </span>
-              </div>
+            <div className="mb-6">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example — 422 Validation Error</p>
               <CodeBlock
                 code={`{
   "message": "The given data was invalid.",
@@ -616,7 +596,15 @@ export default function ApiDocsClient() {
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
-              {ERROR_CODES.map(({ code, label }) => (
+              {[
+                { code: 400, label: 'Bad Request' },
+                { code: 401, label: 'Unauthorized' },
+                { code: 403, label: 'Forbidden' },
+                { code: 404, label: 'Not Found' },
+                { code: 422, label: 'Validation Error' },
+                { code: 429, label: 'Too Many Requests' },
+                { code: 500, label: 'Server Error' },
+              ].map(({ code, label }) => (
                 <div
                   key={code}
                   className="flex items-center gap-2.5 bg-gray-50 dark:bg-[#0f0f0f] border border-gray-200 dark:border-gray-800 rounded-lg px-3 py-2.5"
@@ -628,17 +616,13 @@ export default function ApiDocsClient() {
             </div>
           </section>
 
-          {/* ── Footer ── */}
+          {/* Footer */}
           <footer className="pt-8 border-t border-gray-100 dark:border-gray-800/60 text-center">
             <p className="text-gray-400 dark:text-gray-600 text-xs">
               Questions?{' '}
-              <a href="mailto:harun@toolblip.com" className="text-red-600 dark:text-red-400 hover:underline">
-                harun@toolblip.com
-              </a>
+              <a href="mailto:harun@toolblip.com" className="text-red-600 dark:text-red-400 hover:underline">harun@toolblip.com</a>
               <span className="mx-2 text-gray-300 dark:text-gray-700">·</span>
-              <a href="https://github.com/toolblip" target="_blank" rel="noopener noreferrer" className="text-red-600 dark:text-red-400 hover:underline">
-                GitHub
-              </a>
+              <a href="https://github.com/toolblip" target="_blank" rel="noopener noreferrer" className="text-red-600 dark:text-red-400 hover:underline">GitHub</a>
             </p>
           </footer>
 
@@ -652,9 +636,9 @@ export default function ApiDocsClient() {
 
 const METHOD_COLORS: Record<string, string> = {
   GET:    'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400',
-  POST:   'bg-blue-100  dark:bg-blue-900/30  text-blue-700  dark:text-blue-400',
+  POST:   'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400',
   PUT:    'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400',
-  DELETE: 'bg-red-100   dark:bg-red-900/30   text-red-700   dark:text-red-400',
+  DELETE: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400',
   PATCH:  'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400',
 };
 
