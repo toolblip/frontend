@@ -506,6 +506,23 @@ export const tools: Tool[] = [
   { name: 'Meta Description Generator', slug: 'meta-description-generator', description: 'Generate SEO-optimized meta descriptions from page content with character count alerts.', emoji: '🏷️', category: 'SEO' },
   { name: 'SERP Rank Tracker', slug: 'serp-rank-tracker', description: 'Track keyword rankings in Google search results and monitor position changes over time.', emoji: '📈', category: 'SEO' },
   { name: 'Color Shade Tints', slug: 'color-shade-tints', description: 'Generate tints, shades, and tones of any color for consistent design system palettes.', emoji: '🎨', category: 'Color' },
+
+  // --- New tools (2026-04-23 #2) ---
+  { name: 'Dummy Text Detector', slug: 'dummy-text-detector', description: 'Detect lorem ipsum and placeholder text in documents with one-click removal suggestions.', emoji: '🔍', category: 'Text' },
+  { name: 'Reading Level Estimator', slug: 'reading-level-estimator', description: 'Estimate the reading grade level required to understand any text passage.', emoji: '📚', category: 'Text' },
+  { name: 'robots.txt Validator', slug: 'robots-txt-validator', description: 'Validate robots.txt syntax and check for common errors and misconfigurations.', emoji: '✅', category: 'Developer' },
+  { name: 'JSONPath Query Tester', slug: 'jsonpath-query-tester', description: 'Test JSONPath expressions against JSON data and extract matched nodes instantly.', emoji: '🔎', category: 'Developer' },
+  { name: 'Image Orientation Fixer', slug: 'image-orientation-fixer', description: 'Fix incorrect image orientation by rotating or flipping with one click.', emoji: '🔄', category: 'Image' },
+  { name: 'Image Square Fit', slug: 'image-square-fit', description: 'Fit any image into a square canvas with customizable background color.', emoji: '◻️', category: 'Image' },
+  { name: 'Keyword Position Checker', slug: 'keyword-position-checker', description: 'Check the search engine ranking position of any keyword for a specific URL.', emoji: '📊', category: 'SEO' },
+  { name: 'Hreflang Tag Generator', slug: 'hreflang-tag-generator', description: 'Generate hreflang tags for multi-language and multi-regional website versions.', emoji: '🌍', category: 'SEO' },
+  { name: 'RGBA to HSL Converter', slug: 'rgba-to-hsl', description: 'Convert RGBA color values to HSL with alpha transparency support.', emoji: '🎨', category: 'Color' },
+  { name: 'HSL to HEX Converter', slug: 'hsl-to-hex', description: 'Convert HSL color values to HEX format with live color preview.', emoji: '🎨', category: 'Color' },
+  { name: 'Pressure Unit Converter', slug: 'pressure-unit-converter', description: 'Convert between pascals, bars, PSI, atmospheres, and mmHg pressure units.', emoji: '🌡️', category: 'Conversion' },
+  { name: 'Volume Unit Converter', slug: 'volume-unit-converter', description: 'Convert between liters, gallons, milliliters, fluid ounces, and cubic centimeters.', emoji: '🧪', category: 'Conversion' },
+  { name: 'Data Size Converter', slug: 'data-size-converter', description: 'Convert between bytes, KB, MB, GB, TB, and PB with binary or decimal units.', emoji: '💾', category: 'Conversion' },
+  { name: 'Hex to Decimal Converter', slug: 'hex-to-decimal', description: 'Convert hexadecimal numbers to decimal and binary with instant results.', emoji: '🔢', category: 'Conversion' },
+  { name: 'Decimal to Binary Converter', slug: 'decimal-to-binary', description: 'Convert decimal numbers to binary, hexadecimal, and octal formats instantly.', emoji: '🔢', category: 'Conversion' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network'] as const;
