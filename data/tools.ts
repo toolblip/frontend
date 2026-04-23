@@ -489,6 +489,23 @@ export const tools: Tool[] = [
   { name: 'Contrast Checker', slug: 'contrast-checker-final', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail indicators.', emoji: '♿', category: 'Color' },
   { name: 'Unit Converter', slug: 'unit-converter-final', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
   { name: 'Number Base Converter', slug: 'number-base-converter-final', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly.', emoji: '🔢', category: 'Conversion' },
+
+  // --- New tools (2026-04-23) ---
+  { name: 'Text to Speech', slug: 'text-to-speech', description: 'Convert text to speech using your browser with adjustable voice, speed, and pitch.', emoji: '🔊', category: 'Text' },
+  { name: 'EXIF Remover', slug: 'exif-remover', description: 'Remove EXIF metadata from images to protect privacy before sharing online.', emoji: '🛡️', category: 'Image' },
+  { name: 'UUID Validator', slug: 'uuid-validator', description: 'Validate UUID v1, v4, and v7 formats and check if a UUID string is properly formatted.', emoji: '🆔', category: 'Developer' },
+  { name: 'Regex Visual Builder', slug: 'regex-visual-builder', description: 'Build regex patterns visually with a node-based editor and see matches in real time.', emoji: '🔧', category: 'Developer' },
+  { name: 'Markdown Preview', slug: 'markdown-preview', description: 'Write markdown and see a live rendered preview side by side with export to HTML.', emoji: '📝', category: 'Developer' },
+  { name: 'CIDR Subnet Calculator', slug: 'cidr-calculator', description: 'Calculate subnet masks, network ranges, usable IPs, and wildcard masks from CIDR notation.', emoji: '🌐', category: 'Network' },
+  { name: 'IP Range Calculator', slug: 'ip-range-calculator', description: 'Calculate the number of usable IPs, broadcast address, and network range from two IPs.', emoji: '📡', category: 'Network' },
+  { name: 'Color Saturation Adjuster', slug: 'color-saturation-adjuster', description: 'Adjust color saturation, vibrance, and lightness with a live preview and CSS output.', emoji: '🎨', category: 'Color' },
+  { name: 'Lorem Ipsum API', slug: 'lorem-ipsum-api', description: 'Generate lorem ipsum text via API with customizable paragraphs, sentence count, and format.', emoji: '📜', category: 'Text' },
+  { name: 'Grammar Score Checker', slug: 'grammar-score-checker', description: 'Get a grammar quality score for your text with specific suggestions for improvement.', emoji: '📝', category: 'Text' },
+  { name: 'Text Fluency Checker', slug: 'text-fluency-checker', description: 'Analyze text for reading fluency and get a score based on sentence complexity.', emoji: '📖', category: 'Text' },
+  { name: 'Regex Description Generator', slug: 'regex-description-generator', description: 'Paste a regex pattern and get a plain English explanation of what it matches.', emoji: '🔤', category: 'Developer' },
+  { name: 'Meta Description Generator', slug: 'meta-description-generator', description: 'Generate SEO-optimized meta descriptions from page content with character count alerts.', emoji: '🏷️', category: 'SEO' },
+  { name: 'SERP Rank Tracker', slug: 'serp-rank-tracker', description: 'Track keyword rankings in Google search results and monitor position changes over time.', emoji: '📈', category: 'SEO' },
+  { name: 'Color Shade Tints', slug: 'color-shade-tints', description: 'Generate tints, shades, and tones of any color for consistent design system palettes.', emoji: '🎨', category: 'Color' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network'] as const;
