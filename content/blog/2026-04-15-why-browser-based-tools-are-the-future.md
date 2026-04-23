@@ -29,14 +29,10 @@ For teams, this is even better. No software distribution headaches. No "which ve
 
 Browser tools run close to native speed for most operations. Modern JavaScript engines are incredibly fast, and for CPU-bound tasks like JSON parsing, regex evaluation, or image manipulation, the difference from a native app is imperceptible.
 
-Plus, you can chain tools. Have a Base64 string you need to decode and then validate as JSON? Open two browser tabs. Compare outputs side-by-side. No switching between apps.
+## Always Available, Everywhere
 
-## The Developer Experience is Getting Better
+Chromebook? Linux box? Borrowed laptop? As long as you have a browser, your tools are there. No sync accounts, no portability nightmares. Your bookmarked tools follow you anywhere.
 
-The browser itself is becoming a more powerful platform. WebAssembly, better APIs, improved performance — the gap between web and native is narrowing fast. Tools like Toolblip are built to take full advantage of this, giving you a polished, fast experience without the friction of installation.
+The future of developer utilities is in the cloud — but not in the way you'd think. It's in your browser, processing locally, always available, and respectful of your data.
 
-The future of developer tooling isn't a bigger app store. It's a better browser.
-
----
-
-Ready to try fast, private, no-install tools? [Explore Toolblip's full toolkit →](/tools)
+Ready to try fast, private developer tools? [Check out Toolblip](https://toolblip.com) — no install required.
