@@ -542,6 +542,23 @@ export const tools: Tool[] = [
   { name: 'Data Size Converter', slug: 'data-size-converter', description: 'Convert between bytes, KB, MB, GB, TB, and PB with binary or decimal units.', emoji: '💾', category: 'Conversion' },
   { name: 'Hex to Decimal Converter', slug: 'hex-to-decimal', description: 'Convert hexadecimal numbers to decimal and binary with instant results.', emoji: '🔢', category: 'Conversion' },
   { name: 'Decimal to Binary Converter', slug: 'decimal-to-binary', description: 'Convert decimal numbers to binary, hexadecimal, and octal formats instantly.', emoji: '🔢', category: 'Conversion' },
+
+  // --- New tools (2026-04-23 #4) ---
+  { name: 'Lorem Ipsum API', slug: 'lorem-ipsum-api-tool', description: 'Generate lorem ipsum text via API with customizable paragraphs, sentence count, and format.', emoji: '📜', category: 'Text' },
+  { name: 'Grammar Checker', slug: 'grammar-checker-api', description: 'Check grammar and spelling errors with one-click fixes and detailed explanations.', emoji: '✅', category: 'Text' },
+  { name: 'Readability Score', slug: 'readability-score-api', description: 'Calculate Flesch-Kincaid, SMOG, and other readability indices for any text content.', emoji: '📊', category: 'Text' },
+  { name: 'Text Sorter', slug: 'text-sorter-api', description: 'Sort lines alphabetically, by length, numerically, reverse, or in random order.', emoji: '📋', category: 'Text' },
+  { name: 'Regex Tester', slug: 'regex-tester-api', description: 'Test regex patterns with real-time match highlighting, capture groups, and replacements.', emoji: '🔍', category: 'Developer' },
+  { name: 'JWT Decoder', slug: 'jwt-decoder-api', description: 'Decode JWT tokens and inspect header, payload, expiration, and signature segments.', emoji: '🎫', category: 'Developer' },
+  { name: 'Cron Expression Generator', slug: 'cron-generator-api', description: 'Build cron schedules visually with point-and-click editor and human-readable output.', emoji: '🕐', category: 'Developer' },
+  { name: 'HTTP Headers Viewer', slug: 'http-headers-viewer-api', description: 'View and debug HTTP request and response headers for any URL with timing info.', emoji: '📦', category: 'Developer' },
+  { name: 'Port Scanner', slug: 'port-scanner-api', description: 'Scan common ports on a host to identify open services and running applications.', emoji: '🚪', category: 'Developer' },
+  { name: 'Favicon Generator', slug: 'favicon-generator-api', description: 'Create favicon.ico, PNG, and SVG icons from any image or emoji with one click.', emoji: '🌐', category: 'Image' },
+  { name: 'Image Resizer', slug: 'image-resizer-api', description: 'Resize images to exact pixel dimensions with aspect ratio lock and batch support.', emoji: '📐', category: 'Image' },
+  { name: 'Meta Tag Generator', slug: 'meta-tag-generator-api', description: 'Generate SEO meta tags, Open Graph, and Twitter Card tags with live preview.', emoji: '🏷️', category: 'SEO' },
+  { name: 'SERP Preview', slug: 'serp-preview-api', description: 'See how a page title and description appear in Google search results.', emoji: '🔎', category: 'SEO' },
+  { name: 'Color Picker', slug: 'color-picker-api', description: 'Pick any color visually and get HEX, RGB, HSL, HSV, and CMYK values instantly.', emoji: '🎨', category: 'Color' },
+  { name: 'Contrast Checker', slug: 'contrast-checker-api', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail indicators.', emoji: '♿', category: 'Color' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network'] as const;
