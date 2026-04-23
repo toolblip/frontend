@@ -5,16 +5,15 @@ import CodeBlock from '@/components/ui/CodeBlock';
 
 // ─── Config ────────────────────────────────────────────────────────────────
 
-// Railway production — api.toolblip.com once SSL is ready (Cloudflare-proxied)
-const BASE_URL = 'https://toolblip-api-production.up.railway.app';
+const BASE_URL = 'https://api.toolblip.com';
 
 const ENDPOINTS = [
-  { id: 'tools-list',     method: 'GET',    path: '/api/tools',          auth: false, status: 200, label: 'List all tools' },
-  { id: 'tools-detail',  method: 'GET',    path: '/api/tools/{slug}',   auth: false, status: 200, label: 'Get single tool' },
-  { id: 'auth-register', method: 'POST',   path: '/api/auth/register',  auth: false, status: 201, label: 'Create account' },
-  { id: 'auth-login',    method: 'POST',   path: '/api/auth/login',     auth: false, status: 200, label: 'Sign in' },
-  { id: 'auth-logout',   method: 'POST',   path: '/api/auth/logout',    auth: true,  status: 200, label: 'Revoke session' },
-  { id: 'auth-user',     method: 'GET',    path: '/api/auth/user',      auth: true,  status: 200, label: 'Get authenticated user' },
+  { id: 'tools-list',    method: 'GET',    path: '/api/tools',           auth: false, status: 200, label: 'List all tools' },
+  { id: 'tools-detail', method: 'GET',    path: '/api/tools/{slug}',    auth: false, status: 200, label: 'Get single tool' },
+  { id: 'auth-register',method: 'POST',   path: '/api/auth/register',   auth: false, status: 201, label: 'Create account' },
+  { id: 'auth-login',   method: 'POST',   path: '/api/auth/login',      auth: false, status: 200, label: 'Sign in' },
+  { id: 'auth-logout',  method: 'POST',   path: '/api/auth/logout',     auth: true,  status: 200, label: 'Revoke session' },
+  { id: 'auth-user',    method: 'GET',    path: '/api/auth/user',       auth: true,  status: 200, label: 'Get authenticated user' },
 ] as const;
 
 const SECTIONS = [
@@ -112,12 +111,12 @@ export default function ApiDocsClient() {
               <code className="block text-sm font-mono text-red-600 dark:text-red-400 break-all">{BASE_URL}</code>
               <p className="text-[10px] text-green-600 dark:text-green-400 mt-1.5 flex items-center gap-1">
                 <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                Railway — SSL active
+                SSL active — Cloudflare proxied
               </p>
               <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Coming soon</p>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Railway fallback</p>
                 <code className="block text-[11px] font-mono text-gray-500 dark:text-gray-600 break-all">
-                  https://api.toolblip.com
+                  https://toolblip-api-production.up.railway.app
                 </code>
               </div>
             </div>
@@ -208,7 +207,7 @@ export default function ApiDocsClient() {
               <InlineCode>/api/auth/login</InlineCode>, then include it in every authenticated request:
             </p>
             <CodeBlock
-              code={`Authorization: Bearer 1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX`}
+              code={`Authorization: Bearer 1|abcd1234efgh5678ijkl9012mnop3456qrst`}
               title="Header — all authenticated requests"
               language="bash"
             />
@@ -268,7 +267,7 @@ export default function ApiDocsClient() {
               <CodeBlock
                 code={`{
   "tools": {
-    "tools": [
+    "data": [
       {
         "id": 1,
         "slug": "claude-code",
@@ -277,7 +276,17 @@ export default function ApiDocsClient() {
         "category": "AI",
         "is_pro": false,
         "emoji": "🤖",
-        "created_at": "2026-01-01T00:00:00Z"
+        "created_at": "2026-01-15T08:30:00.000000Z"
+      },
+      {
+        "id": 2,
+        "slug": "cursor",
+        "name": "Cursor",
+        "description": "AI-first code editor",
+        "category": "AI",
+        "is_pro": true,
+        "emoji": "💻",
+        "created_at": "2026-01-20T14:00:00.000000Z"
       }
     ],
     "meta": {
@@ -342,7 +351,7 @@ export default function ApiDocsClient() {
     "category": "AI",
     "is_pro": false,
     "emoji": "🤖",
-    "created_at": "2026-01-01T00:00:00Z"
+    "created_at": "2026-01-15T08:30:00.000000Z"
   }
 }`}
                 language="json"
@@ -374,10 +383,10 @@ export default function ApiDocsClient() {
   -H "Accept: application/json" \\
   -H "Content-Type: application/json" \\
   -d '{
-    "name": "Harun",
-    "email": "harun@example.com",
-    "password": "secret123",
-    "password_confirmation": "secret123"
+    "name": "Harun Ray",
+    "email": "harun@toolblip.com",
+    "password": "securepassword123",
+    "password_confirmation": "securepassword123"
   }'`}
                 title="Request"
                 language="bash"
@@ -389,10 +398,10 @@ export default function ApiDocsClient() {
                 <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Request body</p>
                 <CodeBlock
                   code={`{
-  "name": "Harun",
-  "email": "harun@example.com",
-  "password": "secret123",
-  "password_confirmation": "secret123"
+  "name": "Harun Ray",
+  "email": "harun@toolblip.com",
+  "password": "securepassword123",
+  "password_confirmation": "securepassword123"
 }`}
                   language="json"
                 />
@@ -403,11 +412,11 @@ export default function ApiDocsClient() {
                   code={`{
   "user": {
     "id": 1,
-    "name": "Harun",
-    "email": "harun@example.com",
+    "name": "Harun Ray",
+    "email": "harun@toolblip.com",
     "is_pro": false
   },
-  "token": "1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+  "token": "1|abcd1234efgh5678ijkl9012mnop3456qrst"
 }`}
                   language="json"
                 />
@@ -442,7 +451,10 @@ export default function ApiDocsClient() {
                 code={`curl -X POST "${BASE_URL}/api/auth/login" \\
   -H "Accept: application/json" \\
   -H "Content-Type: application/json" \\
-  -d '{"email":"harun@example.com","password":"secret123"}'`}
+  -d '{
+    "email": "harun@toolblip.com",
+    "password": "securepassword123"
+  }'`}
                 title="Request"
                 language="bash"
               />
@@ -453,8 +465,8 @@ export default function ApiDocsClient() {
                 <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Request body</p>
                 <CodeBlock
                   code={`{
-  "email": "harun@example.com",
-  "password": "secret123"
+  "email": "harun@toolblip.com",
+  "password": "securepassword123"
 }`}
                   language="json"
                 />
@@ -465,11 +477,11 @@ export default function ApiDocsClient() {
                   code={`{
   "user": {
     "id": 1,
-    "name": "Harun",
-    "email": "harun@example.com",
+    "name": "Harun Ray",
+    "email": "harun@toolblip.com",
     "is_pro": false
   },
-  "token": "1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+  "token": "1|abcd1234efgh5678ijkl9012mnop3456qrst"
 }`}
                   language="json"
                 />
@@ -499,7 +511,7 @@ export default function ApiDocsClient() {
               <CodeBlock
                 code={`curl -X POST "${BASE_URL}/api/auth/logout" \\
   -H "Accept: application/json" \\
-  -H "Authorization: Bearer 1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"`}
+  -H "Authorization: Bearer 1|abcd1234efgh5678ijkl9012mnop3456qrst"`}
                 title="Request"
                 language="bash"
               />
@@ -542,7 +554,7 @@ export default function ApiDocsClient() {
               <CodeBlock
                 code={`curl "${BASE_URL}/api/auth/user" \\
   -H "Accept: application/json" \\
-  -H "Authorization: Bearer 1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"`}
+  -H "Authorization: Bearer 1|abcd1234efgh5678ijkl9012mnop3456qrst"`}
                 title="Request"
                 language="bash"
               />
@@ -554,8 +566,8 @@ export default function ApiDocsClient() {
                 code={`{
   "user": {
     "id": 1,
-    "name": "Harun",
-    "email": "harun@example.com",
+    "name": "Harun Ray",
+    "email": "harun@toolblip.com",
     "is_pro": false
   }
 }`}
