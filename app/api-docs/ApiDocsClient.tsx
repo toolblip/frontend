@@ -193,6 +193,7 @@ export default function ApiDocsClient() {
             <CodeBlock
               code={`Authorization: Bearer 1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX`}
               title="Header — all authenticated requests"
+                              language="bash"
             />
             <div className="mt-4 p-4 bg-amber-50 dark:bg-amber-900/15 border border-amber-200 dark:border-amber-800/50 rounded-xl text-xs text-amber-700 dark:text-amber-400 leading-relaxed">
               <strong>Keep your token secret.</strong> Never expose it in client-side code or public repositories.
@@ -213,6 +214,7 @@ export default function ApiDocsClient() {
               code={`curl "${BASE_URL}/api/tools" \\
   -H "Accept: application/json"`}
               title="Request — curl"
+                              language="bash"
             />
 
             <div className="mt-4">
@@ -278,6 +280,7 @@ export default function ApiDocsClient() {
     }
   }
 }`}
+                language="json"
               />
             </div>
           </section>
@@ -293,6 +296,7 @@ export default function ApiDocsClient() {
               code={`curl "${BASE_URL}/api/tools/claude-code" \\
   -H "Accept: application/json"`}
               title="Request — curl"
+                              language="bash"
             />
 
             <div className="mt-4">
@@ -330,6 +334,7 @@ export default function ApiDocsClient() {
     "created_at": "2026-01-01T00:00:00Z"
   }
 }`}
+                language="json"
               />
             </div>
 
@@ -339,6 +344,7 @@ export default function ApiDocsClient() {
                 code={`{
   "message": "Tool not found"
 }`}
+                language="json"
               />
             </div>
           </section>
@@ -362,6 +368,7 @@ export default function ApiDocsClient() {
   "password": "secret123",
   "password_confirmation": "secret123"
 }`}
+                                language="json"
                 />
               </div>
               <div>
@@ -376,6 +383,7 @@ export default function ApiDocsClient() {
   },
   "token": "1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 }`}
+                                language="json"
                 />
               </div>
             </div>
@@ -392,6 +400,7 @@ export default function ApiDocsClient() {
     "password": "secret123",
     "password_confirmation": "secret123"
   }'`}
+                language="bash"
               />
             </div>
 
@@ -405,6 +414,7 @@ export default function ApiDocsClient() {
     "password": ["The password must be at least 8 characters."]
   }
 }`}
+                language="json"
               />
             </div>
           </section>
@@ -424,6 +434,7 @@ export default function ApiDocsClient() {
   "email": "harun@example.com",
   "password": "secret123"
 }`}
+                                language="json"
                 />
               </div>
               <div>
@@ -438,6 +449,7 @@ export default function ApiDocsClient() {
   },
   "token": "1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 }`}
+                  language="json"
                 />
               </div>
             </div>
@@ -449,6 +461,7 @@ export default function ApiDocsClient() {
   -H "Accept: application/json" \\
   -H "Content-Type: application/json" \\
   -d '{"email":"harun@example.com","password":"secret123"}'`}
+                language="bash"
               />
             </div>
 
@@ -458,6 +471,7 @@ export default function ApiDocsClient() {
                 code={`{
   "message": "Invalid credentials"
 }`}
+                language="json"
               />
             </div>
           </section>
@@ -474,6 +488,7 @@ export default function ApiDocsClient() {
                 <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Headers</p>
                 <CodeBlock
                   code={`Authorization: Bearer 1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX`}
+                                  language="bash"
                 />
               </div>
               <div>
@@ -482,6 +497,7 @@ export default function ApiDocsClient() {
                   code={`{
   "message": "Logged out successfully"
 }`}
+                                language="json"
                 />
               </div>
             </div>
@@ -496,6 +512,7 @@ export default function ApiDocsClient() {
                 code={`curl -X POST "${BASE_URL}/api/auth/logout" \\
   -H "Accept: application/json" \\
   -H "Authorization: Bearer 1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"`}
+                language="bash"
               />
             </div>
 
@@ -505,6 +522,7 @@ export default function ApiDocsClient() {
                 code={`{
   "message": "Unauthenticated."
 }`}
+                language="json"
               />
             </div>
           </section>
@@ -521,6 +539,7 @@ export default function ApiDocsClient() {
                 <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Headers</p>
                 <CodeBlock
                   code={`Authorization: Bearer 1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX`}
+                                  language="bash"
                 />
               </div>
               <div>
@@ -534,6 +553,7 @@ export default function ApiDocsClient() {
     "is_pro": false
   }
 }`}
+                  language="json"
                 />
               </div>
             </div>
@@ -544,6 +564,7 @@ export default function ApiDocsClient() {
                 code={`curl "${BASE_URL}/api/auth/user" \\
   -H "Accept: application/json" \\
   -H "Authorization: Bearer 1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"`}
+                language="bash"
               />
             </div>
 
@@ -553,6 +574,7 @@ export default function ApiDocsClient() {
                 code={`{
   "message": "Unauthenticated."
 }`}
+                language="json"
               />
             </div>
           </section>
@@ -579,6 +601,7 @@ export default function ApiDocsClient() {
     "password": ["The password must be at least 8 characters."]
   }
 }`}
+                language="json"
               />
             </div>
 

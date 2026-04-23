@@ -15,3 +15,9 @@ html {
   outline: 2px solid #EF4444;
   outline-offset: 2px;
 }
+
+/* JSON syntax highlighting for API docs */
+.json-string  { color: #86d993; }
+.json-number  { color: #f9c74f; }
+.json-bool    { color: #90beeb; }
+.json-null    { color: #f94144; }
