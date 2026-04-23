@@ -750,4 +750,24 @@ export const tools: Tool[] = [
   { name: 'Number Base Converter', slug: 'base-convert-tool', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly.', emoji: '🔢', category: 'Conversion' },
 ];
 
+  // --- New tools (2026-04-24 #3) ---
+  { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-placeholder', description: 'Generate customizable lorem ipsum placeholder text with paragraphs, sentences, and word count.', emoji: '📜', category: 'Text' },
+  { name: 'Grammar Checker', slug: 'grammar-checker-ai', description: 'Check grammar and spelling errors with one-click fixes and detailed explanations.', emoji: '✅', category: 'Text' },
+  { name: 'Readability Score', slug: 'readability-score-checker', description: 'Calculate Flesch-Kincaid, SMOG, ARI, and Coleman-Liau readability grades for any text.', emoji: '📊', category: 'Text' },
+  { name: 'Text Sorter', slug: 'text-sorter-tool', description: 'Sort lines alphabetically, by length, numerically, reverse, or in random order.', emoji: '📋', category: 'Text' },
+  { name: 'Regex Tester', slug: 'regex-pattern-tester', description: 'Test regex patterns against text with real-time match highlighting and group display.', emoji: '🔍', category: 'Developer' },
+  { name: 'JWT Decoder', slug: 'jwt-token-decoder', description: 'Decode JWT tokens and view header, payload, and expiration details in real time.', emoji: '🎫', category: 'Developer' },
+  { name: 'Cron Expression Generator', slug: 'cron-schedule-generator', description: 'Build cron schedules visually with point-and-click controls and human-readable output.', emoji: '🕐', category: 'Developer' },
+  { name: 'HTTP Headers Viewer', slug: 'http-headers-analyzer', description: 'View and debug HTTP request and response headers for any URL with timing info.', emoji: '📦', category: 'Developer' },
+  { name: 'Port Scanner', slug: 'port-scanner-online', description: 'Scan common ports on a host to identify open services and running applications.', emoji: '🚪', category: 'Developer' },
+  { name: 'Favicon Generator', slug: 'favicon-creator-tool', description: 'Create favicon.ico, PNG, and SVG icons from any image or emoji with one click.', emoji: '🌐', category: 'Image' },
+  { name: 'Image Resizer', slug: 'image-resize-browser', description: 'Resize images to exact pixel dimensions with aspect ratio lock and batch support.', emoji: '📐', category: 'Image' },
+  { name: 'Meta Tag Generator', slug: 'seo-meta-tag-builder', description: 'Generate SEO meta tags, Open Graph, and Twitter Card tags with live preview.', emoji: '🏷️', category: 'SEO' },
+  { name: 'SERP Preview', slug: 'serp-result-preview', description: 'See how a page title and description appear in Google search results.', emoji: '🔎', category: 'SEO' },
+  { name: 'Color Picker', slug: 'color-picker-hex-rgb-hsl', description: 'Pick any color visually and get HEX, RGB, HSL, and CSS values instantly.', emoji: '🎨', category: 'Color' },
+  { name: 'Contrast Checker', slug: 'color-contrast-checker', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail indicators.', emoji: '♿', category: 'Color' },
+  { name: 'Unit Converter', slug: 'unit-conversion-tool', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
+  { name: 'Number Base Converter', slug: 'number-base-convert', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly.', emoji: '🔢', category: 'Conversion' },
+];
+
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network'] as const;
