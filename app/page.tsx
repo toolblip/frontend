@@ -88,24 +88,24 @@ export default function HomePage() {
 
       {/* How it works */}
       <section className="py-8 px-4 border-b border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900/50">
-        <div className="max-w-3xl mx-auto">
-          <p className="text-center text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-5">
+        <div className="max-w-4xl mx-auto">
+          <p className="text-center text-xs font-medium text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-6">
             How it works
           </p>
-          <div className="flex items-center justify-center gap-3 sm:gap-6 flex-wrap">
+          <div className="flex items-start justify-center gap-2 sm:gap-8">
             {[
               {
-                num: '01',
+                step: '01',
                 icon: (
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 ),
                 title: 'Pick a tool',
-                desc: `${tools.length}+ tools for developers`,
+                desc: `${tools.length}+ developer tools`,
               },
               {
-                num: '02',
+                step: '02',
                 icon: (
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -115,7 +115,7 @@ export default function HomePage() {
                 desc: 'Nothing uploaded — ever',
               },
               {
-                num: '03',
+                step: '03',
                 icon: (
                   <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -124,25 +124,23 @@ export default function HomePage() {
                 title: 'Get your result',
                 desc: 'Instant, right in your tab',
               },
-            ].map(({ num, icon, title, desc }) => (
-              <div key={num} className="flex items-center gap-3 sm:gap-5">
-                <div className="flex flex-col sm:flex-row items-center sm:items-start gap-2 sm:gap-3 text-center sm:text-left">
-                  <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 flex items-center justify-center">
+            ].map(({ step, icon, title, desc }, i) => (
+              <div key={step} className="flex items-center gap-2 sm:gap-3">
+                <div className="flex flex-col items-center text-center w-24 sm:w-32">
+                  <div className="w-10 h-10 rounded-xl bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 flex items-center justify-center mb-2">
                     {icon}
                   </div>
-                  <div>
-                    <span className="text-[10px] font-mono text-gray-400 dark:text-gray-500 block mb-0.5">{num}</span>
-                    <span className="text-sm font-semibold text-gray-800 dark:text-gray-100 block">{title}</span>
-                    <span className="text-xs text-gray-500 dark:text-gray-400 leading-snug">{desc}</span>
-                  </div>
+                  <span className="text-[10px] font-mono text-red-500 dark:text-red-400 font-semibold mb-0.5">{step}</span>
+                  <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">{title}</span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400 leading-snug mt-0.5">{desc}</span>
                 </div>
-                {num !== '03' && (
-                  <span className="text-gray-300 dark:text-gray-600 text-lg hidden sm:block flex-shrink-0">→</span>
+                {i < 2 && (
+                  <span className="text-gray-300 dark:text-gray-600 text-lg hidden sm:block mt-[-20px]">→</span>
                 )}
               </div>
             ))}
           </div>
-          <p className="text-center text-xs text-gray-400 dark:text-gray-500 mt-5 flex items-center justify-center gap-1.5">
+          <p className="text-center text-xs text-gray-400 dark:text-gray-500 mt-6 flex items-center justify-center gap-1.5">
             <svg className="w-3.5 h-3.5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
@@ -188,9 +186,11 @@ export default function HomePage() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
                 ),
+                accentBg: 'from-red-50 to-white dark:from-red-950/30 dark:to-gray-900',
                 iconBg: 'bg-red-100 dark:bg-red-900/40',
                 iconColor: 'text-red-600 dark:text-red-400',
                 title: '100% Private',
+                stat: 'Zero data transfer',
                 desc: 'Your data never leaves your browser. No servers, no tracking, no logs — ever.',
               },
               {
@@ -199,10 +199,12 @@ export default function HomePage() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                   </svg>
                 ),
+                accentBg: 'from-amber-50 to-white dark:from-amber-950/30 dark:to-gray-900',
                 iconBg: 'bg-amber-100 dark:bg-amber-900/40',
                 iconColor: 'text-amber-600 dark:text-amber-400',
                 title: 'Lightning Fast',
-                desc: 'Everything runs instantly in your browser tab. No waiting for server responses.',
+                stat: 'Instant results',
+                desc: 'Everything runs in your browser tab. No server roundtrips, no waiting.',
               },
               {
                 icon: (
@@ -210,20 +212,23 @@ export default function HomePage() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 ),
+                accentBg: 'from-blue-50 to-white dark:from-blue-950/30 dark:to-gray-900',
                 iconBg: 'bg-blue-100 dark:bg-blue-900/40',
                 iconColor: 'text-blue-600 dark:text-blue-400',
                 title: 'Completely Free',
-                desc: 'No signup, no paywall, no limits. Open the page and start using tools immediately.',
+                stat: 'No signup required',
+                desc: 'No paywall, no limits. Open the page and start using tools immediately.',
               },
-            ].map(({ icon, iconBg, iconColor, title, desc }) => (
+            ].map(({ icon, accentBg, iconBg, iconColor, title, stat, desc }) => (
               <div
                 key={title}
-                className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 text-center hover:border-red-200 dark:hover:border-red-800 transition-colors"
+                className={`bg-gradient-to-br ${accentBg} dark:bg-gradient-to-br border border-gray-200 dark:border-gray-800 rounded-xl p-4 text-center hover:shadow-md transition-shadow`}
               >
                 <div className={`w-10 h-10 ${iconBg} ${iconColor} rounded-lg flex items-center justify-center mx-auto mb-2`}>
                   {icon}
                 </div>
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-0.5">{title}</h3>
+                <p className="text-[11px] font-medium text-red-600 dark:text-red-400 mb-1.5">{stat}</p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{desc}</p>
               </div>
             ))}
