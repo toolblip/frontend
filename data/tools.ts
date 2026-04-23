@@ -576,7 +576,6 @@ export const tools: Tool[] = [
   { name: 'SERP Preview', slug: 'serp-preview-quick', description: 'See how a page title and description appear in Google search results.', emoji: '🔎', category: 'SEO' },
   { name: 'Color Picker', slug: 'color-picker-quick', description: 'Pick any color and get HEX, RGB, HSL, HSV, and CMYK values with a live preview.', emoji: '🎨', category: 'Color' },
   { name: 'Contrast Checker', slug: 'contrast-checker-quick', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail indicators.', emoji: '♿', category: 'Color' },
-];
 
   // --- New tools (2026-04-23 #6) ---
   { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-tool', description: 'Generate lorem ipsum placeholder text with customizable paragraphs, sentences, and word count.', emoji: '📜', category: 'Text' },
@@ -597,6 +596,22 @@ export const tools: Tool[] = [
   { name: 'Unit Converter', slug: 'unit-converter-tool', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
   { name: 'Number Base Converter', slug: 'number-base-converter-tool', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly.', emoji: '🔢', category: 'Conversion' },
 
+  // --- New tools (2026-04-23 #7) ---
+  { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-new', description: 'Generate lorem ipsum placeholder text with customizable paragraphs, sentences, and word count.', emoji: '📜', category: 'Text' },
+  { name: 'Grammar Checker', slug: 'grammar-checker-new', description: 'Check grammar and spelling errors with one-click fixes and detailed explanations.', emoji: '✅', category: 'Text' },
+  { name: 'Readability Score', slug: 'readability-score-new', description: 'Calculate Flesch-Kincaid and other readability indices for any written content.', emoji: '📊', category: 'Text' },
+  { name: 'Text Sorter', slug: 'text-sorter-new', description: 'Sort lines alphabetically, by length, numerically, reverse, or in random order.', emoji: '📋', category: 'Text' },
+  { name: 'Regex Tester', slug: 'regex-tester-new', description: 'Test regex patterns with real-time match highlighting, capture groups, and replacements.', emoji: '🔍', category: 'Developer' },
+  { name: 'JWT Decoder', slug: 'jwt-decoder-new', description: 'Decode JWT tokens and inspect header, payload, expiration, and signature segments.', emoji: '🎫', category: 'Developer' },
+  { name: 'Cron Expression Generator', slug: 'cron-generator-new', description: 'Build cron schedules visually with point-and-click controls and human-readable output.', emoji: '🕐', category: 'Developer' },
+  { name: 'HTTP Headers Viewer', slug: 'http-headers-viewer-new', description: 'View HTTP request and response headers for any URL with timing breakdown.', emoji: '📦', category: 'Developer' },
+  { name: 'Port Scanner', slug: 'port-scanner-new', description: 'Scan common ports on a host to identify open services and running applications.', emoji: '🚪', category: 'Developer' },
+  { name: 'Favicon Generator', slug: 'favicon-generator-new', description: 'Create favicon.ico and app icons from any image or emoji with multiple sizes.', emoji: '🌐', category: 'Image' },
+  { name: 'Image Resizer', slug: 'image-resizer-new', description: 'Resize images to exact dimensions with aspect ratio lock and batch support.', emoji: '📐', category: 'Image' },
+  { name: 'Meta Tag Generator', slug: 'meta-tag-generator-new', description: 'Generate SEO meta tags, Open Graph, and Twitter Card tags with live preview.', emoji: '🏷️', category: 'SEO' },
+  { name: 'SERP Preview', slug: 'serp-preview-new', description: 'See how a page title and description appear in Google search results.', emoji: '🔎', category: 'SEO' },
+  { name: 'Color Picker', slug: 'color-picker-new', description: 'Pick any color visually and get HEX, RGB, HSL, HSV, and CMYK values instantly.', emoji: '🎨', category: 'Color' },
+  { name: 'Contrast Checker', slug: 'contrast-checker-new', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail indicators.', emoji: '♿', category: 'Color' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network'] as const;
