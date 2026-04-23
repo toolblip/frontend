@@ -872,6 +872,23 @@ export const tools: Tool[] = [
   { name: 'HEX to CMYK Converter', slug: 'hex-to-cmyk', description: 'Convert HEX color codes to CMYK values for print design with live preview.', emoji: '🎨', category: 'Color' },
   { name: 'Data URI Generator', slug: 'data-uri-generator', description: 'Encode any file or text as a data URI for embedding in HTML, CSS, or XML.', emoji: '🔗', category: 'Conversion' },
   { name: 'Slug Permalink Checker', slug: 'slug-permalink-checker', description: 'Check URL slug availability and analyze permalink structure for SEO-friendly paths.', emoji: '🔗', category: 'SEO' },
+
+  // --- New tools (2026-04-24 #4) ---
+  { name: 'Passive Voice Detector', slug: 'passive-voice-detector', description: 'Detect passive voice constructions in text and suggest active voice rewrites for clearer writing.', emoji: '🕵️', category: 'Text' },
+  { name: 'Text Line Deduplicator', slug: 'text-line-deduplicator', description: 'Remove duplicate lines from text while preserving the original order of unique entries.', emoji: '🗑️', category: 'Text' },
+  { name: 'Reading Time Estimator', slug: 'reading-time-estimator', description: 'Estimate how long it takes to read any text based on average reading speed of 200 words per minute.', emoji: '⏱️', category: 'Text' },
+  { name: 'Word Frequency Table', slug: 'word-frequency-table', description: 'Generate a frequency table showing how often each word appears in any text.', emoji: '📊', category: 'Text' },
+  { name: 'HTTP Method Tester', slug: 'http-method-tester', description: 'Send HTTP requests using GET, POST, PUT, DELETE, and other methods with custom headers and body.', emoji: '🌐', category: 'Developer' },
+  { name: 'API Auth Header Generator', slug: 'api-auth-header-generator', description: 'Generate API authentication headers for Bearer, Basic, and AWS Signature schemes.', emoji: '🔐', category: 'Developer' },
+  { name: 'JSON Schema Viewer', slug: 'json-schema-viewer', description: 'Visualize JSON Schema as a tree diagram and explore definitions, properties, and constraints.', emoji: '🗺️', category: 'Developer' },
+  { name: 'Image Border Adder', slug: 'image-border-adder', description: 'Add borders of custom width, color, and style around any image with live preview.', emoji: '🖼️', category: 'Image' },
+  { name: 'Image Rotate Tool', slug: 'image-rotate-tool', description: 'Rotate images by 90, 180, or 270 degrees or set a custom angle with one click.', emoji: '🔄', category: 'Image' },
+  { name: 'Image Flip Tool', slug: 'image-flip-tool', description: 'Flip images horizontally or vertically to mirror them with instant download.', emoji: '🔃', category: 'Image' },
+  { name: 'Heading Tag Analyzer', slug: 'heading-tag-analyzer', description: 'Analyze heading structure (H1–H6) on any webpage to check for proper hierarchy and SEO best practices.', emoji: '🏷️', category: 'SEO' },
+  { name: 'Canonical Tag Checker', slug: 'canonical-tag-checker', description: 'Check if a webpage has a canonical tag and see which URL is set as the preferred version.', emoji: '🔗', category: 'SEO' },
+  { name: 'Color Luminance Checker', slug: 'color-luminance-checker', description: 'Check relative luminance and brightness of any color to predict contrast on light or dark backgrounds.', emoji: '💡', category: 'Color' },
+  { name: 'Color Temperature Adjuster', slug: 'color-temperature-adjuster', description: 'Shift a color warmer (yellow/red) or cooler (blue) by adjusting its temperature value.', emoji: '🎨', category: 'Color' },
+  { name: 'Angle Unit Converter', slug: 'angle-unit-converter', description: 'Convert angles between degrees, radians, gradians, and arcminutes instantly.', emoji: '📐', category: 'Conversion' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network'] as const;
