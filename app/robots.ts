@@ -1,11 +1,13 @@
 import { MetadataRoute } from 'next';
 
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://toolblip.com';
+
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://toolblip.com/sitemap.xml',
+    sitemap: `${BASE_URL}/sitemap.xml`,
   };
 }
