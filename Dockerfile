@@ -24,6 +24,7 @@ WORKDIR /app
 
 # Next.js 15 standalone: server.js, .env, .next, blog/, content/
 COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
 # Install production deps (standalone doesn't bundle node_modules)
 RUN npm install --omit=dev
