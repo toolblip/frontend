@@ -23,8 +23,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: 'monthly' as const,
   }));
 
-  // Blog posts from root blog/ directory
-  const blogDir = path.join(process.cwd(), 'blog');
+  // Blog posts from content/blog/ directory
+  const blogDir = path.join(process.cwd(), 'content', 'blog');
   const blogPosts: MetadataRoute.Sitemap = [];
 
   if (fs.existsSync(blogDir)) {
