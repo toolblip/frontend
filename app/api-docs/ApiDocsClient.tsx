@@ -5,7 +5,8 @@ import CodeBlock from '@/components/ui/CodeBlock';
 
 // ─── Config ────────────────────────────────────────────────────────────────
 
-const BASE_URL = 'https://api.toolblip.com';
+// Railway production — api.toolblip.com once SSL is ready (Cloudflare-proxied)
+const BASE_URL = 'https://toolblip-api-production.up.railway.app';
 
 const ENDPOINTS = [
   { id: 'tools-list',     method: 'GET',    path: '/api/tools',          auth: false, status: 200, label: 'List all tools' },
@@ -111,12 +112,12 @@ export default function ApiDocsClient() {
               <code className="block text-sm font-mono text-red-600 dark:text-red-400 break-all">{BASE_URL}</code>
               <p className="text-[10px] text-green-600 dark:text-green-400 mt-1.5 flex items-center gap-1">
                 <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                SSL active — Cloudflare-proxied
+                Railway — SSL active
               </p>
               <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Production</p>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Coming soon</p>
                 <code className="block text-[11px] font-mono text-gray-500 dark:text-gray-600 break-all">
-                  https://toolblip-api-production.up.railway.app
+                  https://api.toolblip.com
                 </code>
               </div>
             </div>
