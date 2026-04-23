@@ -1,14 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { Home, Wrench, Compass } from 'lucide-react';
+import { Home, Wrench, MapPin } from 'lucide-react';
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4">
       <div className="max-w-md w-full text-center">
         <div className="w-16 h-16 rounded-full bg-[#58D65D]/10 flex items-center justify-center mx-auto mb-6">
-          <Compass className="w-7 h-7 text-[#58D65D]" />
+          <MapPin className="w-7 h-7 text-[#58D65D]" />
         </div>
         <p className="text-[8rem] sm:text-[10rem] font-black leading-none text-[#58D65D] dark:text-[#58D65D] select-none mb-2 tracking-tighter">
           404
