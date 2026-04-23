@@ -1,21 +1,22 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import CodeBlock from '@/components/ui/CodeBlock';
 
 // ─── Config ────────────────────────────────────────────────────────────────
 
-// Primary — Railway production; api.toolblip.com is the production alias
-const BASE_URL = 'https://toolblip-api-production.up.railway.app';
-const API_TOOLBLIP_URL = 'https://api.toolblip.com';
+// Primary — api.toolblip.com (Cloudflare-proxied, SSL active)
+// Fallback — Railway production URL
+const BASE_URL = 'https://api.toolblip.com';
+const RAILWAY_URL = 'https://toolblip-api-production.up.railway.app';
 
 const ENDPOINTS = [
-  { id: 'tools-list',    method: 'GET',    path: '/api/tools',          auth: false, status: 200, desc: 'List all tools' },
-  { id: 'tools-detail', method: 'GET',    path: '/api/tools/{slug}',   auth: false, status: 200, desc: 'Get a single tool by slug' },
-  { id: 'auth-register',method: 'POST',   path: '/api/auth/register',  auth: false, status: 201, desc: 'Create a new account' },
-  { id: 'auth-login',   method: 'POST',   path: '/api/auth/login',     auth: false, status: 200, desc: 'Sign in to your account' },
-  { id: 'auth-logout',  method: 'POST',   path: '/api/auth/logout',    auth: true,  status: 200, desc: 'Revoke the current session' },
-  { id: 'auth-user',    method: 'GET',    path: '/api/auth/user',      auth: true,  status: 200, desc: 'Get the authenticated user' },
+  { id: 'tools-list',     method: 'GET',    path: '/api/tools',           auth: false, status: 200, desc: 'List all tools' },
+  { id: 'tools-detail',   method: 'GET',    path: '/api/tools/{slug}',    auth: false, status: 200, desc: 'Get a single tool' },
+  { id: 'auth-register',  method: 'POST',   path: '/api/auth/register',   auth: false, status: 201, desc: 'Create an account' },
+  { id: 'auth-login',     method: 'POST',   path: '/api/auth/login',      auth: false, status: 200, desc: 'Sign in' },
+  { id: 'auth-logout',    method: 'POST',   path: '/api/auth/logout',    auth: true,  status: 200, desc: 'Revoke session' },
+  { id: 'auth-user',      method: 'GET',    path: '/api/auth/user',      auth: true,  status: 200, desc: 'Get authenticated user' },
 ] as const;
 
 const ERROR_CODES = [
@@ -28,24 +29,61 @@ const ERROR_CODES = [
   { code: 500, label: 'Server Error' },
 ] as const;
 
+const SECTIONS = [
+  { id: 'overview',    label: 'Overview' },
+  { id: 'auth',        label: 'Authentication' },
+  { id: 'tools-list',   label: 'GET /api/tools' },
+  { id: 'tools-detail',label: 'GET /api/tools/{slug}' },
+  { id: 'auth-register',label: 'POST /api/auth/register' },
+  { id: 'auth-login',  label: 'POST /api/auth/login' },
+  { id: 'auth-logout', label: 'POST /api/auth/logout' },
+  { id: 'auth-user',   label: 'GET /api/auth/user' },
+  { id: 'errors',      label: 'Error Codes' },
+] as const;
+
 // ─── Page ─────────────────────────────────────────────────────────────────
 
 export default function ApiDocsClient() {
-  const [activeSection, setActiveSection] = useState<string>('quick-start');
+  const [activeSection, setActiveSection] = useState('overview');
+  const observerRef = useRef<IntersectionObserver | null>(null);
+
+  useEffect(() => {
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        }
+      },
+      { rootMargin: '-20% 0px -70% 0px', threshold: 0 }
+    );
+
+    for (const { id } of SECTIONS) {
+      const el = document.getElementById(id);
+      if (el) observerRef.current!.observe(el);
+    }
+
+    return () => observerRef.current?.disconnect();
+  }, []);
+
+  const scrollTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#090909] text-gray-900 dark:text-gray-100">
+    <div className="min-h-screen bg-white dark:bg-[#090909] text-gray-900 dark:text-gray-100 font-sans">
 
-      {/* ── Top bar ── */}
-      <header className="sticky top-0 z-20 bg-white/95 dark:bg-[#090909]/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-800/80">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
-          <span className="text-[11px] font-mono font-bold bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 px-2.5 py-1 rounded-full">
+      {/* ── Sticky top bar ── */}
+      <header className="sticky top-0 z-30 bg-white/95 dark:bg-[#090909]/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-800/80">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
+          <span className="text-[11px] font-mono font-bold bg-red-500 text-white px-2.5 py-1 rounded-full">
             REST v1
           </span>
           <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Toolblip API</span>
           <div className="ml-auto flex items-center gap-3">
-            <span className="hidden sm:block text-[11px] font-mono text-gray-400">{BASE_URL}</span>
-            <span className="flex items-center gap-1.5 text-[11px] text-green-600 dark:text-green-400">
+            <code className="hidden sm:block text-[11px] font-mono text-gray-400">{BASE_URL}</code>
+            <span className="flex items-center gap-1.5 text-[11px] text-green-600 dark:text-green-400 font-medium">
               <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
               Live
             </span>
@@ -54,130 +92,116 @@ export default function ApiDocsClient() {
       </header>
 
       {/* ── Hero ── */}
-      <div className="border-b border-gray-100 dark:border-gray-800/60 bg-gray-50 dark:bg-[#090909]">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-14">
-          <div className="flex flex-col lg:flex-row lg:items-start gap-8">
+      <div className="bg-gray-50 dark:bg-[#0f0f0f] border-b border-gray-100 dark:border-gray-800/60">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-16 flex flex-col lg:flex-row lg:items-start gap-10">
 
-            {/* Intro */}
-            <div className="flex-1 min-w-0">
-              <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-3 leading-tight">
-                Toolblip REST API
-              </h1>
-              <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed max-w-lg mb-6">
-                Browse developer tools and manage user accounts programmatically. All responses are JSON.
-                Authenticate with a Bearer token to access protected endpoints.
-              </p>
+          {/* Intro */}
+          <div className="flex-1 min-w-0">
+            <h1 className="text-4xl sm:text-5xl font-black text-gray-900 dark:text-white mb-4 leading-tight tracking-tight">
+              API Reference
+            </h1>
+            <p className="text-base text-gray-500 dark:text-gray-400 leading-relaxed max-w-xl mb-8">
+              HTTP REST API for browsing developer tools and managing user accounts. All responses are JSON.
+              Authenticate with a Bearer token to access protected endpoints.
+            </p>
 
-              {/* Endpoint pills */}
-              <div className="flex flex-wrap gap-2">
-                {ENDPOINTS.map(({ id, method, path }) => (
-                  <a
-                    key={id}
-                    href={`#${id}`}
-                    className="inline-flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-full bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:border-gray-300 dark:hover:border-gray-700 transition-colors"
-                  >
-                    <MethodPill method={method} />
-                    <span className="font-mono">{path}</span>
-                  </a>
-                ))}
-              </div>
+            {/* Endpoint pills */}
+            <div className="flex flex-wrap gap-2">
+              {ENDPOINTS.map(({ id, method, path }) => (
+                <button
+                  key={id}
+                  onClick={() => scrollTo(id)}
+                  className="inline-flex items-center gap-2 text-[11px] px-3 py-1.5 rounded-full bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:border-gray-300 dark:hover:border-gray-700 transition-colors cursor-pointer"
+                >
+                  <MethodPill method={method} />
+                  <span className="font-mono">{path}</span>
+                </button>
+              ))}
             </div>
-
-            {/* Base URL card */}
-            <div className="shrink-0 lg:w-72">
-              <div className="bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Base URL</p>
-                <code className="block text-sm font-mono text-red-600 dark:text-red-400 break-all">{BASE_URL}</code>
-                <p className="text-[10px] text-green-600 dark:text-green-400 mt-1.5 flex items-center gap-1">
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                  Railway — Live
-                </p>
-                <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Production alias</p>
-                  <code className="block text-[11px] font-mono text-gray-400 break-all">{API_TOOLBLIP_URL}</code>
-                  <p className="text-[10px] text-gray-500 mt-1">SSL active — Cloudflare-proxied</p>
-                </div>
-              </div>
-            </div>
-
           </div>
+
+          {/* Base URL card */}
+          <div className="shrink-0 lg:w-72">
+            <div className="bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm">
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Base URL</p>
+              <code className="block text-sm font-mono text-red-600 dark:text-red-400 break-all">{BASE_URL}</code>
+              <p className="text-[10px] text-green-600 dark:text-green-400 mt-1.5 flex items-center gap-1">
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                SSL active — Cloudflare-proxied
+              </p>
+              <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Railway fallback</p>
+                <code className="block text-[11px] font-mono text-gray-500 dark:text-gray-600 break-all">{RAILWAY_URL}</code>
+                <p className="text-[10px] text-gray-400 mt-1">For environments that need direct IP access</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
 
-      {/* ── Content ── */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 flex gap-10 lg:gap-12">
+      {/* ── Body ── */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 flex gap-10 lg:gap-12">
 
-        {/* Sidebar */}
-        <aside className="w-36 xl:w-44 shrink-0 hidden md:block">
-          <nav className="sticky top-20 space-y-0.5 text-sm max-h-[calc(100vh-5rem)] overflow-y-auto pb-8 pr-1">
+        {/* Sidebar nav */}
+        <aside className="w-36 xl:w-48 shrink-0 hidden md:block">
+          <nav className="sticky top-20 space-y-0.5 text-sm max-h-[calc(100vh-6rem)] overflow-y-auto pb-8 pr-1">
             <p className="px-3 py-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">On this page</p>
-            {[
-              { id: 'quick-start',   label: 'Quick Start' },
-              { id: 'auth',          label: 'Authentication' },
-              { id: 'tools-list',    label: 'GET /api/tools' },
-              { id: 'tools-detail',  label: 'GET /api/tools/{slug}' },
-              { id: 'auth-register', label: 'POST /api/auth/register' },
-              { id: 'auth-login',   label: 'POST /api/auth/login' },
-              { id: 'auth-logout',  label: 'POST /api/auth/logout' },
-              { id: 'auth-user',    label: 'GET /api/auth/user' },
-              { id: 'errors',       label: 'Error Codes' },
-            ].map(({ id, label }) => (
-              <a
+            {SECTIONS.map(({ id, label }) => (
+              <button
                 key={id}
-                href={`#${id}`}
-                onClick={() => setActiveSection(id)}
-                className={`flex items-center px-3 py-1.5 rounded-lg transition-colors text-xs ${
+                onClick={() => scrollTo(id)}
+                className={`w-full flex items-center px-3 py-1.5 rounded-lg transition-colors text-xs text-left cursor-pointer ${
                   activeSection === id
-                    ? 'text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800 font-medium'
+                    ? 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/30 font-semibold'
                     : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-900'
                 }`}
               >
                 {label}
-              </a>
+              </button>
             ))}
           </nav>
         </aside>
 
-        {/* Main */}
-        <main className="flex-1 min-w-0 space-y-14 sm:space-y-16">
+        {/* Main content */}
+        <main className="flex-1 min-w-0 space-y-16">
 
-          {/* ── Quick Start ── */}
-          <section id="quick-start" className="scroll-mt-16">
-            <SectionHeading>Quick Start</SectionHeading>
+          {/* ── Overview ── */}
+          <section id="overview" className="scroll-mt-16">
+            <SectionHeading>Overview</SectionHeading>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-              <div className="p-4 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 rounded-xl">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Authentication</p>
-                <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
-                  Pass your Bearer token in the <InlineCode>Authorization</InlineCode> header for protected routes.
-                </p>
-              </div>
-              <div className="p-4 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 rounded-xl">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Format</p>
-                <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
-                  All responses are JSON. Include <InlineCode>Accept: application/json</InlineCode> on every request.
-                </p>
-              </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+              {[
+                { icon: '🌐', title: 'Base URL', body: `All requests go to ${BASE_URL}` },
+                { icon: '🔐', title: 'Auth', body: 'Bearer token in Authorization header' },
+                { icon: '📦', title: 'Format', body: 'All responses are JSON. Always include Accept: application/json' },
+              ].map(({ icon, title, body }) => (
+                <div key={title} className="p-4 bg-gray-50 dark:bg-[#0f0f0f] border border-gray-200 dark:border-gray-800 rounded-xl">
+                  <span className="text-lg">{icon}</span>
+                  <p className="text-xs font-bold text-gray-700 dark:text-gray-300 mt-2 mb-1">{title}</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{body}</p>
+                </div>
+              ))}
             </div>
 
-            <div className="p-4 bg-amber-50 dark:bg-amber-900/15 border border-amber-200 dark:border-amber-800/50 rounded-xl text-xs text-amber-700 dark:text-amber-400 leading-relaxed mb-6">
-              <strong>Rate limiting:</strong> Avoid hammering the API. Back off and retry after the indicated delay if you hit 429.
+            <div className="p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 rounded-xl text-xs text-amber-700 dark:text-amber-400 leading-relaxed">
+              <strong>Rate limiting:</strong> Back off and retry with the Retry-After header if you hit 429.
             </div>
 
             {/* Endpoint table */}
-            <div className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+            <div className="mt-6 rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="bg-gray-50 dark:bg-[#111] border-b border-gray-200 dark:border-gray-800">
-                    <th className="text-left px-4 py-2.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest w-20">Method</th>
-                    <th className="text-left px-4 py-2.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Endpoint</th>
-                    <th className="text-left px-4 py-2.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest w-16">Auth</th>
-                    <th className="text-left px-4 py-2.5 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Description</th>
+                    <th className="text-left px-4 py-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest w-20">Method</th>
+                    <th className="text-left px-4 py-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Endpoint</th>
+                    <th className="text-left px-4 py-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest w-16">Auth</th>
+                    <th className="text-left px-4 py-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Description</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                   {ENDPOINTS.map(({ method, path, auth, desc }) => (
-                    <tr key={path} className="bg-white dark:bg-[#090909] hover:bg-gray-50 dark:hover:bg-gray-900/40 transition-colors">
+                    <tr key={path} className="bg-white dark:bg-[#090909] hover:bg-gray-50 dark:hover:bg-gray-900/30 transition-colors">
                       <td className="px-4 py-3"><MethodPill method={method} /></td>
                       <td className="px-4 py-3 font-mono text-xs text-gray-700 dark:text-gray-300">{path}</td>
                       <td className="px-4 py-3">{auth ? <LockPill /> : <PublicPill />}</td>
@@ -192,20 +216,20 @@ export default function ApiDocsClient() {
           {/* ── Authentication ── */}
           <section id="auth" className="scroll-mt-16">
             <SectionHeading>Authentication</SectionHeading>
-            <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-4">
+            <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-5">
               Protected endpoints require a Bearer token. Obtain one from{' '}
               <InlineCode>/api/auth/register</InlineCode> or{' '}
               <InlineCode>/api/auth/login</InlineCode>, then include it in the{' '}
-              <InlineCode>Authorization</InlineCode> header:
+              <InlineCode>Authorization</InlineCode> header on every authenticated request:
             </p>
             <CodeBlock
               code={`Authorization: Bearer 1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX`}
               title="Header — all authenticated requests"
               language="bash"
             />
-            <div className="mt-4 p-4 bg-amber-50 dark:bg-amber-900/15 border border-amber-200 dark:border-amber-800/50 rounded-xl text-xs text-amber-700 dark:text-amber-400 leading-relaxed">
+            <div className="mt-4 p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 rounded-xl text-xs text-amber-700 dark:text-amber-400 leading-relaxed">
               <strong>Keep your token secret.</strong> Never expose it in client-side code or public repositories.
-              Store it securely — tokens are revoked on logout.
+              Tokens are permanently revoked on logout.
             </div>
           </section>
 
@@ -216,8 +240,8 @@ export default function ApiDocsClient() {
               Returns a paginated list of all tools. Public — no authentication required.
             </p>
 
-            <div className="mb-4">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">curl</p>
+            <div className="mb-5">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example request</p>
               <CodeBlock
                 code={`curl "${BASE_URL}/api/tools" \\
   -H "Accept: application/json"`}
@@ -226,8 +250,8 @@ export default function ApiDocsClient() {
               />
             </div>
 
-            <div className="mb-4">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Query parameters</p>
+            <div className="mb-5">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Query parameters</p>
               <div className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
                 <table className="w-full text-xs">
                   <thead>
@@ -240,8 +264,8 @@ export default function ApiDocsClient() {
                   <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                     {[
                       { name: 'category', type: 'string',  desc: 'Filter by category (e.g. AI, DevOps, Analytics)' },
-                      { name: 'page',      type: 'number',  desc: 'Page number (default: 1)' },
-                      { name: 'per_page',  type: 'number',  desc: 'Results per page (default: 20)' },
+                      { name: 'page',     type: 'number',  desc: 'Page number (default: 1)' },
+                      { name: 'per_page', type: 'number', desc: 'Results per page (default: 20)' },
                     ].map(({ name, type, desc }) => (
                       <tr key={name} className="bg-white dark:bg-[#090909]">
                         <td className="px-4 py-2.5 font-mono text-gray-700 dark:text-gray-300">{name}</td>
@@ -255,7 +279,7 @@ export default function ApiDocsClient() {
             </div>
 
             <div>
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Response — 200</p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example response — 200</p>
               <CodeBlock
                 code={`{
   "tools": {
@@ -269,16 +293,6 @@ export default function ApiDocsClient() {
         "is_pro": false,
         "emoji": "🤖",
         "created_at": "2026-01-01T00:00:00Z"
-      },
-      {
-        "id": 2,
-        "slug": "cursor",
-        "name": "Cursor",
-        "description": "AI-first code editor",
-        "category": "AI",
-        "is_pro": true,
-        "emoji": "💻",
-        "created_at": "2026-01-15T12:00:00Z"
       }
     ],
     "meta": {
@@ -301,8 +315,8 @@ export default function ApiDocsClient() {
               Fetch a single tool by its slug identifier. Returns 404 if not found.
             </p>
 
-            <div className="mb-4">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">curl</p>
+            <div className="mb-5">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example request</p>
               <CodeBlock
                 code={`curl "${BASE_URL}/api/tools/claude-code" \\
   -H "Accept: application/json"`}
@@ -311,8 +325,8 @@ export default function ApiDocsClient() {
               />
             </div>
 
-            <div className="mb-4">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Path parameters</p>
+            <div className="mb-5">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Path parameters</p>
               <div className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
                 <table className="w-full text-xs">
                   <thead>
@@ -331,8 +345,8 @@ export default function ApiDocsClient() {
               </div>
             </div>
 
-            <div className="mb-4">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Response — 200</p>
+            <div className="mb-5">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example response — 200</p>
               <CodeBlock
                 code={`{
   "tool": {
@@ -351,7 +365,7 @@ export default function ApiDocsClient() {
             </div>
 
             <div>
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Error — 404</p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error — 404</p>
               <CodeBlock
                 code={`{
   "message": "Tool not found"
@@ -368,8 +382,8 @@ export default function ApiDocsClient() {
               Create a new user account. Returns the user object and a Bearer token.
             </p>
 
-            <div className="mb-4">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">curl</p>
+            <div className="mb-5">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example request</p>
               <CodeBlock
                 code={`curl -X POST "${BASE_URL}/api/auth/register" \\
   -H "Accept: application/json" \\
@@ -385,9 +399,9 @@ export default function ApiDocsClient() {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
               <div>
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Request body</p>
+                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Request body</p>
                 <CodeBlock
                   code={`{
   "name": "Harun",
@@ -399,7 +413,7 @@ export default function ApiDocsClient() {
                 />
               </div>
               <div>
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Response — 201</p>
+                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Response — 201</p>
                 <CodeBlock
                   code={`{
   "user": {
@@ -415,8 +429,8 @@ export default function ApiDocsClient() {
               </div>
             </div>
 
-            <div className="mt-4">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Error — 422</p>
+            <div>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error — 422</p>
               <CodeBlock
                 code={`{
   "message": "The given data was invalid.",
@@ -437,8 +451,8 @@ export default function ApiDocsClient() {
               Sign in with existing credentials. Returns the user object and a Bearer token.
             </p>
 
-            <div className="mb-4">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">curl</p>
+            <div className="mb-5">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example request</p>
               <CodeBlock
                 code={`curl -X POST "${BASE_URL}/api/auth/login" \\
   -H "Accept: application/json" \\
@@ -449,9 +463,9 @@ export default function ApiDocsClient() {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
               <div>
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Request body</p>
+                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Request body</p>
                 <CodeBlock
                   code={`{
   "email": "harun@example.com",
@@ -461,7 +475,7 @@ export default function ApiDocsClient() {
                 />
               </div>
               <div>
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Response — 200</p>
+                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Response — 200</p>
                 <CodeBlock
                   code={`{
   "user": {
@@ -477,8 +491,8 @@ export default function ApiDocsClient() {
               </div>
             </div>
 
-            <div className="mt-4">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Error — 401</p>
+            <div>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error — 401</p>
               <CodeBlock
                 code={`{
   "message": "Invalid credentials"
@@ -495,8 +509,8 @@ export default function ApiDocsClient() {
               Revoke the current Bearer token and end the session.
             </p>
 
-            <div className="mb-4">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">curl</p>
+            <div className="mb-5">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example request</p>
               <CodeBlock
                 code={`curl -X POST "${BASE_URL}/api/auth/logout" \\
   -H "Accept: application/json" \\
@@ -506,31 +520,22 @@ export default function ApiDocsClient() {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Headers</p>
-                <CodeBlock
-                  code={`Authorization: Bearer 1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX`}
-                  language="bash"
-                />
-              </div>
-              <div>
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Response — 200</p>
-                <CodeBlock
-                  code={`{
+            <div className="mb-5">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Response — 200</p>
+              <CodeBlock
+                code={`{
   "message": "Logged out successfully"
 }`}
-                  language="json"
-                />
-              </div>
+                language="json"
+              />
             </div>
 
-            <div className="mt-4 p-3 bg-amber-50 dark:bg-amber-900/15 border border-amber-200 dark:border-amber-800/50 rounded-xl text-xs text-amber-700 dark:text-amber-400 leading-relaxed">
+            <div className="p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 rounded-xl text-xs text-amber-700 dark:text-amber-400 leading-relaxed">
               <strong>Token revoked.</strong> The Bearer token used in this request is now permanently invalid.
             </div>
 
-            <div className="mt-4">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Error — 401</p>
+            <div className="mt-5">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error — 401</p>
               <CodeBlock
                 code={`{
   "message": "Unauthenticated."
@@ -547,8 +552,8 @@ export default function ApiDocsClient() {
               Retrieve the currently authenticated user profile.
             </p>
 
-            <div className="mb-4">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">curl</p>
+            <div className="mb-5">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example request</p>
               <CodeBlock
                 code={`curl "${BASE_URL}/api/auth/user" \\
   -H "Accept: application/json" \\
@@ -558,18 +563,10 @@ export default function ApiDocsClient() {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Headers</p>
-                <CodeBlock
-                  code={`Authorization: Bearer 1|vXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX`}
-                  language="bash"
-                />
-              </div>
-              <div>
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Response — 200</p>
-                <CodeBlock
-                  code={`{
+            <div className="mb-5">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Response — 200</p>
+              <CodeBlock
+                code={`{
   "user": {
     "id": 1,
     "name": "Harun",
@@ -577,13 +574,12 @@ export default function ApiDocsClient() {
     "is_pro": false
   }
 }`}
-                  language="json"
-                />
-              </div>
+                language="json"
+              />
             </div>
 
-            <div className="mt-4">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2 px-1">Error — 401</p>
+            <div>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error — 401</p>
               <CodeBlock
                 code={`{
   "message": "Unauthenticated."
@@ -601,8 +597,8 @@ export default function ApiDocsClient() {
               Validation failures (422) include an <InlineCode>errors</InlineCode> object.
             </p>
 
-            <div className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden mb-5">
-              <div className="bg-gray-50 dark:bg-[#111] px-5 py-2.5 border-b border-gray-200 dark:border-gray-800">
+            <div className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden mb-6">
+              <div className="bg-gray-50 dark:bg-[#111] px-5 py-3 border-b border-gray-200 dark:border-gray-800">
                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
                   Example — 422 Validation Error
                 </span>
@@ -619,11 +615,11 @@ export default function ApiDocsClient() {
               />
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
               {ERROR_CODES.map(({ code, label }) => (
                 <div
                   key={code}
-                  className="flex items-center gap-2.5 bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 rounded-lg px-3 py-2"
+                  className="flex items-center gap-2.5 bg-gray-50 dark:bg-[#0f0f0f] border border-gray-200 dark:border-gray-800 rounded-lg px-3 py-2.5"
                 >
                   <span className="font-mono font-bold text-sm text-gray-700 dark:text-gray-300">{code}</span>
                   <span className="text-xs text-gray-500 dark:text-gray-400">{label}</span>
@@ -636,11 +632,11 @@ export default function ApiDocsClient() {
           <footer className="pt-8 border-t border-gray-100 dark:border-gray-800/60 text-center">
             <p className="text-gray-400 dark:text-gray-600 text-xs">
               Questions?{' '}
-              <a href="mailto:harun@toolblip.com" className="text-red-600 dark:text-red-400 hover:underline transition-colors">
+              <a href="mailto:harun@toolblip.com" className="text-red-600 dark:text-red-400 hover:underline">
                 harun@toolblip.com
               </a>
               <span className="mx-2 text-gray-300 dark:text-gray-700">·</span>
-              <a href="https://github.com/toolblip" target="_blank" rel="noopener noreferrer" className="text-red-600 dark:text-red-400 hover:underline transition-colors">
+              <a href="https://github.com/toolblip" target="_blank" rel="noopener noreferrer" className="text-red-600 dark:text-red-400 hover:underline">
                 GitHub
               </a>
             </p>
@@ -673,7 +669,7 @@ function SectionHeading({ children }: { children: React.ReactNode }) {
 
 function EndpointHeader({ method, path, auth, status }: { method: string; path: string; auth: boolean; status: number }) {
   return (
-    <div className="flex items-center gap-3 mb-3 flex-wrap">
+    <div className="flex items-center gap-2.5 mb-3 flex-wrap">
       <MethodPill method={method} />
       <code className="text-base font-mono font-semibold text-gray-900 dark:text-gray-100">{path}</code>
       {auth ? <LockPill /> : <PublicPill />}
@@ -692,7 +688,7 @@ function MethodPill({ method }: { method: string }) {
 
 function LockPill() {
   return (
-    <span className="text-[11px] text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 px-2 py-0.5 rounded-full font-medium">
+    <span className="text-[11px] text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/30 px-2 py-0.5 rounded-full font-medium">
       🔒 auth
     </span>
   );
@@ -700,7 +696,7 @@ function LockPill() {
 
 function PublicPill() {
   return (
-    <span className="text-[11px] text-gray-400 dark:text-gray-600 bg-gray-50 dark:bg-gray-900 px-2 py-0.5 rounded-full">
+    <span className="text-[11px] text-gray-400 dark:text-gray-600 bg-gray-100 dark:bg-gray-900 px-2 py-0.5 rounded-full">
       public
     </span>
   );
