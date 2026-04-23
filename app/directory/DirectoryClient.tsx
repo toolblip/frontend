@@ -4,16 +4,20 @@ import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { tools } from '@/data/tools';
 
-const TABS = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS'] as const;
+const CATEGORIES = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS'] as const;
+type Category = typeof CATEGORIES[number];
 
 export default function DirectoryClient() {
   const [query, setQuery] = useState('');
-  const [activeTab, setActiveTab] = useState<typeof TABS[number]>('All');
+  const [activeTab, setActiveTab] = useState<Category>('All');
   const [showTopBtn, setShowTopBtn] = useState(false);
   const [visibleCount, setVisibleCount] = useState(24);
+  const [mounted, setMounted] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Debounced search for performance
+  useEffect(() => { setMounted(true); }, []);
+
+  // Debounced search
   const [debouncedQuery, setDebouncedQuery] = useState('');
   useEffect(() => {
     const t = setTimeout(() => setDebouncedQuery(query), 150);
@@ -34,7 +38,11 @@ export default function DirectoryClient() {
   // Keyboard shortcut: / to focus search
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === '/' && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+      if (
+        e.key === '/' &&
+        document.activeElement?.tagName !== 'INPUT' &&
+        document.activeElement?.tagName !== 'TEXTAREA'
+      ) {
         e.preventDefault();
         inputRef.current?.focus();
       }
@@ -66,7 +74,6 @@ export default function DirectoryClient() {
 
   const displayedTools = filtered.slice(0, visibleCount);
   const hasMore = filtered.length > visibleCount;
-
   const loadMore = () => setVisibleCount((c) => c + 24);
 
   const clearAll = () => {
@@ -85,7 +92,7 @@ export default function DirectoryClient() {
             Tool Directory
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            {tools.length} free tools — search, filter, and find what you need
+            {tools.length} free tools — search, filter, and discover what you need
           </p>
         </div>
       </div>
@@ -95,46 +102,49 @@ export default function DirectoryClient() {
         <div className="max-w-6xl mx-auto px-4 py-3 space-y-3">
           {/* Search */}
           <div className="relative">
-            <svg
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+              <svg
+                className="w-4 h-4 text-gray-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </div>
             <input
               ref={inputRef}
               type="text"
-              placeholder="Search tools by name or description... (press / to focus)"
+              placeholder="Search tools by name or description..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full pl-9 pr-16 py-2.5 text-sm bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-shadow"
+              className="w-full pl-9 pr-20 py-2.5 text-sm bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-shadow"
             />
-            {query && (
+            {query ? (
               <button
                 onClick={() => setQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-1"
                 aria-label="Clear search"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
+            ) : (
+              <kbd className="hidden sm:flex absolute right-3 top-1/2 -translate-y-1/2 items-center gap-0.5 text-[10px] text-gray-400 dark:text-gray-500 font-mono bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-1.5 py-0.5 rounded pointer-events-none">
+                /
+              </kbd>
             )}
-            <kbd className="hidden sm:flex absolute right-3 top-1/2 -translate-y-1/2 items-center gap-1 text-[10px] text-gray-400 dark:text-gray-500 font-mono pointer-events-none mt-4">
-              /
-            </kbd>
           </div>
 
           {/* Category tabs */}
           <div className="flex gap-1.5 overflow-x-auto pb-0.5 scrollbar-hide">
-            {TABS.map((tab) => {
+            {CATEGORIES.map((tab) => {
               const count = tabCounts[tab] ?? 0;
               return (
                 <button
@@ -216,14 +226,14 @@ export default function DirectoryClient() {
                   key={tool.slug}
                   href={`/tools/${tool.slug}`}
                   className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-red-500 dark:hover:border-red-600 rounded-xl p-4 transition-all duration-200 hover:shadow-md hover:shadow-red-100/50 dark:hover:shadow-red-900/20 hover:-translate-y-0.5"
-                  style={{ animationDelay: `${Math.min(i, 12) * 40}ms` }}
+                  style={mounted ? { animationDelay: `${Math.min(i, 12) * 40}ms` } : {}}
                 >
                   <div className="flex items-start gap-3">
-                    <span className="text-2xl flex-shrink-0" role="img" aria-hidden="true">
+                    <span className="text-2xl flex-shrink-0 leading-none mt-0.5" role="img" aria-hidden="true">
                       {tool.emoji}
                     </span>
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2 mb-0.5 flex-wrap">
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
                         <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors truncate text-sm sm:text-base">
                           {tool.name}
                         </h3>
@@ -257,32 +267,37 @@ export default function DirectoryClient() {
           </>
         ) : (
           /* Empty state */
-          <div className="flex flex-col items-center justify-center py-24 text-center">
-            <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-2xl flex items-center justify-center mb-5">
-              <svg
-                className="w-8 h-8 text-gray-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={1.5}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
+          <div className="flex flex-col items-center justify-center py-28 text-center">
+            <div className="relative mb-6">
+              <div className="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-2xl flex items-center justify-center">
+                <svg
+                  className="w-9 h-9 text-gray-300 dark:text-gray-600"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </div>
+              <div className="absolute -bottom-1 -right-1 w-7 h-7 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-full flex items-center justify-center">
+                <span className="text-sm">🔍</span>
+              </div>
             </div>
             <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-2">
               No tools found
             </h3>
             <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs mb-1">
               {query
-                ? `No results for "${query}" in ${activeTab === 'All' ? 'any category' : activeTab}`
+                ? `No results for &ldquo;${query}&rdquo; in ${activeTab === 'All' ? 'any category' : activeTab}`
                 : `No tools in the ${activeTab} category yet`}
             </p>
-            <p className="text-xs text-gray-400 dark:text-gray-500 mb-5">
-              Try a different search term or switch categories
+            <p className="text-xs text-gray-400 dark:text-gray-500 mb-6">
+              Try a different search or switch categories
             </p>
             <button
               onClick={clearAll}
