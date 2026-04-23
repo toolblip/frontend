@@ -4,11 +4,11 @@ import ApiDocsClient from './ApiDocsClient';
 export const metadata: Metadata = {
   title: 'API Documentation | Toolblip',
   description:
-    'Toolblip REST API reference. Browse developer tools, manage accounts, and authenticate with Bearer tokens. Base URL: https://api.toolblip.com.',
+    'Toolblip REST API reference. Base URL: https://toolblip-api-production.up.railway.app. Browse tools, register, login, and more — all with Bearer token auth.',
   openGraph: {
     title: 'API Documentation | Toolblip',
     description:
-      'Toolblip REST API reference. Browse developer tools, manage accounts, and authenticate with Bearer tokens.',
+      'Toolblip REST API reference. Base URL: https://toolblip-api-production.up.railway.app.',
     url: 'https://toolblip.com/api-docs',
     siteName: 'Toolblip',
   },
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     card: 'summary',
     title: 'API Documentation | Toolblip',
     description:
-      'Toolblip REST API reference. Browse developer tools, manage accounts, and authenticate with Bearer tokens.',
+      'Toolblip REST API reference. Base URL: https://toolblip-api-production.up.railway.app.',
   },
 };
 

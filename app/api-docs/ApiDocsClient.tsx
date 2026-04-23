@@ -4,8 +4,9 @@ import CodeBlock from '@/components/ui/CodeBlock';
 
 // ─── Config ────────────────────────────────────────────────────────────────
 
-const BASE_URL = 'https://api.toolblip.com';
-const RAILWAY_URL = 'https://toolblip-api-production.up.railway.app'; // fallback if primary is unavailable
+// Primary — Railway production (api.toolblip.com points here via Cloudflare CNAME)
+const BASE_URL = 'https://toolblip-api-production.up.railway.app';
+const API_TOOLBLIP_URL = 'https://api.toolblip.com'; // production alias (SSL ready)
 
 const ENDPOINTS = [
   { id: 'tools-list',    method: 'GET',  path: '/api/tools',          auth: false, status: 200, desc: 'List all tools' },
@@ -86,12 +87,12 @@ export default function ApiDocsClient() {
                 <code className="block text-sm font-mono text-red-600 dark:text-red-400 break-all">{BASE_URL}</code>
                 <p className="text-[10px] text-green-600 dark:text-green-400 mt-1.5 flex items-center gap-1">
                   <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                  SSL active
+                  Railway — Live
                 </p>
                 <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Railway fallback</p>
-                  <code className="block text-[11px] font-mono text-gray-400 break-all">{RAILWAY_URL}</code>
-                  <p className="text-[10px] text-gray-500 mt-1">Use if primary is unreachable</p>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Production alias</p>
+                  <code className="block text-[11px] font-mono text-gray-400 break-all">{API_TOOLBLIP_URL}</code>
+                  <p className="text-[10px] text-gray-500 mt-1">SSL active — Cloudflare-proxied</p>
                 </div>
               </div>
             </div>
