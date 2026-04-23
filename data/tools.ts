@@ -855,6 +855,23 @@ export const tools: Tool[] = [
   { name: 'Contrast Checker', slug: 'contrast-checker-quick', description: 'Check color contrast ratios for WCAG AA and AAA accessibility compliance.', emoji: '♿', category: 'Color' },
   { name: 'Unit Converter', slug: 'unit-converter-quick', description: 'Convert length, weight, temperature, and more between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
   { name: 'Number Base Converter', slug: 'number-base-converter-quick', description: 'Convert between binary, decimal, hexadecimal, and octal instantly.', emoji: '🔢', category: 'Conversion' },
+
+  // --- New tools (2026-04-24 #3) ---
+  { name: 'Text Statistics Calculator', slug: 'text-statistics-calculator', description: 'Count words, sentences, syllables, characters, and analyze readability metrics for any text.', emoji: '📊', category: 'Text' },
+  { name: 'Regex Explanation Tool', slug: 'regex-explainer', description: 'Paste a regex and get a plain English explanation of what each part matches.', emoji: '🔤', category: 'Developer' },
+  { name: 'HTTP Status Codes Reference', slug: 'http-status-codes', description: 'Browse all HTTP status codes with meanings, categories, and common use cases.', emoji: '🌐', category: 'Developer' },
+  { name: 'Cron Schedule Checker', slug: 'cron-schedule-validator', description: 'Paste a cron expression and see the next 10 run times with a human-readable description.', emoji: '⏰', category: 'Developer' },
+  { name: 'JSON Tree View', slug: 'json-tree-view', description: 'Explore JSON data as an interactive tree with expand, collapse, search, and path copy.', emoji: '🌳', category: 'Developer' },
+  { name: 'Encodings Reference', slug: 'encodings-reference', description: 'View ASCII, UTF-8, HTML entities, URL encoding, Base64, and more encoding tables.', emoji: '🔤', category: 'Developer' },
+  { name: 'Image to SVG Converter', slug: 'image-to-svg-converter', description: 'Trace raster images into scalable SVG vectors with adjustable detail and colors.', emoji: '🖼️', category: 'Image' },
+  { name: 'Dominant Color Extractor', slug: 'dominant-color-extractor', description: 'Extract top dominant colors from any image and get HEX and RGB values instantly.', emoji: '🎨', category: 'Image' },
+  { name: 'Open Graph Generator', slug: 'open-graph-generator', description: 'Generate Open Graph meta tags for social sharing with live preview.', emoji: '📤', category: 'SEO' },
+  { name: 'Twitter Card Preview', slug: 'twitter-card-preview', description: 'Preview how a webpage appears when shared on Twitter with large or summary card.', emoji: '🐦', category: 'SEO' },
+  { name: 'Color Harmony Generator', slug: 'color-harmony-generator', description: 'Generate complementary, analogous, triadic, and split-complementary color palettes from any base hue.', emoji: '🎨', category: 'Color' },
+  { name: 'Color Tint Generator', slug: 'color-tint-generator', description: 'Generate tints, shades, and tonal variations of any color for consistent design palettes.', emoji: '🎨', category: 'Color' },
+  { name: 'HEX to CMYK Converter', slug: 'hex-to-cmyk', description: 'Convert HEX color codes to CMYK values for print design with live preview.', emoji: '🎨', category: 'Color' },
+  { name: 'Data URI Generator', slug: 'data-uri-generator', description: 'Encode any file or text as a data URI for embedding in HTML, CSS, or XML.', emoji: '🔗', category: 'Conversion' },
+  { name: 'Slug Permalink Checker', slug: 'slug-permalink-checker', description: 'Check URL slug availability and analyze permalink structure for SEO-friendly paths.', emoji: '🔗', category: 'SEO' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network'] as const;
