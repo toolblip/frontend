@@ -139,7 +139,7 @@ export default function PricingClient() {
             }`}
           >
             Yearly
-            <span className="ml-1.5 text-xs text-green-600 dark:text-green-400 font-semibold">
+            <span className="ml-1.5 text-xs text-red-600 dark:text-red-400 font-semibold">
               2 months free
             </span>
           </button>
@@ -194,12 +194,12 @@ export default function PricingClient() {
               className={[
                 'relative rounded-2xl border p-5 flex flex-col',
                 isHighlighted
-                  ? 'border-green-500 bg-green-50 dark:bg-green-900/10 shadow-lg ring-2 ring-green-500/20'
+                  ? 'border-red-500 bg-red-50 dark:bg-red-900/10 shadow-lg ring-2 ring-red-500/20'
                   : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900',
               ].join(' ')}
             >
               {isHighlighted && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-600 text-white text-xs font-semibold px-3 py-1 rounded-full whitespace-nowrap">
+                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-red-600 text-white text-xs font-semibold px-3 py-1 rounded-full whitespace-nowrap">
                   Most Popular
                 </span>
               )}
@@ -237,7 +237,7 @@ export default function PricingClient() {
                     className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-300"
                   >
                     <svg
-                      className="w-4 h-4 text-green-500 shrink-0 mt-0.5"
+                      className="w-4 h-4 text-red-500 shrink-0 mt-0.5"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -270,7 +270,7 @@ export default function PricingClient() {
                     isLoading
                       ? 'bg-gray-400 cursor-not-allowed text-white'
                       : isHighlighted
-                        ? 'bg-green-600 hover:bg-green-700 text-white'
+                        ? 'bg-red-600 hover:bg-red-700 text-white'
                         : 'bg-gray-900 dark:bg-gray-100 hover:bg-gray-800 dark:hover:bg-gray-200 text-white dark:text-gray-900',
                   ].join(' ')}
                 >

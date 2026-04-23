@@ -35,11 +35,11 @@ export default function UuidGeneratorClient() {
           max={100}
           value={count}
           onChange={(e) => setCount(Math.min(100, Math.max(1, parseInt(e.target.value) || 1)))}
-          className="w-20 bg-gray-800 border border-gray-700 rounded px-2 py-1 text-sm text-white focus:outline-none focus:border-green-500"
+          className="w-20 bg-gray-800 border border-gray-700 rounded px-2 py-1 text-sm text-white focus:outline-none focus:border-red-500"
         />
         <button
           onClick={regenerate}
-          className="bg-green-600 hover:bg-green-500 text-black font-medium px-4 py-1.5 rounded-lg text-sm transition-colors"
+          className="bg-red-600 hover:bg-red-500 text-black font-medium px-4 py-1.5 rounded-lg text-sm transition-colors"
         >
           Generate
         </button>
@@ -49,7 +49,7 @@ export default function UuidGeneratorClient() {
         {uuids.map((uuid, i) => (
           <div key={i} className="flex items-center gap-3">
             <span className="text-gray-600 w-6 shrink-0">{i + 1}</span>
-            <span className="text-green-400">{uuid}</span>
+            <span className="text-red-400">{uuid}</span>
             <button
               onClick={() => navigator.clipboard.writeText(uuid)}
               className="text-gray-500 hover:text-white text-xs ml-auto transition-colors"
@@ -64,7 +64,7 @@ export default function UuidGeneratorClient() {
       <div className="flex gap-3">
         <button
           onClick={copyAll}
-          className="text-sm text-green-400 hover:text-green-300 transition-colors"
+          className="text-sm text-red-400 hover:text-red-300 transition-colors"
         >
           Copy all ({uuids.length})
         </button>

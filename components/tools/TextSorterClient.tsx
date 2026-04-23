@@ -52,7 +52,7 @@ export default function TextSorterClient() {
         <select
           value={mode}
           onChange={e => setMode(e.target.value as SortMode)}
-          className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-green-500"
+          className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-red-500"
         >
           <option value="az">A → Z</option>
           <option value="za">Z → A</option>
@@ -79,13 +79,13 @@ export default function TextSorterClient() {
             onChange={e => setInput(e.target.value)}
             placeholder="apple&#10;Banana&#10;cherry&#10;Apple"
             rows={8}
-            className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-green-500 resize-none"
+            className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500 resize-none"
           />
         </div>
         <div>
           <div className="flex items-center justify-between mb-1.5">
             <label className="text-sm font-medium text-gray-600 dark:text-gray-400">Output</label>
-            <button onClick={handleCopy} className="text-xs text-green-600 dark:text-green-400 hover:text-green-700 font-medium">Copy output</button>
+            <button onClick={handleCopy} className="text-xs text-red-600 dark:text-red-400 hover:text-red-700 font-medium">Copy output</button>
           </div>
           <textarea
             value={sort(input)}

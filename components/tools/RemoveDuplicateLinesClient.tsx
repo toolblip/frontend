@@ -41,7 +41,7 @@ export default function RemoveDuplicateLinesClient() {
             type="checkbox"
             checked={caseSensitive}
             onChange={(e) => setCaseSensitive(e.target.checked)}
-            className="rounded border-gray-600 bg-gray-800 text-green-500 focus:ring-green-600"
+            className="rounded border-gray-600 bg-gray-800 text-red-500 focus:ring-red-600"
           />
           Case-sensitive
         </label>
@@ -51,7 +51,7 @@ export default function RemoveDuplicateLinesClient() {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder="Paste your text here (one item per line)..."
-        className="w-full h-48 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-green-500 placeholder-gray-500"
+        className="w-full h-48 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-red-500 placeholder-gray-500"
         aria-label="Text input"
       />
 
@@ -61,7 +61,7 @@ export default function RemoveDuplicateLinesClient() {
             Original: <span className="text-white">{stats.original}</span> lines
           </span>
           <span className="text-gray-400">
-            After: <span className="text-green-400">{stats.after}</span> lines
+            After: <span className="text-red-400">{stats.after}</span> lines
           </span>
           <span className="text-red-400">
             Removed: <span className="text-red-300">{stats.removed}</span> duplicates
@@ -73,12 +73,12 @@ export default function RemoveDuplicateLinesClient() {
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs text-gray-500 uppercase">Result</span>
           {result && (
-            <button onClick={copy} className="text-xs text-green-400 hover:text-green-300 transition-colors">
+            <button onClick={copy} className="text-xs text-red-400 hover:text-red-300 transition-colors">
               {copied ? 'Copied!' : 'Copy result'}
             </button>
           )}
         </div>
-        <pre className="text-sm text-green-400 font-mono whitespace-pre-wrap break-all">
+        <pre className="text-sm text-red-400 font-mono whitespace-pre-wrap break-all">
           {result || '—'}
         </pre>
       </div>

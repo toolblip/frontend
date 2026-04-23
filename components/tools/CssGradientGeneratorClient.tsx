@@ -116,7 +116,7 @@ export default function CssGradientGeneratorClient() {
             onClick={() => setType(t)}
             className={`text-sm px-4 py-1.5 rounded-full capitalize transition-colors ${
               type === t
-                ? 'bg-green-600 text-black font-medium'
+                ? 'bg-red-600 text-black font-medium'
                 : 'bg-gray-800 text-gray-400 hover:text-white'
             }`}
           >
@@ -141,7 +141,7 @@ export default function CssGradientGeneratorClient() {
                   max={360}
                   value={angle}
                   onChange={e => setAngle(Number(e.target.value))}
-                  className="flex-1 accent-green-500"
+                  className="flex-1 accent-red-500"
                 />
                 <input
                   type="number"
@@ -149,7 +149,7 @@ export default function CssGradientGeneratorClient() {
                   max={360}
                   value={angle}
                   onChange={e => setAngle(clampAngle(Number(e.target.value)))}
-                  className="w-16 bg-gray-800 border border-gray-700 rounded-lg px-2 py-1.5 text-sm text-center text-gray-100 focus:outline-none focus:border-green-500"
+                  className="w-16 bg-gray-800 border border-gray-700 rounded-lg px-2 py-1.5 text-sm text-center text-gray-100 focus:outline-none focus:border-red-500"
                 />
                 <span className="text-sm text-gray-500">°</span>
               </div>
@@ -164,7 +164,7 @@ export default function CssGradientGeneratorClient() {
               </label>
               <button
                 onClick={addStop}
-                className="text-sm text-green-400 hover:text-green-300 transition-colors"
+                className="text-sm text-red-400 hover:text-red-300 transition-colors"
               >
                 + Add Stop
               </button>
@@ -191,7 +191,7 @@ export default function CssGradientGeneratorClient() {
                     max={100}
                     value={stop.position}
                     onChange={e => updateStopPosition(stop.id, Number(e.target.value))}
-                    className="flex-1 accent-green-500"
+                    className="flex-1 accent-red-500"
                   />
                   <span className="text-xs text-gray-400 w-8 text-right shrink-0">
                     {stop.position}%
@@ -231,7 +231,7 @@ export default function CssGradientGeneratorClient() {
               </label>
               <button
                 onClick={copy}
-                className="text-sm text-green-400 hover:text-green-300 transition-colors"
+                className="text-sm text-red-400 hover:text-red-300 transition-colors"
               >
                 {copied ? 'Copied!' : 'Copy'}
               </button>
@@ -259,7 +259,7 @@ export default function CssGradientGeneratorClient() {
               title={preset.name}
             >
               <div
-                className="w-full h-10 rounded-lg border border-gray-700 group-hover:border-green-500 transition-colors"
+                className="w-full h-10 rounded-lg border border-gray-700 group-hover:border-red-500 transition-colors"
                 style={{ background: presetGradient(preset) }}
               />
               <span className="text-xs text-gray-500 group-hover:text-gray-300 transition-colors truncate w-full text-center">

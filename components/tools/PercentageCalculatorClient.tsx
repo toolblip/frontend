@@ -74,7 +74,7 @@ export default function PercentageCalculatorClient() {
             onClick={() => setMode(m)}
             className={`text-sm px-4 py-1.5 rounded-full transition-colors ${
               mode === m
-                ? 'bg-green-600 text-black font-medium'
+                ? 'bg-red-600 text-black font-medium'
                 : 'bg-gray-800 text-gray-400 hover:text-white'
             }`}
           >
@@ -96,7 +96,7 @@ export default function PercentageCalculatorClient() {
                 value={basicPart}
                 onChange={e => setBasicPart(e.target.value)}
                 placeholder="e.g. 25"
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-gray-100 text-lg focus:outline-none focus:border-green-500 placeholder-gray-600"
+                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-gray-100 text-lg focus:outline-none focus:border-red-500 placeholder-gray-600"
               />
             </div>
             <div>
@@ -108,7 +108,7 @@ export default function PercentageCalculatorClient() {
                 value={basicWhole}
                 onChange={e => setBasicWhole(e.target.value)}
                 placeholder="e.g. 200"
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-gray-100 text-lg focus:outline-none focus:border-green-500 placeholder-gray-600"
+                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-gray-100 text-lg focus:outline-none focus:border-red-500 placeholder-gray-600"
               />
             </div>
           </div>
@@ -116,7 +116,7 @@ export default function PercentageCalculatorClient() {
           {basic && (
             <div className="bg-gray-800 border border-gray-700 rounded-xl p-6">
               <div className="text-center">
-                <div className="text-5xl font-bold text-green-400 mb-1">
+                <div className="text-5xl font-bold text-red-400 mb-1">
                   {basic.percent.toFixed(2)}%
                 </div>
                 <p className="text-gray-400 text-sm mt-2">
@@ -125,7 +125,7 @@ export default function PercentageCalculatorClient() {
               </div>
               <div className="mt-5 h-3 bg-gray-700 rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-green-500 rounded-full transition-all duration-500"
+                  className="h-full bg-red-500 rounded-full transition-all duration-500"
                   style={{ width: `${Math.min(100, basic.percent)}%` }}
                 />
               </div>
@@ -155,7 +155,7 @@ export default function PercentageCalculatorClient() {
                 value={changeOld}
                 onChange={e => setChangeOld(e.target.value)}
                 placeholder="e.g. 50"
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-gray-100 text-lg focus:outline-none focus:border-green-500 placeholder-gray-600"
+                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-gray-100 text-lg focus:outline-none focus:border-red-500 placeholder-gray-600"
               />
             </div>
             <div>
@@ -167,7 +167,7 @@ export default function PercentageCalculatorClient() {
                 value={changeNew}
                 onChange={e => setChangeNew(e.target.value)}
                 placeholder="e.g. 65"
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-gray-100 text-lg focus:outline-none focus:border-green-500 placeholder-gray-600"
+                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-gray-100 text-lg focus:outline-none focus:border-red-500 placeholder-gray-600"
               />
             </div>
           </div>
@@ -176,13 +176,13 @@ export default function PercentageCalculatorClient() {
             <div className="bg-gray-800 border border-gray-700 rounded-xl p-6">
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
-                  <div className={`text-2xl font-bold ${change.diff >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                  <div className={`text-2xl font-bold ${change.diff >= 0 ? 'text-red-400' : 'text-red-400'}`}>
                     {change.diff >= 0 ? '+' : ''}{change.diff.toLocaleString(undefined, { maximumFractionDigits: 2 })}
                   </div>
                   <div className="text-xs text-gray-500 mt-1">Difference</div>
                 </div>
                 <div>
-                  <div className={`text-2xl font-bold ${change.pctChange >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                  <div className={`text-2xl font-bold ${change.pctChange >= 0 ? 'text-red-400' : 'text-red-400'}`}>
                     {change.pctChange >= 0 ? '+' : ''}{change.pctChange.toFixed(2)}%
                   </div>
                   <div className="text-xs text-gray-500 mt-1">% Change</div>
@@ -216,7 +216,7 @@ export default function PercentageCalculatorClient() {
               value={billAmount}
               onChange={e => setBillAmount(e.target.value)}
               placeholder="0.00"
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-gray-100 text-lg focus:outline-none focus:border-green-500 placeholder-gray-600"
+              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-gray-100 text-lg focus:outline-none focus:border-red-500 placeholder-gray-600"
             />
           </div>
 
@@ -232,7 +232,7 @@ export default function PercentageCalculatorClient() {
                   onClick={() => setTipPct(p)}
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                     tipPct === p
-                      ? 'bg-green-600 text-black'
+                      ? 'bg-red-600 text-black'
                       : 'bg-gray-800 text-gray-400 hover:text-white border border-gray-700'
                   }`}
                 >
@@ -245,7 +245,7 @@ export default function PercentageCalculatorClient() {
                 max={100}
                 value={tipPct}
                 onChange={e => setTipPct(Math.max(1, Math.min(100, Number(e.target.value))))}
-                className="w-20 bg-gray-800 border border-gray-700 rounded-lg px-2 py-1.5 text-sm text-center text-gray-100 focus:outline-none focus:border-green-500"
+                className="w-20 bg-gray-800 border border-gray-700 rounded-lg px-2 py-1.5 text-sm text-center text-gray-100 focus:outline-none focus:border-red-500"
               />
             </div>
           </div>
@@ -267,7 +267,7 @@ export default function PercentageCalculatorClient() {
                 min={1}
                 value={numPeople}
                 onChange={e => setNumPeople(Math.max(1, Number(e.target.value)))}
-                className="w-20 bg-gray-800 border border-gray-700 rounded-lg px-2 py-1.5 text-sm text-center text-gray-100 focus:outline-none focus:border-green-500"
+                className="w-20 bg-gray-800 border border-gray-700 rounded-lg px-2 py-1.5 text-sm text-center text-gray-100 focus:outline-none focus:border-red-500"
               />
               <button
                 onClick={() => setNumPeople(n => n + 1)}
@@ -283,7 +283,7 @@ export default function PercentageCalculatorClient() {
             <div className="bg-gray-800 border border-gray-700 rounded-xl p-6">
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
-                  <div className="text-2xl font-bold text-green-400">
+                  <div className="text-2xl font-bold text-red-400">
                     ${tip.tip.toFixed(2)}
                   </div>
                   <div className="text-xs text-gray-500 mt-1">Tip</div>
@@ -295,7 +295,7 @@ export default function PercentageCalculatorClient() {
                   <div className="text-xs text-gray-500 mt-1">Total</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-green-400">
+                  <div className="text-2xl font-bold text-red-400">
                     ${tip.perPerson.toFixed(2)}
                   </div>
                   <div className="text-xs text-gray-500 mt-1">Per Person</div>

@@ -67,7 +67,7 @@ export default function ReadabilityScoreClient() {
           onChange={e => setText(e.target.value)}
           placeholder="Enter at least a few sentences to analyze readability..."
           rows={6}
-          className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-green-500 resize-none"
+          className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-red-500 resize-none"
         />
       </div>
       {words.length > 0 && (
@@ -87,7 +87,7 @@ export default function ReadabilityScoreClient() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {[
-              { label: 'Flesch Reading Ease', score: fkScore.toFixed(1), level: fkScore >= 60 ? 'Easy' : fkScore >= 30 ? 'Moderate' : 'Difficult', color: fkScore >= 60 ? 'text-green-600' : fkScore >= 30 ? 'text-yellow-600' : 'text-red-600' },
+              { label: 'Flesch Reading Ease', score: fkScore.toFixed(1), level: fkScore >= 60 ? 'Easy' : fkScore >= 30 ? 'Moderate' : 'Difficult', color: fkScore >= 60 ? 'text-red-600' : fkScore >= 30 ? 'text-yellow-600' : 'text-red-600' },
               { label: 'Flesch-Kincaid Grade', score: fkGrade.toFixed(1), level: gradeLevel(fkGrade * 10), color: 'text-gray-900 dark:text-white' },
               { label: 'SMOG Index', score: smog.toFixed(1), level: gradeLevel(smog * 10), color: 'text-gray-900 dark:text-white' },
             ].map(({ label, score, level, color }) => (

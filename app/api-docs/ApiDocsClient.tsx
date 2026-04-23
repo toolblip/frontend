@@ -37,14 +37,14 @@ export default function ApiDocsClient() {
       {/* ── Top bar ── */}
       <header className="sticky top-0 z-20 bg-white/95 dark:bg-[#090909]/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-800/80">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
-          <span className="text-[11px] font-mono font-bold bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 px-2.5 py-1 rounded-full">
+          <span className="text-[11px] font-mono font-bold bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 px-2.5 py-1 rounded-full">
             REST v1
           </span>
           <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Toolblip API</span>
           <div className="ml-auto flex items-center gap-3">
             <span className="hidden sm:block text-[11px] font-mono text-gray-400">{BASE_URL}</span>
-            <span className="flex items-center gap-1.5 text-[11px] text-green-600 dark:text-green-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+            <span className="flex items-center gap-1.5 text-[11px] text-red-600 dark:text-red-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
               Live
             </span>
           </div>
@@ -85,9 +85,9 @@ export default function ApiDocsClient() {
             <div className="shrink-0 lg:w-72">
               <div className="bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm">
                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Base URL</p>
-                <code className="block text-sm font-mono text-green-600 dark:text-green-400 break-all">{BASE_URL}</code>
-                <p className="text-[10px] text-green-500 mt-1.5 flex items-center gap-1">
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                <code className="block text-sm font-mono text-red-600 dark:text-red-400 break-all">{BASE_URL}</code>
+                <p className="text-[10px] text-red-500 mt-1.5 flex items-center gap-1">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
                   Production — SSL active
                 </p>
                 <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
@@ -720,11 +720,11 @@ export default function ApiDocsClient() {
           <footer className="pt-8 border-t border-gray-100 dark:border-gray-800/60 text-center">
             <p className="text-gray-400 dark:text-gray-600 text-xs">
               Questions?{' '}
-              <a href="mailto:harun@toolblip.com" className="text-green-600 dark:text-green-400 hover:underline transition-colors">
+              <a href="mailto:harun@toolblip.com" className="text-red-600 dark:text-red-400 hover:underline transition-colors">
                 harun@toolblip.com
               </a>
               <span className="mx-2 text-gray-300 dark:text-gray-700">·</span>
-              <a href="https://github.com/toolblip" target="_blank" rel="noopener noreferrer" className="text-green-600 dark:text-green-400 hover:underline transition-colors">
+              <a href="https://github.com/toolblip" target="_blank" rel="noopener noreferrer" className="text-red-600 dark:text-red-400 hover:underline transition-colors">
                 GitHub
               </a>
             </p>
@@ -739,7 +739,7 @@ export default function ApiDocsClient() {
 // ─── Helpers ───────────────────────────────────────────────────────────────
 
 const METHOD_COLORS: Record<string, string> = {
-  GET:    'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400',
+  GET:    'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400',
   POST:   'bg-blue-100  dark:bg-blue-900/30  text-blue-700  dark:text-blue-400',
   PUT:    'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400',
   DELETE: 'bg-red-100   dark:bg-red-900/30   text-red-700   dark:text-red-400',
@@ -749,7 +749,7 @@ const METHOD_COLORS: Record<string, string> = {
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
     <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2.5">
-      <span className="w-1 h-6 bg-green-500 rounded-full shrink-0 mt-0.5" />
+      <span className="w-1 h-6 bg-red-500 rounded-full shrink-0 mt-0.5" />
       {children}
     </h2>
   );

@@ -50,7 +50,7 @@ export default function UnitConverterClient() {
             onClick={() => { setCategory(cat); setSelected(0); }}
             className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
               category === cat
-                ? 'bg-green-600 text-white'
+                ? 'bg-red-600 text-white'
                 : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
             }`}
           >
@@ -80,7 +80,7 @@ export default function UnitConverterClient() {
             type="number"
             value={value}
             onChange={e => setValue(e.target.value)}
-            className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 text-lg focus:outline-none focus:border-green-500"
+            className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 text-lg focus:outline-none focus:border-red-500"
           />
         </div>
         <div>

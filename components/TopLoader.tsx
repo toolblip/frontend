@@ -40,7 +40,7 @@ export default function TopLoader() {
       style={{ opacity: loading ? 1 : 0 }}
     >
       <div
-        className="h-full bg-green-500 transition-all duration-300 ease-out"
+        className="h-full bg-red-500 transition-all duration-300 ease-out"
         style={{ width: `${progress}%` }}
       />
     </div>

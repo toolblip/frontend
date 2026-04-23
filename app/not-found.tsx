@@ -7,7 +7,7 @@ export default function NotFound() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="max-w-md w-full text-center">
-        <p className="text-[8rem] sm:text-[10rem] font-black leading-none text-green-500 dark:text-green-400 select-none mb-2 tracking-tighter">
+        <p className="text-[8rem] sm:text-[10rem] font-black leading-none text-red-500 dark:text-red-400 select-none mb-2 tracking-tighter">
           404
         </p>
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">
@@ -19,7 +19,7 @@ export default function NotFound() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link
             href="/"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 text-white font-semibold py-2.5 px-6 rounded-lg transition-colors text-sm"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white font-semibold py-2.5 px-6 rounded-lg transition-colors text-sm"
           >
             <Home size={16} />
             Go home

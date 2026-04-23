@@ -22,8 +22,8 @@ function parseHex(hex: string): [number, number, number] | null {
 }
 
 function wcagLevel(ratio: number): { level: string; color: string; desc: string } {
-  if (ratio >= 7) return { level: 'AAA', color: 'text-green-600 dark:text-green-400', desc: 'Excellent contrast for all text sizes' };
-  if (ratio >= 4.5) return { level: 'AA', color: 'text-green-600 dark:text-green-400', desc: 'Good contrast for normal text' };
+  if (ratio >= 7) return { level: 'AAA', color: 'text-red-600 dark:text-red-400', desc: 'Excellent contrast for all text sizes' };
+  if (ratio >= 4.5) return { level: 'AA', color: 'text-red-600 dark:text-red-400', desc: 'Good contrast for normal text' };
   if (ratio >= 3) return { level: 'AA Large', color: 'text-yellow-600 dark:text-yellow-400', desc: 'Acceptable for large text (18pt+)' };
   return { level: 'Fail', color: 'text-red-600 dark:text-red-400', desc: 'Insufficient contrast' };
 }
@@ -52,7 +52,7 @@ export default function ContrastCheckerClient() {
             <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">{label}</label>
             <div className="flex gap-2">
               <input type="color" value={value} onChange={e => onChange(e.target.value)} className="w-10 h-10 rounded cursor-pointer border-0" />
-              <input value={value} onChange={e => onChange(e.target.value)} placeholder={example} className="flex-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-1.5 font-mono text-sm focus:outline-none focus:border-green-500" />
+              <input value={value} onChange={e => onChange(e.target.value)} placeholder={example} className="flex-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-1.5 font-mono text-sm focus:outline-none focus:border-red-500" />
             </div>
           </div>
         ))}

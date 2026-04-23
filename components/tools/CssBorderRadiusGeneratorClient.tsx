@@ -49,7 +49,7 @@ export default function CssBorderRadiusGeneratorClient() {
   const [unit, setUnit] = useState<Unit>('px');
   const [linked, setLinked] = useState(true);
   const [borderWidth, setBorderWidth] = useState(2);
-  const [borderColor, setBorderColor] = useState('#22c55e');
+  const [borderColor, setBorderColor] = useState('#EF4444');
   const [copied, setCopied] = useState(false);
 
   const maxVal = unit === 'px' ? 100 : 50;
@@ -116,7 +116,7 @@ export default function CssBorderRadiusGeneratorClient() {
             <button
               key={preset.name}
               onClick={() => applyPreset(preset)}
-              className="px-4 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white text-sm rounded-full transition-colors border border-gray-700 hover:border-green-600"
+              className="px-4 py-1.5 bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white text-sm rounded-full transition-colors border border-gray-700 hover:border-red-600"
             >
               {preset.name}
             </button>
@@ -136,7 +136,7 @@ export default function CssBorderRadiusGeneratorClient() {
                   onClick={() => handleUnitChange(u)}
                   className={`text-sm px-3 py-1 rounded-full transition-colors ${
                     unit === u
-                      ? 'bg-green-600 text-black font-medium'
+                      ? 'bg-red-600 text-black font-medium'
                       : 'bg-gray-800 text-gray-400 hover:text-white'
                   }`}
                 >
@@ -149,7 +149,7 @@ export default function CssBorderRadiusGeneratorClient() {
               title={linked ? 'Unlink corners' : 'Link corners'}
               className={`flex items-center gap-1.5 text-sm px-3 py-1 rounded-full transition-colors ${
                 linked
-                  ? 'bg-green-600 text-black font-medium'
+                  ? 'bg-red-600 text-black font-medium'
                   : 'bg-gray-800 text-gray-400 hover:text-white'
               }`}
             >
@@ -177,7 +177,7 @@ export default function CssBorderRadiusGeneratorClient() {
                     max={maxVal}
                     value={corners[corner]}
                     onChange={e => updateCorner(corner, Number(e.target.value))}
-                    className="flex-1 accent-green-500"
+                    className="flex-1 accent-red-500"
                   />
                   <input
                     type="number"
@@ -187,7 +187,7 @@ export default function CssBorderRadiusGeneratorClient() {
                     onChange={e =>
                       updateCorner(corner, clamp(Number(e.target.value), maxVal))
                     }
-                    className="w-16 bg-gray-800 border border-gray-700 rounded-lg px-2 py-1.5 text-sm text-center text-gray-100 focus:outline-none focus:border-green-500"
+                    className="w-16 bg-gray-800 border border-gray-700 rounded-lg px-2 py-1.5 text-sm text-center text-gray-100 focus:outline-none focus:border-red-500"
                   />
                 </div>
               </div>
@@ -213,7 +213,7 @@ export default function CssBorderRadiusGeneratorClient() {
                   max={16}
                   value={borderWidth}
                   onChange={e => setBorderWidth(Number(e.target.value))}
-                  className="flex-1 accent-green-500"
+                  className="flex-1 accent-red-500"
                 />
                 <input
                   type="number"
@@ -221,7 +221,7 @@ export default function CssBorderRadiusGeneratorClient() {
                   max={16}
                   value={borderWidth}
                   onChange={e => setBorderWidth(clamp(Number(e.target.value), 16))}
-                  className="w-16 bg-gray-800 border border-gray-700 rounded-lg px-2 py-1.5 text-sm text-center text-gray-100 focus:outline-none focus:border-green-500"
+                  className="w-16 bg-gray-800 border border-gray-700 rounded-lg px-2 py-1.5 text-sm text-center text-gray-100 focus:outline-none focus:border-red-500"
                 />
               </div>
             </div>
@@ -250,7 +250,7 @@ export default function CssBorderRadiusGeneratorClient() {
             </label>
             <div className="flex items-center justify-center h-56 bg-gray-800 rounded-xl border border-gray-700">
               <div
-                className="w-40 h-40 bg-green-700"
+                className="w-40 h-40 bg-red-700"
                 style={{
                   borderRadius: borderRadiusStyle,
                   border: `${borderWidth}px solid ${borderColor}`,
@@ -268,7 +268,7 @@ export default function CssBorderRadiusGeneratorClient() {
               </label>
               <button
                 onClick={copy}
-                className="text-sm text-green-400 hover:text-green-300 transition-colors"
+                className="text-sm text-red-400 hover:text-red-300 transition-colors"
               >
                 {copied ? 'Copied!' : 'Copy'}
               </button>

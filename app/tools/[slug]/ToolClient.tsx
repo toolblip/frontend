@@ -24,7 +24,7 @@ function CopyButton({ text }: { text: string }) {
     >
       {copied ? (
         <>
-          <svg className="w-3.5 h-3.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-3.5 h-3.5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
           Copied
@@ -149,7 +149,7 @@ function CharacterCounterUI() {
                 </div>
                 <div className="h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                   <div
-                    className={`h-full rounded-full transition-all ${over ? 'bg-red-500' : pct > 80 ? 'bg-amber-400' : 'bg-green-500'}`}
+                    className={`h-full rounded-full transition-all ${over ? 'bg-red-500' : pct > 80 ? 'bg-amber-400' : 'bg-red-500'}`}
                     style={{ width: `${pct}%` }}
                   />
                 </div>
@@ -272,7 +272,7 @@ function Base64UI() {
               onClick={() => { setMode(m); setError(''); }}
               className={`text-sm px-4 py-1.5 rounded-lg transition-colors font-medium ${
                 mode === m
-                  ? 'bg-green-600 text-white'
+                  ? 'bg-red-600 text-white'
                   : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
               }`}
             >
@@ -337,7 +337,7 @@ function URLEncodeUI() {
               onClick={() => { setMode(m); setError(''); }}
               className={`text-sm px-4 py-1.5 rounded-lg transition-colors font-medium ${
                 mode === m
-                  ? 'bg-green-600 text-white'
+                  ? 'bg-red-600 text-white'
                   : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
               }`}
             >
@@ -403,7 +403,7 @@ function JSONFormatterUI() {
               onClick={() => { setIndent(i); process(input); }}
               className={`text-xs px-3 py-1 rounded-md transition-colors font-mono ${
                 indent === i
-                  ? 'bg-green-600 text-white'
+                  ? 'bg-red-600 text-white'
                   : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'
               }`}
             >
@@ -463,7 +463,7 @@ function ComingSoonUI() {
         </div>
         <div className="w-full max-w-sm mt-4">
           <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
-            <div className="h-full bg-green-500 rounded-full animate-pulse" style={{ width: '45%' }} />
+            <div className="h-full bg-red-500 rounded-full animate-pulse" style={{ width: '45%' }} />
           </div>
           <p className="text-xs text-gray-400 mt-1.5 text-center">Loading…</p>
         </div>
@@ -518,9 +518,9 @@ export default function ToolClient({ tool }: { tool: Tool }) {
 
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-8">
-        <Link href="/" className="hover:text-green-600 dark:hover:text-green-400 transition-colors">Home</Link>
+        <Link href="/" className="hover:text-red-600 dark:hover:text-red-400 transition-colors">Home</Link>
         <span>/</span>
-        <Link href="/tools" className="hover:text-green-600 dark:hover:text-green-400 transition-colors">All Tools</Link>
+        <Link href="/tools" className="hover:text-red-600 dark:hover:text-red-400 transition-colors">All Tools</Link>
         <span>/</span>
         <span className="text-gray-900 dark:text-gray-200">{tool.name}</span>
       </nav>
@@ -532,7 +532,7 @@ export default function ToolClient({ tool }: { tool: Tool }) {
           <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-white">{tool.name}</h1>
             <p className="mt-1 text-gray-500 dark:text-gray-400 leading-relaxed">{tool.description}</p>
-            <span className="inline-block mt-2 text-xs font-medium text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950 px-2.5 py-1 rounded-full">
+            <span className="inline-block mt-2 text-xs font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950 px-2.5 py-1 rounded-full">
               {tool.category}
             </span>
           </div>
@@ -556,11 +556,11 @@ export default function ToolClient({ tool }: { tool: Tool }) {
               <Link
                 key={t.slug}
                 href={`/tools/${t.slug}`}
-                className="group flex items-center gap-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-green-500 dark:hover:border-green-600 rounded-xl p-3 transition-all"
+                className="group flex items-center gap-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-red-500 dark:hover:border-red-600 rounded-xl p-3 transition-all"
               >
                 <span className="text-xl flex-shrink-0">{t.emoji}</span>
                 <div className="min-w-0">
-                  <h3 className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 truncate">
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400 truncate">
                     {t.name}
                   </h3>
                   <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">{t.description}</p>

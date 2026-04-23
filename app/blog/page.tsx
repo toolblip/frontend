@@ -93,7 +93,7 @@ export default function BlogPage() {
                 </Link>
                 <div className="p-5">
                   <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-2">
-                    <span className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-2 py-0.5 rounded font-medium">
+                    <span className="bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 px-2 py-0.5 rounded font-medium">
                       {post.category}
                     </span>
                     <span>{post.readingTime}</span>
@@ -103,7 +103,7 @@ export default function BlogPage() {
                     </time>
                   </div>
                   <Link href={`/blog/${post.slug}`} className="block group-hover:opacity-90 transition-opacity">
-                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors mb-2 leading-snug">
+                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors mb-2 leading-snug">
                       {post.title}
                     </h2>
                     <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed line-clamp-2">

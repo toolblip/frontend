@@ -52,7 +52,7 @@ export default function CaseConverterClient() {
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Type or paste your text here..."
-        className="w-full h-32 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-green-500 placeholder-gray-500"
+        className="w-full h-32 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-red-500 placeholder-gray-500"
         aria-label="Text input"
       />
 
@@ -63,7 +63,7 @@ export default function CaseConverterClient() {
             onClick={() => setSelectedCase(value)}
             className={`text-xs px-3 py-1.5 rounded-full transition-colors ${
               selectedCase === value
-                ? 'bg-green-600 text-black font-medium'
+                ? 'bg-red-600 text-black font-medium'
                 : 'bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700'
             }`}
           >
@@ -78,7 +78,7 @@ export default function CaseConverterClient() {
 
       <button
         onClick={copy}
-        className="text-sm text-green-400 hover:text-green-300 transition-colors"
+        className="text-sm text-red-400 hover:text-red-300 transition-colors"
       >
         {copied ? 'Copied!' : 'Copy result'}
       </button>

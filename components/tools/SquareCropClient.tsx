@@ -87,13 +87,13 @@ export default function SquareCropClient() {
     ctx.fillRect(cropX + cropW, cropY, canvas.width - cropX - cropW, cropH);
 
     // Crop border
-    ctx.strokeStyle = '#58D65D';
+    ctx.strokeStyle = '#DC2626';
     ctx.lineWidth = 2;
     ctx.strokeRect(cropX, cropY, cropW, cropH);
 
     // Corner markers
     const cornerSize = 8;
-    ctx.strokeStyle = '#58D65D';
+    ctx.strokeStyle = '#DC2626';
     ctx.lineWidth = 3;
     // Top-left
     ctx.beginPath();
@@ -169,7 +169,7 @@ export default function SquareCropClient() {
             onClick={() => handlePresetChange(p)}
             className={`text-xs px-3 py-1.5 rounded-full transition-colors ${
               preset.label === p.label
-                ? 'bg-[#58D65D] text-black font-semibold'
+                ? 'bg-[#DC2626] text-black font-semibold'
                 : 'bg-[#1a1a2e] text-gray-400 hover:text-white border border-gray-700'
             }`}
           >
@@ -194,13 +194,13 @@ export default function SquareCropClient() {
       )}
 
       <p className="text-xs text-gray-500">
-        Output: <span className="text-[#58D65D] font-medium">{outputSize} × {outputSize}px</span> — drag on image to reposition crop area
+        Output: <span className="text-[#DC2626] font-medium">{outputSize} × {outputSize}px</span> — drag on image to reposition crop area
       </p>
 
       {/* Upload zone */}
       {!image ? (
         <div
-          className="border-2 border-dashed border-gray-700 hover:border-[#58D65D] rounded-xl p-12 text-center transition-colors cursor-pointer"
+          className="border-2 border-dashed border-gray-700 hover:border-[#DC2626] rounded-xl p-12 text-center transition-colors cursor-pointer"
           onDragOver={(e) => e.preventDefault()}
           onDrop={(e) => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f?.type.startsWith('image/')) loadImage(f); }}
           onClick={() => document.getElementById('square-crop-input')?.click()}
@@ -235,7 +235,7 @@ export default function SquareCropClient() {
             <button
               onClick={downloadCrop}
               disabled={!imgLoaded || isOversized}
-              className="bg-[#58D65D] hover:bg-[#4ac44e] text-black font-semibold px-5 py-2 rounded-lg text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-[#DC2626] hover:bg-[#B91C1C] text-black font-semibold px-5 py-2 rounded-lg text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isOversized ? 'File Too Large' : `Download ${outputSize}×${outputSize} PNG`}
             </button>

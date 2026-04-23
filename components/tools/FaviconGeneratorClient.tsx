@@ -5,7 +5,7 @@ import { useState, useRef } from 'react';
 export default function FaviconGeneratorClient() {
   const [emoji, setEmoji] = useState('🔧');
   const [fg, setFg] = useState('#ffffff');
-  const [bg, setBg] = useState('#16a34a');
+  const [bg, setBg] = useState('#DC2626');
   const [size, setSize] = useState(32);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [downloadReady, setDownloadReady] = useState(false);
@@ -65,7 +65,7 @@ export default function FaviconGeneratorClient() {
             type="text"
             value={emoji}
             onChange={(e) => setEmoji(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500 text-2xl"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 text-2xl"
             maxLength={2}
           />
         </div>
@@ -76,7 +76,7 @@ export default function FaviconGeneratorClient() {
             value={size}
             onChange={(e) => setSize(Number(e.target.value))}
             min={16} max={512}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500"
           />
         </div>
         <div>
@@ -101,7 +101,7 @@ export default function FaviconGeneratorClient() {
 
       <button
         onClick={generate}
-        className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors"
+        className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors"
       >
         Generate
       </button>

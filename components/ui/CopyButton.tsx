@@ -33,7 +33,7 @@ export default function CopyButton({ text, className }: Props) {
   return (
     <button
       onClick={handleCopy}
-      className={className || 'text-xs text-gray-500 hover:text-green-400 transition-colors'}
+      className={className || 'text-xs text-gray-500 hover:text-red-400 transition-colors'}
       title="Copy to clipboard"
     >
       {copied ? '✓ Copied' : 'Copy'}

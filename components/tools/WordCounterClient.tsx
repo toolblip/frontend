@@ -36,13 +36,13 @@ export default function WordCounterClient() {
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Paste or type your text here..."
-        className="w-full h-48 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-green-500 placeholder-gray-500"
+        className="w-full h-48 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-red-500 placeholder-gray-500"
         aria-label="Text input"
       />
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3" aria-live="polite" aria-atomic="true">
         {[
-          { label: 'Words', value: counts.words, color: 'text-green-400' },
+          { label: 'Words', value: counts.words, color: 'text-red-400' },
           { label: 'Characters', value: counts.chars, color: 'text-blue-400' },
           { label: 'Sentences', value: counts.sentences, color: 'text-purple-400' },
           { label: 'Reading time', value: counts.reading, color: 'text-yellow-400', isText: true },
@@ -65,7 +65,7 @@ export default function WordCounterClient() {
         </span>
         <button
           onClick={copyStats}
-          className="text-green-400 hover:text-green-300 transition-colors"
+          className="text-red-400 hover:text-red-300 transition-colors"
           aria-label="Copy stats to clipboard"
         >
           Copy stats

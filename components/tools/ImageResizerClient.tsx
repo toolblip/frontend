@@ -55,7 +55,7 @@ export default function ImageResizerClient() {
           type="file"
           accept="image/*"
           onChange={handleFile}
-          className="w-full text-sm text-gray-500 dark:text-gray-400 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-green-600 file:text-white file:text-sm file:font-medium hover:file:bg-green-700 cursor-pointer"
+          className="w-full text-sm text-gray-500 dark:text-gray-400 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-red-600 file:text-white file:text-sm file:font-medium hover:file:bg-red-700 cursor-pointer"
         />
         <UpgradeNotice tier={tier} />
         <FileSizeError file={file} maxSizeMB={maxSizeMB} />
@@ -77,7 +77,7 @@ export default function ImageResizerClient() {
                   }
                 }}
                 min={1}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500"
               />
             </div>
             <div>
@@ -93,7 +93,7 @@ export default function ImageResizerClient() {
                   }
                 }}
                 min={1}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500"
               />
             </div>
           </div>
@@ -103,7 +103,7 @@ export default function ImageResizerClient() {
               type="checkbox"
               checked={maintain}
               onChange={(e) => setMaintain(e.target.checked)}
-              className="rounded border-gray-300 dark:border-gray-600 text-green-600 focus:ring-green-500"
+              className="rounded border-gray-300 dark:border-gray-600 text-red-600 focus:ring-red-500"
             />
             Maintain aspect ratio
           </label>
@@ -112,7 +112,7 @@ export default function ImageResizerClient() {
             <button
               onClick={resize}
               disabled={isOversized}
-              className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isOversized ? 'File Too Large' : 'Resize & Download'}
             </button>

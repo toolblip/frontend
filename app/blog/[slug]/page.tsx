@@ -69,13 +69,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ '@context': 'https://schema.org', '@type': 'Article', headline: post.title, description: post.description, datePublished: post.date, author: { '@type': 'Person', name: post.author }, publisher: { '@type': 'Organization', name: 'Toolblip', url: 'https://toolblip.com' }, ...(post.featuredImage ? { image: post.featuredImage } : {}), url: postUrl }) }} />
 
       <article className="max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
-        <Link href="/blog" className="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors mb-8">
+        <Link href="/blog" className="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors mb-8">
           ← Blog
         </Link>
 
         <header className="mb-10">
           <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-3">
-            <span className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 px-2 py-0.5 rounded text-xs font-medium">
+            <span className="bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 px-2 py-0.5 rounded text-xs font-medium">
               {post.category}
             </span>
             <span>{post.readingTime} read</span>
@@ -88,8 +88,8 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <p className="text-gray-500 dark:text-gray-400 leading-relaxed">{post.description}</p>
           <div className="flex items-center gap-3 mt-4">
             <span className="text-xs text-gray-400 dark:text-gray-500">Share:</span>
-            <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(postUrl)}`} target="_blank" rel="noopener noreferrer" className="text-xs text-gray-500 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors">Twitter/X</a>
-            <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`} target="_blank" rel="noopener noreferrer" className="text-xs text-gray-500 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors">LinkedIn</a>
+            <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(postUrl)}`} target="_blank" rel="noopener noreferrer" className="text-xs text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors">Twitter/X</a>
+            <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`} target="_blank" rel="noopener noreferrer" className="text-xs text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors">LinkedIn</a>
           </div>
         </header>
 
@@ -127,7 +127,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         )}
 
         <footer className="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800">
-          <Link href="/blog" className="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors">
+          <Link href="/blog" className="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors">
             ← Back to Blog
           </Link>
         </footer>

@@ -95,7 +95,7 @@ function ToolRouter({ tool }: { tool: Tool }) {
           <strong>{tool.name}</strong> is on our roadmap and will be available soon.
         </p>
         <div className="mt-6 flex flex-wrap gap-3 justify-center">
-          <Link href="/tools" className="bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors">Browse all tools</Link>
+          <Link href="/tools" className="bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-lg font-medium transition-colors">Browse all tools</Link>
           <Link href="/directory" className="bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 px-5 py-2.5 rounded-lg font-medium transition-colors">Explore directory</Link>
         </div>
       </div>
@@ -131,9 +131,9 @@ export default function ToolDetail({ tool }: { tool: Tool }) {
 
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-8">
-        <Link href="/" className="hover:text-green-600 dark:hover:text-green-400 transition-colors">Home</Link>
+        <Link href="/" className="hover:text-red-600 dark:hover:text-red-400 transition-colors">Home</Link>
         <span>/</span>
-        <Link href={`/tools?category=${encodeURIComponent(tool.category)}`} className="hover:text-green-600 dark:hover:text-green-400 transition-colors">{tool.category}</Link>
+        <Link href={`/tools?category=${encodeURIComponent(tool.category)}`} className="hover:text-red-600 dark:hover:text-red-400 transition-colors">{tool.category}</Link>
         <span>/</span>
         <span className="text-gray-900 dark:text-gray-200">{tool.name}</span>
       </nav>
@@ -147,7 +147,7 @@ export default function ToolDetail({ tool }: { tool: Tool }) {
             <p className="mt-1 text-gray-500 dark:text-gray-400 leading-relaxed">
               {tool.description}
             </p>
-            <span className="inline-block mt-2 text-xs font-medium text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950 px-2.5 py-1 rounded-full">
+            <span className="inline-block mt-2 text-xs font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950 px-2.5 py-1 rounded-full">
               {tool.category}
             </span>
           </div>
@@ -171,11 +171,11 @@ export default function ToolDetail({ tool }: { tool: Tool }) {
               <Link
                 key={t.slug}
                 href={`/tools/${t.slug}`}
-                className="group flex items-center gap-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-green-500 dark:hover:border-green-600 rounded-xl p-3 transition-all"
+                className="group flex items-center gap-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-red-500 dark:hover:border-red-600 rounded-xl p-3 transition-all"
               >
                 <span className="text-xl flex-shrink-0">{t.emoji}</span>
                 <div className="min-w-0">
-                  <h3 className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 truncate">
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400 truncate">
                     {t.name}
                   </h3>
                   <p className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">{t.description}</p>

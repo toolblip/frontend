@@ -138,7 +138,7 @@ export default function AccountPage() {
       <p className="text-gray-500 dark:text-gray-400 mb-8">Manage your subscription and profile.</p>
 
       {checkingSession && (
-        <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg text-green-700 dark:text-green-400 text-sm">
+        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-400 text-sm">
           Subscription updated! Verifying your new plan...
         </div>
       )}
@@ -149,7 +149,7 @@ export default function AccountPage() {
           Profile
         </h2>
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-green-600 flex items-center justify-center text-white font-semibold text-lg uppercase">
+          <div className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center text-white font-semibold text-lg uppercase">
             {user.name.charAt(0)}
           </div>
           <div>
@@ -173,8 +173,8 @@ export default function AccountPage() {
         ) : subscription.is_pro ? (
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-3 h-3 rounded-full bg-green-500" />
-              <span className="font-medium text-green-700 dark:text-green-400">
+              <div className="w-3 h-3 rounded-full bg-red-500" />
+              <span className="font-medium text-red-700 dark:text-red-400">
                 {tierName} plan active
               </span>
             </div>
@@ -253,7 +253,7 @@ export default function AccountPage() {
             </p>
             <Link
               href="/pricing"
-              className="inline-block px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors"
+              className="inline-block px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors"
             >
               View Plans
             </Link>

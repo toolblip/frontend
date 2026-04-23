@@ -50,23 +50,23 @@ export default function MetaTagGeneratorClient() {
         textarea ? (
           <div key={label}>
             <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">{label}</label>
-            <textarea value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} rows={3} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-green-500 resize-none" />
+            <textarea value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} rows={3} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 resize-none" />
           </div>
         ) : (
           <div key={label}>
             <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">{label}</label>
-            <input value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-green-500" />
+            <input value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-red-500" />
           </div>
         )
       )}
-      <button onClick={generate} className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-medium transition-colors">
+      <button onClick={generate} className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg font-medium transition-colors">
         Generate Tags
       </button>
       {output && (
         <div>
           <div className="flex items-center justify-between mb-2">
             <label className="text-sm font-medium text-gray-600 dark:text-gray-400">Generated Meta Tags</label>
-            <button onClick={handleCopy} className="text-xs text-green-600 dark:text-green-400 hover:text-green-700 font-medium">Copy</button>
+            <button onClick={handleCopy} className="text-xs text-red-600 dark:text-red-400 hover:text-red-700 font-medium">Copy</button>
           </div>
           <textarea value={output} readOnly rows={Math.max(12, output.split('\n').length)} className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200 rounded-lg px-4 py-3 font-mono text-xs resize-none" />
         </div>

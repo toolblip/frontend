@@ -30,7 +30,7 @@ export default function Error({
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link
             href="/"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-green-600 hover:bg-green-500 text-white font-semibold py-2.5 px-6 rounded-lg transition-colors text-sm"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-500 text-white font-semibold py-2.5 px-6 rounded-lg transition-colors text-sm"
           >
             <Home size={16} />
             Go home

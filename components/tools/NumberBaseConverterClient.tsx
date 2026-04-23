@@ -41,7 +41,7 @@ export default function NumberBaseConverterClient() {
             value={value}
             onChange={e => setValue(e.target.value)}
             placeholder="e.g. 255"
-            className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 font-mono text-sm focus:outline-none focus:border-green-500"
+            className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 font-mono text-sm focus:outline-none focus:border-red-500"
           />
         </div>
         <div>
@@ -49,7 +49,7 @@ export default function NumberBaseConverterClient() {
           <select
             value={fromBase}
             onChange={e => setFromBase(parseInt(e.target.value))}
-            className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-green-500"
+            className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-red-500"
           >
             <option value={2}>Binary (base 2)</option>
             <option value={8}>Octal (base 8)</option>
@@ -71,7 +71,7 @@ export default function NumberBaseConverterClient() {
               <code className="flex-1 text-sm text-gray-800 dark:text-gray-200 font-mono break-all">{v}</code>
               <button
                 onClick={() => navigator.clipboard.writeText(v)}
-                className="text-xs text-green-600 dark:text-green-400 hover:text-green-700 font-medium flex-shrink-0"
+                className="text-xs text-red-600 dark:text-red-400 hover:text-red-700 font-medium flex-shrink-0"
               >
                 Copy
               </button>

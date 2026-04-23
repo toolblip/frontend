@@ -34,15 +34,15 @@ export default function AdvertisePage() {
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Formats</h2>
           <ul className="space-y-2 text-gray-600 dark:text-gray-300">
             <li className="flex gap-3">
-              <span className="text-green-600 dark:text-green-400 shrink-0">Above-tool banner</span>
+              <span className="text-red-600 dark:text-red-400 shrink-0">Above-tool banner</span>
               <span className="text-gray-400 dark:text-gray-500"> — shown above the tool UI on every tool page</span>
             </li>
             <li className="flex gap-3">
-              <span className="text-green-600 dark:text-green-400 shrink-0">Below-tool banner</span>
+              <span className="text-red-600 dark:text-red-400 shrink-0">Below-tool banner</span>
               <span className="text-gray-400 dark:text-gray-500"> — shown below the tool output, after the user gets their result</span>
             </li>
             <li className="flex gap-3">
-              <span className="text-green-600 dark:text-green-400 shrink-0">Per-tool sponsorship</span>
+              <span className="text-red-600 dark:text-red-400 shrink-0">Per-tool sponsorship</span>
               <span className="text-gray-400 dark:text-gray-500"> — exclusive placement on a single high-traffic tool</span>
             </li>
           </ul>
@@ -64,7 +64,7 @@ export default function AdvertisePage() {
           </p>
           <a
             href="mailto:harun@toolblip.com"
-            className="inline-flex items-center gap-2 bg-green-600 hover:bg-green-500 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm"
+            className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-500 text-white font-semibold px-5 py-2.5 rounded-lg transition-colors text-sm"
           >
             Email harun@toolblip.com
           </a>

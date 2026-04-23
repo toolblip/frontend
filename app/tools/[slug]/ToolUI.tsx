@@ -47,7 +47,7 @@ function CopyButton({ text }: { text: string }) {
     >
       {copied ? (
         <>
-          <svg className="w-3.5 h-3.5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-3.5 h-3.5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
           Copied
@@ -153,7 +153,7 @@ function CharacterCounterUI() {
                 </div>
                 <div className="h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
                   <div
-                    className={`h-full rounded-full transition-all ${over ? 'bg-red-500' : pct > 80 ? 'bg-amber-400' : 'bg-green-500'}`}
+                    className={`h-full rounded-full transition-all ${over ? 'bg-red-500' : pct > 80 ? 'bg-amber-400' : 'bg-red-500'}`}
                     style={{ width: `${pct}%` }}
                   />
                 </div>
@@ -253,7 +253,7 @@ function Base64UI() {
               onClick={() => { setMode(m); setError(''); }}
               className={`text-sm px-4 py-1.5 rounded-lg transition-colors font-medium ${
                 mode === m
-                  ? 'bg-green-600 text-white'
+                  ? 'bg-red-600 text-white'
                   : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
               }`}
             >
@@ -322,7 +322,7 @@ function URLEncodeUI() {
               onClick={() => { setMode(m); setError(''); }}
               className={`text-sm px-4 py-1.5 rounded-lg transition-colors font-medium ${
                 mode === m
-                  ? 'bg-green-600 text-white'
+                  ? 'bg-red-600 text-white'
                   : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
               }`}
             >
@@ -398,7 +398,7 @@ function JSONFormatterUI() {
               onClick={() => handleIndent(i)}
               className={`text-xs px-3 py-1 rounded-md transition-colors font-mono ${
                 indent === i
-                  ? 'bg-green-600 text-white'
+                  ? 'bg-red-600 text-white'
                   : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'
               }`}
             >
@@ -458,7 +458,7 @@ function ComingSoonUI() {
         </div>
         <div className="w-full max-w-sm mt-4">
           <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
-            <div className="h-full bg-green-500 rounded-full animate-pulse" style={{ width: '45%' }} />
+            <div className="h-full bg-red-500 rounded-full animate-pulse" style={{ width: '45%' }} />
           </div>
           <p className="text-xs text-gray-400 mt-1.5 text-center">Loading…</p>
         </div>

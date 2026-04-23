@@ -177,7 +177,7 @@ export default function ImageFormatConverterClient() {
         onDrop={handleDrop}
         className={`border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-colors select-none ${
           isDragging
-            ? 'border-green-500 bg-green-900/10'
+            ? 'border-red-500 bg-red-900/10'
             : 'border-gray-700 hover:border-gray-600 hover:bg-gray-800/40'
         }`}
       >
@@ -234,7 +234,7 @@ export default function ImageFormatConverterClient() {
                     onClick={() => setOutputFormat(fmt.value)}
                     className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                       outputFormat === fmt.value
-                        ? 'bg-green-600 hover:bg-green-500 text-black'
+                        ? 'bg-red-600 hover:bg-red-500 text-black'
                         : 'bg-gray-800 border border-gray-700 text-gray-400 hover:text-white'
                     }`}
                   >
@@ -247,7 +247,7 @@ export default function ImageFormatConverterClient() {
             {/* Quality slider (hidden for PNG — lossless) */}
             <div className={outputFormat === 'image/png' ? 'opacity-30 pointer-events-none' : ''}>
               <p className="text-xs text-gray-500 uppercase tracking-wide font-medium mb-2">
-                Quality&ensp;<span className="text-green-400 font-semibold">
+                Quality&ensp;<span className="text-red-400 font-semibold">
                   {outputFormat === 'image/png' ? 'N/A (lossless)' : quality}
                 </span>
               </p>
@@ -258,7 +258,7 @@ export default function ImageFormatConverterClient() {
                 value={quality}
                 onChange={(e) => setQuality(Number(e.target.value))}
                 disabled={outputFormat === 'image/png'}
-                className="w-full accent-green-500"
+                className="w-full accent-red-500"
                 aria-label="Quality"
               />
               <div className="flex justify-between text-xs text-gray-600 mt-1">
@@ -273,7 +273,7 @@ export default function ImageFormatConverterClient() {
             onClick={convert}
             disabled={converting || isOversized}
             title={isOversized ? 'File size exceeds your plan limit' : ''}
-            className="w-full bg-green-600 hover:bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed text-black font-semibold py-3 rounded-lg transition-colors"
+            className="w-full bg-red-600 hover:bg-red-500 disabled:opacity-50 disabled:cursor-not-allowed text-black font-semibold py-3 rounded-lg transition-colors"
           >
             {isOversized ? 'File Too Large' : converting ? 'Converting…' : 'Convert Image'}
           </button>
@@ -301,11 +301,11 @@ export default function ImageFormatConverterClient() {
             <div
               className={`border rounded-xl p-4 transition-colors ${
                 result
-                  ? 'bg-gray-800 border-green-700/50'
+                  ? 'bg-gray-800 border-red-700/50'
                   : 'bg-gray-900 border-gray-700 opacity-50'
               }`}
             >
-              <p className={`text-xs uppercase tracking-wide font-medium mb-3 ${result ? 'text-green-500' : 'text-gray-500'}`}>
+              <p className={`text-xs uppercase tracking-wide font-medium mb-3 ${result ? 'text-red-500' : 'text-gray-500'}`}>
                 After
               </p>
               <div className="bg-gray-900 rounded-lg flex items-center justify-center h-48 overflow-hidden">
@@ -321,7 +321,7 @@ export default function ImageFormatConverterClient() {
               </div>
               {result ? (
                 <>
-                  <p className="text-green-400 text-sm mt-3">{formatBytes(result.size)}</p>
+                  <p className="text-red-400 text-sm mt-3">{formatBytes(result.size)}</p>
                   <p className="text-gray-500 text-xs mt-0.5">
                     {sizeDiff(sourceFile.size, result.size)} &middot; {result.ext.toUpperCase()}
                   </p>

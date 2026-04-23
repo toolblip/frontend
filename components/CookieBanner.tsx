@@ -35,7 +35,7 @@ export default function CookieBanner() {
       <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center gap-4 text-sm">
         <p className="text-gray-300 flex-1 leading-relaxed">
           We use analytics cookies to understand how tools are used. No personal data is sold or shared.{' '}
-          <a href="/privacy" className="underline text-green-400 ml-1 hover:text-green-300 transition-colors">
+          <a href="/privacy" className="underline text-red-400 ml-1 hover:text-red-300 transition-colors">
             Privacy policy
           </a>
         </p>
@@ -43,7 +43,7 @@ export default function CookieBanner() {
           <button
             onClick={accept}
             aria-label="Accept analytics cookies"
-            className="bg-green-500 hover:bg-green-400 text-black font-medium px-4 py-1.5 rounded-lg text-sm transition-colors"
+            className="bg-red-500 hover:bg-red-400 text-black font-medium px-4 py-1.5 rounded-lg text-sm transition-colors"
           >
             Accept
           </button>

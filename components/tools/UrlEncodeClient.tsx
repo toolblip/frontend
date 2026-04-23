@@ -36,7 +36,7 @@ export default function UrlEncodeClient() {
             key={m}
             onClick={() => setMode(m)}
             className={`text-sm px-4 py-1.5 rounded-full transition-colors ${
-              mode === m ? 'bg-green-600 text-black font-medium' : 'bg-gray-800 text-gray-400 hover:text-white'
+              mode === m ? 'bg-red-600 text-black font-medium' : 'bg-gray-800 text-gray-400 hover:text-white'
             }`}
           >
             {m === 'encode' ? 'Encode' : 'Decode'}
@@ -48,7 +48,7 @@ export default function UrlEncodeClient() {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder={mode === 'encode' ? 'Enter URL or text to encode...' : 'Enter encoded URL to decode...'}
-        className="w-full h-32 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-green-500 placeholder-gray-500 font-mono"
+        className="w-full h-32 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-red-500 placeholder-gray-500 font-mono"
         aria-label={`${mode} input`}
       />
 
@@ -56,12 +56,12 @@ export default function UrlEncodeClient() {
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs text-gray-500 uppercase">Result</span>
           {result && (
-            <button onClick={copy} className="text-xs text-green-400 hover:text-green-300 transition-colors">
+            <button onClick={copy} className="text-xs text-red-400 hover:text-red-300 transition-colors">
               {copied ? 'Copied!' : 'Copy'}
             </button>
           )}
         </div>
-        <pre className="text-sm text-green-400 font-mono whitespace-pre-wrap break-all">
+        <pre className="text-sm text-red-400 font-mono whitespace-pre-wrap break-all">
           {result || '—'}
         </pre>
       </div>

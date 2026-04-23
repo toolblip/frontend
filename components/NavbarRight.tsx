@@ -38,7 +38,7 @@ export default function NavbarRight() {
           className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
           aria-expanded={menuOpen}
         >
-          <span className="w-7 h-7 rounded-full bg-green-600 flex items-center justify-center text-white text-xs font-semibold uppercase">
+          <span className="w-7 h-7 rounded-full bg-red-600 flex items-center justify-center text-white text-xs font-semibold uppercase">
             {user.name.charAt(0)}
           </span>
           <span className="hidden sm:inline">{user.name}</span>
@@ -88,7 +88,7 @@ export default function NavbarRight() {
       </Link>
       <Link
         href="/signup"
-        className="text-sm bg-green-600 hover:bg-green-500 text-white px-3.5 py-1.5 rounded-md font-medium transition-colors"
+        className="text-sm bg-red-600 hover:bg-red-500 text-white px-3.5 py-1.5 rounded-md font-medium transition-colors"
       >
         Sign up
       </Link>

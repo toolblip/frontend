@@ -58,13 +58,13 @@ export default function HomePage() {
       {/* Hero */}
       <section className="py-14 px-4 text-center border-b border-gray-200 dark:border-gray-800 bg-gradient-to-b from-white to-gray-50 dark:from-gray-950 dark:to-gray-900">
         <div className="max-w-2xl mx-auto">
-          <div className="inline-flex items-center gap-2 bg-green-50 dark:bg-green-950/50 border border-green-200 dark:border-green-800/50 rounded-full px-3 py-1 mb-5">
-            <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-            <span className="text-xs font-medium text-green-700 dark:text-green-400">{tools.length}+ free tools — no signup needed</span>
+          <div className="inline-flex items-center gap-2 bg-red-50 dark:bg-red-950/50 border border-red-200 dark:border-red-800/50 rounded-full px-3 py-1 mb-5">
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+            <span className="text-xs font-medium text-red-700 dark:text-red-400">{tools.length}+ free tools — no signup needed</span>
           </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4 tracking-tight leading-tight">
             Browser-based tools,{' '}
-            <span className="text-green-600 dark:text-green-400">done right.</span>
+            <span className="text-red-600 dark:text-red-400">done right.</span>
           </h1>
           <p className="text-base sm:text-lg text-gray-500 dark:text-gray-400 mb-8 max-w-lg mx-auto leading-relaxed">
             JSON formatters, code generators, unit converters, and more. Everything client-side — your data never goes anywhere.
@@ -79,7 +79,7 @@ export default function HomePage() {
                 key={label}
                 className="flex items-center gap-1.5 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-3 py-1.5 rounded-full text-gray-600 dark:text-gray-300"
               >
-                <span className="text-green-600 dark:text-green-400">&#10003;</span> {label}
+                <span className="text-red-600 dark:text-red-400">&#10003;</span> {label}
               </span>
             ))}
           </div>
@@ -127,7 +127,7 @@ export default function HomePage() {
             ].map(({ num, icon, title, desc }) => (
               <div key={num} className="flex items-center gap-3 sm:gap-5">
                 <div className="flex flex-col sm:flex-row items-center sm:items-start gap-2 sm:gap-3 text-center sm:text-left">
-                  <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400 flex items-center justify-center">
+                  <div className="flex-shrink-0 w-9 h-9 rounded-lg bg-red-100 dark:bg-red-900/40 text-red-600 dark:text-red-400 flex items-center justify-center">
                     {icon}
                   </div>
                   <div>
@@ -143,7 +143,7 @@ export default function HomePage() {
             ))}
           </div>
           <p className="text-center text-xs text-gray-400 dark:text-gray-500 mt-5 flex items-center justify-center gap-1.5">
-            <svg className="w-3.5 h-3.5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg className="w-3.5 h-3.5 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
             No servers. No uploads. Nothing leaves your browser.
@@ -161,7 +161,7 @@ export default function HomePage() {
                 <Link
                   key={cat}
                   href={`/tools?category=${cat}`}
-                  className="px-3 py-1.5 text-xs sm:text-sm font-medium bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 hover:border-green-500 dark:hover:border-green-600 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 text-gray-600 dark:text-gray-300 rounded-full transition-all capitalize flex items-center gap-1.5"
+                  className="px-3 py-1.5 text-xs sm:text-sm font-medium bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 hover:border-red-500 dark:hover:border-red-600 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-600 dark:text-gray-300 rounded-full transition-all capitalize flex items-center gap-1.5"
                 >
                   <span>{cat}</span>
                   <span className="text-[10px] bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded-full text-gray-400 dark:text-gray-500 font-normal">
@@ -188,8 +188,8 @@ export default function HomePage() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
                 ),
-                iconBg: 'bg-green-100 dark:bg-green-900/40',
-                iconColor: 'text-green-600 dark:text-green-400',
+                iconBg: 'bg-red-100 dark:bg-red-900/40',
+                iconColor: 'text-red-600 dark:text-red-400',
                 title: '100% Private',
                 desc: 'Your data never leaves your browser. No servers, no tracking, no logs — ever.',
               },
@@ -218,7 +218,7 @@ export default function HomePage() {
             ].map(({ icon, iconBg, iconColor, title, desc }) => (
               <div
                 key={title}
-                className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 text-center hover:border-green-200 dark:hover:border-green-800 transition-colors"
+                className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 text-center hover:border-red-200 dark:hover:border-red-800 transition-colors"
               >
                 <div className={`w-10 h-10 ${iconBg} ${iconColor} rounded-lg flex items-center justify-center mx-auto mb-2`}>
                   {icon}
@@ -240,7 +240,7 @@ export default function HomePage() {
             </h2>
             <Link
               href="/directory"
-              className="text-sm text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors"
+              className="text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors"
             >
               Browse directory
             </Link>
@@ -250,12 +250,12 @@ export default function HomePage() {
               <Link
                 key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-green-500 dark:hover:border-green-600 rounded-xl p-4 transition-all hover:shadow-md hover:shadow-green-100 dark:hover:shadow-green-900/20"
+                className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-red-500 dark:hover:border-red-600 rounded-xl p-4 transition-all hover:shadow-md hover:shadow-red-100 dark:hover:shadow-red-900/20"
               >
                 <div className="flex items-start gap-3">
                   <span className="text-2xl flex-shrink-0">{tool.emoji}</span>
                   <div className="min-w-0">
-                    <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors truncate text-sm sm:text-base">
+                    <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors truncate text-sm sm:text-base">
                       {tool.name}
                     </h3>
                     <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-0.5 leading-relaxed line-clamp-2">
@@ -272,7 +272,7 @@ export default function HomePage() {
       {/* MCP Directory callout */}
       <section className="py-10 px-4 border-t border-gray-200 dark:border-gray-800">
         <div className="max-w-6xl mx-auto">
-          <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/50 dark:to-gray-900 border border-green-200 dark:border-green-800/50 rounded-2xl p-6 sm:p-8">
+          <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-950/50 dark:to-gray-900 border border-red-200 dark:border-red-800/50 rounded-2xl p-6 sm:p-8">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <div className="flex-1">
                 <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white mb-1.5">
@@ -284,7 +284,7 @@ export default function HomePage() {
               </div>
               <Link
                 href="/directory"
-                className="flex-shrink-0 inline-flex items-center gap-2 bg-green-600 hover:bg-green-500 text-white font-medium px-4 py-2 rounded-lg text-sm transition-colors whitespace-nowrap"
+                className="flex-shrink-0 inline-flex items-center gap-2 bg-red-600 hover:bg-red-500 text-white font-medium px-4 py-2 rounded-lg text-sm transition-colors whitespace-nowrap"
               >
                 Browse directory
               </Link>
@@ -303,7 +303,7 @@ export default function HomePage() {
               </h2>
               <Link
                 href="/blog"
-                className="text-sm text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors"
+                className="text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors"
               >
                 View all
               </Link>
@@ -315,10 +315,10 @@ export default function HomePage() {
                   href={`/blog/${post.slug}`}
                   className="group block bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 rounded-xl p-4 transition-colors"
                 >
-                  <span className="text-xs font-medium text-green-600 dark:text-green-400">
+                  <span className="text-xs font-medium text-red-600 dark:text-red-400">
                     {post.category}
                   </span>
-                  <h3 className="text-sm font-medium text-gray-900 dark:text-white mt-1 mb-2 line-clamp-2 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors leading-snug">
+                  <h3 className="text-sm font-medium text-gray-900 dark:text-white mt-1 mb-2 line-clamp-2 group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors leading-snug">
                     {post.title}
                   </h3>
                   <p className="text-xs text-gray-400">

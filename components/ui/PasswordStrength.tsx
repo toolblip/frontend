@@ -19,7 +19,7 @@ function getStrength(password: string): { score: number; label: string; color: s
   if (score <= 1) return { score: 1, label: 'Weak', color: 'bg-red-500' };
   if (score <= 2) return { score: 2, label: 'Fair', color: 'bg-orange-500' };
   if (score <= 3) return { score: 3, label: 'Good', color: 'bg-yellow-500' };
-  return { score: 4, label: 'Strong', color: 'bg-green-500' };
+  return { score: 4, label: 'Strong', color: 'bg-red-500' };
 }
 
 export default function PasswordStrength({ password }: PasswordStrengthProps) {
@@ -39,7 +39,7 @@ export default function PasswordStrength({ password }: PasswordStrengthProps) {
           />
         ))}
       </div>
-      <p className={`text-xs ${score >= 3 ? 'text-green-600 dark:text-green-400' : 'text-gray-500 dark:text-gray-400'}`}>
+      <p className={`text-xs ${score >= 3 ? 'text-red-600 dark:text-red-400' : 'text-gray-500 dark:text-gray-400'}`}>
         {label}
         {score < 2 && ' — use 8+ characters with letters and numbers'}
         {score >= 2 && score < 3 && ' — add symbols for a stronger password'}

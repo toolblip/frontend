@@ -57,7 +57,7 @@ export default function CronGeneratorClient() {
           type="text"
           value={expr}
           readOnly
-          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-red-500"
         />
       </div>
 
@@ -74,7 +74,7 @@ export default function CronGeneratorClient() {
             <select
               value={value}
               onChange={(e) => set(e.target.value)}
-              className="w-full px-2 py-1.5 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 text-xs focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full px-2 py-1.5 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 text-xs focus:outline-none focus:ring-2 focus:ring-red-500"
             >
               {options.map((o) => (
                 <option key={o} value={o}>{o === '*' ? 'Every' : o}</option>

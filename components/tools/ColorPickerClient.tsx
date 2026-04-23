@@ -36,8 +36,8 @@ function rgbToHsl(r: number, g: number, b: number): { h: number; s: number; l: n
 }
 
 export default function ColorPickerClient() {
-  const [color, setColor] = useState('#22c55e');
-  const [hex, setHex] = useState('#22C55E');
+  const [color, setColor] = useState('#EF4444');
+  const [hex, setHex] = useState('#EF4444');
   const [rgb, setRgb] = useState({ r: 34, g: 197, b: 94 });
   const [hsl, setHsl] = useState({ h: 142, s: 70, l: 45 });
 
@@ -65,8 +65,8 @@ export default function ColorPickerClient() {
         <input
           value={color}
           onChange={e => setColor(e.target.value)}
-          placeholder="#22c55e"
-          className="flex-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 font-mono text-sm focus:outline-none focus:border-green-500"
+          placeholder="#EF4444"
+          className="flex-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 font-mono text-sm focus:outline-none focus:border-red-500"
         />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -79,7 +79,7 @@ export default function ColorPickerClient() {
             <div className="text-xs text-gray-500 dark:text-gray-400 mb-1.5 font-medium">{label}</div>
             <div className="flex items-center justify-between">
               <span className="font-mono text-sm text-gray-800 dark:text-gray-200">{value}</span>
-              <button onClick={() => copy(value)} className="text-xs text-green-600 dark:text-green-400 hover:text-green-700 font-medium">Copy</button>
+              <button onClick={() => copy(value)} className="text-xs text-red-600 dark:text-red-400 hover:text-red-700 font-medium">Copy</button>
             </div>
           </div>
         ))}

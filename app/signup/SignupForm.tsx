@@ -62,37 +62,37 @@ export default function SignupForm() {
         <div>
           <label htmlFor="name" className="block text-sm text-gray-600 dark:text-gray-400 mb-1">Name</label>
           <input id="name" type="text" name="name" required autoComplete="name" value={name} onChange={(e) => setName(e.target.value)}
-            className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-green-500 transition-colors" />
+            className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-red-500 transition-colors" />
         </div>
 
         <div>
           <label htmlFor="email" className="block text-sm text-gray-600 dark:text-gray-400 mb-1">Email</label>
           <input id="email" type="email" name="email" required autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)}
-            className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-green-500 transition-colors" />
+            className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-red-500 transition-colors" />
         </div>
 
         <div>
           <label htmlFor="password" className="block text-sm text-gray-600 dark:text-gray-400 mb-1">Password</label>
           <input id="password" type="password" name="password" required autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)}
-            className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-green-500 transition-colors" />
+            className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-red-500 transition-colors" />
           <PasswordStrength password={password} />
         </div>
 
         <div>
           <label htmlFor="password-confirm" className="block text-sm text-gray-600 dark:text-gray-400 mb-1">Confirm password</label>
           <input id="password-confirm" type="password" name="password_confirmation" required autoComplete="new-password" value={confirm} onChange={(e) => setConfirm(e.target.value)}
-            className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-green-500 transition-colors" />
+            className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-red-500 transition-colors" />
         </div>
 
         <button type="submit" disabled={loading}
-          className="w-full bg-green-600 hover:bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-lg transition-colors text-sm">
+          className="w-full bg-red-600 hover:bg-red-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-lg transition-colors text-sm">
           {loading ? 'Creating account...' : 'Create account'}
         </button>
       </form>
 
       <p className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
         Already have an account?{' '}
-        <Link href="/login" className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 underline transition-colors">
+        <Link href="/login" className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 underline transition-colors">
           Sign in
         </Link>
       </p>

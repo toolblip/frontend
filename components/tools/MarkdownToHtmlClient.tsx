@@ -68,7 +68,7 @@ export default function MarkdownToHtmlClient() {
             value={markdown}
             onChange={(e) => setMarkdown(e.target.value)}
             placeholder="# Hello World&#10;&#10;Write your **markdown** here..."
-            className="w-full h-64 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-green-500 placeholder-gray-500 font-mono"
+            className="w-full h-64 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-red-500 placeholder-gray-500 font-mono"
             aria-label="Markdown input"
           />
         </div>
@@ -76,7 +76,7 @@ export default function MarkdownToHtmlClient() {
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs text-gray-500 uppercase">HTML Output</span>
             {html && (
-              <button onClick={copyHtml} className="text-xs text-green-400 hover:text-green-300 transition-colors">
+              <button onClick={copyHtml} className="text-xs text-red-400 hover:text-red-300 transition-colors">
                 {copied ? 'Copied!' : 'Copy HTML'}
               </button>
             )}

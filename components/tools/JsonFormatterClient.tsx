@@ -40,7 +40,7 @@ export default function JsonFormatterClient() {
               key={m}
               onClick={() => setMode(m)}
               className={`text-sm px-4 py-1.5 rounded-full transition-colors ${
-                mode === m ? 'bg-green-600 text-black font-medium' : 'bg-gray-800 text-gray-400 hover:text-white'
+                mode === m ? 'bg-red-600 text-black font-medium' : 'bg-gray-800 text-gray-400 hover:text-white'
               }`}
             >
               {m === 'format' ? 'Format' : 'Minify'}
@@ -48,7 +48,7 @@ export default function JsonFormatterClient() {
           ))}
         </div>
         {result && (
-          <button onClick={copy} className="text-sm text-green-400 hover:text-green-300 transition-colors">
+          <button onClick={copy} className="text-sm text-red-400 hover:text-red-300 transition-colors">
             {copied ? 'Copied!' : 'Copy'}
           </button>
         )}
@@ -58,7 +58,7 @@ export default function JsonFormatterClient() {
         value={input}
         onChange={(e) => { setInput(e.target.value); setError(''); }}
         placeholder='{"key": "value"}'
-        className="w-full h-48 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-green-500 placeholder-gray-500 font-mono"
+        className="w-full h-48 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-red-500 placeholder-gray-500 font-mono"
         aria-label="JSON input"
       />
 
@@ -69,7 +69,7 @@ export default function JsonFormatterClient() {
       )}
 
       <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
-        <pre className="text-sm text-green-400 font-mono whitespace-pre-wrap break-all">
+        <pre className="text-sm text-red-400 font-mono whitespace-pre-wrap break-all">
           {result || '—'}
         </pre>
       </div>

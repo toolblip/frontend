@@ -46,7 +46,7 @@ export default function TermsPage() {
 
         <section>
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Contact</h2>
-          <p>Questions? Email <a href="mailto:harun@toolblip.com" className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors">harun@toolblip.com</a>.</p>
+          <p>Questions? Email <a href="mailto:harun@toolblip.com" className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors">harun@toolblip.com</a>.</p>
         </section>
       </div>
     </div>

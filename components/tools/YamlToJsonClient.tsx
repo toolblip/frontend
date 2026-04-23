@@ -17,7 +17,7 @@ function syntaxHighlight(json: string): string {
     (match) => {
       let cls = 'text-blue-400';
       if (/^"/.test(match)) {
-        cls = /:$/.test(match) ? 'text-purple-400' : 'text-green-400';
+        cls = /:$/.test(match) ? 'text-purple-400' : 'text-red-400';
       } else if (/true|false/.test(match)) {
         cls = 'text-yellow-400';
       } else if (/null/.test(match)) {
@@ -73,7 +73,7 @@ export default function YamlToJsonClient() {
               onClick={() => setMode(m)}
               className={`text-sm px-4 py-1.5 rounded-full transition-colors ${
                 mode === m
-                  ? 'bg-green-600 text-black font-medium'
+                  ? 'bg-red-600 text-black font-medium'
                   : 'bg-gray-800 text-gray-400 hover:text-white'
               }`}
             >
@@ -91,7 +91,7 @@ export default function YamlToJsonClient() {
                 onClick={() => setIndent(s)}
                 className={`text-sm px-3 py-1.5 rounded-full transition-colors ${
                   indent === s
-                    ? 'bg-green-600 text-black font-medium'
+                    ? 'bg-red-600 text-black font-medium'
                     : 'bg-gray-800 text-gray-400 hover:text-white'
                 }`}
               >
@@ -121,7 +121,7 @@ export default function YamlToJsonClient() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder={`name: Toolblip\nversion: 1.0\nfeatures:\n  - fast\n  - client-side\nconfig:\n  debug: false\n  maxRetries: 3`}
-          className="w-full h-52 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-green-500 placeholder-gray-500 font-mono"
+          className="w-full h-52 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-red-500 placeholder-gray-500 font-mono"
           aria-label="YAML input"
           spellCheck={false}
         />
@@ -143,7 +143,7 @@ export default function YamlToJsonClient() {
           {result && (
             <button
               onClick={copy}
-              className="text-sm text-green-400 hover:text-green-300 transition-colors"
+              className="text-sm text-red-400 hover:text-red-300 transition-colors"
             >
               {copied ? 'Copied!' : 'Copy'}
             </button>

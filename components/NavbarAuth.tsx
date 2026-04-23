@@ -54,7 +54,7 @@ export default function NavbarAuth() {
           aria-expanded={menuOpen}
           aria-haspopup="true"
         >
-          <span className="w-7 h-7 rounded-full bg-green-600 flex items-center justify-center text-white text-xs font-semibold uppercase">
+          <span className="w-7 h-7 rounded-full bg-red-600 flex items-center justify-center text-white text-xs font-semibold uppercase">
             {user.name.charAt(0)}
           </span>
           <span className="hidden sm:inline text-gray-700 dark:text-gray-200">{user.name}</span>
@@ -101,7 +101,7 @@ export default function NavbarAuth() {
       </Link>
       <Link
         href="/signup"
-        className="bg-green-600 hover:bg-green-700 text-white px-3.5 py-1.5 rounded-lg text-sm font-medium transition-colors"
+        className="bg-red-600 hover:bg-red-700 text-white px-3.5 py-1.5 rounded-lg text-sm font-medium transition-colors"
       >
         Sign Up
       </Link>

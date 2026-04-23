@@ -36,12 +36,12 @@ export default function AboutPage() {
           Toolblip is built and maintained by{' '}
           <a
             href="https://github.com/HarunRRayhan"
-            className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 transition-colors"
+            className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors"
           >
             Harun R Rayhan
           </a>
           . He also builds{' '}
-          <a href="https://crontinel.com" className="text-green-400 hover:text-green-300 transition-colors">
+          <a href="https://crontinel.com" className="text-red-400 hover:text-red-300 transition-colors">
             Crontinel
           </a>
           , a Laravel cron and queue monitoring tool for production apps. Both projects share the same goal:

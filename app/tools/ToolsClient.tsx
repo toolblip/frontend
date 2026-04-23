@@ -36,7 +36,7 @@ export default function ToolsClient() {
           onChange={e => setQuery(e.target.value)}
           placeholder="Search tools..."
           aria-label="Search tools by name, description, or category"
-          className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 pl-10 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-green-500 transition-colors"
+          className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 pl-10 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-red-500 transition-colors"
         />
         <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
@@ -56,7 +56,7 @@ export default function ToolsClient() {
             onClick={() => setActiveCategory(cat)}
             className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
               activeCategory === cat
-                ? 'bg-green-600 text-white dark:bg-green-700 dark:text-white'
+                ? 'bg-red-600 text-white dark:bg-red-700 dark:text-white'
                 : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
             }`}
           >
@@ -79,12 +79,12 @@ export default function ToolsClient() {
             <Link
               key={tool.slug}
               href={`/tools/${tool.slug}`}
-              className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-green-500 dark:hover:border-green-600 rounded-xl p-4 transition-all"
+              className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-red-500 dark:hover:border-red-600 rounded-xl p-4 transition-all"
             >
               <div className="flex items-start gap-3">
                 <span className="text-2xl">{tool.emoji}</span>
                 <div className="min-w-0">
-                  <h2 className="font-semibold text-gray-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors truncate text-sm sm:text-base">
+                  <h2 className="font-semibold text-gray-900 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors truncate text-sm sm:text-base">
                     {tool.name}
                   </h2>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5 leading-relaxed line-clamp-2">
@@ -103,7 +103,7 @@ export default function ToolsClient() {
           <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">
             No tools match &ldquo;{query}&rdquo;
           </p>
-          <button onClick={() => { setQuery(''); setActiveCategory('All'); }} className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 text-sm">
+          <button onClick={() => { setQuery(''); setActiveCategory('All'); }} className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 text-sm">
             Clear filters
           </button>
         </div>

@@ -36,7 +36,7 @@ export default function ShareButtons({ toolName, className }: Props) {
       {/* Copy link */}
       <button
         onClick={handleCopyLink}
-        className="inline-flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 hover:text-green-500 dark:hover:text-green-400 transition-colors"
+        className="inline-flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 transition-colors"
         title="Copy link"
       >
         <svg

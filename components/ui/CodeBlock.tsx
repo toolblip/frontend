@@ -42,7 +42,7 @@ export default function CodeBlock({ code, language, title }: Props) {
       <div className="relative bg-gray-900">
         <button
           onClick={handleCopy}
-          className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity text-xs text-gray-400 hover:text-green-400 bg-gray-800 border border-gray-700 px-2 py-1 rounded z-10"
+          className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity text-xs text-gray-400 hover:text-red-400 bg-gray-800 border border-gray-700 px-2 py-1 rounded z-10"
           title="Copy code"
         >
           {copied ? '✓ Copied' : 'Copy'}

@@ -468,7 +468,7 @@ export default function CronParserClient() {
           placeholder="* * * * *"
           spellCheck={false}
           autoComplete="off"
-          className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-gray-100 font-mono text-lg focus:outline-none focus:border-green-500 placeholder-gray-600 transition-colors"
+          className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 text-gray-100 font-mono text-lg focus:outline-none focus:border-red-500 placeholder-gray-600 transition-colors"
           aria-label="Cron expression"
           aria-describedby="cron-field-guide"
         />
@@ -499,8 +499,8 @@ export default function CronParserClient() {
               onClick={() => setExpression(preset.value)}
               className={`px-3 py-1 rounded-full text-sm border transition-colors ${
                 expression === preset.value
-                  ? 'bg-green-600 border-green-600 text-black font-medium'
-                  : 'border-gray-700 text-gray-400 hover:border-green-600 hover:text-green-400'
+                  ? 'bg-red-600 border-red-600 text-black font-medium'
+                  : 'border-gray-700 text-gray-400 hover:border-red-600 hover:text-red-400'
               }`}
             >
               {preset.label}
@@ -513,10 +513,10 @@ export default function CronParserClient() {
       {result.valid ? (
         <div className="space-y-4">
           {/* Description */}
-          <div className="bg-gray-800 border border-green-800 rounded-lg p-4">
+          <div className="bg-gray-800 border border-red-800 rounded-lg p-4">
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-green-400 font-bold">✓</span>
-              <span className="text-green-400 text-xs font-medium uppercase tracking-wide">Valid</span>
+              <span className="text-red-400 font-bold">✓</span>
+              <span className="text-red-400 text-xs font-medium uppercase tracking-wide">Valid</span>
             </div>
             <p className="text-gray-100 text-base leading-relaxed">{result.description}</p>
           </div>
@@ -534,7 +534,7 @@ export default function CronParserClient() {
                     className="flex items-center justify-between py-2.5 border-b border-gray-700 last:border-0"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="text-green-500 text-xs font-mono w-4 text-right shrink-0">
+                      <span className="text-red-500 text-xs font-mono w-4 text-right shrink-0">
                         {i + 1}
                       </span>
                       <span className="text-gray-200 text-sm font-mono">{formatDate(date)}</span>
@@ -588,7 +588,7 @@ export default function CronParserClient() {
                 ['@hourly',  'Once an hour',       '= 0 * * * *'],
               ] as [string, string, string][]).map(([sym, meaning, example]) => (
                 <tr key={sym} className="border-b border-gray-700/40 last:border-0">
-                  <td className="py-1.5 pr-4 font-mono text-green-400">{sym}</td>
+                  <td className="py-1.5 pr-4 font-mono text-red-400">{sym}</td>
                   <td className="py-1.5 pr-4 text-gray-400">{meaning}</td>
                   <td className="py-1.5 text-gray-500">{example}</td>
                 </tr>

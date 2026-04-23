@@ -51,7 +51,7 @@ export default function ThemeToggle() {
               }}
               className={`w-full flex items-center gap-2.5 px-3 py-2 text-sm transition-colors ${
                 theme === t
-                  ? 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20'
+                  ? 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20'
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700'
               }`}
             >

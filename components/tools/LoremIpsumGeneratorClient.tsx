@@ -48,7 +48,7 @@ export default function LoremIpsumGeneratorClient() {
             max={100}
             value={count}
             onChange={e => setCount(Math.max(1, Math.min(100, parseInt(e.target.value) || 1)))}
-            className="w-20 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-green-500"
+            className="w-20 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-red-500"
           />
         </div>
         <div className="flex items-center gap-2">
@@ -56,7 +56,7 @@ export default function LoremIpsumGeneratorClient() {
           <select
             value={type}
             onChange={e => setType(e.target.value as typeof type)}
-            className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-green-500"
+            className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-red-500"
           >
             <option value="words">Words</option>
             <option value="sentences">Sentences</option>
@@ -67,7 +67,7 @@ export default function LoremIpsumGeneratorClient() {
       <div className="flex gap-3">
         <button
           onClick={handleGenerate}
-          className="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-lg font-medium transition-colors"
+          className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg font-medium transition-colors"
         >
           Generate
         </button>

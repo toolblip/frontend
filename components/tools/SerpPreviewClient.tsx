@@ -46,14 +46,14 @@ export default function SerpPreviewClient() {
                 onChange={e => onChange(e.target.value)}
                 placeholder={placeholder}
                 rows={3}
-                className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-green-500 resize-none"
+                className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 resize-none"
               />
             ) : (
               <input
                 value={value}
                 onChange={e => onChange(e.target.value)}
                 placeholder={placeholder}
-                className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-green-500"
+                className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-red-500"
               />
             )}
           </div>
@@ -74,7 +74,7 @@ export default function SerpPreviewClient() {
               </svg>
             </div>
             <div className="min-w-0 flex-1">
-              <div className="text-green-700 dark:text-green-400 text-sm truncate mb-0.5">{breadcrumb}</div>
+              <div className="text-red-700 dark:text-red-400 text-sm truncate mb-0.5">{breadcrumb}</div>
               <div className="text-blue-700 dark:text-blue-400 text-base hover:underline cursor-pointer truncate">{title}</div>
               <div className="text-gray-500 text-sm truncate mb-1">{base}</div>
               <div className="text-gray-600 dark:text-gray-300 text-sm leading-snug">{truncate(description, 160)}</div>

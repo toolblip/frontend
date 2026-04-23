@@ -60,14 +60,14 @@ export default function GrammarCheckerClient() {
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Type or paste your text here to check for grammar and spelling errors..."
-          className="w-full h-40 px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 resize-y focus:outline-none focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400"
+          className="w-full h-40 px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 resize-y focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400"
         />
       </div>
 
       <button
         onClick={checkGrammar}
         disabled={loading || !text.trim()}
-        className="px-4 py-2 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white rounded-lg text-sm font-medium transition-colors disabled:cursor-not-allowed"
+        className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-lg text-sm font-medium transition-colors disabled:cursor-not-allowed"
       >
         {loading ? 'Checking...' : 'Check Grammar'}
       </button>
@@ -95,7 +95,7 @@ export default function GrammarCheckerClient() {
                     <button
                       key={j}
                       onClick={() => applyFix(issue)}
-                      className="text-xs px-2 py-1 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded border border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-900/50 transition-colors"
+                      className="text-xs px-2 py-1 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded border border-red-200 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors"
                     >
                       {r.value}
                     </button>
@@ -108,7 +108,7 @@ export default function GrammarCheckerClient() {
       )}
 
       {!loading && !error && issues.length === 0 && text.trim().length > 0 && (
-        <p className="text-sm text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20 px-3 py-2 rounded-lg">
+        <p className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-3 py-2 rounded-lg">
           ✅ No issues found. Your text looks good!
         </p>
       )}

@@ -62,7 +62,7 @@ export default function ImageCropperClient() {
         ctx.fillRect(0, y + h, canvas.width, canvas.height - y - h);
         ctx.fillRect(0, y, x, h);
         ctx.fillRect(x + w, y, canvas.width - x - w, h);
-        ctx.strokeStyle = '#22c55e';
+        ctx.strokeStyle = '#EF4444';
         ctx.lineWidth = 2;
         ctx.strokeRect(x, y, w, h);
       }
@@ -147,7 +147,7 @@ export default function ImageCropperClient() {
             onClick={() => setPreset({ label, ratio })}
             className={`text-xs px-3 py-1.5 rounded-full transition-colors ${
               preset.label === label
-                ? 'bg-green-600 text-black font-medium'
+                ? 'bg-red-600 text-black font-medium'
                 : 'bg-gray-800 text-gray-400 hover:text-white'
             }`}
           >
@@ -159,7 +159,7 @@ export default function ImageCropperClient() {
       {/* Upload zone */}
       {!image ? (
         <div
-          className="border-2 border-dashed border-gray-700 hover:border-green-600 rounded-xl p-12 text-center transition-colors cursor-pointer"
+          className="border-2 border-dashed border-gray-700 hover:border-red-600 rounded-xl p-12 text-center transition-colors cursor-pointer"
           onDragOver={(e) => e.preventDefault()}
           onDrop={handleDrop}
           onClick={() => document.getElementById('image-input')?.click()}
@@ -191,7 +191,7 @@ export default function ImageCropperClient() {
           <div className="flex gap-3">
             <button
               onClick={downloadCrop}
-              className="bg-green-600 hover:bg-green-500 text-black font-medium px-4 py-2 rounded-lg text-sm transition-colors disabled:opacity-50"
+              className="bg-red-600 hover:bg-red-500 text-black font-medium px-4 py-2 rounded-lg text-sm transition-colors disabled:opacity-50"
               disabled={cropRect.w === 0 || isOversized}
               title={isOversized ? 'File size exceeds your plan limit' : ''}
             >

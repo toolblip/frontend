@@ -40,14 +40,14 @@ export default function RegexTesterClient() {
           value={pattern}
           onChange={e => setPattern(e.target.value)}
           placeholder="Regular expression, e.g. \d+"
-          className="flex-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 font-mono text-sm focus:outline-none focus:border-green-500"
+          className="flex-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 font-mono text-sm focus:outline-none focus:border-red-500"
         />
         <input
           value={flags}
           onChange={e => setFlags(e.target.value.replace(/[^gimsuy]/g, ''))}
           placeholder="g"
           title="Regex flags: g=global, i=ignore case, m=multiline, s=dotall, u=unicode"
-          className="w-16 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2.5 font-mono text-sm focus:outline-none focus:border-green-500"
+          className="w-16 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2.5 font-mono text-sm focus:outline-none focus:border-red-500"
         />
       </div>
       <div>
@@ -57,7 +57,7 @@ export default function RegexTesterClient() {
           onChange={e => setTestString(e.target.value)}
           placeholder="Enter text to test against the regex..."
           rows={4}
-          className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-green-500 resize-none"
+          className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500 resize-none"
         />
       </div>
       {error && (
@@ -66,7 +66,7 @@ export default function RegexTesterClient() {
         </div>
       )}
       {matchList.length > 0 && (
-        <div className="text-green-600 dark:text-green-400 text-sm font-medium">
+        <div className="text-red-600 dark:text-red-400 text-sm font-medium">
           {matchList.length} match{matchList.length !== 1 ? 'es' : ''} found
         </div>
       )}

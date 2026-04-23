@@ -114,7 +114,7 @@ export default function DirectoryClient() {
               placeholder="Search tools by name or description... (press / to focus)"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full pl-9 pr-16 py-2.5 text-sm bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-shadow"
+              className="w-full pl-9 pr-16 py-2.5 text-sm bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-shadow"
             />
             {query && (
               <button
@@ -145,7 +145,7 @@ export default function DirectoryClient() {
                   }}
                   className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-medium rounded-full transition-all ${
                     activeTab === tab
-                      ? 'bg-green-600 text-white shadow-sm'
+                      ? 'bg-red-600 text-white shadow-sm'
                       : 'bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                   }`}
                 >
@@ -153,7 +153,7 @@ export default function DirectoryClient() {
                   <span
                     className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${
                       activeTab === tab
-                        ? 'bg-green-500 text-white'
+                        ? 'bg-red-500 text-white'
                         : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400'
                     }`}
                   >
@@ -182,7 +182,7 @@ export default function DirectoryClient() {
             {filtered.length === 1 ? ' tool' : ' tools'}
             {activeTab !== 'All' && (
               <span className="ml-1">
-                in <span className="font-medium text-green-600 dark:text-green-400">{activeTab}</span>
+                in <span className="font-medium text-red-600 dark:text-red-400">{activeTab}</span>
               </span>
             )}
             {query && (
@@ -197,7 +197,7 @@ export default function DirectoryClient() {
           {(query || activeTab !== 'All') && (
             <button
               onClick={clearAll}
-              className="text-xs text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 font-medium transition-colors flex items-center gap-1"
+              className="text-xs text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium transition-colors flex items-center gap-1"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -215,7 +215,7 @@ export default function DirectoryClient() {
                 <Link
                   key={tool.slug}
                   href={`/tools/${tool.slug}`}
-                  className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-green-500 dark:hover:border-green-600 rounded-xl p-4 transition-all duration-200 hover:shadow-md hover:shadow-green-100/50 dark:hover:shadow-green-900/20 hover:-translate-y-0.5"
+                  className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-red-500 dark:hover:border-red-600 rounded-xl p-4 transition-all duration-200 hover:shadow-md hover:shadow-red-100/50 dark:hover:shadow-red-900/20 hover:-translate-y-0.5"
                   style={{ animationDelay: `${Math.min(i, 12) * 40}ms` }}
                 >
                   <div className="flex items-start gap-3">
@@ -224,11 +224,11 @@ export default function DirectoryClient() {
                     </span>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-                        <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors truncate text-sm sm:text-base">
+                        <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors truncate text-sm sm:text-base">
                           {tool.name}
                         </h3>
                       </div>
-                      <span className="inline-block text-[10px] font-semibold uppercase tracking-wider text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-1.5 py-0.5 rounded-full mb-1.5">
+                      <span className="inline-block text-[10px] font-semibold uppercase tracking-wider text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 px-1.5 py-0.5 rounded-full mb-1.5">
                         {tool.category}
                       </span>
                       <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2">
@@ -245,7 +245,7 @@ export default function DirectoryClient() {
               <div className="flex justify-center mt-8">
                 <button
                   onClick={loadMore}
-                  className="px-6 py-2.5 text-sm font-medium bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 rounded-xl hover:border-green-500 dark:hover:border-green-600 hover:text-green-600 dark:hover:text-green-400 transition-all"
+                  className="px-6 py-2.5 text-sm font-medium bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 rounded-xl hover:border-red-500 dark:hover:border-red-600 hover:text-red-600 dark:hover:text-red-400 transition-all"
                 >
                   Load more tools
                   <span className="ml-2 text-xs text-gray-400 dark:text-gray-500">
@@ -286,7 +286,7 @@ export default function DirectoryClient() {
             </p>
             <button
               onClick={clearAll}
-              className="px-5 py-2 text-sm font-medium bg-green-600 hover:bg-green-500 text-white rounded-lg transition-colors"
+              className="px-5 py-2 text-sm font-medium bg-red-600 hover:bg-red-500 text-white rounded-lg transition-colors"
             >
               Clear all filters
             </button>
@@ -298,7 +298,7 @@ export default function DirectoryClient() {
       <button
         onClick={scrollToTop}
         aria-label="Scroll to top"
-        className={`fixed bottom-6 right-6 w-10 h-10 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full shadow-lg flex items-center justify-center text-gray-500 hover:text-green-600 dark:hover:text-green-400 transition-all duration-300 ${
+        className={`fixed bottom-6 right-6 w-10 h-10 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full shadow-lg flex items-center justify-center text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-all duration-300 ${
           showTopBtn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
         }`}
       >

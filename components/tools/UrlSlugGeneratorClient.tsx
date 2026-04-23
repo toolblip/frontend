@@ -95,7 +95,7 @@ export default function UrlSlugGeneratorClient() {
           onChange={e => setInput(e.target.value)}
           placeholder="Paste or type any text to generate a URL slug…"
           rows={4}
-          className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-gray-100 text-sm focus:outline-none focus:border-green-500 placeholder-gray-600 resize-y"
+          className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-gray-100 text-sm focus:outline-none focus:border-red-500 placeholder-gray-600 resize-y"
         />
       </div>
 
@@ -106,7 +106,7 @@ export default function UrlSlugGeneratorClient() {
           onClick={() => setOptions(o => ({ ...o, lowercase: !o.lowercase }))}
           className={`text-sm px-3 py-1.5 rounded-full border transition-colors ${
             options.lowercase
-              ? 'bg-green-600 border-green-600 text-black font-medium'
+              ? 'bg-red-600 border-red-600 text-black font-medium'
               : 'bg-gray-800 border-gray-700 text-gray-400 hover:text-white'
           }`}
         >
@@ -118,7 +118,7 @@ export default function UrlSlugGeneratorClient() {
           onClick={() => setOptions(o => ({ ...o, trim: !o.trim }))}
           className={`text-sm px-3 py-1.5 rounded-full border transition-colors ${
             options.trim
-              ? 'bg-green-600 border-green-600 text-black font-medium'
+              ? 'bg-red-600 border-red-600 text-black font-medium'
               : 'bg-gray-800 border-gray-700 text-gray-400 hover:text-white'
           }`}
         >
@@ -134,7 +134,7 @@ export default function UrlSlugGeneratorClient() {
               onClick={() => setOptions(o => ({ ...o, separator: s }))}
               className={`w-8 h-8 rounded-lg text-sm font-mono transition-colors ${
                 options.separator === s
-                  ? 'bg-green-600 text-black font-bold'
+                  ? 'bg-red-600 text-black font-bold'
                   : 'bg-gray-800 border border-gray-700 text-gray-400 hover:text-white'
               }`}
             >
@@ -177,13 +177,13 @@ export default function UrlSlugGeneratorClient() {
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 min-w-0">
               <p className="text-xs text-gray-500 uppercase tracking-wide font-medium mb-1.5">Slug</p>
-              <p className="text-green-400 font-mono text-lg break-all leading-snug">
+              <p className="text-red-400 font-mono text-lg break-all leading-snug">
                 {slug}
               </p>
             </div>
             <button
               onClick={copy}
-              className="shrink-0 mt-6 px-4 py-1.5 bg-green-600 hover:bg-green-500 text-black text-sm font-medium rounded-lg transition-colors"
+              className="shrink-0 mt-6 px-4 py-1.5 bg-red-600 hover:bg-red-500 text-black text-sm font-medium rounded-lg transition-colors"
             >
               {copied ? 'Copied!' : 'Copy'}
             </button>

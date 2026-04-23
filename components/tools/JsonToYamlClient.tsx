@@ -59,8 +59,8 @@ export default function JsonToYamlClient() {
           <option value={4}>4 spaces</option>
         </select>
       </div>
-      <textarea value={input} onChange={e => setInput(e.target.value)} placeholder='Paste JSON here...' rows={8} className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-3 text-sm font-mono focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none resize-y" />
-      <button onClick={convert} className="w-full bg-green-600 hover:bg-green-500 text-white font-medium py-2.5 rounded-lg transition-colors text-sm">
+      <textarea value={input} onChange={e => setInput(e.target.value)} placeholder='Paste JSON here...' rows={8} className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-3 text-sm font-mono focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none resize-y" />
+      <button onClick={convert} className="w-full bg-red-600 hover:bg-red-500 text-white font-medium py-2.5 rounded-lg transition-colors text-sm">
         Convert to YAML
       </button>
       {error && <p className="text-red-500 text-sm">{error}</p>}

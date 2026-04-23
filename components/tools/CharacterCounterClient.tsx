@@ -24,7 +24,7 @@ export default function CharacterCounterClient() {
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Type or paste your text here..."
-        className="w-full h-48 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-green-500 placeholder-gray-500"
+        className="w-full h-48 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-red-500 placeholder-gray-500"
         aria-label="Text input"
       />
 
@@ -35,7 +35,7 @@ export default function CharacterCounterClient() {
           { label: 'Words', value: counts.words },
         ].map(({ label, value }) => (
           <div key={label} className="bg-gray-800 border border-gray-700 rounded-lg p-3 text-center">
-            <div className="text-2xl font-bold text-green-400">{value.toLocaleString()}</div>
+            <div className="text-2xl font-bold text-red-400">{value.toLocaleString()}</div>
             <div className="text-xs text-gray-400 mt-1">{label}</div>
           </div>
         ))}
@@ -52,7 +52,7 @@ export default function CharacterCounterClient() {
               <span className="text-xs text-gray-500 w-36 shrink-0">{label}</span>
               <div className="flex-1 bg-gray-800 rounded-full h-2">
                 <div
-                  className={`h-2 rounded-full transition-all ${over ? 'bg-red-500' : near ? 'bg-yellow-500' : 'bg-green-500'}`}
+                  className={`h-2 rounded-full transition-all ${over ? 'bg-red-500' : near ? 'bg-yellow-500' : 'bg-red-500'}`}
                   style={{ width: `${Math.min(100, (counts.withSpaces / limit) * 100)}%` }}
                 />
               </div>
@@ -66,7 +66,7 @@ export default function CharacterCounterClient() {
 
       <button
         onClick={() => navigator.clipboard.writeText(text)}
-        className="text-sm text-green-400 hover:text-green-300 transition-colors"
+        className="text-sm text-red-400 hover:text-red-300 transition-colors"
       >
         Copy text
       </button>
