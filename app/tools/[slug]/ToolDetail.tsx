@@ -1,4 +1,5 @@
 import type { Tool } from '@/data/tools';
+import ShareButtons from '@/components/ShareButtons';
 import WordCounterClient from '@/components/tools/WordCounterClient';
 import CharacterCounterClient from '@/components/tools/CharacterCounterClient';
 import CaseConverterClient from '@/components/tools/CaseConverterClient';
@@ -42,6 +43,9 @@ export default function ToolDetail({ tool }: ToolDetailProps) {
         <p className="mt-3 text-gray-500 dark:text-gray-400 leading-relaxed">
           {tool.description}
         </p>
+        <div className="mt-4">
+          <ShareButtons toolName={tool.name} />
+        </div>
       </div>
 
       {/* Tool UI or Coming Soon */}
