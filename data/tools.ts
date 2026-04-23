@@ -837,6 +837,25 @@ export const tools: Tool[] = [
   { name: 'Data Size Converter', slug: 'data-size-converter', description: 'Convert between bytes, KB, MB, GB, TB, and PB with binary or decimal units.', emoji: '💾', category: 'Conversion' },
   { name: 'Hex to Decimal Converter', slug: 'hex-to-decimal', description: 'Convert hexadecimal numbers to decimal and binary with instant results.', emoji: '🔢', category: 'Conversion' },
   { name: 'Decimal to Binary Converter', slug: 'decimal-to-binary', description: 'Convert decimal numbers to binary, hexadecimal, and octal formats instantly.', emoji: '🔢', category: 'Conversion' },
+
+  // --- New tools (2026-04-24 #2) ---
+  { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-quick', description: 'Quickly generate lorem ipsum placeholder text with customizable paragraph and sentence counts.', emoji: '📜', category: 'Text' },
+  { name: 'Grammar Checker', slug: 'grammar-checker-quick', description: 'Check grammar and spelling errors instantly with one-click corrections for any text.', emoji: '✅', category: 'Text' },
+  { name: 'Readability Score', slug: 'readability-score-quick', description: 'Calculate Flesch-Kincaid and other readability scores to gauge text difficulty.', emoji: '📊', category: 'Text' },
+  { name: 'Text Sorter', slug: 'text-sorter-quick', description: 'Sort text lines alphabetically, by length, numerically, or in reverse order.', emoji: '📋', category: 'Text' },
+  { name: 'Regex Tester', slug: 'regex-tester-quick', description: 'Test regex patterns with real-time match highlighting and capture group display.', emoji: '🔍', category: 'Developer' },
+  { name: 'JWT Decoder', slug: 'jwt-decoder-quick', description: 'Decode JWT tokens and view header, payload, and expiration in real time.', emoji: '🎫', category: 'Developer' },
+  { name: 'Cron Expression Generator', slug: 'cron-generator-quick', description: 'Build cron schedules with point-and-click controls and see human-readable output.', emoji: '🕐', category: 'Developer' },
+  { name: 'HTTP Headers Viewer', slug: 'http-headers-quick', description: 'View request and response HTTP headers for any URL with timing breakdown.', emoji: '📦', category: 'Developer' },
+  { name: 'Port Scanner', slug: 'port-scanner-quick', description: 'Scan common ports on a host to check for open services and availability.', emoji: '🚪', category: 'Developer' },
+  { name: 'Favicon Generator', slug: 'favicon-generator-quick', description: 'Create favicon.ico and app icons from any image or emoji with multiple sizes.', emoji: '🌐', category: 'Image' },
+  { name: 'Image Resizer', slug: 'image-resizer-quick', description: 'Resize images to standard dimensions for social media and web with batch support.', emoji: '📐', category: 'Image' },
+  { name: 'Meta Tag Generator', slug: 'meta-tag-generator-quick', description: 'Generate SEO meta tags, Open Graph, and Twitter Card tags with live preview.', emoji: '🏷️', category: 'SEO' },
+  { name: 'SERP Preview', slug: 'serp-preview-quick', description: 'See how a page title and description appear in actual Google search results.', emoji: '🔎', category: 'SEO' },
+  { name: 'Color Picker', slug: 'color-picker-quick', description: 'Pick any color and instantly get HEX, RGB, HSL, and CSS values with preview.', emoji: '🎨', category: 'Color' },
+  { name: 'Contrast Checker', slug: 'contrast-checker-quick', description: 'Check color contrast ratios for WCAG AA and AAA accessibility compliance.', emoji: '♿', category: 'Color' },
+  { name: 'Unit Converter', slug: 'unit-converter-quick', description: 'Convert length, weight, temperature, and more between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
+  { name: 'Number Base Converter', slug: 'number-base-converter-quick', description: 'Convert between binary, decimal, hexadecimal, and octal instantly.', emoji: '🔢', category: 'Conversion' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network'] as const;
