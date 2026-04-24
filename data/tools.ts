@@ -1253,6 +1253,23 @@ export const tools: Tool[] = [
   { name: 'YouTube to Text Converter', slug: 'youtube-to-text', description: 'Transcribe YouTube videos to text. Get full transcripts instantly.', emoji: '🎬', category: 'AI Tools' },
   { name: 'YouTube Transcript Generator', slug: 'youtube-transcript', description: 'Get transcripts of YouTube videos. Searchable text from video content.', emoji: '🎬', category: 'AI Tools' },
   { name: 'Create ZIP File', slug: 'zip', description: 'Create ZIP archives from multiple files. Compress for easy sharing.', emoji: '📦', category: 'Utility' },
+
+  // --- Batch #8: Genuinely new tools (2026-04-24) ---
+  { name: 'Unicode Escape Encoder', slug: 'unicode-escape-encoder', description: 'Encode Unicode characters to escape sequences and decode escaped strings back to text.', emoji: '🔤', category: 'Developer' },
+  { name: 'Punycode Encoder', slug: 'punycode-encoder', description: 'Encode and decode Punycode for internationalized domain names. Convert between Unicode domain and ASCII.', emoji: '🌐', category: 'Developer' },
+  { name: 'Remove Extra Spaces', slug: 'remove-extra-spaces', description: 'Remove multiple spaces, tabs, and line breaks from text. Clean up copy-pasted content instantly.', emoji: '🧹', category: 'Text' },
+  { name: 'Text Diff Checker', slug: 'text-diff-checker', description: 'Compare two texts side by side and highlight differences line by line.', emoji: '📝', category: 'Text' },
+  { name: 'Percentage Off Calculator', slug: 'percentage-off-calculator', description: 'Calculate the discounted price and amount saved from a percentage off sale.', emoji: '🏷️', category: 'Math' },
+  { name: 'DPI PPI Calculator', slug: 'dpi-ppi-calculator', description: 'Calculate dots per inch and pixels per inch for print and screen resolution.', emoji: '📐', category: 'Image' },
+  { name: 'Random Choice Wheel', slug: 'random-choice-wheel', description: 'Spin a customizable wheel to pick random names or items from a list.', emoji: '🎡', category: 'Utility' },
+  { name: 'ULID Generator', slug: 'ulid-generator', description: 'Generate Universally Unique Lexicographically Sortable Identifiers for distributed systems.', emoji: '🆔', category: 'Developer' },
+  { name: 'JSON to TSV Converter', slug: 'json-to-tsv', description: 'Convert JSON arrays to TSV (tab-separated values) format for spreadsheet import.', emoji: '📊', category: 'Conversion' },
+  { name: 'Favicon Preview', slug: 'favicon-preview', description: 'Preview how a favicon looks at different sizes from 16x16 to 512x512.', emoji: '🌐', category: 'SEO' },
+  { name: 'Word Count from URL', slug: 'word-count-from-url', description: 'Fetch and count words, characters, and paragraphs from any webpage URL.', emoji: '📝', category: 'Text' },
+  { name: 'Image Shadow Generator', slug: 'image-shadow-generator', description: 'Generate CSS box-shadow code for drop shadows, inner shadows, and colored shadows.', emoji: '🖼️', category: 'CSS' },
+  { name: 'Table to Markdown', slug: 'table-to-markdown', description: 'Convert HTML tables or CSV data into clean Markdown table format.', emoji: '📋', category: 'Conversion' },
+  { name: 'Favicon from Emoji', slug: 'favicon-from-emoji', description: 'Turn any emoji into a favicon PNG instantly. Download in multiple sizes.', emoji: '😀', category: 'Image' },
+  { name: 'Batch Favicon Downloader', slug: 'batch-favicon-downloader', description: 'Extract and download favicons from multiple URLs at once in one click.', emoji: '📥', category: 'SEO' },
 ];
 
 
