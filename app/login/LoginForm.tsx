@@ -50,42 +50,65 @@ export default function LoginForm() {
   }
 
   return (
-    <div className="max-w-md mx-auto px-4 sm:px-6 py-10 sm:py-16">
-      <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">Sign in</h1>
+    <div className="tb-v2-auth">
+      <div className="tb-v2-container">
+        <div className="tb-v2-auth-card">
+          <h1 className="tb-v2-auth-title">Sign in</h1>
 
-      <div className="flex items-center gap-3 mb-6">
-        <div className="flex-1 h-px bg-gray-300 dark:bg-gray-700" />
-        <span className="text-gray-500 dark:text-gray-400 text-sm">or</span>
-        <div className="flex-1 h-px bg-gray-300 dark:bg-gray-700" />
+          <div className="tb-v2-auth-divider">
+            <div className="tb-v2-auth-divider-line" />
+            <span className="tb-v2-auth-divider-text">or</span>
+            <div className="tb-v2-auth-divider-line" />
+          </div>
+
+          <form onSubmit={handleSubmit} className="tb-v2-auth-form" noValidate>
+            {error && <p role="alert" className="tb-v2-auth-error">{error}</p>}
+
+            <div className="tb-v2-auth-field">
+              <label htmlFor="email" className="tb-v2-auth-label">Email</label>
+              <input
+                id="email"
+                type="email"
+                name="email"
+                required
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="tb-v2-auth-input"
+                placeholder="you@example.com"
+              />
+            </div>
+
+            <div className="tb-v2-auth-field">
+              <label htmlFor="password" className="tb-v2-auth-label">Password</label>
+              <input
+                id="password"
+                type="password"
+                name="password"
+                required
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="tb-v2-auth-input"
+                placeholder="••••••••"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="tb-v2-auth-submit"
+            >
+              {loading ? 'Signing in...' : 'Sign in'}
+            </button>
+          </form>
+
+          <p className="tb-v2-auth-footer">
+            Don&apos;t have an account?{' '}
+            <Link href="/signup">Sign up</Link>
+          </p>
+        </div>
       </div>
-
-      <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-        {error && <p role="alert" className="text-red-600 dark:text-red-400 text-sm">{error}</p>}
-
-        <div>
-          <label htmlFor="email" className="block text-sm text-gray-600 dark:text-gray-400 mb-1">Email</label>
-          <input id="email" type="email" name="email" required autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)}
-            className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-red-500 transition-colors" />
-        </div>
-
-        <div>
-          <label htmlFor="password" className="block text-sm text-gray-600 dark:text-gray-400 mb-1">Password</label>
-          <input id="password" type="password" name="password" required autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)}
-            className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:border-red-500 transition-colors" />
-        </div>
-
-        <button type="submit" disabled={loading}
-          className="w-full bg-red-600 hover:bg-red-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-2.5 rounded-lg transition-colors text-sm">
-          {loading ? 'Signing in...' : 'Sign in'}
-        </button>
-      </form>
-
-      <p className="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
-        Don&apos;t have an account?{' '}
-        <Link href="/signup" className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 underline transition-colors">
-          Sign up
-        </Link>
-      </p>
     </div>
   );
 }

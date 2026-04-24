@@ -14,40 +14,43 @@ export const metadata: Metadata = {
 
 export default function TermsPage() {
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Terms of Service</h1>
-      <p className="text-gray-500 dark:text-gray-400 text-sm mb-10">Effective April 2026</p>
+    <div className="tb-v2-page">
+      <div className="tb-v2-container">
+        <div className="tb-v2-article">
+          <div className="tb-v2-page-kicker">Legal</div>
+          <h1 className="tb-v2-page-title">Terms of Service</h1>
+          <p className="tb-v2-page-meta">Effective April 2026</p>
 
-      <div className="space-y-10 text-gray-600 dark:text-gray-300 leading-relaxed">
-        <section>
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Use of the service</h2>
-          <p>Toolblip tools are free to use for personal and commercial purposes. No attribution required. You may not use Toolblip to process illegal content or to violate any applicable law.</p>
-        </section>
+          <div className="tb-v2-article-section">
+            <h2>Use of the service</h2>
+            <p>Toolblip tools are free to use for personal and commercial purposes. No attribution required. You may not use Toolblip to process illegal content or to violate any applicable law.</p>
+          </div>
 
-        <section>
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">No warranty</h2>
-          <p>Tools are provided as-is, with no guarantee of accuracy, uptime, or fitness for any particular purpose. Use at your own discretion.</p>
-        </section>
+          <div className="tb-v2-article-section">
+            <h2>No warranty</h2>
+            <p>Tools are provided as-is, with no guarantee of accuracy, uptime, or fitness for any particular purpose. Use at your own discretion.</p>
+          </div>
 
-        <section>
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Rate limits</h2>
-          <p>Free-tier usage may be subject to rate limits to keep the service available for everyone. Excessive automated usage may be restricted without notice.</p>
-        </section>
+          <div className="tb-v2-article-section">
+            <h2>Rate limits</h2>
+            <p>Free-tier usage may be subject to rate limits to keep the service available for everyone. Excessive automated usage may be restricted without notice.</p>
+          </div>
 
-        <section>
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Paid features</h2>
-          <p>Toolblip may introduce paid features or plans in the future. Free tools will remain free.</p>
-        </section>
+          <div className="tb-v2-article-section">
+            <h2>Paid features</h2>
+            <p>Toolblip may introduce paid features or plans in the future. Free tools will remain free.</p>
+          </div>
 
-        <section>
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Governing law</h2>
-          <p>These terms are governed by the laws of Bangladesh, where the service owner is based.</p>
-        </section>
+          <div className="tb-v2-article-section">
+            <h2>Governing law</h2>
+            <p>These terms are governed by the laws of Bangladesh, where the service owner is based.</p>
+          </div>
 
-        <section>
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-3">Contact</h2>
-          <p>Questions? Email <a href="mailto:harun@toolblip.com" className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors">harun@toolblip.com</a>.</p>
-        </section>
+          <div className="tb-v2-article-section">
+            <h2>Contact</h2>
+            <p>Questions? Email <a href="mailto:harun@toolblip.com">harun@toolblip.com</a>.</p>
+          </div>
+        </div>
       </div>
     </div>
   );

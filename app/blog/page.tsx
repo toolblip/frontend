@@ -69,60 +69,55 @@ function getGradient(category: string): [string, string] {
 export default function BlogPage() {
   const posts = getPosts();
   return (
-    <div className="max-w-5xl mx-auto px-4 py-16">
-      <div className="mb-12">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">Blog</h1>
-        <p className="text-gray-500 dark:text-gray-400 text-lg">
-          Guides, tutorials, and updates from the Toolblip team.
-        </p>
-      </div>
-
-      {posts.length === 0 ? (
-        <p className="text-gray-500 dark:text-gray-400">No posts yet — check back soon.</p>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {posts.map((post) => {
-            const [gradFrom, gradTo] = getGradient(post.category);
-            return (
-              <article
-                key={post.slug}
-                className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden hover:border-gray-300 dark:hover:border-gray-700 transition-colors"
-              >
-                <Link href={`/blog/${post.slug}`} className="block">
-                  <FeaturedImage src={post.featuredImage} title={post.title} gradientFrom={gradFrom} gradientTo={gradTo} />
-                </Link>
-                <div className="p-5">
-                  <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-2">
-                    <span className="bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 px-2 py-0.5 rounded font-medium">
-                      {post.category}
-                    </span>
-                    <span>{post.readingTime}</span>
-                    <span>·</span>
-                    <time dateTime={post.date}>
-                      {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
-                    </time>
-                  </div>
-                  <Link href={`/blog/${post.slug}`} className="block group-hover:opacity-90 transition-opacity">
-                    <h2 className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors mb-2 leading-snug">
-                      {post.title}
-                    </h2>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed line-clamp-2">
-                      {post.description}
-                    </p>
-                  </Link>
-                  <div className="flex flex-wrap gap-1.5 mt-4">
-                    {post.tags.slice(0, 4).map((tag) => (
-                      <span key={tag} className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
-                        #{tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </article>
-            );
-          })}
+    <div className="tb-v2-blog">
+      <div className="tb-v2-container">
+        <div className="tb-v2-blog-header">
+          <div className="tb-v2-page-kicker">Blog</div>
+          <h1 className="tb-v2-page-title">Blog</h1>
+          <p className="tb-v2-page-sub">Guides, tutorials, and updates from the Toolblip team.</p>
         </div>
-      )}
+
+        {posts.length === 0 ? (
+          <p className="tb-v2-blog-empty">No posts yet — check back soon.</p>
+        ) : (
+          <div className="tb-v2-blog-grid">
+            {posts.map((post) => {
+              const [gradFrom, gradTo] = getGradient(post.category);
+              return (
+                <article key={post.slug} className="tb-v2-blog-card">
+                  <Link href={`/blog/${post.slug}`} className="tb-v2-blog-card-img">
+                    <FeaturedImage
+                      src={post.featuredImage}
+                      title={post.title}
+                      gradientFrom={gradFrom}
+                      gradientTo={gradTo}
+                    />
+                  </Link>
+                  <div className="tb-v2-blog-card-body">
+                    <div className="tb-v2-blog-card-meta">
+                      <span className="tb-v2-blog-card-cat">{post.category}</span>
+                      <span>{post.readingTime}</span>
+                      <span>·</span>
+                      <time dateTime={post.date}>
+                        {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                      </time>
+                    </div>
+                    <Link href={`/blog/${post.slug}`}>
+                      <h2 className="tb-v2-blog-card-title">{post.title}</h2>
+                    </Link>
+                    <p className="tb-v2-blog-card-desc">{post.description}</p>
+                    <div className="tb-v2-blog-card-tags">
+                      {post.tags.slice(0, 4).map((tag) => (
+                        <span key={tag} className="tb-v2-blog-card-tag">#{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
