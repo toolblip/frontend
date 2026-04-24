@@ -1399,6 +1399,25 @@ export const tools: Tool[] = [
   { name: 'Unit Converter', slug: 'unit-convert-toolblip', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
   { name: 'Number Base Converter', slug: 'number-base-toolblip', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly in your browser.', emoji: '🔢', category: 'Conversion' },
 
+  // --- New tools (2026-04-25) ---
+  { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-std', description: 'Generate lorem ipsum placeholder text with paragraphs, sentences, word count, and starting phrase.', emoji: '📜', category: 'Text' },
+  { name: 'Grammar Checker', slug: 'grammar-checker-std', description: 'Check grammar, spelling, and punctuation with one-click fixes and explanations.', emoji: '✅', category: 'Text' },
+  { name: 'Readability Score', slug: 'readability-score-std', description: 'Calculate Flesch-Kincaid, SMOG, ARI, and Coleman-Liau readability grades.', emoji: '📊', category: 'Text' },
+  { name: 'Text Sorter', slug: 'text-sorter-std', description: 'Sort text lines alphabetically, by length, numerically, or in reverse order.', emoji: '📋', category: 'Text' },
+  { name: 'Regex Tester', slug: 'regex-tester-std', description: 'Test regex patterns with live match highlighting and capture group display.', emoji: '🔍', category: 'Developer' },
+  { name: 'JWT Decoder', slug: 'jwt-decoder-std', description: 'Decode JWT tokens and inspect header, payload, and expiration.', emoji: '🎫', category: 'Developer' },
+  { name: 'Cron Expression Generator', slug: 'cron-generator-std', description: 'Build cron schedules visually with human-readable next-run preview.', emoji: '🕐', category: 'Developer' },
+  { name: 'HTTP Headers Viewer', slug: 'http-headers-viewer-std', description: 'View HTTP request and response headers with timing breakdown.', emoji: '📦', category: 'Developer' },
+  { name: 'Port Scanner', slug: 'port-scanner-std', description: 'Scan common ports on a host to check for open services.', emoji: '🚪', category: 'Developer' },
+  { name: 'Favicon Generator', slug: 'favicon-generator-std', description: 'Create favicon.ico and PNG icons from any image in all standard sizes.', emoji: '🌐', category: 'Image' },
+  { name: 'Image Resizer', slug: 'image-resizer-std', description: 'Resize images to exact dimensions with aspect ratio lock and batch support.', emoji: '📐', category: 'Image' },
+  { name: 'Meta Tag Generator', slug: 'meta-tag-generator-std', description: 'Generate SEO meta tags, Open Graph, and Twitter Card tags with preview.', emoji: '🏷️', category: 'SEO' },
+  { name: 'SERP Preview', slug: 'serp-preview-std', description: 'Preview how a page title and description appear in Google search results.', emoji: '🔎', category: 'SEO' },
+  { name: 'Color Picker', slug: 'color-picker-std', description: 'Pick a color and get HEX, RGB, HSL, and CSS values with preview.', emoji: '🎨', category: 'Color' },
+  { name: 'Contrast Checker', slug: 'contrast-checker-std', description: 'Check color contrast ratios for WCAG AA and AAA compliance.', emoji: '♿', category: 'Color' },
+  { name: 'Unit Converter', slug: 'unit-converter-std', description: 'Convert length, weight, and temperature between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
+  { name: 'Number Base Converter', slug: 'number-base-converter-std', description: 'Convert between binary, decimal, hexadecimal, and octal instantly.', emoji: '🔢', category: 'Conversion' },
+
   // --- New tools (2026-04-24) ---
   { name: 'Text Uniqueness Checker', slug: 'text-uniqueness-checker', description: 'Check text for duplicate and near-duplicate content with similarity scoring.', emoji: '🔍', category: 'Text' },
   { name: 'Duplicate Phrase Detector', slug: 'duplicate-phrase-detector', description: 'Find repeated phrases and word patterns in any text block for cleaner writing.', emoji: '🔁', category: 'Text' },
