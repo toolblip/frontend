@@ -52,7 +52,7 @@ const faqSchema: Record<string, unknown> = {
       name: 'How does yearly billing work?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yearly plans are billed as a single payment for 12 months at a 20% discount — equivalent to 10 months of the monthly price.',
+        text: 'Yearly plans are billed as a single payment for 12 months at a 20% discount - equivalent to 10 months of the monthly price.',
       },
     },
     {

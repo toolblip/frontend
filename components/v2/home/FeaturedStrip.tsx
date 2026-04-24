@@ -38,7 +38,7 @@ export default function FeaturedStrip() {
           </div>
           <div className="tb-v2-band-head-side">
             The tools that keep earning their place. Each runs entirely in your
-            browser — paste, tweak, copy, done.
+            browser - paste, tweak, copy, done.
           </div>
         </div>
         <div className="tb-v2-dir-grid">

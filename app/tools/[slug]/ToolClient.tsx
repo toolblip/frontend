@@ -55,7 +55,7 @@ function ComingSoonUI({ toolSlug }: { toolSlug: string }) {
         inputPlaceholder="Enter text to preview…"
         outputLabel="Output"
         actionLabel="Process"
-        process={(input) => `[${toolSlug}] — ${input}`}
+        process={(input) => `[${toolSlug}] - ${input}`}
       />
     </div>
   );
@@ -105,7 +105,7 @@ export default function ToolClient({ tool }: { tool: Tool }) {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
           </svg>
-          100% client-side — nothing leaves your browser
+          100% client-side - nothing leaves your browser
         </p>
       </div>
     </section>

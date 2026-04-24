@@ -29,8 +29,8 @@ export default function PrivacyPage() {
           <div className="tb-v2-article-section">
             <h2>Cookies</h2>
             <ul>
-              <li><strong>tb_usage</strong> — stores your daily tool usage count in your browser only. This number never leaves your device. It is a functional cookie and is not used for tracking.</li>
-              <li><strong>tb_session</strong> — set by the Toolblip API if you create an account. Used only to keep you signed in. Not present if you use Toolblip without an account.</li>
+              <li><strong>tb_usage</strong> - stores your daily tool usage count in your browser only. This number never leaves your device. It is a functional cookie and is not used for tracking.</li>
+              <li><strong>tb_session</strong> - set by the Toolblip API if you create an account. Used only to keep you signed in. Not present if you use Toolblip without an account.</li>
             </ul>
           </div>
 

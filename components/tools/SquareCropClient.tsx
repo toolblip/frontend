@@ -194,7 +194,7 @@ export default function SquareCropClient() {
       )}
 
       <p className="text-xs text-gray-500">
-        Output: <span className="text-[#DC2626] font-medium">{outputSize} × {outputSize}px</span> — drag on image to reposition crop area
+        Output: <span className="text-[#DC2626] font-medium">{outputSize} × {outputSize}px</span> - drag on image to reposition crop area
       </p>
 
       {/* Upload zone */}

@@ -32,7 +32,7 @@ export default function AboutPage() {
           <div className="tb-v2-article-section">
             <p>
               Privacy-first is not a marketing phrase here. Every tool on Toolblip processes data locally using
-              JavaScript. Base64 encoding, JSON formatting, text conversion, image manipulation — all of it happens
+              JavaScript. Base64 encoding, JSON formatting, text conversion, image manipulation - all of it happens
               client-side. The only analytics collected are cookieless page-view stats via Cloudflare, and optional
               Google Analytics loaded only after you give consent.
             </p>

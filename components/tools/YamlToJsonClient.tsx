@@ -157,7 +157,7 @@ export default function YamlToJsonClient() {
             />
           ) : (
             <p className="text-gray-600 text-sm font-mono">
-              {error ? '—' : 'JSON output will appear here…'}
+              {error ? '-' : 'JSON output will appear here…'}
             </p>
           )}
         </div>

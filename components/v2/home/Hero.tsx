@@ -15,7 +15,7 @@ export default function Hero({ toolCount }: { toolCount: number }) {
               <em>instruments.</em>
             </h1>
             <p className="tb-v2-hero-sub">
-              JSON formatters, QR generators, image resizers, regex testers — the
+              JSON formatters, QR generators, image resizers, regex testers - the
               everyday utilities, rebuilt without the ads, dark patterns, or
               upload-your-file-to-our-server routine.
             </p>

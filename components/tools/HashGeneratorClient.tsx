@@ -242,7 +242,7 @@ export default function HashGeneratorClient() {
                 </button>
               </div>
               <p className={`font-mono text-sm break-all ${hash ? 'text-red-400' : 'text-gray-600'}`}>
-                {hash || '—'}
+                {hash || '-'}
               </p>
             </div>
           );

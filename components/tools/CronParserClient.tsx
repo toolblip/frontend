@@ -163,19 +163,19 @@ function parseCron(expr: string): CronResult {
   const [minP, hrP, domP, monP, dowP] = parts;
 
   const minutes = parseCronField(minP, 0, 59);
-  if (!minutes) return { valid: false, error: 'Invalid minute field — expected 0–59' };
+  if (!minutes) return { valid: false, error: 'Invalid minute field - expected 0–59' };
 
   const hours = parseCronField(hrP, 0, 23);
-  if (!hours) return { valid: false, error: 'Invalid hour field — expected 0–23' };
+  if (!hours) return { valid: false, error: 'Invalid hour field - expected 0–23' };
 
   const daysOfMonth = parseCronField(domP, 1, 31);
-  if (!daysOfMonth) return { valid: false, error: 'Invalid day-of-month field — expected 1–31' };
+  if (!daysOfMonth) return { valid: false, error: 'Invalid day-of-month field - expected 1–31' };
 
   const months = parseCronField(monP, 1, 12, MONTH_NAME_MAP);
-  if (!months) return { valid: false, error: 'Invalid month field — expected 1–12 or JAN–DEC' };
+  if (!months) return { valid: false, error: 'Invalid month field - expected 1–12 or JAN–DEC' };
 
   const rawDow = parseCronField(dowP, 0, 7, DOW_NAME_MAP);
-  if (!rawDow) return { valid: false, error: 'Invalid weekday field — expected 0–7 or SUN–SAT' };
+  if (!rawDow) return { valid: false, error: 'Invalid weekday field - expected 0–7 or SUN–SAT' };
 
   // Normalize: 7 → 0 (both mean Sunday)
   const daysOfWeek = [...new Set(rawDow.map(d => (d === 7 ? 0 : d)))].sort((a, b) => a - b);
@@ -266,7 +266,7 @@ function describeSchedule({ minutes, hours, daysOfMonth, months, daysOfWeek, par
       ? `the ${ordinal(daysOfMonth[0])} of each month`
       : `days ${daysOfMonth.join(', ')} of the month`;
   } else if (!allDow && !allDom) {
-    // Both restricted — standard cron uses OR
+    // Both restricted - standard cron uses OR
     daySeg = `${daysOfMonth.join(',')} or ${daysOfWeek.map(d => DOW_SHORT[d]).join(',')}`;
   }
 
@@ -427,7 +427,7 @@ function formatDate(d: Date): string {
   const m     = d.getMinutes();
   const h12   = h % 12 || 12;
   const ampm  = h < 12 ? 'AM' : 'PM';
-  return `${day}, ${month} ${date}, ${year} — ${h12}:${String(m).padStart(2, '0')} ${ampm}`;
+  return `${day}, ${month} ${date}, ${year} - ${h12}:${String(m).padStart(2, '0')} ${ampm}`;
 }
 
 function relativeTime(d: Date): string {

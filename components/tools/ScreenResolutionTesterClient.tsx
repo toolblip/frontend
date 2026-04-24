@@ -35,7 +35,7 @@ export default function ScreenResolutionTesterClient() {
   const selectPreset = useCallback((preset: Preset) => {
     setWidth(preset.width);
     setHeight(preset.height);
-    setLabel(`${preset.width} × ${preset.height} — ${preset.label}`);
+    setLabel(`${preset.width} × ${preset.height} - ${preset.label}`);
   }, []);
 
   const aspectRatio = (width / height).toFixed(3);
@@ -150,7 +150,7 @@ export default function ScreenResolutionTesterClient() {
           </div>
         </div>
         <p className="text-xs text-gray-600 mt-2 text-center">
-          Scaled preview — actual viewport is {width}×{height}px
+          Scaled preview - actual viewport is {width}×{height}px
         </p>
       </div>
 

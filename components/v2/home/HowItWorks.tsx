@@ -12,7 +12,7 @@ export default function HowItWorks() {
             </h2>
           </div>
           <div className="tb-v2-band-head-side">
-            Online tool sites got bad. Toolblip is our correction — small, fast,
+            Online tool sites got bad. Toolblip is our correction - small, fast,
             honest. The utility web from before it learned to extract.
           </div>
         </div>
@@ -23,7 +23,7 @@ export default function HowItWorks() {
             </div>
             <div className="tb-v2-step-title">Send your data anywhere.</div>
             <div className="tb-v2-step-desc">
-              Every tool runs in your browser. Your file never touches a server —
+              Every tool runs in your browser. Your file never touches a server -
               ours or anyone else&apos;s. Close the tab, it&apos;s gone.
             </div>
           </div>

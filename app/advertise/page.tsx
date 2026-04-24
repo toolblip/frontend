@@ -26,7 +26,7 @@ export default function AdvertisePage() {
           <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
             Developers using tools like JSON formatters, base64 encoders, UUID generators, and more.
             Primarily web developers, backend engineers, and DevOps professionals.
-            Growing audience — exact traffic numbers available on request.
+            Growing audience - exact traffic numbers available on request.
           </p>
         </section>
 
@@ -35,15 +35,15 @@ export default function AdvertisePage() {
           <ul className="space-y-2 text-gray-600 dark:text-gray-300">
             <li className="flex gap-3">
               <span className="text-red-600 dark:text-red-400 shrink-0">Above-tool banner</span>
-              <span className="text-gray-400 dark:text-gray-500"> — shown above the tool UI on every tool page</span>
+              <span className="text-gray-400 dark:text-gray-500"> - shown above the tool UI on every tool page</span>
             </li>
             <li className="flex gap-3">
               <span className="text-red-600 dark:text-red-400 shrink-0">Below-tool banner</span>
-              <span className="text-gray-400 dark:text-gray-500"> — shown below the tool output, after the user gets their result</span>
+              <span className="text-gray-400 dark:text-gray-500"> - shown below the tool output, after the user gets their result</span>
             </li>
             <li className="flex gap-3">
               <span className="text-red-600 dark:text-red-400 shrink-0">Per-tool sponsorship</span>
-              <span className="text-gray-400 dark:text-gray-500"> — exclusive placement on a single high-traffic tool</span>
+              <span className="text-gray-400 dark:text-gray-500"> - exclusive placement on a single high-traffic tool</span>
             </li>
           </ul>
         </section>
@@ -53,7 +53,7 @@ export default function AdvertisePage() {
           <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
             Sponsor slots start at <span className="text-gray-900 dark:text-white font-medium">$100/month</span>.
             Discounts available for quarterly or annual bookings.
-            All sponsors are clearly labeled — no deceptive placements.
+            All sponsors are clearly labeled - no deceptive placements.
           </p>
         </section>
 

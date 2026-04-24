@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 
 const SEED = `The best tool is the one that doesn't get in your way.
 
-Paste anything here — an email, a tweet, a paragraph from your novel — and watch the counts update live. No character limit, no telemetry.`;
+Paste anything here - an email, a tweet, a paragraph from your novel - and watch the counts update live. No character limit, no telemetry.`;
 
 export default function ToyWordCounter() {
   const [text, setText] = useState(SEED);

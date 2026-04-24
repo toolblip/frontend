@@ -33,7 +33,7 @@ export default function CategoryGrid() {
             <h2>Pick a shape.<br />Find a tool.</h2>
           </div>
           <div className="tb-v2-band-head-side">
-            Eleven families, hundreds of tools. Everything is one click away — no
+            Eleven families, hundreds of tools. Everything is one click away - no
             account, no install, no waiting.
           </div>
         </div>

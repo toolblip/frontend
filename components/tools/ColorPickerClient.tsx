@@ -88,7 +88,7 @@ export default function ColorPickerClient() {
         className="w-full h-20 rounded-xl border border-gray-200 dark:border-gray-700 flex items-center justify-center text-white font-bold text-lg"
         style={{ backgroundColor: color }}
       >
-        Preview — {hex}
+        Preview - {hex}
       </div>
     </div>
   );

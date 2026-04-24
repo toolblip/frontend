@@ -128,7 +128,7 @@ export default function CssGradientGeneratorClient() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Controls column */}
         <div className="space-y-5">
-          {/* Angle — linear & conic only */}
+          {/* Angle - linear & conic only */}
           {(type === 'linear' || type === 'conic') && (
             <div>
               <label className="text-xs text-gray-500 uppercase tracking-wide font-medium block mb-2">

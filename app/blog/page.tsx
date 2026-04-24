@@ -78,7 +78,7 @@ export default function BlogPage() {
         </div>
 
         {posts.length === 0 ? (
-          <p className="tb-v2-blog-empty">No posts yet — check back soon.</p>
+          <p className="tb-v2-blog-empty">No posts yet - check back soon.</p>
         ) : (
           <div className="tb-v2-blog-grid">
             {posts.map((post) => {

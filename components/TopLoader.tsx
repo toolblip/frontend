@@ -14,7 +14,7 @@ export default function TopLoader() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Route changed — start loading indicator
+    // Route changed - start loading indicator
     setLoading(true);
     setProgress(20);
 

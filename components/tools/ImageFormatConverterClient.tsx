@@ -117,7 +117,7 @@ export default function ImageFormatConverterClient() {
       if (!ctx) throw new Error('Canvas context not available.');
       ctx.drawImage(img, 0, 0);
 
-      // PNG is lossless — quality param is ignored
+      // PNG is lossless - quality param is ignored
       const qualityValue = outputFormat === 'image/png' ? undefined : quality / 100;
 
       const blob = await new Promise<Blob>((resolve, reject) => {
@@ -244,7 +244,7 @@ export default function ImageFormatConverterClient() {
               </div>
             </div>
 
-            {/* Quality slider (hidden for PNG — lossless) */}
+            {/* Quality slider (hidden for PNG - lossless) */}
             <div className={outputFormat === 'image/png' ? 'opacity-30 pointer-events-none' : ''}>
               <p className="text-xs text-gray-500 uppercase tracking-wide font-medium mb-2">
                 Quality&ensp;<span className="text-red-400 font-semibold">
@@ -327,7 +327,7 @@ export default function ImageFormatConverterClient() {
                   </p>
                 </>
               ) : (
-                <p className="text-gray-600 text-sm mt-3">—</p>
+                <p className="text-gray-600 text-sm mt-3">-</p>
               )}
             </div>
           </div>

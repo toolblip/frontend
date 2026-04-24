@@ -208,7 +208,7 @@ export default function ApiDocsClient() {
             </p>
             <CodeBlock
               code={`Authorization: Bearer 1|abcd1234efgh5678ijkl9012mnop3456qrst`}
-              title="Header — all authenticated requests"
+              title="Header - all authenticated requests"
               language="bash"
             />
             <div className="mt-4 p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 rounded-xl text-xs text-amber-700 dark:text-amber-400 leading-relaxed">
@@ -225,7 +225,7 @@ export default function ApiDocsClient() {
           <section id="tools-list" className="scroll-mt-16">
             <EndpointHeader method="GET" path="/api/tools" auth={false} status={200} />
             <p className="text-gray-500 dark:text-gray-400 text-sm mb-5">
-              Returns a paginated list of all available tools. Public — no authentication required.
+              Returns a paginated list of all available tools. Public - no authentication required.
             </p>
 
             <div className="mb-6">
@@ -267,7 +267,7 @@ export default function ApiDocsClient() {
             </div>
 
             <div>
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example response — 200</p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example response - 200</p>
               <CodeBlock
                 code={`{
   "tools": {
@@ -359,7 +359,7 @@ export default function ApiDocsClient() {
             </div>
 
             <div className="mb-6">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example response — 200</p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example response - 200</p>
               <CodeBlock
                 code={`{
   "tool": {
@@ -378,7 +378,7 @@ export default function ApiDocsClient() {
             </div>
 
             <div>
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error — 404</p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error - 404</p>
               <CodeBlock
                 code={`{
   "message": "Tool not found"
@@ -430,7 +430,7 @@ export default function ApiDocsClient() {
                 />
               </div>
               <div>
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Response — 201</p>
+                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Response - 201</p>
                 <CodeBlock
                   code={`{
   "user": {
@@ -447,7 +447,7 @@ export default function ApiDocsClient() {
             </div>
 
             <div>
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error — 422</p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error - 422</p>
               <CodeBlock
                 code={`{
   "message": "The given data was invalid.",
@@ -495,7 +495,7 @@ export default function ApiDocsClient() {
                 />
               </div>
               <div>
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Response — 200</p>
+                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Response - 200</p>
                 <CodeBlock
                   code={`{
   "user": {
@@ -512,7 +512,7 @@ export default function ApiDocsClient() {
             </div>
 
             <div>
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error — 401</p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error - 401</p>
               <CodeBlock
                 code={`{
   "message": "Invalid credentials"
@@ -541,7 +541,7 @@ export default function ApiDocsClient() {
             </div>
 
             <div className="mb-6">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Response — 200</p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Response - 200</p>
               <CodeBlock
                 code={`{
   "message": "Logged out successfully"
@@ -555,7 +555,7 @@ export default function ApiDocsClient() {
             </div>
 
             <div className="mt-6">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error — 401</p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error - 401</p>
               <CodeBlock
                 code={`{
   "message": "Unauthenticated."
@@ -584,7 +584,7 @@ export default function ApiDocsClient() {
             </div>
 
             <div className="mb-6">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Response — 200</p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Response - 200</p>
               <CodeBlock
                 code={`{
   "user": {
@@ -599,7 +599,7 @@ export default function ApiDocsClient() {
             </div>
 
             <div>
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error — 401</p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error - 401</p>
               <CodeBlock
                 code={`{
   "message": "Unauthenticated."
@@ -638,7 +638,7 @@ export default function ApiDocsClient() {
             </div>
 
             <div>
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example — 422 Validation Error</p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example - 422 Validation Error</p>
               <CodeBlock
                 code={`{
   "message": "The given data was invalid.",

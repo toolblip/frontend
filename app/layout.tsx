@@ -35,7 +35,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Toolblip — Free Online Developer Tools',
+    default: 'Toolblip - Free Online Developer Tools',
     template: '%s | Toolblip',
   },
   description:

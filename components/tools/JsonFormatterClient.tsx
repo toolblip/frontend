@@ -70,7 +70,7 @@ export default function JsonFormatterClient() {
 
       <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
         <pre className="text-sm text-red-400 font-mono whitespace-pre-wrap break-all">
-          {result || '—'}
+          {result || '-'}
         </pre>
       </div>
     </div>

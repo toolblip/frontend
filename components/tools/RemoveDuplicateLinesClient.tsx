@@ -79,7 +79,7 @@ export default function RemoveDuplicateLinesClient() {
           )}
         </div>
         <pre className="text-sm text-red-400 font-mono whitespace-pre-wrap break-all">
-          {result || '—'}
+          {result || '-'}
         </pre>
       </div>
     </div>

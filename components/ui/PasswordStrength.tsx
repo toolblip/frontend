@@ -41,8 +41,8 @@ export default function PasswordStrength({ password }: PasswordStrengthProps) {
       </div>
       <p className={`text-xs ${score >= 3 ? 'text-red-600 dark:text-red-400' : 'text-gray-500 dark:text-gray-400'}`}>
         {label}
-        {score < 2 && ' — use 8+ characters with letters and numbers'}
-        {score >= 2 && score < 3 && ' — add symbols for a stronger password'}
+        {score < 2 && ' - use 8+ characters with letters and numbers'}
+        {score >= 2 && score < 3 && ' - add symbols for a stronger password'}
       </p>
     </div>
   );

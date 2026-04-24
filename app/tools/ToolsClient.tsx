@@ -24,7 +24,7 @@ export default function ToolsClient() {
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">All Tools</h1>
         <p className="text-gray-500 dark:text-gray-400">
-          {allTools.length} free tools — 100% client-side, nothing leaves your browser.
+          {allTools.length} free tools - 100% client-side, nothing leaves your browser.
         </p>
       </div>
 

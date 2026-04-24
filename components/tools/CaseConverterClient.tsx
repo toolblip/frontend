@@ -73,7 +73,7 @@ export default function CaseConverterClient() {
       </div>
 
       <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 font-mono text-sm min-h-[80px]">
-        <span className="text-gray-300">{result || '—'}</span>
+        <span className="text-gray-300">{result || '-'}</span>
       </div>
 
       <button

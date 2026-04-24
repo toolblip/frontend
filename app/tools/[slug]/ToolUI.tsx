@@ -197,7 +197,7 @@ function CaseConverterUI() {
               <div key={label} className="tb-v2-case-row">
                 <span className="tb-v2-case-label">{label}</span>
                 <code className="tb-v2-case-val" style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                  {result || '—'}
+                  {result || '-'}
                 </code>
                 {result && <CopyButton text={result} />}
               </div>
@@ -398,7 +398,7 @@ function JSONFormatterUI() {
         <textarea
           value={input}
           onChange={e => handleInput(e.target.value)}
-          placeholder={'Paste JSON here — {"key": "value"}'}
+          placeholder={'Paste JSON here - {"key": "value"}'}
           rows={6}
           className="tb-v2-tool-textarea"
           style={{ fontFamily: 'var(--f-mono)', fontSize: 13.5 }}

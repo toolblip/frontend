@@ -206,7 +206,7 @@ export default function ImageCropperClient() {
           </div>
           {cropRect.w > 0 && (
             <p className="text-xs text-gray-500">
-              Crop area: {Math.round(cropRect.w)} × {Math.round(cropRect.h)}px — drag on the image to adjust
+              Crop area: {Math.round(cropRect.w)} × {Math.round(cropRect.h)}px - drag on the image to adjust
             </p>
           )}
         </div>
