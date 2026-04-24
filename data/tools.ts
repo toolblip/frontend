@@ -944,6 +944,25 @@ export const tools: Tool[] = [
   { name: 'Contrast Checker', slug: 'contrast-checker-tool', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail indicators.', emoji: '♿', category: 'Color' },
   { name: 'Unit Converter', slug: 'unit-converter-tool', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
   { name: 'Number Base Converter', slug: 'number-base-converter-tool', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly.', emoji: '🔢', category: 'Conversion' },
+
+  // --- New tools (2026-04-24 #8 - unique additions) ---
+  { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-quick', description: 'Generate lorem ipsum placeholder text with paragraphs, sentences, words, and custom starting phrases.', emoji: '📜', category: 'Text' },
+  { name: 'Grammar Checker', slug: 'grammar-checker-quick', description: 'Check grammar and spelling errors with one-click fixes and detailed explanations for any text.', emoji: '✅', category: 'Text' },
+  { name: 'Readability Score', slug: 'readability-score-quick', description: 'Calculate Flesch-Kincaid, SMOG, ARI, and Coleman-Liau readability grades for any text.', emoji: '📊', category: 'Text' },
+  { name: 'Text Sorter', slug: 'text-sorter-quick', description: 'Sort text lines alphabetically, by length, numerically, reverse, or in random order.', emoji: '📋', category: 'Text' },
+  { name: 'Regex Tester', slug: 'regex-tester-quick', description: 'Test regex patterns with real-time match highlighting, capture groups, and replacements.', emoji: '🔍', category: 'Developer' },
+  { name: 'JWT Decoder', slug: 'jwt-decoder-quick', description: 'Decode JWT tokens and inspect header, payload, expiration, and signature segments instantly.', emoji: '🎫', category: 'Developer' },
+  { name: 'Cron Expression Generator', slug: 'cron-generator-quick', description: 'Build cron schedules visually with point-and-click controls and human-readable output.', emoji: '🕐', category: 'Developer' },
+  { name: 'HTTP Headers Viewer', slug: 'http-headers-viewer-quick', description: 'View and debug HTTP request and response headers for any URL with timing breakdown.', emoji: '📦', category: 'Developer' },
+  { name: 'Port Scanner', slug: 'port-scanner-quick', description: 'Scan common ports on a host to identify open services and running applications.', emoji: '🚪', category: 'Developer' },
+  { name: 'Favicon Generator', slug: 'favicon-generator-quick', description: 'Create favicon.ico, PNG, and SVG icons from any image or emoji with multiple sizes.', emoji: '🌐', category: 'Image' },
+  { name: 'Image Resizer', slug: 'image-resizer-quick', description: 'Resize images to exact pixel dimensions with aspect ratio lock and batch support.', emoji: '📐', category: 'Image' },
+  { name: 'Meta Tag Generator', slug: 'meta-tag-generator-quick', description: 'Generate SEO meta tags, Open Graph, and Twitter Card tags with live preview.', emoji: '🏷️', category: 'SEO' },
+  { name: 'SERP Preview', slug: 'serp-preview-quick', description: 'See how a page title and description appear in Google search results.', emoji: '🔎', category: 'SEO' },
+  { name: 'Color Picker', slug: 'color-picker-quick', description: 'Pick any color visually and get HEX, RGB, HSL, HSV, and CMYK values instantly.', emoji: '🎨', category: 'Color' },
+  { name: 'Contrast Checker', slug: 'contrast-checker-quick', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail indicators.', emoji: '♿', category: 'Color' },
+  { name: 'Unit Converter', slug: 'unit-converter-quick', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
+  { name: 'Number Base Converter', slug: 'number-base-converter-quick', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly.', emoji: '🔢', category: 'Conversion' },
 ];
 
-export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network'] as const;
+export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time'] as const;
