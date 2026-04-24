@@ -33,7 +33,9 @@ export default function SearchPalette({ open, onClose }: Props) {
     if (!query) return tools.slice(0, 8);
     type Scored = { t: (typeof tools)[number]; score: number };
     const scored: Scored[] = [];
+    const seen = new Set<string>();
     for (const t of tools) {
+      if (seen.has(t.name)) continue;
       const name = t.name.toLowerCase();
       const desc = t.description.toLowerCase();
       const cat = t.category.toLowerCase();
@@ -43,7 +45,10 @@ export default function SearchPalette({ open, onClose }: Props) {
       if (t.slug.includes(query)) score += 40;
       if (cat.includes(query)) score += 20;
       if (desc.includes(query)) score += 10;
-      if (score > 0) scored.push({ t, score });
+      if (score > 0) {
+        scored.push({ t, score });
+        seen.add(t.name);
+      }
     }
     scored.sort((a, b) => b.score - a.score);
     return scored.slice(0, 10).map((s) => s.t);
