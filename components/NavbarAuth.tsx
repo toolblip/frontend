@@ -92,19 +92,11 @@ export default function NavbarAuth() {
   }
 
   return (
-    <div className="flex items-center gap-3 text-sm">
-      <Link
-        href="/login"
-        className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
-      >
-        Sign in
-      </Link>
-      <Link
-        href="/signup"
-        className="bg-red-600 hover:bg-red-700 text-white px-3.5 py-1.5 rounded-lg text-sm font-medium transition-colors"
-      >
-        Sign Up
-      </Link>
-    </div>
+    <Link
+      href="/login"
+      className="tb-v2-btn tb-v2-btn-primary"
+    >
+      Sign In
+    </Link>
   );
 }
