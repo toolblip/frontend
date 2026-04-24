@@ -70,7 +70,7 @@ export default function RootLayout({
         <Script
           id="theme-init"
           dangerouslySetInnerHTML={{
-            __html: `(function(){var t=localStorage.getItem('theme');var d=document.documentElement;var isDark=t==='dark'||(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches);if(isDark){d.classList.add('dark');d.setAttribute('data-theme','dark');}else{d.setAttribute('data-theme','light');}})()`,
+            __html: `(function(){try{var d=document.documentElement;var s={};try{s=JSON.parse(localStorage.getItem('tb_settings')||'null')||{};}catch(e){}var legacy=localStorage.getItem('theme');var theme=s.theme||legacy||'system';var density=s.density||'comfy';var font=s.font||'sans';var isDark=theme==='dark'||(theme==='system'&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches);if(isDark){d.classList.add('dark');d.setAttribute('data-theme','dark');}else{d.setAttribute('data-theme','light');}d.setAttribute('data-density',density);d.setAttribute('data-fontswap',font);}catch(e){}})()`,
           }}
         />
       </head>

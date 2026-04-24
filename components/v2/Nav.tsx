@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import BrandMark from './BrandMark';
-import ThemeMenu from './ThemeMenu';
+import SettingsMenu from './SettingsMenu';
 import { IconSearch, IconChevronDown, IconMenu } from './icons';
 import NavbarAuth from '@/components/NavbarAuth';
 
@@ -69,7 +69,7 @@ export default function Nav({ onOpenSearch }: Props) {
             <span className="tb-v2-nav-search-label">⌘K or /</span>
           </button>
           <Link href="/pricing" className="tb-v2-nav-pro">Get Pro</Link>
-          <ThemeMenu />
+          <SettingsMenu />
           <div className="tb-v2-nav-signin">
             <NavbarAuth />
           </div>

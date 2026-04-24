@@ -240,3 +240,40 @@ export const IconGrid = compound(
     <rect x="13" y="13" width="7" height="7" />
   </>
 );
+export const IconSettings = compound(
+  <>
+    <circle cx="12" cy="12" r="3" />
+    <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3h.1a1.7 1.7 0 0 0 1-1.6V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9v.1a1.7 1.7 0 0 0 1.6 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.6 1Z" />
+  </>
+);
+export const IconRows = compound(
+  <>
+    <path d="M4 6h16" />
+    <path d="M4 12h16" />
+    <path d="M4 18h16" />
+  </>
+);
+export const IconRowsTight = compound(
+  <>
+    <path d="M4 7h16" />
+    <path d="M4 10h16" />
+    <path d="M4 14h16" />
+    <path d="M4 17h16" />
+  </>
+);
+export const IconType = compound(
+  <>
+    <path d="M4 7V5h16v2" />
+    <path d="M9 20h6" />
+    <path d="M12 5v15" />
+  </>
+);
+export const IconTypeSerif = compound(
+  <>
+    <path d="M4 7V5h16v2" />
+    <path d="M7 20h10" />
+    <path d="M12 5v15" />
+    <path d="M9 5v1" />
+    <path d="M15 5v1" />
+  </>
+);
