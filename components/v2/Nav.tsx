@@ -208,9 +208,7 @@ const MORE_ICONS: Record<string, IconComp> = {
 
 function MegaMenu({ which, onClose }: { which: string; onClose: () => void }) {
   const content = getMenuContent(which);
-  const [activeCat, setActiveCat] = useState<string | null>(
-    content && !content.more ? content.sidebar[0]?.cat ?? null : null,
-  );
+  const [activeIdx, setActiveIdx] = useState<number>(0);
 
   if (!content) return null;
 
@@ -256,6 +254,7 @@ function MegaMenu({ which, onClose }: { which: string; onClose: () => void }) {
     );
   }
 
+  const activeCat = content.sidebar[activeIdx]?.cat ?? null;
   const activeList =
     which === 'tools' && activeCat
       ? tools.filter((t) => t.category === activeCat).slice(0, 12)
@@ -268,17 +267,19 @@ function MegaMenu({ which, onClose }: { which: string; onClose: () => void }) {
         {content.sidebar.map((s, i) => {
           const meta = CAT_META[s.cat];
           const Ic = meta?.icon ?? IconUtil;
-          const active = activeCat === s.cat;
+          const active = activeIdx === i;
+          const handleClick = () => {
+            if (s.slug) window.location.href = `/tools/${s.slug}`;
+            else window.location.href = `/directory?cat=${encodeURIComponent(s.cat)}`;
+            onClose();
+          };
           return (
             <button
               key={i}
               type="button"
               className={`tb-v2-mm-side-row${active ? ' on' : ''}`}
-              onMouseEnter={() => setActiveCat(s.cat)}
-              onClick={() => {
-                window.location.href = `/directory?cat=${encodeURIComponent(s.cat)}`;
-                onClose();
-              }}
+              onMouseEnter={() => setActiveIdx(i)}
+              onClick={handleClick}
               style={{ '--cat-color': meta?.color, '--cat-bg': meta?.bg } as React.CSSProperties}
             >
               <div className="tb-v2-mm-side-icon"><Ic className="tb-v2-ic" /></div>
