@@ -56,6 +56,7 @@ type MenuContent =
       featuredLabel: string;
       featured: FeaturedItem[];
       listLabel?: string;
+      list?: string[];
       learn?: LearnItem[];
       ctaLabel: string;
       ctaTarget: string;
@@ -148,6 +149,8 @@ function getMenuContent(key: string): MenuContent | null {
         { label: 'Eval-driven development',  desc: 'Ship with confidence' },
         { label: 'Model-routing cookbook',   desc: 'Cost vs quality, solved' },
       ],
+      listLabel: 'More AI Tools',
+      list: ['image-to-alt', 'model-leaderboard'],
       ctaLabel: 'All AI Tools',
       ctaTarget: '/directory?cat=AI%2FML',
     };
@@ -343,6 +346,34 @@ function MegaMenu({ which, onClose }: { which: string; onClose: () => void }) {
                   <div className="tb-v2-mm-learn-desc">{l.desc}</div>
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {which !== 'tools' && content.list && content.list.length > 0 && (
+          <div>
+            <div className="tb-v2-mm-label">{content.listLabel}</div>
+            <div className="tb-v2-mm-list">
+              {content.list.map((slug) => {
+                const t = tools.find((x) => x.slug === slug);
+                const name =
+                  t?.name ??
+                  slug
+                    .split('-')
+                    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                    .join(' ');
+                const href = t ? `/tools/${slug}` : content.ctaTarget;
+                return (
+                  <Link
+                    key={slug}
+                    href={href}
+                    className="tb-v2-mm-list-row"
+                    onClick={onClose}
+                  >
+                    {name}
+                  </Link>
+                );
+              })}
             </div>
           </div>
         )}
