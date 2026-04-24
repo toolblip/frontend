@@ -213,9 +213,7 @@ export default function DirectoryClient() {
                     }
                   >
                     <div className="tb-v2-dir-card-top">
-                      <div className="tb-v2-dir-card-icon">
-                        <meta.icon width={22} height={22} />
-                      </div>
+                      <span className="tb-v2-dir-card-emoji">{tool.emoji}</span>
                       <div style={{ flex: 1 }}>
                         <div className="tb-v2-dir-card-title">{tool.name}</div>
                       </div>
