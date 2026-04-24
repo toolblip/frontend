@@ -257,33 +257,29 @@ export default function ApiDocsClient() {
                 <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example response — 200</p>
                 <CodeBlock
                   code={`{
-  "data": [
-    {
-      "id": 1,
-      "slug": "claude-code",
-      "name": "Claude Code",
-      "description": "AI coding assistant by Anthropic",
-      "category": "AI",
-      "is_pro": false,
-      "emoji": "🤖",
-      "created_at": "2026-01-15T08:30:00.000000Z"
-    },
-    {
-      "id": 2,
-      "slug": "cursor",
-      "name": "Cursor",
-      "description": "AI-first code editor built on VS Code",
-      "category": "AI",
-      "is_pro": true,
-      "emoji": "💻",
-      "created_at": "2026-01-20T14:00:00.000000Z"
-    }
-  ],
-  "meta": {
-    "current_page": 1,
-    "total": 2,
-    "per_page": 20,
-    "last_page": 1
+  "tools": {
+    "tools": [
+      {
+        "id": 1,
+        "slug": "claude-code",
+        "name": "Claude Code",
+        "description": "AI coding assistant by Anthropic",
+        "category": "AI",
+        "is_pro": false,
+        "emoji": "🤖",
+        "created_at": "2026-01-15T08:30:00.000000Z"
+      },
+      {
+        "id": 2,
+        "slug": "cursor",
+        "name": "Cursor",
+        "description": "AI-first code editor built on VS Code",
+        "category": "AI",
+        "is_pro": true,
+        "emoji": "💻",
+        "created_at": "2026-01-20T14:00:00.000000Z"
+      }
+    ]
   }
 }`}
                   language="json"
@@ -294,18 +290,15 @@ export default function ApiDocsClient() {
                 <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Response fields</p>
                 <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs">
                   {[
-                    { field: 'data[].id',          desc: 'Unique numeric ID' },
-                    { field: 'data[].slug',        desc: 'URL-friendly identifier' },
-                    { field: 'data[].name',        desc: 'Display name' },
-                    { field: 'data[].description', desc: 'Short description' },
-                    { field: 'data[].category',    desc: 'Tool category' },
-                    { field: 'data[].is_pro',     desc: 'Requires pro subscription' },
-                    { field: 'data[].emoji',       desc: 'Icon emoji (optional)' },
-                    { field: 'data[].created_at',  desc: 'ISO 8601 timestamp' },
-                    { field: 'meta.current_page',  desc: 'Current page number' },
-                    { field: 'meta.total',          desc: 'Total number of tools' },
-                    { field: 'meta.per_page',       desc: 'Results per page' },
-                    { field: 'meta.last_page',      desc: 'Last page number' },
+                    { field: 'tools.tools[]',    desc: 'Array of tool objects' },
+                    { field: 'tools.tools[].id',          desc: 'Unique numeric ID' },
+                    { field: 'tools.tools[].slug',        desc: 'URL-friendly identifier' },
+                    { field: 'tools.tools[].name',        desc: 'Display name' },
+                    { field: 'tools.tools[].description', desc: 'Short description' },
+                    { field: 'tools.tools[].category',    desc: 'Tool category' },
+                    { field: 'tools.tools[].is_pro',     desc: 'Requires pro subscription' },
+                    { field: 'tools.tools[].emoji',       desc: 'Icon emoji (optional)' },
+                    { field: 'tools.tools[].created_at',  desc: 'ISO 8601 timestamp' },
                   ].map(({ field, desc }) => (
                     <div key={field} className="flex gap-2 py-0.5">
                       <code className="font-mono text-gray-700 dark:text-gray-300 shrink-0">{field}</code>
