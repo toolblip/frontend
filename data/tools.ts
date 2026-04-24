@@ -1398,6 +1398,23 @@ export const tools: Tool[] = [
   { name: 'Contrast Checker', slug: 'contrast-check-toolblip', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail indicators.', emoji: '♿', category: 'Color' },
   { name: 'Unit Converter', slug: 'unit-convert-toolblip', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
   { name: 'Number Base Converter', slug: 'number-base-toolblip', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly in your browser.', emoji: '🔢', category: 'Conversion' },
+
+  // --- New tools (2026-04-24) ---
+  { name: 'Text Uniqueness Checker', slug: 'text-uniqueness-checker', description: 'Check text for duplicate and near-duplicate content with similarity scoring.', emoji: '🔍', category: 'Text' },
+  { name: 'Duplicate Phrase Detector', slug: 'duplicate-phrase-detector', description: 'Find repeated phrases and word patterns in any text block for cleaner writing.', emoji: '🔁', category: 'Text' },
+  { name: 'Filler Word Counter', slug: 'filler-word-counter', description: 'Count filler words like actually, basically, and really to improve speaking and writing.', emoji: '📝', category: 'Text' },
+  { name: 'Regex Cheatsheet', slug: 'regex-cheatsheet', description: 'Quick regex reference with common patterns for emails, URLs, phones, dates, and more.', emoji: '📋', category: 'Developer' },
+  { name: 'Token Builder', slug: 'token-builder', description: 'Build custom JWT or bearer tokens with header, payload, and signature editing.', emoji: '🔐', category: 'Developer' },
+  { name: 'HTTP Method Tester', slug: 'http-method-tester', description: 'Test GET, POST, PUT, PATCH, DELETE requests with custom headers and body.', emoji: '🌐', category: 'Developer' },
+  { name: 'Code to Diagram Generator', slug: 'code-to-diagram-generator', description: 'Convert code into visual flowcharts and sequence diagrams for documentation.', emoji: '📊', category: 'Developer' },
+  { name: 'Algorithm Visualizer', slug: 'algorithm-visualizer', description: 'Visualize sorting, searching, and graph algorithms step by step with animation.', emoji: '🎬', category: 'Developer' },
+  { name: 'JSON Schema Editor', slug: 'json-schema-editor', description: 'Edit JSON Schema with live validation, autocomplete, and generated example data.', emoji: '📐', category: 'Developer' },
+  { name: 'Image Scale Calculator', slug: 'image-scale-calculator', description: 'Calculate new image dimensions from a percentage scale or target size.', emoji: '📏', category: 'Image' },
+  { name: 'Sitemap URLs Extractor', slug: 'sitemap-urls-extractor', description: 'Extract and list all URLs from an XML sitemap for SEO audit and analysis.', emoji: '🗺️', category: 'SEO' },
+  { name: 'Robots.txt Editor', slug: 'robots-txt-editor', description: 'Visually edit and test robots.txt rules with live crawler simulation.', emoji: '🤖', category: 'SEO' },
+  { name: 'Color Opacity Generator', slug: 'color-opacity-generator', description: 'Generate HEX and RGB colors with custom alpha transparency for overlays and borders.', emoji: '🎨', category: 'Color' },
+  { name: 'Base64 Image Decoder', slug: 'base64-image-decoder', description: 'Decode Base64 data URLs back to image files for download or inspection.', emoji: '🖼️', category: 'Conversion' },
+  { name: 'HEX to Decimal Converter', slug: 'hex-to-decimal', description: 'Convert hexadecimal color codes to decimal values for RGB and HSL calculations.', emoji: '🔢', category: 'Conversion' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'Image Tools', 'AI Tools', 'Document Generator', 'Text Tools', 'HEX/RGB/HSL'] as const;
