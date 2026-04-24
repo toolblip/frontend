@@ -1270,6 +1270,25 @@ export const tools: Tool[] = [
   { name: 'Table to Markdown', slug: 'table-to-markdown', description: 'Convert HTML tables or CSV data into clean Markdown table format.', emoji: '📋', category: 'Conversion' },
   { name: 'Favicon from Emoji', slug: 'favicon-from-emoji', description: 'Turn any emoji into a favicon PNG instantly. Download in multiple sizes.', emoji: '😀', category: 'Image' },
   { name: 'Batch Favicon Downloader', slug: 'batch-favicon-downloader', description: 'Extract and download favicons from multiple URLs at once in one click.', emoji: '📥', category: 'SEO' },
+
+  // --- Batch #9: New tools (2026-04-24) ---
+  { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-simple', description: 'Generate lorem ipsum text quickly. Pick paragraphs, sentences, or word count.', emoji: '📜', category: 'Text' },
+  { name: 'Grammar Checker', slug: 'grammar-checker-lite', description: 'Check grammar and spelling mistakes with clear one-click corrections.', emoji: '✅', category: 'Text' },
+  { name: 'Readability Score', slug: 'readability-score-handy', description: 'Check how easy your text is to read with a simple score.', emoji: '📊', category: 'Text' },
+  { name: 'Text Sorter', slug: 'text-sorter-handy', description: 'Sort text lines alphabetically, by length, or numerically with one click.', emoji: '📋', category: 'Text' },
+  { name: 'Regex Tester', slug: 'regex-tester-smart', description: 'Test regex patterns and highlight matches instantly in any text sample.', emoji: '🔍', category: 'Developer' },
+  { name: 'JWT Decoder', slug: 'jwt-decoder-simple', description: 'Decode JWT tokens and view header, payload, and expiration data.', emoji: '🎫', category: 'Developer' },
+  { name: 'Cron Expression Generator', slug: 'cron-generator-handy', description: 'Build cron schedules with an interactive editor and get human-readable times.', emoji: '🕐', category: 'Developer' },
+  { name: 'HTTP Headers Viewer', slug: 'http-headers-simple', description: 'Check request and response headers for any URL with timing details.', emoji: '📦', category: 'Developer' },
+  { name: 'Port Scanner', slug: 'port-scanner-lite', description: 'Scan common ports on a host to find open services quickly.', emoji: '🚪', category: 'Developer' },
+  { name: 'Favicon Generator', slug: 'favicon-simple', description: 'Create favicon icons from images or emoji in multiple sizes instantly.', emoji: '🌐', category: 'Image' },
+  { name: 'Image Resizer', slug: 'image-resizer-lite', description: 'Resize images to exact dimensions with aspect ratio lock and batch support.', emoji: '📐', category: 'Image' },
+  { name: 'Meta Tag Generator', slug: 'meta-tag-generator-handy', description: 'Generate SEO meta tags and Open Graph tags with a live preview.', emoji: '🏷️', category: 'SEO' },
+  { name: 'SERP Preview', slug: 'serp-preview-handy', description: 'Preview how your page appears in Google search results instantly.', emoji: '🔎', category: 'SEO' },
+  { name: 'Color Picker', slug: 'color-picker-handy', description: 'Pick any color and get HEX, RGB, and HSL values with live preview.', emoji: '🎨', category: 'Color' },
+  { name: 'Contrast Checker', slug: 'contrast-checker-handy', description: 'Check text and background contrast for WCAG accessibility compliance.', emoji: '♿', category: 'Color' },
+  { name: 'Unit Converter', slug: 'unit-converter-handy', description: 'Convert length, weight, and temperature between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
+  { name: 'Number Base Converter', slug: 'number-base-simple', description: 'Convert between binary, decimal, hexadecimal, and octal in one click.', emoji: '🔢', category: 'Conversion' },
 ];
 
 
