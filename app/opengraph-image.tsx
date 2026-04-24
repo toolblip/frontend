@@ -29,7 +29,7 @@ export default async function Image() {
           />
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
             <div style={{ fontSize: '30px', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.02em', lineHeight: 1 }}>
-              TOOLBLIP
+              Toolblip
             </div>
             <div style={{ fontSize: '14px', color: 'rgba(255,255,255,0.5)', letterSpacing: '0.04em' }}>
               toolblip.com
@@ -59,8 +59,8 @@ export default async function Image() {
             <img
               src={`data:image/jpeg;base64,${screenshot.toString('base64')}`}
               alt="Toolblip homepage"
-              width={880}
-              height={420}
+              width={960}
+              height={460}
               style={{ objectFit: 'cover' }}
             />
           </div>

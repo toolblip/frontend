@@ -6,10 +6,11 @@ import CodeBlock from '@/components/ui/CodeBlock';
 // ─── Config ────────────────────────────────────────────────────────────────
 
 const BASE_URL = 'https://api.toolblip.com';
+const FALLBACK_URL = 'https://toolblip-api-production.up.railway.app';
 
 const ENDPOINTS = [
-  { id: 'tools-list',    method: 'GET',    path: '/api/tools',         auth: false, status: 200, label: 'List all tools' },
-  { id: 'tools-detail', method: 'GET',    path: '/api/tools/{slug}',  auth: false, status: 200, label: 'Get single tool' },
+  { id: 'tools-list',    method: 'GET',    path: '/api/tools',        auth: false, status: 200, label: 'List all tools' },
+  { id: 'tools-detail', method: 'GET',    path: '/api/tools/{slug}', auth: false, status: 200, label: 'Get single tool' },
   { id: 'auth-register', method: 'POST',  path: '/api/auth/register', auth: false, status: 201, label: 'Create account' },
   { id: 'auth-login',   method: 'POST',   path: '/api/auth/login',    auth: false, status: 200, label: 'Sign in' },
   { id: 'auth-logout',  method: 'POST',   path: '/api/auth/logout',   auth: true,  status: 200, label: 'Revoke session' },
@@ -44,8 +45,11 @@ export default function ApiDocsClient() {
       { rootMargin: '-15% 0px -75% 0px', threshold: 0 }
     );
     for (const { id } of SECTIONS) {
-      document.getElementById(id)?.setAttribute('tabindex', '-1');
-      observerRef.current?.observe(document.getElementById(id)!);
+      const el = document.getElementById(id);
+      if (el) {
+        el.setAttribute('tabindex', '-1');
+        observerRef.current?.observe(el);
+      }
     }
     return () => observerRef.current?.disconnect();
   }, []);
@@ -55,12 +59,12 @@ export default function ApiDocsClient() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-[#090909] text-gray-900 dark:text-gray-100">
+    <div className="min-h-screen bg-white dark:bg-[#09090b] text-gray-900 dark:text-gray-100">
 
       {/* ── Top bar ── */}
-      <header className="sticky top-0 z-30 bg-white/95 dark:bg-[#090909]/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-800/80">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
-          <span className="text-[11px] font-mono font-bold bg-red-500 text-white px-2.5 py-1 rounded-full">REST v1</span>
+      <header className="sticky top-0 z-30 bg-white/95 dark:bg-[#09090b]/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-800/80">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
+          <span className="text-[11px] font-mono font-bold bg-[#d93025] text-white px-2.5 py-1 rounded-full">REST v1</span>
           <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Toolblip API</span>
           <div className="ml-auto flex items-center gap-3">
             <code className="hidden sm:block text-[11px] font-mono text-gray-400">{BASE_URL}</code>
@@ -73,8 +77,8 @@ export default function ApiDocsClient() {
       </header>
 
       {/* ── Hero ── */}
-      <div className="bg-gray-50 dark:bg-[#0f0f0f] border-b border-gray-100 dark:border-gray-800/60">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-16 flex flex-col lg:flex-row lg:items-start gap-10">
+      <div className="bg-gray-50 dark:bg-[#0f0f11] border-b border-gray-100 dark:border-gray-800/60">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-16 flex flex-col lg:flex-row lg:items-start gap-10">
 
           {/* Intro */}
           <div className="flex-1 min-w-0">
@@ -83,7 +87,7 @@ export default function ApiDocsClient() {
             </h1>
             <p className="text-base text-gray-500 dark:text-gray-400 leading-relaxed max-w-xl mb-8">
               HTTP REST API for browsing developer tools and managing user accounts.
-              All responses are JSON. Authenticate with a Bearer token to access protected endpoints.
+              All responses are JSON. Authenticate with a Bearer token for protected endpoints.
             </p>
 
             {/* Endpoint pills */}
@@ -106,9 +110,9 @@ export default function ApiDocsClient() {
 
           {/* Base URL card */}
           <div className="shrink-0 lg:w-72">
-            <div className="bg-white dark:bg-[#111] border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm">
+            <div className="bg-white dark:bg-[#111113] border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm">
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Base URL</p>
-              <code className="block text-sm font-mono text-red-600 dark:text-red-400 break-all">{BASE_URL}</code>
+              <code className="block text-sm font-mono text-[#d93025] dark:text-[#d93025] break-all">{BASE_URL}</code>
               <p className="text-[10px] text-green-600 dark:text-green-400 mt-1.5 flex items-center gap-1">
                 <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
                 SSL active
@@ -116,7 +120,7 @@ export default function ApiDocsClient() {
               <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
                 <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Railway fallback</p>
                 <code className="block text-[11px] font-mono text-gray-500 dark:text-gray-600 break-all">
-                  https://toolblip-api-production.up.railway.app
+                  {FALLBACK_URL}
                 </code>
               </div>
             </div>
@@ -126,7 +130,7 @@ export default function ApiDocsClient() {
       </div>
 
       {/* ── Body ── */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 flex gap-10 lg:gap-12">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 flex gap-10 lg:gap-12">
 
         {/* Sidebar */}
         <aside className="w-36 xl:w-44 shrink-0 hidden md:block">
@@ -138,7 +142,7 @@ export default function ApiDocsClient() {
                 onClick={() => scrollTo(id)}
                 className={`w-full flex items-center px-3 py-1.5 rounded-lg transition-colors text-xs text-left cursor-pointer ${
                   activeSection === id
-                    ? 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/30 font-semibold'
+                    ? 'text-[#d93025] dark:text-[#d93025] bg-red-50 dark:bg-[#d93025]/10 font-semibold'
                     : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-900/30'
                 }`}
               >
@@ -161,7 +165,7 @@ export default function ApiDocsClient() {
                 { icon: '🔐', title: 'Auth', body: 'Bearer token in Authorization header' },
                 { icon: '📦', title: 'Format', body: 'All responses are JSON. Always send Accept: application/json' },
               ].map(({ icon, title, body }) => (
-                <div key={title} className="p-4 bg-gray-50 dark:bg-[#0f0f0f] border border-gray-200 dark:border-gray-800 rounded-xl">
+                <div key={title} className="p-4 bg-gray-50 dark:bg-[#0f0f11] border border-gray-200 dark:border-gray-800 rounded-xl">
                   <span className="text-lg">{icon}</span>
                   <p className="text-xs font-bold text-gray-700 dark:text-gray-300 mt-2 mb-1">{title}</p>
                   <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{body}</p>
@@ -177,7 +181,7 @@ export default function ApiDocsClient() {
             <div className="mt-6 rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="bg-gray-50 dark:bg-[#111] border-b border-gray-200 dark:border-gray-800">
+                  <tr className="bg-gray-50 dark:bg-[#111113] border-b border-gray-200 dark:border-gray-800">
                     <th className="text-left px-4 py-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest w-20">Method</th>
                     <th className="text-left px-4 py-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Endpoint</th>
                     <th className="text-left px-4 py-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest w-16">Auth</th>
@@ -186,7 +190,7 @@ export default function ApiDocsClient() {
                 </thead>
                 <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                   {ENDPOINTS.map(({ method, path, auth, label }) => (
-                    <tr key={path} className="bg-white dark:bg-[#090909] hover:bg-gray-50 dark:hover:bg-gray-900/30 transition-colors">
+                    <tr key={path} className="bg-white dark:bg-[#09090b] hover:bg-gray-50 dark:hover:bg-gray-900/30 transition-colors">
                       <td className="px-4 py-3"><MethodPill method={method} /></td>
                       <td className="px-4 py-3 font-mono text-xs text-gray-700 dark:text-gray-300">{path}</td>
                       <td className="px-4 py-3">{auth ? <LockPill /> : <PublicPill />}</td>
@@ -208,7 +212,7 @@ export default function ApiDocsClient() {
             </p>
             <CodeBlock
               code={`Authorization: Bearer 1|abcd1234efgh5678ijkl9012mnop3456qrst`}
-              title="Header - all authenticated requests"
+              title="Header — all authenticated requests"
               language="bash"
             />
             <div className="mt-4 p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900 rounded-xl text-xs text-amber-700 dark:text-amber-400 leading-relaxed">
@@ -225,7 +229,7 @@ export default function ApiDocsClient() {
           <section id="tools-list" className="scroll-mt-16">
             <EndpointHeader method="GET" path="/api/tools" auth={false} status={200} />
             <p className="text-gray-500 dark:text-gray-400 text-sm mb-5">
-              Returns a paginated list of all available tools. Public - no authentication required.
+              Returns a paginated list of all available tools. Public — no authentication required.
             </p>
 
             <div className="mb-6">
@@ -233,7 +237,7 @@ export default function ApiDocsClient() {
               <CodeBlock
                 code={`curl "${BASE_URL}/api/tools" \\
   -H "Accept: application/json"`}
-                title="Request"
+                title="bash"
                 language="bash"
               />
             </div>
@@ -243,7 +247,7 @@ export default function ApiDocsClient() {
               <div className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
                 <table className="w-full text-xs">
                   <thead>
-                    <tr className="bg-gray-50 dark:bg-[#111] border-b border-gray-200 dark:border-gray-800">
+                    <tr className="bg-gray-50 dark:bg-[#111113] border-b border-gray-200 dark:border-gray-800">
                       <th className="text-left px-4 py-2 text-gray-400 font-bold uppercase tracking-widest w-28">Param</th>
                       <th className="text-left px-4 py-2 text-gray-400 font-bold uppercase tracking-widest w-20">Type</th>
                       <th className="text-left px-4 py-2 text-gray-400 font-bold uppercase tracking-widest">Description</th>
@@ -251,11 +255,11 @@ export default function ApiDocsClient() {
                   </thead>
                   <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                     {[
-                      { name: 'category', type: 'string',  desc: 'Filter by category (e.g. AI, DevOps, Analytics)' },
+                      { name: 'category', type: 'string',  desc: 'Filter by category (e.g. ai, devops, analytics)' },
                       { name: 'page',     type: 'number',  desc: 'Page number (default: 1)' },
-                      { name: 'per_page', type: 'number',  desc: 'Results per page (default: 20)' },
+                      { name: 'per_page', type: 'number',  desc: 'Results per page (default: 20, max: 100)' },
                     ].map(({ name, type, desc }) => (
-                      <tr key={name} className="bg-white dark:bg-[#090909]">
+                      <tr key={name} className="bg-white dark:bg-[#09090b]">
                         <td className="px-4 py-2.5 font-mono text-gray-700 dark:text-gray-300">{name}</td>
                         <td className="px-4 py-2.5 text-gray-400 dark:text-gray-500">{type}</td>
                         <td className="px-4 py-2.5 text-gray-500 dark:text-gray-400">{desc}</td>
@@ -267,7 +271,7 @@ export default function ApiDocsClient() {
             </div>
 
             <div>
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example response - 200</p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example response — 200</p>
               <CodeBlock
                 code={`{
   "tools": {
@@ -299,7 +303,7 @@ export default function ApiDocsClient() {
               />
             </div>
 
-            <div className="mt-4 p-4 bg-gray-50 dark:bg-[#0f0f0f] border border-gray-200 dark:border-gray-800 rounded-xl">
+            <div className="mt-4 p-4 bg-gray-50 dark:bg-[#0f0f11] border border-gray-200 dark:border-gray-800 rounded-xl">
               <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Response fields</p>
               <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs">
                 {[
@@ -333,7 +337,7 @@ export default function ApiDocsClient() {
               <CodeBlock
                 code={`curl "${BASE_URL}/api/tools/claude-code" \\
   -H "Accept: application/json"`}
-                title="Request"
+                title="bash"
                 language="bash"
               />
             </div>
@@ -343,13 +347,13 @@ export default function ApiDocsClient() {
               <div className="rounded-xl border border-gray-200 dark:border-gray-800 overflow-hidden">
                 <table className="w-full text-xs">
                   <thead>
-                    <tr className="bg-gray-50 dark:bg-[#111] border-b border-gray-200 dark:border-gray-800">
+                    <tr className="bg-gray-50 dark:bg-[#111113] border-b border-gray-200 dark:border-gray-800">
                       <th className="text-left px-4 py-2 text-gray-400 font-bold uppercase tracking-widest w-28">Param</th>
                       <th className="text-left px-4 py-2 text-gray-400 font-bold uppercase tracking-widest">Description</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr className="bg-white dark:bg-[#090909]">
+                    <tr className="bg-white dark:bg-[#09090b]">
                       <td className="px-4 py-2.5 font-mono text-gray-700 dark:text-gray-300">slug</td>
                       <td className="px-4 py-2.5 text-gray-500 dark:text-gray-400">The unique slug identifier of the tool</td>
                     </tr>
@@ -359,7 +363,7 @@ export default function ApiDocsClient() {
             </div>
 
             <div className="mb-6">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example response - 200</p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example response — 200</p>
               <CodeBlock
                 code={`{
   "tool": {
@@ -378,7 +382,7 @@ export default function ApiDocsClient() {
             </div>
 
             <div>
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error - 404</p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error — 404</p>
               <CodeBlock
                 code={`{
   "message": "Tool not found"
@@ -407,47 +411,46 @@ export default function ApiDocsClient() {
   -H "Content-Type: application/json" \\
   -d '{
     "name": "Harun Ray",
-    "email": "harun@toolblip.com",
+    "email": "harun@example.com",
     "password": "securepassword123",
     "password_confirmation": "securepassword123"
   }'`}
-                title="Request"
+                title="bash"
                 language="bash"
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <div>
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Request body</p>
-                <CodeBlock
-                  code={`{
-  "name": "Harun Ray",
-  "email": "harun@toolblip.com",
-  "password": "securepassword123",
-  "password_confirmation": "securepassword123"
+            <div className="mb-6">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Request body</p>
+              <CodeBlock
+                code={`{
+  "name": "Harun Ray",              // required, min 2 chars
+  "email": "harun@example.com",     // required, valid email, unique
+  "password": "securepassword123",   // required, min 8 chars
+  "password_confirmation": "securepassword123"  // required, must match password
 }`}
-                  language="json"
-                />
-              </div>
-              <div>
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Response - 201</p>
-                <CodeBlock
-                  code={`{
+                language="json"
+              />
+            </div>
+
+            <div className="mb-6">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Success response — 201</p>
+              <CodeBlock
+                code={`{
   "user": {
     "id": 1,
     "name": "Harun Ray",
-    "email": "harun@toolblip.com",
+    "email": "harun@example.com",
     "is_pro": false
   },
   "token": "1|abcd1234efgh5678ijkl9012mnop3456qrst"
 }`}
-                  language="json"
-                />
-              </div>
+                language="json"
+              />
             </div>
 
             <div>
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error - 422</p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error — 422 (validation)</p>
               <CodeBlock
                 code={`{
   "message": "The given data was invalid.",
@@ -475,44 +478,43 @@ export default function ApiDocsClient() {
   -H "Accept: application/json" \\
   -H "Content-Type: application/json" \\
   -d '{
-    "email": "harun@toolblip.com",
+    "email": "harun@example.com",
     "password": "securepassword123"
   }'`}
-                title="Request"
+                title="bash"
                 language="bash"
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <div>
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Request body</p>
-                <CodeBlock
-                  code={`{
-  "email": "harun@toolblip.com",
-  "password": "securepassword123"
+            <div className="mb-6">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Request body</p>
+              <CodeBlock
+                code={`{
+  "email": "harun@example.com",  // required
+  "password": "securepassword123" // required
 }`}
-                  language="json"
-                />
-              </div>
-              <div>
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Response - 200</p>
-                <CodeBlock
-                  code={`{
+                language="json"
+              />
+            </div>
+
+            <div className="mb-6">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Success response — 200</p>
+              <CodeBlock
+                code={`{
   "user": {
     "id": 1,
     "name": "Harun Ray",
-    "email": "harun@toolblip.com",
+    "email": "harun@example.com",
     "is_pro": false
   },
   "token": "1|abcd1234efgh5678ijkl9012mnop3456qrst"
 }`}
-                  language="json"
-                />
-              </div>
+                language="json"
+              />
             </div>
 
             <div>
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error - 401</p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error — 401</p>
               <CodeBlock
                 code={`{
   "message": "Invalid credentials"
@@ -535,13 +537,13 @@ export default function ApiDocsClient() {
                 code={`curl -X POST "${BASE_URL}/api/auth/logout" \\
   -H "Accept: application/json" \\
   -H "Authorization: Bearer 1|abcd1234efgh5678ijkl9012mnop3456qrst"`}
-                title="Request"
+                title="bash"
                 language="bash"
               />
             </div>
 
             <div className="mb-6">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Response - 200</p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Success response — 200</p>
               <CodeBlock
                 code={`{
   "message": "Logged out successfully"
@@ -555,7 +557,7 @@ export default function ApiDocsClient() {
             </div>
 
             <div className="mt-6">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error - 401</p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error — 401</p>
               <CodeBlock
                 code={`{
   "message": "Unauthenticated."
@@ -578,19 +580,19 @@ export default function ApiDocsClient() {
                 code={`curl "${BASE_URL}/api/auth/user" \\
   -H "Accept: application/json" \\
   -H "Authorization: Bearer 1|abcd1234efgh5678ijkl9012mnop3456qrst"`}
-                title="Request"
+                title="bash"
                 language="bash"
               />
             </div>
 
             <div className="mb-6">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Response - 200</p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Success response — 200</p>
               <CodeBlock
                 code={`{
   "user": {
     "id": 1,
     "name": "Harun Ray",
-    "email": "harun@toolblip.com",
+    "email": "harun@example.com",
     "is_pro": false
   }
 }`}
@@ -599,7 +601,7 @@ export default function ApiDocsClient() {
             </div>
 
             <div>
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error - 401</p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error — 401</p>
               <CodeBlock
                 code={`{
   "message": "Unauthenticated."
@@ -629,7 +631,7 @@ export default function ApiDocsClient() {
               ].map(({ code, label }) => (
                 <div
                   key={code}
-                  className="flex items-center gap-2.5 bg-gray-50 dark:bg-[#0f0f0f] border border-gray-200 dark:border-gray-800 rounded-lg px-3 py-2.5"
+                  className="flex items-center gap-2.5 bg-gray-50 dark:bg-[#0f0f11] border border-gray-200 dark:border-gray-800 rounded-lg px-3 py-2.5"
                 >
                   <span className="font-mono font-bold text-sm text-gray-700 dark:text-gray-300">{code}</span>
                   <span className="text-xs text-gray-500 dark:text-gray-400">{label}</span>
@@ -638,7 +640,7 @@ export default function ApiDocsClient() {
             </div>
 
             <div>
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example - 422 Validation Error</p>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example — 422 Validation Error</p>
               <CodeBlock
                 code={`{
   "message": "The given data was invalid.",
@@ -656,9 +658,9 @@ export default function ApiDocsClient() {
           <footer className="pt-8 border-t border-gray-100 dark:border-gray-800/60 text-center">
             <p className="text-gray-400 dark:text-gray-600 text-xs">
               Questions?{' '}
-              <a href="mailto:harun@toolblip.com" className="text-red-600 dark:text-red-400 hover:underline">harun@toolblip.com</a>
+              <a href="mailto:harun@toolblip.com" className="text-[#d93025] dark:text-[#d93025] hover:underline">harun@toolblip.com</a>
               <span className="mx-2 text-gray-300 dark:text-gray-700">·</span>
-              <a href="https://github.com/toolblip" target="_blank" rel="noopener noreferrer" className="text-red-600 dark:text-red-400 hover:underline">GitHub</a>
+              <a href="https://github.com/toolblip" target="_blank" rel="noopener noreferrer" className="text-[#d93025] dark:text-[#d93025] hover:underline">GitHub</a>
             </p>
           </footer>
 
@@ -671,8 +673,8 @@ export default function ApiDocsClient() {
 // ─── Helpers ───────────────────────────────────────────────────────────────
 
 const METHOD_COLORS: Record<string, string> = {
-  GET:    'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400',
-  POST:   'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400',
+  GET:    'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400',
+  POST:   'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400',
   PUT:    'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400',
   DELETE: 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400',
   PATCH:  'bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400',
@@ -681,7 +683,7 @@ const METHOD_COLORS: Record<string, string> = {
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
     <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2.5">
-      <span className="w-1 h-6 bg-red-500 rounded-full shrink-0 mt-0.5" />
+      <span className="w-1 h-6 bg-[#d93025] rounded-full shrink-0 mt-0.5" />
       {children}
     </h2>
   );
