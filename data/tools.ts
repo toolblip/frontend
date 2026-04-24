@@ -982,6 +982,23 @@ export const tools: Tool[] = [
   { name: 'Contrast Checker', slug: 'contrast-checker-new', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail indicators.', emoji: '♿', category: 'Color' },
   { name: 'Unit Converter', slug: 'unit-converter-new', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
   { name: 'Number Base Converter', slug: 'number-base-converter-new', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly.', emoji: '🔢', category: 'Conversion' },
+
+  // --- New tools (2026-04-24 #9 - unique additions) ---
+  { name: 'Sentiment Analyzer', slug: 'sentiment-analyzer', description: 'Analyze text sentiment and detect positive, negative, or neutral tone with scores.', emoji: '💭', category: 'Text' },
+  { name: 'Word Cloud Generator', slug: 'word-cloud-generator', description: 'Generate a visual word cloud from any text with customizable shape and colors.', emoji: '☁️', category: 'Text' },
+  { name: 'English Collocations Checker', slug: 'english-collocations-unique', description: 'Check common English word pairings and phrases for natural-sounding writing.', emoji: '📖', category: 'Text' },
+  { name: 'Article Title Generator', slug: 'article-title-gen', description: 'Generate catchy article titles from a topic with SEO-optimized headline options.', emoji: '✍️', category: 'Text' },
+  { name: 'Code Diff', slug: 'code-diff-tool', description: 'Compare two code snippets and highlight differences with syntax-aware line-by-line diff.', emoji: '🔀', category: 'Developer' },
+  { name: 'SSH Key Generator', slug: 'ssh-key-gen', description: 'Generate RSA, ECDSA, and Ed25519 SSH key pairs for server authentication.', emoji: '🔑', category: 'Developer' },
+  { name: 'Encodings Reference', slug: 'encodings-ref', description: 'View ASCII, UTF-8, HTML entities, URL encoding, Base64, and more encoding tables.', emoji: '🔤', category: 'Developer' },
+  { name: 'HTTP Status Codes Reference', slug: 'http-status-ref', description: 'Browse all HTTP status codes with meanings, categories, and common use cases.', emoji: '🌐', category: 'Developer' },
+  { name: 'Favicon Checker', slug: 'favicon-checker-tool', description: 'Check if a website has a proper favicon and preview all available sizes and formats.', emoji: '🌐', category: 'Image' },
+  { name: 'Image Metadata Viewer', slug: 'image-metadata-tool', description: 'Extract and view EXIF, IPTC, and XMP metadata from JPEG, PNG, and WebP images.', emoji: '📷', category: 'Image' },
+  { name: 'Keyword Difficulty Checker', slug: 'keyword-difficulty-tool', description: 'Estimate SEO difficulty for keywords based on search result competition analysis.', emoji: '📊', category: 'SEO' },
+  { name: 'Color Shade Generator', slug: 'color-shade-tool', description: 'Generate lighter and darker shades of any color for consistent design systems.', emoji: '🎨', category: 'Color' },
+  { name: 'Color Name Finder', slug: 'color-name-tool', description: 'Find the nearest named color for any HEX, RGB, or HSL value from color databases.', emoji: '🏷️', category: 'Color' },
+  { name: 'Number to Words', slug: 'number-to-words-tool', description: 'Convert numbers into human-readable words - great for invoices and checks.', emoji: '🔢', category: 'Conversion' },
+  { name: 'Time Zone Converter', slug: 'time-zone-tool', description: 'Convert times between multiple timezones with daylight saving and current time display.', emoji: '🌍', category: 'Conversion' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time'] as const;
