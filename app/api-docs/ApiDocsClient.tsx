@@ -5,7 +5,9 @@ import CodeBlock from '@/components/ui/CodeBlock';
 
 // ─── Config ────────────────────────────────────────────────────────────────
 
-const BASE_URL = 'https://api.toolblip.com';
+// Primary base URL — Railway production deployment
+// (will switch to https://api.toolblip.com once SSL is provisioned)
+const BASE_URL = 'https://toolblip-api-production.up.railway.app';
 
 const ENDPOINTS = [
   { id: 'tools-list',    method: 'GET',    path: '/api/tools',        auth: false, status: 200, label: 'List all tools' },
@@ -112,9 +114,9 @@ export default function ApiDocsClient() {
             <div className="bg-white dark:bg-[#111113] border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm">
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Base URL</p>
               <code className="block text-sm font-mono text-[#d93025] dark:text-[#d93025] break-all">{BASE_URL}</code>
-              <p className="text-[10px] text-green-600 dark:text-green-400 mt-1.5 flex items-center gap-1">
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                SSL active · production ready
+              <p className="text-[10px] text-amber-600 dark:text-amber-400 mt-1.5 flex items-center gap-1">
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                SSL pending · Railway URL in use
               </p>
             </div>
           </div>
