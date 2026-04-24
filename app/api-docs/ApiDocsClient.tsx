@@ -4,8 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 
 // ─── Config ────────────────────────────────────────────────────────────────
 
-// Base URL — Railway production deployment (api.toolblip.com → Railway once SSL verified)
-const BASE_URL = 'https://toolblip-api-production.up.railway.app';
+// Base URL — Railway production deployment
+const BASE_URL = 'https://api.toolblip.com';
 
 const SECTIONS = [
   { id: 'overview',       label: 'Overview' },
@@ -503,13 +503,13 @@ export default function ApiDocsClient() {
                 <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example response — 200</p>
                 <CodeBlock
                   code={`{
-  "token": "1|abcd1234efgh5678ijkl9012mnop3456qrst",
   "user": {
     "id": 1,
     "name": "Harun Ray",
     "email": "harun@example.com",
     "is_pro": false
-  }
+  },
+  "token": "1|abcd1234efgh5678ijkl9012mnop3456qrst"
 }`}
                   language="json"
                 />
