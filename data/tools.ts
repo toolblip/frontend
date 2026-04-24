@@ -1527,6 +1527,25 @@ export const tools: Tool[] = [
   { name: 'HSV to HEX Converter', slug: 'hsv-to-hex', description: 'Convert HSV and HSB values to HEX format with a live color preview.', emoji: '🎨', category: 'Color' },
   { name: 'Byte Size Converter', slug: 'byte-converter', description: 'Convert bytes to KB, MB, GB, TB with binary (1024) or decimal (1000) base.', emoji: '💾', category: 'Conversion' },
   { name: 'Decimal to HEX Converter', slug: 'decimal-to-hex', description: 'Convert decimal numbers to hexadecimal with optional leading zeros and 0x prefix.', emoji: '🔢', category: 'Conversion' },
+
+  // --- New tools (2026-04-25 #4) ---
+  { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-placeholder', description: 'Generate lorem ipsum placeholder text with paragraphs, sentences, word count, and starting phrase.', emoji: '📜', category: 'Text' },
+  { name: 'Grammar Checker', slug: 'grammar-checker-2025', description: 'Check grammar and spelling errors with one-click fixes and detailed explanations for any text.', emoji: '✅', category: 'Text' },
+  { name: 'Readability Score', slug: 'readability-score-2025', description: 'Calculate Flesch-Kincaid, SMOG, ARI, and Coleman-Liau readability grades for text.', emoji: '📊', category: 'Text' },
+  { name: 'Text Sorter', slug: 'text-sorter-2025', description: 'Sort text lines alphabetically, by length, numerically, or in reverse order instantly.', emoji: '📋', category: 'Text' },
+  { name: 'Regex Tester', slug: 'regex-tester-2025', description: 'Test regex patterns with live match highlighting, capture groups, and replacement preview.', emoji: '🔍', category: 'Developer' },
+  { name: 'JWT Decoder', slug: 'jwt-decoder-2025', description: 'Decode JSON Web Tokens and inspect header, payload, and expiration time instantly.', emoji: '🎫', category: 'Developer' },
+  { name: 'Cron Expression Generator', slug: 'cron-generator-2025', description: 'Build cron schedules visually with point-and-click controls and human-readable descriptions.', emoji: '🕐', category: 'Developer' },
+  { name: 'HTTP Headers Viewer', slug: 'http-headers-2025', description: 'View request and response HTTP headers for any URL with timing breakdown.', emoji: '📦', category: 'Developer' },
+  { name: 'Port Scanner', slug: 'port-scanner-2025', description: 'Scan common ports on any host to identify open services and running applications.', emoji: '🚪', category: 'Developer' },
+  { name: 'Favicon Generator', slug: 'favicon-generator-2025', description: 'Create favicon.ico, PNG, and SVG icons from any image or emoji with one click.', emoji: '🌐', category: 'Image' },
+  { name: 'Image Resizer', slug: 'image-resizer-2025', description: 'Resize images to exact dimensions for social media, thumbnails, and web with preview.', emoji: '📐', category: 'Image' },
+  { name: 'Meta Tag Generator', slug: 'meta-tag-generator-2025', description: 'Generate SEO meta tags, Open Graph, and Twitter Card tags with live preview.', emoji: '🏷️', category: 'SEO' },
+  { name: 'SERP Preview', slug: 'serp-preview-2025', description: 'Preview how a page title and description appear in Google search results.', emoji: '🔎', category: 'SEO' },
+  { name: 'Color Picker', slug: 'color-picker-2025', description: 'Pick any color and get HEX, RGB, HSL, and CSS values with a live color preview.', emoji: '🎨', category: 'Color' },
+  { name: 'Contrast Checker', slug: 'contrast-checker-2025', description: 'Check text and background color contrast for WCAG AA and AAA compliance.', emoji: '♿', category: 'Color' },
+  { name: 'Unit Converter', slug: 'unit-converter-2025', description: 'Convert length, weight, and temperature between metric and imperial units instantly.', emoji: '⚖️', category: 'Conversion' },
+  { name: 'Number Base Converter', slug: 'number-base-converter-2025', description: 'Convert between binary, decimal, hexadecimal, and octal number systems instantly.', emoji: '🔢', category: 'Conversion' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'Image Tools', 'AI Tools', 'Document Generator', 'Text Tools', 'HEX/RGB/HSL'] as const;
