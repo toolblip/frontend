@@ -364,11 +364,28 @@ export default function Nav({ onOpenSearch }: Props) {
   const [anchorStyle, setAnchorStyle] = useState<React.CSSProperties>({});
   const navRef = useRef<HTMLElement>(null);
   const menuTriggerRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const closeTimer = useRef<number | null>(null);
+
+  const cancelClose = () => {
+    if (closeTimer.current != null) {
+      window.clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  };
+  const scheduleClose = () => {
+    cancelClose();
+    closeTimer.current = window.setTimeout(() => setOpenMenu(null), 140);
+  };
+
+  useEffect(() => () => cancelClose(), []);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (navRef.current && !navRef.current.contains(e.target as Node)) {
-        setOpenMenu(null);
+        const anchor = document.querySelector('.tb-v2-mm-anchor');
+        if (!anchor || !anchor.contains(e.target as Node)) {
+          setOpenMenu(null);
+        }
       }
     };
     document.addEventListener('mousedown', handler);
@@ -420,14 +437,14 @@ export default function Nav({ onOpenSearch }: Props) {
             <div
               key={menu.key}
               className="tb-v2-nav-dropdown-root"
-              onMouseLeave={() => setOpenMenu((o) => (o === menu.key ? null : o))}
+              onMouseEnter={() => { cancelClose(); setOpenMenu(menu.key); }}
+              onMouseLeave={scheduleClose}
             >
               <button
                 type="button"
                 ref={(el) => { menuTriggerRefs.current[menu.key] = el; }}
                 className={`tb-v2-nav-trigger${openMenu === menu.key ? ' on' : ''}`}
                 onClick={() => setOpenMenu(openMenu === menu.key ? null : menu.key)}
-                onMouseEnter={() => setOpenMenu(menu.key)}
                 aria-expanded={openMenu === menu.key}
               >
                 <span>{menu.label}</span>
@@ -467,7 +484,12 @@ export default function Nav({ onOpenSearch }: Props) {
       </div>
 
       {openMenu && (
-        <div className="tb-v2-mm-anchor" style={anchorStyle} onMouseLeave={() => setOpenMenu(null)}>
+        <div
+          className="tb-v2-mm-anchor"
+          style={anchorStyle}
+          onMouseEnter={cancelClose}
+          onMouseLeave={scheduleClose}
+        >
           <MegaMenu which={openMenu} onClose={() => setOpenMenu(null)} />
         </div>
       )}
