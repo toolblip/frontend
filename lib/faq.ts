@@ -47,10 +47,39 @@ const CATEGORY_FAQ: Record<string, (t: Tool) => FAQ> = {
     q: `Is the ${t.name} free?`,
     a: `Yes. The ${t.name} is free, requires no signup, and has no usage limits. Toolblip is funded by optional Pro features, not by metering the core tools.`,
   }),
+  'PDF Tools': (t) => ({
+    q: `Are PDFs processed securely in the ${t.name}?`,
+    a: `Yes. The ${t.name} processes PDFs entirely in your browser using client-side PDF libraries. Your files are never uploaded to a server, so you can safely work with contracts, invoices, and other confidential documents.`,
+  }),
+  'Video Tools': (t) => ({
+    q: `Is video processing done in the cloud with the ${t.name}?`,
+    a: `No. The ${t.name} runs in your browser using WebAssembly, so your videos stay on your machine. If an operation ever requires a server (for example, heavy transcoding of very large files), we flag it clearly before anything is uploaded.`,
+  }),
+  'Image Tools': (t) => ({
+    q: `Does the ${t.name} preserve my image's original quality?`,
+    a: `Whenever an operation is lossless — renaming, metadata stripping, format conversion to a lossless codec — the ${t.name} preserves the original bytes. Operations that resample the image (resizing, compressing to JPEG/WebP) will re-encode, but you control the quality setting, and nothing is uploaded.`,
+  }),
+  'AI Tools': (t) => ({
+    q: `Is my text or content stored when I use the ${t.name}?`,
+    a: `No. The ${t.name} does not log or store the content you feed into it. Inputs are processed for the length of the request and then discarded. Toolblip has no backend database of user prompts or AI outputs.`,
+  }),
+  'Document Generator': (t) => ({
+    q: `Are documents from the ${t.name} legally valid?`,
+    a: `The ${t.name} produces templates and drafts — a strong starting point for contracts, invoices, and official forms — but it is not a substitute for legal advice. Have a qualified lawyer review any document before you rely on it in a legal or regulated context.`,
+  }),
+  'Text Tools': (t) => ({
+    q: `Is there a character limit when I use the ${t.name}?`,
+    a: `There's no hard limit. The ${t.name} handles short snippets and long documents equally well because all processing happens on your device. For very large inputs you may notice a brief delay while the browser parses the text.`,
+  }),
 };
 
-function categoryQuestion(t: Tool): FAQ | null {
-  return CATEGORY_FAQ[t.category]?.(t) ?? null;
+function categoryQuestion(t: Tool): FAQ {
+  const fn = CATEGORY_FAQ[t.category];
+  if (fn) return fn(t);
+  return {
+    q: `Is my data private when I use the ${t.name}?`,
+    a: `Yes. The ${t.name} runs entirely in your browser, so nothing you paste, upload, or generate is sent to a server or logged by Toolblip. It is safe to use with confidential content.`,
+  };
 }
 
 function templateFaqs(t: Tool): FAQ[] {
@@ -73,8 +102,7 @@ function templateFaqs(t: Tool): FAQ[] {
     },
   ];
 
-  const catFaq = categoryQuestion(t);
-  if (catFaq) faqs.push(catFaq);
+  faqs.push(categoryQuestion(t));
 
   faqs.push({
     q: `Can I use the ${t.name} offline?`,
@@ -155,6 +183,41 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Why does my cron expression match both a day-of-month AND a day-of-week?', a: 'Standard cron OR\'s the two date fields whenever both are non-wildcard, so `0 9 15 * 1` runs on the 15th OR on Mondays — not "the 15th if it\'s a Monday". The Cron Expression Parser makes that explicit in the plain-English output.' },
     { q: 'Is sub-minute scheduling supported?', a: 'No — cron\'s minimum resolution is one minute. For faster cadence you need a systemd timer or a long-running daemon. The Cron Expression Parser flags any expression that tries to fake sub-minute scheduling.' },
     { q: 'Does the Cron Expression Parser respect timezones?', a: 'The parser computes run times in your local timezone so you can sanity-check them, but remember that cron on a server runs in the server\'s timezone unless you set CRON_TZ at the top of the crontab.' },
+  ],
+  'lorem-ipsum-generator': [
+    { q: 'What is Lorem Ipsum?', a: 'Lorem Ipsum is pseudo-Latin placeholder text used by designers and developers since the 1500s. It fills layouts with realistic-looking content so you can evaluate typography, spacing, and hierarchy without being distracted by the meaning of the words.' },
+    { q: 'How much text can I generate with the Lorem Ipsum Generator?', a: 'Set any number of paragraphs, sentences, or words — there\'s no upper limit. The Lorem Ipsum Generator produces output instantly in your browser, even at tens of thousands of words.' },
+    { q: 'Does the Lorem Ipsum Generator start with "Lorem ipsum dolor sit amet"?', a: 'Yes by default — and you can toggle it off if you\'d rather jump straight into randomized content. Starting with the classic phrase signals "placeholder" to anyone reviewing the mockup.' },
+    { q: 'Can I generate HTML-wrapped Lorem Ipsum?', a: 'Yes. The Lorem Ipsum Generator outputs plain text by default, or wraps paragraphs in `<p>` tags with a single toggle so you can paste straight into a template.' },
+    { q: 'Is it OK to use Lorem Ipsum in a real product?', a: 'Only during design and prototyping. Ship with real copy — Lorem Ipsum left in production is the sort of thing that ends up on Twitter. Use the Lorem Ipsum Detector to find any that slipped through.' },
+  ],
+  'qr-code-generator': [
+    { q: 'What can I encode with the QR Code Generator?', a: 'The QR Code Generator handles URLs, plain text, WiFi credentials, vCards, SMS, email templates, and geo coordinates. Each mode produces a QR code that the scanner will route correctly — for example, WiFi QR codes auto-prompt the user to join the network.' },
+    { q: 'Can I download the QR code as SVG?', a: 'Yes. The QR Code Generator exports both PNG (for quick sharing) and SVG (for print and scalable designs). SVG files stay crisp at any size, which is the right choice for posters and packaging.' },
+    { q: 'Does the QR Code Generator track what I encode?', a: 'No. Everything is generated client-side, so the URLs, passwords, or contact details you encode never leave your browser. This is especially important for WiFi QR codes, which contain your network password.' },
+    { q: 'How large should my QR code be for a poster?', a: 'A good rule of thumb is that the QR code\'s size should be 1/10th the scanning distance — so a poster scanned from 2 meters needs a code at least 20 cm square. The QR Code Generator exports at high resolution for print.' },
+    { q: 'What error-correction level should I pick?', a: 'L and M are fine for screens and indoor print. Pick Q or H if the code will be damaged, weathered, or covered with a logo — higher error correction lets scanners still read it when up to 30% of the pattern is obscured.' },
+  ],
+  'color-picker': [
+    { q: 'What formats does the Color Picker output?', a: 'The Color Picker shows every format web developers need: HEX, RGB / RGBA, HSL / HSLA, and CSS named colors when the value matches one. Copy any format with one click.' },
+    { q: 'How do I pick a color from my screen?', a: 'Most modern browsers expose the EyeDropper API — the Color Picker uses it where available so you can click anywhere on your screen to sample a pixel. In browsers without EyeDropper, use the visual picker or paste a known value.' },
+    { q: 'Can the Color Picker show me accessible text contrast?', a: 'Yes. Enter a background color and the Color Picker shows WCAG AA and AAA contrast ratios against black and white text, plus a recommended foreground pair — so you can verify accessibility while you design.' },
+    { q: 'What\'s the difference between HSL and RGB?', a: 'RGB mixes red, green, and blue channels — how screens physically produce color. HSL thinks in terms of hue (which color), saturation (how vivid), and lightness (how bright), which matches how designers talk about color. Both describe the same values; HSL is just easier to reason about.' },
+    { q: 'Does the Color Picker work offline?', a: 'Yes. Once the page has loaded, the Color Picker runs entirely in your browser. Bookmark it and reach for it even without an internet connection.' },
+  ],
+  'password-generator': [
+    { q: 'How strong are the passwords from the Password Generator?', a: 'The Password Generator uses the browser\'s crypto.getRandomValues — cryptographically secure randomness — so a 16-character password with full character variety is well beyond brute-force range for any modern attacker.' },
+    { q: 'Does the Password Generator store or log my passwords?', a: 'No. Passwords are generated in your browser and never sent anywhere. Nothing is logged, stored, or cached — close the tab and the password is gone unless you saved it to your password manager.' },
+    { q: 'What length should I choose?', a: 'Use at least 16 characters for everyday accounts, and 20+ for high-value logins (banking, email, password-manager master passwords). Length beats complexity — every extra character roughly doubles the brute-force cost.' },
+    { q: 'Should I include special characters?', a: 'Yes, unless a site blocks them. Special characters expand the search space and defeat dictionary attacks. The Password Generator lets you exclude ambiguous characters (like l/1 and O/0) for when you need to type the password by hand.' },
+    { q: 'Can the Password Generator create passphrases?', a: 'Yes. Switch to passphrase mode and the Password Generator strings together random words — easier to type and remember than random strings, and equally secure when long enough (four or more random words beats most 10-character passwords).' },
+  ],
+  'hash-generator': [
+    { q: 'Which hash algorithms does the Hash Generator support?', a: 'The Hash Generator produces MD5, SHA-1, SHA-256, and SHA-512 hashes using the browser\'s native Web Crypto API. For password hashing specifically, use bcrypt, scrypt, or Argon2 instead — we have dedicated tools for each.' },
+    { q: 'Is the Hash Generator safe for sensitive input?', a: 'Yes. All hashing happens locally via Web Crypto, so the text or files you hash never leave your browser. That makes it safe for checksums on confidential files.' },
+    { q: 'Should I use MD5 or SHA-1 for passwords?', a: 'No. MD5 and SHA-1 are cryptographically broken and fast — attackers can brute-force billions of guesses per second. Use bcrypt, scrypt, or Argon2 for password storage. MD5 and SHA-1 are fine for non-security uses like cache keys and fingerprints.' },
+    { q: 'Can the Hash Generator hash files?', a: 'Yes. Drop a file into the Hash Generator and it computes the hash in your browser using streaming crypto. Useful for verifying downloads and comparing large-file integrity — nothing is uploaded.' },
+    { q: 'Why do I always get the same hash for the same input?', a: 'That\'s the defining property of a hash function: deterministic output. If you need different outputs for the same input (for password storage), add a random salt before hashing — the bcrypt and Argon2 tools do this automatically.' },
   ],
 };
 

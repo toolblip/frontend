@@ -31,41 +31,44 @@ export default function WordCounterClient() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="tb-v2-wc-root">
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Paste or type your text here..."
-        className="w-full h-48 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-red-500 placeholder-gray-500"
+        className="tb-v2-wc-input"
         aria-label="Text input"
       />
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3" aria-live="polite" aria-atomic="true">
-        {[
-          { label: 'Words', value: counts.words, color: 'text-red-400' },
-          { label: 'Characters', value: counts.chars, color: 'text-blue-400' },
-          { label: 'Sentences', value: counts.sentences, color: 'text-purple-400' },
-          { label: 'Reading time', value: counts.reading, color: 'text-yellow-400', isText: true },
-        ].map(({ label, value, color, isText }) => (
-          <div key={label} className="bg-gray-800 border border-gray-700 rounded-lg p-3 text-center">
-            <div className={`text-2xl font-bold ${isText ? 'text-base' : color}`}>
-              {isText ? value : value.toLocaleString()}
-            </div>
-            <div className="text-xs text-gray-400 mt-1">{label}</div>
-          </div>
-        ))}
+      <div className="tb-v2-wc-stats" aria-live="polite" aria-atomic="true">
+        <div className="tb-v2-wc-stat">
+          <div className="tb-v2-wc-stat-num">{counts.words.toLocaleString()}</div>
+          <div className="tb-v2-wc-stat-lbl">Words</div>
+        </div>
+        <div className="tb-v2-wc-stat">
+          <div className="tb-v2-wc-stat-num">{counts.chars.toLocaleString()}</div>
+          <div className="tb-v2-wc-stat-lbl">Characters</div>
+        </div>
+        <div className="tb-v2-wc-stat">
+          <div className="tb-v2-wc-stat-num">{counts.sentences.toLocaleString()}</div>
+          <div className="tb-v2-wc-stat-lbl">Sentences</div>
+        </div>
+        <div className="tb-v2-wc-stat">
+          <div className="tb-v2-wc-stat-num">{counts.reading}</div>
+          <div className="tb-v2-wc-stat-lbl">Reading time</div>
+        </div>
       </div>
 
-      <div className="flex justify-between mt-3 text-sm text-gray-500">
-        <span>
-          Paragraphs: <span className="text-gray-300">{counts.paragraphs}</span>
+      <div className="tb-v2-wc-extra">
+        <span className="tb-v2-wc-extra-item">
+          Paragraphs: <strong>{counts.paragraphs}</strong>
         </span>
-        <span>
-          Chars (no spaces): <span className="text-gray-300">{counts.charsNoSpaces.toLocaleString()}</span>
+        <span className="tb-v2-wc-extra-item">
+          Chars (no spaces): <strong>{counts.charsNoSpaces.toLocaleString()}</strong>
         </span>
         <button
           onClick={copyStats}
-          className="text-red-400 hover:text-red-300 transition-colors"
+          className="tb-v2-wc-copy-btn"
           aria-label="Copy stats to clipboard"
         >
           Copy stats

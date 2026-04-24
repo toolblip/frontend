@@ -9,7 +9,6 @@ import CaseConverterClient from '@/components/tools/CaseConverterClient';
 import Base64Client from '@/components/tools/Base64Client';
 import UrlEncodeClient from '@/components/tools/UrlEncodeClient';
 import JsonFormatterClient from '@/components/tools/JsonFormatterClient';
-import GenericToolUI from '@/components/tools/GenericToolUI';
 import FaqSection from '@/components/v2/FaqSection';
 import { getFaqs } from '@/lib/faq';
 
@@ -30,11 +29,11 @@ function getToolComponent(slug: string): React.ReactNode {
     case 'json-editor':
       return <JsonFormatterClient />;
     default:
-      return <ComingSoonUI toolSlug={slug} />;
+      return <ComingSoonUI />;
   }
 }
 
-function ComingSoonUI({ toolSlug }: { toolSlug: string }) {
+function ComingSoonUI() {
   return (
     <div className="tb-v2-coming-soon">
       <div className="tb-v2-coming-soon-icon">
@@ -42,23 +41,19 @@ function ComingSoonUI({ toolSlug }: { toolSlug: string }) {
           <path d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
         </svg>
       </div>
-      <div>
-        <div className="tb-v2-coming-soon-title">Coming Soon</div>
-        <p className="tb-v2-coming-soon-desc">This tool&apos;s interactive UI is on its way. Check back shortly!</p>
+      <div className="tb-v2-coming-soon-body">
+        <div className="tb-v2-coming-soon-title">This tool is being built</div>
+        <p className="tb-v2-coming-soon-desc">
+          Need it sooner? Email{' '}
+          <a
+            className="tb-v2-coming-soon-link"
+            href="mailto:info@toolblip.com?subject=Tool%20Request"
+          >
+            info@toolblip.com
+          </a>
+          .
+        </p>
       </div>
-      <div className="tb-v2-coming-soon-bar">
-        <div className="tb-v2-coming-soon-bar-fill">
-          <div className="tb-v2-coming-soon-bar-inner" />
-        </div>
-        <p className="tb-v2-coming-soon-bar-label">Loading…</p>
-      </div>
-      <GenericToolUI
-        inputLabel="Input"
-        inputPlaceholder="Enter text to preview…"
-        outputLabel="Output"
-        actionLabel="Process"
-        process={(input) => `[${toolSlug}] - ${input}`}
-      />
     </div>
   );
 }

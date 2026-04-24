@@ -1658,6 +1658,81 @@ body.tb-v2 a {
   border-radius: var(--radius-sm); padding: 12px 16px;
 }
 
+/* Word Counter */
+.tb-v2-wc-root { display: flex; flex-direction: column; gap: 0; }
+.tb-v2-wc-input {
+  width: 100%; min-height: 200px; padding: 20px 22px;
+  border: 1px solid var(--line); border-radius: 14px 14px 0 0;
+  background: var(--surface); color: var(--fg-0);
+  font-family: var(--f-sans); font-size: 15px; line-height: 1.65;
+  resize: vertical; outline: none;
+  transition: border-color .12s;
+}
+.tb-v2-wc-input::placeholder { color: var(--fg-3); }
+.tb-v2-wc-input:focus { border-color: var(--red); }
+
+.tb-v2-wc-stats {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border: 1px solid var(--line); border-top: 0;
+  border-radius: 0 0 14px 14px; overflow: hidden;
+  background: var(--surface-2);
+}
+.tb-v2-wc-stat {
+  padding: 20px 16px; text-align: center;
+  border-right: 1px solid var(--line);
+}
+.tb-v2-wc-stat:last-child { border-right: 0; }
+.tb-v2-wc-stat-num {
+  font-family: var(--f-display);
+  font-size: 28px; font-weight: 700; line-height: 1;
+  color: var(--fg-0); letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.tb-v2-wc-stat-lbl {
+  font-size: 11.5px; color: var(--fg-2); margin-top: 6px; font-weight: 500;
+}
+
+.tb-v2-wc-extra {
+  display: flex; align-items: center; gap: 20px;
+  padding: 12px 4px; flex-wrap: wrap;
+}
+.tb-v2-wc-extra-item {
+  font-size: 13px; color: var(--fg-2);
+}
+.tb-v2-wc-extra-item strong { color: var(--fg-0); font-weight: 600; }
+.tb-v2-wc-copy-btn {
+  margin-left: auto; font-size: 13px; font-weight: 600;
+  color: var(--red); background: none; border: none; cursor: pointer;
+  padding: 0; transition: opacity .15s;
+}
+.tb-v2-wc-copy-btn:hover { opacity: .7; }
+
+/* Character Counter limits */
+.tb-v2-cc-root { display: flex; flex-direction: column; gap: 0; }
+.tb-v2-cc-limits { padding: 16px 0 12px; }
+.tb-v2-cc-limits-title {
+  font-size: 12px; font-weight: 600; color: var(--fg-2);
+  text-transform: uppercase; letter-spacing: .05em; margin-bottom: 10px;
+}
+.tb-v2-cc-limit-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.tb-v2-cc-limit-lbl { font-size: 12px; color: var(--fg-2); width: 130px; flex-shrink: 0; }
+.tb-v2-cc-limit-bar { flex: 1; height: 6px; background: var(--surface-2); border-radius: 99px; overflow: hidden; }
+.tb-v2-cc-limit-fill { height: 100%; border-radius: 99px; background: var(--red); transition: width .2s; }
+.tb-v2-cc-limit-fill.near { background: #f59e0b; }
+.tb-v2-cc-limit-fill.over { background: #ef4444; }
+.tb-v2-cc-limit-count { font-size: 11.5px; color: var(--fg-2); width: 64px; text-align: right; font-variant-numeric: tabular-nums; flex-shrink: 0; }
+.tb-v2-cc-limit-count.near { color: #f59e0b; }
+.tb-v2-cc-limit-count.over { color: #ef4444; }
+
+@media (max-width: 480px) {
+  .tb-v2-wc-stats { grid-template-columns: repeat(2, 1fr); }
+  .tb-v2-wc-stat:nth-child(2) { border-right: 0; }
+  .tb-v2-wc-stat:nth-child(1),
+  .tb-v2-wc-stat:nth-child(2) { border-bottom: 1px solid var(--line); }
+  .tb-v2-wc-extra { gap: 12px; }
+  .tb-v2-wc-copy-btn { margin-left: 0; }
+}
+
 /* FAQ section */
 .tb-v2-faq {
   margin-top: 48px;
@@ -1729,22 +1804,13 @@ body.tb-v2 a {
 .tb-v2-coming-soon-desc {
   font-size: 14px; color: var(--fg-2); max-width: 32ch; line-height: 1.55;
 }
-.tb-v2-coming-soon-bar {
-  width: 100%; max-width: 260px; margin-top: 8px;
+.tb-v2-coming-soon-link {
+  margin-top: 4px;
+  font-size: 13.5px; font-weight: 600;
+  color: var(--red); text-decoration: none;
+  transition: opacity .12s;
 }
-.tb-v2-coming-soon-bar-fill {
-  height: 4px; background: var(--surface-2); border-radius: 999px; overflow: hidden;
-}
-.tb-v2-coming-soon-bar-inner {
-  height: 100%; background: var(--red);
-  border-radius: 999px; animation: tbv2Progress 1.8s ease-in-out infinite;
-}
-@keyframes tbv2Progress {
-  0% { width: 0%; } 50% { width: 65%; } 100% { width: 100%; }
-}
-.tb-v2-coming-soon-bar-label {
-  font-size: 11px; color: var(--fg-3); text-align: center; margin-top: 8px;
-}
+.tb-v2-coming-soon-link:hover { opacity: 0.75; }
 
 /* ==========================================================================
    TOOLBLIP v2 - Shared page sections
