@@ -10,6 +10,7 @@ import Base64Client from '@/components/tools/Base64Client';
 import UrlEncodeClient from '@/components/tools/UrlEncodeClient';
 import JsonFormatterClient from '@/components/tools/JsonFormatterClient';
 import QrCodeGeneratorClient from '@/components/tools/QrCodeGeneratorClient';
+import ColorPickerClient from '@/components/tools/ColorPickerClient';
 import FaqSection from '@/components/v2/FaqSection';
 import { getFaqs } from '@/lib/faq';
 
@@ -32,6 +33,8 @@ function getToolComponent(slug: string): React.ReactNode {
     case 'qr-code-generator':
     case 'qr-code':
       return <QrCodeGeneratorClient />;
+    case 'color-picker':
+      return <ColorPickerClient />;
     default:
       return <ComingSoonUI />;
   }

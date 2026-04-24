@@ -1,17 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-
-function hslToHex(h: number, s: number, l: number): string {
-  l /= 100;
-  const a = s * Math.min(l, 1 - l) / 100;
-  const f = (n: number) => {
-    const k = (n + h / 30) % 12;
-    const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-    return Math.round(255 * color).toString(16).padStart(2, '0');
-  };
-  return `#${f(0)}${f(8)}${f(4)}`.toUpperCase();
-}
+import { useState, useCallback } from 'react';
 
 function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
   const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -35,60 +24,141 @@ function rgbToHsl(r: number, g: number, b: number): { h: number; s: number; l: n
   return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
 }
 
+// WCAG relative luminance
+function luminance(r: number, g: number, b: number): number {
+  const toLinear = (c: number) => c <= 10 ? c / 255 / 12.92 : Math.pow((c / 255 + 0.055) / 1.055, 2.4);
+  return 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
+}
+
+function wcagLevel(r: number, g: number, b: number): { bg: string; fg: string; level: string } {
+  const L1 = luminance(r, g, b) + 0.05;
+  const L2 = 1; // white
+  const ratio = L1 > L2 ? L1 / L2 : L2 / L1;
+  const bg = '#ffffff';
+  const fg = ratio >= 7 ? '#18181b' : '#ffffff';
+  const level = ratio >= 4.5 ? (ratio >= 7 ? 'AAA' : 'AA') : 'Fail';
+  return { bg, fg, level };
+}
+
 export default function ColorPickerClient() {
-  const [color, setColor] = useState('#EF4444');
   const [hex, setHex] = useState('#EF4444');
-  const [rgb, setRgb] = useState({ r: 34, g: 197, b: 94 });
-  const [hsl, setHsl] = useState({ h: 142, s: 70, l: 45 });
+  const [hexInput, setHexInput] = useState('#EF4444');
 
-  useEffect(() => {
-    const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(color);
-    if (m) {
-      const r = parseInt(m[1], 16), g = parseInt(m[2], 16), b = parseInt(m[3], 16);
-      setRgb({ r, g, b });
-      setHsl(rgbToHsl(r, g, b));
-      setHex(color.startsWith('#') ? color.toUpperCase() : '#' + color.toUpperCase());
+  const rgb = hexToRgb(hex) ?? { r: 239, g: 68, b: 68 };
+  const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+  const wcag = wcagLevel(rgb.r, rgb.g, rgb.b);
+
+  const copy = useCallback((val: string) => {
+    navigator.clipboard.writeText(val).catch(() => {});
+  }, []);
+
+  function handleColorChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const val = e.target.value;
+    setHex(val);
+    setHexInput(val);
+  }
+
+  function handleHexInputChange(e: React.ChangeEvent<HTMLInputElement>) {
+    let val = e.target.value.trim();
+    setHexInput(val);
+    if (/^#?[a-f\d]{6}$/i.test(val)) {
+      setHex(val.startsWith('#') ? val : '#' + val);
     }
-  }, [color]);
+  }
 
-  const copy = (val: string) => navigator.clipboard.writeText(val);
+  const formats = [
+    { label: 'HEX', value: hex.toUpperCase() },
+    { label: 'RGB', value: `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})` },
+    { label: 'HSL', value: `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)` },
+    { label: 'Hex 3', value: hex.length === 7 ? '#' + hex[1] + hex[3] + hex[5] : hex.toUpperCase() },
+  ];
 
   return (
-    <div className="space-y-4">
-      <div className="flex gap-4 items-center">
+    <div className="tb-v2-cp-root">
+      {/* Color picker + hex input row */}
+      <div className="tb-v2-cp-input-row">
+        <div className="tb-v2-cp-swatch-wrap">
+          <input
+            type="color"
+            value={hex}
+            onChange={handleColorChange}
+            className="tb-v2-cp-color-input"
+            aria-label="Pick a color"
+          />
+        </div>
         <input
-          type="color"
-          value={color}
-          onChange={e => setColor(e.target.value)}
-          className="w-16 h-12 rounded-lg cursor-pointer border-0"
-        />
-        <input
-          value={color}
-          onChange={e => setColor(e.target.value)}
-          placeholder="#EF4444"
-          className="flex-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 font-mono text-sm focus:outline-none focus:border-red-500"
+          type="text"
+          value={hexInput}
+          onChange={handleHexInputChange}
+          onBlur={() => {
+            if (!/^#?[a-f\d]{6}$/i.test(hexInput)) {
+              setHexInput(hex);
+            }
+          }}
+          className="tb-v2-cp-hex-input"
+          aria-label=" HEX color value"
+          maxLength={7}
+          spellCheck={false}
         />
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        {[
-          { label: 'HEX', value: hex },
-          { label: 'RGB', value: `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})` },
-          { label: 'HSL', value: `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)` },
-        ].map(({ label, value }) => (
-          <div key={label} className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-            <div className="text-xs text-gray-500 dark:text-gray-400 mb-1.5 font-medium">{label}</div>
-            <div className="flex items-center justify-between">
-              <span className="font-mono text-sm text-gray-800 dark:text-gray-200">{value}</span>
-              <button onClick={() => copy(value)} className="text-xs text-red-600 dark:text-red-400 hover:text-red-700 font-medium">Copy</button>
-            </div>
+
+      {/* Format cards */}
+      <div className="tb-v2-cp-grid">
+        {formats.map(({ label, value }) => (
+          <div key={label} className="tb-v2-cp-card">
+            <span className="tb-v2-cp-card-label">{label}</span>
+            <span className="tb-v2-cp-card-value">{value}</span>
+            <button
+              type="button"
+              className="tb-v2-cp-copy"
+              onClick={() => copy(value)}
+              aria-label={`Copy ${label}`}
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+              </svg>
+              Copy
+            </button>
           </div>
         ))}
       </div>
-      <div
-        className="w-full h-20 rounded-xl border border-gray-200 dark:border-gray-700 flex items-center justify-center text-white font-bold text-lg"
-        style={{ backgroundColor: color }}
-      >
-        Preview - {hex}
+
+      {/* Preview + WCAG */}
+      <div className="tb-v2-cp-preview-section">
+        <div
+          className="tb-v2-cp-preview"
+          style={{ background: hex }}
+          aria-label={`Color preview: ${hex}`}
+        >
+          <span
+            className="tb-v2-cp-preview-text"
+            style={{ color: hsl.l < 55 ? '#ffffff' : '#18181b' }}
+          >
+            Aa
+          </span>
+        </div>
+        <div className="tb-v2-cp-wcag-card">
+          <p className="tb-v2-cp-wcag-title">Contrast with white</p>
+          <div className="tb-v2-cp-wcag-row">
+            <div
+              className="tb-v2-cp-wcag-swatch"
+              style={{ background: '#fff', color: '#18181b' }}
+            >
+              Aa
+            </div>
+            <div className="tb-v2-cp-wcag-info">
+              <span className={`tb-v2-cp-wcag-badge ${wcag.level === 'AAA' ? 'tb-v2-cp-wcag-aaa' : wcag.level === 'AA' ? 'tb-v2-cp-wcag-aa' : 'tb-v2-cp-wcag-fail'}`}>
+                {wcag.level}
+              </span>
+              <span className="tb-v2-cp-wcag-hint">
+                {wcag.level === 'AAA' ? 'Excellent — ideal for all text sizes' :
+                 wcag.level === 'AA' ? 'Good — suitable for body text' :
+                 'Poor — not enough contrast for readable text'}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
