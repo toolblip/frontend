@@ -12,6 +12,8 @@ export async function generateMetadata({
   const tool = tools.find(t => t.slug === slug);
   if (!tool) return { title: 'Tool Not Found' };
 
+  const ogImage = `/images/tools/${slug}-og.png`;
+
   return {
     title: `${tool.name} - Free Online Tool`,
     description: tool.description,
@@ -21,11 +23,13 @@ export async function generateMetadata({
       url: `https://toolblip.com/tools/${tool.slug}`,
       siteName: 'Toolblip',
       type: 'website',
+      images: [{ url: ogImage, width: 1200, height: 630, alt: tool.name }],
     },
     twitter: {
       card: 'summary',
       title: `${tool.name} | Toolblip`,
       description: tool.description,
+      images: [ogImage],
     },
   };
 }
