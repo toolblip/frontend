@@ -1379,6 +1379,25 @@ export const tools: Tool[] = [
   { name: 'Contrast Checker', slug: 'contrast-checker-easy', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail indicators.', emoji: '♿', category: 'Color' },
   { name: 'Unit Converter', slug: 'unit-converter-easy', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
   { name: 'Number Base Converter', slug: 'number-base-easy', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly in your browser.', emoji: '🔢', category: 'Conversion' },
+
+  // --- Batch #14: New category tools (2026-04-24) ---
+  { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-toolblip', description: 'Generate lorem ipsum placeholder text with paragraphs, sentences, word count, and starting phrase.', emoji: '📜', category: 'Text' },
+  { name: 'Grammar Checker', slug: 'grammar-checker-toolblip', description: 'Check grammar, spelling, and punctuation errors with one-click fixes and detailed suggestions.', emoji: '✅', category: 'Text' },
+  { name: 'Readability Score', slug: 'readability-score-toolblip', description: 'Calculate Flesch-Kincaid, SMOG, ARI, and Coleman-Liau readability indices for any text.', emoji: '📊', category: 'Text' },
+  { name: 'Text Sorter', slug: 'text-sorter-toolblip', description: 'Sort text lines alphabetically, by length, numerically, reverse, or random order with one click.', emoji: '📋', category: 'Text' },
+  { name: 'Regex Tester', slug: 'regex-tester-toolblip', description: 'Test regex patterns with real-time match highlighting, capture groups, and replacement preview.', emoji: '🔍', category: 'Developer' },
+  { name: 'JWT Decoder', slug: 'jwt-decoder-toolblip', description: 'Decode JWT tokens and inspect header, payload, expiration, and signature data in real time.', emoji: '🎫', category: 'Developer' },
+  { name: 'Cron Expression Generator', slug: 'cron-generator-toolblip', description: 'Build cron schedules visually with point-and-click controls and see human-readable next run times.', emoji: '🕐', category: 'Developer' },
+  { name: 'HTTP Headers Viewer', slug: 'http-headers-toolblip', description: 'View HTTP request and response headers for any URL with timing breakdown and security analysis.', emoji: '📦', category: 'Developer' },
+  { name: 'Port Scanner', slug: 'port-scanner-toolblip', description: 'Scan common ports on a host to identify open services and availability from your browser.', emoji: '🚪', category: 'Developer' },
+  { name: 'Favicon Generator', slug: 'favicon-gen-toolblip', description: 'Create favicon icons from any image or emoji with ICO, PNG, and SVG output in all standard sizes.', emoji: '🌐', category: 'Image' },
+  { name: 'Image Resizer', slug: 'image-resize-toolblip', description: 'Resize images to exact dimensions with aspect ratio lock, batch support, and quality control.', emoji: '📐', category: 'Image' },
+  { name: 'Meta Tag Generator', slug: 'meta-gen-toolblip', description: 'Generate SEO meta tags, Open Graph, and Twitter Card tags with live preview for any URL.', emoji: '🏷️', category: 'SEO' },
+  { name: 'SERP Preview', slug: 'serp-preview-toolblip', description: 'Preview how your page title and meta description appear in Google search results with character counts.', emoji: '🔎', category: 'SEO' },
+  { name: 'Color Picker', slug: 'color-pick-toolblip', description: 'Pick any color visually and get HEX, RGB, HSL, HSV, and CMYK values with a live preview.', emoji: '🎨', category: 'Color' },
+  { name: 'Contrast Checker', slug: 'contrast-check-toolblip', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail indicators.', emoji: '♿', category: 'Color' },
+  { name: 'Unit Converter', slug: 'unit-convert-toolblip', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
+  { name: 'Number Base Converter', slug: 'number-base-toolblip', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly in your browser.', emoji: '🔢', category: 'Conversion' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'Image Tools', 'AI Tools', 'Document Generator', 'Text Tools', 'HEX/RGB/HSL'] as const;
