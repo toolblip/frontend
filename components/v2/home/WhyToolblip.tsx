@@ -20,50 +20,17 @@ const BENEFITS = [
 
 export default function WhyToolblip() {
   return (
-    <section style={{ padding: '40px 0', borderBottom: '1px solid var(--border-1)' }}>
+    <section className="why-section">
       <div className="tb-v2-container">
-        <p
-          style={{
-            textAlign: 'center',
-            fontSize: 12,
-            fontWeight: 700,
-            textTransform: 'uppercase',
-            letterSpacing: '0.1em',
-            color: 'var(--accent)',
-            marginBottom: 24,
-          }}
-        >
-          Why Toolblip?
-        </p>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-            gap: 16,
-          }}
-        >
+        <p className="why-kicker">Why Toolblip?</p>
+        <div className="why-grid">
           {BENEFITS.map(({ icon: Icon, title, desc }) => (
-            <div
-              key={title}
-              style={{
-                padding: '24px 28px',
-                borderRadius: 12,
-                border: '1px solid var(--border-1)',
-                background: 'var(--bg-2)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: 12,
-              }}
-            >
-              <span style={{ color: 'var(--accent)', display: 'flex' }}>
+            <div key={title} className="why-card">
+              <span className="why-icon">
                 <Icon width={22} height={22} />
               </span>
-              <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--fg-1)' }}>
-                {title}
-              </div>
-              <div style={{ fontSize: 14, color: 'var(--fg-2)', lineHeight: 1.6 }}>
-                {desc}
-              </div>
+              <div className="why-title">{title}</div>
+              <div className="why-desc">{desc}</div>
             </div>
           ))}
         </div>

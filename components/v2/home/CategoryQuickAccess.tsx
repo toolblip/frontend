@@ -10,53 +10,18 @@ export default function CategoryQuickAccess() {
   const cats = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
 
   return (
-    <section
-      style={{
-        borderBottom: '1px solid var(--border-1)',
-        padding: '14px 0',
-        background: 'var(--bg-1)',
-      }}
-    >
+    <section className="cat-acc">
       <div className="tb-v2-container">
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 8,
-            flexWrap: 'wrap',
-          }}
-        >
-          <span
-            style={{
-              fontSize: 12,
-              fontWeight: 600,
-              color: 'var(--fg-3)',
-              marginRight: 4,
-              textTransform: 'uppercase',
-              letterSpacing: '0.06em',
-              flexShrink: 0,
-            }}
-          >
-            Browse:
-          </span>
+        <div className="cat-acc-inner">
+          <span className="cat-acc-label">Browse:</span>
           {cats.map((cat) => (
             <Link
               key={cat}
               href={`/tools?category=${encodeURIComponent(cat)}`}
-              className="tb-v2-pill"
-              style={{ fontSize: 13, cursor: 'pointer' }}
+              className="tb-v2-pill cat-acc-pill"
             >
               {cat}
-              <span
-                style={{
-                  marginLeft: 5,
-                  fontSize: 11,
-                  opacity: 0.6,
-                  fontWeight: 500,
-                }}
-              >
-                {counts[cat]}
-              </span>
+              <span className="cat-acc-count">{counts[cat]}</span>
             </Link>
           ))}
         </div>
