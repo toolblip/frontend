@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 
 // ─── Config ────────────────────────────────────────────────────────────────
 
-// Base URL — Railway production (api.toolblip.com once SSL is fully ready)
+// Base URL — Railway production deployment
 const BASE_URL = 'https://api.toolblip.com';
 
 const SECTIONS = [
@@ -16,12 +16,12 @@ const SECTIONS = [
 ] as const;
 
 const ENDPOINTS = [
-  { method: 'GET',  path: '/api/tools',          desc: 'List all tools',        auth: false },
-  { method: 'GET',  path: '/api/tools/{slug}',       desc: 'Get single tool',       auth: false },
-  { method: 'POST', path: '/api/auth/register',      desc: 'Create account',         auth: false },
-  { method: 'POST', path: '/api/auth/login',         desc: 'Sign in',               auth: false },
-  { method: 'POST', path: '/api/auth/logout',        desc: 'Revoke session',         auth: true  },
-  { method: 'GET',  path: '/api/auth/user',          desc: 'Get authenticated user', auth: true  },
+  { method: 'GET',  path: '/api/tools',             desc: 'List all tools',          auth: false },
+  { method: 'GET',  path: '/api/tools/{slug}',      desc: 'Get single tool',         auth: false },
+  { method: 'POST', path: '/api/auth/register',     desc: 'Create account',          auth: false },
+  { method: 'POST', path: '/api/auth/login',        desc: 'Sign in',                 auth: false },
+  { method: 'POST', path: '/api/auth/logout',       desc: 'Revoke session',           auth: true  },
+  { method: 'GET',  path: '/api/auth/user',         desc: 'Get authenticated user',  auth: true  },
 ] as const;
 
 const METHOD_STYLES: Record<string, string> = {
@@ -105,12 +105,12 @@ export default function ApiDocsClient() {
 
           {/* Endpoint pills */}
           <div className="flex flex-wrap gap-2">
-            <EndpointPill method="GET"    path="/api/tools"          targetId="tools" />
-            <EndpointPill method="GET"    path="/api/tools/{slug}"   targetId="tool-detail" />
-            <EndpointPill method="POST"   path="/api/auth/register"  targetId="auth" />
-            <EndpointPill method="POST"   path="/api/auth/login"     targetId="auth" />
-            <EndpointPill method="POST"   path="/api/auth/logout"    targetId="auth" />
-            <EndpointPill method="GET"    path="/api/auth/user"      targetId="auth" />
+            <EndpointPill method="GET"    path="/api/tools"         targetId="tools" />
+            <EndpointPill method="GET"    path="/api/tools/{slug}"  targetId="tool-detail" />
+            <EndpointPill method="POST"   path="/api/auth/register" targetId="auth" />
+            <EndpointPill method="POST"   path="/api/auth/login"   targetId="auth" />
+            <EndpointPill method="POST"   path="/api/auth/logout"  targetId="auth" />
+            <EndpointPill method="GET"    path="/api/auth/user"    targetId="auth" />
           </div>
         </div>
       </div>
@@ -207,6 +207,7 @@ export default function ApiDocsClient() {
 
           <section id="tools" className="scroll-mt-16 space-y-12">
 
+            {/* ── GET /api/tools ── */}
             <div>
               <SectionHeading>Tools — GET /api/tools</SectionHeading>
               <p className="text-gray-500 dark:text-gray-400 text-sm mb-5">
@@ -237,8 +238,9 @@ export default function ApiDocsClient() {
                     <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                       {[
                         { name: 'category',  type: 'string',  desc: 'Filter by category (e.g. ai, devops, analytics)' },
-                        { name: 'page',      type: 'number',  desc: 'Page number (default: 1)' },
-                        { name: 'per_page',  type: 'number',  desc: 'Results per page (default: 20, max: 100)' },
+                        { name: 'search',   type: 'string',  desc: 'Full-text search across name and description' },
+                        { name: 'page',     type: 'number',  desc: 'Page number (default: 1)' },
+                        { name: 'per_page', type: 'number',  desc: 'Results per page (default: 20, max: 100)' },
                       ].map(({ name, type, desc }) => (
                         <tr key={name} className="bg-white dark:bg-[#09090b]">
                           <td className="px-4 py-2.5 font-mono text-gray-700 dark:text-gray-300">{name}</td>
@@ -255,29 +257,33 @@ export default function ApiDocsClient() {
                 <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example response — 200</p>
                 <CodeBlock
                   code={`{
-  "tools": {
-    "tools": [
-      {
-        "id": 1,
-        "slug": "claude-code",
-        "name": "Claude Code",
-        "description": "AI coding assistant by Anthropic",
-        "category": "AI",
-        "is_pro": false,
-        "emoji": "🤖",
-        "created_at": "2026-01-15T08:30:00.000000Z"
-      },
-      {
-        "id": 2,
-        "slug": "cursor",
-        "name": "Cursor",
-        "description": "AI-first code editor built on VS Code",
-        "category": "AI",
-        "is_pro": true,
-        "emoji": "💻",
-        "created_at": "2026-01-20T14:00:00.000000Z"
-      }
-    ]
+  "data": [
+    {
+      "id": 1,
+      "slug": "claude-code",
+      "name": "Claude Code",
+      "description": "AI coding assistant by Anthropic",
+      "category": "AI",
+      "is_pro": false,
+      "emoji": "🤖",
+      "created_at": "2026-01-15T08:30:00.000000Z"
+    },
+    {
+      "id": 2,
+      "slug": "cursor",
+      "name": "Cursor",
+      "description": "AI-first code editor built on VS Code",
+      "category": "AI",
+      "is_pro": true,
+      "emoji": "💻",
+      "created_at": "2026-01-20T14:00:00.000000Z"
+    }
+  ],
+  "meta": {
+    "current_page": 1,
+    "total": 2,
+    "per_page": 20,
+    "last_page": 1
   }
 }`}
                   language="json"
@@ -288,14 +294,18 @@ export default function ApiDocsClient() {
                 <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Response fields</p>
                 <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs">
                   {[
-                    { field: 'tools[].id',          desc: 'Unique numeric ID' },
-                    { field: 'tools[].slug',         desc: 'URL-friendly identifier' },
-                    { field: 'tools[].name',         desc: 'Display name' },
-                    { field: 'tools[].description',  desc: 'Short description' },
-                    { field: 'tools[].category',     desc: 'Tool category' },
-                    { field: 'tools[].is_pro',       desc: 'Requires pro subscription' },
-                    { field: 'tools[].emoji',         desc: 'Icon emoji (optional)' },
-                    { field: 'tools[].created_at',    desc: 'ISO 8601 timestamp' },
+                    { field: 'data[].id',          desc: 'Unique numeric ID' },
+                    { field: 'data[].slug',        desc: 'URL-friendly identifier' },
+                    { field: 'data[].name',        desc: 'Display name' },
+                    { field: 'data[].description', desc: 'Short description' },
+                    { field: 'data[].category',    desc: 'Tool category' },
+                    { field: 'data[].is_pro',     desc: 'Requires pro subscription' },
+                    { field: 'data[].emoji',       desc: 'Icon emoji (optional)' },
+                    { field: 'data[].created_at',  desc: 'ISO 8601 timestamp' },
+                    { field: 'meta.current_page',  desc: 'Current page number' },
+                    { field: 'meta.total',          desc: 'Total number of tools' },
+                    { field: 'meta.per_page',       desc: 'Results per page' },
+                    { field: 'meta.last_page',      desc: 'Last page number' },
                   ].map(({ field, desc }) => (
                     <div key={field} className="flex gap-2 py-0.5">
                       <code className="font-mono text-gray-700 dark:text-gray-300 shrink-0">{field}</code>
@@ -307,7 +317,7 @@ export default function ApiDocsClient() {
             </div>
 
             {/* ── GET /api/tools/{slug} ── */}
-            <div>
+            <div id="tool-detail">
               <div className="flex items-center gap-2.5 mb-3 flex-wrap">
                 <MethodPill method="GET" />
                 <code className="text-base font-mono font-semibold text-gray-900 dark:text-gray-100">/api/tools/{'{slug}'}</code>
@@ -352,7 +362,7 @@ export default function ApiDocsClient() {
                 <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example response — 200</p>
                 <CodeBlock
                   code={`{
-  "tool": {
+  "data": {
     "id": 1,
     "slug": "claude-code",
     "name": "Claude Code",
@@ -371,7 +381,7 @@ export default function ApiDocsClient() {
                 <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Error — 404</p>
                 <CodeBlock
                   code={`{
-  "message": "Tool not found"
+  "message": "No query results for model [App\\\\Models\\\\Tool]."
 }`}
                   language="json"
                 />
@@ -418,9 +428,9 @@ export default function ApiDocsClient() {
                 <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Request body</p>
                 <CodeBlock
                   code={`{
-  "name": "Harun Ray",                // required, min 2 chars
-  "email": "harun@example.com",       // required, valid email, unique
-  "password": "securepassword123",    // required, min 8 chars
+  "name": "Harun Ray",                   // required, min 2 chars
+  "email": "harun@example.com",          // required, valid email, unique
+  "password": "securepassword123",        // required, min 8 chars
   "password_confirmation": "securepassword123"  // required, must match password
 }`}
                   language="json"
@@ -500,13 +510,13 @@ export default function ApiDocsClient() {
                 <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example response — 200</p>
                 <CodeBlock
                   code={`{
+  "token": "1|abcd1234efgh5678ijkl9012mnop3456qrst",
   "user": {
     "id": 1,
     "name": "Harun Ray",
     "email": "harun@example.com",
     "is_pro": false
-  },
-  "token": "1|abcd1234efgh5678ijkl9012mnop3456qrst"
+  }
 }`}
                   language="json"
                 />
@@ -550,7 +560,7 @@ export default function ApiDocsClient() {
                 <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example response — 200</p>
                 <CodeBlock
                   code={`{
-  "message": "Logged out successfully"
+  "message": "Logged out"
 }`}
                   language="json"
                 />

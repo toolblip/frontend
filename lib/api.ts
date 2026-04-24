@@ -35,13 +35,13 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
 }
 
 // Tools
-export async function getTools(params?: { category?: string; page?: number }) {
+export async function getTools(params?: { category?: string; search?: string; page?: number; per_page?: number }) {
   const query = new URLSearchParams(params as Record<string, string>).toString();
-  return apiRequest<{ tools: { tools: Tool[] } }>(`/api/tools${query ? `?${query}` : ''}`);
+  return apiRequest<{ data: Tool[]; meta: { current_page: number; total: number; per_page: number; last_page: number } }>(`/api/tools${query ? `?${query}` : ''}`);
 }
 
 export async function getTool(slug: string) {
-  return apiRequest<{ tool: Tool }>(`/api/tools/${slug}`);
+  return apiRequest<{ data: Tool }>(`/api/tools/${slug}`);
 }
 
 // MCP Servers
