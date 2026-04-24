@@ -25,7 +25,6 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
     if (stored) setThemeState(stored);
   }, []);
 
-  // Apply theme class to <html>
   useEffect(() => {
     if (!mounted) return;
     const root = document.documentElement;
@@ -34,6 +33,7 @@ export default function ThemeProvider({ children }: { children: React.ReactNode 
       (theme === 'system' &&
         window.matchMedia('(prefers-color-scheme: dark)').matches);
     root.classList.toggle('dark', isDark);
+    root.setAttribute('data-theme', isDark ? 'dark' : 'light');
   }, [theme, mounted]);
 
   return (
