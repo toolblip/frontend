@@ -1303,6 +1303,25 @@ export const tools: Tool[] = [
   { name: 'Docker Compose Generator', slug: 'docker-compose-generator', description: 'Generate Docker Compose YAML files for multi-container applications with common templates.', emoji: '🐳', category: 'Network' },
   { name: 'UUID Comparator', slug: 'uuid-comparator', description: 'Compare two UUIDs to check equality and sort them chronologically by timestamp.', emoji: '🆔', category: 'Developer' },
   { name: 'Text Statistics Advanced', slug: 'text-statistics-advanced', description: 'Get advanced text stats including lexicon density, syllables per word, and reading level.', emoji: '📊', category: 'Text' },
+
+  // --- Batch #10: New tools (2026-04-24 #2) ---  
+  { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-toolbox', description: 'Generate lorem ipsum placeholder text with options for paragraphs, sentences, word count, and starting phrase.', emoji: '📜', category: 'Text' },
+  { name: 'Grammar Checker', slug: 'grammar-checker-web', description: 'Check grammar and spelling mistakes with clear one-click corrections and detailed explanations.', emoji: '✅', category: 'Text' },
+  { name: 'Readability Score', slug: 'readability-checker', description: 'Calculate Flesch-Kincaid, SMOG, and Coleman-Liau readability scores for any text.', emoji: '📊', category: 'Text' },
+  { name: 'Text Sorter', slug: 'text-sorter-instant', description: 'Sort text lines alphabetically, by length, numerically, or in reverse order instantly.', emoji: '📋', category: 'Text' },
+  { name: 'Regex Tester', slug: 'regex-tester-web', description: 'Test regex patterns against any text with real-time match highlighting and group capture display.', emoji: '🔍', category: 'Developer' },
+  { name: 'JWT Decoder', slug: 'jwt-decoder-web', description: 'Decode JWT tokens and inspect header, payload, expiration, and signature data instantly.', emoji: '🎫', category: 'Developer' },
+  { name: 'Cron Expression Generator', slug: 'cron-expression-generator', description: 'Build cron schedules visually with an interactive editor and see human-readable run times.', emoji: '🕐', category: 'Developer' },
+  { name: 'HTTP Headers Viewer', slug: 'http-headers-checker', description: 'View HTTP request and response headers for any URL with timing breakdown and CORS info.', emoji: '📦', category: 'Developer' },
+  { name: 'Port Scanner', slug: 'port-checker', description: 'Scan common ports on a host to check for open services and running applications.', emoji: '🚪', category: 'Developer' },
+  { name: 'Favicon Generator', slug: 'favicon-creator', description: 'Create favicon icons from any image or emoji with ICO, PNG, and SVG output in multiple sizes.', emoji: '🌐', category: 'Image' },
+  { name: 'Image Resizer', slug: 'image-resize-web', description: 'Resize images to exact dimensions for social media, thumbnails, and OG images with batch support.', emoji: '📐', category: 'Image' },
+  { name: 'Meta Tag Generator', slug: 'seo-meta-tag-creator', description: 'Generate SEO meta tags, Open Graph, and Twitter Card tags with live preview for any URL.', emoji: '🏷️', category: 'SEO' },
+  { name: 'SERP Preview', slug: 'serp-preview-tool', description: 'Preview how your page title and meta description appear in Google search results.', emoji: '🔎', category: 'SEO' },
+  { name: 'Color Picker', slug: 'color-picker-web', description: 'Pick any color visually and get HEX, RGB, HSL, HSV, and CMYK values with live preview.', emoji: '🎨', category: 'Color' },
+  { name: 'Contrast Checker', slug: 'color-contrast-checker', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail indicators.', emoji: '♿', category: 'Color' },
+  { name: 'Unit Converter', slug: 'unit-converter-toolbox', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
+  { name: 'Number Base Converter', slug: 'number-base-encoder', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly in your browser.', emoji: '🔢', category: 'Conversion' },
 ];
 
 
