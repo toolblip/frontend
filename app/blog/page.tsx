@@ -72,7 +72,7 @@ export default function BlogPage() {
     <div className="tb-v2-blog">
       <div className="tb-v2-container">
         <div className="tb-v2-blog-header">
-          <div className="tb-v2-page-kicker">Blog</div>
+          <div className="tb-v2-kicker">Blog</div>
           <h1 className="tb-v2-page-title">Blog</h1>
           <p className="tb-v2-page-sub">Guides, tutorials, and updates from the Toolblip team.</p>
         </div>

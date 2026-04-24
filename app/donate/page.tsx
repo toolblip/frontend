@@ -17,7 +17,7 @@ export default function DonatePage() {
     <div className="tb-v2-donate">
       <div className="tb-v2-container">
         <div className="tb-v2-article">
-          <div className="tb-v2-page-kicker">Support</div>
+          <div className="tb-v2-kicker">Support</div>
           <h1 className="tb-v2-page-title">Support Toolblip</h1>
 
           <div className="tb-v2-article-section">

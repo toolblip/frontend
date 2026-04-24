@@ -244,6 +244,7 @@ body.tb-v2 a {
 .tb-v2-btn-ghost:hover { background: var(--surface-2); }
 .tb-v2-btn-lg { height: 48px; padding: 0 24px; font-size: 15px; }
 .tb-v2-btn-sm { height: 30px; padding: 0 12px; font-size: 12.5px; }
+.tb-v2-pricing-btn { height: 40px; padding: 0 18px; font-size: 13px; font-weight: 600; width: 100%; justify-content: center; }
 
 /* Line icons */
 .tb-v2-ic { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
@@ -1450,7 +1451,7 @@ body.tb-v2 a {
 /* Static page wrapper (about, legal) */
 .tb-v2-page { padding: 48px 0 80px; }
 .tb-v2-page > .tb-v2-container { position: relative; z-index: 1; }
-.tb-v2-page-kicker { font-size: 12px; font-weight: 600; color: var(--red); letter-spacing: -0.01em; margin-bottom: 8px; }
+
 .tb-v2-page-title { font-family: var(--f-display); font-weight: 700; letter-spacing: -0.025em; line-height: 1.05; font-size: 36px; color: var(--fg-0); }
 .tb-v2-page-sub { font-size: 16px; color: var(--fg-2); margin-top: 10px; }
 .tb-v2-page-meta { font-size: 12px; color: var(--fg-3); margin-top: 4px; margin-bottom: 40px; }

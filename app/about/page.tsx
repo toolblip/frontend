@@ -18,7 +18,7 @@ export default function AboutPage() {
     <div className="tb-v2-page">
       <div className="tb-v2-container">
         <div className="tb-v2-article">
-          <div className="tb-v2-page-kicker">About</div>
+          <div className="tb-v2-kicker">About</div>
           <h1 className="tb-v2-page-title">About Toolblip</h1>
 
           <div className="tb-v2-article-section">

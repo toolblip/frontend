@@ -17,7 +17,7 @@ export default function TermsPage() {
     <div className="tb-v2-page">
       <div className="tb-v2-container">
         <div className="tb-v2-article">
-          <div className="tb-v2-page-kicker">Legal</div>
+          <div className="tb-v2-kicker">Legal</div>
           <h1 className="tb-v2-page-title">Terms of Service</h1>
           <p className="tb-v2-page-meta">Effective April 2026</p>
 

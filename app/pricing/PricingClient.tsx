@@ -114,7 +114,7 @@ export default function PricingClient() {
     <div className="tb-v2-pricing">
       <div className="tb-v2-container">
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <div className="tb-v2-page-kicker">Pricing</div>
+          <div className="tb-v2-kicker">Pricing</div>
           <h1 className="tb-v2-page-title" style={{ fontSize: '36px' }}>Simple, transparent pricing</h1>
           <p className="tb-v2-page-sub">All tools are free to use. Upgrade for an uninterrupted experience.</p>
 
@@ -217,8 +217,8 @@ export default function PricingClient() {
                 {isFree ? (
                   <Link
                     href="/signup"
-                    className="tb-v2-btn tb-v2-btn-primary"
-                    style={{ height: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: 'var(--radius-sm)', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}
+                    className="tb-v2-btn tb-v2-btn-primary tb-v2-pricing-btn"
+                    style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
                   >
                     Get Started
                   </Link>
@@ -226,8 +226,8 @@ export default function PricingClient() {
                   <button
                     onClick={() => handleUpgrade(plan)}
                     disabled={isLoading}
-                    className="tb-v2-btn tb-v2-btn-primary"
-                    style={{ height: '40px', fontSize: '13px', fontWeight: 600, borderRadius: 'var(--radius-sm)', width: '100%', background: isHighlighted ? 'var(--red)' : undefined, borderColor: isHighlighted ? 'var(--red)' : undefined }}
+                    className="tb-v2-btn tb-v2-btn-primary tb-v2-pricing-btn"
+                    style={{ background: isHighlighted ? 'var(--fg-0)' : undefined, borderColor: isHighlighted ? 'var(--fg-0)' : undefined }}
                   >
                     {isLoading ? 'Redirecting...' : `Get ${plan.name}`}
                   </button>
