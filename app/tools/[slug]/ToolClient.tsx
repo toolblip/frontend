@@ -89,12 +89,10 @@ export default function ToolClient({ tool }: { tool: Tool }) {
             <p className="tb-v2-tool-desc">{tool.description}</p>
             <div className="tb-v2-tool-header-row">
               <span className="tb-v2-tool-cat-pill">{tool.category}</span>
-              <div className="tb-v2-share-row">
-                <ShareButtons
-                  toolName={tool.name}
-                  className="tb-v2-share-row"
-                />
-              </div>
+              <ShareButtons
+                toolName={tool.name}
+                className="tb-v2-share-row"
+              />
             </div>
           </div>
         </div>
