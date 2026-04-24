@@ -1453,6 +1453,25 @@ export const tools: Tool[] = [
   { name: 'Contrast Checker', slug: 'contrast-checker-tool', description: 'Check text and background color contrast for WCAG AA and AAA accessibility compliance.', emoji: '♿', category: 'Color' },
   { name: 'Unit Converter', slug: 'unit-converter-tool', description: 'Convert length, weight, and temperature between metric and imperial units instantly.', emoji: '⚖️', category: 'Conversion' },
   { name: 'Number Base Converter', slug: 'base-converter', description: 'Convert between binary, decimal, hexadecimal, and octal number systems instantly.', emoji: '🔢', category: 'Conversion' },
+
+  // --- New tools (2026-04-25) ---
+  { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-quick', description: 'Generate quick lorem ipsum placeholder text with customizable word count and paragraph length.', emoji: '📜', category: 'Text' },
+  { name: 'Grammar Checker', slug: 'grammar-checker-instant', description: 'Check grammar and spelling mistakes instantly with one-click corrections and explanations.', emoji: '✅', category: 'Text' },
+  { name: 'Readability Score', slug: 'readability-checker-pro', description: 'Calculate Flesch-Kincaid, SMOG, and Coleman-Liau readability grades for any written text.', emoji: '📊', category: 'Text' },
+  { name: 'Text Sorter', slug: 'text-sorter-alpha', description: 'Sort text lines alphabetically, by length, numerically, or in reverse order with one click.', emoji: '📋', category: 'Text' },
+  { name: 'Regex Tester', slug: 'regex-live-tester', description: 'Test regex patterns with live match highlighting, capture groups, and replacement preview.', emoji: '🔍', category: 'Developer' },
+  { name: 'JWT Decoder', slug: 'jwt-inspector', description: 'Decode JSON Web Tokens and inspect header, payload, and expiration time instantly.', emoji: '🎫', category: 'Developer' },
+  { name: 'Cron Expression Generator', slug: 'cron-schedule-builder', description: 'Build cron schedules visually with point-and-click controls and get human-readable descriptions.', emoji: '🕐', category: 'Developer' },
+  { name: 'HTTP Headers Viewer', slug: 'http-headers-inspector', description: 'View request and response HTTP headers for any URL with timing and security info.', emoji: '📦', category: 'Developer' },
+  { name: 'Port Scanner', slug: 'port-scanner-mock', description: 'Check common ports on any host to identify open services and running applications.', emoji: '🚪', category: 'Developer' },
+  { name: 'Favicon Generator', slug: 'favicon-quick-generator', description: 'Create favicon.ico, PNG, and SVG icons from any image or emoji with one click.', emoji: '🌐', category: 'Image' },
+  { name: 'Image Resizer', slug: 'image-resize-browser', description: 'Resize images to exact dimensions for social media, thumbnails, and web with live preview.', emoji: '📐', category: 'Image' },
+  { name: 'Meta Tag Generator', slug: 'seo-meta-tag-creator', description: 'Generate SEO meta tags, Open Graph, and Twitter Card tags with live preview.', emoji: '🏷️', category: 'SEO' },
+  { name: 'SERP Preview', slug: 'serp-snippet-viewer', description: 'Preview how a page title and description appear in Google search results.', emoji: '🔎', category: 'SEO' },
+  { name: 'Color Picker', slug: 'color-picker-hex-rgb-hsl', description: 'Pick any color and get HEX, RGB, HSL, and CSS values with a live color preview.', emoji: '🎨', category: 'Color' },
+  { name: 'Contrast Checker', slug: 'contrast-checker-wcag', description: 'Check text and background color contrast for WCAG AA and AAA accessibility compliance.', emoji: '♿', category: 'Color' },
+  { name: 'Unit Converter', slug: 'unit-converter-length-weight', description: 'Convert length, weight, and temperature between metric and imperial units instantly.', emoji: '⚖️', category: 'Conversion' },
+  { name: 'Number Base Converter', slug: 'number-base-converter-bin-hex', description: 'Convert between binary, decimal, hexadecimal, and octal number systems instantly.', emoji: '🔢', category: 'Conversion' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'Image Tools', 'AI Tools', 'Document Generator', 'Text Tools', 'HEX/RGB/HSL'] as const;
