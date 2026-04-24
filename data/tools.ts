@@ -1289,6 +1289,20 @@ export const tools: Tool[] = [
   { name: 'Contrast Checker', slug: 'contrast-checker-handy', description: 'Check text and background contrast for WCAG accessibility compliance.', emoji: '♿', category: 'Color' },
   { name: 'Unit Converter', slug: 'unit-converter-handy', description: 'Convert length, weight, and temperature between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
   { name: 'Number Base Converter', slug: 'number-base-simple', description: 'Convert between binary, decimal, hexadecimal, and octal in one click.', emoji: '🔢', category: 'Conversion' },
+
+  // --- Batch #8: Additional tools (2026-04-24) ---
+  { name: 'YAML Pretty Print', slug: 'yaml-pretty-print', description: 'Format and indent YAML with syntax highlighting and configurable spacing.', emoji: '📄', category: 'Developer' },
+  { name: 'JSON Patch Generator', slug: 'json-patch-generator', description: 'Generate JSON Patch (RFC 6902) diff from two JSON documents automatically.', emoji: '🔄', category: 'Developer' },
+  { name: 'HMAC Generator', slug: 'hmac-generator', description: 'Generate HMAC digests for any text using SHA-256, SHA-1, or MD5 with a secret key.', emoji: '🔑', category: 'Developer' },
+  { name: 'Secure Random Generator', slug: 'secure-random-generator', description: 'Generate cryptographically secure random strings, numbers, UUIDs, and bytes in your browser.', emoji: '🎲', category: 'Developer' },
+  { name: 'JSON Escape/Unescape', slug: 'json-escape-unescape', description: 'Escape or unescape special characters in JSON strings for safe embedding and storage.', emoji: '🔗', category: 'Developer' },
+  { name: 'CSS Naming Convention Converter', slug: 'css-naming-convention', description: 'Convert CSS class names between BEM, kebab-case, camelCase, and SCSS conventions.', emoji: '🎨', category: 'CSS' },
+  { name: 'HTML Minifier', slug: 'html-minifier', description: 'Minify HTML by removing whitespace, comments, and optional tags for faster page loads.', emoji: '⚡', category: 'Developer' },
+  { name: 'Random PIN Generator', slug: 'random-pin-generator', description: 'Generate random numeric PINs of any length for secure codes, OTPs, and access keys.', emoji: '🔢', category: 'Utility' },
+  { name: 'Kubernetes YAML Generator', slug: 'kubernetes-yaml-generator', description: 'Generate Kubernetes manifests for Deployments, Services, ConfigMaps, and more.', emoji: '☸️', category: 'Network' },
+  { name: 'Docker Compose Generator', slug: 'docker-compose-generator', description: 'Generate Docker Compose YAML files for multi-container applications with common templates.', emoji: '🐳', category: 'Network' },
+  { name: 'UUID Comparator', slug: 'uuid-comparator', description: 'Compare two UUIDs to check equality and sort them chronologically by timestamp.', emoji: '🆔', category: 'Developer' },
+  { name: 'Text Statistics Advanced', slug: 'text-statistics-advanced', description: 'Get advanced text stats including lexicon density, syllables per word, and reading level.', emoji: '📊', category: 'Text' },
 ];
 
 
