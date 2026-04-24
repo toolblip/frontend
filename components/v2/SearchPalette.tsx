@@ -35,7 +35,7 @@ export default function SearchPalette({ open, onClose }: Props) {
     const scored: Scored[] = [];
     const seen = new Set<string>();
     for (const t of tools) {
-      if (seen.has(t.name)) continue;
+      if (seen.has(t.slug)) continue;
       const name = t.name.toLowerCase();
       const desc = t.description.toLowerCase();
       const cat = t.category.toLowerCase();
@@ -47,7 +47,7 @@ export default function SearchPalette({ open, onClose }: Props) {
       if (desc.includes(query)) score += 10;
       if (score > 0) {
         scored.push({ t, score });
-        seen.add(t.name);
+        seen.add(t.slug);
       }
     }
     scored.sort((a, b) => b.score - a.score);
