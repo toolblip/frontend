@@ -1,7 +1,7 @@
 type Props = { size?: number; className?: string };
 
-export default function BrandMark({ size = 34, className }: Props) {
-  const innerSize = Math.round(size * 0.72);
+export default function BrandMark({ size = 42, className }: Props) {
+  const innerSize = Math.round(size * 0.88);
   return (
     <div
       className={`tb-v2-brand-mark ${className ?? ''}`}
@@ -9,7 +9,7 @@ export default function BrandMark({ size = 34, className }: Props) {
       aria-hidden="true"
     >
       <img
-        src="/logos/logo-dark.png"
+        src="/logos/logo-transparent.png"
         alt=""
         width={innerSize}
         height={innerSize}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import BrandMark from './BrandMark';
 import SettingsMenu from './SettingsMenu';
@@ -11,16 +11,73 @@ type Props = {
   onOpenSearch: () => void;
 };
 
-const menuLinks: Array<{ key: 'tools' | 'mcp' | 'aiml' | 'more'; label: string; href: string }> = [
-  { key: 'tools', label: 'Tools', href: '/directory' },
-  { key: 'mcp', label: 'MCP', href: '/directory?cat=MCP' },
-  { key: 'aiml', label: 'AI / ML', href: '/directory?cat=AI%2FML' },
-  { key: 'more', label: 'More', href: '/about' },
+type MenuItem = {
+  key: string;
+  label: string;
+  href?: string;
+  items?: Array<{ label: string; href: string; description?: string }>;
+};
+
+const menus: MenuItem[] = [
+  {
+    key: 'tools',
+    label: 'Tools',
+    items: [
+      { label: 'Text Tools', href: '/directory?cat=Text', description: 'Count, convert, format text' },
+      { label: 'Image Tools', href: '/directory?cat=Image', description: 'Resize, convert, optimize images' },
+      { label: 'Dev Tools', href: '/directory?cat=Dev', description: 'Regex, JSON, Base64, JWT' },
+      { label: 'QR Codes', href: '/directory?cat=QR', description: 'Generate and decode QR codes' },
+      { label: 'Color Tools', href: '/directory?cat=Color', description: 'Pick, convert, mix colors' },
+      { label: 'All Tools', href: '/directory', description: 'Browse the full directory' },
+    ],
+  },
+  {
+    key: 'mcp',
+    label: 'MCP',
+    items: [
+      { label: 'What is MCP', href: '/blog/what-is-an-mcp-server', description: 'Model Context Protocol explained' },
+      { label: 'MCP Servers', href: '/directory?cat=MCP', description: 'Available MCP server tools' },
+      { label: 'Connect Claude', href: '/blog/connect-claude-code-to-toolblip', description: 'Use Toolblip from Claude Code' },
+    ],
+  },
+  {
+    key: 'aiml',
+    label: 'AI / ML',
+    items: [
+      { label: 'AI Tools', href: '/directory?cat=AI%2FML', description: 'AI-powered utility tools' },
+      { label: 'Prompt Library', href: '/blog', description: 'Tips and prompt engineering guides' },
+    ],
+  },
+  {
+    key: 'more',
+    label: 'More',
+    items: [
+      { label: 'Pricing', href: '/pricing', description: 'Plans and upgrades' },
+      { label: 'Blog', href: '/blog', description: 'Articles and tutorials' },
+      { label: 'API Docs', href: '/api-docs', description: 'Developer API reference' },
+      { label: 'About', href: '/about', description: 'About Toolblip' },
+      { label: 'Donate', href: '/donate', description: 'Support the project' },
+    ],
+  },
 ];
 
 export default function Nav({ onOpenSearch }: Props) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const navRef = useRef<HTMLElement>(null);
 
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(e.target as Node)) {
+        setOpenMenu(null);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  // Keyboard shortcuts
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const active = document.activeElement;
@@ -35,6 +92,8 @@ export default function Nav({ onOpenSearch }: Props) {
       } else if (e.key === '/' && !inField) {
         e.preventDefault();
         onOpenSearch();
+      } else if (e.key === 'Escape') {
+        setOpenMenu(null);
       }
     };
     window.addEventListener('keydown', onKey);
@@ -42,7 +101,7 @@ export default function Nav({ onOpenSearch }: Props) {
   }, [onOpenSearch]);
 
   return (
-    <nav className="tb-v2-nav">
+    <nav className="tb-v2-nav" ref={navRef}>
       <div className="tb-v2-container tb-v2-nav-inner">
         <Link href="/" className="tb-v2-brand">
           <BrandMark />
@@ -50,11 +109,50 @@ export default function Nav({ onOpenSearch }: Props) {
         </Link>
 
         <div className="tb-v2-nav-links tb-v2-nav-links-center">
-          {menuLinks.map(({ key, label, href }) => (
-            <Link key={key} href={href} className="tb-v2-nav-trigger">
-              <span>{label}</span>
-              <IconChevronDown className="tb-v2-ic tb-v2-nav-trigger-chev" />
-            </Link>
+          {menus.map((menu) => (
+            <div key={menu.key} className="tb-v2-nav-dropdown-root">
+              {menu.items ? (
+                <>
+                  <button
+                    type="button"
+                    className={`tb-v2-nav-trigger${openMenu === menu.key ? ' open' : ''}`}
+                    onClick={() => setOpenMenu(openMenu === menu.key ? null : menu.key)}
+                    onMouseEnter={() => setOpenMenu(menu.key)}
+                    aria-expanded={openMenu === menu.key}
+                  >
+                    <span>{menu.label}</span>
+                    <IconChevronDown
+                      className="tb-v2-ic tb-v2-nav-trigger-chev"
+                      style={{ width: 12, height: 12 }}
+                    />
+                  </button>
+                  {openMenu === menu.key && (
+                    <div
+                      className="tb-v2-nav-dropdown"
+                      onMouseLeave={() => setOpenMenu(null)}
+                    >
+                      {menu.items.map((item) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className="tb-v2-nav-dropdown-item"
+                          onClick={() => setOpenMenu(null)}
+                        >
+                          <span className="tb-v2-nav-dropdown-label">{item.label}</span>
+                          {item.description && (
+                            <span className="tb-v2-nav-dropdown-desc">{item.description}</span>
+                          )}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <Link href={menu.href!} className="tb-v2-nav-trigger">
+                  <span>{menu.label}</span>
+                </Link>
+              )}
+            </div>
           ))}
         </div>
 
@@ -86,12 +184,22 @@ export default function Nav({ onOpenSearch }: Props) {
 
       {mobileOpen && (
         <div className="tb-v2-nav-mobile-sheet open">
-          {menuLinks.map(({ key, label, href }) => (
-            <Link key={key} href={href} onClick={() => setMobileOpen(false)}>{label}</Link>
+          {menus.map((menu) => (
+            <div key={menu.key}>
+              {menu.items ? (
+                <>
+                  <span className="tb-v2-nav-mobile-section">{menu.label}</span>
+                  {menu.items.map((item) => (
+                    <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)}>
+                      {item.label}
+                    </Link>
+                  ))}
+                </>
+              ) : (
+                <Link href={menu.href!} onClick={() => setMobileOpen(false)}>{menu.label}</Link>
+              )}
+            </div>
           ))}
-          <Link href="/directory" onClick={() => setMobileOpen(false)}>All Tools</Link>
-          <Link href="/blog" onClick={() => setMobileOpen(false)}>Blog</Link>
-          <Link href="/api-docs" onClick={() => setMobileOpen(false)}>API Docs</Link>
           <div className="tb-v2-nav-mobile-divider" />
           <Link href="/pricing" onClick={() => setMobileOpen(false)}>Get Pro</Link>
           <Link href="/login" onClick={() => setMobileOpen(false)}>Sign in</Link>

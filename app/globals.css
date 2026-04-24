@@ -217,6 +217,28 @@ body.tb-v2 a {
 .tb-v2-nav-trigger.on .tb-v2-nav-trigger-chev { color: var(--red); transform: rotate(180deg); }
 .tb-v2-nav-trigger-chev { width: 12px; height: 12px; opacity: 0.7; transition: transform .15s; }
 
+.tb-v2-nav-dropdown-root { position: relative; }
+
+.tb-v2-nav-dropdown {
+  position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%);
+  min-width: 220px; background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); box-shadow: 0 8px 24px -4px rgba(0,0,0,0.15);
+  padding: 6px; z-index: 200; display: flex; flex-direction: column; gap: 2px;
+}
+.tb-v2-nav-dropdown-item {
+  display: flex; flex-direction: column; gap: 1px;
+  padding: 10px 12px; border-radius: calc(var(--radius) - 4px);
+  text-decoration: none; color: var(--fg-0);
+  transition: background .1s;
+}
+.tb-v2-nav-dropdown-item:hover { background: var(--surface-2); }
+.tb-v2-nav-dropdown-label { font-size: 14px; font-weight: 500; }
+.tb-v2-nav-dropdown-desc { font-size: 12px; color: var(--fg-2); line-height: 1.3; }
+.tb-v2-nav-mobile-section {
+  display: block; font-size: 11px; font-weight: 600; color: var(--fg-2);
+  text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 12px 4px;
+}
+
 .tb-v2-kbd {
   font-size: 11px; padding: 2px 7px;
   background: var(--surface-2); border: 1px solid var(--line);
