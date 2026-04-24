@@ -242,23 +242,23 @@ body.tb-v2 a {
 
 /* Mega-menu */
 .tb-v2-mm-anchor {
-  position: absolute; top: 100%; left: 0; right: 0;
-  z-index: 200;
+  position: fixed;
+  z-index: 9999;
   padding-top: 6px;
-  display: flex; justify-content: center;
 }
 .tb-v2-mega-menu {
   display: flex;
   width: 100%;
-  max-width: 960px;
+  max-width: 700px;
+  max-height: 480px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  box-shadow: 0 8px 32px -4px rgba(0,0,0,0.18);
+  box-shadow: 0 8px 32px -4px rgba(0,0,0,0.18), 0 0 0 1px var(--line);
   overflow: hidden;
   animation: tb-v2-mm-drop 0.12s ease-out;
 }
-.tb-v2-mega-more { max-width: 960px; }
+.tb-v2-mega-more { max-width: 700px; }
 
 .tb-v2-mm-side {
   width: 200px; flex-shrink: 0;
@@ -293,31 +293,30 @@ body.tb-v2 a {
 .tb-v2-mm-side-desc { font-size: 11px; color: var(--fg-2); line-height: 1.3; }
 
 .tb-v2-mm-body {
-  flex: 1; padding: 14px 16px;
-  display: flex; flex-direction: column; gap: 14px;
-  overflow-y: auto; max-height: 420px;
+  flex: 1; padding: 12px 14px;
+  display: flex; flex-direction: column; gap: 12px;
+  overflow-y: auto;
 }
 .tb-v2-mm-featured { display: flex; gap: 8px; }
 .tb-v2-mm-feat-card {
-  flex: 1; display: flex; flex-direction: column; gap: 6px;
-  padding: 12px; border-radius: 10px; border: 1px solid var(--line);
+  flex: 1; display: flex; flex-direction: column; gap: 5px;
+  padding: 10px; border-radius: 10px; border: 1px solid var(--line);
   background: var(--surface-1); text-decoration: none; color: var(--fg-0);
   transition: background .1s, border-color .1s;
   position: relative; overflow: hidden;
 }
 .tb-v2-mm-feat-card:hover { background: var(--cat-bg, var(--surface-2)); border-color: var(--cat-color, var(--line-2)); }
 .tb-v2-mm-feat-thumb {
-  width: 32px; height: 32px; border-radius: 8px;
+  width: 28px; height: 28px; border-radius: 7px;
   display: grid; place-items: center;
   background: var(--cat-bg, var(--surface-2));
   color: var(--cat-color, var(--fg-1));
 }
-.tb-v2-mm-feat-thumb .tb-v2-ic { width: 16px; height: 16px; }
-.tb-v2-mm-feat-title { font-size: 13px; font-weight: 600; }
+.tb-v2-mm-feat-thumb .tb-v2-ic { width: 14px; height: 14px; }
+.tb-v2-mm-feat-title { font-size: 12.5px; font-weight: 600; }
 .tb-v2-mm-feat-desc { font-size: 11px; color: var(--fg-2); line-height: 1.4; }
-.tb-v2-mm-feat-go { position: absolute; top: 10px; right: 10px; width: 14px; height: 14px; color: var(--fg-3); }
-
-.tb-v2-mm-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; }
+.tb-v2-mm-feat-go { position: absolute; top: 8px; right: 8px; width: 13px; height: 13px; color: var(--fg-3); }
+.tb-v2-mm-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; }
 .tb-v2-mm-list-row {
   padding: 6px 8px; border-radius: 6px;
   font-size: 12.5px; font-weight: 500; color: var(--fg-1);

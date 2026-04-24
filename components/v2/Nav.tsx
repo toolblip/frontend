@@ -361,7 +361,9 @@ export default function Nav({ onOpenSearch }: Props) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [anchorStyle, setAnchorStyle] = useState<React.CSSProperties>({});
   const navRef = useRef<HTMLElement>(null);
+  const menuTriggerRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -395,6 +397,16 @@ export default function Nav({ onOpenSearch }: Props) {
     return () => window.removeEventListener('keydown', onKey);
   }, [onOpenSearch]);
 
+  useEffect(() => {
+    if (!openMenu) { setAnchorStyle({}); return; }
+    const trigger = menuTriggerRefs.current[openMenu];
+    if (!trigger) return;
+    const rect = trigger.getBoundingClientRect();
+    const menuWidth = 700;
+    const left = Math.max(16, Math.min(rect.left + rect.width / 2 - menuWidth / 2, window.innerWidth - menuWidth - 16));
+    setAnchorStyle({ top: rect.bottom + 6, left });
+  }, [openMenu]);
+
   return (
     <nav className="tb-v2-nav" ref={navRef}>
       <div className="tb-v2-container tb-v2-nav-inner">
@@ -412,6 +424,7 @@ export default function Nav({ onOpenSearch }: Props) {
             >
               <button
                 type="button"
+                ref={(el) => { menuTriggerRefs.current[menu.key] = el; }}
                 className={`tb-v2-nav-trigger${openMenu === menu.key ? ' on' : ''}`}
                 onClick={() => setOpenMenu(openMenu === menu.key ? null : menu.key)}
                 onMouseEnter={() => setOpenMenu(menu.key)}
@@ -454,7 +467,7 @@ export default function Nav({ onOpenSearch }: Props) {
       </div>
 
       {openMenu && (
-        <div className="tb-v2-mm-anchor" onMouseLeave={() => setOpenMenu(null)}>
+        <div className="tb-v2-mm-anchor" style={anchorStyle} onMouseLeave={() => setOpenMenu(null)}>
           <MegaMenu which={openMenu} onClose={() => setOpenMenu(null)} />
         </div>
       )}
