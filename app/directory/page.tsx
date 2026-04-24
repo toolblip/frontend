@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import DirectoryClient from './DirectoryClient';
 
 export const metadata: Metadata = {
-  title: 'Tool Directory | Toolblip',
+  title: 'Tool Directory',
   description:
     'Browse all free browser-based tools on Toolblip. Text, developer, image, conversion, math, CSS tools and more.',
   openGraph: {

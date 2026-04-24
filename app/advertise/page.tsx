@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Advertise on Toolblip | Toolblip',
+  title: 'Advertise on Toolblip',
   description: 'Sponsor a tool on Toolblip and reach developers who use JSON formatters, Base64 encoders, UUID generators, and more every day. Slots start at $100/month.',
   openGraph: {
     title: 'Advertise on Toolblip | Toolblip',

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import ApiDocsClient from './ApiDocsClient';
 
 export const metadata: Metadata = {
-  title: 'API Documentation | Toolblip',
+  title: 'API Documentation',
   description:
     'Toolblip REST API reference. Base URL: https://api.toolblip.com. Browse tools, register, login, and more - all with Bearer token auth. SSL active.',
   openGraph: {

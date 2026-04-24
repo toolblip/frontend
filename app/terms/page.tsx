@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Terms of Service | Toolblip',
+  title: 'Terms of Service',
   description: 'Terms for using Toolblip. Tools are free for personal and commercial use. No attribution required. Read the full terms of service here.',
   openGraph: {
     title: 'Terms of Service | Toolblip',

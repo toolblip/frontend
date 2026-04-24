@@ -13,7 +13,7 @@ export async function generateMetadata({
   if (!tool) return { title: 'Tool Not Found' };
 
   return {
-    title: `${tool.name} - Free Online Tool | Toolblip`,
+    title: `${tool.name} - Free Online Tool`,
     description: tool.description,
     openGraph: {
       title: `${tool.name} | Toolblip`,

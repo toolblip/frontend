@@ -36,7 +36,7 @@ export default function SignupForm() {
         localStorage.setItem('toolblip_user', JSON.stringify(data.user));
         window.location.href = '/';
       } else {
-        const msg = data.message ?? data.errors ? Object.values(data.errors).flat().join(', ') : 'Could not create account. Please try again.';
+        const msg = data.message ?? (data.errors ? Object.values(data.errors).flat().join(', ') : 'Could not create account. Please try again.');
         setError(msg);
       }
     } catch {
@@ -51,12 +51,6 @@ export default function SignupForm() {
       <div className="tb-v2-container">
         <div className="tb-v2-auth-card">
           <h1 className="tb-v2-auth-title">Create account</h1>
-
-          <div className="tb-v2-auth-divider">
-            <div className="tb-v2-auth-divider-line" />
-            <span className="tb-v2-auth-divider-text">or</span>
-            <div className="tb-v2-auth-divider-line" />
-          </div>
 
           <form onSubmit={handleSubmit} className="tb-v2-auth-form" noValidate>
             {error && <p role="alert" className="tb-v2-auth-error">{error}</p>}

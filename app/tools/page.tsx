@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Tools | Toolblip',
+  title: 'Tools',
   description: 'Browse all developer tools on Toolblip.',
   openGraph: {
     title: 'Tools | Toolblip',

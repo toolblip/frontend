@@ -152,8 +152,9 @@ export default function PricingClient() {
         <div className="tb-v2-pricing-grid">
           {plans.map((plan) => {
             const isLoading = loading === plan.tier;
-            const price =
+            const priceCents =
               billing === 'yearly' ? plan.price_yearly : plan.price_monthly;
+            const price = priceCents / 100;
             const isHighlighted = plan.tier === HIGHLIGHT_TIER;
             const isFree = plan.tier === 'free';
 

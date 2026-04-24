@@ -6,7 +6,7 @@ import type { Metadata } from 'next';
 import FeaturedImage from '@/components/blog/FeaturedImage';
 
 export const metadata: Metadata = {
-  title: 'Blog | Toolblip',
+  title: 'Blog',
   description: 'Guides, tutorials, and updates from the Toolblip team. Learn about developer tools, MCP, and how to get the most out of Toolblip.',
   openGraph: {
     title: 'Blog | Toolblip',

@@ -55,12 +55,6 @@ export default function LoginForm() {
         <div className="tb-v2-auth-card">
           <h1 className="tb-v2-auth-title">Sign in</h1>
 
-          <div className="tb-v2-auth-divider">
-            <div className="tb-v2-auth-divider-line" />
-            <span className="tb-v2-auth-divider-text">or</span>
-            <div className="tb-v2-auth-divider-line" />
-          </div>
-
           <form onSubmit={handleSubmit} className="tb-v2-auth-form" noValidate>
             {error && <p role="alert" className="tb-v2-auth-error">{error}</p>}
 

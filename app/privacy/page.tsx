@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy | Toolblip',
+  title: 'Privacy Policy',
   description: 'Toolblip tools run 100% in your browser. Nothing you paste or upload is sent to any server. No account required. Read the full privacy policy.',
   openGraph: {
     title: 'Privacy Policy | Toolblip',

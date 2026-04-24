@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import PricingClient from './PricingClient';
 
 export const metadata: Metadata = {
-  title: 'Pricing | Toolblip',
+  title: 'Pricing',
   description:
     'Upgrade to Toolblip for an ad-free experience. Free, Starter ($4.99/mo), Ultra ($19.99/mo), and Max ($49.99/mo) plans with no ads, cloud storage, and team features.',
   openGraph: {
