@@ -1,17 +1,15 @@
 ---
 title: Why Is My Cron Job Not Running? 10 Common Cron Expression Mistakes
-description: Cron jobs failing silently? Most cron expression errors come from a handful of predictable mistakes. Learn to spot and fix them fast.
+description: Ten cron expression mistakes that cause most silent failures — OR'd date fields, timezone drift, missing output redirects — with minimal examples and fixes.
 date: 2026-04-24
 category: Developer Tools
 ---
 
-If you've ever stared at a cron expression like `*/5 * * * *` and wondered why your job runs every minute instead of every five, you're not alone. Cron syntax is famously terse, and even small typos can turn a well-intentioned schedule into a non-running ghost job.
+Your cron job didn't run. Or worse — it ran sixty times when it should have run once. Cron packs a schedule into five fields of terse punctuation, and a single wrong character turns a nightly backup into a flood of pager alerts.
 
-This guide walks through the 10 mistakes developers hit most often, with concrete examples and fixes. Bookmark it — you'll be back.
+Almost every "why is my cron not running" moment comes down to the same handful of mistakes. Here they are, each with the symptom you'll see in the wild and the exact fix.
 
-## What Is a Cron Expression?
-
-A cron expression is a 5-field string that defines a schedule:
+## The 5-field anatomy
 
 ```
 ┌──────────── minute (0–59)
@@ -23,195 +21,171 @@ A cron expression is a 5-field string that defines a schedule:
 * * * * *
 ```
 
-Each field can hold a specific value, a range, a list, or a step (`*` means "every"). Getting any one field wrong breaks the whole schedule.
+Each field takes a value, a range, a list, a step (`*/n`), or a wildcard (`*`). Position is everything — `0 9 * * *` is not the same as `9 0 * * *`. If you ever aren't sure what a line means, paste it into the [cron expression parser](/tools/cron-parser) and watch the next five run times.
 
 ---
 
-## The 10 Most Common Cron Mistakes
+## 1. `*` vs `0` in the minute field
 
-### 1. Mixing Up `*` and `0` in the Minute Field
+**Symptom:** the job you meant to run hourly is firing every minute.
 
-This is the #1 source of confusion.
-
-- `* * * * *` — runs **every minute**
-- `0 * * * *` — runs **every hour, at minute 0** (once per hour)
-
-If you want your job to run once an hour and you wrote `* * * * *`, you'll be debugging a job that fires 60 times per hour before you realize the mistake.
-
-**Fix:** Use a [cron expression tester](/tools/cron-expression-tester) to validate your schedule before deploying.
-
-### 2. Using `5/10` Instead of `*/5` for Step Values
-
-Step values in cron use `/`, but the syntax trips people up.
-
-- `*/5 * * * *` — every 5 minutes (`0, 5, 10, 15...`)
-- `5/10 * * * *` — starting at minute 5, every 10 minutes (`5, 15, 25, 35...`)
-
-These look similar but behave very differently. `5/10` starts at 5 and then adds 10 each time. `*/5` starts at 0 and adds 5 each time.
-
-### 3. Forgetting That Day-of-Month and Day-of-Week Are OR'd Together
-
-This one bites people hard.
-
-In standard cron, if you set both the day-of-month **and** the day-of-week to non-wildcard values, the job runs if **either** field matches. So:
+`* * * * *` means *every minute of every hour*. `0 * * * *` means *minute 0 of every hour*, i.e. once per hour. The wildcard is "any value", not "the first value."
 
 ```
-0 9 15 * *  →  Runs at 9 AM on the 15th of every month  AND  runs at 9 AM on every Monday
+* * * * *   →  every minute           (60× per hour)
+0 * * * *   →  top of every hour      (1× per hour)
 ```
 
-Not "9 AM on the 15th if it's a Monday." Most people expect AND, but cron gives you OR.
+If you wrote `* * * * *` expecting "once per hour," you'll rack up 60× the work before you notice.
 
-**Fix:** If you need a specific day, stick to one field. Use day-of-week for weekday jobs, day-of-month for calendar-date jobs — not both.
+## 2. `5/10` isn't the same as `*/5`
 
-### 4. Using `8` for Sunday in the Day-of-Week Field
+Both use the step operator `/`, but they start in different places.
 
-The day-of-week field uses `0` for Sunday, not `7`.
+```
+*/5  * * * *   →  0, 5, 10, 15, 20 ...   (every 5)
+5/10 * * * *   →  5, 15, 25, 35 ...      (start at 5, add 10)
+```
 
-- `0` = Sunday
-- `1` = Monday
-- `6` = Saturday
-- `7` = **also Sunday** (somecron versions accept this, but POSIX standard is 0–6)
+When you want "every N minutes," lead with `*` — `*/N`. `a/b` is the rarer "start at a, step by b" form.
 
-If you wrote `0 9 * * 7` expecting Sunday, it might work on some systems and silently fail on others. Best practice: always use `0` for Sunday.
+## 3. Day-of-month and day-of-week are OR'd, not AND'd
 
-### 5. Missing the Range When Using Lists
+This one is the ambush — it looks like English and does the opposite.
 
-Ranges and lists are not the same thing.
+```
+0 9 15 * 1   →  9 AM on the 15th  OR  9 AM on every Monday
+```
 
-- `1,2,3 * * * *` — runs at minutes 1, 2, and 3 (list)
-- `1-3 * * * *` — runs at minutes 1, 2, and 3 (range, same result)
-- `1-3,5 * * * *` — runs at minutes 1, 2, 3, and 5 (mixing is valid)
+Not "9 AM on the 15th *if* it's a Monday." Standard cron (vixie, cronie) unions the two date fields whenever both are non-wildcard. [POSIX](https://pubs.opengroup.org/onlinepubs/9699919799/utilities/crontab.html) specifies this behavior, so you can't assume it away.
 
-The mistake: writing `1-3-5` thinking it means "1 through 5." That's invalid syntax. Use `1-5` for a range.
+**Fix:** pick one. Use day-of-week for weekday jobs, day-of-month for calendar-date jobs, and leave the other as `*`.
 
-### 6. Hardcoding the Wrong Timezone
+## 4. Using `7` for Sunday
 
-Cron runs in the system timezone by default. If your server is in UTC but you're in EST, writing `0 14 * * *` means 2 PM UTC, not 2 PM EST.
+The day-of-week field runs 0–6, where `0` is Sunday.
 
-Symptoms: the job runs, but at seemingly random times relative to your local clock.
+| Value | Day    |
+|-------|--------|
+| 0     | Sunday |
+| 1     | Monday |
+| 6     | Saturday |
 
-**Fix:** Explicitly set the `CRON_TZ` or `TZ` environment variable in your cron table:
+Vixie and cronie accept `7` as a second alias for Sunday, but BusyBox and several embedded cron ports don't. Stick to `0`-`6` and your crontab ports cleanly between Linux, Alpine containers, and BSD.
+
+## 5. `1-3-5` is not a range
+
+Ranges use a single dash; lists use commas; you can mix them. Double dashes aren't a thing.
+
+```
+1,2,3 * * * *   →  minutes 1, 2, 3         (list)
+1-3   * * * *   →  minutes 1, 2, 3         (range)
+1-3,5 * * * *   →  minutes 1, 2, 3, 5      (mix)
+1-3-5 * * * *   →  syntax error
+```
+
+If you want "1 through 5," write `1-5`.
+
+## 6. Assuming cron uses your local timezone
+
+By default, cron runs in the system timezone. On most cloud hosts that's UTC. If you live in New York and write `0 14 * * *` hoping for 2 PM lunch-hour reports, you'll get them at 10 AM EDT instead.
+
+Pin the timezone explicitly at the top of the crontab:
 
 ```
 CRON_TZ=America/New_York
-0 14 * * * /usr/local/bin/backup.sh
+0 14 * * * /usr/local/bin/report.sh
 ```
 
-### 7. Cron Jobs Without a Trailing Newline
+When you're debugging an off-by-N-hours job, the [time zone converter](/tools/time-zone-converter) and [timestamp converter](/tools/timestamp-converter) make the math mechanical instead of fraught.
 
-If your crontab entry is the last line in the file and doesn't end with a newline, it gets silently ignored on some cron implementations.
+## 7. No trailing newline
 
-Always add a blank line at the end of your crontab:
+Old-school `cron(8)` implementations read the crontab line by line and stop at EOF. If your last entry doesn't end with `\n`, some daemons silently drop it. This bites hardest when the crontab was generated by a config management tool that produced a file without a final newline.
 
-```bash
-crontab -e
-# ... your entries ...
+Leave a blank line at the bottom:
+
+```
 0 2 * * * /usr/local/bin/cleanup.sh
 
 ```
 
-### 8. Assuming `30 2 1 * *` Means "2:30 AM on the First"
+(Yes, that trailing empty line matters.)
 
-Let's parse: minute=30, hour=2, day-of-month=1, month=*, day-of-week=*. This runs at **2:30 AM on the 1st of every month** — that's correct.
+## 8. Field order off by one
 
-But `30 2 * * 1` (with day-of-week = 1) means **2:30 AM every Monday**. Same time, different logic. The field position matters enormously.
+Cron's five positions are fixed. Swap any two and the schedule is unrecognizable.
 
-Always validate before assuming.
+```
+30 2 1 * *   →  2:30 AM on the 1st of every month
+30 2 * * 1   →  2:30 AM every Monday
+2 30 1 * *   →  invalid — 30 isn't a valid hour
+```
 
-### 9. Using Ranges That Exceed the Field's Valid Range
+When in doubt, read the line right-to-left and name each field out loud: *day-of-week, month, day-of-month, hour, minute.* If the description doesn't match what you wanted, the expression is wrong.
 
-Month field: 1–12. Day-of-week field: 0–6. Hour field: 0–23. Minute field: 0–59.
+## 9. Out-of-range values don't do what you'd hope
 
-Writing `0 24 * * *` silently falls back to invalid — some cron daemons reject it, others round down to the next valid hour or skip entirely.
+Each field has a hard range. Values outside it are handled *inconsistently* across daemons, and that's the real hazard:
 
-Same with `0 * 32 * *` — there's no day 32, so the expression is ignored.
+| Expression      | vixie-cron / cronie              | BusyBox cron           |
+|-----------------|----------------------------------|-------------------------|
+| `0 24 * * *`    | refuses to load the file, logs `bad hour` to syslog | treats `24` as `0`, runs at midnight |
+| `0 * 32 * *`    | refuses to load, logs `bad day-of-month`            | drops the entry silently |
+| `60 * * * *`    | refuses to load, logs `bad minute`                  | varies |
 
-### 10. Not Checking If Cron Even Ran (stdout/stderr Got Lost)
+So "will it run?" depends on which cron binary ships with your base image. On modern Linux (`cronie`, Debian/Ubuntu default) an out-of-range value kills the entire crontab load, not just the bad line. On Alpine's BusyBox you may get a half-working crontab you never notice. Valid ranges: minute 0–59, hour 0–23, day-of-month 1–31, month 1–12, day-of-week 0–6.
 
-Your cron job might have run perfectly but the output went nowhere. By default, cron sends mail to the crontab owner. If that's not configured, you see nothing.
+## 10. The job ran. You just can't see it.
 
-Signs of this: the job clearly should have fired, but there's no trace of it.
+Default cron mails stdout/stderr to the crontab owner. If your MTA isn't configured — which it isn't, on most containers and cloud VMs — every line of output vanishes.
 
-**Fix:** Redirect output to a log file explicitly:
+Redirect explicitly:
 
 ```
 0 2 * * * /usr/local/bin/backup.sh >> /var/log/backup.log 2>&1
 ```
 
-Or use a systemd timer instead of cron for better logging on modern Linux systems.
+If you can run systemd timers instead, they log to the journal by default, show exit codes in `systemctl status`, and skip this whole class of problem.
 
 ---
 
-## Quick Reference: Cron Syntax Cheat Sheet
+## Cron cheat sheet
 
-| Expression | Meaning |
-|---|---|
-| `* * * * *` | Every minute |
-| `*/5 * * * *` | Every 5 minutes |
-| `0 * * * *` | Every hour (at minute 0) |
-| `0 0 * * *` | Every day at midnight |
-| `0 9 * * 1-5` | 9 AM every weekday |
-| `0 0 1 * *` | Midnight on the 1st of each month |
-| `0 0 * * 0` | Midnight every Sunday |
-| `*/15 */2 * * *` | Every 15 minutes, every 2 hours |
-
----
-
-## How to Test Your Cron Expression
-
-The easiest way to verify a cron expression without waiting around is to use a [cron expression tester](/tools/cron-expression-tester). You punch in your expression, see the next 10 scheduled run times, and catch mistakes before they become production incidents.
-
-Pair it with a [Unix timestamp converter](/tools/unix-timestamp-converter) when debugging across systems with different time settings.
+| Expression      | Meaning |
+|-----------------|---------|
+| `* * * * *`     | Every minute |
+| `*/5 * * * *`   | Every 5 minutes |
+| `0 * * * *`     | Top of every hour |
+| `0 0 * * *`     | Daily at midnight |
+| `0 9 * * 1-5`   | 9 AM every weekday |
+| `0 0 1 * *`     | Midnight on the 1st of each month |
+| `0 0 * * 0`     | Midnight every Sunday |
+| `*/15 9-17 * * 1-5` | Every 15 min, 9 AM–5 PM, weekdays |
 
 ---
 
-## Common Cron Expression Patterns for Reference
+## Testing before you deploy
 
-**Every 5 minutes:**
-```
-*/5 * * * *
-```
+Waiting 24 hours to find out whether `0 3 15 * 1` does what you think is a lousy debugging loop. The [cron expression parser](/tools/cron-parser) translates any expression into English and lists the next five run times, so you catch mistakes in seconds. If you're building a schedule from scratch, the [cron expression generator](/tools/cron-generator) gives you point-and-click fields plus the same preview.
 
-**Every 15 minutes:**
-```
-*/15 * * * *
-```
+For output-related debugging, a [regex tester](/tools/regex-tester) is handy when you're pulling job runs out of a noisy log file.
 
-**Every hour:**
-```
-0 * * * *
-```
+---
 
-**Every day at 3 AM:**
-```
-0 3 * * *
-```
+## Workaround: sub-minute scheduling
 
-**Every Monday at 9 AM:**
-```
-0 9 * * 1
-```
+Cron's minimum resolution is one minute — there's no way to say "every 30 seconds" in a single line. When you need sub-minute cadence, pair two entries and offset one with `sleep`:
 
-**Every weekday at 8 AM:**
-```
-0 8 * * 1-5
-```
-
-**At 9 AM on the 1st of every month:**
-```
-0 9 1 * *
-```
-
-**Every 30 seconds (cron limitation):** Cron can't do sub-minute natively. You'll need two entries:
 ```
 * * * * * /scripts/job.sh
 * * * * * sleep 30 && /scripts/job.sh
 ```
 
+This is a workaround, not a mistake. It works, but it leaks a stray `sleep` process per minute and won't align cleanly across reboots. If your workload actually needs sub-minute timing, a long-running daemon or a systemd timer with `OnUnitActiveSec=30s` is a cleaner fit than cron.
+
 ---
 
-## Conclusion
+## The short version
 
-Cron expression mistakes are almost always the same few categories: field confusion (`*` vs `0`), wrong timezone, OR vs AND between date fields, and invisible failures from missing output handling.
-
-Know these 10 traps, validate your expressions with a [cron tester](/tools/cron-expression-tester) before deploying, and you won't be Googling "why is my cron job not running" at 2 AM again.
+Most "cron not running" incidents are one of four things: the wildcard isn't what you think it is, the two date fields are OR'd, the timezone isn't what the server thinks it is, or the output went to a mailbox no one reads. Validate every expression in the [cron parser](/tools/cron-parser) before you commit it, pin `CRON_TZ`, redirect stdout and stderr, and "why is my cron job not running" stops being a 2 AM question.
