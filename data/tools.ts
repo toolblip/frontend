@@ -999,6 +999,26 @@ export const tools: Tool[] = [
   { name: 'Color Name Finder', slug: 'color-name-tool', description: 'Find the nearest named color for any HEX, RGB, or HSL value from color databases.', emoji: '🏷️', category: 'Color' },
   { name: 'Number to Words', slug: 'number-to-words-tool', description: 'Convert numbers into human-readable words - great for invoices and checks.', emoji: '🔢', category: 'Conversion' },
   { name: 'Time Zone Converter', slug: 'time-zone-tool', description: 'Convert times between multiple timezones with daylight saving and current time display.', emoji: '🌍', category: 'Conversion' },
+
+  // --- New tools (2026-04-24 #10 - genuinely new) ---
+  { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-browser', description: 'Generate lorem ipsum placeholder text in your browser with customizable paragraphs, sentences, and word count.', emoji: '📜', category: 'Text' },
+  { name: 'Grammar Checker', slug: 'grammar-checker-browser', description: 'Check grammar and spelling errors in any text with one-click fixes and detailed explanations.', emoji: '✅', category: 'Text' },
+  { name: 'Readability Score', slug: 'readability-score-browser', description: 'Calculate Flesch-Kincaid and other readability indices for your text in the browser.', emoji: '📊', category: 'Text' },
+  { name: 'Text Sorter', slug: 'text-sorter-browser', description: 'Sort text lines alphabetically, by length, numerically, or in reverse order.', emoji: '📋', category: 'Text' },
+  { name: 'Regex Tester', slug: 'regex-tester-browser', description: 'Test regex patterns with real-time match highlighting and capture group display in your browser.', emoji: '🔍', category: 'Developer' },
+  { name: 'JWT Decoder', slug: 'jwt-decoder-browser', description: 'Decode JWT tokens in your browser and view header, payload, and expiration instantly.', emoji: '🎫', category: 'Developer' },
+  { name: 'Cron Expression Generator', slug: 'cron-generator-browser', description: 'Build cron schedules visually with point-and-click editor and get human-readable descriptions.', emoji: '🕐', category: 'Developer' },
+  { name: 'HTTP Headers Viewer', slug: 'http-headers-browser', description: 'View HTTP request and response headers for any URL with timing breakdown in your browser.', emoji: '📦', category: 'Developer' },
+  { name: 'Port Scanner', slug: 'port-scanner-browser', description: 'Check common ports on a host to identify open services and availability in your browser.', emoji: '🚪', category: 'Developer' },
+  { name: 'Favicon Generator', slug: 'favicon-browser', description: 'Create favicon icons from any image or emoji directly in your browser with multiple sizes.', emoji: '🌐', category: 'Image' },
+  { name: 'Image Resizer', slug: 'image-resizer-browser', description: 'Resize images to specific dimensions in your browser with aspect ratio lock and batch support.', emoji: '📐', category: 'Image' },
+  { name: 'Meta Tag Generator', slug: 'meta-tag-browser', description: 'Generate SEO meta tags, Open Graph, and Twitter Card tags with live browser preview.', emoji: '🏷️', category: 'SEO' },
+  { name: 'SERP Preview', slug: 'serp-browser', description: 'Preview how a page title and description appear in Google search results from your browser.', emoji: '🔎', category: 'SEO' },
+  { name: 'Color Picker', slug: 'color-picker-browser', description: 'Pick any color visually and get HEX, RGB, HSL, and CSS values with a live preview.', emoji: '🎨', category: 'Color' },
+  { name: 'Contrast Checker', slug: 'contrast-browser', description: 'Check text and background color contrast for WCAG AA and AAA compliance.', emoji: '♿', category: 'Color' },
+  { name: 'Unit Converter', slug: 'unit-converter-browser', description: 'Convert length, weight, and temperature between metric and imperial units in your browser.', emoji: '⚖️', category: 'Conversion' },
+  { name: 'Number Base Converter', slug: 'number-base-browser', description: 'Convert between binary, decimal, hexadecimal, and octal instantly in your browser.', emoji: '🔢', category: 'Conversion' },
 ];
+
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time'] as const;
