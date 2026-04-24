@@ -5,7 +5,9 @@ import matter from 'gray-matter';
 import type { Metadata } from 'next';
 import { tools } from '@/data/tools';
 import Hero from '@/components/v2/home/Hero';
-import PillsRow from '@/components/v2/home/PillsRow';
+import HowItWorksStrip from '@/components/v2/home/HowItWorksStrip';
+import CategoryQuickAccess from '@/components/v2/home/CategoryQuickAccess';
+import WhyToolblip from '@/components/v2/home/WhyToolblip';
 import FeaturedStrip from '@/components/v2/home/FeaturedStrip';
 import CategoryGrid from '@/components/v2/home/CategoryGrid';
 import HowItWorks from '@/components/v2/home/HowItWorks';
@@ -59,7 +61,9 @@ export default function HomePage() {
   return (
     <>
       <Hero toolCount={toolCount} />
-      <PillsRow toolCount={toolCount} />
+      <HowItWorksStrip />
+      <CategoryQuickAccess />
+      <WhyToolblip />
       <FeaturedStrip />
       <CategoryGrid />
       <HowItWorks />
