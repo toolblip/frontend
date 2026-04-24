@@ -20,27 +20,50 @@ const BENEFITS = [
 
 export default function WhyToolblip() {
   return (
-    <section className="tb-v2-band tb-v2-band-sm">
+    <section style={{ padding: '40px 0', borderBottom: '1px solid var(--border-1)' }}>
       <div className="tb-v2-container">
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 16 }}>
+        <p
+          style={{
+            textAlign: 'center',
+            fontSize: 12,
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            letterSpacing: '0.1em',
+            color: 'var(--accent)',
+            marginBottom: 24,
+          }}
+        >
+          Why Toolblip?
+        </p>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: 16,
+          }}
+        >
           {BENEFITS.map(({ icon: Icon, title, desc }) => (
             <div
               key={title}
               style={{
-                padding: '20px 24px',
+                padding: '24px 28px',
                 borderRadius: 12,
                 border: '1px solid var(--border-1)',
                 background: 'var(--bg-2)',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 10,
+                gap: 12,
               }}
             >
               <span style={{ color: 'var(--accent)', display: 'flex' }}>
-                <Icon width={20} height={20} />
+                <Icon width={22} height={22} />
               </span>
-              <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--fg-1)' }}>{title}</div>
-              <div style={{ fontSize: 13, color: 'var(--fg-2)', lineHeight: 1.55 }}>{desc}</div>
+              <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--fg-1)' }}>
+                {title}
+              </div>
+              <div style={{ fontSize: 14, color: 'var(--fg-2)', lineHeight: 1.6 }}>
+                {desc}
+              </div>
             </div>
           ))}
         </div>
