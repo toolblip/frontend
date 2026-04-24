@@ -1797,20 +1797,21 @@ body.tb-v2 a {
   background: var(--surface-2); border: 1px solid var(--line);
   display: grid; place-items: center; color: var(--fg-3);
 }
+.tb-v2-coming-soon-body {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+}
 .tb-v2-coming-soon-title {
   font-family: var(--f-display); font-size: 22px; font-weight: 700;
   color: var(--fg-0); letter-spacing: -0.02em;
 }
 .tb-v2-coming-soon-desc {
-  font-size: 14px; color: var(--fg-2); max-width: 32ch; line-height: 1.55;
+  font-size: 14px; color: var(--fg-2); max-width: 36ch; line-height: 1.55;
 }
 .tb-v2-coming-soon-link {
-  margin-top: 4px;
-  font-size: 13.5px; font-weight: 600;
-  color: var(--red); text-decoration: none;
+  font-weight: 600; color: var(--red); text-decoration: none;
   transition: opacity .12s;
 }
-.tb-v2-coming-soon-link:hover { opacity: 0.75; }
+.tb-v2-coming-soon-link:hover { opacity: 0.75; text-decoration: underline; }
 
 /* ==========================================================================
    TOOLBLIP v2 - Shared page sections
