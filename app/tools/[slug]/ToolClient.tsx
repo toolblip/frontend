@@ -10,6 +10,8 @@ import Base64Client from '@/components/tools/Base64Client';
 import UrlEncodeClient from '@/components/tools/UrlEncodeClient';
 import JsonFormatterClient from '@/components/tools/JsonFormatterClient';
 import GenericToolUI from '@/components/tools/GenericToolUI';
+import FaqSection from '@/components/v2/FaqSection';
+import { getFaqs } from '@/lib/faq';
 
 function getToolComponent(slug: string): React.ReactNode {
   switch (slug) {
@@ -99,6 +101,9 @@ export default function ToolClient({ tool }: { tool: Tool }) {
         <div className="tb-v2-tool-card">
           {component}
         </div>
+
+        {/* FAQ */}
+        <FaqSection toolName={tool.name} faqs={getFaqs(tool)} />
 
         {/* Footer note */}
         <p className="tb-v2-tool-footer">
