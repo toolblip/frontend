@@ -1322,7 +1322,25 @@ export const tools: Tool[] = [
   { name: 'Contrast Checker', slug: 'color-contrast-checker', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail indicators.', emoji: '♿', category: 'Color' },
   { name: 'Unit Converter', slug: 'unit-converter-toolbox', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
   { name: 'Number Base Converter', slug: 'number-base-encoder', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly in your browser.', emoji: '🔢', category: 'Conversion' },
-];
 
+  // --- Batch #11: Expanded tools (2026-04-24 #3) ---
+  { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-full', description: 'Generate lorem ipsum placeholder text with customizable paragraphs, sentences, word count, and starting phrase.', emoji: '📜', category: 'Text' },
+  { name: 'Grammar Checker', slug: 'grammar-checker-full', description: 'Check grammar and spelling errors with one-click corrections and detailed explanations for any text.', emoji: '✅', category: 'Text' },
+  { name: 'Readability Score', slug: 'readability-score-full', description: 'Calculate Flesch-Kincaid, SMOG, ARI, and Coleman-Liau readability grades for any text content.', emoji: '📊', category: 'Text' },
+  { name: 'Text Sorter', slug: 'text-sorter-full', description: 'Sort text lines alphabetically, by length, numerically, reverse, or random order instantly.', emoji: '📋', category: 'Text' },
+  { name: 'Regex Tester', slug: 'regex-tester-full', description: 'Test regex patterns with real-time match highlighting, capture groups, and replacement preview.', emoji: '🔍', category: 'Developer' },
+  { name: 'JWT Decoder', slug: 'jwt-decoder-full', description: 'Decode JWT tokens and inspect header, payload, expiration, and signature segments instantly.', emoji: '🎫', category: 'Developer' },
+  { name: 'Cron Expression Generator', slug: 'cron-generator-full', description: 'Build cron schedules visually with an interactive editor and get human-readable next run times.', emoji: '🕐', category: 'Date & Time' },
+  { name: 'HTTP Headers Viewer', slug: 'http-headers-full', description: 'View HTTP request and response headers for any URL with timing breakdown and CORS details.', emoji: '📦', category: 'Developer' },
+  { name: 'Port Scanner', slug: 'port-scanner-full', description: 'Scan common ports on a host to identify open services and running applications from your browser.', emoji: '🚪', category: 'Developer' },
+  { name: 'Favicon Generator', slug: 'favicon-full', description: 'Create favicon icons from any image or emoji with ICO, PNG, and SVG output in multiple sizes.', emoji: '🌐', category: 'Image' },
+  { name: 'Image Resizer', slug: 'image-resizer-full', description: 'Resize images to exact dimensions with aspect ratio lock, batch support, and quality control.', emoji: '📐', category: 'Image' },
+  { name: 'Meta Tag Generator', slug: 'meta-tag-full', description: 'Generate SEO meta tags, Open Graph, and Twitter Card tags with live preview for any URL.', emoji: '🏷️', category: 'SEO' },
+  { name: 'SERP Preview', slug: 'serp-preview-full', description: 'Preview how your page title and meta description appear in Google search results with character counts.', emoji: '🔎', category: 'SEO' },
+  { name: 'Color Picker', slug: 'color-picker-full', description: 'Pick any color visually and get HEX, RGB, HSL, HSV, and CMYK values with a live preview.', emoji: '🎨', category: 'Color' },
+  { name: 'Contrast Checker', slug: 'contrast-checker-full', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail indicators.', emoji: '♿', category: 'Color' },
+  { name: 'Unit Converter', slug: 'unit-converter-full', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
+  { name: 'Number Base Converter', slug: 'number-base-full', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly in your browser.', emoji: '🔢', category: 'Conversion' },
+];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'Image Tools', 'AI Tools', 'Document Generator', 'Text Tools'] as const;
