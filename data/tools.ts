@@ -1528,6 +1528,22 @@ export const tools: Tool[] = [
   { name: 'Byte Size Converter', slug: 'byte-converter', description: 'Convert bytes to KB, MB, GB, TB with binary (1024) or decimal (1000) base.', emoji: '💾', category: 'Conversion' },
   { name: 'Decimal to HEX Converter', slug: 'decimal-to-hex', description: 'Convert decimal numbers to hexadecimal with optional leading zeros and 0x prefix.', emoji: '🔢', category: 'Conversion' },
 
+  // --- New tools (2026-04-25 #5 - unique additions) ---
+  { name: 'WiFi QR Code Generator', slug: 'wifi-qr-code-generator', description: 'Generate QR codes for WiFi network sharing with SSID, password, and encryption type.', emoji: '📶', category: 'Image' },
+  { name: 'vCard QR Code Generator', slug: 'vcard-qr-generator', description: 'Generate QR codes containing contact information (vCard) for easy sharing.', emoji: '📱', category: 'Image' },
+  { name: 'QR Code Scanner', slug: 'qr-code-scanner', description: 'Scan and decode QR codes from images or webcam with instant text output.', emoji: '📲', category: 'Image' },
+  { name: 'Barcode Scanner', slug: 'barcode-scanner', description: 'Scan and decode common barcode formats including UPC, EAN, Code 128, and Code 39.', emoji: '📊', category: 'Image' },
+  { name: 'Area Converter', slug: 'area-converter', description: 'Convert between square meters, acres, hectares, square feet, and other area units.', emoji: '📐', category: 'Conversion' },
+  { name: 'Frequency Converter', slug: 'frequency-converter', description: 'Convert between hertz, kilohertz, megahertz, gigahertz, and RPM instantly.', emoji: '📡', category: 'Conversion' },
+  { name: 'Force Converter', slug: 'force-converter', description: 'Convert between newtons, dynes, pounds-force, and kilogram-force units.', emoji: '⚡', category: 'Conversion' },
+  { name: 'Random Color Generator', slug: 'random-color-generator', description: 'Generate random colors with HEX, RGB, and HSL values. Copy with one click.', emoji: '🎨', category: 'Color' },
+  { name: 'Time Duration Calculator', slug: 'time-duration-calculator', description: 'Calculate the duration between two dates and times in years, months, days, hours.', emoji: '⏱️', category: 'Utility' },
+  { name: 'Timestamp Diff Calculator', slug: 'timestamp-diff-calculator', description: 'Calculate the difference between two Unix timestamps or dates with breakdown.', emoji: '🕰️', category: 'Utility' },
+  { name: 'Pixel Density Calculator', slug: 'pixel-density-calculator', description: 'Calculate PPI and DPI for images at different dimensions and print sizes.', emoji: '📏', category: 'Image' },
+  { name: 'HTML to Text', slug: 'html-to-plain-text-tool', description: 'Strip HTML tags from any content and extract clean readable plain text.', emoji: '📝', category: 'Conversion' },
+  { name: 'Fake Address Generator', slug: 'fake-address-generator', description: 'Generate realistic fake addresses for testing with street, city, state, and zip.', emoji: '🏠', category: 'Text' },
+  { name: 'Random MAC Generator', slug: 'random-mac-generator', description: 'Generate random MAC addresses in OUI, EUI-48, and EUI-64 formats for testing.', emoji: '📡', category: 'Network' },
+
   // --- New tools (2026-04-25 #4) ---
   { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-placeholder', description: 'Generate lorem ipsum placeholder text with paragraphs, sentences, word count, and starting phrase.', emoji: '📜', category: 'Text' },
   { name: 'Grammar Checker', slug: 'grammar-checker-2025', description: 'Check grammar and spelling errors with one-click fixes and detailed explanations for any text.', emoji: '✅', category: 'Text' },
