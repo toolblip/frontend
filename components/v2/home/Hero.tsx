@@ -23,9 +23,9 @@ export default function Hero({ toolCount }: { toolCount: number }) {
               <Link href="/directory" className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg">
                 Browse all tools <IconArrow style={{ width: 16, height: 16 }} />
               </Link>
-              <Link href="/tools/json-formatter" className="tb-v2-btn tb-v2-btn-lg">
-                Try JSON Formatter
-              </Link>
+              <a href="mailto:info@toolblip.com?subject=Tool Suggestion" className="tb-v2-btn tb-v2-btn-lg">
+                Submit Your Tool
+              </a>
             </div>
             <div className="tb-v2-hero-chips">
               <span className="tb-v2-chip"><IconShield /> In-browser only</span>

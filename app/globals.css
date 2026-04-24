@@ -926,6 +926,23 @@ body.tb-v2 a {
 }
 .tb-v2-toy-stat-lbl { font-size: 11.5px; color: var(--fg-2); margin-top: 6px; font-weight: 500; }
 
+/* Toy: foot link */
+.tb-v2-toy-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px; border-top: 1px solid var(--line);
+  background: var(--surface-2);
+}
+.tb-v2-toy-link {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 12px; font-weight: 600; color: var(--red);
+  text-decoration: none; transition: opacity .15s;
+}
+.tb-v2-toy-link:hover { opacity: .75; }
+.tb-v2-toy-rotate-hint {
+  font-size: 11px; color: var(--fg-3); font-weight: 500;
+  animation: tbv2LiveBlink 1.6s ease-in-out infinite;
+}
+
 /* Toy: QR */
 .tb-v2-toy-qr-pane { padding: 22px; display: flex; gap: 20px; align-items: center; flex: 1; }
 .tb-v2-toy-qr-form { flex: 1; display: flex; flex-direction: column; gap: 10px; }
