@@ -295,9 +295,8 @@ body.tb-v2 a {
   text-align: left; width: 100%;
   color: inherit; transition: background .08s, box-shadow .08s;
 }
-.tb-v2-mm-side-row:hover,
-.tb-v2-mm-side-row.on { background: var(--surface); }
-.tb-v2-mm-side-row.on { box-shadow: 0 0 0 1px var(--line); }
+.tb-v2-mm-side-row:hover { background: var(--surface-2); }
+.tb-v2-mm-side-row.on { background: var(--surface); box-shadow: 0 0 0 1.5px var(--line); }
 .tb-v2-mm-side-icon {
   width: 34px; height: 34px; border-radius: 8px;
   display: flex; align-items: center; justify-content: center;
