@@ -52,7 +52,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const toolPages: MetadataRoute.Sitemap = tools.map((tool) => ({
     url: `${BASE_URL}/tools/${tool.slug}`,
     lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
+    changeFrequency: 'monthly' as const,
     priority: 0.7,
   }));
 
