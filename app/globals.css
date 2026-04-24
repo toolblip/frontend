@@ -607,9 +607,9 @@ body.tb-v2 a {
 .tb-v2-sp-row-cat {
   font-family: var(--f-mono); font-size: 10.5px;
   letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--cat-color, var(--fg-2));
+  color: #fff;
   padding: 3px 7px; border-radius: 4px;
-  background: var(--cat-bg, var(--surface-2));
+  background: var(--cat-color, var(--fg-2));
 }
 [data-cat-color="off"] .tb-v2-sp-row-cat { color: var(--fg-2); background: var(--surface-2); }
 .tb-v2-sp-row-go { color: var(--fg-3); opacity: 0; transition: opacity .1s, color .1s; }
