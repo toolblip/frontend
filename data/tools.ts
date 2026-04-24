@@ -1018,6 +1018,25 @@ export const tools: Tool[] = [
   { name: 'Contrast Checker', slug: 'contrast-browser', description: 'Check text and background color contrast for WCAG AA and AAA compliance.', emoji: '♿', category: 'Color' },
   { name: 'Unit Converter', slug: 'unit-converter-browser', description: 'Convert length, weight, and temperature between metric and imperial units in your browser.', emoji: '⚖️', category: 'Conversion' },
   { name: 'Number Base Converter', slug: 'number-base-browser', description: 'Convert between binary, decimal, hexadecimal, and octal instantly in your browser.', emoji: '🔢', category: 'Conversion' },
+  // From ploy.cloud (missing in toolblip)
+  { name: 'Simple Counter', slug: 'counter', description: 'A clean, easy-to-use counter for tracking anything. Perfect for tallying, counting reps, or keeping score.', emoji: '🔢', category: 'Utility' },
+  { name: 'Random Password Generator', slug: 'random-password-generator', description: 'Generate strong, secure passwords instantly. Customize length and character types for maximum security.', emoji: '🔐', category: 'Utility' },
+  { name: 'XML Sitemap URL Extractor', slug: 'sitemap-extractor', description: 'Extract all URLs from any sitemap.xml file instantly. Perfect for SEO audits, site analysis, and content inventory.', emoji: '🗺️', category: 'SEO' },
+  { name: 'Citation Generator', slug: 'citation-generator', description: 'Create perfect citations in APA, MLA, Chicago, and more formats. Support for books, websites, journals, and other sources.', emoji: '📚', category: 'Text' },
+  { name: 'Markdown to PDF Converter', slug: 'markdown-to-pdf', description: 'Convert Markdown to professional PDFs instantly. Support for tables, code blocks, and custom themes. 100% client-side.', emoji: '📄', category: 'Developer' },
+  { name: 'PDF Password Remover', slug: 'pdf-password-remover', description: 'Remove password protection from PDF files instantly. 100% secure client-side processing - your files never leave your device.', emoji: '🔓', category: 'Utility' },
+  { name: 'Base64 Encoder/Decoder', slug: 'base64-encoder-decoder', description: 'Encode and decode Base64 strings instantly. Support for text, files, images, and binary data with live preview.', emoji: '🔤', category: 'Developer' },
+  { name: 'Text Case Converter', slug: 'text-case-converter', description: 'Convert text between different cases: UPPERCASE, lowercase, Title Case, camelCase, snake_case, and more.', emoji: '🔤', category: 'Text' },
+  { name: 'URL Encoder/Decoder', slug: 'url-encoder-decoder', description: 'Encode and decode URLs instantly. Perfect for handling special characters in URLs and query parameters.', emoji: '🔗', category: 'Developer' },
+  { name: 'JSON Schema Editor', slug: 'json-schema-editor', description: 'Create and validate JSON schemas visually. Perfect for API development, data validation, and documentation.', emoji: '📋', category: 'Developer' },
+  { name: 'HTML Encoder/Decoder', slug: 'html-encoder-decoder', description: 'Encode and decode HTML entities. Convert special characters to HTML entities and back.', emoji: '🏷️', category: 'Developer' },
+  { name: 'CSS Minifier', slug: 'css-minifier', description: 'Minify CSS code to reduce file size. Remove whitespace, comments, and optimize for production.', emoji: '🎨', category: 'Developer' },
+  { name: 'Text Diff Checker', slug: 'text-difference-checker', description: 'Compare two texts and highlight differences. Perfect for code review, document comparison, and content editing.', emoji: '📝', category: 'Text' },
+  { name: 'Markdown Editor', slug: 'markdown-editor', description: 'Write and preview Markdown in real-time. Export to HTML, PDF, or copy formatted text with syntax highlighting.', emoji: '✏️', category: 'Text' },
+  { name: 'Binary Converter', slug: 'binary-converter', description: 'Convert between binary, decimal, hexadecimal, and octal number systems. Support for signed integers and more.', emoji: '🔢', category: 'Developer' },
+  { name: 'Tip Calculator', slug: 'tip-calculator', description: 'Calculate tips and split bills among multiple people. Perfect for restaurants, bars, and services.', emoji: '💰', category: 'Utility' },
+  { name: 'Backslash Escape/Unescape', slug: 'backslash-escape-unescape', description: 'Escape and unescape backslash characters in strings for JSON, JavaScript, regex, and other programming contexts.', emoji: '🔙', category: 'Developer' },
+  { name: 'SQL Formatter', slug: 'sql-formatter', description: 'Format, beautify, and minify SQL queries with proper indentation and syntax highlighting. Support for all major databases.', emoji: '🗄️', category: 'Developer' },
 ];
 
 
