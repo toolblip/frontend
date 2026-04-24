@@ -5,17 +5,15 @@ import CodeBlock from '@/components/ui/CodeBlock';
 
 // ─── Config ────────────────────────────────────────────────────────────────
 
-// Primary base URL — Railway production deployment
-// (will switch to https://api.toolblip.com once SSL is provisioned)
-const BASE_URL = 'https://toolblip-api-production.up.railway.app';
+const BASE_URL = 'https://api.toolblip.com';
 
 const ENDPOINTS = [
-  { id: 'tools-list',    method: 'GET',    path: '/api/tools',          auth: false, status: 200, label: 'List all tools' },
-  { id: 'tools-detail',  method: 'GET',    path: '/api/tools/{slug}',   auth: false, status: 200, label: 'Get single tool' },
-  { id: 'auth-register', method: 'POST',   path: '/api/auth/register',  auth: false, status: 201, label: 'Create account' },
-  { id: 'auth-login',    method: 'POST',   path: '/api/auth/login',     auth: false, status: 200, label: 'Sign in' },
-  { id: 'auth-logout',   method: 'POST',   path: '/api/auth/logout',    auth: true,  status: 200, label: 'Revoke session' },
-  { id: 'auth-user',     method: 'GET',    path: '/api/auth/user',     auth: true,  status: 200, label: 'Get authenticated user' },
+  { id: 'tools-list',    method: 'GET',    path: '/api/tools',         auth: false, status: 200, label: 'List all tools' },
+  { id: 'tools-detail', method: 'GET',    path: '/api/tools/{slug}',  auth: false, status: 200, label: 'Get single tool' },
+  { id: 'auth-register', method: 'POST',  path: '/api/auth/register', auth: false, status: 201, label: 'Create account' },
+  { id: 'auth-login',   method: 'POST',   path: '/api/auth/login',    auth: false, status: 200, label: 'Sign in' },
+  { id: 'auth-logout',  method: 'POST',   path: '/api/auth/logout',   auth: true,  status: 200, label: 'Revoke session' },
+  { id: 'auth-user',    method: 'GET',    path: '/api/auth/user',     auth: true,  status: 200, label: 'Get authenticated user' },
 ] as const;
 
 const SECTIONS = [
@@ -24,7 +22,7 @@ const SECTIONS = [
   { id: 'tools-list',    label: 'GET /api/tools' },
   { id: 'tools-detail',  label: 'GET /api/tools/{slug}' },
   { id: 'auth-register', label: 'POST /api/auth/register' },
-  { id: 'auth-login',   label: 'POST /api/auth/login' },
+  { id: 'auth-login',    label: 'POST /api/auth/login' },
   { id: 'auth-logout',   label: 'POST /api/auth/logout' },
   { id: 'auth-user',     label: 'GET /api/auth/user' },
   { id: 'errors',        label: 'Error Codes' },
@@ -113,12 +111,12 @@ export default function ApiDocsClient() {
               <code className="block text-sm font-mono text-red-600 dark:text-red-400 break-all">{BASE_URL}</code>
               <p className="text-[10px] text-green-600 dark:text-green-400 mt-1.5 flex items-center gap-1">
                 <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                Railway — SSL active
+                SSL active
               </p>
               <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Custom domain (SSL pending)</p>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Railway fallback</p>
                 <code className="block text-[11px] font-mono text-gray-500 dark:text-gray-600 break-all">
-                  https://api.toolblip.com
+                  https://toolblip-api-production.up.railway.app
                 </code>
               </div>
             </div>
@@ -227,7 +225,7 @@ export default function ApiDocsClient() {
           <section id="tools-list" className="scroll-mt-16">
             <EndpointHeader method="GET" path="/api/tools" auth={false} status={200} />
             <p className="text-gray-500 dark:text-gray-400 text-sm mb-5">
-              Returns all available tools. Public — no authentication required.
+              Returns a paginated list of all available tools. Public — no authentication required.
             </p>
 
             <div className="mb-6">
@@ -305,14 +303,14 @@ export default function ApiDocsClient() {
               <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Response fields</p>
               <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs">
                 {[
-                  { field: 'tools[].id',         desc: 'Unique numeric ID' },
-                  { field: 'tools[].slug',        desc: 'URL-friendly identifier' },
-                  { field: 'tools[].name',        desc: 'Display name' },
-                  { field: 'tools[].description', desc: 'Short description' },
-                  { field: 'tools[].category',    desc: 'Tool category' },
-                  { field: 'tools[].is_pro',      desc: 'Requires pro subscription' },
-                  { field: 'tools[].emoji',       desc: 'Icon emoji (optional)' },
-                  { field: 'tools[].created_at',  desc: 'ISO 8601 timestamp' },
+                  { field: 'tools[].id',          desc: 'Unique numeric ID' },
+                  { field: 'tools[].slug',         desc: 'URL-friendly identifier' },
+                  { field: 'tools[].name',         desc: 'Display name' },
+                  { field: 'tools[].description',  desc: 'Short description' },
+                  { field: 'tools[].category',     desc: 'Tool category' },
+                  { field: 'tools[].is_pro',       desc: 'Requires pro subscription' },
+                  { field: 'tools[].emoji',        desc: 'Icon emoji (optional)' },
+                  { field: 'tools[].created_at',   desc: 'ISO 8601 timestamp' },
                 ].map(({ field, desc }) => (
                   <div key={field} className="flex gap-2 py-0.5">
                     <code className="font-mono text-gray-700 dark:text-gray-300 shrink-0">{field}</code>
@@ -398,7 +396,7 @@ export default function ApiDocsClient() {
           <section id="auth-register" className="scroll-mt-16">
             <EndpointHeader method="POST" path="/api/auth/register" auth={false} status={201} />
             <p className="text-gray-500 dark:text-gray-400 text-sm mb-5">
-              Create a new user account. Returns the user object and a Bearer token.
+              Create a new user account. Returns the user object and a Bearer token on success.
             </p>
 
             <div className="mb-6">
@@ -467,7 +465,7 @@ export default function ApiDocsClient() {
           <section id="auth-login" className="scroll-mt-16">
             <EndpointHeader method="POST" path="/api/auth/login" auth={false} status={200} />
             <p className="text-gray-500 dark:text-gray-400 text-sm mb-5">
-              Sign in with existing credentials. Returns the user object and a Bearer token.
+              Sign in with existing credentials. Returns the user object and a Bearer token on success.
             </p>
 
             <div className="mb-6">
@@ -528,7 +526,7 @@ export default function ApiDocsClient() {
           <section id="auth-logout" className="scroll-mt-16">
             <EndpointHeader method="POST" path="/api/auth/logout" auth={true} status={200} />
             <p className="text-gray-500 dark:text-gray-400 text-sm mb-5">
-              Revoke the current Bearer token and end the session. Token becomes permanently invalid.
+              Revoke the current Bearer token and end the session. The token becomes permanently invalid.
             </p>
 
             <div className="mb-6">
