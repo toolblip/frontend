@@ -3,9 +3,13 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { tools } from '@/data/tools';
+import { CAT_META, getCategoryMeta } from '@/lib/v2/categoryMeta';
+import { IconArrowUR, IconSearch, IconClose, IconDown } from '@/components/v2/icons';
 
-const CATEGORIES = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS'] as const;
-type Category = typeof CATEGORIES[number];
+const ALL_CATEGORIES = ['All', ...Object.keys(CAT_META)] as const;
+type Category = typeof ALL_CATEGORIES[number];
+
+type SortMode = 'default' | 'az' | 'za' | 'newest';
 
 export default function DirectoryClient() {
   const [query, setQuery] = useState('');
@@ -13,7 +17,10 @@ export default function DirectoryClient() {
   const [showTopBtn, setShowTopBtn] = useState(false);
   const [visibleCount, setVisibleCount] = useState(24);
   const [mounted, setMounted] = useState(false);
-  const [animKey, setAnimKey] = useState(0); // increment to re-trigger card animations
+  const [animKey, setAnimKey] = useState(0);
+  const [sortMode, setSortMode] = useState<SortMode>('default');
+  const [sortOpen, setSortOpen] = useState(false);
+  const sortRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => { setMounted(true); }, []);
@@ -24,6 +31,17 @@ export default function DirectoryClient() {
     const t = setTimeout(() => setDebouncedQuery(query), 150);
     return () => clearTimeout(t);
   }, [query]);
+
+  // Close sort dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (sortRef.current && !sortRef.current.contains(e.target as Node)) {
+        setSortOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
 
   // Scroll-to-top button
   useEffect(() => {
@@ -55,11 +73,11 @@ export default function DirectoryClient() {
   // Re-trigger card entrance animation whenever filters change
   useEffect(() => {
     setAnimKey((k) => k + 1);
-  }, [debouncedQuery, activeTab]);
+  }, [debouncedQuery, activeTab, sortMode]);
 
   const filtered = useMemo(() => {
     const q = debouncedQuery.trim().toLowerCase();
-    return tools.filter((tool) => {
+    let result = tools.filter((tool) => {
       const matchesTab = activeTab === 'All' || tool.category === activeTab;
       const matchesSearch =
         !q ||
@@ -68,7 +86,15 @@ export default function DirectoryClient() {
         tool.category.toLowerCase().includes(q);
       return matchesTab && matchesSearch;
     });
-  }, [debouncedQuery, activeTab]);
+
+    if (sortMode === 'az') {
+      result = [...result].sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sortMode === 'za') {
+      result = [...result].sort((a, b) => b.name.localeCompare(a.name));
+    }
+
+    return result;
+  }, [debouncedQuery, activeTab, sortMode]);
 
   const tabCounts = useMemo(() => {
     const counts: Record<string, number> = { All: tools.length };
@@ -86,72 +112,91 @@ export default function DirectoryClient() {
     setQuery('');
     setActiveTab('All');
     setVisibleCount(24);
+    setSortMode('default');
     inputRef.current?.focus();
   };
 
+  const sortLabel: Record<SortMode, string> = {
+    default: 'Most used',
+    az: 'A → Z',
+    za: 'Z → A',
+    newest: 'Newest',
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      {/* Header */}
-      <div className="border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
-        <div className="max-w-6xl mx-auto px-4 py-8 sm:py-10">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-1">
-            Tool Directory
-          </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            {tools.length} free tools — search, filter, and discover what you need
+    <div className="tb-v2-shell">
+      {/* ── Page header ── */}
+      <div className="tb-v2-dir-header">
+        <div className="tb-v2-container">
+          <div className="tb-v2-kicker">All tools</div>
+          <h1 className="tb-v2-dir-title">Tool Directory</h1>
+          <p className="tb-v2-dir-sub">
+            {tools.length} free browser-based tools — text, developer, image,
+            conversion, math, and more.
           </p>
         </div>
       </div>
 
-      {/* Sticky controls */}
-      <div className="sticky top-0 z-10 bg-gray-50/95 dark:bg-gray-950/95 backdrop-blur-sm border-b border-gray-200 dark:border-gray-800">
-        <div className="max-w-6xl mx-auto px-4 py-3 space-y-3">
-          {/* Search */}
-          <div className="relative">
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-              <svg
-                className="w-4 h-4 text-gray-400"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
+      {/* ── Sticky search + filter bar ── */}
+      <div className="tb-v2-dir-controls">
+        <div className="tb-v2-container">
+          {/* Search row */}
+          <div className="tb-v2-dir-search-row">
+            <div className="tb-v2-dir-search-wrap">
+              <IconSearch className="tb-v2-dir-search-ic" />
+              <input
+                ref={inputRef}
+                type="text"
+                placeholder="Search tools…"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="tb-v2-dir-search-input"
+              />
+              {query ? (
+                <button
+                  onClick={() => setQuery('')}
+                  className="tb-v2-dir-search-clear"
+                  aria-label="Clear search"
+                >
+                  <IconClose className="tb-v2-ic" />
+                </button>
+              ) : (
+                <kbd className="tb-v2-kbd tb-v2-dir-search-kbd">/</kbd>
+              )}
             </div>
-            <input
-              ref={inputRef}
-              type="text"
-              placeholder="Search tools by name or description..."
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              className="w-full pl-9 pr-20 py-2.5 text-sm bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-shadow"
-            />
-            {query ? (
+
+            {/* Sort dropdown */}
+            <div className="tb-v2-dir-sort-wrap" ref={sortRef}>
               <button
-                onClick={() => setQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-1"
-                aria-label="Clear search"
+                className={`tb-v2-btn tb-v2-dir-sort-btn${sortOpen ? ' on' : ''}`}
+                onClick={() => setSortOpen((o) => !o)}
               >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                {sortLabel[sortMode]}
+                <IconDown className="tb-v2-ic" />
               </button>
-            ) : (
-              <kbd className="hidden sm:flex absolute right-3 top-1/2 -translate-y-1/2 items-center gap-0.5 text-[10px] text-gray-400 dark:text-gray-500 font-mono bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 px-1.5 py-0.5 rounded pointer-events-none">
-                /
-              </kbd>
-            )}
+              {sortOpen && (
+                <div className="tb-v2-dir-sort-pop">
+                  {(['default', 'az', 'za'] as SortMode[]).map((m) => (
+                    <button
+                      key={m}
+                      className={`tb-v2-tm-row${sortMode === m ? ' on' : ''}`}
+                      onClick={() => { setSortMode(m); setSortOpen(false); }}
+                    >
+                      {sortLabel[m]}
+                      {sortMode === m && <IconClose className="tb-v2-ic tb-v2-tm-check" />}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Category tabs */}
-          <div className="flex gap-1.5 overflow-x-auto pb-0.5 scrollbar-hide">
-            {CATEGORIES.map((tab) => {
+          <div className="tb-v2-dir-tabs">
+            {ALL_CATEGORIES.map((tab) => {
               const count = tabCounts[tab] ?? 0;
+              if (count === 0 && tab !== 'All') return null;
+              const isActive = activeTab === tab;
               return (
                 <button
                   key={tab}
@@ -159,22 +204,10 @@ export default function DirectoryClient() {
                     setActiveTab(tab);
                     setVisibleCount(24);
                   }}
-                  className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-medium rounded-full transition-all ${
-                    activeTab === tab
-                      ? 'bg-red-600 text-white shadow-sm'
-                      : 'bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
-                  }`}
+                  className={`tb-v2-dir-tab${isActive ? ' on' : ''}`}
                 >
                   <span>{tab}</span>
-                  <span
-                    className={`text-[10px] font-semibold px-1.5 py-0.5 rounded-full ${
-                      activeTab === tab
-                        ? 'bg-red-500 text-white'
-                        : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400'
-                    }`}
-                  >
-                    {count}
-                  </span>
+                  <span className="tb-v2-dir-tab-count">{count}</span>
                 </button>
               );
             })}
@@ -182,42 +215,27 @@ export default function DirectoryClient() {
         </div>
       </div>
 
-      {/* Results */}
-      <div className="max-w-6xl mx-auto px-4 py-6">
+      {/* ── Results ── */}
+      <div className="tb-v2-container tb-v2-dir-body">
         {/* Count bar */}
-        <div className="flex items-center justify-between mb-5">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+        <div className="tb-v2-dir-countbar">
+          <p className="tb-v2-dir-count-text">
             Showing{' '}
-            <span className="font-semibold text-gray-900 dark:text-gray-200">
-              {displayedTools.length}
-            </span>{' '}
-            of{' '}
-            <span className="font-semibold text-gray-900 dark:text-gray-200">
-              {filtered.length}
-            </span>
+            <strong>{displayedTools.length}</strong> of{' '}
+            <strong>{filtered.length}</strong>
             {filtered.length === 1 ? ' tool' : ' tools'}
             {activeTab !== 'All' && (
-              <span className="ml-1">
-                in <span className="font-medium text-red-600 dark:text-red-400">{activeTab}</span>
-              </span>
+              <span className="tb-v2-dir-count-cat"> in {activeTab}</span>
             )}
             {query && (
-              <span className="ml-1">
-                for{' '}
-                <span className="font-medium text-gray-900 dark:text-gray-200">
-                  &ldquo;{query}&rdquo;
-                </span>
+              <span className="tb-v2-dir-count-query">
+                {' '}for &ldquo;{query}&rdquo;
               </span>
             )}
           </p>
-          {(query || activeTab !== 'All') && (
-            <button
-              onClick={clearAll}
-              className="text-xs text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 font-medium transition-colors flex items-center gap-1"
-            >
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
+          {(query || activeTab !== 'All' || sortMode !== 'default') && (
+            <button onClick={clearAll} className="tb-v2-dir-clear-btn">
+              <IconClose className="tb-v2-ic" />
               Clear filters
             </button>
           )}
@@ -226,55 +244,59 @@ export default function DirectoryClient() {
         {/* Grid */}
         {filtered.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4" key={animKey}>
-              {displayedTools.map((tool, i) => (
-                <Link
-                  key={tool.slug}
-                  href={`/tools/${tool.slug}`}
-                  className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-red-500 dark:hover:border-red-600 rounded-xl p-4 transition-all duration-200 hover:shadow-md hover:shadow-red-100/50 dark:hover:shadow-red-900/20 hover:-translate-y-0.5"
-                  style={
-                    mounted
-                      ? {
-                          animationName: 'fadeSlideUp',
-                          animationDuration: '350ms',
-                          animationTimingFunction: 'ease-out',
-                          animationFillMode: 'both',
-                          animationDelay: `${Math.min(i % 24, 12) * 35}ms`,
-                        }
-                      : { opacity: 0 }
-                  }
-                >
-                  <div className="flex items-start gap-3">
-                    <span className="text-2xl flex-shrink-0 leading-none mt-0.5" role="img" aria-hidden="true">
-                      {tool.emoji}
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2 mb-1 flex-wrap">
-                        <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors truncate text-sm sm:text-base">
-                          {tool.name}
-                        </h3>
+            <div className="tb-v2-dir-grid" key={animKey}>
+              {displayedTools.map((tool, i) => {
+                const meta = getCategoryMeta(tool.category);
+                return (
+                  <Link
+                    key={tool.slug}
+                    href={`/tools/${tool.slug}`}
+                    className="tb-v2-dir-card"
+                    style={
+                      mounted
+                        ? ({
+                            '--cat-color': meta.color,
+                            '--cat-bg': meta.bg,
+                            animationName: 'fadeSlideUp',
+                            animationDuration: '350ms',
+                            animationTimingFunction: 'ease-out',
+                            animationFillMode: 'both',
+                            animationDelay: `${Math.min(i % 24, 12) * 35}ms`,
+                          } as React.CSSProperties)
+                        : ({
+                            '--cat-color': meta.color,
+                            '--cat-bg': meta.bg,
+                            opacity: 0,
+                          } as React.CSSProperties)
+                    }
+                  >
+                    <div className="tb-v2-dir-card-top">
+                      <div className="tb-v2-dir-card-icon">
+                        <meta.icon width={22} height={22} />
                       </div>
-                      <span className="inline-block text-[10px] font-semibold uppercase tracking-wider text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 px-1.5 py-0.5 rounded-full mb-1.5">
-                        {tool.category}
-                      </span>
-                      <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2">
-                        {tool.description}
-                      </p>
+                      <div style={{ flex: 1 }}>
+                        <div className="tb-v2-dir-card-title">{tool.name}</div>
+                      </div>
+                      <IconArrowUR className="tb-v2-ic tb-v2-dir-card-go" />
                     </div>
-                  </div>
-                </Link>
-              ))}
+                    <div className="tb-v2-dir-card-desc">{tool.description}</div>
+                    <div className="tb-v2-dir-card-foot">
+                      <span className="tb-v2-dir-tag">{tool.category}</span>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
 
             {/* Load more */}
             {hasMore && (
-              <div className="flex justify-center mt-8">
+              <div className="tb-v2-dir-loadmore">
                 <button
                   onClick={loadMore}
-                  className="px-6 py-2.5 text-sm font-medium bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 rounded-xl hover:border-red-500 dark:hover:border-red-600 hover:text-red-600 dark:hover:text-red-400 transition-all"
+                  className="tb-v2-btn tb-v2-btn-lg"
                 >
                   Load more tools
-                  <span className="ml-2 text-xs text-gray-400 dark:text-gray-500">
+                  <span className="tb-v2-dir-loadmore-count">
                     ({filtered.length - visibleCount} remaining)
                   </span>
                 </button>
@@ -283,42 +305,17 @@ export default function DirectoryClient() {
           </>
         ) : (
           /* Empty state */
-          <div className="flex flex-col items-center justify-center py-28 text-center">
-            <div className="relative mb-6">
-              <div className="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-2xl flex items-center justify-center">
-                <svg
-                  className="w-9 h-9 text-gray-300 dark:text-gray-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-              </div>
-              <div className="absolute -bottom-1 -right-1 w-7 h-7 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-full flex items-center justify-center">
-                <span className="text-sm">🔍</span>
-              </div>
+          <div className="tb-v2-dir-empty">
+            <div className="tb-v2-dir-empty-icon">
+              <IconSearch width={32} height={32} />
             </div>
-            <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-2">
-              No tools found
-            </h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400 max-w-xs mb-1">
+            <h3 className="tb-v2-dir-empty-title">No tools found</h3>
+            <p className="tb-v2-dir-empty-desc">
               {query
-                ? `No results for &ldquo;${query}&rdquo; in ${activeTab === 'All' ? 'any category' : activeTab}`
+                ? `No results for "${query}"${activeTab === 'All' ? '' : ` in ${activeTab}`}`
                 : `No tools in the ${activeTab} category yet`}
             </p>
-            <p className="text-xs text-gray-400 dark:text-gray-500 mb-6">
-              Try a different search or switch categories
-            </p>
-            <button
-              onClick={clearAll}
-              className="px-5 py-2 text-sm font-medium bg-red-600 hover:bg-red-500 text-white rounded-lg transition-colors"
-            >
+            <button onClick={clearAll} className="tb-v2-btn tb-v2-btn-primary">
               Clear all filters
             </button>
           </div>
@@ -329,15 +326,12 @@ export default function DirectoryClient() {
       <button
         onClick={scrollToTop}
         aria-label="Scroll to top"
-        className={`fixed bottom-6 right-6 w-10 h-10 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full shadow-lg flex items-center justify-center text-gray-500 hover:text-red-600 dark:hover:text-red-400 transition-all duration-300 ${
-          showTopBtn ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
-        }`}
+        className={`tb-v2-dir-topbtn${showTopBtn ? ' on' : ''}`}
       >
-        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M5 15l7-7 7 7" />
         </svg>
       </button>
-
     </div>
   );
 }
