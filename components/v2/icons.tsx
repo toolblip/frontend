@@ -176,3 +176,67 @@ export const IconMenu = compound(
     <path d="M4 17h16" />
   </>
 );
+export const IconShield = compound(
+  <>
+    <path d="M12 3 4 6v6c0 5 4 8 8 9 4-1 8-4 8-9V6l-8-3Z" />
+    <path d="m9 12 2 2 4-4" />
+  </>
+);
+export const IconZap = base('M13 3 5 14h6l-1 7 8-11h-6l1-7Z');
+export const IconGift = compound(
+  <>
+    <path d="M20 12v8H4v-8" />
+    <path d="M22 8H2v4h20V8Z" />
+    <path d="M12 22V8" />
+    <path d="M12 8H7.5a2.5 2.5 0 1 1 0-5C11 3 12 8 12 8Z" />
+    <path d="M12 8h4.5a2.5 2.5 0 1 0 0-5C13 3 12 8 12 8Z" />
+  </>
+);
+export const IconDown = compound(
+  <>
+    <path d="M12 4v13" />
+    <path d="m6 11 6 6 6-6" />
+    <path d="M5 21h14" />
+  </>
+);
+export const IconCopy = compound(
+  <>
+    <rect x="8" y="8" width="12" height="12" rx="2" />
+    <path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3" />
+  </>
+);
+export const IconCode = compound(
+  <>
+    <path d="m9 8-4 4 4 4" />
+    <path d="m15 8 4 4-4 4" />
+  </>
+);
+export const IconKey = compound(
+  <>
+    <circle cx="8" cy="15" r="4" />
+    <path d="m11 12 9-9" />
+    <path d="m15 7 3 3" />
+  </>
+);
+export const IconCrop = compound(
+  <>
+    <path d="M6 2v16h16" />
+    <path d="M22 6H6l12 12" />
+  </>
+);
+export const IconHash = compound(
+  <>
+    <path d="M4 9h16" />
+    <path d="M4 15h16" />
+    <path d="M10 3 8 21" />
+    <path d="M16 3l-2 18" />
+  </>
+);
+export const IconGrid = compound(
+  <>
+    <rect x="4" y="4" width="7" height="7" />
+    <rect x="13" y="4" width="7" height="7" />
+    <rect x="4" y="13" width="7" height="7" />
+    <rect x="13" y="13" width="7" height="7" />
+  </>
+);

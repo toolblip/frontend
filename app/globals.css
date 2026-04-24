@@ -521,3 +521,400 @@ body.tb-v2 a {
   .tb-v2-footer-grid { grid-template-columns: 1fr 1fr; gap: 28px 20px; }
   .tb-v2-footer-brand { grid-column: 1 / -1; }
 }
+
+/* ==========================================================================
+   TOOLBLIP v2 — Typography helpers + buttons for home page
+   ========================================================================== */
+
+.tb-v2-kicker {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--red);
+  letter-spacing: -0.01em;
+}
+
+.tb-v2-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 38px; padding: 0 18px; font-size: 14px; font-weight: 600;
+  border-radius: 999px; border: 1px solid var(--line);
+  background: var(--surface); color: var(--fg-0);
+  transition: background .12s, border-color .12s, color .12s, transform .08s;
+  cursor: pointer; font-family: inherit;
+}
+.tb-v2-btn:hover { background: var(--surface-2); border-color: var(--line-2); }
+.tb-v2-btn:active { transform: scale(0.98); }
+.tb-v2-btn-primary {
+  background: var(--red); border-color: var(--red); color: #fff;
+  box-shadow: 0 2px 8px -2px color-mix(in srgb, var(--red) 50%, transparent);
+}
+.tb-v2-btn-primary:hover { background: var(--red-hover); border-color: var(--red-hover); color: #fff; }
+.tb-v2-btn-lg { height: 48px; padding: 0 24px; font-size: 15px; }
+.tb-v2-btn-sm { height: 30px; padding: 0 12px; font-size: 12.5px; }
+
+/* ==========================================================================
+   TOOLBLIP v2 — Hero
+   ========================================================================== */
+
+.tb-v2-hero {
+  padding: 80px 0 60px;
+  position: relative;
+  overflow: hidden;
+}
+.tb-v2-hero::before {
+  content: ""; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 15% 30%, color-mix(in srgb, var(--red) 8%, transparent), transparent 70%),
+    radial-gradient(ellipse 50% 40% at 85% 70%, #fde0ef66, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+[data-theme="dark"] .tb-v2-hero::before,
+.dark .tb-v2-hero::before {
+  background:
+    radial-gradient(ellipse 60% 50% at 15% 30%, color-mix(in srgb, var(--red) 18%, transparent), transparent 70%),
+    radial-gradient(ellipse 50% 40% at 85% 70%, #3e1832aa, transparent 70%);
+}
+.tb-v2-hero > .tb-v2-container { position: relative; z-index: 1; }
+.tb-v2-hero-grid {
+  display: grid; grid-template-columns: 1.05fr 1fr;
+  gap: 64px; align-items: center;
+}
+.tb-v2-hero h1 {
+  font-size: clamp(44px, 5.8vw, 72px);
+  margin: 18px 0 20px;
+  font-family: var(--f-display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  color: var(--fg-0);
+}
+.tb-v2-hero h1 em {
+  font-style: normal; color: var(--red);
+  background: linear-gradient(transparent 60%, color-mix(in srgb, var(--red) 20%, transparent) 60%);
+  padding: 0 2px;
+}
+.tb-v2-hero-sub {
+  max-width: 44ch; color: var(--fg-1);
+  font-size: 18px; line-height: 1.55; margin: 0 0 28px;
+}
+.tb-v2-hero-cta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.tb-v2-hero-chips {
+  display: flex; gap: 10px; margin-top: 26px;
+  font-size: 13px; color: var(--fg-1); align-items: center; flex-wrap: wrap;
+}
+.tb-v2-chip {
+  display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 999px; font-weight: 500;
+}
+.tb-v2-chip svg { color: var(--red); }
+.tb-v2-hero-note {
+  margin-top: 12px; font-size: 12.5px; color: var(--fg-3);
+  display: flex; justify-content: space-between;
+}
+
+/* ==========================================================================
+   TOOLBLIP v2 — Hero toy
+   ========================================================================== */
+
+.tb-v2-toy {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset, 0 20px 50px -20px rgba(0,0,0,0.15);
+}
+[data-theme="dark"] .tb-v2-toy,
+.dark .tb-v2-toy {
+  box-shadow: 0 1px 0 rgba(255,255,255,0.03) inset, 0 20px 60px -20px rgba(0,0,0,0.7);
+}
+.tb-v2-toy-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 14px 12px 16px; border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+.tb-v2-toy-tabs {
+  display: inline-flex; gap: 2px; padding: 3px;
+  background: var(--surface-2); border-radius: 999px;
+}
+.tb-v2-toy-tab {
+  padding: 6px 14px; font-size: 13px; font-weight: 500;
+  color: var(--fg-2); border-radius: 999px;
+  transition: all .15s;
+  cursor: pointer; border: 0; background: transparent; font-family: inherit;
+}
+.tb-v2-toy-tab.on {
+  background: var(--surface); color: var(--fg-0);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08); font-weight: 600;
+}
+.tb-v2-toy-meta {
+  font-size: 11.5px; color: var(--fg-2);
+  display: flex; gap: 8px; align-items: center; font-weight: 500;
+}
+.tb-v2-live-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: #22c55e;
+  box-shadow: 0 0 0 3px color-mix(in srgb, #22c55e 20%, transparent);
+  animation: tbv2LiveBlink 1.6s ease-in-out infinite;
+}
+@keyframes tbv2LiveBlink { 0%,100% { opacity: 0.9; } 50% { opacity: 0.4; } }
+
+.tb-v2-toy-body { min-height: 340px; display: flex; flex-direction: column; }
+.tb-v2-toy-textarea {
+  flex: 1; width: 100%; border: 0; outline: 0; background: transparent;
+  resize: none; padding: 20px 22px; color: var(--fg-0);
+  font-family: var(--f-sans); font-size: 15px; line-height: 1.6;
+  min-height: 220px;
+}
+.tb-v2-toy-textarea::placeholder { color: var(--fg-3); }
+
+.tb-v2-toy-stats {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  border-top: 1px solid var(--line); background: var(--surface-2);
+}
+.tb-v2-toy-stat { padding: 16px 18px; border-right: 1px solid var(--line); }
+.tb-v2-toy-stat:last-child { border-right: 0; }
+.tb-v2-toy-stat-num {
+  font-family: var(--f-display);
+  font-size: 26px; font-weight: 700; line-height: 1;
+  color: var(--fg-0); letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+.tb-v2-toy-stat-num sub {
+  font-size: 14px; color: var(--fg-3); margin-left: 2px;
+  vertical-align: baseline; font-weight: 700;
+}
+.tb-v2-toy-stat-lbl { font-size: 11.5px; color: var(--fg-2); margin-top: 6px; font-weight: 500; }
+
+/* Toy: QR */
+.tb-v2-toy-qr-pane { padding: 22px; display: flex; gap: 20px; align-items: center; flex: 1; }
+.tb-v2-toy-qr-form { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+.tb-v2-toy-qr-form label { font-size: 12px; font-weight: 600; color: var(--fg-1); }
+.tb-v2-toy-qr-form input {
+  height: 40px; padding: 0 14px; border: 1px solid var(--line);
+  border-radius: 10px; background: var(--surface-2); color: var(--fg-0);
+  font-size: 14px; outline: none;
+  transition: border-color .12s, background .12s;
+  font-family: inherit;
+}
+.tb-v2-toy-qr-form input:focus { border-color: var(--red); background: var(--surface); }
+.tb-v2-toy-qr-preview {
+  width: 180px; height: 180px; padding: 14px;
+  background: #fff; border: 1px solid var(--line); border-radius: 14px;
+  flex-shrink: 0;
+}
+
+/* Toy: Color */
+.tb-v2-toy-color-pane { padding: 22px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
+.tb-v2-toy-swatch {
+  height: 120px; border-radius: 14px; border: 1px solid var(--line);
+  display: flex; align-items: flex-end; padding: 16px;
+  font-size: 15px; font-weight: 600; color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+  letter-spacing: -0.01em;
+}
+.tb-v2-toy-color-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.tb-v2-toy-color-val {
+  padding: 10px 12px; background: var(--surface-2);
+  border: 1px solid var(--line); border-radius: 10px;
+  font-size: 12px;
+  display: flex; flex-direction: column; gap: 3px;
+}
+.tb-v2-toy-color-val b { color: var(--fg-0); font-weight: 600; font-size: 13px; }
+.tb-v2-toy-color-val span { color: var(--fg-3); font-size: 10.5px; font-weight: 600; letter-spacing: 0; }
+.tb-v2-toy-color-sliders { display: flex; flex-direction: column; gap: 10px; }
+.tb-v2-toy-color-slider {
+  display: grid; grid-template-columns: 18px 1fr 52px; gap: 12px;
+  align-items: center; font-size: 12px; color: var(--fg-2); font-weight: 600;
+}
+.tb-v2-toy-color-slider input[type="range"] {
+  -webkit-appearance: none; appearance: none; height: 6px; border-radius: 3px;
+  background: var(--surface-3); outline: none;
+}
+.tb-v2-toy-color-slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; width: 18px; height: 18px;
+  border-radius: 50%; background: var(--fg-0); border: 3px solid var(--surface);
+  cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+}
+
+/* ==========================================================================
+   TOOLBLIP v2 — Pills row
+   ========================================================================== */
+
+.tb-v2-pills {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  padding: 24px 0 40px; justify-content: center;
+  border-bottom: 1px solid var(--line);
+}
+.tb-v2-pill {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 16px; border-radius: 999px;
+  background: var(--surface); border: 1px solid var(--line);
+  font-size: 13.5px; font-weight: 500; color: var(--fg-1);
+}
+.tb-v2-pill b { color: var(--fg-0); font-weight: 700; }
+
+/* ==========================================================================
+   TOOLBLIP v2 — Section bands
+   ========================================================================== */
+
+.tb-v2-band { padding: 72px 0; }
+.tb-v2-band + .tb-v2-band { border-top: 1px solid var(--line); }
+.tb-v2-band-sm { padding: 48px 0; }
+.tb-v2-band-head {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 24px; margin-bottom: 36px;
+}
+.tb-v2-band-head h2 {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 38px; letter-spacing: -0.025em;
+  line-height: 1.05; margin: 10px 0 0;
+  color: var(--fg-0); max-width: 18ch;
+}
+.tb-v2-band-head h2 em {
+  font-style: normal; color: var(--red);
+}
+.tb-v2-band-head-side {
+  color: var(--fg-1); max-width: 36ch;
+  font-size: 15px; line-height: 1.55;
+}
+
+/* ==========================================================================
+   TOOLBLIP v2 — Category grid
+   ========================================================================== */
+
+.tb-v2-cats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+.tb-v2-cat {
+  padding: 22px;
+  border-radius: var(--radius);
+  background: var(--cat-bg, var(--surface));
+  border: 1px solid transparent;
+  transition: transform .15s, box-shadow .15s;
+  display: flex; flex-direction: column; gap: 8px;
+  min-height: 150px;
+}
+.tb-v2-cat:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px -12px rgba(0,0,0,0.15);
+}
+.tb-v2-cat-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: grid; place-items: center;
+  color: var(--cat-color, var(--fg-0));
+  background: var(--surface);
+  margin-bottom: 6px;
+}
+.tb-v2-cat-name {
+  font-size: 17px; font-weight: 600;
+  color: var(--cat-color, var(--fg-0));
+  letter-spacing: -0.01em;
+}
+.tb-v2-cat-count {
+  font-size: 12.5px; color: var(--cat-color, var(--fg-2));
+  opacity: 0.7; font-weight: 500;
+}
+.tb-v2-cat-examples {
+  font-size: 13px; color: var(--cat-color, var(--fg-2));
+  opacity: 0.85; line-height: 1.5; margin-top: 4px;
+}
+
+/* ==========================================================================
+   TOOLBLIP v2 — Directory cards (used on home + dir)
+   ========================================================================== */
+
+.tb-v2-dir-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 12px;
+}
+.tb-v2-dir-card {
+  padding: 18px; border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  display: flex; flex-direction: column; gap: 12px;
+  transition: border-color .12s, transform .12s, box-shadow .15s;
+  position: relative;
+}
+.tb-v2-dir-card:hover {
+  border-color: var(--line-2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -12px rgba(0,0,0,0.12);
+}
+.tb-v2-dir-card-top { display: flex; align-items: flex-start; gap: 12px; }
+.tb-v2-dir-card-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: grid; place-items: center; flex-shrink: 0;
+  color: var(--cat-color, var(--fg-0));
+  background: var(--cat-bg, var(--surface-2));
+}
+.tb-v2-dir-card-title {
+  font-size: 15.5px; font-weight: 600; color: var(--fg-0);
+  line-height: 1.3; letter-spacing: -0.01em;
+}
+.tb-v2-dir-card-desc {
+  font-size: 13.5px; color: var(--fg-2); line-height: 1.5;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.tb-v2-dir-card-foot {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: auto;
+}
+.tb-v2-dir-tag {
+  font-size: 11.5px; font-weight: 600;
+  color: var(--cat-color, var(--fg-2));
+  padding: 4px 10px; border-radius: 999px;
+  background: var(--cat-bg, var(--surface-2));
+}
+.tb-v2-dir-card-go {
+  color: var(--fg-3);
+  transition: color .12s, transform .12s;
+}
+.tb-v2-dir-card:hover .tb-v2-dir-card-go {
+  color: var(--red); transform: translate(2px, -2px);
+}
+
+/* ==========================================================================
+   TOOLBLIP v2 — Steps / How it works
+   ========================================================================== */
+
+.tb-v2-steps {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+}
+.tb-v2-step {
+  padding: 28px; background: var(--surface); border: 1px solid var(--line);
+  border-radius: var(--radius); display: flex; flex-direction: column; gap: 14px;
+  min-height: 220px;
+}
+.tb-v2-step-icon {
+  width: 48px; height: 48px; border-radius: 14px;
+  background: var(--red-tint); color: var(--red);
+  display: grid; place-items: center;
+}
+.tb-v2-step-title {
+  font-size: 20px; font-family: var(--f-display);
+  font-weight: 700; letter-spacing: -0.02em; color: var(--fg-0);
+}
+.tb-v2-step-desc { color: var(--fg-1); font-size: 14px; line-height: 1.6; }
+
+/* ==========================================================================
+   TOOLBLIP v2 — Home responsive
+   ========================================================================== */
+
+@media (max-width: 980px) {
+  .tb-v2-hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  .tb-v2-steps { grid-template-columns: 1fr; }
+  .tb-v2-band-head { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .tb-v2-band-head h2 { font-size: 32px; }
+}
+@media (max-width: 760px) {
+  .tb-v2-hero { padding: 48px 0 40px; }
+  .tb-v2-band { padding: 48px 0; }
+  .tb-v2-toy-qr-pane { flex-direction: column; align-items: stretch; }
+  .tb-v2-toy-qr-preview { width: 160px; height: 160px; align-self: center; }
+  .tb-v2-toy-color-row { grid-template-columns: repeat(2, 1fr); }
+}
