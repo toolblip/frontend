@@ -1724,6 +1724,40 @@ body.tb-v2 a {
 .tb-v2-cc-limit-count.near { color: #f59e0b; }
 .tb-v2-cc-limit-count.over { color: #ef4444; }
 
+/* QR Code Generator */
+.tb-v2-qr-root { display: flex; flex-direction: column; gap: 0; }
+.tb-v2-qr-form { display: flex; flex-direction: column; gap: 12px; }
+.tb-v2-qr-size-row { display: flex; align-items: center; gap: 12px; }
+.tb-v2-qr-size-label { font-size: 12px; font-weight: 600; color: var(--fg-2); width: 36px; flex-shrink: 0; }
+.tb-v2-qr-sizes { display: flex; gap: 6px; }
+.tb-v2-qr-size-btn {
+  height: 32px; padding: 0 12px; border: 1px solid var(--line);
+  border-radius: 8px; background: var(--surface); color: var(--fg-1);
+  font-size: 12px; font-weight: 600; cursor: pointer; transition: all .12s;
+}
+.tb-v2-qr-size-btn:hover { border-color: var(--red); color: var(--red); }
+.tb-v2-qr-size-btn.on { background: var(--red); border-color: var(--red); color: #fff; }
+.tb-v2-qr-dl-row { display: flex; gap: 8px; }
+.tb-v2-qr-dl-btn {
+  flex: 1; height: 38px; display: flex; align-items: center; justify-content: center; gap: 6px;
+  border: 1px solid var(--line); border-radius: 10px; background: var(--surface);
+  color: var(--fg-1); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .12s;
+}
+.tb-v2-qr-dl-btn:hover:not(:disabled) { border-color: var(--red); color: var(--red); }
+.tb-v2-qr-dl-btn:disabled { opacity: .4; cursor: default; }
+.tb-v2-qr-preview-wrap {
+  margin-top: 20px; display: flex; justify-content: center;
+}
+.tb-v2-qr-preview-img {
+  border: 1px solid var(--line); border-radius: 12px;
+  max-width: 100%; width: auto; height: auto;
+}
+.tb-v2-qr-empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; padding: 48px 24px; color: var(--fg-3); font-size: 13px;
+  border: 1px dashed var(--line); border-radius: 12px; text-align: center;
+}
+
 @media (max-width: 480px) {
   .tb-v2-wc-stats { grid-template-columns: repeat(2, 1fr); }
   .tb-v2-wc-stat:nth-child(2) { border-right: 0; }
