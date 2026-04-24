@@ -1510,6 +1510,23 @@ export const tools: Tool[] = [
   { name: 'Contrast Checker', slug: 'contrast-checker-xl', description: 'Check text and background color contrast for WCAG AA and AAA accessibility compliance.', emoji: '♿', category: 'Color' },
   { name: 'Unit Converter', slug: 'unit-converter-xl', description: 'Convert length, weight, and temperature between metric and imperial units instantly.', emoji: '⚖️', category: 'Conversion' },
   { name: 'Number Base Converter', slug: 'number-base-converter-xl', description: 'Convert between binary, decimal, hexadecimal, and octal number systems instantly.', emoji: '🔢', category: 'Conversion' },
+
+  // --- New tools (2026-04-24) ---
+  { name: 'Headline Analyzer', slug: 'headline-analyzer', description: 'Analyze headlines for word count, emotional impact, and SEO keyword density.', emoji: '✍️', category: 'Text' },
+  { name: 'Word Complexity Analyzer', slug: 'word-complexity-analyzer', description: 'Analyze text for average syllable count and suggest simpler alternatives for readability.', emoji: '🔤', category: 'Text' },
+  { name: 'Text Structure Validator', slug: 'text-structure-validator', description: 'Check heading hierarchy, paragraph length, and list usage for well-structured content.', emoji: '📋', category: 'Text' },
+  { name: 'Character Variety Checker', slug: 'character-variety-checker', description: 'Check text for character variety including uppercase, lowercase, digits, and special symbols.', emoji: '🔣', category: 'Text' },
+  { name: 'API Documentation Generator', slug: 'api-doc-generator', description: 'Generate API documentation from endpoint definitions with request/response examples.', emoji: '📄', category: 'Developer' },
+  { name: 'Database Query Formatter', slug: 'db-query-formatter', description: 'Format and prettify SQL queries with keyword highlighting and indentation.', emoji: '🗄️', category: 'Developer' },
+  { name: 'UUID Compare', slug: 'uuid-compare', description: 'Compare two UUIDs to check version, variant, timestamp, and lexicographic order.', emoji: '🆔', category: 'Developer' },
+  { name: 'Image Dimension Checker', slug: 'image-dimension-checker', description: 'Check image width, height, and file size without uploading - supports JPEG, PNG, WebP.', emoji: '📐', category: 'Image' },
+  { name: 'OG Tag Debugger', slug: 'og-tag-debugger', description: 'Debug Open Graph and Twitter Card meta tags for any URL with detailed validation.', emoji: '🔍', category: 'SEO' },
+  { name: 'Canonical URL Generator', slug: 'canonical-url-generator', description: 'Generate canonical URL tags for webpages to prevent duplicate content SEO issues.', emoji: '🔗', category: 'SEO' },
+  { name: 'Image Background Remover', slug: 'image-background-remover', description: 'Remove background from images using browser-based processing - no upload required.', emoji: '✂️', category: 'Image' },
+  { name: 'HEX to HSV Converter', slug: 'hex-to-hsv', description: 'Convert HEX color codes to HSV and HSB values with live color preview.', emoji: '🎨', category: 'Color' },
+  { name: 'HSV to HEX Converter', slug: 'hsv-to-hex', description: 'Convert HSV and HSB values to HEX format with a live color preview.', emoji: '🎨', category: 'Color' },
+  { name: 'Byte Size Converter', slug: 'byte-converter', description: 'Convert bytes to KB, MB, GB, TB with binary (1024) or decimal (1000) base.', emoji: '💾', category: 'Conversion' },
+  { name: 'Decimal to HEX Converter', slug: 'decimal-to-hex', description: 'Convert decimal numbers to hexadecimal with optional leading zeros and 0x prefix.', emoji: '🔢', category: 'Conversion' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'Image Tools', 'AI Tools', 'Document Generator', 'Text Tools', 'HEX/RGB/HSL'] as const;
