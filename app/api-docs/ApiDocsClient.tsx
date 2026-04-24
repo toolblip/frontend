@@ -32,6 +32,12 @@ const METHOD_STYLES: Record<string, string> = {
   PATCH:  'bg-violet-100 dark:bg-violet-900/30 text-violet-700 dark:text-violet-400',
 };
 
+// ─── Shared helpers ──────────────────────────────────────────────────────────
+
+function scrollToSection(id: string) {
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────
 
 export default function ApiDocsClient() {
@@ -53,10 +59,6 @@ export default function ApiDocsClient() {
     }
     return () => observerRef.current?.disconnect();
   }, []);
-
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#09090b] text-gray-900 dark:text-gray-100">
@@ -123,7 +125,7 @@ export default function ApiDocsClient() {
             {SECTIONS.map(({ id, label }) => (
               <button
                 key={id}
-                onClick={() => scrollTo(id)}
+                onClick={() => scrollToSection(id)}
                 className={`w-full flex items-center px-3 py-1.5 rounded-lg transition-colors text-xs text-left cursor-pointer ${
                   activeSection === id
                     ? 'text-[#58D65D] dark:text-[#58D65D] bg-emerald-50 dark:bg-[#58D65D]/10 font-semibold'
@@ -724,7 +726,7 @@ function InlineCode({ children }: { children: React.ReactNode }) {
 function EndpointPill({ method, path, targetId }: { method: string; path: string; targetId: string }) {
   return (
     <button
-      onClick={() => scrollTo(targetId)}
+      onClick={() => scrollToSection(targetId)}
       className="inline-flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-full
         bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800
         text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white

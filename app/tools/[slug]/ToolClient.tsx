@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import type { Tool } from '@/data/tools';
+import ShareButtons from '@/components/ShareButtons';
 
 // ─── Shared Layout ───────────────────────────────────────────────────────────
 
@@ -21,6 +22,9 @@ function ToolLayout({ tool }: { tool: Tool }) {
         <p className="text-gray-500 dark:text-gray-400 leading-relaxed">
           {tool.description}
         </p>
+        <div className="mt-4">
+          <ShareButtons toolName={tool.name} />
+        </div>
       </div>
     </div>
   );
