@@ -1725,37 +1725,65 @@ body.tb-v2 a {
 .tb-v2-cc-limit-count.over { color: #ef4444; }
 
 /* QR Code Generator */
-.tb-v2-qr-root { display: flex; flex-direction: column; gap: 0; }
-.tb-v2-qr-form { display: flex; flex-direction: column; gap: 12px; }
-.tb-v2-qr-size-row { display: flex; align-items: center; gap: 12px; }
-.tb-v2-qr-size-label { font-size: 12px; font-weight: 600; color: var(--fg-2); width: 36px; flex-shrink: 0; }
-.tb-v2-qr-sizes { display: flex; gap: 6px; }
+.tb-v2-qr-root { display: flex; flex-direction: column; gap: 20px; }
+.tb-v2-qr-input-row { display: flex; gap: 8px; align-items: flex-start; }
+.tb-v2-qr-input-wrap { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+.tb-v2-qr-input {
+  height: 40px; padding: 0 12px;
+  border: 1px solid var(--line); border-radius: 9px;
+  background: var(--surface); color: var(--fg-1);
+  font-size: 14px; outline: none; width: 100%;
+  transition: border-color .15s;
+}
+.tb-v2-qr-input:focus { border-color: var(--fg-3); }
+.tb-v2-qr-input--err { border-color: #ef4444; }
+.tb-v2-qr-error { font-size: 12px; color: #ef4444; padding: 0 2px; }
+.tb-v2-qr-gen-btn {
+  height: 40px; padding: 0 16px; flex-shrink: 0;
+  display: flex; align-items: center; gap: 7px;
+  background: var(--fg-1); color: var(--surface);
+  border-radius: 9px; border: none; cursor: pointer;
+  font-size: 13px; font-weight: 600; white-space: nowrap;
+  transition: opacity .15s;
+}
+.tb-v2-qr-gen-btn:hover { opacity: 0.85; }
+.tb-v2-qr-gen-btn:active { opacity: 0.7; }
+.tb-v2-qr-gen-btn:disabled { opacity: 0.45; cursor: default; }
+.tb-v2-qr-spinner {
+  width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff; border-radius: 50%;
+  animation: tb-v2-spin 0.7s linear infinite;
+}
+@keyframes tb-v2-spin { to { transform: rotate(360deg); } }
+.tb-v2-qr-controls { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.tb-v2-qr-size-group { display: flex; align-items: center; gap: 8px; }
+.tb-v2-qr-dl-group { display: flex; align-items: center; gap: 8px; }
+.tb-v2-qr-label { font-size: 12px; font-weight: 600; color: var(--fg-3); white-space: nowrap; }
+.tb-v2-qr-sizes { display: flex; gap: 5px; }
 .tb-v2-qr-size-btn {
-  height: 32px; padding: 0 12px; border: 1px solid var(--line);
-  border-radius: 8px; background: var(--surface); color: var(--fg-1);
+  height: 30px; padding: 0 10px;
+  border: 1px solid var(--line); border-radius: 7px;
+  background: var(--surface); color: var(--fg-2);
   font-size: 12px; font-weight: 600; cursor: pointer; transition: all .12s;
 }
-.tb-v2-qr-size-btn:hover { border-color: var(--red); color: var(--red); }
-.tb-v2-qr-size-btn.on { background: var(--red); border-color: var(--red); color: #fff; }
-.tb-v2-qr-dl-row { display: flex; gap: 8px; }
+.tb-v2-qr-size-btn:hover { border-color: var(--fg-3); color: var(--fg-1); }
+.tb-v2-qr-size-btn.on { background: var(--fg-1); border-color: var(--fg-1); color: var(--surface); }
+.tb-v2-qr-dl-btns { display: flex; gap: 6px; }
 .tb-v2-qr-dl-btn {
-  flex: 1; height: 38px; display: flex; align-items: center; justify-content: center; gap: 6px;
-  border: 1px solid var(--line); border-radius: 10px; background: var(--surface);
-  color: var(--fg-1); font-size: 13px; font-weight: 600; cursor: pointer; transition: all .12s;
+  height: 30px; padding: 0 12px;
+  display: flex; align-items: center; gap: 5px;
+  border: 1px solid var(--line); border-radius: 7px;
+  background: var(--surface); color: var(--fg-2);
+  font-size: 12px; font-weight: 600; cursor: pointer; transition: all .12s;
 }
-.tb-v2-qr-dl-btn:hover:not(:disabled) { border-color: var(--red); color: var(--red); }
-.tb-v2-qr-dl-btn:disabled { opacity: .4; cursor: default; }
-.tb-v2-qr-preview-wrap {
-  margin-top: 20px; display: flex; justify-content: center;
-}
-.tb-v2-qr-preview-img {
-  border: 1px solid var(--line); border-radius: 12px;
-  max-width: 100%; width: auto; height: auto;
-}
-.tb-v2-qr-empty {
+.tb-v2-qr-dl-btn:hover { border-color: var(--fg-3); color: var(--fg-1); }
+.tb-v2-qr-preview { display: flex; justify-content: center; padding: 16px 0 4px; }
+.tb-v2-qr-img { border-radius: 10px; max-width: 100%; height: auto; }
+.tb-v2-qr-placeholder {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 10px; padding: 48px 24px; color: var(--fg-3); font-size: 13px;
-  border: 1px dashed var(--line); border-radius: 12px; text-align: center;
+  gap: 10px; padding: 40px 24px; color: var(--fg-3);
+  border: 1px dashed var(--line); border-radius: 10px;
+  font-size: 13px; text-align: center;
 }
 
 @media (max-width: 480px) {
