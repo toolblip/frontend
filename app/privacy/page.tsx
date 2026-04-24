@@ -8,6 +8,7 @@ export const metadata: Metadata = {
     description: 'Toolblip tools run 100% in your browser. Nothing you paste or upload is sent to any server. No account required. Read the full privacy policy.',
     url: 'https://toolblip.com/privacy',
     siteName: 'Toolblip',
+    images: [{ url: 'https://toolblip.com/og-default.png', width: 1200, height: 630, alt: 'Toolblip' }],
   },
   twitter: { card: 'summary', title: 'Privacy Policy | Toolblip', description: 'Toolblip tools run 100% in your browser. Nothing you paste or upload is sent to any server.' },
 };

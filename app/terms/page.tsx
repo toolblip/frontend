@@ -8,6 +8,7 @@ export const metadata: Metadata = {
     description: 'Terms for using Toolblip. Tools are free for personal and commercial use. No attribution required. Read the full terms of service here.',
     url: 'https://toolblip.com/terms',
     siteName: 'Toolblip',
+    images: [{ url: 'https://toolblip.com/og-default.png', width: 1200, height: 630, alt: 'Toolblip' }],
   },
   twitter: { card: 'summary', title: 'Terms of Service | Toolblip', description: 'Toolblip terms of service. Free for personal and commercial use.' },
 };

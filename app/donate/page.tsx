@@ -8,6 +8,7 @@ export const metadata: Metadata = {
     description: 'Toolblip is free, forever. No login, no paywalls. If it saved you time, a coffee keeps the lights on. Donate via GitHub Sponsors or Ko-fi.',
     url: 'https://toolblip.com/donate',
     siteName: 'Toolblip',
+    images: [{ url: 'https://toolblip.com/og-default.png', width: 1200, height: 630, alt: 'Toolblip' }],
   },
   twitter: { card: 'summary', title: 'Support Toolblip | Toolblip', description: 'Toolblip is free forever. If it saved you time, a coffee keeps the lights on.' },
 };
