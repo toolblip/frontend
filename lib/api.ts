@@ -37,11 +37,12 @@ export async function apiRequest<T>(path: string, options: RequestOptions = {}):
 // Tools
 export async function getTools(params?: { category?: string; search?: string; page?: number; per_page?: number }) {
   const query = new URLSearchParams(params as Record<string, string>).toString();
-  return apiRequest<{ data: Tool[]; meta: { current_page: number; total: number; per_page: number; last_page: number } }>(`/api/tools${query ? `?${query}` : ''}`);
+  return apiRequest<{ tools: { tools: Tool[]; meta?: { current_page: number; total: number; per_page: number; last_page: number } } }>(`/api/tools${query ? `?${query}` : ''}`);
 }
 
 export async function getTool(slug: string) {
   return apiRequest<{ data: Tool }>(`/api/tools/${slug}`);
+}
 }
 
 // MCP Servers
@@ -58,10 +59,10 @@ export async function login(email: string, password: string) {
   });
 }
 
-export async function register(name: string, email: string, password: string) {
+export async function register(name: string, email: string, password: string, passwordConfirmation: string) {
   return apiRequest<{ user: User; token: string }>('/api/auth/register', {
     method: 'POST',
-    body: { name, email, password },
+    body: { name, email, password, password_confirmation: passwordConfirmation },
   });
 }
 
