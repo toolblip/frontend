@@ -8,12 +8,12 @@ import CodeBlock from '@/components/ui/CodeBlock';
 const BASE_URL = 'https://api.toolblip.com';
 
 const ENDPOINTS = [
-  { id: 'tools-list',    method: 'GET',    path: '/api/tools',           auth: false, status: 200, label: 'List all tools' },
-  { id: 'tools-detail', method: 'GET',    path: '/api/tools/{slug}',    auth: false, status: 200, label: 'Get single tool' },
-  { id: 'auth-register',method: 'POST',   path: '/api/auth/register',   auth: false, status: 201, label: 'Create account' },
-  { id: 'auth-login',   method: 'POST',   path: '/api/auth/login',      auth: false, status: 200, label: 'Sign in' },
-  { id: 'auth-logout',  method: 'POST',   path: '/api/auth/logout',     auth: true,  status: 200, label: 'Revoke session' },
-  { id: 'auth-user',    method: 'GET',    path: '/api/auth/user',       auth: true,  status: 200, label: 'Get authenticated user' },
+  { id: 'tools-list',    method: 'GET',    path: '/api/tools',          auth: false, status: 200, label: 'List all tools' },
+  { id: 'tools-detail',  method: 'GET',    path: '/api/tools/{slug}',   auth: false, status: 200, label: 'Get single tool' },
+  { id: 'auth-register', method: 'POST',   path: '/api/auth/register',  auth: false, status: 201, label: 'Create account' },
+  { id: 'auth-login',    method: 'POST',   path: '/api/auth/login',     auth: false, status: 200, label: 'Sign in' },
+  { id: 'auth-logout',   method: 'POST',   path: '/api/auth/logout',    auth: true,  status: 200, label: 'Revoke session' },
+  { id: 'auth-user',     method: 'GET',    path: '/api/auth/user',     auth: true,  status: 200, label: 'Get authenticated user' },
 ] as const;
 
 const SECTIONS = [
@@ -22,7 +22,7 @@ const SECTIONS = [
   { id: 'tools-list',    label: 'GET /api/tools' },
   { id: 'tools-detail',  label: 'GET /api/tools/{slug}' },
   { id: 'auth-register', label: 'POST /api/auth/register' },
-  { id: 'auth-login',    label: 'POST /api/auth/login' },
+  { id: 'auth-login',   label: 'POST /api/auth/login' },
   { id: 'auth-logout',   label: 'POST /api/auth/logout' },
   { id: 'auth-user',     label: 'GET /api/auth/user' },
   { id: 'errors',        label: 'Error Codes' },
@@ -59,7 +59,7 @@ export default function ApiDocsClient() {
 
       {/* ── Top bar ── */}
       <header className="sticky top-0 z-30 bg-white/95 dark:bg-[#090909]/95 backdrop-blur-sm border-b border-gray-100 dark:border-gray-800/80">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center gap-3">
           <span className="text-[11px] font-mono font-bold bg-red-500 text-white px-2.5 py-1 rounded-full">REST v1</span>
           <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Toolblip API</span>
           <div className="ml-auto flex items-center gap-3">
@@ -74,7 +74,7 @@ export default function ApiDocsClient() {
 
       {/* ── Hero ── */}
       <div className="bg-gray-50 dark:bg-[#0f0f0f] border-b border-gray-100 dark:border-gray-800/60">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-16 flex flex-col lg:flex-row lg:items-start gap-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-16 flex flex-col lg:flex-row lg:items-start gap-10">
 
           {/* Intro */}
           <div className="flex-1 min-w-0">
@@ -126,7 +126,7 @@ export default function ApiDocsClient() {
       </div>
 
       {/* ── Body ── */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 flex gap-10 lg:gap-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 flex gap-10 lg:gap-12">
 
         {/* Sidebar */}
         <aside className="w-36 xl:w-44 shrink-0 hidden md:block">
@@ -139,7 +139,7 @@ export default function ApiDocsClient() {
                 className={`w-full flex items-center px-3 py-1.5 rounded-lg transition-colors text-xs text-left cursor-pointer ${
                   activeSection === id
                     ? 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/30 font-semibold'
-                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-900'
+                    : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-900/30'
                 }`}
               >
                 {label}
@@ -217,11 +217,15 @@ export default function ApiDocsClient() {
             </div>
           </section>
 
+          {/* ═══════════════════════════════════════════════════════════════ */}
+          {/* TOOLS                                                            */}
+          {/* ═══════════════════════════════════════════════════════════════ */}
+
           {/* ── GET /api/tools ── */}
           <section id="tools-list" className="scroll-mt-16">
             <EndpointHeader method="GET" path="/api/tools" auth={false} status={200} />
             <p className="text-gray-500 dark:text-gray-400 text-sm mb-5">
-              Returns a paginated list of all tools. Public — no authentication required.
+              Returns all available tools. Public — no authentication required.
             </p>
 
             <div className="mb-6">
@@ -249,7 +253,7 @@ export default function ApiDocsClient() {
                     {[
                       { name: 'category', type: 'string',  desc: 'Filter by category (e.g. AI, DevOps, Analytics)' },
                       { name: 'page',     type: 'number',  desc: 'Page number (default: 1)' },
-                      { name: 'per_page', type: 'number', desc: 'Results per page (default: 20)' },
+                      { name: 'per_page', type: 'number',  desc: 'Results per page (default: 20)' },
                     ].map(({ name, type, desc }) => (
                       <tr key={name} className="bg-white dark:bg-[#090909]">
                         <td className="px-4 py-2.5 font-mono text-gray-700 dark:text-gray-300">{name}</td>
@@ -267,7 +271,7 @@ export default function ApiDocsClient() {
               <CodeBlock
                 code={`{
   "tools": {
-    "data": [
+    "tools": [
       {
         "id": 1,
         "slug": "claude-code",
@@ -282,23 +286,38 @@ export default function ApiDocsClient() {
         "id": 2,
         "slug": "cursor",
         "name": "Cursor",
-        "description": "AI-first code editor",
+        "description": "AI-first code editor built on VS Code",
         "category": "AI",
         "is_pro": true,
         "emoji": "💻",
         "created_at": "2026-01-20T14:00:00.000000Z"
       }
-    ],
-    "meta": {
-      "current_page": 1,
-      "per_page": 20,
-      "total": 42,
-      "last_page": 3
-    }
+    ]
   }
 }`}
                 language="json"
               />
+            </div>
+
+            <div className="mt-4 p-4 bg-gray-50 dark:bg-[#0f0f0f] border border-gray-200 dark:border-gray-800 rounded-xl">
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Response fields</p>
+              <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-xs">
+                {[
+                  { field: 'tools[].id',         desc: 'Unique numeric ID' },
+                  { field: 'tools[].slug',        desc: 'URL-friendly identifier' },
+                  { field: 'tools[].name',        desc: 'Display name' },
+                  { field: 'tools[].description', desc: 'Short description' },
+                  { field: 'tools[].category',    desc: 'Tool category' },
+                  { field: 'tools[].is_pro',      desc: 'Requires pro subscription' },
+                  { field: 'tools[].emoji',       desc: 'Icon emoji (optional)' },
+                  { field: 'tools[].created_at',  desc: 'ISO 8601 timestamp' },
+                ].map(({ field, desc }) => (
+                  <div key={field} className="flex gap-2 py-0.5">
+                    <code className="font-mono text-gray-700 dark:text-gray-300 shrink-0">{field}</code>
+                    <span className="text-gray-400 dark:text-gray-500">{desc}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </section>
 
@@ -368,6 +387,10 @@ export default function ApiDocsClient() {
               />
             </div>
           </section>
+
+          {/* ═══════════════════════════════════════════════════════════════ */}
+          {/* AUTH                                                             */}
+          {/* ═══════════════════════════════════════════════════════════════ */}
 
           {/* ── POST /api/auth/register ── */}
           <section id="auth-register" className="scroll-mt-16">
@@ -503,7 +526,7 @@ export default function ApiDocsClient() {
           <section id="auth-logout" className="scroll-mt-16">
             <EndpointHeader method="POST" path="/api/auth/logout" auth={true} status={200} />
             <p className="text-gray-500 dark:text-gray-400 text-sm mb-5">
-              Revoke the current Bearer token and end the session.
+              Revoke the current Bearer token and end the session. Token becomes permanently invalid.
             </p>
 
             <div className="mb-6">
@@ -591,24 +614,10 @@ export default function ApiDocsClient() {
             <SectionHeading>Error Codes</SectionHeading>
             <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-6">
               All errors return a JSON body with a <InlineCode>message</InlineCode> field.
-              Validation failures (422) include an <InlineCode>errors</InlineCode> object.
+              Validation failures (422) include an <InlineCode>errors</InlineCode> object listing field-level issues.
             </p>
 
-            <div className="mb-6">
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example — 422 Validation Error</p>
-              <CodeBlock
-                code={`{
-  "message": "The given data was invalid.",
-  "errors": {
-    "email": ["The email field is required."],
-    "password": ["The password must be at least 8 characters."]
-  }
-}`}
-                language="json"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 mb-6">
               {[
                 { code: 400, label: 'Bad Request' },
                 { code: 401, label: 'Unauthorized' },
@@ -626,6 +635,20 @@ export default function ApiDocsClient() {
                   <span className="text-xs text-gray-500 dark:text-gray-400">{label}</span>
                 </div>
               ))}
+            </div>
+
+            <div>
+              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-2">Example — 422 Validation Error</p>
+              <CodeBlock
+                code={`{
+  "message": "The given data was invalid.",
+  "errors": {
+    "email": ["The email field is required."],
+    "password": ["The password must be at least 8 characters."]
+  }
+}`}
+                language="json"
+              />
             </div>
           </section>
 
