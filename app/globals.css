@@ -242,14 +242,15 @@ body.tb-v2 a {
 
 /* Mega-menu */
 .tb-v2-mm-anchor {
-  position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+  position: absolute; top: 100%; left: 0; right: 0;
   z-index: 200;
   padding-top: 6px;
+  display: flex; justify-content: center;
 }
 .tb-v2-mega-menu {
   display: flex;
-  min-width: 580px;
-  max-width: 680px;
+  width: 100%;
+  max-width: 960px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -257,7 +258,7 @@ body.tb-v2 a {
   overflow: hidden;
   animation: tb-v2-mm-drop 0.12s ease-out;
 }
-.tb-v2-mega-more { min-width: 640px; max-width: 720px; }
+.tb-v2-mega-more { max-width: 960px; }
 
 .tb-v2-mm-side {
   width: 200px; flex-shrink: 0;
