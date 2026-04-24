@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 
 // ─── Config ────────────────────────────────────────────────────────────────
 
-// Base URL — Railway production deployment (api.toolblip.com SSL pending)
+// Base URL — Railway production deployment (api.toolblip.com → Railway once SSL verified)
 const BASE_URL = 'https://toolblip-api-production.up.railway.app';
 
 const SECTIONS = [
