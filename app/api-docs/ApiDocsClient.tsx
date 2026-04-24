@@ -5,8 +5,8 @@ import CodeBlock from '@/components/ui/CodeBlock';
 
 // ─── Config ────────────────────────────────────────────────────────────────
 
-const BASE_URL = 'https://api.toolblip.com';
-const FALLBACK_URL = 'https://toolblip-api-production.up.railway.app';
+const BASE_URL = 'https://toolblip-api-production.up.railway.app';
+const PRIMARY_URL = 'https://api.toolblip.com'; // switch once SSL is ready
 
 const ENDPOINTS = [
   { id: 'tools-list',    method: 'GET',    path: '/api/tools',        auth: false, status: 200, label: 'List all tools' },
@@ -70,7 +70,7 @@ export default function ApiDocsClient() {
             <code className="hidden sm:block text-[11px] font-mono text-gray-400">{BASE_URL}</code>
             <span className="flex items-center gap-1.5 text-[11px] text-green-600 dark:text-green-400 font-medium">
               <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-              Live
+              Live (Railway)
             </span>
           </div>
         </div>
@@ -111,16 +111,16 @@ export default function ApiDocsClient() {
           {/* Base URL card */}
           <div className="shrink-0 lg:w-72">
             <div className="bg-white dark:bg-[#111113] border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm">
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Base URL</p>
+              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3">Base URL (active)</p>
               <code className="block text-sm font-mono text-[#d93025] dark:text-[#d93025] break-all">{BASE_URL}</code>
-              <p className="text-[10px] text-green-600 dark:text-green-400 mt-1.5 flex items-center gap-1">
-                <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                SSL active
+              <p className="text-[10px] text-amber-600 dark:text-amber-400 mt-1.5 flex items-center gap-1">
+                <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                SSL cert pending · migrating soon
               </p>
               <div className="mt-3 pt-3 border-t border-gray-100 dark:border-gray-800">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Railway fallback</p>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Primary URL (SSL ready)</p>
                 <code className="block text-[11px] font-mono text-gray-500 dark:text-gray-600 break-all">
-                  {FALLBACK_URL}
+                  {PRIMARY_URL}
                 </code>
               </div>
             </div>
