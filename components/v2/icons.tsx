@@ -182,7 +182,6 @@ export const IconShield = compound(
     <path d="m9 12 2 2 4-4" />
   </>
 );
-export const IconZap = base('M13 3 5 14h6l-1 7 8-11h-6l1-7Z');
 export const IconGift = compound(
   <>
     <path d="M20 12v8H4v-8" />
@@ -277,3 +276,62 @@ export const IconTypeSerif = compound(
     <path d="M15 5v1" />
   </>
 );
+export const IconLock = compound(
+  <>
+    <rect x="5" y="11" width="14" height="10" rx="2" />
+    <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+  </>
+);
+export const IconClock = compound(
+  <>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 7v5l3 2" />
+  </>
+);
+export const IconDice = compound(
+  <>
+    <rect x="4" y="4" width="16" height="16" rx="3" />
+    <circle cx="9" cy="9" r="1" fill="currentColor" />
+    <circle cx="15" cy="9" r="1" fill="currentColor" />
+    <circle cx="9" cy="15" r="1" fill="currentColor" />
+    <circle cx="15" cy="15" r="1" fill="currentColor" />
+    <circle cx="12" cy="12" r="1" fill="currentColor" />
+  </>
+);
+export const IconGlobe = compound(
+  <>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M3 12h18" />
+    <path d="M12 3a13 13 0 0 1 0 18" />
+    <path d="M12 3a13 13 0 0 0 0 18" />
+  </>
+);
+export const IconLink = compound(
+  <>
+    <path d="M9 15a5 5 0 0 0 7 0l3-3a5 5 0 1 0-7-7l-1 1" />
+    <path d="M15 9a5 5 0 0 0-7 0l-3 3a5 5 0 1 0 7 7l1-1" />
+  </>
+);
+export const IconFile = compound(
+  <>
+    <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z" />
+    <path d="M14 3v5h5" />
+  </>
+);
+export const IconCommand = compound(
+  <>
+    <path d="M18 3a3 3 0 0 0-3 3v3" />
+    <path d="M6 3a3 3 0 0 1 3 3v3" />
+    <path d="M18 21a3 3 0 0 1-3-3v-3" />
+    <path d="M6 21a3 3 0 0 0 3-3v-3" />
+    <rect x="9" y="9" width="6" height="6" />
+  </>
+);
+export const IconHelp = compound(
+  <>
+    <circle cx="12" cy="12" r="9" />
+    <path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-1 .4-1 1.2-1 1.7" />
+    <circle cx="12" cy="17" r="0.8" fill="currentColor" />
+  </>
+);
+export const IconZap = base("M13 3 5 14h6l-1 7 8-11h-6l1-7Z");
