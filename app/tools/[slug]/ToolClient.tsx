@@ -2,8 +2,7 @@
 
 import type { Tool } from '@/data/tools';
 import Link from 'next/link';
-
-// Real tool UIs
+import ShareButtons from '@/components/ShareButtons';
 import WordCounterClient from '@/components/tools/WordCounterClient';
 import CharacterCounterClient from '@/components/tools/CharacterCounterClient';
 import CaseConverterClient from '@/components/tools/CaseConverterClient';
@@ -12,7 +11,6 @@ import UrlEncodeClient from '@/components/tools/UrlEncodeClient';
 import JsonFormatterClient from '@/components/tools/JsonFormatterClient';
 import GenericToolUI from '@/components/tools/GenericToolUI';
 
-// Map slugs to real client components
 function getToolComponent(slug: string): React.ReactNode {
   switch (slug) {
     case 'word-counter':
@@ -29,8 +27,6 @@ function getToolComponent(slug: string): React.ReactNode {
     case 'json-formatter':
     case 'json-editor':
       return <JsonFormatterClient />;
-
-    // Fallback: generic input/output UI for simple transform tools
     default:
       return <ComingSoonUI toolSlug={slug} />;
   }
@@ -38,19 +34,28 @@ function getToolComponent(slug: string): React.ReactNode {
 
 function ComingSoonUI({ toolSlug }: { toolSlug: string }) {
   return (
-    <div className="space-y-4">
-      <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 text-sm text-amber-700 dark:text-amber-400">
-        🎉 This tool is on our roadmap. The UI is coming soon!
+    <div className="tb-v2-coming-soon">
+      <div className="tb-v2-coming-soon-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+        </svg>
+      </div>
+      <div>
+        <div className="tb-v2-coming-soon-title">Coming Soon</div>
+        <p className="tb-v2-coming-soon-desc">This tool&apos;s interactive UI is on its way. Check back shortly!</p>
+      </div>
+      <div className="tb-v2-coming-soon-bar">
+        <div className="tb-v2-coming-soon-bar-fill">
+          <div className="tb-v2-coming-soon-bar-inner" />
+        </div>
+        <p className="tb-v2-coming-soon-bar-label">Loading…</p>
       </div>
       <GenericToolUI
         inputLabel="Input"
-        inputPlaceholder="Enter text..."
+        inputPlaceholder="Enter text to preview…"
         outputLabel="Output"
         actionLabel="Process"
-        process={(input) => {
-          // Placeholder: just echo
-          return `[${toolSlug}] — ${input}`;
-        }}
+        process={(input) => `[${toolSlug}] — ${input}`}
       />
     </div>
   );
@@ -60,41 +65,49 @@ export default function ToolClient({ tool }: { tool: Tool }) {
   const component = getToolComponent(tool.slug);
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
-      {/* Breadcrumb */}
-      <nav className="mb-6 text-sm text-gray-500 dark:text-gray-400">
-        <Link href="/tools" className="hover:text-red-600 dark:hover:text-red-400 transition-colors">
-          All Tools
-        </Link>
-        <span className="mx-2">›</span>
-        <span>{tool.category}</span>
-      </nav>
+    <section className="tb-v2-tool-page">
+      <div className="tb-v2-container">
 
-      {/* Tool header */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-3">
-          <span className="text-4xl">{tool.emoji}</span>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            {tool.name}
-          </h1>
+        {/* Breadcrumb */}
+        <nav className="tb-v2-breadcrumb" aria-label="Breadcrumb">
+          <Link href="/tools">All Tools</Link>
+          <span className="tb-v2-breadcrumb-sep" aria-hidden="true">›</span>
+          <span>{tool.category}</span>
+        </nav>
+
+        {/* Header */}
+        <div className="tb-v2-tool-header">
+          <div className="tb-v2-tool-emoji" aria-hidden="true">
+            {tool.emoji}
+          </div>
+          <div className="tb-v2-tool-title-group">
+            <h1 className="tb-v2-tool-title">{tool.name}</h1>
+            <p className="tb-v2-tool-desc">{tool.description}</p>
+            <div className="tb-v2-tool-header-row">
+              <span className="tb-v2-tool-cat-pill">{tool.category}</span>
+              <div className="tb-v2-share-row">
+                <ShareButtons
+                  toolName={tool.name}
+                  className="tb-v2-share-row"
+                />
+              </div>
+            </div>
+          </div>
         </div>
-        <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
-          {tool.description}
+
+        {/* Tool card */}
+        <div className="tb-v2-tool-card">
+          {component}
+        </div>
+
+        {/* Footer note */}
+        <p className="tb-v2-tool-footer">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+          100% client-side — nothing leaves your browser
         </p>
-        <span className="inline-block text-xs font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-3 py-1 rounded-full">
-          {tool.category}
-        </span>
       </div>
-
-      {/* Tool UI */}
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
-        {component}
-      </div>
-
-      {/* Footer note */}
-      <p className="text-center text-xs text-gray-400 dark:text-gray-500 mt-6">
-        100% client-side — nothing leaves your browser
-      </p>
-    </div>
+    </section>
   );
 }
