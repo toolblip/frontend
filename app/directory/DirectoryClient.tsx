@@ -13,6 +13,7 @@ export default function DirectoryClient() {
   const [showTopBtn, setShowTopBtn] = useState(false);
   const [visibleCount, setVisibleCount] = useState(24);
   const [mounted, setMounted] = useState(false);
+  const [animKey, setAnimKey] = useState(0); // increment to re-trigger card animations
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => { setMounted(true); }, []);
@@ -50,6 +51,11 @@ export default function DirectoryClient() {
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, []);
+
+  // Re-trigger card entrance animation whenever filters change
+  useEffect(() => {
+    setAnimKey((k) => k + 1);
+  }, [debouncedQuery, activeTab]);
 
   const filtered = useMemo(() => {
     const q = debouncedQuery.trim().toLowerCase();
@@ -220,13 +226,23 @@ export default function DirectoryClient() {
         {/* Grid */}
         {filtered.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4" key={animKey}>
               {displayedTools.map((tool, i) => (
                 <Link
                   key={tool.slug}
                   href={`/tools/${tool.slug}`}
                   className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-red-500 dark:hover:border-red-600 rounded-xl p-4 transition-all duration-200 hover:shadow-md hover:shadow-red-100/50 dark:hover:shadow-red-900/20 hover:-translate-y-0.5"
-                  style={mounted ? { animationDelay: `${Math.min(i, 12) * 40}ms` } : {}}
+                  style={
+                    mounted
+                      ? {
+                          animationName: 'fadeSlideUp',
+                          animationDuration: '350ms',
+                          animationTimingFunction: 'ease-out',
+                          animationFillMode: 'both',
+                          animationDelay: `${Math.min(i % 24, 12) * 35}ms`,
+                        }
+                      : { opacity: 0 }
+                  }
                 >
                   <div className="flex items-start gap-3">
                     <span className="text-2xl flex-shrink-0 leading-none mt-0.5" role="img" aria-hidden="true">
@@ -321,6 +337,7 @@ export default function DirectoryClient() {
           <path strokeLinecap="round" strokeLinejoin="round" d="M5 15l7-7 7 7" />
         </svg>
       </button>
+
     </div>
   );
 }
