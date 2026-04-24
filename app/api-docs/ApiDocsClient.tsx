@@ -4,23 +4,24 @@ import { useState, useEffect, useRef } from 'react';
 
 // ─── Config ────────────────────────────────────────────────────────────────
 
-const BASE_URL = 'https://api.toolblip.com';
+// Base URL — Railway production (will switch to https://api.toolblip.com once SSL is fully ready)
+const BASE_URL = 'https://toolblip-api-production.up.railway.app';
 
 const SECTIONS = [
-  { id: 'overview',      label: 'Overview' },
-  { id: 'authentication',label: 'Authentication' },
+  { id: 'overview',       label: 'Overview' },
+  { id: 'authentication', label: 'Authentication' },
   { id: 'tools',         label: 'Tools' },
   { id: 'auth',          label: 'Auth' },
   { id: 'errors',        label: 'Error Codes' },
 ] as const;
 
 const ENDPOINTS = [
-  { method: 'GET',    path: '/api/tools',           desc: 'List all tools',          auth: false },
-  { method: 'GET',    path: '/api/tools/{slug}',    desc: 'Get single tool',         auth: false },
-  { method: 'POST',   path: '/api/auth/register',   desc: 'Create account',          auth: false },
-  { method: 'POST',   path: '/api/auth/login',       desc: 'Sign in',                 auth: false },
-  { method: 'POST',   path: '/api/auth/logout',     desc: 'Revoke session',          auth: true  },
-  { method: 'GET',    path: '/api/auth/user',       desc: 'Get authenticated user',  auth: true  },
+  { method: 'GET',  path: '/api/tools',          desc: 'List all tools',        auth: false },
+  { method: 'GET',  path: '/api/tools/{slug}',       desc: 'Get single tool',       auth: false },
+  { method: 'POST', path: '/api/auth/register',      desc: 'Create account',         auth: false },
+  { method: 'POST', path: '/api/auth/login',         desc: 'Sign in',               auth: false },
+  { method: 'POST', path: '/api/auth/logout',        desc: 'Revoke session',         auth: true  },
+  { method: 'GET',  path: '/api/auth/user',          desc: 'Get authenticated user', auth: true  },
 ] as const;
 
 const METHOD_STYLES: Record<string, string> = {
