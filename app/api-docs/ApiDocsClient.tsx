@@ -4,8 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 
 // ─── Config ────────────────────────────────────────────────────────────────
 
-// Base URL — Railway production (will switch to https://api.toolblip.com once SSL is fully ready)
-const BASE_URL = 'https://toolblip-api-production.up.railway.app';
+// Base URL — Railway production (api.toolblip.com once SSL is fully ready)
+const BASE_URL = 'https://api.toolblip.com';
 
 const SECTIONS = [
   { id: 'overview',       label: 'Overview' },
@@ -103,19 +103,12 @@ export default function ApiDocsClient() {
 
           {/* Endpoint pills */}
           <div className="flex flex-wrap gap-2">
-            {ENDPOINTS.map(({ method, path }) => (
-              <button
-                key={path}
-                onClick={() => scrollTo(path.replace(/\//g, '-').replace(/\{|\}/g, '').replace(/^-/, '').slice(0, 20) || 'overview')}
-                className="inline-flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-full
-                  bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800
-                  text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white
-                  hover:border-gray-300 dark:hover:border-gray-700 transition-colors cursor-pointer"
-              >
-                <MethodPill method={method} />
-                <span className="font-mono">{path}</span>
-              </button>
-            ))}
+            <EndpointPill method="GET"    path="/api/tools"          targetId="tools" />
+            <EndpointPill method="GET"    path="/api/tools/{slug}"   targetId="tool-detail" />
+            <EndpointPill method="POST"   path="/api/auth/register"  targetId="auth" />
+            <EndpointPill method="POST"   path="/api/auth/login"     targetId="auth" />
+            <EndpointPill method="POST"   path="/api/auth/logout"    targetId="auth" />
+            <EndpointPill method="GET"    path="/api/auth/user"      targetId="auth" />
           </div>
         </div>
       </div>
@@ -725,6 +718,21 @@ function InlineCode({ children }: { children: React.ReactNode }) {
     <code className="font-mono text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-1.5 py-0.5 rounded">
       {children}
     </code>
+  );
+}
+
+function EndpointPill({ method, path, targetId }: { method: string; path: string; targetId: string }) {
+  return (
+    <button
+      onClick={() => scrollTo(targetId)}
+      className="inline-flex items-center gap-1.5 text-[11px] px-3 py-1.5 rounded-full
+        bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-gray-800
+        text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white
+        hover:border-gray-300 dark:hover:border-gray-700 transition-colors cursor-pointer"
+    >
+      <MethodPill method={method} />
+      <span className="font-mono">{path}</span>
+    </button>
   );
 }
 
