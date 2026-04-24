@@ -3,13 +3,11 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { tools } from '@/data/tools';
-import { CAT_META, getCategoryMeta } from '@/lib/v2/categoryMeta';
-import { IconArrowUR, IconSearch, IconClose, IconDown } from '@/components/v2/icons';
+import { getCategoryMeta } from '@/lib/v2/categoryMeta';
+import { IconArrowUR, IconSearch, IconClose } from '@/components/v2/icons';
 
-const ALL_CATEGORIES = ['All', ...Object.keys(CAT_META)] as const;
-type Category = typeof ALL_CATEGORIES[number];
-
-type SortMode = 'default' | 'az' | 'za' | 'newest';
+const DIRECTORY_CATEGORIES = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS'] as const;
+type Category = typeof DIRECTORY_CATEGORIES[number];
 
 export default function DirectoryClient() {
   const [query, setQuery] = useState('');
@@ -18,9 +16,6 @@ export default function DirectoryClient() {
   const [visibleCount, setVisibleCount] = useState(24);
   const [mounted, setMounted] = useState(false);
   const [animKey, setAnimKey] = useState(0);
-  const [sortMode, setSortMode] = useState<SortMode>('default');
-  const [sortOpen, setSortOpen] = useState(false);
-  const sortRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => { setMounted(true); }, []);
@@ -31,17 +26,6 @@ export default function DirectoryClient() {
     const t = setTimeout(() => setDebouncedQuery(query), 150);
     return () => clearTimeout(t);
   }, [query]);
-
-  // Close sort dropdown on outside click
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (sortRef.current && !sortRef.current.contains(e.target as Node)) {
-        setSortOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handler);
-    return () => document.removeEventListener('mousedown', handler);
-  }, []);
 
   // Scroll-to-top button
   useEffect(() => {
@@ -73,28 +57,19 @@ export default function DirectoryClient() {
   // Re-trigger card entrance animation whenever filters change
   useEffect(() => {
     setAnimKey((k) => k + 1);
-  }, [debouncedQuery, activeTab, sortMode]);
+  }, [debouncedQuery, activeTab]);
 
   const filtered = useMemo(() => {
     const q = debouncedQuery.trim().toLowerCase();
-    let result = tools.filter((tool) => {
+    return tools.filter((tool) => {
       const matchesTab = activeTab === 'All' || tool.category === activeTab;
       const matchesSearch =
         !q ||
         tool.name.toLowerCase().includes(q) ||
-        tool.description.toLowerCase().includes(q) ||
-        tool.category.toLowerCase().includes(q);
+        tool.description.toLowerCase().includes(q);
       return matchesTab && matchesSearch;
     });
-
-    if (sortMode === 'az') {
-      result = [...result].sort((a, b) => a.name.localeCompare(b.name));
-    } else if (sortMode === 'za') {
-      result = [...result].sort((a, b) => b.name.localeCompare(a.name));
-    }
-
-    return result;
-  }, [debouncedQuery, activeTab, sortMode]);
+  }, [debouncedQuery, activeTab]);
 
   const tabCounts = useMemo(() => {
     const counts: Record<string, number> = { All: tools.length };
@@ -112,15 +87,7 @@ export default function DirectoryClient() {
     setQuery('');
     setActiveTab('All');
     setVisibleCount(24);
-    setSortMode('default');
     inputRef.current?.focus();
-  };
-
-  const sortLabel: Record<SortMode, string> = {
-    default: 'Most used',
-    az: 'A → Z',
-    za: 'Z → A',
-    newest: 'Newest',
   };
 
   return (
@@ -164,36 +131,11 @@ export default function DirectoryClient() {
                 <kbd className="tb-v2-kbd tb-v2-dir-search-kbd">/</kbd>
               )}
             </div>
-
-            {/* Sort dropdown */}
-            <div className="tb-v2-dir-sort-wrap" ref={sortRef}>
-              <button
-                className={`tb-v2-btn tb-v2-dir-sort-btn${sortOpen ? ' on' : ''}`}
-                onClick={() => setSortOpen((o) => !o)}
-              >
-                {sortLabel[sortMode]}
-                <IconDown className="tb-v2-ic" />
-              </button>
-              {sortOpen && (
-                <div className="tb-v2-dir-sort-pop">
-                  {(['default', 'az', 'za'] as SortMode[]).map((m) => (
-                    <button
-                      key={m}
-                      className={`tb-v2-tm-row${sortMode === m ? ' on' : ''}`}
-                      onClick={() => { setSortMode(m); setSortOpen(false); }}
-                    >
-                      {sortLabel[m]}
-                      {sortMode === m && <IconClose className="tb-v2-ic tb-v2-tm-check" />}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
           </div>
 
           {/* Category tabs */}
           <div className="tb-v2-dir-tabs">
-            {ALL_CATEGORIES.map((tab) => {
+            {DIRECTORY_CATEGORIES.map((tab) => {
               const count = tabCounts[tab] ?? 0;
               if (count === 0 && tab !== 'All') return null;
               const isActive = activeTab === tab;
@@ -233,7 +175,7 @@ export default function DirectoryClient() {
               </span>
             )}
           </p>
-          {(query || activeTab !== 'All' || sortMode !== 'default') && (
+          {(query || activeTab !== 'All') && (
             <button onClick={clearAll} className="tb-v2-dir-clear-btn">
               <IconClose className="tb-v2-ic" />
               Clear filters
