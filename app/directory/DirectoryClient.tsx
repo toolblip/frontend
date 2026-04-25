@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { tools } from '@/data/tools';
 import { getCategoryMeta } from '@/lib/v2/categoryMeta';
@@ -10,8 +11,20 @@ const DIRECTORY_CATEGORIES = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'C
 type Category = typeof DIRECTORY_CATEGORIES[number];
 
 export default function DirectoryClient() {
+  const searchParams = useSearchParams();
+  const urlCategory = searchParams.get('category');
+  const validCategory = DIRECTORY_CATEGORIES.includes(urlCategory as Category) ? (urlCategory as Category) : 'All';
+
   const [query, setQuery] = useState('');
-  const [activeTab, setActiveTab] = useState<Category>('All');
+  const [activeTab, setActiveTab] = useState<Category>(validCategory);
+
+  // Sync activeTab when URL ?category= param changes (e.g. navigating from homepage pills)
+  useEffect(() => {
+    if (urlCategory && DIRECTORY_CATEGORIES.includes(urlCategory as Category)) {
+      setActiveTab(urlCategory as Category);
+      setVisibleCount(24);
+    }
+  }, [urlCategory]);
   const [showTopBtn, setShowTopBtn] = useState(false);
   const [visibleCount, setVisibleCount] = useState(24);
   const [mounted, setMounted] = useState(false);
@@ -19,6 +32,7 @@ export default function DirectoryClient() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => { setMounted(true); }, []);
+
 
   // Debounced search
   const [debouncedQuery, setDebouncedQuery] = useState('');

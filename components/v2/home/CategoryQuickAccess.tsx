@@ -3,20 +3,19 @@
 import Link from 'next/link';
 
 const CATEGORIES = [
-  { label: 'Text', icon: 'Aa' },
-  { label: 'Developer', icon: '</>' },
-  { label: 'Image', icon: '🖼️' },
-  { label: 'Encoder', icon: '🔐' },
-  { label: 'Conversion', icon: '🔄' },
-  { label: 'Color', icon: '🎨' },
-  { label: 'SEO', icon: '🔍' },
-  { label: 'CSS', icon: '✨' },
-  { label: 'Math', icon: '∑' },
+  { label: 'Text', icon: 'Aa', color: 'var(--blue)' },
+  { label: 'Developer', icon: '</>', color: 'var(--green)' },
+  { label: 'Encoder', icon: '🔐', color: 'var(--purple)' },
+  { label: 'Image', icon: '🖼️', color: 'var(--amber)' },
+  { label: 'Conversion', icon: '🔄', color: 'var(--teal)' },
+  { label: 'Math', icon: '∑', color: 'var(--pink)' },
+  { label: 'CSS', icon: '✨', color: 'var(--indigo)' },
+  { label: 'SEO', icon: '🔍', color: 'var(--green)' },
 ];
 
 export default function CategoryQuickAccess() {
   return (
-    <section style={{ padding: '20px 0' }}>
+    <section style={{ padding: '16px 0 4px' }}>
       <div className="tb-v2-container">
         <div style={{
           display: 'flex',
@@ -31,7 +30,7 @@ export default function CategoryQuickAccess() {
           {CATEGORIES.map((cat) => (
             <Link
               key={cat.label}
-              href="/directory"
+              href={`/directory?category=${encodeURIComponent(cat.label)}`}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -47,8 +46,8 @@ export default function CategoryQuickAccess() {
                 transition: 'all 0.12s',
               }}
               onMouseEnter={(e) => {
-                (e.currentTarget as HTMLAnchorElement).style.borderColor = 'var(--fg-3)';
-                (e.currentTarget as HTMLAnchorElement).style.color = 'var(--fg-0)';
+                (e.currentTarget as HTMLAnchorElement).style.borderColor = cat.color;
+                (e.currentTarget as HTMLAnchorElement).style.color = cat.color;
               }}
               onMouseLeave={(e) => {
                 (e.currentTarget as HTMLAnchorElement).style.borderColor = 'var(--border)';
