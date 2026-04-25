@@ -4,8 +4,10 @@ import { useState, useEffect, useRef } from 'react';
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 
-const PRIMARY_BASE = 'https://api.toolblip.com';
-const LEGACY_BASE  = 'https://toolblip-api-production.up.railway.app';
+// Primary — Railway production (used until api.toolblip.com SSL is ready)
+const PRIMARY_BASE = 'https://toolblip-api-production.up.railway.app';
+// Future primary once SSL is provisioned on api.toolblip.com
+const LEGACY_BASE  = 'https://api.toolblip.com';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -461,6 +463,7 @@ export default function ApiDocsClient() {
           <p className="text-[var(--fg-2)] text-base sm:text-lg max-w-2xl leading-relaxed">
             Base URL:{' '}
             <code className="font-mono text-[var(--fg-1)] font-medium">{PRIMARY_BASE}</code>
+            <span className="text-xs text-[var(--fg-3)]">(api.toolblip.com once SSL is ready)</span>
             {' '}&middot; All requests and responses use JSON &middot; Bearer token auth.
           </p>
 
@@ -524,13 +527,15 @@ export default function ApiDocsClient() {
                     <div>
                       <p className="text-sm font-semibold text-[var(--fg-0)]">Primary — use this</p>
                       <code className="text-sm font-mono text-emerald-600 dark:text-emerald-400 mt-0.5 block">{PRIMARY_BASE}</code>
+                      <p className="text-xs text-[var(--fg-3)] mt-1">Railway production · SSL pending for api.toolblip.com</p>
                     </div>
                   </div>
                   <div className="mt-2 p-4 rounded-xl bg-[var(--surface)] border border-[var(--line)] flex items-start gap-3 opacity-60">
                     <span className="text-[var(--fg-3)] mt-0.5 shrink-0 text-sm">○</span>
                     <div>
-                      <p className="text-sm font-semibold text-[var(--fg-0)]">Legacy fallback</p>
+                      <p className="text-sm font-semibold text-[var(--fg-0)]">Future primary</p>
                       <code className="text-sm font-mono text-[var(--fg-2)] mt-0.5 block">{LEGACY_BASE}</code>
+                      <p className="text-xs text-[var(--fg-3)] mt-1">api.toolblip.com · activates once SSL is ready</p>
                     </div>
                   </div>
                 </div>
