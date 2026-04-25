@@ -3,7 +3,6 @@
 import { useState, useCallback } from 'react';
 
 const BASE_URL = 'https://api.toolblip.com';
-const ALT_URL = 'https://toolblip-api-production.up.railway.app';
 
 const ENDPOINTS = [
   {
@@ -25,16 +24,6 @@ const ENDPOINTS = [
         "category": "text",
         "is_pro": false,
         "emoji": "📋",
-        "created_at": "2026-04-10T12:00:00.000000Z"
-      },
-      {
-        "id": 2,
-        "slug": "base64-encoder",
-        "name": "Base64 Encoder / Decoder",
-        "description": "Encode or decode Base64 strings with one click.",
-        "category": "text",
-        "is_pro": false,
-        "emoji": "🔤",
         "created_at": "2026-04-10T12:00:00.000000Z"
       }
     ],
@@ -98,7 +87,7 @@ const ENDPOINTS = [
     path: '/api/auth/login',
     summary: 'Login',
     auth: false,
-    description: 'Authenticates a user with email and password. Returns the user object and a Bearer token.',
+    description: 'Authenticates a user with email and password. Returns the user object and a Bearer token for subsequent requests.',
     curl: `curl -X POST "${BASE_URL}/api/auth/login" \\
   -H "Content-Type: application/json" \\
   -H "Accept: application/json" \\
@@ -168,9 +157,8 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md transition-all
-        bg-[var(--surface-2)] text-[var(--fg-2)] hover:bg-[var(--surface-3)] hover:text-[var(--fg-1)]
-        dark:bg-[var(--surface-2)] dark:text-[var(--fg-2)] dark:hover:text-[var(--fg-1)]"
+      className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md transition-all shrink-0
+        bg-[var(--surface-2)] text-[var(--fg-2)] hover:bg-[var(--surface-3)] hover:text-[var(--fg-1)]"
       title="Copy to clipboard"
     >
       {copied ? (
@@ -178,7 +166,7 @@ function CopyButton({ text }: { text: string }) {
           <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
           </svg>
-          Copied
+          Copied!
         </>
       ) : (
         <>
@@ -196,16 +184,15 @@ function CopyButton({ text }: { text: string }) {
 function CodeBlock({ code, label }: { code: string; label?: string }) {
   return (
     <div className="rounded-xl overflow-hidden border border-[var(--line)] dark:border-[var(--line-2)]">
-      {label && (
-        <div className="flex items-center justify-between px-4 py-2 bg-[var(--surface-2)] dark:bg-[var(--surface-2)] border-b border-[var(--line)] dark:border-[var(--line-2)]">
-          <span className="text-xs font-semibold font-mono text-[var(--fg-2)] uppercase tracking-wider">{label}</span>
-          <CopyButton text={code} />
-        </div>
-      )}
-      <pre className={`overflow-x-auto p-4 text-sm leading-relaxed ${!label ? 'flex items-center justify-between' : ''}`}
-        style={{ background: 'var(--surface)', fontFamily: 'var(--f-mono)', color: 'var(--fg-1)' }}>
-        {!label && <CopyButton text={code} />}
-        <code className="block whitespace-pre">{code}</code>
+      <div className="flex items-center justify-between px-4 py-2.5 bg-[var(--surface-2)] border-b border-[var(--line)] dark:border-[var(--line-2)]">
+        <span className="text-xs font-semibold font-mono text-[var(--fg-3)] uppercase tracking-wider">{label}</span>
+        <CopyButton text={code} />
+      </div>
+      <pre
+        className="overflow-x-auto p-4 text-sm leading-relaxed"
+        style={{ background: 'var(--surface)', fontFamily: 'var(--f-mono)', color: 'var(--fg-1)' }}
+      >
+        <code className="whitespace-pre">{code}</code>
       </pre>
     </div>
   );
@@ -215,8 +202,10 @@ function EndpointCard({ endpoint }: { endpoint: typeof ENDPOINTS[number] }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="rounded-2xl overflow-hidden border border-[var(--line)] dark:border-[var(--line-2)] transition-shadow hover:shadow-md"
-      style={{ background: 'var(--surface)' }}>
+    <div
+      className="rounded-2xl overflow-hidden border border-[var(--line)] dark:border-[var(--line-2)] transition-all hover:shadow-sm"
+      style={{ background: 'var(--surface)' }}
+    >
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-[var(--surface-2)] dark:hover:bg-[var(--surface-2)] transition-colors"
@@ -224,12 +213,17 @@ function EndpointCard({ endpoint }: { endpoint: typeof ENDPOINTS[number] }) {
         <span className={`shrink-0 px-2.5 py-1 rounded-md text-xs font-bold tracking-wide ${METHOD_COLORS[endpoint.method]}`}>
           {endpoint.method}
         </span>
-        <code className="flex-1 text-sm font-semibold truncate" style={{ fontFamily: 'var(--f-mono)', color: 'var(--fg-0)' }}>
+        <code
+          className="flex-1 text-sm font-semibold truncate"
+          style={{ fontFamily: 'var(--f-mono)', color: 'var(--fg-0)' }}
+        >
           {endpoint.path}
         </code>
-        <span className="text-sm text-[var(--fg-2)] truncate hidden sm:block">{endpoint.summary}</span>
+        <span className="text-sm text-[var(--fg-2)] truncate hidden sm:block flex-1 min-w-0 ml-2">
+          {endpoint.summary}
+        </span>
         {endpoint.auth && (
-          <span className="shrink-0 px-2 py-0.5 rounded text-xs font-semibold bg-[var(--red-tint)] text-[var(--red)] dark:bg-[var(--red-tint)]">
+          <span className="shrink-0 ml-2 px-2 py-0.5 rounded text-xs font-semibold bg-[var(--red-tint)] text-[var(--red)]">
             Auth
           </span>
         )}
@@ -243,20 +237,24 @@ function EndpointCard({ endpoint }: { endpoint: typeof ENDPOINTS[number] }) {
       </button>
 
       {open && (
-        <div className="px-5 pb-5 space-y-4 border-t border-[var(--line)] dark:border-[var(--line-2)]"
-          style={{ borderTopColor: 'var(--line)' }}>
-          <p className="pt-4 text-sm leading-relaxed" style={{ color: 'var(--fg-1)' }}>{endpoint.description}</p>
+        <div
+          className="px-5 pb-5 space-y-5 border-t border-[var(--line)] dark:border-[var(--line-2)]"
+          style={{ borderTopColor: 'var(--line)' }}
+        >
+          <p className="pt-4 text-sm leading-relaxed" style={{ color: 'var(--fg-1)' }}>
+            {endpoint.description}
+          </p>
 
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--fg-3)' }}>
-              Request
+            <h4 className="text-xs font-bold uppercase tracking-wider mb-2.5" style={{ color: 'var(--fg-3)' }}>
+              Example curl
             </h4>
             <CodeBlock code={endpoint.curl} label="curl" />
           </div>
 
           <div>
-            <h4 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--fg-3)' }}>
-              Response
+            <h4 className="text-xs font-bold uppercase tracking-wider mb-2.5" style={{ color: 'var(--fg-3)' }}>
+              Example response
             </h4>
             <CodeBlock code={endpoint.response} label="JSON" />
           </div>
@@ -266,25 +264,22 @@ function EndpointCard({ endpoint }: { endpoint: typeof ENDPOINTS[number] }) {
   );
 }
 
-function InfoBlock({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) {
+function SectionHeader({ title }: { title: string }) {
   return (
-    <div className="flex gap-3 p-4 rounded-xl border border-[var(--line)] dark:border-[var(--line-2)]"
-      style={{ background: 'var(--surface)' }}>
-      <span className="shrink-0 mt-0.5 w-5 h-5" style={{ color: 'var(--red)' }}>{icon}</span>
-      <div>
-        <h3 className="text-sm font-bold mb-1" style={{ color: 'var(--fg-0)' }}>{title}</h3>
-        <div className="text-sm leading-relaxed" style={{ color: 'var(--fg-1)' }}>{children}</div>
-      </div>
-    </div>
+    <h2 className="text-base font-bold mb-4 flex items-center gap-2" style={{ color: 'var(--fg-0)' }}>
+      <span className="w-1 h-4 rounded-full shrink-0" style={{ background: 'var(--red)' }} />
+      {title}
+    </h2>
   );
 }
 
 export default function ApiDocsClient() {
   return (
     <main className="min-h-screen" style={{ background: 'var(--bg)' }}>
-      {/* Header */}
+
+      {/* ── Hero ─────────────────────────────────────── */}
       <div className="border-b border-[var(--line)]" style={{ background: 'var(--surface)' }}>
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold mb-6"
             style={{ background: 'var(--red-tint)', color: 'var(--red)' }}>
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -292,7 +287,10 @@ export default function ApiDocsClient() {
             </svg>
             REST API
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-3" style={{ color: 'var(--fg-0)', fontFamily: 'var(--f-display)' }}>
+          <h1
+            className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-4"
+            style={{ color: 'var(--fg-0)', fontFamily: 'var(--f-display)' }}
+          >
             Toolblip API Reference
           </h1>
           <p className="text-base sm:text-lg leading-relaxed max-w-2xl" style={{ color: 'var(--fg-2)' }}>
@@ -301,115 +299,146 @@ export default function ApiDocsClient() {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 space-y-10">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 space-y-14">
 
-        {/* Base URL */}
+        {/* ── Base URL ────────────────────────────────── */}
         <section>
-          <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--fg-0)' }}>Base URL</h2>
-          <div className="rounded-xl overflow-hidden border border-[var(--line)] dark:border-[var(--line-2)]"
-            style={{ background: 'var(--surface)' }}>
-            <table className="w-full text-sm">
-              <tbody>
-                <tr className="border-b border-[var(--line)] dark:border-[var(--line-2)]">
-                  <td className="px-4 py-3 font-semibold w-40 shrink-0" style={{ color: 'var(--fg-2)' }}>Production</td>
-                  <td className="px-4 py-3">
-                    <code className="text-sm font-semibold" style={{ fontFamily: 'var(--f-mono)', color: 'var(--fg-0)' }}>
-                      {BASE_URL}
-                    </code>
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-4 py-3 font-semibold" style={{ color: 'var(--fg-2)' }}>Railway (alt)</td>
-                  <td className="px-4 py-3">
-                    <code className="text-sm" style={{ fontFamily: 'var(--f-mono)', color: 'var(--fg-2)' }}>
-                      {ALT_URL}
-                    </code>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          <SectionHeader title="Base URL" />
+          <div
+            className="rounded-xl overflow-hidden border border-[var(--line)] dark:border-[var(--line-2)]"
+            style={{ background: 'var(--surface)' }}
+          >
+            <div className="flex items-center gap-4 px-5 py-4 border-b border-[var(--line)] dark:border-[var(--line-2)]">
+              <span className="shrink-0 px-2.5 py-1 rounded-md text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
+                HTTPS
+              </span>
+              <code
+                className="text-base font-semibold font-mono"
+                style={{ fontFamily: 'var(--f-mono)', color: 'var(--fg-0)' }}
+              >
+                {BASE_URL}
+              </code>
+            </div>
+            <div className="px-5 py-3.5 flex items-center gap-3">
+              <svg className="w-4 h-4 shrink-0" style={{ color: 'var(--fg-3)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <p className="text-sm" style={{ color: 'var(--fg-2)' }}>
+                All API requests go to this base URL. No trailing slash.
+              </p>
+            </div>
           </div>
         </section>
 
-        {/* Authentication */}
+        {/* ── Authentication ───────────────────────────── */}
         <section>
-          <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--fg-0)' }}>Authentication</h2>
-          <InfoBlock
-            icon={
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-            }
-            title="Bearer Token Authentication"
+          <SectionHeader title="Authentication" />
+          <div
+            className="p-5 rounded-xl border border-[var(--line)] dark:border-[var(--line-2)] mb-5"
+            style={{ background: 'var(--surface)' }}
           >
-            All authenticated endpoints require an <code style={{ fontFamily: 'var(--f-mono)' }}>Authorization</code> header with a Bearer token.
-            Tokens are returned from <code style={{ fontFamily: 'var(--f-mono)' }}>/api/auth/register</code> and{' '}
-            <code style={{ fontFamily: 'var(--f-mono)' }}>/api/auth/login</code>.
-          </InfoBlock>
+            <div className="flex items-start gap-4">
+              <div className="shrink-0 w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: 'var(--red-tint)' }}>
+                <svg className="w-5 h-5" style={{ color: 'var(--red)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-sm font-bold mb-1" style={{ color: 'var(--fg-0)' }}>
+                  Bearer Token Authentication
+                </h3>
+                <p className="text-sm leading-relaxed" style={{ color: 'var(--fg-1)' }}>
+                  Include your token as a Bearer token in the{' '}
+                  <code style={{ fontFamily: 'var(--f-mono)' }}>Authorization</code> header on every authenticated request.
+                  Tokens are returned from{' '}
+                  <code style={{ fontFamily: 'var(--f-mono)' }}>/api/auth/register</code> and{' '}
+                  <code style={{ fontFamily: 'var(--f-mono)' }}>/api/auth/login</code>.
+                </p>
+              </div>
+            </div>
+          </div>
 
-          <div className="mt-4 p-4 rounded-xl border border-[var(--line)] dark:border-[var(--line-2)] overflow-hidden"
-            style={{ background: 'var(--surface-2)' }}>
-            <pre className="text-sm leading-relaxed" style={{ fontFamily: 'var(--f-mono)', color: 'var(--fg-1)' }}>
+          <div
+            className="p-4 rounded-xl border border-[var(--line)] dark:border-[var(--line-2)] overflow-hidden"
+            style={{ background: 'var(--surface-2)' }}
+          >
+            <pre className="text-sm" style={{ fontFamily: 'var(--f-mono)', color: 'var(--fg-1)' }}>
               <code>{'Authorization: Bearer {token}'}</code>
             </pre>
           </div>
 
-          <div className="mt-3 space-y-2">
+          <div className="mt-4 grid sm:grid-cols-2 gap-2">
             {[
-              { label: 'Register', path: '/api/auth/register', desc: 'Creates account, returns token' },
-              { label: 'Login', path: '/api/auth/login', desc: 'Authenticates, returns token' },
-              { label: 'Logout', path: '/api/auth/logout', desc: 'Requires auth — revokes token' },
-              { label: 'Get user', path: '/api/auth/user', desc: 'Requires auth — returns current user' },
+              { method: 'Public', path: '/api/auth/register', desc: 'Create account → get token' },
+              { method: 'Public', path: '/api/auth/login', desc: 'Login → get token' },
+              { method: 'Auth', path: '/api/auth/logout', desc: 'Revoke token' },
+              { method: 'Auth', path: '/api/auth/user', desc: 'Get current user' },
             ].map((r) => (
-              <div key={r.path} className="flex items-center gap-3 text-sm">
-                <span className="shrink-0 w-16 text-center px-2 py-0.5 rounded font-bold text-xs bg-[var(--surface)] text-[var(--fg-2)] border border-[var(--line)] dark:border-[var(--line-2)]">
-                  {r.label}
+              <div key={r.path} className="flex items-center gap-2.5 text-sm p-2.5 rounded-lg" style={{ background: 'var(--surface)' }}>
+                <span
+                  className={`shrink-0 px-2 py-0.5 rounded text-xs font-bold ${
+                    r.method === 'Auth' ? 'bg-[var(--red-tint)] text-[var(--red)]' : 'bg-[var(--surface-3)] text-[var(--fg-2)]'
+                  }`}
+                >
+                  {r.method}
                 </span>
-                <code style={{ fontFamily: 'var(--f-mono)', color: 'var(--fg-1)' }}>{r.path}</code>
-                <span style={{ color: 'var(--fg-3)' }}>— {r.desc}</span>
+                <code style={{ fontFamily: 'var(--f-mono)', color: 'var(--fg-1)', fontSize: '13px' }}>{r.path}</code>
+                <span className="hidden sm:inline" style={{ color: 'var(--fg-3)', fontSize: '13px' }}>— {r.desc}</span>
               </div>
             ))}
           </div>
         </section>
 
-        {/* Response Format */}
+        {/* ── Response Format ─────────────────────────── */}
         <section>
-          <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--fg-0)' }}>Response Format</h2>
-          <InfoBlock
-            icon={
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <SectionHeader title="Response Format" />
+          <div
+            className="p-5 rounded-xl border border-[var(--line)] dark:border-[var(--line-2)] flex items-start gap-4"
+            style={{ background: 'var(--surface)' }}
+          >
+            <div className="shrink-0 w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: 'var(--surface-2)' }}>
+              <svg className="w-5 h-5" style={{ color: 'var(--fg-2)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                   d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-            }
-            title="All responses are JSON"
-          >
-            Every endpoint returns <code style={{ fontFamily: 'var(--f-mono)' }}>Content-Type: application/json</code>. Success
-            responses follow the shapes shown below. Errors return an object with an optional <code style={{ fontFamily: 'var(--f-mono)' }}>message</code> field.
-          </InfoBlock>
+            </div>
+            <div>
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--fg-1)' }}>
+                All responses are <strong>JSON</strong> with{' '}
+                <code style={{ fontFamily: 'var(--f-mono)' }}>Content-Type: application/json</code>.
+                Success responses follow the shapes shown in the endpoint examples. Errors return an object with an optional{' '}
+                <code style={{ fontFamily: 'var(--f-mono)' }}>message</code> field.
+              </p>
+            </div>
+          </div>
         </section>
 
-        {/* Rate Limiting */}
+        {/* ── Rate Limiting ───────────────────────────── */}
         <section>
-          <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--fg-0)' }}>Rate Limiting</h2>
-          <InfoBlock
-            icon={
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <SectionHeader title="Rate Limiting" />
+          <div
+            className="p-5 rounded-xl border border-[var(--line)] dark:border-[var(--line-2)] flex items-start gap-4"
+            style={{ background: 'var(--surface)' }}
+          >
+            <div className="shrink-0 w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: 'var(--surface-2)' }}>
+              <svg className="w-5 h-5" style={{ color: 'var(--fg-2)' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                   d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-            }
-            title="60 requests per minute"
-          >
-            The API enforces a rate limit of 60 requests per minute per IP address. Exceeding this returns a{' '}
-            <code style={{ fontFamily: 'var(--f-mono)' }}>429 Too Many Requests</code> response.
-          </InfoBlock>
+            </div>
+            <div>
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--fg-1)' }}>
+                <strong>60 requests per minute</strong> per IP address. Exceeding this returns a{' '}
+                <code style={{ fontFamily: 'var(--f-mono)' }}>429 Too Many Requests</code> response.
+              </p>
+            </div>
+          </div>
         </section>
 
-        {/* Endpoints */}
+        {/* ── Endpoints ───────────────────────────────── */}
         <section>
-          <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--fg-0)' }}>Endpoints</h2>
+          <SectionHeader title="Endpoints" />
           <div className="space-y-3">
             {ENDPOINTS.map((ep) => (
               <EndpointCard key={`${ep.method}:${ep.path}`} endpoint={ep} />
@@ -417,16 +446,18 @@ export default function ApiDocsClient() {
           </div>
         </section>
 
-        {/* Error Codes */}
+        {/* ── Error Codes ─────────────────────────────── */}
         <section>
-          <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--fg-0)' }}>Error Codes</h2>
-          <div className="rounded-xl overflow-hidden border border-[var(--line)] dark:border-[var(--line-2)]"
-            style={{ background: 'var(--surface)' }}>
+          <SectionHeader title="Error Codes" />
+          <div
+            className="rounded-xl overflow-hidden border border-[var(--line)] dark:border-[var(--line-2)]"
+            style={{ background: 'var(--surface)' }}
+          >
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-[var(--line)] dark:border-[var(--line-2)]" style={{ background: 'var(--surface-2)' }}>
-                  <th className="px-4 py-2.5 text-left font-bold" style={{ color: 'var(--fg-2)' }}>Status</th>
-                  <th className="px-4 py-2.5 text-left font-bold" style={{ color: 'var(--fg-2)' }}>Meaning</th>
+                  <th className="px-4 py-2.5 text-left font-bold text-xs uppercase tracking-wider" style={{ color: 'var(--fg-2)' }}>Status</th>
+                  <th className="px-4 py-2.5 text-left font-bold text-xs uppercase tracking-wider" style={{ color: 'var(--fg-2)' }}>Meaning</th>
                 </tr>
               </thead>
               <tbody>
@@ -440,7 +471,10 @@ export default function ApiDocsClient() {
                   { code: '429', msg: 'Too Many Requests — rate limit exceeded' },
                   { code: '500', msg: 'Server Error — something went wrong on our end' },
                 ].map((row, i) => (
-                  <tr key={row.code} className={i > 0 ? 'border-t border-[var(--line)] dark:border-[var(--line-2)]' : ''}>
+                  <tr
+                    key={row.code}
+                    className={i > 0 ? 'border-t border-[var(--line)] dark:border-[var(--line-2)]' : ''}
+                  >
                     <td className="px-4 py-3 font-bold" style={{ fontFamily: 'var(--f-mono)', color: 'var(--red)' }}>
                       {row.code}
                     </td>
@@ -452,10 +486,10 @@ export default function ApiDocsClient() {
           </div>
         </section>
 
-        {/* Footer */}
-        <section className="text-center pt-4">
+        {/* ── Footer ──────────────────────────────────── */}
+        <section className="text-center pt-2 pb-8">
           <p className="text-sm" style={{ color: 'var(--fg-3)' }}>
-            Questions? Open an issue at{' '}
+            Questions or bugs? Open an issue at{' '}
             <a
               href="https://github.com/toolblip/api"
               target="_blank"
