@@ -1661,7 +1661,6 @@ export const tools: Tool[] = [
   { name: 'Contrast Checker', slug: 'contrast-checker-dg', description: 'Check text and background color contrast for WCAG AA and AAA compliance.', emoji: '♿', category: 'Color' },
   { name: 'Unit Converter', slug: 'unit-converter-dg', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
   { name: 'Number Base Converter', slug: 'number-base-converter-dg', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly.', emoji: '🔢', category: 'Conversion' },
-];
 
   // --- New tools (2026-04-25 #4 - directory expansion) ---
   { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-expander', description: 'Generate lorem ipsum placeholder text with customizable paragraphs, sentences, and word count.', emoji: '📜', category: 'Text' },
