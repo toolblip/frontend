@@ -1579,6 +1579,32 @@ export const tools: Tool[] = [
   { name: 'SERP Preview', slug: 'serp-preview-tool', description: 'Preview how a page title and description appear in Google search results.', emoji: '🔎', category: 'SEO' },
   { name: 'Color Picker', slug: 'color-picker-ultra', description: 'Pick any color and get HEX, RGB, HSL, and CSS values with a live preview.', emoji: '🎨', category: 'Color' },
   { name: 'Contrast Checker', slug: 'contrast-checker-ultra', description: 'Check text and background color contrast for WCAG AA and AAA compliance.', emoji: '♿', category: 'Color' },
+
+  // --- New tools (2026-04-25 #5) ---
+  { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-design', description: 'Generate lorem ipsum placeholder text for design mockups with word count controls.', emoji: '📜', category: 'Text' },
+  { name: 'Spelling Checker', slug: 'spelling-checker-tool', description: 'Check spelling errors in any text and get one-click corrections instantly.', emoji: '✏️', category: 'Text' },
+  { name: 'Text Complexity Analyzer', slug: 'text-complexity-analyzer', description: 'Analyze text complexity with syllable count, sentence length, and vocabulary score.', emoji: '📊', category: 'Text' },
+  { name: 'Text Deduplicator', slug: 'text-deduplicator', description: 'Remove duplicate words, phrases, and sentences from text with one click.', emoji: '🔎', category: 'Text' },
+  { name: 'API Endpoint Debugger', slug: 'api-endpoint-debugger', description: 'Debug API endpoints with custom headers, body, and authentication for testing.', emoji: '🔌', category: 'Developer' },
+  { name: 'Cron Expression Parser', slug: 'cron-expression-parser', description: 'Parse cron expressions and get human-readable descriptions with next 10 run times.', emoji: '⏱️', category: 'Developer' },
+  { name: 'HTTP Status Code Lookup', slug: 'http-status-code-lookup', description: 'Look up HTTP status codes with meanings, categories, and common use cases.', emoji: '🌐', category: 'Developer' },
+  { name: 'JSON Schema Viewer', slug: 'json-schema-viewer', description: 'View and explore JSON Schema structures with property type annotations.', emoji: '📋', category: 'Developer' },
+  { name: 'HTML Attribute Encoder', slug: 'html-attribute-encoder', description: 'Encode HTML attributes for safe use inside element tags and values.', emoji: '🏷️', category: 'Developer' },
+  { name: 'Base64 Image Viewer', slug: 'base64-image-viewer', description: 'View images encoded as Base64 data URLs directly in your browser.', emoji: '🖼️', category: 'Image' },
+  { name: 'Favicon Preview', slug: 'favicon-preview-tool', description: 'Preview how a favicon looks at different sizes and on various backgrounds.', emoji: '🌐', category: 'Image' },
+  { name: 'Photo Metadata Remover', slug: 'photo-metadata-remover', description: 'Strip EXIF and metadata from photos to protect privacy before sharing online.', emoji: '🛡️', category: 'Image' },
+  { name: 'SEO Title Analyzer', slug: 'seo-title-analyzer', description: 'Analyze SEO title length and quality for Google search results click-through rates.', emoji: '🏷️', category: 'SEO' },
+  { name: 'SERP Simulator', slug: 'serp-simulator', description: 'Simulate how any webpage appears in Google search results with pixel-perfect preview.', emoji: '🔎', category: 'SEO' },
+  { name: 'Robots TXT Checker', slug: 'robots-txt-checker', description: 'Check robots.txt files for crawler directives and blocked paths with validation.', emoji: '🤖', category: 'SEO' },
+  { name: 'Color Luminance Calculator', slug: 'color-luminance-calculator', description: 'Calculate relative luminance of any color for WCAG contrast ratio compliance.', emoji: '🎨', category: 'Color' },
+  { name: 'CMYK to RGB Converter', slug: 'cmyk-to-rgb-tool', description: 'Convert CMYK color values to RGB and HEX for print and digital design.', emoji: '🎨', category: 'Color' },
+  { name: 'All-in-One Unit Converter', slug: 'all-in-one-unit-converter', description: 'Convert between length, weight, temperature, speed, and volume in one tool.', emoji: '⚖️', category: 'Conversion' },
+  { name: 'Octal to Decimal Converter', slug: 'octal-to-decimal', description: 'Convert octal numbers to decimal, binary, and hexadecimal instantly.', emoji: '🔢', category: 'Conversion' },
+  { name: 'Slug Health Checker', slug: 'slug-health-checker', description: 'Check URL slug health for duplicate content issues and SEO-friendly structure.', emoji: '🔗', category: 'SEO' },
+  { name: 'Duplicate URL Detector', slug: 'duplicate-url-detector', description: 'Detect duplicate URLs in a list and suggest canonical versions for SEO.', emoji: '🔍', category: 'SEO' },
+  { name: 'Screen Density Simulator', slug: 'screen-density-simulator', description: 'Simulate how websites look on screens with different DPI and pixel densities.', emoji: '🖥️', category: 'Developer' },
+  { name: 'HTML Table to JSON', slug: 'html-table-to-json', description: 'Convert HTML tables to JSON arrays with automatic header detection.', emoji: '📊', category: 'Conversion' },
+  { name: 'Text Sentence Shuffler', slug: 'text-sentence-shuffler', description: 'Shuffle sentences within paragraphs or across a whole text randomly.', emoji: '🔀', category: 'Text' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'Image Tools', 'AI Tools', 'Document Generator', 'Text Tools', 'HEX/RGB/HSL'] as const;
