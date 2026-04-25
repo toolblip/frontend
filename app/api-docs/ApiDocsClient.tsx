@@ -157,7 +157,7 @@ const ENDPOINTS = [
   -H "Content-Type: application/json" \\
   -H "Authorization: Bearer {token}"`,
         response: `{
-  "message": "Logged out successfully."
+  "message": "Logged out successfully"
 }`,
       },
       {
