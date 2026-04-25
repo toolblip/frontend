@@ -23,6 +23,13 @@ import XmlToJsonClient from '@/components/tools/XmlToJsonClient';
 import SqlToJsonClient from '@/components/tools/SqlToJsonClient';
 import JsMinifierClient from '@/components/tools/JsMinifierClient';
 import NumberBaseConverterClient from '@/components/tools/NumberBaseConverterClient';
+import JwtDecoderClient from '@/components/tools/JwtDecoderClient';
+import RegexTesterClient from '@/components/tools/RegexTesterClient';
+import CronParserClient from '@/components/tools/CronParserClient';
+import UrlSlugGeneratorClient from '@/components/tools/UrlSlugGeneratorClient';
+import UrlParamsClient from '@/components/tools/UrlParamsClient';
+import MetaTagGeneratorClient from '@/components/tools/MetaTagGeneratorClient';
+import SerpPreviewClient from '@/components/tools/SerpPreviewClient';
 import FaqSection from '@/components/v2/FaqSection';
 import { getFaqs } from '@/lib/faq';
 
@@ -73,6 +80,22 @@ function getToolComponent(slug: string): React.ReactNode {
       return <JsMinifierClient />;
     case 'number-base-converter':
       return <NumberBaseConverterClient />;
+    case 'jwt-decoder':
+      return <JwtDecoderClient />;
+    case 'regex-tester':
+      return <RegexTesterClient />;
+    case 'cron-parser':
+    case 'cron-expression-parser':
+      return <CronParserClient />;
+    case 'url-slug-generator':
+      return <UrlSlugGeneratorClient />;
+    case 'url-parameter-extractor':
+    case 'url-params-extractor':
+      return <UrlParamsClient />;
+    case 'meta-tag-generator':
+      return <MetaTagGeneratorClient />;
+    case 'serp-preview':
+      return <SerpPreviewClient />;
     default:
       return <ComingSoonUI />;
   }

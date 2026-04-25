@@ -1,76 +1,162 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+
+function escapeAttr(s: string): string {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+function buildTags(o: {
+  title: string;
+  description: string;
+  url: string;
+  image: string;
+  twitter: string;
+  type: string;
+}): string {
+  const t = o.title || 'Page Title';
+  const d = o.description || 'Page description';
+  const u = o.url || 'https://example.com/';
+  const handle = o.twitter ? (o.twitter.startsWith('@') ? o.twitter : `@${o.twitter}`) : '';
+
+  const lines: string[] = [];
+  lines.push('<!-- Primary Meta Tags -->');
+  lines.push(`<title>${escapeAttr(t)}</title>`);
+  lines.push(`<meta name="title" content="${escapeAttr(t)}">`);
+  lines.push(`<meta name="description" content="${escapeAttr(d)}">`);
+  lines.push('');
+  lines.push('<!-- Open Graph -->');
+  lines.push(`<meta property="og:type" content="${escapeAttr(o.type)}">`);
+  lines.push(`<meta property="og:url" content="${escapeAttr(u)}">`);
+  lines.push(`<meta property="og:title" content="${escapeAttr(t)}">`);
+  lines.push(`<meta property="og:description" content="${escapeAttr(d)}">`);
+  lines.push(o.image
+    ? `<meta property="og:image" content="${escapeAttr(o.image)}">`
+    : '<!-- <meta property="og:image" content="https://example.com/og.jpg"> -->');
+  lines.push('');
+  lines.push('<!-- Twitter -->');
+  lines.push('<meta name="twitter:card" content="summary_large_image">');
+  if (handle) lines.push(`<meta name="twitter:site" content="${escapeAttr(handle)}">`);
+  lines.push(`<meta name="twitter:title" content="${escapeAttr(t)}">`);
+  lines.push(`<meta name="twitter:description" content="${escapeAttr(d)}">`);
+  lines.push(o.image
+    ? `<meta name="twitter:image" content="${escapeAttr(o.image)}">`
+    : '<!-- <meta name="twitter:image" content="https://example.com/og.jpg"> -->');
+  return lines.join('\n');
+}
+
+const TYPES = ['website', 'article', 'product', 'profile'];
 
 export default function MetaTagGeneratorClient() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [url, setUrl] = useState('');
   const [image, setImage] = useState('');
-  const [twitterHandle, setTwitterHandle] = useState('');
-  const [output, setOutput] = useState('');
+  const [twitter, setTwitter] = useState('');
+  const [type, setType] = useState('website');
+  const [copied, setCopied] = useState(false);
 
-  const generate = () => {
-    const lines = [
-      '<!-- Primary Meta Tags -->',
-      `<title>${title || '(Page Title)'}</title>`,
-      `<meta name="title" content="${title || '(Page Title)'}">`,
-      `<meta name="description" content="${description || '(Page description)'}">`,
-      '',
-      '<!-- Open Graph / Facebook -->',
-      `<meta property="og:type" content="website">`,
-      `<meta property="og:url" content="${url || 'https://example.com/'}">`,
-      `<meta property="og:title" content="${title || '(Page Title)'}">`,
-      `<meta property="og:description" content="${description || '(Page description)'}">`,
-      image ? `<meta property="og:image" content="${image}">` : '<!-- <meta property="og:image" content="https://example.com/image.jpg"> -->',
-      '',
-      '<!-- Twitter -->',
-      `<meta name="twitter:card" content="summary_large_image">`,
-      twitterHandle ? `<meta name="twitter:site" content="${twitterHandle.startsWith('@') ? twitterHandle : '@' + twitterHandle}">` : '<!-- <meta name="twitter:site" content="@username"> -->',
-      `<meta name="twitter:title" content="${title || '(Page Title)'}">`,
-      `<meta name="twitter:description" content="${description || '(Page description)'}">`,
-      image ? `<meta name="twitter:image" content="${image}">` : '<!-- <meta name="twitter:image" content="https://example.com/image.jpg"> -->',
-    ];
-    setOutput(lines.join('\n'));
-  };
+  const tags = useMemo(
+    () => buildTags({ title, description, url, image, twitter, type }),
+    [title, description, url, image, twitter, type],
+  );
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(output);
+  const copy = () => {
+    navigator.clipboard.writeText(tags).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div className="space-y-4">
-      {[
-        { label: 'Page Title', value: title, onChange: setTitle, placeholder: 'My Amazing Page' },
-        { label: 'Page URL', value: url, onChange: setUrl, placeholder: 'https://example.com/page' },
-        { label: 'Description', value: description, onChange: setDescription, placeholder: 'A short description of your page...', textarea: true },
-        { label: 'OG/Twitter Image URL', value: image, onChange: setImage, placeholder: 'https://example.com/og-image.jpg' },
-        { label: 'Twitter Handle (without @)', value: twitterHandle, onChange: setTwitterHandle, placeholder: 'toolblip' },
-      ].map(({ label, value, onChange, placeholder, textarea }) =>
-        textarea ? (
-          <div key={label}>
-            <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">{label}</label>
-            <textarea value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} rows={3} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 resize-none" />
+    <div>
+      <div className="tb-v2-meta-grid">
+        <label className="tb-v2-meta-field">
+          <span className="tb-v2-tool-label">Page title</span>
+          <input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="My Amazing Page"
+            className="tb-v2-meta-input"
+          />
+        </label>
+
+        <label className="tb-v2-meta-field">
+          <span className="tb-v2-tool-label">Page URL</span>
+          <input
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            placeholder="https://example.com/page"
+            className="tb-v2-meta-input"
+          />
+        </label>
+
+        <label className="tb-v2-meta-field tb-v2-meta-field-wide">
+          <span className="tb-v2-tool-label">Description</span>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="A short description of your page…"
+            rows={2}
+            className="tb-v2-meta-input"
+          />
+        </label>
+
+        <label className="tb-v2-meta-field">
+          <span className="tb-v2-tool-label">Image URL (1200×630)</span>
+          <input
+            value={image}
+            onChange={(e) => setImage(e.target.value)}
+            placeholder="https://example.com/og.jpg"
+            className="tb-v2-meta-input"
+          />
+        </label>
+
+        <label className="tb-v2-meta-field">
+          <span className="tb-v2-tool-label">Twitter handle</span>
+          <input
+            value={twitter}
+            onChange={(e) => setTwitter(e.target.value)}
+            placeholder="toolblip"
+            className="tb-v2-meta-input"
+          />
+        </label>
+
+        <div className="tb-v2-meta-field tb-v2-meta-field-wide">
+          <span className="tb-v2-tool-label">og:type</span>
+          <div className="tb-v2-mode-tabs" role="radiogroup" aria-label="Open Graph type">
+            {TYPES.map((t) => (
+              <button
+                key={t}
+                type="button"
+                role="radio"
+                aria-checked={type === t}
+                onClick={() => setType(t)}
+                className={`tb-v2-mode-tab ${type === t ? 'on' : ''}`}
+              >
+                {t}
+              </button>
+            ))}
           </div>
-        ) : (
-          <div key={label}>
-            <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">{label}</label>
-            <input value={value} onChange={e => onChange(e.target.value)} placeholder={placeholder} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-red-500" />
-          </div>
-        )
-      )}
-      <button onClick={generate} className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg font-medium transition-colors">
-        Generate Tags
-      </button>
-      {output && (
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <label className="text-sm font-medium text-gray-600 dark:text-gray-400">Generated Meta Tags</label>
-            <button onClick={handleCopy} className="text-xs text-red-600 dark:text-red-400 hover:text-red-700 font-medium">Copy</button>
-          </div>
-          <textarea value={output} readOnly rows={Math.max(12, output.split('\n').length)} className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200 rounded-lg px-4 py-3 font-mono text-xs resize-none" />
         </div>
-      )}
+      </div>
+
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">Generated tags</span>
+        <button
+          type="button"
+          onClick={copy}
+          className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+        >
+          {copied ? 'Copied' : 'Copy'}
+        </button>
+      </div>
+      <div className="tb-v2-tool-output-body">
+        <pre className="tb-v2-tool-pre">{tags}</pre>
+      </div>
     </div>
   );
 }

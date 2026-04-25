@@ -1,82 +1,191 @@
 'use client';
 
-import { useState } from 'react';
+import { Fragment, useMemo, useState } from 'react';
+
+interface MatchInfo {
+  index: number;
+  match: string;
+  groups: (string | undefined)[];
+  named: Record<string, string>;
+}
+
+interface Result {
+  matches: MatchInfo[];
+  error: string;
+  segments: { text: string; hit: boolean }[];
+}
+
+const FLAG_CHARS = ['g', 'i', 'm', 's', 'u', 'y'] as const;
+type Flag = typeof FLAG_CHARS[number];
+
+const FLAG_LABEL: Record<Flag, string> = {
+  g: 'global',
+  i: 'ignore case',
+  m: 'multiline',
+  s: 'dotall',
+  u: 'unicode',
+  y: 'sticky',
+};
+
+function compute(pattern: string, flags: string, sample: string): Result {
+  if (!pattern || !sample) return { matches: [], error: '', segments: [{ text: sample, hit: false }] };
+  let re: RegExp;
+  try {
+    const f = flags.includes('g') ? flags : flags + 'g';
+    re = new RegExp(pattern, f);
+  } catch (e) {
+    return { matches: [], error: (e as Error).message, segments: [{ text: sample, hit: false }] };
+  }
+  const matches: MatchInfo[] = [];
+  const segments: { text: string; hit: boolean }[] = [];
+  let last = 0;
+  let m: RegExpExecArray | null;
+  let safety = 0;
+  while ((m = re.exec(sample)) !== null) {
+    if (safety++ > 5000) break;
+    if (m[0] === '' && re.lastIndex === m.index) {
+      re.lastIndex++;
+      continue;
+    }
+    const idx = m.index;
+    if (idx > last) segments.push({ text: sample.slice(last, idx), hit: false });
+    segments.push({ text: m[0], hit: true });
+    last = idx + m[0].length;
+    matches.push({
+      index: idx,
+      match: m[0],
+      groups: m.slice(1),
+      named: m.groups ? { ...m.groups } : {},
+    });
+  }
+  if (last < sample.length) segments.push({ text: sample.slice(last), hit: false });
+  if (segments.length === 0) segments.push({ text: sample, hit: false });
+  return { matches, error: '', segments };
+}
 
 export default function RegexTesterClient() {
-  const [pattern, setPattern] = useState('');
-  const [flags, setFlags] = useState('g');
-  const [testString, setTestString] = useState('');
-  const [error, setError] = useState('');
+  const [pattern, setPattern] = useState('\\b\\w+@\\w+\\.\\w+\\b');
+  const [flags, setFlags] = useState<Set<Flag>>(new Set(['g']));
+  const [sample, setSample] = useState(
+    'Email Ada at ada@example.com or Grace at grace@toolblip.com to confirm.\nNo match: just plain text on this line.',
+  );
 
-  const matches = () => {
-    if (!pattern || !testString) return [];
-    try {
-      setError('');
-      const regex = new RegExp(pattern, flags);
-      const found = [...testString.matchAll(regex)];
-      return found.map((m, i) => ({ index: m.index ?? 0, match: m[0], groups: m.slice(1) }));
-    } catch (e: unknown) {
-      setError((e as Error).message);
-      return [];
-    }
+  const flagStr = useMemo(() => Array.from(flags).join(''), [flags]);
+  const result = useMemo(() => compute(pattern, flagStr, sample), [pattern, flagStr, sample]);
+
+  const toggleFlag = (f: Flag) => {
+    setFlags((cur) => {
+      const next = new Set(cur);
+      if (next.has(f)) next.delete(f);
+      else next.add(f);
+      return next;
+    });
   };
-
-  const highlighted = () => {
-    if (!pattern || !testString) return testString;
-    try {
-      const regex = new RegExp(pattern, flags);
-      return testString.replace(regex, (m) => `〖${m}〗`);
-    } catch {
-      return testString;
-    }
-  };
-
-  const matchList = matches();
 
   return (
-    <div className="space-y-4">
-      <div className="flex gap-2">
+    <div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Pattern</span>
+        <span className="tb-v2-hash-stats">
+          {result.error ? '—' : `${result.matches.length} match${result.matches.length === 1 ? '' : 'es'}`}
+        </span>
+      </div>
+      <div className="tb-v2-rgx-pattern">
+        <span className="tb-v2-rgx-slash">/</span>
         <input
           value={pattern}
-          onChange={e => setPattern(e.target.value)}
-          placeholder="Regular expression, e.g. \d+"
-          className="flex-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 font-mono text-sm focus:outline-none focus:border-red-500"
+          onChange={(e) => setPattern(e.target.value)}
+          spellCheck={false}
+          autoComplete="off"
+          className="tb-v2-rgx-input"
+          aria-label="Regular expression pattern"
         />
-        <input
-          value={flags}
-          onChange={e => setFlags(e.target.value.replace(/[^gimsuy]/g, ''))}
-          placeholder="g"
-          title="Regex flags: g=global, i=ignore case, m=multiline, s=dotall, u=unicode"
-          className="w-16 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2.5 font-mono text-sm focus:outline-none focus:border-red-500"
-        />
+        <span className="tb-v2-rgx-slash">/</span>
+        <span className="tb-v2-rgx-flagstr">{flagStr || '—'}</span>
       </div>
-      <div>
-        <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">Test string</label>
-        <textarea
-          value={testString}
-          onChange={e => setTestString(e.target.value)}
-          placeholder="Enter text to test against the regex..."
-          rows={4}
-          className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500 resize-none"
-        />
+
+      <div className="tb-v2-rgx-flags" role="group" aria-label="Regex flags">
+        {FLAG_CHARS.map((f) => (
+          <button
+            key={f}
+            type="button"
+            onClick={() => toggleFlag(f)}
+            className={`tb-v2-mode-tab ${flags.has(f) ? 'on' : ''}`}
+            title={FLAG_LABEL[f]}
+            aria-pressed={flags.has(f)}
+          >
+            {f}
+          </button>
+        ))}
       </div>
-      {error && (
-        <div className="text-red-500 text-sm bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg px-4 py-2">
-          {error}
-        </div>
+
+      {result.error && (
+        <p className="tb-v2-error" role="alert" style={{ marginTop: 12 }}>
+          <strong>Invalid pattern:</strong> {result.error}
+        </p>
       )}
-      {matchList.length > 0 && (
-        <div className="text-red-600 dark:text-red-400 text-sm font-medium">
-          {matchList.length} match{matchList.length !== 1 ? 'es' : ''} found
-        </div>
-      )}
-      {testString && pattern && !error && (
-        <div>
-          <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">Highlighted matches</label>
-          <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm whitespace-pre-wrap break-all text-gray-800 dark:text-gray-200">
-            {highlighted()}
+
+      <div className="tb-v2-tool-input-head" style={{ marginTop: 16 }}>
+        <span className="tb-v2-tool-label">Test string</span>
+      </div>
+      <textarea
+        value={sample}
+        onChange={(e) => setSample(e.target.value)}
+        placeholder="Paste text to test the pattern against…"
+        className="tb-v2-tool-textarea"
+        style={{ fontFamily: 'var(--f-mono)' }}
+        aria-label="Test string"
+      />
+
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">Highlighted</span>
+      </div>
+      <div className="tb-v2-tool-output-body">
+        <pre className="tb-v2-tool-pre tb-v2-rgx-hl">
+          {result.segments.map((s, i) =>
+            s.hit ? <mark key={i} className="tb-v2-rgx-mark">{s.text}</mark> : <Fragment key={i}>{s.text}</Fragment>,
+          )}
+          {!sample && '—'}
+        </pre>
+      </div>
+
+      {result.matches.length > 0 && (
+        <>
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">Matches</span>
           </div>
-        </div>
+          <div className="tb-v2-tool-output-body">
+            <ol className="tb-v2-rgx-list">
+              {result.matches.slice(0, 100).map((m, i) => (
+                <li key={i} className="tb-v2-rgx-item">
+                  <span className="tb-v2-rgx-idx">@{m.index}</span>
+                  <code className="tb-v2-rgx-text">{m.match}</code>
+                  {m.groups.length > 0 && (
+                    <div className="tb-v2-rgx-groups">
+                      {m.groups.map((g, gi) => (
+                        <span key={gi} className="tb-v2-rgx-group">
+                          <span className="tb-v2-rgx-glabel">${gi + 1}</span>
+                          <code>{g ?? '∅'}</code>
+                        </span>
+                      ))}
+                      {Object.entries(m.named).map(([k, v]) => (
+                        <span key={k} className="tb-v2-rgx-group">
+                          <span className="tb-v2-rgx-glabel">{k}</span>
+                          <code>{v}</code>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </li>
+              ))}
+              {result.matches.length > 100 && (
+                <li className="tb-v2-rgx-item">
+                  <span className="tb-v2-hash-stats">…and {result.matches.length - 100} more.</span>
+                </li>
+              )}
+            </ol>
+          </div>
+        </>
       )}
     </div>
   );

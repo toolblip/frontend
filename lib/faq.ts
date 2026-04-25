@@ -289,6 +289,34 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Why is my hex value rejected?', a: 'Hex digits are 0–9 and A–F (case insensitive). Anything else — punctuation, the `0x` prefix, or a stray space — causes the input to be rejected. Strip the `0x` and any separators and try again.' },
     { q: 'Is the conversion done in my browser?', a: 'Yes. Conversion is pure-JS arithmetic on BigInt and runs locally — nothing about the numbers you enter is logged or sent anywhere.' },
   ],
+  'url-slug-generator': [
+    { q: 'What is a URL slug?', a: 'A slug is the readable, hyphenated tail of a URL (`/blog/how-to-build-a-slug`). Slugs are kinder to readers and search engines than `?id=42` URLs and survive content edits when the underlying ID changes.' },
+    { q: 'How does the URL Slug Generator handle accents and emoji?', a: 'Accented characters are folded to their ASCII equivalents (`café` → `cafe`) using Unicode NFKD normalization. Emoji and other non-Latin characters that have no obvious romanization are stripped — slugs are deliberately conservative to stay portable.' },
+    { q: 'What separator should I use?', a: 'Hyphens (`-`) are the safest, most-supported choice and what Google explicitly recommends. Use underscores (`_`) only if your CMS forces them, and dots (`.`) only inside file-style paths. Mixing separators across a site hurts consistency.' },
+    { q: 'Is there a recommended length limit?', a: '50–75 characters is a good zone for blog posts. Longer slugs are technically fine but get truncated in search results and shared links — pick a length and stick with it.' },
+    { q: 'Can I generate slugs offline?', a: 'Yes. The slugifier is pure JavaScript that runs entirely in your browser. Once the page has loaded, it works without an internet connection.' },
+  ],
+  'url-parameter-extractor': [
+    { q: 'What does the URL Params Extractor do?', a: 'Paste any URL and it lists every query parameter (`?key=value&...`) and the URL fragment (`#anchor`). Each value can be copied individually, or you can grab the whole set as a JSON object — handy for documenting an API call or building a test fixture.' },
+    { q: 'Decoded vs Raw — which should I use?', a: 'Decoded shows what the server actually sees after `decodeURIComponent` (so `hello%20world` becomes `hello world`). Raw shows the over-the-wire form. Use Decoded when reading values, Raw when you need to reproduce the URL exactly.' },
+    { q: 'Does it handle URLs without a scheme?', a: 'Yes. If you paste `example.com/path?x=1`, the tool prepends `https://` to make it a valid URL. The displayed scheme will reflect the assumption.' },
+    { q: 'How are repeated parameters handled?', a: 'The list shows every occurrence in order, so `?id=1&id=2` gives you two rows. The "Copy as JSON" output collapses duplicates into an array under that key.' },
+    { q: 'Is the URL sent anywhere?', a: 'No. Parsing uses the browser\'s built-in `URL` and `URLSearchParams` APIs, all in your tab — useful when the URL contains tokens, session IDs, or anything else you wouldn\'t paste into a server-side tool.' },
+  ],
+  'meta-tag-generator': [
+    { q: 'Which meta tags does this tool generate?', a: 'A complete head-snippet covering the basics — `<title>`, `<meta name="description">` — plus Open Graph tags for Facebook/LinkedIn previews and Twitter Card tags for X. That set covers >95% of real-world social-share unfurling.' },
+    { q: 'What size should the OG image be?', a: '1200×630 px is the safe sweet spot. Facebook, LinkedIn, and Slack all crop to roughly this aspect ratio. Smaller than 600×315 and the platforms downgrade to a small thumbnail.' },
+    { q: 'Do I need a separate Twitter image?', a: 'No. Twitter falls back to `og:image` when `twitter:image` is missing, so a single well-sized image works everywhere. Add a Twitter-specific image only if you want a different crop for X.' },
+    { q: 'What\'s the difference between og:type "website" and "article"?', a: '`website` is the safe default. Use `article` for blog posts and news pages — it lets you add `article:published_time`, `article:author`, etc., and some platforms render that metadata more richly.' },
+    { q: 'How do I test the result?', a: 'Paste the live URL into the social-share debugger from each platform — Meta\'s Sharing Debugger, X\'s Card Validator, LinkedIn\'s Post Inspector. Those tools also let you re-scrape the page after you push changes.' },
+  ],
+  'serp-preview': [
+    { q: 'What length should my title and description be?', a: 'Keep titles under 60 characters and meta descriptions under 160. Google truncates anything longer in search results — those limits are based on pixel width on desktop and shrink slightly on mobile.' },
+    { q: 'Will Google use the description I write?', a: 'Sometimes. Google rewrites about 60% of meta descriptions to better match the user\'s query, so treat the description as a strong hint rather than a guarantee. A clear, query-relevant description gives you the best chance.' },
+    { q: 'Is the preview pixel-perfect?', a: 'It\'s a close approximation of how Google renders the result on a typical desktop or mobile screen. Real SERP layout varies by query, device, sitelinks, and personalisation — use the preview as a guide, not a pixel-exact mirror.' },
+    { q: 'Why does the URL show as a breadcrumb?', a: 'Google replaced raw URLs with breadcrumb paths derived from your URL structure in 2020. Sites with clean, hierarchical URLs (`/category/post-slug`) get cleaner breadcrumbs in search.' },
+    { q: 'Does this affect my live SEO?', a: 'No — the SERP Preview is a visualizer. It doesn\'t crawl, modify, or submit anything to Google. Push your title/description to the live page first, then test it in Google Search Console for the real scrape.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
