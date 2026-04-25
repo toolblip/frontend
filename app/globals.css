@@ -2536,9 +2536,66 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 .tb-v2-auth-footer a { color: var(--red); font-weight: 500; }
 .tb-v2-auth-footer a:hover { color: var(--red-hover); }
 
+/* ==========================================================================
+   TOOLBLIP v2 - Blog Post / Prose
+   ========================================================================== */
+.tb-v2-post { padding: 48px 0 80px; }
+.tb-v2-post-inner { max-width: 680px; margin: 0 auto; }
+.tb-v2-post-back { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; color: var(--fg-3); text-decoration: none; margin-bottom: 28px; transition: color .15s; }
+.tb-v2-post-back:hover { color: var(--red); }
+.tb-v2-post-meta { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--fg-3); margin-bottom: 14px; flex-wrap: wrap; }
+.tb-v2-post-cat { background: var(--red-tint); color: var(--red); font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
+.tb-v2-post-title { font-family: var(--f-display); font-size: 34px; font-weight: 700; color: var(--fg-0); letter-spacing: -0.02em; line-height: 1.15; margin: 0 0 14px; }
+.tb-v2-post-desc { font-size: 15.5px; color: var(--fg-2); line-height: 1.65; margin: 0 0 24px; }
+.tb-v2-post-share { display: flex; align-items: center; gap: 12px; padding: 14px 0; margin-bottom: 36px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.tb-v2-post-share-label { font-size: 12px; color: var(--fg-3); }
+.tb-v2-post-share-btn { font-size: 12px; color: var(--fg-2); text-decoration: none; transition: color .15s; }
+.tb-v2-post-share-btn:hover { color: var(--red); }
+.tb-v2-prose { font-size: 15px; color: var(--fg-1); line-height: 1.75; }
+.tb-v2-prose > * + * { margin-top: 1.1em; }
+.tb-v2-prose h1 { font-size: 24px; font-weight: 700; color: var(--fg-0); letter-spacing: -0.02em; margin: 1.4em 0 0.4em; }
+.tb-v2-prose h2 { font-size: 20px; font-weight: 700; color: var(--fg-0); letter-spacing: -0.01em; margin: 1.4em 0 0.4em; }
+.tb-v2-prose h3 { font-size: 17px; font-weight: 600; color: var(--fg-0); margin: 1.2em 0 0.3em; }
+.tb-v2-prose h4 { font-size: 15px; font-weight: 600; color: var(--fg-0); margin: 1em 0 0.3em; }
+.tb-v2-prose p { margin: 0 0 0.9em; }
+.tb-v2-prose a { color: var(--red); text-decoration: none; }
+.tb-v2-prose a:hover { color: var(--red-hover); text-decoration: underline; }
+.tb-v2-prose strong { color: var(--fg-0); font-weight: 600; }
+.tb-v2-prose em { font-style: italic; }
+.tb-v2-prose ul { list-style: none; padding: 0; margin: 0 0 1em; }
+.tb-v2-prose ul li { padding: 3px 0; display: flex; gap: 8px; }
+.tb-v2-prose ul li::before { content: '·'; color: var(--fg-3); flex-shrink: 0; }
+.tb-v2-prose ol { padding-left: 20px; margin: 0 0 1em; list-style: decimal; }
+.tb-v2-prose ol li { padding: 2px 0; }
+.tb-v2-prose blockquote { border-left: 3px solid var(--red); padding: 10px 16px; margin: 1.4em 0; background: var(--surface-2); border-radius: 0 8px 8px 0; font-style: italic; }
+.tb-v2-prose blockquote p { margin: 0; }
+.tb-v2-prose code { font-family: var(--f-mono); font-size: 12.5px; background: var(--surface-2); border: 1px solid var(--line); padding: 1px 5px; border-radius: 4px; color: var(--fg-0); }
+.tb-v2-prose pre { background: var(--surface-2); border: 1px solid var(--line); border-radius: 10px; padding: 16px; overflow-x: auto; margin: 1.4em 0; }
+.tb-v2-prose pre code { background: none; border: none; padding: 0; font-size: 13px; }
+.tb-v2-prose img { width: 100%; border-radius: 10px; margin: 1.4em 0; }
+.tb-v2-prose hr { border: none; border-top: 1px solid var(--line); margin: 2em 0; }
+.tb-v2-prose table { width: 100%; border-collapse: collapse; margin: 1.4em 0; font-size: 14px; }
+.tb-v2-prose th { background: var(--surface-2); padding: 8px 12px; text-align: left; font-weight: 600; color: var(--fg-0); border-bottom: 2px solid var(--line); }
+.tb-v2-prose td { padding: 8px 12px; border-bottom: 1px solid var(--line); }
+.tb-v2-post-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 36px; }
+.tb-v2-post-tag { font-size: 12px; color: var(--fg-2); background: var(--surface-2); padding: 4px 10px; border-radius: 20px; }
+.tb-v2-post-author { margin-top: 36px; padding: 18px; background: var(--surface-2); border: 1px solid var(--line); border-radius: 12px; }
+.tb-v2-post-author-name { font-size: 14px; font-weight: 600; color: var(--fg-0); }
+.tb-v2-post-author-bio { font-size: 13px; color: var(--fg-2); margin-top: 4px; line-height: 1.5; }
+.tb-v2-post-related { margin-top: 52px; }
+.tb-v2-post-related-title { font-size: 16px; font-weight: 700; color: var(--fg-0); margin-bottom: 14px; }
+.tb-v2-post-related-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.tb-v2-post-related-card { padding: 14px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; text-decoration: none; transition: border-color .15s, box-shadow .15s; display: block; }
+.tb-v2-post-related-card:hover { border-color: var(--line-2); box-shadow: 0 4px 16px rgba(0,0,0,.06); }
+.tb-v2-post-related-card-title { font-size: 13px; font-weight: 600; color: var(--fg-0); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.tb-v2-post-related-card-meta { font-size: 11px; color: var(--fg-3); margin-top: 5px; }
+.tb-v2-post-footer { margin-top: 36px; padding-top: 28px; border-top: 1px solid var(--line); }
+@media (max-width: 760px) { .tb-v2-post-title { font-size: 26px; } .tb-v2-post-related-grid { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .tb-v2-post { padding: 32px 0 60px; } .tb-v2-post-title { font-size: 22px; } }
+
 /* Blog page */
 .tb-v2-blog { padding: 48px 0 80px; }
-.tb-v2-blog-header { margin-bottom: 40px; }
+.tb-v2-blog-header { margin-bottom: 40px; display: flex; flex-direction: column; gap: 6px; }
 .tb-v2-blog-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
 .tb-v2-blog-card { background: var(--surface); border: 1.5px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; transition: border-color .15s, box-shadow .15s; display: flex; flex-direction: column; }
 .tb-v2-blog-card:hover { border-color: var(--line-2); box-shadow: 0 4px 20px rgba(0,0,0,.06); }

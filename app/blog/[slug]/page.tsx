@@ -66,72 +66,118 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({ '@context': 'https://schema.org', '@type': 'Article', headline: post.title, description: post.description, datePublished: post.date, author: { '@type': 'Person', name: post.author }, publisher: { '@type': 'Organization', name: 'Toolblip', url: 'https://toolblip.com' }, ...(post.featuredImage ? { image: post.featuredImage } : {}), url: postUrl }) }} />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Article',
+            headline: post.title,
+            description: post.description,
+            datePublished: post.date,
+            author: { '@type': 'Person', name: post.author },
+            publisher: { '@type': 'Organization', name: 'Toolblip', url: 'https://toolblip.com' },
+            ...(post.featuredImage ? { image: post.featuredImage } : {}),
+            url: postUrl,
+          }),
+        }}
+      />
 
-      <article className="max-w-2xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
-        <Link href="/blog" className="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors mb-8">
-          ← Blog
-        </Link>
+      <div className="tb-v2-post">
+        <div className="tb-v2-container">
+          <div className="tb-v2-post-inner">
 
-        <header className="mb-10">
-          <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400 mb-3">
-            <span className="bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 px-2 py-0.5 rounded text-xs font-medium">
-              {post.category}
-            </span>
-            <span>{post.readingTime} read</span>
-            <span>·</span>
-            <time dateTime={post.date}>
-              {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-            </time>
-          </div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4 leading-tight">{post.title}</h1>
-          <p className="text-gray-500 dark:text-gray-400 leading-relaxed">{post.description}</p>
-          <div className="flex items-center gap-3 mt-4">
-            <span className="text-xs text-gray-400 dark:text-gray-500">Share:</span>
-            <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(postUrl)}`} target="_blank" rel="noopener noreferrer" className="text-xs text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors">Twitter/X</a>
-            <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`} target="_blank" rel="noopener noreferrer" className="text-xs text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors">LinkedIn</a>
-          </div>
-        </header>
+            {/* Back link */}
+            <Link href="/blog" className="tb-v2-post-back">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              Blog
+            </Link>
 
-        {post.html && (
-          <div className="prose dark:prose-invert max-w-none" dangerouslySetInnerHTML={{ __html: post.html }} />
-        )}
-
-        {post.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 mt-10">
-            {post.tags.map((tag) => (
-              <span key={tag} className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">
-                #{tag}
-              </span>
-            ))}
-          </div>
-        )}
-
-        <div className="mt-12 p-5 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl">
-          <p className="text-sm font-medium text-gray-900 dark:text-white mb-1">{post.author}</p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">Writing about developer tools, web performance, and the tools that make building faster.</p>
-        </div>
-
-        {related.length > 0 && (
-          <section className="mt-16">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-6">More in {post.category}</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {related.map((r) => (
-                <Link key={r.slug} href={`/blog/${r.slug}`} className="block bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-3 hover:border-gray-300 dark:hover:border-gray-700 transition-colors">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white line-clamp-2 mb-1">{r.title}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{r.readingTime} read</p>
-                </Link>
-              ))}
+            {/* Meta */}
+            <div className="tb-v2-post-meta">
+              <span className="tb-v2-post-cat">{post.category}</span>
+              <span>{post.readingTime} read</span>
+              <span>·</span>
+              <time dateTime={post.date}>
+                {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </time>
             </div>
-          </section>
-        )}
 
-        <footer className="mt-16 pt-8 border-t border-gray-200 dark:border-gray-800">
-          <Link href="/blog" className="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors">
-            ← Back to Blog
-          </Link>
-        </footer>
-      </article>
+            {/* Title + description */}
+            <h1 className="tb-v2-post-title">{post.title}</h1>
+            <p className="tb-v2-post-desc">{post.description}</p>
+
+            {/* Share row */}
+            <div className="tb-v2-post-share">
+              <span className="tb-v2-post-share-label">Share:</span>
+              <a
+                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(post.title)}&url=${encodeURIComponent(postUrl)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="tb-v2-post-share-btn"
+              >
+                Twitter/X
+              </a>
+              <a
+                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="tb-v2-post-share-btn"
+              >
+                LinkedIn
+              </a>
+            </div>
+
+            {/* Article content */}
+            {post.html && (
+              <div className="tb-v2-prose" dangerouslySetInnerHTML={{ __html: post.html }} />
+            )}
+
+            {/* Tags */}
+            {post.tags.length > 0 && (
+              <div className="tb-v2-post-tags">
+                {post.tags.map((tag) => (
+                  <span key={tag} className="tb-v2-post-tag">#{tag}</span>
+                ))}
+              </div>
+            )}
+
+            {/* Author bio */}
+            <div className="tb-v2-post-author">
+              <div className="tb-v2-post-author-name">{post.author}</div>
+              <div className="tb-v2-post-author-bio">Writing about developer tools, web performance, and the tools that make building faster.</div>
+            </div>
+
+            {/* Related posts */}
+            {related.length > 0 && (
+              <div className="tb-v2-post-related">
+                <div className="tb-v2-post-related-title">More in {post.category}</div>
+                <div className="tb-v2-post-related-grid">
+                  {related.map((r) => (
+                    <Link key={r.slug} href={`/blog/${r.slug}`} className="tb-v2-post-related-card">
+                      <div className="tb-v2-post-related-card-title">{r.title}</div>
+                      <div className="tb-v2-post-related-card-meta">{r.readingTime} read</div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Footer */}
+            <div className="tb-v2-post-footer">
+              <Link href="/blog" className="tb-v2-post-back">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                  <path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Back to Blog
+              </Link>
+            </div>
+
+          </div>
+        </div>
+      </div>
     </>
   );
 }

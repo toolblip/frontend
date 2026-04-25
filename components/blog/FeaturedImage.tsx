@@ -12,22 +12,21 @@ export default function FeaturedImage({ src, title, gradientFrom, gradientTo }: 
 
   if (!src) {
     return (
-      <div className="h-44 w-full flex items-center justify-center" style={{ background: gradient }}>
-        <span className="text-5xl font-bold text-white/30 uppercase">{title.charAt(0)}</span>
+      <div style={{ background: gradient, height: 180, width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <span style={{ fontSize: 48, fontWeight: 700, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase' }}>{title.charAt(0)}</span>
       </div>
     );
   }
 
   return (
-    <div className="h-44 w-full overflow-hidden group-hover:opacity-100 transition-opacity" style={{ background: gradient }}>
+    <div style={{ background: gradient, height: 180, width: '100%', overflow: 'hidden' }}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={src}
         alt=""
-        className="w-full h-full object-cover opacity-90"
+        style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.9 }}
         onError={(e) => {
-          // Hide broken image, show gradient instead
-          const img = e.currentTarget;
+          const img = e.currentTarget as HTMLImageElement;
           img.style.display = 'none';
         }}
       />
