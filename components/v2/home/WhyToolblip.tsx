@@ -1,26 +1,24 @@
-import { IconShield, IconZap, IconGift } from '@/components/v2/icons';
-
 const BENEFITS = [
   {
-    icon: IconShield,
     emoji: '🔒',
     title: 'Private',
     headline: 'Nothing leaves your browser.',
     desc: 'All processing happens locally in your tab. No servers, no uploads, no logs — your data never leaves your machine.',
+    accent: '#ef4444',
   },
   {
-    icon: IconZap,
     emoji: '⚡',
     title: 'Fast',
     headline: 'Instant results, zero waiting.',
     desc: "Runs entirely in your browser. No cold starts, no network round-trips, no queues. Your tab is already the server.",
+    accent: '#f59e0b',
   },
   {
-    icon: IconGift,
     emoji: '💚',
     title: 'Free',
     headline: 'No signup. No paywall.',
     desc: 'Every tool is free, always. No "unlock export" prompts, no credit card, no monthly subscription. Just open and go.',
+    accent: '#22c55e',
   },
 ];
 
@@ -35,13 +33,15 @@ export default function WhyToolblip() {
           </h2>
         </div>
         <div className="why-grid">
-          {BENEFITS.map(({ icon: Icon, emoji, title, headline, desc }) => (
-            <div key={title} className="why-card">
+          {BENEFITS.map(({ emoji, title, headline, desc, accent }) => (
+            <div
+              key={title}
+              className="why-card"
+              style={{ '--why-accent': accent } as React.CSSProperties}
+            >
               <div className="why-card-top">
                 <span className="why-emoji">{emoji}</span>
-                <span className="why-icon">
-                  <Icon width={20} height={20} />
-                </span>
+                <span className="why-accent-bar" />
               </div>
               <div className="why-title">{title}</div>
               <div className="why-headline-text">{headline}</div>

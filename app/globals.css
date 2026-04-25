@@ -2648,14 +2648,14 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 .hiw-step {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 8px;
-  padding: 8px 14px;
-  transition: border-color 0.12s;
+  padding: 9px 14px;
+  transition: border-color 0.12s, box-shadow 0.12s;
 }
-.hiw-step:hover { border-color: var(--line-2); }
+.hiw-step:hover { border-color: var(--red); box-shadow: 0 0 0 3px color-mix(in srgb, var(--red) 10%, transparent); }
 .hiw-num {
   width: 22px;
   height: 22px;
@@ -2674,10 +2674,21 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   display: flex;
   align-items: center;
 }
+.hiw-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
 .hiw-label {
   font-size: 14px;
   font-weight: 600;
   color: var(--fg-1);
+  white-space: nowrap;
+  line-height: 1.2;
+}
+.hiw-sub {
+  font-size: 11px;
+  color: var(--fg-3);
   white-space: nowrap;
 }
 .hiw-divider {
@@ -2687,11 +2698,10 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   margin: 0 4px;
 }
 .hiw-arrow {
-  color: var(--line-2);
-  font-size: 18px;
-  font-weight: 300;
+  color: var(--fg-3);
+  display: flex;
+  align-items: center;
   flex-shrink: 0;
-  line-height: 1;
 }
 .hiw-note {
   font-size: 13px;
@@ -2725,11 +2735,13 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 .cat-acc-pill {
   font-size: 13px;
   cursor: pointer;
-  transition: border-color 0.12s, background 0.12s;
+  transition: border-color 0.12s, background 0.12s, color 0.12s, transform 0.1s;
 }
 .cat-acc-pill:hover {
-  border-color: var(--line-2);
-  background: var(--surface-2);
+  border-color: var(--red);
+  background: color-mix(in srgb, var(--red) 8%, var(--surface));
+  color: var(--fg-0);
+  transform: translateY(-1px);
 }
 .cat-acc-count {
   margin-left: 5px;
@@ -2787,15 +2799,19 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 .why-card-top {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+  margin-bottom: 4px;
 }
 .why-emoji {
-  font-size: 22px;
+  font-size: 26px;
   line-height: 1;
 }
-.why-icon {
-  color: var(--red);
-  display: flex;
+.why-accent-bar {
+  display: block;
+  width: 32px;
+  height: 3px;
+  border-radius: 99px;
+  background: var(--why-accent, var(--red));
 }
 .why-title {
   font-weight: 700;
