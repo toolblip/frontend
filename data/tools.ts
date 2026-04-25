@@ -1758,6 +1758,20 @@ export const tools: Tool[] = [
   { name: 'CSS Cursor Generator', slug: 'css-cursor-generator', description: 'Generate custom CSS cursor values with URL images, fallback cursors, and CSS output.', emoji: '🖱️', category: 'CSS' },
   { name: 'Markdown Table from JSON', slug: 'markdown-table-from-json', description: 'Generate markdown tables from JSON arrays with customizable alignment and header formatting.', emoji: '📋', category: 'Conversion' },
   { name: 'HTTP Status Checker', slug: 'http-status-checker', description: 'Check HTTP status codes for multiple URLs in bulk and identify issues quickly.', emoji: '🌐', category: 'Developer' },
+
+  // --- New tools (2026-04-26 #2 - from requested categories) ---
+  { name: 'HEX to RGB', slug: 'hex-to-rgb-new', description: 'Convert HEX color codes to RGB and RGBA formats with instant live color preview.', emoji: '🎨', category: 'Color' },
+  { name: 'RGB to HEX', slug: 'rgb-to-hex-new', description: 'Convert RGB and RGBA values to HEX format with a live color preview swatch.', emoji: '🎨', category: 'Color' },
+  { name: 'HSL to RGB', slug: 'hsl-to-rgb-new', description: 'Convert HSL color values to RGB and HEX with a live color preview swatch.', emoji: '🎨', category: 'Color' },
+  { name: 'Color Harmony Generator', slug: 'color-harmony-new', description: 'Generate complementary, analogous, triadic, and split-complementary color palettes from any hue.', emoji: '🎨', category: 'Color' },
+  { name: 'Color Shade Generator', slug: 'color-shade-gen', description: 'Generate lighter, darker, and tinted variations of any color for design system palettes.', emoji: '🎨', category: 'Color' },
+  { name: 'Image Metadata Remover', slug: 'image-metadata-remover', description: 'Remove EXIF and metadata from images to protect privacy before sharing online.', emoji: '🛡️', category: 'Image' },
+  { name: 'GIF to MP4 Converter', slug: 'gif-to-mp4', description: 'Convert animated GIF files to MP4 video format for better compatibility and smaller file size.', emoji: '🎞️', category: 'Image' },
+  { name: 'Batch Image Resizer', slug: 'batch-image-resizer', description: 'Resize multiple images at once to standard dimensions with aspect ratio lock.', emoji: '📐', category: 'Image' },
+  { name: 'Sitemap HTML Generator', slug: 'sitemap-html-new', description: 'Generate a linked HTML sitemap page from a list of URLs for website navigation.', emoji: '🗺️', category: 'SEO' },
+  { name: 'Keyword Density Analyzer', slug: 'keyword-density-analyzer-new', description: 'Analyze keyword frequency and density in text or HTML content for SEO optimization.', emoji: '📈', category: 'SEO' },
+  { name: 'Percentage Change Calculator', slug: 'percentage-change-calc', description: 'Calculate percentage increase or decrease between two values with direction and magnitude.', emoji: '📊', category: 'Math' },
+  { name: 'Tip Calculator', slug: 'tip-calculator', description: 'Calculate tips and split bills among multiple people with custom tip percentage.', emoji: '💰', category: 'Math' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'AI Tools', 'Document Generator'] as const;
