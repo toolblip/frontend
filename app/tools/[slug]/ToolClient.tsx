@@ -46,6 +46,7 @@ import PercentageCalculatorClient from '@/components/tools/PercentageCalculatorC
 import CreditCardValidatorClient from '@/components/tools/CreditCardValidatorClient';
 import UnixTimestampConverterClient from '@/components/tools/UnixTimestampConverterClient';
 import PercentageDifferenceClient from '@/components/tools/PercentageDifferenceClient';
+import ReadabilityScoreClient from '@/components/tools/ReadabilityScoreClient';
 import ScreenResolutionTesterClient from '@/components/tools/ScreenResolutionTesterClient';
 import SquareCropClient from '@/components/tools/SquareCropClient';
 import TextSorterClient from '@/components/tools/TextSorterClient';
