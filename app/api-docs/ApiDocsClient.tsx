@@ -1,6 +1,7 @@
 'use client';
 
-const BASE_URL = 'https://toolblip-api-production.up.railway.app';
+// Uses NEXT_PUBLIC_API_URL from environment (https://api.toolblip.com in production)
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.toolblip.com';
 
 // ─── Method badge ──────────────────────────────────────────────────────────────
 function MethodBadge({ method }: { method: string }) {

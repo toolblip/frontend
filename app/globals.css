@@ -2050,8 +2050,13 @@ body.tb-v2 a {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 12px;
   flex-wrap: wrap;
+}
+.hiw-step-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 .hiw-step {
   display: flex;
@@ -2088,12 +2093,19 @@ body.tb-v2 a {
   color: var(--fg-1);
   white-space: nowrap;
 }
-.hiw-div {
-  display: flex;
-  align-items: center;
-  color: var(--line-2);
+.hiw-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--line-2);
+  margin: 0 4px;
 }
-.hiw-arrow { flex-shrink: 0; }
+.hiw-arrow {
+  color: var(--line-2);
+  font-size: 18px;
+  font-weight: 300;
+  flex-shrink: 0;
+  line-height: 1;
+}
 .hiw-note {
   font-size: 13px;
   color: var(--fg-3);
@@ -2141,21 +2153,34 @@ body.tb-v2 a {
 
 /* ===== Why Toolblip ===== */
 .why-section {
-  padding: 40px 0;
+  padding: 48px 0;
   border-bottom: 1px solid var(--line);
 }
-.why-kicker {
+.why-header {
   text-align: center;
+  margin-bottom: 32px;
+}
+.why-kicker {
   font-size: 12px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--red);
-  margin-bottom: 24px;
+  margin-bottom: 10px;
+}
+.why-headline {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--fg-0);
+  line-height: 1.3;
+}
+.why-headline em {
+  font-style: normal;
+  color: var(--red);
 }
 .why-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 }
 .why-card {
@@ -2165,12 +2190,21 @@ body.tb-v2 a {
   background: var(--surface-2);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   transition: border-color 0.12s, transform 0.15s;
 }
 .why-card:hover {
   border-color: var(--line-2);
   transform: translateY(-2px);
+}
+.why-card-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.why-emoji {
+  font-size: 22px;
+  line-height: 1;
 }
 .why-icon {
   color: var(--red);
@@ -2180,6 +2214,11 @@ body.tb-v2 a {
   font-weight: 700;
   font-size: 16px;
   color: var(--fg-0);
+}
+.why-headline-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg-1);
 }
 .why-desc {
   font-size: 14px;
@@ -2191,6 +2230,7 @@ body.tb-v2 a {
 @media (max-width: 900px) {
   .tb-v2-pricing-grid { grid-template-columns: repeat(2, 1fr); }
   .why-grid { grid-template-columns: 1fr; }
+  .why-headline { font-size: 22px; }
 }
 @media (max-width: 760px) {
   .tb-v2-tool-page { padding: 36px 0 60px; }
@@ -2213,5 +2253,7 @@ body.tb-v2 a {
   .hiw-inner { gap: 6px; }
   .hiw-step { padding: 7px 10px; gap: 6px; }
   .hiw-label { font-size: 13px; }
+  .hiw-step-group { gap: 4px; }
+  .hiw-arrow { font-size: 16px; }
   .why-section { padding: 32px 0; }
 }
