@@ -766,13 +766,12 @@ body.tb-v2 a {
   .tb-v2-tm-wrap { display: inline-flex; }
   .tb-v2-tm-trigger { padding: 0; width: 40px; height: 40px; justify-content: center; }
 }
-@media (max-width: 480px) {
+@media (max-width: 320px) {
   .tb-v2-nav { height: 52px; }
   .tb-v2-nav-inner { height: 52px; gap: 4px; }
   .tb-v2-nav-search { width: 36px; min-width: 36px; height: 36px; }
   .tb-v2-tm-trigger { width: 36px; height: 36px; }
   .tb-v2-brand-mark { width: 30px; height: 30px; }
-  /* Very small screens: hide brand name */
   .tb-v2-brand-name { display: none; }
 }
 @media (max-width: 620px) {
