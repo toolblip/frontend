@@ -358,6 +358,27 @@ function getToolComponent(slug: string): React.ReactNode {
     case 'picture-resizer':
     case 'image-scaler':
     case 'scale-image':
+    case 'image-resizer-v2':
+    case 'image-resizer-v3':
+    case 'image-resizer-v4':
+    case 'image-resizer-v5':
+    case 'image-resizer-v6':
+    case 'image-resizer-final':
+    case 'image-resizer-pro':
+    case 'image-resizer-lite':
+    case 'image-resizer-browser':
+    case 'image-resizer-api':
+    case 'image-resizer-quick':
+    case 'image-resizer-tool':
+    case 'image-resizer-new':
+    case 'image-resizer-std':
+    case 'image-resizer-xl':
+    case 'image-resizer-2025':
+    case 'image-resizer-dg':
+    case 'image-resizer-expander':
+    case 'browser-image-resizer':
+    case 'image-resizer-full':
+    case 'image-resizer-easy':
       return <ImageResizerClient />;
     case 'image-cropper':
     case 'crop-image':
