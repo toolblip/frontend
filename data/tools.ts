@@ -1728,6 +1728,20 @@ export const tools: Tool[] = [
   { name: 'Contrast Checker', slug: 'contrast-checker-new', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail indicators.', emoji: '♿', category: 'Color' },
   { name: 'Unit Converter', slug: 'unit-converter-new', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
   { name: 'Number Base Converter', slug: 'number-base-converter-new', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly.', emoji: '🔢', category: 'Conversion' },
+
+  // --- New tools (2026-04-25 #3 - additional unique tools) ---
+  { name: 'Lorem Ipsum Paragraphs', slug: 'lorem-ipsum-paragraphs', description: 'Generate multiple paragraphs of lorem ipsum placeholder text with custom word and sentence options.', emoji: '📜', category: 'Text' },
+  { name: 'Flesch-Kincaid Calculator', slug: 'flesch-kincaid-calculator', description: 'Calculate the Flesch-Kincaid readability grade level and reading ease score for any text.', emoji: '📊', category: 'Text' },
+  { name: 'Regex Pattern Builder', slug: 'regex-pattern-builder', description: 'Build regex patterns visually from common use cases like emails, phones, URLs, and dates.', emoji: '🔍', category: 'Developer' },
+  { name: 'JWT Inspector', slug: 'jwt-inspector', description: 'Inspect and decode JWT tokens without signature verification to view payload and expiration.', emoji: '🎫', category: 'Developer' },
+  { name: 'Cron Schedule Explainer', slug: 'cron-schedule-explainer', description: 'Explain what a cron schedule means in plain English and show the next run times.', emoji: '⏱️', category: 'Developer' },
+  { name: 'Response Header Analyzer', slug: 'response-header-analyzer', description: 'Analyze HTTP response headers for security, caching, CORS, and content-type configuration.', emoji: '📦', category: 'Developer' },
+  { name: 'Social OG Image Generator', slug: 'og-image-generator', description: 'Create Open Graph images for social sharing in standard 1200x630 dimensions.', emoji: '🖼️', category: 'Image' },
+  { name: 'SERP Snippet Preview', slug: 'serp-snippet-preview', description: 'Preview how a webpage looks as a Google search result with title, URL, and description.', emoji: '🔎', category: 'SEO' },
+  { name: 'HEX to RGBA Converter', slug: 'hex-to-rgba', description: 'Convert HEX color codes to RGBA format with adjustable alpha transparency and live preview.', emoji: '🎨', category: 'Color' },
+  { name: 'Color Contrast Matrix', slug: 'color-contrast-matrix', description: 'Generate a contrast matrix for multiple colors to check WCAG AA and AAA compliance.', emoji: '♿', category: 'Color' },
+  { name: 'Pressure Unit Converter', slug: 'pressure-unit-converter', description: 'Convert pressure units including pascal, bar, psi, atm, and torr instantly.', emoji: '⚖️', category: 'Conversion' },
+  { name: 'Binary to Decimal', slug: 'binary-to-decimal', description: 'Convert binary numbers to decimal and vice versa with step-by-step calculation display.', emoji: '🔢', category: 'Conversion' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'AI Tools', 'Document Generator'] as const;
