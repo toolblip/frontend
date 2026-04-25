@@ -48,6 +48,7 @@ import ScreenResolutionTesterClient from '@/components/tools/ScreenResolutionTes
 import SquareCropClient from '@/components/tools/SquareCropClient';
 import TextSorterClient from '@/components/tools/TextSorterClient';
 import UnitConverterClient from '@/components/tools/UnitConverterClient';
+
 import FaqSection from '@/components/v2/FaqSection';
 import { getFaqs } from '@/lib/faq';
 
@@ -149,6 +150,354 @@ function getToolComponent(slug: string): React.ReactNode {
     case 'text-sorter':
       return <TextSorterClient />;
     case 'unit-converter':
+    case 'binary-converter':
+    case 'binary-decimal-hex-converter':
+    case 'binary-text':
+    case 'binary-text-express':
+    case 'binary-to-text':
+    case 'binary-to-text-v2':
+    case 'hex-converter':
+    case 'hex-decimal-converter':
+    case 'decimal-to-hex':
+    case 'decimal-to-binary':
+    case 'octal-converter':
+    case 'base-convert-tool':
+    case 'base-converter':
+    case 'base-number-converter':
+    case 'base64-to-text':
+    case 'base64-decode':
+    case 'base64-encode':
+    case 'hex-to-decimal':
+    case 'hex-to-binary':
+    case 'decimal-to-hex':
+    case 'decimal-to-octal':
+    case 'octal-to-decimal':
+    case 'binary-to-hex':
+    case 'hex-to-octal':
+    case 'number-base-converter':
+    case 'base-2-converter':
+    case 'base-8-converter':
+    case 'base-16-converter':
+    case 'base-36-converter':
+    case 'binary-decimal-converter':
+    case 'decimal-binary-converter':
+    case 'hex-decimal-converter-v2':
+    case 'binary-converter-tool':
+    case 'hex-converter-tool':
+    case 'base-converter-tool':
+    case 'number-system-converter':
+    case 'radix-converter':
+      return <NumberBaseConverterClient />;
+    case 'text-case-converter':
+    case 'lowercase-converter':
+    case 'uppercase-converter':
+    case 'title-case-generator':
+    case 'sentence-case':
+    case 'text-capitalize':
+      return <CaseConverterClient />;
+    case 'url-encoder-decoder':
+    case 'html-encoder-decoder':
+    case 'backslash-escape-unescape':
+    case 'html-encoder':
+    case 'html-decoder':
+    case 'url-encode-decode':
+      return <UrlEncodeClient />;
+    case 'json-validator':
+    case 'json-beautifier':
+    case 'json-prettifier':
+    case 'json-format':
+    case 'format-json':
+    case 'prettify-json':
+    case 'minify-json':
+    case 'json-minifier':
+      return <JsonFormatterClient />;
+    case 'yaml-validator':
+    case 'yaml-formatter':
+    case 'yaml-prettifier':
+      return <YamlToJsonClient />;
+    case 'text-sorter':
+    case 'alphabetical-sorter':
+    case 'sort-text':
+    case 'sort-lines':
+    case 'sort-list':
+    case 'sort-words':
+    case 'sort-alphabetically':
+    case 'text-sort-tool':
+    case 'line-sorter':
+    case 'sort-text-lines':
+    case 'sort-strings':
+    case 'randomize-list':
+    case 'shuffle-list':
+    case 'shuffle-text':
+    case 'random-text-order':
+      return <TextSorterClient />;
+    case 'lorem-generator':
+    case 'lorem-text':
+    case 'placeholder-text':
+    case 'dummy-text':
+    case 'lorem-ipsum-generator':
+    case 'lorem-ipsum-creator':
+    case 'lorem-text-generator':
+    case 'ipsum-generator':
+    case 'latin-text-generator':
+      return <LoremIpsumGeneratorClient />;
+    case 'md5-generator':
+    case 'sha256-generator':
+    case 'sha-256-generator':
+    case 'sha512-generator':
+    case 'sha1-generator':
+    case 'hash-generator-tool':
+      return <HashGeneratorClient />;
+    case 'remove-duplicates':
+    case 'remove-duplicate-lines':
+      return <RemoveDuplicateLinesClient />;
+    case 'text-compare':
+    case 'compare-text':
+    case 'text-comparison':
+    case 'text-diff-tool':
+      return <TextDiffClient />;
+    case 'cron-generator':
+    case 'cron-expander':
+    case 'cron-schedule-builder':
+    case 'cron-tool':
+    case 'cron-visual-builder':
+    case 'cron-human-readable':
+    case 'cron-expression-builder':
+    case 'cron-schedule-generator':
+    case 'cron-validator':
+    case 'cron-schedule-checker':
+    case 'cron-toolblip':
+    case 'cron-generator-tool':
+    case 'cron-generator-browser':
+    case 'cron-generator-easy':
+    case 'cron-generator-express':
+    case 'cron-generator-final':
+    case 'cron-generator-full':
+    case 'cron-generator-new':
+    case 'cron-generator-pro':
+    case 'cron-generator-quick':
+    case 'cron-generator-std':
+    case 'cron-generator-v2':
+    case 'cron-generator-v3':
+    case 'cron-generator-v4':
+    case 'cron-generator-v5':
+    case 'cron-generator-v6':
+    case 'cron-schedule-validator':
+    case 'cron-expression-generator':
+    case 'cron-generator-2025':
+    case 'cron-generator-api':
+    case 'cron-generator-dg':
+    case 'cron-generator-handy':
+      return <CronGeneratorClient />;
+    case 'jwt-decoder':
+    case 'jwt-viewer':
+    case 'jwt-explorer':
+    case 'jwt-parser':
+      return <JwtDecoderClient />;
+    case 'regex-tester':
+    case 'regex-match':
+    case 'regex-validator':
+    case 'regex-generator':
+      return <RegexTesterClient />;
+    case 'url-slug':
+    case 'slug-generator':
+    case 'slug-creator':
+    case 'slug-maker':
+    case 'url-friendly-text':
+    case 'text-to-slug':
+      return <UrlSlugGeneratorClient />;
+    case 'meta-tag-generator':
+    case 'og-tag-generator':
+    case 'meta-generator':
+    case 'meta-tags':
+    case 'facebook-og-generator':
+    case 'twitter-card-generator':
+    case 'seo-meta-tags':
+      return <MetaTagGeneratorClient />;
+    case 'serp-preview':
+    case 'google-preview':
+    case 'search-preview':
+    case 'seo-preview':
+    case 'google-serp-preview':
+    case 'search-result-preview':
+      return <SerpPreviewClient />;
+    case 'markdown-prettifier':
+    case 'markdown-formatter':
+    case 'md-to-html':
+      return <MarkdownToHtmlClient />;
+    case 'password-generator-tool':
+    case 'random-password-generator':
+    case 'pwd-generator':
+      return <PasswordGeneratorClient />;
+    case 'uuid-generator':
+    case 'uuid-creator':
+    case 'uuid-maker':
+    case 'uuid-v4-generator':
+    case 'guid-generator':
+    case 'unique-id-generator':
+      return <UuidGeneratorClient />;
+    case 'image-resizer':
+    case 'resize-image':
+    case 'resize-photo':
+    case 'photo-resizer':
+    case 'image-resize-tool':
+    case 'resize-images':
+    case 'image-resize-browser':
+    case 'image-resize-toolblip':
+    case 'resize-image-tool':
+    case 'resize-picture':
+    case 'picture-resizer':
+    case 'image-scaler':
+    case 'scale-image':
+      return <ImageResizerClient />;
+    case 'image-cropper':
+    case 'crop-image':
+    case 'crop-photo':
+    case 'photo-cropper':
+    case 'image-crop-tool':
+    case 'crop-photo-tool':
+    case 'cropping-tool':
+      return <ImageCropperClient />;
+    case 'image-format-converter':
+    case 'convert-image-format':
+    case 'image-converter':
+    case 'change-image-format':
+    case 'image-file-converter':
+    case 'png-to-jpg':
+    case 'jpg-to-png':
+    case 'webp-converter':
+    case 'convert-to-webp':
+    case 'convert-to-png':
+    case 'convert-to-jpg':
+    case 'image-convert-format':
+    case 'format-converter-image':
+      return <ImageFormatConverterClient />;
+    case 'percentage-calculator':
+    case 'percent-calculator':
+    case 'percentage-of-number':
+    case 'percentage-change-calculator':
+    case 'percentage-off-calculator':
+      return <PercentageCalculatorClient />;
+    case 'readability-checker':
+    case 'flesch-reading-ease':
+    case 'readability-score':
+    case 'reading-level':
+    case 'text-readability':
+      return <ReadabilityScoreClient />;
+    case 'http-headers-viewer':
+    case 'http-header-checker':
+    case 'view-http-headers':
+    case 'http-headers-check':
+    case 'check-http-headers':
+    case 'header-viewer':
+      return <HttpHeadersViewerClient />;
+    case 'screen-resolution-tester':
+    case 'viewport-tester':
+    case 'responsive-checker':
+    case 'browser-resolution-test':
+    case 'screen-size-tester':
+    case 'device-viewport-test':
+      return <ScreenResolutionTesterClient />;
+    case 'favicon-generator':
+    case 'favicon-creator':
+    case 'favicon-maker':
+    case 'favicon-from-emoji':
+    case 'favicon-tool':
+    case 'favicon-maker-tool':
+    case 'favicon-generator-tool':
+    case 'favicon-png-generator':
+    case 'favicon-preview-tool':
+      return <FaviconGeneratorClient />;
+    case 'grammar-checker':
+    case 'grammar-check':
+    case 'grammar-fixer':
+    case 'check-grammar':
+    case 'grammar-checker-tool':
+    case 'english-grammar-checker':
+    case 'grammar-corrector':
+      return <GrammarCheckerClient />;
+    case 'qr-generator':
+    case 'qrcode-generator':
+    case 'qr-creator':
+    case 'qr-code-maker':
+      return <QrCodeGeneratorClient />;
+    case 'circle-crop':
+    case 'circular-crop':
+    case 'crop-circle':
+    case 'round-crop':
+      return <CircleCropClient />;
+    case 'square-crop':
+    case 'crop-square':
+    case 'square-crop-tool':
+      return <SquareCropClient />;
+    case 'contrast-checker':
+    case 'color-contrast-checker':
+    case 'wcag-contrast-checker':
+    case 'contrast-auditor':
+    case 'color-contrast-auditor':
+      return <ContrastCheckerClient />;
+    case 'css-border-radius-generator':
+    case 'border-radius-generator':
+    case 'border-radius-tool':
+      return <CssBorderRadiusGeneratorClient />;
+    case 'css-gradient-generator':
+    case 'gradient-generator':
+    case 'css-gradient-tool':
+      return <CssGradientGeneratorClient />;
+    case 'sql-to-json':
+    case 'sql-converter':
+    case 'sql-to-json-converter':
+      return <SqlToJsonClient />;
+    case 'xml-to-json':
+    case 'xml-converter':
+    case 'xml-to-json-converter':
+    case 'xml-formatter':
+      return <XmlToJsonClient />;
+    case 'js-minifier':
+    case 'javascript-minifier':
+    case 'minify-javascript':
+    case 'minify-js':
+    case 'compress-javascript':
+      return <JsMinifierClient />;
+    case 'unit-converter':
+    case 'all-in-one-unit-converter':
+    case 'angle-unit-converter':
+    case 'area-converter':
+    case 'pressure-converter':
+    case 'volume-converter':
+    case 'speed-converter':
+    case 'energy-converter':
+    case 'temperature-converter':
+    case 'length-converter':
+    case 'weight-converter':
+    case 'mass-converter':
+    case 'time-converter':
+    case 'unit-conversion-tool':
+    case 'unit-convert-toolblip':
+    case 'unit-converter-browser':
+    case 'unit-converter-easy':
+    case 'unit-converter-express':
+    case 'unit-converter-final':
+    case 'unit-converter-full':
+    case 'unit-converter-handy':
+    case 'unit-converter-length-weight':
+    case 'unit-converter-new':
+    case 'unit-converter-pro':
+    case 'unit-converter-quick':
+    case 'unit-converter-std':
+    case 'unit-converter-tool':
+    case 'unit-converter-toolbox':
+    case 'unit-converter-v2':
+    case 'unit-converter-v3':
+    case 'unit-converter-v4':
+    case 'unit-converter-v5':
+    case 'unit-converter-xl':
+    case 'unit-converter-2025':
+    case 'unit-converter-dg':
+    case 'unit-toolblip':
+    case 'units-convert-tool':
+      return <UnitConverterClient />;
+
       return <UnitConverterClient />;
     default:
       return <ComingSoonUI />;
