@@ -43,7 +43,6 @@ export async function getTools(params?: { category?: string; search?: string; pa
 export async function getTool(slug: string) {
   return apiRequest<{ data: Tool }>(`/api/tools/${slug}`);
 }
-}
 
 // MCP Servers
 export async function getMcpServers(params?: { category?: string; page?: number }) {
