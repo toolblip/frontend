@@ -7,13 +7,13 @@ export default function NotFound() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4">
       <div className="max-w-md w-full text-center animate-in fade-in zoom-in duration-500">
-        <p className="text-[8rem] sm:text-[10rem] font-black leading-none text-[#58D65D] dark:text-[#58D65D] select-none mb-2 tracking-tighter">
+        <p className="text-[7rem] sm:text-[9rem] font-black leading-none text-[#58D65D] dark:text-[#58D65D] select-none mb-2 tracking-tighter drop-shadow-sm">
           404
         </p>
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">
           Page not found
         </h1>
-        <p className="text-gray-500 dark:text-gray-400 mb-10 text-base">
+        <p className="text-gray-500 dark:text-gray-400 mb-10 text-base leading-relaxed">
           The page you&apos;re looking for doesn&apos;t exist.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
