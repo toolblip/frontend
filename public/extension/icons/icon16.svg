@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="$size" height="$size" viewBox="0 0 $size $size">
+  <rect width="$size" height="$size" rx="$(echo "$size/4" | bc)" fill="#1c1c21"/>
+  <circle cx="$(echo "$size*0.3" | bc)" cy="$(echo "$size*0.3" | bc)" r="$(echo "$size*0.15" | bc)" stroke="#d93030" stroke-width="$(echo "$size*0.06" | bc)" fill="none"/>
+  <circle cx="$(echo "$size*0.65" | bc)" cy="$(echo "$size*0.3" | bc)" r="$(echo "$size*0.1" | bc)" stroke="#d93030" stroke-width="$(echo "$size*0.05" | bc)" fill="none"/>
+  <path d="M$(echo "$size*0.15" | bc) $(echo "$size*0.7" | bc) Q$(echo "$size*0.35" | bc) $(echo "$size*0.5" | bc) $(echo "$size*0.5" | bc) $(echo "$size*0.6" | bc) Q$(echo "$size*0.65" | bc) $(echo "$size*0.7" | bc) $(echo "$size*0.85" | bc) $(echo "$size*0.45" | bc)" stroke="#b5b5b8" stroke-width="$(echo "$size*0.07" | bc)" stroke-linecap="round" fill="none"/>
+  <circle cx="$(echo "$size*0.5" | bc)" cy="$(echo "$size*0.6" | bc)" r="$(echo "$size*0.07" | bc)" fill="#58D65D"/>
+</svg>

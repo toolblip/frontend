@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=400">
+<title>Toolblip</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0f1117;
+    --surface: #1c1c21;
+    --surface2: #2a2a32;
+    --border: #3a3a42;
+    --text: #e8e8ed;
+    --text2: #9898a4;
+    --green: #58D65D;
+    --red: #ef4444;
+    --yellow: #eab308;
+    --blue: #3b82f6;
+  }
+  body { width: 400px; min-height: 480px; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px; }
+  .header { display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); gap: 8px; }
+  .logo { width: 28px; height: 28px; }
+  .brand { font-weight: 700; font-size: 15px; color: var(--text); flex: 1; }
+  .brand span { color: var(--green); }
+  .open-site { font-size: 11px; color: var(--text2); text-decoration: none; padding: 4px 10px; border: 1px solid var(--border); border-radius: 6px; transition: all 0.15s; }
+  .open-site:hover { border-color: var(--green); color: var(--green); }
+  .tabs { display: flex; border-bottom: 1px solid var(--border); padding: 0 8px; overflow-x: auto; scrollbar-width: none; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab { padding: 10px 12px; font-size: 12px; color: var(--text2); cursor: pointer; border-bottom: 2px solid transparent; white-space: nowrap; transition: all 0.15s; user-select: none; }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--green); border-bottom-color: var(--green); }
+  .panel { display: none; padding: 16px; }
+  .panel.active { display: block; }
+  .field { margin-bottom: 14px; }
+  .label { font-size: 11px; color: var(--text2); margin-bottom: 6px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+  textarea, input[type="text"], input[type="number"], input[type="password"], select { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; color: var(--text); padding: 10px 12px; font-size: 13px; font-family: 'SF Mono', 'Fira Code', monospace; outline: none; transition: border-color 0.15s; resize: none; }
+  textarea:focus, input:focus, select:focus { border-color: var(--green); }
+  textarea { min-height: 80px; }
+  .row { display: flex; gap: 8px; align-items: center; }
+  .row .field { flex: 1; }
+  .btn-row { display: flex; gap: 8px; margin-top: 12px; }
+  .btn { flex: 1; padding: 9px 12px; border-radius: 8px; border: none; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+  .btn-primary { background: var(--green); color: #000; }
+  .btn-primary:hover { opacity: 0.9; }
+  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover { border-color: var(--green); color: var(--green); }
+  .result-box { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 12px; word-break: break-all; min-height: 42px; display: flex; align-items: center; }
+  .result-box.success { border-color: var(--green); background: rgba(88,214,93,0.05); }
+  .result-box.error { border-color: var(--red); background: rgba(239,68,68,0.05); }
+  .result-value { flex: 1; word-break: break-all; }
+  .copy-btn { background: none; border: none; color: var(--text2); cursor: pointer; padding: 4px; font-size: 14px; margin-left: 8px; transition: color 0.15s; }
+  .copy-btn:hover { color: var(--green); }
+  .toggles { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .toggle { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+  .toggle input { width: 14px; height: 14px; accent-color: var(--green); }
+  .toggle span { font-size: 12px; color: var(--text2); }
+  .strength-bar { height: 4px; background: var(--surface2); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+  .strength-fill { height: 100%; border-radius: 2px; transition: width 0.3s, background 0.3s; }
+  .strength-fill.weak { width: 25%; background: var(--red); }
+  .strength-fill.fair { width: 50%; background: var(--yellow); }
+  .strength-fill.strong { width: 75%; background: var(--blue); }
+  .strength-fill.very-strong { width: 100%; background: var(--green); }
+  .strength-label { font-size: 11px; margin-top: 4px; color: var(--text2); }
+  .color-row { display: flex; gap: 8px; align-items: center; }
+  input[type="color"] { width: 48px; height: 42px; padding: 2px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; }
+  .hex-input { flex: 1; }
+  .qr-preview { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 12px; }
+  .qr-preview canvas { border: 1px solid var(--border); border-radius: 8px; background: #fff; }
+  .hash-select { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+  .hash-btn { padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text2); font-size: 11px; cursor: pointer; transition: all 0.15s; }
+  .hash-btn:hover { border-color: var(--green); color: var(--green); }
+  .hash-btn.active { background: var(--green); color: #000; border-color: var(--green); font-weight: 600; }
+  .toast { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); background: var(--green); color: #000; padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 100; }
+  .toast.show { opacity: 1; }
+  .footer { padding: 10px 16px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+  .footer-text { font-size: 11px; color: var(--text2); }
+  .footer-text a { color: var(--text2); text-decoration: underline; }
+  .footer-text a:hover { color: var(--green); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <svg class="logo" viewBox="0 0 40 40" fill="none">
+    <rect width="40" height="40" rx="10" fill="#1c1c21"/>
+    <circle cx="13" cy="13" r="5" stroke="#d93030" stroke-width="2.5" fill="none"/>
+    <circle cx="27" cy="13" r="3.5" stroke="#d93030" stroke-width="2" fill="none"/>
+    <path d="M8 27 Q13 20 20 23 Q27 26 32 19" stroke="#b5b5b8" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    <circle cx="20" cy="23" r="2" fill="#58D65D"/>
+  </svg>
+  <div class="brand">Tool<span>blip</span></div>
+  <a href="https://toolblip.com" target="_blank" class="open-site">Open site →</a>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-tab="password">Password</div>
+  <div class="tab" data-tab="uuid">UUID</div>
+  <div class="tab" data-tab="hash">Hash</div>
+  <div class="tab" data-tab="base64">Base64</div>
+  <div class="tab" data-tab="url">URL</div>
+  <div class="tab" data-tab="color">Color</div>
+  <div class="tab" data-tab="qr">QR Code</div>
+</div>
+
+<!-- PASSWORD -->
+<div class="panel active" id="panel-password">
+  <div class="field">
+    <div class="label">Generated Password</div>
+    <div class="result-box" id="pw-result">
+      <span class="result-value" id="pw-value">—</span>
+      <button class="copy-btn" onclick="copy('pw-value')">📋</button>
+    </div>
+    <div class="strength-bar"><div class="strength-fill" id="pw-strength-fill"></div></div>
+    <div class="strength-label" id="pw-strength-label"></div>
+  </div>
+  <div class="field">
+    <div class="label">Length: <span id="pw-length-val">16</span></div>
+    <input type="range" min="8" max="64" value="16" id="pw-length" style="width:100%" oninput="generatePassword()">
+  </div>
+  <div class="toggles">
+    <label class="toggle"><input type="checkbox" checked id="pw-upper" onchange="generatePassword()"><span>A-Z</span></label>
+    <label class="toggle"><input type="checkbox" checked id="pw-lower" onchange="generatePassword()"><span>a-z</span></label>
+    <label class="toggle"><input type="checkbox" checked id="pw-digits" onchange="generatePassword()"><span>0-9</span></label>
+    <label class="toggle"><input type="checkbox" checked id="pw-symbols" onchange="generatePassword()"><span>!@#$</span></label>
+    <label class="toggle"><input type="checkbox" id="pw-ambiguous" onchange="generatePassword()"><span>No ambiguous</span></label>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="generatePassword()">🔄 Regenerate</button>
+  </div>
+</div>
+
+<!-- UUID -->
+<div class="panel" id="panel-uuid">
+  <div class="field">
+    <div class="label">UUID v4</div>
+    <div class="result-box" id="uuid-result">
+      <span class="result-value" id="uuid-value">—</span>
+      <button class="copy-btn" onclick="copy('uuid-value')">📋</button>
+    </div>
+  </div>
+  <div class="field">
+    <div class="label">Quantity</div>
+    <input type="number" id="uuid-qty" value="1" min="1" max="100" onchange="generateUUIDs()">
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="generateUUIDs()">🔄 Generate</button>
+    <button class="btn btn-secondary" onclick="copy('uuid-value')">📋 Copy</button>
+  </div>
+</div>
+
+<!-- HASH -->
+<div class="panel" id="panel-hash">
+  <div class="field">
+    <div class="label">Input Text</div>
+    <textarea id="hash-input" placeholder="Enter text to hash..." oninput="generateHash()"></textarea>
+  </div>
+  <div class="field">
+    <div class="label">Algorithm</div>
+    <div class="hash-select">
+      <button class="hash-btn active" data-algo="SHA-256" onclick="setHashAlgo(this)">SHA-256</button>
+      <button class="hash-btn" data-algo="SHA-1" onclick="setHashAlgo(this)">SHA-1</button>
+      <button class="hash-btn" data-algo="SHA-512" onclick="setHashAlgo(this)">SHA-512</button>
+      <button class="hash-btn" data-algo="MD5" onclick="setHashAlgo(this)">MD5</button>
+    </div>
+  </div>
+  <div class="field">
+    <div class="label">Hash Output</div>
+    <div class="result-box" id="hash-result">
+      <span class="result-value" id="hash-value">—</span>
+      <button class="copy-btn" onclick="copy('hash-value')">📋</button>
+    </div>
+  </div>
+</div>
+
+<!-- BASE64 -->
+<div class="panel" id="panel-base64">
+  <div class="field">
+    <div class="label">Input</div>
+    <textarea id="b64-input" placeholder="Enter text to encode/decode..."></textarea>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="base64Encode()">Encode →</button>
+    <button class="btn btn-secondary" onclick="base64Decode()">← Decode</button>
+    <button class="btn btn-secondary" onclick="copy('b64-value')">📋 Copy</button>
+  </div>
+  <div class="field" style="margin-top:12px">
+    <div class="label">Output</div>
+    <div class="result-box" id="b64-result">
+      <span class="result-value" id="b64-value">—</span>
+    </div>
+  </div>
+</div>
+
+<!-- URL -->
+<div class="panel" id="panel-url">
+  <div class="field">
+    <div class="label">Input</div>
+    <textarea id="url-input" placeholder="Enter URL or text to encode/decode..."></textarea>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="urlEncode()">Encode →</button>
+    <button class="btn btn-secondary" onclick="urlDecode()">← Decode</button>
+    <button class="btn btn-secondary" onclick="copy('url-value')">📋 Copy</button>
+  </div>
+  <div class="field" style="margin-top:12px">
+    <div class="label">Output</div>
+    <div class="result-box" id="url-result">
+      <span class="result-value" id="url-value">—</span>
+    </div>
+  </div>
+</div>
+
+<!-- COLOR -->
+<div class="panel" id="panel-color">
+  <div class="field">
+    <div class="label">Pick a Color</div>
+    <div class="color-row">
+      <input type="color" id="color-picker" value="#58D65D" oninput="updateColor()">
+      <input type="text" id="color-hex" class="hex-input" value="#58D65D" oninput="updateColorFromHex()">
+    </div>
+  </div>
+  <div class="row">
+    <div class="field">
+      <div class="label">HEX</div>
+      <input type="text" id="color-hex-out" readonly value="#58D65D">
+    </div>
+    <div class="field">
+      <div class="label">RGB</div>
+      <input type="text" id="color-rgb-out" readonly value="rgb(88, 214, 93)">
+    </div>
+    <div class="field">
+      <div class="label">HSL</div>
+      <input type="text" id="color-hsl-out" readonly value="hsl(122, 59%, 60%)">
+    </div>
+  </div>
+  <div class="field">
+    <div class="label">Preview</div>
+    <div id="color-preview" style="height:40px;background:#58D65D;border-radius:8px;border:1px solid var(--border)"></div>
+  </div>
+</div>
+
+<!-- QR -->
+<div class="panel" id="panel-qr">
+  <div class="field">
+    <div class="label">Content</div>
+    <textarea id="qr-input" placeholder="Enter URL or text...">https://toolblip.com</textarea>
+  </div>
+  <div class="field">
+    <div class="label">Size</div>
+    <select id="qr-size">
+      <option value="128">Small (128px)</option>
+      <option value="256" selected>Medium (256px)</option>
+      <option value="512">Large (512px)</option>
+    </select>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="generateQR()">Generate QR</button>
+  </div>
+  <div class="qr-preview" id="qr-preview" style="display:none">
+    <canvas id="qr-canvas"></canvas>
+    <button class="btn btn-secondary" onclick="downloadQR()">⬇ Download PNG</button>
+  </div>
+</div>
+
+<div class="toast" id="toast">Copied!</div>
+<div class="footer">
+  <span class="footer-text"><a href="https://toolblip.com/tools" target="_blank">+1,400 more tools</a> at toolblip.com</span>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>
