@@ -545,6 +545,24 @@ export const tools: Tool[] = [
 
   // --- New tools (2026-04-23 #4) ---
   { name: 'Lorem Ipsum API', slug: 'lorem-ipsum-api-tool', description: 'Generate lorem ipsum text via API with customizable paragraphs, sentence count, and format.', emoji: '📜', category: 'Text' },
+
+  // --- New tools (2026-04-25) ---
+  { name: 'HEX Color Picker', slug: 'hex-color-picker', description: 'Pick colors visually and get HEX, RGB, HSL, and CSS values with a live preview swatch.', emoji: '🎨', category: 'Color' },
+  { name: 'RGBA Color Picker', slug: 'rgba-color-picker', description: 'Pick colors with alpha transparency and copy HEX, RGB, RGBA, and HSL values instantly.', emoji: '🎨', category: 'Color' },
+  { name: 'Color Format Converter', slug: 'color-format-converter-v2', description: 'Convert between HEX, RGB, RGBA, HSL, HSLA, and CMYK formats with a live color preview.', emoji: '🎨', category: 'Color' },
+  { name: 'WCAG Contrast Checker', slug: 'wcag-contrast-checker', description: 'Check color contrast ratios and verify WCAG AA and AAA compliance for accessibility.', emoji: '♿', category: 'Color' },
+  { name: 'Length Weight Converter', slug: 'length-weight-converter', description: 'Convert length, weight, and mass between metric and imperial units instantly.', emoji: '📏', category: 'Conversion' },
+  { name: 'Temperature Unit Converter', slug: 'temperature-unit-converter', description: 'Convert temperatures between Celsius, Fahrenheit, Kelvin, and Rankine instantly.', emoji: '🌡️', category: 'Conversion' },
+  { name: 'Base Number Converter', slug: 'base-number-converter', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 number systems.', emoji: '🔢', category: 'Conversion' },
+  { name: 'JSON Web Token Inspector', slug: 'jwt-inspector', description: 'Inspect and decode JWT tokens - view header, payload, expiration, and signature.', emoji: '🎫', category: 'Developer' },
+  { name: 'Regex Match Visualizer', slug: 'regex-match-visualizer', description: 'Visualize regex matches with highlighted groups and real-time pattern testing.', emoji: '🔍', category: 'Developer' },
+  { name: 'Cron Human Readable', slug: 'cron-human-readable', description: 'Convert cron expressions to plain English with the next 5 scheduled run times.', emoji: '🕐', category: 'Developer' },
+  { name: 'HTTP Response Headers', slug: 'http-response-headers', description: 'View HTTP response headers for any URL including caching, CORS, and security headers.', emoji: '📦', category: 'Developer' },
+  { name: 'Mock Port Scanner', slug: 'mock-port-scanner', description: 'Simulate scanning common ports on a host to identify available services.', emoji: '🚪', category: 'Developer' },
+  { name: 'Browser Image Resizer', slug: 'browser-image-resizer', description: 'Resize images directly in your browser with aspect ratio lock and instant download.', emoji: '📐', category: 'Image' },
+  { name: 'Favicon PNG Generator', slug: 'favicon-png-generator', description: 'Generate PNG favicon icons in 16x16 to 512x512 from any image or emoji.', emoji: '🌐', category: 'Image' },
+  { name: 'SEO Title Tag Generator', slug: 'seo-title-tag-generator', description: 'Generate SEO-optimized title tags with character count and Google preview.', emoji: '🏷️', category: 'SEO' },
+  { name: 'Google SERP Preview', slug: 'google-serp-preview', description: 'Preview how your page title and description appear in actual Google search results.', emoji: '🔎', category: 'SEO' },
   { name: 'Grammar Checker', slug: 'grammar-checker-api', description: 'Check grammar and spelling errors with one-click fixes and detailed explanations.', emoji: '✅', category: 'Text' },
   { name: 'Readability Score', slug: 'readability-score-api', description: 'Calculate Flesch-Kincaid, SMOG, and other readability indices for any text content.', emoji: '📊', category: 'Text' },
   { name: 'Text Sorter', slug: 'text-sorter-api', description: 'Sort lines alphabetically, by length, numerically, reverse, or in random order.', emoji: '📋', category: 'Text' },
