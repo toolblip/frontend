@@ -1,65 +1,127 @@
 'use client';
 
 const BASE_URL = 'https://toolblip-api-production.up.railway.app';
-const API_BASE = 'api.toolblip.com'; // switch once SSL is ready
 
-// ─── Code block ───────────────────────────────────────────────────────────────
-function CodeBlock({ code, label }: { code: string; label?: string }) {
-  return (
-    <div className="relative rounded-xl overflow-hidden bg-[#0d0d10] border border-[#2a2a32] my-3 text-sm">
-      {label && (
-        <div className="flex items-center justify-between px-4 py-2 border-b border-[#2a2a32]">
-          <span className="text-xs text-[#6b6b7a] font-mono">{label}</span>
-        </div>
-      )}
-      <pre className="overflow-x-auto p-4 text-[#e2e2ea] font-mono text-xs leading-relaxed">
-        <code>{code}
-        </code>
-      </pre>
-    </div>
-  );
-}
-
-// ─── Method badge ─────────────────────────────────────────────────────────────
+// ─── Method badge ──────────────────────────────────────────────────────────────
 function MethodBadge({ method }: { method: string }) {
   const colors: Record<string, string> = {
-    GET:    'bg-[#dcf4ff] text-[#0c5790] dark:bg-[#12304a] dark:text-[#87c7f0]',
-    POST:   'bg-[#d6f0df] text-[#1e6b42] dark:bg-[#1a3527] dark:text-[#7cd1a3]',
-    PUT:    'bg-[#ffe7d4] text-[#b8430f] dark:bg-[#432518] dark:text-[#ffb07a]',
-    DELETE: 'bg-[#fbdcda] text-[#9b1f1a] dark:bg-[#401917] dark:text-[#f09690]',
-    PATCH:  'bg-[#ebe0ff] text-[#5f2fb5] dark:bg-[#2d1d48] dark:text-[#b49cff]',
+    GET:    'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
+    POST:   'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300',
+    PUT:    'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300',
+    DELETE: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300',
+    PATCH:  'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300',
   };
   return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold font-mono ${colors[method] ?? 'bg-surface-2 text-fg-1'}`}>
+    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold font-mono tracking-wide ${colors[method] ?? 'bg-surface-2 text-fg-1'}`}>
       {method}
     </span>
   );
 }
 
-// ─── Section heading ──────────────────────────────────────────────────────────
-function SectionHeading({ children }: { children: React.ReactNode }) {
+// ─── Code block ───────────────────────────────────────────────────────────────
+function CodeBlock({ label, code }: { label?: string; code: string }) {
   return (
-    <h2 className="text-xl font-bold text-[--fg-0] mt-12 mb-4 pb-3 border-b border-[--line]">
-      {children}
-    </h2>
+    <div className="rounded-xl overflow-hidden border border-[--line] my-3 text-sm">
+      {label && (
+        <div className="flex items-center justify-between px-4 py-2 border-b border-[--line] bg-surface-2">
+          <span className="text-xs text-fg-2 font-mono">{label}</span>
+        </div>
+      )}
+      <pre className="overflow-x-auto p-4 bg-[#0d0d10] text-[#e2e2ea] font-mono text-xs leading-6">
+        <code>{code}</code>
+      </pre>
+    </div>
   );
 }
 
-function EndpointHeading({ method, path, auth }: { method: string; path: string; auth?: boolean }) {
+// ─── Section heading ──────────────────────────────────────────────────────────
+function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
   return (
-    <div className="flex flex-wrap items-center gap-2 mb-2">
-      <MethodBadge method={method} />
-      <code className="font-mono text-base font-semibold text-[--fg-0]">{path}</code>
-      {auth && (
-        <span className="ml-1 inline-flex items-center gap-1 text-xs text-[--fg-2] border border-[--line] rounded-full px-2 py-0.5">
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="1.5" y="4.5" width="7" height="5" rx="1" stroke="currentColor" strokeWidth="1.2"/>
-            <path d="M3 4.5V3a2 2 0 1 1 4 0v1.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
-          </svg>
-          Auth required
-        </span>
-      )}
+    <section id={id} className="mb-14 scroll-mt-20">
+      <h2 className="text-lg font-bold text-fg-0 mb-5 pb-3 border-b border-[--line]">
+        {title}
+      </h2>
+      {children}
+    </section>
+  );
+}
+
+// ─── Endpoint block ───────────────────────────────────────────────────────────
+function Endpoint({
+  method,
+  path,
+  auth,
+  description,
+  params,
+  curl,
+  response,
+}: {
+  method: string;
+  path: string;
+  auth?: boolean;
+  description: string;
+  params?: React.ReactNode;
+  curl: string;
+  response: string;
+}) {
+  return (
+    <div className="mb-10">
+      <div className="flex flex-wrap items-center gap-2 mb-3">
+        <MethodBadge method={method} />
+        <code className="font-mono text-sm font-semibold text-fg-0">{path}</code>
+        {auth && (
+          <span className="ml-1 inline-flex items-center gap-1 text-xs text-fg-2 border border-[--line] rounded-full px-2 py-0.5">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="1.5" y="4.5" width="7" height="5" rx="1" stroke="currentColor" strokeWidth="1.2"/>
+              <path d="M3 4.5V3a2 2 0 1 1 4 0v1.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+            </svg>
+            Auth required
+          </span>
+        )}
+      </div>
+      <p className="text-fg-1 text-sm leading-relaxed mb-4">{description}</p>
+      {params}
+      <CodeBlock label="curl" code={curl} />
+      <CodeBlock label="Response" code={response} />
     </div>
+  );
+}
+
+// ─── Table ────────────────────────────────────────────────────────────────────
+function ParamTable({ rows }: { rows: { name: string; type: string; desc: string }[] }) {
+  return (
+    <div className="overflow-x-auto mb-4">
+      <table className="w-full text-sm border-collapse">
+        <thead>
+          <tr className="border-b border-[--line] text-left">
+            <th className="py-2 pr-4 font-mono text-fg-2 text-xs">Field / Param</th>
+            <th className="py-2 pr-4 font-mono text-fg-2 text-xs">Type</th>
+            <th className="py-2 font-mono text-fg-2 text-xs">Description</th>
+          </tr>
+        </thead>
+        <tbody className="text-fg-1">
+          {rows.map((r, i) => (
+            <tr key={i} className="border-b border-[--line-2]">
+              <td className="py-2 pr-4 font-mono text-red-600 dark:text-red-400 text-xs">{r.name}</td>
+              <td className="py-2 pr-4 font-mono text-xs text-fg-2">{r.type}</td>
+              <td className="py-2 text-sm">{r.desc}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+// ─── Nav item ─────────────────────────────────────────────────────────────────
+function NavItem({ href, label }: { href: string; label: string }) {
+  return (
+    <a
+      href={href}
+      className="block px-3 py-1.5 rounded-lg text-sm text-fg-2 hover:text-fg-0 hover:bg-surface-2 transition-colors"
+    >
+      {label}
+    </a>
   );
 }
 
@@ -69,87 +131,99 @@ export default function ApiDocsClient() {
     <main className="min-h-screen bg-[--bg]">
       {/* ── Hero ── */}
       <div className="border-b border-[--line] bg-[--surface]">
-        <div className="max-w-4xl mx-auto px-6 py-14">
-          <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold text-[--fg-2] border border-[--line] rounded-full px-3 py-1 mb-5">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            REST API v1
+        <div className="max-w-6xl mx-auto px-6 py-14 flex items-start gap-8">
+          <div className="flex-1 min-w-0">
+            <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold text-fg-2 border border-[--line] rounded-full px-3 py-1 mb-5">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              REST API v1
+            </div>
+            <h1 className="text-4xl font-black text-fg-0 tracking-tight mb-3" style={{ fontFamily: 'var(--f-display)', letterSpacing: '-0.025em' }}>
+              Toolblip API
+            </h1>
+            <p className="text-fg-1 text-base leading-relaxed max-w-xl">
+              Build on top of Toolblip. Browse the full catalog of free developer tools, manage user accounts, and integrate Toolblip into your own apps.
+            </p>
+            <div className="mt-5 flex flex-wrap items-center gap-3 text-sm">
+              <span className="font-mono text-xs text-fg-2 bg-surface-2 border border-[--line] rounded-lg px-3 py-1.5">
+                Base URL:{' '}
+                <span className="text-fg-0 font-semibold">{BASE_URL}</span>
+              </span>
+            </div>
           </div>
-          <h1 className="text-4xl font-black text-[--fg-0] tracking-tight mb-3">
-            Toolblip API
-          </h1>
-          <p className="text-[--fg-1] text-lg leading-relaxed max-w-2xl">
-            Build on top of Toolblip. Browse the full catalog of free developer tools, manage user accounts, and integrate toolblip into your own apps and workflows.
-          </p>
-
-          {/* Base URL chip */}
-          <div className="mt-6 inline-flex items-center gap-2 bg-[--surface-2] border border-[--line] rounded-xl px-4 py-2.5 font-mono text-sm">
-            <span className="text-[--fg-2] text-xs">Base URL</span>
-            <span className="text-[--fg-0] font-semibold">{BASE_URL}</span>
-            <span className="text-[--fg-3] text-xs">/ {API_BASE}</span>
+          {/* Quick stats */}
+          <div className="hidden md:flex flex-col gap-3 shrink-0">
+            {[
+              { label: 'Endpoints', value: '6' },
+              { label: 'Auth type', value: 'Bearer' },
+              { label: 'Format', value: 'JSON' },
+            ].map(({ label, value }) => (
+              <div key={label} className="text-center min-w-[80px]">
+                <div className="text-xl font-bold text-fg-0" style={{ fontFamily: 'var(--f-display)' }}>{value}</div>
+                <div className="text-xs text-fg-2 mt-0.5">{label}</div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-6 py-10">
-
-        {/* ── Authentication ── */}
-        <SectionHeading>Authentication</SectionHeading>
-        <p className="text-[--fg-1] leading-relaxed mb-4">
-          All authenticated endpoints require a <strong>Bearer token</strong> passed in the{' '}
-          <code className="font-mono text-sm bg-[--surface-2] px-1.5 py-0.5 rounded border border-[--line]">Authorization</code> header.
-        </p>
-        <CodeBlock
-          label="Authorization header"
-          code="Authorization: Bearer YOUR_TOKEN_HERE"
-        />
-        <p className="text-sm text-[--fg-2]">
-          Tokens are returned on successful <strong>register</strong> or <strong>login</strong> and must be stored securely by your app.
-        </p>
-
-        {/* ── Response format ── */}
-        <SectionHeading>Response format</SectionHeading>
-        <p className="text-[--fg-1] leading-relaxed mb-4">
-          All responses are JSON with <code className="font-mono text-sm bg-[--surface-2] px-1.5 py-0.5 rounded border border-[--line]">Content-Type: application/json</code>.
-          Errors return a top-level <code className="font-mono text-sm bg-[--surface-2] px-1.5 py-0.5 rounded border border-[--line]">message</code> field.
-        </p>
-
-        {/* ── Tools ── */}
-        <SectionHeading>Tools</SectionHeading>
-
-        {/* GET /api/tools */}
-        <div className="mb-10">
-          <EndpointHeading method="GET" path="/api/tools" />
-          <p className="text-[--fg-1] leading-relaxed mb-4">
-            Returns a paginated list of all available tools. Supports optional filters for category and search query.
-          </p>
-
-          <h3 className="text-sm font-bold text-[--fg-0] mb-2">Query parameters</h3>
-          <div className="overflow-x-auto mb-4">
-            <table className="w-full text-sm border-collapse">
-              <thead>
-                <tr className="border-b border-[--line] text-left">
-                  <th className="py-2 pr-4 font-mono text-[--fg-2] text-xs">Parameter</th>
-                  <th className="py-2 pr-4 font-mono text-[--fg-2] text-xs">Type</th>
-                  <th className="py-2 font-mono text-[--fg-2] text-xs">Description</th>
-                </tr>
-              </thead>
-              <tbody className="text-[--fg-1]">
-                <tr className="border-b border-[--line-2]"><td className="py-2 pr-4 font-mono text-[#b8430f]">category</td><td className="py-2 pr-4 font-mono text-xs">string</td><td className="py-2 text-sm">Filter by category, e.g. <code className="text-xs">text</code>, <code className="text-xs">image</code>, <code className="text-xs">mcp</code></td></tr>
-                <tr className="border-b border-[--line-2]"><td className="py-2 pr-4 font-mono text-[#b8430f]">search</td><td className="py-2 pr-4 font-mono text-xs">string</td><td className="py-2 text-sm">Full-text search against tool name and description</td></tr>
-                <tr className="border-b border-[--line-2]"><td className="py-2 pr-4 font-mono text-[#b8430f]">page</td><td className="py-2 pr-4 font-mono text-xs">integer</td><td className="py-2 text-sm">Page number (default: 1)</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-[#b8430f]">per_page</td><td className="py-2 pr-4 font-mono text-xs">integer</td><td className="py-2 text-sm">Results per page (default: 20)</td></tr>
-              </tbody>
-            </table>
+      <div className="max-w-6xl mx-auto px-6 py-10 flex gap-10">
+        {/* ── Sidebar nav ── */}
+        <aside className="hidden lg:block w-44 shrink-0">
+          <div className="sticky top-24">
+            <p className="text-xs font-bold text-fg-3 uppercase tracking-widest mb-3 px-3">On this page</p>
+            <nav className="flex flex-col gap-0.5">
+              <NavItem href="#introduction" label="Introduction" />
+              <NavItem href="#tools" label="Tools" />
+              <NavItem href="#auth" label="Authentication" />
+              <NavItem href="#errors" label="Errors" />
+            </nav>
           </div>
+        </aside>
 
-          <CodeBlock
-            label="curl — List all tools"
-            code={`curl -X GET "${BASE_URL}/api/tools?category=text&page=1" \\
+        {/* ── Content ── */}
+        <div className="flex-1 min-w-0 max-w-3xl">
+
+          {/* ── Introduction ── */}
+          <section id="introduction" className="mb-14 scroll-mt-20">
+            <h2 className="text-lg font-bold text-fg-0 mb-5 pb-3 border-b border-[--line]">Introduction</h2>
+            <p className="text-fg-1 text-sm leading-relaxed mb-4">
+              The Toolblip API is a RESTful interface for accessing tool metadata and managing user accounts. All endpoints are served over HTTPS.
+            </p>
+
+            <h3 className="text-sm font-bold text-fg-0 mb-2">Authentication</h3>
+            <p className="text-fg-1 text-sm leading-relaxed mb-3">
+              All authenticated endpoints require a <strong>Bearer token</strong> in the <code className="font-mono text-xs bg-surface-2 px-1.5 py-0.5 rounded border border-[--line]">Authorization</code> header.
+            </p>
+            <CodeBlock
+              label="Authorization header"
+              code="Authorization: Bearer YOUR_TOKEN_HERE"
+            />
+            <p className="text-sm text-fg-2">
+              Tokens are returned on successful <strong>register</strong> or <strong>login</strong> and must be stored securely by your app.
+            </p>
+
+            <h3 className="text-sm font-bold text-fg-0 mb-2 mt-6">Response format</h3>
+            <p className="text-fg-1 text-sm leading-relaxed mb-3">
+              All responses are JSON. Every response carries <code className="font-mono text-xs bg-surface-2 px-1.5 py-0.5 rounded border border-[--line]">Content-Type: application/json</code>.
+            </p>
+          </section>
+
+          {/* ── Tools ── */}
+          <Section id="tools" title="Tools">
+            <Endpoint
+              method="GET"
+              path="/api/tools"
+              description="Returns a paginated list of all available tools. Supports optional filters for category and full-text search."
+              params={
+                <ParamTable rows={[
+                  { name: 'category', type: 'string', desc: 'Filter by category, e.g. text, image, mcp' },
+                  { name: 'search', type: 'string', desc: 'Search against tool name and description' },
+                  { name: 'page', type: 'integer', desc: 'Page number (default: 1)' },
+                  { name: 'per_page', type: 'integer', desc: 'Results per page (default: 20)' },
+                ]} />
+              curl={`curl -X GET "${BASE_URL}/api/tools?category=text&page=1" \\
   -H "Accept: application/json"`}
-          />
-          <CodeBlock
-            label="200 OK — Response body"
-            code={`{
+              response={`{
   "tools": {
     "tools": [
       {
@@ -181,24 +255,15 @@ export default function ApiDocsClient() {
     }
   }
 }`}
-          />
-        </div>
+            />
 
-        {/* GET /api/tools/:slug */}
-        <div className="mb-10">
-          <EndpointHeading method="GET" path="/api/tools/{slug}" />
-          <p className="text-[--fg-1] leading-relaxed mb-4">
-            Fetch a single tool by its URL-safe slug. Returns full tool details including the <code className="font-mono text-sm bg-[--surface-2] px-1.5 py-0.5 rounded border border-[--line]">id</code> and <code className="font-mono text-sm bg-[--surface-2] px-1.5 py-0.5 rounded border border-[--line]">is_pro</code> flag.
-          </p>
-
-          <CodeBlock
-            label="curl — Get single tool"
-            code={`curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
+            <Endpoint
+              method="GET"
+              path="/api/tools/{slug}"
+              description="Fetch a single tool by its URL-safe slug. Returns full tool details including the is_pro flag."
+              curl={`curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
   -H "Accept: application/json"`}
-          />
-          <CodeBlock
-            label="200 OK — Response body"
-            code={`{
+              response={`{
   "data": {
     "id": 1,
     "slug": "json-formatter",
@@ -210,41 +275,24 @@ export default function ApiDocsClient() {
     "created_at": "2026-01-10T09:00:00Z"
   }
 }`}
-          />
-        </div>
+            />
+          </Section>
 
-        {/* ── Auth ── */}
-        <SectionHeading>Authentication</SectionHeading>
+          {/* ── Authentication ── */}
+          <Section id="auth" title="Authentication">
 
-        {/* POST /api/auth/register */}
-        <div className="mb-10">
-          <EndpointHeading method="POST" path="/api/auth/register" />
-          <p className="text-[--fg-1] leading-relaxed mb-4">
-            Create a new user account. Returns the user object and a Bearer token you should persist for subsequent authenticated requests.
-          </p>
-
-          <h3 className="text-sm font-bold text-[--fg-0] mb-2">Request body</h3>
-          <div className="overflow-x-auto mb-4">
-            <table className="w-full text-sm border-collapse">
-              <thead>
-                <tr className="border-b border-[--line] text-left">
-                  <th className="py-2 pr-4 font-mono text-[--fg-2] text-xs">Field</th>
-                  <th className="py-2 pr-4 font-mono text-[--fg-2] text-xs">Type</th>
-                  <th className="py-2 font-mono text-[--fg-2] text-xs">Description</th>
-                </tr>
-              </thead>
-              <tbody className="text-[--fg-1]">
-                <tr className="border-b border-[--line-2]"><td className="py-2 pr-4 font-mono text-[#b8430f]">name</td><td className="py-2 pr-4 font-mono text-xs">string</td><td className="py-2 text-sm">Full display name (required)</td></tr>
-                <tr className="border-b border-[--line-2]"><td className="py-2 pr-4 font-mono text-[#b8430f]">email</td><td className="py-2 pr-4 font-mono text-xs">string</td><td className="py-2 text-sm">Valid email address (required, unique)</td></tr>
-                <tr className="border-b border-[--line-2]"><td className="py-2 pr-4 font-mono text-[#b8430f]">password</td><td className="py-2 pr-4 font-mono text-xs">string</td><td className="py-2 text-sm">Min 8 characters (required)</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-[#b8430f]">password_confirmation</td><td className="py-2 pr-4 font-mono text-xs">string</td><td className="py-2 text-sm">Must match password (required)</td></tr>
-              </tbody>
-            </table>
-          </div>
-
-          <CodeBlock
-            label="curl — Register"
-            code={`curl -X POST "${BASE_URL}/api/auth/register" \\
+            <Endpoint
+              method="POST"
+              path="/api/auth/register"
+              description="Create a new user account. Returns the user object and a Bearer token for authenticated requests."
+              params={
+                <ParamTable rows={[
+                  { name: 'name', type: 'string', desc: 'Full display name (required)' },
+                  { name: 'email', type: 'string', desc: 'Valid email address (required, unique)' },
+                  { name: 'password', type: 'string', desc: 'Minimum 8 characters (required)' },
+                  { name: 'password_confirmation', type: 'string', desc: 'Must match password (required)' },
+                ]} />
+              curl={`curl -X POST "${BASE_URL}/api/auth/register" \\
   -H "Content-Type: application/json" \\
   -H "Accept: application/json" \\
   -d '{
@@ -253,10 +301,7 @@ export default function ApiDocsClient() {
     "password": "secretpass123",
     "password_confirmation": "secretpass123"
   }'`}
-          />
-          <CodeBlock
-            label="201 Created — Response body"
-            code={`{
+              response={`{
   "user": {
     "id": 42,
     "name": "Alex Rivera",
@@ -265,46 +310,25 @@ export default function ApiDocsClient() {
   },
   "token": "1|abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUV"
 }`}
-          />
-        </div>
+            />
 
-        {/* POST /api/auth/login */}
-        <div className="mb-10">
-          <EndpointHeading method="POST" path="/api/auth/login" />
-          <p className="text-[--fg-1] leading-relaxed mb-4">
-            Authenticate an existing user with email and password. Returns the user object and a fresh Bearer token.
-          </p>
-
-          <h3 className="text-sm font-bold text-[--fg-0] mb-2">Request body</h3>
-          <div className="overflow-x-auto mb-4">
-            <table className="w-full text-sm border-collapse">
-              <thead>
-                <tr className="border-b border-[--line] text-left">
-                  <th className="py-2 pr-4 font-mono text-[--fg-2] text-xs">Field</th>
-                  <th className="py-2 pr-4 font-mono text-[--fg-2] text-xs">Type</th>
-                  <th className="py-2 font-mono text-[--fg-2] text-xs">Description</th>
-                </tr>
-              </thead>
-              <tbody className="text-[--fg-1]">
-                <tr className="border-b border-[--line-2]"><td className="py-2 pr-4 font-mono text-[#b8430f]">email</td><td className="py-2 pr-4 font-mono text-xs">string</td><td className="py-2 text-sm">Registered email address (required)</td></tr>
-                <tr><td className="py-2 pr-4 font-mono text-[#b8430f]">password</td><td className="py-2 pr-4 font-mono text-xs">string</td><td className="py-2 text-sm">Account password (required)</td></tr>
-              </tbody>
-            </table>
-          </div>
-
-          <CodeBlock
-            label="curl — Login"
-            code={`curl -X POST "${BASE_URL}/api/auth/login" \\
+            <Endpoint
+              method="POST"
+              path="/api/auth/login"
+              description="Authenticate an existing user with email and password. Returns the user object and a fresh Bearer token."
+              params={
+                <ParamTable rows={[
+                  { name: 'email', type: 'string', desc: 'Registered email address (required)' },
+                  { name: 'password', type: 'string', desc: 'Account password (required)' },
+                ]} />
+              curl={`curl -X POST "${BASE_URL}/api/auth/login" \\
   -H "Content-Type: application/json" \\
   -H "Accept: application/json" \\
   -d '{
     "email": "alex@example.com",
     "password": "secretpass123"
   }'`}
-          />
-          <CodeBlock
-            label="200 OK — Response body"
-            code={`{
+              response={`{
   "user": {
     "id": 42,
     "name": "Alex Rivera",
@@ -313,47 +337,31 @@ export default function ApiDocsClient() {
   },
   "token": "2|newtokenuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456"
 }`}
-          />
-        </div>
+            />
 
-        {/* POST /api/auth/logout */}
-        <div className="mb-10">
-          <EndpointHeading method="POST" path="/api/auth/logout" auth />
-          <p className="text-[--fg-1] leading-relaxed mb-4">
-            Revoke the current session token. The token passed in the Authorization header will be invalidated immediately and can no longer be used.
-          </p>
-
-          <CodeBlock
-            label="curl — Logout"
-            code={`curl -X POST "${BASE_URL}/api/auth/logout" \\
+            <Endpoint
+              method="POST"
+              path="/api/auth/logout"
+              auth
+              description="Revoke the current session token. The token passed in the Authorization header will be invalidated immediately."
+              curl={`curl -X POST "${BASE_URL}/api/auth/logout" \\
   -H "Content-Type: application/json" \\
   -H "Accept: application/json" \\
   -H "Authorization: Bearer YOUR_TOKEN_HERE"`}
-          />
-          <CodeBlock
-            label="200 OK — Response body"
-            code={`{
+              response={`{
   "message": "Session revoked successfully."
 }`}
-          />
-        </div>
+            />
 
-        {/* GET /api/auth/user */}
-        <div className="mb-10">
-          <EndpointHeading method="GET" path="/api/auth/user" auth />
-          <p className="text-[--fg-1] leading-relaxed mb-4">
-            Return the currently authenticated user based on the Bearer token. Use this to verify a token or fetch fresh user data.
-          </p>
-
-          <CodeBlock
-            label="curl — Get current user"
-            code={`curl -X GET "${BASE_URL}/api/auth/user" \\
+            <Endpoint
+              method="GET"
+              path="/api/auth/user"
+              auth
+              description="Return the currently authenticated user based on the Bearer token. Use to verify a token or fetch fresh user data."
+              curl={`curl -X GET "${BASE_URL}/api/auth/user" \\
   -H "Accept: application/json" \\
   -H "Authorization: Bearer YOUR_TOKEN_HERE"`}
-          />
-          <CodeBlock
-            label="200 OK — Response body"
-            code={`{
+              response={`{
   "user": {
     "id": 42,
     "name": "Alex Rivera",
@@ -361,41 +369,58 @@ export default function ApiDocsClient() {
     "is_pro": true
   }
 }`}
-          />
-        </div>
+            />
+          </Section>
 
-        {/* ── Error responses ── */}
-        <SectionHeading>Error responses</SectionHeading>
-        <p className="text-[--fg-1] leading-relaxed mb-4">
-          Failed requests return an appropriate HTTP status code and a JSON body with a <code className="font-mono text-sm bg-[--surface-2] px-1.5 py-0.5 rounded border border-[--line]">message</code> field describing the error.
-        </p>
-        <div className="overflow-x-auto mb-4">
-          <table className="w-full text-sm border-collapse">
-            <thead>
-              <tr className="border-b border-[--line] text-left">
-                <th className="py-2 pr-4 font-mono text-[--fg-2] text-xs">Status</th>
-                <th className="py-2 font-mono text-[--fg-2] text-xs">Meaning</th>
-              </tr>
-            </thead>
-            <tbody className="text-[--fg-1]">
-              <tr className="border-b border-[--line-2]"><td className="py-2 pr-4 font-mono text-[#9b1f1a]">401</td><td className="py-2 text-sm">Missing or invalid token</td></tr>
-              <tr className="border-b border-[--line-2]"><td className="py-2 pr-4 font-mono text-[#9b1f1a]">403</td><td className="py-2 text-sm">Token valid but insufficient permissions</td></tr>
-              <tr className="border-b border-[--line-2]"><td className="py-2 pr-4 font-mono text-[#9b1f1a]">404</td><td className="py-2 text-sm">Resource not found</td></tr>
-              <tr className="border-b border-[--line-2]"><td className="py-2 pr-4 font-mono text-[#9b1f1a]">422</td><td className="py-2 text-sm">Validation error (check <code className="font-mono text-xs">message</code> field)</td></tr>
-              <tr><td className="py-2 pr-4 font-mono text-[#9b1f1a]">500</td><td className="py-2 text-sm">Internal server error</td></tr>
-            </tbody>
-          </table>
-        </div>
-        <CodeBlock
-          label="Error response (422 example)"
-          code={`{
+          {/* ── Errors ── */}
+          <Section id="errors" title="Error Responses">
+            <p className="text-fg-1 text-sm leading-relaxed mb-4">
+              Failed requests return an appropriate HTTP status code and a JSON body with a <code className="font-mono text-xs bg-surface-2 px-1.5 py-0.5 rounded border border-[--line]">message</code> field describing the error.
+            </p>
+            <div className="overflow-x-auto mb-4">
+              <table className="w-full text-sm border-collapse">
+                <thead>
+                  <tr className="border-b border-[--line] text-left">
+                    <th className="py-2 pr-4 font-mono text-fg-2 text-xs">Status</th>
+                    <th className="py-2 font-mono text-fg-2 text-xs">Meaning</th>
+                  </tr>
+                </thead>
+                <tbody className="text-fg-1">
+                  {[
+                    { s: '401', m: 'Missing or invalid token' },
+                    { s: '403', m: 'Valid token but insufficient permissions' },
+                    { s: '404', m: 'Resource not found' },
+                    { s: '422', m: 'Validation error — check message and errors fields' },
+                    { s: '429', m: 'Rate limit exceeded — slow down requests' },
+                    { s: '500', m: 'Internal server error' },
+                  ].map(({ s, m }) => (
+                    <tr key={s} className="border-b border-[--line-2]">
+                      <td className="py-2 pr-4 font-mono text-red-600 dark:text-red-400">{s}</td>
+                      <td className="py-2 text-sm">{m}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <CodeBlock
+              label="422 Validation error — response"
+              code={`{
   "message": "The email field is required.",
   "errors": {
     "email": ["The email field is required."],
     "password": ["The password must be at least 8 characters."]
   }
 }`}
-        />
+            />
+            <CodeBlock
+              label="401 Unauthorized — response"
+              code={`{
+  "message": "Unauthenticated."
+}`}
+            />
+          </Section>
+
+        </div>
       </div>
     </main>
   );
