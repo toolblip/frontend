@@ -1742,6 +1742,22 @@ export const tools: Tool[] = [
   { name: 'Color Contrast Matrix', slug: 'color-contrast-matrix', description: 'Generate a contrast matrix for multiple colors to check WCAG AA and AAA compliance.', emoji: '♿', category: 'Color' },
   { name: 'Pressure Unit Converter', slug: 'pressure-unit-converter', description: 'Convert pressure units including pascal, bar, psi, atm, and torr instantly.', emoji: '⚖️', category: 'Conversion' },
   { name: 'Binary to Decimal', slug: 'binary-to-decimal', description: 'Convert binary numbers to decimal and vice versa with step-by-step calculation display.', emoji: '🔢', category: 'Conversion' },
+
+  // --- New tools (2026-04-26 - genuine unique additions) ---
+  { name: 'CSS Animation Generator', slug: 'css-animation-generator', description: 'Generate CSS @keyframes animations with a visual editor - control timing, iteration, and easing curves.', emoji: '🎬', category: 'CSS' },
+  { name: 'Webhook Tester', slug: 'webhook-tester', description: 'Test webhook endpoints by sending custom payloads and inspect the response and timing.', emoji: '🪝', category: 'Developer' },
+  { name: 'ICO File Generator', slug: 'ico-file-generator', description: 'Create Windows ICO favicon files from any image with multiple size presets included.', emoji: '🖼️', category: 'Image' },
+  { name: 'Scientific Notation Converter', slug: 'scientific-notation-converter', description: 'Convert between decimal notation and scientific notation with step-by-step calculation display.', emoji: '🔢', category: 'Conversion' },
+  { name: 'JSONPath Query Tool', slug: 'jsonpath-query-tool', description: 'Query JSON data using JSONPath expressions and see matched results highlighted instantly.', emoji: '🌳', category: 'Developer' },
+  { name: 'CSS Filter Generator', slug: 'css-filter-generator', description: 'Generate CSS filter effects - blur, brightness, contrast, grayscale, sepia, and more with live preview.', emoji: '🎨', category: 'CSS' },
+  { name: 'cURL to Python', slug: 'curl-to-python', description: 'Convert cURL commands to Python requests code with headers, params, and body handling.', emoji: '🐍', category: 'Developer' },
+  { name: 'cURL to JavaScript', slug: 'curl-to-javascript', description: 'Convert cURL commands to JavaScript fetch or Axios code with proper async/await syntax.', emoji: '⚡', category: 'Developer' },
+  { name: 'Robots.txt Simulator', slug: 'robots-txt-simulator', description: 'Simulate how search engine crawlers see your site based on robots.txt rules.', emoji: '🤖', category: 'SEO' },
+  { name: 'Image DPI Resizer', slug: 'image-dpi-resizer', description: 'Change DPI and resolution of images for print with proper aspect ratio preservation.', emoji: '📐', category: 'Image' },
+  { name: 'SVG Compressor', slug: 'svg-compressor', description: 'Compress SVG files by removing unnecessary metadata, comments, and optimizing path data.', emoji: '✂️', category: 'Image' },
+  { name: 'CSS Cursor Generator', slug: 'css-cursor-generator', description: 'Generate custom CSS cursor values with URL images, fallback cursors, and CSS output.', emoji: '🖱️', category: 'CSS' },
+  { name: 'Markdown Table from JSON', slug: 'markdown-table-from-json', description: 'Generate markdown tables from JSON arrays with customizable alignment and header formatting.', emoji: '📋', category: 'Conversion' },
+  { name: 'HTTP Status Checker', slug: 'http-status-checker', description: 'Check HTTP status codes for multiple URLs in bulk and identify issues quickly.', emoji: '🌐', category: 'Developer' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'AI Tools', 'Document Generator'] as const;
