@@ -1,84 +1,83 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 type Mode = 'encode' | 'decode';
+
+function process(input: string, mode: Mode): { result: string; error: string } {
+  if (!input) return { result: '', error: '' };
+  try {
+    if (mode === 'encode') {
+      return { result: btoa(unescape(encodeURIComponent(input))), error: '' };
+    }
+    return { result: decodeURIComponent(escape(atob(input.trim()))), error: '' };
+  } catch {
+    return {
+      result: '',
+      error: mode === 'encode' ? 'Could not encode this text.' : 'Invalid Base64 string.',
+    };
+  }
+}
 
 export default function Base64Client() {
   const [input, setInput] = useState('');
   const [mode, setMode] = useState<Mode>('encode');
-  const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
 
-  const result = (() => {
-    if (!input) return '';
-    try {
-      if (mode === 'encode') {
-        setError('');
-        return btoa(unescape(encodeURIComponent(input)));
-      } else {
-        setError('');
-        return decodeURIComponent(escape(atob(input)));
-      }
-    } catch {
-      setError('Invalid Base64 string');
-      return '';
-    }
-  })();
+  const { result, error } = useMemo(() => process(input, mode), [input, mode]);
 
   const copy = () => {
-    if (result) {
-      navigator.clipboard.writeText(result);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
+    if (!result) return;
+    navigator.clipboard.writeText(result).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex gap-3">
-        {(['encode', 'decode'] as Mode[]).map((m) => (
-          <button
-            key={m}
-            onClick={() => { setMode(m); setError(''); }}
-            className={`text-sm px-4 py-1.5 rounded-full transition-colors ${
-              mode === m ? 'bg-red-600 text-black font-medium' : 'bg-gray-800 text-gray-400 hover:text-white'
-            }`}
-          >
-            {m === 'encode' ? 'Encode' : 'Decode'}
-          </button>
-        ))}
+    <div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">{mode === 'encode' ? 'Text' : 'Base64'}</span>
+        <div className="tb-v2-mode-tabs" role="tablist" aria-label="Base64 mode">
+          {(['encode', 'decode'] as Mode[]).map((m) => (
+            <button
+              key={m}
+              role="tab"
+              aria-selected={mode === m}
+              onClick={() => setMode(m)}
+              className={`tb-v2-mode-tab ${mode === m ? 'on' : ''}`}
+            >
+              {m === 'encode' ? 'Encode' : 'Decode'}
+            </button>
+          ))}
+        </div>
       </div>
-
       <textarea
         value={input}
-        onChange={(e) => { setInput(e.target.value); setError(''); }}
-        placeholder={mode === 'encode' ? 'Enter text to encode...' : 'Enter Base64 to decode...'}
-        className="w-full h-32 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-red-500 placeholder-gray-500 font-mono"
+        onChange={(e) => setInput(e.target.value)}
+        placeholder={mode === 'encode' ? 'Enter text to encode...' : 'Paste Base64 to decode...'}
+        className="tb-v2-tool-textarea"
+        style={{ fontFamily: 'var(--f-mono)' }}
         aria-label={`${mode} input`}
       />
 
-      {error && (
-        <p className="text-red-400 text-sm">{error}</p>
-      )}
-
-      <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs text-gray-500 uppercase">Result</span>
-          {result && (
-            <button onClick={copy} className="text-xs text-red-400 hover:text-red-300 transition-colors">
-              {copied ? 'Copied!' : 'Copy'}
-            </button>
-          )}
-        </div>
-        <pre className="text-sm text-red-400 font-mono whitespace-pre-wrap break-all">
-          {result || '-'}
-        </pre>
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">{mode === 'encode' ? 'Base64' : 'Text'}</span>
+        <button
+          type="button"
+          onClick={copy}
+          disabled={!result}
+          className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+        >
+          {copied ? 'Copied' : 'Copy'}
+        </button>
       </div>
-
-      <p className="text-xs text-gray-500">
-        100% client-side. Your text never leaves your browser.
-      </p>
+      <div className="tb-v2-tool-output-body">
+        {error ? (
+          <p className="tb-v2-error" role="alert">{error}</p>
+        ) : (
+          <pre className="tb-v2-tool-pre">{result || '—'}</pre>
+        )}
+      </div>
     </div>
   );
 }

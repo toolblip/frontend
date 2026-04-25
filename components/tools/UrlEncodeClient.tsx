@@ -1,69 +1,82 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 type Mode = 'encode' | 'decode';
+
+function process(input: string, mode: Mode): { result: string; error: string } {
+  if (!input) return { result: '', error: '' };
+  try {
+    return {
+      result: mode === 'encode' ? encodeURIComponent(input) : decodeURIComponent(input),
+      error: '',
+    };
+  } catch {
+    return {
+      result: '',
+      error: mode === 'decode' ? 'Invalid URL-encoded string.' : 'Could not encode this input.',
+    };
+  }
+}
 
 export default function UrlEncodeClient() {
   const [input, setInput] = useState('');
   const [mode, setMode] = useState<Mode>('encode');
   const [copied, setCopied] = useState(false);
 
-  const result = (() => {
-    if (!input) return '';
-    try {
-      if (mode === 'encode') {
-        return encodeURIComponent(input);
-      } else {
-        return decodeURIComponent(input);
-      }
-    } catch {
-      return 'Error: invalid encoded string';
-    }
-  })();
+  const { result, error } = useMemo(() => process(input, mode), [input, mode]);
 
   const copy = () => {
-    navigator.clipboard.writeText(result);
+    if (!result) return;
+    navigator.clipboard.writeText(result).catch(() => {});
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex gap-3">
-        {(['encode', 'decode'] as Mode[]).map((m) => (
-          <button
-            key={m}
-            onClick={() => setMode(m)}
-            className={`text-sm px-4 py-1.5 rounded-full transition-colors ${
-              mode === m ? 'bg-red-600 text-black font-medium' : 'bg-gray-800 text-gray-400 hover:text-white'
-            }`}
-          >
-            {m === 'encode' ? 'Encode' : 'Decode'}
-          </button>
-        ))}
+    <div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">{mode === 'encode' ? 'URL or text' : 'Encoded URL'}</span>
+        <div className="tb-v2-mode-tabs" role="tablist" aria-label="URL encode mode">
+          {(['encode', 'decode'] as Mode[]).map((m) => (
+            <button
+              key={m}
+              role="tab"
+              aria-selected={mode === m}
+              onClick={() => setMode(m)}
+              className={`tb-v2-mode-tab ${mode === m ? 'on' : ''}`}
+            >
+              {m === 'encode' ? 'Encode' : 'Decode'}
+            </button>
+          ))}
+        </div>
       </div>
-
       <textarea
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        placeholder={mode === 'encode' ? 'Enter URL or text to encode...' : 'Enter encoded URL to decode...'}
-        className="w-full h-32 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-red-500 placeholder-gray-500 font-mono"
+        placeholder={mode === 'encode' ? 'Enter URL or text to encode...' : 'Paste encoded URL to decode...'}
+        className="tb-v2-tool-textarea"
+        style={{ fontFamily: 'var(--f-mono)' }}
         aria-label={`${mode} input`}
       />
 
-      <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs text-gray-500 uppercase">Result</span>
-          {result && (
-            <button onClick={copy} className="text-xs text-red-400 hover:text-red-300 transition-colors">
-              {copied ? 'Copied!' : 'Copy'}
-            </button>
-          )}
-        </div>
-        <pre className="text-sm text-red-400 font-mono whitespace-pre-wrap break-all">
-          {result || '-'}
-        </pre>
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">{mode === 'encode' ? 'Encoded' : 'Decoded'}</span>
+        <button
+          type="button"
+          onClick={copy}
+          disabled={!result}
+          className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+        >
+          {copied ? 'Copied' : 'Copy'}
+        </button>
+      </div>
+      <div className="tb-v2-tool-output-body">
+        {error ? (
+          <p className="tb-v2-error" role="alert">{error}</p>
+        ) : (
+          <pre className="tb-v2-tool-pre">{result || '—'}</pre>
+        )}
       </div>
     </div>
   );

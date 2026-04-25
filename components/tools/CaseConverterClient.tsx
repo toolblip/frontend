@@ -2,86 +2,104 @@
 
 import { useState } from 'react';
 
-type CaseType = 'upper' | 'lower' | 'title' | 'sentence' | 'camel' | 'snake' | 'kebab' | 'constant';
+const CASES = [
+  { label: 'UPPER', key: 'upper' },
+  { label: 'lower', key: 'lower' },
+  { label: 'Title', key: 'title' },
+  { label: 'Sentence', key: 'sentence' },
+  { label: 'camelCase', key: 'camel' },
+  { label: 'snake_case', key: 'snake' },
+  { label: 'kebab-case', key: 'kebab' },
+  { label: 'CONSTANT', key: 'constant' },
+] as const;
 
-const CASES: { label: string; value: CaseType }[] = [
-  { label: 'UPPERCASE', value: 'upper' },
-  { label: 'lowercase', value: 'lower' },
-  { label: 'Title Case', value: 'title' },
-  { label: 'Sentence case', value: 'sentence' },
-  { label: 'camelCase', value: 'camel' },
-  { label: 'snake_case', value: 'snake' },
-  { label: 'kebab-case', value: 'kebab' },
-  { label: 'CONSTANT_CASE', value: 'constant' },
-];
+type CaseKey = typeof CASES[number]['key'];
 
-function toCase(text: string, type: CaseType): string {
+function tokenize(text: string): string[] {
+  if (!text.trim()) return [];
+  return text
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .split(/[\s_\-./]+/)
+    .filter(Boolean);
+}
+
+function convert(text: string, key: CaseKey): string {
   if (!text) return '';
-  switch (type) {
-    case 'upper': return text.toUpperCase();
-    case 'lower': return text.toLowerCase();
-    case 'title': return text.replace(/\w\S*/g, (t) => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase());
-    case 'sentence': return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+  switch (key) {
+    case 'upper':
+      return text.toUpperCase();
+    case 'lower':
+      return text.toLowerCase();
+    case 'title':
+      return text.replace(/\w\S*/g, (t) => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase());
+    case 'sentence':
+      return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
     case 'camel': {
-      const words = text.trim().split(/[\s_-]+/);
-      return words[0].toLowerCase() + words.slice(1).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join('');
+      const words = tokenize(text);
+      if (words.length === 0) return '';
+      return (
+        words[0].toLowerCase() +
+        words.slice(1).map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join('')
+      );
     }
-    case 'snake': return text.trim().split(/[\s-]+/).map(w => w.toLowerCase()).join('_');
-    case 'kebab': return text.trim().split(/[\s_]+/).map(w => w.toLowerCase()).join('-');
-    case 'constant': return text.trim().split(/[\s-]+/).map(w => w.toUpperCase()).join('_');
-    default: return text;
+    case 'snake':
+      return tokenize(text).map((w) => w.toLowerCase()).join('_');
+    case 'kebab':
+      return tokenize(text).map((w) => w.toLowerCase()).join('-');
+    case 'constant':
+      return tokenize(text).map((w) => w.toUpperCase()).join('_');
   }
 }
 
 export default function CaseConverterClient() {
   const [text, setText] = useState('');
-  const [selectedCase, setSelectedCase] = useState<CaseType>('upper');
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState<CaseKey | null>(null);
 
-  const result = toCase(text, selectedCase);
-
-  const copy = () => {
-    navigator.clipboard.writeText(result);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const copy = (val: string, key: CaseKey) => {
+    if (!val) return;
+    navigator.clipboard.writeText(val).catch(() => {});
+    setCopied(key);
+    setTimeout(() => setCopied(null), 1500);
   };
 
   return (
-    <div className="space-y-4">
+    <div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Input</span>
+      </div>
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Type or paste your text here..."
-        className="w-full h-32 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-red-500 placeholder-gray-500"
+        className="tb-v2-tool-textarea"
         aria-label="Text input"
       />
 
-      <div className="flex flex-wrap gap-2">
-        {CASES.map(({ label, value }) => (
-          <button
-            key={value}
-            onClick={() => setSelectedCase(value)}
-            className={`text-xs px-3 py-1.5 rounded-full transition-colors ${
-              selectedCase === value
-                ? 'bg-red-600 text-black font-medium'
-                : 'bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700'
-            }`}
-          >
-            {label}
-          </button>
-        ))}
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">All cases</span>
       </div>
-
-      <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 font-mono text-sm min-h-[80px]">
-        <span className="text-gray-300">{result || '-'}</span>
+      <div className="tb-v2-tool-output-body" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {CASES.map(({ label, key }) => {
+          const val = convert(text, key);
+          return (
+            <div key={key} className="tb-v2-case-row">
+              <span className="tb-v2-case-label">{label}</span>
+              <span className="tb-v2-case-val" title={val}>
+                {val || '—'}
+              </span>
+              <button
+                type="button"
+                onClick={() => copy(val, key)}
+                className={`tb-v2-copy-btn ${copied === key ? 'done' : ''}`}
+                disabled={!val}
+                aria-label={`Copy ${label}`}
+              >
+                {copied === key ? 'Copied' : 'Copy'}
+              </button>
+            </div>
+          );
+        })}
       </div>
-
-      <button
-        onClick={copy}
-        className="text-sm text-red-400 hover:text-red-300 transition-colors"
-      >
-        {copied ? 'Copied!' : 'Copy result'}
-      </button>
     </div>
   );
 }

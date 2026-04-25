@@ -1,77 +1,100 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 type Mode = 'format' | 'minify';
+
+function process(input: string, mode: Mode, indent: number): { result: string; error: string } {
+  if (!input.trim()) return { result: '', error: '' };
+  try {
+    const parsed = JSON.parse(input);
+    return {
+      result: mode === 'minify' ? JSON.stringify(parsed) : JSON.stringify(parsed, null, indent),
+      error: '',
+    };
+  } catch (e) {
+    return { result: '', error: (e as Error).message };
+  }
+}
 
 export default function JsonFormatterClient() {
   const [input, setInput] = useState('');
   const [mode, setMode] = useState<Mode>('format');
-  const [error, setError] = useState('');
+  const [indent, setIndent] = useState(2);
   const [copied, setCopied] = useState(false);
 
-  const result = (() => {
-    if (!input.trim()) return '';
-    try {
-      const parsed = JSON.parse(input);
-      setError('');
-      if (mode === 'minify') {
-        return JSON.stringify(parsed);
-      }
-      return JSON.stringify(parsed, null, 2);
-    } catch (e) {
-      setError((e as Error).message);
-      return '';
-    }
-  })();
+  const { result, error } = useMemo(() => process(input, mode, indent), [input, mode, indent]);
 
   const copy = () => {
-    navigator.clipboard.writeText(result);
+    if (!result) return;
+    navigator.clipboard.writeText(result).catch(() => {});
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="flex gap-3">
+    <div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">JSON</span>
+        <div className="tb-v2-mode-tabs" role="tablist" aria-label="JSON mode">
           {(['format', 'minify'] as Mode[]).map((m) => (
             <button
               key={m}
+              role="tab"
+              aria-selected={mode === m}
               onClick={() => setMode(m)}
-              className={`text-sm px-4 py-1.5 rounded-full transition-colors ${
-                mode === m ? 'bg-red-600 text-black font-medium' : 'bg-gray-800 text-gray-400 hover:text-white'
-              }`}
+              className={`tb-v2-mode-tab ${mode === m ? 'on' : ''}`}
             >
               {m === 'format' ? 'Format' : 'Minify'}
             </button>
           ))}
         </div>
-        {result && (
-          <button onClick={copy} className="text-sm text-red-400 hover:text-red-300 transition-colors">
-            {copied ? 'Copied!' : 'Copy'}
-          </button>
-        )}
       </div>
-
       <textarea
         value={input}
-        onChange={(e) => { setInput(e.target.value); setError(''); }}
-        placeholder='{"key": "value"}'
-        className="w-full h-48 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-red-500 placeholder-gray-500 font-mono"
+        onChange={(e) => setInput(e.target.value)}
+        placeholder='{"hello": "world", "items": [1, 2, 3]}'
+        className="tb-v2-tool-textarea"
+        style={{ fontFamily: 'var(--f-mono)' }}
         aria-label="JSON input"
       />
 
-      {error && (
-        <div className="bg-red-900/20 border border-red-700/50 rounded-lg p-3 text-sm text-red-300">
-          <strong>Syntax error:</strong> {error}
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">{mode === 'format' ? 'Formatted' : 'Minified'}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          {mode === 'format' && (
+            <div className="tb-v2-mode-tabs" role="group" aria-label="Indent size">
+              {[2, 4].map((n) => (
+                <button
+                  key={n}
+                  type="button"
+                  onClick={() => setIndent(n)}
+                  className={`tb-v2-mode-tab ${indent === n ? 'on' : ''}`}
+                  aria-pressed={indent === n}
+                >
+                  {n}-space
+                </button>
+              ))}
+            </div>
+          )}
+          <button
+            type="button"
+            onClick={copy}
+            disabled={!result}
+            className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+          >
+            {copied ? 'Copied' : 'Copy'}
+          </button>
         </div>
-      )}
-
-      <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
-        <pre className="text-sm text-red-400 font-mono whitespace-pre-wrap break-all">
-          {result || '-'}
-        </pre>
+      </div>
+      <div className="tb-v2-tool-output-body">
+        {error ? (
+          <p className="tb-v2-error" role="alert">
+            <strong>Syntax error:</strong> {error}
+          </p>
+        ) : (
+          <pre className="tb-v2-tool-pre">{result || '—'}</pre>
+        )}
       </div>
     </div>
   );
