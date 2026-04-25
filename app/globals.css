@@ -755,9 +755,9 @@ body.tb-v2 a {
   .tb-v2-nav-links-center { display: none; }
   .tb-v2-nav-signin { display: none; }
   .tb-v2-nav-pro { display: none; }
+  /* Push nav-right to far right, pack its children tight */
+  .tb-v2-nav-right { gap: 6px; margin-left: auto; }
   .tb-v2-nav-mobile-toggle { display: inline-flex; }
-  /* Mobile nav: search + theme + toggle all pushed right */
-  .tb-v2-nav-right { gap: 6px; }
   .tb-v2-nav-search {
     width: 40px; min-width: 40px; max-width: 40px;
     padding: 0; justify-content: center; flex: none;
