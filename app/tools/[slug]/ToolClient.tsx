@@ -2,6 +2,7 @@
 
 import React from 'react';
 import type { Tool } from '@/data/tools';
+import ShareButtons from '@/components/ShareButtons';
 
 // Text tools
 import WordCounterClient from '@/components/tools/WordCounterClient';
@@ -192,6 +193,9 @@ export default function ToolClient({ tool }: ToolClientProps) {
         <span className="inline-block mt-3 text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">
           {tool.category}
         </span>
+        <div className="mt-4">
+          <ShareButtons toolName={tool.name} />
+        </div>
       </div>
 
       {/* Tool UI or placeholder */}
