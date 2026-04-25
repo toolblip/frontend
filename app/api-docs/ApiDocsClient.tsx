@@ -4,10 +4,10 @@ import { useState, useEffect, useRef } from 'react';
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 
-// Primary — Railway production (used until api.toolblip.com SSL is ready)
-const PRIMARY_BASE = 'https://toolblip-api-production.up.railway.app';
-// Future primary once SSL is provisioned on api.toolblip.com
-const LEGACY_BASE  = 'https://api.toolblip.com';
+// Primary — api.toolblip.com (SSL verified ✅)
+const PRIMARY_BASE = 'https://api.toolblip.com';
+// Fallback — Railway production URL
+const RAILWAY_BASE = 'https://toolblip-api-production.up.railway.app';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -39,7 +39,7 @@ interface Group {
   items: Endpoint[];
 }
 
-// ─── Endpoint data ────────────────────────────────────────────────────────────
+// ─── Endpoint data ───────────────────────────────────────────────────────────
 
 const ENDPOINTS: Group[] = [
   {
@@ -214,21 +214,6 @@ const ENDPOINTS: Group[] = [
   },
 ];
 
-// ─── Design tokens ───────────────────────────────────────────────────────────
-
-const t = {
-  bg:        'var(--bg)',
-  surface:   'var(--surface)',
-  surface2:  'var(--surface-2)',
-  line:      'var(--line)',
-  fg0:      'var(--fg-0)',
-  fg1:      'var(--fg-1)',
-  fg2:      'var(--fg-2)',
-  fg3:      'var(--fg-3)',
-  accent:   'var(--accent)',
-  accentFg: 'var(--accent-fg)',
-} as const;
-
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function copyToClipboard(text: string, setter: (v: string) => void) {
@@ -246,11 +231,11 @@ function highlightJSON(code: string): string {
     .replace(
       /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
       (match) => {
-        let cls = 'text-amber-600 dark:text-amber-400'; // number / bool / null
+        let cls = 'text-amber-600 dark:text-amber-400';
         if (/^"/.test(match)) {
           cls = /:$/.test(match)
-            ? 'text-sky-600 dark:text-sky-400'  // key
-            : 'text-emerald-600 dark:text-emerald-400'; // string value
+            ? 'text-sky-600 dark:text-sky-400'
+            : 'text-emerald-600 dark:text-emerald-400';
         }
         return `<span class="${cls}">${match}</span>`;
       }
@@ -366,7 +351,6 @@ function CodeBlock({ code, language, title }: { code: string; language: string; 
 function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
   return (
     <div className="bg-[var(--surface)] border border-[var(--line)] rounded-2xl overflow-hidden">
-      {/* Header */}
       <div className="px-5 py-4 border-b border-[var(--line)] bg-[var(--surface-2)]/50">
         <div className="flex flex-wrap items-center gap-2.5 mb-1.5">
           <MethodBadge method={endpoint.method} />
@@ -404,7 +388,6 @@ export default function ApiDocsClient() {
   const [activeSection, setActiveSection] = useState<string>('');
   const observerRef = useRef<IntersectionObserver | null>(null);
 
-  // Intersection observer for active section highlighting
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
       (entries) => {
@@ -428,10 +411,10 @@ export default function ApiDocsClient() {
     setCollapsed((c) => ({ ...c, [slug]: !c[slug] }));
 
   const navLinks = [
-    ...ENDPOINTS.map((g) => ({ href: `#${g.groupSlug}`, label: g.group })),
     { href: '#getting-started', label: 'Getting Started' },
     { href: '#errors', label: 'Errors' },
     { href: '#rate-limits', label: 'Rate Limits' },
+    ...ENDPOINTS.map((g) => ({ href: `#${g.groupSlug}`, label: g.group })),
   ];
 
   return (
@@ -439,13 +422,11 @@ export default function ApiDocsClient() {
 
       {/* ── Hero ── */}
       <div className="relative border-b border-[var(--line)] bg-[var(--surface)] overflow-hidden">
-        {/* Subtle grid background */}
         <div className="absolute inset-0 opacity-[0.03]" style={{
           backgroundImage: 'linear-gradient(var(--fg-3) 1px, transparent 1px), linear-gradient(90deg, var(--fg-3) 1px, transparent 1px)',
           backgroundSize: '40px 40px',
         }} />
         <div className="relative max-w-5xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
-          {/* Live badge */}
           <div className="flex items-center gap-2 text-xs font-medium px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 mb-6 w-fit">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
@@ -463,11 +444,9 @@ export default function ApiDocsClient() {
           <p className="text-[var(--fg-2)] text-base sm:text-lg max-w-2xl leading-relaxed">
             Base URL:{' '}
             <code className="font-mono text-[var(--fg-1)] font-medium">{PRIMARY_BASE}</code>
-            <span className="text-xs text-[var(--fg-3)]">(api.toolblip.com once SSL is ready)</span>
             {' '}&middot; All requests and responses use JSON &middot; Bearer token auth.
           </p>
 
-          {/* Quick stats */}
           <div className="flex flex-wrap gap-4 mt-8">
             {[
               { label: 'Endpoints', value: '6' },
@@ -525,17 +504,17 @@ export default function ApiDocsClient() {
                   <div className="p-4 rounded-xl bg-[var(--surface)] border border-[var(--line)] flex items-start gap-3">
                     <span className="text-green-500 mt-0.5 shrink-0 text-sm">✓</span>
                     <div>
-                      <p className="text-sm font-semibold text-[var(--fg-0)]">Primary — use this</p>
+                      <p className="text-sm font-semibold text-[var(--fg-0)]">Primary</p>
                       <code className="text-sm font-mono text-emerald-600 dark:text-emerald-400 mt-0.5 block">{PRIMARY_BASE}</code>
-                      <p className="text-xs text-[var(--fg-3)] mt-1">Railway production · SSL pending for api.toolblip.com</p>
+                      <p className="text-xs text-[var(--fg-3)] mt-1">api.toolblip.com — SSL verified ✅</p>
                     </div>
                   </div>
                   <div className="mt-2 p-4 rounded-xl bg-[var(--surface)] border border-[var(--line)] flex items-start gap-3 opacity-60">
                     <span className="text-[var(--fg-3)] mt-0.5 shrink-0 text-sm">○</span>
                     <div>
-                      <p className="text-sm font-semibold text-[var(--fg-0)]">Future primary</p>
-                      <code className="text-sm font-mono text-[var(--fg-2)] mt-0.5 block">{LEGACY_BASE}</code>
-                      <p className="text-xs text-[var(--fg-3)] mt-1">api.toolblip.com · activates once SSL is ready</p>
+                      <p className="text-sm font-semibold text-[var(--fg-0)]">Fallback</p>
+                      <code className="text-sm font-mono text-[var(--fg-2)] mt-0.5 block">{RAILWAY_BASE}</code>
+                      <p className="text-xs text-[var(--fg-3)] mt-1">Railway production URL — use if primary is unavailable</p>
                     </div>
                   </div>
                 </div>
@@ -587,14 +566,14 @@ export default function ApiDocsClient() {
 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
                 {[
-                  { code: '200', label: 'OK',               cls: 'emerald' },
-                  { code: '201', label: 'Created',          cls: 'emerald' },
-                  { code: '401', label: 'Unauthorized',      cls: 'amber' },
-                  { code: '403', label: 'Forbidden',        cls: 'amber' },
-                  { code: '404', label: 'Not Found',        cls: 'amber' },
-                  { code: '422', label: 'Validation Error', cls: 'amber' },
-                  { code: '429', label: 'Rate Limited',     cls: 'rose' },
-                  { code: '500', label: 'Server Error',     cls: 'rose' },
+                  { code: '200', label: 'OK',                cls: 'emerald' },
+                  { code: '201', label: 'Created',            cls: 'emerald' },
+                  { code: '401', label: 'Unauthorized',       cls: 'amber' },
+                  { code: '403', label: 'Forbidden',         cls: 'amber' },
+                  { code: '404', label: 'Not Found',         cls: 'amber' },
+                  { code: '422', label: 'Validation Error',   cls: 'amber' },
+                  { code: '429', label: 'Rate Limited',      cls: 'rose' },
+                  { code: '500', label: 'Server Error',      cls: 'rose' },
                 ].map((s) => {
                   const colors: Record<string, string> = {
                     emerald: 'text-emerald-600 dark:text-emerald-400',
@@ -627,7 +606,6 @@ export default function ApiDocsClient() {
               const isCollapsed = !!collapsed[group.groupSlug];
               return (
                 <section key={group.groupSlug} id={group.groupSlug}>
-                  {/* Group header */}
                   <div className="flex items-start justify-between mb-2">
                     <div>
                       <h2 className="text-2xl font-black text-[var(--fg-0)] tracking-tight" style={{ fontFamily: 'var(--f-display)' }}>
@@ -667,9 +645,9 @@ export default function ApiDocsClient() {
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
                 {[
-                  { tier: 'Unauthenticated',       limit: '60 req / min',  note: 'Per IP address' },
-                  { tier: 'Authenticated (Free)', limit: '120 req / min', note: 'Per account' },
-                  { tier: 'Pro Members',           limit: '500 req / min', note: 'Per account' },
+                  { tier: 'Unauthenticated',        limit: '60 req / min', note: 'Per IP address' },
+                  { tier: 'Authenticated (Free)',   limit: '120 req / min', note: 'Per account' },
+                  { tier: 'Pro Members',            limit: '500 req / min', note: 'Per account' },
                 ].map((t) => (
                   <div key={t.tier} className="p-4 rounded-xl bg-[var(--surface)] border border-[var(--line)]">
                     <p className="text-xs font-semibold text-[var(--fg-3)] uppercase tracking-wide mb-1.5">
