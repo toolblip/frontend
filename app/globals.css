@@ -748,7 +748,6 @@ body.tb-v2 a {
 }
 @media (max-width: 760px) {
   .tb-v2-container { padding: 0 16px; }
-  .tb-v2-brand-name { display: none; }
   .tb-v2-footer-grid { grid-template-columns: 1fr 1fr; }
   .tb-v2-footer-meta { flex-direction: column; gap: 6px; align-items: flex-start; }
 
@@ -773,6 +772,8 @@ body.tb-v2 a {
   .tb-v2-nav-search { width: 36px; min-width: 36px; height: 36px; }
   .tb-v2-tm-trigger { width: 36px; height: 36px; }
   .tb-v2-brand-mark { width: 30px; height: 30px; }
+  /* Very small screens: hide brand name */
+  .tb-v2-brand-name { display: none; }
 }
 @media (max-width: 620px) {
   .tb-v2-footer-grid { grid-template-columns: 1fr 1fr; gap: 28px 20px; }
