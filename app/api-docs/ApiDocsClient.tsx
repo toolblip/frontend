@@ -3,7 +3,10 @@
 import { useState } from 'react';
 import CodeBlock from '@/components/ui/CodeBlock';
 
-const BASE_URL = 'https://api.toolblip.com';
+// Primary base URL — Railway production deployment
+// Switch to https://api.toolblip.com once SSL is provisioned
+const API_BASE_URL = 'https://api.toolblip-api-production.up.railway.app';
+const API_BASE_URL_PROD = 'https://api.toolblip.com';
 
 const ENDPOINTS = [
   // Tools
@@ -22,9 +25,8 @@ const ENDPOINTS = [
           { name: 'page', type: 'integer', optional: true, description: 'Page number (default: 1)' },
           { name: 'per_page', type: 'integer', optional: true, description: 'Items per page (default: 20)' },
         ],
-        curl: `curl -X GET "${BASE_URL}/api/tools" \\
-  -H "Accept: application/json" \\
-  -H "Content-Type: application/json"`,
+        curl: `curl -X GET "${API_BASE_URL}/api/tools" \\
+  -H "Accept: application/json"`,
         response: `{
   "tools": {
     "tools": [
@@ -62,13 +64,12 @@ const ENDPOINTS = [
         method: 'GET',
         path: '/api/tools/{slug}',
         auth: false,
-        description: 'Returns a single tool by its slug.',
+        description: 'Returns a single tool by its slug identifier.',
         params: [
           { name: 'slug', type: 'string', optional: false, description: 'URL-friendly tool identifier (e.g. json-formatter)' },
         ],
-        curl: `curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
-  -H "Accept: application/json" \\
-  -H "Content-Type: application/json"`,
+        curl: `curl -X GET "${API_BASE_URL}/api/tools/json-formatter" \\
+  -H "Accept: application/json"`,
         response: `{
   "data": {
     "id": 1,
@@ -101,7 +102,7 @@ const ENDPOINTS = [
           { name: 'password', type: 'string', optional: false, description: 'Password (min 8 characters)' },
           { name: 'password_confirmation', type: 'string', optional: false, description: 'Must match password exactly' },
         ],
-        curl: `curl -X POST "${BASE_URL}/api/auth/register" \\
+        curl: `curl -X POST "${API_BASE_URL}/api/auth/register" \\
   -H "Accept: application/json" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -129,7 +130,7 @@ const ENDPOINTS = [
           { name: 'email', type: 'string', optional: false, description: 'Registered email address' },
           { name: 'password', type: 'string', optional: false, description: 'Account password' },
         ],
-        curl: `curl -X POST "${BASE_URL}/api/auth/login" \\
+        curl: `curl -X POST "${API_BASE_URL}/api/auth/login" \\
   -H "Accept: application/json" \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -152,9 +153,8 @@ const ENDPOINTS = [
         auth: true,
         description: 'Revoke the current Bearer token. The token can no longer be used after this call.',
         params: [],
-        curl: `curl -X POST "${BASE_URL}/api/auth/logout" \\
+        curl: `curl -X POST "${API_BASE_URL}/api/auth/logout" \\
   -H "Accept: application/json" \\
-  -H "Content-Type: application/json" \\
   -H "Authorization: Bearer {token}"`,
         response: `{
   "message": "Logged out successfully"
@@ -166,9 +166,8 @@ const ENDPOINTS = [
         auth: true,
         description: 'Return the currently authenticated user profile.',
         params: [],
-        curl: `curl -X GET "${BASE_URL}/api/auth/user" \\
+        curl: `curl -X GET "${API_BASE_URL}/api/auth/user" \\
   -H "Accept: application/json" \\
-  -H "Content-Type: application/json" \\
   -H "Authorization: Bearer {token}"`,
         response: `{
   "user": {
@@ -242,24 +241,20 @@ export default function ApiDocsClient() {
                 <p className="text-xs font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-3 px-2">
                   Quick Links
                 </p>
-                <a
-                  href="#base-url"
-                  className="block text-sm text-[var(--fg-2)] hover:text-[var(--fg-0)] px-2 py-1.5 rounded-lg hover:bg-[var(--surface-2)] transition-colors"
-                >
-                  Base URL
-                </a>
-                <a
-                  href="#auth"
-                  className="block text-sm text-[var(--fg-2)] hover:text-[var(--fg-0)] px-2 py-1.5 rounded-lg hover:bg-[var(--surface-2)] transition-colors"
-                >
-                  Authentication
-                </a>
-                <a
-                  href="#errors"
-                  className="block text-sm text-[var(--fg-2)] hover:text-[var(--fg-0)] px-2 py-1.5 rounded-lg hover:bg-[var(--surface-2)] transition-colors"
-                >
-                  Errors
-                </a>
+                {[
+                  { href: '#base-url', label: 'Base URL' },
+                  { href: '#auth', label: 'Authentication' },
+                  { href: '#errors', label: 'Errors' },
+                  { href: '#rate-limits', label: 'Rate Limits' },
+                ].map(link => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    className="block text-sm text-[var(--fg-2)] hover:text-[var(--fg-0)] px-2 py-1.5 rounded-lg hover:bg-[var(--surface-2)] transition-colors"
+                  >
+                    {link.label}
+                  </a>
+                ))}
               </div>
             </div>
           </aside>
@@ -272,10 +267,14 @@ export default function ApiDocsClient() {
               <h2 className="text-xl font-bold text-[var(--fg-0)] mb-4" style={{ fontFamily: 'var(--f-display)' }}>
                 Base URL
               </h2>
-              <div className="bg-[var(--surface)] border border-[var(--line)] rounded-xl p-4">
+              <div className="space-y-3">
                 <CodeBlock
-                  code={`${BASE_URL}`}
-                  title="Base URL"
+                  code={`# Production (recommended — available once SSL is ready)\n${API_BASE_URL_PROD}`}
+                  title="Production Base URL"
+                />
+                <CodeBlock
+                  code={`# Railway direct (works now)\n${API_BASE_URL}`}
+                  title="Railway Direct URL"
                 />
               </div>
             </section>
