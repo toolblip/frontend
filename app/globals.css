@@ -756,7 +756,14 @@ body.tb-v2 a {
   .tb-v2-nav-signin { display: none; }
   .tb-v2-tm-wrap { display: none; }
   .tb-v2-nav-mobile-toggle { display: inline-flex; }
-  .tb-v2-nav-search { flex: 1; max-width: 300px; padding: 8px 12px; }
+  .tb-v2-nav-search { flex: 1; max-width: 200px; padding: 8px 10px; }
+  .tb-v2-nav-inner { gap: 8px; }
+}
+@media (max-width: 480px) {
+  .tb-v2-nav { height: 52px; }
+  .tb-v2-nav-inner { height: 52px; gap: 6px; }
+  .tb-v2-nav-search { max-width: 160px; padding: 6px 8px; }
+  .tb-v2-brand-mark { width: 32px; height: 32px; }
 }
 @media (max-width: 620px) {
   .tb-v2-footer-grid { grid-template-columns: 1fr 1fr; gap: 28px 20px; }
