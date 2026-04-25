@@ -1,52 +1,104 @@
-import { IconDev, IconCode, IconZap } from '@/components/v2/icons';
-
-const STEPS = [
-  {
-    num: 1,
-    icon: <IconDev width={18} height={18} />,
-    label: 'Pick a tool',
-    sub: 'From 11 categories',
-  },
-  {
-    num: 2,
-    icon: <IconCode width={18} height={18} />,
-    label: 'Paste your data',
-    sub: 'Nothing uploaded',
-  },
-  {
-    num: 3,
-    icon: <IconZap width={18} height={18} />,
-    label: 'Get your result',
-    sub: 'Instantly',
-  },
-];
-
 export default function HowItWorksStrip() {
   return (
-    <section className="hiw-strip">
-      <div className="tb-v2-container hiw-container">
-        <div className="hiw-inner">
-          {STEPS.map((step, i) => (
-            <div key={step.num} className="hiw-step-group">
-              <div className="hiw-step">
-                <span className="hiw-num">{step.num}</span>
-                <span className="hiw-icon">{step.icon}</span>
-                <div className="hiw-text">
-                  <span className="hiw-label">{step.label}</span>
-                  <span className="hiw-sub">{step.sub}</span>
+    <section
+      style={{
+        borderTop: '1px solid var(--border)',
+        borderBottom: '1px solid var(--border)',
+        background: 'var(--surface-2)',
+      }}
+    >
+      <div className="tb-v2-container" style={{ padding: '28px 28px 20px' }}>
+        {/* Steps row */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'center',
+            gap: 0,
+            flexWrap: 'wrap',
+          }}
+        >
+          {[
+            {
+              icon: (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 20h9" /><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                </svg>
+              ),
+              color: 'var(--green)',
+              bg: 'var(--green-tint)',
+              step: '1',
+              title: 'Pick a tool',
+              desc: 'Browse 80+ free browser-based tools by category.',
+            },
+            {
+              icon: (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                </svg>
+              ),
+              color: 'var(--blue)',
+              bg: 'var(--blue-tint)',
+              step: '2',
+              title: 'Paste your data',
+              desc: 'Type or paste — nothing is ever sent to a server.',
+            },
+            {
+              icon: (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              ),
+              color: 'var(--purple)',
+              bg: 'var(--purple-tint)',
+              step: '3',
+              title: 'Get your result',
+              desc: 'Copy the output instantly. Done in seconds.',
+            },
+          ].map((item, i) => (
+            <div key={i} style={{ display: 'flex', alignItems: 'center', flex: '1 1 0', minWidth: 160 }}>
+              {i > 0 && (
+                <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 4px' }}>
+                  <svg width="24" height="2" viewBox="0 0 24 2" preserveAspectRatio="none">
+                    <line x1="0" y1="1" x2="24" y2="1" stroke="var(--border)" strokeWidth="1.5" strokeDasharray="3 3" />
+                  </svg>
+                </div>
+              )}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '8px 16px', gap: 8, flex: '1 1 0' }}>
+                <div style={{
+                  width: 44, height: 44, borderRadius: '50%',
+                  background: item.bg, color: item.color,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  flexShrink: 0,
+                }}>
+                  {item.icon}
+                </div>
+                <div>
+                  <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 3 }}>{item.title}</div>
+                  <div style={{ fontSize: 12, color: 'var(--fg-2)', lineHeight: 1.45 }}>{item.desc}</div>
                 </div>
               </div>
-              {i < STEPS.length - 1 && (
-                <span className="hiw-arrow" aria-hidden="true">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </span>
-              )}
             </div>
           ))}
-          <div className="hiw-divider" />
-          <span className="hiw-note">
-            🔒 No servers &middot; No uploads &middot; Nothing leaves your browser
-          </span>
+        </div>
+
+        {/* Privacy tagline */}
+        <div style={{
+          textAlign: 'center',
+          marginTop: 16,
+          paddingTop: 12,
+          borderTop: '1px solid var(--border)',
+          fontSize: 12.5,
+          color: 'var(--fg-3)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 5,
+        }}>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+          </svg>
+          No servers &nbsp;&middot;&nbsp; No uploads &nbsp;&middot;&nbsp; Nothing leaves your browser &mdash; ever.
         </div>
       </div>
     </section>
