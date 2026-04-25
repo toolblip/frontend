@@ -10,7 +10,6 @@ const CATEGORIES = [
   { label: 'Conversion', icon: '🔄', color: 'var(--teal)' },
   { label: 'Math', icon: '∑', color: 'var(--pink)' },
   { label: 'CSS', icon: '✨', color: 'var(--indigo)' },
-  { label: 'SEO', icon: '🔍', color: 'var(--green)' },
 ];
 
 export default function CategoryQuickAccess() {
