@@ -7,7 +7,7 @@ import { tools } from '@/data/tools';
 import { getCategoryMeta } from '@/lib/v2/categoryMeta';
 import { IconArrowUR, IconSearch, IconClose } from '@/components/v2/icons';
 
-const DIRECTORY_CATEGORIES = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS'] as const;
+const DIRECTORY_CATEGORIES = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'Color'] as const;
 type Category = typeof DIRECTORY_CATEGORIES[number];
 
 export default function DirectoryClient() {
