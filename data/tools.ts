@@ -1308,6 +1308,25 @@ export const tools: Tool[] = [
   { name: 'Unit Converter', slug: 'unit-converter-handy', description: 'Convert length, weight, and temperature between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
   { name: 'Number Base Converter', slug: 'number-base-simple', description: 'Convert between binary, decimal, hexadecimal, and octal in one click.', emoji: '🔢', category: 'Conversion' },
 
+  // --- Batch #15: Directory expansion (2026-04-25) ---
+  { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-generator', description: 'Generate lorem ipsum placeholder text with paragraphs, sentences, and word count options.', emoji: '📜', category: 'Text' },
+  { name: 'Text Sorter', slug: 'text-sorter', description: 'Sort text lines alphabetically, by length, numerically, or in reverse and random order.', emoji: '📋', category: 'Text' },
+  { name: 'Grammar Checker', slug: 'grammar-checker', description: 'Check grammar and spelling errors with one-click corrections and style suggestions.', emoji: '✅', category: 'Text' },
+  { name: 'Readability Score', slug: 'readability-score', description: 'Calculate Flesch-Kincaid, SMOG, ARI, and Coleman-Liau readability indices.', emoji: '📊', category: 'Text' },
+  { name: 'Regex Tester', slug: 'regex-tester', description: 'Test regex patterns with real-time highlighting, capture groups, and replacements.', emoji: '🔍', category: 'Developer' },
+  { name: 'JWT Decoder', slug: 'jwt-decoder', description: 'Decode JWT tokens and view header, payload, expiration, and signature info.', emoji: '🎫', category: 'Developer' },
+  { name: 'Cron Expression Generator', slug: 'cron-expression-generator', description: 'Build cron schedules with visual controls and see human-readable next run times.', emoji: '🕐', category: 'Developer' },
+  { name: 'HTTP Headers Viewer', slug: 'http-headers-viewer', description: 'View HTTP request and response headers with full timing breakdown per header.', emoji: '📦', category: 'Developer' },
+  { name: 'Port Scanner', slug: 'port-scanner', description: 'Scan common ports on any host to identify open services and availability.', emoji: '🚪', category: 'Developer' },
+  { name: 'Favicon Generator', slug: 'favicon-generator', description: 'Create favicon.ico and app icons from any image, logo, or emoji instantly.', emoji: '🌐', category: 'Image' },
+  { name: 'Image Resizer', slug: 'image-resizer', description: 'Resize images to exact dimensions for social media, thumbnails, and OG tags.', emoji: '📐', category: 'Image' },
+  { name: 'Meta Tag Generator', slug: 'meta-tag-generator', description: 'Generate SEO meta tags, Open Graph, and Twitter Card tags with preview.', emoji: '🏷️', category: 'SEO' },
+  { name: 'SERP Preview', slug: 'serp-preview', description: 'Preview how a page appears in Google search results with title and description.', emoji: '🔎', category: 'SEO' },
+  { name: 'Color Picker', slug: 'color-picker', description: 'Pick any color and get HEX, RGB, HSL, HSV, and CMYK values instantly.', emoji: '🎨', category: 'Color' },
+  { name: 'Contrast Checker', slug: 'contrast-checker', description: 'Check text and background contrast for WCAG AA and AAA accessibility compliance.', emoji: '♿', category: 'Color' },
+  { name: 'Unit Converter', slug: 'unit-converter', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial.', emoji: '⚖️', category: 'Conversion' },
+  { name: 'Number Base Converter', slug: 'number-base-converter', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly.', emoji: '🔢', category: 'Conversion' },
+
   // --- Batch #8: Additional tools (2026-04-24) ---
   { name: 'YAML Pretty Print', slug: 'yaml-pretty-print', description: 'Format and indent YAML with syntax highlighting and configurable spacing.', emoji: '📄', category: 'Developer' },
   { name: 'JSON Patch Generator', slug: 'json-patch-generator', description: 'Generate JSON Patch (RFC 6902) diff from two JSON documents automatically.', emoji: '🔄', category: 'Developer' },

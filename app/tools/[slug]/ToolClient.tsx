@@ -43,7 +43,9 @@ import ImageCropperClient from '@/components/tools/ImageCropperClient';
 import ImageFormatConverterClient from '@/components/tools/ImageFormatConverterClient';
 import ImageResizerClient from '@/components/tools/ImageResizerClient';
 import PercentageCalculatorClient from '@/components/tools/PercentageCalculatorClient';
-import ReadabilityScoreClient from '@/components/tools/ReadabilityScoreClient';
+import CreditCardValidatorClient from '@/components/tools/CreditCardValidatorClient';
+import UnixTimestampConverterClient from '@/components/tools/UnixTimestampConverterClient';
+import PercentageDifferenceClient from '@/components/tools/PercentageDifferenceClient';
 import ScreenResolutionTesterClient from '@/components/tools/ScreenResolutionTesterClient';
 import SquareCropClient from '@/components/tools/SquareCropClient';
 import TextSorterClient from '@/components/tools/TextSorterClient';
@@ -119,6 +121,8 @@ function getToolComponent(slug: string): React.ReactNode {
       return <CircleCropClient />;
     case 'contrast-checker':
       return <ContrastCheckerClient />;
+    case 'credit-card-validator':
+      return <CreditCardValidatorClient />;
     case 'cron-generator':
       return <CronGeneratorClient />;
     case 'css-border-radius-generator':
@@ -202,6 +206,10 @@ function getToolComponent(slug: string): React.ReactNode {
     case 'html-decoder':
     case 'url-encode-decode':
       return <UrlEncodeClient />;
+    case 'unix-timestamp-converter':
+    case 'unix-timestamp':
+    case 'timestamp-converter':
+    case 'epoch-converter':
     case 'json-validator':
     case 'json-beautifier':
     case 'json-prettifier':
@@ -377,6 +385,8 @@ function getToolComponent(slug: string): React.ReactNode {
     case 'percentage-of-number':
     case 'percentage-change-calculator':
     case 'percentage-off-calculator':
+    case 'percentage-difference':
+    case 'percent-difference':
       return <PercentageCalculatorClient />;
     case 'readability-checker':
     case 'flesch-reading-ease':
