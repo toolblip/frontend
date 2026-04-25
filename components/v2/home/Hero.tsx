@@ -28,9 +28,9 @@ export default function Hero({ toolCount }: { toolCount: number }) {
               </a>
             </div>
             <div className="tb-v2-hero-chips">
-              <span className="tb-v2-chip"><IconShield /> In-browser only</span>
+              <span className="tb-v2-chip"><IconShield /> Privacy-first</span>
               <span className="tb-v2-chip"><IconZap /> No signup</span>
-              <span className="tb-v2-chip"><IconGift /> Zero ads</span>
+              <span className="tb-v2-chip"><IconGift /> No tracking</span>
             </div>
           </div>
           <div>
