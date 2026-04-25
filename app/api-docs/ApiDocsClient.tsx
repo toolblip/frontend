@@ -1,427 +1,473 @@
 'use client';
 
-// Uses NEXT_PUBLIC_API_URL from environment (https://api.toolblip.com in production)
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.toolblip.com';
+import { useState, useCallback } from 'react';
 
-// ─── Method badge ──────────────────────────────────────────────────────────────
-function MethodBadge({ method }: { method: string }) {
-  const colors: Record<string, string> = {
-    GET:    'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300',
-    POST:   'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300',
-    PUT:    'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300',
-    DELETE: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300',
-    PATCH:  'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300',
-  };
-  return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold font-mono tracking-wide ${colors[method] ?? 'bg-surface-2 text-fg-1'}`}>
-      {method}
-    </span>
-  );
-}
+const BASE_URL = 'https://api.toolblip.com';
+const ALT_URL = 'https://toolblip-api-production.up.railway.app';
 
-// ─── Code block ───────────────────────────────────────────────────────────────
-function CodeBlock({ label, code }: { label?: string; code: string }) {
-  return (
-    <div className="rounded-xl overflow-hidden border border-[--line] my-3 text-sm">
-      {label && (
-        <div className="flex items-center justify-between px-4 py-2 border-b border-[--line] bg-surface-2">
-          <span className="text-xs text-fg-2 font-mono">{label}</span>
-        </div>
-      )}
-      <pre className="overflow-x-auto p-4 bg-[#0d0d10] text-[#e2e2ea] font-mono text-xs leading-6">
-        <code>{code}</code>
-      </pre>
-    </div>
-  );
-}
-
-// ─── Section heading ──────────────────────────────────────────────────────────
-function Section({ id, title, children }: { id: string; title: string; children: React.ReactNode }) {
-  return (
-    <section id={id} className="mb-14 scroll-mt-20">
-      <h2 className="text-lg font-bold text-fg-0 mb-5 pb-3 border-b border-[--line]">
-        {title}
-      </h2>
-      {children}
-    </section>
-  );
-}
-
-// ─── Endpoint block ───────────────────────────────────────────────────────────
-function Endpoint({
-  method,
-  path,
-  auth,
-  description,
-  params,
-  curl,
-  response,
-}: {
-  method: string;
-  path: string;
-  auth?: boolean;
-  description: string;
-  params?: React.ReactNode;
-  curl: string;
-  response: string;
-}) {
-  return (
-    <div className="mb-10">
-      <div className="flex flex-wrap items-center gap-2 mb-3">
-        <MethodBadge method={method} />
-        <code className="font-mono text-sm font-semibold text-fg-0">{path}</code>
-        {auth && (
-          <span className="ml-1 inline-flex items-center gap-1 text-xs text-fg-2 border border-[--line] rounded-full px-2 py-0.5">
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <rect x="1.5" y="4.5" width="7" height="5" rx="1" stroke="currentColor" strokeWidth="1.2"/>
-              <path d="M3 4.5V3a2 2 0 1 1 4 0v1.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
-            </svg>
-            Auth required
-          </span>
-        )}
-      </div>
-      <p className="text-fg-1 text-sm leading-relaxed mb-4">{description}</p>
-      {params}
-      <CodeBlock label="curl" code={curl} />
-      <CodeBlock label="Response" code={response} />
-    </div>
-  );
-}
-
-// ─── Table ────────────────────────────────────────────────────────────────────
-function ParamTable({ rows }: { rows: { name: string; type: string; desc: string }[] }) {
-  return (
-    <div className="overflow-x-auto mb-4">
-      <table className="w-full text-sm border-collapse">
-        <thead>
-          <tr className="border-b border-[--line] text-left">
-            <th className="py-2 pr-4 font-mono text-fg-2 text-xs">Field / Param</th>
-            <th className="py-2 pr-4 font-mono text-fg-2 text-xs">Type</th>
-            <th className="py-2 font-mono text-fg-2 text-xs">Description</th>
-          </tr>
-        </thead>
-        <tbody className="text-fg-1">
-          {rows.map((r, i) => (
-            <tr key={i} className="border-b border-[--line-2]">
-              <td className="py-2 pr-4 font-mono text-red-600 dark:text-red-400 text-xs">{r.name}</td>
-              <td className="py-2 pr-4 font-mono text-xs text-fg-2">{r.type}</td>
-              <td className="py-2 text-sm">{r.desc}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
-// ─── Nav item ─────────────────────────────────────────────────────────────────
-function NavItem({ href, label }: { href: string; label: string }) {
-  return (
-    <a
-      href={href}
-      className="block px-3 py-1.5 rounded-lg text-sm text-fg-2 hover:text-fg-0 hover:bg-surface-2 transition-colors"
-    >
-      {label}
-    </a>
-  );
-}
-
-// ─── Main component ───────────────────────────────────────────────────────────
-export default function ApiDocsClient() {
-  return (
-    <main className="min-h-screen bg-[--bg]">
-      {/* ── Hero ── */}
-      <div className="border-b border-[--line] bg-[--surface]">
-        <div className="max-w-6xl mx-auto px-6 py-14 flex items-start gap-8">
-          <div className="flex-1 min-w-0">
-            <div className="inline-flex items-center gap-2 text-xs font-mono font-semibold text-fg-2 border border-[--line] rounded-full px-3 py-1 mb-5">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              REST API v1
-            </div>
-            <h1 className="text-4xl font-black text-fg-0 tracking-tight mb-3" style={{ fontFamily: 'var(--f-display)', letterSpacing: '-0.025em' }}>
-              Toolblip API
-            </h1>
-            <p className="text-fg-1 text-base leading-relaxed max-w-xl">
-              Build on top of Toolblip. Browse the full catalog of free developer tools, manage user accounts, and integrate Toolblip into your own apps.
-            </p>
-            <div className="mt-5 flex flex-wrap items-center gap-3 text-sm">
-              <span className="font-mono text-xs text-fg-2 bg-surface-2 border border-[--line] rounded-lg px-3 py-1.5">
-                Base URL:{' '}
-                <span className="text-fg-0 font-semibold">{BASE_URL}</span>
-              </span>
-            </div>
-          </div>
-          {/* Quick stats */}
-          <div className="hidden md:flex flex-col gap-3 shrink-0">
-            {[
-              { label: 'Endpoints', value: '6' },
-              { label: 'Auth type', value: 'Bearer' },
-              { label: 'Format', value: 'JSON' },
-            ].map(({ label, value }) => (
-              <div key={label} className="text-center min-w-[80px]">
-                <div className="text-xl font-bold text-fg-0" style={{ fontFamily: 'var(--f-display)' }}>{value}</div>
-                <div className="text-xs text-fg-2 mt-0.5">{label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-6xl mx-auto px-6 py-10 flex gap-10">
-        {/* ── Sidebar nav ── */}
-        <aside className="hidden lg:block w-44 shrink-0">
-          <div className="sticky top-24">
-            <p className="text-xs font-bold text-fg-3 uppercase tracking-widest mb-3 px-3">On this page</p>
-            <nav className="flex flex-col gap-0.5">
-              <NavItem href="#introduction" label="Introduction" />
-              <NavItem href="#tools" label="Tools" />
-              <NavItem href="#auth" label="Authentication" />
-              <NavItem href="#errors" label="Errors" />
-            </nav>
-          </div>
-        </aside>
-
-        {/* ── Content ── */}
-        <div className="flex-1 min-w-0 max-w-3xl">
-
-          {/* ── Introduction ── */}
-          <section id="introduction" className="mb-14 scroll-mt-20">
-            <h2 className="text-lg font-bold text-fg-0 mb-5 pb-3 border-b border-[--line]">Introduction</h2>
-            <p className="text-fg-1 text-sm leading-relaxed mb-4">
-              The Toolblip API is a RESTful interface for accessing tool metadata and managing user accounts. All endpoints are served over HTTPS.
-            </p>
-
-            <h3 className="text-sm font-bold text-fg-0 mb-2">Authentication</h3>
-            <p className="text-fg-1 text-sm leading-relaxed mb-3">
-              All authenticated endpoints require a <strong>Bearer token</strong> in the <code className="font-mono text-xs bg-surface-2 px-1.5 py-0.5 rounded border border-[--line]">Authorization</code> header.
-            </p>
-            <CodeBlock
-              label="Authorization header"
-              code="Authorization: Bearer YOUR_TOKEN_HERE"
-            />
-            <p className="text-sm text-fg-2">
-              Tokens are returned on successful <strong>register</strong> or <strong>login</strong> and must be stored securely by your app.
-            </p>
-
-            <h3 className="text-sm font-bold text-fg-0 mb-2 mt-6">Response format</h3>
-            <p className="text-fg-1 text-sm leading-relaxed mb-3">
-              All responses are JSON. Every response carries <code className="font-mono text-xs bg-surface-2 px-1.5 py-0.5 rounded border border-[--line]">Content-Type: application/json</code>.
-            </p>
-          </section>
-
-          {/* ── Tools ── */}
-          <Section id="tools" title="Tools">
-            <Endpoint
-              method="GET"
-              path="/api/tools"
-              description="Returns a paginated list of all available tools. Supports optional filters for category and full-text search."
-              params={
-                <ParamTable rows={[
-                  { name: 'category', type: 'string', desc: 'Filter by category, e.g. text, image, mcp' },
-                  { name: 'search', type: 'string', desc: 'Search against tool name and description' },
-                  { name: 'page', type: 'integer', desc: 'Page number (default: 1)' },
-                  { name: 'per_page', type: 'integer', desc: 'Results per page (default: 20)' },
-                ]} />
-              curl={`curl -X GET "${BASE_URL}/api/tools?category=text&page=1" \\
-  -H "Accept: application/json"`}
-              response={`{
+const ENDPOINTS = [
+  {
+    method: 'GET',
+    path: '/api/tools',
+    summary: 'List all tools',
+    auth: false,
+    description: 'Returns a paginated list of all available tools. Supports optional filtering by category and search query.',
+    curl: `curl -X GET "${BASE_URL}/api/tools" \\
+  -H "Accept: application/json"`,
+    response: `{
   "tools": {
     "tools": [
       {
         "id": 1,
         "slug": "json-formatter",
         "name": "JSON Formatter",
-        "description": "Format, validate and minify JSON data instantly.",
+        "description": "Format, validate, and beautify JSON data instantly.",
         "category": "text",
         "is_pro": false,
-        "emoji": "🔧",
-        "created_at": "2026-01-10T09:00:00Z"
+        "emoji": "📋",
+        "created_at": "2026-04-10T12:00:00.000000Z"
       },
       {
         "id": 2,
-        "slug": "image-compressor",
-        "name": "Image Compressor",
-        "description": "Compress PNG and JPEG images without losing quality.",
-        "category": "image",
-        "is_pro": true,
-        "emoji": "🖼️",
-        "created_at": "2026-01-12T14:30:00Z"
+        "slug": "base64-encoder",
+        "name": "Base64 Encoder / Decoder",
+        "description": "Encode or decode Base64 strings with one click.",
+        "category": "text",
+        "is_pro": false,
+        "emoji": "🔤",
+        "created_at": "2026-04-10T12:00:00.000000Z"
       }
     ],
     "meta": {
       "current_page": 1,
-      "total": 48,
-      "per_page": 20,
-      "last_page": 3
+      "total": 24,
+      "per_page": 15,
+      "last_page": 2
     }
   }
-}`}
-            />
-
-            <Endpoint
-              method="GET"
-              path="/api/tools/{slug}"
-              description="Fetch a single tool by its URL-safe slug. Returns full tool details including the is_pro flag."
-              curl={`curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
-  -H "Accept: application/json"`}
-              response={`{
+}`,
+  },
+  {
+    method: 'GET',
+    path: '/api/tools/{slug}',
+    summary: 'Get single tool',
+    auth: false,
+    description: 'Returns detailed information for a specific tool by its slug identifier.',
+    curl: `curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
+  -H "Accept: application/json"`,
+    response: `{
   "data": {
     "id": 1,
     "slug": "json-formatter",
     "name": "JSON Formatter",
-    "description": "Format, validate and minify JSON data instantly.",
+    "description": "Format, validate, and beautify JSON data instantly.",
     "category": "text",
     "is_pro": false,
-    "emoji": "🔧",
-    "created_at": "2026-01-10T09:00:00Z"
+    "emoji": "📋",
+    "created_at": "2026-04-10T12:00:00.000000Z"
   }
-}`}
-            />
-          </Section>
-
-          {/* ── Authentication ── */}
-          <Section id="auth" title="Authentication">
-
-            <Endpoint
-              method="POST"
-              path="/api/auth/register"
-              description="Create a new user account. Returns the user object and a Bearer token for authenticated requests."
-              params={
-                <ParamTable rows={[
-                  { name: 'name', type: 'string', desc: 'Full display name (required)' },
-                  { name: 'email', type: 'string', desc: 'Valid email address (required, unique)' },
-                  { name: 'password', type: 'string', desc: 'Minimum 8 characters (required)' },
-                  { name: 'password_confirmation', type: 'string', desc: 'Must match password (required)' },
-                ]} />
-              curl={`curl -X POST "${BASE_URL}/api/auth/register" \\
+}`,
+  },
+  {
+    method: 'POST',
+    path: '/api/auth/register',
+    summary: 'Register new account',
+    auth: false,
+    description: 'Creates a new user account. Returns the authenticated user object and a Bearer token for subsequent requests.',
+    curl: `curl -X POST "${BASE_URL}/api/auth/register" \\
   -H "Content-Type: application/json" \\
   -H "Accept: application/json" \\
   -d '{
-    "name": "Alex Rivera",
-    "email": "alex@example.com",
-    "password": "secretpass123",
-    "password_confirmation": "secretpass123"
-  }'`}
-              response={`{
+    "name": "Jane Doe",
+    "email": "jane@example.com",
+    "password": "securepassword123",
+    "password_confirmation": "securepassword123"
+  }'`,
+    response: `{
   "user": {
-    "id": 42,
-    "name": "Alex Rivera",
-    "email": "alex@example.com",
+    "id": 5,
+    "name": "Jane Doe",
+    "email": "jane@example.com",
     "is_pro": false
   },
-  "token": "1|abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUV"
-}`}
-            />
-
-            <Endpoint
-              method="POST"
-              path="/api/auth/login"
-              description="Authenticate an existing user with email and password. Returns the user object and a fresh Bearer token."
-              params={
-                <ParamTable rows={[
-                  { name: 'email', type: 'string', desc: 'Registered email address (required)' },
-                  { name: 'password', type: 'string', desc: 'Account password (required)' },
-                ]} />
-              curl={`curl -X POST "${BASE_URL}/api/auth/login" \\
+  "token": "1|laravel_sanctum_abc123xyz..."
+}`,
+  },
+  {
+    method: 'POST',
+    path: '/api/auth/login',
+    summary: 'Login',
+    auth: false,
+    description: 'Authenticates a user with email and password. Returns the user object and a Bearer token.',
+    curl: `curl -X POST "${BASE_URL}/api/auth/login" \\
   -H "Content-Type: application/json" \\
   -H "Accept: application/json" \\
   -d '{
-    "email": "alex@example.com",
-    "password": "secretpass123"
-  }'`}
-              response={`{
+    "email": "jane@example.com",
+    "password": "securepassword123"
+  }'`,
+    response: `{
   "user": {
-    "id": 42,
-    "name": "Alex Rivera",
-    "email": "alex@example.com",
+    "id": 5,
+    "name": "Jane Doe",
+    "email": "jane@example.com",
     "is_pro": false
   },
-  "token": "2|newtokenuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ123456"
-}`}
-            />
-
-            <Endpoint
-              method="POST"
-              path="/api/auth/logout"
-              auth
-              description="Revoke the current session token. The token passed in the Authorization header will be invalidated immediately."
-              curl={`curl -X POST "${BASE_URL}/api/auth/logout" \\
-  -H "Content-Type: application/json" \\
-  -H "Accept: application/json" \\
-  -H "Authorization: Bearer YOUR_TOKEN_HERE"`}
-              response={`{
-  "message": "Session revoked successfully."
-}`}
-            />
-
-            <Endpoint
-              method="GET"
-              path="/api/auth/user"
-              auth
-              description="Return the currently authenticated user based on the Bearer token. Use to verify a token or fetch fresh user data."
-              curl={`curl -X GET "${BASE_URL}/api/auth/user" \\
-  -H "Accept: application/json" \\
-  -H "Authorization: Bearer YOUR_TOKEN_HERE"`}
-              response={`{
+  "token": "2|laravel_sanctum_abc456..."
+}`,
+  },
+  {
+    method: 'POST',
+    path: '/api/auth/logout',
+    summary: 'Logout',
+    auth: true,
+    description: 'Revokes the current Bearer token, logging the user out. Requires a valid Authorization header.',
+    curl: `curl -X POST "${BASE_URL}/api/auth/logout" \\
+  -H "Authorization: Bearer {token}" \\
+  -H "Accept: application/json"`,
+    response: `{
+  "message": "Logged out successfully"
+}`,
+  },
+  {
+    method: 'GET',
+    path: '/api/auth/user',
+    summary: 'Get authenticated user',
+    auth: true,
+    description: 'Returns the currently authenticated user based on the Bearer token in the Authorization header.',
+    curl: `curl -X GET "${BASE_URL}/api/auth/user" \\
+  -H "Authorization: Bearer {token}" \\
+  -H "Accept: application/json"`,
+    response: `{
   "user": {
-    "id": 42,
-    "name": "Alex Rivera",
-    "email": "alex@example.com",
-    "is_pro": true
+    "id": 5,
+    "name": "Jane Doe",
+    "email": "jane@example.com",
+    "is_pro": false
   }
-}`}
-            />
-          </Section>
+}`,
+  },
+];
 
-          {/* ── Errors ── */}
-          <Section id="errors" title="Error Responses">
-            <p className="text-fg-1 text-sm leading-relaxed mb-4">
-              Failed requests return an appropriate HTTP status code and a JSON body with a <code className="font-mono text-xs bg-surface-2 px-1.5 py-0.5 rounded border border-[--line]">message</code> field describing the error.
-            </p>
-            <div className="overflow-x-auto mb-4">
-              <table className="w-full text-sm border-collapse">
-                <thead>
-                  <tr className="border-b border-[--line] text-left">
-                    <th className="py-2 pr-4 font-mono text-fg-2 text-xs">Status</th>
-                    <th className="py-2 font-mono text-fg-2 text-xs">Meaning</th>
-                  </tr>
-                </thead>
-                <tbody className="text-fg-1">
-                  {[
-                    { s: '401', m: 'Missing or invalid token' },
-                    { s: '403', m: 'Valid token but insufficient permissions' },
-                    { s: '404', m: 'Resource not found' },
-                    { s: '422', m: 'Validation error — check message and errors fields' },
-                    { s: '429', m: 'Rate limit exceeded — slow down requests' },
-                    { s: '500', m: 'Internal server error' },
-                  ].map(({ s, m }) => (
-                    <tr key={s} className="border-b border-[--line-2]">
-                      <td className="py-2 pr-4 font-mono text-red-600 dark:text-red-400">{s}</td>
-                      <td className="py-2 text-sm">{m}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <CodeBlock
-              label="422 Validation error — response"
-              code={`{
-  "message": "The email field is required.",
-  "errors": {
-    "email": ["The email field is required."],
-    "password": ["The password must be at least 8 characters."]
-  }
-}`}
-            />
-            <CodeBlock
-              label="401 Unauthorized — response"
-              code={`{
-  "message": "Unauthenticated."
-}`}
-            />
-          </Section>
+const METHOD_COLORS: Record<string, string> = {
+  GET: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+  POST: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+  PUT: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
+  PATCH: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
+  DELETE: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+};
 
+function CopyButton({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false);
+  const handleCopy = useCallback(async () => {
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }, [text]);
+
+  return (
+    <button
+      onClick={handleCopy}
+      className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded-md transition-all
+        bg-[var(--surface-2)] text-[var(--fg-2)] hover:bg-[var(--surface-3)] hover:text-[var(--fg-1)]
+        dark:bg-[var(--surface-2)] dark:text-[var(--fg-2)] dark:hover:text-[var(--fg-1)]"
+      title="Copy to clipboard"
+    >
+      {copied ? (
+        <>
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+          </svg>
+          Copied
+        </>
+      ) : (
+        <>
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <rect x="9" y="9" width="13" height="13" rx="2" strokeWidth={2} />
+            <path strokeLinecap="round" strokeWidth={2} d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+          </svg>
+          Copy
+        </>
+      )}
+    </button>
+  );
+}
+
+function CodeBlock({ code, label }: { code: string; label?: string }) {
+  return (
+    <div className="rounded-xl overflow-hidden border border-[var(--line)] dark:border-[var(--line-2)]">
+      {label && (
+        <div className="flex items-center justify-between px-4 py-2 bg-[var(--surface-2)] dark:bg-[var(--surface-2)] border-b border-[var(--line)] dark:border-[var(--line-2)]">
+          <span className="text-xs font-semibold font-mono text-[var(--fg-2)] uppercase tracking-wider">{label}</span>
+          <CopyButton text={code} />
         </div>
+      )}
+      <pre className={`overflow-x-auto p-4 text-sm leading-relaxed ${!label ? 'flex items-center justify-between' : ''}`}
+        style={{ background: 'var(--surface)', fontFamily: 'var(--f-mono)', color: 'var(--fg-1)' }}>
+        {!label && <CopyButton text={code} />}
+        <code className="block whitespace-pre">{code}</code>
+      </pre>
+    </div>
+  );
+}
+
+function EndpointCard({ endpoint }: { endpoint: typeof ENDPOINTS[number] }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="rounded-2xl overflow-hidden border border-[var(--line)] dark:border-[var(--line-2)] transition-shadow hover:shadow-md"
+      style={{ background: 'var(--surface)' }}>
+      <button
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-[var(--surface-2)] dark:hover:bg-[var(--surface-2)] transition-colors"
+      >
+        <span className={`shrink-0 px-2.5 py-1 rounded-md text-xs font-bold tracking-wide ${METHOD_COLORS[endpoint.method]}`}>
+          {endpoint.method}
+        </span>
+        <code className="flex-1 text-sm font-semibold truncate" style={{ fontFamily: 'var(--f-mono)', color: 'var(--fg-0)' }}>
+          {endpoint.path}
+        </code>
+        <span className="text-sm text-[var(--fg-2)] truncate hidden sm:block">{endpoint.summary}</span>
+        {endpoint.auth && (
+          <span className="shrink-0 px-2 py-0.5 rounded text-xs font-semibold bg-[var(--red-tint)] text-[var(--red)] dark:bg-[var(--red-tint)]">
+            Auth
+          </span>
+        )}
+        <svg
+          className={`shrink-0 w-4 h-4 transition-transform ${open ? 'rotate-180' : ''}`}
+          style={{ color: 'var(--fg-3)' }}
+          fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {open && (
+        <div className="px-5 pb-5 space-y-4 border-t border-[var(--line)] dark:border-[var(--line-2)]"
+          style={{ borderTopColor: 'var(--line)' }}>
+          <p className="pt-4 text-sm leading-relaxed" style={{ color: 'var(--fg-1)' }}>{endpoint.description}</p>
+
+          <div>
+            <h4 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--fg-3)' }}>
+              Request
+            </h4>
+            <CodeBlock code={endpoint.curl} label="curl" />
+          </div>
+
+          <div>
+            <h4 className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--fg-3)' }}>
+              Response
+            </h4>
+            <CodeBlock code={endpoint.response} label="JSON" />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function InfoBlock({ icon, title, children }: { icon: React.ReactNode; title: string; children: React.ReactNode }) {
+  return (
+    <div className="flex gap-3 p-4 rounded-xl border border-[var(--line)] dark:border-[var(--line-2)]"
+      style={{ background: 'var(--surface)' }}>
+      <span className="shrink-0 mt-0.5 w-5 h-5" style={{ color: 'var(--red)' }}>{icon}</span>
+      <div>
+        <h3 className="text-sm font-bold mb-1" style={{ color: 'var(--fg-0)' }}>{title}</h3>
+        <div className="text-sm leading-relaxed" style={{ color: 'var(--fg-1)' }}>{children}</div>
+      </div>
+    </div>
+  );
+}
+
+export default function ApiDocsClient() {
+  return (
+    <main className="min-h-screen" style={{ background: 'var(--bg)' }}>
+      {/* Header */}
+      <div className="border-b border-[var(--line)]" style={{ background: 'var(--surface)' }}>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold mb-6"
+            style={{ background: 'var(--red-tint)', color: 'var(--red)' }}>
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+            </svg>
+            REST API
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-3" style={{ color: 'var(--fg-0)', fontFamily: 'var(--f-display)' }}>
+            Toolblip API Reference
+          </h1>
+          <p className="text-base sm:text-lg leading-relaxed max-w-2xl" style={{ color: 'var(--fg-2)' }}>
+            Build integrations with Toolblip. Browse tools, manage user accounts, and access developer features — all via simple REST endpoints.
+          </p>
+        </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 space-y-10">
+
+        {/* Base URL */}
+        <section>
+          <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--fg-0)' }}>Base URL</h2>
+          <div className="rounded-xl overflow-hidden border border-[var(--line)] dark:border-[var(--line-2)]"
+            style={{ background: 'var(--surface)' }}>
+            <table className="w-full text-sm">
+              <tbody>
+                <tr className="border-b border-[var(--line)] dark:border-[var(--line-2)]">
+                  <td className="px-4 py-3 font-semibold w-40 shrink-0" style={{ color: 'var(--fg-2)' }}>Production</td>
+                  <td className="px-4 py-3">
+                    <code className="text-sm font-semibold" style={{ fontFamily: 'var(--f-mono)', color: 'var(--fg-0)' }}>
+                      {BASE_URL}
+                    </code>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-4 py-3 font-semibold" style={{ color: 'var(--fg-2)' }}>Railway (alt)</td>
+                  <td className="px-4 py-3">
+                    <code className="text-sm" style={{ fontFamily: 'var(--f-mono)', color: 'var(--fg-2)' }}>
+                      {ALT_URL}
+                    </code>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* Authentication */}
+        <section>
+          <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--fg-0)' }}>Authentication</h2>
+          <InfoBlock
+            icon={
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            }
+            title="Bearer Token Authentication"
+          >
+            All authenticated endpoints require an <code style={{ fontFamily: 'var(--f-mono)' }}>Authorization</code> header with a Bearer token.
+            Tokens are returned from <code style={{ fontFamily: 'var(--f-mono)' }}>/api/auth/register</code> and{' '}
+            <code style={{ fontFamily: 'var(--f-mono)' }}>/api/auth/login</code>.
+          </InfoBlock>
+
+          <div className="mt-4 p-4 rounded-xl border border-[var(--line)] dark:border-[var(--line-2)] overflow-hidden"
+            style={{ background: 'var(--surface-2)' }}>
+            <pre className="text-sm leading-relaxed" style={{ fontFamily: 'var(--f-mono)', color: 'var(--fg-1)' }}>
+              <code>{'Authorization: Bearer {token}'}</code>
+            </pre>
+          </div>
+
+          <div className="mt-3 space-y-2">
+            {[
+              { label: 'Register', path: '/api/auth/register', desc: 'Creates account, returns token' },
+              { label: 'Login', path: '/api/auth/login', desc: 'Authenticates, returns token' },
+              { label: 'Logout', path: '/api/auth/logout', desc: 'Requires auth — revokes token' },
+              { label: 'Get user', path: '/api/auth/user', desc: 'Requires auth — returns current user' },
+            ].map((r) => (
+              <div key={r.path} className="flex items-center gap-3 text-sm">
+                <span className="shrink-0 w-16 text-center px-2 py-0.5 rounded font-bold text-xs bg-[var(--surface)] text-[var(--fg-2)] border border-[var(--line)] dark:border-[var(--line-2)]">
+                  {r.label}
+                </span>
+                <code style={{ fontFamily: 'var(--f-mono)', color: 'var(--fg-1)' }}>{r.path}</code>
+                <span style={{ color: 'var(--fg-3)' }}>— {r.desc}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Response Format */}
+        <section>
+          <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--fg-0)' }}>Response Format</h2>
+          <InfoBlock
+            icon={
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            }
+            title="All responses are JSON"
+          >
+            Every endpoint returns <code style={{ fontFamily: 'var(--f-mono)' }}>Content-Type: application/json</code>. Success
+            responses follow the shapes shown below. Errors return an object with an optional <code style={{ fontFamily: 'var(--f-mono)' }}>message</code> field.
+          </InfoBlock>
+        </section>
+
+        {/* Rate Limiting */}
+        <section>
+          <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--fg-0)' }}>Rate Limiting</h2>
+          <InfoBlock
+            icon={
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            }
+            title="60 requests per minute"
+          >
+            The API enforces a rate limit of 60 requests per minute per IP address. Exceeding this returns a{' '}
+            <code style={{ fontFamily: 'var(--f-mono)' }}>429 Too Many Requests</code> response.
+          </InfoBlock>
+        </section>
+
+        {/* Endpoints */}
+        <section>
+          <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--fg-0)' }}>Endpoints</h2>
+          <div className="space-y-3">
+            {ENDPOINTS.map((ep) => (
+              <EndpointCard key={`${ep.method}:${ep.path}`} endpoint={ep} />
+            ))}
+          </div>
+        </section>
+
+        {/* Error Codes */}
+        <section>
+          <h2 className="text-lg font-bold mb-4" style={{ color: 'var(--fg-0)' }}>Error Codes</h2>
+          <div className="rounded-xl overflow-hidden border border-[var(--line)] dark:border-[var(--line-2)]"
+            style={{ background: 'var(--surface)' }}>
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-[var(--line)] dark:border-[var(--line-2)]" style={{ background: 'var(--surface-2)' }}>
+                  <th className="px-4 py-2.5 text-left font-bold" style={{ color: 'var(--fg-2)' }}>Status</th>
+                  <th className="px-4 py-2.5 text-left font-bold" style={{ color: 'var(--fg-2)' }}>Meaning</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  { code: '200', msg: 'OK — request succeeded' },
+                  { code: '201', msg: 'Created — resource was created' },
+                  { code: '401', msg: 'Unauthorized — missing or invalid token' },
+                  { code: '403', msg: 'Forbidden — authenticated but not allowed' },
+                  { code: '404', msg: 'Not Found — resource does not exist' },
+                  { code: '422', msg: 'Unprocessable Entity — validation failed' },
+                  { code: '429', msg: 'Too Many Requests — rate limit exceeded' },
+                  { code: '500', msg: 'Server Error — something went wrong on our end' },
+                ].map((row, i) => (
+                  <tr key={row.code} className={i > 0 ? 'border-t border-[var(--line)] dark:border-[var(--line-2)]' : ''}>
+                    <td className="px-4 py-3 font-bold" style={{ fontFamily: 'var(--f-mono)', color: 'var(--red)' }}>
+                      {row.code}
+                    </td>
+                    <td className="px-4 py-3" style={{ color: 'var(--fg-1)' }}>{row.msg}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <section className="text-center pt-4">
+          <p className="text-sm" style={{ color: 'var(--fg-3)' }}>
+            Questions? Open an issue at{' '}
+            <a
+              href="https://github.com/toolblip/api"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2 hover:opacity-80 transition-opacity"
+              style={{ color: 'var(--fg-2)' }}
+            >
+              github.com/toolblip/api
+            </a>
+          </p>
+        </section>
+
       </div>
     </main>
   );
