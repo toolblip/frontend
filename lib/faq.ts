@@ -233,6 +233,62 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Is there a limit on input size?', a: 'No fixed limit — the tool runs in your browser. Tens of thousands of lines process in well under a second; very large inputs are bounded only by your device\'s memory.' },
     { q: 'Will my data be uploaded?', a: 'No. The Remove Duplicate Lines tool is fully client-side. Whatever you paste — addresses, IDs, log lines — never leaves your browser.' },
   ],
+  'markdown-to-html': [
+    { q: 'What flavor of Markdown does this tool support?', a: 'The Markdown to HTML converter uses GitHub Flavored Markdown (GFM) — headings, lists, links, tables, fenced code blocks, blockquotes, and inline formatting all work the same way they do on GitHub.' },
+    { q: 'Can I see the rendered output and the HTML source?', a: 'Yes. Toggle the right pane between Preview (rendered HTML) and HTML (the raw source). The Copy button always copies the HTML source so you can paste it straight into a CMS or an email template.' },
+    { q: 'Is the rendered HTML safe to copy into my site?', a: 'It\'s clean HTML — no inline styles, no scripts, no class names — so it drops cleanly into most CMSes. If your input contains raw HTML, GFM passes it through; sanitize before publishing user-supplied input.' },
+    { q: 'Does the Markdown to HTML tool work offline?', a: 'Yes. Conversion happens entirely in your browser via the marked library. Once the page is loaded you can use it without an internet connection, and nothing you paste leaves your device.' },
+    { q: 'Why isn\'t my Markdown rendering the way I expect?', a: 'Most surprises come from blank-line rules — Markdown needs a blank line before a heading, a list, or a code fence for them to be recognized. Switch to the HTML view to see exactly what was produced.' },
+  ],
+  'yaml-to-json': [
+    { q: 'What\'s the difference between YAML and JSON?', a: 'They describe the same shape of data — objects, arrays, strings, numbers, booleans, null. YAML is friendlier to read and supports comments; JSON is stricter and more universal as an interchange format. Most config files in modern tooling are YAML; most APIs speak JSON.' },
+    { q: 'Can the YAML to JSON tool convert in both directions?', a: 'Yes. Switch between YAML → JSON and JSON → YAML, or use the Swap button to feed the output back as input. The same parser is used both ways so round-tripping is lossless for standard data.' },
+    { q: 'How is YAML output formatted?', a: 'JSON is pretty-printed with 2-space indentation. YAML output uses 2-space indentation, no document markers, and 80-character line width — the defaults for js-yaml and the format most teams use for config files.' },
+    { q: 'Does the converter support YAML anchors and references?', a: 'Yes. Anchors (&name) and aliases (*name) are resolved when converting to JSON. Going from JSON back to YAML produces a flat document — JSON has no anchor concept, so duplicated values are simply written out in full.' },
+    { q: 'Is my YAML uploaded anywhere?', a: 'No. The YAML to JSON tool runs in your browser using js-yaml. Config files often contain secrets and infrastructure details; nothing is sent over the network.' },
+  ],
+  'json-to-yaml': [
+    { q: 'How is the YAML output formatted?', a: 'YAML output uses 2-space indentation, no document markers, and 80-character line width — the defaults for js-yaml and the format most teams use for config files. JSON-style strings stay quoted only where YAML requires it.' },
+    { q: 'Does the converter handle nested arrays and objects?', a: 'Yes. Arbitrarily nested JSON structures convert cleanly into YAML\'s indentation-based format. Round-trip back to JSON via the Swap button to verify nothing was lost.' },
+    { q: 'What happens to JSON null and booleans in YAML?', a: 'They convert to YAML\'s native null, true, and false literals. Strings that happen to look like those keywords are quoted automatically to avoid ambiguity.' },
+    { q: 'Can I convert YAML back to JSON?', a: 'Yes — switch the direction tab. The same parser handles both directions, so you can round-trip data without losing structure.' },
+    { q: 'Is my JSON uploaded anywhere?', a: 'No. Conversion happens entirely in your browser, so configuration that contains internal hostnames or secrets stays on your device.' },
+  ],
+  'xml-to-json': [
+    { q: 'How does the XML to JSON converter handle attributes?', a: 'Attributes are placed under an `@attributes` key on the parent object. Text content from a mixed node goes under `#text`. This is the convention used by xml2js and many other libraries — it round-trips cleanly back to XML.' },
+    { q: 'Does it handle repeated child elements?', a: 'Yes. When the same tag appears multiple times under the same parent, the converter emits an array. A single occurrence stays as an object — the most common convention for XML-to-JSON mapping.' },
+    { q: 'Can I convert JSON back to XML?', a: 'Yes. Switch the direction tab and the tool emits well-formed XML, restoring `@attributes` to real attributes and `#text` to inner text. The JSON must have exactly one root key, since XML requires a single root element.' },
+    { q: 'What about XML namespaces and CDATA?', a: 'Prefixed element names (like `ns:tag`) are preserved as-is in the JSON keys. CDATA sections collapse to plain text content during parsing. For specialised XML-Schema work you\'ll want a dedicated tool.' },
+    { q: 'Is the XML uploaded somewhere?', a: 'No. The XML to JSON tool uses the browser\'s built-in DOMParser; no parsing happens on a server. SOAP responses and config files stay private to your browser.' },
+  ],
+  'sql-to-json': [
+    { q: 'What does the SQL to JSON tool do?', a: 'It parses SQL `INSERT INTO table (cols...) VALUES (...)` statements and emits the rows as a JSON array — handy when you need to load fixture data into an app, generate seed JSON from a SQL dump, or eyeball a few rows.' },
+    { q: 'Can it run SELECT queries?', a: 'No. There\'s no database in your browser, so the tool can\'t execute queries against your data. It parses INSERT statements only — the structured form where rows live inline in the SQL text.' },
+    { q: 'Which SQL dialects work?', a: 'Standard MySQL, PostgreSQL, and SQLite-style INSERTs all parse cleanly: backtick or double-quoted identifiers, single-quoted strings, NULL/TRUE/FALSE literals, numeric values, multiple rows per VALUES clause, and -- or /* */ comments.' },
+    { q: 'What about INSERT statements without column names?', a: 'They work — values are emitted as `col1`, `col2`, etc. Add an explicit column list (`INSERT INTO t (a, b) VALUES (...)`) to get meaningful keys in the JSON output.' },
+    { q: 'Is my SQL sent anywhere?', a: 'No. Parsing happens locally in your browser. Database dumps often contain PII, internal IDs, and credentials in connection strings — nothing leaves the page.' },
+  ],
+  'js-minifier': [
+    { q: 'What does this minifier actually do?', a: 'It strips comments, collapses runs of whitespace, and removes unnecessary spacing around operators — the safe rewrites that don\'t change behaviour. It does NOT rename variables or perform tree-shaking; for production use, run terser or esbuild as part of your build.' },
+    { q: 'Will it break my code?', a: 'It\'s designed not to. The minifier respects strings, template literals, and regex literals and never collapses whitespace inside them. Run your test suite after minifying anything you\'ll ship.' },
+    { q: 'How much can I save?', a: 'Typical hand-written code shrinks 20–40% from comment and whitespace removal alone. The output panel shows the byte count before and after so you can see exactly how much was saved.' },
+    { q: 'Why doesn\'t it rename variables?', a: 'Safe identifier renaming requires full scope analysis to avoid breaking closures, eval, and `with`. That\'s what tools like terser do — they\'re heavier but produce smaller output. This tool is for quick comment/whitespace stripping in the browser.' },
+    { q: 'Is my code uploaded?', a: 'No. The JS Minifier runs entirely in your browser, so even proprietary or unreleased code stays on your machine.' },
+  ],
+  'javascript-minifier': [
+    { q: 'What does this minifier actually do?', a: 'It strips comments, collapses runs of whitespace, and removes unnecessary spacing around operators — the safe rewrites that don\'t change behaviour. It does NOT rename variables or perform tree-shaking; for production use, run terser or esbuild as part of your build.' },
+    { q: 'Will it break my code?', a: 'It\'s designed not to. The minifier respects strings, template literals, and regex literals and never collapses whitespace inside them. Run your test suite after minifying anything you\'ll ship.' },
+    { q: 'How much can I save?', a: 'Typical hand-written code shrinks 20–40% from comment and whitespace removal alone. The output panel shows the byte count before and after so you can see exactly how much was saved.' },
+    { q: 'Why doesn\'t it rename variables?', a: 'Safe identifier renaming requires full scope analysis to avoid breaking closures, eval, and `with`. That\'s what tools like terser do — they\'re heavier but produce smaller output. This tool is for quick comment/whitespace stripping in the browser.' },
+    { q: 'Is my code uploaded?', a: 'No. The JavaScript Minifier runs entirely in your browser, so even proprietary or unreleased code stays on your machine.' },
+  ],
+  'number-base-converter': [
+    { q: 'Which bases does the Number Base Converter support?', a: 'Binary (base 2), Octal (base 8), Decimal (base 10), and Hexadecimal (base 16). Pick the source base, type a number, and all four representations update at once.' },
+    { q: 'Does it handle very large numbers?', a: 'Yes. The conversion uses BigInt under the hood, so it stays exact for numbers far beyond JavaScript\'s 2^53 safe-integer limit. Useful for hashes, 64-bit IDs, and bitmasks.' },
+    { q: 'Can I convert negative numbers?', a: 'Yes. Prefix the input with `-` and every output is shown with the negative sign. The tool does not produce two\'s-complement representations — for that, you\'d apply the bitwise inverse of the magnitude in the chosen width.' },
+    { q: 'Why is my hex value rejected?', a: 'Hex digits are 0–9 and A–F (case insensitive). Anything else — punctuation, the `0x` prefix, or a stray space — causes the input to be rejected. Strip the `0x` and any separators and try again.' },
+    { q: 'Is the conversion done in my browser?', a: 'Yes. Conversion is pure-JS arithmetic on BigInt and runs locally — nothing about the numbers you enter is logged or sent anywhere.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {

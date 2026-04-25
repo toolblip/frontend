@@ -17,6 +17,12 @@ import LoremIpsumGeneratorClient from '@/components/tools/LoremIpsumGeneratorCli
 import HashGeneratorClient from '@/components/tools/HashGeneratorClient';
 import TextDiffClient from '@/components/tools/TextDiffClient';
 import RemoveDuplicateLinesClient from '@/components/tools/RemoveDuplicateLinesClient';
+import MarkdownToHtmlClient from '@/components/tools/MarkdownToHtmlClient';
+import YamlToJsonClient from '@/components/tools/YamlToJsonClient';
+import XmlToJsonClient from '@/components/tools/XmlToJsonClient';
+import SqlToJsonClient from '@/components/tools/SqlToJsonClient';
+import JsMinifierClient from '@/components/tools/JsMinifierClient';
+import NumberBaseConverterClient from '@/components/tools/NumberBaseConverterClient';
 import FaqSection from '@/components/v2/FaqSection';
 import { getFaqs } from '@/lib/faq';
 
@@ -53,6 +59,20 @@ function getToolComponent(slug: string): React.ReactNode {
       return <TextDiffClient />;
     case 'remove-duplicate-lines':
       return <RemoveDuplicateLinesClient />;
+    case 'markdown-to-html':
+      return <MarkdownToHtmlClient />;
+    case 'yaml-to-json':
+    case 'json-to-yaml':
+      return <YamlToJsonClient />;
+    case 'xml-to-json':
+      return <XmlToJsonClient />;
+    case 'sql-to-json':
+      return <SqlToJsonClient />;
+    case 'js-minifier':
+    case 'javascript-minifier':
+      return <JsMinifierClient />;
+    case 'number-base-converter':
+      return <NumberBaseConverterClient />;
     default:
       return <ComingSoonUI />;
   }

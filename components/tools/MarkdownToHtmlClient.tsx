@@ -1,91 +1,101 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { marked } from 'marked';
 
-function parseMarkdown(md: string): string {
-  // Simple client-side markdown parser
-  let html = md
-    // Escape HTML
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    // Code blocks
-    .replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code class="language-$1">$2</code></pre>')
-    // Inline code
-    .replace(/`([^`]+)`/g, '<code>$1</code>')
-    // Bold
-    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-    // Italic
-    .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-    // Headers
-    .replace(/^#### (.+)$/gm, '<h4>$1</h4>')
-    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
-    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
-    .replace(/^# (.+)$/gm, '<h1>$1</h1>')
-    // Blockquotes
-    .replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>')
-    // Unordered lists
-    .replace(/^- (.+)$/gm, '<li>$1</li>')
-    // Ordered lists
-    .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
-    // Links
-    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
-    // Paragraphs
-    .replace(/\n\n/g, '</p><p>')
-    // Line breaks
-    .replace(/\n/g, '<br/>');
+type RightView = 'preview' | 'html';
 
-  // Wrap list items
-  html = html.replace(/(<li>[\s\S]*?<\/li>)/gs, '<ul>$1</ul>');
-  // Wrap in paragraph if not already wrapped
-  if (!html.startsWith('<')) {
-    html = '<p>' + html + '</p>';
-  }
+const SAMPLE = `# Markdown to HTML
 
-  return html;
-}
+Type **Markdown** on the left, see the rendered HTML on the right.
+
+- Lists work
+- So does \`inline code\`
+
+\`\`\`js
+console.log('and code blocks');
+\`\`\`
+
+> Block quotes too.
+
+[Visit Toolblip](https://toolblip.com)
+`;
 
 export default function MarkdownToHtmlClient() {
-  const [markdown, setMarkdown] = useState('');
+  const [src, setSrc] = useState(SAMPLE);
+  const [right, setRight] = useState<RightView>('preview');
   const [copied, setCopied] = useState(false);
 
-  const html = parseMarkdown(markdown);
+  useEffect(() => {
+    marked.setOptions({ gfm: true, breaks: false });
+  }, []);
 
-  const copyHtml = () => {
-    navigator.clipboard.writeText(html);
+  const html = useMemo(() => {
+    try {
+      return marked.parse(src, { async: false }) as string;
+    } catch {
+      return '';
+    }
+  }, [src]);
+
+  const copy = () => {
+    if (!html) return;
+    navigator.clipboard.writeText(html).catch(() => {});
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-gray-500 uppercase">Markdown</span>
-          </div>
-          <textarea
-            value={markdown}
-            onChange={(e) => setMarkdown(e.target.value)}
-            placeholder="# Hello World&#10;&#10;Write your **markdown** here..."
-            className="w-full h-64 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-red-500 placeholder-gray-500 font-mono"
-            aria-label="Markdown input"
-          />
+    <div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Markdown ↔ HTML</span>
+        <div className="tb-v2-mode-tabs" role="tablist" aria-label="Right pane">
+          {(['preview', 'html'] as RightView[]).map((v) => (
+            <button
+              key={v}
+              type="button"
+              role="tab"
+              aria-selected={right === v}
+              onClick={() => setRight(v)}
+              className={`tb-v2-mode-tab ${right === v ? 'on' : ''}`}
+            >
+              {v === 'preview' ? 'Preview' : 'HTML'}
+            </button>
+          ))}
         </div>
-        <div>
-          <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-gray-500 uppercase">HTML Output</span>
-            {html && (
-              <button onClick={copyHtml} className="text-xs text-red-400 hover:text-red-300 transition-colors">
-                {copied ? 'Copied!' : 'Copy HTML'}
-              </button>
-            )}
-          </div>
+      </div>
+
+      <div className="tb-v2-md-grid">
+        <textarea
+          value={src}
+          onChange={(e) => setSrc(e.target.value)}
+          className="tb-v2-tool-textarea tb-v2-md-src"
+          style={{ fontFamily: 'var(--f-mono)' }}
+          aria-label="Markdown input"
+          placeholder="# Hello"
+        />
+        {right === 'preview' ? (
           <div
-            className="w-full h-64 bg-gray-800 border border-gray-700 rounded-lg p-3 text-sm overflow-auto prose prose-invert prose-sm max-w-none"
-            dangerouslySetInnerHTML={{ __html: html || '<span class="text-gray-600">HTML output will appear here...</span>' }}
+            className="tb-v2-md-preview"
+            // eslint-disable-next-line react/no-danger
+            dangerouslySetInnerHTML={{ __html: html }}
+            aria-label="Rendered preview"
           />
-        </div>
+        ) : (
+          <pre className="tb-v2-md-html-pane">{html || '—'}</pre>
+        )}
+      </div>
+
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">{right === 'preview' ? 'Rendered' : 'HTML source'}</span>
+        <button
+          type="button"
+          onClick={copy}
+          disabled={!html}
+          className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+        >
+          {copied ? 'Copied' : 'Copy HTML'}
+        </button>
       </div>
     </div>
   );

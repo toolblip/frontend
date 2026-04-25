@@ -1,88 +1,126 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
-function convertBase(value: string, fromBase: number): { decimal: bigint; bin: string; oct: string; hex: string } | null {
-  try {
-    // Handle negative numbers
-    const isNegative = value.startsWith('-');
-    const absValue = isNegative ? value.slice(1) : value;
-    // Parse digit by digit to support arbitrary precision
-    let decimal = BigInt(0);
-    for (const char of absValue) {
-      const digit = parseInt(char, fromBase);
-      if (isNaN(digit) || digit >= fromBase) throw new Error('Invalid digit');
-      decimal = decimal * BigInt(fromBase) + BigInt(digit);
-    }
-    if (isNegative) decimal = -decimal;
-    return {
-      decimal,
-      bin: (isNegative ? '-' : '') + decimal.toString(2),
-      oct: (isNegative ? '-' : '') + decimal.toString(8),
-      hex: (isNegative ? '-' : '') + decimal.toString(16).toUpperCase(),
-    };
-  } catch {
-    return null;
+type Base = 2 | 8 | 10 | 16;
+
+const BASES: { base: Base; label: string; placeholder: string }[] = [
+  { base: 2, label: 'Binary', placeholder: '11111111' },
+  { base: 8, label: 'Octal', placeholder: '377' },
+  { base: 10, label: 'Decimal', placeholder: '255' },
+  { base: 16, label: 'Hex', placeholder: 'FF' },
+];
+
+function isValidForBase(value: string, base: Base): boolean {
+  if (!value) return true;
+  const v = value.startsWith('-') ? value.slice(1) : value;
+  if (!v) return false;
+  const re = base === 2 ? /^[01]+$/
+    : base === 8 ? /^[0-7]+$/
+    : base === 10 ? /^\d+$/
+    : /^[0-9a-fA-F]+$/;
+  return re.test(v);
+}
+
+function parseToBigInt(value: string, base: Base): bigint | null {
+  if (!isValidForBase(value, base)) return null;
+  const negative = value.startsWith('-');
+  const v = negative ? value.slice(1) : value;
+  if (!v) return null;
+  let n = 0n;
+  const b = BigInt(base);
+  for (const ch of v) {
+    n = n * b + BigInt(parseInt(ch, base));
   }
+  return negative ? -n : n;
+}
+
+function formatBase(n: bigint, base: Base, uppercase = true): string {
+  const s = n.toString(base);
+  return base === 16 && uppercase ? s.toUpperCase() : s;
 }
 
 export default function NumberBaseConverterClient() {
   const [value, setValue] = useState('255');
-  const [fromBase, setFromBase] = useState(10);
+  const [fromBase, setFromBase] = useState<Base>(10);
+  const [copied, setCopied] = useState<Base | null>(null);
 
-  const result = convertBase(value.trim(), fromBase);
+  const { decimal, error } = useMemo(() => {
+    const trimmed = value.trim();
+    if (!trimmed) return { decimal: null as bigint | null, error: '' };
+    const parsed = parseToBigInt(trimmed, fromBase);
+    if (parsed === null) {
+      return { decimal: null, error: `Not a valid base-${fromBase} number.` };
+    }
+    return { decimal: parsed, error: '' };
+  }, [value, fromBase]);
+
+  const copy = (b: Base, val: string) => {
+    if (!val) return;
+    navigator.clipboard.writeText(val).catch(() => {});
+    setCopied(b);
+    setTimeout(() => setCopied(null), 1500);
+  };
 
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">Number</label>
-          <input
-            value={value}
-            onChange={e => setValue(e.target.value)}
-            placeholder="e.g. 255"
-            className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 font-mono text-sm focus:outline-none focus:border-red-500"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">Base</label>
-          <select
-            value={fromBase}
-            onChange={e => setFromBase(parseInt(e.target.value))}
-            className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-red-500"
-          >
-            <option value={2}>Binary (base 2)</option>
-            <option value={8}>Octal (base 8)</option>
-            <option value={10}>Decimal (base 10)</option>
-            <option value={16}>Hexadecimal (base 16)</option>
-          </select>
-        </div>
-      </div>
-      {result ? (
-        <div className="space-y-3">
-          {[
-            { label: 'Decimal (10)', value: result.decimal.toString(), base: 10 },
-            { label: 'Binary (2)', value: result.bin, base: 2 },
-            { label: 'Octal (8)', value: result.oct, base: 8 },
-            { label: 'Hexadecimal (16)', value: result.hex, base: 16 },
-          ].map(({ label, value: v }) => (
-            <div key={label} className="flex items-center gap-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3">
-              <span className="text-xs text-gray-500 dark:text-gray-400 w-32 flex-shrink-0 font-medium">{label}</span>
-              <code className="flex-1 text-sm text-gray-800 dark:text-gray-200 font-mono break-all">{v}</code>
-              <button
-                onClick={() => navigator.clipboard.writeText(v)}
-                className="text-xs text-red-600 dark:text-red-400 hover:text-red-700 font-medium flex-shrink-0"
-              >
-                Copy
-              </button>
-            </div>
+    <div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Number</span>
+        <div className="tb-v2-mode-tabs" role="tablist" aria-label="Source base">
+          {BASES.map(({ base, label }) => (
+            <button
+              key={base}
+              type="button"
+              role="tab"
+              aria-selected={fromBase === base}
+              onClick={() => setFromBase(base)}
+              className={`tb-v2-mode-tab ${fromBase === base ? 'on' : ''}`}
+            >
+              {label}
+            </button>
           ))}
         </div>
-      ) : (
-        <div className="text-red-500 text-sm bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-lg px-4 py-2">
-          Invalid number for base {fromBase}
-        </div>
-      )}
+      </div>
+
+      <div className="tb-v2-nb-input-wrap">
+        <input
+          type="text"
+          inputMode="text"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder={BASES.find((b) => b.base === fromBase)?.placeholder}
+          className="tb-v2-nb-input"
+          aria-label={`Number in base ${fromBase}`}
+          autoComplete="off"
+          spellCheck={false}
+        />
+        {error && <p className="tb-v2-error" role="alert">{error}</p>}
+      </div>
+
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">All bases</span>
+      </div>
+      <div className="tb-v2-tool-output-body" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {BASES.map(({ base, label }) => {
+          const out = decimal !== null ? formatBase(decimal, base) : '';
+          return (
+            <div key={base} className="tb-v2-nb-row">
+              <span className="tb-v2-nb-label">{label}</span>
+              <span className="tb-v2-nb-base">base {base}</span>
+              <code className="tb-v2-nb-val">{out || '—'}</code>
+              <button
+                type="button"
+                onClick={() => copy(base, out)}
+                disabled={!out}
+                className={`tb-v2-copy-btn ${copied === base ? 'done' : ''}`}
+                aria-label={`Copy ${label}`}
+              >
+                {copied === base ? 'Copied' : 'Copy'}
+              </button>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
