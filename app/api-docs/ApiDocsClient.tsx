@@ -3,9 +3,12 @@
 import { useState } from 'react';
 import CodeBlock from '@/components/ui/CodeBlock';
 
-const API_BASE = 'https://api.toolblip.com';
+// ─── Config ──────────────────────────────────────────────────────────────────
 
-// ─── Endpoint definitions ───────────────────────────────────────────────────
+const API_BASE = 'https://api.toolblip.com';
+const API_BASE_LEGACY = 'https://toolblip-api-production.up.railway.app';
+
+// ─── Types ───────────────────────────────────────────────────────────────────
 
 type Method = 'GET' | 'POST';
 
@@ -32,6 +35,8 @@ interface Group {
   groupSlug: string;
   items: Endpoint[];
 }
+
+// ─── Endpoint data ────────────────────────────────────────────────────────────
 
 const ENDPOINTS: Group[] = [
   {
@@ -88,14 +93,14 @@ const ENDPOINTS: Group[] = [
         method: 'GET',
         path: '/api/tools/{slug}',
         auth: false,
-        summary: 'Get a single tool by its slug',
+        summary: 'Get a single tool by slug',
         params: [
           { name: 'slug', type: 'string', in: 'path', optional: false, description: 'URL-friendly tool identifier (e.g. json-formatter)' },
         ],
         curl: `curl -X GET "${API_BASE}/api/tools/json-formatter" \\
   -H "Accept: application/json"`,
         response: `{
-  "data": {
+  "tool": {
     "id": 1,
     "slug": "json-formatter",
     "name": "JSON Formatter",
@@ -204,17 +209,36 @@ const ENDPOINTS: Group[] = [
   },
 ];
 
-// ─── Method colours ──────────────────────────────────────────────────────────
+// ─── Style constants ─────────────────────────────────────────────────────────
 
-const METHOD_COLORS: Record<Method, { bg: string; text: string }> = {
+const METHOD_STYLE: Record<Method, { bg: string; text: string }> = {
   GET:  { bg: 'bg-emerald-100 dark:bg-emerald-900/40', text: 'text-emerald-700 dark:text-emerald-400' },
-  POST: { bg: 'bg-blue-100 dark:bg-blue-900/40',       text: 'text-blue-700 dark:text-blue-400' },
+  POST: { bg: 'bg-blue-100   dark:bg-blue-900/40',    text: 'text-blue-700   dark:text-blue-400'    },
 };
 
-// ─── Sub-components ─────────────────────────────────────────────────────────
+const STATUS_STYLE: Record<string, { bg: string; text: string }> = {
+  '2xx': { bg: 'bg-emerald-50 dark:bg-emerald-950/40', text: 'text-emerald-700 dark:text-emerald-400' },
+  '4xx': { bg: 'bg-amber-50   dark:bg-amber-950/40',  text: 'text-amber-700   dark:text-amber-400'   },
+  '5xx': { bg: 'bg-rose-50    dark:bg-rose-950/40',    text: 'text-rose-700    dark:text-rose-400'    },
+};
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+function SidebarLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <a
+      href={href}
+      className="block text-sm text-[var(--fg-2)] hover:text-[var(--fg-0)] hover:bg-[var(--surface-2)] px-2 py-1.5 rounded-lg transition-colors"
+    >
+      {children}
+    </a>
+  );
+}
+
+// ─── Components ──────────────────────────────────────────────────────────────
 
 function MethodBadge({ method }: { method: Method }) {
-  const { bg, text } = METHOD_COLORS[method];
+  const { bg, text } = METHOD_STYLE[method];
   return (
     <span className={`inline-block text-xs font-bold px-2.5 py-1 rounded-md shrink-0 ${bg} ${text}`}>
       {method}
@@ -232,46 +256,49 @@ function AuthBadge() {
 
 function ParamTable({ params }: { params: Param[] }) {
   if (params.length === 0) return null;
+
   const pathParams  = params.filter((p) => p.in === 'path');
   const queryParams = params.filter((p) => p.in === 'query');
   const bodyParams  = params.filter((p) => p.in === 'body');
 
+  const rows = [
+    { title: 'Path Parameters',  data: pathParams  },
+    { title: 'Query Parameters', data: queryParams },
+    { title: 'Request Body',     data: bodyParams  },
+  ].filter((r) => r.data.length > 0);
+
   return (
     <div className="space-y-3">
-      {pathParams.length  > 0 && <ParamGroup title="Path Parameters"   params={pathParams} />}
-      {queryParams.length > 0 && <ParamGroup title="Query Parameters"  params={queryParams} />}
-      {bodyParams.length  > 0 && <ParamGroup title="Request Body"     params={bodyParams} />}
-    </div>
-  );
-}
-
-function ParamGroup({ title, params }: { title: string; params: Param[] }) {
-  return (
-    <div>
-      <h5 className="text-xs font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-2">{title}</h5>
-      <div className="rounded-xl border border-[var(--line)] overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-[var(--surface-2)]">
-            <tr>
-              <th className="text-left px-3 py-2 text-xs font-semibold text-[var(--fg-2)] w-44">Name</th>
-              <th className="text-left px-3 py-2 text-xs font-semibold text-[var(--fg-2)] w-32">Type</th>
-              <th className="text-left px-3 py-2 text-xs font-semibold text-[var(--fg-2)]">Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            {params.map((p, i) => (
-              <tr key={i} className="border-t border-[var(--line)]">
-                <td className="px-3 py-2">
-                  <code className="font-mono text-xs text-[var(--fg-0)]">{p.name}</code>
-                  {p.optional && <span className="ml-2 text-xs text-[var(--fg-3)]">optional</span>}
-                </td>
-                <td className="px-3 py-2 text-xs text-[var(--fg-2)] font-mono">{p.type}</td>
-                <td className="px-3 py-2 text-xs text-[var(--fg-2)]">{p.description}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {rows.map(({ title, data }) => (
+        <div key={title}>
+          <h5 className="text-xs font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-2">{title}</h5>
+          <div className="rounded-xl border border-[var(--line)] overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-[var(--surface-2)]">
+                <tr>
+                  <th className="text-left px-3 py-2 text-xs font-semibold text-[var(--fg-2)] w-44">Name</th>
+                  <th className="text-left px-3 py-2 text-xs font-semibold text-[var(--fg-2)] w-32">Type</th>
+                  <th className="text-left px-3 py-2 text-xs font-semibold text-[var(--fg-2)]">Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((p, i) => (
+                  <tr key={i} className="border-t border-[var(--line)]">
+                    <td className="px-3 py-2">
+                      <code className="font-mono text-xs text-[var(--fg-0)]">{p.name}</code>
+                      {p.optional && (
+                        <span className="ml-2 text-xs text-[var(--fg-3)]">optional</span>
+                      )}
+                    </td>
+                    <td className="px-3 py-2 text-xs text-[var(--fg-2)] font-mono">{p.type}</td>
+                    <td className="px-3 py-2 text-xs text-[var(--fg-2)]">{p.description}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }
@@ -293,12 +320,16 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
         {endpoint.params.length > 0 && <ParamTable params={endpoint.params} />}
 
         <div>
-          <h5 className="text-xs font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-2">Example Request</h5>
+          <h5 className="text-xs font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-2">
+            Example — cURL
+          </h5>
           <CodeBlock code={endpoint.curl} language="bash" />
         </div>
 
         <div>
-          <h5 className="text-xs font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-2">Example Response</h5>
+          <h5 className="text-xs font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-2">
+            Example — Response
+          </h5>
           <CodeBlock code={endpoint.response} language="json" />
         </div>
       </div>
@@ -306,7 +337,7 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
   );
 }
 
-// ─── Main component ──────────────────────────────────────────────────────────
+// ─── Main ────────────────────────────────────────────────────────────────────
 
 export default function ApiDocsClient() {
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
@@ -317,7 +348,7 @@ export default function ApiDocsClient() {
   return (
     <div className="min-h-screen bg-[var(--bg)]">
 
-      {/* ── Hero ── */}
+      {/* Hero */}
       <div className="border-b border-[var(--line)] bg-[var(--surface)]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
           <div className="flex items-center gap-2 text-xs font-medium px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 mb-5 w-fit">
@@ -341,49 +372,44 @@ export default function ApiDocsClient() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
         <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] gap-12">
 
-          {/* ── Sidebar ── */}
+          {/* Sidebar */}
           <aside>
             <div className="lg:sticky lg:top-8 space-y-1">
               <p className="text-xs font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-3 px-2">
                 Endpoints
               </p>
               {ENDPOINTS.map((group) => (
-                <a
-                  key={group.groupSlug}
-                  href={`#${group.groupSlug}`}
-                  className="block text-sm text-[var(--fg-2)] hover:text-[var(--fg-0)] hover:bg-[var(--surface-2)] px-2 py-1.5 rounded-lg transition-colors"
-                >
+                <SidebarLink key={group.groupSlug} href={`#${group.groupSlug}`}>
                   {group.group}
-                </a>
+                </SidebarLink>
               ))}
               <div className="pt-5 mt-5 border-t border-[var(--line)]">
                 <p className="text-xs font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-3 px-2">
                   On this page
                 </p>
                 {[
-                  { href: '#base-url',         label: 'Base URL' },
-                  { href: '#authentication',  label: 'Authentication' },
-                  { href: '#errors',           label: 'Errors' },
-                  { href: '#rate-limits',      label: 'Rate Limits' },
+                  { href: '#base-url',        label: 'Base URL' },
+                  { href: '#authentication', label: 'Authentication' },
+                  { href: '#errors',          label: 'Errors' },
+                  { href: '#rate-limits',    label: 'Rate Limits' },
                 ].map((link) => (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    className="block text-sm text-[var(--fg-2)] hover:text-[var(--fg-0)] hover:bg-[var(--surface-2)] px-2 py-1.5 rounded-lg transition-colors"
-                  >
+                  <SidebarLink key={link.href} href={link.href}>
                     {link.label}
-                  </a>
+                  </SidebarLink>
                 ))}
               </div>
             </div>
           </aside>
 
-          {/* ── Main content ── */}
+          {/* Main content */}
           <div className="space-y-14">
 
             {/* Base URL */}
             <section id="base-url">
-              <h2 className="text-xl font-bold text-[var(--fg-0)] mb-4" style={{ fontFamily: 'var(--f-display)' }}>
+              <h2
+                className="text-xl font-bold text-[var(--fg-0)] mb-4"
+                style={{ fontFamily: 'var(--f-display)' }}
+              >
                 Base URL
               </h2>
               <div className="p-4 rounded-xl bg-[var(--surface)] border border-[var(--line)] flex items-start gap-3">
@@ -392,7 +418,7 @@ export default function ApiDocsClient() {
                   <p className="text-sm font-semibold text-[var(--fg-0)]">Production</p>
                   <code className="text-sm font-mono text-[var(--fg-1)] mt-0.5 block">{API_BASE}</code>
                   <p className="text-xs text-[var(--fg-3)] mt-1">
-                    Primary base URL &mdash; use this for all requests.
+                    Primary base URL — use this for all requests.
                   </p>
                 </div>
               </div>
@@ -400,11 +426,9 @@ export default function ApiDocsClient() {
                 <span className="text-gray-400 mt-0.5 shrink-0">○</span>
                 <div>
                   <p className="text-sm font-semibold text-[var(--fg-0)]">Legacy</p>
-                  <code className="text-sm font-mono text-[var(--fg-1)] mt-0.5 block">
-                    https://toolblip-api-production.up.railway.app
-                  </code>
+                  <code className="text-sm font-mono text-[var(--fg-1)] mt-0.5 block">{API_BASE_LEGACY}</code>
                   <p className="text-xs text-[var(--fg-3)] mt-1">
-                    Old URL &mdash; still functional but will be deprecated.
+                    Old URL — still functional but will be deprecated once SSL is ready on the primary domain.
                   </p>
                 </div>
               </div>
@@ -412,11 +436,14 @@ export default function ApiDocsClient() {
 
             {/* Authentication */}
             <section id="authentication">
-              <h2 className="text-xl font-bold text-[var(--fg-0)] mb-4" style={{ fontFamily: 'var(--f-display)' }}>
+              <h2
+                className="text-xl font-bold text-[var(--fg-0)] mb-4"
+                style={{ fontFamily: 'var(--f-display)' }}
+              >
                 Authentication
               </h2>
               <p className="text-[var(--fg-1)] text-sm leading-relaxed mb-4">
-                The API uses <strong>Bearer token authentication</strong>. Pass your token
+                The API uses <strong>Bearer token authentication</strong>. Include your token
                 in the{' '}
                 <code className="px-1.5 py-0.5 rounded bg-[var(--surface-2)] text-[var(--fg-0)] text-sm font-mono border border-[var(--line)]">
                   Authorization
@@ -431,7 +458,7 @@ export default function ApiDocsClient() {
               <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 text-sm text-[var(--fg-1)] mt-4">
                 <span className="text-amber-500 mt-0.5 shrink-0">⚠️</span>
                 <span>
-                  Keep your token secure &mdash; never expose it in public or client-side code.
+                  Keep your token secure — never expose it in public or client-side code.
                   Revoke it anytime with{' '}
                   <code className="font-mono text-xs">POST /api/auth/logout</code>.
                 </span>
@@ -440,7 +467,10 @@ export default function ApiDocsClient() {
 
             {/* Errors */}
             <section id="errors">
-              <h2 className="text-xl font-bold text-[var(--fg-0)] mb-4" style={{ fontFamily: 'var(--f-display)' }}>
+              <h2
+                className="text-xl font-bold text-[var(--fg-0)] mb-4"
+                style={{ fontFamily: 'var(--f-display)' }}
+              >
                 Errors
               </h2>
               <p className="text-[var(--fg-1)] text-sm leading-relaxed mb-4">
@@ -458,22 +488,20 @@ export default function ApiDocsClient() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
                 {[
                   { code: '200', label: 'OK',               cls: '2xx' },
-                  { code: '201', label: 'Created',           cls: '2xx' },
-                  { code: '401', label: 'Unauthorized',     cls: '4xx' },
-                  { code: '403', label: 'Forbidden',         cls: '4xx' },
-                  { code: '404', label: 'Not Found',         cls: '4xx' },
+                  { code: '201', label: 'Created',          cls: '2xx' },
+                  { code: '401', label: 'Unauthorized',      cls: '4xx' },
+                  { code: '403', label: 'Forbidden',        cls: '4xx' },
+                  { code: '404', label: 'Not Found',        cls: '4xx' },
                   { code: '422', label: 'Validation Error', cls: '4xx' },
                   { code: '429', label: 'Rate Limited',     cls: '4xx' },
                   { code: '500', label: 'Server Error',     cls: '5xx' },
                 ].map((s) => {
-                  const colorMap: Record<string, { bg: string; text: string }> = {
-                    '2xx': { bg: 'bg-emerald-50 dark:bg-emerald-950/40', text: 'text-emerald-700 dark:text-emerald-400' },
-                    '4xx': { bg: 'bg-amber-50 dark:bg-amber-950/40',    text: 'text-amber-700 dark:text-amber-400'    },
-                    '5xx': { bg: 'bg-rose-50 dark:bg-rose-950/40',      text: 'text-rose-700 dark:text-rose-400'      },
-                  };
-                  const { bg, text } = colorMap[s.cls];
+                  const { bg, text } = STATUS_STYLE[s.cls];
                   return (
-                    <div key={s.code} className="flex items-center gap-2 p-3 rounded-xl bg-[var(--surface)] border border-[var(--line)]">
+                    <div
+                      key={s.code}
+                      className="flex items-center gap-2 p-3 rounded-xl bg-[var(--surface)] border border-[var(--line)]"
+                    >
                       <span className={`font-mono font-bold text-sm ${text}`}>{s.code}</span>
                       <span className="text-xs text-[var(--fg-2)]">{s.label}</span>
                     </div>
@@ -499,7 +527,10 @@ export default function ApiDocsClient() {
               return (
                 <section key={group.groupSlug} id={group.groupSlug}>
                   <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-xl font-bold text-[var(--fg-0)]" style={{ fontFamily: 'var(--f-display)' }}>
+                    <h2
+                      className="text-xl font-bold text-[var(--fg-0)]"
+                      style={{ fontFamily: 'var(--f-display)' }}
+                    >
                       {group.group}
                     </h2>
                     <button
@@ -524,16 +555,22 @@ export default function ApiDocsClient() {
 
             {/* Rate Limits */}
             <section id="rate-limits">
-              <h2 className="text-xl font-bold text-[var(--fg-0)] mb-4" style={{ fontFamily: 'var(--f-display)' }}>
+              <h2
+                className="text-xl font-bold text-[var(--fg-0)] mb-4"
+                style={{ fontFamily: 'var(--f-display)' }}
+              >
                 Rate Limits
               </h2>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
                 {[
-                  { tier: 'Unauthenticated',   limit: '60 req / min', note: 'IP-based' },
+                  { tier: 'Unauthenticated',       limit: '60 req / min',  note: 'IP-based' },
                   { tier: 'Authenticated (Free)', limit: '120 req / min', note: 'Per account' },
-                  { tier: 'Pro Members',         limit: '500 req / min', note: 'Per account' },
+                  { tier: 'Pro Members',           limit: '500 req / min', note: 'Per account' },
                 ].map((t) => (
-                  <div key={t.tier} className="p-4 rounded-xl bg-[var(--surface)] border border-[var(--line)]">
+                  <div
+                    key={t.tier}
+                    className="p-4 rounded-xl bg-[var(--surface)] border border-[var(--line)]"
+                  >
                     <p className="text-xs font-semibold text-[var(--fg-3)] uppercase tracking-wide mb-1">
                       {t.tier}
                     </p>
