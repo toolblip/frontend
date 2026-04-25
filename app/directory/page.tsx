@@ -11,7 +11,7 @@ export const metadata: Metadata = {
       'Browse all free browser-based tools on Toolblip. Text, developer, image, conversion, math, CSS tools and more.',
     url: 'https://toolblip.com/directory',
     siteName: 'Toolblip',
-    images: [{ url: 'https://toolblip.com/og-default.png', width: 1200, height: 630, alt: 'Toolblip' }],
+    images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: 'Toolblip' }],
   },
   twitter: {
     card: 'summary',

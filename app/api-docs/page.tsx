@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     description: 'Toolblip REST API reference. Base URL: https://api.toolblip.com.',
     url: 'https://toolblip.com/api-docs',
     siteName: 'Toolblip',
-    images: [{ url: 'https://toolblip.com/og-default.png', width: 1200, height: 630, alt: 'Toolblip' }],
+    images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: 'Toolblip' }],
   },
   twitter: {
     card: 'summary',
