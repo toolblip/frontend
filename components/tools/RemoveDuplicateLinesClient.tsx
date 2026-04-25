@@ -1,86 +1,120 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+
+type Options = {
+  caseSensitive: boolean;
+  trim: boolean;
+  ignoreEmpty: boolean;
+};
+
+function dedupe(input: string, opts: Options): { result: string; original: number; after: number } {
+  if (!input) return { result: '', original: 0, after: 0 };
+  const lines = input.split('\n');
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const raw of lines) {
+    const line = opts.trim ? raw.trim() : raw;
+    if (opts.ignoreEmpty && line.trim() === '') continue;
+    const key = opts.caseSensitive ? line : line.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(line);
+  }
+  return { result: out.join('\n'), original: lines.length, after: out.length };
+}
 
 export default function RemoveDuplicateLinesClient() {
   const [input, setInput] = useState('');
-  const [caseSensitive, setCaseSensitive] = useState(false);
+  const [opts, setOpts] = useState<Options>({
+    caseSensitive: false,
+    trim: false,
+    ignoreEmpty: false,
+  });
   const [copied, setCopied] = useState(false);
 
-  const result = (() => {
-    if (!input.trim()) return '';
-    const lines = input.split('\n');
-    const seen = new Set<string>();
-    return lines
-      .filter((line) => {
-        const key = caseSensitive ? line : line.toLowerCase();
-        if (seen.has(key)) return false;
-        seen.add(key);
-        return true;
-      })
-      .join('\n');
-  })();
-
-  const stats = {
-    original: input ? input.split('\n').length : 0,
-    after: result ? result.split('\n').length : 0,
-    removed: (input ? input.split('\n').length : 0) - (result ? result.split('\n').length : 0),
-  };
+  const { result, original, after } = useMemo(() => dedupe(input, opts), [input, opts]);
+  const removed = original - after;
 
   const copy = () => {
-    navigator.clipboard.writeText(result);
+    if (!result) return;
+    navigator.clipboard.writeText(result).catch(() => {});
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), 1500);
   };
 
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-3">
-        <label className="flex items-center gap-2 text-sm text-gray-400 cursor-pointer">
-          <input
-            type="checkbox"
-            checked={caseSensitive}
-            onChange={(e) => setCaseSensitive(e.target.checked)}
-            className="rounded border-gray-600 bg-gray-800 text-red-500 focus:ring-red-600"
-          />
-          Case-sensitive
-        </label>
-      </div>
+  const toggle = (key: keyof Options) => setOpts((o) => ({ ...o, [key]: !o[key] }));
 
+  return (
+    <div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Input</span>
+        <div className="tb-v2-mode-tabs" role="group" aria-label="Dedupe options">
+          <button
+            type="button"
+            onClick={() => toggle('caseSensitive')}
+            className={`tb-v2-mode-tab ${opts.caseSensitive ? 'on' : ''}`}
+            aria-pressed={opts.caseSensitive}
+          >
+            Case-sensitive
+          </button>
+          <button
+            type="button"
+            onClick={() => toggle('trim')}
+            className={`tb-v2-mode-tab ${opts.trim ? 'on' : ''}`}
+            aria-pressed={opts.trim}
+          >
+            Trim whitespace
+          </button>
+          <button
+            type="button"
+            onClick={() => toggle('ignoreEmpty')}
+            className={`tb-v2-mode-tab ${opts.ignoreEmpty ? 'on' : ''}`}
+            aria-pressed={opts.ignoreEmpty}
+          >
+            Skip empty
+          </button>
+        </div>
+      </div>
       <textarea
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        placeholder="Paste your text here (one item per line)..."
-        className="w-full h-48 bg-gray-800 border border-gray-700 rounded-lg p-3 text-gray-100 text-sm resize-y focus:outline-none focus:border-red-500 placeholder-gray-500"
-        aria-label="Text input"
+        placeholder="Paste your lines here..."
+        className="tb-v2-tool-textarea"
+        style={{ fontFamily: 'var(--f-mono)' }}
+        aria-label="Lines input"
       />
 
       {input && (
-        <div className="flex gap-4 text-sm">
-          <span className="text-gray-400">
-            Original: <span className="text-white">{stats.original}</span> lines
-          </span>
-          <span className="text-gray-400">
-            After: <span className="text-red-400">{stats.after}</span> lines
-          </span>
-          <span className="text-red-400">
-            Removed: <span className="text-red-300">{stats.removed}</span> duplicates
-          </span>
+        <div className="tb-v2-stats-grid">
+          <div className="tb-v2-stat-pill">
+            <div className="tb-v2-stat-pill-val">{original.toLocaleString()}</div>
+            <div className="tb-v2-stat-pill-lbl">Original</div>
+          </div>
+          <div className="tb-v2-stat-pill">
+            <div className="tb-v2-stat-pill-val">{after.toLocaleString()}</div>
+            <div className="tb-v2-stat-pill-lbl">Unique</div>
+          </div>
+          <div className="tb-v2-stat-pill">
+            <div className="tb-v2-stat-pill-val">{removed.toLocaleString()}</div>
+            <div className="tb-v2-stat-pill-lbl">Removed</div>
+          </div>
         </div>
       )}
 
-      <div className="bg-gray-800 border border-gray-700 rounded-lg p-4">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-xs text-gray-500 uppercase">Result</span>
-          {result && (
-            <button onClick={copy} className="text-xs text-red-400 hover:text-red-300 transition-colors">
-              {copied ? 'Copied!' : 'Copy result'}
-            </button>
-          )}
-        </div>
-        <pre className="text-sm text-red-400 font-mono whitespace-pre-wrap break-all">
-          {result || '-'}
-        </pre>
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">Result</span>
+        <button
+          type="button"
+          onClick={copy}
+          disabled={!result}
+          className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+        >
+          {copied ? 'Copied' : 'Copy'}
+        </button>
+      </div>
+      <div className="tb-v2-tool-output-body">
+        <pre className="tb-v2-tool-pre">{result || '—'}</pre>
       </div>
     </div>
   );

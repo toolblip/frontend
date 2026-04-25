@@ -1,95 +1,127 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
-function generateLorem(words: number, type: 'words' | 'sentences' | 'paragraphs'): string {
-  const pool = 'lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum'.split(' ');
-  if (type === 'words') return Array.from({ length: words }, () => pool[Math.floor(Math.random() * pool.length)]).join(' ');
-  if (type === 'sentences') {
-    let result = '';
-    let wordCount = 0;
-    while (wordCount < words) {
-      const sentenceLen = Math.floor(Math.random() * 10) + 8;
-      const sentence = Array.from({ length: sentenceLen }, () => pool[Math.floor(Math.random() * pool.length)]).join(' ');
-      result += sentence.charAt(0).toUpperCase() + sentence.slice(1) + '. ';
-      wordCount += sentenceLen;
+const POOL = 'lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua enim ad minim veniam quis nostrud exercitation ullamco laboris nisi aliquip ex ea commodo consequat duis aute irure reprehenderit voluptate velit esse cillum eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident sunt culpa qui officia deserunt mollit anim id est laborum'.split(' ');
+
+const CLASSIC_START = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit,';
+
+function randomWord(): string {
+  return POOL[Math.floor(Math.random() * POOL.length)];
+}
+
+function makeSentence(minWords = 6, maxWords = 16): string {
+  const len = Math.floor(Math.random() * (maxWords - minWords + 1)) + minWords;
+  const words = Array.from({ length: len }, randomWord);
+  words[0] = words[0].charAt(0).toUpperCase() + words[0].slice(1);
+  return words.join(' ') + '.';
+}
+
+function makeParagraph(): string {
+  const sentences = Math.floor(Math.random() * 4) + 4;
+  return Array.from({ length: sentences }, () => makeSentence()).join(' ');
+}
+
+function generate(count: number, classicStart: boolean, wrapTags: boolean): string {
+  const paragraphs: string[] = [];
+  for (let i = 0; i < count; i++) {
+    let p = makeParagraph();
+    if (i === 0 && classicStart) {
+      p = CLASSIC_START + ' ' + p.charAt(0).toLowerCase() + p.slice(1);
     }
-    return result.trim();
+    paragraphs.push(p);
   }
-  // paragraphs
-  return Array.from({ length: words }, (_, i) => {
-    const paraLen = Math.floor(Math.random() * 40) + 20;
-    const para = Array.from({ length: paraLen }, () => pool[Math.floor(Math.random() * pool.length)]).join(' ');
-    return para.charAt(0).toUpperCase() + para.slice(1) + '.';
-  }).join('\n\n');
+  if (wrapTags) {
+    return paragraphs.map((p) => `<p>${p}</p>`).join('\n');
+  }
+  return paragraphs.join('\n\n');
 }
 
 export default function LoremIpsumGeneratorClient() {
   const [count, setCount] = useState(3);
-  const [type, setType] = useState<'words' | 'sentences' | 'paragraphs'>('paragraphs');
-  const [output, setOutput] = useState('');
+  const [classicStart, setClassicStart] = useState(true);
+  const [wrapTags, setWrapTags] = useState(false);
+  const [seed, setSeed] = useState(0);
+  const [copied, setCopied] = useState(false);
 
-  const handleGenerate = () => {
-    setOutput(generateLorem(count, type));
-  };
+  const output = useMemo(
+    () => generate(count, classicStart, wrapTags),
+    // seed is used to force regeneration
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [count, classicStart, wrapTags, seed]
+  );
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(output);
+  const regenerate = () => setSeed((s) => s + 1);
+  const copy = () => {
+    if (!output) return;
+    navigator.clipboard.writeText(output).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap gap-3">
-        <div className="flex items-center gap-2">
-          <label className="text-sm text-gray-600 dark:text-gray-400">Count:</label>
-          <input
-            type="number"
-            min={1}
-            max={100}
-            value={count}
-            onChange={e => setCount(Math.max(1, Math.min(100, parseInt(e.target.value) || 1)))}
-            className="w-20 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-red-500"
-          />
-        </div>
-        <div className="flex items-center gap-2">
-          <label className="text-sm text-gray-600 dark:text-gray-400">Type:</label>
-          <select
-            value={type}
-            onChange={e => setType(e.target.value as typeof type)}
-            className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-red-500"
-          >
-            <option value="words">Words</option>
-            <option value="sentences">Sentences</option>
-            <option value="paragraphs">Paragraphs</option>
-          </select>
-        </div>
-      </div>
-      <div className="flex gap-3">
+    <div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Options</span>
         <button
-          onClick={handleGenerate}
-          className="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg font-medium transition-colors"
+          type="button"
+          onClick={regenerate}
+          className="tb-v2-copy-btn"
+          aria-label="Regenerate"
         >
-          Generate
+          Regenerate
         </button>
-        {output && (
-          <button
-            onClick={handleCopy}
-            className="bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 px-5 py-2 rounded-lg font-medium transition-colors"
-          >
-            Copy
-          </button>
-        )}
       </div>
-      {output && (
-        <div>
-          <textarea
-            value={output}
-            readOnly
-            rows={8}
-            className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm resize-none"
-          />
+
+      <div className="tb-v2-tool-output-body">
+        <div className="tb-v2-lorem-controls">
+          <div className="tb-v2-lorem-count">
+            <label htmlFor="lorem-count" className="tb-v2-tool-label">Paragraphs: {count}</label>
+            <input
+              id="lorem-count"
+              type="range"
+              min={1}
+              max={20}
+              value={count}
+              onChange={(e) => setCount(Number(e.target.value))}
+              className="tb-v2-pw-slider"
+            />
+          </div>
+          <div className="tb-v2-mode-tabs">
+            <button
+              type="button"
+              onClick={() => setClassicStart((v) => !v)}
+              className={`tb-v2-mode-tab ${classicStart ? 'on' : ''}`}
+              aria-pressed={classicStart}
+            >
+              Lorem ipsum start
+            </button>
+            <button
+              type="button"
+              onClick={() => setWrapTags((v) => !v)}
+              className={`tb-v2-mode-tab ${wrapTags ? 'on' : ''}`}
+              aria-pressed={wrapTags}
+            >
+              &lt;p&gt; tags
+            </button>
+          </div>
         </div>
-      )}
+      </div>
+
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">Output</span>
+        <button
+          type="button"
+          onClick={copy}
+          disabled={!output}
+          className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+        >
+          {copied ? 'Copied' : 'Copy'}
+        </button>
+      </div>
+      <div className="tb-v2-tool-output-body">
+        <pre className="tb-v2-tool-pre" style={{ maxHeight: 360 }}>{output || '—'}</pre>
+      </div>
     </div>
   );
 }

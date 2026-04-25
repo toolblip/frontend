@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useEffect, useState } from 'react';
 
 // ─── Pure-JS MD5 (RFC 1321) ─────────────────────────────────────────────────
 
@@ -53,13 +53,18 @@ function md5blk(s: string): number[] {
 }
 
 function md5(str: string): string {
-  const n = str.length;
+  // Convert to UTF-8 bytes as a binary string for correct multi-byte hashing.
+  const bytes = new TextEncoder().encode(str);
+  let bin = '';
+  for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+
+  const n = bin.length;
   let state = [1732584193, -271733879, -1732584194, 271733878];
   let i: number;
   for (i = 64; i <= n; i += 64) {
-    state = md5cycle(state, md5blk(str.slice(i - 64, i)));
+    state = md5cycle(state, md5blk(bin.slice(i - 64, i)));
   }
-  const tail = str.slice(i - 64);
+  const tail = bin.slice(i - 64);
   const length16 = tail.length;
   const tmp: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   for (let j = 0; j < length16; j++) {
@@ -88,20 +93,10 @@ async function shaHash(algorithm: string, input: string): Promise<string> {
     .join('');
 }
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+// ─── Component ───────────────────────────────────────────────────────────────
 
 type Algorithm = 'MD5' | 'SHA-1' | 'SHA-256' | 'SHA-512';
-
 const ALGORITHMS: Algorithm[] = ['MD5', 'SHA-1', 'SHA-256', 'SHA-512'];
-
-const ALGO_LABEL: Record<Algorithm, string> = {
-  'MD5': 'MD5',
-  'SHA-1': 'SHA-1',
-  'SHA-256': 'SHA-256',
-  'SHA-512': 'SHA-512',
-};
-
-// ─── Component ───────────────────────────────────────────────────────────────
 
 export default function HashGeneratorClient() {
   const [input, setInput] = useState('');
@@ -109,152 +104,92 @@ export default function HashGeneratorClient() {
     'MD5': '', 'SHA-1': '', 'SHA-256': '', 'SHA-512': '',
   });
   const [uppercase, setUppercase] = useState(false);
-  const [activeAlgos, setActiveAlgos] = useState<Set<Algorithm>>(new Set(ALGORITHMS));
   const [copied, setCopied] = useState<Algorithm | null>(null);
 
-  const computeHashes = useCallback(async (text: string) => {
-    if (!text) {
+  useEffect(() => {
+    let alive = true;
+    if (!input) {
       setHashes({ 'MD5': '', 'SHA-1': '', 'SHA-256': '', 'SHA-512': '' });
       return;
     }
-    const [sha1, sha256, sha512] = await Promise.all([
-      shaHash('SHA-1', text),
-      shaHash('SHA-256', text),
-      shaHash('SHA-512', text),
-    ]);
-    setHashes({
-      'MD5': md5(text),
-      'SHA-1': sha1,
-      'SHA-256': sha256,
-      'SHA-512': sha512,
+    Promise.all([
+      shaHash('SHA-1', input),
+      shaHash('SHA-256', input),
+      shaHash('SHA-512', input),
+    ]).then(([sha1, sha256, sha512]) => {
+      if (!alive) return;
+      setHashes({
+        'MD5': md5(input),
+        'SHA-1': sha1,
+        'SHA-256': sha256,
+        'SHA-512': sha512,
+      });
     });
-  }, []);
+    return () => { alive = false; };
+  }, [input]);
 
-  useEffect(() => {
-    computeHashes(input);
-  }, [input, computeHashes]);
+  const fmt = (h: string) => (uppercase ? h.toUpperCase() : h);
 
-  function formatHash(hash: string): string {
-    return uppercase ? hash.toUpperCase() : hash.toLowerCase();
-  }
-
-  async function copyHash(algo: Algorithm) {
-    const hash = formatHash(hashes[algo]);
-    if (!hash) return;
-    await navigator.clipboard.writeText(hash);
+  const copy = (algo: Algorithm) => {
+    const h = fmt(hashes[algo]);
+    if (!h) return;
+    navigator.clipboard.writeText(h).catch(() => {});
     setCopied(algo);
     setTimeout(() => setCopied(null), 1500);
-  }
+  };
 
-  function toggleAlgo(algo: Algorithm) {
-    setActiveAlgos(prev => {
-      const next = new Set(prev);
-      if (next.has(algo) && next.size > 1) {
-        next.delete(algo);
-      } else {
-        next.add(algo);
-      }
-      return next;
-    });
-  }
+  const byteLen = input ? new TextEncoder().encode(input).length : 0;
 
   return (
-    <div className="space-y-6">
-      {/* Input */}
-      <div>
-        <div className="flex items-center justify-between mb-2">
-          <label className="text-xs text-gray-500 uppercase tracking-wide font-medium">
-            Input Text
-          </label>
-          {input && (
-            <button
-              onClick={() => setInput('')}
-              className="text-xs text-gray-500 hover:text-red-400 transition-colors"
-            >
-              Clear
-            </button>
-          )}
-        </div>
-        <textarea
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          placeholder="Type or paste text to hash..."
-          rows={4}
-          className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-gray-100 text-sm focus:outline-none focus:border-red-500 placeholder-gray-600 resize-y font-mono"
-        />
-      </div>
-
-      {/* Controls */}
-      <div className="flex flex-wrap items-center gap-3">
-        {/* Algorithm toggles */}
-        <div className="flex flex-wrap gap-2 flex-1">
-          {ALGORITHMS.map(algo => (
-            <button
-              key={algo}
-              onClick={() => toggleAlgo(algo)}
-              className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
-                activeAlgos.has(algo)
-                  ? 'bg-red-600 hover:bg-red-500 text-black'
-                  : 'bg-gray-800 text-gray-500 hover:text-gray-300'
-              }`}
-            >
-              {ALGO_LABEL[algo]}
-            </button>
-          ))}
-        </div>
-
-        {/* Case toggle */}
+    <div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Input</span>
         <button
-          onClick={() => setUppercase(u => !u)}
-          className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${
-            uppercase
-              ? 'bg-red-600 hover:bg-red-500 text-black'
-              : 'bg-gray-800 text-gray-400 hover:text-white'
-          }`}
+          type="button"
+          onClick={() => setUppercase((v) => !v)}
+          className={`tb-v2-mode-tab ${uppercase ? 'on' : ''}`}
+          aria-pressed={uppercase}
         >
-          {uppercase ? 'UPPER' : 'lower'}
+          UPPERCASE
         </button>
       </div>
+      <textarea
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder="Type or paste text to hash..."
+        className="tb-v2-tool-textarea"
+        style={{ fontFamily: 'var(--f-mono)' }}
+        aria-label="Hash input"
+      />
 
-      {/* Hash outputs */}
-      <div className="space-y-3">
-        {ALGORITHMS.filter(algo => activeAlgos.has(algo)).map(algo => {
-          const hash = formatHash(hashes[algo]);
-          const isCopied = copied === algo;
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">Hashes</span>
+        {input && (
+          <span className="tb-v2-hash-stats">
+            {input.length} char{input.length !== 1 ? 's' : ''} · {byteLen} byte{byteLen !== 1 ? 's' : ''}
+          </span>
+        )}
+      </div>
+      <div className="tb-v2-tool-output-body" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {ALGORITHMS.map((algo) => {
+          const h = fmt(hashes[algo]);
           return (
-            <div key={algo} className="bg-gray-800 border border-gray-700 rounded-lg p-4">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs text-gray-500 uppercase tracking-wide font-medium">
-                  {ALGO_LABEL[algo]}
-                </span>
-                <button
-                  onClick={() => copyHash(algo)}
-                  disabled={!hash}
-                  className={`text-xs px-3 py-1 rounded-md transition-colors ${
-                    isCopied
-                      ? 'bg-red-700/40 text-red-400'
-                      : hash
-                      ? 'bg-gray-700 text-gray-400 hover:bg-gray-600 hover:text-white'
-                      : 'bg-gray-800 text-gray-600 cursor-not-allowed'
-                  }`}
-                >
-                  {isCopied ? 'Copied!' : 'Copy'}
-                </button>
-              </div>
-              <p className={`font-mono text-sm break-all ${hash ? 'text-red-400' : 'text-gray-600'}`}>
-                {hash || '-'}
-              </p>
+            <div key={algo} className="tb-v2-hash-row">
+              <span className="tb-v2-hash-algo">{algo}</span>
+              <code className="tb-v2-hash-val">{h || '—'}</code>
+              <button
+                type="button"
+                onClick={() => copy(algo)}
+                disabled={!h}
+                className={`tb-v2-copy-btn ${copied === algo ? 'done' : ''}`}
+                aria-label={`Copy ${algo}`}
+              >
+                {copied === algo ? 'Copied' : 'Copy'}
+              </button>
             </div>
           );
         })}
       </div>
-
-      {/* Stats */}
-      {input && (
-        <p className="text-xs text-gray-600 text-right">
-          {input.length} character{input.length !== 1 ? 's' : ''} &middot; {new TextEncoder().encode(input).length} bytes
-        </p>
-      )}
     </div>
   );
 }

@@ -11,6 +11,12 @@ import UrlEncodeClient from '@/components/tools/UrlEncodeClient';
 import JsonFormatterClient from '@/components/tools/JsonFormatterClient';
 import QrCodeGeneratorClient from '@/components/tools/QrCodeGeneratorClient';
 import ColorPickerClient from '@/components/tools/ColorPickerClient';
+import UuidGeneratorClient from '@/components/tools/UuidGeneratorClient';
+import PasswordGeneratorClient from '@/components/tools/PasswordGeneratorClient';
+import LoremIpsumGeneratorClient from '@/components/tools/LoremIpsumGeneratorClient';
+import HashGeneratorClient from '@/components/tools/HashGeneratorClient';
+import TextDiffClient from '@/components/tools/TextDiffClient';
+import RemoveDuplicateLinesClient from '@/components/tools/RemoveDuplicateLinesClient';
 import FaqSection from '@/components/v2/FaqSection';
 import { getFaqs } from '@/lib/faq';
 
@@ -35,6 +41,18 @@ function getToolComponent(slug: string): React.ReactNode {
       return <QrCodeGeneratorClient />;
     case 'color-picker':
       return <ColorPickerClient />;
+    case 'uuid-generator':
+      return <UuidGeneratorClient />;
+    case 'password-generator':
+      return <PasswordGeneratorClient />;
+    case 'lorem-ipsum-generator':
+      return <LoremIpsumGeneratorClient />;
+    case 'hash-generator':
+      return <HashGeneratorClient />;
+    case 'text-diff':
+      return <TextDiffClient />;
+    case 'remove-duplicate-lines':
+      return <RemoveDuplicateLinesClient />;
     default:
       return <ComingSoonUI />;
   }

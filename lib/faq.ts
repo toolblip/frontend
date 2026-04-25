@@ -151,9 +151,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
   ],
   'uuid-generator': [
     { q: 'What is a UUID?', a: 'A UUID (Universally Unique Identifier) is a 128-bit ID — typically shown as 36 characters with dashes — that is extremely unlikely to collide across systems, which makes it ideal for database keys, file names, and distributed IDs.' },
-    { q: 'What version of UUID does this tool generate?', a: 'The UUID Generator produces v4 UUIDs — random — using the browser\'s crypto.getRandomValues API. That matches the recommendation in RFC 4122 for most application-level IDs.' },
-    { q: 'Can I generate multiple UUIDs at once?', a: 'Yes. Set the count and you get any number of UUIDs in one shot. Copy them as plain text or as a JSON array for dropping straight into code.' },
-    { q: 'Are these UUIDs cryptographically secure?', a: 'The UUID Generator uses your browser\'s crypto.getRandomValues, which is cryptographically secure. That said, UUIDs are identifiers — use them for IDs, not for secrets.' },
+    { q: 'What version of UUID does this tool generate?', a: 'The UUID Generator produces v4 UUIDs — random — using the browser\'s native crypto.randomUUID() function. That matches the recommendation in RFC 4122 for most application-level IDs.' },
+    { q: 'Can I get the UUID without hyphens or in uppercase?', a: 'Yes. Toggle the hyphens off to get a 32-character compact form, and toggle UPPER to switch the hex digits to uppercase. The output updates in place.' },
+    { q: 'Are these UUIDs cryptographically secure?', a: 'The UUID Generator uses crypto.randomUUID(), which is backed by the platform CSPRNG. That said, UUIDs are identifiers — use them for IDs, not for secrets.' },
     { q: 'Does the UUID Generator work offline?', a: 'Yes. Once the page is loaded, the generator runs entirely in your browser with no network calls.' },
   ],
   'case-converter': [
@@ -186,10 +186,10 @@ const OVERRIDES: Record<string, FAQ[]> = {
   ],
   'lorem-ipsum-generator': [
     { q: 'What is Lorem Ipsum?', a: 'Lorem Ipsum is pseudo-Latin placeholder text used by designers and developers since the 1500s. It fills layouts with realistic-looking content so you can evaluate typography, spacing, and hierarchy without being distracted by the meaning of the words.' },
-    { q: 'How much text can I generate with the Lorem Ipsum Generator?', a: 'Set any number of paragraphs, sentences, or words — there\'s no upper limit. The Lorem Ipsum Generator produces output instantly in your browser, even at tens of thousands of words.' },
+    { q: 'How much text can I generate?', a: 'Drag the slider for 1 to 20 paragraphs, each with 4–8 randomized sentences. Output regenerates instantly in your browser whenever you change the count or hit Regenerate.' },
     { q: 'Does the Lorem Ipsum Generator start with "Lorem ipsum dolor sit amet"?', a: 'Yes by default — and you can toggle it off if you\'d rather jump straight into randomized content. Starting with the classic phrase signals "placeholder" to anyone reviewing the mockup.' },
     { q: 'Can I generate HTML-wrapped Lorem Ipsum?', a: 'Yes. The Lorem Ipsum Generator outputs plain text by default, or wraps paragraphs in `<p>` tags with a single toggle so you can paste straight into a template.' },
-    { q: 'Is it OK to use Lorem Ipsum in a real product?', a: 'Only during design and prototyping. Ship with real copy — Lorem Ipsum left in production is the sort of thing that ends up on Twitter. Use the Lorem Ipsum Detector to find any that slipped through.' },
+    { q: 'Is it OK to use Lorem Ipsum in a real product?', a: 'Only during design and prototyping. Ship with real copy — Lorem Ipsum left in production is the sort of thing that ends up on social media.' },
   ],
   'qr-code-generator': [
     { q: 'What can I encode with the QR Code Generator?', a: 'Anything that fits in a string — URLs are the most common, but plain text, WiFi credentials in the standard `WIFI:` format, vCard contact details, SMS templates, and email links all work. Type or paste the value, click Generate, and download the result.' },
@@ -210,14 +210,28 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does the Password Generator store or log my passwords?', a: 'No. Passwords are generated in your browser and never sent anywhere. Nothing is logged, stored, or cached — close the tab and the password is gone unless you saved it to your password manager.' },
     { q: 'What length should I choose?', a: 'Use at least 16 characters for everyday accounts, and 20+ for high-value logins (banking, email, password-manager master passwords). Length beats complexity — every extra character roughly doubles the brute-force cost.' },
     { q: 'Should I include special characters?', a: 'Yes, unless a site blocks them. Special characters expand the search space and defeat dictionary attacks. The Password Generator lets you exclude ambiguous characters (like l/1 and O/0) for when you need to type the password by hand.' },
-    { q: 'Can the Password Generator create passphrases?', a: 'Yes. Switch to passphrase mode and the Password Generator strings together random words — easier to type and remember than random strings, and equally secure when long enough (four or more random words beats most 10-character passwords).' },
+    { q: 'What does the strength indicator mean?', a: 'It estimates entropy from the chosen length and the size of the active character pool. "Weak" is below ~36 bits, "Fair" up to ~60, "Strong" up to ~100, and "Very strong" beyond that. For online accounts, aim for Strong or higher.' },
   ],
   'hash-generator': [
-    { q: 'Which hash algorithms does the Hash Generator support?', a: 'The Hash Generator produces MD5, SHA-1, SHA-256, and SHA-512 hashes using the browser\'s native Web Crypto API. For password hashing specifically, use bcrypt, scrypt, or Argon2 instead — we have dedicated tools for each.' },
-    { q: 'Is the Hash Generator safe for sensitive input?', a: 'Yes. All hashing happens locally via Web Crypto, so the text or files you hash never leave your browser. That makes it safe for checksums on confidential files.' },
+    { q: 'Which hash algorithms does the Hash Generator support?', a: 'The Hash Generator produces MD5, SHA-1, SHA-256, and SHA-512 hashes simultaneously. SHA hashes are computed via the browser\'s native Web Crypto API; MD5 is computed in pure JavaScript locally. For password hashing specifically, use bcrypt, scrypt, or Argon2 instead.' },
+    { q: 'Is the Hash Generator safe for sensitive input?', a: 'Yes. All hashing happens in your browser. The text you hash never leaves the page, so it\'s safe for checksums on confidential strings or comparing internal fingerprints.' },
     { q: 'Should I use MD5 or SHA-1 for passwords?', a: 'No. MD5 and SHA-1 are cryptographically broken and fast — attackers can brute-force billions of guesses per second. Use bcrypt, scrypt, or Argon2 for password storage. MD5 and SHA-1 are fine for non-security uses like cache keys and fingerprints.' },
-    { q: 'Can the Hash Generator hash files?', a: 'Yes. Drop a file into the Hash Generator and it computes the hash in your browser using streaming crypto. Useful for verifying downloads and comparing large-file integrity — nothing is uploaded.' },
+    { q: 'Are the hashes encoded as hex?', a: 'Yes — lowercase hex by default. Toggle UPPERCASE to switch the digits A–F to upper case. If you need a different encoding (Base64, etc.), copy the hex and convert it with the Base64 tool.' },
     { q: 'Why do I always get the same hash for the same input?', a: 'That\'s the defining property of a hash function: deterministic output. If you need different outputs for the same input (for password storage), add a random salt before hashing — the bcrypt and Argon2 tools do this automatically.' },
+  ],
+  'text-diff': [
+    { q: 'How does the Text Diff tool compare my text?', a: 'It splits both inputs into lines and runs a longest-common-subsequence diff. Lines that match are shown unchanged, lines only in the original are marked as removed (−), and lines only in the changed text are marked as added (+).' },
+    { q: 'Can it diff more than just plain text?', a: 'Yes — anything you can paste in. Code, JSON, logs, configuration files, or commit messages all work. The line-based view is what most code review tools use, so it should look familiar.' },
+    { q: 'Does the diff highlight inline word changes?', a: 'Not currently. The Text Diff tool works at the line level. If you want to see what changed within a single line, paste the two versions on their own lines and the result will show them side by side.' },
+    { q: 'Is my text uploaded anywhere?', a: 'No. The diff is computed entirely in your browser, so even sensitive code, contracts, or logs stay on your machine.' },
+    { q: 'Why are some lines counted as changed when only whitespace differs?', a: 'A line with different whitespace is technically a different line. To ignore those differences, normalize whitespace before pasting (or trim trailing spaces in your editor) and run the diff again.' },
+  ],
+  'remove-duplicate-lines': [
+    { q: 'How does the Remove Duplicate Lines tool decide what counts as a duplicate?', a: 'By default, two lines are duplicates when they match after lowercasing. Toggle Case-sensitive to treat "Apple" and "apple" as different, or enable Trim whitespace to ignore leading and trailing spaces when comparing.' },
+    { q: 'Does it preserve the original order?', a: 'Yes. The first occurrence of each unique line is kept in its original position; later duplicates are dropped. This is the behaviour most people want when cleaning a list.' },
+    { q: 'Can I skip empty lines?', a: 'Yes. Toggle Skip empty and the tool drops any line that is blank (or contains only whitespace) before deduping. Useful when pasting text with stray newlines.' },
+    { q: 'Is there a limit on input size?', a: 'No fixed limit — the tool runs in your browser. Tens of thousands of lines process in well under a second; very large inputs are bounded only by your device\'s memory.' },
+    { q: 'Will my data be uploaded?', a: 'No. The Remove Duplicate Lines tool is fully client-side. Whatever you paste — addresses, IDs, log lines — never leaves your browser.' },
   ],
 };
 
