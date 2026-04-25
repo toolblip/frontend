@@ -30,6 +30,24 @@ import UrlSlugGeneratorClient from '@/components/tools/UrlSlugGeneratorClient';
 import UrlParamsClient from '@/components/tools/UrlParamsClient';
 import MetaTagGeneratorClient from '@/components/tools/MetaTagGeneratorClient';
 import SerpPreviewClient from '@/components/tools/SerpPreviewClient';
+import CircleCropClient from '@/components/tools/CircleCropClient';
+import ContrastCheckerClient from '@/components/tools/ContrastCheckerClient';
+import CronGeneratorClient from '@/components/tools/CronGeneratorClient';
+import CssBorderRadiusGeneratorClient from '@/components/tools/CssBorderRadiusGeneratorClient';
+import CssGradientGeneratorClient from '@/components/tools/CssGradientGeneratorClient';
+import FaviconGeneratorClient from '@/components/tools/FaviconGeneratorClient';
+import GrammarCheckerClient from '@/components/tools/GrammarCheckerClient';
+import HtmlEncoderClient from '@/components/tools/HtmlEncoderClient';
+import HttpHeadersViewerClient from '@/components/tools/HttpHeadersViewerClient';
+import ImageCropperClient from '@/components/tools/ImageCropperClient';
+import ImageFormatConverterClient from '@/components/tools/ImageFormatConverterClient';
+import ImageResizerClient from '@/components/tools/ImageResizerClient';
+import PercentageCalculatorClient from '@/components/tools/PercentageCalculatorClient';
+import ReadabilityScoreClient from '@/components/tools/ReadabilityScoreClient';
+import ScreenResolutionTesterClient from '@/components/tools/ScreenResolutionTesterClient';
+import SquareCropClient from '@/components/tools/SquareCropClient';
+import TextSorterClient from '@/components/tools/TextSorterClient';
+import UnitConverterClient from '@/components/tools/UnitConverterClient';
 import FaqSection from '@/components/v2/FaqSection';
 import { getFaqs } from '@/lib/faq';
 
@@ -96,6 +114,42 @@ function getToolComponent(slug: string): React.ReactNode {
       return <MetaTagGeneratorClient />;
     case 'serp-preview':
       return <SerpPreviewClient />;
+    case 'circle-crop':
+      return <CircleCropClient />;
+    case 'contrast-checker':
+      return <ContrastCheckerClient />;
+    case 'cron-generator':
+      return <CronGeneratorClient />;
+    case 'css-border-radius-generator':
+      return <CssBorderRadiusGeneratorClient />;
+    case 'css-gradient-generator':
+      return <CssGradientGeneratorClient />;
+    case 'favicon-generator':
+      return <FaviconGeneratorClient />;
+    case 'grammar-checker':
+      return <GrammarCheckerClient />;
+    case 'html-encoder':
+      return <HtmlEncoderClient />;
+    case 'http-headers-viewer':
+      return <HttpHeadersViewerClient />;
+    case 'image-cropper':
+      return <ImageCropperClient />;
+    case 'image-format-converter':
+      return <ImageFormatConverterClient />;
+    case 'image-resizer':
+      return <ImageResizerClient />;
+    case 'percentage-calculator':
+      return <PercentageCalculatorClient />;
+    case 'readability-score':
+      return <ReadabilityScoreClient />;
+    case 'screen-resolution-tester':
+      return <ScreenResolutionTesterClient />;
+    case 'square-crop':
+      return <SquareCropClient />;
+    case 'text-sorter':
+      return <TextSorterClient />;
+    case 'unit-converter':
+      return <UnitConverterClient />;
     default:
       return <ComingSoonUI />;
   }
