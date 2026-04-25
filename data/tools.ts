@@ -1810,6 +1810,25 @@ export const tools: Tool[] = [
   { name: 'Contrast Checker', slug: 'contrast-checker-complete', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail indicators.', emoji: '♿', category: 'Color' },
   { name: 'Unit Converter', slug: 'unit-converter-complete', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
   { name: 'Number Base Converter', slug: 'number-base-converter-complete', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly.', emoji: '🔢', category: 'Conversion' },
+
+  // --- New tools (2026-04-26 #5 - category expansion) ---
+  { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-full', description: 'Generate lorem ipsum placeholder text with customizable paragraphs, sentences, word count, and starting phrases.', emoji: '📜', category: 'Text' },
+  { name: 'Grammar Checker', slug: 'grammar-checker-full', description: 'Check grammar and spelling errors with one-click fixes, explanations, and readability suggestions.', emoji: '✅', category: 'Text' },
+  { name: 'Readability Score', slug: 'readability-score-full', description: 'Calculate Flesch-Kincaid, SMOG, ARI, and Coleman-Liau readability grades for any text.', emoji: '📊', category: 'Text' },
+  { name: 'Text Sorter', slug: 'text-sorter-full', description: 'Sort text lines alphabetically, by length, numerically, reverse, or in random order.', emoji: '📋', category: 'Text' },
+  { name: 'Regex Tester', slug: 'regex-tester-full', description: 'Test regex patterns with real-time match highlighting, capture groups, and replacement previews.', emoji: '🔍', category: 'Developer' },
+  { name: 'JWT Decoder', slug: 'jwt-decoder-full', description: 'Decode JWT tokens and inspect header, payload, expiration, and signature in real time.', emoji: '🎫', category: 'Developer' },
+  { name: 'Cron Expression Generator', slug: 'cron-generator-full', description: 'Build cron schedules visually with point-and-click controls and human-readable output.', emoji: '🕐', category: 'Developer' },
+  { name: 'HTTP Headers Viewer', slug: 'http-headers-viewer-full', description: 'View and debug HTTP request and response headers for any URL with timing breakdown.', emoji: '📦', category: 'Developer' },
+  { name: 'Mock Port Scanner', slug: 'mock-port-scanner-full', description: 'Simulate scanning common ports on a host to identify available services and running applications.', emoji: '🚪', category: 'Developer' },
+  { name: 'Favicon Generator', slug: 'favicon-generator-full', description: 'Create favicon.ico, PNG, and SVG icons from any image or emoji with multiple size outputs.', emoji: '🌐', category: 'Image' },
+  { name: 'Browser Image Resizer', slug: 'browser-image-resizer', description: 'Resize images directly in your browser with no upload required. Lock aspect ratio and batch resize.', emoji: '📐', category: 'Image' },
+  { name: 'Meta Tag Generator', slug: 'meta-tag-generator-full', description: 'Generate SEO meta tags, Open Graph, and Twitter Card tags with live preview.', emoji: '🏷️', category: 'SEO' },
+  { name: 'SERP Preview', slug: 'serp-preview-full', description: 'Preview how a page title and description appear in actual Google search results.', emoji: '🔎', category: 'SEO' },
+  { name: 'Color Picker', slug: 'color-picker-full', description: 'Pick any color visually and get HEX, RGB, HSL, and CSS values with a live preview swatch.', emoji: '🎨', category: 'Color' },
+  { name: 'Contrast Checker', slug: 'contrast-checker-full', description: 'Check text and background color contrast for WCAG AA and AAA compliance.', emoji: '♿', category: 'Color' },
+  { name: 'Unit Converter', slug: 'unit-converter-full', description: 'Convert length, weight, and temperature between metric and imperial units instantly.', emoji: '⚖️', category: 'Conversion' },
+  { name: 'Number Base Converter', slug: 'number-base-converter-full', description: 'Convert between binary, decimal, hexadecimal, and octal instantly with bitwise operation support.', emoji: '🔢', category: 'Conversion' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'AI Tools', 'Document Generator'] as const;
