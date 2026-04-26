@@ -53,7 +53,7 @@ export default function HowItWorksStrip() {
               desc: 'Copy the output instantly. Done in seconds.',
             },
           ].map((item, i) => (
-            <div key={i} style={{ display: 'flex', alignItems: 'center', flex: '1 1 0', minWidth: 160 }}>
+            <div key={i} className={`hiw-step hiw-step-${i}`} style={{ display: 'flex', alignItems: 'center', flex: '1 1 0', minWidth: 160 }}>
               {i > 0 && (
                 <div
                   style={{
@@ -119,6 +119,7 @@ export default function HowItWorksStrip() {
           }}
         >
           <div
+            className="privacy-badge"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -149,6 +150,26 @@ export default function HowItWorksStrip() {
           </div>
         </div>
       </div>
+      <style>{`
+        .hiw-step {
+          animation: hiw-step-in 0.45s ease-out both;
+        }
+        .hiw-step-1 { animation-delay: 0.1s; }
+        .hiw-step-2 { animation-delay: 0.2s; }
+
+        @keyframes hiw-step-in {
+          from { opacity: 0; transform: translateY(10px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes privacy-pulse {
+          0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.2); }
+          50%       { box-shadow: 0 0 0 5px rgba(34, 197, 94, 0); }
+        }
+        .privacy-badge {
+          animation: privacy-pulse 3.5s ease-in-out infinite;
+        }
+      `}</style>
     </section>
   );
 }

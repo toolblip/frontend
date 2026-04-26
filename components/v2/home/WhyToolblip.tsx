@@ -8,7 +8,7 @@ const benefits = [
     color: 'var(--green)',
     bg: 'var(--green-tint)',
     title: 'Private',
-    desc: 'Everything runs locally in your browser. Your data never touches our servers — or anyone else\'s.',
+    desc: 'Your data never leaves your browser. No servers, no uploads, no tracking — ever.',
   },
   {
     icon: (
@@ -19,18 +19,22 @@ const benefits = [
     color: 'var(--amber)',
     bg: 'var(--amber-tint)',
     title: 'Fast',
-    desc: 'No network requests, no waiting on servers. Results appear instantly in your browser tab.',
+    desc: 'Everything runs in your tab. No waiting on servers — results appear instantly.',
   },
   {
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+        <polyline points="20 12 20 22 4 22 4 12" />
+        <rect x="2" y="7" width="20" height="5" />
+        <line x1="12" y1="22" x2="12" y2="7" />
+        <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z" />
+        <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z" />
       </svg>
     ),
     color: 'var(--blue)',
     bg: 'var(--blue-tint)',
     title: 'Free',
-    desc: 'No signup, no paywall, no usage limits. Every tool is free, forever. No account needed.',
+    desc: 'No signup, no paywall, no usage caps. Every tool is free, now and always.',
   },
 ];
 
@@ -120,6 +124,23 @@ export default function WhyToolblip() {
         }
         [data-theme="dark"] .why-card:hover {
           box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .why-card {
+          animation: why-card-in 0.5s ease-out both;
+        }
+        .why-card:nth-child(2) { animation-delay: 0.08s; }
+        .why-card:nth-child(3) { animation-delay: 0.16s; }
+
+        @keyframes why-card-in {
+          from {
+            opacity: 0;
+            transform: translateY(12px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
       `}</style>
     </section>
