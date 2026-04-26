@@ -1,7 +1,7 @@
 import { MetadataRoute } from 'next';
 import { tools } from '@/data/tools';
 
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://toolblip.com';
+const BASE_URL = 'https://toolblip.com';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [
