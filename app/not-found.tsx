@@ -5,7 +5,10 @@ export default function NotFound() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="max-w-md w-full text-center animate-in fade-in zoom-in duration-500">
-        <div className="text-8xl sm:text-9xl font-bold text-[#58D65D] dark:text-[#58D65D] mb-2 tracking-tight" style={{ fontFamily: 'var(--tb-font-nunito, Nunito, sans-serif)' }}>
+        <div
+          className="text-8xl sm:text-9xl font-bold text-[#58D65D] mb-2 tracking-tight"
+          style={{ fontFamily: 'var(--tb-font-nunito, Nunito, sans-serif)' }}
+        >
           404
         </div>
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">
