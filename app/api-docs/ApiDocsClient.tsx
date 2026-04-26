@@ -2,15 +2,22 @@
 
 const BASE_URL = 'https://api.toolblip.com';
 
+interface FieldDef {
+  name: string;
+  type: string;
+  required: boolean;
+  description: string;
+}
+
 interface Endpoint {
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  method: 'GET' | 'POST';
   path: string;
   auth: boolean;
   description: string;
-  body?: { fields: { name: string; type: string; required: boolean; description: string }[] };
+  body?: { fields: FieldDef[] };
   curl: string;
   response: string;
-  responseLabel?: string;
+  responseNote?: string;
 }
 
 const endpoints: Endpoint[] = [
@@ -18,7 +25,7 @@ const endpoints: Endpoint[] = [
     method: 'GET',
     path: '/api/tools',
     auth: false,
-    description: 'Returns a paginated list of all available tools.',
+    description: 'Returns a paginated list of all available tools in the directory.',
     curl: `curl -X GET "${BASE_URL}/api/tools" \\
   -H "Accept: application/json"`,
     response: `{
@@ -95,7 +102,7 @@ const endpoints: Endpoint[] = [
   },
   "token": "1|abcdef123456..."
 }`,
-    responseLabel: 'Save the token — use it as Bearer {token} in subsequent requests.',
+    responseNote: 'Save the token — use it as Bearer {token} in subsequent authenticated requests.',
   },
   {
     method: 'POST',
@@ -129,7 +136,7 @@ const endpoints: Endpoint[] = [
     method: 'POST',
     path: '/api/auth/logout',
     auth: true,
-    description: 'Invalidates the current user\'s token. Requires valid Bearer authentication.',
+    description: "Invalidates the current user's token.",
     curl: `curl -X POST "${BASE_URL}/api/auth/logout" \\
   -H "Authorization: Bearer {token}" \\
   -H "Accept: application/json"`,
@@ -141,7 +148,7 @@ const endpoints: Endpoint[] = [
     method: 'GET',
     path: '/api/auth/user',
     auth: true,
-    description: 'Returns the currently authenticated user\'s profile.',
+    description: 'Returns the currently authenticated user profile.',
     curl: `curl -X GET "${BASE_URL}/api/auth/user" \\
   -H "Authorization: Bearer {token}" \\
   -H "Accept: application/json"`,
@@ -156,170 +163,237 @@ const endpoints: Endpoint[] = [
   },
 ];
 
-const METHOD_COLORS: Record<string, string> = {
-  GET: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+const METHOD_STYLES: Record<string, string> = {
+  GET: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
   POST: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
   PUT: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
   DELETE: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
 };
 
+function CodeBlock({ children, dark = false }: { children: string; dark?: boolean }) {
+  return (
+    <div
+      className={`overflow-x-auto rounded-xl p-4 text-xs font-mono leading-relaxed ${
+        dark
+          ? 'bg-[var(--fg-0)] text-emerald-400'
+          : 'bg-[var(--surface-2)] text-[var(--fg-1)]'
+      }`}
+    >
+      {children}
+    </div>
+  );
+}
+
+function EndpointCard({ ep }: { ep: Endpoint }) {
+  return (
+    <div className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] overflow-hidden">
+      {/* Header */}
+      <div className="flex flex-wrap items-center gap-2 border-b border-[var(--line)] bg-[var(--surface-2)] px-5 py-3.5">
+        <span
+          className={`shrink-0 rounded-md px-2.5 py-1 text-xs font-bold uppercase tracking-wide ${METHOD_STYLES[ep.method]}`}
+        >
+          {ep.method}
+        </span>
+        <code className="font-mono text-sm font-medium text-[var(--fg-0)]">{ep.path}</code>
+        {ep.auth && (
+          <span className="ml-auto shrink-0 rounded-full bg-amber-100 px-2.5 py-1 text-xs font-semibold text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
+            🔒 Auth required
+          </span>
+        )}
+      </div>
+
+      <div className="p-5 space-y-5">
+        <p className="text-sm text-[var(--fg-2)] leading-relaxed">{ep.description}</p>
+
+        {/* Request body fields */}
+        {ep.body && (
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-2.5">
+              Request Body
+            </p>
+            <div className="overflow-hidden rounded-xl border border-[var(--line)]">
+              <table className="w-full text-sm">
+                <thead className="bg-[var(--surface-2)]">
+                  <tr>
+                    <th className="px-4 py-2.5 text-left font-semibold text-[var(--fg-1)]">Field</th>
+                    <th className="px-4 py-2.5 text-left font-semibold text-[var(--fg-1)]">Type</th>
+                    <th className="px-4 py-2.5 text-left font-semibold text-[var(--fg-1)]">Description</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[var(--line)]">
+                  {ep.body.fields.map((f) => (
+                    <tr key={f.name}>
+                      <td className="px-4 py-2.5">
+                        <code className="font-mono text-xs text-[var(--fg-0)]">{f.name}</code>
+                        {f.required && <span className="ml-1 text-[var(--red)] text-xs">*</span>}
+                      </td>
+                      <td className="px-4 py-2.5">
+                        <span className="rounded bg-[var(--surface-3)] px-1.5 py-0.5 font-mono text-xs text-[var(--fg-2)]">
+                          {f.type}
+                        </span>
+                      </td>
+                      <td className="px-4 py-2.5 text-xs text-[var(--fg-2)]">{f.description}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* curl example */}
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-2.5">Example</p>
+          <CodeBlock dark>{ep.curl}</CodeBlock>
+        </div>
+
+        {/* Response */}
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-2.5">Response</p>
+          <CodeBlock>{ep.response}</CodeBlock>
+          {ep.responseNote && (
+            <p className="mt-2 text-xs text-[var(--fg-3)] italic">{ep.responseNote}</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function TableOfContents() {
+  return (
+    <nav className="space-y-1">
+      <p className="text-xs font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-3">Contents</p>
+      {endpoints.map((ep, i) => (
+        <a
+          key={i}
+          href={`#endpoint-${i}`}
+          className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-[var(--fg-2)] hover:bg-[var(--surface-2)] hover:text-[var(--fg-0)] transition-colors"
+        >
+          <span
+            className={`shrink-0 rounded px-1.5 py-0.5 text-xs font-bold ${METHOD_STYLES[ep.method]}`}
+          >
+            {ep.method}
+          </span>
+          <code className="font-mono text-xs truncate">{ep.path}</code>
+        </a>
+      ))}
+    </nav>
+  );
+}
+
 export default function ApiDocsClient() {
   return (
     <main className="min-h-screen bg-[var(--bg)]">
-      {/* Hero */}
+      {/* ── Hero ── */}
       <section className="border-b border-[var(--line)] bg-[var(--surface)]">
-        <div className="mx-auto max-w-4xl px-6 py-16">
-          <div className="inline-flex items-center gap-2 rounded-full bg-[var(--red-tint)] px-3 py-1 text-xs font-medium text-[var(--red)] mb-4">
+        <div className="mx-auto max-w-5xl px-6 py-14">
+          {/* Pill badge */}
+          <div className="inline-flex items-center gap-2 rounded-full bg-[var(--red-tint)] px-3 py-1 text-xs font-semibold text-[var(--red)] mb-5">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--red)] opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-[var(--red)]" />
             </span>
             API Reference
           </div>
+
           <h1 className="text-4xl font-bold tracking-tight text-[var(--fg-0)] mb-3">
             Toolblip REST API
           </h1>
-          <p className="text-lg text-[var(--fg-2)] mb-8 max-w-2xl">
-            Build integrations with Toolblip. Browse tools, manage users, and access developer features
-            via a clean, token-based REST API.
+          <p className="text-base text-[var(--fg-2)] mb-10 max-w-2xl leading-relaxed">
+            Integrate with Toolblip. Browse tools, manage accounts, and authenticate users via a clean
+            token-based REST API served at{' '}
+            <code className="font-mono text-[var(--fg-1)]">api.toolblip.com</code>.
           </p>
 
-          {/* Base URL */}
-          <div className="mb-6">
-            <p className="text-xs font-semibold uppercase tracking-wider text-[var(--fg-3)] mb-2">Base URL</p>
-            <div className="inline-flex items-center gap-2 rounded-lg border border-[var(--line-2)] bg-[var(--surface-2)] px-4 py-2 font-mono text-sm text-[var(--fg-1)]">
-              <span className="text-[var(--fg-3)]">$</span>
-              {BASE_URL}
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            {/* Base URL */}
+            <div className="rounded-xl border border-[var(--line)] bg-[var(--surface-2)] p-5">
+              <p className="text-xs font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-2.5">
+                Base URL
+              </p>
+              <code className="font-mono text-sm text-[var(--fg-0)] break-all">{BASE_URL}</code>
             </div>
-          </div>
 
-          {/* Auth */}
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-[var(--fg-3)] mb-2">Authentication</p>
-            <div className="rounded-lg border border-[var(--line)] bg-[var(--surface)] p-4">
-              <p className="text-sm text-[var(--fg-1)] mb-2">
-                All authenticated endpoints require a Bearer token in the{' '}
-                <code className="rounded bg-[var(--surface-2)] px-1.5 py-0.5 font-mono text-xs text-[var(--fg-0)]">
+            {/* Auth */}
+            <div className="rounded-xl border border-[var(--line)] bg-[var(--surface-2)] p-5">
+              <p className="text-xs font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-2.5">
+                Authentication
+              </p>
+              <p className="text-xs text-[var(--fg-2)] mb-2.5">
+                Bearer token in the{' '}
+                <code className="rounded bg-[var(--surface-3)] px-1.5 py-0.5 font-mono text-xs text-[var(--fg-1)]">
                   Authorization
                 </code>{' '}
-                header:
+                header.
               </p>
-              <div className="rounded-md bg-[var(--surface-2)] px-3 py-2 font-mono text-xs text-[var(--fg-1)]">
-                Authorization: Bearer {'{'}your_token{'}'}
-              </div>
-              <p className="mt-2 text-xs text-[var(--fg-2)]">
-                Tokens are returned from{' '}
-                <span className="font-medium text-[var(--fg-1)]">POST /api/auth/register</span> and{' '}
-                <span className="font-medium text-[var(--fg-1)]">POST /api/auth/login</span>.
-              </p>
+              <code className="font-mono text-xs text-[var(--fg-1)]">
+                Authorization: Bearer {'{'}token{'}'}
+              </code>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Endpoints */}
-      <section className="mx-auto max-w-4xl px-6 py-12">
-        <h2 className="text-2xl font-bold text-[var(--fg-0)] mb-8">Endpoints</h2>
+      {/* ── Body: sidebar + content ── */}
+      <section className="mx-auto max-w-5xl px-6 py-10">
+        <div className="flex flex-col gap-10 lg:flex-row lg:gap-12">
 
-        <div className="space-y-8">
-          {endpoints.map((ep, i) => (
-            <div
-              key={i}
-              className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] overflow-hidden"
-            >
-              {/* Endpoint header */}
-              <div className="flex items-center gap-3 border-b border-[var(--line)] bg-[var(--surface-2)] px-6 py-4">
-                <span
-                  className={`shrink-0 rounded-md px-2.5 py-1 text-xs font-bold uppercase tracking-wide ${METHOD_COLORS[ep.method]}`}
-                >
-                  {ep.method}
-                </span>
-                <code className="font-mono text-sm font-medium text-[var(--fg-0)]">{ep.path}</code>
-                {ep.auth && (
-                  <span className="ml-auto shrink-0 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
-                    Requires auth
-                  </span>
-                )}
-              </div>
-
-              <div className="p-6">
-                <p className="text-sm text-[var(--fg-1)] mb-5">{ep.description}</p>
-
-                {/* Request body */}
-                {ep.body && (
-                  <div className="mb-5">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-[var(--fg-3)] mb-2">
-                      Request Body
-                    </p>
-                    <div className="overflow-hidden rounded-lg border border-[var(--line)]">
-                      <table className="w-full text-sm">
-                        <thead className="bg-[var(--surface-2)]">
-                          <tr>
-                            <th className="px-4 py-2 text-left font-semibold text-[var(--fg-1)]">Field</th>
-                            <th className="px-4 py-2 text-left font-semibold text-[var(--fg-1)]">Type</th>
-                            <th className="px-4 py-2 text-left font-semibold text-[var(--fg-1)]">Description</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-[var(--line)]">
-                          {ep.body.fields.map((f) => (
-                            <tr key={f.name}>
-                              <td className="px-4 py-2">
-                                <code className="font-mono text-xs text-[var(--fg-0)]">{f.name}</code>
-                                {f.required && (
-                                  <span className="ml-1 text-[var(--red)] text-xs">*</span>
-                                )}
-                              </td>
-                              <td className="px-4 py-2">
-                                <span className="rounded bg-[var(--surface-2)] px-1.5 py-0.5 font-mono text-xs text-[var(--fg-2)]">
-                                  {f.type}
-                                </span>
-                              </td>
-                              <td className="px-4 py-2 text-xs text-[var(--fg-2)]">{f.description}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                )}
-
-                {/* curl example */}
-                <div className="mb-5">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-[var(--fg-3)] mb-2">Example</p>
-                  <div className="overflow-x-auto rounded-lg bg-[#1a1a2e] p-4">
-                    <pre className="text-xs text-green-400 font-mono leading-relaxed whitespace-pre-wrap">
-                      {ep.curl}
-                    </pre>
-                  </div>
-                </div>
-
-                {/* Response */}
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-[var(--fg-3)] mb-2">
-                    Response
-                  </p>
-                  <div className="overflow-x-auto rounded-lg bg-[var(--surface-2)] p-4">
-                    <pre className="text-xs text-[var(--fg-1)] font-mono leading-relaxed whitespace-pre-wrap">
-                      {ep.response}
-                    </pre>
-                  </div>
-                  {ep.responseLabel && (
-                    <p className="mt-2 text-xs text-[var(--fg-2)] italic">{ep.responseLabel}</p>
-                  )}
-                </div>
-              </div>
+          {/* Sidebar TOC */}
+          <aside className="lg:w-52 shrink-0">
+            <div className="sticky top-6 rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-4 lg:block hidden">
+              <TableOfContents />
             </div>
-          ))}
-        </div>
+            {/* Mobile TOC */}
+            <details className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-4 lg:hidden">
+              <summary className="cursor-pointer text-sm font-semibold text-[var(--fg-1)]">
+                📑 Jump to endpoint
+              </summary>
+              <div className="mt-3">
+                <TableOfContents />
+              </div>
+            </details>
+          </aside>
 
-        {/* Rate limits footer */}
-        <div className="mt-12 rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-6">
-          <h3 className="font-semibold text-[var(--fg-0)] mb-2">Rate Limits</h3>
-          <p className="text-sm text-[var(--fg-2)]">
-            The API currently has no strict rate limit, but please be respectful and cache responses
-            where possible. If you need higher limits for a commercial integration, contact us at{' '}
-            <span className="font-medium text-[var(--fg-1)]">info@toolblip.com</span>.
-          </p>
+          {/* Endpoints */}
+          <div className="flex-1 space-y-6 min-w-0">
+            {endpoints.map((ep, i) => (
+              <div key={i} id={`endpoint-${i}`} className="scroll-mt-6">
+                <EndpointCard ep={ep} />
+              </div>
+            ))}
+
+            {/* ── Rate limits & contact ── */}
+            <div className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-6 space-y-3">
+              <h3 className="font-semibold text-[var(--fg-0)]">Rate Limits</h3>
+              <p className="text-sm text-[var(--fg-2)] leading-relaxed">
+                No strict rate limit is currently enforced, but please cache responses where possible
+                and avoid abusive usage. For higher limits on commercial integrations, reach us at{' '}
+                <a
+                  href="mailto:info@toolblip.com"
+                  className="font-medium text-[var(--fg-1)] hover:text-[var(--red)] transition-colors"
+                >
+                  info@toolblip.com
+                </a>
+                .
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-6 space-y-3">
+              <h3 className="font-semibold text-[var(--fg-0)]">Errors</h3>
+              <p className="text-sm text-[var(--fg-2)] leading-relaxed">
+                All errors return a JSON object with a{' '}
+                <code className="font-mono text-xs bg-[var(--surface-2)] px-1.5 py-0.5 rounded text-[var(--fg-1)]">
+                  message
+                </code>{' '}
+                field. HTTP status codes follow REST conventions:{' '}
+                <span className="font-mono text-xs text-[var(--fg-1)]">400</span> for bad request,{' '}
+                <span className="font-mono text-xs text-[var(--fg-1)]">401</span> for unauthenticated,{' '}
+                <span className="font-mono text-xs text-[var(--fg-1)]">404</span> for not found, and{' '}
+                <span className="font-mono text-xs text-[var(--fg-1)]">500</span> for server errors.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
     </main>
