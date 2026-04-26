@@ -4,13 +4,15 @@ import { useState } from 'react';
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 
-// Primary base URL — Railway production deployment (api.toolblip.com SSL verified ✅)
-// Falls back to direct Railway URL if custom domain SSL is reissuing
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.toolblip.com';
+// Primary: api.toolblip.com (custom domain with SSL ✅)
+// Fallback: direct Railway URL
+const BASE_URL =
+  (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_API_URL) ||
+  'https://api.toolblip.com';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-interface Param {
+interface Parameter {
   name: string;
   type: string;
   required: boolean;
@@ -18,27 +20,30 @@ interface Param {
 }
 
 interface Endpoint {
-  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  group: string;
+  method: 'GET' | 'POST';
   path: string;
   auth: boolean;
   title: string;
   description: string;
-  params: Param[];
+  params: Parameter[];
+  bodyParams?: Parameter[];
   curl: string;
   response: string;
 }
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
+// ─── Endpoint Data ─────────────────────────────────────────────────────────────
 
 const endpoints: Endpoint[] = [
   // ── Tools ──────────────────────────────────────────────────────────────────
   {
+    group: 'tools',
     method: 'GET',
     path: '/api/tools',
     auth: false,
     title: 'List All Tools',
     description:
-      'Returns a paginated list of all tools in the directory. Supports optional filtering by category slug and full-text search on name and description.',
+      'Returns a paginated list of all tools in the directory. Supports optional filtering by category and full-text search.',
     params: [
       {
         name: 'category',
@@ -65,13 +70,7 @@ const endpoints: Endpoint[] = [
         description: 'Items per page (default: 20, max: 100)',
       },
     ],
-    curl: `# Public request
-curl -X GET "${BASE_URL}/api/tools?category=writing&page=1" \\
-  -H "Accept: application/json"
-
-# Authenticated request (higher rate limit)
-curl -X GET "${BASE_URL}/api/tools?category=writing&page=1" \\
-  -H "Authorization: Bearer {token}" \\
+    curl: `curl -X GET "${BASE_URL}/api/tools?category=developer&page=1" \\
   -H "Accept: application/json"`,
     response: `{
   "tools": {
@@ -80,7 +79,7 @@ curl -X GET "${BASE_URL}/api/tools?category=writing&page=1" \\
         "id": 1,
         "slug": "json-formatter",
         "name": "JSON Formatter",
-        "description": "Format, validate, and prettify JSON data instantly in your browser.",
+        "description": "Format, validate, and prettify JSON data instantly.",
         "category": "developer",
         "is_pro": false,
         "emoji": "📋",
@@ -107,6 +106,7 @@ curl -X GET "${BASE_URL}/api/tools?category=writing&page=1" \\
 }`,
   },
   {
+    group: 'tools',
     method: 'GET',
     path: '/api/tools/{slug}',
     auth: false,
@@ -121,20 +121,14 @@ curl -X GET "${BASE_URL}/api/tools?category=writing&page=1" \\
         description: 'Tool slug — the URL-safe identifier (e.g. "json-formatter", "image-resizer")',
       },
     ],
-    curl: `# Public request
-curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
-  -H "Accept: application/json"
-
-# Authenticated request
-curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
-  -H "Authorization: Bearer {token}" \\
+    curl: `curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
   -H "Accept: application/json"`,
     response: `{
   "tool": {
     "id": 1,
     "slug": "json-formatter",
     "name": "JSON Formatter",
-    "description": "Format, validate, and prettify JSON data instantly in your browser.",
+    "description": "Format, validate, and prettify JSON data instantly.",
     "category": "developer",
     "is_pro": false,
     "emoji": "📋",
@@ -145,32 +139,19 @@ curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
 
   // ── Auth ────────────────────────────────────────────────────────────────────
   {
+    group: 'auth',
     method: 'POST',
     path: '/api/auth/register',
     auth: false,
     title: 'Register',
     description:
-      'Create a new user account. Returns the user object and a Bearer token to use for authenticated requests.',
-    params: [
+      'Create a new user account. Returns the user object and a Bearer token for authenticated requests.',
+    params: [],
+    bodyParams: [
       { name: 'name', type: 'string', required: true, description: 'Full display name' },
-      {
-        name: 'email',
-        type: 'string',
-        required: true,
-        description: 'Email address — must be unique across all accounts',
-      },
-      {
-        name: 'password',
-        type: 'string',
-        required: true,
-        description: 'Password — minimum 8 characters',
-      },
-      {
-        name: 'password_confirmation',
-        type: 'string',
-        required: true,
-        description: 'Must match the password field exactly',
-      },
+      { name: 'email', type: 'string', required: true, description: 'Email address — must be unique' },
+      { name: 'password', type: 'string', required: true, description: 'Password — minimum 8 characters' },
+      { name: 'password_confirmation', type: 'string', required: true, description: 'Must match password exactly' },
     ],
     curl: `curl -X POST "${BASE_URL}/api/auth/register" \\
   -H "Content-Type: application/json" \\
@@ -192,13 +173,15 @@ curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
 }`,
   },
   {
+    group: 'auth',
     method: 'POST',
     path: '/api/auth/login',
     auth: false,
     title: 'Login',
     description:
-      'Authenticate an existing user. Returns a Bearer token for use in subsequent authenticated requests.',
-    params: [
+      'Authenticate an existing user. Returns a Bearer token to use in subsequent authenticated requests.',
+    params: [],
+    bodyParams: [
       { name: 'email', type: 'string', required: true, description: 'Account email address' },
       { name: 'password', type: 'string', required: true, description: 'Account password' },
     ],
@@ -220,12 +203,13 @@ curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
 }`,
   },
   {
+    group: 'auth',
     method: 'POST',
     path: '/api/auth/logout',
     auth: true,
     title: 'Logout',
     description:
-      'Invalidate the current session token. After calling this the token can no longer be used for authenticated requests.',
+      'Invalidate the current session token. After calling this the token can no longer be used.',
     params: [],
     curl: `curl -X POST "${BASE_URL}/api/auth/logout" \\
   -H "Authorization: Bearer 2|Yz7LcQ3aMbNcOdPeQfGhRiJsTkL" \\
@@ -235,12 +219,13 @@ curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
 }`,
   },
   {
+    group: 'auth',
     method: 'GET',
     path: '/api/auth/user',
     auth: true,
     title: 'Get Authenticated User',
     description:
-      'Returns the profile of the currently authenticated user. Use the Bearer token returned from login or register.',
+      'Returns the profile of the currently authenticated user. Use the Bearer token from login or register.',
     params: [],
     curl: `curl -X GET "${BASE_URL}/api/auth/user" \\
   -H "Authorization: Bearer 2|Yz7LcQ3aMbNcOdPeQfGhRiJsTkL" \\
@@ -259,38 +244,36 @@ curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 const methodColors: Record<string, string> = {
-  GET:    'bg-emerald-100 text-emerald-700 ring-emerald-200',
-  POST:   'bg-blue-100 text-blue-700 ring-blue-200',
-  PUT:    'bg-amber-100 text-amber-700 ring-amber-200',
-  PATCH:  'bg-orange-100 text-orange-700 ring-orange-200',
-  DELETE: 'bg-rose-100 text-rose-700 ring-rose-200',
+  GET:  'bg-emerald-100 text-emerald-700 ring-emerald-200',
+  POST: 'bg-blue-100 text-blue-700 ring-blue-200',
+};
+
+const groupMeta: Record<string, { label: string; emoji: string }> = {
+  tools: { label: 'Tools', emoji: '🔧' },
+  auth:  { label: 'Authentication', emoji: '🔑' },
 };
 
 function MethodBadge({ method }: { method: string }) {
   return (
-    <span
-      className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold ring-1 ${methodColors[method] ?? 'bg-gray-100 text-gray-700 ring-gray-200'}`}
-    >
+    <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold ring-1 ${methodColors[method] ?? 'bg-gray-100 text-gray-700 ring-gray-200'}`}>
       {method}
     </span>
   );
 }
 
-function AuthBadge({ required }: { required: boolean }) {
+function AuthPill({ required }: { required: boolean }) {
   return (
-    <span
-      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ring-1 ${
-        required
-          ? 'bg-amber-50 text-amber-700 ring-amber-200'
-          : 'bg-slate-100 text-slate-500 ring-slate-200'
-      }`}
-    >
+    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ring-1 ${
+      required
+        ? 'bg-amber-50 text-amber-700 ring-amber-200'
+        : 'bg-slate-100 text-slate-500 ring-slate-200'
+    }`}>
       {required ? (
         <>
           <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
           </svg>
-          Auth required
+          Auth
         </>
       ) : (
         <>
@@ -343,11 +326,22 @@ function CopyButton({ text }: { text: string }) {
   );
 }
 
+function SectionDivider({ group }: { group: string }) {
+  const meta = groupMeta[group];
+  return (
+    <div className="flex items-center gap-2 mb-4 px-1">
+      <span className="text-base">{meta?.emoji}</span>
+      <h2 className="text-lg font-bold text-slate-900">{meta?.label}</h2>
+    </div>
+  );
+}
+
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function ApiDocsClient() {
-  const [openEndpoint, setOpenEndpoint] = useState<number | null>(0);
-  const toggleEndpoint = (i: number) => setOpenEndpoint(openEndpoint === i ? null : i);
+  const [openEndpoint, setOpenEndpoint] = useState<number | null>(null);
+
+  const groups = [...new Set(endpoints.map((ep) => ep.group))];
 
   const scrollTo = (i: number) => {
     setOpenEndpoint(i);
@@ -356,6 +350,7 @@ export default function ApiDocsClient() {
 
   return (
     <div className="min-h-screen bg-slate-50">
+
       {/* ── Header ────────────────────────────────────────────────────────── */}
       <header className="bg-white border-b border-slate-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -385,7 +380,7 @@ export default function ApiDocsClient() {
             </div>
             <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-100 rounded-xl px-4 py-3">
               <span className="text-xs font-semibold text-emerald-600 uppercase tracking-wide">SSL</span>
-              <code className="text-sm font-mono text-emerald-700">✅ Verified</code>
+              <span className="text-sm text-emerald-700">✅ Verified</span>
             </div>
           </div>
         </div>
@@ -400,29 +395,41 @@ export default function ApiDocsClient() {
               <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">
                 Endpoints
               </p>
-              <nav className="space-y-0.5">
-                {endpoints.map((ep, i) => (
-                  <button
-                    key={i}
-                    onClick={() => scrollTo(i)}
-                    className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors text-left ${
-                      openEndpoint === i
-                        ? 'bg-indigo-50 text-indigo-700'
-                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                    }`}
-                  >
-                    <MethodBadge method={ep.method} />
-                    <span className="truncate font-mono text-xs flex-1">{ep.path}</span>
-                  </button>
+              <nav className="space-y-4">
+                {groups.map((group) => (
+                  <div key={group}>
+                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5 px-1">
+                      {groupMeta[group]?.emoji} {groupMeta[group]?.label}
+                    </p>
+                    <div className="space-y-0.5">
+                      {endpoints
+                        .map((ep, i) => ({ ep, i }))
+                        .filter(({ ep }) => ep.group === group)
+                        .map(({ ep, i }) => (
+                          <button
+                            key={i}
+                            onClick={() => scrollTo(i)}
+                            className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors text-left ${
+                              openEndpoint === i
+                                ? 'bg-indigo-50 text-indigo-700'
+                                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                            }`}
+                          >
+                            <MethodBadge method={ep.method} />
+                            <span className="truncate font-mono text-xs flex-1">{ep.path}</span>
+                          </button>
+                        ))}
+                    </div>
+                  </div>
                 ))}
               </nav>
             </div>
           </aside>
 
           {/* ── Main content ───────────────────────────────────────────────── */}
-          <main className="lg:col-span-3 space-y-8">
+          <main className="lg:col-span-3 space-y-10">
 
-            {/* Overview cards */}
+            {/* ── Overview cards ─────────────────────────────────────────── */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="bg-white rounded-2xl border border-slate-200 p-5">
                 <div className="flex items-center gap-2 mb-3">
@@ -431,10 +438,10 @@ export default function ApiDocsClient() {
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
                   </div>
-                  <h3 className="font-semibold text-slate-800 text-sm">Bearer Token Auth</h3>
+                  <h3 className="font-semibold text-slate-800 text-sm">Bearer Token</h3>
                 </div>
                 <p className="text-sm text-slate-600 mb-3">
-                  Pass your token from register or login in the Authorization header.
+                  Pass your token from register or login in the Authorization header on every authenticated request.
                 </p>
                 <CodeBlock code="Authorization: Bearer {token}" />
               </div>
@@ -483,51 +490,26 @@ export default function ApiDocsClient() {
               </div>
             </div>
 
-            {/* ── Tools Group ───────────────────────────────────────────────── */}
-            <div>
-              <div className="flex items-center gap-2 mb-4 px-1">
-                <span className="text-base">🔧</span>
-                <h2 className="text-lg font-bold text-slate-900">Tools</h2>
-                <span className="text-xs text-slate-400 font-mono mt-0.5">/api/tools</span>
+            {/* ── Endpoint groups ──────────────────────────────────────────── */}
+            {groups.map((group) => (
+              <div key={group}>
+                <SectionDivider group={group} />
+                <div className="space-y-3">
+                  {endpoints
+                    .map((ep, i) => ({ ep, i }))
+                    .filter(({ ep }) => ep.group === group)
+                    .map(({ ep, i }) => (
+                      <EndpointCard
+                        key={i}
+                        ep={ep}
+                        i={i}
+                        openEndpoint={openEndpoint}
+                        toggleEndpoint={setOpenEndpoint}
+                      />
+                    ))}
+                </div>
               </div>
-              <div className="space-y-3">
-                {endpoints
-                  .map((ep, i) => ({ ep, i }))
-                  .filter(({ ep }) => ep.path.startsWith('/api/tools'))
-                  .map(({ ep, i }) => (
-                    <EndpointCard
-                      key={i}
-                      ep={ep}
-                      i={endpoints.indexOf(ep)}
-                      openEndpoint={openEndpoint}
-                      toggleEndpoint={toggleEndpoint}
-                    />
-                  ))}
-              </div>
-            </div>
-
-            {/* ── Auth Group ───────────────────────────────────────────────── */}
-            <div>
-              <div className="flex items-center gap-2 mb-4 px-1">
-                <span className="text-base">🔑</span>
-                <h2 className="text-lg font-bold text-slate-900">Authentication</h2>
-                <span className="text-xs text-slate-400 font-mono mt-0.5">/api/auth</span>
-              </div>
-              <div className="space-y-3">
-                {endpoints
-                  .map((ep, i) => ({ ep, i }))
-                  .filter(({ ep }) => ep.path.startsWith('/api/auth'))
-                  .map(({ ep, i }) => (
-                    <EndpointCard
-                      key={i}
-                      ep={ep}
-                      i={endpoints.indexOf(ep)}
-                      openEndpoint={openEndpoint}
-                      toggleEndpoint={toggleEndpoint}
-                    />
-                  ))}
-              </div>
-            </div>
+            ))}
 
             {/* ── Help CTA ─────────────────────────────────────────────────── */}
             <div className="bg-gradient-to-r from-indigo-50 to-violet-50 rounded-2xl border border-indigo-100 p-6">
@@ -568,6 +550,46 @@ export default function ApiDocsClient() {
 
 // ─── Endpoint Card ────────────────────────────────────────────────────────────
 
+function ParamTable({ params, body }: { params: Parameter[]; body?: Parameter[] }) {
+  const rows = body ?? params;
+  if (rows.length === 0) return null;
+  return (
+    <div>
+      <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
+        {body ? 'Body Parameters' : 'Query Parameters'}
+      </h4>
+      <div className="border border-slate-100 rounded-xl overflow-hidden">
+        <table className="w-full text-sm">
+          <thead className="bg-slate-50">
+            <tr>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Name</th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Type</th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Required</th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Description</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-100">
+            {rows.map((p, pi) => (
+              <tr key={pi}>
+                <td className="px-4 py-2.5 font-mono text-xs text-indigo-700">{p.name}</td>
+                <td className="px-4 py-2.5 text-xs text-slate-500">{p.type}</td>
+                <td className="px-4 py-2.5 text-xs">
+                  {p.required ? (
+                    <span className="text-red-500 font-medium">Yes</span>
+                  ) : (
+                    <span className="text-slate-400">No</span>
+                  )}
+                </td>
+                <td className="px-4 py-2.5 text-xs text-slate-600">{p.description}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 function EndpointCard({
   ep,
   i,
@@ -577,23 +599,24 @@ function EndpointCard({
   ep: Endpoint;
   i: number;
   openEndpoint: number | null;
-  toggleEndpoint: (i: number) => void;
+  toggleEndpoint: (i: number | null) => void;
 }) {
+  const isOpen = openEndpoint === i;
   return (
     <div
       id={`endpoint-${i}`}
       className="bg-white rounded-2xl border border-slate-200 overflow-hidden"
     >
       <button
-        onClick={() => toggleEndpoint(i)}
+        onClick={() => toggleEndpoint(isOpen ? null : i)}
         className="w-full flex items-center gap-3 px-5 py-4 hover:bg-slate-50 transition-colors text-left"
       >
         <MethodBadge method={ep.method} />
         <code className="font-mono text-sm text-slate-800">{ep.path}</code>
         <span className="text-sm text-slate-500 flex-1 truncate">{ep.title}</span>
-        <AuthBadge required={ep.auth} />
+        <AuthPill required={ep.auth} />
         <svg
-          className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${openEndpoint === i ? 'rotate-180' : ''}`}
+          className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -603,45 +626,12 @@ function EndpointCard({
         </svg>
       </button>
 
-      {openEndpoint === i && (
+      {isOpen && (
         <div className="border-t border-slate-100 px-5 py-5 space-y-5">
           <p className="text-sm text-slate-600">{ep.description}</p>
 
-          {ep.params.length > 0 && (
-            <div>
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">
-                Parameters
-              </h4>
-              <div className="border border-slate-100 rounded-xl overflow-hidden">
-                <table className="w-full text-sm">
-                  <thead className="bg-slate-50">
-                    <tr>
-                      <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Name</th>
-                      <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Type</th>
-                      <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Required</th>
-                      <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Description</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {ep.params.map((p, pi) => (
-                      <tr key={pi}>
-                        <td className="px-4 py-2.5 font-mono text-xs text-indigo-700">{p.name}</td>
-                        <td className="px-4 py-2.5 text-xs text-slate-500">{p.type}</td>
-                        <td className="px-4 py-2.5 text-xs">
-                          {p.required ? (
-                            <span className="text-red-500 font-medium">Yes</span>
-                          ) : (
-                            <span className="text-slate-400">No</span>
-                          )}
-                        </td>
-                        <td className="px-4 py-2.5 text-xs text-slate-600">{p.description}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
+          <ParamTable params={ep.params} />
+          {ep.bodyParams && <ParamTable params={ep.bodyParams} body />}
 
           <div>
             <div className="flex items-center justify-between mb-2">
