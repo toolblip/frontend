@@ -38,7 +38,7 @@ const endpoints: Endpoint[] = [
     path: '/api/tools',
     auth: false,
     description:
-      'Returns a paginated list of all tools in the directory. Supports optional filtering by category and full-text search via query parameters.',
+      'Returns a paginated list of all tools. Supports optional filtering by category and full-text search.',
     curl: `curl "${BASE_URL}/api/tools" \\
   -H "Accept: application/json"`,
     response: `{
@@ -77,7 +77,7 @@ const endpoints: Endpoint[] = [
     method: 'GET',
     path: '/api/tools/{slug}',
     auth: false,
-    description: 'Returns a single tool by its URL-safe slug. Replace {slug} with the tool\'s slug identifier.',
+    description: 'Returns a single tool by its URL-safe slug. Replace {slug} with the tool\'s identifier.',
     curl: `curl "${BASE_URL}/api/tools/qr-code-generator" \\
   -H "Accept: application/json"`,
     response: `{
@@ -95,7 +95,7 @@ const endpoints: Endpoint[] = [
     responseFields: [
       { name: 'tool.id', type: 'integer', description: 'Unique numeric identifier' },
       { name: 'tool.slug', type: 'string', description: 'URL-safe identifier' },
-      { name: 'tool.name', type: 'string', description: 'Display name of the tool' },
+      { name: 'tool.name', type: 'string', description: 'Display name' },
       { name: 'tool.description', type: 'string', description: 'Full description shown on the tool detail page' },
       { name: 'tool.category', type: 'string', description: 'Category slug' },
       { name: 'tool.is_pro', type: 'boolean', description: 'Whether this tool requires a Pro subscription' },
@@ -143,7 +143,7 @@ const endpoints: Endpoint[] = [
       { name: 'user.is_pro', type: 'boolean', description: 'Active Pro subscription status' },
       { name: 'token', type: 'string', description: 'Bearer token — include in Authorization header for authenticated requests' },
     ],
-    responseNote: 'Save the token securely. It is required for all subsequent authenticated endpoints.',
+    responseNote: 'Save the token securely. It is required for all authenticated endpoints.',
   },
   {
     method: 'POST',
@@ -211,7 +211,7 @@ const endpoints: Endpoint[] = [
   },
 ];
 
-// ── Method styles ────────────────────────────────────────────────────────────
+// ── Method badge styles ──────────────────────────────────────────────────────
 
 const METHOD_STYLES: Record<string, string> = {
   GET:    'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
@@ -236,7 +236,7 @@ function CopyButton({ text }: { text: string }) {
   );
 }
 
-// ── Code block ──────────────────────────────────────────────────────────────
+// ── Code block ───────────────────────────────────────────────────────────────
 
 function CodeBlock({ children, label = 'JSON' }: { children: string; label?: string }) {
   return (
@@ -256,12 +256,47 @@ function CurlBlock({ children }: { children: string }) {
   return (
     <div className="relative rounded-xl overflow-hidden border border-[var(--line)]">
       <div className="bg-[#0d0d10] px-4 py-2.5 flex items-center justify-between border-b border-[var(--line)]">
-        <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--fg-3)]">cURL</span>
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--fg-3)]">cURL</span>
+        </div>
         <CopyButton text={children} />
       </div>
       <div className="bg-[#0d0d10] overflow-x-auto p-4">
         <pre className="font-mono text-xs leading-relaxed text-[#e4e4e7] whitespace-pre">{children}</pre>
       </div>
+    </div>
+  );
+}
+
+// ── Field table ───────────────────────────────────────────────────────────────
+
+function FieldTable({ fields }: { fields: ResponseField[] }) {
+  return (
+    <div className="mt-3 overflow-hidden rounded-xl border border-[var(--line)]">
+      <table className="w-full text-sm">
+        <thead className="bg-[var(--surface-2)]">
+          <tr>
+            <th className="px-4 py-3 text-left font-semibold text-[var(--fg-1)]">Field</th>
+            <th className="px-4 py-3 text-left font-semibold text-[var(--fg-1)]">Type</th>
+            <th className="px-4 py-3 text-left font-semibold text-[var(--fg-1)]">Description</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-[var(--line)]">
+          {fields.map((f) => (
+            <tr key={f.name}>
+              <td className="px-4 py-3">
+                <code className="font-mono text-xs text-[var(--fg-0)]">{f.name}</code>
+              </td>
+              <td className="px-4 py-3">
+                <span className="rounded bg-[var(--surface-3)] px-1.5 py-0.5 font-mono text-xs text-[var(--fg-2)]">
+                  {f.type}
+                </span>
+              </td>
+              <td className="px-4 py-3 text-xs text-[var(--fg-2)]">{f.description}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
@@ -274,7 +309,7 @@ function EndpointCard({ ep, index }: { ep: Endpoint; index: number }) {
       id={`endpoint-${index}`}
       className="scroll-mt-6 rounded-2xl border border-[var(--line)] bg-[var(--surface)] overflow-hidden"
     >
-      {/* Header strip */}
+      {/* Header */}
       <div className="flex flex-wrap items-center gap-3 border-b border-[var(--line)] bg-[var(--surface-2)] px-5 py-4">
         <span
           className={`shrink-0 rounded-md px-2.5 py-1 text-xs font-bold uppercase tracking-wide ${METHOD_STYLES[ep.method]}`}
@@ -348,32 +383,7 @@ function EndpointCard({ ep, index }: { ep: Endpoint; index: number }) {
           <CodeBlock>{ep.response}</CodeBlock>
 
           {ep.responseFields && ep.responseFields.length > 0 && (
-            <div className="mt-3 overflow-hidden rounded-xl border border-[var(--line)]">
-              <table className="w-full text-sm">
-                <thead className="bg-[var(--surface-2)]">
-                  <tr>
-                    <th className="px-4 py-3 text-left font-semibold text-[var(--fg-1)]">Field</th>
-                    <th className="px-4 py-3 text-left font-semibold text-[var(--fg-1)]">Type</th>
-                    <th className="px-4 py-3 text-left font-semibold text-[var(--fg-1)]">Description</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[var(--line)]">
-                  {ep.responseFields.map((f) => (
-                    <tr key={f.name}>
-                      <td className="px-4 py-3">
-                        <code className="font-mono text-xs text-[var(--fg-0)]">{f.name}</code>
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="rounded bg-[var(--surface-3)] px-1.5 py-0.5 font-mono text-xs text-[var(--fg-2)]">
-                          {f.type}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-xs text-[var(--fg-2)]">{f.description}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <FieldTable fields={ep.responseFields} />
           )}
 
           {ep.responseNote && (
@@ -392,16 +402,16 @@ function EndpointCard({ ep, index }: { ep: Endpoint; index: number }) {
 
 function TableOfContents() {
   const groups = [
-    { label: 'Tools', endpoints: endpoints.filter((e) => e.path.startsWith('/api/tools')) },
-    { label: 'Authentication', endpoints: endpoints.filter((e) => e.path.startsWith('/api/auth')) },
+    { label: 'Tools', icon: '🔧', endpoints: endpoints.filter((e) => e.path.startsWith('/api/tools')) },
+    { label: 'Authentication', icon: '🔑', endpoints: endpoints.filter((e) => e.path.startsWith('/api/auth')) },
   ];
 
   return (
     <nav className="space-y-4">
       {groups.map((group) => (
         <div key={group.label}>
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-2">
-            {group.label}
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-2 flex items-center gap-1.5">
+            <span>{group.icon}</span> {group.label}
           </p>
           <div className="space-y-0.5">
             {group.endpoints.map((ep) => {
@@ -562,7 +572,15 @@ export default function ApiDocsClient() {
             <div className="rounded-2xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/40 p-6">
               <h3 className="font-semibold text-[var(--fg-0)] mb-2">Making authenticated requests</h3>
               <p className="text-sm text-[var(--fg-2)] mb-4 leading-relaxed">
-                For endpoints marked <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">🔒 Auth required</span>, include the token from <code className="font-mono text-xs bg-[var(--surface-2)] px-1.5 py-0.5 rounded">/api/auth/login</code> or <code className="font-mono text-xs bg-[var(--surface-2)] px-1.5 py-0.5 rounded">/api/auth/register</code> in every request:
+                For endpoints marked{' '}
+                <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
+                  🔒 Auth required
+                </span>
+                , include the token from{' '}
+                <code className="font-mono text-xs bg-[var(--surface-2)] px-1.5 py-0.5 rounded">/api/auth/login</code>
+                {' '}or{' '}
+                <code className="font-mono text-xs bg-[var(--surface-2)] px-1.5 py-0.5 rounded">/api/auth/register</code>
+                {' '}in every request:
               </p>
               <CurlBlock>{`curl "${BASE_URL}/api/auth/user" \\
   -H "Authorization: Bearer {token}" \\
@@ -621,6 +639,14 @@ export default function ApiDocsClient() {
                   </tbody>
                 </table>
               </div>
+            </div>
+
+            {/* ── Footer note ── */}
+            <div className="text-center text-xs text-[var(--fg-3)] pt-4 border-t border-[var(--line)]">
+              Questions or need a higher rate limit?{' '}
+              <a href="mailto:info@toolblip.com" className="text-[var(--fg-2)] hover:text-[var(--fg-0)] transition-colors">
+                info@toolblip.com
+              </a>
             </div>
           </div>
         </div>
