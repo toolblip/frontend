@@ -2184,6 +2184,15 @@ export const tools: Tool[] = [
   { name: 'Contrast Checker', slug: 'contrast-checker-advanced', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail and suggested fixes.', emoji: '♿', category: 'Color' },
   { name: 'Unit Converter', slug: 'unit-converter-advanced', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units instantly.', emoji: '⚖️', category: 'Conversion' },
   { name: 'Number Base Converter', slug: 'number-base-converter-advanced', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 number systems instantly.', emoji: '🔢', category: 'Conversion' },
+  { name: 'Word Finder', slug: 'word-finder', description: 'Find valid English words from a string of letters with pattern and length filters.', emoji: '🔤', category: 'Text' },
+  { name: 'Title Case Converter', slug: 'title-case-converter', description: 'Convert text to Title Case with options for small words, numbers, and custom exceptions.', emoji: '✏️', category: 'Text' },
+  { name: 'JSON Path Tester', slug: 'json-path-tester-new', description: 'Test JSONPath expressions against any JSON data and see matched nodes highlighted instantly.', emoji: '🌳', category: 'Developer' },
+  { name: 'CSS Units Converter', slug: 'css-units-converter-new', description: 'Convert between CSS length units - px, rem, em, vw, vh, ch, and more.', emoji: '📏', category: 'Developer' },
+  { name: 'Shell Command Generator', slug: 'shell-command-generator-new', description: 'Generate shell commands from plain English descriptions for bash, zsh, and fish shells.', emoji: '💻', category: 'Developer' },
+  { name: 'Favicon Grabber', slug: 'favicon-grabber', description: 'Download the favicon from any website URL in ICO, PNG, and SVG formats.', emoji: '🌐', category: 'Image' },
+  { name: 'Google Rank Checker', slug: 'google-rank-checker', description: 'Check approximate Google ranking for a keyword and URL combination in your region.', emoji: '📈', category: 'SEO' },
+  { name: 'Random Color Generator', slug: 'random-color-generator', description: 'Generate random colors with HEX, RGB, HSL values and one-click copy to clipboard.', emoji: '🎨', category: 'Color' },
+  { name: 'BMI Calculator', slug: 'bmi-calculator', description: 'Calculate Body Mass Index from height and weight in metric or imperial units.', emoji: '⚖️', category: 'Utility' },
 
 ];
 
