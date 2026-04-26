@@ -2245,6 +2245,26 @@ export const tools: Tool[] = [
   { name: 'Color Contrast Ratio Checker', slug: 'color-contrast-ratio-checker', description: 'Check foreground and background color contrast for WCAG AA and AAA compliance with suggestions.', emoji: '♿', category: 'Color' },
   { name: 'General Unit Converter', slug: 'general-unit-converter', description: 'Convert between length, weight, temperature, speed, area, and volume units instantly.', emoji: '⚖️', category: 'Conversion' },
 
+  { name: 'Number Base Converter', slug: 'number-base-converter-v5', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly.', emoji: '🔢', category: 'Conversion' },
+  { name: 'Syllable Word Counter', slug: 'syllable-word-counter', description: 'Count syllables in words and estimate reading level for any text passage.', emoji: '🔤', category: 'Text' },
+  { name: 'Lorem Ipsum Bytes Generator', slug: 'lorem-ipsum-bytes', description: 'Generate lorem ipsum with byte-size control, HTML tags, and customizable paragraph count.', emoji: '📜', category: 'Text' },
+  { name: 'Advanced Grammar Checker', slug: 'grammar-checker-advanced', description: 'Check grammar, spelling, and tone with detailed explanations and one-click corrections.', emoji: '✅', category: 'Text' },
+  { name: 'Readability Checker', slug: 'readability-checker', description: 'Calculate Flesch-Kincaid, SMOG, ARI, and Coleman-Liau readability grades for text.', emoji: '📊', category: 'Text' },
+  { name: 'Smart Text Sorter', slug: 'smart-text-sorter', description: 'Sort text lines alphabetically, by length, numerically, or in random order.', emoji: '📋', category: 'Text' },
+  { name: 'Regex Match Tester', slug: 'regex-match-tester', description: 'Test regex patterns with live match highlighting, capture groups, and replacements.', emoji: '🔍', category: 'Developer' },
+  { name: 'JWT Token Inspector', slug: 'jwt-token-inspector', description: 'Decode JWT tokens and view header, payload, expiration, and signature info.', emoji: '🎫', category: 'Developer' },
+  { name: 'Cron Human-Readable', slug: 'cron-human-readable', description: 'Build cron schedules visually with a point-and-click editor and plain English output.', emoji: '🕐', category: 'Developer' },
+  { name: 'HTTP Headers Inspector', slug: 'http-headers-inspector', description: 'View HTTP request and response headers for any URL with full timing breakdown.', emoji: '📦', category: 'Developer' },
+  { name: 'Port Checker', slug: 'port-checker', description: 'Check common ports on a host to identify open services and running applications.', emoji: '🚪', category: 'Developer' },
+  { name: 'Favicon PNG Creator', slug: 'favicon-png-creator', description: 'Create favicon.ico and app icons from any image or emoji with multiple size outputs.', emoji: '🌐', category: 'Image' },
+  { name: 'Image Size Resizer', slug: 'image-size-resizer', description: 'Resize images to standard dimensions for social media, thumbnails, and web use.', emoji: '📐', category: 'Image' },
+  { name: 'SEO Meta Tag Builder', slug: 'seo-meta-tag-builder', description: 'Generate SEO meta tags, Open Graph, and Twitter Card tags with live preview.', emoji: '🏷️', category: 'SEO' },
+  { name: 'Google SERP Simulator', slug: 'google-serp-simulator', description: 'Preview how a page title and description appear in actual Google search results.', emoji: '🔎', category: 'SEO' },
+  { name: 'Color Picker Wheel', slug: 'color-picker-wheel', description: 'Pick colors from a visual wheel and get HEX, RGB, HSL, and CSS values instantly.', emoji: '🎨', category: 'Color' },
+  { name: 'WCAG Contrast Auditor', slug: 'wcag-contrast-auditor', description: 'Check foreground and background color contrast for WCAG AA and AAA compliance.', emoji: '♿', category: 'Color' },
+  { name: 'Unit Measurement Converter', slug: 'unit-measurement-converter', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
+  { name: 'BIN HEX DEC Converter', slug: 'bin-hex-dec-converter', description: 'Convert between binary, hexadecimal, and decimal number systems instantly.', emoji: '🔢', category: 'Conversion' },
+
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'AI Tools', 'Document Generator', 'Image Tools'] as const;
