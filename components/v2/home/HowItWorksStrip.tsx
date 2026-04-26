@@ -27,7 +27,6 @@ export default function HowItWorksStrip() {
               ),
               color: 'var(--green)',
               bg: 'var(--green-tint)',
-              step: '1',
               title: 'Pick a tool',
               desc: 'Browse 80+ free browser-based tools by category.',
             },
@@ -39,7 +38,6 @@ export default function HowItWorksStrip() {
               ),
               color: 'var(--blue)',
               bg: 'var(--blue-tint)',
-              step: '2',
               title: 'Paste your data',
               desc: 'Type or paste — nothing is ever sent to a server.',
             },
@@ -51,54 +49,104 @@ export default function HowItWorksStrip() {
               ),
               color: 'var(--purple)',
               bg: 'var(--purple-tint)',
-              step: '3',
               title: 'Get your result',
               desc: 'Copy the output instantly. Done in seconds.',
             },
           ].map((item, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', flex: '1 1 0', minWidth: 160 }}>
               {i > 0 && (
-                <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', padding: '0 4px' }}>
-                  <svg width="24" height="2" viewBox="0 0 24 2" preserveAspectRatio="none">
-                    <line x1="0" y1="1" x2="24" y2="1" stroke="var(--border)" strokeWidth="1.5" strokeDasharray="3 3" />
+                <div
+                  style={{
+                    flexShrink: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: '0 8px',
+                    color: 'var(--fg-3)',
+                  }}
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
                 </div>
               )}
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '8px 16px', gap: 8, flex: '1 1 0' }}>
-                <div style={{
-                  width: 44, height: 44, borderRadius: '50%',
-                  background: item.bg, color: item.color,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  flexShrink: 0,
-                }}>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  textAlign: 'center',
+                  padding: '8px 16px',
+                  gap: 8,
+                  flex: '1 1 0',
+                }}
+              >
+                <div
+                  style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: '50%',
+                    background: item.bg,
+                    color: item.color,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                  }}
+                >
                   {item.icon}
                 </div>
                 <div>
-                  <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 3 }}>{item.title}</div>
-                  <div style={{ fontSize: 12, color: 'var(--fg-2)', lineHeight: 1.45 }}>{item.desc}</div>
+                  <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 3 }}>
+                    {item.title}
+                  </div>
+                  <div style={{ fontSize: 12, color: 'var(--fg-2)', lineHeight: 1.45 }}>
+                    {item.desc}
+                  </div>
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Privacy tagline */}
-        <div style={{
-          textAlign: 'center',
-          marginTop: 16,
-          paddingTop: 12,
-          borderTop: '1px solid var(--border)',
-          fontSize: 12.5,
-          color: 'var(--fg-3)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: 5,
-        }}>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
-          </svg>
-          No servers &nbsp;&middot;&nbsp; No uploads &nbsp;&middot;&nbsp; Nothing leaves your browser &mdash; ever.
+        {/* Privacy badge */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            marginTop: 16,
+            paddingTop: 14,
+            borderTop: '1px solid var(--border)',
+          }}
+        >
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              padding: '5px 14px',
+              borderRadius: 999,
+              background: 'var(--green-tint)',
+              color: 'var(--green)',
+              fontSize: 12.5,
+              fontWeight: 600,
+            }}
+          >
+            <svg
+              width="13"
+              height="13"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ flexShrink: 0 }}
+            >
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            No servers &nbsp;&middot;&nbsp; No uploads &nbsp;&middot;&nbsp; Nothing leaves your browser &mdash; ever.
+          </div>
         </div>
       </div>
     </section>

@@ -12,7 +12,14 @@
 :root {
   --red: #d93030;
   --red-hover: #b82524;
-  --red-tint: #fdecec;
+  --red-tint:    #fdecec;
+  --green-tint:  #d6f0df;
+  --blue-tint:   #e7ecff;
+  --purple-tint: #ebe0ff;
+  --amber-tint:  #fff0c9;
+  --teal-tint:   #d3efea;
+  --pink-tint:   #fde0ef;
+  --indigo-tint: #e0e7ff;
 
   --bg: #fafaf8;
   --surface: #ffffff;
@@ -64,7 +71,14 @@
   --fg-1: #d4d4d1;
   --fg-2: #8a8a89;
   --fg-3: #5a5a58;
-  --red-tint: #2a0f0e;
+  --red-tint:    #2a0f0e;
+  --green-tint:  #1a3527;
+  --blue-tint:   #1d2547;
+  --purple-tint: #2d1d48;
+  --amber-tint:  #382a10;
+  --teal-tint:   #103430;
+  --pink-tint:   #3e1832;
+  --indigo-tint: #1d2044;
 
   --c-dev-bg:  #1d2547; --c-dev:  #9aafff;
   --c-txt-bg:  #432518; --c-txt:  #ffb07a;

@@ -40,19 +40,29 @@ export default function WhyToolblip() {
       <div className="tb-v2-container">
         <div style={{ textAlign: 'center', marginBottom: 28 }}>
           <div className="tb-v2-kicker">Why Toolblip?</div>
-          <h2 style={{ fontSize: 22, fontWeight: 700, margin: '4px 0 0', letterSpacing: '-0.3px' }}>
+          <h2
+            style={{
+              fontSize: 22,
+              fontWeight: 700,
+              margin: '4px 0 0',
+              letterSpacing: '-0.3px',
+            }}
+          >
             The smarter tool choice
           </h2>
         </div>
 
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: 16,
-        }}>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+            gap: 16,
+          }}
+        >
           {benefits.map((b) => (
             <div
               key={b.title}
+              className="why-card"
               style={{
                 padding: '20px',
                 borderRadius: 10,
@@ -61,24 +71,58 @@ export default function WhyToolblip() {
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 10,
+                transition: 'box-shadow 0.15s, transform 0.15s',
               }}
             >
-              <div style={{
-                width: 44, height: 44, borderRadius: 10,
-                background: b.bg, color: b.color,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                flexShrink: 0,
-              }}>
+              <div
+                style={{
+                  width: 44,
+                  height: 44,
+                  borderRadius: 10,
+                  background: b.bg,
+                  color: b.color,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+              >
                 {b.icon}
               </div>
               <div>
-                <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 5 }}>{b.title}</div>
-                <div style={{ fontSize: 13, color: 'var(--fg-2)', lineHeight: 1.5 }}>{b.desc}</div>
+                <div
+                  style={{
+                    fontWeight: 700,
+                    fontSize: 15,
+                    marginBottom: 5,
+                  }}
+                >
+                  {b.title}
+                </div>
+                <div
+                  style={{
+                    fontSize: 13,
+                    color: 'var(--fg-2)',
+                    lineHeight: 1.5,
+                  }}
+                >
+                  {b.desc}
+                </div>
               </div>
             </div>
           ))}
         </div>
       </div>
+      <style>{`
+        .why-card:hover {
+          box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+          transform: translateY(-2px);
+        }
+        [data-theme="dark"] .why-card:hover {
+          box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+      `}</style>
     </section>
   );
 }
+</parameter>
