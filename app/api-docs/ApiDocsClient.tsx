@@ -2,6 +2,8 @@
 
 const BASE_URL = 'https://api.toolblip.com';
 
+// ── Types ────────────────────────────────────────────────────────────────────
+
 interface FieldDef {
   name: string;
   type: string;
@@ -10,7 +12,7 @@ interface FieldDef {
 }
 
 interface Endpoint {
-  method: 'GET' | 'POST';
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
   path: string;
   auth: boolean;
   description: string;
@@ -20,14 +22,16 @@ interface Endpoint {
   responseNote?: string;
 }
 
+// ── Endpoint definitions ─────────────────────────────────────────────────────
+
 const endpoints: Endpoint[] = [
+  // ── Tools ──────────────────────────────────────────────────────────────────
   {
     method: 'GET',
     path: '/api/tools',
     auth: false,
-    description: 'Returns a paginated list of all available tools in the directory.',
-    curl: `curl -X GET "${BASE_URL}/api/tools" \\
-  -H "Accept: application/json"`,
+    description: 'Returns a paginated list of all available tools in the directory. Supports filtering by category and search query.',
+    curl: `curl "${BASE_URL}/api/tools" -H "Accept: application/json"`,
     response: `{
   "tools": {
     "tools": [
@@ -55,9 +59,8 @@ const endpoints: Endpoint[] = [
     method: 'GET',
     path: '/api/tools/{slug}',
     auth: false,
-    description: 'Returns a single tool by its slug identifier.',
-    curl: `curl -X GET "${BASE_URL}/api/tools/qr-code-generator" \\
-  -H "Accept: application/json"`,
+    description: 'Returns a single tool by its URL-safe slug identifier.',
+    curl: `curl "${BASE_URL}/api/tools/qr-code-generator" -H "Accept: application/json"`,
     response: `{
   "tool": {
     "id": 1,
@@ -71,28 +74,25 @@ const endpoints: Endpoint[] = [
   }
 }`,
   },
+
+  // ── Auth ────────────────────────────────────────────────────────────────────
   {
     method: 'POST',
     path: '/api/auth/register',
     auth: false,
-    description: 'Creates a new user account and returns an authentication token.',
+    description: 'Creates a new user account and returns a Bearer token for subsequent authenticated requests.',
     body: {
       fields: [
         { name: 'name', type: 'string', required: true, description: 'Full name (min 2 characters)' },
-        { name: 'email', type: 'string', required: true, description: 'Valid email address' },
+        { name: 'email', type: 'string', required: true, description: 'Unique, valid email address' },
         { name: 'password', type: 'string', required: true, description: 'Minimum 8 characters' },
-        { name: 'password_confirmation', type: 'string', required: true, description: 'Must match password' },
+        { name: 'password_confirmation', type: 'string', required: true, description: 'Must match password exactly' },
       ],
     },
     curl: `curl -X POST "${BASE_URL}/api/auth/register" \\
   -H "Content-Type: application/json" \\
   -H "Accept: application/json" \\
-  -d '{
-    "name": "Harun Ray",
-    "email": "harun@example.com",
-    "password": "securepass123",
-    "password_confirmation": "securepass123"
-  }'`,
+  -d '{"name":"Harun Ray","email":"harun@example.com","password":"securepass123","password_confirmation":"securepass123"}'`,
     response: `{
   "user": {
     "id": 1,
@@ -102,13 +102,13 @@ const endpoints: Endpoint[] = [
   },
   "token": "1|abcdef123456..."
 }`,
-    responseNote: 'Save the token — use it as Bearer {token} in subsequent authenticated requests.',
+    responseNote: 'Save the token — use it as Bearer {token} in the Authorization header for all authenticated requests.',
   },
   {
     method: 'POST',
     path: '/api/auth/login',
     auth: false,
-    description: 'Authenticates an existing user and returns a token.',
+    description: 'Authenticates an existing user with email and password, returning a Bearer token.',
     body: {
       fields: [
         { name: 'email', type: 'string', required: true, description: 'Registered email address' },
@@ -118,10 +118,7 @@ const endpoints: Endpoint[] = [
     curl: `curl -X POST "${BASE_URL}/api/auth/login" \\
   -H "Content-Type: application/json" \\
   -H "Accept: application/json" \\
-  -d '{
-    "email": "harun@example.com",
-    "password": "securepass123"
-  }'`,
+  -d '{"email":"harun@example.com","password":"securepass123"}'`,
     response: `{
   "user": {
     "id": 1,
@@ -136,7 +133,7 @@ const endpoints: Endpoint[] = [
     method: 'POST',
     path: '/api/auth/logout',
     auth: true,
-    description: "Invalidates the current user's token.",
+    description: 'Invalidates the current user\'s Bearer token server-side.',
     curl: `curl -X POST "${BASE_URL}/api/auth/logout" \\
   -H "Authorization: Bearer {token}" \\
   -H "Accept: application/json"`,
@@ -148,8 +145,8 @@ const endpoints: Endpoint[] = [
     method: 'GET',
     path: '/api/auth/user',
     auth: true,
-    description: 'Returns the currently authenticated user profile.',
-    curl: `curl -X GET "${BASE_URL}/api/auth/user" \\
+    description: 'Returns the profile of the currently authenticated user.',
+    curl: `curl "${BASE_URL}/api/auth/user" \\
   -H "Authorization: Bearer {token}" \\
   -H "Accept: application/json"`,
     response: `{
@@ -163,32 +160,60 @@ const endpoints: Endpoint[] = [
   },
 ];
 
+// ── Method styles ────────────────────────────────────────────────────────────
+
 const METHOD_STYLES: Record<string, string> = {
-  GET: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
-  POST: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-  PUT: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-  DELETE: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+  GET:    'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+  POST:   'bg-blue-100 text-blue-700    dark:bg-blue-900/30    dark:text-blue-400',
+  PUT:    'bg-amber-100 text-amber-700   dark:bg-amber-900/30  dark:text-amber-400',
+  DELETE: 'bg-red-100 text-red-700       dark:bg-red-900/30     dark:text-red-400',
 };
 
-function CodeBlock({ children, dark = false }: { children: string; dark?: boolean }) {
+// ── Components ───────────────────────────────────────────────────────────────
+
+function CopyButton({ text }: { text: string }) {
+  function handleCopy() {
+    navigator.clipboard.writeText(text).catch(() => {});
+  }
   return (
-    <div
-      className={`overflow-x-auto rounded-xl p-4 text-xs font-mono leading-relaxed ${
-        dark
-          ? 'bg-[var(--fg-0)] text-emerald-400'
-          : 'bg-[var(--surface-2)] text-[var(--fg-1)]'
-      }`}
+    <button
+      onClick={handleCopy}
+      className="shrink-0 rounded-lg border border-[var(--line)] bg-[var(--surface-2)] px-2.5 py-1 text-xs font-medium text-[var(--fg-2)] hover:border-[var(--fg-3)] hover:text-[var(--fg-0)] transition-all active:scale-95"
     >
-      {children}
+      Copy
+    </button>
+  );
+}
+
+function CodeBlock({ children }: { children: string }) {
+  return (
+    <div className="relative group">
+      <div className="overflow-x-auto rounded-xl bg-[var(--surface-2)] p-4 text-xs font-mono leading-relaxed text-[var(--fg-1)]">
+        <pre className="whitespace-pre">{children}</pre>
+      </div>
+      <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+        <CopyButton text={children} />
+      </div>
     </div>
   );
 }
 
-function EndpointCard({ ep }: { ep: Endpoint }) {
+function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
-    <div className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] overflow-hidden">
-      {/* Header */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-[var(--line)] bg-[var(--surface-2)] px-5 py-3.5">
+    <h2 className="text-xs font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-4">
+      {children}
+    </h2>
+  );
+}
+
+function EndpointCard({ ep, index }: { ep: Endpoint; index: number }) {
+  return (
+    <div
+      id={`endpoint-${index}`}
+      className="scroll-mt-6 rounded-2xl border border-[var(--line)] bg-[var(--surface)] overflow-hidden"
+    >
+      {/* Header strip */}
+      <div className="flex flex-wrap items-center gap-2 border-b border-[var(--line)] bg-[var(--surface-2)] px-5 py-3">
         <span
           className={`shrink-0 rounded-md px-2.5 py-1 text-xs font-bold uppercase tracking-wide ${METHOD_STYLES[ep.method]}`}
         >
@@ -225,7 +250,9 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
                     <tr key={f.name}>
                       <td className="px-4 py-2.5">
                         <code className="font-mono text-xs text-[var(--fg-0)]">{f.name}</code>
-                        {f.required && <span className="ml-1 text-[var(--red)] text-xs">*</span>}
+                        {f.required && (
+                          <span className="ml-1 text-[var(--red)] text-xs font-bold">*</span>
+                        )}
                       </td>
                       <td className="px-4 py-2.5">
                         <span className="rounded bg-[var(--surface-3)] px-1.5 py-0.5 font-mono text-xs text-[var(--fg-2)]">
@@ -243,13 +270,17 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
 
         {/* curl example */}
         <div>
-          <p className="text-xs font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-2.5">Example</p>
-          <CodeBlock dark>{ep.curl}</CodeBlock>
+          <p className="text-xs font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-2.5">
+            Example Request
+          </p>
+          <CodeBlock>{ep.curl}</CodeBlock>
         </div>
 
         {/* Response */}
         <div>
-          <p className="text-xs font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-2.5">Response</p>
+          <p className="text-xs font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-2.5">
+            Example Response
+          </p>
           <CodeBlock>{ep.response}</CodeBlock>
           {ep.responseNote && (
             <p className="mt-2 text-xs text-[var(--fg-3)] italic">{ep.responseNote}</p>
@@ -262,33 +293,36 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
 
 function TableOfContents() {
   return (
-    <nav className="space-y-1">
+    <nav className="space-y-0.5">
       <p className="text-xs font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-3">Contents</p>
       {endpoints.map((ep, i) => (
         <a
           key={i}
           href={`#endpoint-${i}`}
-          className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-[var(--fg-2)] hover:bg-[var(--surface-2)] hover:text-[var(--fg-0)] transition-colors"
+          className="flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs text-[var(--fg-2)] hover:bg-[var(--surface-2)] hover:text-[var(--fg-0)] transition-colors"
         >
           <span
-            className={`shrink-0 rounded px-1.5 py-0.5 text-xs font-bold ${METHOD_STYLES[ep.method]}`}
+            className={`shrink-0 rounded px-1.5 py-0.5 text-[10px] font-bold ${METHOD_STYLES[ep.method]}`}
           >
             {ep.method}
           </span>
-          <code className="font-mono text-xs truncate">{ep.path}</code>
+          <code className="font-mono truncate">{ep.path}</code>
         </a>
       ))}
     </nav>
   );
 }
 
+// ── Main component ────────────────────────────────────────────────────────────
+
 export default function ApiDocsClient() {
   return (
     <main className="min-h-screen bg-[var(--bg)]">
+
       {/* ── Hero ── */}
       <section className="border-b border-[var(--line)] bg-[var(--surface)]">
         <div className="mx-auto max-w-5xl px-6 py-14">
-          {/* Pill badge */}
+          {/* Status pill */}
           <div className="inline-flex items-center gap-2 rounded-full bg-[var(--red-tint)] px-3 py-1 text-xs font-semibold text-[var(--red)] mb-5">
             <span className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[var(--red)] opacity-75" />
@@ -301,31 +335,32 @@ export default function ApiDocsClient() {
             Toolblip REST API
           </h1>
           <p className="text-base text-[var(--fg-2)] mb-10 max-w-2xl leading-relaxed">
-            Integrate with Toolblip. Browse tools, manage accounts, and authenticate users via a clean
-            token-based REST API served at{' '}
-            <code className="font-mono text-[var(--fg-1)]">api.toolblip.com</code>.
+            Integrate with Toolblip. Browse tools, register accounts, and authenticate users via a clean
+            token-based REST API.
           </p>
 
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-            {/* Base URL */}
+          {/* Key info cards */}
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             <div className="rounded-xl border border-[var(--line)] bg-[var(--surface-2)] p-5">
               <p className="text-xs font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-2.5">
                 Base URL
               </p>
-              <code className="font-mono text-sm text-[var(--fg-0)] break-all">{BASE_URL}</code>
+              <div className="flex items-center gap-2">
+                <code className="font-mono text-sm text-[var(--fg-0)] break-all">{BASE_URL}</code>
+                <CopyButton text={BASE_URL} />
+              </div>
             </div>
 
-            {/* Auth */}
             <div className="rounded-xl border border-[var(--line)] bg-[var(--surface-2)] p-5">
               <p className="text-xs font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-2.5">
                 Authentication
               </p>
-              <p className="text-xs text-[var(--fg-2)] mb-2.5">
-                Bearer token in the{' '}
+              <p className="text-xs text-[var(--fg-2)] mb-2">
+                Pass your Bearer token in the{' '}
                 <code className="rounded bg-[var(--surface-3)] px-1.5 py-0.5 font-mono text-xs text-[var(--fg-1)]">
                   Authorization
                 </code>{' '}
-                header.
+                header on every authenticated request.
               </p>
               <code className="font-mono text-xs text-[var(--fg-1)]">
                 Authorization: Bearer {'{'}token{'}'}
@@ -335,18 +370,18 @@ export default function ApiDocsClient() {
         </div>
       </section>
 
-      {/* ── Body: sidebar + content ── */}
+      {/* ── Body ── */}
       <section className="mx-auto max-w-5xl px-6 py-10">
         <div className="flex flex-col gap-10 lg:flex-row lg:gap-12">
 
           {/* Sidebar TOC */}
           <aside className="lg:w-52 shrink-0">
-            <div className="sticky top-6 rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-4 lg:block hidden">
+            <div className="sticky top-6 hidden lg:block rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-4">
               <TableOfContents />
             </div>
             {/* Mobile TOC */}
             <details className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-4 lg:hidden">
-              <summary className="cursor-pointer text-sm font-semibold text-[var(--fg-1)]">
+              <summary className="cursor-pointer text-sm font-semibold text-[var(--fg-1)] select-none">
                 📑 Jump to endpoint
               </summary>
               <div className="mt-3">
@@ -355,15 +390,42 @@ export default function ApiDocsClient() {
             </details>
           </aside>
 
-          {/* Endpoints */}
+          {/* Endpoint list */}
           <div className="flex-1 space-y-6 min-w-0">
-            {endpoints.map((ep, i) => (
-              <div key={i} id={`endpoint-${i}`} className="scroll-mt-6">
-                <EndpointCard ep={ep} />
-              </div>
-            ))}
 
-            {/* ── Rate limits & contact ── */}
+            {/* Tools */}
+            <div>
+              <SectionHeading>Tools</SectionHeading>
+              <div className="space-y-4">
+                {endpoints
+                  .filter((e) => e.path.startsWith('/api/tools'))
+                  .map((ep, _, arr) => (
+                    <EndpointCard
+                      key={ep.path}
+                      ep={ep}
+                      index={endpoints.indexOf(ep)}
+                    />
+                  ))}
+              </div>
+            </div>
+
+            {/* Auth */}
+            <div>
+              <SectionHeading>Authentication</SectionHeading>
+              <div className="space-y-4">
+                {endpoints
+                  .filter((e) => e.path.startsWith('/api/auth'))
+                  .map((ep) => (
+                    <EndpointCard
+                      key={ep.path}
+                      ep={ep}
+                      index={endpoints.indexOf(ep)}
+                    />
+                  ))}
+              </div>
+            </div>
+
+            {/* ── Rate limits ── */}
             <div className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-6 space-y-3">
               <h3 className="font-semibold text-[var(--fg-0)]">Rate Limits</h3>
               <p className="text-sm text-[var(--fg-2)] leading-relaxed">
@@ -379,19 +441,45 @@ export default function ApiDocsClient() {
               </p>
             </div>
 
+            {/* ── Errors ── */}
             <div className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-6 space-y-3">
-              <h3 className="font-semibold text-[var(--fg-0)]">Errors</h3>
+              <h3 className="font-semibold text-[var(--fg-0)]">Error Responses</h3>
               <p className="text-sm text-[var(--fg-2)] leading-relaxed">
                 All errors return a JSON object with a{' '}
-                <code className="font-mono text-xs bg-[var(--surface-2)] px-1.5 py-0.5 rounded text-[var(--fg-1)]">
+                <code className="rounded bg-[var(--surface-2)] px-1.5 py-0.5 font-mono text-xs text-[var(--fg-1)]">
                   message
                 </code>{' '}
-                field. HTTP status codes follow REST conventions:{' '}
-                <span className="font-mono text-xs text-[var(--fg-1)]">400</span> for bad request,{' '}
-                <span className="font-mono text-xs text-[var(--fg-1)]">401</span> for unauthenticated,{' '}
-                <span className="font-mono text-xs text-[var(--fg-1)]">404</span> for not found, and{' '}
-                <span className="font-mono text-xs text-[var(--fg-1)]">500</span> for server errors.
+                field describing what went wrong.
               </p>
+              <div className="overflow-hidden rounded-xl border border-[var(--line)]">
+                <table className="w-full text-sm">
+                  <thead className="bg-[var(--surface-2)]">
+                    <tr>
+                      <th className="px-4 py-2.5 text-left font-semibold text-[var(--fg-1)]">Status</th>
+                      <th className="px-4 py-2.5 text-left font-semibold text-[var(--fg-1)]">Meaning</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[var(--line)] text-[var(--fg-2)]">
+                    {[
+                      [400, 'Bad request — missing or invalid fields'],
+                      [401, 'Unauthenticated — token missing or invalid'],
+                      [403, 'Forbidden — authenticated but insufficient permissions'],
+                      [404, 'Not found — resource does not exist'],
+                      [422, 'Validation error — request body failed validation'],
+                      [500, 'Server error — something went wrong on our end'],
+                    ].map(([code, meaning]) => (
+                      <tr key={code}>
+                        <td className="px-4 py-2.5">
+                          <code className="rounded bg-[var(--surface-2)] px-1.5 py-0.5 font-mono text-xs text-[var(--fg-1)]">
+                            {code}
+                          </code>
+                        </td>
+                        <td className="px-4 py-2.5 text-xs">{meaning as string}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
