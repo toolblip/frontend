@@ -7,32 +7,47 @@ import { tools } from '@/data/tools';
 import { getCategoryMeta } from '@/lib/v2/categoryMeta';
 import { IconArrowUR, IconSearch, IconClose } from '@/components/v2/icons';
 
-const DIRECTORY_CATEGORIES = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'Color'] as const;
+// All categories present in tools.ts + categoryMeta.ts
+const DIRECTORY_CATEGORIES = [
+  'All',
+  'Text',
+  'Developer',
+  'Image',
+  'Encoder',
+  'Conversion',
+  'Math',
+  'CSS',
+  'Color',
+  'SEO',
+  'Network',
+  'Utility',
+] as const;
 type Category = typeof DIRECTORY_CATEGORIES[number];
 
 export default function DirectoryClient() {
   const searchParams = useSearchParams();
   const urlCategory = searchParams.get('category');
-  const validCategory = DIRECTORY_CATEGORIES.includes(urlCategory as Category) ? (urlCategory as Category) : 'All';
+  const validCategory = DIRECTORY_CATEGORIES.includes(urlCategory as Category)
+    ? (urlCategory as Category)
+    : 'All';
 
   const [query, setQuery] = useState('');
   const [activeTab, setActiveTab] = useState<Category>(validCategory);
+  const [visibleCount, setVisibleCount] = useState(24);
+  const [mounted, setMounted] = useState(false);
+  const [showTopBtn, setShowTopBtn] = useState(false);
+  const [animKey, setAnimKey] = useState(0);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  // Sync activeTab when URL ?category= param changes (e.g. navigating from homepage pills)
+  useEffect(() => { setMounted(true); }, []);
+
+  // Sync tab when URL ?category= param changes
   useEffect(() => {
     if (urlCategory && DIRECTORY_CATEGORIES.includes(urlCategory as Category)) {
       setActiveTab(urlCategory as Category);
       setVisibleCount(24);
     }
   }, [urlCategory]);
-  const [showTopBtn, setShowTopBtn] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(24);
-  const [mounted, setMounted] = useState(false);
-  const [animKey, setAnimKey] = useState(0);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => { setMounted(true); }, []);
-
 
   // Debounced search
   const [debouncedQuery, setDebouncedQuery] = useState('');
@@ -112,7 +127,7 @@ export default function DirectoryClient() {
           <div className="tb-v2-kicker">All tools</div>
           <h1 className="tb-v2-dir-title">Tool Directory</h1>
           <p className="tb-v2-dir-sub">
-            {tools.length} free browser-based tools - text, developer, image,
+            {tools.length} free browser-based tools — text, developer, image,
             conversion, math, and more.
           </p>
         </div>
@@ -151,6 +166,7 @@ export default function DirectoryClient() {
           <div className="tb-v2-dir-tabs">
             {DIRECTORY_CATEGORIES.map((tab) => {
               const count = tabCounts[tab] ?? 0;
+              // Only show tabs that have tools (or All)
               if (count === 0 && tab !== 'All') return null;
               const isActive = activeTab === tab;
               return (
@@ -261,7 +277,11 @@ export default function DirectoryClient() {
           /* Empty state */
           <div className="tb-v2-dir-empty">
             <div className="tb-v2-dir-empty-icon">
-              <IconSearch width={32} height={32} />
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8"/>
+                <path d="m21 21-4.35-4.35"/>
+                <path d="M8 11h6M11 8v6" opacity="0.4"/>
+              </svg>
             </div>
             <h3 className="tb-v2-dir-empty-title">No tools found</h3>
             <p className="tb-v2-dir-empty-desc">
