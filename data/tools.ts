@@ -2070,7 +2070,6 @@ export const tools: Tool[] = [
   { name: 'Contrast Checker', slug: 'contrast-checker-pro', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail indicators.', emoji: '♿', category: 'Color' },
   { name: 'Unit Converter', slug: 'unit-converter-pro', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
   { name: 'Number Base Converter', slug: 'number-base-converter-pro', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly.', emoji: '🔢', category: 'Conversion' },
-];
 
   // --- New tools (2026-04-27) ---
   { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-browser', description: 'Generate lorem ipsum text in your browser with customizable paragraphs, sentences, word count, and starting phrase.', emoji: '📜', category: 'Text' },
