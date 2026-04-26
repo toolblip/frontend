@@ -30,8 +30,14 @@ export default function CategoryQuickAccess() {
 
   return (
     <section style={{ padding: '16px 0 4px' }}>
+      <div className="tb-v2-container" style={{ marginBottom: 8 }}>
+        <div style={{ textAlign: 'center', marginBottom: 4 }}>
+          <span className="tb-v2-kicker" style={{ fontSize: 12 }}>Quick access</span>
+        </div>
+      </div>
       <div className="tb-v2-container">
         <div
+          className="cat-pills-row"
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -40,16 +46,6 @@ export default function CategoryQuickAccess() {
             justifyContent: 'center',
           }}
         >
-          <span
-            style={{
-              fontSize: 13,
-              color: 'var(--fg-3)',
-              marginRight: 2,
-              flexShrink: 0,
-            }}
-          >
-            Browse by:
-          </span>
           {categories.map((name) => {
             const meta = CATEGORY_META[name] ?? FALLBACK;
             return (
@@ -81,11 +77,20 @@ export default function CategoryQuickAccess() {
           font-size: 13px;
           font-weight: 500;
           text-decoration: none;
-          transition: border-color 0.12s, color 0.12s;
+          transition: border-color 0.12s, color 0.12s, transform 0.12s, box-shadow 0.12s;
         }
         .category-pill:hover {
           border-color: var(--pill-border);
           color: var(--pill-border);
+          transform: translateY(-1px);
+          box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+        .cat-pills-row {
+          animation: cat-pills-in 0.4s ease-out both;
+        }
+        @keyframes cat-pills-in {
+          from { opacity: 0; transform: translateY(6px); }
+          to   { opacity: 1; transform: translateY(0); }
         }
       `}</style>
     </section>

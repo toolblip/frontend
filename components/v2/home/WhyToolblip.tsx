@@ -7,8 +7,8 @@ const benefits = [
     ),
     color: 'var(--green)',
     bg: 'var(--green-tint)',
-    title: 'Private',
-    desc: 'Your data never leaves your browser. No servers, no uploads, no tracking — ever.',
+    title: '100% Private',
+    desc: 'Your data never leaves your browser. Nothing is sent to any server — ever. Not even to us.',
   },
   {
     icon: (
@@ -18,8 +18,8 @@ const benefits = [
     ),
     color: 'var(--amber)',
     bg: 'var(--amber-tint)',
-    title: 'Fast',
-    desc: 'Everything runs in your tab. No waiting on servers — results appear instantly.',
+    title: 'Instantly Fast',
+    desc: 'No server round-trips. No loading spinners. Results appear the moment you finish typing.',
   },
   {
     icon: (
@@ -33,8 +33,8 @@ const benefits = [
     ),
     color: 'var(--blue)',
     bg: 'var(--blue-tint)',
-    title: 'Free',
-    desc: 'No signup, no paywall, no usage caps. Every tool is free, now and always.',
+    title: 'Completely Free',
+    desc: 'No signup. No paywall. No usage limits. Every tool is free, today and every day after.',
   },
 ];
 
@@ -119,11 +119,12 @@ export default function WhyToolblip() {
       </div>
       <style>{`
         .why-card:hover {
-          box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-          transform: translateY(-2px);
+          box-shadow: 0 6px 24px rgba(0,0,0,0.10);
+          transform: translateY(-3px) scale(1.01);
+          border-color: var(--fg-3);
         }
         [data-theme="dark"] .why-card:hover {
-          box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+          box-shadow: 0 6px 24px rgba(0,0,0,0.4);
         }
 
         .why-card {

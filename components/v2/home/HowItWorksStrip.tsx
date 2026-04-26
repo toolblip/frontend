@@ -1,4 +1,9 @@
-export default function HowItWorksStrip() {
+interface Props {
+  toolCount: number;
+  categoryCount: number;
+}
+
+export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
   return (
     <section
       style={{
@@ -28,7 +33,7 @@ export default function HowItWorksStrip() {
               color: 'var(--green)',
               bg: 'var(--green-tint)',
               title: 'Pick a tool',
-              desc: 'Browse 80+ free browser-based tools by category.',
+              desc: `Browse ${toolCount}+ free browser-based tools across ${categoryCount} categories.`,
             },
             {
               icon: (

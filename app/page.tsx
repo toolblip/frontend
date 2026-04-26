@@ -72,7 +72,7 @@ export default function HomePage() {
     <>
       <Hero toolCount={toolCount} />
       <HowItWorksStrip toolCount={toolCount} categoryCount={categoryCount} />
-      <CategoryQuickAccess categories={categories} />
+      <CategoryQuickAccess />
       <WhyToolblip />
       <FeaturedStrip />
       <CategoryGrid />
