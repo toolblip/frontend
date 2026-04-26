@@ -3,7 +3,8 @@
 import { useState } from 'react';
 
 // ─── Config ───────────────────────────────────────────────────────────────────
-
+// Primary: api.toolblip.com (SSL ✅ verified)
+// Fallback: toolblip-api-production.up.railway.app
 const BASE_URL = 'https://api.toolblip.com';
 const RAILWAY_URL = 'https://toolblip-api-production.up.railway.app';
 
@@ -55,27 +56,11 @@ const endpoints: Endpoint[] = [
         required: false,
         description: 'Full-text search across tool name and description',
       },
-      {
-        name: 'page',
-        type: 'integer',
-        required: false,
-        description: 'Page number (default: 1)',
-      },
-      {
-        name: 'per_page',
-        type: 'integer',
-        required: false,
-        description: 'Items per page (default: 20, max: 100)',
-      },
     ],
     responseSchema: [
       { label: 'tools.tools[]', content: 'Array of Tool objects' },
-      { label: 'tools.meta.current_page', content: 'integer — Current page number' },
-      { label: 'tools.meta.total', content: 'integer — Total tool count' },
-      { label: 'tools.meta.per_page', content: 'integer — Items per page' },
-      { label: 'tools.meta.last_page', content: 'integer — Total pages' },
     ],
-    curl: `curl -X GET "${BASE_URL}/api/tools?category=developer&page=1" \\
+    curl: `curl -X GET "${BASE_URL}/api/tools" \\
   -H "Accept: application/json"`,
     response: `{
   "tools": {
@@ -89,14 +74,18 @@ const endpoints: Endpoint[] = [
         "is_pro": false,
         "emoji": "📋",
         "created_at": "2026-01-15T10:30:00Z"
+      },
+      {
+        "id": 2,
+        "slug": "image-resizer",
+        "name": "Image Resizer",
+        "description": "Resize images to any dimension in seconds.",
+        "category": "image",
+        "is_pro": false,
+        "emoji": "🖼️",
+        "created_at": "2026-01-20T08:00:00Z"
       }
-    ],
-    "meta": {
-      "current_page": 1,
-      "total": 120,
-      "per_page": 20,
-      "last_page": 6
-    }
+    ]
   }
 }`,
   },
@@ -180,7 +169,6 @@ const endpoints: Endpoint[] = [
     ],
     curl: `curl -X POST "${BASE_URL}/api/auth/register" \\
   -H "Content-Type: application/json" \\
-  -H "Accept: application/json" \\
   -d '{
     "name": "Jane Doe",
     "email": "jane@example.com",
@@ -223,7 +211,6 @@ const endpoints: Endpoint[] = [
     ],
     curl: `curl -X POST "${BASE_URL}/api/auth/login" \\
   -H "Content-Type: application/json" \\
-  -H "Accept: application/json" \\
   -d '{
     "email": "jane@example.com",
     "password": "secretpass123"
@@ -250,8 +237,7 @@ const endpoints: Endpoint[] = [
       { label: 'message', content: 'string — Confirmation message' },
     ],
     curl: `curl -X POST "${BASE_URL}/api/auth/logout" \\
-  -H "Authorization: Bearer {token}" \\
-  -H "Accept: application/json"`,
+  -H "Authorization: Bearer {token}"`,
     response: `{
   "message": "Logged out successfully"
 }`,
@@ -271,8 +257,7 @@ const endpoints: Endpoint[] = [
       { label: 'user.is_pro', content: 'boolean — Pro subscription status' },
     ],
     curl: `curl -X GET "${BASE_URL}/api/auth/user" \\
-  -H "Authorization: Bearer {token}" \\
-  -H "Accept: application/json"`,
+  -H "Authorization: Bearer {token}"`,
     response: `{
   "user": {
     "id": 42,
