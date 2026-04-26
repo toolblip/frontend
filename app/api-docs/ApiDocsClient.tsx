@@ -1,14 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 
 // ─── Config ───────────────────────────────────────────────────────────────────
-// Primary: api.toolblip.com (SSL ✅ verified)
-// Fallback: toolblip-api-production.up.railway.app
 const BASE_URL = 'https://api.toolblip.com';
 const RAILWAY_URL = 'https://toolblip-api-production.up.railway.app';
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// ─── Types ───────────────────────────────────────────────────────────────────
 
 interface Parameter {
   name: string;
@@ -42,7 +41,7 @@ const endpoints: Endpoint[] = [
     auth: false,
     title: 'List All Tools',
     description:
-      'Returns a paginated list of all tools. Supports filtering by category and full-text search.',
+      'Returns a paginated list of all tools in the directory. Supports optional category filtering and full-text search across tool names and descriptions.',
     params: [
       {
         name: 'category',
@@ -56,9 +55,22 @@ const endpoints: Endpoint[] = [
         required: false,
         description: 'Full-text search across tool name and description',
       },
+      {
+        name: 'page',
+        type: 'integer',
+        required: false,
+        description: 'Page number for pagination (default: 1)',
+      },
+      {
+        name: 'per_page',
+        type: 'integer',
+        required: false,
+        description: 'Number of results per page (default: 20, max: 100)',
+      },
     ],
     responseSchema: [
       { label: 'tools.tools[]', content: 'Array of Tool objects' },
+      { label: 'tools.meta', content: 'Pagination metadata object (optional)' },
     ],
     curl: `curl -X GET "${BASE_URL}/api/tools" \\
   -H "Accept: application/json"`,
@@ -95,7 +107,7 @@ const endpoints: Endpoint[] = [
     path: '/api/tools/{slug}',
     auth: false,
     title: 'Get Tool by Slug',
-    description: 'Returns a single tool by its URL-safe slug. Returns 404 if no tool matches.',
+    description: 'Returns a single tool by its URL-safe slug. Returns 404 if no matching tool is found.',
     params: [
       {
         name: 'slug',
@@ -111,7 +123,7 @@ const endpoints: Endpoint[] = [
       { label: 'tool.description', content: 'string — Full description' },
       { label: 'tool.category', content: 'string — Category slug' },
       { label: 'tool.is_pro', content: 'boolean — Requires Pro subscription' },
-      { label: 'tool.emoji', content: 'string — Emoji icon (optional)' },
+      { label: 'tool.emoji', content: 'string — Emoji icon (optional field)' },
       { label: 'tool.created_at', content: 'string — ISO 8601 timestamp' },
     ],
     curl: `curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
@@ -138,14 +150,14 @@ const endpoints: Endpoint[] = [
     auth: false,
     title: 'Register',
     description:
-      'Create a new user account. Returns the user object and a Bearer token for authenticated requests.',
+      'Create a new user account. Returns the user object and a Bearer token for use in subsequent authenticated requests.',
     bodyParams: [
       { name: 'name', type: 'string', required: true, description: 'Full display name' },
       {
         name: 'email',
         type: 'string',
         required: true,
-        description: 'Email address — must be unique',
+        description: 'Email address — must be unique across all accounts',
       },
       {
         name: 'password',
@@ -169,6 +181,7 @@ const endpoints: Endpoint[] = [
     ],
     curl: `curl -X POST "${BASE_URL}/api/auth/register" \\
   -H "Content-Type: application/json" \\
+  -H "Accept: application/json" \\
   -d '{
     "name": "Jane Doe",
     "email": "jane@example.com",
@@ -192,7 +205,7 @@ const endpoints: Endpoint[] = [
     auth: false,
     title: 'Login',
     description:
-      'Authenticate an existing user. Returns a Bearer token to use in subsequent authenticated requests.',
+      'Authenticate an existing user. Returns a Bearer token to include in the Authorization header for all subsequent authenticated requests.',
     bodyParams: [
       {
         name: 'email',
@@ -211,6 +224,7 @@ const endpoints: Endpoint[] = [
     ],
     curl: `curl -X POST "${BASE_URL}/api/auth/login" \\
   -H "Content-Type: application/json" \\
+  -H "Accept: application/json" \\
   -d '{
     "email": "jane@example.com",
     "password": "secretpass123"
@@ -232,12 +246,13 @@ const endpoints: Endpoint[] = [
     auth: true,
     title: 'Logout',
     description:
-      'Invalidate the current session token. After calling this the token can no longer be used.',
+      'Invalidate the current session token. After calling this, the token can no longer be used for authenticated requests.',
     responseSchema: [
       { label: 'message', content: 'string — Confirmation message' },
     ],
     curl: `curl -X POST "${BASE_URL}/api/auth/logout" \\
-  -H "Authorization: Bearer {token}"`,
+  -H "Authorization: Bearer {token}" \\
+  -H "Accept: application/json"`,
     response: `{
   "message": "Logged out successfully"
 }`,
@@ -249,7 +264,7 @@ const endpoints: Endpoint[] = [
     auth: true,
     title: 'Get Authenticated User',
     description:
-      'Returns the profile of the currently authenticated user. Use the Bearer token from login or register.',
+      'Returns the profile of the currently authenticated user. Use the Bearer token from the login or register response.',
     responseSchema: [
       { label: 'user.id', content: 'integer — User ID' },
       { label: 'user.name', content: 'string — Display name' },
@@ -257,7 +272,8 @@ const endpoints: Endpoint[] = [
       { label: 'user.is_pro', content: 'boolean — Pro subscription status' },
     ],
     curl: `curl -X GET "${BASE_URL}/api/auth/user" \\
-  -H "Authorization: Bearer {token}"`,
+  -H "Authorization: Bearer {token}" \\
+  -H "Accept: application/json"`,
     response: `{
   "user": {
     "id": 42,
@@ -281,6 +297,18 @@ const groupMeta: Record<string, { label: string; icon: string }> = {
   tools: { label: 'Tools', icon: '🔧' },
   auth: { label: 'Authentication', icon: '🔑' },
 };
+
+const statusCodes = [
+  { code: 200, label: 'OK', desc: 'Request succeeded. Response body contains the result.' },
+  { code: 201, label: 'Created', desc: 'Resource created successfully (e.g. new user registered).' },
+  { code: 400, label: 'Bad Request', desc: 'Invalid request body or parameters.' },
+  { code: 401, label: 'Unauthorized', desc: 'Missing or invalid Bearer token.' },
+  { code: 403, label: 'Forbidden', desc: 'Authenticated but not permitted to access this resource.' },
+  { code: 404, label: 'Not Found', desc: 'The requested resource does not exist.' },
+  { code: 422, label: 'Validation Error', desc: 'Request body failed validation. Check the message field for details.' },
+  { code: 429, label: 'Too Many Requests', desc: 'Rate limit exceeded. Slow down and retry.' },
+  { code: 500, label: 'Server Error', desc: 'Something went wrong on our end. Please retry.' },
+];
 
 // ─── UI Primitives ─────────────────────────────────────────────────────────────
 
@@ -377,12 +405,11 @@ function SectionDivider({ group }: { group: string }) {
 // ─── Main Component ───────────────────────────────────────────────────────────
 
 export default function ApiDocsClient() {
-  const [openEndpoint, setOpenEndpoint] = useState<number | null>(0);
-
+  const [openEndpoint, setOpenEndpoint] = useState<number | null>(null);
   const groups = [...new Set(endpoints.map((ep) => ep.group))];
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-slate-50 flex flex-col">
 
       {/* ── Header ────────────────────────────────────────────────────────── */}
       <header className="bg-white border-b border-slate-200">
@@ -434,7 +461,7 @@ export default function ApiDocsClient() {
         </div>
       </header>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div className="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
 
           {/* ── Sidebar ──────────────────────────────────────────────────── */}
@@ -456,7 +483,10 @@ export default function ApiDocsClient() {
                         .map(({ ep, i }) => (
                           <button
                             key={i}
-                            onClick={() => setOpenEndpoint(i)}
+                            onClick={() => {
+                              setOpenEndpoint(openEndpoint === i ? null : i);
+                              document.getElementById(`endpoint-${i}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }}
                             className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors text-left ${
                               openEndpoint === i
                                 ? 'bg-indigo-50 text-indigo-700'
@@ -471,79 +501,95 @@ export default function ApiDocsClient() {
                   </div>
                 ))}
               </nav>
+
+              {/* ── Quick nav ──────────────────────────────────────────────── */}
+              <div className="mt-8 pt-6 border-t border-slate-200">
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 px-1">
+                  On this page
+                </p>
+                <div className="space-y-1">
+                  <a href="#overview" className="block px-3 py-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors">Overview</a>
+                  <a href="#tools" className="block px-3 py-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors">Tools</a>
+                  <a href="#auth" className="block px-3 py-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors">Authentication</a>
+                  <a href="#status-codes" className="block px-3 py-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors">Status Codes</a>
+                  <a href="#help" className="block px-3 py-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors">Get Help</a>
+                </div>
+              </div>
             </div>
           </aside>
 
           {/* ── Main content ──────────────────────────────────────────────── */}
-          <main className="lg:col-span-3 space-y-10">
+          <main className="lg:col-span-3 space-y-12">
 
             {/* ── Overview cards ────────────────────────────────────────── */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="bg-white rounded-2xl border border-slate-200 p-5">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <svg className="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
+            <section id="overview">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="bg-white rounded-2xl border border-slate-200 p-5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <svg className="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                      </svg>
+                    </div>
+                    <h3 className="font-semibold text-slate-800 text-sm">Bearer Token Auth</h3>
                   </div>
-                  <h3 className="font-semibold text-slate-800 text-sm">Bearer Token Auth</h3>
+                  <p className="text-sm text-slate-600 mb-3">
+                    Pass the token from register or login in the Authorization header.
+                  </p>
+                  <CodeBlock code="Authorization: Bearer {token}" />
                 </div>
-                <p className="text-sm text-slate-600 mb-3">
-                  Pass the token from register or login in the Authorization header.
-                </p>
-                <CodeBlock code="Authorization: Bearer {token}" />
-              </div>
 
-              <div className="bg-white rounded-2xl border border-slate-200 p-5">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <svg className="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
-                    </svg>
+                <div className="bg-white rounded-2xl border border-slate-200 p-5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <svg className="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
+                      </svg>
+                    </div>
+                    <h3 className="font-semibold text-slate-800 text-sm">JSON Throughout</h3>
                   </div>
-                  <h3 className="font-semibold text-slate-800 text-sm">JSON Throughout</h3>
+                  <p className="text-sm text-slate-600 mb-3">
+                    All requests and responses use JSON. Always include both headers.
+                  </p>
+                  <CodeBlock code="Content-Type: application/json\nAccept: application/json" />
                 </div>
-                <p className="text-sm text-slate-600 mb-3">
-                  All requests and responses use JSON. Always include both headers.
-                </p>
-                <CodeBlock code="Content-Type: application/json\nAccept: application/json" />
-              </div>
 
-              <div className="bg-white rounded-2xl border border-slate-200 p-5">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <svg className="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
+                <div className="bg-white rounded-2xl border border-slate-200 p-5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <svg className="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                    </div>
+                    <h3 className="font-semibold text-slate-800 text-sm">Rate Limits</h3>
                   </div>
-                  <h3 className="font-semibold text-slate-800 text-sm">Rate Limits</h3>
+                  <p className="text-sm text-slate-600">
+                    Public: <strong>60 req/min</strong>. Authenticated: <strong>120 req/min</strong>.
+                    Pro users enjoy higher limits.
+                  </p>
                 </div>
-                <p className="text-sm text-slate-600">
-                  Public: <strong>60 req/min</strong>. Authenticated: <strong>120 req/min</strong>.
-                  Pro users enjoy higher limits.
-                </p>
-              </div>
 
-              <div className="bg-white rounded-2xl border border-slate-200 p-5">
-                <div className="flex items-center gap-2 mb-3">
-                  <div className="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <svg className="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                    </svg>
+                <div className="bg-white rounded-2xl border border-slate-200 p-5">
+                  <div className="flex items-center gap-2 mb-3">
+                    <div className="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <svg className="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                    </div>
+                    <h3 className="font-semibold text-slate-800 text-sm">Error Format</h3>
                   </div>
-                  <h3 className="font-semibold text-slate-800 text-sm">Error Format</h3>
+                  <p className="text-sm text-slate-600">
+                    Errors return JSON with a{' '}
+                    <code className="font-mono text-xs bg-slate-100 px-1 rounded">message</code>{' '}
+                    field. Codes: 400, 401, 403, 404, 422, 500.
+                  </p>
                 </div>
-                <p className="text-sm text-slate-600">
-                  Errors return JSON with a{' '}
-                  <code className="font-mono text-xs bg-slate-100 px-1 rounded">message</code>{' '}
-                  field. Codes: 400, 401, 403, 404, 422, 500.
-                </p>
               </div>
-            </div>
+            </section>
 
             {/* ── Endpoint groups ─────────────────────────────────────────── */}
             {groups.map((group) => (
-              <div key={group}>
+              <section key={group} id={group}>
                 <SectionDivider group={group} />
                 <div className="space-y-3">
                   {endpoints
@@ -555,15 +601,53 @@ export default function ApiDocsClient() {
                         ep={ep}
                         i={i}
                         openEndpoint={openEndpoint}
-                        toggleEndpoint={setOpenEndpoint}
+                        toggleEndpoint={(idx) => setOpenEndpoint(idx === i ? null : idx)}
                       />
                     ))}
                 </div>
-              </div>
+              </section>
             ))}
 
+            {/* ── HTTP Status Codes ──────────────────────────────────────── */}
+            <section id="status-codes">
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-base">📡</span>
+                <h2 className="text-base font-bold text-slate-800">HTTP Status Codes</h2>
+                <div className="flex-1 h-px bg-slate-200" />
+              </div>
+              <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+                <table className="w-full text-sm">
+                  <thead className="bg-slate-50">
+                    <tr>
+                      <th className="px-5 py-3 text-left font-semibold text-slate-700 text-xs w-24">Code</th>
+                      <th className="px-5 py-3 text-left font-semibold text-slate-700 text-xs w-32">Status</th>
+                      <th className="px-5 py-3 text-left font-semibold text-slate-700 text-xs">Description</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {statusCodes.map((s) => (
+                      <tr key={s.code} className="hover:bg-slate-50">
+                        <td className="px-5 py-3">
+                          <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-bold ${
+                            s.code >= 500 ? 'bg-red-50 text-red-700' :
+                            s.code >= 400 ? 'bg-amber-50 text-amber-700' :
+                            s.code >= 300 ? 'bg-blue-50 text-blue-700' :
+                            'bg-emerald-50 text-emerald-700'
+                          }`}>
+                            {s.code}
+                          </span>
+                        </td>
+                        <td className="px-5 py-3 text-xs font-medium text-slate-700">{s.label}</td>
+                        <td className="px-5 py-3 text-xs text-slate-600">{s.desc}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
             {/* ── Help CTA ───────────────────────────────────────────────── */}
-            <div className="bg-gradient-to-r from-indigo-50 to-violet-50 rounded-2xl border border-indigo-100 p-6">
+            <section id="help" className="bg-gradient-to-r from-indigo-50 to-violet-50 rounded-2xl border border-indigo-100 p-6">
               <h2 className="text-base font-bold text-slate-900 mb-1">Need help?</h2>
               <p className="text-sm text-slate-600 mb-4">
                 Questions about the API? Reach out at{' '}
@@ -584,17 +668,42 @@ export default function ApiDocsClient() {
                   </svg>
                   GitHub
                 </a>
-                <a
-                  href="https://toolblip.com"
+                <Link
+                  href="/"
                   className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors"
                 >
                   Explore Toolblip →
-                </a>
+                </Link>
               </div>
-            </div>
+            </section>
+
           </main>
         </div>
       </div>
+
+      {/* ── Footer ────────────────────────────────────────────────────────── */}
+      <footer className="border-t border-slate-200 bg-white">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 bg-indigo-600 rounded-lg flex items-center justify-center">
+                <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                </svg>
+              </div>
+              <span className="text-sm font-semibold text-slate-700">Toolblip API</span>
+            </div>
+            <div className="flex items-center gap-4 text-xs text-slate-500">
+              <Link href="/api-docs" className="hover:text-indigo-600 transition-colors">Documentation</Link>
+              <Link href="/terms" className="hover:text-indigo-600 transition-colors">Terms</Link>
+              <Link href="/privacy" className="hover:text-indigo-600 transition-colors">Privacy</Link>
+              <a href="mailto:api@toolblip.com" className="hover:text-indigo-600 transition-colors">api@toolblip.com</a>
+            </div>
+            <span className="text-xs text-slate-400">© {new Date().getFullYear()} Toolblip</span>
+          </div>
+        </div>
+      </footer>
+
     </div>
   );
 }
@@ -678,7 +787,7 @@ function EndpointCard({
   ep: Endpoint;
   i: number;
   openEndpoint: number | null;
-  toggleEndpoint: (i: number | null) => void;
+  toggleEndpoint: (i: number) => void;
 }) {
   const isOpen = openEndpoint === i;
 
@@ -688,7 +797,7 @@ function EndpointCard({
       className="bg-white rounded-2xl border border-slate-200 overflow-hidden"
     >
       <button
-        onClick={() => toggleEndpoint(isOpen ? null : i)}
+        onClick={() => toggleEndpoint(i)}
         className="w-full flex items-center gap-3 px-5 py-4 hover:bg-slate-50 transition-colors text-left"
       >
         <MethodBadge method={ep.method} />
