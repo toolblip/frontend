@@ -1,6 +1,11 @@
 'use client';
 
-export default function HowItWorksStrip() {
+interface HowItWorksStripProps {
+  toolCount: number;
+  categoryCount: number;
+}
+
+export default function HowItWorksStrip({ toolCount, categoryCount }: HowItWorksStripProps) {
   return (
     <section style={{ background: 'var(--surface-2)', borderTop: '1px solid var(--line)', borderBottom: '1px solid var(--line)' }}>
       <div className="tb-v2-container">
@@ -32,7 +37,7 @@ export default function HowItWorksStrip() {
             </div>
             <div>
               <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--fg-0)', letterSpacing: '-0.01em' }}>Pick a tool</div>
-              <div style={{ fontSize: 12.5, color: 'var(--fg-2)', marginTop: 2 }}>Browse {39} tools across 7 categories</div>
+              <div style={{ fontSize: 12.5, color: 'var(--fg-2)', marginTop: 2 }}>Browse {toolCount} tools across {categoryCount} categories</div>
             </div>
           </div>
 
@@ -77,7 +82,7 @@ export default function HowItWorksStrip() {
             </div>
             <div>
               <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--fg-0)', letterSpacing: '-0.01em' }}>Paste your data</div>
-              <div style={{ fontSize: 12.5, color: 'var(--fg-2)', marginTop: 2 }}>Type or paste — nothing leaves your browser</div>
+              <div style={{ fontSize: 12.5, color: 'var(--fg-2)', marginTop: 2 }}>No servers, no uploads, nothing leaves your browser</div>
             </div>
           </div>
 

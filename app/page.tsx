@@ -58,11 +58,21 @@ export default function HomePage() {
   const recentPosts = getRecentPosts();
   const toolCount = tools.length;
 
+  // Derive unique categories from real tool data, sorted by tool count desc
+  const categoryCounts = tools.reduce<Record<string, number>>((acc, t) => {
+    acc[t.category] = (acc[t.category] ?? 0) + 1;
+    return acc;
+  }, {});
+  const categories = Object.entries(categoryCounts)
+    .sort(([, a], [, b]) => b - a)
+    .map(([name]) => ({ name }))
+  const categoryCount = categories.length;
+
   return (
     <>
       <Hero toolCount={toolCount} />
-      <HowItWorksStrip />
-      <CategoryQuickAccess />
+      <HowItWorksStrip toolCount={toolCount} categoryCount={categoryCount} />
+      <CategoryQuickAccess categories={categories} />
       <WhyToolblip />
       <FeaturedStrip />
       <CategoryGrid />
