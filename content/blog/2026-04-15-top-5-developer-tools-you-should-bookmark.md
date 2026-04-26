@@ -8,7 +8,6 @@ category: "Developer Tools"
 tags: ["json", "base64", "regex", "cron", "hash", "bookmarks"]
 author: "Toolblip Team"
 readingTime: "5 min read"
-featuredImage: null
 ---
 
 Let's be honest: every developer has a folder of random websites they use once a week for quick tasks. Half of them are probably dead links by now. Here's the better approach — bookmark these five and actually remember where they are.
@@ -25,8 +24,4 @@ Let's be honest: every developer has a folder of random websites they use once a
 
 The theme here is obvious: these are tasks that come up constantly but don't justify opening a full application or hitting an online service that stores your data. Browser-based, fast, private.
 
-All five of these are available at once place — [Toolblip's developer tools](https://toolblip.com/tools). Bookmark it once and you're set.
-
----
-
-*Bookmark once. Use forever. Stop hunting for random websites.*
+All five of these are available at once place — [Toolblip's developer tools](/tools). Bookmark it once and you're set.
