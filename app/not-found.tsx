@@ -1,15 +1,13 @@
-'use client';
-
 import Link from 'next/link';
-import { Home, Wrench } from 'lucide-react';
+import { Home, Search } from 'lucide-react';
 
 export default function NotFound() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4">
       <div className="max-w-md w-full text-center animate-in fade-in zoom-in duration-500">
-        <p className="text-[7rem] sm:text-[9rem] font-black leading-none text-[#58D65D] dark:text-[#58D65D] select-none mb-2 tracking-tighter drop-shadow-sm">
+        <div className="text-8xl sm:text-9xl font-bold text-[#58D65D] dark:text-[#58D65D] mb-2 tracking-tight" style={{ fontFamily: 'var(--tb-font-nunito, Nunito, sans-serif)' }}>
           404
-        </p>
+        </div>
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">
           Page not found
         </h1>
@@ -26,9 +24,9 @@ export default function NotFound() {
           </Link>
           <Link
             href="/tools"
-            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-700 hover:border-[#58D65D] dark:hover:border-[#58D65D] text-gray-700 dark:text-gray-300 font-medium py-2.5 px-6 rounded-lg transition-all duration-200 text-sm hover:text-[#58D65D] dark:hover:text-[#58D65D] hover:-translate-y-0.5"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-gray-300 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-600 text-gray-700 dark:text-gray-300 font-medium py-2.5 px-6 rounded-lg transition-all duration-200 text-sm cursor-pointer hover:-translate-y-0.5"
           >
-            <Wrench size={16} />
+            <Search size={16} />
             Browse tools
           </Link>
         </div>
