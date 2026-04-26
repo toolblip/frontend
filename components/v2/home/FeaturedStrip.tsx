@@ -1,3 +1,80 @@
+'use client';
+
+import Link from 'next/link';
+import { tools } from '@/data/tools';
+import { getCategoryMeta } from '@/lib/v2/categoryMeta';
+import { IconArrowUR } from '@/components/v2/icons';
+
+const FEATURED_SLUGS = [
+  'json-formatter',
+  'base64',
+  'word-counter',
+  'regex-tester',
+  'image-resizer',
+  'uuid-generator',
+  'hash-generator',
+  'url-encode',
+];
+
 export default function FeaturedStrip() {
-  return null;
+  const featured = FEATURED_SLUGS.map((s) => tools.find((t) => t.slug === s)).filter(Boolean);
+
+  return (
+    <section style={{ padding: '0 0 8px' }}>
+      <div className="tb-v2-container">
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
+            gap: 10,
+          }}
+        >
+          {featured.map((tool) => {
+            if (!tool) return null;
+            const meta = getCategoryMeta(tool.category);
+            return (
+              <Link
+                key={tool.slug}
+                href={`/tools/${tool.slug}`}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 10,
+                  padding: '10px 14px',
+                  borderRadius: 8,
+                  border: '1px solid var(--border)',
+                  background: 'var(--surface-1)',
+                  textDecoration: 'none',
+                  color: 'inherit',
+                  transition: 'border-color 0.12s, box-shadow 0.12s',
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = meta.color;
+                  (e.currentTarget as HTMLElement).style.boxShadow = `0 2px 12px ${meta.bg}`;
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = 'var(--border)';
+                  (e.currentTarget as HTMLElement).style.boxShadow = 'none';
+                }}
+              >
+                <span style={{ fontSize: 20, flexShrink: 0 }}>{tool.emoji}</span>
+                <span
+                  style={{
+                    flex: 1,
+                    fontSize: 13,
+                    fontWeight: 500,
+                    lineHeight: 1.3,
+                    color: 'var(--fg-1)',
+                  }}
+                >
+                  {tool.name}
+                </span>
+                <IconArrowUR style={{ width: 14, height: 14, color: 'var(--fg-3)', flexShrink: 0 }} />
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
 }
