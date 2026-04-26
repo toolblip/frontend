@@ -2194,6 +2194,25 @@ export const tools: Tool[] = [
   { name: 'Random Color Generator', slug: 'random-color-generator', description: 'Generate random colors with HEX, RGB, HSL values and one-click copy to clipboard.', emoji: '🎨', category: 'Color' },
   { name: 'BMI Calculator', slug: 'bmi-calculator', description: 'Calculate Body Mass Index from height and weight in metric or imperial units.', emoji: '⚖️', category: 'Utility' },
 
+  // --- New tools (2026-04-27 #5) - genuinely unique additions ---
+  { name: 'Text Improver', slug: 'text-improver', description: 'Rewrite and improve text clarity, flow, and style with specific suggestions for better readability.', emoji: '✍️', category: 'Text' },
+  { name: 'Sentence Extractor', slug: 'sentence-extractor', description: 'Extract all sentences from any text block with automatic numbering and export options.', emoji: '📝', category: 'Text' },
+  { name: 'Lorem Ipsum Words Generator', slug: 'lorem-ipsum-words', description: 'Generate a specific number of lorem ipsum words for placeholder content in design mockups.', emoji: '📜', category: 'Text' },
+  { name: 'Homophone Checker', slug: 'homophone-checker', description: 'Detect commonly confused homophones like there/their/theyre and suggest the correct word.', emoji: '🔤', category: 'Text' },
+  { name: 'API Endpoint Documenter', slug: 'api-endpoint-documenter', description: 'Generate API documentation from endpoint definitions with request/response examples and parameter tables.', emoji: '📄', category: 'Developer' },
+  { name: 'Webhook Payload Tester', slug: 'webhook-tester', description: 'Send test payloads to webhook URLs and inspect the received data and response.', emoji: '🪝', category: 'Developer' },
+  { name: 'robots.txt Generator', slug: 'robots-txt-builder', description: 'Build robots.txt files with an interactive form to allow or block specific crawlers and paths.', emoji: '🤖', category: 'Developer' },
+  { name: 'JSON to TypeScript Types', slug: 'json-to-typescript-types', description: 'Convert JSON data into TypeScript type definitions with optional strict null and readonly modifiers.', emoji: '📘', category: 'Developer' },
+  { name: 'Sitemap HTML Generator', slug: 'sitemap-html-generator', description: 'Generate a linked HTML sitemap page from a list of URLs for website navigation and SEO.', emoji: '🗺️', category: 'SEO' },
+  { name: 'Favicon PNG Generator', slug: 'favicon-png-maker', description: 'Generate PNG favicon icons in standard sizes from any image or emoji with transparent background.', emoji: '🌐', category: 'Image' },
+  { name: 'Image Brightness Adjuster', slug: 'image-brightness-adjuster', description: 'Adjust image brightness, contrast, and exposure with live preview and instant download.', emoji: '☀️', category: 'Image' },
+  { name: 'Color Palette from Image', slug: 'color-palette-from-image', description: 'Extract a 5-color palette from any image and get HEX, RGB, and HSL values for each swatch.', emoji: '🎨', category: 'Color' },
+  { name: 'Cooking Unit Converter', slug: 'cooking-unit-converter', description: 'Convert between cooking measurements - cups, tablespoons, teaspoons, grams, milliliters, and ounces.', emoji: '🍳', category: 'Conversion' },
+  { name: 'Hex to Decimal Converter', slug: 'hex-to-decimal-converter', description: 'Convert hexadecimal numbers to decimal and binary with step-by-step calculation breakdown.', emoji: '🔢', category: 'Conversion' },
+  { name: 'Decimal to Hex Converter', slug: 'decimal-to-hex-converter', description: 'Convert decimal numbers to hexadecimal and binary with instant result and copy button.', emoji: '🔢', category: 'Conversion' },
+
 ];
+
+export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'AI Tools', 'Document Generator', 'Image Tools'] as const;
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'AI Tools', 'Document Generator', 'Image Tools'] as const;
