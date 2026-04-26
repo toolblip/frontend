@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import type { Tool } from '@/data/tools';
+import ShareButtons from '@/components/ShareButtons';
 
 // ─── Individual tool UIs ────────────────────────────────────────────────────
 
@@ -386,6 +387,9 @@ export default function ToolClient({ tool }: { tool: Tool }) {
           </div>
         </div>
         <p className="text-gray-500 dark:text-gray-400 leading-relaxed">{tool.description}</p>
+        <div className="mt-4">
+          <ShareButtons toolName={tool.name} />
+        </div>
       </div>
 
       {/* Tool UI */}
