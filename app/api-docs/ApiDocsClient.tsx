@@ -1,184 +1,146 @@
 'use client';
 
-const BASE_URL = 'https://api.toolblip.com';
+import { useState } from 'react';
 
-// ── Types ────────────────────────────────────────────────────────────────────
+const BASE_URL = 'https://toolblip-api-production.up.railway.app';
 
-interface FieldDef {
-  name: string;
-  type: string;
-  required: boolean;
-  description: string;
-}
-
-interface ResponseField {
-  name: string;
-  type: string;
-  description: string;
-}
-
-interface Endpoint {
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
-  path: string;
-  auth: boolean;
-  description: string;
-  body?: { fields: FieldDef[] };
-  responseFields?: ResponseField[];
-  curl: string;
-  response: string;
-  responseNote?: string;
-}
-
-// ── Endpoint definitions ─────────────────────────────────────────────────────
-
-const endpoints: Endpoint[] = [
-  // ── Tools ──────────────────────────────────────────────────────────────────
+const endpoints = [
   {
     method: 'GET',
     path: '/api/tools',
     auth: false,
-    description:
-      'Returns a paginated list of all tools. Supports optional filtering by category and full-text search.',
-    curl: `curl "${BASE_URL}/api/tools" \\
+    title: 'List Tools',
+    description: 'Returns a paginated list of all tools in the directory.',
+    params: [
+      { name: 'category', type: 'string', required: false, description: 'Filter by category slug (e.g. "writing", "productivity")' },
+      { name: 'search', type: 'string', required: false, description: 'Search tool name and description' },
+      { name: 'page', type: 'integer', required: false, description: 'Page number (default: 1)' },
+      { name: 'per_page', type: 'integer', required: false, description: 'Items per page (default: 20, max: 100)' },
+    ],
+    curl: `curl -X GET "${BASE_URL}/api/tools?category=writing&page=1" \\
   -H "Accept: application/json"`,
     response: `{
   "tools": {
     "tools": [
       {
         "id": 1,
-        "slug": "qr-code-generator",
-        "name": "QR Code Generator",
-        "description": "Generate QR codes for URLs, text, Wi-Fi, and more.",
-        "category": "image",
+        "slug": "chatgpt",
+        "name": "ChatGPT",
+        "description": "AI-powered conversational assistant by OpenAI.",
+        "category": "ai",
         "is_pro": false,
-        "emoji": "📱",
-        "created_at": "2026-04-10T12:00:00.000000Z"
+        "emoji": "🤖",
+        "created_at": "2026-01-15T10:30:00Z"
+      },
+      {
+        "id": 2,
+        "slug": "claude-ai",
+        "name": "Claude AI",
+        "description": "Helpful, harmless, and honest AI assistant.",
+        "category": "ai",
+        "is_pro": false,
+        "emoji": "✨",
+        "created_at": "2026-01-20T14:00:00Z"
       }
     ],
     "meta": {
       "current_page": 1,
-      "total": 48,
+      "total": 120,
       "per_page": 20,
-      "last_page": 3
+      "last_page": 6
     }
   }
 }`,
-    responseFields: [
-      { name: 'tools.tools', type: 'Tool[]', description: 'Array of tool objects' },
-      { name: 'tools.tools[].id', type: 'integer', description: 'Unique numeric identifier' },
-      { name: 'tools.tools[].slug', type: 'string', description: 'URL-safe identifier for tool detail pages' },
-      { name: 'tools.tools[].name', type: 'string', description: 'Display name' },
-      { name: 'tools.tools[].category', type: 'string', description: 'Category slug: image, text, development, utility, etc.' },
-      { name: 'tools.tools[].is_pro', type: 'boolean', description: 'Whether the tool requires a Pro subscription' },
-      { name: 'tools.meta', type: 'object', description: 'Pagination metadata: current_page, total, per_page, last_page' },
-    ],
   },
   {
     method: 'GET',
     path: '/api/tools/{slug}',
     auth: false,
-    description: 'Returns a single tool by its URL-safe slug. Replace {slug} with the tool\'s identifier.',
-    curl: `curl "${BASE_URL}/api/tools/qr-code-generator" \\
+    title: 'Get Tool',
+    description: 'Returns a single tool by its slug.',
+    params: [
+      { name: 'slug', type: 'string', required: true, description: 'Tool slug URL identifier' },
+    ],
+    curl: `curl -X GET "${BASE_URL}/api/tools/chatgpt" \\
   -H "Accept: application/json"`,
     response: `{
   "tool": {
     "id": 1,
-    "slug": "qr-code-generator",
-    "name": "QR Code Generator",
-    "description": "Generate QR codes for URLs, text, Wi-Fi, and more.",
-    "category": "image",
+    "slug": "chatgpt",
+    "name": "ChatGPT",
+    "description": "AI-powered conversational assistant by OpenAI.",
+    "category": "ai",
     "is_pro": false,
-    "emoji": "📱",
-    "created_at": "2026-04-10T12:00:00.000000Z"
+    "emoji": "🤖",
+    "created_at": "2026-01-15T10:30:00Z"
   }
 }`,
-    responseFields: [
-      { name: 'tool.id', type: 'integer', description: 'Unique numeric identifier' },
-      { name: 'tool.slug', type: 'string', description: 'URL-safe identifier' },
-      { name: 'tool.name', type: 'string', description: 'Display name' },
-      { name: 'tool.description', type: 'string', description: 'Full description shown on the tool detail page' },
-      { name: 'tool.category', type: 'string', description: 'Category slug' },
-      { name: 'tool.is_pro', type: 'boolean', description: 'Whether this tool requires a Pro subscription' },
-      { name: 'tool.emoji', type: 'string', description: 'Emoji icon for the tool card (optional)' },
-      { name: 'tool.created_at', type: 'string', description: 'ISO 8601 timestamp' },
-    ],
   },
-
-  // ── Auth ────────────────────────────────────────────────────────────────────
   {
     method: 'POST',
     path: '/api/auth/register',
     auth: false,
-    description: 'Creates a new user account and returns a Bearer token for authenticated requests.',
-    body: {
-      fields: [
-        { name: 'name', type: 'string', required: true, description: 'Full display name (min. 2 characters)' },
-        { name: 'email', type: 'string', required: true, description: 'Unique, valid email address' },
-        { name: 'password', type: 'string', required: true, description: 'Account password (min. 8 characters)' },
-        { name: 'password_confirmation', type: 'string', required: true, description: 'Must match password exactly' },
-      ],
-    },
+    title: 'Register',
+    description: 'Create a new user account. Returns the user object and a Bearer token.',
+    params: [
+      { name: 'name', type: 'string', required: true, description: 'Full name' },
+      { name: 'email', type: 'string', required: true, description: 'Email address (must be unique)' },
+      { name: 'password', type: 'string', required: true, description: 'Password (min. 8 characters)' },
+      { name: 'password_confirmation', type: 'string', required: true, description: 'Must match password' },
+    ],
     curl: `curl -X POST "${BASE_URL}/api/auth/register" \\
   -H "Content-Type: application/json" \\
   -H "Accept: application/json" \\
   -d '{
-    "name": "Harun Ray",
-    "email": "harun@example.com",
-    "password": "securepass123",
-    "password_confirmation": "securepass123"
+    "name": "Jane Doe",
+    "email": "jane@example.com",
+    "password": "secretpass123",
+    "password_confirmation": "secretpass123"
   }'`,
     response: `{
   "user": {
-    "id": 1,
-    "name": "Harun Ray",
-    "email": "harun@example.com",
+    "id": 42,
+    "name": "Jane Doe",
+    "email": "jane@example.com",
     "is_pro": false
   },
-  "token": "1|abcdef1234567890..."
+  "token": "1|Xr8KbP9...aBcDeFgHiJkL"
 }`,
-    responseFields: [
-      { name: 'user.id', type: 'integer', description: 'Unique numeric identifier' },
-      { name: 'user.name', type: 'string', description: 'Display name' },
-      { name: 'user.email', type: 'string', description: 'Registered email address' },
-      { name: 'user.is_pro', type: 'boolean', description: 'Active Pro subscription status' },
-      { name: 'token', type: 'string', description: 'Bearer token — include in Authorization header for authenticated requests' },
-    ],
-    responseNote: 'Save the token securely. It is required for all authenticated endpoints.',
   },
   {
     method: 'POST',
     path: '/api/auth/login',
     auth: false,
-    description: 'Authenticates an existing user with email and password, returning a Bearer token.',
-    body: {
-      fields: [
-        { name: 'email', type: 'string', required: true, description: 'Registered email address' },
-        { name: 'password', type: 'string', required: true, description: 'Account password' },
-      ],
-    },
+    title: 'Login',
+    description: 'Authenticate an existing user. Returns the user object and a Bearer token.',
+    params: [
+      { name: 'email', type: 'string', required: true, description: 'Email address' },
+      { name: 'password', type: 'string', required: true, description: 'Account password' },
+    ],
     curl: `curl -X POST "${BASE_URL}/api/auth/login" \\
   -H "Content-Type: application/json" \\
   -H "Accept: application/json" \\
-  -d '{"email":"harun@example.com","password":"securepass123"}'`,
+  -d '{
+    "email": "jane@example.com",
+    "password": "secretpass123"
+  }'`,
     response: `{
   "user": {
-    "id": 1,
-    "name": "Harun Ray",
-    "email": "harun@example.com",
+    "id": 42,
+    "name": "Jane Doe",
+    "email": "jane@example.com",
     "is_pro": false
   },
-  "token": "2|ghijkl7890123456..."
+  "token": "2|Yz7LcQ3...mNoPqRsTuVwX"
 }`,
-    responseFields: [
-      { name: 'user', type: 'object', description: 'Authenticated user object (same shape as /auth/register)' },
-      { name: 'token', type: 'string', description: 'Bearer token for use in Authorization header' },
-    ],
   },
   {
     method: 'POST',
     path: '/api/auth/logout',
     auth: true,
-    description: 'Invalidates the current Bearer token server-side. The token can no longer be used after this call.',
+    title: 'Logout',
+    description: 'Invalidate the current session token. Requires a valid Bearer token.',
+    params: [],
     curl: `curl -X POST "${BASE_URL}/api/auth/logout" \\
   -H "Authorization: Bearer {token}" \\
   -H "Accept: application/json"`,
@@ -190,467 +152,294 @@ const endpoints: Endpoint[] = [
     method: 'GET',
     path: '/api/auth/user',
     auth: true,
-    description: 'Returns the profile of the currently authenticated user.',
-    curl: `curl "${BASE_URL}/api/auth/user" \\
+    title: 'Get Authenticated User',
+    description: 'Returns the currently authenticated user profile.',
+    params: [],
+    curl: `curl -X GET "${BASE_URL}/api/auth/user" \\
   -H "Authorization: Bearer {token}" \\
   -H "Accept: application/json"`,
     response: `{
   "user": {
-    "id": 1,
-    "name": "Harun Ray",
-    "email": "harun@example.com",
-    "is_pro": true
+    "id": 42,
+    "name": "Jane Doe",
+    "email": "jane@example.com",
+    "is_pro": false
   }
 }`,
-    responseFields: [
-      { name: 'user.id', type: 'integer', description: 'Unique numeric identifier' },
-      { name: 'user.name', type: 'string', description: 'Display name' },
-      { name: 'user.email', type: 'string', description: 'Registered email address' },
-      { name: 'user.is_pro', type: 'boolean', description: 'Active Pro subscription status' },
-    ],
   },
 ];
 
-// ── Method badge styles ──────────────────────────────────────────────────────
+function MethodBadge({ method }: { method: string }) {
+  const colors: Record<string, string> = {
+    GET: 'bg-green-100 text-green-800',
+    POST: 'bg-blue-100 text-blue-800',
+    PUT: 'bg-yellow-100 text-yellow-800',
+    PATCH: 'bg-orange-100 text-orange-800',
+    DELETE: 'bg-red-100 text-red-800',
+  };
+  return (
+    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold ${colors[method] || 'bg-gray-100 text-gray-800'}`}>
+      {method}
+    </span>
+  );
+}
 
-const METHOD_STYLES: Record<string, string> = {
-  GET:    'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
-  POST:   'bg-blue-100 text-blue-700    dark:bg-blue-900/30    dark:text-blue-400',
-  PUT:    'bg-amber-100 text-amber-700  dark:bg-amber-900/30  dark:text-amber-400',
-  DELETE: 'bg-red-100 text-red-700      dark:bg-red-900/30    dark:text-red-400',
-};
+function AuthBadge({ required }: { required: boolean }) {
+  return (
+    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${required ? 'bg-amber-100 text-amber-800' : 'bg-gray-100 text-gray-500'}`}>
+      {required ? (
+        <>
+          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+          Auth
+        </>
+      ) : (
+        <>
+          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+          Public
+        </>
+      )}
+    </span>
+  );
+}
 
-// ── Copy button ─────────────────────────────────────────────────────────────
+function CodeBlock({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  return (
+    <pre className={`bg-[#1a1a2e] text-gray-100 rounded-xl p-4 text-sm font-mono overflow-x-auto ${className}`}>
+      {children}
+    </pre>
+  );
+}
 
 function CopyButton({ text }: { text: string }) {
-  function handleCopy() {
-    navigator.clipboard.writeText(text).catch(() => {});
-  }
+  const [copied, setCopied] = useState(false);
+  const handleCopy = async () => {
+    await navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
   return (
     <button
       onClick={handleCopy}
-      className="shrink-0 rounded-lg border border-[var(--line)] bg-[var(--surface-2)] px-2.5 py-1 text-xs font-medium text-[var(--fg-2)] hover:border-[var(--fg-3)] hover:text-[var(--fg-0)] transition-all active:scale-95"
+      className="flex items-center gap-1.5 px-3 py-1.5 bg-white/10 hover:bg-white/20 text-gray-300 text-xs rounded-lg transition-colors"
     >
-      Copy
+      {copied ? (
+        <>
+          <svg className="w-3.5 h-3.5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+          Copied!
+        </>
+      ) : (
+        <>
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+          Copy
+        </>
+      )}
     </button>
   );
 }
 
-// ── Code block ───────────────────────────────────────────────────────────────
-
-function CodeBlock({ children, label = 'JSON' }: { children: string; label?: string }) {
-  return (
-    <div className="relative rounded-xl overflow-hidden border border-[var(--line)]">
-      <div className="bg-[var(--surface-2)] px-4 py-2.5 flex items-center justify-between border-b border-[var(--line)]">
-        <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--fg-3)]">{label}</span>
-        <CopyButton text={children} />
-      </div>
-      <div className="bg-[var(--surface-2)] overflow-x-auto p-4">
-        <pre className="font-mono text-xs leading-relaxed text-[var(--fg-1)] whitespace-pre">{children}</pre>
-      </div>
-    </div>
-  );
-}
-
-function CurlBlock({ children }: { children: string }) {
-  return (
-    <div className="relative rounded-xl overflow-hidden border border-[var(--line)]">
-      <div className="bg-[#0d0d10] px-4 py-2.5 flex items-center justify-between border-b border-[var(--line)]">
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--fg-3)]">cURL</span>
-        </div>
-        <CopyButton text={children} />
-      </div>
-      <div className="bg-[#0d0d10] overflow-x-auto p-4">
-        <pre className="font-mono text-xs leading-relaxed text-[#e4e4e7] whitespace-pre">{children}</pre>
-      </div>
-    </div>
-  );
-}
-
-// ── Field table ───────────────────────────────────────────────────────────────
-
-function FieldTable({ fields }: { fields: ResponseField[] }) {
-  return (
-    <div className="mt-3 overflow-hidden rounded-xl border border-[var(--line)]">
-      <table className="w-full text-sm">
-        <thead className="bg-[var(--surface-2)]">
-          <tr>
-            <th className="px-4 py-3 text-left font-semibold text-[var(--fg-1)]">Field</th>
-            <th className="px-4 py-3 text-left font-semibold text-[var(--fg-1)]">Type</th>
-            <th className="px-4 py-3 text-left font-semibold text-[var(--fg-1)]">Description</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-[var(--line)]">
-          {fields.map((f) => (
-            <tr key={f.name}>
-              <td className="px-4 py-3">
-                <code className="font-mono text-xs text-[var(--fg-0)]">{f.name}</code>
-              </td>
-              <td className="px-4 py-3">
-                <span className="rounded bg-[var(--surface-3)] px-1.5 py-0.5 font-mono text-xs text-[var(--fg-2)]">
-                  {f.type}
-                </span>
-              </td>
-              <td className="px-4 py-3 text-xs text-[var(--fg-2)]">{f.description}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
-// ── Endpoint card ────────────────────────────────────────────────────────────
-
-function EndpointCard({ ep, index }: { ep: Endpoint; index: number }) {
-  return (
-    <div
-      id={`endpoint-${index}`}
-      className="scroll-mt-6 rounded-2xl border border-[var(--line)] bg-[var(--surface)] overflow-hidden"
-    >
-      {/* Header */}
-      <div className="flex flex-wrap items-center gap-3 border-b border-[var(--line)] bg-[var(--surface-2)] px-5 py-4">
-        <span
-          className={`shrink-0 rounded-md px-2.5 py-1 text-xs font-bold uppercase tracking-wide ${METHOD_STYLES[ep.method]}`}
-        >
-          {ep.method}
-        </span>
-        <code className="font-mono text-sm font-medium text-[var(--fg-0)]">{ep.path}</code>
-        {ep.auth ? (
-          <span className="ml-auto shrink-0 rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
-            🔒 Auth required
-          </span>
-        ) : (
-          <span className="ml-auto shrink-0 rounded-full bg-[var(--surface-3)] px-3 py-1 text-xs font-medium text-[var(--fg-3)]">
-            Public
-          </span>
-        )}
-      </div>
-
-      <div className="p-6 space-y-6">
-        <p className="text-sm text-[var(--fg-2)] leading-relaxed">{ep.description}</p>
-
-        {/* Request body */}
-        {ep.body && (
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-3">
-              Request Body
-            </p>
-            <div className="overflow-hidden rounded-xl border border-[var(--line)]">
-              <table className="w-full text-sm">
-                <thead className="bg-[var(--surface-2)]">
-                  <tr>
-                    <th className="px-4 py-3 text-left font-semibold text-[var(--fg-1)]">Field</th>
-                    <th className="px-4 py-3 text-left font-semibold text-[var(--fg-1)]">Type</th>
-                    <th className="px-4 py-3 text-left font-semibold text-[var(--fg-1)]">Description</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[var(--line)]">
-                  {ep.body.fields.map((f) => (
-                    <tr key={f.name}>
-                      <td className="px-4 py-3">
-                        <code className="font-mono text-xs text-[var(--fg-0)]">{f.name}</code>
-                        {f.required && <span className="ml-1.5 text-[var(--red)] text-xs font-bold">*</span>}
-                      </td>
-                      <td className="px-4 py-3">
-                        <span className="rounded bg-[var(--surface-3)] px-1.5 py-0.5 font-mono text-xs text-[var(--fg-2)]">
-                          {f.type}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-xs text-[var(--fg-2)]">{f.description}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-
-        {/* Example request */}
-        <div>
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-3">
-            Example Request
-          </p>
-          <CurlBlock>{ep.curl}</CurlBlock>
-        </div>
-
-        {/* Response */}
-        <div>
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-3">
-            Example Response
-          </p>
-          <CodeBlock>{ep.response}</CodeBlock>
-
-          {ep.responseFields && ep.responseFields.length > 0 && (
-            <FieldTable fields={ep.responseFields} />
-          )}
-
-          {ep.responseNote && (
-            <p className="mt-3 text-xs text-amber-600 dark:text-amber-400 flex items-start gap-2 bg-amber-50 dark:bg-amber-900/20 rounded-lg px-4 py-3 border border-amber-200 dark:border-amber-800">
-              <span className="mt-0.5">⚠️</span>
-              {ep.responseNote}
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ── Table of contents ────────────────────────────────────────────────────────
-
-function TableOfContents() {
-  const groups = [
-    { label: 'Tools', icon: '🔧', endpoints: endpoints.filter((e) => e.path.startsWith('/api/tools')) },
-    { label: 'Authentication', icon: '🔑', endpoints: endpoints.filter((e) => e.path.startsWith('/api/auth')) },
-  ];
-
-  return (
-    <nav className="space-y-4">
-      {groups.map((group) => (
-        <div key={group.label}>
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-2 flex items-center gap-1.5">
-            <span>{group.icon}</span> {group.label}
-          </p>
-          <div className="space-y-0.5">
-            {group.endpoints.map((ep) => {
-              const idx = endpoints.indexOf(ep);
-              return (
-                <a
-                  key={ep.path}
-                  href={`#endpoint-${idx}`}
-                  className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs text-[var(--fg-2)] hover:bg-[var(--surface-2)] hover:text-[var(--fg-0)] transition-colors"
-                >
-                  <span
-                    className={`shrink-0 rounded px-1.5 py-0.5 text-[10px] font-bold ${METHOD_STYLES[ep.method]}`}
-                  >
-                    {ep.method}
-                  </span>
-                  <code className="font-mono truncate">{ep.path}</code>
-                </a>
-              );
-            })}
-          </div>
-        </div>
-      ))}
-    </nav>
-  );
-}
-
-// ── Main component ────────────────────────────────────────────────────────────
-
 export default function ApiDocsClient() {
+  const [activeTab, setActiveTab] = useState<'overview' | 'endpoints'>('overview');
+  const [openEndpoint, setOpenEndpoint] = useState<number | null>(null);
+
+  const toggleEndpoint = (i: number) => setOpenEndpoint(openEndpoint === i ? null : i);
+
   return (
-    <main className="min-h-screen bg-[var(--bg)]">
-
-      {/* ── Hero ── */}
-      <section className="border-b border-[var(--line)] bg-gradient-to-b from-[var(--surface)] to-[var(--bg)]">
-        <div className="mx-auto max-w-5xl px-6 py-16">
-          {/* Live badge */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950 px-4 py-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400 mb-8">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-            </span>
-            API Live — api.toolblip.com
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+      {/* Header */}
+      <div className="bg-white border-b border-slate-200">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center">
+              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+            </div>
+            <h1 className="text-3xl font-bold text-slate-900">API Documentation</h1>
           </div>
-
-          <h1 className="text-4xl font-bold tracking-tight text-[var(--fg-0)] mb-3">
-            Toolblip REST API
-          </h1>
-          <p className="text-base text-[var(--fg-2)] mb-10 max-w-xl leading-relaxed">
-            Integrate with Toolblip. Browse tools, register accounts, and authenticate users via a clean token-based REST API. All responses are JSON.
+          <p className="text-lg text-slate-600 max-w-2xl">
+            Toolblip REST API — browse and manage tools programmatically. All endpoints return JSON and follow REST conventions.
           </p>
 
-          {/* Key info cards */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div className="rounded-xl border border-[var(--line)] bg-[var(--surface-2)] p-5">
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-3">
-                Base URL
-              </p>
-              <div className="flex items-center justify-between gap-2">
-                <code className="font-mono text-xs text-[var(--fg-0)] break-all">{BASE_URL}</code>
-                <CopyButton text={BASE_URL} />
-              </div>
-            </div>
-
-            <div className="rounded-xl border border-[var(--line)] bg-[var(--surface-2)] p-5">
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-3">
-                Auth Method
-              </p>
-              <code className="font-mono text-xs text-[var(--fg-0)]">
-                Bearer {'{token}'}
-              </code>
-              <p className="text-[10px] text-[var(--fg-3)] mt-1.5">Authorization header</p>
-            </div>
-
-            <div className="rounded-xl border border-[var(--line)] bg-[var(--surface-2)] p-5">
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-3">
-                Content Type
-              </p>
-              <code className="font-mono text-xs text-[var(--fg-0)]">
-                application/json
-              </code>
-              <p className="text-[10px] text-[var(--fg-3)] mt-1.5">Accept &amp; Content-Type</p>
-            </div>
+          {/* Base URL pill */}
+          <div className="mt-4 inline-flex items-center gap-2 bg-slate-100 rounded-lg px-4 py-2">
+            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wide">Base URL</span>
+            <code className="text-sm font-mono text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded">
+              {BASE_URL}
+            </code>
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* ── Body ── */}
-      <section className="mx-auto max-w-5xl px-6 py-10">
-        <div className="flex flex-col gap-10 lg:flex-row lg:gap-12">
-
-          {/* Sidebar TOC */}
-          <aside className="lg:w-52 shrink-0">
-            <div className="sticky top-6 hidden lg:block rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-4">
-              <p className="text-[10px] font-semibold uppercase tracking-widest text-[var(--fg-3)] mb-4">
-                On this page
-              </p>
-              <TableOfContents />
-            </div>
-            <details className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-4 lg:hidden">
-              <summary className="cursor-pointer text-sm font-semibold text-[var(--fg-1)] select-none">
-                📑 Jump to endpoint
-              </summary>
-              <div className="mt-4">
-                <TableOfContents />
-              </div>
-            </details>
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Sidebar */}
+          <aside className="lg:col-span-1">
+            <nav className="sticky top-8 space-y-1">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-3">Reference</p>
+              {endpoints.map((ep, i) => (
+                <button
+                  key={i}
+                  onClick={() => {
+                    setActiveTab('endpoints');
+                    setOpenEndpoint(i);
+                    document.getElementById(`endpoint-${i}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg text-slate-700 hover:bg-slate-100 hover:text-slate-900 transition-colors text-left group"
+                >
+                  <MethodBadge method={ep.method} />
+                  <span className="truncate font-mono text-xs">{ep.path.split('/').pop()?.replace('{slug}', 'slug') || ep.path}</span>
+                </button>
+              ))}
+            </nav>
           </aside>
 
-          {/* Endpoint list */}
-          <div className="flex-1 space-y-12 min-w-0">
+          {/* Main content */}
+          <main className="lg:col-span-3 space-y-6">
 
-            {/* ── Tools ── */}
-            <div>
-              <div className="flex items-center gap-3 mb-5">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--line)] bg-[var(--surface-2)]">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--fg-3)]">
-                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
-                  </svg>
+            {/* Overview card */}
+            <div className="bg-white rounded-2xl border border-slate-200 p-6">
+              <h2 className="text-lg font-bold text-slate-900 mb-4">Overview</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="p-4 bg-slate-50 rounded-xl">
+                  <div className="flex items-center gap-2 mb-2">
+                    <svg className="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                    <h3 className="font-semibold text-slate-800 text-sm">Authentication</h3>
+                  </div>
+                  <p className="text-sm text-slate-600">
+                    Use Bearer token authentication. Pass your token in the <code className="font-mono text-xs bg-slate-200 px-1 rounded">Authorization</code> header.
+                  </p>
+                  <CodeBlock className="mt-3 text-xs !p-3">
+                    {`Authorization: Bearer {token}`}
+                  </CodeBlock>
                 </div>
-                <div>
-                  <h2 className="text-base font-semibold text-[var(--fg-0)]">Tools</h2>
-                  <p className="text-xs text-[var(--fg-3)]">Browse the tool directory</p>
+
+                <div className="p-4 bg-slate-50 rounded-xl">
+                  <div className="flex items-center gap-2 mb-2">
+                    <svg className="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" /></svg>
+                    <h3 className="font-semibold text-slate-800 text-sm">Content Type</h3>
+                  </div>
+                  <p className="text-sm text-slate-600">
+                    All requests and responses use JSON. Always include the header below.
+                  </p>
+                  <CodeBlock className="mt-3 text-xs !p-3">
+                    {`Content-Type: application/json\nAccept: application/json`}
+                  </CodeBlock>
                 </div>
-              </div>
-              <div className="space-y-4">
-                {endpoints
-                  .filter((e) => e.path.startsWith('/api/tools'))
-                  .map((ep) => (
-                    <EndpointCard key={ep.path} ep={ep} index={endpoints.indexOf(ep)} />
-                  ))}
+
+                <div className="p-4 bg-slate-50 rounded-xl">
+                  <div className="flex items-center gap-2 mb-2">
+                    <svg className="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    <h3 className="font-semibold text-slate-800 text-sm">Rate Limits</h3>
+                  </div>
+                  <p className="text-sm text-slate-600">
+                    Public endpoints are limited to 60 requests per minute. Authenticated endpoints allow 120 req/min. Pro users get higher limits.
+                  </p>
+                </div>
+
+                <div className="p-4 bg-slate-50 rounded-xl">
+                  <div className="flex items-center gap-2 mb-2">
+                    <svg className="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" /></svg>
+                    <h3 className="font-semibold text-slate-800 text-sm">Errors</h3>
+                  </div>
+                  <p className="text-sm text-slate-600">
+                    Errors return a JSON object with <code className="font-mono text-xs bg-slate-200 px-1 rounded">message</code>. HTTP status codes follow REST conventions (400, 401, 403, 404, 422, 500).
+                  </p>
+                </div>
               </div>
             </div>
 
-            {/* ── Authentication ── */}
-            <div>
-              <div className="flex items-center gap-3 mb-5">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-[var(--line)] bg-[var(--surface-2)]">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--fg-3)]">
-                    <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                  </svg>
+            {/* Endpoints */}
+            <div className="space-y-3">
+              <h2 className="text-lg font-bold text-slate-900 px-1">Endpoints</h2>
+              {endpoints.map((ep, i) => (
+                <div key={i} id={`endpoint-${i}`} className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+                  <button
+                    onClick={() => toggleEndpoint(i)}
+                    className="w-full flex items-center gap-3 px-5 py-4 hover:bg-slate-50 transition-colors text-left"
+                  >
+                    <MethodBadge method={ep.method} />
+                    <code className="font-mono text-sm text-slate-800">{ep.path}</code>
+                    <span className="text-sm text-slate-500 flex-1 truncate">{ep.title}</span>
+                    <AuthBadge required={ep.auth} />
+                    <svg className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${openEndpoint === i ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                  </button>
+
+                  {openEndpoint === i && (
+                    <div className="border-t border-slate-100 px-5 py-5 space-y-5">
+                      <p className="text-sm text-slate-600">{ep.description}</p>
+
+                      {ep.params.length > 0 && (
+                        <div>
+                          <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Parameters</h4>
+                          <div className="border border-slate-100 rounded-xl overflow-hidden">
+                            <table className="w-full text-sm">
+                              <thead className="bg-slate-50">
+                                <tr>
+                                  <th className="px-4 py-2 text-left font-semibold text-slate-700">Name</th>
+                                  <th className="px-4 py-2 text-left font-semibold text-slate-700">Type</th>
+                                  <th className="px-4 py-2 text-left font-semibold text-slate-700">Required</th>
+                                  <th className="px-4 py-2 text-left font-semibold text-slate-700">Description</th>
+                                </tr>
+                              </thead>
+                              <tbody className="divide-y divide-slate-100">
+                                {ep.params.map((p, pi) => (
+                                  <tr key={pi}>
+                                    <td className="px-4 py-2.5 font-mono text-xs text-indigo-700">{p.name}</td>
+                                    <td className="px-4 py-2.5 text-xs text-slate-500">{p.type}</td>
+                                    <td className="px-4 py-2.5 text-xs">
+                                      {p.required
+                                        ? <span className="text-red-600 font-medium">Yes</span>
+                                        : <span className="text-slate-400">No</span>}
+                                    </td>
+                                    <td className="px-4 py-2.5 text-xs text-slate-600">{p.description}</td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      )}
+
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Example Request</h4>
+                          <CopyButton text={ep.curl} />
+                        </div>
+                        <CodeBlock>{ep.curl}</CodeBlock>
+                      </div>
+
+                      <div>
+                        <div className="flex items-center justify-between mb-2">
+                          <h4 className="text-xs font-bold text-slate-500 uppercase tracking-wider">Example Response</h4>
+                          <CopyButton text={ep.response} />
+                        </div>
+                        <CodeBlock>{ep.response}</CodeBlock>
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <div>
-                  <h2 className="text-base font-semibold text-[var(--fg-0)]">Authentication</h2>
-                  <p className="text-xs text-[var(--fg-3)]">Register, login, and manage sessions</p>
-                </div>
-              </div>
-              <div className="space-y-4">
-                {endpoints
-                  .filter((e) => e.path.startsWith('/api/auth'))
-                  .map((ep) => (
-                    <EndpointCard key={ep.path} ep={ep} index={endpoints.indexOf(ep)} />
-                  ))}
-              </div>
+              ))}
             </div>
 
-            {/* ── Auth header snippet ── */}
-            <div className="rounded-2xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/40 p-6">
-              <h3 className="font-semibold text-[var(--fg-0)] mb-2">Making authenticated requests</h3>
-              <p className="text-sm text-[var(--fg-2)] mb-4 leading-relaxed">
-                For endpoints marked{' '}
-                <span className="inline-flex items-center rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
-                  🔒 Auth required
-                </span>
-                , include the token from{' '}
-                <code className="font-mono text-xs bg-[var(--surface-2)] px-1.5 py-0.5 rounded">/api/auth/login</code>
-                {' '}or{' '}
-                <code className="font-mono text-xs bg-[var(--surface-2)] px-1.5 py-0.5 rounded">/api/auth/register</code>
-                {' '}in every request:
+            {/* SDK / Quick links */}
+            <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-2xl border border-indigo-100 p-6">
+              <h2 className="text-lg font-bold text-slate-900 mb-2">Need help?</h2>
+              <p className="text-sm text-slate-600 mb-4">
+                Questions about the API? Reach out at{' '}
+                <a href="mailto:api@toolblip.com" className="text-indigo-600 hover:underline">api@toolblip.com</a>
+                {' '}or open an issue on GitHub.
               </p>
-              <CurlBlock>{`curl "${BASE_URL}/api/auth/user" \\
-  -H "Authorization: Bearer {token}" \\
-  -H "Accept: application/json"`}</CurlBlock>
-            </div>
-
-            {/* ── Rate limits ── */}
-            <div className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-6">
-              <h3 className="font-semibold text-[var(--fg-0)] mb-2">Rate Limits</h3>
-              <p className="text-sm text-[var(--fg-2)] leading-relaxed">
-                No strict rate limit is currently enforced, but please cache responses where possible and avoid abusive usage. For higher limits on commercial integrations, reach us at{' '}
-                <a href="mailto:info@toolblip.com" className="font-medium text-[var(--fg-1)] hover:text-[var(--red)] transition-colors">
-                  info@toolblip.com
+              <div className="flex flex-wrap gap-3">
+                <a href="https://github.com/toolblip" className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-50 transition-colors">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+                  GitHub
                 </a>
-                .
-              </p>
-            </div>
-
-            {/* ── Errors ── */}
-            <div className="rounded-2xl border border-[var(--line)] bg-[var(--surface)] p-6">
-              <h3 className="font-semibold text-[var(--fg-0)] mb-4">Error Responses</h3>
-              <p className="text-sm text-[var(--fg-2)] mb-4 leading-relaxed">
-                All errors return a JSON object with a{' '}
-                <code className="rounded bg-[var(--surface-2)] px-1.5 py-0.5 font-mono text-xs text-[var(--fg-1)]">
-                  message
-                </code>{' '}
-                field describing what went wrong.
-              </p>
-              <div className="overflow-hidden rounded-xl border border-[var(--line)]">
-                <table className="w-full text-sm">
-                  <thead className="bg-[var(--surface-2)]">
-                    <tr>
-                      <th className="px-4 py-3 text-left font-semibold text-[var(--fg-1)]">Status</th>
-                      <th className="px-4 py-3 text-left font-semibold text-[var(--fg-1)]">Meaning</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[var(--line)]">
-                    {[
-                      [400, 'Bad request — missing or invalid fields'],
-                      [401, 'Unauthenticated — token missing or invalid'],
-                      [403, 'Forbidden — authenticated but insufficient permissions'],
-                      [404, 'Not found — resource does not exist'],
-                      [422, 'Validation error — request body failed validation'],
-                      [429, 'Too many requests — slow down and retry'],
-                      [500, 'Server error — something went wrong on our end'],
-                    ].map(([code, meaning]) => (
-                      <tr key={code as number}>
-                        <td className="px-4 py-3">
-                          <code className="rounded bg-[var(--surface-2)] px-1.5 py-0.5 font-mono text-xs text-[var(--fg-1)]">
-                            {code as number}
-                          </code>
-                        </td>
-                        <td className="px-4 py-3 text-xs text-[var(--fg-2)]">{meaning as string}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                <a href="https://toolblip.com" className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
+                  toolblip.com →
+                </a>
               </div>
             </div>
-
-            {/* ── Footer note ── */}
-            <div className="text-center text-xs text-[var(--fg-3)] pt-4 border-t border-[var(--line)]">
-              Questions or need a higher rate limit?{' '}
-              <a href="mailto:info@toolblip.com" className="text-[var(--fg-2)] hover:text-[var(--fg-0)] transition-colors">
-                info@toolblip.com
-              </a>
-            </div>
-          </div>
+          </main>
         </div>
-      </section>
-    </main>
+      </div>
+    </div>
   );
 }
