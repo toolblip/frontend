@@ -2109,6 +2109,25 @@ export const tools: Tool[] = [
   { name: 'Unit Converter', slug: 'unit-converter-fresh', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
   { name: 'Number Base Converter', slug: 'number-base-converter-fresh', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly.', emoji: '🔢', category: 'Conversion' },
 
+  // --- New tools (2026-04-27 #3) ---
+  { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-smart', description: 'Generate smart lorem ipsum text with paragraphs, sentences, words, and custom starting phrases.', emoji: '📜', category: 'Text' },
+  { name: 'Grammar Checker', slug: 'grammar-checker-smart', description: 'Check grammar and spelling with AI-powered suggestions and one-click fixes for any text.', emoji: '✅', category: 'Text' },
+  { name: 'Readability Score', slug: 'readability-score-smart', description: 'Calculate Flesch-Kincaid, SMOG, and Coleman-Liau readability grades with improvement tips.', emoji: '📊', category: 'Text' },
+  { name: 'Text Sorter', slug: 'text-sorter-smart', description: 'Sort text lines alphabetically, by length, numerically, or randomly with smart deduplication.', emoji: '📋', category: 'Text' },
+  { name: 'Regex Tester', slug: 'regex-tester-smart', description: 'Test regex patterns with real-time highlighting, smart capture groups, and replacement preview.', emoji: '🔍', category: 'Developer' },
+  { name: 'JWT Decoder', slug: 'jwt-decoder-smart', description: 'Decode JWT tokens with smart validation of header, payload, expiration, and signature.', emoji: '🎫', category: 'Developer' },
+  { name: 'Cron Expression Generator', slug: 'cron-generator-smart', description: 'Build cron schedules with a smart visual editor and human-readable descriptions.', emoji: '🕐', category: 'Developer' },
+  { name: 'HTTP Headers Viewer', slug: 'http-headers-viewer-smart', description: 'View and debug HTTP headers with smart analysis of caching, CORS, and security headers.', emoji: '📦', category: 'Developer' },
+  { name: 'Port Scanner', slug: 'port-scanner-smart', description: 'Simulate scanning common ports on any host to identify available services and open ports.', emoji: '🚪', category: 'Developer' },
+  { name: 'Favicon Generator', slug: 'favicon-generator-smart', description: 'Create smart favicon.ico and app icons from any image with multiple size outputs.', emoji: '🌐', category: 'Image' },
+  { name: 'Image Resizer', slug: 'image-resizer-smart', description: 'Resize images smartly in-browser with aspect ratio lock, batch mode, and instant download.', emoji: '📐', category: 'Image' },
+  { name: 'Meta Tag Generator', slug: 'meta-tag-generator-smart', description: 'Generate SEO meta tags, Open Graph, and Twitter Card tags with smart live preview.', emoji: '🏷️', category: 'SEO' },
+  { name: 'SERP Preview', slug: 'serp-preview-smart', description: 'Preview how your page appears in Google search with smart title and description length alerts.', emoji: '🔎', category: 'SEO' },
+  { name: 'Color Picker', slug: 'color-picker-smart', description: 'Pick any color and get smart HEX, RGB, HSL, and CSS values with live preview swatch.', emoji: '🎨', category: 'Color' },
+  { name: 'Contrast Checker', slug: 'contrast-checker-smart', description: 'Check color contrast ratios and get smart suggestions for WCAG AA and AAA compliance.', emoji: '♿', category: 'Color' },
+  { name: 'Unit Converter', slug: 'unit-converter-smart', description: 'Convert length, weight, temperature, speed, and volume with smart unit suggestions.', emoji: '⚖️', category: 'Conversion' },
+  { name: 'Number Base Converter', slug: 'number-base-converter-smart', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 with smart base detection.', emoji: '🔢', category: 'Conversion' },
+
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'AI Tools', 'Document Generator'] as const;
