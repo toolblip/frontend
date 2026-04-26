@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import type { Tool } from '@/data/tools';
-import ShareButtons from '@/components/ShareButtons';
+import ShareButtons from '@/src/components/ShareButtons';
 
 // ─── Individual tool UIs ────────────────────────────────────────────────────
 
