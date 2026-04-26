@@ -2166,6 +2166,25 @@ export const tools: Tool[] = [
   { name: 'Unit Converter', slug: 'unit-converter-prime', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units instantly.', emoji: '⚖️', category: 'Conversion' },
   { name: 'Number Base Converter', slug: 'number-base-converter-prime', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 number systems instantly.', emoji: '🔢', category: 'Conversion' },
 
+  // --- New tools (2026-04-27) - requested category expansion ---
+  { name: 'Lorem Ipsum Generator', slug: 'lorem-ipsum-advanced', description: 'Generate lorem ipsum placeholder text with customizable paragraphs, sentences, word count, and starting phrase.', emoji: '📜', category: 'Text' },
+  { name: 'Grammar Checker', slug: 'grammar-checker-advanced', description: 'Check grammar and spelling errors with one-click fixes, detailed explanations, and style suggestions.', emoji: '✅', category: 'Text' },
+  { name: 'Readability Score', slug: 'readability-score-advanced', description: 'Calculate Flesch-Kincaid, SMOG, ARI, Coleman-Liau, and Gunning Fog readability grades for any text.', emoji: '📊', category: 'Text' },
+  { name: 'Text Sorter', slug: 'text-sorter-advanced', description: 'Sort lines alphabetically, by length, numerically, reverse, or random order with one-click copy.', emoji: '📋', category: 'Text' },
+  { name: 'Regex Tester', slug: 'regex-tester-advanced', description: 'Test regex patterns with live match highlighting, capture groups, replacement preview, and step-through.', emoji: '🔍', category: 'Developer' },
+  { name: 'JWT Decoder', slug: 'jwt-decoder-advanced', description: 'Decode JWT tokens and view header, payload, expiration, and signature with algorithm identification.', emoji: '🎫', category: 'Developer' },
+  { name: 'Cron Expression Generator', slug: 'cron-generator-advanced', description: 'Build cron schedules visually with point-and-click controls and get human-readable schedule descriptions.', emoji: '🕐', category: 'Developer' },
+  { name: 'HTTP Headers Viewer', slug: 'http-headers-viewer-advanced', description: 'View HTTP request and response headers for any URL with timing breakdown and security analysis.', emoji: '📦', category: 'Developer' },
+  { name: 'Port Scanner', slug: 'port-scanner-advanced', description: 'Simulate scanning common ports on a host to identify available services and running applications.', emoji: '🚪', category: 'Developer' },
+  { name: 'Favicon Generator', slug: 'favicon-generator-advanced', description: 'Create favicon.ico, PNG, and SVG icons from any image, emoji, or text with multiple sizes.', emoji: '🌐', category: 'Image' },
+  { name: 'Image Resizer', slug: 'image-resizer-advanced', description: 'Resize images in the browser with no upload required. Lock aspect ratio, batch resize, and download.', emoji: '📐', category: 'Image' },
+  { name: 'Meta Tag Generator', slug: 'meta-tag-generator-advanced', description: 'Generate SEO meta tags, Open Graph, and Twitter Card tags with live SERP and social preview.', emoji: '🏷️', category: 'SEO' },
+  { name: 'SERP Preview', slug: 'serp-preview-advanced', description: 'Preview how a page title and meta description appear in Google search results with character alerts.', emoji: '🔎', category: 'SEO' },
+  { name: 'Color Picker', slug: 'color-picker-advanced', description: 'Pick any color visually and get HEX, RGB, HSL, HSV, and CMYK values with a live preview.', emoji: '🎨', category: 'Color' },
+  { name: 'Contrast Checker', slug: 'contrast-checker-advanced', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail and suggested fixes.', emoji: '♿', category: 'Color' },
+  { name: 'Unit Converter', slug: 'unit-converter-advanced', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units instantly.', emoji: '⚖️', category: 'Conversion' },
+  { name: 'Number Base Converter', slug: 'number-base-converter-advanced', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 number systems instantly.', emoji: '🔢', category: 'Conversion' },
+
 ];
 
-export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'AI Tools', 'Document Generator'] as const;
+export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'AI Tools', 'Document Generator', 'Image Tools'] as const;
