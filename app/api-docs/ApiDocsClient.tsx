@@ -4,11 +4,10 @@ import { useState } from 'react';
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 
-// Primary: api.toolblip.com (custom domain with SSL ✅)
-// Fallback: direct Railway URL
-const BASE_URL =
-  (typeof window !== 'undefined' && process.env.NEXT_PUBLIC_API_URL) ||
-  'https://api.toolblip.com';
+// Production: api.toolblip.com (custom domain, SSL ✅)
+// Fallback: Railway direct URL (temporary, SSL ✅)
+const BASE_URL = 'https://api.toolblip.com';
+const RAILWAY_URL = 'https://toolblip-api-production.up.railway.app';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -35,7 +34,7 @@ interface Endpoint {
 // ─── Endpoint Data ─────────────────────────────────────────────────────────────
 
 const endpoints: Endpoint[] = [
-  // ── Tools ──────────────────────────────────────────────────────────────────
+  // ── Tools ────────────────────────────────────────────────────────────────────
   {
     group: 'tools',
     method: 'GET',
@@ -112,13 +111,14 @@ const endpoints: Endpoint[] = [
     auth: false,
     title: 'Get Tool by Slug',
     description:
-      'Returns a single tool by its URL-safe slug. Returns a 404 if the tool is not found.',
+      'Returns a single tool by its URL-safe slug. Returns a 404 if no tool matches.',
     params: [
       {
         name: 'slug',
         type: 'string',
         required: true,
-        description: 'Tool slug — the URL-safe identifier (e.g. "json-formatter", "image-resizer")',
+        description:
+          'Tool slug — the URL-safe identifier (e.g. "json-formatter", "image-resizer")',
       },
     ],
     curl: `curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
@@ -137,7 +137,7 @@ const endpoints: Endpoint[] = [
 }`,
   },
 
-  // ── Auth ────────────────────────────────────────────────────────────────────
+  // ── Auth ─────────────────────────────────────────────────────────────────────
   {
     group: 'auth',
     method: 'POST',
@@ -148,10 +148,30 @@ const endpoints: Endpoint[] = [
       'Create a new user account. Returns the user object and a Bearer token for authenticated requests.',
     params: [],
     bodyParams: [
-      { name: 'name', type: 'string', required: true, description: 'Full display name' },
-      { name: 'email', type: 'string', required: true, description: 'Email address — must be unique' },
-      { name: 'password', type: 'string', required: true, description: 'Password — minimum 8 characters' },
-      { name: 'password_confirmation', type: 'string', required: true, description: 'Must match password exactly' },
+      {
+        name: 'name',
+        type: 'string',
+        required: true,
+        description: 'Full display name',
+      },
+      {
+        name: 'email',
+        type: 'string',
+        required: true,
+        description: 'Email address — must be unique',
+      },
+      {
+        name: 'password',
+        type: 'string',
+        required: true,
+        description: 'Password — minimum 8 characters',
+      },
+      {
+        name: 'password_confirmation',
+        type: 'string',
+        required: true,
+        description: 'Must match password exactly',
+      },
     ],
     curl: `curl -X POST "${BASE_URL}/api/auth/register" \\
   -H "Content-Type: application/json" \\
@@ -182,8 +202,18 @@ const endpoints: Endpoint[] = [
       'Authenticate an existing user. Returns a Bearer token to use in subsequent authenticated requests.',
     params: [],
     bodyParams: [
-      { name: 'email', type: 'string', required: true, description: 'Account email address' },
-      { name: 'password', type: 'string', required: true, description: 'Account password' },
+      {
+        name: 'email',
+        type: 'string',
+        required: true,
+        description: 'Account email address',
+      },
+      {
+        name: 'password',
+        type: 'string',
+        required: true,
+        description: 'Account password',
+      },
     ],
     curl: `curl -X POST "${BASE_URL}/api/auth/login" \\
   -H "Content-Type: application/json" \\
@@ -241,21 +271,25 @@ const endpoints: Endpoint[] = [
   },
 ];
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+// ─── Helpers ───────────────────────────────────────────────────────────────────
 
 const methodColors: Record<string, string> = {
-  GET:  'bg-emerald-100 text-emerald-700 ring-emerald-200',
+  GET: 'bg-emerald-100 text-emerald-700 ring-emerald-200',
   POST: 'bg-blue-100 text-blue-700 ring-blue-200',
 };
 
 const groupMeta: Record<string, { label: string; emoji: string }> = {
   tools: { label: 'Tools', emoji: '🔧' },
-  auth:  { label: 'Authentication', emoji: '🔑' },
+  auth: { label: 'Authentication', emoji: '🔑' },
 };
 
 function MethodBadge({ method }: { method: string }) {
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold ring-1 ${methodColors[method] ?? 'bg-gray-100 text-gray-700 ring-gray-200'}`}>
+    <span
+      className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold ring-1 ${
+        methodColors[method] ?? 'bg-gray-100 text-gray-700 ring-gray-200'
+      }`}
+    >
       {method}
     </span>
   );
@@ -263,22 +297,44 @@ function MethodBadge({ method }: { method: string }) {
 
 function AuthPill({ required }: { required: boolean }) {
   return (
-    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ring-1 ${
-      required
-        ? 'bg-amber-50 text-amber-700 ring-amber-200'
-        : 'bg-slate-100 text-slate-500 ring-slate-200'
-    }`}>
+    <span
+      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ring-1 ${
+        required
+          ? 'bg-amber-50 text-amber-700 ring-amber-200'
+          : 'bg-slate-100 text-slate-500 ring-slate-200'
+      }`}
+    >
       {required ? (
         <>
-          <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          <svg
+            className="w-3 h-3 flex-shrink-0"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+            />
           </svg>
           Auth
         </>
       ) : (
         <>
-          <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+          <svg
+            className="w-3 h-3 flex-shrink-0"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+            />
           </svg>
           Public
         </>
@@ -309,15 +365,35 @@ function CopyButton({ text }: { text: string }) {
     >
       {copied ? (
         <>
-          <svg className="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+          <svg
+            className="w-3.5 h-3.5 text-emerald-400"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M5 13l4 4L19 7"
+            />
           </svg>
           Copied!
         </>
       ) : (
         <>
-          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+          <svg
+            className="w-3.5 h-3.5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+            />
           </svg>
           Copy
         </>
@@ -345,19 +421,31 @@ export default function ApiDocsClient() {
 
   const scrollTo = (i: number) => {
     setOpenEndpoint(i);
-    document.getElementById(`endpoint-${i}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document
+      .getElementById(`endpoint-${i}`)
+      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   return (
     <div className="min-h-screen bg-slate-50">
 
-      {/* ── Header ────────────────────────────────────────────────────────── */}
+      {/* ── Header ─────────────────────────────────────────────────────────── */}
       <header className="bg-white border-b border-slate-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center flex-shrink-0">
-              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+              <svg
+                className="w-5 h-5 text-white"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+                />
               </svg>
             </div>
             <div>
@@ -366,22 +454,54 @@ export default function ApiDocsClient() {
             </div>
           </div>
           <p className="text-slate-600 max-w-2xl mb-6">
-            Integrate Toolblip into your apps. Browse the tool directory, register accounts, and manage authenticated sessions — all via simple JSON REST calls.
+            Integrate Toolblip into your apps. Browse the tool directory, register accounts, and
+            manage authenticated sessions — all via simple JSON REST calls.
           </p>
 
-          <div className="flex flex-wrap items-center gap-3">
+          {/* ── Base URL display ───────────────────────────────────────────── */}
+          <div className="flex flex-wrap items-center gap-3 mb-4">
             <div className="inline-flex flex-col gap-1.5 bg-slate-900 rounded-xl px-5 py-3">
-              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Base URL</span>
+              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
+                Base URL
+              </span>
               <code className="text-sm font-mono text-emerald-400">{BASE_URL}</code>
             </div>
             <div className="inline-flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-4 py-3">
-              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Auth</span>
+              <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">
+                Auth
+              </span>
               <code className="text-sm font-mono text-slate-700">Bearer token</code>
             </div>
             <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-100 rounded-xl px-4 py-3">
-              <span className="text-xs font-semibold text-emerald-600 uppercase tracking-wide">SSL</span>
+              <span className="text-xs font-semibold text-emerald-600 uppercase tracking-wide">
+                SSL
+              </span>
               <span className="text-sm text-emerald-700">✅ Verified</span>
             </div>
+          </div>
+
+          {/* ── Railway URL note ───────────────────────────────────────────── */}
+          <div className="flex items-start gap-2 text-xs text-slate-500 bg-amber-50 border border-amber-100 rounded-xl px-4 py-3 max-w-xl">
+            <svg
+              className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>
+              Direct Railway URL:{' '}
+              <code className="font-mono text-amber-700">{RAILWAY_URL}</code>
+              {'. '}
+              Use this if{' '}
+              <code className="font-mono">{BASE_URL}</code> is unavailable.
+            </span>
           </div>
         </div>
       </header>
@@ -389,7 +509,7 @@ export default function ApiDocsClient() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
 
-          {/* ── Sidebar ───────────────────────────────────────────────────── */}
+          {/* ── Sidebar ─────────────────────────────────────────────────────── */}
           <aside className="lg:col-span-1">
             <div className="sticky top-8">
               <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">
@@ -416,7 +536,9 @@ export default function ApiDocsClient() {
                             }`}
                           >
                             <MethodBadge method={ep.method} />
-                            <span className="truncate font-mono text-xs flex-1">{ep.path}</span>
+                            <span className="truncate font-mono text-xs flex-1">
+                              {ep.path}
+                            </span>
                           </button>
                         ))}
                     </div>
@@ -429,19 +551,30 @@ export default function ApiDocsClient() {
           {/* ── Main content ───────────────────────────────────────────────── */}
           <main className="lg:col-span-3 space-y-10">
 
-            {/* ── Overview cards ─────────────────────────────────────────── */}
+            {/* ── Overview cards ────────────────────────────────────────────── */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="bg-white rounded-2xl border border-slate-200 p-5">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <svg className="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    <svg
+                      className="w-4 h-4 text-indigo-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      />
                     </svg>
                   </div>
                   <h3 className="font-semibold text-slate-800 text-sm">Bearer Token</h3>
                 </div>
                 <p className="text-sm text-slate-600 mb-3">
-                  Pass your token from register or login in the Authorization header on every authenticated request.
+                  Pass your token from register or login in the Authorization header on every
+                  authenticated request.
                 </p>
                 <CodeBlock code="Authorization: Bearer {token}" />
               </div>
@@ -449,8 +582,18 @@ export default function ApiDocsClient() {
               <div className="bg-white rounded-2xl border border-slate-200 p-5">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <svg className="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
+                    <svg
+                      className="w-4 h-4 text-indigo-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"
+                      />
                     </svg>
                   </div>
                   <h3 className="font-semibold text-slate-800 text-sm">JSON Throughout</h3>
@@ -464,33 +607,56 @@ export default function ApiDocsClient() {
               <div className="bg-white rounded-2xl border border-slate-200 p-5">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <svg className="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    <svg
+                      className="w-4 h-4 text-indigo-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
+                      />
                     </svg>
                   </div>
                   <h3 className="font-semibold text-slate-800 text-sm">Rate Limits</h3>
                 </div>
                 <p className="text-sm text-slate-600">
-                  Public endpoints: <strong>60 req/min</strong>. Authenticated: <strong>120 req/min</strong>. Pro users enjoy higher limits.
+                  Public endpoints: <strong>60 req/min</strong>. Authenticated:{' '}
+                  <strong>120 req/min</strong>. Pro users enjoy higher limits.
                 </p>
               </div>
 
               <div className="bg-white rounded-2xl border border-slate-200 p-5">
                 <div className="flex items-center gap-2 mb-3">
                   <div className="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <svg className="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    <svg
+                      className="w-4 h-4 text-indigo-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={2}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                      />
                     </svg>
                   </div>
                   <h3 className="font-semibold text-slate-800 text-sm">Error Format</h3>
                 </div>
                 <p className="text-sm text-slate-600">
-                  Errors return JSON with a <code className="font-mono text-xs bg-slate-100 px-1 rounded">message</code> field. Status codes: 400, 401, 403, 404, 422, 500.
+                  Errors return JSON with a{' '}
+                  <code className="font-mono text-xs bg-slate-100 px-1 rounded">message</code>{' '}
+                  field. Status codes: 400, 401, 403, 404, 422, 500.
                 </p>
               </div>
             </div>
 
-            {/* ── Endpoint groups ──────────────────────────────────────────── */}
+            {/* ── Endpoint groups ────────────────────────────────────────────── */}
             {groups.map((group) => (
               <div key={group}>
                 <SectionDivider group={group} />
@@ -516,7 +682,10 @@ export default function ApiDocsClient() {
               <h2 className="text-base font-bold text-slate-900 mb-1">Need help?</h2>
               <p className="text-sm text-slate-600 mb-4">
                 Questions about the API? Reach out at{' '}
-                <a href="mailto:api@toolblip.com" className="text-indigo-600 hover:underline">
+                <a
+                  href="mailto:api@toolblip.com"
+                  className="text-indigo-600 hover:underline"
+                >
                   api@toolblip.com
                 </a>{' '}
                 or open an issue on GitHub.
@@ -548,9 +717,15 @@ export default function ApiDocsClient() {
   );
 }
 
-// ─── Endpoint Card ────────────────────────────────────────────────────────────
+// ─── Endpoint Card ─────────────────────────────────────────────────────────────
 
-function ParamTable({ params, body }: { params: Parameter[]; body?: Parameter[] }) {
+function ParamTable({
+  params,
+  body,
+}: {
+  params: Parameter[];
+  body?: Parameter[];
+}) {
   const rows = body ?? params;
   if (rows.length === 0) return null;
   return (
@@ -562,16 +737,26 @@ function ParamTable({ params, body }: { params: Parameter[]; body?: Parameter[] 
         <table className="w-full text-sm">
           <thead className="bg-slate-50">
             <tr>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Name</th>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Type</th>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Required</th>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Description</th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">
+                Name
+              </th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">
+                Type
+              </th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">
+                Required
+              </th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">
+                Description
+              </th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
             {rows.map((p, pi) => (
               <tr key={pi}>
-                <td className="px-4 py-2.5 font-mono text-xs text-indigo-700">{p.name}</td>
+                <td className="px-4 py-2.5 font-mono text-xs text-indigo-700">
+                  {p.name}
+                </td>
                 <td className="px-4 py-2.5 text-xs text-slate-500">{p.type}</td>
                 <td className="px-4 py-2.5 text-xs">
                   {p.required ? (
@@ -603,10 +788,7 @@ function EndpointCard({
 }) {
   const isOpen = openEndpoint === i;
   return (
-    <div
-      id={`endpoint-${i}`}
-      className="bg-white rounded-2xl border border-slate-200 overflow-hidden"
-    >
+    <div id={`endpoint-${i}`} className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
       <button
         onClick={() => toggleEndpoint(isOpen ? null : i)}
         className="w-full flex items-center gap-3 px-5 py-4 hover:bg-slate-50 transition-colors text-left"
@@ -616,13 +798,19 @@ function EndpointCard({
         <span className="text-sm text-slate-500 flex-1 truncate">{ep.title}</span>
         <AuthPill required={ep.auth} />
         <svg
-          className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}
+          className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${
+            isOpen ? 'rotate-180' : ''
+          }`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
           strokeWidth={2}
         >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M19 9l-7 7-7-7"
+          />
         </svg>
       </button>
 
@@ -635,7 +823,9 @@ function EndpointCard({
 
           <div>
             <div className="flex items-center justify-between mb-2">
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Example Request</h4>
+              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                Example Request
+              </h4>
               <CopyButton text={ep.curl} />
             </div>
             <CodeBlock code={ep.curl} />
@@ -643,7 +833,9 @@ function EndpointCard({
 
           <div>
             <div className="flex items-center justify-between mb-2">
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Example Response</h4>
+              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                Example Response
+              </h4>
               <CopyButton text={ep.response} />
             </div>
             <CodeBlock code={ep.response} />
