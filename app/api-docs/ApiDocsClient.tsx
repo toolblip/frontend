@@ -2,16 +2,36 @@
 
 import { useState } from 'react';
 
-// Primary base URL — api.toolblip.com (SSL ✅ verified)
+// ─── Endpoint definitions ───────────────────────────────────────────────────────
+
 const BASE_URL = 'https://api.toolblip.com';
 
-const endpoints = [
+interface Param {
+  name: string;
+  type: string;
+  required: boolean;
+  description: string;
+}
+
+interface Endpoint {
+  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  path: string;
+  auth: boolean;
+  title: string;
+  description: string;
+  params: Param[];
+  curl: string;
+  response: string;
+}
+
+const endpoints: Endpoint[] = [
+  // ── Tools ──────────────────────────────────────────────────────────────────
   {
     method: 'GET',
     path: '/api/tools',
     auth: false,
     title: 'List Tools',
-    description: 'Returns a paginated list of all tools in the directory.',
+    description: 'Returns a paginated list of all tools in the directory. Supports filtering by category and full-text search.',
     params: [
       { name: 'category', type: 'string', required: false, description: 'Filter by category slug (e.g. "writing", "image")' },
       { name: 'search', type: 'string', required: false, description: 'Search tool name and description' },
@@ -32,16 +52,6 @@ const endpoints = [
         "is_pro": false,
         "emoji": "🤖",
         "created_at": "2026-01-15T10:30:00Z"
-      },
-      {
-        "id": 2,
-        "slug": "claude-ai",
-        "name": "Claude AI",
-        "description": "Helpful, harmless, and honest AI assistant.",
-        "category": "ai",
-        "is_pro": false,
-        "emoji": "✨",
-        "created_at": "2026-01-20T14:00:00Z"
       }
     ],
     "meta": {
@@ -77,12 +87,14 @@ const endpoints = [
   }
 }`,
   },
+
+  // ── Auth ───────────────────────────────────────────────────────────────────
   {
     method: 'POST',
     path: '/api/auth/register',
     auth: false,
     title: 'Register',
-    description: 'Create a new user account. Returns the user object and a Bearer token for subsequent authenticated requests.',
+    description: 'Create a new user account. Returns the user object and a Bearer token for authenticated requests.',
     params: [
       { name: 'name', type: 'string', required: true, description: 'Full name' },
       { name: 'email', type: 'string', required: true, description: 'Email address (must be unique)' },
@@ -113,7 +125,7 @@ const endpoints = [
     path: '/api/auth/login',
     auth: false,
     title: 'Login',
-    description: 'Authenticate an existing user with email and password. Returns a Bearer token to use for subsequent authenticated requests.',
+    description: 'Authenticate an existing user. Returns a Bearer token to use for subsequent authenticated requests.',
     params: [
       { name: 'email', type: 'string', required: true, description: 'Email address' },
       { name: 'password', type: 'string', required: true, description: 'Account password' },
@@ -140,7 +152,7 @@ const endpoints = [
     path: '/api/auth/logout',
     auth: true,
     title: 'Logout',
-    description: 'Invalidate the current session token. Requires a valid Bearer token in the Authorization header.',
+    description: 'Invalidate the current session token. Requires a valid Bearer token.',
     params: [],
     curl: `curl -X POST "${BASE_URL}/api/auth/logout" \\
   -H "Authorization: Bearer {token}" \\
@@ -154,7 +166,7 @@ const endpoints = [
     path: '/api/auth/user',
     auth: true,
     title: 'Get Authenticated User',
-    description: 'Returns the profile of the currently authenticated user. Use the token received from login or register.',
+    description: 'Returns the profile of the currently authenticated user. Use the token from login or register.',
     params: [],
     curl: `curl -X GET "${BASE_URL}/api/auth/user" \\
   -H "Authorization: Bearer {token}" \\
@@ -170,18 +182,19 @@ const endpoints = [
   },
 ];
 
-// ─── Sub-components ─────────────────────────────────────────────────────────────
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+const methodColors: Record<string, string> = {
+  GET:    'bg-emerald-100 text-emerald-700 ring-emerald-200',
+  POST:   'bg-blue-100 text-blue-700 ring-blue-200',
+  PUT:    'bg-amber-100 text-amber-700 ring-amber-200',
+  PATCH:  'bg-orange-100 text-orange-700 ring-orange-200',
+  DELETE: 'bg-rose-100 text-rose-700 ring-rose-200',
+};
 
 function MethodBadge({ method }: { method: string }) {
-  const colors: Record<string, string> = {
-    GET:    'bg-emerald-100 text-emerald-800',
-    POST:   'bg-blue-100 text-blue-800',
-    PUT:    'bg-amber-100 text-amber-800',
-    PATCH:  'bg-orange-100 text-orange-800',
-    DELETE: 'bg-rose-100 text-rose-800',
-  };
   return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-bold ${colors[method] ?? 'bg-gray-100 text-gray-800'}`}>
+    <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold ring-1 ${methodColors[method] ?? 'bg-gray-100 text-gray-700 ring-gray-200'}`}>
       {method}
     </span>
   );
@@ -189,7 +202,11 @@ function MethodBadge({ method }: { method: string }) {
 
 function AuthBadge({ required }: { required: boolean }) {
   return (
-    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${required ? 'bg-amber-100 text-amber-700' : 'bg-gray-100 text-gray-500'}`}>
+    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ring-1 ${
+      required
+        ? 'bg-amber-50 text-amber-700 ring-amber-200'
+        : 'bg-slate-100 text-slate-500 ring-slate-200'
+    }`}>
       {required ? (
         <>
           <svg className="w-3 h-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -211,7 +228,7 @@ function AuthBadge({ required }: { required: boolean }) {
 
 function CodeBlock({ children }: { children: string }) {
   return (
-    <pre className="bg-[#0f1117] text-gray-100 rounded-xl p-4 text-sm font-mono overflow-x-auto leading-relaxed">
+    <pre className="bg-[#0f1117] text-gray-100 rounded-xl p-4 text-sm font-mono overflow-x-auto leading-relaxed whitespace-pre">
       {children}
     </pre>
   );
@@ -248,7 +265,7 @@ function CopyButton({ text }: { text: string }) {
   );
 }
 
-// ─── Main component ────────────────────────────────────────────────────────────
+// ─── Main component ───────────────────────────────────────────────────────────
 
 export default function ApiDocsClient() {
   const [openEndpoint, setOpenEndpoint] = useState<number | null>(null);
@@ -256,7 +273,7 @@ export default function ApiDocsClient() {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      {/* ── Header ── */}
+      {/* Header */}
       <header className="bg-white border-b border-slate-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center gap-3 mb-3">
@@ -271,10 +288,9 @@ export default function ApiDocsClient() {
             </div>
           </div>
           <p className="text-slate-600 max-w-2xl mb-5">
-            Browse and manage tools programmatically. All endpoints return JSON and follow REST conventions. Public endpoints are free to use; authenticated endpoints require a Bearer token.
+            Integrate Toolblip into your apps. All endpoints return JSON. Public endpoints are free; authenticated ones require a Bearer token.
           </p>
 
-          {/* Base URL pill */}
           <div className="inline-flex items-center gap-2 bg-slate-900 rounded-lg px-4 py-2">
             <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Base URL</span>
             <code className="text-sm font-mono text-emerald-400">{BASE_URL}</code>
@@ -285,7 +301,7 @@ export default function ApiDocsClient() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
 
-          {/* ── Sidebar ── */}
+          {/* Sidebar */}
           <aside className="lg:col-span-1">
             <div className="sticky top-8">
               <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">Endpoints</p>
@@ -311,14 +327,14 @@ export default function ApiDocsClient() {
             </div>
           </aside>
 
-          {/* ── Main content ── */}
+          {/* Main content */}
           <main className="lg:col-span-3 space-y-6">
 
-            {/* ── Overview cards ── */}
+            {/* Overview cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="bg-white rounded-2xl border border-slate-200 p-5">
                 <div className="flex items-center gap-2 mb-3">
-                  <div className="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center">
+                  <div className="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center flex-shrink-0">
                     <svg className="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
@@ -326,14 +342,14 @@ export default function ApiDocsClient() {
                   <h3 className="font-semibold text-slate-800 text-sm">Authentication</h3>
                 </div>
                 <p className="text-sm text-slate-600 mb-3">
-                  Pass your token in the <code className="font-mono text-xs bg-slate-100 px-1 rounded">Authorization</code> header as a Bearer token.
+                  Pass your token as a Bearer token in the Authorization header.
                 </p>
                 <CodeBlock>Authorization: Bearer {'{token}'}</CodeBlock>
               </div>
 
               <div className="bg-white rounded-2xl border border-slate-200 p-5">
                 <div className="flex items-center gap-2 mb-3">
-                  <div className="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center">
+                  <div className="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center flex-shrink-0">
                     <svg className="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
                     </svg>
@@ -348,7 +364,7 @@ export default function ApiDocsClient() {
 
               <div className="bg-white rounded-2xl border border-slate-200 p-5">
                 <div className="flex items-center gap-2 mb-3">
-                  <div className="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center">
+                  <div className="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center flex-shrink-0">
                     <svg className="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
@@ -362,7 +378,7 @@ export default function ApiDocsClient() {
 
               <div className="bg-white rounded-2xl border border-slate-200 p-5">
                 <div className="flex items-center gap-2 mb-3">
-                  <div className="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center">
+                  <div className="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center flex-shrink-0">
                     <svg className="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
@@ -370,12 +386,12 @@ export default function ApiDocsClient() {
                   <h3 className="font-semibold text-slate-800 text-sm">Errors</h3>
                 </div>
                 <p className="text-sm text-slate-600">
-                  Errors return a JSON object with a <code className="font-mono text-xs bg-slate-100 px-1 rounded">message</code> field. Common status codes: 400, 401, 403, 404, 422, 500.
+                  Errors return JSON with a <code className="font-mono text-xs bg-slate-100 px-1 rounded">message</code> field. Status codes: 400, 401, 403, 404, 422, 500.
                 </p>
               </div>
             </div>
 
-            {/* ── Endpoints ── */}
+            {/* Endpoints */}
             <div>
               <h2 className="text-lg font-bold text-slate-900 mb-4 px-1">Endpoints</h2>
               <div className="space-y-3">
@@ -395,10 +411,7 @@ export default function ApiDocsClient() {
                       <AuthBadge required={ep.auth} />
                       <svg
                         className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${openEndpoint === i ? 'rotate-180' : ''}`}
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
+                        fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
                       >
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                       </svg>
@@ -462,7 +475,7 @@ export default function ApiDocsClient() {
               </div>
             </div>
 
-            {/* ── Help / CTA ── */}
+            {/* Help CTA */}
             <div className="bg-gradient-to-r from-indigo-50 to-violet-50 rounded-2xl border border-indigo-100 p-6">
               <h2 className="text-base font-bold text-slate-900 mb-1">Need help?</h2>
               <p className="text-sm text-slate-600 mb-4">
