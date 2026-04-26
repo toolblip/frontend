@@ -2211,8 +2211,23 @@ export const tools: Tool[] = [
   { name: 'Hex to Decimal Converter', slug: 'hex-to-decimal-converter', description: 'Convert hexadecimal numbers to decimal and binary with step-by-step calculation breakdown.', emoji: '🔢', category: 'Conversion' },
   { name: 'Decimal to Hex Converter', slug: 'decimal-to-hex-converter', description: 'Convert decimal numbers to hexadecimal and binary with instant result and copy button.', emoji: '🔢', category: 'Conversion' },
 
-];
+  // --- New tools (2026-04-27) - genuinely new additions ---
+  { name: 'Read Time Calculator', slug: 'read-time-calculator', description: 'Estimate how long it takes to read any text based on average reading speed.', emoji: '⏱️', category: 'Text' },
+  { name: 'Paragraph Generator', slug: 'paragraph-generator', description: 'Generate random paragraphs with customizable word count and topic for placeholder content.', emoji: '📝', category: 'Text' },
+  { name: 'Synonym Finder', slug: 'synonym-finder', description: 'Find synonyms and antonyms for any word with one click.', emoji: '🔤', category: 'Text' },
+  { name: 'cURL Command Builder', slug: 'curl-command-builder', description: 'Build cURL commands with custom method, headers, body, and authentication.', emoji: '💻', category: 'Developer' },
+  { name: 'CSS Gradient Generator', slug: 'css-gradient-generator', description: 'Generate CSS linear and radial gradients with live preview and export.', emoji: '🎨', category: 'CSS' },
+  { name: 'DNS Lookup Tool', slug: 'dns-lookup-tool', description: 'Check DNS records for any domain including A, MX, CNAME, TXT, and NS records.', emoji: '🌐', category: 'Network' },
+  { name: 'QR Code Generator', slug: 'qr-code-generator', description: 'Generate QR codes for URLs, text, WiFi, vCards, and more with downloadable PNG.', emoji: '📲', category: 'Image' },
+  { name: 'Image Compression Tool', slug: 'image-compression-tool', description: 'Compress JPEG, PNG, and WebP images to reduce file size without losing quality.', emoji: '🗜️', category: 'Image' },
+  { name: 'Keyword Density Checker', slug: 'keyword-density-checker', description: 'Check keyword phrase frequency and density in any webpage or text for SEO analysis.', emoji: '📊', category: 'SEO' },
+  { name: 'Page Speed Insights Preview', slug: 'pagespeed-preview', description: 'Preview estimated page speed score and core Web Vitals for any URL.', emoji: '⚡', category: 'SEO' },
+  { name: 'Color Shade Generator', slug: 'color-shade-generator', description: 'Generate tints, shades, and tones of any color for consistent design palettes.', emoji: '🎨', category: 'Color' },
+  { name: 'Currency Converter', slug: 'currency-converter', description: 'Convert amounts between currencies with live exchange rates updated daily.', emoji: '💱', category: 'Conversion' },
+  { name: 'Fraction Calculator', slug: 'fraction-calculator', description: 'Add, subtract, multiply, and divide fractions with step-by-step solutions.', emoji: '➗', category: 'Math' },
+  { name: 'Percentage Calculator', slug: 'percentage-calculator', description: 'Calculate percentages, percentage increase/decrease, and discounts instantly.', emoji: '🏷️', category: 'Math' },
+  { name: 'Random ID Generator', slug: 'random-id-generator', description: 'Generate random alphanumeric IDs, coupon codes, and referral codes in bulk.', emoji: '🎲', category: 'Utility' },
 
-export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'AI Tools', 'Document Generator', 'Image Tools'] as const;
+];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'AI Tools', 'Document Generator', 'Image Tools'] as const;
