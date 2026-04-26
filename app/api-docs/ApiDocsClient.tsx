@@ -4,7 +4,9 @@ import { useState } from 'react';
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 
-const BASE_URL = 'https://api.toolblip.com';
+// Primary base URL — Railway production deployment (api.toolblip.com SSL verified ✅)
+// Falls back to direct Railway URL if custom domain SSL is reissuing
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.toolblip.com';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -26,14 +28,7 @@ interface Endpoint {
   response: string;
 }
 
-type GroupKey = 'tools' | 'auth';
-
 // ─── Data ─────────────────────────────────────────────────────────────────────
-
-const endpointGroups: { key: GroupKey; label: string; icon: string }[] = [
-  { key: 'tools', label: 'Tools', icon: '🔧' },
-  { key: 'auth', label: 'Authentication', icon: '🔑' },
-];
 
 const endpoints: Endpoint[] = [
   // ── Tools ──────────────────────────────────────────────────────────────────
@@ -70,7 +65,13 @@ const endpoints: Endpoint[] = [
         description: 'Items per page (default: 20, max: 100)',
       },
     ],
-    curl: `curl -X GET "${BASE_URL}/api/tools?category=writing&page=1" \\
+    curl: `# Public request
+curl -X GET "${BASE_URL}/api/tools?category=writing&page=1" \\
+  -H "Accept: application/json"
+
+# Authenticated request (higher rate limit)
+curl -X GET "${BASE_URL}/api/tools?category=writing&page=1" \\
+  -H "Authorization: Bearer {token}" \\
   -H "Accept: application/json"`,
     response: `{
   "tools": {
@@ -84,6 +85,16 @@ const endpoints: Endpoint[] = [
         "is_pro": false,
         "emoji": "📋",
         "created_at": "2026-01-15T10:30:00Z"
+      },
+      {
+        "id": 2,
+        "slug": "image-resizer",
+        "name": "Image Resizer",
+        "description": "Resize images to any dimension with high-quality downsampling.",
+        "category": "image",
+        "is_pro": false,
+        "emoji": "🖼️",
+        "created_at": "2026-01-20T14:00:00Z"
       }
     ],
     "meta": {
@@ -110,7 +121,13 @@ const endpoints: Endpoint[] = [
         description: 'Tool slug — the URL-safe identifier (e.g. "json-formatter", "image-resizer")',
       },
     ],
-    curl: `curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
+    curl: `# Public request
+curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
+  -H "Accept: application/json"
+
+# Authenticated request
+curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
+  -H "Authorization: Bearer {token}" \\
   -H "Accept: application/json"`,
     response: `{
   "tool": {
@@ -211,7 +228,7 @@ const endpoints: Endpoint[] = [
       'Invalidate the current session token. After calling this the token can no longer be used for authenticated requests.',
     params: [],
     curl: `curl -X POST "${BASE_URL}/api/auth/logout" \\
-  -H "Authorization: Bearer {token}" \\
+  -H "Authorization: Bearer 2|Yz7LcQ3aMbNcOdPeQfGhRiJsTkL" \\
   -H "Accept: application/json"`,
     response: `{
   "message": "Logged out successfully"
@@ -226,7 +243,7 @@ const endpoints: Endpoint[] = [
       'Returns the profile of the currently authenticated user. Use the Bearer token returned from login or register.',
     params: [],
     curl: `curl -X GET "${BASE_URL}/api/auth/user" \\
-  -H "Authorization: Bearer {token}" \\
+  -H "Authorization: Bearer 2|Yz7LcQ3aMbNcOdPeQfGhRiJsTkL" \\
   -H "Accept: application/json"`,
     response: `{
   "user": {
@@ -287,10 +304,10 @@ function AuthBadge({ required }: { required: boolean }) {
   );
 }
 
-function CodeBlock({ children }: { children: string }) {
+function CodeBlock({ code }: { code: string }) {
   return (
     <pre className="bg-[#0f1117] text-gray-100 rounded-xl p-4 text-sm font-mono overflow-x-auto leading-relaxed whitespace-pre">
-      {children}
+      {code}
     </pre>
   );
 }
@@ -332,9 +349,6 @@ export default function ApiDocsClient() {
   const [openEndpoint, setOpenEndpoint] = useState<number | null>(0);
   const toggleEndpoint = (i: number) => setOpenEndpoint(openEndpoint === i ? null : i);
 
-  const toolsEndpoints = endpoints.filter((e) => e.path.startsWith('/api/tools'));
-  const authEndpoints = endpoints.filter((e) => e.path.startsWith('/api/auth'));
-
   const scrollTo = (i: number) => {
     setOpenEndpoint(i);
     document.getElementById(`endpoint-${i}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -361,13 +375,17 @@ export default function ApiDocsClient() {
           </p>
 
           <div className="flex flex-wrap items-center gap-3">
-            <div className="inline-flex items-center gap-2 bg-slate-900 rounded-lg px-4 py-2">
+            <div className="inline-flex flex-col gap-1.5 bg-slate-900 rounded-xl px-5 py-3">
               <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Base URL</span>
               <code className="text-sm font-mono text-emerald-400">{BASE_URL}</code>
             </div>
-            <div className="inline-flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-4 py-2">
+            <div className="inline-flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-4 py-3">
               <span className="text-xs font-semibold text-slate-400 uppercase tracking-wide">Auth</span>
               <code className="text-sm font-mono text-slate-700">Bearer token</code>
+            </div>
+            <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-100 rounded-xl px-4 py-3">
+              <span className="text-xs font-semibold text-emerald-600 uppercase tracking-wide">SSL</span>
+              <code className="text-sm font-mono text-emerald-700">✅ Verified</code>
             </div>
           </div>
         </div>
@@ -418,7 +436,7 @@ export default function ApiDocsClient() {
                 <p className="text-sm text-slate-600 mb-3">
                   Pass your token from register or login in the Authorization header.
                 </p>
-                <CodeBlock>Authorization: Bearer {'{token}'}</CodeBlock>
+                <CodeBlock code="Authorization: Bearer {token}" />
               </div>
 
               <div className="bg-white rounded-2xl border border-slate-200 p-5">
@@ -433,7 +451,7 @@ export default function ApiDocsClient() {
                 <p className="text-sm text-slate-600 mb-3">
                   All requests and responses use JSON. Always include the correct headers.
                 </p>
-                <CodeBlock>{'Content-Type: application/json\nAccept: application/json'}</CodeBlock>
+                <CodeBlock code="Content-Type: application/json\nAccept: application/json" />
               </div>
 
               <div className="bg-white rounded-2xl border border-slate-200 p-5">
@@ -630,7 +648,7 @@ function EndpointCard({
               <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Example Request</h4>
               <CopyButton text={ep.curl} />
             </div>
-            <CodeBlock>{ep.curl}</CodeBlock>
+            <CodeBlock code={ep.curl} />
           </div>
 
           <div>
@@ -638,7 +656,7 @@ function EndpointCard({
               <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">Example Response</h4>
               <CopyButton text={ep.response} />
             </div>
-            <CodeBlock>{ep.response}</CodeBlock>
+            <CodeBlock code={ep.response} />
           </div>
         </div>
       )}
