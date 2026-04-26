@@ -13,12 +13,12 @@ export const metadata: Metadata = {
   twitter: { card: 'summary', title: 'Tools | Toolblip', description: 'Browse all developer tools on Toolblip.' },
 };
 
-export default function ToolsPage({
+export default async function ToolsPage({
   searchParams,
 }: {
   searchParams: Promise<{ category?: string }>;
 }) {
-  const { category } = searchParams;
+  const { category } = await searchParams;
   const params = category ? `?category=${encodeURIComponent(category)}` : '';
   redirect(`/directory${params}`);
 }
