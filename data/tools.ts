@@ -1977,6 +1977,23 @@ export const tools: Tool[] = [
   { name: 'Contrast Checker', slug: 'contrast-checker-ultimate', description: 'Check color contrast ratios for WCAG AA and AAA compliance with pass/fail indicators.', emoji: '♿', category: 'Color' },
   { name: 'Unit Converter', slug: 'unit-converter-ultimate', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
   { name: 'Number Base Converter', slug: 'number-base-converter-ultimate', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly.', emoji: '🔢', category: 'Conversion' },
+
+  // --- New tools (2026-04-26 #5 - genuinely new) ---
+  { name: 'Random Choice Picker', slug: 'random-choice-picker', description: 'Pick random items from a list. Enter choices separated by newlines and spin or pick one at random.', emoji: '🎯', category: 'Utility' },
+  { name: 'Discount Calculator', slug: 'discount-calculator', description: 'Calculate sale prices, percentage discounts, and savings instantly with original and discounted price.', emoji: '💰', category: 'Math' },
+  { name: 'Tip Calculator', slug: 'tip-calculator', description: 'Calculate tip amounts, per-person splits, and total bills for restaurant dining.', emoji: '🍽️', category: 'Math' },
+  { name: 'Sleep Duration Calculator', slug: 'sleep-duration-calculator', description: 'Calculate how long you slept between two times and see sleep cycles completed.', emoji: '😴', category: 'Utility' },
+  { name: 'List Difference Finder', slug: 'list-difference-finder', description: 'Find items that are unique to each list - show items in list A but not B and vice versa.', emoji: '🔀', category: 'Text' },
+  { name: 'Markup Calculator', slug: 'markup-calculator', description: 'Calculate selling price from cost and markup percentage, or derive markup from cost and price.', emoji: '💲', category: 'Math' },
+  { name: 'Time Duration Calculator', slug: 'time-duration-calculator', description: 'Add or subtract time intervals - calculate end time from start plus duration, or find the gap between two times.', emoji: '⏱️', category: 'Utility' },
+  { name: 'Plain Text Formatter', slug: 'plain-text-formatter', description: 'Clean up text by removing extra spaces, line breaks, and formatting for clean copy.', emoji: '📝', category: 'Text' },
+  { name: 'Word Combinations', slug: 'word-combinations', description: 'Generate all possible two-word and three-word combinations or permutations from a list of words.', emoji: '🔤', category: 'Text' },
+  { name: 'Reading Pace Calculator', slug: 'reading-pace-calculator', description: 'Calculate your reading speed in words per minute and estimate completion time for any text.', emoji: '📖', category: 'Text' },
+  { name: 'Regex Escape', slug: 'regex-escape', description: 'Escape special regex characters in text so they are treated as literal characters in patterns.', emoji: '🔙', category: 'Developer' },
+  { name: 'Base64 File Encoder', slug: 'base64-file-encoder', description: 'Encode any file to Base64 data string for embedding or decoding Base64 back to a file.', emoji: '📎', category: 'Encoder' },
+  { name: 'URL Similarity Checker', slug: 'url-similarity-checker', description: 'Compare two URLs and check similarity - useful for detecting duplicate pages or redirects.', emoji: '🔗', category: 'Developer' },
+  { name: 'What-If Scenario Calculator', slug: 'what-if-scenario-calculator', description: 'Model what-if scenarios - change variables and see how results scale with instant recalculation.', emoji: '🔮', category: 'Math' },
+  { name: 'Bill Splitter', slug: 'bill-splitter', description: 'Split a bill among multiple people with customizable tips, tax, and round-up options.', emoji: '🧾', category: 'Math' },
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'AI Tools', 'Document Generator'] as const;
