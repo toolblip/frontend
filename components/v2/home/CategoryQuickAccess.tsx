@@ -40,7 +40,7 @@ export default function CategoryQuickAccess() {
           {CATEGORIES.map((cat) => (
             <Link
               key={cat.label}
-              href={`/directory?category=${encodeURIComponent(cat.label)}`}
+              href={`/tools?category=${encodeURIComponent(cat.label)}`}
               className="category-pill"
               style={
                 {
