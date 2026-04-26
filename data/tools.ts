@@ -2228,6 +2228,23 @@ export const tools: Tool[] = [
   { name: 'Percentage Calculator', slug: 'percentage-calculator', description: 'Calculate percentages, percentage increase/decrease, and discounts instantly.', emoji: '🏷️', category: 'Math' },
   { name: 'Random ID Generator', slug: 'random-id-generator', description: 'Generate random alphanumeric IDs, coupon codes, and referral codes in bulk.', emoji: '🎲', category: 'Utility' },
 
+  // --- New tools (2026-04-27 #6) ---
+  { name: 'Readability Score Calculator', slug: 'readability-score-calculator', description: 'Calculate Flesch-Kincaid, SMOG, ARI, and Coleman-Liau readability scores for any text.', emoji: '📊', category: 'Text' },
+  { name: 'Grammar Checker Pro', slug: 'grammar-checker-pro', description: 'Advanced grammar and spell checker with style suggestions, tone detection, and one-click fixes.', emoji: '✅', category: 'Text' },
+  { name: 'Lorem Ipsum Generator Pro', slug: 'lorem-ipsum-generator-pro', description: 'Generate lorem ipsum text with byte-size, word count, paragraph, and HTML tag options.', emoji: '📜', category: 'Text' },
+  { name: 'Text Line Sorter', slug: 'text-line-sorter', description: 'Sort text lines alphabetically, by length, reverse order, or remove duplicates in one click.', emoji: '📋', category: 'Text' },
+  { name: 'Regex Pattern Tester', slug: 'regex-pattern-tester', description: 'Test regex patterns with match highlighting, capture groups, replacement preview, and common pattern library.', emoji: '🔍', category: 'Developer' },
+  { name: 'JWT Token Decoder', slug: 'jwt-token-decoder', description: 'Decode JWT tokens to inspect header, payload, and expiration without signature verification.', emoji: '🎫', category: 'Developer' },
+  { name: 'Cron Schedule Builder', slug: 'cron-schedule-builder', description: 'Build cron schedules interactively with a visual editor showing next 10 run times instantly.', emoji: '🕐', category: 'Developer' },
+  { name: 'HTTP Request Headers Inspector', slug: 'http-request-headers-inspector', description: 'Inspect HTTP request and response headers for any URL with timing breakdown and security analysis.', emoji: '📦', category: 'Developer' },
+  { name: 'Network Port Scanner', slug: 'network-port-scanner', description: 'Scan common ports on a host to discover open services and check firewall accessibility.', emoji: '🚪', category: 'Developer' },
+  { name: 'Favicon Icon Generator', slug: 'favicon-icon-generator', description: 'Generate favicon icons from text, emoji, or images with ICO, PNG, and SVG output.', emoji: '🌐', category: 'Image' },
+  { name: 'SEO Meta Tag Analyzer', slug: 'seo-meta-tag-analyzer', description: 'Analyze and generate SEO meta tags, Open Graph, and Twitter Card tags with scoring.', emoji: '🏷️', category: 'SEO' },
+  { name: 'Google SERP Simulator', slug: 'google-serp-simulator', description: 'Simulate how a webpage appears in Google search results with title, description, and URL preview.', emoji: '🔎', category: 'SEO' },
+  { name: 'HEX RGB HSL Color Picker', slug: 'hex-rgb-hsl-color-picker', description: 'Pick colors visually or enter HEX, RGB, or HSL values with live preview swatch and CSS output.', emoji: '🎨', category: 'Color' },
+  { name: 'Color Contrast Ratio Checker', slug: 'color-contrast-ratio-checker', description: 'Check foreground and background color contrast for WCAG AA and AAA compliance with suggestions.', emoji: '♿', category: 'Color' },
+  { name: 'General Unit Converter', slug: 'general-unit-converter', description: 'Convert between length, weight, temperature, speed, area, and volume units instantly.', emoji: '⚖️', category: 'Conversion' },
+
 ];
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'AI Tools', 'Document Generator', 'Image Tools'] as const;
