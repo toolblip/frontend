@@ -7,7 +7,7 @@ interface ShareButtonsProps {
   toolSlug?: string;
 }
 
-export default function ShareButtons({ toolName }: ShareButtonsProps) {
+export default function ShareButtons({ toolName, toolSlug }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
 
   const pageUrl = typeof window !== 'undefined'
