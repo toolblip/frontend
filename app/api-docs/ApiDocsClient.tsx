@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 const BASE_URL = 'https://api.toolblip.com';
+const PRODUCTION_URL = 'https://toolblip-api-production.up.railway.app';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 interface Parameter {
@@ -21,7 +22,7 @@ interface ResponseField {
 
 interface Endpoint {
   group: string;
-  method: 'GET' | 'POST' | 'DELETE';
+  method: 'GET' | 'POST';
   path: string;
   auth: boolean;
   title: string;
@@ -42,33 +43,12 @@ const endpoints: Endpoint[] = [
     path: '/api/tools',
     auth: false,
     title: 'List all tools',
-    description:
-      'Returns a paginated list of all tools in the directory. Supports optional category filtering and full-text search.',
+    description: 'Returns a paginated list of all tools in the directory.',
     params: [
-      {
-        name: 'category',
-        type: 'string',
-        required: false,
-        description: 'Filter by category slug (e.g. "developer", "image", "writing")',
-      },
-      {
-        name: 'search',
-        type: 'string',
-        required: false,
-        description: 'Full-text search across tool name and description',
-      },
-      {
-        name: 'page',
-        type: 'integer',
-        required: false,
-        description: 'Page number (default: 1)',
-      },
-      {
-        name: 'per_page',
-        type: 'integer',
-        required: false,
-        description: 'Results per page (default: 20, max: 100)',
-      },
+      { name: 'category', type: 'string', required: false, description: 'Filter by category slug (e.g. "developer", "image", "writing")' },
+      { name: 'search', type: 'string', required: false, description: 'Full-text search across tool name and description' },
+      { name: 'page', type: 'integer', required: false, description: 'Page number (default: 1)' },
+      { name: 'per_page', type: 'integer', required: false, description: 'Results per page (default: 20, max: 100)' },
     ],
     responseFields: [
       { field: 'tools.tools[]', content: 'Array of Tool objects' },
@@ -109,15 +89,9 @@ const endpoints: Endpoint[] = [
     path: '/api/tools/{slug}',
     auth: false,
     title: 'Get tool by slug',
-    description:
-      'Returns a single tool by its URL-safe slug. Returns 404 if not found.',
+    description: 'Returns a single tool by its URL-safe slug. Returns 404 if not found.',
     params: [
-      {
-        name: 'slug',
-        type: 'string',
-        required: true,
-        description: 'URL-safe identifier (e.g. "json-formatter", "image-resizer")',
-      },
+      { name: 'slug', type: 'string', required: true, description: 'URL-safe identifier (e.g. "json-formatter", "image-resizer")' },
     ],
     responseFields: [
       { field: 'tool.id', content: 'integer — Unique tool ID' },
@@ -152,28 +126,12 @@ const endpoints: Endpoint[] = [
     path: '/api/auth/register',
     auth: false,
     title: 'Register new account',
-    description:
-      'Create a new user account. Returns a Bearer token for use in subsequent authenticated requests.',
+    description: 'Create a new user account. Returns a Bearer token for authenticated requests.',
     bodyParams: [
       { name: 'name', type: 'string', required: true, description: 'Full display name' },
-      {
-        name: 'email',
-        type: 'string',
-        required: true,
-        description: 'Email address — must be unique across all accounts',
-      },
-      {
-        name: 'password',
-        type: 'string',
-        required: true,
-        description: 'Password — minimum 8 characters',
-      },
-      {
-        name: 'password_confirmation',
-        type: 'string',
-        required: true,
-        description: 'Must match password exactly',
-      },
+      { name: 'email', type: 'string', required: true, description: 'Email address — must be unique' },
+      { name: 'password', type: 'string', required: true, description: 'Password — minimum 8 characters' },
+      { name: 'password_confirmation', type: 'string', required: true, description: 'Must match password exactly' },
     ],
     responseFields: [
       { field: 'user.id', content: 'integer — User ID' },
@@ -207,21 +165,10 @@ const endpoints: Endpoint[] = [
     path: '/api/auth/login',
     auth: false,
     title: 'Login',
-    description:
-      'Authenticate an existing user. Returns a Bearer token to include in the Authorization header for all protected endpoints.',
+    description: 'Authenticate an existing user. Returns a Bearer token for authenticated requests.',
     bodyParams: [
-      {
-        name: 'email',
-        type: 'string',
-        required: true,
-        description: 'Account email address',
-      },
-      {
-        name: 'password',
-        type: 'string',
-        required: true,
-        description: 'Account password',
-      },
+      { name: 'email', type: 'string', required: true, description: 'Account email address' },
+      { name: 'password', type: 'string', required: true, description: 'Account password' },
     ],
     responseFields: [
       { field: 'user.id', content: 'integer — User ID' },
@@ -253,11 +200,9 @@ const endpoints: Endpoint[] = [
     path: '/api/auth/logout',
     auth: true,
     title: 'Logout',
-    description:
-      'Invalidate the current session token. After calling this, the token can no longer be used.',
+    description: 'Invalidate the current session token. After calling this, the token can no longer be used.',
     responseFields: [{ field: 'message', content: 'string — Confirmation message' }],
     curl: `curl -X POST "${BASE_URL}/api/auth/logout" \\
-  -H "Content-Type: application/json" \\
   -H "Authorization: Bearer {token}" \\
   -H "Accept: application/json"`,
     response: `{
@@ -270,8 +215,7 @@ const endpoints: Endpoint[] = [
     path: '/api/auth/user',
     auth: true,
     title: 'Get authenticated user',
-    description:
-      'Returns the profile of the currently authenticated user. Use the Bearer token from the login or register response.',
+    description: 'Returns the profile of the currently authenticated user.',
     responseFields: [
       { field: 'user.id', content: 'integer — User ID' },
       { field: 'user.name', content: 'string — Display name' },
@@ -293,18 +237,18 @@ const endpoints: Endpoint[] = [
 ];
 
 // ─── Constants ────────────────────────────────────────────────────────────────
-const methodColors: Record<string, string> = {
-  GET: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
-  POST: 'bg-blue-50 text-blue-700 border border-blue-200',
-  DELETE: 'bg-red-50 text-red-700 border border-red-200',
+const METHOD_COLORS: Record<string, string> = {
+  GET: 'bg-emerald-100 text-emerald-700',
+  POST: 'bg-blue-100 text-blue-700',
+  DELETE: 'bg-red-100 text-red-700',
 };
 
-const groupMeta: Record<string, { label: string; icon: string }> = {
+const GROUP_META: Record<string, { label: string; icon: string }> = {
   tools: { label: 'Tools', icon: '🔧' },
   auth: { label: 'Authentication', icon: '🔑' },
 };
 
-const statusCodes = [
+const STATUS_CODES = [
   { code: 200, label: 'OK', desc: 'Request succeeded.' },
   { code: 201, label: 'Created', desc: 'Resource created successfully.' },
   { code: 400, label: 'Bad Request', desc: 'Invalid request body or parameters.' },
@@ -316,14 +260,10 @@ const statusCodes = [
   { code: 500, label: 'Server Error', desc: 'Something went wrong on our end.' },
 ];
 
-// ─── Primitives ───────────────────────────────────────────────────────────────
+// ─── Sub-components ────────────────────────────────────────────────────────────
 function MethodBadge({ method }: { method: string }) {
   return (
-    <span
-      className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${
-        methodColors[method] ?? 'bg-gray-100 text-gray-700 border border-gray-200'
-      }`}
-    >
+    <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${METHOD_COLORS[method] ?? 'bg-gray-100 text-gray-700'}`}>
       {method}
     </span>
   );
@@ -331,35 +271,17 @@ function MethodBadge({ method }: { method: string }) {
 
 function AuthPill({ required }: { required: boolean }) {
   return (
-    <span
-      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium border ${
-        required
-          ? 'bg-amber-50 text-amber-700 border-amber-200'
-          : 'bg-slate-100 text-slate-500 border-slate-200'
-      }`}
-    >
-      {required ? (
-        <>
-          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-          </svg>
-          Auth required
-        </>
-      ) : (
-        <>
-          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-          </svg>
-          Public
-        </>
-      )}
+    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
+      required ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-500'
+    }`}>
+      {required ? '🔒 Auth' : '🌐 Public'}
     </span>
   );
 }
 
 function CodeBlock({ code }: { code: string }) {
   return (
-    <pre className="bg-[#0d1117] text-gray-100 rounded-xl p-4 text-sm font-mono overflow-x-auto leading-relaxed whitespace-pre">
+    <pre className="bg-[#0f172a] text-slate-100 rounded-xl p-4 text-sm font-mono overflow-x-auto leading-relaxed whitespace-pre">
       {code}
     </pre>
   );
@@ -375,7 +297,7 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="flex items-center gap-1.5 px-3 py-1.5 text-gray-400 hover:text-gray-200 hover:bg-white/10 text-xs rounded-lg transition-colors"
+      className="flex items-center gap-1.5 px-3 py-1.5 text-slate-400 hover:text-slate-200 hover:bg-white/10 text-xs rounded-lg transition-colors"
     >
       {copied ? (
         <>
@@ -396,6 +318,111 @@ function CopyButton({ text }: { text: string }) {
   );
 }
 
+function ParamTable({ params, body }: { params: Parameter[]; body?: boolean }) {
+  if (!params || params.length === 0) return null;
+  return (
+    <div className="mb-5">
+      <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">{body ? 'Body Parameters' : 'Query Parameters'}</h4>
+      <div className="border border-slate-100 rounded-xl overflow-hidden">
+        <table className="w-full text-sm">
+          <thead className="bg-slate-50">
+            <tr>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs w-40">Name</th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs w-24">Type</th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs w-20">Required</th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Description</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-100">
+            {params.map((p, pi) => (
+              <tr key={pi} className="hover:bg-slate-50/50">
+                <td className="px-4 py-2.5 font-mono text-xs text-indigo-600 font-medium">{p.name}</td>
+                <td className="px-4 py-2.5 text-xs text-slate-500">{p.type}</td>
+                <td className="px-4 py-2.5 text-xs">{p.required ? <span className="text-red-500 font-medium">Yes</span> : <span className="text-slate-400">No</span>}</td>
+                <td className="px-4 py-2.5 text-xs text-slate-600">{p.description}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function ResponseFields({ fields }: { fields: ResponseField[] }) {
+  if (!fields || fields.length === 0) return null;
+  return (
+    <div className="mb-5">
+      <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Response Fields</h4>
+      <div className="border border-slate-100 rounded-xl overflow-hidden">
+        <table className="w-full text-sm">
+          <thead className="bg-slate-50">
+            <tr>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs w-40">Field</th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Description</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-slate-100">
+            {fields.map((f, fi) => (
+              <tr key={fi} className="hover:bg-slate-50/50">
+                <td className="px-4 py-2.5 font-mono text-xs text-indigo-600 font-medium">{f.field}</td>
+                <td className="px-4 py-2.5 text-xs text-slate-600">{f.content}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+function EndpointCard({ ep, i, openEndpoint, toggleEndpoint }: { ep: Endpoint; i: number; openEndpoint: number | null; toggleEndpoint: (i: number) => void }) {
+  const isOpen = openEndpoint === i;
+
+  return (
+    <div id={`endpoint-${i}`} className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+      <button
+        onClick={() => toggleEndpoint(i)}
+        className="w-full flex items-center gap-3 px-5 py-4 hover:bg-slate-50 transition-colors text-left"
+      >
+        <MethodBadge method={ep.method} />
+        <code className="font-mono text-sm text-slate-800">{ep.path}</code>
+        <span className="text-sm text-slate-500 flex-1 truncate">{ep.title}</span>
+        <AuthPill required={ep.auth} />
+        <svg className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {isOpen && (
+        <div className="border-t border-slate-100 px-5 py-5 space-y-5">
+          <p className="text-sm text-slate-600 leading-relaxed">{ep.description}</p>
+
+          {ep.params && ep.params.length > 0 && <ParamTable params={ep.params} />}
+          {ep.bodyParams && ep.bodyParams.length > 0 && <ParamTable params={ep.bodyParams} body />}
+          {ep.responseFields && <ResponseFields fields={ep.responseFields} />}
+
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Example Request</h4>
+              <CopyButton text={ep.curl} />
+            </div>
+            <CodeBlock code={ep.curl} />
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Example Response</h4>
+              <CopyButton text={ep.response} />
+            </div>
+            <CodeBlock code={ep.response} />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function ApiDocsClient() {
   const [openEndpoint, setOpenEndpoint] = useState<number | null>(null);
@@ -406,27 +433,26 @@ export default function ApiDocsClient() {
 
       {/* Header */}
       <header className="bg-white border-b border-slate-200">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center gap-3 mb-5">
-            <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center flex-shrink-0">
+            <div className="w-11 h-11 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-sm shadow-indigo-200">
               <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
               </svg>
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-slate-900">API Documentation</h1>
-              <p className="text-slate-500 text-sm mt-0.5">Toolblip REST API Reference</p>
+              <h1 className="text-3xl font-bold text-slate-900 tracking-tight">API Documentation</h1>
+              <p className="text-slate-500 text-sm mt-0.5">Toolblip REST API Reference — v1.0</p>
             </div>
           </div>
 
-          <p className="text-slate-600 max-w-2xl mb-6 text-[15px] leading-relaxed">
-            Integrate Toolblip into your apps. Browse the tool directory, register accounts,
-            and manage authenticated sessions — all via simple JSON REST calls.
+          <p className="text-slate-600 max-w-2xl mb-7 text-[15px] leading-relaxed">
+            Integrate Toolblip into your apps. Browse the tool directory, register accounts, and manage authenticated sessions — all via simple JSON REST.
           </p>
 
-          {/* Base URL + meta */}
-          <div className="flex flex-wrap items-center gap-3 mb-3">
-            <div className="inline-flex flex-col gap-1.5 bg-slate-900 rounded-xl px-5 py-3">
+          {/* Base URL + meta badges */}
+          <div className="flex flex-wrap items-center gap-3 mb-4">
+            <div className="inline-flex flex-col gap-1 bg-slate-900 rounded-xl px-5 py-3">
               <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Base URL</span>
               <code className="text-sm font-mono text-emerald-400">{BASE_URL}</code>
             </div>
@@ -436,24 +462,23 @@ export default function ApiDocsClient() {
             </div>
             <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3">
               <span className="text-[10px] font-semibold text-emerald-600 uppercase tracking-widest">SSL</span>
-              <span className="text-sm text-emerald-700">✅ Verified</span>
+              <span className="text-sm text-emerald-700 font-medium">✅ Active</span>
             </div>
           </div>
 
-          <div className="flex items-start gap-2 text-xs text-slate-500 bg-slate-100 border border-slate-200 rounded-xl px-4 py-2.5 max-w-xl">
-            <svg className="w-4 h-4 text-slate-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <div className="flex items-start gap-2 text-xs text-slate-500 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2.5 max-w-xl">
+            <svg className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span>
-              Direct deploy URL: <code className="font-mono text-slate-600">https://toolblip-api-production.up.railway.app</code>.
-              Use this if {BASE_URL} is unavailable.
+              Fallback URL: <code className="font-mono text-slate-700">{PRODUCTION_URL}</code>. Use this if the primary domain is unavailable.
             </span>
           </div>
         </div>
       </header>
 
-      <div className="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div className="flex-1 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
 
           {/* Sidebar */}
           <aside className="lg:col-span-1">
@@ -463,7 +488,7 @@ export default function ApiDocsClient() {
                 {groups.map((group) => (
                   <div key={group}>
                     <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-1.5 px-1">
-                      {groupMeta[group]?.icon} {groupMeta[group]?.label}
+                      {GROUP_META[group]?.icon} {GROUP_META[group]?.label}
                     </p>
                     <div className="space-y-0.5">
                       {endpoints
@@ -477,9 +502,7 @@ export default function ApiDocsClient() {
                               document.getElementById(`endpoint-${i}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                             }}
                             className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors text-left ${
-                              openEndpoint === i
-                                ? 'bg-indigo-50 text-indigo-700'
-                                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                              openEndpoint === i ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
                             }`}
                           >
                             <MethodBadge method={ep.method} />
@@ -506,9 +529,9 @@ export default function ApiDocsClient() {
           </aside>
 
           {/* Main content */}
-          <main className="lg:col-span-3 space-y-12">
+          <main className="lg:col-span-4 space-y-12">
 
-            {/* Overview */}
+            {/* Overview cards */}
             <section id="overview">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="bg-white rounded-2xl border border-slate-200 p-5">
@@ -520,9 +543,7 @@ export default function ApiDocsClient() {
                     </div>
                     <h3 className="font-semibold text-slate-800 text-sm">Bearer Token Auth</h3>
                   </div>
-                  <p className="text-sm text-slate-600 mb-3">
-                    Pass the token from register or login in the Authorization header.
-                  </p>
+                  <p className="text-sm text-slate-600 mb-3">Pass the token from register or login in the Authorization header.</p>
                   <CodeBlock code="Authorization: Bearer {token}" />
                 </div>
 
@@ -535,9 +556,7 @@ export default function ApiDocsClient() {
                     </div>
                     <h3 className="font-semibold text-slate-800 text-sm">JSON Throughout</h3>
                   </div>
-                  <p className="text-sm text-slate-600 mb-3">
-                    All requests and responses use JSON. Always include both headers.
-                  </p>
+                  <p className="text-sm text-slate-600 mb-3">All requests and responses use JSON. Always include both headers.</p>
                   <CodeBlock code="Content-Type: application/json\nAccept: application/json" />
                 </div>
 
@@ -578,8 +597,8 @@ export default function ApiDocsClient() {
             {groups.map((group) => (
               <section key={group} id={group}>
                 <div className="flex items-center gap-2 mb-4">
-                  <span className="text-base">{groupMeta[group]?.icon}</span>
-                  <h2 className="text-base font-bold text-slate-800">{groupMeta[group]?.label}</h2>
+                  <span className="text-base">{GROUP_META[group]?.icon}</span>
+                  <h2 className="text-base font-bold text-slate-800">{GROUP_META[group]?.label}</h2>
                   <div className="flex-1 h-px bg-slate-200" />
                 </div>
                 <div className="space-y-3">
@@ -616,7 +635,7 @@ export default function ApiDocsClient() {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {statusCodes.map((s) => (
+                    {STATUS_CODES.map((s) => (
                       <tr key={s.code} className="hover:bg-slate-50">
                         <td className="px-5 py-3">
                           <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-bold ${
@@ -664,10 +683,10 @@ export default function ApiDocsClient() {
 
       {/* Footer */}
       <footer className="border-t border-slate-200 bg-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 bg-indigo-600 rounded-lg flex items-center justify-center">
+              <div className="w-6 h-6 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-lg flex items-center justify-center">
                 <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                 </svg>
@@ -685,126 +704,6 @@ export default function ApiDocsClient() {
         </div>
       </footer>
 
-    </div>
-  );
-}
-
-// ─── Endpoint Card ─────────────────────────────────────────────────────────────
-function ParamTable({ params, body }: { params: Parameter[]; body?: boolean }) {
-  if (params.length === 0) return null;
-  return (
-    <div>
-      <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">
-        {body ? 'Body Parameters' : 'Query Parameters'}
-      </h4>
-      <div className="border border-slate-100 rounded-xl overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-slate-50">
-            <tr>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Name</th>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Type</th>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Required</th>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Description</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {params.map((p, pi) => (
-              <tr key={pi}>
-                <td className="px-4 py-2.5 font-mono text-xs text-indigo-700">{p.name}</td>
-                <td className="px-4 py-2.5 text-xs text-slate-500">{p.type}</td>
-                <td className="px-4 py-2.5 text-xs">
-                  {p.required
-                    ? <span className="text-red-500 font-medium">Yes</span>
-                    : <span className="text-slate-400">No</span>}
-                </td>
-                <td className="px-4 py-2.5 text-xs text-slate-600">{p.description}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
-function ResponseFields({ fields }: { fields: ResponseField[] }) {
-  if (!fields || fields.length === 0) return null;
-  return (
-    <div>
-      <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Response Fields</h4>
-      <div className="border border-slate-100 rounded-xl overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-slate-50">
-            <tr>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Field</th>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Type / Description</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100">
-            {fields.map((f, fi) => (
-              <tr key={fi}>
-                <td className="px-4 py-2.5 font-mono text-xs text-indigo-700">{f.field}</td>
-                <td className="px-4 py-2.5 text-xs text-slate-600">{f.content}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
-function EndpointCard({
-  ep, i, openEndpoint, toggleEndpoint,
-}: {
-  ep: Endpoint;
-  i: number;
-  openEndpoint: number | null;
-  toggleEndpoint: (i: number) => void;
-}) {
-  const isOpen = openEndpoint === i;
-
-  return (
-    <div id={`endpoint-${i}`} className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
-      <button
-        onClick={() => toggleEndpoint(i)}
-        className="w-full flex items-center gap-3 px-5 py-4 hover:bg-slate-50 transition-colors text-left"
-      >
-        <MethodBadge method={ep.method} />
-        <code className="font-mono text-sm text-slate-800">{ep.path}</code>
-        <span className="text-sm text-slate-500 flex-1 truncate">{ep.title}</span>
-        <AuthPill required={ep.auth} />
-        <svg className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}
-          fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
-
-      {isOpen && (
-        <div className="border-t border-slate-100 px-5 py-5 space-y-5">
-          <p className="text-sm text-slate-600 leading-relaxed">{ep.description}</p>
-
-          {ep.params && ep.params.length > 0 && <ParamTable params={ep.params} />}
-          {ep.bodyParams && ep.bodyParams.length > 0 && <ParamTable params={ep.bodyParams} body />}
-          {ep.responseFields && <ResponseFields fields={ep.responseFields} />}
-
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Example Request</h4>
-              <CopyButton text={ep.curl} />
-            </div>
-            <CodeBlock code={ep.curl} />
-          </div>
-
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Example Response</h4>
-              <CopyButton text={ep.response} />
-            </div>
-            <CodeBlock code={ep.response} />
-          </div>
-        </div>
-      )}
     </div>
   );
 }
