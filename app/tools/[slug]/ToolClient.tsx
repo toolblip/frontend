@@ -375,6 +375,17 @@ function ToolUI({ tool }: { tool: Tool }) {
 export default function ToolClient({ tool }: { tool: Tool }) {
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
+      {/* Breadcrumb */}
+      <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6">
+        <a href="/" className="hover:text-red-600 dark:hover:text-red-400 transition-colors">Home</a>
+        <span>/</span>
+        <a href="/tools" className="hover:text-red-600 dark:hover:text-red-400 transition-colors">Tools</a>
+        <span>/</span>
+        <a href={`/tools?category=${encodeURIComponent(tool.category)}`} className="hover:text-red-600 dark:hover:text-red-400 transition-colors">{tool.category}</a>
+        <span>/</span>
+        <span className="text-gray-900 dark:text-white">{tool.name}</span>
+      </nav>
+
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-3">
