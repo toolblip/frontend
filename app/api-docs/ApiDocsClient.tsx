@@ -256,6 +256,7 @@ const endpoints: Endpoint[] = [
       'Invalidate the current session token. After calling this, the token can no longer be used for authenticated requests.',
     responseSchema: [{ label: 'message', content: 'string — Confirmation message' }],
     curl: `curl -X POST "${BASE_URL}/api/auth/logout" \\
+  -H "Content-Type: application/json" \\
   -H "Authorization: Bearer {token}" \\
   -H "Accept: application/json"`,
     response: `{
