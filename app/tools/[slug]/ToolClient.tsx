@@ -399,7 +399,7 @@ export default function ToolClient({ tool }: { tool: Tool }) {
         </div>
         <p className="text-gray-500 dark:text-gray-400 leading-relaxed">{tool.description}</p>
         <div className="mt-4">
-          <ShareButtons toolName={tool.name} />
+          <ShareButtons toolName={tool.name} toolSlug={tool.slug} />
         </div>
       </div>
 

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 
 interface ShareButtonsProps {
   toolName: string;
+  toolSlug?: string;
 }
 
 export default function ShareButtons({ toolName }: ShareButtonsProps) {
@@ -11,7 +12,7 @@ export default function ShareButtons({ toolName }: ShareButtonsProps) {
 
   const pageUrl = typeof window !== 'undefined'
     ? window.location.href
-    : `https://toolblip.com/tools/${''}`; // fallback for SSR
+    : `https://toolblip.com/tools/${toolSlug ?? ''}`; // fallback for SSR
 
   function handleCopyLink() {
     navigator.clipboard.writeText(window.location.href).then(() => {
