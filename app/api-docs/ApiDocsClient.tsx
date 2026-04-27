@@ -4,8 +4,9 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 // ─── Config ───────────────────────────────────────────────────────────────────
-const BASE_URL = 'https://api.toolblip.com';
-const PRODUCTION_URL = 'https://toolblip-api-production.up.railway.app';
+// Primary: Railway production deployment. Once SSL is verified on api.toolblip.com, switch to that.
+const BASE_URL = 'https://toolblip-api-production.up.railway.app';
+const PRIMARY_DOMAIN = 'https://api.toolblip.com';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 interface Parameter {
@@ -471,7 +472,7 @@ export default function ApiDocsClient() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span>
-              Fallback URL: <code className="font-mono text-slate-700">{PRODUCTION_URL}</code>. Use this if the primary domain is unavailable.
+              Preferred domain (SSL pending): <code className="font-mono text-slate-700">{PRIMARY_DOMAIN}</code>. Currently routing to Railway.
             </span>
           </div>
         </div>
