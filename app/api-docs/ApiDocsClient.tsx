@@ -5,15 +5,18 @@ import Link from 'next/link';
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 const BASE_URL = 'https://api.toolblip.com';
-const RAILWAY_DIRECT = 'https://toolblip-api-production.up.railway.app';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
-
 interface Parameter {
   name: string;
   type: string;
   required: boolean;
   description: string;
+}
+
+interface ResponseField {
+  field: string;
+  content: string;
 }
 
 interface Endpoint {
@@ -25,13 +28,12 @@ interface Endpoint {
   description: string;
   params?: Parameter[];
   bodyParams?: Parameter[];
-  responseSchema?: { label: string; content: string }[];
+  responseFields?: ResponseField[];
   curl: string;
   response: string;
 }
 
 // ─── Endpoint Data ─────────────────────────────────────────────────────────────
-
 const endpoints: Endpoint[] = [
   // ── Tools ──────────────────────────────────────────────────────────────────
   {
@@ -39,9 +41,9 @@ const endpoints: Endpoint[] = [
     method: 'GET',
     path: '/api/tools',
     auth: false,
-    title: 'List All Tools',
+    title: 'List all tools',
     description:
-      'Returns a paginated list of all tools in the directory. Supports optional category filtering and full-text search across tool names and descriptions.',
+      'Returns a paginated list of all tools in the directory. Supports optional category filtering and full-text search.',
     params: [
       {
         name: 'category',
@@ -59,18 +61,18 @@ const endpoints: Endpoint[] = [
         name: 'page',
         type: 'integer',
         required: false,
-        description: 'Page number for pagination (default: 1)',
+        description: 'Page number (default: 1)',
       },
       {
         name: 'per_page',
         type: 'integer',
         required: false,
-        description: 'Number of results per page (default: 20, max: 100)',
+        description: 'Results per page (default: 20, max: 100)',
       },
     ],
-    responseSchema: [
-      { label: 'tools.tools[]', content: 'Array of Tool objects' },
-      { label: 'tools.meta', content: 'Pagination metadata object (optional)' },
+    responseFields: [
+      { field: 'tools.tools[]', content: 'Array of Tool objects' },
+      { field: 'tools.meta', content: 'Pagination metadata: current_page, total, per_page, last_page' },
     ],
     curl: `curl -X GET "${BASE_URL}/api/tools" \\
   -H "Accept: application/json"`,
@@ -106,27 +108,26 @@ const endpoints: Endpoint[] = [
     method: 'GET',
     path: '/api/tools/{slug}',
     auth: false,
-    title: 'Get Tool by Slug',
+    title: 'Get tool by slug',
     description:
-      'Returns a single tool by its URL-safe slug. Returns 404 if no matching tool is found.',
+      'Returns a single tool by its URL-safe slug. Returns 404 if not found.',
     params: [
       {
         name: 'slug',
         type: 'string',
         required: true,
-        description:
-          'Tool slug — the URL-safe identifier (e.g. "json-formatter", "image-resizer")',
+        description: 'URL-safe identifier (e.g. "json-formatter", "image-resizer")',
       },
     ],
-    responseSchema: [
-      { label: 'tool.id', content: 'integer — Unique tool ID' },
-      { label: 'tool.slug', content: 'string — URL-safe identifier' },
-      { label: 'tool.name', content: 'string — Display name' },
-      { label: 'tool.description', content: 'string — Full description' },
-      { label: 'tool.category', content: 'string — Category slug' },
-      { label: 'tool.is_pro', content: 'boolean — Requires Pro subscription' },
-      { label: 'tool.emoji', content: 'string — Emoji icon (optional)' },
-      { label: 'tool.created_at', content: 'string — ISO 8601 timestamp' },
+    responseFields: [
+      { field: 'tool.id', content: 'integer — Unique tool ID' },
+      { field: 'tool.slug', content: 'string — URL-safe identifier' },
+      { field: 'tool.name', content: 'string — Display name' },
+      { field: 'tool.description', content: 'string — Full description' },
+      { field: 'tool.category', content: 'string — Category slug' },
+      { field: 'tool.is_pro', content: 'boolean — Requires Pro subscription' },
+      { field: 'tool.emoji', content: 'string — Emoji icon (optional)' },
+      { field: 'tool.created_at', content: 'string — ISO 8601 timestamp' },
     ],
     curl: `curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
   -H "Accept: application/json"`,
@@ -150,9 +151,9 @@ const endpoints: Endpoint[] = [
     method: 'POST',
     path: '/api/auth/register',
     auth: false,
-    title: 'Register',
+    title: 'Register new account',
     description:
-      'Create a new user account. Returns the user object and a Bearer token for use in subsequent authenticated requests.',
+      'Create a new user account. Returns a Bearer token for use in subsequent authenticated requests.',
     bodyParams: [
       { name: 'name', type: 'string', required: true, description: 'Full display name' },
       {
@@ -174,12 +175,12 @@ const endpoints: Endpoint[] = [
         description: 'Must match password exactly',
       },
     ],
-    responseSchema: [
-      { label: 'user.id', content: 'integer — User ID' },
-      { label: 'user.name', content: 'string — Display name' },
-      { label: 'user.email', content: 'string — Email address' },
-      { label: 'user.is_pro', content: 'boolean — Pro subscription status' },
-      { label: 'token', content: 'string — Bearer token for authenticated requests' },
+    responseFields: [
+      { field: 'user.id', content: 'integer — User ID' },
+      { field: 'user.name', content: 'string — Display name' },
+      { field: 'user.email', content: 'string — Email address' },
+      { field: 'user.is_pro', content: 'boolean — Pro subscription status' },
+      { field: 'token', content: 'string — Bearer token for authenticated requests' },
     ],
     curl: `curl -X POST "${BASE_URL}/api/auth/register" \\
   -H "Content-Type: application/json" \\
@@ -207,7 +208,7 @@ const endpoints: Endpoint[] = [
     auth: false,
     title: 'Login',
     description:
-      'Authenticate an existing user. Returns a Bearer token to include in the Authorization header for all subsequent authenticated requests.',
+      'Authenticate an existing user. Returns a Bearer token to include in the Authorization header for all protected endpoints.',
     bodyParams: [
       {
         name: 'email',
@@ -222,12 +223,12 @@ const endpoints: Endpoint[] = [
         description: 'Account password',
       },
     ],
-    responseSchema: [
-      { label: 'user.id', content: 'integer — User ID' },
-      { label: 'user.name', content: 'string — Display name' },
-      { label: 'user.email', content: 'string — Email address' },
-      { label: 'user.is_pro', content: 'boolean — Pro subscription status' },
-      { label: 'token', content: 'string — Bearer token for authenticated requests' },
+    responseFields: [
+      { field: 'user.id', content: 'integer — User ID' },
+      { field: 'user.name', content: 'string — Display name' },
+      { field: 'user.email', content: 'string — Email address' },
+      { field: 'user.is_pro', content: 'boolean — Pro subscription status' },
+      { field: 'token', content: 'string — Bearer token for authenticated requests' },
     ],
     curl: `curl -X POST "${BASE_URL}/api/auth/login" \\
   -H "Content-Type: application/json" \\
@@ -253,8 +254,8 @@ const endpoints: Endpoint[] = [
     auth: true,
     title: 'Logout',
     description:
-      'Invalidate the current session token. After calling this, the token can no longer be used for authenticated requests.',
-    responseSchema: [{ label: 'message', content: 'string — Confirmation message' }],
+      'Invalidate the current session token. After calling this, the token can no longer be used.',
+    responseFields: [{ field: 'message', content: 'string — Confirmation message' }],
     curl: `curl -X POST "${BASE_URL}/api/auth/logout" \\
   -H "Content-Type: application/json" \\
   -H "Authorization: Bearer {token}" \\
@@ -268,14 +269,14 @@ const endpoints: Endpoint[] = [
     method: 'GET',
     path: '/api/auth/user',
     auth: true,
-    title: 'Get Authenticated User',
+    title: 'Get authenticated user',
     description:
       'Returns the profile of the currently authenticated user. Use the Bearer token from the login or register response.',
-    responseSchema: [
-      { label: 'user.id', content: 'integer — User ID' },
-      { label: 'user.name', content: 'string — Display name' },
-      { label: 'user.email', content: 'string — Email address' },
-      { label: 'user.is_pro', content: 'boolean — Pro subscription status' },
+    responseFields: [
+      { field: 'user.id', content: 'integer — User ID' },
+      { field: 'user.name', content: 'string — Display name' },
+      { field: 'user.email', content: 'string — Email address' },
+      { field: 'user.is_pro', content: 'boolean — Pro subscription status' },
     ],
     curl: `curl -X GET "${BASE_URL}/api/auth/user" \\
   -H "Authorization: Bearer {token}" \\
@@ -291,8 +292,7 @@ const endpoints: Endpoint[] = [
   },
 ];
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-
+// ─── Constants ────────────────────────────────────────────────────────────────
 const methodColors: Record<string, string> = {
   GET: 'bg-emerald-50 text-emerald-700 border border-emerald-200',
   POST: 'bg-blue-50 text-blue-700 border border-blue-200',
@@ -305,59 +305,22 @@ const groupMeta: Record<string, { label: string; icon: string }> = {
 };
 
 const statusCodes = [
-  {
-    code: 200,
-    label: 'OK',
-    desc: 'Request succeeded. Response body contains the result.',
-  },
-  {
-    code: 201,
-    label: 'Created',
-    desc: 'Resource created successfully (e.g. new user registered).',
-  },
-  {
-    code: 400,
-    label: 'Bad Request',
-    desc: 'Invalid request body or parameters.',
-  },
-  {
-    code: 401,
-    label: 'Unauthorized',
-    desc: 'Missing or invalid Bearer token.',
-  },
-  {
-    code: 403,
-    label: 'Forbidden',
-    desc: 'Authenticated but not permitted to access this resource.',
-  },
-  {
-    code: 404,
-    label: 'Not Found',
-    desc: 'The requested resource does not exist.',
-  },
-  {
-    code: 422,
-    label: 'Validation Error',
-    desc: 'Request body failed validation. Check the message field for details.',
-  },
-  {
-    code: 429,
-    label: 'Too Many Requests',
-    desc: 'Rate limit exceeded. Slow down and retry.',
-  },
-  {
-    code: 500,
-    label: 'Server Error',
-    desc: 'Something went wrong on our end. Please retry.',
-  },
+  { code: 200, label: 'OK', desc: 'Request succeeded.' },
+  { code: 201, label: 'Created', desc: 'Resource created successfully.' },
+  { code: 400, label: 'Bad Request', desc: 'Invalid request body or parameters.' },
+  { code: 401, label: 'Unauthorized', desc: 'Missing or invalid Bearer token.' },
+  { code: 403, label: 'Forbidden', desc: 'Authenticated but not permitted.' },
+  { code: 404, label: 'Not Found', desc: 'The requested resource does not exist.' },
+  { code: 422, label: 'Validation Error', desc: 'Request body failed validation.' },
+  { code: 429, label: 'Too Many Requests', desc: 'Rate limit exceeded.' },
+  { code: 500, label: 'Server Error', desc: 'Something went wrong on our end.' },
 ];
 
-// ─── UI Primitives ─────────────────────────────────────────────────────────────
-
+// ─── Primitives ───────────────────────────────────────────────────────────────
 function MethodBadge({ method }: { method: string }) {
   return (
     <span
-      className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold ${
+      className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-bold ${
         methodColors[method] ?? 'bg-gray-100 text-gray-700 border border-gray-200'
       }`}
     >
@@ -377,35 +340,15 @@ function AuthPill({ required }: { required: boolean }) {
     >
       {required ? (
         <>
-          <svg
-            className="w-3 h-3"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-            />
+          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
           </svg>
           Auth required
         </>
       ) : (
         <>
-          <svg
-            className="w-3 h-3"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-            />
+          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
           </svg>
           Public
         </>
@@ -436,35 +379,15 @@ function CopyButton({ text }: { text: string }) {
     >
       {copied ? (
         <>
-          <svg
-            className="w-3.5 h-3.5 text-emerald-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M5 13l4 4L19 7"
-            />
+          <svg className="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
           <span className="text-emerald-400">Copied!</span>
         </>
       ) : (
         <>
-          <svg
-            className="w-3.5 h-3.5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-            />
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
           </svg>
           Copy
         </>
@@ -473,19 +396,7 @@ function CopyButton({ text }: { text: string }) {
   );
 }
 
-function SectionDivider({ group }: { group: string }) {
-  const meta = groupMeta[group];
-  return (
-    <div className="flex items-center gap-2 mb-4">
-      <span className="text-base">{meta?.icon}</span>
-      <h2 className="text-base font-bold text-slate-800">{meta?.label}</h2>
-      <div className="flex-1 h-px bg-slate-200" />
-    </div>
-  );
-}
-
 // ─── Main Component ───────────────────────────────────────────────────────────
-
 export default function ApiDocsClient() {
   const [openEndpoint, setOpenEndpoint] = useState<number | null>(null);
   const groups = [...new Set(endpoints.map((ep) => ep.group))];
@@ -493,23 +404,13 @@ export default function ApiDocsClient() {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
 
-      {/* ── Header ────────────────────────────────────────────────────────── */}
+      {/* Header */}
       <header className="bg-white border-b border-slate-200">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center gap-3 mb-5">
             <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center flex-shrink-0">
-              <svg
-                className="w-5 h-5 text-white"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-                />
+              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
               </svg>
             </div>
             <div>
@@ -523,46 +424,28 @@ export default function ApiDocsClient() {
             and manage authenticated sessions — all via simple JSON REST calls.
           </p>
 
-          {/* ── Base URL + meta pills ──────────────────────────────────────── */}
+          {/* Base URL + meta */}
           <div className="flex flex-wrap items-center gap-3 mb-3">
             <div className="inline-flex flex-col gap-1.5 bg-slate-900 rounded-xl px-5 py-3">
-              <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">
-                Base URL
-              </span>
+              <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Base URL</span>
               <code className="text-sm font-mono text-emerald-400">{BASE_URL}</code>
             </div>
             <div className="inline-flex items-center gap-2 bg-white border border-slate-200 rounded-xl px-4 py-3">
-              <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">
-                Auth
-              </span>
+              <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Auth</span>
               <code className="text-sm font-mono text-slate-700">Bearer token</code>
             </div>
             <div className="inline-flex items-center gap-2 bg-emerald-50 border border-emerald-200 rounded-xl px-4 py-3">
-              <span className="text-[10px] font-semibold text-emerald-600 uppercase tracking-widest">
-                SSL
-              </span>
+              <span className="text-[10px] font-semibold text-emerald-600 uppercase tracking-widest">SSL</span>
               <span className="text-sm text-emerald-700">✅ Verified</span>
             </div>
           </div>
 
-          {/* ── Infrastructure note ─────────────────────────────────────────── */}
           <div className="flex items-start gap-2 text-xs text-slate-500 bg-slate-100 border border-slate-200 rounded-xl px-4 py-2.5 max-w-xl">
-            <svg
-              className="w-4 h-4 text-slate-400 flex-shrink-0 mt-0.5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={2}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
+            <svg className="w-4 h-4 text-slate-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <span>
-              Direct deploy URL:{' '}
-              <code className="font-mono text-slate-600">{RAILWAY_DIRECT}</code>.
+              Direct deploy URL: <code className="font-mono text-slate-600">https://toolblip-api-production.up.railway.app</code>.
               Use this if {BASE_URL} is unavailable.
             </span>
           </div>
@@ -572,12 +455,10 @@ export default function ApiDocsClient() {
       <div className="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
 
-          {/* ── Sidebar ──────────────────────────────────────────────────── */}
+          {/* Sidebar */}
           <aside className="lg:col-span-1">
             <div className="sticky top-8">
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 px-1">
-                Endpoints
-              </p>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 px-1">Endpoints</p>
               <nav className="space-y-5">
                 {groups.map((group) => (
                   <div key={group}>
@@ -593,9 +474,7 @@ export default function ApiDocsClient() {
                             key={i}
                             onClick={() => {
                               setOpenEndpoint(openEndpoint === i ? null : i);
-                              document
-                                .getElementById(`endpoint-${i}`)
-                                ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                              document.getElementById(`endpoint-${i}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
                             }}
                             className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors text-left ${
                               openEndpoint === i
@@ -612,68 +491,31 @@ export default function ApiDocsClient() {
                 ))}
               </nav>
 
-              {/* ── Quick nav ──────────────────────────────────────────────── */}
+              {/* Quick nav */}
               <div className="mt-8 pt-6 border-t border-slate-200">
-                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 px-1">
-                  On this page
-                </p>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 px-1">On this page</p>
                 <div className="space-y-1">
-                  <a
-                    href="#overview"
-                    className="block px-3 py-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors"
-                  >
-                    Overview
-                  </a>
-                  <a
-                    href="#tools"
-                    className="block px-3 py-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors"
-                  >
-                    Tools
-                  </a>
-                  <a
-                    href="#auth"
-                    className="block px-3 py-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors"
-                  >
-                    Authentication
-                  </a>
-                  <a
-                    href="#status-codes"
-                    className="block px-3 py-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors"
-                  >
-                    Status Codes
-                  </a>
-                  <a
-                    href="#help"
-                    className="block px-3 py-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors"
-                  >
-                    Get Help
-                  </a>
+                  <a href="#overview" className="block px-3 py-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors">Overview</a>
+                  <a href="#tools" className="block px-3 py-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors">Tools</a>
+                  <a href="#auth" className="block px-3 py-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors">Authentication</a>
+                  <a href="#status-codes" className="block px-3 py-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors">Status Codes</a>
+                  <a href="#help" className="block px-3 py-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors">Get Help</a>
                 </div>
               </div>
             </div>
           </aside>
 
-          {/* ── Main content ──────────────────────────────────────────────── */}
+          {/* Main content */}
           <main className="lg:col-span-3 space-y-12">
 
-            {/* ── Overview cards ────────────────────────────────────────── */}
+            {/* Overview */}
             <section id="overview">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="bg-white rounded-2xl border border-slate-200 p-5">
                   <div className="flex items-center gap-2 mb-3">
                     <div className="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <svg
-                        className="w-4 h-4 text-indigo-600"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                        />
+                      <svg className="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                       </svg>
                     </div>
                     <h3 className="font-semibold text-slate-800 text-sm">Bearer Token Auth</h3>
@@ -687,18 +529,8 @@ export default function ApiDocsClient() {
                 <div className="bg-white rounded-2xl border border-slate-200 p-5">
                   <div className="flex items-center gap-2 mb-3">
                     <div className="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <svg
-                        className="w-4 h-4 text-indigo-600"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"
-                        />
+                      <svg className="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
                       </svg>
                     </div>
                     <h3 className="font-semibold text-slate-800 text-sm">JSON Throughout</h3>
@@ -712,18 +544,8 @@ export default function ApiDocsClient() {
                 <div className="bg-white rounded-2xl border border-slate-200 p-5">
                   <div className="flex items-center gap-2 mb-3">
                     <div className="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <svg
-                        className="w-4 h-4 text-indigo-600"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M13 10V3L4 14h7v7l9-11h-7z"
-                        />
+                      <svg className="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                       </svg>
                     </div>
                     <h3 className="font-semibold text-slate-800 text-sm">Rate Limits</h3>
@@ -737,18 +559,8 @@ export default function ApiDocsClient() {
                 <div className="bg-white rounded-2xl border border-slate-200 p-5">
                   <div className="flex items-center gap-2 mb-3">
                     <div className="w-7 h-7 bg-indigo-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <svg
-                        className="w-4 h-4 text-indigo-600"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-                        />
+                      <svg className="w-4 h-4 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                       </svg>
                     </div>
                     <h3 className="font-semibold text-slate-800 text-sm">Error Format</h3>
@@ -762,10 +574,14 @@ export default function ApiDocsClient() {
               </div>
             </section>
 
-            {/* ── Endpoint groups ─────────────────────────────────────────── */}
+            {/* Endpoint groups */}
             {groups.map((group) => (
               <section key={group} id={group}>
-                <SectionDivider group={group} />
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="text-base">{groupMeta[group]?.icon}</span>
+                  <h2 className="text-base font-bold text-slate-800">{groupMeta[group]?.label}</h2>
+                  <div className="flex-1 h-px bg-slate-200" />
+                </div>
                 <div className="space-y-3">
                   {endpoints
                     .map((ep, i) => ({ ep, i }))
@@ -783,7 +599,7 @@ export default function ApiDocsClient() {
               </section>
             ))}
 
-            {/* ── HTTP Status Codes ──────────────────────────────────────── */}
+            {/* HTTP Status Codes */}
             <section id="status-codes">
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-base">📡</span>
@@ -794,34 +610,21 @@ export default function ApiDocsClient() {
                 <table className="w-full text-sm">
                   <thead className="bg-slate-50">
                     <tr>
-                      <th className="px-5 py-3 text-left font-semibold text-slate-700 text-xs w-24">
-                        Code
-                      </th>
-                      <th className="px-5 py-3 text-left font-semibold text-slate-700 text-xs w-32">
-                        Status
-                      </th>
-                      <th className="px-5 py-3 text-left font-semibold text-slate-700 text-xs">
-                        Description
-                      </th>
+                      <th className="px-5 py-3 text-left font-semibold text-slate-700 text-xs w-24">Code</th>
+                      <th className="px-5 py-3 text-left font-semibold text-slate-700 text-xs w-32">Status</th>
+                      <th className="px-5 py-3 text-left font-semibold text-slate-700 text-xs">Description</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {statusCodes.map((s) => (
                       <tr key={s.code} className="hover:bg-slate-50">
                         <td className="px-5 py-3">
-                          <span
-                            className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-bold ${
-                              s.code >= 500
-                                ? 'bg-red-50 text-red-700'
-                                : s.code >= 400
-                                  ? 'bg-amber-50 text-amber-700'
-                                  : s.code >= 300
-                                    ? 'bg-blue-50 text-blue-700'
-                                    : 'bg-emerald-50 text-emerald-700'
-                            }`}
-                          >
-                            {s.code}
-                          </span>
+                          <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-bold ${
+                            s.code >= 500 ? 'bg-red-50 text-red-700'
+                              : s.code >= 400 ? 'bg-amber-50 text-amber-700'
+                              : s.code >= 300 ? 'bg-blue-50 text-blue-700'
+                              : 'bg-emerald-50 text-emerald-700'
+                          }`}>{s.code}</span>
                         </td>
                         <td className="px-5 py-3 text-xs font-medium text-slate-700">{s.label}</td>
                         <td className="px-5 py-3 text-xs text-slate-600">{s.desc}</td>
@@ -832,35 +635,24 @@ export default function ApiDocsClient() {
               </div>
             </section>
 
-            {/* ── Help CTA ───────────────────────────────────────────────── */}
-            <section
-              id="help"
-              className="bg-gradient-to-r from-indigo-50 to-violet-50 rounded-2xl border border-indigo-100 p-6"
-            >
+            {/* Help CTA */}
+            <section id="help" className="bg-gradient-to-r from-indigo-50 to-violet-50 rounded-2xl border border-indigo-100 p-6">
               <h2 className="text-base font-bold text-slate-900 mb-1">Need help?</h2>
               <p className="text-sm text-slate-600 mb-4">
                 Questions about the API? Reach out at{' '}
-                <a href="mailto:api@toolblip.com" className="text-indigo-600 hover:underline">
-                  api@toolblip.com
-                </a>{' '}
+                <a href="mailto:api@toolblip.com" className="text-indigo-600 hover:underline">api@toolblip.com</a>{' '}
                 or open an issue on GitHub.
               </p>
               <div className="flex flex-wrap gap-3">
-                <a
-                  href="https://github.com/toolblip"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-50 transition-colors"
-                >
+                <a href="https://github.com/toolblip" target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-50 transition-colors">
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
                   </svg>
                   GitHub
                 </a>
-                <Link
-                  href="/"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors"
-                >
+                <Link href="/"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors">
                   Explore Toolblip →
                 </Link>
               </div>
@@ -870,47 +662,23 @@ export default function ApiDocsClient() {
         </div>
       </div>
 
-      {/* ── Footer ────────────────────────────────────────────────────────── */}
+      {/* Footer */}
       <footer className="border-t border-slate-200 bg-white">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <div className="w-6 h-6 bg-indigo-600 rounded-lg flex items-center justify-center">
-                <svg
-                  className="w-3 h-3 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-                  />
+                <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                 </svg>
               </div>
               <span className="text-sm font-semibold text-slate-700">Toolblip API</span>
             </div>
             <div className="flex items-center gap-4 text-xs text-slate-500">
-              <Link
-                href="/api-docs"
-                className="hover:text-indigo-600 transition-colors"
-              >
-                Documentation
-              </Link>
-              <Link href="/terms" className="hover:text-indigo-600 transition-colors">
-                Terms
-              </Link>
-              <Link href="/privacy" className="hover:text-indigo-600 transition-colors">
-                Privacy
-              </Link>
-              <a
-                href="mailto:api@toolblip.com"
-                className="hover:text-indigo-600 transition-colors"
-              >
-                api@toolblip.com
-              </a>
+              <Link href="/api-docs" className="hover:text-indigo-600 transition-colors">Documentation</Link>
+              <Link href="/terms" className="hover:text-indigo-600 transition-colors">Terms</Link>
+              <Link href="/privacy" className="hover:text-indigo-600 transition-colors">Privacy</Link>
+              <a href="mailto:api@toolblip.com" className="hover:text-indigo-600 transition-colors">api@toolblip.com</a>
             </div>
             <span className="text-xs text-slate-400">© {new Date().getFullYear()} Toolblip</span>
           </div>
@@ -922,7 +690,6 @@ export default function ApiDocsClient() {
 }
 
 // ─── Endpoint Card ─────────────────────────────────────────────────────────────
-
 function ParamTable({ params, body }: { params: Parameter[]; body?: boolean }) {
   if (params.length === 0) return null;
   return (
@@ -934,18 +701,10 @@ function ParamTable({ params, body }: { params: Parameter[]; body?: boolean }) {
         <table className="w-full text-sm">
           <thead className="bg-slate-50">
             <tr>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">
-                Name
-              </th>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">
-                Type
-              </th>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">
-                Required
-              </th>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">
-                Description
-              </th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Name</th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Type</th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Required</th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Description</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
@@ -954,11 +713,9 @@ function ParamTable({ params, body }: { params: Parameter[]; body?: boolean }) {
                 <td className="px-4 py-2.5 font-mono text-xs text-indigo-700">{p.name}</td>
                 <td className="px-4 py-2.5 text-xs text-slate-500">{p.type}</td>
                 <td className="px-4 py-2.5 text-xs">
-                  {p.required ? (
-                    <span className="text-red-500 font-medium">Yes</span>
-                  ) : (
-                    <span className="text-slate-400">No</span>
-                  )}
+                  {p.required
+                    ? <span className="text-red-500 font-medium">Yes</span>
+                    : <span className="text-slate-400">No</span>}
                 </td>
                 <td className="px-4 py-2.5 text-xs text-slate-600">{p.description}</td>
               </tr>
@@ -970,30 +727,24 @@ function ParamTable({ params, body }: { params: Parameter[]; body?: boolean }) {
   );
 }
 
-function ResponseSchema({ schema }: { schema: { label: string; content: string }[] }) {
-  if (!schema || schema.length === 0) return null;
+function ResponseFields({ fields }: { fields: ResponseField[] }) {
+  if (!fields || fields.length === 0) return null;
   return (
     <div>
-      <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">
-        Response Schema
-      </h4>
+      <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Response Fields</h4>
       <div className="border border-slate-100 rounded-xl overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-slate-50">
             <tr>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">
-                Field
-              </th>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">
-                Type / Description
-              </th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Field</th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-700 text-xs">Type / Description</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {schema.map((s, si) => (
-              <tr key={si}>
-                <td className="px-4 py-2.5 font-mono text-xs text-indigo-700">{s.label}</td>
-                <td className="px-4 py-2.5 text-xs text-slate-600">{s.content}</td>
+            {fields.map((f, fi) => (
+              <tr key={fi}>
+                <td className="px-4 py-2.5 font-mono text-xs text-indigo-700">{f.field}</td>
+                <td className="px-4 py-2.5 text-xs text-slate-600">{f.content}</td>
               </tr>
             ))}
           </tbody>
@@ -1004,10 +755,7 @@ function ResponseSchema({ schema }: { schema: { label: string; content: string }
 }
 
 function EndpointCard({
-  ep,
-  i,
-  openEndpoint,
-  toggleEndpoint,
+  ep, i, openEndpoint, toggleEndpoint,
 }: {
   ep: Endpoint;
   i: number;
@@ -1026,15 +774,8 @@ function EndpointCard({
         <code className="font-mono text-sm text-slate-800">{ep.path}</code>
         <span className="text-sm text-slate-500 flex-1 truncate">{ep.title}</span>
         <AuthPill required={ep.auth} />
-        <svg
-          className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${
-            isOpen ? 'rotate-180' : ''
-          }`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
+        <svg className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}
+          fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
         </svg>
       </button>
@@ -1044,16 +785,12 @@ function EndpointCard({
           <p className="text-sm text-slate-600 leading-relaxed">{ep.description}</p>
 
           {ep.params && ep.params.length > 0 && <ParamTable params={ep.params} />}
-          {ep.bodyParams && ep.bodyParams.length > 0 && (
-            <ParamTable params={ep.bodyParams} body />
-          )}
-          {ep.responseSchema && <ResponseSchema schema={ep.responseSchema} />}
+          {ep.bodyParams && ep.bodyParams.length > 0 && <ParamTable params={ep.bodyParams} body />}
+          {ep.responseFields && <ResponseFields fields={ep.responseFields} />}
 
           <div>
             <div className="flex items-center justify-between mb-2">
-              <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                Example Request
-              </h4>
+              <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Example Request</h4>
               <CopyButton text={ep.curl} />
             </div>
             <CodeBlock code={ep.curl} />
@@ -1061,9 +798,7 @@ function EndpointCard({
 
           <div>
             <div className="flex items-center justify-between mb-2">
-              <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                Example Response
-              </h4>
+              <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Example Response</h4>
               <CopyButton text={ep.response} />
             </div>
             <CodeBlock code={ep.response} />
