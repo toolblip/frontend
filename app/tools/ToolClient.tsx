@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import type { Tool } from '@/data/tools';
+import ShareButtons from '@/components/ShareButtons';
 
 // Real tool UI components
 import WordCounterClient from '@/components/tools/WordCounterClient';
@@ -108,6 +109,12 @@ export default function ToolClient({ tool }: { tool: Tool }) {
       {/* Tool UI */}
       <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
         <ToolRenderer tool={tool} />
+      </div>
+
+      {/* Share */}
+      <div className="mt-6 pt-6 border-t border-gray-100 dark:border-gray-800">
+        <p className="text-xs text-gray-400 dark:text-gray-500 mb-3 font-medium uppercase tracking-wide">Share this tool</p>
+        <ShareButtons toolName={tool.name} />
       </div>
 
       {/* Footer note */}

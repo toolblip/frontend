@@ -5,6 +5,7 @@ description: >-
   tools are quietly replacing desktop apps — here's why that's a good thing.
 slug: browser-based-tools-future
 date: 2026-04-15T00:00:00.000Z
+emoji: "🌐"
 category: Developer Tools
 tags:
   - Browser Tools

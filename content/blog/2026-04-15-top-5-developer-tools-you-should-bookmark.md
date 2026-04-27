@@ -5,6 +5,7 @@ description: >-
   day. JSON formatting, regex testing, cron parsing, and more — no sign-up needed.
 slug: top-5-developer-tools-bookmark
 date: 2026-04-15T00:00:00.000Z
+emoji: "🔖"
 category: Developer Tools
 tags:
   - Developer Tools
