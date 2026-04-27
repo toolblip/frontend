@@ -1,5 +1,6 @@
 ---
 title: Top 5 Developer Tools You Should Bookmark
+emoji: 🔖
 description: >-
   Five browser-based tools that cover 80% of the small tasks developers do every
   day. JSON formatting, regex testing, cron parsing, and more — no sign-up needed.

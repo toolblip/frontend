@@ -1,5 +1,6 @@
 ---
 title: Why Browser-Based Tools Are the Future
+emoji: 🌐
 description: >-
   No installs, no sign-ups, no data leaving your machine. Browser-based developer
   tools are quietly replacing desktop apps — here's why that's a good thing.

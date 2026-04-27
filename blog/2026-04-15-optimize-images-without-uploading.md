@@ -1,5 +1,6 @@
 ---
 title: How to Optimize Images Without Uploading
+emoji: 🖼️
 description: >-
   Crop, resize, compress, and convert images — all in your browser, no server
   upload required. Here's how browser-only image processing works and why it beats
