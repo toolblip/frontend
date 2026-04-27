@@ -12,15 +12,11 @@ const DIRECTORY_CATEGORIES = [
   'All',
   'Text',
   'Developer',
-  'Image',
   'Encoder',
+  'Image',
   'Conversion',
   'Math',
   'CSS',
-  'Color',
-  'SEO',
-  'Network',
-  'Utility',
 ] as const;
 type Category = typeof DIRECTORY_CATEGORIES[number];
 
