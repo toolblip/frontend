@@ -1,6 +1,6 @@
 ---
 title: How to Optimize Images Without Uploading
-date: "2026-04-15"
+date: 2026-04-15T00:00:00.000Z
 description: >-
   Crop, resize, compress, and convert images — all in your browser, no server
   upload required. Here's how browser-only image processing works and why it beats
