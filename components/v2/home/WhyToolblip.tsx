@@ -7,8 +7,8 @@ const benefits = [
     ),
     color: 'var(--green)',
     bg: 'var(--green-tint)',
-    title: '100% Private',
-    desc: 'Your data never leaves your browser. Nothing is sent to any server — ever. Not even to us.',
+    title: 'Private',
+    desc: 'Data never leaves your browser. Nothing is sent to any server — ever.',
   },
   {
     icon: (
@@ -18,7 +18,7 @@ const benefits = [
     ),
     color: 'var(--amber)',
     bg: 'var(--amber-tint)',
-    title: 'Instantly Fast',
+    title: 'Fast',
     desc: 'No server round-trips. No loading spinners. Results appear the moment you finish typing.',
   },
   {
@@ -33,8 +33,8 @@ const benefits = [
     ),
     color: 'var(--blue)',
     bg: 'var(--blue-tint)',
-    title: 'Completely Free',
-    desc: 'No signup. No paywall. No usage limits. Every tool is free, today and every day after.',
+    title: 'Free',
+    desc: 'No signup. No paywall. No usage limits. Every tool is free, always.',
   },
 ];
 
