@@ -4,9 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 // ─── Config ───────────────────────────────────────────────────────────────────
-// Primary: Railway production deployment. Once SSL is verified on api.toolblip.com, switch to that.
-const BASE_URL = 'https://toolblip-api-production.up.railway.app';
-const PRIMARY_DOMAIN = 'https://api.toolblip.com';
+const BASE_URL = 'https://api.toolblip.com';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 interface Parameter {
@@ -467,14 +465,7 @@ export default function ApiDocsClient() {
             </div>
           </div>
 
-          <div className="flex items-start gap-2 text-xs text-slate-500 bg-amber-50 border border-amber-200 rounded-xl px-4 py-2.5 max-w-xl">
-            <svg className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span>
-              Preferred domain (SSL pending): <code className="font-mono text-slate-700">{PRIMARY_DOMAIN}</code>. Currently routing to Railway.
-            </span>
-          </div>
+          
         </div>
       </header>
 
