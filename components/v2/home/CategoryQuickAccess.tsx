@@ -19,7 +19,6 @@ const CATEGORY_META: Record<string, { icon: string; borderColor: string }> = {
 const FALLBACK = { icon: '📁', borderColor: '#6b7280' };
 
 export default function CategoryQuickAccess() {
-  // Derive categories dynamically from real tool data
   const counts = tools.reduce<Record<string, number>>((acc, t) => {
     acc[t.category] = (acc[t.category] ?? 0) + 1;
     return acc;
@@ -59,6 +58,7 @@ export default function CategoryQuickAccess() {
               >
                 <span style={{ fontSize: 12 }}>{meta.icon}</span>
                 {name}
+                <span className="cat-pill-count">{counts[name]}</span>
               </Link>
             );
           })}
@@ -69,7 +69,7 @@ export default function CategoryQuickAccess() {
           display: inline-flex;
           align-items: center;
           gap: 5px;
-          padding: 5px 12px;
+          padding: 5px 10px 5px 10px;
           border-radius: 999px;
           border: 1px solid var(--border);
           background: var(--surface-1);
@@ -84,6 +84,20 @@ export default function CategoryQuickAccess() {
           color: var(--pill-border);
           transform: translateY(-1px);
           box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+        }
+        .cat-pill-count {
+          font-size: 11px;
+          font-weight: 600;
+          background: var(--border);
+          color: var(--fg-2);
+          border-radius: 999;
+          padding: 1px 6px;
+          line-height: 1.5;
+          transition: background 0.12s, color 0.12s;
+        }
+        .category-pill:hover .cat-pill-count {
+          background: var(--pill-border);
+          color: white;
         }
         .cat-pills-row {
           animation: cat-pills-in 0.4s ease-out both;

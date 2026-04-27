@@ -12,7 +12,13 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
         background: 'var(--surface-2)',
       }}
     >
-      <div className="tb-v2-container" style={{ padding: '28px 28px 20px' }}>
+      <div className="tb-v2-container" style={{ padding: '20px 28px 20px' }}>
+        <div style={{ textAlign: 'center', marginBottom: 20 }}>
+          <div className="tb-v2-kicker">How it works</div>
+          <h2 style={{ fontSize: 18, fontWeight: 700, margin: '4px 0 0', letterSpacing: '-0.3px' }}>
+            Three steps. Zero friction.
+          </h2>
+        </div>
         {/* Steps row */}
         <div
           style={{
