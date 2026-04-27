@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 // ─── Config ───────────────────────────────────────────────────────────────────
@@ -42,7 +42,7 @@ const endpoints: Endpoint[] = [
     path: '/api/tools',
     auth: false,
     title: 'List all tools',
-    description: 'Returns a paginated list of all tools in the directory.',
+    description: 'Returns a paginated list of all tools in the directory. Supports filtering by category and full-text search.',
     params: [
       { name: 'category', type: 'string', required: false, description: 'Filter by category slug (e.g. "developer", "image", "writing")' },
       { name: 'search', type: 'string', required: false, description: 'Full-text search across tool name and description' },
@@ -254,7 +254,7 @@ const STATUS_CODES = [
   { code: 401, label: 'Unauthorized', desc: 'Missing or invalid Bearer token.' },
   { code: 403, label: 'Forbidden', desc: 'Authenticated but not permitted.' },
   { code: 404, label: 'Not Found', desc: 'The requested resource does not exist.' },
-  { code: 422, label: 'Validation Error', desc: 'Request body failed validation.' },
+  { code: 422, label: 'Unprocessable Entity', desc: 'Request body failed validation.' },
   { code: 429, label: 'Too Many Requests', desc: 'Rate limit exceeded.' },
   { code: 500, label: 'Server Error', desc: 'Something went wrong on our end.' },
 ];
@@ -273,7 +273,7 @@ function AuthPill({ required }: { required: boolean }) {
     <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${
       required ? 'bg-amber-100 text-amber-700' : 'bg-slate-100 text-slate-500'
     }`}>
-      {required ? '🔒 Auth' : '🌐 Public'}
+      {required ? '🔒 Auth required' : '🌐 Public'}
     </span>
   );
 }
@@ -375,31 +375,31 @@ function ResponseFields({ fields }: { fields: ResponseField[] }) {
   );
 }
 
-function EndpointCard({ ep, i, openEndpoint, toggleEndpoint }: { ep: Endpoint; i: number; openEndpoint: number | null; toggleEndpoint: (i: number) => void }) {
-  const isOpen = openEndpoint === i;
+function EndpointCard({ ep, index }: { ep: Endpoint; index: number }) {
+  const [open, setOpen] = useState(false);
 
   return (
-    <div id={`endpoint-${i}`} className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+    <div id={`endpoint-${ep.group}-${index}`} className="bg-white rounded-2xl border border-slate-200 overflow-hidden">
       <button
-        onClick={() => toggleEndpoint(i)}
+        onClick={() => setOpen(!open)}
         className="w-full flex items-center gap-3 px-5 py-4 hover:bg-slate-50 transition-colors text-left"
       >
         <MethodBadge method={ep.method} />
         <code className="font-mono text-sm text-slate-800">{ep.path}</code>
         <span className="text-sm text-slate-500 flex-1 truncate">{ep.title}</span>
         <AuthPill required={ep.auth} />
-        <svg className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <svg className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${open ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
         </svg>
       </button>
 
-      {isOpen && (
+      {open && (
         <div className="border-t border-slate-100 px-5 py-5 space-y-5">
           <p className="text-sm text-slate-600 leading-relaxed">{ep.description}</p>
 
           {ep.params && ep.params.length > 0 && <ParamTable params={ep.params} />}
           {ep.bodyParams && ep.bodyParams.length > 0 && <ParamTable params={ep.bodyParams} body />}
-          {ep.responseFields && <ResponseFields fields={ep.responseFields} />}
+          {ep.responseFields && ep.responseFields.length > 0 && <ResponseFields fields={ep.responseFields} />}
 
           <div>
             <div className="flex items-center justify-between mb-2">
@@ -424,7 +424,6 @@ function EndpointCard({ ep, i, openEndpoint, toggleEndpoint }: { ep: Endpoint; i
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function ApiDocsClient() {
-  const [openEndpoint, setOpenEndpoint] = useState<number | null>(null);
   const groups = [...new Set(endpoints.map((ep) => ep.group))];
 
   return (
@@ -441,7 +440,7 @@ export default function ApiDocsClient() {
             </div>
             <div>
               <h1 className="text-3xl font-bold text-slate-900 tracking-tight">API Documentation</h1>
-              <p className="text-slate-500 text-sm mt-0.5">Toolblip REST API Reference — v1.0</p>
+              <p className="text-slate-500 text-sm mt-0.5">Toolblip REST API Reference — v1</p>
             </div>
           </div>
 
@@ -464,8 +463,6 @@ export default function ApiDocsClient() {
               <span className="text-sm text-emerald-700 font-medium">✅ Active</span>
             </div>
           </div>
-
-          
         </div>
       </header>
 
@@ -487,19 +484,14 @@ export default function ApiDocsClient() {
                         .map((ep, i) => ({ ep, i }))
                         .filter(({ ep }) => ep.group === group)
                         .map(({ ep, i }) => (
-                          <button
+                          <a
                             key={i}
-                            onClick={() => {
-                              setOpenEndpoint(openEndpoint === i ? null : i);
-                              document.getElementById(`endpoint-${i}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                            }}
-                            className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors text-left ${
-                              openEndpoint === i ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                            }`}
+                            href={`#endpoint-${ep.group}-${i}`}
+                            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors text-left text-slate-600 hover:bg-indigo-50 hover:text-indigo-700"
                           >
                             <MethodBadge method={ep.method} />
                             <span className="truncate font-mono text-xs flex-1">{ep.path}</span>
-                          </button>
+                          </a>
                         ))}
                     </div>
                   </div>
@@ -511,8 +503,8 @@ export default function ApiDocsClient() {
                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 px-1">On this page</p>
                 <div className="space-y-1">
                   <a href="#overview" className="block px-3 py-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors">Overview</a>
-                  <a href="#tools" className="block px-3 py-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors">Tools</a>
-                  <a href="#auth" className="block px-3 py-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors">Authentication</a>
+                  <a href="#section-tools" className="block px-3 py-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors">Tools</a>
+                  <a href="#section-auth" className="block px-3 py-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors">Authentication</a>
                   <a href="#status-codes" className="block px-3 py-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors">Status Codes</a>
                   <a href="#help" className="block px-3 py-1.5 text-xs text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-indigo-50 transition-colors">Get Help</a>
                 </div>
@@ -587,7 +579,7 @@ export default function ApiDocsClient() {
 
             {/* Endpoint groups */}
             {groups.map((group) => (
-              <section key={group} id={group}>
+              <section key={group} id={`section-${group}`}>
                 <div className="flex items-center gap-2 mb-4">
                   <span className="text-base">{GROUP_META[group]?.icon}</span>
                   <h2 className="text-base font-bold text-slate-800">{GROUP_META[group]?.label}</h2>
@@ -598,13 +590,7 @@ export default function ApiDocsClient() {
                     .map((ep, i) => ({ ep, i }))
                     .filter(({ ep }) => ep.group === group)
                     .map(({ ep, i }) => (
-                      <EndpointCard
-                        key={i}
-                        ep={ep}
-                        i={i}
-                        openEndpoint={openEndpoint}
-                        toggleEndpoint={(idx) => setOpenEndpoint(idx === i ? null : idx)}
-                      />
+                      <EndpointCard key={i} ep={ep} index={i} />
                     ))}
                 </div>
               </section>
