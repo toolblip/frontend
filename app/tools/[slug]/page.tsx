@@ -2,6 +2,7 @@ import { tools } from '@/data/tools';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import ToolUI from './ToolUI';
+import ShareButtons from '@/components/ShareButtons';
 
 export function generateStaticParams() {
   return tools.map(tool => ({ slug: tool.slug }));
@@ -49,6 +50,9 @@ export default async function ToolDetailPage({ params }: { params: Promise<{ slu
             <span className="inline-block text-xs font-medium text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">
               {tool.category}
             </span>
+          </div>
+          <div className="mt-4">
+            <ShareButtons toolName={tool.name} toolSlug={tool.slug} />
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 // ─── Config ───────────────────────────────────────────────────────────────────
@@ -9,7 +9,6 @@ const BASE_URL = 'https://api.toolblip.com';
 // ─── Endpoint definitions ────────────────────────────────────────────────────
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
-type AuthRequired = boolean;
 
 interface QueryParam {
   name: string;
@@ -36,7 +35,7 @@ interface Endpoint {
   group: string;
   method: HttpMethod;
   path: string;
-  auth: AuthRequired;
+  auth: boolean;
   title: string;
   description: string;
   queryParams?: QueryParam[];
@@ -99,9 +98,6 @@ const ENDPOINTS: Endpoint[] = [
     auth: false,
     title: 'Get tool by slug',
     description: 'Returns a single tool by its URL-safe slug. Returns 404 if not found.',
-    queryParams: [
-      { name: 'slug', type: 'string', required: true, description: 'URL-safe identifier (e.g. "json-formatter", "image-resizer")' },
-    ],
     responseFields: [
       { field: 'tool.id', type: 'integer', description: 'Unique tool ID' },
       { field: 'tool.slug', type: 'string', description: 'URL-safe identifier' },
@@ -257,25 +253,23 @@ const GROUPS = [
 ];
 
 const STATUS_CODES = [
-  { code: 200, label: 'OK', desc: 'Request succeeded.', color: 'text-emerald-600' },
-  { code: 201, label: 'Created', desc: 'Resource created successfully.', color: 'text-emerald-600' },
-  { code: 400, label: 'Bad Request', desc: 'Invalid request body or parameters.', color: 'text-red-600' },
-  { code: 401, label: 'Unauthorized', desc: 'Missing or invalid Bearer token.', color: 'text-red-600' },
-  { code: 403, label: 'Forbidden', desc: 'Authenticated but not permitted.', color: 'text-red-600' },
-  { code: 404, label: 'Not Found', desc: 'The requested resource does not exist.', color: 'text-amber-600' },
-  { code: 422, label: 'Unprocessable Entity', desc: 'Request body failed validation.', color: 'text-amber-600' },
-  { code: 429, label: 'Too Many Requests', desc: 'Rate limit exceeded.', color: 'text-amber-600' },
-  { code: 500, label: 'Server Error', desc: 'Something went wrong on our end.', color: 'text-red-600' },
+  { code: 200, label: 'OK', desc: 'Request succeeded.', color: 'text-emerald-600 dark:text-emerald-400' },
+  { code: 201, label: 'Created', desc: 'Resource created successfully.', color: 'text-emerald-600 dark:text-emerald-400' },
+  { code: 400, label: 'Bad Request', desc: 'Invalid request body or parameters.', color: 'text-red-600 dark:text-red-400' },
+  { code: 401, label: 'Unauthorized', desc: 'Missing or invalid Bearer token.', color: 'text-red-600 dark:text-red-400' },
+  { code: 403, label: 'Forbidden', desc: 'Authenticated but not permitted.', color: 'text-red-600 dark:text-red-400' },
+  { code: 404, label: 'Not Found', desc: 'The requested resource does not exist.', color: 'text-amber-600 dark:text-amber-400' },
+  { code: 422, label: 'Unprocessable Entity', desc: 'Request body failed validation.', color: 'text-amber-600 dark:text-amber-400' },
+  { code: 429, label: 'Too Many Requests', desc: 'Rate limit exceeded.', color: 'text-amber-600 dark:text-amber-400' },
+  { code: 500, label: 'Server Error', desc: 'Something went wrong on our end.', color: 'text-red-600 dark:text-red-400' },
 ];
 
-// ─── Method colors ────────────────────────────────────────────────────────────
-
-const METHOD_COLORS: Record<HttpMethod, { bg: string; text: string; darkBg: string; darkText: string }> = {
-  GET:    { bg: 'bg-emerald-50',    text: 'text-emerald-700',    darkBg: 'bg-emerald-500/10', darkText: 'text-emerald-400' },
-  POST:   { bg: 'bg-blue-50',      text: 'text-blue-700',       darkBg: 'bg-blue-500/10',   darkText: 'text-blue-400'   },
-  PUT:    { bg: 'bg-amber-50',     text: 'text-amber-700',      darkBg: 'bg-amber-500/10',  darkText: 'text-amber-400'  },
-  DELETE: { bg: 'bg-red-50',       text: 'text-red-700',         darkBg: 'bg-red-500/10',    darkText: 'text-red-400'   },
-  PATCH:  { bg: 'bg-violet-50',   text: 'text-violet-700',     darkBg: 'bg-violet-500/10', darkText: 'text-violet-400' },
+const METHOD_COLORS: Record<HttpMethod, { bg: string; text: string }> = {
+  GET:    { bg: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400',   text: 'text-emerald-700 dark:text-emerald-400' },
+  POST:   { bg: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400',               text: 'text-blue-700 dark:text-blue-400' },
+  PUT:    { bg: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400',          text: 'text-amber-700 dark:text-amber-400' },
+  DELETE: { bg: 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-400',                  text: 'text-red-700 dark:text-red-400' },
+  PATCH:  { bg: 'bg-violet-100 text-violet-700 dark:bg-violet-950 dark:text-violet-400',    text: 'text-violet-700 dark:text-violet-400' },
 };
 
 // ─── Sub-components ────────────────────────────────────────────────────────────
@@ -289,26 +283,6 @@ function MethodBadge({ method }: { method: HttpMethod }) {
   );
 }
 
-function AuthBadge({ required }: { required: boolean }) {
-  return (
-    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium border ${
-      required
-        ? 'bg-amber-50 text-amber-700 border-amber-200'
-        : 'bg-slate-100 text-slate-500 border-slate-200'
-    }`}>
-      {required ? '🔒 Auth' : '🌐 Public'}
-    </span>
-  );
-}
-
-function CodeBlock({ code, className = '' }: { code: string; className?: string }) {
-  return (
-    <pre className={`bg-[#0d1117] text-slate-300 rounded-xl p-4 text-[12.5px] font-mono overflow-x-auto leading-relaxed ${className}`}>
-      {code}
-    </pre>
-  );
-}
-
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
   const handleCopy = async () => {
@@ -319,7 +293,7 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="flex items-center gap-1.5 px-2.5 py-1.5 text-slate-500 hover:text-slate-200 hover:bg-white/10 text-xs rounded-lg transition-colors"
+      className="flex items-center gap-1.5 px-2.5 py-1.5 text-slate-400 hover:text-slate-200 hover:bg-white/10 text-xs rounded-lg transition-colors"
     >
       {copied ? (
         <>
@@ -340,7 +314,15 @@ function CopyButton({ text }: { text: string }) {
   );
 }
 
-function ParamTable({ params, body }: { params: QueryParam[] | BodyParam[]; body?: boolean }) {
+function CodeBlock({ code }: { code: string }) {
+  return (
+    <pre className="bg-[#0d1117] text-slate-300 rounded-xl p-4 text-[12.5px] font-mono overflow-x-auto leading-relaxed whitespace-pre">
+      {code}
+    </pre>
+  );
+}
+
+function ParamTable({ params, body }: { params: (QueryParam | BodyParam)[]; body?: boolean }) {
   return (
     <div className="mb-5">
       <h4 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">
@@ -350,10 +332,10 @@ function ParamTable({ params, body }: { params: QueryParam[] | BodyParam[]; body
         <table className="w-full text-sm">
           <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
             <tr>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-600 dark:text-slate-400 text-xs w-44">Name</th>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-600 dark:text-slate-400 text-xs w-20">Type</th>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-600 dark:text-slate-400 text-xs w-20">Required</th>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-600 dark:text-slate-400 text-xs">Description</th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs w-40">Name</th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs w-20">Type</th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs w-20">Required</th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs">Description</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-50 dark:divide-slate-800/60">
@@ -380,9 +362,9 @@ function ResponseFieldsTable({ fields }: { fields: ResponseField[] }) {
         <table className="w-full text-sm">
           <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
             <tr>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-600 dark:text-slate-400 text-xs w-44">Field</th>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-600 dark:text-slate-400 text-xs w-20">Type</th>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-600 dark:text-slate-400 text-xs">Description</th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs w-40">Field</th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs w-20">Type</th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs">Description</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-50 dark:divide-slate-800/60">
@@ -404,7 +386,10 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transition-all hover:border-indigo-200 dark:hover:border-indigo-800">
+    <div
+      id={ep.id}
+      className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transition-all hover:border-indigo-200 dark:hover:border-indigo-800 scroll-mt-20"
+    >
       {/* Header */}
       <button
         onClick={() => setOpen(!open)}
@@ -413,7 +398,14 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
         <MethodBadge method={ep.method} />
         <code className="font-mono text-sm text-slate-800 dark:text-slate-200 font-medium">{ep.path}</code>
         <span className="text-sm text-slate-500 dark:text-slate-400 flex-1 truncate">{ep.title}</span>
-        <AuthBadge required={ep.auth} />
+        {ep.auth && (
+          <span className="flex items-center gap-1 text-[11px] text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/50 border border-amber-100 dark:border-amber-900 px-2 py-0.5 rounded-full">
+            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            Auth
+          </span>
+        )}
         <svg
           className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${open ? 'rotate-180' : ''}`}
           fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
@@ -422,16 +414,15 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
         </svg>
       </button>
 
-      {/* Expanded content */}
+      {/* Expanded */}
       {open && (
-        <div className="border-t border-slate-100 dark:border-slate-800 px-5 py-6 space-y-6 bg-slate-50/40 dark:bg-slate-900/50">
+        <div className="border-t border-slate-100 dark:border-slate-800 px-5 py-6 space-y-5 bg-slate-50/40 dark:bg-slate-900/50">
           <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{ep.description}</p>
 
           {ep.queryParams && ep.queryParams.length > 0 && <ParamTable params={ep.queryParams} />}
           {ep.bodyParams && ep.bodyParams.length > 0 && <ParamTable params={ep.bodyParams} body />}
           {ep.responseFields && ep.responseFields.length > 0 && <ResponseFieldsTable fields={ep.responseFields} />}
 
-          {/* Example request */}
           <div>
             <div className="flex items-center justify-between mb-2">
               <h4 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Example Request</h4>
@@ -440,7 +431,6 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
             <CodeBlock code={ep.curl} />
           </div>
 
-          {/* Example response */}
           <div>
             <div className="flex items-center justify-between mb-2">
               <h4 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Example Response</h4>
@@ -456,6 +446,28 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function ApiDocsClient() {
+  const [activeId, setActiveId] = useState<string>('');
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveId(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: '-20% 0px -70% 0px' }
+    );
+
+    ENDPOINTS.forEach((ep) => {
+      const el = document.getElementById(ep.id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col">
 
@@ -470,7 +482,7 @@ export default function ApiDocsClient() {
                     <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                   </svg>
                 </div>
-                <span className="font-bold text-slate-900 dark:text-slate-100 group-hover:text-indigo-600 transition-colors">Toolblip</span>
+                <span className="font-bold text-slate-900 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">Toolblip</span>
               </Link>
               <span className="text-slate-300 dark:text-slate-600">/</span>
               <span className="text-sm font-medium text-slate-600 dark:text-slate-400">API Docs</span>
@@ -490,26 +502,26 @@ export default function ApiDocsClient() {
 
       {/* ── Hero ───────────────────────────────────────────────────── */}
       <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-          <div className="flex items-start gap-4 mb-8">
-            <div className="w-14 h-14 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-indigo-200/50 dark:shadow-indigo-900/30">
-              <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="flex items-start gap-4 mb-7">
+            <div className="w-13 h-13 w-[52px] h-[52px] bg-gradient-to-br from-indigo-600 to-violet-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-indigo-200/50 dark:shadow-indigo-900/30">
+              <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
               </svg>
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">API Documentation</h1>
-              <p className="text-slate-500 dark:text-slate-400 mt-1 text-base">Toolblip REST API — integrate tools, auth, and more</p>
+              <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">API Documentation</h1>
+              <p className="text-slate-500 dark:text-slate-400 mt-0.5 text-sm">Toolblip REST API reference — integrate tools and user auth into any app</p>
             </div>
           </div>
 
-          {/* Key facts */}
-          <div className="flex flex-wrap gap-3 mb-6">
-            <div className="inline-flex flex-col gap-1 bg-slate-900 dark:bg-slate-800 rounded-xl px-5 py-3">
+          {/* Key facts strip */}
+          <div className="flex flex-wrap gap-2.5 mb-5">
+            <div className="inline-flex flex-col gap-1 bg-slate-900 dark:bg-slate-800 rounded-xl px-4 py-2.5">
               <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Base URL</span>
-              <code className="text-sm font-mono text-emerald-400 dark:text-emerald-300">{BASE_URL}</code>
+              <code className="text-sm font-mono text-emerald-400">{BASE_URL}</code>
             </div>
-            <div className="inline-flex items-center gap-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3">
+            <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5">
               <svg className="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
@@ -518,22 +530,20 @@ export default function ApiDocsClient() {
                 <code className="font-mono text-slate-700 dark:text-slate-300">Bearer token</code>
               </span>
             </div>
-            <div className="inline-flex items-center gap-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3">
+            <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5">
               <svg className="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <span className="text-xs text-slate-600 dark:text-slate-400">
-                <span className="font-semibold text-slate-800 dark:text-slate-200">Format:</span>{' '}
-                JSON only
+                <span className="font-semibold text-slate-800 dark:text-slate-200">Format:</span> JSON only
               </span>
             </div>
-            <div className="inline-flex items-center gap-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3">
+            <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5">
               <svg className="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
               <span className="text-xs text-slate-600 dark:text-slate-400">
-                <span className="font-semibold text-slate-800 dark:text-slate-200">Rate limit:</span>{' '}
-                60 req/min public, 120 req/min authed
+                <span className="font-semibold text-slate-800 dark:text-slate-200">Rate limit:</span> 60 req/min
               </span>
             </div>
           </div>
@@ -546,9 +556,8 @@ export default function ApiDocsClient() {
             <div>
               <p className="text-sm font-semibold text-indigo-900 dark:text-indigo-300 mb-0.5">Authentication</p>
               <p className="text-sm text-indigo-700 dark:text-indigo-400 leading-relaxed">
-                After registering or logging in, include the returned{' '}
-                <code className="font-mono text-xs bg-indigo-100 dark:bg-indigo-900/50 px-1 rounded">token</code>
-                {' '}in every authenticated request as:
+                Include the token from <code className="font-mono text-xs bg-indigo-100 dark:bg-indigo-900/50 px-1 rounded">register</code> or{' '}
+                <code className="font-mono text-xs bg-indigo-100 dark:bg-indigo-900/50 px-1 rounded">login</code> in every authenticated request:
               </p>
               <code className="mt-2 block bg-slate-900 dark:bg-slate-800 text-emerald-400 dark:text-emerald-300 rounded-lg px-3 py-2 text-xs font-mono">
                 Authorization: Bearer &lt;your-token&gt;
@@ -575,11 +584,16 @@ export default function ApiDocsClient() {
                     <div className="space-y-0.5">
                       {ENDPOINTS.filter((ep) => ep.group === g.id).map((ep) => {
                         const c = METHOD_COLORS[ep.method];
+                        const isActive = activeId === ep.id;
                         return (
                           <a
                             key={ep.id}
                             href={`#${ep.id}`}
-                            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors text-left text-slate-600 dark:text-slate-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 hover:text-indigo-700 dark:hover:text-indigo-400"
+                            className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all text-left ${
+                              isActive
+                                ? 'bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-400'
+                                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-200'
+                            }`}
                           >
                             <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold ${c.bg} ${c.text} flex-shrink-0`}>
                               {ep.method}
@@ -593,17 +607,17 @@ export default function ApiDocsClient() {
                 ))}
               </nav>
 
-              {/* Quick nav */}
+              {/* On this page */}
               <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800">
                 <p className="text-[11px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest mb-3 px-1">On this page</p>
                 <div className="space-y-0.5">
                   {[
                     { href: '#overview', label: 'Overview' },
                     { href: '#status-codes', label: 'Status Codes' },
-                    { href: '#help', label: 'Get Help' },
+                    { href: '#get-help', label: 'Get Help' },
                   ].map((item) => (
                     <a key={item.href} href={item.href}
-                      className="block px-3 py-1.5 text-xs text-slate-500 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-950/50 transition-colors">
+                      className="block px-3 py-1.5 text-xs text-slate-500 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
                       {item.label}
                     </a>
                   ))}
@@ -618,7 +632,7 @@ export default function ApiDocsClient() {
             {/* Overview */}
             <section id="overview">
               <div className="flex items-center gap-3 mb-5">
-                <span className="text-lg">📖</span>
+                <span className="text-base">📖</span>
                 <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">Overview</h2>
                 <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
               </div>
@@ -641,7 +655,7 @@ export default function ApiDocsClient() {
                       </svg>
                     ),
                     title: 'JSON Throughout',
-                    desc: 'All requests and responses use JSON. Always include both headers.',
+                    desc: 'All requests and responses use JSON. Always include both Content-Type and Accept headers.',
                     code: 'Content-Type: application/json\nAccept: application/json',
                   },
                   {
@@ -651,7 +665,7 @@ export default function ApiDocsClient() {
                       </svg>
                     ),
                     title: 'Rate Limits',
-                    desc: 'Public: 60 req/min. Authenticated: 120 req/min. Pro users enjoy higher limits.',
+                    desc: 'Public endpoints: 60 requests/minute. Authenticated: 120 requests/minute.',
                     code: undefined,
                   },
                   {
@@ -681,15 +695,13 @@ export default function ApiDocsClient() {
             {GROUPS.map((g) => (
               <section key={g.id} id={g.id}>
                 <div className="flex items-center gap-3 mb-5">
-                  <span className="text-lg">{g.icon}</span>
+                  <span className="text-base">{g.icon}</span>
                   <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">{g.label}</h2>
                   <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
                 </div>
                 <div className="space-y-3">
                   {ENDPOINTS.filter((ep) => ep.group === g.id).map((ep) => (
-                    <div key={ep.id} id={ep.id}>
-                      <EndpointCard ep={ep} />
-                    </div>
+                    <EndpointCard key={ep.id} ep={ep} />
                   ))}
                 </div>
               </section>
@@ -698,7 +710,7 @@ export default function ApiDocsClient() {
             {/* HTTP Status Codes */}
             <section id="status-codes">
               <div className="flex items-center gap-3 mb-5">
-                <span className="text-lg">📡</span>
+                <span className="text-base">📡</span>
                 <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">HTTP Status Codes</h2>
                 <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
               </div>
@@ -706,16 +718,16 @@ export default function ApiDocsClient() {
                 <table className="w-full text-sm">
                   <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
                     <tr>
-                      <th className="px-5 py-3.5 text-left font-semibold text-slate-600 dark:text-slate-400 text-xs w-24">Code</th>
-                      <th className="px-5 py-3.5 text-left font-semibold text-slate-600 dark:text-slate-400 text-xs w-36">Status</th>
-                      <th className="px-5 py-3.5 text-left font-semibold text-slate-600 dark:text-slate-400 text-xs">Description</th>
+                      <th className="px-5 py-3.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs w-24">Code</th>
+                      <th className="px-5 py-3.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs w-36">Status</th>
+                      <th className="px-5 py-3.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs">Description</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-50 dark:divide-slate-800/60">
                     {STATUS_CODES.map((s) => (
                       <tr key={s.code} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30">
                         <td className="px-5 py-3">
-                          <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-mono font-bold ${s.color} bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700`}>
+                          <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-mono font-bold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 ${s.color}`}>
                             {s.code}
                           </span>
                         </td>
@@ -729,7 +741,7 @@ export default function ApiDocsClient() {
             </section>
 
             {/* Help CTA */}
-            <section id="help" className="bg-gradient-to-r from-indigo-50 to-violet-50 dark:from-indigo-950/30 dark:to-violet-950/30 rounded-2xl border border-indigo-100 dark:border-indigo-900 p-7">
+            <section id="get-help" className="bg-gradient-to-r from-indigo-50 to-violet-50 dark:from-indigo-950/30 dark:to-violet-950/30 rounded-2xl border border-indigo-100 dark:border-indigo-900 p-7">
               <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-1">Need help with the API?</h2>
               <p className="text-sm text-slate-600 dark:text-slate-400 mb-5 leading-relaxed">
                 Questions about integration? Reach out at{' '}
