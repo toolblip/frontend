@@ -8,6 +8,7 @@ author: "Toolblip Team"
 readingTime: "5 min read"
 featuredImage: ""
 slug: "top-5-developer-tools-bookmark"
+emoji: "🔖"
 ---
 
 Every developer has a set of tools they reach for multiple times a day. Not the big ones - not VS Code, not Docker, not Git. The small ones. The utilities that save you a Google search and a context switch. These are the five you should have bookmarked right now.
