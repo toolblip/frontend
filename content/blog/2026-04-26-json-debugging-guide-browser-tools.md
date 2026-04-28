@@ -20,7 +20,7 @@ featuredImage: 'https://api.radtx.com/gradient/ef4444-f59e0b/1200/630'
 
 You open DevTools. You paste the API response. You squint at 4,000 characters of unstructured JSON crammed into a single line. You have no idea why your code is failing.
 
-If this sounds familiar, you're not alone. JSON debugging is one of those skills nobody teaches formally — you just accumulate scar tissue until you recognize the problem on sight.
+If this sounds familiar, you're not alone. JSON debugging is one of those skills nobody teaches formally - you just accumulate scar tissue until you recognize the problem on sight.
 
 The good news: the tools have gotten dramatically better. In 2026, you can diagnose most JSON errors in under 30 seconds without installing anything or creating an account. Here's how.
 
@@ -83,7 +83,7 @@ Your code probably expects `count` to be a number. It isn't. Silent failure foll
 
 ### Unicode Encoding Issues
 
-Copy-pasting from Word, Google Docs, or a PDF can introduce smart quotes (`"`), em-dashes (—), or non-breaking spaces that look identical to their ASCII counterparts but break parsing.
+Copy-pasting from Word, Google Docs, or a PDF can introduce smart quotes (`"`), em-dashes (-), or non-breaking spaces that look identical to their ASCII counterparts but break parsing.
 
 ## The 30-Second Debug Workflow
 
@@ -91,13 +91,13 @@ Here's the approach that works for most JSON errors.
 
 ### Step 1: Validate First
 
-Before you touch your code, paste the raw JSON into a [JSON validator](/tools/json-validator). A validator pinpoints the exact line and character where the problem starts — something a stack trace obscures in nested call chains.
+Before you touch your code, paste the raw JSON into a [JSON validator](/tools/json-validator). A validator pinpoints the exact line and character where the problem starts - something a stack trace obscures in nested call chains.
 
 Toolblip's [JSON Validator](/tools/json-validator) highlights the error location and gives you a human-readable explanation. No install, no signup.
 
 ### Step 2: Format for Readability
 
-A single-line blob is unreadable. Use [JSON Formatter](/tools/json-formatter) to pretty-print it with proper indentation. If the formatter auto-detects the structure and applies syntax highlighting, you can spot structural issues visually — unclosed objects, mismatched brackets, rogue properties — without reading every character.
+A single-line blob is unreadable. Use [JSON Formatter](/tools/json-formatter) to pretty-print it with proper indentation. If the formatter auto-detects the structure and applies syntax highlighting, you can spot structural issues visually - unclosed objects, mismatched brackets, rogue properties - without reading every character.
 
 ### Step 3: Check for the Silent Killers
 
@@ -126,7 +126,7 @@ Browser tools and IDE extensions both have a place. The question is which one to
 
 ### IDE Extensions Win When:
 
-**You're in a full debugging session.** You need to step through code, inspect variables, and trace execution — not just validate a payload.
+**You're in a full debugging session.** You need to step through code, inspect variables, and trace execution - not just validate a payload.
 
 **You want to validate on save.** Editor extensions that run linting/validation as you type catch errors before you even execute.
 
@@ -152,7 +152,7 @@ Use a browser-based JSON validator on the raw response to see exactly what's bei
 
 ### "My JSON is valid but the data looks wrong"
 
-This is a semantic error — the JSON parses successfully but the data isn't what your code expects. Debug this by:
+This is a semantic error - the JSON parses successfully but the data isn't what your code expects. Debug this by:
 
 1. Formatted the JSON and visually inspect all keys and value types
 2. Add `console.log(typeof data.yourField)` statements to check actual types
@@ -191,6 +191,6 @@ All of these run entirely in your browser. Nothing is sent to a server.
 
 JSON debugging doesn't have to be a scavenger hunt. The workflow is simple: validate → format → inspect. Browser-based tools like Toolblip's JSON suite get you there in seconds, locally, without friction.
 
-The most common errors — trailing commas, smart quotes, type mismatches — are also the easiest to fix once you know what to look for. Now you know.
+The most common errors - trailing commas, smart quotes, type mismatches - are also the easiest to fix once you know what to look for. Now you know.
 
 Bookmark your tools. The next time an API response breaks your code, you'll be ready.

@@ -47,17 +47,17 @@ JSON (JavaScript Object Notation) has become the dominant data format for web AP
 
 ### JSON Strengths
 
-- **Native JavaScript support** — `JSON.parse()` and `JSON.stringify()` are built into every browser and Node.js. No libraries needed.
-- **Concise** — Less verbose than XML. A comparable XML document is typically 2-3x larger.
-- **Faster to parse** — Parsers are simpler because JSON maps directly to primitive types.
-- **First-class API citizen** — REST APIs overwhelmingly return JSON. The Content-Type header `application/json` is the web standard.
+- **Native JavaScript support** - `JSON.parse()` and `JSON.stringify()` are built into every browser and Node.js. No libraries needed.
+- **Concise** - Less verbose than XML. A comparable XML document is typically 2-3x larger.
+- **Faster to parse** - Parsers are simpler because JSON maps directly to primitive types.
+- **First-class API citizen** - REST APIs overwhelmingly return JSON. The Content-Type header `application/json` is the web standard.
 
 ### JSON Weaknesses
 
-- **No schema validation** — You can't define a JSON schema and have it enforced automatically. Tools like JSON Schema help, but it's an add-on, not core.
-- **Limited data types** — Only strings, numbers, booleans, null, arrays, and objects. No dates, no binary data, no custom types.
-- **No namespace support** — If you're merging documents from different sources, you risk attribute name collisions.
-- **Binary data requires encoding** — Base64 or hex encoding adds ~33% overhead.
+- **No schema validation** - You can't define a JSON schema and have it enforced automatically. Tools like JSON Schema help, but it's an add-on, not core.
+- **Limited data types** - Only strings, numbers, booleans, null, arrays, and objects. No dates, no binary data, no custom types.
+- **No namespace support** - If you're merging documents from different sources, you risk attribute name collisions.
+- **Binary data requires encoding** - Base64 or hex encoding adds ~33% overhead.
 
 ## XML: The Document Standard
 
@@ -78,17 +78,17 @@ XML (eXtensible Markup Language) predates JSON by a decade and remains critical 
 
 ### XML Strengths
 
-- **Schema validation** — XSD (XML Schema Definition) and DTD let you define exactly what structure your documents must have, with automatic validation.
-- **Rich type system** — Attributes, namespaces, entities, processing instructions. You can express complex hierarchical relationships.
-- **Industry adoption** — Microsoft Office formats (`.docx`, `.xlsx`), SVG, RSS/Atom feeds, SOAP web services, and many financial/medical systems use XML.
-- **XPath and XSLT** — Powerful query and transformation languages built specifically for XML trees.
+- **Schema validation** - XSD (XML Schema Definition) and DTD let you define exactly what structure your documents must have, with automatic validation.
+- **Rich type system** - Attributes, namespaces, entities, processing instructions. You can express complex hierarchical relationships.
+- **Industry adoption** - Microsoft Office formats (`.docx`, `.xlsx`), SVG, RSS/Atom feeds, SOAP web services, and many financial/medical systems use XML.
+- **XPath and XSLT** - Powerful query and transformation languages built specifically for XML trees.
 
 ### XML Weaknesses
 
-- **Verbose** — Opening and closing tags for every value adds significant bulk.
-- **Slower to parse** — XML parsers must track tag state, handle namespaces, and resolve entities.
-- **Not native to JavaScript** — Requires a parser like `DOMParser` or a library like `xml2js`.
-- **Confusing error messages** — A missing closing tag somewhere early in a document can produce a cascade of confusing errors.
+- **Verbose** - Opening and closing tags for every value adds significant bulk.
+- **Slower to parse** - XML parsers must track tag state, handle namespaces, and resolve entities.
+- **Not native to JavaScript** - Requires a parser like `DOMParser` or a library like `xml2js`.
+- **Confusing error messages** - A missing closing tag somewhere early in a document can produce a cascade of confusing errors.
 
 ## Head-to-Head Comparison
 
@@ -127,14 +127,14 @@ XML (eXtensible Markup Language) predates JSON by a decade and remains critical 
 
 ## A Note on "JSON vs XML" as a Debate
 
-The JSON vs XML framing is somewhat of a false dichotomy. They don't compete in most modern contexts. JSON won the web API battle decisively. XML remains dominant in specific niches where its strengths — schema validation, namespaces, document semantics — are irreplaceable.
+The JSON vs XML framing is somewhat of a false dichotomy. They don't compete in most modern contexts. JSON won the web API battle decisively. XML remains dominant in specific niches where its strengths - schema validation, namespaces, document semantics - are irreplaceable.
 
 If you're starting a new web project today: **default to JSON**. If you encounter XML in the wild, it's usually because you're integrating with a system that predates the JSON era. In that case, reach for a parser, not a migration.
 
 ## Useful Tools
 
-- **[JSON Formatter](/tools/json-formatter)** — Validate, format, and minify JSON instantly in your browser
-- **[Base64 Encoder](/tools/base64)** — Encode and decode Base64 for data transmission
-- **[URL Encoder](/tools/url-encode)** — Safely encode URLs and URL components
+- **[JSON Formatter](/tools/json-formatter)** - Validate, format, and minify JSON instantly in your browser
+- **[Base64 Encoder](/tools/base64)** - Encode and decode Base64 for data transmission
+- **[URL Encoder](/tools/url-encode)** - Safely encode URLs and URL components
 
 No data leaves your browser. Everything runs client-side.

@@ -20,13 +20,13 @@ featuredImage: 'https://api.radtx.com/gradient/6b7280-374151/1200/630'
 
 # JSON Validation: How to Find and Fix Broken JSON Fast
 
-You've been here. You paste JSON into a tool, an API, or a config file — and get back something like `Unexpected token at position 47`. Or worse: `Invalid JSON` with no further information.
+You've been here. You paste JSON into a tool, an API, or a config file - and get back something like `Unexpected token at position 47`. Or worse: `Invalid JSON` with no further information.
 
 JSON validation errors are fixable once you understand what the parser is actually complaining about. Here's how to read them and fix them fast.
 
 ## Why JSON Parsing Fails
 
-JSON has strict rules. The parser is not being pedantic — it's following the spec. Common failure points:
+JSON has strict rules. The parser is not being pedantic - it's following the spec. Common failure points:
 
 ### 1. Trailing Commas
 
@@ -99,7 +99,7 @@ Many JSON validators report `position X` in the error message. This is the chara
 2. Go to character position X
 3. Look at the character at that position and the few characters before it
 
-Most errors are at or very near the actual problem — the parser often can't detect the error until it tries to parse what comes next.
+Most errors are at or very near the actual problem - the parser often can't detect the error until it tries to parse what comes next.
 
 ## Validating JSON Programmatically
 
@@ -139,16 +139,16 @@ if (json_last_error() !== JSON_ERROR_NONE) {
 
 ### 1. Format Before Debugging
 
-Minified JSON is nearly impossible to read. Always format it first — one misplaced comma is easy to miss in a wall of text.
+Minified JSON is nearly impossible to read. Always format it first - one misplaced comma is easy to miss in a wall of text.
 
 **[Format your JSON →](/tools/json-formatter)**
 
 ### 2. Validate in Your Editor
 
 Most code editors have JSON validation built in:
-- **VS Code** — errors shown in the Problems panel, red underlines
-- **Sublime Text** — JSON syntax checking via `sublime-json`
-- **IntelliJ/WebStorm** — real-time validation with line-level error markers
+- **VS Code** - errors shown in the Problems panel, red underlines
+- **Sublime Text** - JSON syntax checking via `sublime-json`
+- **IntelliJ/WebStorm** - real-time validation with line-level error markers
 
 ### 3. Use jq for Command-Line JSON
 
@@ -169,7 +169,7 @@ If your JSON validates in a browser tool but fails in code, you might have a UTF
 
 ## JSON vs JSONC
 
-If you're working in VS Code, your `settings.json` or `tsconfig.json` might be JSONC — JSON with Comments. VS Code uses JSONC to allow `//` and `/* */` comments in config files. These are **not valid JSON** and will fail if parsed with a standard JSON parser.
+If you're working in VS Code, your `settings.json` or `tsconfig.json` might be JSONC - JSON with Comments. VS Code uses JSONC to allow `//` and `/* */` comments in config files. These are **not valid JSON** and will fail if parsed with a standard JSON parser.
 
 ## TL;DR Error Guide
 
@@ -185,4 +185,4 @@ If you're working in VS Code, your `settings.json` or `tsconfig.json` might be J
 
 **[Validate and format your JSON →](/tools/json-formatter)**
 
-Paste any JSON — formatted, minified, or broken — and get back a clean error message with the exact line and character position of the problem.
+Paste any JSON - formatted, minified, or broken - and get back a clean error message with the exact line and character position of the problem.

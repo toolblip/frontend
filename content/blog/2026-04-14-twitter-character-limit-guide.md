@@ -20,7 +20,7 @@ featuredImage: 'https://api.radtx.com/gradient/6b7280-374151/1200/630'
 
 # The Complete Character Limit Reference for Every Platform
 
-Every social platform has its own character limit — some for historical reasons, some for technical constraints, some for engagement optimization. Here's every limit that matters.
+Every social platform has its own character limit - some for historical reasons, some for technical constraints, some for engagement optimization. Here's every limit that matters.
 
 ## Quick Reference Table
 
@@ -37,7 +37,7 @@ Every social platform has its own character limit — some for historical reason
 | Discord | 2000 | Message |
 | Reddit | 40000 | Post body |
 
-## Twitter / X — 280 Characters
+## Twitter / X - 280 Characters
 
 Twitter's famous 280-character limit is one of the most misunderstood constraints on the web. What most people don't know:
 
@@ -46,18 +46,18 @@ Twitter's famous 280-character limit is one of the most misunderstood constraint
 - Emojis count as 2 characters each (except certain Japanese emojis)
 
 **What's NOT counted:**
-- URLs (they're auto-shortened to 23 characters regardless of actual length — so don't bother counting)
+- URLs (they're auto-shortened to 23 characters regardless of actual length - so don't bother counting)
 
 **Tips:**
 - Use the character counter to see exactly what Twitter counts
 - The limit includes `@` mentions and `#` hashtags
 - If you need more: reply to your own tweet to create a thread
 
-## Threads by Meta — 500 Characters
+## Threads by Meta - 500 Characters
 
 Threads posts follow Instagram's model. Links count toward the limit.
 
-## LinkedIn — 3,000 Characters
+## LinkedIn - 3,000 Characters
 
 LinkedIn's 3000-character limit is generous but don't use all of it. Studies consistently show that 150-300 character posts get more engagement. The counter helps you stay concise.
 
@@ -66,7 +66,7 @@ LinkedIn's 3000-character limit is generous but don't use all of it. Studies con
 - "About" section: 2000 characters
 - Comment: 1250 characters
 
-## Instagram — 2,200 Characters
+## Instagram - 2,200 Characters
 
 Instagram captions over 125 characters get less engagement on average. Keep it punchy.
 
@@ -75,11 +75,11 @@ Instagram captions over 125 characters get less engagement on average. Keep it p
 - Hashtag limit: 30 hashtags per post
 - Caption on carousel: same 2200
 
-## TikTok — 150 Characters
+## TikTok - 150 Characters
 
-TikTok captions are short and punchy. 150 characters forces brevity. Use keywords early — the caption gets truncated after ~100 characters in the feed.
+TikTok captions are short and punchy. 150 characters forces brevity. Use keywords early - the caption gets truncated after ~100 characters in the feed.
 
-## YouTube — 5,000 Characters
+## YouTube - 5,000 Characters
 
 YouTube descriptions get truncated after the first 100-150 characters in mobile search results. Put the most important information first.
 
@@ -87,7 +87,7 @@ YouTube descriptions get truncated after the first 100-150 characters in mobile 
 - Title: 100 characters (beyond this gets truncated in search)
 - Channel description: 5000 characters
 
-## Meta Description Tags — 160 Characters
+## Meta Description Tags - 160 Characters
 
 Not a social platform, but if you're writing meta descriptions for SEO:
 
@@ -97,10 +97,10 @@ Google typically displays the first 150-160 characters of a meta description in 
 
 When writing for a platform with a character limit:
 
-1. **Draft without looking at the counter** — write naturally first
-2. **Then check** — copy into the character counter tool
-3. **Trim methodically** — remove filler words, redundant phrases
-4. **Check the specific preset** — use Twitter, LinkedIn, or meta tag presets to see the relevant limit
+1. **Draft without looking at the counter** - write naturally first
+2. **Then check** - copy into the character counter tool
+3. **Trim methodically** - remove filler words, redundant phrases
+4. **Check the specific preset** - use Twitter, LinkedIn, or meta tag presets to see the relevant limit
 
 ## Free Tools
 

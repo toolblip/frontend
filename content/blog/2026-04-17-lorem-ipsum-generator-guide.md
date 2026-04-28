@@ -30,7 +30,7 @@ The standard Lorem Ipsum begins:
 
 > *"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."*
 
-This Latin was chosen precisely **because it looks meaningless** — designers don't want readers distracted by actual content when reviewing layout, typography, and spacing.
+This Latin was chosen precisely **because it looks meaningless** - designers don't want readers distracted by actual content when reviewing layout, typography, and spacing.
 
 ## Why Designers Use Lorem Ipsum
 
@@ -40,11 +40,11 @@ When you're designing a newspaper layout, a landing page, or a magazine spread, 
 
 ### 2. Tests Typography at Scale
 
-Lorem Ipsum text exercises the full range of your typographic choices — headings, body text, captions, pull quotes — at realistic quantities. If your line-height, font-size, and measure (line length) work well with Lorem Ipsum, they'll work well with real content.
+Lorem Ipsum text exercises the full range of your typographic choices - headings, body text, captions, pull quotes - at realistic quantities. If your line-height, font-size, and measure (line length) work well with Lorem Ipsum, they'll work well with real content.
 
 ### 3. Reveals Visual Hierarchy
 
-With real content, readers process meaning and skip around. With Lorem Ipsum, there's no meaning to process, so you can see purely **visual hierarchy** — does the eye naturally flow from heading to subheading to body? Does the contrast guide reading order?
+With real content, readers process meaning and skip around. With Lorem Ipsum, there's no meaning to process, so you can see purely **visual hierarchy** - does the eye naturally flow from heading to subheading to body? Does the contrast guide reading order?
 
 ## How to Generate Custom Amounts
 
@@ -83,7 +83,7 @@ Some generators offer "meaningful placeholder" text that mimics the structure an
 - Legal-looking boilerplate text
 
 ### Multiple Languages
-Some Lorem Ipsum generators offer passages in different languages — useful for testing multilingual layouts or font rendering with non-Latin alphabets.
+Some Lorem Ipsum generators offer passages in different languages - useful for testing multilingual layouts or font rendering with non-Latin alphabets.
 
 ## Common Lorem Ipsum Mistakes
 
@@ -93,7 +93,7 @@ Never ship a design with Lorem Ipsum in the final handoff. It signals incomplete
 
 ### Mistake 2: Not Enough Text
 
-Under-filling a design with Lorem Ipsum makes it look like an unfinished wireframe. **Fill every content area** — headers, footers, sidebars, captions. You want the client to see a realistic page, not a skeleton.
+Under-filling a design with Lorem Ipsum makes it look like an unfinished wireframe. **Fill every content area** - headers, footers, sidebars, captions. You want the client to see a realistic page, not a skeleton.
 
 ### Mistake 3: Ignoring Responsive Behavior
 
@@ -119,7 +119,7 @@ When using Lorem Ipsum in HTML, be aware of these common entities:
 /* Test line-height with a realistic measure */
 p {
   font-size: 1rem;       /* 16px base */
-  line-height: 1.6;      /* ~26px line spacing — comfortable for body */
+  line-height: 1.6;      /* ~26px line spacing - comfortable for body */
   max-width: 68ch;       /* Optimal measure: ~68 characters per line */
 }
 
@@ -133,22 +133,22 @@ p {
 }
 ```
 
-The `ch` unit (character width) is especially useful for limiting line length — `max-width: 68ch` means the element won't exceed about 68 characters per line regardless of font size.
+The `ch` unit (character width) is especially useful for limiting line length - `max-width: 68ch` means the element won't exceed about 68 characters per line regardless of font size.
 
 ## When to Use Real Content Instead
 
 In some cases, Lorem Ipsum is actively harmful to the design process:
 
-- **Hero sections and taglines** — These need real emotional weight. A hero with Lorem Ipsum doesn't communicate the brand's personality.
-- **Testimonials** — A design with fake-sounding quotes undermines the feature you're designing.
-- **Data-heavy UIs** — A dashboard with fake numbers and names gives you a better sense of density and information hierarchy.
-- **Email templates** — See real subject lines, preview text, and body copy to judge the actual email experience.
+- **Hero sections and taglines** - These need real emotional weight. A hero with Lorem Ipsum doesn't communicate the brand's personality.
+- **Testimonials** - A design with fake-sounding quotes undermines the feature you're designing.
+- **Data-heavy UIs** - A dashboard with fake numbers and names gives you a better sense of density and information hierarchy.
+- **Email templates** - See real subject lines, preview text, and body copy to judge the actual email experience.
 
-For these cases, use realistic content that approximates the actual tone and length of the final copy — even if the specific words aren't finalized.
+For these cases, use realistic content that approximates the actual tone and length of the final copy - even if the specific words aren't finalized.
 
 ## Try It Now
 
-The [Lorem Ipsum Generator on Toolblip](/tools/lorem-ipsum-generator) lets you generate anywhere from 1 to 20+ paragraphs, choose whether to start with "Lorem ipsum," and copy with one click. No ads, no signup — entirely client-side.
+The [Lorem Ipsum Generator on Toolblip](/tools/lorem-ipsum-generator) lets you generate anywhere from 1 to 20+ paragraphs, choose whether to start with "Lorem ipsum," and copy with one click. No ads, no signup - entirely client-side.
 
 ---
 

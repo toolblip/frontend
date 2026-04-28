@@ -16,21 +16,21 @@ category: Developer Tools
 featuredImage: 'https://api.radtx.com/gradient/0ea5e9-8b5cf6/1200/630'
 ---
 
-Regular expressions — regex — are one of the most powerful tools in a developer's toolkit. They're also notoriously difficult to get right without a good testing environment. A single misplaced character can turn a precise match into a wildcard nightmare.
+Regular expressions - regex - are one of the most powerful tools in a developer's toolkit. They're also notoriously difficult to get right without a good testing environment. A single misplaced character can turn a precise match into a wildcard nightmare.
 
 A regex tester removes the guesswork. This guide shows you how to use one effectively, and what patterns every developer should have in their toolkit.
 
 ## What Is a Regex Tester?
 
-A regex tester is a visual environment where you write a regular expression and immediately see which parts of your test string match — and which don't. Instead of tweaking code, re-running, checking output, tweaking again, you get instant feedback.
+A regex tester is a visual environment where you write a regular expression and immediately see which parts of your test string match - and which don't. Instead of tweaking code, re-running, checking output, tweaking again, you get instant feedback.
 
 Most testers provide:
 
-- **Real-time match highlighting** — matched text is colored or highlighted
-- **Match groups** — captured groups are labeled and displayed separately
-- **Replacement preview** — see what `replace()` would produce before committing
-- **Error messages** — clear explanations when your pattern is invalid
-- **Pattern explanation** — human-readable breakdown of what your regex does
+- **Real-time match highlighting** - matched text is colored or highlighted
+- **Match groups** - captured groups are labeled and displayed separately
+- **Replacement preview** - see what `replace()` would produce before committing
+- **Error messages** - clear explanations when your pattern is invalid
+- **Pattern explanation** - human-readable breakdown of what your regex does
 
 ## How to Use a Regex Tester
 
@@ -46,7 +46,7 @@ Most regex testers default to JavaScript (ECMAScript), but different languages u
 | Go | Go standard library |
 | Rust | Rust `regex` crate |
 
-If you're working in JavaScript, make sure the tester is set to JS mode — patterns that work in Python's `re` module may behave differently.
+If you're working in JavaScript, make sure the tester is set to JS mode - patterns that work in Python's `re` module may behave differently.
 
 ### Step 2: Write Your Pattern
 
@@ -171,16 +171,16 @@ https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0
 A period `.` matches any character. To match a literal period, escape it:
 
 ```regex
-# Wrong — matches anything followed by .com
+# Wrong - matches anything followed by .com
 example.com
 
-# Correct — matches the literal string
+# Correct - matches the literal string
 example\.com
 ```
 
 ### Mistake 2: Overusing `.*`
 
-`.*` is greedy — it matches as much as possible. This can eat more than you intended:
+`.*` is greedy - it matches as much as possible. This can eat more than you intended:
 
 ```regex
 # Greedy: matches from the first < to the LAST >
@@ -219,17 +219,17 @@ Prefer possessive quantifiers or atomic groups where supported, or restructure t
 
 ## Regex Tester Best Practices
 
-1. **Test with edge cases** — empty strings, strings with only special characters, very long strings
-2. **Always set the right flavor** — a Python regex may work differently in JavaScript
+1. **Test with edge cases** - empty strings, strings with only special characters, very long strings
+2. **Always set the right flavor** - a Python regex may work differently in JavaScript
 3. **Use non-greedy matching** (`*?`, `+?`) by default when matching between delimiters
-4. **Read your pattern aloud** — if you can't explain what it does, the pattern is probably too complex
-5. **Comment your patterns** — in languages that support regex comments (`(?#comment)` in PCRE or `(?x)` for extended mode)
+4. **Read your pattern aloud** - if you can't explain what it does, the pattern is probably too complex
+5. **Comment your patterns** - in languages that support regex comments (`(?#comment)` in PCRE or `(?x)` for extended mode)
 
 ## Try It Now
 
 The [Regex Tester on Toolblip](/tools/regex-tester) is built for real developer workflows. It highlights matches in real-time, shows capture groups, explains your pattern in plain English, and has a library of common patterns to copy.
 
-No signup, no server calls — everything runs in your browser.
+No signup, no server calls - everything runs in your browser.
 
 ---
 

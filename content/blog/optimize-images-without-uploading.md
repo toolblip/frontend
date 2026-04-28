@@ -1,6 +1,6 @@
 ---
 title: "How to Optimize Images Without Uploading"
-description: "Crop, resize, convert, and compress images entirely in your browser. No server, no uploads, no privacy concerns — just fast local processing."
+description: "Crop, resize, convert, and compress images entirely in your browser. No server, no uploads, no privacy concerns - just fast local processing."
 date: "2026-04-15"
 category: "Performance"
 tags: ["images", "optimization", "privacy", "browser", "performance"]
@@ -10,7 +10,7 @@ featuredImage: ""
 slug: "optimize-images-without-uploading"
 ---
 
-A few years ago, optimizing an image meant uploading it to a web service, waiting for the server to process it, and downloading the result. That workflow is fine — until you're handling sensitive screenshots, internal documents, or just don't want your data sitting on someone else's server.
+A few years ago, optimizing an image meant uploading it to a web service, waiting for the server to process it, and downloading the result. That workflow is fine - until you're handling sensitive screenshots, internal documents, or just don't want your data sitting on someone else's server.
 
 Browser-based image processing has matured to the point where you can do almost everything locally, and it's fast.
 
@@ -22,13 +22,13 @@ The result: what used to require a server can now happen in milliseconds inside 
 
 ## What You Can Do Locally
 
-**Crop and resize** — Draw a crop area, set your dimensions, and export. Great for preparing images to exact aspect ratios for social media, hero sections, or thumbnails.
+**Crop and resize** - Draw a crop area, set your dimensions, and export. Great for preparing images to exact aspect ratios for social media, hero sections, or thumbnails.
 
-**Format conversion** — Convert between PNG, JPEG, WebP, and others. WebP in particular offers significant compression gains over JPEG with comparable quality, but macOS Preview doesn't export to WebP natively. A browser tool handles it instantly.
+**Format conversion** - Convert between PNG, JPEG, WebP, and others. WebP in particular offers significant compression gains over JPEG with comparable quality, but macOS Preview doesn't export to WebP natively. A browser tool handles it instantly.
 
-**Compression** — Reduce file size by adjusting quality settings. You can preview the output before downloading, which is the key advantage over "upload and hope" services.
+**Compression** - Reduce file size by adjusting quality settings. You can preview the output before downloading, which is the key advantage over "upload and hope" services.
 
-**Metadata removal** — Strip EXIF data, which contains camera info, GPS coordinates, and timestamps. This is a genuine privacy win — especially for screenshots that might reveal more than intended.
+**Metadata removal** - Strip EXIF data, which contains camera info, GPS coordinates, and timestamps. This is a genuine privacy win - especially for screenshots that might reveal more than intended.
 
 ## Why It Matters
 
@@ -38,6 +38,6 @@ But privacy is the real story. When you upload an image to a third-party service
 
 ## Getting Started
 
-Pick a browser-based image tool — Toolblip's image cropper and format converter run entirely in your browser, no account needed. Drop in an image, make your adjustments, and download. You'll never go back to uploading.
+Pick a browser-based image tool - Toolblip's image cropper and format converter run entirely in your browser, no account needed. Drop in an image, make your adjustments, and download. You'll never go back to uploading.
 
 **Try the image tools at [toolblip.com/tools](https://toolblip.com/tools).**

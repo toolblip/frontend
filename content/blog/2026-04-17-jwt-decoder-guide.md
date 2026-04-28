@@ -18,7 +18,7 @@ category: Authentication
 featuredImage: 'https://api.radtx.com/gradient/f59e0b-ef4444/1200/630'
 ---
 
-If you work with modern web applications, you've seen JWTs — those long strings of dots-separated base64 that show up in browser storage, API responses, and auth headers. But what do they actually contain? And how do you inspect one without sending it to a third-party service?
+If you work with modern web applications, you've seen JWTs - those long strings of dots-separated base64 that show up in browser storage, API responses, and auth headers. But what do they actually contain? And how do you inspect one without sending it to a third-party service?
 
 A JWT decoder answers both questions, entirely in your browser.
 
@@ -54,7 +54,7 @@ The header is base64url-encoded JSON. Decode it and you get:
 ```
 
 - **`alg`**: The algorithm used to sign the token. `HS256` (HMAC using SHA-256) is the most common for symmetric signing. `RS256` (RSA Signature) is common for asymmetric (public/private key) setups.
-- **`typ`**: The token type — almost always `"JWT"`.
+- **`typ`**: The token type - almost always `"JWT"`.
 
 ### 2. The Payload
 
@@ -68,21 +68,21 @@ The payload is also base64url-encoded JSON. Decode it and you get:
 }
 ```
 
-The payload contains **claims** — statements about a user or subject. There are three types:
+The payload contains **claims** - statements about a user or subject. There are three types:
 
 **Registered claims** (predefined by the JWT spec):
 
 | Claim | Meaning |
 |-------|---------|
-| `iss` | Issuer — who issued the token |
-| `sub` | Subject — who the token is about |
-| `aud` | Audience — who the token is intended for |
+| `iss` | Issuer - who issued the token |
+| `sub` | Subject - who the token is about |
+| `aud` | Audience - who the token is intended for |
 | `exp` | Expiration time (Unix timestamp) |
-| `nbf` | Not before — token not valid before this time |
-| `iat` | Issued at — when the token was created |
-| `jti` | JWT ID — unique identifier for this token |
+| `nbf` | Not before - token not valid before this time |
+| `iat` | Issued at - when the token was created |
+| `jti` | JWT ID - unique identifier for this token |
 
-**Public claims**: Any key-value pair — like `name`, `email`, `role`.
+**Public claims**: Any key-value pair - like `name`, `email`, `role`.
 
 **Private claims**: Custom claims agreed upon by two parties, like `plan: "pro"` or `org_id: "acme"`.
 
@@ -111,7 +111,7 @@ A client-side JWT decoder processes everything locally. No network request is ma
 
 ### Reason 2: Debug Auth Issues Fast
 
-"Users are getting logged out unexpectedly" or "This API endpoint returns 403" — these are often token issues. Is the token expired? Is the `sub` claim what you expected? Is the algorithm what your server expects? A decoder lets you answer these questions in seconds.
+"Users are getting logged out unexpectedly" or "This API endpoint returns 403" - these are often token issues. Is the token expired? Is the `sub` claim what you expected? Is the algorithm what your server expects? A decoder lets you answer these questions in seconds.
 
 ### Reason 3: Learn How Auth Systems Work
 
@@ -119,7 +119,7 @@ Inspecting real tokens from apps you use is a great way to understand how authen
 
 ## How to Validate a JWT
 
-Decoding a JWT is not the same as validating it. A JWT can be decoded without verifying its signature — the signature is what makes it trustworthy.
+Decoding a JWT is not the same as validating it. A JWT can be decoded without verifying its signature - the signature is what makes it trustworthy.
 
 **Never trust a decoded JWT payload alone.** Always verify the signature server-side.
 
@@ -136,7 +136,7 @@ That said, a decoder helps you diagnose validation failures:
 
 ### Pitfall 1: Storing Tokens in localStorage
 
-localStorage is accessible to any JavaScript on your page — including third-party scripts. XSS attacks can steal tokens stored there. The `HttpOnly` cookie approach is more secure because JavaScript can't read it.
+localStorage is accessible to any JavaScript on your page - including third-party scripts. XSS attacks can steal tokens stored there. The `HttpOnly` cookie approach is more secure because JavaScript can't read it.
 
 ### Pitfall 2: Not Checking Expiration
 
@@ -151,10 +151,10 @@ Tokens in URLs can end up in server logs, browser history, and referrer headers.
 The `alg: "none"` vulnerability allows attackers to strip the signature. Always validate the algorithm server-side and reject unexpected algorithms:
 
 ```javascript
-// Dangerous — allows alg:none
+// Dangerous - allows alg:none
 const decoded = jwt.verify(token, secret);
 
-// Safe — explicitly specify expected algorithm
+// Safe - explicitly specify expected algorithm
 const decoded = jwt.verify(token, secret, { algorithms: ['HS256'] });
 ```
 
@@ -181,22 +181,22 @@ function decodeJWT(token) {
 
 const { header, payload } = decodeJWT(token);
 console.log(payload.sub); // "1234567890"
-console.log(payload.exp); // Unix timestamp — check if expired
+console.log(payload.exp); // Unix timestamp - check if expired
 ```
 
 > **Note:** This decodes but does NOT verify the signature. Always use a proper library like `jose` (Node.js/browser) or `pyjwt` (Python) for verification.
 
 ## The Three Types of JWT Claims
 
-**1. Registered claims** — Standard fields defined by RFC 7519. Use them consistently:
-- `exp` — Always set an expiration
-- `iat` — Set automatically by most libraries
-- `iss` — Set your application identifier
+**1. Registered claims** - Standard fields defined by RFC 7519. Use them consistently:
+- `exp` - Always set an expiration
+- `iat` - Set automatically by most libraries
+- `iss` - Set your application identifier
 
-**2. Public claims** — Registered in the [IANA JWT registry](https://www.iana.org/assignments/jwt/jwt.xhtml) to avoid collisions:
-- `email`, `name`, `picture` — common OAuth/OIDC claims
+**2. Public claims** - Registered in the [IANA JWT registry](https://www.iana.org/assignments/jwt/jwt.xhtml) to avoid collisions:
+- `email`, `name`, `picture` - common OAuth/OIDC claims
 
-**3. Private claims** — Custom keys for your application:
+**3. Private claims** - Custom keys for your application:
 - `role: "admin"`, `plan: "pro"`, `org_id: "42"`
 
 ## Try It Now

@@ -24,7 +24,7 @@ You know the pain. You open a fetch response in your browser DevTools and see:
 
 All on one line. Good luck finding the bug.
 
-A **JSON formatter** solves this — it takes your compressed JSON and turns it into something a human can actually read. This guide covers what makes a formatter useful, what features to look for, and how to debug JSON errors faster.
+A **JSON formatter** solves this - it takes your compressed JSON and turns it into something a human can actually read. This guide covers what makes a formatter useful, what features to look for, and how to debug JSON errors faster.
 
 ## What Is a JSON Formatter?
 
@@ -35,7 +35,7 @@ A JSON formatter takes minified or poorly-structured JSON and pretty-prints it w
 - **Syntax highlighting** so you can distinguish strings from numbers from booleans
 - **Line breaks** between top-level keys
 
-The same tool usually doubles as a **JSON validator** — it tells you whether your JSON is actually valid, and pinpoints the exact character where an error occurs.
+The same tool usually doubles as a **JSON validator** - it tells you whether your JSON is actually valid, and pinpoints the exact character where an error occurs.
 
 ## Why JSON Goes Wrong
 
@@ -115,7 +115,7 @@ For deeply nested JSON (API responses often are), a tree view that lets you coll
 ```javascript
 {
   "data": {
-    "users": [  ← [2 items] — click to expand
+    "users": [  ← [2 items] - click to expand
       { ... },
       { ... }
     ]
@@ -236,13 +236,13 @@ function parseJSON(str) {
 A common source of confusion: **JSON is a string format**. It's not the same as a JavaScript object.
 
 ```javascript
-// This is a string — valid JSON
+// This is a string - valid JSON
 const jsonString = '{"name": "Product", "price": 29.99}';
 
-// This is a JavaScript object — NOT JSON
+// This is a JavaScript object - NOT JSON
 const jsObject = { name: "Product", price: 29.99 };
 
-// You can't send a JS object over HTTP — it must be serialized:
+// You can't send a JS object over HTTP - it must be serialized:
 JSON.stringify(jsObject);  // → '{"name":"Product","price":29.99}'
 
 // And to parse an incoming JSON string:
@@ -265,4 +265,4 @@ The [JSON Formatter on Toolblip](/tools/json-formatter) validates, formats, and 
 
 ---
 
-JSON formatter tools are deceptively simple — they seem like a commodity, but a good one with fast validation, clear error messages, and a tree view will save you hours of debugging time over the course of a project.
+JSON formatter tools are deceptively simple - they seem like a commodity, but a good one with fast validation, clear error messages, and a tree view will save you hours of debugging time over the course of a project.

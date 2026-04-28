@@ -99,7 +99,7 @@ export default function SubmitToolPage() {
 
   if (!checked) return null;
 
-  // Not logged in — show auth prompt
+  // Not logged in - show auth prompt
   if (!user) {
     return (
       <div className="tb-v2-container" style={{ paddingTop: '64px', paddingBottom: '96px' }}>
@@ -135,7 +135,7 @@ export default function SubmitToolPage() {
     );
   }
 
-  // Logged in — show form
+  // Logged in - show form
   if (submitted) {
     return (
       <div className="tb-v2-container" style={{ paddingTop: '64px', paddingBottom: '96px' }}>

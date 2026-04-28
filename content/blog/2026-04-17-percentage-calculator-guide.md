@@ -1,6 +1,6 @@
 ---
 title: "Percentage Calculator: The Mental Math You Don't Have to Do"
-description: "Calculating percentages wrong is embarrassingly common. This guide walks through the correct way to compute percentage increases, decreases, and proportions — and why your first instinct is usually wrong."
+description: "Calculating percentages wrong is embarrassingly common. This guide walks through the correct way to compute percentage increases, decreases, and proportions - and why your first instinct is usually wrong."
 publishDate: "2026-04-17"
 slug: percentage-calculator-guide
 readingTime: 4 min

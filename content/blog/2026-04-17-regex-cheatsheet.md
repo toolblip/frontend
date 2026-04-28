@@ -24,7 +24,7 @@ Regular expressions (regex) are one of those tools that every developer uses but
 
 ## Basic Concepts
 
-A regex is a pattern that describes text. It matches strings against that pattern. Most regex syntax works the same way across languages — JavaScript, Python, PHP, Go, Ruby all share the same core syntax.
+A regex is a pattern that describes text. It matches strings against that pattern. Most regex syntax works the same way across languages - JavaScript, Python, PHP, Go, Ruby all share the same core syntax.
 
 ### Literal Characters
 
@@ -60,9 +60,9 @@ To match a literal question mark: `\?`
 Define your own set: `[aeiou]` matches any vowel. `[^aeiou]` matches any non-vowel (the `^` negates).
 
 ```
-/[A-Z]/     — any uppercase letter
-/[0-9a-f]/  — any hex digit
-/[^\s]/     — any non-whitespace character
+/[A-Z]/     - any uppercase letter
+/[0-9a-f]/  - any hex digit
+/[^\s]/     - any non-whitespace character
 ```
 
 ## Quantifiers
@@ -78,7 +78,7 @@ How many times does the previous thing repeat?
 | `{n,m}` | Between n and m | `/\d{2,4}/` matches "12", "123", "1234" |
 | `{n,}` | n or more | `/\d{2,}/` matches "12", "123", "12345" |
 
-Quantifiers are **greedy** by default — they match as much as possible. Add `?` after them to make them **lazy** (match as little as possible).
+Quantifiers are **greedy** by default - they match as much as possible. Add `?` after them to make them **lazy** (match as little as possible).
 
 ```javascript
 "<h1>Title</h1>".match(/<.+>/)    // matches entire string (greedy)
@@ -87,7 +87,7 @@ Quantifiers are **greedy** by default — they match as much as possible. Add `?
 
 ## Anchors
 
-Anchors don't match characters — they match positions.
+Anchors don't match characters - they match positions.
 
 | Pattern | Meaning | Example |
 |---------|---------|---------|
@@ -98,7 +98,7 @@ Anchors don't match characters — they match positions.
 
 ## Groups and Capturing
 
-Parentheses `()` create capturing groups — they extract the content inside them.
+Parentheses `()` create capturing groups - they extract the content inside them.
 
 ```javascript
 "user@example.com".match(/^(.+)@(.+)$/)
@@ -226,7 +226,7 @@ text.replace(/\w+@\w+\.\w+/g, "[email protected]")
 
 ## Useful Tool
 
-Need to test a regex pattern right now? Try our **[Regex Tester](/tools/regex-tester)** — paste your pattern, enter test strings, and see matches highlighted instantly. Everything runs in your browser.
+Need to test a regex pattern right now? Try our **[Regex Tester](/tools/regex-tester)** - paste your pattern, enter test strings, and see matches highlighted instantly. Everything runs in your browser.
 
 ## Debugging Regex: A Practical Tip
 
@@ -234,9 +234,9 @@ When a regex fails, simplify it. Start with the smallest possible pattern that s
 
 ```javascript
 // Broken: /^https?:\/\/[^\s/$.?#].[^\s]*$/
-// Step 1: /^https?$/  — does this match?
-// Step 2: /^https?:\/\/$/  — now this?
-// Step 3: /^https?:\/\/\w+$/  — add a hostname
+// Step 1: /^https?$/  - does this match?
+// Step 2: /^https?:\/\/$/  - now this?
+// Step 3: /^https?:\/\/\w+$/  - add a hostname
 // Keep going until it breaks
 ```
 
@@ -246,10 +246,10 @@ Most regex errors are from forgetting to escape a metacharacter or using the wro
 
 Regex is powerful but not magic. Don't use it to:
 
-- **Parse HTML** — Use a proper HTML parser. HTML is not a regular language.
-- **Validate complex structured formats** — Use a schema validator for XML or JSON Schema.
-- **Match nested patterns** — Regex can't match balanced parentheses or nested brackets. Use a parser instead.
-- **Process multi-line text casually** — Remember `.` doesn't match newlines unless you use the `s` (dotAll) flag.
+- **Parse HTML** - Use a proper HTML parser. HTML is not a regular language.
+- **Validate complex structured formats** - Use a schema validator for XML or JSON Schema.
+- **Match nested patterns** - Regex can't match balanced parentheses or nested brackets. Use a parser instead.
+- **Process multi-line text casually** - Remember `.` doesn't match newlines unless you use the `s` (dotAll) flag.
 
 Regex is the right tool for: input validation, data extraction, find-and-replace, and pattern matching on flat text.
 

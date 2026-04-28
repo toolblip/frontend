@@ -33,7 +33,7 @@ The Unix epoch is `00:00:00 UTC on January 1, 1970`. A Unix timestamp is the **n
 1704067200 → 2024-01-01 00:00:00 UTC
 ```
 
-The current Unix timestamp (as I'm writing this) is around **1744502400**. By the time you read this, it will be different — timestamps are always moving forward.
+The current Unix timestamp (as I'm writing this) is around **1744502400**. By the time you read this, it will be different - timestamps are always moving forward.
 
 ## Seconds vs Milliseconds: The Classic Developer Bug
 
@@ -52,7 +52,7 @@ This is the single most common timestamp mistake.
 **The rule:** When a timestamp is 13 digits long, it's in milliseconds. When it's 10 digits, it's in seconds.
 
 ```javascript
-// JavaScript — timestamps are ALWAYS milliseconds
+// JavaScript - timestamps are ALWAYS milliseconds
 const now = Date.now();           // 1744502400000 (13 digits)
 const seconds = Math.floor(now / 1000); // 1744502400 (10 digits)
 
@@ -165,10 +165,10 @@ INSERT INTO logs (event_date) VALUES (1704067200000);
 
 **Why timestamps are better:**
 
-1. **No parsing required** — numbers are faster to read and compare than strings
-2. **No ambiguity** — `"2024-01-01"` could be January 1st (US) or January 1st (UK)
-3. **Timezone independent** — the same number works everywhere
-4. **Easy arithmetic** — `end_time - start_time` gives you duration in seconds
+1. **No parsing required** - numbers are faster to read and compare than strings
+2. **No ambiguity** - `"2024-01-01"` could be January 1st (US) or January 1st (UK)
+3. **Timezone independent** - the same number works everywhere
+4. **Easy arithmetic** - `end_time - start_time` gives you duration in seconds
 
 ## When Milliseconds Matter
 
@@ -190,13 +190,13 @@ document.cookie = `token=abc; expires=${new Date(Date.now() + 86400000).toUTCStr
 
 **Leap seconds:** Unix timestamps don't count leap seconds. UTC has had 27 leap seconds added since 1972, but Unix time assumes every day is exactly 86400 seconds. This means Unix time and UTC diverge by the number of leap seconds that have occurred.
 
-**Year 2038 problem:** 32-bit signed integers overflow at `2147483647` (January 19, 2038 at 03:14:07 UTC). Most modern systems use 64-bit integers now, so this is largely a historical curiosity — but legacy 32-bit systems still exist.
+**Year 2038 problem:** 32-bit signed integers overflow at `2147483647` (January 19, 2038 at 03:14:07 UTC). Most modern systems use 64-bit integers now, so this is largely a historical curiosity - but legacy 32-bit systems still exist.
 
 **Negative timestamps:** Unix time supports dates before 1970 using negative numbers. `date -d '1969-12-31' +%s` gives `-86400`.
 
 ## Try It Now
 
-The [Unix Timestamp Converter on Toolblip](/tools/unix-timestamp-converter) converts between human-readable dates and Unix timestamps instantly, with full timezone support. No server calls — everything runs in your browser.
+The [Unix Timestamp Converter on Toolblip](/tools/unix-timestamp-converter) converts between human-readable dates and Unix timestamps instantly, with full timezone support. No server calls - everything runs in your browser.
 
 ---
 

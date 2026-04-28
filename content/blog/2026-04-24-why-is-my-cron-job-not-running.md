@@ -1,11 +1,11 @@
 ---
 title: Why Is My Cron Job Not Running? 10 Common Cron Expression Mistakes
-description: Ten cron expression mistakes that cause most silent failures — OR'd date fields, timezone drift, missing output redirects — with minimal examples and fixes.
+description: Ten cron expression mistakes that cause most silent failures - OR'd date fields, timezone drift, missing output redirects - with minimal examples and fixes.
 date: 2026-04-24
 category: Developer Tools
 ---
 
-Your cron job didn't run. Or worse — it ran sixty times when it should have run once. Cron packs a schedule into five fields of terse punctuation, and a single wrong character turns a nightly backup into a flood of pager alerts.
+Your cron job didn't run. Or worse - it ran sixty times when it should have run once. Cron packs a schedule into five fields of terse punctuation, and a single wrong character turns a nightly backup into a flood of pager alerts.
 
 Almost every "why is my cron not running" moment comes down to the same handful of mistakes. Here they are, each with the symptom you'll see in the wild and the exact fix.
 
@@ -21,7 +21,7 @@ Almost every "why is my cron not running" moment comes down to the same handful 
 * * * * *
 ```
 
-Each field takes a value, a range, a list, a step (`*/n`), or a wildcard (`*`). Position is everything — `0 9 * * *` is not the same as `9 0 * * *`. If you ever aren't sure what a line means, paste it into the [cron expression parser](/tools/cron-parser) and watch the next five run times.
+Each field takes a value, a range, a list, a step (`*/n`), or a wildcard (`*`). Position is everything - `0 9 * * *` is not the same as `9 0 * * *`. If you ever aren't sure what a line means, paste it into the [cron expression parser](/tools/cron-parser) and watch the next five run times.
 
 ---
 
@@ -47,11 +47,11 @@ Both use the step operator `/`, but they start in different places.
 5/10 * * * *   →  5, 15, 25, 35 ...      (start at 5, add 10)
 ```
 
-When you want "every N minutes," lead with `*` — `*/N`. `a/b` is the rarer "start at a, step by b" form.
+When you want "every N minutes," lead with `*` - `*/N`. `a/b` is the rarer "start at a, step by b" form.
 
 ## 3. Day-of-month and day-of-week are OR'd, not AND'd
 
-This one is the ambush — it looks like English and does the opposite.
+This one is the ambush - it looks like English and does the opposite.
 
 ```
 0 9 15 * 1   →  9 AM on the 15th  OR  9 AM on every Monday
@@ -119,7 +119,7 @@ Cron's five positions are fixed. Swap any two and the schedule is unrecognizable
 ```
 30 2 1 * *   →  2:30 AM on the 1st of every month
 30 2 * * 1   →  2:30 AM every Monday
-2 30 1 * *   →  invalid — 30 isn't a valid hour
+2 30 1 * *   →  invalid - 30 isn't a valid hour
 ```
 
 When in doubt, read the line right-to-left and name each field out loud: *day-of-week, month, day-of-month, hour, minute.* If the description doesn't match what you wanted, the expression is wrong.
@@ -138,7 +138,7 @@ So "will it run?" depends on which cron binary ships with your base image. On mo
 
 ## 10. The job ran. You just can't see it.
 
-Default cron mails stdout/stderr to the crontab owner. If your MTA isn't configured — which it isn't, on most containers and cloud VMs — every line of output vanishes.
+Default cron mails stdout/stderr to the crontab owner. If your MTA isn't configured - which it isn't, on most containers and cloud VMs - every line of output vanishes.
 
 Redirect explicitly:
 
@@ -175,7 +175,7 @@ For output-related debugging, a [regex tester](/tools/regex-tester) is handy whe
 
 ## Workaround: sub-minute scheduling
 
-Cron's minimum resolution is one minute — there's no way to say "every 30 seconds" in a single line. When you need sub-minute cadence, pair two entries and offset one with `sleep`:
+Cron's minimum resolution is one minute - there's no way to say "every 30 seconds" in a single line. When you need sub-minute cadence, pair two entries and offset one with `sleep`:
 
 ```
 * * * * * /scripts/job.sh

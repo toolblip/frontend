@@ -26,11 +26,11 @@ A URL slug is the part of a URL that comes after the domain and identifies a spe
 
 Good slugs are:
 
-- **Descriptive** — `json-formatter` tells you exactly what the page is
-- **Short** — fewer characters, easier to type and share
-- **Lowercase** — `JSON-Formatter` and `json-formatter` are different URLs
-- ** hyphen-separated** — `json-formatter` not `json_formatter` or `jsonformatter`
-- **Singular nouns** — `tool` not `tools` (consistency, not a rule)
+- **Descriptive** - `json-formatter` tells you exactly what the page is
+- **Short** - fewer characters, easier to type and share
+- **Lowercase** - `JSON-Formatter` and `json-formatter` are different URLs
+- ** hyphen-separated** - `json-formatter` not `json_formatter` or `jsonformatter`
+- **Singular nouns** - `tool` not `tools` (consistency, not a rule)
 
 ## The Standard for URL Slugs
 

@@ -10,7 +10,7 @@ featuredImage: https://api.radtx.com/gradient/6366f1-ec4899/1200/630
 author: Harun R Rayhan
 ---
 
-Every database row, every document, every session — something has to give each one a unique ID. If you're building anything with a database, you've faced this problem. The solution most developers land on is UUIDs.
+Every database row, every document, every session - something has to give each one a unique ID. If you're building anything with a database, you've faced this problem. The solution most developers land on is UUIDs.
 
 But not all UUIDs are the same. There are five versions, and version 4 is almost always the right one.
 
@@ -23,25 +23,25 @@ UUID stands for Universally Unique Identifier. It's a 128-bit value formatted as
 ```
 
 The format breaks down as:
-- 8 hex digits (32 bits) — time_low
-- 4 hex digits (16 bits) — time_mid  
-- 4 hex digits (16 bits) — time_hi_and_version
-- 4 hex digits (16 bits) — clock_seq
-- 12 hex digits (48 bits) — node
+- 8 hex digits (32 bits) - time_low
+- 4 hex digits (16 bits) - time_mid  
+- 4 hex digits (16 bits) - time_hi_and_version
+- 4 hex digits (16 bits) - clock_seq
+- 12 hex digits (48 bits) - node
 
 That's 2^128 possible values. To put that in perspective: if you generated a billion UUIDs per second, it would take longer than the age of the universe to have a 50% chance of generating a duplicate.
 
 ## The Five UUID Versions
 
-**Version 1** — Time-based. Combines a timestamp and the machine's MAC address. Theoretically sortable by time, but exposes your MAC address (a privacy concern).
+**Version 1** - Time-based. Combines a timestamp and the machine's MAC address. Theoretically sortable by time, but exposes your MAC address (a privacy concern).
 
-**Version 4** — Random. Pure random generation. No timestamp, no MAC address, no clues about when or where it was created.
+**Version 4** - Random. Pure random generation. No timestamp, no MAC address, no clues about when or where it was created.
 
-**Version 5** — SHA-1 hash of a namespace and name. Deterministic — the same input always produces the same UUID. Good for URL-safe namespacing.
+**Version 5** - SHA-1 hash of a namespace and name. Deterministic - the same input always produces the same UUID. Good for URL-safe namespacing.
 
-**Version 7** — Timestamp-based, like v1 but uses Unix timestamp instead of Gregorian. More sortable, less privacy-leaking than v1.
+**Version 7** - Timestamp-based, like v1 but uses Unix timestamp instead of Gregorian. More sortable, less privacy-leaking than v1.
 
-**Version 3** — MD5 hash of namespace + name. Older, less preferred than v5.
+**Version 3** - MD5 hash of namespace + name. Older, less preferred than v5.
 
 ## Why UUID v4 Is the Default Choice
 
@@ -53,7 +53,7 @@ Here's why v4 dominates:
 
 **Collision risk is negligible.** The birthday paradox says you need about 2^64 values before a 50% chance of collision. In practice, you'll never hit that.
 
-**Database-friendly.** UUIDs can be primary keys, foreign keys, session tokens, event IDs — anything that needs uniqueness without coordination.
+**Database-friendly.** UUIDs can be primary keys, foreign keys, session tokens, event IDs - anything that needs uniqueness without coordination.
 
 ## When to Choose a Different Version
 
@@ -94,15 +94,15 @@ Fact: A UUID is 36 characters. In URLs, base64-encode the raw bytes and you get 
 Fact: Yes, sequential IDs have better B-tree locality. But UUID v7 (time-sortable) solves this. For most apps, the difference is negligible.
 
 **Myth: UUIDs can't be used as primary keys.**  
-Fact: They absolutely can. PostgreSQL, MySQL, MongoDB — all handle UUID primary keys fine. The tradeoff is slightly larger indexes, but the benefits almost always outweigh it.
+Fact: They absolutely can. PostgreSQL, MySQL, MongoDB - all handle UUID primary keys fine. The tradeoff is slightly larger indexes, but the benefits almost always outweigh it.
 
 ## Use Toolblip's UUID Generator
 
 Instead of writing a script or installing a library just to get one UUID, use [Toolblip's UUID Generator](/tools/uuid-generator). One click gives you:
 
-- **UUID v4** (random) — default, most common
+- **UUID v4** (random) - default, most common
 - **UUID v1** (time + MAC)
 - **UUID v4 in uppercase** or lowercase
-- **Bulk generation** — up to 100 at once
+- **Bulk generation** - up to 100 at once
 
 No sign-up. No library installation. Just generate and copy.

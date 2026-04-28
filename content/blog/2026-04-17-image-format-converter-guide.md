@@ -16,7 +16,7 @@ The first step is choosing the right format.
 
 ## The Four Main Web Image Formats
 
-### JPEG — Best for photographs
+### JPEG - Best for photographs
 
 JPEG uses lossy compression to achieve tiny file sizes on photographic images. The human eye is surprisingly forgiving of color quality loss in photographs, which is why JPEGs can compress so aggressively.
 
@@ -27,7 +27,7 @@ JPEG uses lossy compression to achieve tiny file sizes on photographic images. T
 <img src="photo.jpg" alt="Mountain landscape" />
 ```
 
-### PNG — Best for graphics with transparency
+### PNG - Best for graphics with transparency
 
 PNG uses lossless compression. It supports alpha transparency (partial opacity) and preserves sharp edges perfectly. File sizes are larger than JPEG for photos, but perfect for graphics.
 
@@ -38,18 +38,18 @@ PNG uses lossless compression. It supports alpha transparency (partial opacity) 
 <img src="logo.png" alt="Company logo with transparent background" />
 ```
 
-### WebP — The modern general-purpose format
+### WebP - The modern general-purpose format
 
 WebP delivers 25–35% smaller file sizes than JPEG for equivalent quality, with lossless and lossy modes plus transparency support. It's supported by all modern browsers.
 
 **Best for:** Any image on the modern web. Use it as your default.  
-**Avoid for:** Very old browser support (IE 11 — but at this point you probably don't need it).
+**Avoid for:** Very old browser support (IE 11 - but at this point you probably don't need it).
 
 ```html
 <img src="photo.webp" alt="Photo optimized as WebP" />
 ```
 
-### AVIF — The new high-efficiency standard
+### AVIF - The new high-efficiency standard
 
 AVIF offers 50% smaller files than JPEG at equivalent quality, with excellent HDR support and transparency. Browser support is good (Chrome, Firefox, Safari 16.4+). Fallback to WebP for older Safari.
 
@@ -106,12 +106,12 @@ The savings are real and significant.
 
 Instead of opening Photoshop or running CLI commands, use the browser-based converter:
 
-1. **Upload** your image (JPEG, PNG, GIF, BMP, TIFF, WebP — all input formats supported)
-2. **Choose output format** — WebP, AVIF, JPEG, PNG, or ICO
+1. **Upload** your image (JPEG, PNG, GIF, BMP, TIFF, WebP - all input formats supported)
+2. **Choose output format** - WebP, AVIF, JPEG, PNG, or ICO
 3. **Adjust quality** if using lossy formats
 4. **Download** the converted file
 
-Batch conversion is supported — convert up to 20 images at once.
+Batch conversion is supported - convert up to 20 images at once.
 
 No server upload. All processing happens in your browser. Your images never leave your machine.
 
@@ -142,14 +142,14 @@ For WordPress, plugins like ShortPixel or Imagify handle this automatically on u
 
 Image format has a direct impact on your Core Web Vitals:
 
-**LCP (Largest Contentful Paint)** — A large hero image in WebP instead of JPEG loads faster, improving your LCP score. LCP threshold: under 2.5s is "good."
+**LCP (Largest Contentful Paint)** - A large hero image in WebP instead of JPEG loads faster, improving your LCP score. LCP threshold: under 2.5s is "good."
 
-**CLS (Cumulative Layout Shift)** — Always specify `width` and `height` attributes on `<img>` elements so the browser reserves space before the image loads.
+**CLS (Cumulative Layout Shift)** - Always specify `width` and `height` attributes on `<img>` elements so the browser reserves space before the image loads.
 
-**INP (Interaction to Next Paint)** — Images aren't directly measured by INP, but lighter pages load faster, improving perceived responsiveness.
+**INP (Interaction to Next Paint)** - Images aren't directly measured by INP, but lighter pages load faster, improving perceived responsiveness.
 
 ## Bottom Line
 
 Switching from JPEG/PNG to WebP is the single highest-leverage image optimization you can do. It requires no changes to your HTML structure (just swap the filename), delivers immediate file size reductions, and is supported everywhere.
 
-Use [Toolblip's Image Format Converter](/tools/image-format-converter) for one-off conversions and batch processing — no software to install, no account needed.
+Use [Toolblip's Image Format Converter](/tools/image-format-converter) for one-off conversions and batch processing - no software to install, no account needed.

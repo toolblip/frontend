@@ -2,7 +2,7 @@
 title: 'How to Pretty-Print (and Minify) JSON in Any Language'
 description: >-
   A practical cheatsheet for formatting and minifying JSON from the command line,
-  Python, Node.js, PHP, and the browser — plus the fastest no-install option for
+  Python, Node.js, PHP, and the browser - plus the fastest no-install option for
   when you just need it done now.
 date: '2026-04-23'
 category: Developer Tools
@@ -22,7 +22,7 @@ featuredImage: 'https://api.radtx.com/gradient/14b8a6-f59e0b/1200/630'
 
 JSON is everywhere. Most of the time you get it formatted. Then you get a single-line blob from a log file, an API response, or a colleague's config, and suddenly you can't read anything.
 
-This is a cheatsheet for the most common ways to pretty-print and minify JSON — from the shell, from Python, from Node.js, from PHP, and from the browser. Bookmark it.
+This is a cheatsheet for the most common ways to pretty-print and minify JSON - from the shell, from Python, from Node.js, from PHP, and from the browser. Bookmark it.
 
 ## Pretty-Print JSON in the Browser (No Install)
 
@@ -146,7 +146,7 @@ print(json.dumps(data, indent=2, sort_keys=True))
 Minify in Python:
 ```python
 compact = json.dumps(data, separators=(',', ':'))
-# No spaces after colons or commas — smallest possible output
+# No spaces after colons or commas - smallest possible output
 ```
 
 Read from a string (e.g., from an API response):
@@ -162,7 +162,7 @@ Common pattern for checking JSON config in CI/CD:
 
 ```bash
 #!/bin/bash
-# validate-json.sh — exits 0 if valid JSON, 1 otherwise
+# validate-json.sh - exits 0 if valid JSON, 1 otherwise
 python3 -c "import json; json.load(open('$1'))" && echo "Valid JSON" || echo "Invalid JSON"
 ```
 
@@ -312,7 +312,7 @@ curl -s https://api.example.com/data | jq '[.items[] | select(.status == "active
 
 If you're on a system without Python or jq, and you don't have Node installed:
 
-**Open [Toolblip JSON Formatter](/tools/json-formatter)** — it's a browser tab, works on any OS, and handles JSON of any size.
+**Open [Toolblip JSON Formatter](/tools/json-formatter)** - it's a browser tab, works on any OS, and handles JSON of any size.
 
 Paste a malformed JSON blob and it shows you:
 - The formatted output with syntax highlighting
@@ -336,13 +336,13 @@ Paste a malformed JSON blob and it shows you:
 
 ## When to Use Which
 
-- **Terminal + `jq`** — best for piping, scripting, filtering JSON in pipelines
-- **Python `json` module** — when you're already in a Python script or need `sort_keys`
-- **Node `JSON.stringify`** — quick Node REPL debugging, no dependencies
-- **PHP `json_encode`** — format API responses before returning them during development
-- **Browser tool** — when you get handed a blob and just need to read it right now
+- **Terminal + `jq`** - best for piping, scripting, filtering JSON in pipelines
+- **Python `json` module** - when you're already in a Python script or need `sort_keys`
+- **Node `JSON.stringify`** - quick Node REPL debugging, no dependencies
+- **PHP `json_encode`** - format API responses before returning them during development
+- **Browser tool** - when you get handed a blob and just need to read it right now
 
-For everything else, there's the [Toolblip JSON Formatter](/tools/json-formatter) — open it, paste, understand your JSON in 3 seconds.
+For everything else, there's the [Toolblip JSON Formatter](/tools/json-formatter) - open it, paste, understand your JSON in 3 seconds.
 
 ---
 

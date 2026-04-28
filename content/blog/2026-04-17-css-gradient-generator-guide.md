@@ -24,7 +24,7 @@ background: linear-gradient(
 
 And you have no idea if that's going to look good. You add it to your site, hit refresh, and... either it looks amazing or it looks terrible. There's no in-between, and there's no easy way to iterate.
 
-That's why gradient generators exist — and why we built one into Toolblip.
+That's why gradient generators exist - and why we built one into Toolblip.
 
 ## What Is a CSS Gradient?
 
@@ -40,7 +40,7 @@ CSS supports three main gradient types:
 
 ## Linear Gradients: The Most Common
 
-A linear gradient moves in one direction — left-to-right, top-to-bottom, or any angle you specify.
+A linear gradient moves in one direction - left-to-right, top-to-bottom, or any angle you specify.
 
 ```css
 /* Top to bottom (default) */
@@ -121,10 +121,10 @@ Conic gradients are great for creating pie charts, color wheels, and loading spi
 
 Instead of guessing angles and color stops, use the live preview:
 
-1. **Pick your gradient type** — linear, radial, or conic
-2. **Add colors** — click to add stops, drag to reposition
-3. **Adjust the angle** — scrub the angle slider to see the result instantly
-4. **Copy the CSS** — click and you get copy-ready code
+1. **Pick your gradient type** - linear, radial, or conic
+2. **Add colors** - click to add stops, drag to reposition
+3. **Adjust the angle** - scrub the angle slider to see the result instantly
+4. **Copy the CSS** - click and you get copy-ready code
 
 The preview updates as you type, so there's no lag between what you configure and what you'll get.
 

@@ -12,7 +12,7 @@ author: Harun R Rayhan
 
 Markdown is everywhere. GitHub READMEs, documentation sites, blog posts (including this one), pull request comments, forum posts. If you're a developer and not using Markdown, you're spending extra time writing HTML by hand.
 
-But the web runs on HTML. So at some point, your Markdown needs to become HTML. That's what a Markdown to HTML converter does — and it's one of those tools that once you use it right, you wonder how you ever lived without it.
+But the web runs on HTML. So at some point, your Markdown needs to become HTML. That's what a Markdown to HTML converter does - and it's one of those tools that once you use it right, you wonder how you ever lived without it.
 
 ## What Is Markdown?
 
@@ -34,7 +34,7 @@ Markdown is a lightweight text-to-HTML conversion syntax. It uses simple, readab
 ```code block```
 ```
 
-The goal is text that's readable as-is, even before conversion. Compare a raw Markdown file to an HTML file — the Markdown is obviously readable; the HTML is not.
+The goal is text that's readable as-is, even before conversion. Compare a raw Markdown file to an HTML file - the Markdown is obviously readable; the HTML is not.
 
 ## Why Convert Markdown to HTML?
 

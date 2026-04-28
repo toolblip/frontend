@@ -128,8 +128,8 @@ const ENDPOINTS: Endpoint[] = [
     description: 'Create a new user account. Returns a Bearer token to use in authenticated requests.',
     bodyParams: [
       { name: 'name', type: 'string', required: true, description: 'Full display name' },
-      { name: 'email', type: 'string', required: true, description: 'Email address — must be unique' },
-      { name: 'password', type: 'string', required: true, description: 'Password — minimum 8 characters' },
+      { name: 'email', type: 'string', required: true, description: 'Email address - must be unique' },
+      { name: 'password', type: 'string', required: true, description: 'Password - minimum 8 characters' },
       { name: 'password_confirmation', type: 'string', required: true, description: 'Must match password exactly' },
     ],
     responseFields: [
@@ -384,7 +384,7 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
       id={ep.id}
       className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transition-all hover:border-green-200 dark:hover:border-green-800 scroll-mt-20"
     >
-      {/* Header — always visible */}
+      {/* Header - always visible */}
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center gap-3 px-5 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-left"
@@ -483,7 +483,7 @@ export default function ApiDocsClient() {
             </div>
             <div>
               <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">API Documentation</h1>
-              <p className="text-slate-500 dark:text-slate-400 mt-0.5 text-sm">Toolblip REST API reference — integrate tools and user auth into any app</p>
+              <p className="text-slate-500 dark:text-slate-400 mt-0.5 text-sm">Toolblip REST API reference - integrate tools and user auth into any app</p>
             </div>
           </div>
 

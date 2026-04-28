@@ -18,11 +18,11 @@ You've got two options. Option one: open a spreadsheet, paste the data, use a fo
 
 Data duplication is everywhere:
 
-- **Form submissions** — users submit the same form twice (double-checkout protection fails)
-- **Database exports** — a JOIN query without a DISTINCT clause produces duplicates
-- **Scraping** — a crawler visits the same URL via different paths
-- **Manual copy-paste** — you paste the same block twice without realizing
-- **Version control** — git merge conflicts leave duplicate entries
+- **Form submissions** - users submit the same form twice (double-checkout protection fails)
+- **Database exports** - a JOIN query without a DISTINCT clause produces duplicates
+- **Scraping** - a crawler visits the same URL via different paths
+- **Manual copy-paste** - you paste the same block twice without realizing
+- **Version control** - git merge conflicts leave duplicate entries
 
 The list goes on. Point is: duplicates happen, and cleaning them by hand is an insult to your time.
 
@@ -50,7 +50,7 @@ The case-sensitivity option matters. `hello` and `HELLO` are the same line if yo
 
 ### Email list cleaning
 
-You have a CSV of newsletter subscribers with 12,000 rows. Some emails appear multiple times (signed up for multiple lists). Remove duplicates and your ESP sends 12,000 unique emails instead of 13,400 total sends — better deliverability, cleaner metrics.
+You have a CSV of newsletter subscribers with 12,000 rows. Some emails appear multiple times (signed up for multiple lists). Remove duplicates and your ESP sends 12,000 unique emails instead of 13,400 total sends - better deliverability, cleaner metrics.
 
 ### Product ID audit
 
@@ -80,15 +80,15 @@ JavaScript's `Set` preserves insertion order, so iterating through lines and add
 
 Browser-based deduplication handles millions of lines without issue for plain text. A 10MB text file with 100,000 lines takes under a second to process in JavaScript.
 
-The practical limit is usually memory, not speed. If your input is huge, your browser might slow down — but for typical use (emails, IDs, URLs, short text), it's instantaneous.
+The practical limit is usually memory, not speed. If your input is huge, your browser might slow down - but for typical use (emails, IDs, URLs, short text), it's instantaneous.
 
 ## Use Toolblip's Remove Duplicate Lines
 
 No account. No server. Just paste, click, copy:
 
-1. **Paste your text** — however many lines
+1. **Paste your text** - however many lines
 2. **Toggle case-sensitivity** if needed
-3. **Click "Remove Duplicates"** — get instant results
-4. **Copy the clean list** — use it wherever
+3. **Click "Remove Duplicates"** - get instant results
+4. **Copy the clean list** - use it wherever
 
 [Remove Duplicate Lines](/tools/remove-duplicate-lines) handles lists up to hundreds of thousands of lines in your browser. Nothing is sent to any server.

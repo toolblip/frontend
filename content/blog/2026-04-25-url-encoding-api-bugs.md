@@ -5,17 +5,17 @@ date: 2026-04-25
 category: Developer Tools
 ---
 
-If you've ever stared at a 400 Bad Request error and had no idea why — you're not alone. URL encoding bugs are one of the most frustrating, least-understood issues in web development. They don't throw loud errors. They silently corrupt your data.
+If you've ever stared at a 400 Bad Request error and had no idea why - you're not alone. URL encoding bugs are one of the most frustrating, least-understood issues in web development. They don't throw loud errors. They silently corrupt your data.
 
 This guide breaks down the real-world encoding mistakes that break APIs, with examples you can run in your browser right now using the [Toolblip URL Encoder/Decoder](/tools/url-encode).
 
 ## What Is URL Encoding, Really?
 
-URLs are designed to transmit raw bytes. But the characters in a URL have special meaning: `?` marks the query string start, `&` separates parameters, `/` divides path segments, and `#` denotes a fragment. Any character that conflicts with those roles needs to be **percent-encoded** — converted to a `%` followed by two hexadecimal digits representing the byte value.
+URLs are designed to transmit raw bytes. But the characters in a URL have special meaning: `?` marks the query string start, `&` separates parameters, `/` divides path segments, and `#` denotes a fragment. Any character that conflicts with those roles needs to be **percent-encoded** - converted to a `%` followed by two hexadecimal digits representing the byte value.
 
 For example, a space (ASCII 32) becomes `%20`. An ampersand (`&`) becomes `%26`. A question mark (`?`) becomes `%3F`.
 
-The full set of characters that don't need encoding — the **unreserved set** — is:
+The full set of characters that don't need encoding - the **unreserved set** - is:
 
 ```
 A-Z a-z 0-9 - _ . ~
@@ -27,7 +27,7 @@ Everything else should be encoded if it appears in a URL component where it has 
 
 ### Rule 1: Encode *Before* Inserting Into a URL
 
-This sounds obvious. But the mistake is doing it twice — or not at all.
+This sounds obvious. But the mistake is doing it twice - or not at all.
 
 Here's a typical flow:
 
@@ -43,7 +43,7 @@ What actually gets sent:
 GET /search?q=bread & butter HTTP/1.1
 ```
 
-The `&` splits the query parameter. Your backend sees `q=bread` and a second parameter called ` butter` with no value. The API might return 400, or worse — it might silently ignore the extra parameter and return wrong results.
+The `&` splits the query parameter. Your backend sees `q=bread` and a second parameter called ` butter` with no value. The API might return 400, or worse - it might silently ignore the extra parameter and return wrong results.
 
 The fix:
 
@@ -67,7 +67,7 @@ const encoded = encodeURIComponent(rawValue);
 // "hello%2520world"  ← % becomes %25, double-encoded!
 ```
 
-Now your server receives `hello%2520world` instead of `hello%20world`. The `%20` you worked hard to encode got encoded *again* into `%2520`. Decode once, and you get `hello%20world` — still encoded. Decode twice, and finally: `hello world`.
+Now your server receives `hello%2520world` instead of `hello%20world`. The `%20` you worked hard to encode got encoded *again* into `%2520`. Decode once, and you get `hello%20world` - still encoded. Decode twice, and finally: `hello world`.
 
 Double-encoding is insidious because the URL *looks* valid. It passes syntax checks. The bug only shows up as corrupted data in your database or wrong search results.
 
@@ -86,7 +86,7 @@ logger.log(`Request: ${url}`); // or any template interpolation
 // → "hello%2520world" in logs
 ```
 
-Result: you look at your logs and see `hello%2520world`. You think something is wrong. Nothing is wrong — it's just double-encoded in the display. But if your monitoring scrapes that log and tries to query it, things break.
+Result: you look at your logs and see `hello%2520world`. You think something is wrong. Nothing is wrong - it's just double-encoded in the display. But if your monitoring scrapes that log and tries to query it, things break.
 
 **Fix:** Track exactly where encoding happens in your stack. Encode at the boundary (when constructing the URL), and nowhere else.
 
@@ -100,7 +100,7 @@ const value = encodeURIComponent("a=b&c=d"); // "a%3Db%26c%3Dd"
 
 // Use encodeURI() for full URLs you want to preserve structure
 const url = encodeURI("https://example.com/path?a=b&c=d");
-// "https://example.com/path?a=b&c=d"  — separators preserved
+// "https://example.com/path?a=b&c=d"  - separators preserved
 ```
 
 If you use `encodeURI()` on a query value, you get the wrong result. If you use `encodeURIComponent()` on a full URL, you destroy the structure:
@@ -127,7 +127,7 @@ const searchQuery = decodeURIComponent(req.query.q);
 // → SQL injection risk if you didn't escape properly
 ```
 
-Actually, in most modern frameworks the auto-decode is fine — but the danger is when you mix raw and decoded values, or when you store the encoded string but display the decoded one inconsistently.
+Actually, in most modern frameworks the auto-decode is fine - but the danger is when you mix raw and decoded values, or when you store the encoded string but display the decoded one inconsistently.
 
 ## How to Debug URL Encoding Issues
 
@@ -155,7 +155,7 @@ const fullyDecoded = decodeURIComponent(decoded);
 const reEncoded = encodeURIComponent(fullyDecoded);
 ```
 
-You can do this instantly in your browser with the [Toolblip URL Encoder/Decoder](/tools/url-encode) — paste any string, see both encoded and decoded output, and cycle through multiple decode passes.
+You can do this instantly in your browser with the [Toolblip URL Encoder/Decoder](/tools/url-encode) - paste any string, see both encoded and decoded output, and cycle through multiple decode passes.
 
 ### Step 3: Check the Raw HTTP Request
 
@@ -169,14 +169,14 @@ Look at exactly what's being sent. Is `%20` in the URL, or is it a literal space
 
 ## The Base64 URL-Safe Variant
 
-Standard Base64 uses `+`, `/`, and `=` — characters that conflict with URL encoding. When you're putting Base64 in a URL parameter, you need the **URL-safe variant**:
+Standard Base64 uses `+`, `/`, and `=` - characters that conflict with URL encoding. When you're putting Base64 in a URL parameter, you need the **URL-safe variant**:
 
 ```
 Standard Base64:  Y+Bz8A==  ← contains +, /, =
 URL-safe Base64:  Y-Bz8A    ← uses - and _ instead, drops =
 ```
 
-If you're putting tokens, signed data, or encoded payloads in URLs, URL-safe Base64 isn't optional — standard Base64 will break your URLs.
+If you're putting tokens, signed data, or encoded payloads in URLs, URL-safe Base64 isn't optional - standard Base64 will break your URLs.
 
 The [Toolblip Base64 encoder](/tools/base64) supports URL-safe mode. Paste any string, check "URL-safe output," and get a variant that won't corrupt your URLs.
 
@@ -208,13 +208,13 @@ The loop continued. Eventually, one system decoded three times and got: `C ` (ju
 
 No signup. No server round-trips. Everything runs in your browser.
 
-- [URL Encoder/Decoder](/tools/url-encode) — encode, decode, and debug percent-encoded strings
-- [Base64 Encode/Decode](/tools/base64) — with URL-safe mode for API tokens and URL payloads
+- [URL Encoder/Decoder](/tools/url-encode) - encode, decode, and debug percent-encoded strings
+- [Base64 Encode/Decode](/tools/base64) - with URL-safe mode for API tokens and URL payloads
 
 ## Bottom Line
 
 URL encoding bugs are invisible until they aren't. A `+` sign in a search query becomes a space. A `%` in a discount code becomes `%25`. A properly-encoded URL passes every syntax check but carries corrupted data.
 
-The fix is knowing exactly where encoding happens in your stack — and making sure it happens exactly once, at the right layer. Once you have that, these bugs become trivial to debug.
+The fix is knowing exactly where encoding happens in your stack - and making sure it happens exactly once, at the right layer. Once you have that, these bugs become trivial to debug.
 
 Start with the [Toolblip URL Encoder/Decoder](/tools/url-encode). Paste your broken URL. Decode it fully. You'll see exactly what's happening.

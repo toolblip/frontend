@@ -1,7 +1,7 @@
 ---
 title: 'The Ultimate Guide to Image Conversion and Optimization'
 description: >-
-  WebP, PNG, JPEG — choosing the right image format can make or break your site''s performance. Learn when to use each format, how browser-based conversion works, and why client-side processing is better for your privacy.
+  WebP, PNG, JPEG - choosing the right image format can make or break your site''s performance. Learn when to use each format, how browser-based conversion works, and why client-side processing is better for your privacy.
 slug: image-conversion-optimization-guide
 date: 2026-04-21T00:00:00.000Z
 category: Image
@@ -28,9 +28,9 @@ Every image format makes different trade-offs. Understanding those trade-offs is
 |--------|----------|-------------|-------------|
 | JPEG   | Photos, complex images | No | Lossy |
 | PNG    | Graphics, logos, screenshots | Yes | Lossless |
-| WebP   | Everything — modern replacement | Yes | Both |
+| WebP   | Everything - modern replacement | Yes | Both |
 
-**WebP** is the format you should reach for first. It produces files 25–35% smaller than JPEG at equivalent quality, and supports both lossy and lossless compression with transparency. The only reason not to use WebP is browser compatibility — and at this point, [WebP has 98%+ global browser support](https://caniuse.com/webp).
+**WebP** is the format you should reach for first. It produces files 25–35% smaller than JPEG at equivalent quality, and supports both lossy and lossless compression with transparency. The only reason not to use WebP is browser compatibility - and at this point, [WebP has 98%+ global browser support](https://caniuse.com/webp).
 
 ## When to Use Each Format
 
@@ -54,13 +54,13 @@ Every image format makes different trade-offs. Understanding those trade-offs is
 
 Traditionally, converting images meant uploading them to a server or downloading a desktop app like Photoshop. That's slow, raises privacy concerns (your images are on someone else's machine), and requires software installation.
 
-Browser-based conversion uses the Canvas API. JavaScript loads your image into memory, draws it onto an invisible `<canvas>` element, and then exports it in the desired format — entirely on your device. **No upload. No server. No third party.** Your image never leaves your browser.
+Browser-based conversion uses the Canvas API. JavaScript loads your image into memory, draws it onto an invisible `<canvas>` element, and then exports it in the desired format - entirely on your device. **No upload. No server. No third party.** Your image never leaves your browser.
 
 This means:
 - ⚡ Conversion is nearly instant
 - 🔒 Your images stay private
 - 🌐 It works offline once the page loads
-- 📱 It works on any device — phone, tablet, Chromebook
+- 📱 It works on any device - phone, tablet, Chromebook
 
 ## The Privacy Benefit of Client-Side Processing
 
@@ -73,21 +73,21 @@ With client-side processing, the math is simple: if the image never leaves your 
 
 ## Tools to Convert and Optimize Your Images
 
-If you're ready to start optimizing, Toolblip has everything you need — all processing happens in your browser:
+If you're ready to start optimizing, Toolblip has everything you need - all processing happens in your browser:
 
-- **[Image Resizer](/tools/image-resizer)** — Resize and convert images in one place. Pick your format, set dimensions, and download the result.
-- **[Favicon Generator](/tools/favicon-generator)** — Need a favicon in multiple sizes? This tool generates all the formats you need from a single upload, ready to drop into your project.
-- **[Image to Base64](/tools/image-to-base64)** — Convert any image to a Base64 data URL. Useful for embedding images directly in CSS or HTML without external files.
+- **[Image Resizer](/tools/image-resizer)** - Resize and convert images in one place. Pick your format, set dimensions, and download the result.
+- **[Favicon Generator](/tools/favicon-generator)** - Need a favicon in multiple sizes? This tool generates all the formats you need from a single upload, ready to drop into your project.
+- **[Image to Base64](/tools/image-to-base64)** - Convert any image to a Base64 data URL. Useful for embedding images directly in CSS or HTML without external files.
 
 ## Quick Tips for Better Image Optimization
 
-1. **Set a quality level.** For JPEG and lossy WebP, 80% quality is usually the sweet spot — nearly invisible difference in quality, significant file size reduction.
+1. **Set a quality level.** For JPEG and lossy WebP, 80% quality is usually the sweet spot - nearly invisible difference in quality, significant file size reduction.
 2. **Resize before uploading.** A 4000px-wide image displayed at 400px wide is wasteful. Resize to the maximum display size.
 3. **Use responsive images.** Serve different sizes for different screens. A phone shouldn't download a 2MB hero image.
 4. **Consider lazy loading.** Images below the fold don't need to load immediately. Add `loading="lazy"` to your `<img>` tags.
 
 ## Start Optimizing Today
 
-Image optimization isn't a one-time task — it's a habit. The good news is it takes seconds. Pick up an image, run it through a browser-based converter, and notice the difference in load times. Your visitors (and your Core Web Vitals scores) will thank you.
+Image optimization isn't a one-time task - it's a habit. The good news is it takes seconds. Pick up an image, run it through a browser-based converter, and notice the difference in load times. Your visitors (and your Core Web Vitals scores) will thank you.
 
 With tools like Toolblip's [Image Resizer](/tools/image-resizer), there's no excuse to ship oversized images. Everything runs in your browser, nothing leaves your device, and you're done in under a minute.

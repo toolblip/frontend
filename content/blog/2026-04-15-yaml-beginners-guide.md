@@ -20,7 +20,7 @@ featuredImage: 'https://api.radtx.com/gradient/0ea5e9-8b5cf6/1200/630'
 
 # YAML for JSON Developers: A Practical Introduction
 
-If you work with APIs or configuration files, you've likely encountered YAML. Docker Compose, Kubernetes, GitHub Actions, Ansible — all use YAML. This guide gets you productive fast.
+If you work with APIs or configuration files, you've likely encountered YAML. Docker Compose, Kubernetes, GitHub Actions, Ansible - all use YAML. This guide gets you productive fast.
 
 ## YAML vs JSON at a Glance
 
@@ -79,7 +79,7 @@ version: 1.0
 
 ### 2. Type Coercion Can Bite You
 
-YAML auto-converts values to types — sometimes unexpectedly.
+YAML auto-converts values to types - sometimes unexpectedly.
 
 ```yaml
 # ⚠️ "yes" becomes boolean true
@@ -146,10 +146,10 @@ const config = yaml.load(fs.readFileSync('config.yaml', 'utf8'));
 
 ## Key Takeaways
 
-1. **Spaces only** — no tabs, ever
+1. **Spaces only** - no tabs, ever
 2. **Quotes protect strings** from accidental type conversion
-3. **Comments are free** — use them in configuration files
-4. **Automatic types** — `yes`/`no` become booleans, `42` becomes a number
+3. **Comments are free** - use them in configuration files
+4. **Automatic types** - `yes`/`no` become booleans, `42` becomes a number
 5. **`---` separates documents** in multi-document files
 
 YAML is a superpower for configuration. Once you know the gotchas, it's much more readable than JSON for human-edited files.

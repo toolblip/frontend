@@ -1,6 +1,6 @@
 ---
 title: "Top 5 Developer Tools You Should Bookmark"
-description: "JSON formatter, Base64 encoder, regex tester, cron parser, and hash generator — the five tools that belong in every developer's bookmark bar."
+description: "JSON formatter, Base64 encoder, regex tester, cron parser, and hash generator - the five tools that belong in every developer's bookmark bar."
 date: "2026-04-15"
 category: "Developer Tools"
 tags: ["bookmarks", "productivity", "developer-tools", "utilities"]
@@ -10,7 +10,7 @@ featuredImage: ""
 slug: "top-5-developer-tools-bookmark"
 ---
 
-Every developer has a set of tools they reach for multiple times a day. Not the big ones — not VS Code, not Docker, not Git. The small ones. The utilities that save you a Google search and a context switch. These are the five you should have bookmarked right now.
+Every developer has a set of tools they reach for multiple times a day. Not the big ones - not VS Code, not Docker, not Git. The small ones. The utilities that save you a Google search and a context switch. These are the five you should have bookmarked right now.
 
 ## 1. JSON Formatter
 
@@ -20,7 +20,7 @@ Bookmark this one first. You'll use it every day.
 
 ## 2. Base64 Encoder/Decoder
 
-Base64 shows up everywhere — in API authentication headers, in data URIs, in JWTs, in configuration files. Needing to encode or decode Base64 is constant, and the browser's built-in solutions require writing throwaway code. A dedicated Base64 tool handles text, files, and URLs cleanly. Some even auto-detect whether you're trying to decode something that isn't actually Base64.
+Base64 shows up everywhere - in API authentication headers, in data URIs, in JWTs, in configuration files. Needing to encode or decode Base64 is constant, and the browser's built-in solutions require writing throwaway code. A dedicated Base64 tool handles text, files, and URLs cleanly. Some even auto-detect whether you're trying to decode something that isn't actually Base64.
 
 ## 3. Regex Tester
 
@@ -38,4 +38,4 @@ Need to quickly hash a string with SHA-256, MD5, or bcrypt? Writing a one-off sc
 
 These five tools cover a huge chunk of the daily utility work that would otherwise send you down a Stack Overflow rabbit hole. Bookmark them once, use them forever.
 
-**All five are available free at [toolblip.com/tools](https://toolblip.com/tools) — no install required.**
+**All five are available free at [toolblip.com/tools](https://toolblip.com/tools) - no install required.**

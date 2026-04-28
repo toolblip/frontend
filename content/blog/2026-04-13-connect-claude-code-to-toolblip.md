@@ -1,8 +1,8 @@
 ---
 title: How to Connect Claude Code to Toolblip in 5 Minutes
 description: >-
-  Give Claude Code access to every Toolblip developer tool — JSON formatter,
-  Base64 encoder, regex tester, and more — via the MCP protocol.
+  Give Claude Code access to every Toolblip developer tool - JSON formatter,
+  Base64 encoder, regex tester, and more - via the MCP protocol.
 slug: connect-claude-code-to-toolblip
 date: 2026-04-13T00:00:00.000Z
 category: Tutorial
@@ -20,25 +20,25 @@ featuredImage: 'https://api.radtx.com/gradient/6b7280-374151/1200/630'
 
 # How to Connect Claude Code to Toolblip in 5 Minutes
 
-Every developer has those repetitive moments — formatting a JSON response, generating a UUID for a test record, validating a cron expression before shipping a deployment script. They only take a few seconds each, but they add up, and they break your flow.
+Every developer has those repetitive moments - formatting a JSON response, generating a UUID for a test record, validating a cron expression before shipping a deployment script. They only take a few seconds each, but they add up, and they break your flow.
 
-Now imagine Claude Code handling those tasks for you — without you leaving the editor, copying anything to a browser, or context-switching at all. With the Model Context Protocol (MCP) and Toolblip's MCP server, that workflow is real and it takes about 5 minutes to set up.
+Now imagine Claude Code handling those tasks for you - without you leaving the editor, copying anything to a browser, or context-switching at all. With the Model Context Protocol (MCP) and Toolblip's MCP server, that workflow is real and it takes about 5 minutes to set up.
 
 This guide walks you through every step, from installation to your first real-world use case.
 
 ## What Is MCP, and Why Does It Matter Here?
 
-MCP — the Model Context Protocol — is an open standard that lets AI assistants connect to external tools and data sources in a structured, secure way. Rather than relying on ad-hoc prompts or fragile screen-scraping, MCP defines a contract: the AI knows exactly what tools are available, what arguments they take, and how to interpret the results.
+MCP - the Model Context Protocol - is an open standard that lets AI assistants connect to external tools and data sources in a structured, secure way. Rather than relying on ad-hoc prompts or fragile screen-scraping, MCP defines a contract: the AI knows exactly what tools are available, what arguments they take, and how to interpret the results.
 
-When Claude Code connects to Toolblip via MCP, it gains access to a suite of client-side developer utilities — things like JSON formatters, hash generators, and regex testers — as if they were native capabilities. The difference is that these tools run entirely in your browser. No data leaves your machine.
+When Claude Code connects to Toolblip via MCP, it gains access to a suite of client-side developer utilities - things like JSON formatters, hash generators, and regex testers - as if they were native capabilities. The difference is that these tools run entirely in your browser. No data leaves your machine.
 
 ## Prerequisites
 
 Before you start, make sure you have:
 
 - **Claude Code** installed and working (`npx @anthropic/claude-code` or via the Claude.ai desktop app)
-- **Node.js 18+** — required to run the MCP server package
-- **npm or yarn** — for installing the package
+- **Node.js 18+** - required to run the MCP server package
+- **npm or yarn** - for installing the package
 - A terminal and about 5 minutes
 
 That's it. No accounts, no API keys, no server to deploy.
@@ -96,7 +96,7 @@ Open this file in your editor. If it doesn't exist yet, create it. Then add the 
 
 A few things to note about this configuration:
 
-- The key `"toolblip"` is the server name. You can rename it to anything — it's how Claude Code refers to this server in logs and debugging.
+- The key `"toolblip"` is the server name. You can rename it to anything - it's how Claude Code refers to this server in logs and debugging.
 - Using `"command": "npx"` means the package is fetched and run on demand. This keeps the config clean but requires an internet connection on first run.
 - If you installed the package globally and want to skip the network fetch, you can point directly to the binary:
 
@@ -114,7 +114,7 @@ Save the file.
 
 ## Step 3: Restart Claude Code
 
-If Claude Code is already running, quit it completely and reopen it. New MCP servers are discovered on startup — a running instance won't pick up config changes automatically.
+If Claude Code is already running, quit it completely and reopen it. New MCP servers are discovered on startup - a running instance won't pick up config changes automatically.
 
 When Claude Code starts, you should see the Toolblip server loaded in the startup log. It looks something like this:
 
@@ -143,7 +143,7 @@ Format and validate this JSON. If it's invalid, tell me what's wrong:
 {"name":"Toolblip","version":"1.0","active":true,"users":["Alice","Bob","Carol"],"config":{"theme":"dark","notifications":true}}
 ```
 
-Claude Code will recognize the intent, call the `json_formatter` tool through the MCP server, and return clean, indented JSON. If the JSON had a syntax error, it would tell you exactly where — same as toolblip.com's validator.
+Claude Code will recognize the intent, call the `json_formatter` tool through the MCP server, and return clean, indented JSON. If the JSON had a syntax error, it would tell you exactly where - same as toolblip.com's validator.
 
 ### Example 2: Generate a UUID
 
@@ -161,7 +161,7 @@ Before adding a cron schedule to your deployment pipeline, ask:
 Is this cron expression valid: 0 30 8 * * 1-5? What does it evaluate to?
 ```
 
-Claude Code calls `cron_parse` and returns the human-readable interpretation — "At 8:30 AM on every weekday" — along with a confirmation that the expression is syntactically valid.
+Claude Code calls `cron_parse` and returns the human-readable interpretation - "At 8:30 AM on every weekday" - along with a confirmation that the expression is syntactically valid.
 
 ### Example 4: Hash a String
 
@@ -224,9 +224,9 @@ No network request is made to a third-party API. The tool logic is bundled in th
 
 ### "MCP server not found" or "Unknown server"
 
-The most common cause is an invalid `settings.json` file. JSON is strict — trailing commas, missing quotes, and mismatched braces will silently break the file.
+The most common cause is an invalid `settings.json` file. JSON is strict - trailing commas, missing quotes, and mismatched braces will silently break the file.
 
-Run your settings.json through a JSON validator before saving it. VS Code has this built in — look for the red squiggles.
+Run your settings.json through a JSON validator before saving it. VS Code has this built in - look for the red squiggles.
 
 ### "Tool returned no output"
 
@@ -244,7 +244,7 @@ What arguments does the json_format tool take?
 
 ### "Permission denied" on npm install
 
-This is almost always an npm ownership issue. Fix it by following [npm's official guide](https://docs.npmjs.com/resolving-eACCES-permissions-errors-when-installing-packages-globally) — or just use `npx` in the config, which avoids global installation entirely.
+This is almost always an npm ownership issue. Fix it by following [npm's official guide](https://docs.npmjs.com/resolving-eACCES-permissions-errors-when-installing-packages-globally) - or just use `npx` in the config, which avoids global installation entirely.
 
 ### Slow first run with npx
 
@@ -254,11 +254,11 @@ When using `"command": "npx"`, the first invocation downloads the package. This 
 
 Once the connection is working, here are some workflows that genuinely save time:
 
-- **API debugging** — paste a raw API response and ask Claude to format, validate, and summarize it
-- **Config file validation** — validate JSON or YAML config files before deploying
-- **Test data generation** — generate UUIDs, hashes, and encoded strings directly in your test files
-- **Cron scheduling** — validate deployment schedules before committing them to your pipeline
-- **Regex development** — iterate on regex patterns with live test feedback
+- **API debugging** - paste a raw API response and ask Claude to format, validate, and summarize it
+- **Config file validation** - validate JSON or YAML config files before deploying
+- **Test data generation** - generate UUIDs, hashes, and encoded strings directly in your test files
+- **Cron scheduling** - validate deployment schedules before committing them to your pipeline
+- **Regex development** - iterate on regex patterns with live test feedback
 
 The less time you spend context-switching to a browser tab for a 3-second task, the more you stay in flow.
 

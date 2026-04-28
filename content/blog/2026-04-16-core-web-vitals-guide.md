@@ -1,7 +1,7 @@
 ---
 title: 'Core Web Vitals for Developers: What Actually Matters in 2026'
 description: >-
-  LCP, INP, CLS — Google's Core Web Vitals are now confirmed ranking factors.
+  LCP, INP, CLS - Google's Core Web Vitals are now confirmed ranking factors.
   Here's what each metric means, what causes poor scores, and how to fix them.
 slug: core-web-vitals-guide
 date: 2026-04-16T00:00:00.000Z
@@ -19,11 +19,11 @@ featuredImage: 'https://api.radtx.com/gradient/6b7280-374151/1200/630'
 
 # Core Web Vitals for Developers: What Actually Matters in 2026
 
-Google confirmed in 2024 that Core Web Vitals are **confirmed ranking signals** — not just "signals to consider." If your site has poor CWV scores, you're bleeding organic traffic to faster competitors.
+Google confirmed in 2024 that Core Web Vitals are **confirmed ranking signals** - not just "signals to consider." If your site has poor CWV scores, you're bleeding organic traffic to faster competitors.
 
 ## The Three Metrics
 
-### 1. LCP — Largest Contentful Paint
+### 1. LCP - Largest Contentful Paint
 
 **What it measures:** How fast the largest visible element loads.
 
@@ -48,7 +48,7 @@ The "largest element" is usually a hero image, large text block, or video poster
 <img src="/hero.avif" width="1200" height="600" alt="...">
 ```
 
-### 2. INP — Interaction to Next Paint
+### 2. INP - Interaction to Next Paint
 
 **What it measures:** How fast your page responds to user interactions.
 
@@ -85,7 +85,7 @@ function processInChunks(items) {
 }
 ```
 
-### 3. CLS — Cumulative Layout Shift
+### 3. CLS - Cumulative Layout Shift
 
 **What it measures:** How much the page layout shifts unexpectedly during loading.
 
@@ -116,10 +116,10 @@ function processInChunks(items) {
 Open DevTools → Lighthouse → Run analysis. You'll get per-metric breakdowns with specific recommendations.
 
 ### PageSpeed Insights
-pagespeed.web.dev — gives field data (real users) and lab data (synthetic) combined.
+pagespeed.web.dev - gives field data (real users) and lab data (synthetic) combined.
 
 ### Web Vitals Chrome Extension
-[Chrome extension](https://chrome.google.com/webstore/detail/web-vitals/ahfhijdlegdabablpippeagghigmibma) — shows CWV in real-time as you browse.
+[Chrome extension](https://chrome.google.com/webstore/detail/web-vitals/ahfhijdlegdabablpippeagghigmibma) - shows CWV in real-time as you browse.
 
 ### Search Console
 Performance report → discover issues across your whole site.
@@ -142,9 +142,9 @@ Based on real optimization work:
 
 Most sites will see the biggest gains from three fixes:
 
-1. **Image dimensions** — add `width` and `height` to every `<img>` tag
-2. **Font preload** — `<link rel="preload" as="font" href="/font.woff2">`
-3. **JavaScript defer** — `<script defer src="...">` instead of blocking `<script>` in `<head>`
+1. **Image dimensions** - add `width` and `height` to every `<img>` tag
+2. **Font preload** - `<link rel="preload" as="font" href="/font.woff2">`
+3. **JavaScript defer** - `<script defer src="...">` instead of blocking `<script>` in `<head>`
 
 These three alone can move LCP from "poor" to "good" on most sites.
 

@@ -1,6 +1,6 @@
 ---
 title: "Base64 Encoding and Decoding: The Developer's Practical Cheatsheet"
-description: "From text to images to JSON payloads — every Base64 operation a developer needs, explained with examples and linked directly to the free browser tool."
+description: "From text to images to JSON payloads - every Base64 operation a developer needs, explained with examples and linked directly to the free browser tool."
 date: 2026-04-28
 category: Developer Tools
 tags: ["base64", "encoding", "decoding", "data-urls", "api", "images", "json", "developer-tools"]
@@ -9,13 +9,13 @@ readingTime: 8 min
 featuredImage: "https://api.radtx.com/gradient/3b82f6-8b5cf6/1200/630"
 ---
 
-Every developer uses Base64 daily — in JWTs, data URLs, API responses, and config files. But when you need to *do* something with it, the documentation is scattered. This guide collects every Base64 operation you'll actually need, with working code and a browser tool to match.
+Every developer uses Base64 daily - in JWTs, data URLs, API responses, and config files. But when you need to *do* something with it, the documentation is scattered. This guide collects every Base64 operation you'll actually need, with working code and a browser tool to match.
 
 No theory. No padding lecture. Just the stuff you Google at 11pm.
 
 ## Base64 in 60 Seconds
 
-Base64 converts binary data into a string of 64 safe ASCII characters. It exists because JSON, HTML, HTTP headers, and email were all designed for text — not raw bytes.
+Base64 converts binary data into a string of 64 safe ASCII characters. It exists because JSON, HTML, HTTP headers, and email were all designed for text - not raw bytes.
 
 The same string encoded in Base64 is about **37% larger** than the original binary. That's the price of safety.
 
@@ -79,18 +79,18 @@ const decoded = Buffer.from(encoded, "base64").toString("utf-8");
 
 ## Image → Base64 (Data URL)
 
-This is where Base64 earns its keep. Converting an image to a Base64 data URL lets you embed it directly in HTML or CSS — no file to upload, no server to host it.
+This is where Base64 earns its keep. Converting an image to a Base64 data URL lets you embed it directly in HTML or CSS - no file to upload, no server to host it.
 
 **When to use data URLs:**
 - Small images: icons, logos, flags, UI glyphs
-- Email HTML — attachments don't survive most email clients, but inline data URLs do
+- Email HTML - attachments don't survive most email clients, but inline data URLs do
 - Single-file demos and prototypes where you can't reference external assets
 - Avoiding an extra HTTP request for a tiny image
 
 **When NOT to use:**
-- Large photos — a 500KB JPEG becomes a ~670KB Base64 string, and that's inside your HTML
-- Anything that changes frequently — data URLs are static and uncacheable
-- Production web pages — browsers cache regular image files, but inline data URLs are re-downloaded with every page load
+- Large photos - a 500KB JPEG becomes a ~670KB Base64 string, and that's inside your HTML
+- Anything that changes frequently - data URLs are static and uncacheable
+- Production web pages - browsers cache regular image files, but inline data URLs are re-downloaded with every page load
 
 **The format:**
 ```
@@ -104,7 +104,7 @@ AAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO
 9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot" />
 ```
 
-To convert an image to Base64 without uploading it anywhere, use the **[Toolblip Base64 Encoder](/tools/base64)** — drag in a PNG, JPEG, WebP, or SVG, and it generates the data URL instantly in your browser. Your image never touches a server.
+To convert an image to Base64 without uploading it anywhere, use the **[Toolblip Base64 Encoder](/tools/base64)** - drag in a PNG, JPEG, WebP, or SVG, and it generates the data URL instantly in your browser. Your image never touches a server.
 
 ## Base64 Image → File
 
@@ -216,20 +216,20 @@ payload += "=" * (4 - len(payload) % 4)
 decoded = json.loads(base64.urlsafe_b64decode(payload))
 ```
 
-> **Note:** You can decode a JWT payload instantly in the browser with the **[Toolblip JWT Decoder](/tools/jwt)** — no library, no install, entirely client-side.
+> **Note:** You can decode a JWT payload instantly in the browser with the **[Toolblip JWT Decoder](/tools/jwt)** - no library, no install, entirely client-side.
 
 ## Base64 in Configuration Files
 
 Many config formats (Docker, Docker Compose, `.env` files, SSH keys) use Base64 to store binary data as text.
 
-**Dockerfile — encode a file into an ENV variable:**
+**Dockerfile - encode a file into an ENV variable:**
 ```dockerfile
 # Build args come in as strings; encode for safe transport
 ARG SSL_CERT
 ENV SSL_CERT_DATA=$(echo -n "$SSL_CERT" | base64)
 ```
 
-**docker-compose.yml — storing credentials:**
+**docker-compose.yml - storing credentials:**
 ```yaml
 secrets:
   api_key:
@@ -255,7 +255,7 @@ SERVICE_ACCOUNT_CREDENTIALS={"type":"service_account",...}
 This fires when `atob()` or `btoa()` hits a character outside the Latin1 range. Fix:
 
 ```javascript
-// WRONG — fails on non-ASCII
+// WRONG - fails on non-ASCII
 btoa("café"); // Error
 
 // RIGHT
@@ -311,22 +311,22 @@ const urlSafe = standard.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "
 
 ## Try It in Your Browser
 
-Everything in this guide — text encoding, image conversion, data URL generation — works entirely in your browser with **[Toolblip Base64 Encoder/Decoder](/tools/base64)**. No upload. No server call. No account.
+Everything in this guide - text encoding, image conversion, data URL generation - works entirely in your browser with **[Toolblip Base64 Encoder/Decoder](/tools/base64)**. No upload. No server call. No account.
 
 Open a tab, paste, and you're done.
 
 ---
 
 **Related tools on Toolblip:**
-- [JWT Decoder](/tools/jwt) — inspect token payloads instantly
-- [JSON Formatter](/tools/json) — validate and beautify JSON from any API response
-- [URL Encoder/Decoder](/tools/url) — encode special characters for URLs and query strings
-- [Hash Generator](/tools/hash) — generate MD5, SHA-1, SHA-256, and more for any input
+- [JWT Decoder](/tools/jwt) - inspect token payloads instantly
+- [JSON Formatter](/tools/json) - validate and beautify JSON from any API response
+- [URL Encoder/Decoder](/tools/url) - encode special characters for URLs and query strings
+- [Hash Generator](/tools/hash) - generate MD5, SHA-1, SHA-256, and more for any input
 
 **Related reading:**
-- [JWT Decoder Guide](/blog/jwt-decoder-guide) — deeper dive into JWT structure and claims
-- [JSON Debugging Guide](/blog/json-debugging-guide-browser-tools) — working with API responses in the browser
-- [Base64 Encoding Explained](/blog/base64-encoding-explained) — the concept behind the code
+- [JWT Decoder Guide](/blog/jwt-decoder-guide) - deeper dive into JWT structure and claims
+- [JSON Debugging Guide](/blog/json-debugging-guide-browser-tools) - working with API responses in the browser
+- [Base64 Encoding Explained](/blog/base64-encoding-explained) - the concept behind the code
 
 ---
-*Part of the [Toolblip Developer Tools](/tools) series — free, no-signup browser tools for developers.*
+*Part of the [Toolblip Developer Tools](/tools) series - free, no-signup browser tools for developers.*

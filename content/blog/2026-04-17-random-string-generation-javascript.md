@@ -18,21 +18,21 @@ author: Toolblip Team
 readingTime: 5 min
 descriptionSEO: >-
   How to generate cryptographically secure random strings in JavaScript. UUID
-  v4, random tokens, passwords — secure methods with code examples.
+  v4, random tokens, passwords - secure methods with code examples.
 featuredImage: 'https://api.radtx.com/gradient/0ea5e9-8b5cf6/1200/630'
 ---
 
-Random strings are everywhere in software — session tokens, password reset links, API keys, UUIDs. Getting them wrong creates security vulnerabilities that are hard to catch. This guide shows you how to do it properly.
+Random strings are everywhere in software - session tokens, password reset links, API keys, UUIDs. Getting them wrong creates security vulnerabilities that are hard to catch. This guide shows you how to do it properly.
 
 ## Why It Matters
 
-Computers are deterministic. Generating "random" strings with `Math.random()` or `Date.now()` isn't truly random — it's pseudorandom, predictable, and exploitable. If you use `Math.random()` to generate a password reset token, an attacker who can guess the seed can reset any user's password.
+Computers are deterministic. Generating "random" strings with `Math.random()` or `Date.now()` isn't truly random - it's pseudorandom, predictable, and exploitable. If you use `Math.random()` to generate a password reset token, an attacker who can guess the seed can reset any user's password.
 
 **Rule: always use the Web Crypto API for security-sensitive randomness.**
 
 ## Generate a UUID v4
 
-The simplest secure use case — a unique identifier with enough entropy that guessing is impossible.
+The simplest secure use case - a unique identifier with enough entropy that guessing is impossible.
 
 ```javascript
 // Modern browsers and Node.js 19+
@@ -145,7 +145,7 @@ const token = Math.random().toString(36).substring(2);
 ```javascript
 // NEVER do this
 const token = btoa(Date.now() + Math.random());
-// Entirely predictable — attacker knows approximately when token was created
+// Entirely predictable - attacker knows approximately when token was created
 ```
 
 ### ❌ Short Tokens
@@ -186,8 +186,8 @@ const token = createHmac('sha256', secret)
 
 ## Useful Tools
 
-- **[UUID Generator](/tools/uuid-generator)** — Generate UUIDs v4 instantly in your browser
-- **[Hash Generator](/tools/hash-generator)** — Generate SHA/MD5 hashes
-- **[Base64 Encoder](/tools/base64)** — Encode any string to base64
+- **[UUID Generator](/tools/uuid-generator)** - Generate UUIDs v4 instantly in your browser
+- **[Hash Generator](/tools/hash-generator)** - Generate SHA/MD5 hashes
+- **[Base64 Encoder](/tools/base64)** - Encode any string to base64
 
 No data leaves your browser. Everything runs client-side using the Web Crypto API.

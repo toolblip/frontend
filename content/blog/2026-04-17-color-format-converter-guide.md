@@ -1,5 +1,5 @@
 ---
-title: "Color Format Converter: HEX, RGB, HSL — and When Each Format Is Useful"
+title: "Color Format Converter: HEX, RGB, HSL - and When Each Format Is Useful"
 description: "Designers and developers work with colors in multiple formats. Learn the differences between HEX, RGB, HSL, and HSV, when to use each one, and how automatic conversion helps you work faster."
 publishDate: "2026-04-17"
 slug: color-format-converter-guide
@@ -20,14 +20,14 @@ HEX colors are the web's native format. They're compact, ubiquitous, and immedia
 
 ```
 #RRGGBB  (6 hex digits)
-#RGB     (3 hex digits — shorthand)
+#RGB     (3 hex digits - shorthand)
 ```
 
 Examples:
-- `#ff5733` — bright orange-red
-- `#000000` — black
-- `#ffffff` — white
-- `#3b82f6` — Tailwind blue-500
+- `#ff5733` - bright orange-red
+- `#000000` - black
+- `#ffffff` - white
+- `#3b82f6` - Tailwind blue-500
 
 The 3-digit shorthand (`#RGB`) expands to 6 digits by doubling each digit: `#f09` → `#ff0099`.
 
@@ -37,7 +37,7 @@ HEX is great when:
 - You want the most compact representation
 
 HEX is less great when:
-- You need to adjust a color (make it lighter, more saturated) — HEX math is painful
+- You need to adjust a color (make it lighter, more saturated) - HEX math is painful
 - You're communicating with designers who think in HSL or RGB
 
 ## RGB Format
@@ -45,11 +45,11 @@ HEX is less great when:
 RGB (Red, Green, Blue) defines a color by how much of each primary light to mix:
 
 ```
-rgb(255, 87, 51)       — integers 0–255
-rgba(255, 87, 51, 0.5) — with alpha channel
+rgb(255, 87, 51)       - integers 0–255
+rgba(255, 87, 51, 0.5) - with alpha channel
 ```
 
-Every color monitor works this way — pixels are tiny lights combining red, green, and blue at different intensities.
+Every color monitor works this way - pixels are tiny lights combining red, green, and blue at different intensities.
 
 RGB is intuitive when:
 - You're generating colors programmatically (you often have R, G, B values from an API)
@@ -57,7 +57,7 @@ RGB is intuitive when:
 - You're working with image processing (most image formats store data as RGB)
 
 RGB is less intuitive when:
-- You want to make a color "lighter" or "more vivid" — you have to guess at channel values
+- You want to make a color "lighter" or "more vivid" - you have to guess at channel values
 - You're designing (HSL is almost always better for human thinking)
 
 ## HSL Format
@@ -65,18 +65,18 @@ RGB is less intuitive when:
 HSL (Hue, Saturation, Lightness) was designed for human comprehension:
 
 ```
-hsl(200, 90%, 55%)     — saturated sky blue
-hsla(200, 90%, 55%, 0.8) — with alpha
+hsl(200, 90%, 55%)     - saturated sky blue
+hsla(200, 90%, 55%, 0.8) - with alpha
 ```
 
-**Hue** — the color's position on the wheel (0–360°). 0° = red, 120° = green, 240° = blue.
+**Hue** - the color's position on the wheel (0–360°). 0° = red, 120° = green, 240° = blue.
 
-**Saturation** — how vivid the color is (0% = gray, 100% = full color).
+**Saturation** - how vivid the color is (0% = gray, 100% = full color).
 
-**Lightness** — how light or dark (0% = black, 50% = normal, 100% = white).
+**Lightness** - how light or dark (0% = black, 50% = normal, 100% = white).
 
 HSL is the best format for designing because:
-- `hsl(200, 90%, 55%)` — I want a vivid, bright blue. I know exactly what to change.
+- `hsl(200, 90%, 55%)` - I want a vivid, bright blue. I know exactly what to change.
 - Need it lighter? Increase lightness. Need it grayer? Decrease saturation.
 - Complementary color? Add 180° to the hue.
 
@@ -85,10 +85,10 @@ HSL is the best format for designing because:
 HSV (also called HSB) is similar to HSL but with a different definition of "lightness":
 
 ```
-hsva(200, 90%, 95%, 1)  — very light blue
+hsva(200, 90%, 95%, 1)  - very light blue
 ```
 
-In HSV, the third component is "brightness" (value) — the maximum intensity of the color. In HSL, lightness is the midpoint between black and white, which makes HSL better for predicting perceived lightness.
+In HSV, the third component is "brightness" (value) - the maximum intensity of the color. In HSL, lightness is the midpoint between black and white, which makes HSL better for predicting perceived lightness.
 
 Most design tools (Figma, Sketch, Photoshop's color picker) use HSV internally.
 

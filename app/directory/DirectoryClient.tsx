@@ -123,7 +123,7 @@ export default function DirectoryClient() {
           <div className="tb-v2-kicker">All tools</div>
           <h1 className="tb-v2-dir-title">Tool Directory</h1>
           <p className="tb-v2-dir-sub">
-            {tools.length} free browser-based tools — text, developer, image,
+            {tools.length} free browser-based tools - text, developer, image,
             conversion, math, and more.
           </p>
         </div>

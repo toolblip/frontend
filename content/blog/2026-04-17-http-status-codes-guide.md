@@ -1,7 +1,7 @@
 ---
 title: The Complete Guide to HTTP Status Codes in 2026
 description: >-
-  Every HTTP status code explained. From 100 to 511 — what each code means, when
+  Every HTTP status code explained. From 100 to 511 - what each code means, when
   to use it, and what the client should do next.
 slug: http-status-codes-guide
 date: '2026-04-17'
@@ -20,7 +20,7 @@ descriptionSEO: >-
 featuredImage: 'https://api.radtx.com/gradient/0ea5e9-8b5cf6/1200/630'
 ---
 
-Every developer hits an unexpected `403` or `429` at some point and wastes time guessing what happened. HTTP status codes are a shared language between servers and clients — learning them properly saves hours of debugging and makes your APIs better.
+Every developer hits an unexpected `403` or `429` at some point and wastes time guessing what happened. HTTP status codes are a shared language between servers and clients - learning them properly saves hours of debugging and makes your APIs better.
 
 ## How Status Codes Work
 
@@ -28,13 +28,13 @@ HTTP responses have a three-digit status code. The first digit tells you the cat
 
 | Range | Meaning |
 |-------|---------|
-| 1xx | **Informational** — request received, continuing |
-| 2xx | **Success** — request successfully received and accepted |
-| 3xx | **Redirection** — further action needed |
-| 4xx | **Client Error** — request has bad syntax or is unauthorized |
-| 5xx | **Server Error** — server failed to fulfill a valid request |
+| 1xx | **Informational** - request received, continuing |
+| 2xx | **Success** - request successfully received and accepted |
+| 3xx | **Redirection** - further action needed |
+| 4xx | **Client Error** - request has bad syntax or is unauthorized |
+| 5xx | **Server Error** - server failed to fulfill a valid request |
 
-## 1xx — Informational
+## 1xx - Informational
 
 These indicate the request was received and understood, but the client should wait for the final response. Rarely seen in practice.
 
@@ -46,7 +46,7 @@ Server is switching protocols (e.g., HTTP → WebSocket via Upgrade header). You
 
 ---
 
-## 2xx — Success
+## 2xx - Success
 
 ### 200 OK
 The request succeeded. The meaning of "success" depends on the HTTP method:
@@ -70,7 +70,7 @@ A new resource was created. Always include a `Location` header pointing to the n
 ```
 
 ### 202 Accepted
-Request accepted for processing but not completed yet. Useful for async operations — the client checks back later.
+Request accepted for processing but not completed yet. Useful for async operations - the client checks back later.
 
 ### 204 No Content
 Success, but no body returned. Use after `DELETE` or successful update where you don't need to return data.
@@ -85,7 +85,7 @@ Server returning part of a resource (not the full thing). Used for resumable dow
 
 ---
 
-## 3xx — Redirection
+## 3xx - Redirection
 
 ### 301 Moved Permanently
 The resource has a new permanent URL. All future requests should use the new URL. Browsers cache this.
@@ -106,7 +106,7 @@ Same as 301 but guarantees the method won't change. Use instead of 301 when redi
 
 ---
 
-## 4xx — Client Errors
+## 4xx - Client Errors
 
 The server is saying: *you* made the mistake.
 
@@ -128,7 +128,7 @@ HTTP/1.1 400 Bad Request
 You need to authenticate (provide credentials). The response should include a `WWW-Authenticate` header.
 
 ### 403 Forbidden
-You are authenticated but don't have permission. Unlike 401, authentication doesn't help — the server is explicitly refusing you.
+You are authenticated but don't have permission. Unlike 401, authentication doesn't help - the server is explicitly refusing you.
 
 ### 404 Not Found
 The resource doesn't exist. Note: some APIs return 404 for both "resource doesn't exist" and "you don't have access" (to avoid information leakage). Without knowing which, a 404 and 403 look identical from the outside.
@@ -142,7 +142,7 @@ Allow: GET, POST, DELETE
 ```
 
 ### 409 Conflict
-The request conflicts with the current state — e.g., creating a duplicate user, uploading a file that already exists, or a version conflict.
+The request conflicts with the current state - e.g., creating a duplicate user, uploading a file that already exists, or a version conflict.
 
 ### 410 Gone
 The resource existed but has been permanently deleted. Unlike 404, the server is explicitly saying "this is gone forever."
@@ -151,7 +151,7 @@ The resource existed but has been permanently deleted. Unlike 404, the server is
 The request body format isn't supported. Sending JSON to an endpoint that only accepts `multipart/form-data` returns this.
 
 ### 422 Unprocessable Entity
-The request format is correct but the content is semantically wrong — valid JSON but invalid field values, for example.
+The request format is correct but the content is semantically wrong - valid JSON but invalid field values, for example.
 
 ### 429 Too Many Requests
 Rate limited. Include a `Retry-After` header telling the client when to try again.
@@ -165,7 +165,7 @@ X-RateLimit-Remaining: 0
 
 ---
 
-## 5xx — Server Errors
+## 5xx - Server Errors
 
 The server broke, not the client. These should be rare and taken seriously.
 

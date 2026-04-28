@@ -33,7 +33,7 @@ function ComingSoonPlaceholder({ tool }: { tool: Tool }) {
       <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg px-4 py-8 text-center">
         <span className="text-3xl block mb-2">{tool.emoji}</span>
         <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">
-          {tool.name} — Coming Soon
+          {tool.name} - Coming Soon
         </p>
         <p className="text-gray-400 dark:text-gray-500 text-xs mt-1">
           Full UI is under construction
@@ -119,7 +119,7 @@ export default function ToolClient({ tool }: { tool: Tool }) {
 
       {/* Footer note */}
       <p className="mt-6 text-center text-xs text-gray-400 dark:text-gray-600">
-        100% client-side — nothing is sent to any server
+        100% client-side - nothing is sent to any server
       </p>
     </div>
   );

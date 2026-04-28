@@ -19,7 +19,7 @@ featuredImage: 'https://api.radtx.com/gradient/f97316-facc15/1200/630'
 
 # URL Structure and SEO: How to Build URLs That Rank
 
-URLs are one of the most underrated SEO elements. A well-structured URL tells users and search engines exactly what a page is about — before they even click.
+URLs are one of the most underrated SEO elements. A well-structured URL tells users and search engines exactly what a page is about - before they even click.
 
 ## What Makes a URL SEO-Friendly?
 
@@ -44,9 +44,9 @@ https://toolblip.com / tools / json-formatter
         domain        section   keyword
 ```
 
-1. **Root domain** — your brand
-2. **Section** — broad category
-3. **Slug** — keyword-rich, hyphen-separated
+1. **Root domain** - your brand
+2. **Section** - broad category
+3. **Slug** - keyword-rich, hyphen-separated
 
 ## Common Mistakes
 
@@ -113,7 +113,7 @@ Common duplicate URL scenarios:
 
 ## How to Fix Bad URLs
 
-**Don't just change them** — 301 redirect the old URL to the new one. This preserves 90-99% of your link equity.
+**Don't just change them** - 301 redirect the old URL to the new one. This preserves 90-99% of your link equity.
 
 ```apache
 # Apache .htaccess
@@ -165,4 +165,4 @@ Add `url` and `mainEntityOfPage` to your page schema:
 - [ ] Canonical tag set
 - [ ] Redirect old URLs to new with 301
 
-A clean URL structure is low-effort but high-impact SEO. It takes 5 minutes to audit your URLs and fix the worst ones — and the ranking benefits compound over time.
+A clean URL structure is low-effort but high-impact SEO. It takes 5 minutes to audit your URLs and fix the worst ones - and the ranking benefits compound over time.

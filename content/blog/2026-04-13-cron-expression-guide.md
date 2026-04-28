@@ -49,7 +49,7 @@ Each field accepts:
 
 ## Real Examples
 
-### `0 * * * *` — Every hour, on the hour
+### `0 * * * *` - Every hour, on the hour
 
 ```
 minute = 0       (at minute 0)
@@ -58,9 +58,9 @@ day    = *       (every day)
 month  = *       (every month)
 week   = *       (every day of week)
 ```
-At 1:00, 2:00, 3:00 — every hour exactly.
+At 1:00, 2:00, 3:00 - every hour exactly.
 
-### `0 9 * * 1-5` — Weekdays at 9am
+### `0 9 * * 1-5` - Weekdays at 9am
 
 ```
 minute = 0
@@ -71,7 +71,7 @@ week   = 1-5     (Monday through Friday)
 ```
 Every weekday at 9:00 AM. No weekends.
 
-### `*/15 * * * *` — Every 15 minutes
+### `*/15 * * * *` - Every 15 minutes
 
 ```
 minute = */15    (every 15 minutes: 0, 15, 30, 45)
@@ -82,7 +82,7 @@ week   = *
 ```
 Every quarter hour, all day, every day.
 
-### `0 0 1 * *` — First of every month at midnight
+### `0 0 1 * *` - First of every month at midnight
 
 ```
 minute = 0
@@ -93,7 +93,7 @@ week   = *
 ```
 Midnight on the first day of each month.
 
-### `30 4 * * *` — Daily at 4:30am
+### `30 4 * * *` - Daily at 4:30am
 
 ```
 minute = 30
@@ -121,7 +121,7 @@ Check your expression before deploying.
 
 ### Mistake 3: Forgetting That Months Start at 1
 
-The month field uses 1–12 (January = 1), not 0–11 like JavaScript's `Date` month index. Writing `0 0 0 0 *` for January doesn't work — it means "day 0" which is invalid.
+The month field uses 1–12 (January = 1), not 0–11 like JavaScript's `Date` month index. Writing `0 0 0 0 *` for January doesn't work - it means "day 0" which is invalid.
 
 ## Step Values
 
