@@ -394,10 +394,11 @@ function FaviconChecker() {
   const [allDone, setAllDone] = useState(false);
 
   type CheckKey = 'favicon_ico' | 'favicon_png' | 'apple_touch' | 'google_serp' | 'android_manifest' | 'og_image';
+  type CheckResult = { status: 'pass' | 'fail' | 'warn' | 'pending'; detail: string; iconUrl?: string };
 
   const extractDomain = (input: string) => {
+    const raw = input.trim();
     try {
-      const raw = input.trim();
       const withProto = raw.startsWith('http') ? raw : `https://${raw}`;
       return new URL(withProto).hostname.replace(/^www\./, '');
     } catch {
@@ -416,12 +417,13 @@ function FaviconChecker() {
     setAllDone(false);
     setChecks({});
 
-    const run = async (key: CheckKey, fn: () => Promise<typeof checks[string]>) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const run = async (key: CheckKey, fn: () => Promise<any>) => {
       const result = await fn();
       setChecks(prev => ({ ...prev, [key]: result }));
     };
 
-    const checks: Record<CheckKey, () => Promise<typeof checks[string]>> = {
+    const checks: Record<CheckKey, () => Promise<CheckResult>> = {
       favicon_ico: async () => {
         try {
           const r = await fetch(gcdn(d, 64), { method: 'HEAD' });
