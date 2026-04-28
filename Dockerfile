@@ -30,7 +30,7 @@ COPY --from=builder /app/public ./public
 RUN npm install --omit=dev
 
 # nginx: Railway routes to 8080, proxy to Node on 3000
-RUN echo 'server { listen 8080; server_name _; root /app/public; location / { proxy_pass http://127.0.0.1:3000; proxy_http_version 1.1; proxy_set_header Host $host; proxy_set_header X-Real-IP $remote_addr; } location /_next/static { proxy_pass http://127.0.0.1:3000; } }' \
+RUN echo 'server { listen 8080; server_name _; root /app/public; location /health { return 200 \'ok\'; add_header Content-Type text/plain; } location / { proxy_pass http://127.0.0.1:3000; proxy_http_version 1.1; proxy_set_header Host $host; proxy_set_header X-Real-IP $remote_addr; } location /_next/static { proxy_pass http://127.0.0.1:3000; } }' \
   > /etc/nginx/http.d/default.conf
 
 # Start script — override Railway's HOSTNAME (container_id) and PORT env vars
