@@ -26,7 +26,7 @@ export default function FeaturedStrip() {
               Most used this week.
             </h2>
           </div>
-          <Link href="/directory" style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--red)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
+          <Link href="/tools" style={{ fontSize: 13.5, fontWeight: 600, color: 'var(--red)', textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4 }}>
             View all
             <svg className="tb-v2-ic" style={{ width: 13, height: 13 }} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="5" y1="12" x2="19" y2="12" />
