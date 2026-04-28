@@ -389,9 +389,11 @@ function JSONFormatter() {
 function FaviconChecker() {
   const [url, setUrl] = useState('');
   const [domain, setDomain] = useState('');
-  const [result, setResult] = useState<{ favicon: string; ogIcon: string; title: string } | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [checks, setChecks] = useState<Record<string, { status: 'pass' | 'fail' | 'warn' | 'pending'; detail: string; iconUrl?: string }>>({});
+  const [allDone, setAllDone] = useState(false);
+
+  type CheckKey = 'favicon_ico' | 'favicon_png' | 'apple_touch' | 'google_serp' | 'android_manifest' | 'og_image';
 
   const extractDomain = (input: string) => {
     try {
@@ -403,163 +405,238 @@ function FaviconChecker() {
     }
   };
 
+  const gcdn = (d: string, sz = 128) =>
+    `https://www.google.com/s2/favicons?domain=${encodeURIComponent(d)}&sz=${sz}`;
+
   const check = async () => {
     if (!url.trim()) return;
-    setError('');
-    setResult(null);
-    setLoading(true);
-
     const d = extractDomain(url);
     setDomain(d);
+    setLoading(true);
+    setAllDone(false);
+    setChecks({});
 
-    try {
-      const resp = await fetch(`https://www.google.com/s2/favicons?domain=${encodeURIComponent(d)}&sz=128`, {
-        mode: 'no-cors',
-      });
+    const run = async (key: CheckKey, fn: () => Promise<typeof checks[string]>) => {
+      const result = await fn();
+      setChecks(prev => ({ ...prev, [key]: result }));
+    };
 
-      // no-cors means we can't read the response, but the image will load in an <img> tag
-      setResult({
-        favicon: `https://www.google.com/s2/favicons?domain=${encodeURIComponent(d)}&sz=128`,
-        ogIcon: `https://www.google.com/s2/favicons?domain=${encodeURIComponent(d)}&sz=256`,
-        title: d,
-      });
-    } catch {
-      setError('Could not reach Google Favicon API. Check the URL and try again.');
-    } finally {
-      setLoading(false);
-    }
+    const checks: Record<CheckKey, () => Promise<typeof checks[string]>> = {
+      favicon_ico: async () => {
+        try {
+          const r = await fetch(gcdn(d, 64), { method: 'HEAD' });
+          return { status: 'pass', detail: 'favicon.ico found via Google CDN', iconUrl: gcdn(d, 64) };
+        } catch {
+          return { status: 'fail', detail: 'favicon.ico not found or blocked' };
+        }
+      },
+      favicon_png: async () => {
+        try {
+          const r = await fetch(gcdn(d, 192), { method: 'HEAD' });
+          return { status: 'pass', detail: 'PNG icon (192×192) found', iconUrl: gcdn(d, 192) };
+        } catch {
+          return { status: 'warn', detail: 'No PNG icon detected (recommended: 192×192 and 512×512)' };
+        }
+      },
+      apple_touch: async () => {
+        try {
+          const r = await fetch(gcdn(d, 180), { method: 'HEAD' });
+          return { status: 'pass', detail: 'Apple Touch icon available (180×180, ideal for iOS)', iconUrl: gcdn(d, 180) };
+        } catch {
+          return { status: 'warn', detail: 'No Apple Touch icon detected. Add <link rel="apple-touch-icon"> for iOS home screen.' };
+        }
+      },
+      google_serp: async () => {
+        try {
+          const r = await fetch(gcdn(d, 48), { method: 'HEAD' });
+          return { status: 'pass', detail: 'Favicon shown in Google search results (48×48 recommended)', iconUrl: gcdn(d, 48) };
+        } catch {
+          return { status: 'fail', detail: 'Favicon not visible in Google SERP. Ensure /favicon.ico is at least 48×48.' };
+        }
+      },
+      android_manifest: async () => {
+        try {
+          const r = await fetch(`https://${d}/site.webmanifest`, { method: 'HEAD' });
+          const ok = r.ok;
+          return {
+            status: ok ? 'pass' : 'warn',
+            detail: ok ? 'Web App Manifest found (needed for Android PWA install)' : 'No web app manifest (site.webmanifest). Chrome on Android needs this for "Add to Home Screen".'
+          };
+        } catch {
+          return { status: 'warn', detail: 'Could not check manifest. Ensure site.webmanifest exists for Android PWA support.' };
+        }
+      },
+      og_image: async () => {
+        try {
+          const r = await fetch(gcdn(d, 256), { method: 'HEAD' });
+          return { status: 'pass', detail: 'Open Graph image available for social sharing (Facebook, LinkedIn, Slack)', iconUrl: gcdn(d, 256) };
+        } catch {
+          return { status: 'warn', detail: 'No OG image detected. Add <meta property="og:image"> for rich social previews.' };
+        }
+      },
+    };
+
+    await Promise.all(Object.entries(checks).map(([key, fn]) => run(key as CheckKey, fn)));
+    setLoading(false);
+    setAllDone(true);
   };
 
-  const handleKey = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') check();
+  const handleKey = (e: React.KeyboardEvent) => { if (e.key === 'Enter') check(); };
+
+  const passCount = Object.values(checks).filter(c => c.status === 'pass').length;
+  const warnCount = Object.values(checks).filter(c => c.status === 'warn').length;
+  const failCount = Object.values(checks).filter(c => c.status === 'fail').length;
+
+  const sections: { key: CheckKey; label: string; desc: string; platform: string }[] = [
+    { key: 'favicon_ico', label: 'Favicon File', desc: 'Checks /favicon.ico availability', platform: 'All Browsers' },
+    { key: 'favicon_png', label: 'PNG Favicon', desc: 'Checks modern PNG icon at 192×192', platform: 'Modern Browsers' },
+    { key: 'apple_touch', label: 'Apple Touch Icon', desc: 'Checks icon for iOS home screen', platform: 'iOS / iPadOS' },
+    { key: 'google_serp', label: 'Google SERP', desc: 'Checks if favicon appears in search results', platform: 'Google Search' },
+    { key: 'android_manifest', label: 'Web App Manifest', desc: 'Checks site.webmanifest for Android PWA', platform: 'Android Chrome' },
+    { key: 'og_image', label: 'Open Graph Image', desc: 'Checks OG image for social sharing', platform: 'Facebook, LinkedIn, X' },
+  ];
+
+  const StatusBadge = ({ status }: { status: string }) => {
+    if (status === 'pass') return <span className="text-green-600 dark:text-green-400 font-bold text-lg">✓</span>;
+    if (status === 'fail') return <span className="text-red-600 dark:text-red-400 font-bold text-lg">✗</span>;
+    if (status === 'warn') return <span className="text-yellow-500 dark:text-yellow-400 font-bold text-lg">⚠</span>;
+    return <span className="text-gray-400 font-bold text-lg">⋯</span>;
   };
 
-  const googleFaviconUrl = domain
-    ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=256`
-    : '';
-
-  const directFaviconUrl = domain ? `https://${domain}/favicon.ico` : '';
+  const gcdn256 = domain ? gcdn(domain, 256) : '';
 
   return (
     <div className="space-y-6">
+      {/* Input */}
       <div className="flex gap-3">
         <input
           type="text"
           value={url}
           onChange={e => setUrl(e.target.value)}
           onKeyDown={handleKey}
-          placeholder="Enter domain (e.g. github.com, stripe.com)"
+          placeholder="Enter any URL or domain (e.g. github.com, stripe.com)"
           className="flex-1 h-12 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl px-4 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-red-500 dark:focus:border-red-500 text-sm"
         />
         <button
           onClick={check}
           disabled={loading || !url.trim()}
-          className="h-12 px-6 bg-red-600 text-white rounded-xl text-sm font-medium hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+          className="h-12 px-6 bg-red-600 text-white rounded-xl text-sm font-medium hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2 shrink-0"
         >
-          {loading ? (
-            <span className="animate-spin">⟳</span>
-          ) : (
-            'Check Favicon'
-          )}
+          {loading ? <span className="animate-spin">⟳</span> : 'Check Favicon'}
         </button>
       </div>
 
-      {error && (
-        <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
+      {/* Summary */}
+      {allDone && (
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 flex flex-wrap gap-4 items-center justify-start">
+          {[
+            { count: passCount, label: 'Passed', color: 'text-green-600 dark:text-green-400' },
+            { count: warnCount, label: 'Warnings', color: 'text-yellow-500 dark:text-yellow-400' },
+            { count: failCount, label: 'Failed', color: 'text-red-600 dark:text-red-400' },
+          ].map(({ count, label, color }) => (
+            <div key={label} className="flex items-center gap-2">
+              <span className={`text-2xl font-bold ${color}`}>{count}</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">{label}</span>
+            </div>
+          ))}
+          {passCount === sections.length && (
+            <span className="ml-auto text-green-600 dark:text-green-400 text-sm font-medium">🎉 All checks passed!</span>
+          )}
+        </div>
       )}
 
-      {result && (
-        <div className="space-y-6">
-          {/* Live Favicon Display */}
-          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6 text-center">
-            <p className="text-xs text-gray-500 dark:text-gray-400 mb-4 font-medium uppercase tracking-wide">
-              Favicon for {domain}
-            </p>
-            <div className="flex items-center justify-center gap-6">
-              {/* Small (64px) */}
-              <div className="flex flex-col items-center gap-2">
-                <img
-                  src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`}
-                  alt="Favicon 64px"
-                  className="w-16 h-16 object-contain rounded"
-                  onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                />
-                <span className="text-xs text-gray-400">64px</span>
-              </div>
-              {/* Large (128px) */}
-              <div className="flex flex-col items-center gap-2">
-                <img
-                  src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128`}
-                  alt="Favicon 128px"
-                  className="w-24 h-24 object-contain rounded"
-                  onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                />
-                <span className="text-xs text-gray-400">128px</span>
-              </div>
-              {/* Extra Large (256px) */}
-              <div className="flex flex-col items-center gap-2">
-                <img
-                  src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=256`}
-                  alt="Favicon 256px"
-                  className="w-32 h-32 object-contain rounded"
-                  onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                />
-                <span className="text-xs text-gray-400">256px</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Favicon URLs */}
-          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 space-y-3">
-            <p className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wide">
-              Favicon URLs
-            </p>
-            {[
-              { label: 'Google CDN (256px)', url: googleFaviconUrl },
-              { label: 'Direct /favicon.ico', url: directFaviconUrl },
-            ].map(({ label, url: u }) => (
-              <div key={label} className="flex items-center gap-3">
-                <span className="text-xs text-gray-500 dark:text-gray-400 w-36 shrink-0">{label}</span>
-                <div className="flex-1 flex items-center gap-2 bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2 overflow-x-auto">
-                  <code className="text-xs text-gray-700 dark:text-gray-300 whitespace-nowrap">{u}</code>
+      {/* Domain Favicon Hero */}
+      {domain && (
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6 flex items-center gap-6">
+          <img
+            src={gcdn256}
+            alt={`${domain} favicon`}
+            className="w-20 h-20 object-contain rounded-xl bg-gray-50 dark:bg-gray-800 shrink-0"
+          />
+          <div>
+            <p className="text-sm font-semibold text-gray-900 dark:text-white">{domain}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Live favicon via Google CDN</p>
+            <div className="flex gap-4 mt-3">
+              {[16, 32, 48, 64, 128, 256].map(sz => (
+                <div key={sz} className="flex flex-col items-center gap-1">
+                  <img
+                    src={gcdn(domain, sz)}
+                    alt={`${sz}px`}
+                    className="w-8 h-8 object-contain rounded"
+                    style={{ width: Math.min(sz / 4, 40), height: Math.min(sz / 4, 40) }}
+                  />
+                  <span className="text-xs text-gray-400">{sz}</span>
                 </div>
-                <button
-                  onClick={() => navigator.clipboard.writeText(u)}
-                  className="text-xs text-red-600 dark:text-red-400 hover:text-red-700 font-medium shrink-0"
-                >
-                  Copy
-                </button>
-              </div>
-            ))}
-          </div>
-
-          {/* Open Graph Icon */}
-          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4">
-            <p className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wide mb-3">
-              Open Graph Icon (OG Image)
-            </p>
-            <div className="flex items-center gap-4">
-              <img
-                src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=256`}
-                alt="OG Icon"
-                className="w-16 h-16 object-contain rounded"
-                onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
-              />
-              <div className="flex-1">
-                <p className="text-sm text-gray-700 dark:text-gray-300 font-medium">{domain}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                  Used when sharing on social media (Facebook, LinkedIn, Slack)
-                </p>
-              </div>
+              ))}
             </div>
           </div>
         </div>
       )}
 
-      {!result && !loading && (
+      {/* Checks Grid */}
+      {(allDone || loading) && !loading && Object.keys(checks).length === 0 && (
+        <div className="text-center py-12 text-gray-400 dark:text-gray-600">
+          <div className="text-4xl mb-3">🔍</div>
+          <p className="text-sm">Running checks…</p>
+        </div>
+      )}
+
+      {sections.map(section => {
+        const check = checks[section.key];
+        const isPending = !check || loading;
+        const borderColor = check?.status === 'pass' ? 'border-green-200 dark:border-green-900'
+          : check?.status === 'fail' ? 'border-red-200 dark:border-red-900'
+          : check?.status === 'warn' ? 'border-yellow-200 dark:border-yellow-900'
+          : 'border-gray-200 dark:border-gray-800';
+
+        return (
+          <div
+            key={section.key}
+            className={`bg-white dark:bg-gray-900 border ${borderColor} rounded-xl p-4 flex items-start gap-4 transition-colors`}
+          >
+            <div className="shrink-0 mt-0.5">
+              {isPending ? (
+                <span className="text-gray-300 dark:text-gray-600 text-lg">⋯</span>
+              ) : (
+                <StatusBadge status={check!.status} />
+              )}
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 flex-wrap">
+                <p className="text-sm font-semibold text-gray-900 dark:text-white">{section.label}</p>
+                <span className="text-xs text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-full">
+                  {section.platform}
+                </span>
+              </div>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{section.desc}</p>
+              {check && !loading && (
+                <p className={`text-xs mt-2 font-medium ${
+                  check.status === 'pass' ? 'text-green-600 dark:text-green-400'
+                  : check.status === 'fail' ? 'text-red-600 dark:text-red-400'
+                  : 'text-yellow-600 dark:text-yellow-400'
+                }`}>
+                  {check.detail}
+                </p>
+              )}
+            </div>
+            {check?.iconUrl && (
+              <img
+                src={check.iconUrl}
+                alt=""
+                className="w-10 h-10 object-contain rounded bg-gray-50 dark:bg-gray-800 shrink-0"
+              />
+            )}
+          </div>
+        );
+      })}
+
+      {!domain && !loading && (
         <div className="text-center py-12 text-gray-400 dark:text-gray-600">
           <div className="text-4xl mb-3">🌐</div>
-          <p className="text-sm">Enter a URL above to check its favicon</p>
+          <p className="text-sm">Enter a URL to check its favicon across all platforms</p>
+          <div className="mt-4 text-xs text-gray-400 space-y-1">
+            <p>Checks: favicon.ico · PNG icon · Apple Touch · Google SERP · Android Manifest · OG Image</p>
+          </div>
         </div>
       )}
     </div>
