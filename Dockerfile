@@ -1,5 +1,20 @@
+# syntax=docker/dockerfile:1
+# Railway-optimized: Next.js standalone on port 3000
 FROM node:22-alpine
+
 WORKDIR /app
-RUN echo "const http = require('http'); const s = http.createServer((req,res) => res.end('ok')); s.listen(3000, '0.0.0.0', () => console.log('Listening on 3000'));" > server.js
+
+# Install all deps for build
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+RUN npm run build
+
+# Strip dev deps
+RUN npm install --omit=dev
+
 EXPOSE 3000
-CMD ["node", "server.js"]
+ENV PORT=3000 HOSTNAME=0.0.0.0
+
+CMD ["node", ".next/standalone/server.js"]
