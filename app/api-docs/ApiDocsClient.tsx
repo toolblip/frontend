@@ -1,23 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 
 // ─── Config ───────────────────────────────────────────────────────────────────
 const BASE_URL = 'https://api.toolblip.com';
 
-// ─── Endpoint definitions ────────────────────────────────────────────────────
-
+// ─── Types ────────────────────────────────────────────────────────────────────
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
 
-interface QueryParam {
-  name: string;
-  type: string;
-  required: boolean;
-  description: string;
-}
-
-interface BodyParam {
+interface Param {
   name: string;
   type: string;
   required: boolean;
@@ -38,13 +30,14 @@ interface Endpoint {
   auth: boolean;
   title: string;
   description: string;
-  queryParams?: QueryParam[];
-  bodyParams?: BodyParam[];
+  queryParams?: Param[];
+  bodyParams?: Param[];
   responseFields?: ResponseField[];
   curl: string;
   response: string;
 }
 
+// ─── Data ─────────────────────────────────────────────────────────────────────
 const ENDPOINTS: Endpoint[] = [
   // ── Tools ──────────────────────────────────────────────────────────────────
   {
@@ -54,7 +47,7 @@ const ENDPOINTS: Endpoint[] = [
     path: '/api/tools',
     auth: false,
     title: 'List all tools',
-    description: 'Returns a paginated list of all available tools. Supports filtering by category and full-text search.',
+    description: 'Returns a paginated list of all available tools. Filter by category or search by name and description.',
     queryParams: [
       { name: 'category', type: 'string', required: false, description: 'Filter by category slug (e.g. "developer", "image", "writing")' },
       { name: 'search', type: 'string', required: false, description: 'Full-text search across tool name and description' },
@@ -264,20 +257,20 @@ const STATUS_CODES = [
   { code: 500, label: 'Server Error', desc: 'Something went wrong on our end.', color: 'text-red-600 dark:text-red-400' },
 ];
 
-const METHOD_COLORS: Record<HttpMethod, { bg: string; text: string }> = {
-  GET:    { bg: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400',   text: 'text-emerald-700 dark:text-emerald-400' },
-  POST:   { bg: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400',               text: 'text-blue-700 dark:text-blue-400' },
-  PUT:    { bg: 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-400',          text: 'text-amber-700 dark:text-amber-400' },
-  DELETE: { bg: 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-400',                  text: 'text-red-700 dark:text-red-400' },
-  PATCH:  { bg: 'bg-violet-100 text-violet-700 dark:bg-violet-950 dark:text-violet-400',    text: 'text-violet-700 dark:text-violet-400' },
+const METHOD_COLORS: Record<HttpMethod, { bg: string; text: string; dark: string }> = {
+  GET:    { bg: 'bg-emerald-100 text-emerald-700',   text: 'text-emerald-700',   dark: 'dark:bg-emerald-950 dark:text-emerald-400' },
+  POST:   { bg: 'bg-blue-100 text-blue-700',          text: 'text-blue-700',       dark: 'dark:bg-blue-950 dark:text-blue-400' },
+  PUT:    { bg: 'bg-amber-100 text-amber-700',        text: 'text-amber-700',      dark: 'dark:bg-amber-950 dark:text-amber-400' },
+  DELETE: { bg: 'bg-red-100 text-red-700',           text: 'text-red-700',        dark: 'dark:bg-red-950 dark:text-red-400' },
+  PATCH:  { bg: 'bg-violet-100 text-violet-700',     text: 'text-violet-700',     dark: 'dark:bg-violet-950 dark:text-violet-400' },
 };
 
-// ─── Sub-components ────────────────────────────────────────────────────────────
+// ─── Components ───────────────────────────────────────────────────────────────
 
 function MethodBadge({ method }: { method: HttpMethod }) {
   const c = METHOD_COLORS[method];
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold ${c.bg} ${c.text}`}>
+    <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold ${c.bg} ${c.text} ${c.dark}`}>
       {method}
     </span>
   );
@@ -294,6 +287,7 @@ function CopyButton({ text }: { text: string }) {
     <button
       onClick={handleCopy}
       className="flex items-center gap-1.5 px-2.5 py-1.5 text-slate-400 hover:text-slate-200 hover:bg-white/10 text-xs rounded-lg transition-colors"
+      aria-label="Copy to clipboard"
     >
       {copied ? (
         <>
@@ -322,7 +316,7 @@ function CodeBlock({ code }: { code: string }) {
   );
 }
 
-function ParamTable({ params, body }: { params: (QueryParam | BodyParam)[]; body?: boolean }) {
+function ParamTable({ params, body }: { params: Param[]; body?: boolean }) {
   return (
     <div className="mb-5">
       <h4 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">
@@ -390,16 +384,17 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
       id={ep.id}
       className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transition-all hover:border-indigo-200 dark:hover:border-indigo-800 scroll-mt-20"
     >
-      {/* Header */}
+      {/* Header — always visible */}
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center gap-3 px-5 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-left"
+        aria-expanded={open}
       >
         <MethodBadge method={ep.method} />
         <code className="font-mono text-sm text-slate-800 dark:text-slate-200 font-medium">{ep.path}</code>
         <span className="text-sm text-slate-500 dark:text-slate-400 flex-1 truncate">{ep.title}</span>
         {ep.auth && (
-          <span className="flex items-center gap-1 text-[11px] text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/50 border border-amber-100 dark:border-amber-900 px-2 py-0.5 rounded-full">
+          <span className="flex items-center gap-1 text-[11px] text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/50 border border-amber-100 dark:border-amber-900 px-2 py-0.5 rounded-full flex-shrink-0">
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
@@ -414,7 +409,7 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
         </svg>
       </button>
 
-      {/* Expanded */}
+      {/* Expanded content */}
       {open && (
         <div className="border-t border-slate-100 dark:border-slate-800 px-5 py-6 space-y-5 bg-slate-50/40 dark:bg-slate-900/50">
           <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{ep.description}</p>
@@ -447,9 +442,10 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function ApiDocsClient() {
   const [activeId, setActiveId] = useState<string>('');
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
+    observerRef.current = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
@@ -462,11 +458,16 @@ export default function ApiDocsClient() {
 
     ENDPOINTS.forEach((ep) => {
       const el = document.getElementById(ep.id);
-      if (el) observer.observe(el);
+      if (el) observerRef.current?.observe(el);
     });
 
-    return () => observer.disconnect();
+    return () => observerRef.current?.disconnect();
   }, []);
+
+  const scrollTo = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col">
@@ -477,7 +478,7 @@ export default function ApiDocsClient() {
           <div className="flex items-center justify-between h-14">
             <div className="flex items-center gap-3">
               <Link href="/" className="flex items-center gap-2.5 group">
-                <div className="w-8 h-8 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-lg flex items-center justify-center shadow-sm">
+                <div className="w-8 h-8 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-lg flex items-center justify-center shadow-sm flex-shrink-0">
                   <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                   </svg>
@@ -503,8 +504,8 @@ export default function ApiDocsClient() {
       {/* ── Hero ───────────────────────────────────────────────────── */}
       <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="flex items-start gap-4 mb-7">
-            <div className="w-13 h-13 w-[52px] h-[52px] bg-gradient-to-br from-indigo-600 to-violet-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-indigo-200/50 dark:shadow-indigo-900/30">
+          <div className="flex items-start gap-4 mb-8">
+            <div className="w-[52px] h-[52px] bg-gradient-to-br from-indigo-600 to-violet-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-indigo-200/50 dark:shadow-indigo-900/30">
               <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
               </svg>
@@ -515,36 +516,38 @@ export default function ApiDocsClient() {
             </div>
           </div>
 
-          {/* Key facts strip */}
-          <div className="flex flex-wrap gap-2.5 mb-5">
-            <div className="inline-flex flex-col gap-1 bg-slate-900 dark:bg-slate-800 rounded-xl px-4 py-2.5">
+          {/* Key facts */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+            <div className="flex flex-col gap-1 bg-slate-900 dark:bg-slate-800 rounded-xl px-4 py-3">
               <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Base URL</span>
               <code className="text-sm font-mono text-emerald-400">{BASE_URL}</code>
             </div>
-            <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5">
-              <svg className="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <div className="flex items-center gap-2.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3">
+              <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
-              <span className="text-xs text-slate-600 dark:text-slate-400">
-                <span className="font-semibold text-slate-800 dark:text-slate-200">Auth:</span>{' '}
-                <code className="font-mono text-slate-700 dark:text-slate-300">Bearer token</code>
-              </span>
+              <div>
+                <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest block">Auth</span>
+                <code className="text-xs font-mono text-slate-700 dark:text-slate-300">Bearer token</code>
+              </div>
             </div>
-            <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5">
-              <svg className="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <div className="flex items-center gap-2.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3">
+              <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <span className="text-xs text-slate-600 dark:text-slate-400">
-                <span className="font-semibold text-slate-800 dark:text-slate-200">Format:</span> JSON only
-              </span>
+              <div>
+                <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest block">Format</span>
+                <span className="text-xs text-slate-700 dark:text-slate-300">JSON only</span>
+              </div>
             </div>
-            <div className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5">
-              <svg className="w-4 h-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <div className="flex items-center gap-2.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3">
+              <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
-              <span className="text-xs text-slate-600 dark:text-slate-400">
-                <span className="font-semibold text-slate-800 dark:text-slate-200">Rate limit:</span> 60 req/min
-              </span>
+              <div>
+                <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest block">Rate Limit</span>
+                <span className="text-xs text-slate-700 dark:text-slate-300">60 req/min</span>
+              </div>
             </div>
           </div>
 
@@ -573,66 +576,70 @@ export default function ApiDocsClient() {
 
           {/* ── Sidebar ── */}
           <aside className="lg:col-span-1">
-            <div className="sticky top-20">
-              <p className="text-[11px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest mb-3 px-1">Endpoints</p>
-              <nav className="space-y-5">
-                {GROUPS.map((g) => (
-                  <div key={g.id}>
-                    <p className="text-[11px] font-semibold text-slate-400 dark:text-slate-600 uppercase tracking-wider mb-1.5 px-1">
-                      {g.icon} {g.label}
-                    </p>
-                    <div className="space-y-0.5">
-                      {ENDPOINTS.filter((ep) => ep.group === g.id).map((ep) => {
-                        const c = METHOD_COLORS[ep.method];
-                        const isActive = activeId === ep.id;
-                        return (
-                          <a
-                            key={ep.id}
-                            href={`#${ep.id}`}
-                            className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all text-left ${
-                              isActive
-                                ? 'bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-400'
-                                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-200'
-                            }`}
-                          >
-                            <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold ${c.bg} ${c.text} flex-shrink-0`}>
-                              {ep.method}
-                            </span>
-                            <span className="truncate font-mono text-xs flex-1">{ep.path}</span>
-                          </a>
-                        );
-                      })}
+            <div className="sticky top-20 space-y-6">
+              <div>
+                <p className="text-[11px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest mb-3 px-1">Endpoints</p>
+                <nav className="space-y-5">
+                  {GROUPS.map((g) => (
+                    <div key={g.id}>
+                      <p className="text-[11px] font-semibold text-slate-400 dark:text-slate-600 uppercase tracking-wider mb-1.5 px-1">
+                        {g.icon} {g.label}
+                      </p>
+                      <div className="space-y-0.5">
+                        {ENDPOINTS.filter((ep) => ep.group === g.id).map((ep) => {
+                          const c = METHOD_COLORS[ep.method];
+                          const isActive = activeId === ep.id;
+                          return (
+                            <button
+                              key={ep.id}
+                              onClick={() => scrollTo(ep.id)}
+                              className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all text-left ${
+                                isActive
+                                  ? 'bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-400'
+                                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-200'
+                              }`}
+                            >
+                              <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold flex-shrink-0 ${c.bg} ${c.text} ${c.dark}`}>
+                                {ep.method}
+                              </span>
+                              <span className="truncate font-mono text-xs flex-1">{ep.path}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </nav>
+                  ))}
+                </nav>
+              </div>
 
               {/* On this page */}
-              <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800">
+              <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
                 <p className="text-[11px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest mb-3 px-1">On this page</p>
                 <div className="space-y-0.5">
                   {[
-                    { href: '#overview', label: 'Overview' },
-                    { href: '#status-codes', label: 'Status Codes' },
-                    { href: '#get-help', label: 'Get Help' },
+                    { id: 'overview', label: 'Overview' },
+                    { id: 'status-codes', label: 'Status Codes' },
+                    { id: 'get-help', label: 'Get Help' },
                   ].map((item) => (
-                    <a key={item.href} href={item.href}
-                      className="block px-3 py-1.5 text-xs text-slate-500 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                    <button
+                      key={item.id}
+                      onClick={() => scrollTo(item.id)}
+                      className="block w-full px-3 py-1.5 text-xs text-slate-500 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-left"
+                    >
                       {item.label}
-                    </a>
+                    </button>
                   ))}
                 </div>
               </div>
             </div>
           </aside>
 
-          {/* ── Main ── */}
+          {/* ── Main content ── */}
           <main className="lg:col-span-4 space-y-14">
 
             {/* Overview */}
             <section id="overview">
-              <div className="flex items-center gap-3 mb-5">
-                <span className="text-base">📖</span>
+              <div className="flex items-center gap-3 mb-6">
                 <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">Overview</h2>
                 <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
               </div>
@@ -691,12 +698,11 @@ export default function ApiDocsClient() {
               </div>
             </section>
 
-            {/* Endpoint groups */}
+            {/* Endpoint sections */}
             {GROUPS.map((g) => (
               <section key={g.id} id={g.id}>
-                <div className="flex items-center gap-3 mb-5">
-                  <span className="text-base">{g.icon}</span>
-                  <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">{g.label}</h2>
+                <div className="flex items-center gap-3 mb-6">
+                  <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">{g.icon} {g.label}</h2>
                   <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
                 </div>
                 <div className="space-y-3">
@@ -709,8 +715,7 @@ export default function ApiDocsClient() {
 
             {/* HTTP Status Codes */}
             <section id="status-codes">
-              <div className="flex items-center gap-3 mb-5">
-                <span className="text-base">📡</span>
+              <div className="flex items-center gap-3 mb-6">
                 <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">HTTP Status Codes</h2>
                 <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
               </div>
@@ -766,11 +771,11 @@ export default function ApiDocsClient() {
       </div>
 
       {/* ── Footer ─────────────────────────────────────────────────── */}
-      <footer className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+      <footer className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 mt-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-lg flex items-center justify-center">
+              <div className="w-6 h-6 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-lg flex items-center justify-center flex-shrink-0">
                 <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
                 </svg>
