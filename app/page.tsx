@@ -23,6 +23,14 @@ export const metadata: Metadata = {
     url: 'https://toolblip.com',
     siteName: 'Toolblip',
     type: 'website',
+    images: [
+      {
+        url: '/og-preview.png',
+        width: 1200,
+        height: 630,
+        alt: 'Toolblip - Free Online Developer Tools',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
