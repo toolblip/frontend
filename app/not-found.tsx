@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { Home, Search } from 'lucide-react';
 
@@ -7,7 +9,10 @@ export default function NotFound() {
       <div className="max-w-md w-full text-center animate-in fade-in zoom-in duration-500">
         <div
           className="text-8xl sm:text-9xl font-extrabold text-[#58D65D] mb-4 tracking-tight"
-          style={{ fontFamily: 'var(--tb-font-nunito, Nunito, sans-serif)' }}
+          style={{
+            fontFamily: 'var(--tb-font-nunito, Nunito, sans-serif)',
+            textShadow: '0 0 60px rgba(88, 214, 93, 0.25)',
+          }}
         >
           404
         </div>
