@@ -2,7 +2,7 @@
 title: "How to Optimize Images Without Uploading"
 date: "2026-04-15"
 description: "Crop, resize, and convert images entirely in your browser. No uploads, no servers, no waiting. Here's how browser-only image processing works."
-slug: "optimize-images-without-uploading"
+slug: "how-to-optimize-images-without-uploading"
 emoji: "🖼️"
 category: "Guides"
 tags: ["images", "privacy", "optimization"]

@@ -2,7 +2,7 @@
 title: "Top 5 Developer Tools You Should Bookmark"
 date: "2026-04-15"
 description: "Every developer has a set of utilities they visit almost daily. Here are five browser-based tools that deserve a permanent spot in your bookmark bar."
-slug: "top-5-developer-tools-bookmark"
+slug: "top-5-developer-tools-you-should-bookmark"
 emoji: "🔖"
 category: "Tools"
 tags: ["productivity", "json", "developer-tools", "bookmarks"]
