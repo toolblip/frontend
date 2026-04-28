@@ -359,7 +359,7 @@ export default function ApiDocsPage() {
                   Include your token in the Authorization header:
                 </p>
                 <pre style={s.codeBlock}>
-                  {'Authorization: Bearer YOUR_TOKEN_HERE'}
+                  {'Authorization: Bearer $TB_TOKEN'}
                 </pre>
                 <p style={{ marginTop: 12, color: 'var(--fg-3)', fontSize: 12.5 }}>
                   Tokens do not expire unless you log out. Store them securely.
@@ -524,7 +524,7 @@ export default function ApiDocsPage() {
                 curl={`curl -X POST "${BASE_URL}/api/auth/logout" \\
   -H "Content-Type: application/json" \\
   -H "Accept: application/json" \\
-  -H "Authorization: Bearer YOUR_TOKEN_HERE"`}
+  -H "Authorization: Bearer $TB_TOKEN"`}
                 response={`{
   "message": "Session terminated successfully."
 }`}
@@ -538,7 +538,7 @@ export default function ApiDocsPage() {
                 auth
                 curl={`curl -X GET "${BASE_URL}/api/auth/user" \\
   -H "Accept: application/json" \\
-  -H "Authorization: Bearer YOUR_TOKEN_HERE"`}
+  -H "Authorization: Bearer $TB_TOKEN"`}
                 response={`{
   "user": {
     "id": 12,
