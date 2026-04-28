@@ -23,7 +23,7 @@ export default function Hero({ toolCount }: HeroProps) {
               and more. Nothing uploaded, nothing tracked. Runs in your browser tab.
             </p>
             <div className="tb-v2-hero-cta">
-              <Link href="/tools" className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg">
+              <Link href="/directory" className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg">
                 Browse all tools
                 <svg className="tb-v2-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="5" y1="12" x2="19" y2="12" />

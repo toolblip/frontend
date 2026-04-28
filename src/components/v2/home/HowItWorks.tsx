@@ -71,7 +71,7 @@ export default function HowItWorks() {
         </div>
 
         <div style={{ textAlign: 'center', marginTop: 48 }}>
-          <Link href="/tools" className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg">
+          <Link href="/directory" className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg">
             Start browsing
             <svg className="tb-v2-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <line x1="5" y1="12" x2="19" y2="12" />

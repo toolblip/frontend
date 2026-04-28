@@ -82,7 +82,7 @@ export default function CategoryGrid() {
             return (
               <Link
                 key={cat.name}
-                href={`/tools?category=${encodeURIComponent(cat.name)}`}
+                href={`/directory?category=${encodeURIComponent(cat.name)}`}
                 className="tb-v2-cat"
                 style={
                   {

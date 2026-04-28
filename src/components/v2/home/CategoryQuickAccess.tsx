@@ -79,7 +79,7 @@ export default function CategoryQuickAccess({ categories }: CategoryQuickAccessP
             return (
               <Link
                 key={cat.name}
-                href={`/tools?category=${encodeURIComponent(cat.name)}`}
+                href={`/directory?category=${encodeURIComponent(cat.name)}`}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
