@@ -118,6 +118,7 @@ const s: Record<string, React.CSSProperties> = {
   methodGet: { background: '#dcf4ff', color: '#0c5790' },
   methodPost: { background: '#d6f0df', color: '#1e6b42' },
   methodDelete: { background: '#fdecec', color: '#9b1f1a' },
+  methodPut: { background: '#fef3c7', color: '#92400e' },
   endpoint: { fontFamily: 'var(--f-mono)', fontSize: 14, fontWeight: 600, color: 'var(--fg-0)' },
   authBadge: {
     display: 'inline-flex',
@@ -126,6 +127,17 @@ const s: Record<string, React.CSSProperties> = {
     background: '#fdecec',
     border: '1px solid #f5c6c6',
     color: '#9b1f1a',
+    borderRadius: 6,
+    padding: '3px 9px',
+    fontSize: 11.5,
+    fontWeight: 600,
+  },
+  optionalBadge: {
+    display: 'inline-flex',
+    alignItems: 'center',
+    background: 'var(--surface-2)',
+    border: '1px solid var(--border)',
+    color: 'var(--fg-3)',
     borderRadius: 6,
     padding: '3px 9px',
     fontSize: 11.5,
@@ -181,12 +193,23 @@ const s: Record<string, React.CSSProperties> = {
     marginTop: 40,
   },
   divider: { height: 1, background: 'var(--line)', margin: '40px 0' },
+  note: {
+    background: 'var(--surface-2)',
+    border: '1px solid var(--border)',
+    borderRadius: 10,
+    padding: '14px 18px',
+    fontSize: 13.5,
+    color: 'var(--fg-2)',
+    lineHeight: 1.6,
+    marginTop: 16,
+  },
 };
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function Method({ m }: { m: 'GET' | 'POST' | 'DELETE' }) {
-  const style = m === 'GET' ? s.methodGet : m === 'POST' ? s.methodPost : s.methodDelete;
+function Method({ m }: { m: 'GET' | 'POST' | 'DELETE' | 'PUT' }) {
+  const style =
+    m === 'GET' ? s.methodGet : m === 'POST' ? s.methodPost : m === 'DELETE' ? s.methodDelete : s.methodPut;
   return <span style={{ ...s.method, ...style }}>{m}</span>;
 }
 
@@ -201,7 +224,7 @@ interface Param {
 
 interface EndpointProps {
   id: string;
-  method: 'GET' | 'POST' | 'DELETE';
+  method: 'GET' | 'POST' | 'DELETE' | 'PUT';
   path: string;
   description: string;
   auth?: boolean;
@@ -313,6 +336,11 @@ export default function ApiDocsPage() {
               Format: <strong style={s.badgeStrong}>application/json</strong>
             </div>
           </div>
+          <div style={s.note}>
+            <strong>Direct Railway URL:</strong> Requests can also be sent directly to{' '}
+            <code style={{ fontFamily: 'var(--f-mono)', fontSize: 12 }}>https://toolblip-api-production.up.railway.app</code>.
+            The domain <code style={{ fontFamily: 'var(--f-mono)', fontSize: 12 }}>api.toolblip.com</code> routes to the same service via Cloudflare.
+          </div>
         </div>
       </div>
 
@@ -325,11 +353,14 @@ export default function ApiDocsPage() {
             <div style={s.navSection}>
               <p style={s.navLabel}>Getting Started</p>
               <a href="#authentication" style={s.navLink}>Authentication</a>
+              <a href="#tools" style={s.navLink}>Tools</a>
+              <a href="#mcp" style={s.navLink}>MCP Servers</a>
+              <a href="#subscription" style={s.navLink}>Subscription</a>
             </div>
             <div style={s.navSection}>
               <p style={s.navLabel}>Tools</p>
               <a href="#get-tools" style={s.navLink}>GET /api/tools</a>
-              <a href="#get-tool-slug" style={s.navLink}>GET /api/tools/{`{slug}`}</a>
+              <a href="#get-tools-slug" style={s.navLink}>GET /api/tools/{`{slug}`}</a>
             </div>
             <div style={s.navSection}>
               <p style={s.navLabel}>Auth</p>
@@ -337,6 +368,15 @@ export default function ApiDocsPage() {
               <a href="#post-login" style={s.navLink}>POST /api/auth/login</a>
               <a href="#post-logout" style={s.navLink}>POST /api/auth/logout</a>
               <a href="#get-user" style={s.navLink}>GET /api/auth/user</a>
+            </div>
+            <div style={s.navSection}>
+              <p style={s.navLabel}>MCP Servers</p>
+              <a href="#get-mcp-servers" style={s.navLink}>GET /api/mcp/servers</a>
+            </div>
+            <div style={s.navSection}>
+              <p style={s.navLabel}>Subscription</p>
+              <a href="#post-checkout" style={s.navLink}>POST /api/subscription/checkout</a>
+              <a href="#post-portal" style={s.navLink}>POST /api/subscription/portal</a>
             </div>
             <div style={s.navSection}>
               <p style={s.navLabel}>Reference</p>
@@ -424,7 +464,7 @@ export default function ApiDocsPage() {
               />
 
               <Endpoint
-                id="get-tool-slug"
+                id="get-tools-slug"
                 method="GET"
                 path="/api/tools/{slug}"
                 description="Fetch a single tool by its slug. Returns tool details including full description and metadata."
@@ -546,6 +586,87 @@ export default function ApiDocsPage() {
     "email": "alex@example.com",
     "is_pro": true
   }
+}`}
+              />
+            </section>
+
+            <div style={s.divider} />
+
+            {/* ── MCP Servers ── */}
+            <section id="mcp" style={s.section}>
+              <h2 style={s.sectionTitle}>MCP Servers</h2>
+              <p style={s.sectionDesc}>
+                Browse MCP (Model Context Protocol) servers available in the directory.
+              </p>
+
+              <Endpoint
+                id="get-mcp-servers"
+                method="GET"
+                path="/api/mcp/servers"
+                description="Returns a paginated list of MCP servers. Supports filtering by category."
+                params={[
+                  { name: 'category', type: 'string', required: false, description: 'Filter by category (e.g. development, data, ai).' },
+                  { name: 'page', type: 'integer', required: false, description: 'Page number for pagination (default: 1).' },
+                ]}
+                curl={`curl -X GET "${BASE_URL}/api/mcp/servers?category=development" \\
+  -H "Accept: application/json"`}
+                response={`{
+  "servers": {
+    "servers": [
+      {
+        "id": 1,
+        "slug": "filesystem-mcp",
+        "name": "Filesystem MCP",
+        "description": "A Model Context Protocol server for file operations.",
+        "category": "development",
+        "url": "https://example.com/filesystem-mcp",
+        "created_at": "2026-01-15T10:30:00.000000Z"
+      }
+    ]
+  }
+}`}
+              />
+            </section>
+
+            <div style={s.divider} />
+
+            {/* ── Subscription ── */}
+            <section id="subscription" style={s.section}>
+              <h2 style={s.sectionTitle}>Subscription</h2>
+              <p style={s.sectionDesc}>
+                Manage Stripe subscriptions and billing. All endpoints require authentication.
+              </p>
+
+              <Endpoint
+                id="post-checkout"
+                method="POST"
+                path="/api/subscription/checkout"
+                description="Create a Stripe Checkout session to upgrade your subscription. Returns a Stripe-hosted payment URL."
+                auth
+                params={[
+                  { name: 'plan', type: 'string', required: true, description: 'Billing interval: "monthly" or "yearly".' },
+                ]}
+                curl={`curl -X POST "${BASE_URL}/api/subscription/checkout" \\
+  -H "Content-Type: application/json" \\
+  -H "Accept: application/json" \\
+  -H "Authorization: Bearer $TB_TOKEN" \\
+  -d '{ "plan": "yearly" }'`}
+                response={`{
+  "url": "https://checkout.stripe.com/c/pay/..."
+}`}
+              />
+
+              <Endpoint
+                id="post-portal"
+                method="POST"
+                path="/api/subscription/portal"
+                description="Open the Stripe Customer Portal for managing billing, invoices, and subscription details."
+                auth
+                curl={`curl -X POST "${BASE_URL}/api/subscription/portal" \\
+  -H "Accept: application/json" \\
+  -H "Authorization: Bearer $TB_TOKEN"`}
+                response={`{
+  "url": "https://billing.stripe.com/session/..."
 }`}
               />
             </section>
