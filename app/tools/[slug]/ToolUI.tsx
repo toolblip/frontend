@@ -385,6 +385,187 @@ function JSONFormatter() {
   );
 }
 
+// ─── Favicon Checker ─────────────────────────────────────────────
+function FaviconChecker() {
+  const [url, setUrl] = useState('');
+  const [domain, setDomain] = useState('');
+  const [result, setResult] = useState<{ favicon: string; ogIcon: string; title: string } | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const extractDomain = (input: string) => {
+    try {
+      const raw = input.trim();
+      const withProto = raw.startsWith('http') ? raw : `https://${raw}`;
+      return new URL(withProto).hostname.replace(/^www\./, '');
+    } catch {
+      return raw.replace(/^https?:\/\//, '').split('/')[0].replace(/^www\./, '');
+    }
+  };
+
+  const check = async () => {
+    if (!url.trim()) return;
+    setError('');
+    setResult(null);
+    setLoading(true);
+
+    const d = extractDomain(url);
+    setDomain(d);
+
+    try {
+      const resp = await fetch(`https://www.google.com/s2/favicons?domain=${encodeURIComponent(d)}&sz=128`, {
+        mode: 'no-cors',
+      });
+
+      // no-cors means we can't read the response, but the image will load in an <img> tag
+      setResult({
+        favicon: `https://www.google.com/s2/favicons?domain=${encodeURIComponent(d)}&sz=128`,
+        ogIcon: `https://www.google.com/s2/favicons?domain=${encodeURIComponent(d)}&sz=256`,
+        title: d,
+      });
+    } catch {
+      setError('Could not reach Google Favicon API. Check the URL and try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleKey = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') check();
+  };
+
+  const googleFaviconUrl = domain
+    ? `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=256`
+    : '';
+
+  const directFaviconUrl = domain ? `https://${domain}/favicon.ico` : '';
+
+  return (
+    <div className="space-y-6">
+      <div className="flex gap-3">
+        <input
+          type="text"
+          value={url}
+          onChange={e => setUrl(e.target.value)}
+          onKeyDown={handleKey}
+          placeholder="Enter domain (e.g. github.com, stripe.com)"
+          className="flex-1 h-12 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl px-4 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-red-500 dark:focus:border-red-500 text-sm"
+        />
+        <button
+          onClick={check}
+          disabled={loading || !url.trim()}
+          className="h-12 px-6 bg-red-600 text-white rounded-xl text-sm font-medium hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+        >
+          {loading ? (
+            <span className="animate-spin">⟳</span>
+          ) : (
+            'Check Favicon'
+          )}
+        </button>
+      </div>
+
+      {error && (
+        <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
+      )}
+
+      {result && (
+        <div className="space-y-6">
+          {/* Live Favicon Display */}
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6 text-center">
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-4 font-medium uppercase tracking-wide">
+              Favicon for {domain}
+            </p>
+            <div className="flex items-center justify-center gap-6">
+              {/* Small (64px) */}
+              <div className="flex flex-col items-center gap-2">
+                <img
+                  src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`}
+                  alt="Favicon 64px"
+                  className="w-16 h-16 object-contain rounded"
+                  onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                />
+                <span className="text-xs text-gray-400">64px</span>
+              </div>
+              {/* Large (128px) */}
+              <div className="flex flex-col items-center gap-2">
+                <img
+                  src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=128`}
+                  alt="Favicon 128px"
+                  className="w-24 h-24 object-contain rounded"
+                  onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                />
+                <span className="text-xs text-gray-400">128px</span>
+              </div>
+              {/* Extra Large (256px) */}
+              <div className="flex flex-col items-center gap-2">
+                <img
+                  src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=256`}
+                  alt="Favicon 256px"
+                  className="w-32 h-32 object-contain rounded"
+                  onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                />
+                <span className="text-xs text-gray-400">256px</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Favicon URLs */}
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 space-y-3">
+            <p className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wide">
+              Favicon URLs
+            </p>
+            {[
+              { label: 'Google CDN (256px)', url: googleFaviconUrl },
+              { label: 'Direct /favicon.ico', url: directFaviconUrl },
+            ].map(({ label, url: u }) => (
+              <div key={label} className="flex items-center gap-3">
+                <span className="text-xs text-gray-500 dark:text-gray-400 w-36 shrink-0">{label}</span>
+                <div className="flex-1 flex items-center gap-2 bg-gray-50 dark:bg-gray-800 rounded-lg px-3 py-2 overflow-x-auto">
+                  <code className="text-xs text-gray-700 dark:text-gray-300 whitespace-nowrap">{u}</code>
+                </div>
+                <button
+                  onClick={() => navigator.clipboard.writeText(u)}
+                  className="text-xs text-red-600 dark:text-red-400 hover:text-red-700 font-medium shrink-0"
+                >
+                  Copy
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* Open Graph Icon */}
+          <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4">
+            <p className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wide mb-3">
+              Open Graph Icon (OG Image)
+            </p>
+            <div className="flex items-center gap-4">
+              <img
+                src={`https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=256`}
+                alt="OG Icon"
+                className="w-16 h-16 object-contain rounded"
+                onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }}
+              />
+              <div className="flex-1">
+                <p className="text-sm text-gray-700 dark:text-gray-300 font-medium">{domain}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                  Used when sharing on social media (Facebook, LinkedIn, Slack)
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {!result && !loading && (
+        <div className="text-center py-12 text-gray-400 dark:text-gray-600">
+          <div className="text-4xl mb-3">🌐</div>
+          <p className="text-sm">Enter a URL above to check its favicon</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ─── Coming Soon ────────────────────────────────────────────────
 function ComingSoon() {
   return (
@@ -419,6 +600,8 @@ export default function ToolUI({ tool }: { tool: { slug: string } }) {
     case 'json-formatter':
     case 'json-editor':
       return <JSONFormatter />;
+    case 'favicon-checker':
+      return <FaviconChecker />;
     default:
       return <ComingSoon />;
   }
