@@ -39,7 +39,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               color: 'var(--green)',
               bg: 'var(--green-tint)',
               title: 'Pick a tool',
-              desc: `Browse ${toolCount}+ free browser-based tools across ${categoryCount} categories.`,
+              desc: `Browse ${toolCount}+ free tools. No account needed.`,
             },
             {
               icon: (
@@ -50,7 +50,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               color: 'var(--blue)',
               bg: 'var(--blue-tint)',
               title: 'Paste your data',
-              desc: 'Type or paste — nothing is ever sent to a server.',
+              desc: 'Your data stays in your browser. Nothing is sent anywhere.',
             },
             {
               icon: (
@@ -61,7 +61,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               color: 'var(--purple)',
               bg: 'var(--purple-tint)',
               title: 'Get your result',
-              desc: 'Copy the output instantly. Done in seconds.',
+              desc: 'Copy the output instantly. Done in seconds, no signup.',
             },
           ].map((item, i) => (
             <div key={i} className={`hiw-step hiw-step-${i}`} style={{ display: 'flex', alignItems: 'center', flex: '1 1 0', minWidth: 160 }}>
