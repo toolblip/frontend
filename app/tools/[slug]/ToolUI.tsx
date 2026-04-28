@@ -109,7 +109,7 @@ function CaseConverter() {
     switch (type) {
       case 'upper': result = text.toUpperCase(); break;
       case 'lower': result = text.toLowerCase(); break;
-      case 'title': result = text.replace(/\b\w/g => c => c.toUpperCase()); break;
+      case 'title': result = text.replace(/\b\w/g, c => c.toUpperCase()); break;
       case 'camel': result = text.replace(/[-_\s]+(.)?/g, (_, c) => c ? c.toUpperCase() : '').replace(/^./, c => c.toLowerCase()); break;
       case 'snake': result = text.replace(/[- ]+/g, '_').replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase(); break;
       case 'kebab': result = text.replace(/[-_ ]+/g, '-').replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(); break;
