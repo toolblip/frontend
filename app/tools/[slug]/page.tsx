@@ -12,9 +12,24 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const tool = tools.find(t => t.slug === slug);
   if (!tool) return {};
+  const title = `${tool.name} - Free Online Tool | Toolblip`;
+  const url = `https://toolblip.com/tools/${slug}`;
   return {
-    title: `${tool.name} - Free Online Tool | Toolblip`,
+    title,
     description: tool.description,
+    openGraph: {
+      title,
+      description: tool.description,
+      url,
+      siteName: 'Toolblip',
+      type: 'website',
+      images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: `${tool.name} - Toolblip` }],
+    },
+    twitter: {
+      card: 'summary' as const,
+      title,
+      description: tool.description,
+    },
   };
 }
 
