@@ -8,6 +8,7 @@ author: "Toolblip Team"
 readingTime: "5 min read"
 featuredImage: ""
 slug: "optimize-images-without-uploading"
+emoji: "🖼️"
 ---
 
 A few years ago, optimizing an image meant uploading it to a web service, waiting for the server to process it, and downloading the result. That workflow is fine - until you're handling sensitive screenshots, internal documents, or just don't want your data sitting on someone else's server.

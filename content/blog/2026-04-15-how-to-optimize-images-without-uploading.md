@@ -4,6 +4,7 @@ description: >-
   Crop, resize, and convert image formats - all in your browser, all locally. No uploads, no server round-trips, no waiting.
 slug: how-to-optimize-images-without-uploading
 date: 2026-04-15T00:00:00.000Z
+emoji: "🖼️"
 category: Developer Tools
 tags:
   - Images

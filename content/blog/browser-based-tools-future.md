@@ -8,6 +8,7 @@ author: "Toolblip Team"
 readingTime: "4 min read"
 featuredImage: ""
 slug: "browser-based-tools-future"
+emoji: "🖥️"
 ---
 
 There's a quiet revolution happening in developer workflows - and it runs right in your browser.

@@ -4,6 +4,7 @@ description: >-
   Five tools that handle the boring, repetitive tasks every developer faces - JSON formatting, Base64 encoding, regex testing, cron parsing, and hash generation.
 slug: top-5-developer-tools-bookmark
 date: 2026-04-15T00:00:00.000Z
+emoji: "🔖"
 category: Developer Tools
 tags:
   - JSON

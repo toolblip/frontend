@@ -4,6 +4,7 @@ description: >-
   No installs, no accounts, no uploads - browser-based developer tools process everything locally. Here's why that's the right direction for the web.
 slug: browser-based-tools-future
 date: 2026-04-15T00:00:00.000Z
+emoji: "🖥️"
 category: Developer Tools
 tags:
   - Privacy
