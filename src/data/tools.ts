@@ -292,3 +292,16 @@ export const tools: Tool[] = [
       'Check color contrast ratios for WCAG accessibility compliance. AA and AAA pass indicators.',
   },
 ];
+
+export const categories: Category[] = [
+  'All',
+  'Text',
+  'Developer',
+  'Encoder',
+  'Image',
+  'Conversion',
+  'Math',
+  'CSS',
+  'SEO',
+  'Color',
+];
