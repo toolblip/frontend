@@ -240,7 +240,7 @@ interface EndpointProps {
   response: string;
 }
 
-function Endpoint({ method, path, description, auth, params, curl, response }: EndpointProps) {
+function Endpoint({ id, method, path, description, auth, params, curl, response }: EndpointProps) {
   return (
     <div id={id} style={s.card}>
       <div style={s.cardHeader}>
