@@ -246,8 +246,8 @@ const GROUPS = [
 ];
 
 const STATUS_CODES = [
-  { code: 200, label: 'OK', desc: 'Request succeeded.', color: 'text-emerald-600 dark:text-emerald-400' },
-  { code: 201, label: 'Created', desc: 'Resource created successfully.', color: 'text-emerald-600 dark:text-emerald-400' },
+  { code: 200, label: 'OK', desc: 'Request succeeded.', color: 'text-green-600 dark:text-green-400' },
+  { code: 201, label: 'Created', desc: 'Resource created successfully.', color: 'text-green-600 dark:text-green-400' },
   { code: 400, label: 'Bad Request', desc: 'Invalid request body or parameters.', color: 'text-red-600 dark:text-red-400' },
   { code: 401, label: 'Unauthorized', desc: 'Missing or invalid Bearer token.', color: 'text-red-600 dark:text-red-400' },
   { code: 403, label: 'Forbidden', desc: 'Authenticated but not permitted.', color: 'text-red-600 dark:text-red-400' },
@@ -258,11 +258,11 @@ const STATUS_CODES = [
 ];
 
 const METHOD_COLORS: Record<HttpMethod, { bg: string; text: string; dark: string }> = {
-  GET:    { bg: 'bg-emerald-100 text-emerald-700',   text: 'text-emerald-700',   dark: 'dark:bg-emerald-950 dark:text-emerald-400' },
-  POST:   { bg: 'bg-blue-100 text-blue-700',          text: 'text-blue-700',       dark: 'dark:bg-blue-950 dark:text-blue-400' },
-  PUT:    { bg: 'bg-amber-100 text-amber-700',        text: 'text-amber-700',      dark: 'dark:bg-amber-950 dark:text-amber-400' },
-  DELETE: { bg: 'bg-red-100 text-red-700',           text: 'text-red-700',        dark: 'dark:bg-red-950 dark:text-red-400' },
-  PATCH:  { bg: 'bg-violet-100 text-violet-700',     text: 'text-violet-700',     dark: 'dark:bg-violet-950 dark:text-violet-400' },
+  GET:    { bg: 'bg-green-100 text-green-700',   text: 'text-green-700',   dark: 'dark:bg-green-950 dark:text-green-400' },
+  POST:   { bg: 'bg-blue-100 text-blue-700',      text: 'text-blue-700',    dark: 'dark:bg-blue-950 dark:text-blue-400' },
+  PUT:    { bg: 'bg-amber-100 text-amber-700',    text: 'text-amber-700',   dark: 'dark:bg-amber-950 dark:text-amber-400' },
+  DELETE: { bg: 'bg-red-100 text-red-700',       text: 'text-red-700',     dark: 'dark:bg-red-950 dark:text-red-400' },
+  PATCH:  { bg: 'bg-violet-100 text-violet-700', text: 'text-violet-700',  dark: 'dark:bg-violet-950 dark:text-violet-400' },
 };
 
 // ─── Components ───────────────────────────────────────────────────────────────
@@ -291,10 +291,10 @@ function CopyButton({ text }: { text: string }) {
     >
       {copied ? (
         <>
-          <svg className="w-3.5 h-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="w-3.5 h-3.5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
-          <span className="text-emerald-400">Copied</span>
+          <span className="text-green-400">Copied</span>
         </>
       ) : (
         <>
@@ -335,7 +335,7 @@ function ParamTable({ params, body }: { params: Param[]; body?: boolean }) {
           <tbody className="divide-y divide-slate-50 dark:divide-slate-800/60">
             {params.map((p, i) => (
               <tr key={i} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30">
-                <td className="px-4 py-2.5 font-mono text-xs text-indigo-600 dark:text-indigo-400 font-medium">{p.name}</td>
+                <td className="px-4 py-2.5 font-mono text-xs text-green-600 dark:text-green-400 font-medium">{p.name}</td>
                 <td className="px-4 py-2.5 text-xs text-slate-500 dark:text-slate-500">{p.type}</td>
                 <td className="px-4 py-2.5 text-xs">{p.required ? <span className="text-red-500 font-medium">Yes</span> : <span className="text-slate-400">No</span>}</td>
                 <td className="px-4 py-2.5 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">{p.description}</td>
@@ -364,7 +364,7 @@ function ResponseFieldsTable({ fields }: { fields: ResponseField[] }) {
           <tbody className="divide-y divide-slate-50 dark:divide-slate-800/60">
             {fields.map((f, i) => (
               <tr key={i} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30">
-                <td className="px-4 py-2.5 font-mono text-xs text-indigo-600 dark:text-indigo-400 font-medium">{f.field}</td>
+                <td className="px-4 py-2.5 font-mono text-xs text-green-600 dark:text-green-400 font-medium">{f.field}</td>
                 <td className="px-4 py-2.5 text-xs text-slate-500 dark:text-slate-500">{f.type}</td>
                 <td className="px-4 py-2.5 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">{f.description}</td>
               </tr>
@@ -382,7 +382,7 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
   return (
     <div
       id={ep.id}
-      className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transition-all hover:border-indigo-200 dark:hover:border-indigo-800 scroll-mt-20"
+      className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transition-all hover:border-green-200 dark:hover:border-green-800 scroll-mt-20"
     >
       {/* Header — always visible */}
       <button
@@ -470,42 +470,13 @@ export default function ApiDocsClient() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col">
-
-      {/* ── Header ─────────────────────────────────────────────────── */}
-      <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14">
-            <div className="flex items-center gap-3">
-              <Link href="/" className="flex items-center gap-2.5 group">
-                <div className="w-8 h-8 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-lg flex items-center justify-center shadow-sm flex-shrink-0">
-                  <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                  </svg>
-                </div>
-                <span className="font-bold text-slate-900 dark:text-slate-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">Toolblip</span>
-              </Link>
-              <span className="text-slate-300 dark:text-slate-600">/</span>
-              <span className="text-sm font-medium text-slate-600 dark:text-slate-400">API Docs</span>
-              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 border border-indigo-100 dark:border-indigo-900">
-                v1
-              </span>
-            </div>
-            <div className="flex items-center gap-5 text-sm">
-              <Link href="/tools" className="text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Browse Tools</Link>
-              <Link href="/pricing" className="text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Pricing</Link>
-              <a href="https://github.com/toolblip" target="_blank" rel="noopener noreferrer"
-                className="text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors">GitHub</a>
-            </div>
-          </div>
-        </div>
-      </header>
+    <div className="bg-slate-50 dark:bg-slate-950">
 
       {/* ── Hero ───────────────────────────────────────────────────── */}
       <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-start gap-4 mb-8">
-            <div className="w-[52px] h-[52px] bg-gradient-to-br from-indigo-600 to-violet-600 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-indigo-200/50 dark:shadow-indigo-900/30">
+            <div className="w-[52px] h-[52px] bg-[#58D65D] rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-green-200/50 dark:shadow-green-900/30">
               <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
               </svg>
@@ -520,7 +491,7 @@ export default function ApiDocsClient() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
             <div className="flex flex-col gap-1 bg-slate-900 dark:bg-slate-800 rounded-xl px-4 py-3">
               <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Base URL</span>
-              <code className="text-sm font-mono text-emerald-400">{BASE_URL}</code>
+              <code className="text-sm font-mono text-[#58D65D]">{BASE_URL}</code>
             </div>
             <div className="flex items-center gap-2.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3">
               <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -552,17 +523,17 @@ export default function ApiDocsClient() {
           </div>
 
           {/* Auth callout */}
-          <div className="bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-100 dark:border-indigo-900 rounded-xl p-4 flex items-start gap-3">
-            <svg className="w-5 h-5 text-indigo-500 dark:text-indigo-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <div className="bg-green-50 dark:bg-green-950/50 border border-green-100 dark:border-green-900 rounded-xl p-4 flex items-start gap-3">
+            <svg className="w-5 h-5 text-[#58D65D] dark:text-green-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <div>
-              <p className="text-sm font-semibold text-indigo-900 dark:text-indigo-300 mb-0.5">Authentication</p>
-              <p className="text-sm text-indigo-700 dark:text-indigo-400 leading-relaxed">
-                Include the token from <code className="font-mono text-xs bg-indigo-100 dark:bg-indigo-900/50 px-1 rounded">register</code> or{' '}
-                <code className="font-mono text-xs bg-indigo-100 dark:bg-indigo-900/50 px-1 rounded">login</code> in every authenticated request:
+              <p className="text-sm font-semibold text-green-900 dark:text-green-300 mb-0.5">Authentication</p>
+              <p className="text-sm text-green-700 dark:text-green-400 leading-relaxed">
+                Include the token from <code className="font-mono text-xs bg-green-100 dark:bg-green-900/50 px-1 rounded">register</code> or{' '}
+                <code className="font-mono text-xs bg-green-100 dark:bg-green-900/50 px-1 rounded">login</code> in every authenticated request:
               </p>
-              <code className="mt-2 block bg-slate-900 dark:bg-slate-800 text-emerald-400 dark:text-emerald-300 rounded-lg px-3 py-2 text-xs font-mono">
+              <code className="mt-2 block bg-slate-900 dark:bg-slate-800 text-[#58D65D] dark:text-green-300 rounded-lg px-3 py-2 text-xs font-mono">
                 Authorization: Bearer &lt;your-token&gt;
               </code>
             </div>
@@ -571,7 +542,7 @@ export default function ApiDocsClient() {
       </div>
 
       {/* ── Content ─────────────────────────────────────────────────── */}
-      <div className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
 
           {/* ── Sidebar ── */}
@@ -595,7 +566,7 @@ export default function ApiDocsClient() {
                               onClick={() => scrollTo(ep.id)}
                               className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all text-left ${
                                 isActive
-                                  ? 'bg-indigo-100 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-400'
+                                  ? 'bg-green-100 dark:bg-green-950 text-green-700 dark:text-green-400'
                                   : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-200'
                               }`}
                             >
@@ -624,7 +595,7 @@ export default function ApiDocsClient() {
                     <button
                       key={item.id}
                       onClick={() => scrollTo(item.id)}
-                      className="block w-full px-3 py-1.5 text-xs text-slate-500 dark:text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-left"
+                      className="block w-full px-3 py-1.5 text-xs text-slate-500 dark:text-slate-500 hover:text-green-600 dark:hover:text-green-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-left"
                     >
                       {item.label}
                     </button>
@@ -647,7 +618,7 @@ export default function ApiDocsClient() {
                 {[
                   {
                     icon: (
-                      <svg className="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <svg className="w-5 h-5 text-[#58D65D] dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                       </svg>
                     ),
@@ -657,7 +628,7 @@ export default function ApiDocsClient() {
                   },
                   {
                     icon: (
-                      <svg className="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <svg className="w-5 h-5 text-[#58D65D] dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
                       </svg>
                     ),
@@ -667,7 +638,7 @@ export default function ApiDocsClient() {
                   },
                   {
                     icon: (
-                      <svg className="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <svg className="w-5 h-5 text-[#58D65D] dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                       </svg>
                     ),
@@ -677,7 +648,7 @@ export default function ApiDocsClient() {
                   },
                   {
                     icon: (
-                      <svg className="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <svg className="w-5 h-5 text-[#58D65D] dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                       </svg>
                     ),
@@ -688,7 +659,7 @@ export default function ApiDocsClient() {
                 ].map((card, i) => (
                   <div key={i} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 hover:border-slate-300 dark:hover:border-slate-700 transition-colors">
                     <div className="flex items-center gap-2.5 mb-3">
-                      <div className="w-9 h-9 bg-indigo-50 dark:bg-indigo-950/50 rounded-xl flex items-center justify-center flex-shrink-0">{card.icon}</div>
+                      <div className="w-9 h-9 bg-green-50 dark:bg-green-950/50 rounded-xl flex items-center justify-center flex-shrink-0">{card.icon}</div>
                       <h3 className="font-semibold text-slate-800 dark:text-slate-200 text-sm">{card.title}</h3>
                     </div>
                     <p className="text-sm text-slate-600 dark:text-slate-400 mb-3 leading-relaxed">{card.desc}</p>
@@ -746,11 +717,11 @@ export default function ApiDocsClient() {
             </section>
 
             {/* Help CTA */}
-            <section id="get-help" className="bg-gradient-to-r from-indigo-50 to-violet-50 dark:from-indigo-950/30 dark:to-violet-950/30 rounded-2xl border border-indigo-100 dark:border-indigo-900 p-7">
+            <section id="get-help" className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 rounded-2xl border border-green-100 dark:border-green-900 p-7">
               <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-1">Need help with the API?</h2>
               <p className="text-sm text-slate-600 dark:text-slate-400 mb-5 leading-relaxed">
                 Questions about integration? Reach out at{' '}
-                <a href="mailto:api@toolblip.com" className="text-indigo-600 dark:text-indigo-400 hover:underline font-medium">api@toolblip.com</a>
+                <a href="mailto:api@toolblip.com" className="text-[#58D65D] dark:text-green-400 hover:underline font-medium">api@toolblip.com</a>
                 {' '}or open an issue on GitHub.
               </p>
               <div className="flex flex-wrap gap-3">
@@ -760,7 +731,7 @@ export default function ApiDocsClient() {
                   View on GitHub
                 </a>
                 <Link href="/"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 dark:bg-indigo-700 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors">
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#58D65D] dark:bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-[#4bc44e] dark:hover:bg-green-500 transition-colors">
                   Explore Toolblip →
                 </Link>
               </div>
@@ -769,29 +740,6 @@ export default function ApiDocsClient() {
           </main>
         </div>
       </div>
-
-      {/* ── Footer ─────────────────────────────────────────────────── */}
-      <footer className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 mt-auto">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 bg-gradient-to-br from-indigo-600 to-violet-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-                </svg>
-              </div>
-              <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">Toolblip API</span>
-            </div>
-            <div className="flex items-center gap-5 text-xs text-slate-400 dark:text-slate-600">
-              <Link href="/api-docs" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Docs</Link>
-              <Link href="/terms" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Terms</Link>
-              <Link href="/privacy" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">Privacy</Link>
-              <a href="mailto:api@toolblip.com" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">api@toolblip.com</a>
-            </div>
-            <span className="text-xs text-slate-400 dark:text-slate-600">© {new Date().getFullYear()} Toolblip</span>
-          </div>
-        </div>
-      </footer>
 
     </div>
   );

@@ -39,7 +39,7 @@ export default function ApiStatus() {
           state === 'checking'
             ? 'bg-yellow-400 animate-pulse'
             : state === 'online'
-            ? 'bg-red-500'
+            ? 'bg-green-500'
             : 'bg-red-500'
         }`}
       />
