@@ -1563,7 +1563,7 @@ export const tools: Tool[] = [
   { name: 'WCAG Contrast Auditor', slug: 'wcag-contrast-auditor', description: 'Check foreground and background color contrast for WCAG AA and AAA compliance.', emoji: '♿', category: 'Color' },
   { name: 'Unit Measurement Converter', slug: 'unit-measurement-converter', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
   { name: 'BIN HEX DEC Converter', slug: 'bin-hex-dec-converter', description: 'Convert between binary, hexadecimal, and decimal number systems instantly.', emoji: '🔢', category: 'Conversion' },
-  { name: 'Favicon Checker', slug: 'favicon-checker', description: 'Check the live favicon of any website. Enter a URL and instantly see the favicon image, source URL, and Open Graph icon.', emoji: '🔍', category: 'SEO' }
+  { name: 'Favicon Checker', slug: 'favicon-checker', description: 'Check your favicon across 6 platforms: ico, PNG, Apple Touch, Google SERP, Android Web Manifest, and Open Graph image. Similar to RealFaviconGenerator.', emoji: '🔍', category: 'SEO' }
 ]
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'AI Tools', 'Document Generator', 'Image Tools'] as const;
