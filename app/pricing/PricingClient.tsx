@@ -51,6 +51,8 @@ export default function PricingClient() {
   const [error, setError] = useState<string | null>(null);
   const [plans, setPlans] = useState<Plan[]>([]);
   const [plansLoading, setPlansLoading] = useState(true);
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [userIsPro, setUserIsPro] = useState(false);
 
   useEffect(() => {
     fetch(`${API_BASE}/api/plans`)
@@ -63,6 +65,27 @@ export default function PricingClient() {
         setPlans(FALLBACK_PLANS);
         setPlansLoading(false);
       });
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (new URLSearchParams(window.location.search).has('session_id')) {
+      setShowSuccess(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const token = localStorage.getItem('toolblip_token');
+    if (!token) return;
+    fetch(`${API_BASE}/api/auth/me`, {
+      headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
+    })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data?.user?.is_pro) setUserIsPro(true);
+      })
+      .catch(() => {});
   }, []);
 
   async function handleUpgrade(plan: Plan) {
@@ -120,9 +143,35 @@ export default function PricingClient() {
     );
   }
 
+  const highlightPlan = plans.find((p) => p.tier === HIGHLIGHT_TIER);
+  const stickyPriceCents = highlightPlan
+    ? billing === 'yearly'
+      ? highlightPlan.price_yearly
+      : highlightPlan.price_monthly
+    : 0;
+  const stickyPrice = stickyPriceCents / 100;
+
   return (
     <div className="tb-v2-pricing">
       <div className="tb-v2-container">
+        {showSuccess && (
+          <div className="tb-v2-pricing-success" role="status">
+            <strong>Subscription activated!</strong> Your plan is now active. Welcome to Toolblip.
+            <button
+              type="button"
+              onClick={() => setShowSuccess(false)}
+              className="tb-v2-pricing-success-close"
+              aria-label="Dismiss"
+            >
+              ×
+            </button>
+          </div>
+        )}
+        {userIsPro && !showSuccess && (
+          <div className="tb-v2-pricing-active-sub" role="status">
+            You have an active subscription. Manage it from your account.
+          </div>
+        )}
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <div className="tb-v2-kicker">Pricing</div>
           <h1 className="tb-v2-page-title" style={{ fontSize: '36px' }}>Simple, transparent pricing</h1>
@@ -257,6 +306,28 @@ export default function PricingClient() {
           </p>
         </div>
       </div>
+
+      {highlightPlan && !userIsPro && (
+        <div className="tb-v2-pricing-sticky-mobile" role="region" aria-label="Recommended plan">
+          <div className="tb-v2-pricing-sticky-info">
+            <span className="tb-v2-pricing-sticky-name">{highlightPlan.name}</span>
+            <span className="tb-v2-pricing-sticky-price">
+              ${stickyPrice % 1 === 0 ? stickyPrice : stickyPrice.toFixed(2)}
+              <span className="tb-v2-pricing-sticky-period">
+                {billing === 'yearly' ? '/yr' : '/mo'}
+              </span>
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => handleUpgrade(highlightPlan)}
+            disabled={loading === highlightPlan.tier}
+            className="tb-v2-btn tb-v2-btn-primary tb-v2-pricing-sticky-btn"
+          >
+            {loading === highlightPlan.tier ? '…' : `Get ${highlightPlan.name}`}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
