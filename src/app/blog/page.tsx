@@ -9,6 +9,20 @@ export const metadata = {
   title: 'Blog — Developer Tools & Guides | Toolblip',
   description:
     'Articles on developer tools, browser-based utilities, and guides to help you work faster. No installs, no sign-ups.',
+  openGraph: {
+    title: 'Blog — Developer Tools & Guides | Toolblip',
+    description:
+      'Articles on developer tools, browser-based utilities, and guides to help you work faster. No installs, no sign-ups.',
+    url: 'https://toolblip.com/blog',
+    siteName: 'Toolblip',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Blog — Developer Tools & Guides | Toolblip',
+    description:
+      'Articles on developer tools, browser-based utilities, and guides to help you work faster. No installs, no sign-ups.',
+  },
 };
 
 interface PostMeta {

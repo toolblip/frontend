@@ -4,6 +4,20 @@ export const metadata: Metadata = {
   title: 'API Documentation — Toolblip',
   description:
     'Toolblip REST API reference. Authenticate with Bearer tokens and integrate tools into your app.',
+  openGraph: {
+    title: 'API Documentation — Toolblip',
+    description:
+      'Toolblip REST API reference. Authenticate with Bearer tokens and integrate tools into your app.',
+    url: 'https://toolblip.com/api-docs',
+    siteName: 'Toolblip',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'API Documentation — Toolblip',
+    description:
+      'Toolblip REST API reference. Authenticate with Bearer tokens and integrate tools into your app.',
+  },
 };
 
 const BASE_URL = 'https://toolblip-api-production.up.railway.app';
