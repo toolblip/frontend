@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   },
 };
 
-const BASE_URL = 'https://toolblip-api-production.up.railway.app';
+const BASE_URL = 'https://api.toolblip.com';
 
 // ─── Styles ─────────────────────────────────────────────────────────────────
 
@@ -425,39 +425,36 @@ export default function ApiDocsPage() {
                 id="get-tools"
                 method="GET"
                 path="/api/tools"
-                description="Returns a paginated list of all tools. Supports filtering by category and search."
+                description="Returns a list of all available tools. Supports optional filtering by category or search."
                 params={[
-                  { name: 'category', type: 'string', required: false, description: 'Filter by category (e.g. text, developer, image).' },
-                  { name: 'search', type: 'string', required: false, description: 'Search by name or description.' },
-                  { name: 'page', type: 'integer', required: false, description: 'Page number (default: 1).' },
+                  { name: 'category', type: 'string', required: false, description: 'Filter by category (e.g. developer, text, image).' },
+                  { name: 'search', type: 'string', required: false, description: 'Search by name or keyword.' },
                 ]}
-                curl={`curl -X GET "${BASE_URL}/api/tools?category=developer&page=1" \\
+                curl={`curl -X GET "${BASE_URL}/api/tools?category=developer" \\
   -H "Accept: application/json"`}
                 response={`{
-  "tools": {
-    "tools": [
-      {
-        "id": 1,
-        "slug": "url-encode",
-        "name": "URL Encode",
-        "description": "Encode text for safe URL usage.",
-        "category": "encoder",
-        "is_pro": false,
-        "emoji": "🔗",
-        "created_at": "2026-01-15T09:23:00.000000Z"
-      },
-      {
-        "id": 2,
-        "slug": "json-formatter",
-        "name": "JSON Formatter",
-        "description": "Format and validate JSON data instantly.",
-        "category": "developer",
-        "is_pro": false,
-        "emoji": "📋",
-        "created_at": "2026-01-20T14:11:00.000000Z"
-      }
-    ]
-  }
+  "tools": [
+    {
+      "id": 1,
+      "slug": "url-encode",
+      "name": "URL Encode",
+      "description": "Encode text for safe URL usage.",
+      "category": "encoder",
+      "is_pro": false,
+      "emoji": "🔗",
+      "created_at": "2026-01-15T09:23:00.000000Z"
+    },
+    {
+      "id": 2,
+      "slug": "json-formatter",
+      "name": "JSON Formatter",
+      "description": "Format and validate JSON data instantly.",
+      "category": "developer",
+      "is_pro": false,
+      "emoji": "📋",
+      "created_at": "2026-01-20T14:11:00.000000Z"
+    }
+  ]
 }`}
               />
 
@@ -465,11 +462,11 @@ export default function ApiDocsPage() {
                 id="get-tool-slug"
                 method="GET"
                 path="/api/tools/{slug}"
-                description="Fetch a single tool by its slug. Returns tool details including full description and metadata."
+                description="Fetch a single tool by its slug. Returns tool details including description, category, and metadata."
                 params={[
-                  { name: 'slug', type: 'string', required: true, description: 'The URL-friendly slug of the tool (e.g. json-formatter).' },
+                  { name: 'slug', type: 'string', required: true, description: 'URL-friendly slug of the tool (e.g. json-formatter).' },
                 ]}
-                curl={`curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
+                curl={`curl -X GET "${BASE_URL}/api/tools/{slug}" \\
   -H "Accept: application/json"`}
                 response={`{
   "tool": {
