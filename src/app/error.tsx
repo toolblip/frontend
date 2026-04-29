@@ -11,7 +11,9 @@ export default function Error({
 }) {
   return (
     <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
-      <div className="text-6xl mb-6">⚠️</div>
+      <div className="text-9xl font-bold text-red-500 dark:text-red-400 leading-none mb-4">
+        Error
+      </div>
       <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3">
         Something went wrong
       </h1>
