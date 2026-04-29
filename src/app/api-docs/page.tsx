@@ -416,7 +416,6 @@ export default function ApiDocsPage() {
                   { name: 'category', type: 'string', required: false, description: 'Filter by category (e.g. text, developer, image).' },
                   { name: 'search', type: 'string', required: false, description: 'Search by name or description.' },
                   { name: 'page', type: 'integer', required: false, description: 'Page number (default: 1).' },
-                  { name: 'per_page', type: 'integer', required: false, description: 'Results per page (default: 20, max: 100).' },
                 ]}
                 curl={`curl -X GET "${BASE_URL}/api/tools?category=developer&page=1" \\
   -H "Accept: application/json"`}
@@ -443,13 +442,7 @@ export default function ApiDocsPage() {
         "emoji": "📋",
         "created_at": "2026-01-20T14:11:00.000000Z"
       }
-    ],
-    "meta": {
-      "current_page": 1,
-      "total": 48,
-      "per_page": 20,
-      "last_page": 3
-    }
+    ]
   }
 }`}
               />
