@@ -31,6 +31,7 @@
     "src/layouts",
     "src/styles",
     "astro.config.mjs",
-    "wrangler.toml"
+    "wrangler.toml",
+    "mcp"
   ]
 }
