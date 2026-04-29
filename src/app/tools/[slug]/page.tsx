@@ -3,6 +3,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 
+import ShareButtons from '@/components/ShareButtons';
+
 // Real UI components
 import WordCounterClient from '@/components/tools/WordCounterClient';
 import CharacterCounterClient from '@/components/tools/CharacterCounterClient';
@@ -132,6 +134,9 @@ export default async function ToolDetailPage({ params }: Props) {
               <p className="mt-2 text-gray-500 dark:text-gray-400 leading-relaxed max-w-xl">
                 {tool.description}
               </p>
+              <div className="mt-4">
+                <ShareButtons toolName={tool.name} toolSlug={tool.slug} />
+              </div>
             </div>
           </div>
         </div>
