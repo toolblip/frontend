@@ -1,6 +1,10 @@
 # Dependencies
 node_modules/
 
+# External projects (not part of this repo)
+api/
+legacy/
+
 # Build output
 .next/
 out/
