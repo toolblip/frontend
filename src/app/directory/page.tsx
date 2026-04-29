@@ -1,26 +1,30 @@
+import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import DirectoryClient from './DirectoryClient';
 
-export const metadata = {
-  title: 'Tool Directory — All Free Tools | Toolblip',
-  description: 'Browse all free tools on Toolblip. Search and filter by category — text, developer, image, encoder, and more.',
+export const metadata: Metadata = {
+  title: 'Tool Directory',
+  description:
+    'Browse all free browser-based tools on Toolblip. Text, developer, image, conversion, math, CSS tools and more.',
   openGraph: {
-    title: 'Tool Directory — All Free Tools | Toolblip',
-    description: 'Browse all free tools on Toolblip. Search and filter by category — text, developer, image, encoder, and more.',
+    title: 'Tool Directory | Toolblip',
+    description:
+      'Browse all free browser-based tools on Toolblip. Text, developer, image, conversion, math, CSS tools and more.',
     url: 'https://toolblip.com/directory',
     siteName: 'Toolblip',
-    type: 'website',
+    images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: 'Toolblip' }],
   },
   twitter: {
     card: 'summary',
-    title: 'Tool Directory — All Free Tools | Toolblip',
-    description: 'Browse all free tools on Toolblip. Search and filter by category — text, developer, image, encoder, and more.',
+    title: 'Tool Directory | Toolblip',
+    description:
+      'Browse all free browser-based tools on Toolblip. Text, developer, image, conversion, math, CSS tools and more.',
   },
 };
 
 export default function DirectoryPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[var(--bg)]" />}>
+    <Suspense>
       <DirectoryClient />
     </Suspense>
   );

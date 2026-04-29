@@ -17,6 +17,8 @@ const DIRECTORY_CATEGORIES = [
   'Conversion',
   'Math',
   'CSS',
+  'SEO',
+  'Color',
 ] as const;
 type Category = typeof DIRECTORY_CATEGORIES[number];
 
