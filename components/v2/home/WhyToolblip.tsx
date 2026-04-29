@@ -8,7 +8,7 @@ const benefits = [
     color: '#16a34a',
     bg: '#dcfce7',
     title: 'Private',
-    desc: 'Data never leaves your browser. Nothing is sent to any server — ever.',
+    desc: 'Your API keys, JSON blobs, and private notes stay on your device. Nothing is ever transmitted anywhere.',
     glow: 'rgba(22, 163, 74, 0.15)',
   },
   {
@@ -20,7 +20,7 @@ const benefits = [
     color: '#d97706',
     bg: '#fef3c7',
     title: 'Fast',
-    desc: 'No server round-trips. No loading spinners. Results appear the moment you finish typing.',
+    desc: 'No waiting for servers. No loading spinners. Results update as you type — or instantly when you paste.',
     glow: 'rgba(217, 119, 6, 0.15)',
   },
   {
@@ -36,7 +36,7 @@ const benefits = [
     color: '#2563eb',
     bg: '#dbeafe',
     title: 'Free',
-    desc: 'No signup. No paywall. No usage limits. Every tool is free, always.',
+    desc: 'Every tool, every feature, every export — completely free. No signup wall, no usage caps, no "upgrade to download".'
     glow: 'rgba(37, 99, 235, 0.15)',
   },
 ];
