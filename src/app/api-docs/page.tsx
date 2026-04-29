@@ -20,8 +20,8 @@ export const metadata: Metadata = {
   },
 };
 
-const BASE_URL = 'https://api.toolblip.com';
-const RAILWAY_URL = 'https://toolblip-api-production.up.railway.app';
+const BASE_URL = 'https://toolblip-api-production.up.railway.app';
+const CUSTOM_URL = 'https://api.toolblip.com'; // available once SSL is ready
 
 // ─── Styles ─────────────────────────────────────────────────────────────────
 
@@ -239,6 +239,7 @@ function Method({ m }: { m: 'GET' | 'POST' | 'DELETE' }) {
 
 interface Param {
   name: string;
+  in: 'path' | 'query' | 'body';
   type: string;
   required: boolean;
   description: string;
@@ -281,7 +282,8 @@ function Endpoint({ id, method, path, description, auth, params, curl, response 
           <table style={s.paramsTable}>
             <thead>
               <tr>
-                <th style={{ ...s.th, width: 155 }}>Name</th>
+                <th style={{ ...s.th, width: 140 }}>Name</th>
+                <th style={{ ...s.th, width: 70 }}>In</th>
                 <th style={{ ...s.th, width: 95 }}>Type</th>
                 <th style={s.th}>Description</th>
               </tr>
@@ -294,6 +296,9 @@ function Endpoint({ id, method, path, description, auth, params, curl, response 
                       {p.name}
                       {p.required && <span style={s.required}>*</span>}
                     </span>
+                  </td>
+                  <td style={{ ...s.td, ...(i === params.length - 1 ? s.tdLast : {}) }}>
+                    <span style={{ fontFamily: 'var(--f-mono)', fontSize: 11.5, color: 'var(--fg-3)' }}>{p.in}</span>
                   </td>
                   <td style={{ ...s.td, ...(i === params.length - 1 ? s.tdLast : {}) }}>
                     <span style={s.tdType}>{p.type}</span>
@@ -406,11 +411,11 @@ export default function ApiDocsPage() {
                 <pre style={s.codeBlock}>{BASE_URL}</pre>
               </div>
               <p style={{ ...s.sectionDesc, marginTop: 12 }}>
-                While SSL is being provisioned for <code style={s.codeInline}>api.toolblip.com</code>, you may also
-                use the Railway deployment directly:
+                While SSL is being provisioned for <code style={s.codeInline}>api.toolblip.com</code>, use the
+                Railway URL above. Once SSL is ready, switch to:
               </p>
               <div style={s.authCard}>
-                <pre style={s.codeBlock}>{RAILWAY_URL}</pre>
+                <pre style={s.codeBlock}>{CUSTOM_URL}</pre>
               </div>
             </section>
 
@@ -447,11 +452,11 @@ export default function ApiDocsPage() {
                 id="get-tools"
                 method="GET"
                 path="/api/tools"
-                description="Returns a paginated list of all tools. Supports optional filtering by category or search query."
+                description="Returns all tools. Response wraps the array under the tools key."
                 params={[
-                  { name: 'category', type: 'string', required: false, description: 'Filter by category slug (e.g. developer, text, image).' },
-                  { name: 'search', type: 'string', required: false, description: 'Search by name or keyword in title/description.' },
-                  { name: 'page', type: 'integer', required: false, description: 'Page number for pagination (default: 1).' },
+                  { name: 'category', in: 'query', type: 'string', required: false, description: 'Filter by category slug (e.g. developer, text, image).' },
+                  { name: 'search', in: 'query', type: 'string', required: false, description: 'Search by name or keyword in title/description.' },
+                  { name: 'page', in: 'query', type: 'integer', required: false, description: 'Page number for pagination (default: 1).' },
                 ]}
                 curl={`curl -X GET "${BASE_URL}/api/tools?category=developer&search=json" \\
   -H "Accept: application/json"`}
@@ -487,9 +492,9 @@ export default function ApiDocsPage() {
                 id="get-tool-slug"
                 method="GET"
                 path="/api/tools/{slug}"
-                description="Fetch a single tool by its unique slug. Returns full tool details including description, category, and metadata."
+                description="Fetch a single tool by its unique slug. Returns full tool details."
                 params={[
-                  { name: 'slug', type: 'string', required: true, description: 'URL-friendly slug of the tool (e.g. json-formatter).' },
+                  { name: 'slug', in: 'path', type: 'string', required: true, description: 'URL-friendly slug of the tool (e.g. json-formatter).' },
                 ]}
                 curl={`curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
   -H "Accept: application/json"`}
@@ -521,10 +526,10 @@ export default function ApiDocsPage() {
                 path="/api/auth/register"
                 description="Create a new user account. Returns the user object and a Bearer token for immediate authentication."
                 params={[
-                  { name: 'name', type: 'string', required: true, description: 'Full display name of the user.' },
-                  { name: 'email', type: 'string', required: true, description: 'Valid email address (must be unique per account).' },
-                  { name: 'password', type: 'string', required: true, description: 'Account password (minimum 8 characters).' },
-                  { name: 'password_confirmation', type: 'string', required: true, description: 'Must match the password field exactly.' },
+                  { name: 'name', in: 'body', type: 'string', required: true, description: 'Full display name of the user.' },
+                  { name: 'email', in: 'body', type: 'string', required: true, description: 'Valid email address (must be unique per account).' },
+                  { name: 'password', in: 'body', type: 'string', required: true, description: 'Account password (minimum 8 characters).' },
+                  { name: 'password_confirmation', in: 'body', type: 'string', required: true, description: 'Must match the password field exactly.' },
                 ]}
                 curl={`curl -X POST "${BASE_URL}/api/auth/register" \\
   -H "Content-Type: application/json" \\
@@ -552,8 +557,8 @@ export default function ApiDocsPage() {
                 path="/api/auth/login"
                 description="Authenticate with existing credentials. Returns the user object and a Bearer token."
                 params={[
-                  { name: 'email', type: 'string', required: true, description: 'Email address of your account.' },
-                  { name: 'password', type: 'string', required: true, description: 'Your account password.' },
+                  { name: 'email', in: 'body', type: 'string', required: true, description: 'Email address of your account.' },
+                  { name: 'password', in: 'body', type: 'string', required: true, description: 'Your account password.' },
                 ]}
                 curl={`curl -X POST "${BASE_URL}/api/auth/login" \\
   -H "Content-Type: application/json" \\
