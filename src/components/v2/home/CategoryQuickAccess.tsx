@@ -64,9 +64,21 @@ export default function CategoryQuickAccess({ categories }: CategoryQuickAccessP
         <div style={{
           display: 'flex',
           flexWrap: 'wrap',
-          gap: 10,
+          gap: 8,
           justifyContent: 'center',
+          alignItems: 'center',
         }}>
+          <span style={{
+            fontSize: 12,
+            fontWeight: 600,
+            color: 'var(--fg-3)',
+            letterSpacing: '0.05em',
+            textTransform: 'uppercase',
+            marginRight: 4,
+            whiteSpace: 'nowrap',
+          }}>
+            Browse:
+          </span>
           {categories.map((cat) => {
             const { bg, color } = getCategoryStyle(cat.name);
             const emoji = getCategoryEmoji(cat.name);
@@ -77,27 +89,32 @@ export default function CategoryQuickAccess({ categories }: CategoryQuickAccessP
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: 8,
-                  padding: '10px 18px',
+                  gap: 6,
+                  padding: '7px 14px',
                   borderRadius: 999,
                   background: bg,
                   color: color,
-                  fontSize: 14,
+                  fontSize: 13,
                   fontWeight: 600,
                   textDecoration: 'none',
-                  transition: 'transform .1s, box-shadow .1s',
+                  transition: 'transform .1s, box-shadow .1s, opacity .1s',
                   border: '1px solid transparent',
+                  whiteSpace: 'nowrap',
                 }}
                 onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
-                  (e.currentTarget as HTMLElement).style.boxShadow = `0 4px 12px -4px ${color}40`;
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.transform = 'translateY(-1px)';
+                  el.style.boxShadow = `0 4px 12px -4px ${color}50`;
+                  el.style.opacity = '0.9';
                 }}
                 onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
-                  (e.currentTarget as HTMLElement).style.boxShadow = 'none';
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.transform = 'translateY(0)';
+                  el.style.boxShadow = 'none';
+                  el.style.opacity = '1';
                 }}
               >
-                <span style={{ fontSize: 16 }}>{emoji}</span>
+                <span style={{ fontSize: 14 }}>{emoji}</span>
                 {cat.name}
               </Link>
             );

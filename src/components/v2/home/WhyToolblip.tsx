@@ -4,26 +4,44 @@ const BENEFITS = [
   {
     emoji: '🔒',
     title: '100% Private',
-    desc: 'Your data never leaves your browser. No servers, no uploads, no tracking — not even we can see what you\'re doing.',
+    tagline: 'Your data, your device, end of story',
+    desc: 'Everything runs in your browser tab. Nothing is sent to any server — not even we can see what you\'re working on.',
     tint: 'var(--green-tint)',
     color: '#1e6b42',
-    bg: '#d6f0df',
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+      </svg>
+    ),
   },
   {
     emoji: '⚡',
     title: 'Instantly Fast',
-    desc: 'Runs entirely in your browser tab. No API calls, no loading spinners, no rate limits. Just paste and go.',
+    tagline: 'No spinners. No API calls. No waiting.',
+    desc: 'Results appear the moment you paste. No round-trips to a server, no rate limits, no loading screens.',
     tint: 'var(--amber-tint)',
     color: '#7a4e00',
-    bg: '#fff0c9',
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+      </svg>
+    ),
   },
   {
     emoji: '🆓',
     title: 'Always Free',
-    desc: 'No signup, no paywall, no usage limits. Every tool is free, forever. Built and maintained by a small team.',
+    tagline: 'No signup. No paywall. No catch.',
+    desc: 'Every tool is free, forever. No account needed, no credit card, no usage caps. Built by developers, for everyone.',
     tint: 'var(--blue-tint)',
     color: '#1d3fa0',
-    bg: '#e7ecff',
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <line x1="12" y1="8" x2="12" y2="12" />
+        <line x1="12" y1="16" x2="12.01" y2="16" />
+      </svg>
+    ),
   },
 ];
 
@@ -43,7 +61,7 @@ export default function WhyToolblip() {
               margin: '10px 0 0',
               color: 'var(--fg-0)',
             }}>
-              Better than a download.
+              Why Toolblip?
             </h2>
           </div>
         </div>
@@ -63,7 +81,18 @@ export default function WhyToolblip() {
                 border: '1px solid var(--line)',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 14,
+                gap: 16,
+                transition: 'transform .15s, box-shadow .15s',
+              }}
+              onMouseEnter={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.transform = 'translateY(-2px)';
+                el.style.boxShadow = '0 8px 24px -8px rgba(0,0,0,0.12)';
+              }}
+              onMouseLeave={(e) => {
+                const el = e.currentTarget as HTMLElement;
+                el.style.transform = 'translateY(0)';
+                el.style.boxShadow = 'none';
               }}
             >
               <div style={{
@@ -74,9 +103,9 @@ export default function WhyToolblip() {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                fontSize: 24,
+                color: b.color,
               }}>
-                {b.emoji}
+                {b.icon}
               </div>
               <div>
                 <div style={{
@@ -85,9 +114,18 @@ export default function WhyToolblip() {
                   fontWeight: 700,
                   letterSpacing: '-0.02em',
                   color: 'var(--fg-0)',
-                  marginBottom: 8,
+                  marginBottom: 4,
                 }}>
                   {b.title}
+                </div>
+                <div style={{
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: b.color,
+                  marginBottom: 10,
+                  letterSpacing: '0.01em',
+                }}>
+                  {b.tagline}
                 </div>
                 <div style={{
                   fontSize: 14,
