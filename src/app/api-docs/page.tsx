@@ -21,6 +21,7 @@ export const metadata: Metadata = {
 };
 
 const BASE_URL = 'https://api.toolblip.com';
+const RAILWAY_URL = 'https://toolblip-api-production.up.railway.app';
 
 // ─── Styles ─────────────────────────────────────────────────────────────────
 
@@ -371,12 +372,13 @@ export default function ApiDocsPage() {
           <nav style={s.nav}>
             <div style={s.navSection}>
               <p style={s.navLabel}>Getting Started</p>
+              <a href="#base-url" style={s.navLink}>Base URL</a>
               <a href="#authentication" style={s.navLink}>Authentication</a>
             </div>
             <div style={s.navSection}>
               <p style={s.navLabel}>Tools</p>
               <a href="#get-tools" style={s.navLink}>GET /api/tools</a>
-              <a href="#get-tool-slug" style={s.navLink}>GET /api/tools/{`{slug}`}</a>
+              <a href="#get-tool-slug" style={s.navLink}>GET /api/tools/{'{slug}'}</a>
             </div>
             <div style={s.navSection}>
               <p style={s.navLabel}>Auth</p>
@@ -393,6 +395,26 @@ export default function ApiDocsPage() {
 
           {/* Main content */}
           <main style={s.content}>
+
+            {/* Base URL */}
+            <section id="base-url" style={s.section}>
+              <h2 style={s.sectionTitle}>Base URL</h2>
+              <p style={s.sectionDesc}>
+                All API requests are made to the following base URL:
+              </p>
+              <div style={s.authCard}>
+                <pre style={s.codeBlock}>{BASE_URL}</pre>
+              </div>
+              <p style={{ ...s.sectionDesc, marginTop: 12 }}>
+                While SSL is being provisioned for <code style={s.codeInline}>api.toolblip.com</code>, you may also
+                use the Railway deployment directly:
+              </p>
+              <div style={s.authCard}>
+                <pre style={s.codeBlock}>{RAILWAY_URL}</pre>
+              </div>
+            </section>
+
+            <div style={s.divider} />
 
             {/* Authentication */}
             <section id="authentication" style={s.section}>
@@ -425,36 +447,39 @@ export default function ApiDocsPage() {
                 id="get-tools"
                 method="GET"
                 path="/api/tools"
-                description="Returns a list of all available tools. Supports optional filtering by category or search."
+                description="Returns a paginated list of all tools. Supports optional filtering by category or search query."
                 params={[
-                  { name: 'category', type: 'string', required: false, description: 'Filter by category (e.g. developer, text, image).' },
-                  { name: 'search', type: 'string', required: false, description: 'Search by name or keyword.' },
+                  { name: 'category', type: 'string', required: false, description: 'Filter by category slug (e.g. developer, text, image).' },
+                  { name: 'search', type: 'string', required: false, description: 'Search by name or keyword in title/description.' },
+                  { name: 'page', type: 'integer', required: false, description: 'Page number for pagination (default: 1).' },
                 ]}
-                curl={`curl -X GET "${BASE_URL}/api/tools?category=developer" \\
+                curl={`curl -X GET "${BASE_URL}/api/tools?category=developer&search=json" \\
   -H "Accept: application/json"`}
                 response={`{
-  "tools": [
-    {
-      "id": 1,
-      "slug": "url-encode",
-      "name": "URL Encode",
-      "description": "Encode text for safe URL usage.",
-      "category": "encoder",
-      "is_pro": false,
-      "emoji": "🔗",
-      "created_at": "2026-01-15T09:23:00.000000Z"
-    },
-    {
-      "id": 2,
-      "slug": "json-formatter",
-      "name": "JSON Formatter",
-      "description": "Format and validate JSON data instantly.",
-      "category": "developer",
-      "is_pro": false,
-      "emoji": "📋",
-      "created_at": "2026-01-20T14:11:00.000000Z"
-    }
-  ]
+  "tools": {
+    "tools": [
+      {
+        "id": 1,
+        "slug": "url-encode",
+        "name": "URL Encode",
+        "description": "Encode text for safe URL usage.",
+        "category": "encoder",
+        "is_pro": false,
+        "emoji": "🔗",
+        "created_at": "2026-01-15T09:23:00.000000Z"
+      },
+      {
+        "id": 2,
+        "slug": "json-formatter",
+        "name": "JSON Formatter",
+        "description": "Format and validate JSON data instantly.",
+        "category": "developer",
+        "is_pro": false,
+        "emoji": "📋",
+        "created_at": "2026-01-20T14:11:00.000000Z"
+      }
+    ]
+  }
 }`}
               />
 
@@ -462,11 +487,11 @@ export default function ApiDocsPage() {
                 id="get-tool-slug"
                 method="GET"
                 path="/api/tools/{slug}"
-                description="Fetch a single tool by its slug. Returns tool details including description, category, and metadata."
+                description="Fetch a single tool by its unique slug. Returns full tool details including description, category, and metadata."
                 params={[
                   { name: 'slug', type: 'string', required: true, description: 'URL-friendly slug of the tool (e.g. json-formatter).' },
                 ]}
-                curl={`curl -X GET "${BASE_URL}/api/tools/{slug}" \\
+                curl={`curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
   -H "Accept: application/json"`}
                 response={`{
   "tool": {
@@ -488,17 +513,17 @@ export default function ApiDocsPage() {
             {/* Auth endpoints */}
             <section id="auth" style={s.section}>
               <h2 style={s.sectionTitle}>Auth</h2>
-              <p style={s.sectionDesc}>Register, log in, or manage your session.</p>
+              <p style={s.sectionDesc}>Register, log in, and manage your API session.</p>
 
               <Endpoint
                 id="post-register"
                 method="POST"
                 path="/api/auth/register"
-                description="Create a new user account. Returns the user object and a Bearer token."
+                description="Create a new user account. Returns the user object and a Bearer token for immediate authentication."
                 params={[
-                  { name: 'name', type: 'string', required: true, description: 'Full name of the user.' },
-                  { name: 'email', type: 'string', required: true, description: 'Valid email address (must be unique).' },
-                  { name: 'password', type: 'string', required: true, description: 'Account password (min 8 characters).' },
+                  { name: 'name', type: 'string', required: true, description: 'Full display name of the user.' },
+                  { name: 'email', type: 'string', required: true, description: 'Valid email address (must be unique per account).' },
+                  { name: 'password', type: 'string', required: true, description: 'Account password (minimum 8 characters).' },
                   { name: 'password_confirmation', type: 'string', required: true, description: 'Must match the password field exactly.' },
                 ]}
                 curl={`curl -X POST "${BASE_URL}/api/auth/register" \\
@@ -525,7 +550,7 @@ export default function ApiDocsPage() {
                 id="post-login"
                 method="POST"
                 path="/api/auth/login"
-                description="Log in with existing credentials. Returns the user object and a Bearer token."
+                description="Authenticate with existing credentials. Returns the user object and a Bearer token."
                 params={[
                   { name: 'email', type: 'string', required: true, description: 'Email address of your account.' },
                   { name: 'password', type: 'string', required: true, description: 'Your account password.' },
@@ -552,7 +577,7 @@ export default function ApiDocsPage() {
                 id="post-logout"
                 method="POST"
                 path="/api/auth/logout"
-                description="Invalidate the current token. Requires authentication."
+                description="Invalidate the current token server-side. Requires authentication. The token can no longer be used after this call."
                 auth
                 curl={`curl -X POST "${BASE_URL}/api/auth/logout" \\
   -H "Content-Type: application/json" \\
@@ -567,7 +592,7 @@ export default function ApiDocsPage() {
                 id="get-user"
                 method="GET"
                 path="/api/auth/user"
-                description="Fetch the currently authenticated user. Requires a valid Bearer token."
+                description="Fetch the currently authenticated user. Use this to verify a token or get the latest user profile data."
                 auth
                 curl={`curl -X GET "${BASE_URL}/api/auth/user" \\
   -H "Accept: application/json" \\
@@ -590,17 +615,17 @@ export default function ApiDocsPage() {
               <h2 style={s.sectionTitle}>Errors</h2>
               <p style={s.sectionDesc}>
                 All errors return a JSON body with a <code style={s.codeInline}>message</code> field describing
-                what went wrong.
+                what went wrong. HTTP status codes follow standard conventions.
               </p>
               <div style={s.authCard}>
                 {([
-                  { code: '400', label: 'Bad Request', desc: 'Invalid or missing parameters.' },
+                  { code: '400', label: 'Bad Request', desc: 'Invalid or missing parameters in the request body.' },
                   { code: '401', label: 'Unauthorized', desc: 'Missing or invalid auth token.' },
-                  { code: '403', label: 'Forbidden', desc: 'Authenticated but not permitted.' },
-                  { code: '404', label: 'Not Found', desc: 'Resource does not exist.' },
-                  { code: '422', label: 'Unprocessable Entity', desc: 'Validation failed — check the message field.' },
-                  { code: '429', label: 'Too Many Requests', desc: 'Rate limit exceeded. Wait and retry.' },
-                  { code: '500', label: 'Server Error', desc: 'Something went wrong on our end.' },
+                  { code: '403', label: 'Forbidden', desc: 'Authenticated but not permitted for this resource.' },
+                  { code: '404', label: 'Not Found', desc: 'Resource does not exist (e.g. unknown tool slug).' },
+                  { code: '422', label: 'Unprocessable Entity', desc: 'Validation failed — check the message field for details.' },
+                  { code: '429', label: 'Too Many Requests', desc: 'Rate limit exceeded. Wait before retrying.' },
+                  { code: '500', label: 'Server Error', desc: 'Something went wrong on our end. Try again later.' },
                 ] as const).map((err, i) => (
                   <div
                     key={err.code}
@@ -620,8 +645,11 @@ export default function ApiDocsPage() {
             {/* Quickstart tip */}
             <div style={s.tip}>
               <p style={s.tipText}>
-                <strong style={{ color: 'var(--fg-0)' }}>Quickstart:</strong> Register to get a token, then pass it
-                as{' '}
+                <strong style={{ color: 'var(--fg-0)' }}>Quickstart:</strong> Call{' '}
+                <code style={{ fontFamily: 'var(--f-mono)', fontSize: 13, background: '#fff', padding: '1px 6px', borderRadius: 4 }}>
+                  POST /api/auth/register
+                </code>{' '}
+                to get a token, then pass it as{' '}
                 <code style={{ fontFamily: 'var(--f-mono)', fontSize: 13, background: '#fff', padding: '1px 6px', borderRadius: 4 }}>
                   Authorization: Bearer &lt;token&gt;
                 </code>{' '}
