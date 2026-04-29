@@ -2,15 +2,9 @@
 
 import Link from 'next/link';
 
-interface Category {
-  name: string;
-  emoji: string;
-  bg: string;
-  color: string;
-}
-
 interface CategoryQuickAccessProps {
-  categories: Category[];
+  // Only name is required; emoji/bg/color are computed internally via EMOJI_MAP / COLOR_MAP
+  categories: { name: string }[];
 }
 
 const EMOJI_MAP: Record<string, string> = {

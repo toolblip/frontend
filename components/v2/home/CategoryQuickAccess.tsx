@@ -3,6 +3,11 @@
 import Link from 'next/link';
 import { tools } from '@/data/tools';
 
+interface CategoryQuickAccessProps {
+  /** Optional category list. When provided, overrides internal derivation from tools. */
+  categories?: { name: string }[];
+}
+
 const CATEGORY_META: Record<string, { icon: string; borderColor: string }> = {
   Text:       { icon: 'Aa', borderColor: '#b8430f' },
   Developer:  { icon: '</>', borderColor: '#4056c9' },
@@ -13,19 +18,23 @@ const CATEGORY_META: Record<string, { icon: string; borderColor: string }> = {
   Network:    { icon: '🌐', borderColor: '#446a0b' },
   CSS:        { icon: '✨', borderColor: '#08657a' },
   Math:       { icon: '∑', borderColor: '#9b1f1a' },
+  Encoder:    { icon: '🔐', borderColor: '#5a2d8a' },
   Generate:   { icon: '⚡', borderColor: '#c27a0a' },
 };
 
 const FALLBACK = { icon: '📁', borderColor: '#6b7280' };
 
-export default function CategoryQuickAccess() {
+export default function CategoryQuickAccess({ categories }: CategoryQuickAccessProps) {
   const counts = tools.reduce<Record<string, number>>((acc, t) => {
     acc[t.category] = (acc[t.category] ?? 0) + 1;
     return acc;
   }, {});
-  const categories = Object.entries(counts)
-    .sort(([, a], [, b]) => b - a)
-    .map(([name]) => name);
+
+  const cats = categories
+    ? categories.map((c) => c.name)
+    : Object.entries(counts)
+        .sort(([, a], [, b]) => b - a)
+        .map(([name]) => name);
 
   return (
     <section style={{ padding: '18px 0 6px' }}>
@@ -45,7 +54,7 @@ export default function CategoryQuickAccess() {
             justifyContent: 'center',
           }}
         >
-          {categories.map((name) => {
+          {cats.map((name) => {
             const meta = CATEGORY_META[name] ?? FALLBACK;
             return (
               <Link
@@ -58,7 +67,7 @@ export default function CategoryQuickAccess() {
               >
                 <span style={{ fontSize: 12 }}>{meta.icon}</span>
                 {name}
-                <span className="cat-pill-count">{counts[name]}</span>
+                <span className="cat-pill-count">{counts[name] ?? 0}</span>
               </Link>
             );
           })}
