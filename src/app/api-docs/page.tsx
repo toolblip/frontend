@@ -12,6 +12,12 @@ export const metadata: Metadata = {
     siteName: 'Toolblip',
     type: 'website',
   },
+  twitter: {
+    card: 'summary',
+    title: 'API Documentation — Toolblip',
+    description:
+      'Toolblip REST API reference. Authenticate with Bearer tokens and integrate tools into your app.',
+  },
 };
 
 const BASE = 'https://toolblip-api-production.up.railway.app';
@@ -48,7 +54,7 @@ const C = {
   endpoint: { fontFamily: 'var(--f-mono)', fontSize: 13.5, fontWeight: 600, color: 'var(--fg-0)' },
   authBadge: { display: 'inline-flex', alignItems: 'center', gap: 4, background: '#fdecec', border: '1px solid #f5c6c6', color: '#9b1f1a', borderRadius: 6, padding: '3px 9px', fontSize: 11.5, fontWeight: 600, flexShrink: 0 },
   desc: { color: 'var(--fg-2)', fontSize: 14, lineHeight: 1.55, margin: 0 },
-  paramsTable: { width: '100%', borderCollapse: 'collapse', fontSize: 13 },
+  paramsTable: { width: '100%', borderCollapse: 'collapse' as const, fontSize: 13 },
   th: { textAlign: 'left' as const, padding: '7px 8px 7px 0', color: 'var(--fg-3)', fontWeight: 600, fontSize: 10.5, textTransform: 'uppercase' as const, letterSpacing: '0.06em', borderBottom: '1px solid var(--line)' },
   td: { padding: '9px 8px 9px 0', borderBottom: '1px solid var(--line)', verticalAlign: 'top' as const },
   tdLast: { borderBottom: 'none' },

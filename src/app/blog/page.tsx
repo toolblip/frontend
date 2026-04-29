@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
@@ -5,7 +6,7 @@ import Link from 'next/link';
 
 const BLOG_DIR = path.join(process.cwd(), 'src/content/blog');
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Blog — Developer Tools & Guides | Toolblip',
   description:
     'Articles on developer tools, browser-based utilities, and guides to help you work faster. No installs, no sign-ups.',
