@@ -6,6 +6,9 @@ import Link from 'next/link';
 import { tools } from '@/data/tools';
 import { getCategoryMeta } from '@/lib/v2/categoryMeta';
 import { IconArrowUR, IconSearch, IconClose } from '@/components/v2/icons';
+import HowItWorksStrip from '@/components/v2/home/HowItWorksStrip';
+import CategoryQuickAccess from '@/components/v2/home/CategoryQuickAccess';
+import WhyToolblip from '@/components/v2/home/WhyToolblip';
 
 // All categories present in tools.ts + categoryMeta.ts
 const DIRECTORY_CATEGORIES = [
@@ -117,6 +120,13 @@ export default function DirectoryClient() {
     inputRef.current?.focus();
   };
 
+  // Unique categories for HowItWorksStrip and CategoryQuickAccess
+  const uniqueCategories = useMemo(() => {
+    const seen = new Set<string>();
+    for (const tool of tools) seen.add(tool.category);
+    return Array.from(seen).sort();
+  }, []);
+
   return (
     <div className="tb-v2-shell">
       {/* ── Page header ── */}
@@ -125,11 +135,20 @@ export default function DirectoryClient() {
           <div className="tb-v2-kicker">All tools</div>
           <h1 className="tb-v2-dir-title">Tool Directory</h1>
           <p className="tb-v2-dir-sub">
-            {tools.length} free browser-based tools - text, developer, image,
+            {tools.length} free browser-based tools — text, developer, image,
             conversion, math, and more.
           </p>
         </div>
       </div>
+
+      {/* ── How it works strip ── */}
+      <HowItWorksStrip toolCount={tools.length} categoryCount={uniqueCategories.length} />
+
+      {/* ── Category quick-access pills ── */}
+      <CategoryQuickAccess categories={uniqueCategories.map((n) => ({ name: n }))} />
+
+      {/* ── Why Toolblip? ── */}
+      <WhyToolblip />
 
       {/* ── Sticky search + filter bar ── */}
       <div className="tb-v2-dir-controls">
