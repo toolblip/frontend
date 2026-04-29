@@ -7,12 +7,12 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
   return (
     <section
       style={{
-        borderTop: '1px solid var(--border)',
-        borderBottom: '1px solid var(--border)',
+        borderTop: '1px solid var(--line)',
+        borderBottom: '1px solid var(--line)',
         background: 'var(--surface-2)',
       }}
     >
-      <div className="tb-v2-container" style={{ padding: '20px 28px 20px' }}>
+      <div className="tb-v2-container" style={{ padding: '24px 28px 20px' }}>
         <div style={{ textAlign: 'center', marginBottom: 20 }}>
           <div className="tb-v2-kicker">How it works</div>
           <h2 style={{ fontSize: 18, fontWeight: 700, margin: '4px 0 0', letterSpacing: '-0.3px' }}>
@@ -39,7 +39,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               color: 'var(--green)',
               bg: 'var(--green-tint)',
               title: 'Pick a tool',
-              desc: `Browse ${toolCount}+ free browser-based tools across ${categoryCount} categories.`,
+              desc: `${toolCount} free tools — JSON, Base64, images, text, and more.`,
             },
             {
               icon: (
@@ -50,7 +50,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               color: 'var(--blue)',
               bg: 'var(--blue-tint)',
               title: 'Paste your data',
-              desc: 'Type or paste — nothing is ever sent to a server.',
+              desc: 'Type or paste — nothing leaves your browser. Ever.',
             },
             {
               icon: (
@@ -61,7 +61,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               color: 'var(--purple)',
               bg: 'var(--purple-tint)',
               title: 'Get your result',
-              desc: 'Copy the output instantly. Done in seconds.',
+              desc: 'Copy the output instantly. No waiting, no spinners.',
             },
           ].map((item, i) => (
             <div key={i} className={`hiw-step hiw-step-${i}`} style={{ display: 'flex', alignItems: 'center', flex: '1 1 0', minWidth: 160 }}>
@@ -71,11 +71,11 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
                     flexShrink: 0,
                     display: 'flex',
                     alignItems: 'center',
-                    padding: '0 8px',
+                    padding: '0 6px',
                     color: 'var(--fg-3)',
                   }}
                 >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
                 </div>
@@ -86,31 +86,33 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
                   flexDirection: 'column',
                   alignItems: 'center',
                   textAlign: 'center',
-                  padding: '8px 16px',
+                  padding: '8px 12px',
                   gap: 8,
                   flex: '1 1 0',
                 }}
               >
                 <div
                   style={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: '50%',
+                    width: 48,
+                    height: 48,
+                    borderRadius: 12,
                     background: item.bg,
                     color: item.color,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     flexShrink: 0,
+                    transition: 'transform 0.15s',
                   }}
+                  className="hiw-icon"
                 >
                   {item.icon}
                 </div>
                 <div>
-                  <div style={{ fontWeight: 600, fontSize: 14, marginBottom: 3 }}>
+                  <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 3, color: 'var(--fg-0)' }}>
                     {item.title}
                   </div>
-                  <div style={{ fontSize: 12, color: 'var(--fg-2)', lineHeight: 1.45 }}>
+                  <div style={{ fontSize: 12.5, color: 'var(--fg-2)', lineHeight: 1.45 }}>
                     {item.desc}
                   </div>
                 </div>
@@ -171,6 +173,21 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
         @keyframes hiw-step-in {
           from { opacity: 0; transform: translateY(10px); }
           to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .hiw-icon {
+          animation: hiw-icon-in 0.5s ease-out both;
+        }
+        .hiw-step-1 .hiw-icon { animation-delay: 0.12s; }
+        .hiw-step-2 .hiw-icon { animation-delay: 0.24s; }
+
+        @keyframes hiw-icon-in {
+          from { opacity: 0; transform: scale(0.7) rotate(-8deg); }
+          to   { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+
+        .hiw-icon:hover {
+          transform: scale(1.1) rotate(-3deg);
         }
 
         @keyframes privacy-pulse {

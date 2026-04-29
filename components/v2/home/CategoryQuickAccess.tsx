@@ -28,10 +28,10 @@ export default function CategoryQuickAccess() {
     .map(([name]) => name);
 
   return (
-    <section style={{ padding: '16px 0 4px' }}>
+    <section style={{ padding: '18px 0 6px' }}>
       <div className="tb-v2-container" style={{ marginBottom: 8 }}>
-        <div style={{ textAlign: 'center', marginBottom: 4 }}>
-          <span className="tb-v2-kicker" style={{ fontSize: 12 }}>Quick access</span>
+        <div style={{ textAlign: 'center', marginBottom: 6 }}>
+          <span className="tb-v2-kicker" style={{ fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Browse by category</span>
         </div>
       </div>
       <div className="tb-v2-container">
