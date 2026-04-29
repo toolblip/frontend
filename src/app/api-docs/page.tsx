@@ -11,6 +11,11 @@ export const metadata: Metadata = {
     siteName: 'Toolblip',
     type: 'website',
   },
+  twitter: {
+    card: 'summary',
+    title: 'API Docs — Toolblip',
+    description: 'Toolblip REST API reference. Authenticate with Bearer tokens and integrate the tool directory into your app.',
+  },
 };
 
 const BASE = 'https://toolblip-api-production.up.railway.app';
