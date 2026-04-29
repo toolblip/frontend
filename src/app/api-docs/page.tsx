@@ -539,8 +539,8 @@ function IconChevronRight() {
   );
 }
 
-function Method({ m }: { m: 'GET' | 'POST' | 'DELETE' }) {
-  const style = m === 'GET' ? s.methodGet : m === 'POST' ? s.methodPost : s.methodDelete;
+function Method({ m }: { m: 'GET' | 'POST' }) {
+  const style = m === 'GET' ? s.methodGet : s.methodPost;
   return <span style={{ ...s.method, ...style }}>{m}</span>;
 }
 
@@ -784,9 +784,10 @@ export default function ApiDocsPage() {
                     description: 'Page number for pagination (default: 1).',
                   },
                 ]}
-                curl={`curl -X GET "${BASE}/api/tools?category=developer&search=json" \\
+                curl={`curl -X GET "${BASE}/api/tools" \\
   -H "Accept: application/json"`}
-                response={`{
+                response={`// 200 OK
+{
   "tools": {
     "tools": [
       {
@@ -830,7 +831,8 @@ export default function ApiDocsPage() {
                 ]}
                 curl={`curl -X GET "${BASE}/api/tools/json-formatter" \\
   -H "Accept: application/json"`}
-                response={`{
+                response={`// 200 OK
+{
   "tool": {
     "id": 2,
     "slug": "json-formatter",
@@ -896,14 +898,15 @@ export default function ApiDocsPage() {
     "password": "securepass123",
     "password_confirmation": "securepass123"
   }'`}
-                response={`{
+                response={`// 201 Created
+{
   "user": {
     "id": 12,
     "name": "Alex Johnson",
     "email": "alex@example.com",
     "is_pro": false
   },
-  "token": "1|abcdef1234567890..."
+  "token": "1|abcdef1234567890abcdef1234567890abcdef12"
 }`}
               />
 
@@ -935,14 +938,15 @@ export default function ApiDocsPage() {
     "email": "alex@example.com",
     "password": "securepass123"
   }'`}
-                response={`{
+                response={`// 200 OK
+{
   "user": {
     "id": 12,
     "name": "Alex Johnson",
     "email": "alex@example.com",
     "is_pro": false
   },
-  "token": "2|abcdef1234567890..."
+  "token": "2|abcdef1234567890abcdef1234567890abcdef12"
 }`}
               />
 
@@ -956,7 +960,8 @@ export default function ApiDocsPage() {
   -H "Content-Type: application/json" \\
   -H "Accept: application/json" \\
   -H "Authorization: Bearer $TB_TOKEN"`}
-                response={`{
+                response={`// 200 OK
+{
   "message": "Session terminated successfully."
 }`}
               />
@@ -970,7 +975,8 @@ export default function ApiDocsPage() {
                 curl={`curl -X GET "${BASE}/api/auth/user" \\
   -H "Accept: application/json" \\
   -H "Authorization: Bearer $TB_TOKEN"`}
-                response={`{
+                response={`// 200 OK
+{
   "user": {
     "id": 12,
     "name": "Alex Johnson",
