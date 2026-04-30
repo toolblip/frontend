@@ -633,8 +633,9 @@ export default function ApiDocsPage() {
           <p style={s.kicker}>API Reference</p>
           <h1 style={s.title}>API Documentation</h1>
           <p style={s.subtitle}>
-            Integrate Toolblip into your app. All endpoints return JSON over HTTPS,
-            and authenticated requests use a Bearer token in the Authorization header.
+            Integrate Toolblip into your app. All endpoints return JSON over HTTPS.{' '}
+            Authenticated requests include a Bearer token in the Authorization header.
+            The API is RESTful, stateless, and CORS-enabled.
           </p>
           <div style={s.badges}>
             <div style={s.badge}>
@@ -668,6 +669,7 @@ export default function ApiDocsPage() {
           <nav style={s.nav}>
             <div style={s.navSection}>
               <p style={s.navLabel}>Getting Started</p>
+              <a href="#overview" style={s.navLink}>Overview</a>
               <a href="#base-url" style={s.navLink}>Base URL</a>
               <a href="#authentication" style={s.navLink}>Authentication</a>
             </div>
@@ -691,6 +693,40 @@ export default function ApiDocsPage() {
 
           {/* Main content */}
           <main style={s.content}>
+
+            {/* ── Overview ─────────────────────────────────────────────── */}
+            <section id="overview" style={s.section}>
+              <h2 style={s.sectionTitle}>Overview</h2>
+              <p style={s.sectionDesc}>
+                The Toolblip API lets you browse the tool directory and manage user
+                accounts programmatically. All requests must be made over HTTPS.
+              </p>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(3, 1fr)',
+                gap: 12,
+                marginTop: 4,
+              }}>
+                {[
+                  { icon: '🔓', label: 'Bearer token auth', desc: 'Simple token-based authentication for protected endpoints.' },
+                  { icon: '📦', label: 'RESTful', desc: 'Standard HTTP methods — GET, POST. Predictable and intuitive.' },
+                  { icon: '📋', label: 'JSON responses', desc: 'Every endpoint returns application/json. Always.' },
+                ].map(item => (
+                  <div key={item.label} style={{
+                    background: t.surface,
+                    border: `1px solid ${t.border}`,
+                    borderRadius: 12,
+                    padding: '16px 18px',
+                  }}>
+                    <div style={{ fontSize: 22, marginBottom: 8 }}>{item.icon}</div>
+                    <div style={{ fontWeight: 700, fontSize: 13.5, color: t.fg0, marginBottom: 4 }}>{item.label}</div>
+                    <div style={{ fontSize: 12.5, color: t.fg2, lineHeight: 1.6 }}>{item.desc}</div>
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            <div style={s.divider} />
 
             {/* ── Base URL ──────────────────────────────────────────────── */}
             <section id="base-url" style={s.section}>
@@ -744,7 +780,7 @@ export default function ApiDocsPage() {
                 id="get-tools"
                 method="GET"
                 path="/api/tools"
-                description="Returns a paginated list of all tools. The array is wrapped under the tools key."
+                description="Returns a paginated list of all tools in the directory. The results are wrapped in a tools object with a nested tools array."
                 params={[
                   {
                     name: 'category',
