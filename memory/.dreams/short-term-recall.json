@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-04-29T21:01:16.376Z",
+  "updatedAt": "2026-04-30T21:05:26.402Z",
   "entries": {
     "memory:memory/2026-04-29.md:4:7": {
       "key": "memory:memory/2026-04-29.md:4:7",
@@ -10,18 +10,19 @@
       "source": "memory",
       "snippet": "Railway Deployment Issue (UNRESOLVED): **Problem**: toolblip-frontend on Railway is serving old build with 404 CSS; **Root cause**: Railway is using pre-built Docker image, NOT building from GitHub source; **Evidence**: Deployment logs show \"Starting Container\" with no build step",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-04-29T21:00:52.096Z",
+      "lastRecalledAt": "2026-04-30T21:03:13.419Z",
       "queryHashes": [
         "312dd0eab707"
       ],
       "recallDays": [
         "2026-04-30",
-        "2026-04-29"
+        "2026-04-29",
+        "2026-05-01"
       ],
       "conceptTags": [
         "toolblip-frontend",
@@ -42,18 +43,19 @@
       "source": "memory",
       "snippet": "Railway Deployment Issue (UNRESOLVED): **Also**: Check if GitHub repo reconnection needed (repo may have moved to toolblip/frontend)",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-04-29T21:00:52.096Z",
+      "lastRecalledAt": "2026-04-30T21:03:13.419Z",
       "queryHashes": [
         "312dd0eab707"
       ],
       "recallDays": [
         "2026-04-30",
-        "2026-04-29"
+        "2026-04-29",
+        "2026-05-01"
       ],
       "conceptTags": [
         "toolblip/frontend",
@@ -74,18 +76,19 @@
       "source": "memory",
       "snippet": "GitHub Push Working: Pushed `railway.toml` and tsconfig.json fix to GitHub; Railway is NOT rebuilding from these pushes - confirmed by stale CSS hashes",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-04-29T21:00:52.096Z",
+      "lastRecalledAt": "2026-04-30T21:03:13.419Z",
       "queryHashes": [
         "312dd0eab707"
       ],
       "recallDays": [
         "2026-04-30",
-        "2026-04-29"
+        "2026-04-29",
+        "2026-05-01"
       ],
       "conceptTags": [
         "railway.toml",
@@ -106,18 +109,19 @@
       "source": "memory",
       "snippet": "MCP Folder Issue (Fixed): The `mcp/` folder was causing TypeScript build errors; Added `mcp` to `tsconfig.json` exclude list",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-04-29T21:00:52.096Z",
+      "lastRecalledAt": "2026-04-30T21:03:13.419Z",
       "queryHashes": [
         "312dd0eab707"
       ],
       "recallDays": [
         "2026-04-30",
-        "2026-04-29"
+        "2026-04-29",
+        "2026-05-01"
       ],
       "conceptTags": [
         "tsconfig.json",
@@ -138,18 +142,19 @@
       "source": "memory",
       "snippet": "Railway Cleanup Needed: 3 unused PostgreSQL instances on Railway: `Postgres-XDi-`, `Postgres-QAgG`, `Postgres`; These are garbage from testing - Neon is being used for Postgres; Can be deleted to save resources",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-04-29T21:00:52.096Z",
+      "lastRecalledAt": "2026-04-30T21:03:13.419Z",
       "queryHashes": [
         "312dd0eab707"
       ],
       "recallDays": [
         "2026-04-30",
-        "2026-04-29"
+        "2026-04-29",
+        "2026-05-01"
       ],
       "conceptTags": [
         "postgres-xdi",
@@ -168,30 +173,31 @@
       "startLine": 24,
       "endLine": 26,
       "source": "memory",
-      "snippet": "Keys/Tokens: Railway token: `[REDACTED]`; Neon PostgreSQL: `postgresql://neondb_owner:[REDACTED]@ep-wispy-block-amid7x9e-pooler.c-5.us-east-1.aws.neon.tech/neondb?sslmode=require`; Superadmin: `info@toolblip.com` / `[REDACTED]`",
+      "snippet": "Keys/Tokens: Railway token: `[COMMITTED - REVOKED]`; Neon PostgreSQL: `[COMMITTED - REVOKED]`; Superadmin: `info@toolblip.com` / `[COMMITTED - REVOKED]`",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-04-29T21:00:52.096Z",
+      "lastRecalledAt": "2026-04-30T21:03:13.419Z",
       "queryHashes": [
         "312dd0eab707"
       ],
       "recallDays": [
         "2026-04-30",
-        "2026-04-29"
+        "2026-04-29",
+        "2026-05-01"
       ],
       "conceptTags": [
         "keys/tokens",
-        "neondb-owner",
-        "npg-rbrkaxg70vjx",
         "toolblip.com",
-        "[REDACTED]",
         "keys",
         "tokens",
-        "railway"
+        "railway",
+        "token",
+        "committed",
+        "revoked"
       ]
     },
     "memory:memory/2026-04-29.md:29:32": {
@@ -202,18 +208,19 @@
       "source": "memory",
       "snippet": "Railway Deployment Issue (STILL UNRESOLVED): Multiple `railway up` commands sent - deployments stack up in QUEUED state; Current deployment `0cd6317b-6c2f-4a46-a56f-0a7a751008e0` has been QUEUED for ~35 minutes; Railway logs show \"Starting Container\" only - no build steps; **ROOT",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-04-29T21:00:52.096Z",
+      "lastRecalledAt": "2026-04-30T21:03:13.419Z",
       "queryHashes": [
         "312dd0eab707"
       ],
       "recallDays": [
         "2026-04-30",
-        "2026-04-29"
+        "2026-04-29",
+        "2026-05-01"
       ],
       "conceptTags": [
         "railway",
@@ -234,18 +241,19 @@
       "source": "memory",
       "snippet": "Railway Deployment Issue (STILL UNRESOLVED): **FIX NEEDED**: In Railway dashboard → toolblip service → Settings → Build & Deploy → Change Build Method from \"Docker Image\" to \"Nixpacks\" or \"Dockerfile\"; Site CSS still 404ing - site is broken for users",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-04-29T21:00:52.096Z",
+      "lastRecalledAt": "2026-04-30T21:03:13.419Z",
       "queryHashes": [
         "312dd0eab707"
       ],
       "recallDays": [
         "2026-04-30",
-        "2026-04-29"
+        "2026-04-29",
+        "2026-05-01"
       ],
       "conceptTags": [
         "railway",
@@ -266,18 +274,19 @@
       "source": "memory",
       "snippet": "Recent Failed Deployments (before tonight): 1251e1bc-dd98-469c-98e8-74d4c65c9987 | FAILED | 2026-04-29 08:39:03; c885d90a-f8f2-448b-a972-2a7284f14cbd | FAILED | 2026-04-29 08:35:07; 99955e1c-63d8-4e59-bf84-17f8906468fe | FAILED | 2026-04-29 08:25:15; These failures happened befor",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-04-29T21:00:52.096Z",
+      "lastRecalledAt": "2026-04-30T21:03:13.419Z",
       "queryHashes": [
         "312dd0eab707"
       ],
       "recallDays": [
         "2026-04-30",
-        "2026-04-29"
+        "2026-04-29",
+        "2026-05-01"
       ],
       "conceptTags": [
         "recent",
@@ -298,18 +307,19 @@
       "source": "memory",
       "snippet": "Status: BLOCKED: Railway deployment needs manual intervention in Railway dashboard; Need user to check Build & Deploy settings",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-04-29T21:00:52.096Z",
+      "lastRecalledAt": "2026-04-30T21:03:13.419Z",
       "queryHashes": [
         "312dd0eab707"
       ],
       "recallDays": [
         "2026-04-30",
-        "2026-04-29"
+        "2026-04-29",
+        "2026-05-01"
       ],
       "conceptTags": [
         "status",
@@ -330,18 +340,19 @@
       "source": "memory",
       "snippet": "Task [5/10]: Improve directory page — Already Complete: The `/directory` page already has a full browse experience implemented in `src/app/directory/DirectoryClient.tsx` (309 lines):",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-04-29T21:00:52.096Z",
+      "lastRecalledAt": "2026-04-30T21:03:13.419Z",
       "queryHashes": [
         "312dd0eab707"
       ],
       "recallDays": [
         "2026-04-30",
-        "2026-04-29"
+        "2026-04-29",
+        "2026-05-01"
       ],
       "conceptTags": [
         "5/10",
@@ -362,18 +373,19 @@
       "source": "memory",
       "snippet": "Task [5/10]: Improve directory page — Already Complete: Debounced search bar with `/` keyboard shortcut; Category filter tabs with tool counts; Tool card grid with emoji, name, category, description; \"Showing X of Y tools\" count display",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-04-29T21:00:52.096Z",
+      "lastRecalledAt": "2026-04-30T21:03:13.419Z",
       "queryHashes": [
         "312dd0eab707"
       ],
       "recallDays": [
         "2026-04-30",
-        "2026-04-29"
+        "2026-04-29",
+        "2026-05-01"
       ],
       "conceptTags": [
         "5/10",
@@ -394,18 +406,19 @@
       "source": "memory",
       "snippet": "Task [5/10]: Improve directory page — Already Complete: Empty state with clear filters; Scroll-to-top button; Load more pagination; URL `?category=` sync",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-04-29T21:00:52.096Z",
+      "lastRecalledAt": "2026-04-30T21:03:13.419Z",
       "queryHashes": [
         "312dd0eab707"
       ],
       "recallDays": [
         "2026-04-30",
-        "2026-04-29"
+        "2026-04-29",
+        "2026-05-01"
       ],
       "conceptTags": [
         "5/10",
@@ -426,18 +439,19 @@
       "source": "memory",
       "snippet": "Task [5/10]: Improve directory page — Already Complete: All 5 requested features were already built. Task is complete.",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-04-29T21:00:52.096Z",
+      "lastRecalledAt": "2026-04-30T21:03:13.419Z",
       "queryHashes": [
         "312dd0eab707"
       ],
       "recallDays": [
         "2026-04-30",
-        "2026-04-29"
+        "2026-04-29",
+        "2026-05-01"
       ],
       "conceptTags": [
         "5/10",
@@ -458,18 +472,19 @@
       "source": "memory",
       "snippet": "Homepage Sections [7/10] — Already Complete: All 3 homepage sections (HowItWorksStrip, CategoryQuickAccess, WhyToolblip) already implemented; Commits `df7ddedb` and `bda263b5` cover the work; Nothing to add; code matches spec",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-04-29T21:00:52.096Z",
+      "lastRecalledAt": "2026-04-30T21:03:13.419Z",
       "queryHashes": [
         "312dd0eab707"
       ],
       "recallDays": [
         "2026-04-30",
-        "2026-04-29"
+        "2026-04-29",
+        "2026-05-01"
       ],
       "conceptTags": [
         "7/10",
@@ -15551,13 +15566,13 @@
       ],
       "conceptTags": [
         "neondb-owner",
-        "npg-rbrkaxg70vjx",
         "channel-binding",
         "got",
         "here's",
         "neon",
         "connection",
-        "string"
+        "string",
+        "postgresql"
       ]
     },
     "memory:memory/.dreams/session-corpus/2026-04-29.txt:24:24": {
@@ -15590,6 +15605,1577 @@
         "event",
         "was",
         "triggered"
+      ]
+    },
+    "memory:memory/2026-04-30.md:4:7": {
+      "key": "memory:memory/2026-04-30.md:4:7",
+      "path": "memory/2026-04-30.md",
+      "startLine": 4,
+      "endLine": 7,
+      "source": "memory",
+      "snippet": "SEO Files Already Done: app/sitemap.ts and app/robots.ts were already present (created in prior session); sitemap includes all required routes + tool slugs; robots.txt allows all crawlers and points to sitemap.xml; No action needed — verified existing implementation is correct",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-04-30T21:03:13.419Z",
+      "lastRecalledAt": "2026-04-30T21:03:13.419Z",
+      "queryHashes": [
+        "e757f9360616"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "app/sitemap.ts",
+        "app/robots.ts",
+        "robots.txt",
+        "sitemap.xml",
+        "seo",
+        "already",
+        "done",
+        "app"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-28.txt:25:25": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-28.txt:25:25",
+      "path": "memory/.dreams/session-corpus/2026-04-28.txt",
+      "startLine": 25,
+      "endLine": 25,
+      "source": "memory",
+      "snippet": "Assistant: Now commit the frontend changes:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "8a4254b47642"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "now",
+        "commit",
+        "frontend",
+        "changes"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-28.txt:26:26": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-28.txt:26:26",
+      "path": "memory/.dreams/session-corpus/2026-04-28.txt",
+      "startLine": 26,
+      "endLine": 26,
+      "source": "memory",
+      "snippet": "Assistant: Now commit the workspace-level changes (docs/research):",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "8a4254b47642"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "workspace-level",
+        "docs/research",
+        "now",
+        "commit",
+        "level",
+        "changes",
+        "docs",
+        "research"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-28.txt:27:27": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-28.txt:27:27",
+      "path": "memory/.dreams/session-corpus/2026-04-28.txt",
+      "startLine": 27,
+      "endLine": 27,
+      "source": "memory",
+      "snippet": "Assistant: Docs is gitignored too. The promotion drafts are saved locally at `docs/research/top3-promotion-drafts.md` — they're in the workspace. --- Here's the summary: ## Completed ### Task 1: Auto-seeding on Railway ✅ - Updated `api/Dockerfile` CMD to run `php artisan db:seed",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "8a4254b47642"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "auto-seeding",
+        "api/dockerfile",
+        "docs",
+        "gitignored",
+        "too",
+        "promotion",
+        "drafts",
+        "saved"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-28.txt:28:28": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-28.txt:28:28",
+      "path": "memory/.dreams/session-corpus/2026-04-28.txt",
+      "startLine": 28,
+      "endLine": 28,
+      "source": "memory",
+      "snippet": "Assistant: - Checkout validates price_id against DB plans, creates Stripe Checkout Session, returns redirect URL - Wired routes: `/api/plans` (public), `/api/subscription/checkout` (authenticated) - **Commit:** `3ae3819` on `toolblip-api` (same commit) ### Task 3: Blog SEO ✅ - Si",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "8a4254b47642"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "price-id",
+        "api/plans",
+        "api/subscription/checkout",
+        "toolblip-api",
+        "checkout",
+        "validates",
+        "against",
+        "plans"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-28.txt:29:29": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-28.txt:29:29",
+      "path": "memory/.dreams/session-corpus/2026-04-28.txt",
+      "startLine": 29,
+      "endLine": 29,
+      "source": "memory",
+      "snippet": "Assistant: Dockerfile + migration changes to take effect. tb | ~/Work/toolblip | minimax-m2.7-highspeed",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "8a4254b47642"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "work/toolblip",
+        "minimax-m2.7-highspeed",
+        "dockerfile",
+        "migration",
+        "changes",
+        "take",
+        "effect",
+        "toolblip"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-28.txt:30:30": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-28.txt:30:30",
+      "path": "memory/.dreams/session-corpus/2026-04-28.txt",
+      "startLine": 30,
+      "endLine": 30,
+      "source": "memory",
+      "snippet": "Assistant: ☀️ **Morning Digest — April 28, 2026** **Research done:** 0 new sessions (last session was Apr 23) **Content published:** 2 posts overnight 📝 *Bulk UUID Generator Guide* — SEO piece targeting \"bulk UUID generator\" + comparison vs v7 for databases 📝 *Toolblip vs. VS C",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "8a4254b47642"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "morning",
+        "digest",
+        "april",
+        "research",
+        "done",
+        "new",
+        "last",
+        "was"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-28.txt:31:31": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-28.txt:31:31",
+      "path": "memory/.dreams/session-corpus/2026-04-28.txt",
+      "startLine": 31,
+      "endLine": 31,
+      "source": "memory",
+      "snippet": "Assistant: ideas:** 8 (Curl Command Builder, WebSocket Test Tool, HTTP Request Builder, Random String from Regex, SVG→PNG batch, JWT Claims Decoder, AI Model Comparison, LLM Token Counter) **Today's priorities:** → Add **LLM Token Counter** — competitor gap, high intent traffic →",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "8a4254b47642"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "ideas",
+        "curl",
+        "command",
+        "builder",
+        "websocket",
+        "test",
+        "tool",
+        "http"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-28.txt:32:32": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-28.txt:32:32",
+      "path": "memory/.dreams/session-corpus/2026-04-28.txt",
+      "startLine": 32,
+      "endLine": 32,
+      "source": "memory",
+      "snippet": "Assistant: 🚨 **Railway Deployment Alert** Service: `toolblip` (frontend) Status: **FAILED** ⚠️ Railway service is stopped. Multiple consecutive deployment failures: - `b4d4a0b0` — FAILED (latest) - `a4dde373` — FAILED - `52adbf0f` — FAILED Railway URL returns: **404** Custom dom",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "8a4254b47642"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "railway",
+        "deployment",
+        "alert",
+        "service",
+        "toolblip",
+        "frontend",
+        "status",
+        "failed"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-28.txt:33:33": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-28.txt:33:33",
+      "path": "memory/.dreams/session-corpus/2026-04-28.txt",
+      "startLine": 33,
+      "endLine": 33,
+      "source": "memory",
+      "snippet": "Assistant: ✅ Directory page already fully implemented (done in prior session). All 5 features in place: • Search bar (debounced, / shortcut) • Category tabs (All/Text/Developer/Encoder/Image/Conversion/Math/CSS + counts) • Tool card grid (emoji, name, category, description, hover",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "8a4254b47642"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "directory",
+        "page",
+        "already",
+        "fully",
+        "implemented",
+        "done",
+        "prior",
+        "all"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:25:25": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:25:25",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 25,
+      "endLine": 25,
+      "source": "memory",
+      "snippet": "User: debug and fix this. also this cron may have stale data",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "debug",
+        "fix",
+        "cron",
+        "may",
+        "stale",
+        "data"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:26:26": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:26:26",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 26,
+      "endLine": 26,
+      "source": "memory",
+      "snippet": "Assistant: Let me investigate what's happening with Railway and check the cron jobs.",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "let",
+        "investigate",
+        "what's",
+        "happening",
+        "railway",
+        "check",
+        "cron",
+        "jobs"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:27:27": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:27:27",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 27,
+      "endLine": 27,
+      "source": "memory",
+      "snippet": "Assistant: The site works fine. Railway healthcheck is likely the issue. Let me check if there's a proper Railway config and look at the cron task issue.",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "site",
+        "works",
+        "fine",
+        "railway",
+        "healthcheck",
+        "likely",
+        "issue",
+        "let"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:28:28": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:28:28",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 28,
+      "endLine": 28,
+      "source": "memory",
+      "snippet": "Assistant: The site is healthy. The Railway \"FAILED\" status is a false positive - the healthcheck is likely misconfigured. Let me check the Railway config and cron setup.",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "site",
+        "healthy",
+        "railway",
+        "failed",
+        "status",
+        "false",
+        "positive",
+        "healthcheck"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:29:29": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:29:29",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 29,
+      "endLine": 29,
+      "source": "memory",
+      "snippet": "Assistant: Found the cron jobs. The Railway monitoring cron is running every 5 minutes. Let me check the actual Railway status and the healthcheck issue.",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "found",
+        "cron",
+        "jobs",
+        "railway",
+        "monitoring",
+        "running",
+        "minutes",
+        "let"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:30:30": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:30:30",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 30,
+      "endLine": 30,
+      "source": "memory",
+      "snippet": "Assistant: The Railway status shows FAILED but the container is running fine and logs are clean. This is a Railway healthcheck false positive. Let me check the railway.toml configuration.",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "railway.toml",
+        "railway",
+        "status",
+        "shows",
+        "failed",
+        "but",
+        "container",
+        "running"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:31:31": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:31:31",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 31,
+      "endLine": 31,
+      "source": "memory",
+      "snippet": "Assistant: Railway shows FAILED but the site works. This is a Railway healthcheck false positive. The `.railway/project.json.bak` exists in frontend which confirms Railway is linked. Let me check the Railway deployment more thoroughly and see if redeployment helps:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "railway/project.json.bak",
+        "railway",
+        "shows",
+        "failed",
+        "but",
+        "site",
+        "works",
+        "healthcheck"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:32:32": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:32:32",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 32,
+      "endLine": 32,
+      "source": "memory",
+      "snippet": "Assistant: Multiple deployments are FAILED but the site is still up. This means Railway can't successfully deploy new versions but the old container keeps serving. Let me check what's failing:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "multiple",
+        "deployments",
+        "failed",
+        "but",
+        "site",
+        "still",
+        "means",
+        "railway"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:33:33": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:33:33",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 33,
+      "endLine": 33,
+      "source": "memory",
+      "snippet": "Assistant: Found the issue. The build is failing due to a TypeScript error: ``` Type error: Property 'categories' does not exist on type 'IntrinsicAttributes' ``` Let me look at the problematic file:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "found",
+        "issue",
+        "failing",
+        "due",
+        "typescript",
+        "error",
+        "type",
+        "property"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:34:34": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:34:34",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 34,
+      "endLine": 34,
+      "source": "memory",
+      "snippet": "Assistant: Found the bug. `CategoryQuickAccess` component doesn't accept props (it computes categories internally from `tools`), but `app/page.tsx` is passing `categories={categories}`. The TypeScript error is blocking the build. Let me fix it:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "app/page.tsx",
+        "found",
+        "bug",
+        "categoryquickaccess",
+        "component",
+        "doesn't",
+        "accept",
+        "props"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:35:35": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:35:35",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 35,
+      "endLine": 35,
+      "source": "memory",
+      "snippet": "Assistant: Now let me verify the build passes:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "now",
+        "let",
+        "verify",
+        "passes"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:36:36": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:36:36",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 36,
+      "endLine": 36,
+      "source": "memory",
+      "snippet": "Assistant: The TypeScript error I fixed was the actual build blocker. Let me verify the fix is correct:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "typescript",
+        "error",
+        "fixed",
+        "was",
+        "actual",
+        "blocker",
+        "let",
+        "verify"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:37:37": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:37:37",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 37,
+      "endLine": 37,
+      "source": "memory",
+      "snippet": "Assistant: Directory page was already rebuilt — committed as `0a9753e feat: rebuild directory page with search and filters`. Current features: • Search bar (live filter by name/description) • Category tabs (All, Text, Developer, Encoder, Image, Conversion, Math, CSS, SEO, Color)",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "name/description",
+        "directory",
+        "page",
+        "was",
+        "already",
+        "rebuilt",
+        "committed",
+        "0a9753e"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:38:38": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:38:38",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 38,
+      "endLine": 38,
+      "source": "memory",
+      "snippet": "Assistant: ☀️ **Morning Digest — Apr 28, 2026** **Content published:** 3 posts overnight • *The Free Regex Tester That Actually Respects Your Time (and Privacy)* • *The UUID Decision Guide: Which Version Should You Actually Use?* • *Base64 Encoding and Decoding: The Developer's P",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "morning",
+        "digest",
+        "apr",
+        "content",
+        "published",
+        "posts",
+        "overnight",
+        "free"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:39:39": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:39:39",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 39,
+      "endLine": 39,
+      "source": "memory",
+      "snippet": "Assistant: Multiple Show HN posts confirm developer demand. High priority to ship. 2. **JSON Schema Validator** — APIs are everywhere, no good free browser tool exists. Medium priority. 3. **Large-file JSON formatter (50GB+)** — json2xml.com positions on streaming. Opportunity fo",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "large-file",
+        "json2xml.com",
+        "multiple",
+        "show",
+        "posts",
+        "confirm",
+        "developer",
+        "demand"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-30.txt:1:1": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-30.txt:1:1",
+      "path": "memory/.dreams/session-corpus/2026-04-30.txt",
+      "startLine": 1,
+      "endLine": 1,
+      "source": "memory",
+      "snippet": "User: You have committed postgres url. Why?",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "cf3cd2e1e340"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "committed",
+        "postgres",
+        "url",
+        "why"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-30.txt:2:2": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-30.txt:2:2",
+      "path": "memory/.dreams/session-corpus/2026-04-30.txt",
+      "startLine": 2,
+      "endLine": 2,
+      "source": "memory",
+      "snippet": "Assistant: Found it. The postgres URL is in `memory/2026-04-29.md` which was committed with the secrets. I also see it leaked into `memory/dreaming/` files too. Here's what happened: - I was tracking deployment context and credentials in memory files for continuity - The `memory/",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "cf3cd2e1e340"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "memory/2026-04-29.md",
+        "memory/dreaming",
+        "found",
+        "postgres",
+        "url",
+        "which",
+        "was",
+        "committed"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-30.txt:3:3": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-30.txt:3:3",
+      "path": "memory/.dreams/session-corpus/2026-04-30.txt",
+      "startLine": 3,
+      "endLine": 3,
+      "source": "memory",
+      "snippet": "Assistant: Now let me check what other files might have the secrets still in them:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "cf3cd2e1e340"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "now",
+        "let",
+        "check",
+        "what",
+        "other",
+        "might",
+        "secrets",
+        "still"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-30.txt:4:4": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-30.txt:4:4",
+      "path": "memory/.dreams/session-corpus/2026-04-30.txt",
+      "startLine": 4,
+      "endLine": 4,
+      "source": "memory",
+      "snippet": "Assistant: Good — current files are clean. But the secrets are still in git history in commits `bda263b5` and `ec4715e5`. **The problem:** Git history rewrite is needed to fully remove the secrets. Options: 1. **Use `git filter-branch`** — native, slow but always available 2. **U",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "cf3cd2e1e340"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "filter-branch",
+        "good",
+        "current",
+        "clean",
+        "but",
+        "secrets",
+        "still",
+        "git"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-30.txt:5:5": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-30.txt:5:5",
+      "path": "memory/.dreams/session-corpus/2026-04-30.txt",
+      "startLine": 5,
+      "endLine": 5,
+      "source": "memory",
+      "snippet": "User: Rotate now",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "cf3cd2e1e340"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "rotate",
+        "now"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-30.txt:6:6": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-30.txt:6:6",
+      "path": "memory/.dreams/session-corpus/2026-04-30.txt",
+      "startLine": 6,
+      "endLine": 6,
+      "source": "memory",
+      "snippet": "Assistant: Can't access Neon console — it requires login. You'll need to do this manually: 1. Go to **console.neon.tech** → sign in 2. Select your project → **Dashboard** → **Connection Details** 3. Click **Reset password** or edit the role credentials 4. Copy the new connection",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "cf3cd2e1e340"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "console.neon.tech",
+        "can't",
+        "access",
+        "neon",
+        "console",
+        "requires",
+        "login",
+        "you'll"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-30.txt:7:7": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-30.txt:7:7",
+      "path": "memory/.dreams/session-corpus/2026-04-30.txt",
+      "startLine": 7,
+      "endLine": 7,
+      "source": "memory",
+      "snippet": "User: You can do this. Rotate the password",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "cf3cd2e1e340"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "can",
+        "rotate",
+        "password"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-30.txt:8:8": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-30.txt:8:8",
+      "path": "memory/.dreams/session-corpus/2026-04-30.txt",
+      "startLine": 8,
+      "endLine": 8,
+      "source": "memory",
+      "snippet": "Assistant: Can't do it — no Neon API key available in the environment. The Neon CLI isn't installed either. I need either: - **Neon API key** — from `console.neon.tech` → Account Settings → API Keys - Or you do it manually at console.neon.tech → your project → Connection Details",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "cf3cd2e1e340"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "console.neon.tech",
+        "can't",
+        "neon",
+        "api",
+        "key",
+        "available",
+        "environment",
+        "cli"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-30.txt:9:9": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-30.txt:9:9",
+      "path": "memory/.dreams/session-corpus/2026-04-30.txt",
+      "startLine": 9,
+      "endLine": 9,
+      "source": "memory",
+      "snippet": "User: An async command completion event was triggered, but user delivery is disabled for this run. Handle the result internally and reply HEARTBEAT_OK only. Do not mention, summarize, or reuse command output. Current time: Thursday, April 30th, 2026 - 10:50 AM (Asia/Dhaka) / 2026",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "cf3cd2e1e340"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "heartbeat-ok",
+        "asia/dhaka",
+        "async",
+        "command",
+        "completion",
+        "event",
+        "was",
+        "triggered"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-30.txt:10:10": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-30.txt:10:10",
+      "path": "memory/.dreams/session-corpus/2026-04-30.txt",
+      "startLine": 10,
+      "endLine": 10,
+      "source": "memory",
+      "snippet": "Assistant: 🔍 Opportunity Finder done. Found 16 questions, 7 content gaps, 10 tool ideas. Top find: **JSON Diff tool** — consistently in-demand on Reddit and Stack Overflow for comparing API responses, low competition in browser-based free space, and aligns perfectly with Toolbli",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "cf3cd2e1e340"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "in-demand",
+        "browser-based",
+        "opportunity",
+        "finder",
+        "done",
+        "found",
+        "questions",
+        "content"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-30.txt:11:11": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-30.txt:11:11",
+      "path": "memory/.dreams/session-corpus/2026-04-30.txt",
+      "startLine": 11,
+      "endLine": 11,
+      "source": "memory",
+      "snippet": "Assistant: ☀️ **Morning Digest — Apr 30, 2026** Overnight was quiet on the content side — no new keyword research or blog posts published. But the system is running and the pipeline is warm. **Research done:** 0 sessions **Content published:** 0 posts **Opportunities found:** 8 n",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "cf3cd2e1e340"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "morning",
+        "digest",
+        "apr",
+        "overnight",
+        "was",
+        "quiet",
+        "content",
+        "side"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-30.txt:12:12": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-30.txt:12:12",
+      "path": "memory/.dreams/session-corpus/2026-04-30.txt",
+      "startLine": 12,
+      "endLine": 12,
+      "source": "memory",
+      "snippet": "Assistant: uploading.\" Existing contrast-checker tool isn't well-covered. **Today's priority:** 1. 🔴 Fix Railway deployment — site is serving stale build with 404 CSS. Needs manual dashboard change: Build Source \"Docker Image\" → \"GitHub\" 2. 🟡 Build JSON Diff — highest-opportuni",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "cf3cd2e1e340"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "contrast-checker",
+        "well-covered",
+        "highest-opportuni",
+        "uploading",
+        "existing",
+        "contrast",
+        "checker",
+        "tool"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-01.txt:1:1": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-01.txt:1:1",
+      "path": "memory/.dreams/session-corpus/2026-05-01.txt",
+      "startLine": 1,
+      "endLine": 1,
+      "source": "memory",
+      "snippet": "Assistant: ✍️ Content #2 published: JWT vs OAuth 2.0: What They Actually Are and How They Differ",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "23c989536796"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "2.0",
+        "content",
+        "published",
+        "jwt",
+        "oauth",
+        "what",
+        "actually",
+        "how"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:40:40": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:40:40",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 40,
+      "endLine": 40,
+      "source": "memory",
+      "snippet": "Assistant: 🚨 **Railway Deployment Failed** **Service:** toolblip (frontend) **Status:** FAILED **Deployment ID:** 1251e1bc-dd98-469c-98e8-74d4c65c9987 **Last 10 log lines:** ``` Starting Container ▲ Next.js 16.2.4 - Local: http://localhost:8080 - Network: http://0.0.0.0:8080 ✓ R",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "network",
+        "next.js",
+        "16.2.4",
+        "0.0.0.0",
+        "railway",
+        "deployment",
+        "failed",
+        "service"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:41:41": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:41:41",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 41,
+      "endLine": 41,
+      "source": "memory",
+      "snippet": "Assistant: The fix is in place. Now let me address the stale cron data issue. The cron relies on `railway service status` which can return stale cached data. Let me update it to check the actual site health first:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "fix",
+        "place",
+        "now",
+        "let",
+        "address",
+        "stale",
+        "cron",
+        "data"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:42:42": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:42:42",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 42,
+      "endLine": 42,
+      "source": "memory",
+      "snippet": "Assistant: The cron logic is flawed - it trusts Railway's FAILED status even when toolblip.com is healthy. I need to update it to check the actual site first:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "toolblip.com",
+        "cron",
+        "logic",
+        "flawed",
+        "trusts",
+        "railway's",
+        "failed",
+        "status"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:43:43": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:43:43",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 43,
+      "endLine": 43,
+      "source": "memory",
+      "snippet": "Assistant: Now let me commit and push the fix so Railway can redeploy:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "now",
+        "let",
+        "commit",
+        "push",
+        "fix",
+        "railway",
+        "can",
+        "redeploy"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:44:44": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:44:44",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 44,
+      "endLine": 44,
+      "source": "memory",
+      "snippet": "Assistant: The fix is pushed. Let me check if Railway auto-deploys on git push and monitor the deployment:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "auto-deploys",
+        "fix",
+        "pushed",
+        "let",
+        "check",
+        "railway",
+        "auto",
+        "deploys"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:45:45": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:45:45",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 45,
+      "endLine": 45,
+      "source": "memory",
+      "snippet": "Assistant: A new deployment is building. Let me watch it:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "new",
+        "deployment",
+        "building",
+        "let",
+        "watch"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:46:46": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:46:46",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 46,
+      "endLine": 46,
+      "source": "memory",
+      "snippet": "Assistant: 🎉 **Deployment SUCCESS!** The new Railway deployment (e78ec4b0) succeeded. Let me verify the site:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "deployment",
+        "success",
+        "new",
+        "railway",
+        "e78ec4b0",
+        "succeeded",
+        "let",
+        "verify"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:47:47": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:47:47",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 47,
+      "endLine": 47,
+      "source": "memory",
+      "snippet": "Assistant: **Fixed! Summary:** **Problem 1: Railway deployment was failing (5 FAILED deployments in a row)** - **Root cause**: TypeScript error in `app/page.tsx` - it was passing `categories={categories}` to `CategoryQuickAccess`, but that component doesn't accept props (computes",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "app/page.tsx",
+        "fixed",
+        "summary",
+        "problem",
+        "railway",
+        "deployment",
+        "was",
+        "failing"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:48:48": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:48:48",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 48,
+      "endLine": 48,
+      "source": "memory",
+      "snippet": "Assistant: **Current status:** - Railway: `SUCCESS` ✅ - toolblip.com: HTTP 200 ✅ - Previous FAILED deployments: now superseded by the successful one",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "toolblip.com",
+        "current",
+        "status",
+        "railway",
+        "success",
+        "http",
+        "previous",
+        "failed"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:49:49": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:49:49",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 49,
+      "endLine": 49,
+      "source": "memory",
+      "snippet": "Assistant: Let me trace the alert origin by checking the relevant cron sessions:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "let",
+        "trace",
+        "alert",
+        "origin",
+        "checking",
+        "relevant",
+        "cron"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:50:50": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:50:50",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 50,
+      "endLine": 50,
+      "source": "memory",
+      "snippet": "Assistant: Found it. The alert came from the `tb` agent's Railway monitoring cron (id `6253791b...`) that runs every 5 minutes. **The alert is NOT correct** - it's a false positive from stale Railway status. Here's the history from recent tasks: | Task | Result | What happened |",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "found",
+        "alert",
+        "came",
+        "agent's",
+        "railway",
+        "monitoring",
+        "cron",
+        "6253791b"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:51:51": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:51:51",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 51,
+      "endLine": 51,
+      "source": "memory",
+      "snippet": "Assistant: positive, app actually starts fine) 2. Cron checks Railway status → sees FAILED → sends Telegram alert 3. Cron ALSO checks toolblip.com → sees 200 → acknowledges it's a false positive So you're getting alerted, then getting a follow-up \"actually it's fine\" message. Tha",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-04-30T21:04:44.028Z",
+      "lastRecalledAt": "2026-04-30T21:04:44.028Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-01",
+        "2026-04-30"
+      ],
+      "conceptTags": [
+        "toolblip.com",
+        "follow-up",
+        "positive",
+        "app",
+        "actually",
+        "starts",
+        "fine",
+        "cron"
       ]
     }
   }
