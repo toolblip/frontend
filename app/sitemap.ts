@@ -21,30 +21,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/directory`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
-      priority: 0.7,
+      priority: 0.8,
     },
     {
       url: `${baseUrl}/about`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
-      priority: 0.6,
+      priority: 0.7,
     },
     {
       url: `${baseUrl}/login`,
       lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.3,
+      changeFrequency: 'monthly',
+      priority: 0.5,
     },
     {
       url: `${baseUrl}/signup`,
       lastModified: new Date(),
-      changeFrequency: 'yearly',
-      priority: 0.3,
+      changeFrequency: 'monthly',
+      priority: 0.5,
     },
     {
       url: `${baseUrl}/blog`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
+      changeFrequency: 'daily',
       priority: 0.8,
     },
   ];
@@ -52,7 +52,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const toolRoutes: MetadataRoute.Sitemap = tools.map((tool) => ({
     url: `${baseUrl}/tools/${tool.slug}`,
     lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
+    changeFrequency: 'weekly',
     priority: 0.8,
   }));
 
