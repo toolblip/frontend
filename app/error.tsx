@@ -14,7 +14,7 @@ export default function Error({
         className="text-9xl font-bold select-none leading-none mb-4"
         style={{ color: 'var(--red-tint)', WebkitTextStroke: '2px var(--red)' }}
       >
-        !
+        500
       </div>
       <h1 className="text-2xl font-semibold mb-3" style={{ color: 'var(--fg-0)' }}>
         Something went wrong
