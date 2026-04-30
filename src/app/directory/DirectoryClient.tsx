@@ -34,7 +34,7 @@ export default function DirectoryClient() {
 
   const [query, setQuery] = useState('');
   const [activeTab, setActiveTab] = useState<Category>(validCategory);
-  const [visibleCount, setVisibleCount] = useState(24);
+  const [visibleCount, setVisibleCount] = useState(30);
   const [mounted, setMounted] = useState(false);
   const [showTopBtn, setShowTopBtn] = useState(false);
   const [animKey, setAnimKey] = useState(0);
@@ -46,7 +46,7 @@ export default function DirectoryClient() {
   useEffect(() => {
     if (urlCategory && DIRECTORY_CATEGORIES.includes(urlCategory as Category)) {
       setActiveTab(urlCategory as Category);
-      setVisibleCount(24);
+      setVisibleCount(30);
     }
   }, [urlCategory]);
 
@@ -111,12 +111,27 @@ export default function DirectoryClient() {
 
   const displayedTools = filtered.slice(0, visibleCount);
   const hasMore = filtered.length > visibleCount;
-  const loadMore = () => setVisibleCount((c) => c + 24);
+
+  // Infinite scroll — load more as user scrolls near the bottom
+  const loadMoreRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!hasMore) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setVisibleCount((c) => c + 12);
+        }
+      },
+      { rootMargin: '200px' }
+    );
+    if (loadMoreRef.current) observer.observe(loadMoreRef.current);
+    return () => observer.disconnect();
+  }, [hasMore]);
 
   const clearAll = () => {
     setQuery('');
     setActiveTab('All');
-    setVisibleCount(24);
+    setVisibleCount(30);
     inputRef.current?.focus();
   };
 
@@ -191,7 +206,7 @@ export default function DirectoryClient() {
                   key={tab}
                   onClick={() => {
                     setActiveTab(tab);
-                    setVisibleCount(24);
+                    setVisibleCount(30);
                   }}
                   className={`tb-v2-dir-tab${isActive ? ' on' : ''}`}
                 >
@@ -209,10 +224,10 @@ export default function DirectoryClient() {
         {/* Count bar */}
         <div className="tb-v2-dir-countbar">
           <p className="tb-v2-dir-count-text">
-            Showing{' '}
-            <strong>{displayedTools.length}</strong> of{' '}
-            <strong>{filtered.length}</strong>
-            {filtered.length === 1 ? ' tool' : ' tools'}
+            {filtered.length === displayedTools.length
+              ? <><strong>{filtered.length}</strong> {filtered.length === 1 ? 'tool' : 'tools'}</>
+              : <><strong>{displayedTools.length}</strong> of <strong>{filtered.length}</strong> {filtered.length === 1 ? 'tool' : 'tools'}</>
+            }
             {activeTab !== 'All' && (
               <span className="tb-v2-dir-count-cat"> in {activeTab}</span>
             )}
@@ -275,19 +290,9 @@ export default function DirectoryClient() {
               })}
             </div>
 
-            {/* Load more */}
+            {/* Infinite scroll sentinel */}
             {hasMore && (
-              <div className="tb-v2-dir-loadmore">
-                <button
-                  onClick={loadMore}
-                  className="tb-v2-btn tb-v2-btn-lg"
-                >
-                  Load more tools
-                  <span className="tb-v2-dir-loadmore-count">
-                    ({filtered.length - visibleCount} remaining)
-                  </span>
-                </button>
-              </div>
+              <div ref={loadMoreRef} className="tb-v2-dir-loadmore" aria-hidden />
             )}
           </>
         ) : (
