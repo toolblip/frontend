@@ -36,8 +36,7 @@ const benefits = [
     color: '#2563eb',
     bg: '#dbeafe',
     title: 'Free',
-    desc: 'Every tool. Every feature. Every export. No paywall, no usage limit, no account required — now and forever.'
-    glow: 'rgba(37, 99, 235, 0.15)',
+    desc: 'Every tool. Every feature. Every export. No paywall, no usage limit, no account required — now and forever.',
   },
 ];
 

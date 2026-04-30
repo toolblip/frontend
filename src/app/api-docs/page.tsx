@@ -41,7 +41,7 @@ const s = {
     background: t.bg,
     fontFamily: 'var(--f-sans)',
     color: t.fg0,
-    scrollBehavior: 'smooth',
+    scrollBehavior: 'smooth' as const,
   },
 
   container: {
@@ -521,8 +521,8 @@ function IconChevronRight() {
   );
 }
 
-function Method({ m }: { m: 'GET' | 'POST' }) {
-  const style = m === 'GET' ? s.methodGet : s.methodPost;
+function Method({ m }: { m: 'GET' | 'POST' | 'DELETE' }) {
+  const style = m === 'GET' ? s.methodGet : m === 'POST' ? s.methodPost : s.methodDelete;
   return <span style={{ ...s.method, ...style }}>{m}</span>;
 }
 
