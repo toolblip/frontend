@@ -10,9 +10,36 @@ export default function Error({
 }) {
   return (
     <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4">
+      <style>{`
+        @keyframes floatOops {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-6px); }
+        }
+        .float-oops { animation: floatOops 2.8s ease-in-out infinite; }
+      `}</style>
+
+      {/* Warning triangle icon */}
+      <svg
+        className="mb-6 opacity-30"
+        width="32"
+        height="32"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        style={{ color: 'var(--red)' }}
+        aria-hidden="true"
+      >
+        <path d="m10.29 3.86-8.07 14A2 2 0 0 0 3.79 21h16.42a2 2 0 0 0 1.57-3l-8.07-14a2 2 0 0 0-3.14 0Z" />
+        <line x1="12" y1="9" x2="12" y2="13" />
+        <line x1="12" y1="17" x2="12.01" y2="17" />
+      </svg>
+
       {/* Error glyph */}
       <div
-        className="select-none mb-8"
+        className="select-none mb-8 float-oops"
         style={{
           fontFamily: 'var(--f-display)',
           fontWeight: 800,

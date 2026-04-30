@@ -3,9 +3,35 @@ import Link from 'next/link';
 export default function NotFound() {
   return (
     <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4">
+      <style>{`
+        @keyframes float404 {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-8px); }
+        }
+        .float-404 { animation: float404 3s ease-in-out infinite; }
+      `}</style>
+
+      {/* Compass icon — suggesting "you're lost" */}
+      <svg
+        className="mb-6 opacity-30"
+        width="32"
+        height="32"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        style={{ color: 'var(--green)' }}
+        aria-hidden="true"
+      >
+        <circle cx="12" cy="12" r="10" />
+        <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor" stroke="none" />
+      </svg>
+
       {/* 404 glyph */}
       <div
-        className="select-none mb-8"
+        className="select-none mb-8 float-404"
         style={{
           fontFamily: 'var(--f-display)',
           fontWeight: 800,
