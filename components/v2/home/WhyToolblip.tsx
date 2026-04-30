@@ -8,7 +8,7 @@ const benefits = [
     color: '#16a34a',
     bg: '#dcfce7',
     title: 'Private',
-    desc: 'Your API keys, JSON blobs, and private notes stay on your device. Nothing is ever transmitted anywhere.',
+    desc: 'All processing happens locally in your browser tab. Your data never touches a server — not once, ever.',
     glow: 'rgba(22, 163, 74, 0.15)',
   },
   {
@@ -20,7 +20,7 @@ const benefits = [
     color: '#d97706',
     bg: '#fef3c7',
     title: 'Fast',
-    desc: 'No waiting for servers. No loading spinners. Results update as you type — or instantly when you paste.',
+    desc: 'Zero server round-trips. Results are instant — whether you\'re processing 1KB or 1MB, it\'s all in-browser.',
     glow: 'rgba(217, 119, 6, 0.15)',
   },
   {
@@ -36,7 +36,7 @@ const benefits = [
     color: '#2563eb',
     bg: '#dbeafe',
     title: 'Free',
-    desc: 'Every tool, every feature, every export — 100% free. No signup wall, no usage caps, no upgrade prompt.',
+    desc: 'Every tool. Every feature. Every export. No paywall, no usage limit, no account required — now and forever.'
     glow: 'rgba(37, 99, 235, 0.15)',
   },
 ];
@@ -56,7 +56,7 @@ export default function WhyToolblip() {
               color: 'var(--fg-0)',
             }}
           >
-            The smarter tool choice
+            No signup. No servers. No catch.
           </h2>
         </div>
 

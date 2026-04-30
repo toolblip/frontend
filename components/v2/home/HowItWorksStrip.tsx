@@ -39,7 +39,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               color: 'var(--green)',
               bg: 'var(--green-tint)',
               title: 'Pick a tool',
-              desc: `${toolCount} tools ready — JSON, Base64, images, text and more.`,}, {
+              desc: `${toolCount} tools across ${categoryCount} categories — JSON, Base64, images, text and more.`,}, {
               icon: (
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
@@ -48,7 +48,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               color: 'var(--blue)',
               bg: 'var(--blue-tint)',
               title: 'Paste your data',
-              desc: 'Nothing leaves your tab. Everything runs right here in your browser.',
+              desc: 'Your clipboard, your browser tab. Nothing is ever sent anywhere — guaranteed.',
             },
             {
               icon: (
@@ -59,7 +59,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               color: 'var(--purple)',
               bg: 'var(--purple-tint)',
               title: 'Get your result',
-              desc: 'Instant output, right there in your tab. Copy it and move on.',
+              desc: 'Your result appears instantly. Copy it and move on — no waiting, no loading.',
             },
           ].map((item, i) => (
             <div key={i} className={`hiw-step hiw-step-${i}`} style={{ display: 'flex', alignItems: 'center', flex: '1 1 0', minWidth: 160 }}>
