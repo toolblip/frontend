@@ -780,7 +780,7 @@ export default function ApiDocsPage() {
                 id="get-tools"
                 method="GET"
                 path="/api/tools"
-                description="Returns a paginated list of all tools in the directory. The results are wrapped in a tools object with a nested tools array."
+                description="Returns a paginated list of all tools in the directory. Supports filtering by category and full-text search by name or keyword."
                 params={[
                   {
                     name: 'category',
@@ -802,6 +802,13 @@ export default function ApiDocsPage() {
                     type: 'integer',
                     required: false,
                     description: 'Page number for pagination (default: 1).',
+                  },
+                  {
+                    name: 'per_page',
+                    in: 'query',
+                    type: 'integer',
+                    required: false,
+                    description: 'Number of results per page (default: 20, max: 100).',
                   },
                 ]}
                 curl={`curl -X GET "${BASE}/api/tools" \\
@@ -830,7 +837,10 @@ export default function ApiDocsPage() {
         "emoji": "📋",
         "created_at": "2026-01-20T14:11:00.000000Z"
       }
-    ]
+    ],
+    "total": 47,
+    "page": 1,
+    "per_page": 20
   }
 }`}
               />
