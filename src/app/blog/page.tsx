@@ -17,6 +17,7 @@ export const metadata: Metadata = {
     url: 'https://toolblip.com/blog',
     siteName: 'Toolblip',
     type: 'website',
+    images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: 'Toolblip' }],
   },
   twitter: {
     card: 'summary',
