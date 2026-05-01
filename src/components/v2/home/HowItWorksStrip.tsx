@@ -10,14 +10,14 @@ const STEPS = [
     num: '1',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="11" cy="11" r="8" />
-        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        <rect x="3" y="3" width="7" height="7" /><rect x="14" y="3" width="7" height="7" />
+        <rect x="14" y="14" width="7" height="7" /><rect x="3" y="14" width="7" height="7" />
       </svg>
     ),
     bg: 'var(--red-tint)',
     color: 'var(--red)',
     title: 'Pick a tool',
-    desc: 'Browse or search — there\'s no signup, no paywall.',
+    desc: 'JSON formatter, Base64, UUID gen — 60+ tools.',
   },
   {
     num: '2',
@@ -25,14 +25,13 @@ const STEPS = [
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
         <polyline points="14 2 14 8 20 8" />
-        <line x1="16" y1="13" x2="8" y2="13" />
-        <line x1="16" y1="17" x2="8" y2="17" />
+        <line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" />
       </svg>
     ),
     bg: 'var(--blue-tint)',
     color: 'var(--c-dev)',
     title: 'Paste your data',
-    desc: 'Nothing uploaded. Nothing sent.',
+    desc: 'Nothing uploaded. Data stays in your tab.',
   },
   {
     num: '3',
@@ -44,7 +43,7 @@ const STEPS = [
     bg: 'var(--green-tint)',
     color: '#1e6b42',
     title: 'Get your result',
-    desc: 'Copy or download. Instantly.',
+    desc: 'Copy or download. No servers, no waiting.',
   },
 ];
 
@@ -78,7 +77,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: HowItWorks
               ⚡
             </div>
             <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--fg-2)', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
-              {toolCount} tools · {categoryCount} categories
+              {toolCount} tools · {categoryCount} categories · No signup needed
             </span>
           </div>
 

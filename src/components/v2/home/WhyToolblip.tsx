@@ -3,9 +3,9 @@
 const BENEFITS = [
   {
     emoji: '🔒',
-    title: '100% Private',
-    tagline: 'Your data, your device, end of story',
-    desc: 'Everything runs in your browser tab. Nothing is sent to any server — not even we can see what you\'re working on.',
+    title: 'Totally Private',
+    tagline: 'No servers. No uploads. Nothing leaves your browser.',
+    desc: 'All processing happens in your tab. We can\'t see your data — no server, no tracking, no logs.',
     tint: 'var(--green-tint)',
     color: '#1e6b42',
     icon: (
@@ -18,8 +18,8 @@ const BENEFITS = [
   {
     emoji: '⚡',
     title: 'Instantly Fast',
-    tagline: 'No spinners. No API calls. No waiting.',
-    desc: 'Results appear the moment you paste. No round-trips to a server, no rate limits, no loading screens.',
+    tagline: 'No API calls. No loading spinners.',
+    desc: 'Results appear the moment you paste. Everything runs client-side — no round-trips, no rate limits.',
     tint: 'var(--amber-tint)',
     color: '#7a4e00',
     icon: (
@@ -30,16 +30,14 @@ const BENEFITS = [
   },
   {
     emoji: '🆓',
-    title: 'Always Free',
-    tagline: 'No signup. No paywall. No catch.',
-    desc: 'Every tool is free, forever. No account needed, no credit card, no usage caps. Built by developers, for everyone.',
+    title: '100% Free',
+    tagline: 'No signup. No paywall. No usage caps.',
+    desc: 'Every tool, free forever. No account, no credit card, no artificial limits. Open the tab and go.',
     tint: 'var(--blue-tint)',
     color: '#1d3fa0',
     icon: (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10" />
-        <line x1="12" y1="8" x2="12" y2="12" />
-        <line x1="12" y1="16" x2="12.01" y2="16" />
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
       </svg>
     ),
   },
