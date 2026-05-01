@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-04-30T21:05:26.402Z",
+  "updatedAt": "2026-05-01T18:04:30.366Z",
   "entries": {
     "memory:memory/2026-04-29.md:4:7": {
       "key": "memory:memory/2026-04-29.md:4:7",
@@ -17176,6 +17176,130 @@
         "starts",
         "fine",
         "cron"
+      ]
+    },
+    "memory:memory/2026-04-29.md:26:57": {
+      "key": "memory:memory/2026-04-29.md:26:57",
+      "path": "memory/2026-04-29.md",
+      "startLine": 26,
+      "endLine": 57,
+      "source": "memory",
+      "snippet": "- Superadmin: `info@toolblip.com` / `temp-password-123` ## Railway Deployment Issue (STILL UNRESOLVED) - Multiple `railway up` commands sent - deployments stack up in QUEUED state - Current deployment `0cd6317b-6c2f-4a46-a56f-0a7a751008e0` has been QUEUED for ~35 minutes - Railway logs show \"Starting Container\" only - no build steps - **ROOT CAUSE**: Railway is likely using pre-built Docker image instead of building from GitHub - **FIX NEEDED**: In Railway dashboard → toolblip service → Settings → Build & Deploy → Change Build Method from \"Docker Image\" to \"Nixpacks\" or \"Dockerfile\" - Site CSS still 404ing - site is broken for users ## Recent Failed Deployments (before tonight) - 1251e1bc-",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4922544240951538,
+      "maxScore": 0.4922544240951538,
+      "firstRecalledAt": "2026-05-01T18:04:24.965Z",
+      "lastRecalledAt": "2026-05-01T18:04:24.965Z",
+      "queryHashes": [
+        "b21e8055dcc8"
+      ],
+      "recallDays": [
+        "2026-05-02"
+      ],
+      "conceptTags": [
+        "toolblip.com",
+        "temp-password-123",
+        "pre-built",
+        "superadmin",
+        "info",
+        "temp",
+        "password",
+        "railway"
+      ]
+    },
+    "memory:memory/2026-05-01.md:1:47": {
+      "key": "memory:memory/2026-05-01.md:1:47",
+      "path": "memory/2026-05-01.md",
+      "startLine": 1,
+      "endLine": 47,
+      "source": "memory",
+      "snippet": "# 2026-05-01 ## Git History Cleanup — COMPLETED - Cleaned git history using `git filter-repo` replacing secrets with `[REDACTED]` - Force-pushed to GitHub (commit `a8882f5` → `2746332`) - Backup at `/Users/ray/Work/toolblip-backup-*` ## Neon PostgreSQL Password Rotation — COMPLETED - Old exposed password: `[REDACTED]` (from Apr 29 commit bda263b5) - New password: `[REDACTED]` (rotated via browser automation) - API key generated: `[REDACTED]` - Updated `.env` files: - `/Users/ray/Work/toolblip/.env` - `/Users/ray/Work/toolblip/api/.env` ## Stripe Staging Mode Feature — COMPLETED (backend) Added to `api/`: - `app/Helpers/StripeHelper.php` — picks test vs prod keys based on staging mo",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.5062771290540695,
+      "maxScore": 0.5062771290540695,
+      "firstRecalledAt": "2026-05-01T18:04:30.366Z",
+      "lastRecalledAt": "2026-05-01T18:04:30.366Z",
+      "queryHashes": [
+        "8e5944dee150"
+      ],
+      "recallDays": [
+        "2026-05-02"
+      ],
+      "conceptTags": [
+        "backup",
+        "filter-repo",
+        "force-pushed",
+        "users/ray/work/toolblip-backup",
+        "users/ray/work/toolblip",
+        "users/ray/work/toolblip/api",
+        "app/helpers/stripehelper.php",
+        "git"
+      ]
+    },
+    "memory:memory/2026-05-01.md:36:76": {
+      "key": "memory:memory/2026-05-01.md:36:76",
+      "path": "memory/2026-05-01.md",
+      "startLine": 36,
+      "endLine": 76,
+      "source": "memory",
+      "snippet": ".openclaw/ ``` ## Directory Page — Already Done `page.tsx` — thin Next.js wrapper with metadata + Suspense `DirectoryClient.tsx` — full client implementation (search, categories, cards, scroll) ## Railway Token - May 1, 2026 - New Railway token received: `[REDACTED]` - Saved to: `/Users/ray/Work/toolblip/api/.env` - Note: Railway API returns 404 on all endpoints with this token - may need to verify token format or regenerate from Railway dashboard - Railway project ID: `fbf89789-2505-4d49-8f00-3cfeb9fe11fe` - Railway environment: `970533e1-82a4-4efc-a6ac-61c03d1cf53c` # 2026-05-01 ## Git History Cleanup — COMPLETED - Cleaned git history using `git filter-repo` replacing secrets with `[",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.5058550357818603,
+      "maxScore": 0.5058550357818603,
+      "firstRecalledAt": "2026-05-01T18:04:30.366Z",
+      "lastRecalledAt": "2026-05-01T18:04:30.366Z",
+      "queryHashes": [
+        "8e5944dee150"
+      ],
+      "recallDays": [
+        "2026-05-02"
+      ],
+      "conceptTags": [
+        "page.tsx",
+        "next.js",
+        "directoryclient.tsx",
+        "users/ray/work/toolblip/api",
+        "filter-repo",
+        "openclaw",
+        "directory",
+        "page"
+      ]
+    },
+    "memory:memory/2026-04-29.md:50:64": {
+      "key": "memory:memory/2026-04-29.md:50:64",
+      "path": "memory/2026-04-29.md",
+      "startLine": 50,
+      "endLine": 64,
+      "source": "memory",
+      "snippet": "- Category filter tabs with tool counts - Tool card grid with emoji, name, category, description - \"Showing X of Y tools\" count display - Empty state with clear filters - Scroll-to-top button - Load more pagination - URL `?category=` sync All 5 requested features were already built. Task is complete. ## Homepage Sections [7/10] — Already Complete - All 3 homepage sections (HowItWorksStrip, CategoryQuickAccess, WhyToolblip) already implemented - Commits `df7ddedb` and `bda263b5` cover the work - Nothing to add; code matches spec",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4999614596366882,
+      "maxScore": 0.4999614596366882,
+      "firstRecalledAt": "2026-05-01T18:04:30.366Z",
+      "lastRecalledAt": "2026-05-01T18:04:30.366Z",
+      "queryHashes": [
+        "8e5944dee150"
+      ],
+      "recallDays": [
+        "2026-05-02"
+      ],
+      "conceptTags": [
+        "scroll-to-top",
+        "7/10",
+        "category",
+        "filter",
+        "tabs",
+        "tool",
+        "counts",
+        "card"
       ]
     }
   }
