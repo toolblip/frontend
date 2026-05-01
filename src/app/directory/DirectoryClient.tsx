@@ -6,7 +6,27 @@ import { tools } from '@/data/tools';
 import { getCategoryMeta } from '@/lib/v2/categoryMeta';
 import { IconArrowUR, IconSearch, IconClose } from '@/components/v2/icons';
 
-const DIRECTORY_CATEGORIES = [
+export type Category =
+  | 'All'
+  | 'Text'
+  | 'Developer'
+  | 'Encoder'
+  | 'Image'
+  | 'Conversion'
+  | 'Math'
+  | 'CSS'
+  | 'SEO'
+  | 'Color';
+
+export interface Tool {
+  slug: string;
+  name: string;
+  emoji: string;
+  category: Exclude<Category, 'All'>;
+  description: string;
+}
+
+const DIRECTORY_CATEGORIES: Category[] = [
   'All',
   'Text',
   'Developer',
@@ -18,8 +38,6 @@ const DIRECTORY_CATEGORIES = [
   'SEO',
   'Color',
 ] as const;
-type Category = typeof DIRECTORY_CATEGORIES[number];
-
 export default function DirectoryClient() {
   const [query, setQuery] = useState('');
   const [activeTab, setActiveTab] = useState<Category>('All');
