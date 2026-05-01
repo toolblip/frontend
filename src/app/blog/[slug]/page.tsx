@@ -83,6 +83,7 @@ export async function generateMetadata({
       url,
       siteName: 'Toolblip',
       type: 'article',
+      images: [{ url: post.meta.featuredImage || 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: post.meta.title }],
     },
     twitter: {
       card: 'summary' as const,
