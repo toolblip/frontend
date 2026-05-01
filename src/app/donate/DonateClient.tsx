@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { StripeStagingBanner } from '@/components/StripeStagingBanner';
-import { useStripeStatus } from '@/lib/stripeStatus';
+import { StripeStagingBanner } from '../../components/StripeStagingBanner';
+import { useStripeStatus } from '../../lib/stripeStatus';
 
 const AMOUNTS = [5, 10, 25, 50, 100];
 

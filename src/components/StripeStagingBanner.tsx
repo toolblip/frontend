@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useStripeStatus } from '@/lib/stripeStatus';
+import { useStripeStatus } from '../lib/stripeStatus';
 
 export function StripeStagingBanner() {
   const { status, loading, error } = useStripeStatus();
