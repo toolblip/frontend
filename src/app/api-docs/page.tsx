@@ -2,8 +2,8 @@
 
 import { CopyButton } from './CopyButton';
 
-const BASE = 'https://toolblip-api-production.up.railway.app';
 const CUSTOM = 'https://api.toolblip.com';
+const RAILWAY = 'https://toolblip-api-production.up.railway.app';
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
 
@@ -643,7 +643,7 @@ export default function ApiDocsPage() {
                 <polyline points="4 17 10 11 4 5" /><line x1="12" y1="19" x2="20" y2="19" />
               </svg>
               Base:{' '}
-              <strong style={{ ...s.badgeMono, marginLeft: 4 }}>{BASE}</strong>
+              <strong style={{ ...s.badgeMono, marginLeft: 4 }}>{CUSTOM}</strong>
             </div>
             <div style={s.badge}>
               <IconLock />
@@ -735,15 +735,13 @@ export default function ApiDocsPage() {
               <div style={s.urlCard}>
                 <span style={s.urlLabel}>Primary</span>
                 <code style={{ fontFamily: 'var(--f-mono)', fontSize: 13.5, color: t.fg0, fontWeight: 600 }}>
-                  {BASE}
+                  {CUSTOM}
                 </code>
               </div>
               <div style={s.noteCard}>
                 <p style={s.noteText}>
-                  While SSL is being provisioned for{' '}
-                  <code style={s.codeInline}>{CUSTOM}</code>, use the Railway URL above.
-                  Switch the base URL to <code style={s.codeInline}>{CUSTOM}</code> once DNS
-                  and SSL are ready.
+                  Railway fallback: <code style={s.codeInline}>{RAILWAY}</code>.
+                  Use <code style={s.codeInline}>{CUSTOM}</code> as the primary once SSL is ready.
                 </p>
               </div>
             </section>
@@ -811,7 +809,7 @@ export default function ApiDocsPage() {
                     description: 'Number of results per page (default: 20, max: 100).',
                   },
                 ]}
-                curl={`curl -X GET "${BASE}/api/tools" \\
+                curl={`curl -X GET "${CUSTOM}/api/tools" \\
   -H "Accept: application/json"`}
                 response={`// 200 OK
 {
@@ -859,7 +857,7 @@ export default function ApiDocsPage() {
                     description: 'URL-friendly slug of the tool (e.g. json-formatter).',
                   },
                 ]}
-                curl={`curl -X GET "${BASE}/api/tools/json-formatter" \\
+                curl={`curl -X GET "${CUSTOM}/api/tools/json-formatter" \\
   -H "Accept: application/json"`}
                 response={`// 200 OK
 {
@@ -919,7 +917,7 @@ export default function ApiDocsPage() {
                     description: 'Must match the password field exactly.',
                   },
                 ]}
-                curl={`curl -X POST "${BASE}/api/auth/register" \\
+                curl={`curl -X POST "${CUSTOM}/api/auth/register" \\
   -H "Content-Type: application/json" \\
   -H "Accept: application/json" \\
   -d '{
@@ -961,7 +959,7 @@ export default function ApiDocsPage() {
                     description: 'Your account password.',
                   },
                 ]}
-                curl={`curl -X POST "${BASE}/api/auth/login" \\
+                curl={`curl -X POST "${CUSTOM}/api/auth/login" \\
   -H "Content-Type: application/json" \\
   -H "Accept: application/json" \\
   -d '{
@@ -986,7 +984,7 @@ export default function ApiDocsPage() {
                 path="/api/auth/logout"
                 description="Invalidate the current token server-side. Requires authentication. The token can no longer be used after this call."
                 auth
-                curl={`curl -X POST "${BASE}/api/auth/logout" \\
+                curl={`curl -X POST "${CUSTOM}/api/auth/logout" \\
   -H "Content-Type: application/json" \\
   -H "Accept: application/json" \\
   -H "Authorization: Bearer $TB_TOKEN"`}
@@ -1002,7 +1000,7 @@ export default function ApiDocsPage() {
                 path="/api/auth/user"
                 description="Fetch the currently authenticated user. Use to verify a token or retrieve the latest profile data."
                 auth
-                curl={`curl -X GET "${BASE}/api/auth/user" \\
+                curl={`curl -X GET "${CUSTOM}/api/auth/user" \\
   -H "Accept: application/json" \\
   -H "Authorization: Bearer $TB_TOKEN"`}
                 response={`// 200 OK
