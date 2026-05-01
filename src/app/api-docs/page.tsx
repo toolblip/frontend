@@ -1,5 +1,4 @@
-'use client';
-
+import type { Metadata } from 'next';
 import { CopyButton } from './CopyButton';
 
 const CUSTOM = 'https://api.toolblip.com';
@@ -621,8 +620,29 @@ function Endpoint({ id, method, path, description, auth, params, curl, response 
   );
 }
 
+export const metadata: Metadata = {
+  title: 'API Docs — Toolblip',
+  description:
+    'Toolblip REST API reference. Integrate the tool directory into your app with simple Bearer token authentication.',
+  openGraph: {
+    title: 'API Docs — Toolblip',
+    description:
+      'Toolblip REST API reference. Integrate the tool directory into your app with simple Bearer token authentication.',
+    url: 'https://toolblip.com/api-docs',
+    siteName: 'Toolblip',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'API Docs — Toolblip',
+    description:
+      'Toolblip REST API reference. Integrate the tool directory into your app with simple Bearer token authentication.',
+  },
+};
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
+'use client';
 export default function ApiDocsPage() {
   return (
     <div style={s.page}>
