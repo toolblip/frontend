@@ -35,3 +35,4 @@ api/
 # OpenClaw
 .claude-home/
 .openclaw/
+.railway_token
