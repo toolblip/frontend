@@ -703,7 +703,7 @@ export default function ApiDocsPage() {
               <a href="#post-register" style={s.navLink}>POST /api/auth/register</a>
               <a href="#post-login" style={s.navLink}>POST /api/auth/login</a>
               <a href="#post-logout" style={s.navLink}>POST /api/auth/logout</a>
-              <a href="#get-me" style={s.navLink}>GET /api/auth/me</a>
+              <a href="#get-user" style={s.navLink}>GET /api/auth/user</a>
             </div>
             <div style={s.navSection}>
               <p style={s.navLabel}>Reference</p>
@@ -1015,12 +1015,12 @@ export default function ApiDocsPage() {
               />
 
               <Endpoint
-                id="get-me"
+                id="get-user"
                 method="GET"
-                path="/api/auth/me"
+                path="/api/auth/user"
                 description="Fetch the currently authenticated user. Use to verify a token or retrieve the latest profile data."
                 auth
-                curl={`curl -X GET "${CUSTOM}/api/auth/me" \\`
+                curl={`curl -X GET "${CUSTOM}/api/auth/user" \\
   -H "Accept: application/json" \\
   -H "Authorization: Bearer $TB_TOKEN"`}
                 response={`// 200 OK
