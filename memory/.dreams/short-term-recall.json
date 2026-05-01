@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-01T18:04:30.366Z",
+  "updatedAt": "2026-05-01T21:01:51.969Z",
   "entries": {
     "memory:memory/2026-04-29.md:4:7": {
       "key": "memory:memory/2026-04-29.md:4:7",
@@ -17196,7 +17196,8 @@
         "b21e8055dcc8"
       ],
       "recallDays": [
-        "2026-05-02"
+        "2026-05-02",
+        "2026-05-01"
       ],
       "conceptTags": [
         "toolblip.com",
@@ -17227,7 +17228,8 @@
         "8e5944dee150"
       ],
       "recallDays": [
-        "2026-05-02"
+        "2026-05-02",
+        "2026-05-01"
       ],
       "conceptTags": [
         "backup",
@@ -17258,7 +17260,8 @@
         "8e5944dee150"
       ],
       "recallDays": [
-        "2026-05-02"
+        "2026-05-02",
+        "2026-05-01"
       ],
       "conceptTags": [
         "page.tsx",
@@ -17289,7 +17292,8 @@
         "8e5944dee150"
       ],
       "recallDays": [
-        "2026-05-02"
+        "2026-05-02",
+        "2026-05-01"
       ],
       "conceptTags": [
         "scroll-to-top",
@@ -17300,6 +17304,2045 @@
         "tool",
         "counts",
         "card"
+      ]
+    },
+    "memory:memory/2026-05-01.md:4:6": {
+      "key": "memory:memory/2026-05-01.md:4:6",
+      "path": "memory/2026-05-01.md",
+      "startLine": 4,
+      "endLine": 6,
+      "source": "memory",
+      "snippet": "Git History Cleanup — COMPLETED: Cleaned git history using `git filter-repo` replacing secrets with `[REDACTED]`; Force-pushed to GitHub (commit `a8882f5` → `2746332`); Backup at `/Users/ray/Work/toolblip-backup-*`",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "f16f2797a8f9"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "backup",
+        "filter-repo",
+        "force-pushed",
+        "users/ray/work/toolblip-backup",
+        "git",
+        "history",
+        "cleanup",
+        "completed"
+      ]
+    },
+    "memory:memory/2026-05-01.md:9:12": {
+      "key": "memory:memory/2026-05-01.md:9:12",
+      "path": "memory/2026-05-01.md",
+      "startLine": 9,
+      "endLine": 12,
+      "source": "memory",
+      "snippet": "Neon PostgreSQL Password Rotation — COMPLETED: Old exposed password: `[REDACTED]` (from Apr 29 commit bda263b5); New password: `[REDACTED]` (rotated via browser automation); API key generated: `[REDACTED]`; Updated `.env` files:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "f16f2797a8f9"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "neon",
+        "postgresql",
+        "password",
+        "rotation",
+        "completed",
+        "old",
+        "exposed",
+        "redacted"
+      ]
+    },
+    "memory:memory/2026-05-01.md:13:14": {
+      "key": "memory:memory/2026-05-01.md:13:14",
+      "path": "memory/2026-05-01.md",
+      "startLine": 13,
+      "endLine": 14,
+      "source": "memory",
+      "snippet": "Neon PostgreSQL Password Rotation — COMPLETED: `/Users/ray/Work/toolblip/.env`; `/Users/ray/Work/toolblip/api/.env`",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "f16f2797a8f9"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "users/ray/work/toolblip",
+        "users/ray/work/toolblip/api",
+        "neon",
+        "postgresql",
+        "password",
+        "rotation",
+        "completed",
+        "users"
+      ]
+    },
+    "memory:memory/2026-05-01.md:17:20": {
+      "key": "memory:memory/2026-05-01.md:17:20",
+      "path": "memory/2026-05-01.md",
+      "startLine": 17,
+      "endLine": 20,
+      "source": "memory",
+      "snippet": "Stripe Staging Mode Feature — COMPLETED (backend): `api/app/Helpers/StripeHelper.php` — picks test vs prod keys based on staging mode; `api/app/Http/Middleware/EnsureStripeStagingMode.php` — blocks non-admins when staging on; `config/services.php` — added test keys and staging_mo",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "f16f2797a8f9"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "api/app/helpers/stripehelper.php",
+        "non-admins",
+        "config/services.php",
+        "staging-mo",
+        "stripe",
+        "staging",
+        "mode",
+        "feature"
+      ]
+    },
+    "memory:memory/2026-05-01.md:21:21": {
+      "key": "memory:memory/2026-05-01.md:21:21",
+      "path": "memory/2026-05-01.md",
+      "startLine": 21,
+      "endLine": 21,
+      "source": "memory",
+      "snippet": "Stripe Staging Mode Feature — COMPLETED (backend): `.env` — test keys and `STRIPE_STAGING_MODE=false`",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "f16f2797a8f9"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "stripe-staging-mode",
+        "stripe",
+        "staging",
+        "mode",
+        "feature",
+        "completed",
+        "backend",
+        "env"
+      ]
+    },
+    "memory:memory/2026-05-01.md:24:24": {
+      "key": "memory:memory/2026-05-01.md:24:24",
+      "path": "memory/2026-05-01.md",
+      "startLine": 24,
+      "endLine": 24,
+      "source": "memory",
+      "snippet": "Gitignore Updated — COMPLETED: Added explicit OpenClaw protection:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "f16f2797a8f9"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "gitignore",
+        "updated",
+        "completed",
+        "added",
+        "explicit",
+        "openclaw",
+        "protection"
+      ]
+    },
+    "memory:memory/2026-05-01.md:26:27": {
+      "key": "memory:memory/2026-05-01.md:26:27",
+      "path": "memory/2026-05-01.md",
+      "startLine": 26,
+      "endLine": 27,
+      "source": "memory",
+      "snippet": "Gitignore Updated — COMPLETED: .claude-home/ .openclaw/",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "f16f2797a8f9"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "claude-home",
+        "gitignore",
+        "updated",
+        "completed",
+        "claude",
+        "home",
+        "openclaw"
+      ]
+    },
+    "memory:memory/2026-05-01.md:31:34": {
+      "key": "memory:memory/2026-05-01.md:31:34",
+      "path": "memory/2026-05-01.md",
+      "startLine": 31,
+      "endLine": 34,
+      "source": "memory",
+      "snippet": "Railway Token v2 - May 1, 2026 (afternoon): New PAT received: `4f89be0a-4172-482b-b1cc-aff0b833d950`; Updated in `/Users/ray/Work/toolblip/api/.env`; Railway CLI v4.37.2 uses OAuth login flow — headless not possible; GraphQL API at `https://backboard.railway.app/graphql/v2` works",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "f16f2797a8f9"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "users/ray/work/toolblip/api",
+        "v4.37.2",
+        "backboard.railway.app/graphql/v2",
+        "railway",
+        "token",
+        "may",
+        "afternoon",
+        "new"
+      ]
+    },
+    "memory:memory/2026-05-01.md:37:40": {
+      "key": "memory:memory/2026-05-01.md:37:40",
+      "path": "memory/2026-05-01.md",
+      "startLine": 37,
+      "endLine": 40,
+      "source": "memory",
+      "snippet": "Railway Deployment — WORKING: API deployed via GraphQL: `bd40fae4-d2ad-4fb5-baf8-3aef9e90918c`; Service ID: `e39d0cb5-c516-4fb5-9b56-9ae3b7b39ad2`; API responding at: https://api.toolblip.com/api/stripe/status → `{\"staging_mode\":false}`; Source: GitHub `toolblip/toolblip-api` (ma",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "f16f2797a8f9"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "staging-mode",
+        "toolblip/toolblip-api",
+        "railway",
+        "deployment",
+        "working",
+        "api",
+        "deployed",
+        "via"
+      ]
+    },
+    "memory:memory/2026-05-01.md:43:45": {
+      "key": "memory:memory/2026-05-01.md:43:45",
+      "path": "memory/2026-05-01.md",
+      "startLine": 43,
+      "endLine": 45,
+      "source": "memory",
+      "snippet": "Stripe Staging Mode — Frontend: `src/lib/stripeStatus.ts` — client hook fetching `GET /api/stripe/status`; `src/components/StripeStagingBanner.tsx` — fixed bottom banner, dismissible; `src/app/donate/page.tsx` + `DonateClient.tsx` — Stripe checkout UI",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "f16f2797a8f9"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "src/lib/stripestatus.ts",
+        "api/stripe/status",
+        "src/app/donate/page.tsx",
+        "donateclient.tsx",
+        "stripe",
+        "staging",
+        "mode",
+        "frontend"
+      ]
+    },
+    "memory:memory/2026-05-01.md:48:51": {
+      "key": "memory:memory/2026-05-01.md:48:51",
+      "path": "memory/2026-05-01.md",
+      "startLine": 48,
+      "endLine": 51,
+      "source": "memory",
+      "snippet": "Tool Detail Page — Already Built: `src/app/tools/[slug]/page.tsx` — full page template with hero band; 6 real tool UIs in `src/components/tools/`:; `WordCounterClient.tsx`, `CharacterCounterClient.tsx`, `CaseConverterClient.tsx`; `Base64Client.tsx`, `UrlEncodeClient.tsx`, `JsonFo",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "f16f2797a8f9"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "src/app/tools",
+        "page.tsx",
+        "src/components/tools",
+        "wordcounterclient.tsx",
+        "charactercounterclient.tsx",
+        "caseconverterclient.tsx",
+        "base64client.tsx",
+        "urlencodeclient.tsx"
+      ]
+    },
+    "memory:memory/2026-05-01.md:52:53": {
+      "key": "memory:memory/2026-05-01.md:52:53",
+      "path": "memory/2026-05-01.md",
+      "startLine": 52,
+      "endLine": 53,
+      "source": "memory",
+      "snippet": "Tool Detail Page — Already Built: `src/app/tools/[slug]/ToolUI.tsx` — dispatcher component; Committed: `e3d7dbc` \"feat: add tool detail page template with real UIs\"",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "f16f2797a8f9"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "src/app/tools",
+        "toolui.tsx",
+        "tool",
+        "detail",
+        "page",
+        "already",
+        "built",
+        "src"
+      ]
+    },
+    "memory:memory/2026-05-01.md:56:57": {
+      "key": "memory:memory/2026-05-01.md:56:57",
+      "path": "memory/2026-05-01.md",
+      "startLine": 56,
+      "endLine": 57,
+      "source": "memory",
+      "snippet": "Cron [4/10] — Already Complete (May 2, 00:04): Tool detail page template already built and committed (commit `e3d7dbc`); No action needed — task was done in a previous session",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "f16f2797a8f9"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "4/10",
+        "cron",
+        "already",
+        "complete",
+        "may",
+        "tool",
+        "detail",
+        "page"
+      ]
+    },
+    "memory:memory/2026-05-01.md:61:61": {
+      "key": "memory:memory/2026-05-01.md:61:61",
+      "path": "memory/2026-05-01.md",
+      "startLine": 61,
+      "endLine": 61,
+      "source": "memory",
+      "snippet": "Cron: Social sharing for tools [8/10] — 2026-05-02 01:42 BDT: Task: \"Add social sharing to tool detail pages\" — Already DONE.",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "f16f2797a8f9"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "8/10",
+        "cron",
+        "social",
+        "sharing",
+        "tools",
+        "bdt",
+        "task",
+        "add"
+      ]
+    },
+    "memory:memory/2026-05-01.md:63:63": {
+      "key": "memory:memory/2026-05-01.md:63:63",
+      "path": "memory/2026-05-01.md",
+      "startLine": 63,
+      "endLine": 63,
+      "source": "memory",
+      "snippet": "Cron: Social sharing for tools [8/10] — 2026-05-02 01:42 BDT: `src/components/ShareButtons.tsx` exists with:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "f16f2797a8f9"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "8/10",
+        "src/components/sharebuttons.tsx",
+        "cron",
+        "social",
+        "sharing",
+        "tools",
+        "bdt",
+        "src"
+      ]
+    },
+    "memory:memory/2026-05-01.md:64:66": {
+      "key": "memory:memory/2026-05-01.md:64:66",
+      "path": "memory/2026-05-01.md",
+      "startLine": 64,
+      "endLine": 66,
+      "source": "memory",
+      "snippet": "Cron: Social sharing for tools [8/10] — 2026-05-02 01:42 BDT: Copy link button (with clipboard fallback); Twitter/X share link; LinkedIn share link",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "f16f2797a8f9"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "8/10",
+        "twitter/x",
+        "cron",
+        "social",
+        "sharing",
+        "tools",
+        "bdt",
+        "copy"
+      ]
+    },
+    "memory:memory/2026-05-01.md:68:69": {
+      "key": "memory:memory/2026-05-01.md:68:69",
+      "path": "memory/2026-05-01.md",
+      "startLine": 68,
+      "endLine": 69,
+      "source": "memory",
+      "snippet": "Cron: Social sharing for tools [8/10] — 2026-05-02 01:42 BDT: Integrated into `src/app/tools/[slug]/page.tsx` at line 140. Already committed and pushed in previous sessions (commits `7fdf46b`, `452bab3`).",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "f16f2797a8f9"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "8/10",
+        "src/app/tools",
+        "page.tsx",
+        "cron",
+        "social",
+        "sharing",
+        "tools",
+        "bdt"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:52:52": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:52:52",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 52,
+      "endLine": 52,
+      "source": "memory",
+      "snippet": "User: can you find out where this alert comes from and is it correct?",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "can",
+        "find",
+        "out",
+        "where",
+        "alert",
+        "comes",
+        "correct"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:53:53": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:53:53",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 53,
+      "endLine": 53,
+      "source": "memory",
+      "snippet": "User: update that cron as well",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "update",
+        "cron",
+        "well"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:54:54": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:54:54",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 54,
+      "endLine": 54,
+      "source": "memory",
+      "snippet": "Assistant: Let me check if there's another Railway-related cron or if the existing one needs further improvement:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "railway-related",
+        "let",
+        "check",
+        "there's",
+        "another",
+        "railway",
+        "related",
+        "cron"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:55:55": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:55:55",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 55,
+      "endLine": 55,
+      "source": "memory",
+      "snippet": "Assistant: I already updated it this session, but let me improve it further — the 5-minute checks are too noisy now that Railway is fixed. I'll reduce frequency and make it even smarter:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "5-minute",
+        "already",
+        "updated",
+        "but",
+        "let",
+        "improve",
+        "further",
+        "minute"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:56:56": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:56:56",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 56,
+      "endLine": 56,
+      "source": "memory",
+      "snippet": "Assistant: Done. Updated the Railway monitoring cron: - **Frequency**: Every 30 min (was every 5 min) — way less noise - **Logic**: HTTP 200 → `HEARTBEAT_OK` only, no Telegram. Only alert when site is actually down - Railway's stale FAILED status is safely ignored",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "heartbeat-ok",
+        "done",
+        "updated",
+        "railway",
+        "monitoring",
+        "cron",
+        "frequency",
+        "min"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:57:57": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:57:57",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 57,
+      "endLine": 57,
+      "source": "memory",
+      "snippet": "User: give me list of top 5 most important tasks",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "give",
+        "list",
+        "top",
+        "important",
+        "tasks"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:58:58": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:58:58",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 58,
+      "endLine": 58,
+      "source": "memory",
+      "snippet": "Assistant: Based on the system memory and task audit, here are the **top 5 most important tasks**: --- **1. 🚨 Rotate ALL exposed secrets (CRITICAL)** Multiple tokens are exposed in git history — Vercel, GitHub password, Cloudflare API, Context7, Packagist. These are **already in",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "based",
+        "task",
+        "audit",
+        "here",
+        "top",
+        "important",
+        "tasks",
+        "rotate"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:59:59": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:59:59",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 59,
+      "endLine": 59,
+      "source": "memory",
+      "snippet": "Assistant: needs the same. --- **4. Configure Stripe webhook URL** `https://api.toolblip.com/api/stripe/webhook` needs to be registered in the Stripe dashboard to handle payments/subscriptions. --- **5. Fix Telegram security issues** - Telegram DMs are **open** to anyone — should",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "payments/subscriptions",
+        "needs",
+        "configure",
+        "stripe",
+        "webhook",
+        "url",
+        "https",
+        "api.toolblip.com"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:60:60": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:60:60",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 60,
+      "endLine": 60,
+      "source": "memory",
+      "snippet": "Assistant: Re: #5 Telegram — yes, you're right. The group being `open` means anyone can see and interact with the bot in the group, but the bot itself is private (your account controls it). The security flags are about DM policy — if you want the bot to only respond to you in DMs",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "telegram",
+        "yes",
+        "you're",
+        "right",
+        "group",
+        "open",
+        "means",
+        "anyone"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:61:61": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:61:61",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 61,
+      "endLine": 61,
+      "source": "memory",
+      "snippet": "User: #3 we are going to use neon #5 this group need to be open for all. also the bot is private so no one else can send message unless I allow it right?",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "going",
+        "use",
+        "neon",
+        "group",
+        "need",
+        "open",
+        "all",
+        "bot"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:62:62": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:62:62",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 62,
+      "endLine": 62,
+      "source": "memory",
+      "snippet": "User: for #5, I want few people and bot to send message",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "want",
+        "few",
+        "people",
+        "bot",
+        "send",
+        "message"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:63:63": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:63:63",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 63,
+      "endLine": 63,
+      "source": "memory",
+      "snippet": "Assistant: Got it. Let me update the Telegram config to restrict to specific user IDs — your ID is `346039811`:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "got",
+        "let",
+        "update",
+        "telegram",
+        "config",
+        "restrict",
+        "specific",
+        "ids"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-01.txt:2:2": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-01.txt:2:2",
+      "path": "memory/.dreams/session-corpus/2026-05-01.txt",
+      "startLine": 2,
+      "endLine": 2,
+      "source": "memory",
+      "snippet": "User: can you fix this: From: GitGuardian security@getgitguardian.com Subject: [toolblip/frontend] PostgreSQL URI exposed on GitHub ─── GitGuardian has detected the following PostgreSQL URI exposed within your GitHub account. Details: • Secret type: PostgreSQL URI • Repository: t",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "23c989536796"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "getgitguardian.com",
+        "toolblip/frontend",
+        "can",
+        "fix",
+        "gitguardian",
+        "security",
+        "subject",
+        "toolblip"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-01.txt:3:3": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-01.txt:3:3",
+      "path": "memory/.dreams/session-corpus/2026-05-01.txt",
+      "startLine": 3,
+      "endLine": 3,
+      "source": "memory",
+      "snippet": "Assistant: Found the issue. The PostgreSQL URI was committed in `memory/2026-04-29.md` in commit `bda263b5`: ``` postgresql://neondb_owner:npg_rbRKAXg70Vjx@ep-wispy-block-amid7x9e-pooler.c-5.us-east-1.aws.neon.tech/neondb?sslmode=require ``` The current memory file already marks",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "23c989536796"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "memory/2026-04-29.md",
+        "neondb-owner",
+        "npg-rbrkaxg70vjx",
+        "found",
+        "issue",
+        "postgresql",
+        "uri",
+        "was"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-01.txt:4:4": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-01.txt:4:4",
+      "path": "memory/.dreams/session-corpus/2026-05-01.txt",
+      "startLine": 4,
+      "endLine": 4,
+      "source": "memory",
+      "snippet": "Assistant: First, let me backup the repo, then I'll clean the git history:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "23c989536796"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "backup",
+        "first",
+        "let",
+        "repo",
+        "i'll",
+        "clean",
+        "git",
+        "history"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-01.txt:5:5": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-01.txt:5:5",
+      "path": "memory/.dreams/session-corpus/2026-05-01.txt",
+      "startLine": 5,
+      "endLine": 5,
+      "source": "memory",
+      "snippet": "Assistant: Now let me clean the git history:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "23c989536796"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "now",
+        "let",
+        "clean",
+        "git",
+        "history"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-01.txt:6:6": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-01.txt:6:6",
+      "path": "memory/.dreams/session-corpus/2026-05-01.txt",
+      "startLine": 6,
+      "endLine": 6,
+      "source": "memory",
+      "snippet": "Assistant: Secrets removed from git history. Now re-adding origin and force pushing:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "23c989536796"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "re-adding",
+        "secrets",
+        "removed",
+        "git",
+        "history",
+        "now",
+        "adding",
+        "origin"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-01.txt:7:7": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-01.txt:7:7",
+      "path": "memory/.dreams/session-corpus/2026-05-01.txt",
+      "startLine": 7,
+      "endLine": 7,
+      "source": "memory",
+      "snippet": "Assistant: Done! Here's what I did: **✅ Git history cleaned** — The PostgreSQL URI and other secrets have been replaced with `[REDACTED]` in ~1255 commits. The cleaned history has been force-pushed to GitHub. **Backup location:** `/Users/ray/Work/toolblip-backup-*` --- **⚠️ Still",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "23c989536796"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "backup",
+        "force-pushed",
+        "users/ray/work/toolblip-backup",
+        "done",
+        "here's",
+        "what",
+        "did",
+        "git"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-01.txt:8:8": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-01.txt:8:8",
+      "path": "memory/.dreams/session-corpus/2026-05-01.txt",
+      "startLine": 8,
+      "endLine": 8,
+      "source": "memory",
+      "snippet": "Assistant: GitGuardian should clear the alert on the next scan.",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "23c989536796"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "gitguardian",
+        "clear",
+        "alert",
+        "scan"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-01.txt:9:9": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-01.txt:9:9",
+      "path": "memory/.dreams/session-corpus/2026-05-01.txt",
+      "startLine": 9,
+      "endLine": 9,
+      "source": "memory",
+      "snippet": "User: An async command completion event was triggered, but user delivery is disabled for this run. Handle the result internally and reply HEARTBEAT_OK only. Do not mention, summarize, or reuse command output. Current time: Friday, May 1st, 2026 - 10:38 AM (Asia/Dhaka) / 2026-05-0",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "23c989536796"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "heartbeat-ok",
+        "asia/dhaka",
+        "2026-05-0",
+        "async",
+        "command",
+        "completion",
+        "event",
+        "was"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-01.txt:10:10": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-01.txt:10:10",
+      "path": "memory/.dreams/session-corpus/2026-05-01.txt",
+      "startLine": 10,
+      "endLine": 10,
+      "source": "memory",
+      "snippet": "User: you can login in neon using github login method and rotate password",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "23c989536796"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "can",
+        "login",
+        "neon",
+        "github",
+        "method",
+        "rotate",
+        "password"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-01.txt:11:11": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-01.txt:11:11",
+      "path": "memory/.dreams/session-corpus/2026-05-01.txt",
+      "startLine": 11,
+      "endLine": 11,
+      "source": "memory",
+      "snippet": "Assistant: The browser tool can't attach — it requires the Chrome MCP extension to be running. Let me check if it's set up:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "23c989536796"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "browser",
+        "tool",
+        "can't",
+        "attach",
+        "requires",
+        "chrome",
+        "mcp",
+        "extension"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-01.txt:12:12": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-01.txt:12:12",
+      "path": "memory/.dreams/session-corpus/2026-05-01.txt",
+      "startLine": 12,
+      "endLine": 12,
+      "source": "memory",
+      "snippet": "Assistant: I'm blocked on rotating the Neon password — here's where things stand: **What I tried:** - **Neon CLI** (`neon`) — installed, but auth requires interactive GitHub OAuth (opens a browser window) - **Browser tool** — Chrome MCP extension isn't attached/running (`profile",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "23c989536796"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "attached/running",
+        "i'm",
+        "blocked",
+        "rotating",
+        "neon",
+        "password",
+        "here's",
+        "where"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-01.txt:13:13": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-01.txt:13:13",
+      "path": "memory/.dreams/session-corpus/2026-05-01.txt",
+      "startLine": 13,
+      "endLine": 13,
+      "source": "memory",
+      "snippet": "User: An async command completion event was triggered, but user delivery is disabled for this run. Handle the result internally and reply HEARTBEAT_OK only. Do not mention, summarize, or reuse command output. Current time: Friday, May 1st, 2026 - 10:43 AM (Asia/Dhaka) / 2026-05-0",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "23c989536796"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "heartbeat-ok",
+        "asia/dhaka",
+        "2026-05-0",
+        "async",
+        "command",
+        "completion",
+        "event",
+        "was"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:64:64": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:64:64",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 64,
+      "endLine": 64,
+      "source": "memory",
+      "snippet": "Assistant: Who else should be allowed to send messages? Just give me their Telegram user IDs or @usernames. For now I'll set it to just you (`346039811`) + the bot. Once you give me the other IDs I'll add them:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "who",
+        "else",
+        "allowed",
+        "send",
+        "messages",
+        "give",
+        "telegram",
+        "ids"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:65:65": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:65:65",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 65,
+      "endLine": 65,
+      "source": "memory",
+      "snippet": "Assistant: Updated. Restarting gateway to apply:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "gateway",
+        "updated",
+        "restarting",
+        "apply"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:66:66": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:66:66",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 66,
+      "endLine": 66,
+      "source": "memory",
+      "snippet": "User: for #3 we will create a new neon accunt for tb",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "will",
+        "create",
+        "new",
+        "neon",
+        "accunt"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:67:67": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:67:67",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 67,
+      "endLine": 67,
+      "source": "memory",
+      "snippet": "Assistant: Got it. You'll need to create a new Neon account/project manually first, then give me the connection string. Here's how to do it: 1. **Sign up at [neon.tech](https://neon.tech)** — use GitHub or email 2. **Create a new project** for toolblip 3. **Get the connection str",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "account/project",
+        "neon.tech",
+        "got",
+        "you'll",
+        "need",
+        "create",
+        "new",
+        "neon"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:68:68": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:68:68",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 68,
+      "endLine": 68,
+      "source": "memory",
+      "snippet": "User: wor on non blocking things while I am going for excercise",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "wor",
+        "non",
+        "blocking",
+        "things",
+        "while",
+        "going",
+        "excercise"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:69:69": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:69:69",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 69,
+      "endLine": 69,
+      "source": "memory",
+      "snippet": "Assistant: On it. Let me check what's most actionable:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "let",
+        "check",
+        "what's",
+        "actionable"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:70:70": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:70:70",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 70,
+      "endLine": 70,
+      "source": "memory",
+      "snippet": "Assistant: I see 3 running tasks (blog posts + OG tags) and lots of stale Railway failures. Let me clean up and work on the non-blocking items:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "non-blocking",
+        "see",
+        "running",
+        "tasks",
+        "blog",
+        "posts",
+        "tags",
+        "lots"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:71:71": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:71:71",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 71,
+      "endLine": 71,
+      "source": "memory",
+      "snippet": "Assistant: Good, pruned 173 stale tasks. Now let me investigate the Telegram edit issue and check what's happening with the other non-blocking items:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "non-blocking",
+        "good",
+        "pruned",
+        "stale",
+        "tasks",
+        "now",
+        "let",
+        "investigate"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:72:72": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:72:72",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 72,
+      "endLine": 72,
+      "source": "memory",
+      "snippet": "Assistant: Let me check the non-blocking items and update RECENT.md:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "non-blocking",
+        "recent.md",
+        "let",
+        "check",
+        "non",
+        "blocking",
+        "items",
+        "update"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:73:73": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:73:73",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 73,
+      "endLine": 73,
+      "source": "memory",
+      "snippet": "Assistant: Let me update RECENT.md with today's fixes while the audit runs:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "recent.md",
+        "let",
+        "update",
+        "today's",
+        "fixes",
+        "while",
+        "audit",
+        "runs"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:74:74": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:74:74",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 74,
+      "endLine": 74,
+      "source": "memory",
+      "snippet": "Assistant: Good. Now let me check the running tasks:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "good",
+        "now",
+        "let",
+        "check",
+        "running",
+        "tasks"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-04-29.txt:75:75": {
+      "key": "memory:memory/.dreams/session-corpus/2026-04-29.txt:75:75",
+      "path": "memory/.dreams/session-corpus/2026-04-29.txt",
+      "startLine": 75,
+      "endLine": 75,
+      "source": "memory",
+      "snippet": "Assistant: Found a couple quick wins. Let me fix them:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "401e1af52a6f"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "found",
+        "couple",
+        "quick",
+        "wins",
+        "let",
+        "fix",
+        "them"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-01.txt:14:14": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-01.txt:14:14",
+      "path": "memory/.dreams/session-corpus/2026-05-01.txt",
+      "startLine": 14,
+      "endLine": 14,
+      "source": "memory",
+      "snippet": "User: [Queued messages while agent was busy] --- Queued #1 (from Harun Ray) in your browser. do you know what your browser is?",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "23c989536796"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "queued",
+        "messages",
+        "while",
+        "was",
+        "busy",
+        "harun",
+        "ray",
+        "browser"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-01.txt:15:15": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-01.txt:15:15",
+      "path": "memory/.dreams/session-corpus/2026-05-01.txt",
+      "startLine": 15,
+      "endLine": 15,
+      "source": "memory",
+      "snippet": "Assistant: No — the browser tool needs either: 1. **Chrome open with remote debugging** (e.g. `chrome --remote-debugging-port=9222`), or 2. **The OpenClaw Chrome MCP extension** running and connected Right now the Chrome MCP attach is timing out — meaning either Chrome isn't open",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "23c989536796"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "e.g",
+        "remote-debugging-port",
+        "browser",
+        "tool",
+        "needs",
+        "either",
+        "chrome",
+        "open"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-01.txt:16:16": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-01.txt:16:16",
+      "path": "memory/.dreams/session-corpus/2026-05-01.txt",
+      "startLine": 16,
+      "endLine": 16,
+      "source": "memory",
+      "snippet": "User: your browser is chrome with toolblip profile. and login in to neon site using github and then generate API key for yourself",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "23c989536796"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "browser",
+        "chrome",
+        "toolblip",
+        "profile",
+        "login",
+        "neon",
+        "site",
+        "github"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-01.txt:17:17": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-01.txt:17:17",
+      "path": "memory/.dreams/session-corpus/2026-05-01.txt",
+      "startLine": 17,
+      "endLine": 17,
+      "source": "memory",
+      "snippet": "Assistant: The MCP extension isn't connecting. Let me try connecting via Chrome's remote debugging port instead:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "23c989536796"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "mcp",
+        "extension",
+        "isn't",
+        "connecting",
+        "let",
+        "try",
+        "via",
+        "chrome's"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-01.txt:18:18": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-01.txt:18:18",
+      "path": "memory/.dreams/session-corpus/2026-05-01.txt",
+      "startLine": 18,
+      "endLine": 18,
+      "source": "memory",
+      "snippet": "Assistant: Chrome is running with remote debugging on port 9225. Let me try to attach directly:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "23c989536796"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "chrome",
+        "running",
+        "remote",
+        "debugging",
+        "let",
+        "try",
+        "attach",
+        "directly"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-01.txt:19:19": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-01.txt:19:19",
+      "path": "memory/.dreams/session-corpus/2026-05-01.txt",
+      "startLine": 19,
+      "endLine": 19,
+      "source": "memory",
+      "snippet": "Assistant: Chrome is already open with Neon console. Let me check if I can use Playwright to control it via CDP:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "23c989536796"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "chrome",
+        "already",
+        "open",
+        "neon",
+        "console",
+        "let",
+        "check",
+        "can"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-01.txt:20:20": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-01.txt:20:20",
+      "path": "memory/.dreams/session-corpus/2026-05-01.txt",
+      "startLine": 20,
+      "endLine": 20,
+      "source": "memory",
+      "snippet": "Assistant: Logged in. Let me click \"Create new secret key\":",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "23c989536796"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "logged",
+        "let",
+        "click",
+        "create",
+        "new",
+        "secret",
+        "key"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-01.txt:21:21": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-01.txt:21:21",
+      "path": "memory/.dreams/session-corpus/2026-05-01.txt",
+      "startLine": 21,
+      "endLine": 21,
+      "source": "memory",
+      "snippet": "Assistant: Got it! New API key: `napi_…o18` Now let me use this to rotate the database password:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "23c989536796"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "got",
+        "new",
+        "api",
+        "key",
+        "napi",
+        "o18",
+        "now",
+        "let"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-01.txt:22:22": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-01.txt:22:22",
+      "path": "memory/.dreams/session-corpus/2026-05-01.txt",
+      "startLine": 22,
+      "endLine": 22,
+      "source": "memory",
+      "snippet": "Assistant: The API key is created but the database password rotation needs a different approach. Let me do it through the browser - navigate to the project settings:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "23c989536796"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "api",
+        "key",
+        "created",
+        "but",
+        "database",
+        "password",
+        "rotation",
+        "needs"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-01.txt:23:23": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-01.txt:23:23",
+      "path": "memory/.dreams/session-corpus/2026-05-01.txt",
+      "startLine": 23,
+      "endLine": 23,
+      "source": "memory",
+      "snippet": "Assistant: The password has been reset. The old credential `npg_rbRKAXg70Vjx` is no longer valid. Here's a summary: **✅ What was done:** 1. **Git history cleaned** — Removed the PostgreSQL URI and other secrets from ~1255 commits, force-pushed to GitHub 2. **New Neon API key gene",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "23c989536796"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "npg-rbrkaxg70vjx",
+        "force-pushed",
+        "password",
+        "has",
+        "been",
+        "reset",
+        "old",
+        "credential"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-01.txt:24:24": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-01.txt:24:24",
+      "path": "memory/.dreams/session-corpus/2026-05-01.txt",
+      "startLine": 24,
+      "endLine": 24,
+      "source": "memory",
+      "snippet": "Assistant: GitGuardian should clear the alert on the next scan.",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "23c989536796"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "gitguardian",
+        "clear",
+        "alert",
+        "scan"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-01.txt:25:25": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-01.txt:25:25",
+      "path": "memory/.dreams/session-corpus/2026-05-01.txt",
+      "startLine": 25,
+      "endLine": 25,
+      "source": "memory",
+      "snippet": "User: An async command completion event was triggered, but user delivery is disabled for this run. Handle the result internally and reply HEARTBEAT_OK only. Do not mention, summarize, or reuse command output. Current time: Friday, May 1st, 2026 - 11:03 AM (Asia/Dhaka) / 2026-05-0",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "queryHashes": [
+        "23c989536796"
+      ],
+      "recallDays": [
+        "2026-05-02",
+        "2026-05-01"
+      ],
+      "conceptTags": [
+        "heartbeat-ok",
+        "asia/dhaka",
+        "2026-05-0",
+        "async",
+        "command",
+        "completion",
+        "event",
+        "was"
       ]
     }
   }
