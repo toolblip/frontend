@@ -51,7 +51,7 @@ export default function WhyToolblip() {
       <div className="tb-v2-container">
         <div className="tb-v2-band-head" style={{ marginBottom: 40 }}>
           <div>
-            <div className="tb-v2-kicker">Why Toolblip?</div>
+            <div className="tb-v2-kicker">Our promise</div>
             <h2 style={{
               fontFamily: 'var(--f-display)',
               fontWeight: 700,

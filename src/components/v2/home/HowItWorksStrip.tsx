@@ -32,7 +32,7 @@ const STEPS = [
     bg: 'var(--blue-tint)',
     color: 'var(--c-dev)',
     title: 'Paste your data',
-    desc: 'Nothing leaves your browser — no servers, no uploads.',
+    desc: 'Nothing uploaded. Nothing sent.',
   },
   {
     num: '3',
@@ -44,7 +44,7 @@ const STEPS = [
     bg: 'var(--green-tint)',
     color: '#1e6b42',
     title: 'Get your result',
-    desc: 'Copy or download instantly — done in seconds.',
+    desc: 'Copy or download. Instantly.',
   },
 ];
 
