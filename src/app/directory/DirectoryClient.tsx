@@ -1,16 +1,11 @@
 'use client';
 
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
-import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { tools } from '@/data/tools';
 import { getCategoryMeta } from '@/lib/v2/categoryMeta';
 import { IconArrowUR, IconSearch, IconClose } from '@/components/v2/icons';
-import HowItWorksStrip from '@/components/v2/home/HowItWorksStrip';
-import CategoryQuickAccess from '@/components/v2/home/CategoryQuickAccess';
-import WhyToolblip from '@/components/v2/home/WhyToolblip';
 
-// All categories present in tools.ts + categoryMeta.ts
 const DIRECTORY_CATEGORIES = [
   'All',
   'Text',
@@ -26,29 +21,12 @@ const DIRECTORY_CATEGORIES = [
 type Category = typeof DIRECTORY_CATEGORIES[number];
 
 export default function DirectoryClient() {
-  const searchParams = useSearchParams();
-  const urlCategory = searchParams.get('category');
-  const validCategory = DIRECTORY_CATEGORIES.includes(urlCategory as Category)
-    ? (urlCategory as Category)
-    : 'All';
-
   const [query, setQuery] = useState('');
-  const [activeTab, setActiveTab] = useState<Category>(validCategory);
-  const [visibleCount, setVisibleCount] = useState(30);
+  const [activeTab, setActiveTab] = useState<Category>('All');
   const [mounted, setMounted] = useState(false);
-  const [showTopBtn, setShowTopBtn] = useState(false);
-  const [animKey, setAnimKey] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => { setMounted(true); }, []);
-
-  // Sync tab when URL ?category= param changes
-  useEffect(() => {
-    if (urlCategory && DIRECTORY_CATEGORIES.includes(urlCategory as Category)) {
-      setActiveTab(urlCategory as Category);
-      setVisibleCount(30);
-    }
-  }, [urlCategory]);
 
   // Debounced search
   const [debouncedQuery, setDebouncedQuery] = useState('');
@@ -56,17 +34,6 @@ export default function DirectoryClient() {
     const t = setTimeout(() => setDebouncedQuery(query), 150);
     return () => clearTimeout(t);
   }, [query]);
-
-  // Scroll-to-top button
-  useEffect(() => {
-    const handler = () => setShowTopBtn(window.scrollY > 600);
-    window.addEventListener('scroll', handler, { passive: true });
-    return () => window.removeEventListener('scroll', handler);
-  }, []);
-
-  const scrollToTop = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
 
   // Keyboard shortcut: / to focus search
   useEffect(() => {
@@ -83,11 +50,6 @@ export default function DirectoryClient() {
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, []);
-
-  // Re-trigger card entrance animation whenever filters change
-  useEffect(() => {
-    setAnimKey((k) => k + 1);
-  }, [debouncedQuery, activeTab]);
 
   const filtered = useMemo(() => {
     const q = debouncedQuery.trim().toLowerCase();
@@ -109,38 +71,10 @@ export default function DirectoryClient() {
     return counts;
   }, []);
 
-  const displayedTools = filtered.slice(0, visibleCount);
-  const hasMore = filtered.length > visibleCount;
-
-  // Infinite scroll — load more as user scrolls near the bottom
-  const loadMoreRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!hasMore) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          setVisibleCount((c) => c + 12);
-        }
-      },
-      { rootMargin: '200px' }
-    );
-    if (loadMoreRef.current) observer.observe(loadMoreRef.current);
-    return () => observer.disconnect();
-  }, [hasMore]);
-
   const clearAll = () => {
     setQuery('');
     setActiveTab('All');
-    setVisibleCount(30);
-    inputRef.current?.focus();
   };
-
-  // Unique categories for HowItWorksStrip and CategoryQuickAccess
-  const uniqueCategories = useMemo(() => {
-    const seen = new Set<string>();
-    for (const tool of tools) seen.add(tool.category);
-    return Array.from(seen).sort();
-  }, []);
 
   return (
     <div className="tb-v2-shell">
@@ -150,20 +84,11 @@ export default function DirectoryClient() {
           <div className="tb-v2-kicker">All tools</div>
           <h1 className="tb-v2-dir-title">Tool Directory</h1>
           <p className="tb-v2-dir-sub">
-            {tools.length} free browser-based tools — text, developer, image,
-            conversion, math, and more.
+            Browse {tools.length} free browser-based tools — text, developer,
+            image, conversion, math, CSS and more.
           </p>
         </div>
       </div>
-
-      {/* ── How it works strip ── */}
-      <HowItWorksStrip toolCount={tools.length} categoryCount={uniqueCategories.length} />
-
-      {/* ── Category quick-access pills ── */}
-      <CategoryQuickAccess categories={uniqueCategories.map((n) => ({ name: n }))} />
-
-      {/* ── Why Toolblip? ── */}
-      <WhyToolblip />
 
       {/* ── Sticky search + filter bar ── */}
       <div className="tb-v2-dir-controls">
@@ -198,16 +123,12 @@ export default function DirectoryClient() {
           <div className="tb-v2-dir-tabs">
             {DIRECTORY_CATEGORIES.map((tab) => {
               const count = tabCounts[tab] ?? 0;
-              // Only show tabs that have tools (or All)
               if (count === 0 && tab !== 'All') return null;
               const isActive = activeTab === tab;
               return (
                 <button
                   key={tab}
-                  onClick={() => {
-                    setActiveTab(tab);
-                    setVisibleCount(30);
-                  }}
+                  onClick={() => setActiveTab(tab)}
                   className={`tb-v2-dir-tab${isActive ? ' on' : ''}`}
                 >
                   <span>{tab}</span>
@@ -224,10 +145,8 @@ export default function DirectoryClient() {
         {/* Count bar */}
         <div className="tb-v2-dir-countbar">
           <p className="tb-v2-dir-count-text">
-            {filtered.length === displayedTools.length
-              ? <><strong>{filtered.length}</strong> {filtered.length === 1 ? 'tool' : 'tools'}</>
-              : <><strong>{displayedTools.length}</strong> of <strong>{filtered.length}</strong> {filtered.length === 1 ? 'tool' : 'tools'}</>
-            }
+            Showing <strong>{filtered.length}</strong>{' '}
+            {filtered.length === 1 ? 'tool' : 'tools'}
             {activeTab !== 'All' && (
               <span className="tb-v2-dir-count-cat"> in {activeTab}</span>
             )}
@@ -247,54 +166,47 @@ export default function DirectoryClient() {
 
         {/* Grid */}
         {filtered.length > 0 ? (
-          <>
-            <div className="tb-v2-dir-grid" key={animKey}>
-              {displayedTools.map((tool, i) => {
-                const meta = getCategoryMeta(tool.category);
-                return (
-                  <Link
-                    key={tool.slug}
-                    href={`/tools/${tool.slug}`}
-                    className="tb-v2-dir-card"
-                    style={
-                      mounted
-                        ? ({
-                            '--cat-color': meta.color,
-                            '--cat-bg': meta.bg,
-                            animationName: 'fadeSlideUp',
-                            animationDuration: '350ms',
-                            animationTimingFunction: 'ease-out',
-                            animationFillMode: 'both',
-                            animationDelay: `${Math.min(i % 24, 12) * 35}ms`,
-                          } as React.CSSProperties)
-                        : ({
-                            '--cat-color': meta.color,
-                            '--cat-bg': meta.bg,
-                            opacity: 0,
-                          } as React.CSSProperties)
-                    }
-                  >
-                    <div className="tb-v2-dir-card-top">
-                      <span className="tb-v2-dir-card-emoji">{tool.emoji}</span>
-                      <div style={{ flex: 1 }}>
-                        <div className="tb-v2-dir-card-title">{tool.name}</div>
-                      </div>
-                      <IconArrowUR className="tb-v2-ic tb-v2-dir-card-go" />
+          <div className="tb-v2-dir-grid">
+            {filtered.map((tool, i) => {
+              const meta = getCategoryMeta(tool.category);
+              return (
+                <Link
+                  key={tool.slug}
+                  href={`/tools/${tool.slug}`}
+                  className="tb-v2-dir-card"
+                  style={
+                    mounted
+                      ? ({
+                          '--cat-color': meta.color,
+                          '--cat-bg': meta.bg,
+                          animationName: 'fadeSlideUp',
+                          animationDuration: '350ms',
+                          animationTimingFunction: 'ease-out',
+                          animationFillMode: 'both',
+                          animationDelay: `${Math.min(i % 24, 12) * 35}ms`,
+                        } as React.CSSProperties)
+                      : ({
+                          '--cat-color': meta.color,
+                          '--cat-bg': meta.bg,
+                          opacity: 0,
+                        } as React.CSSProperties)
+                  }
+                >
+                  <div className="tb-v2-dir-card-top">
+                    <span className="tb-v2-dir-card-emoji">{tool.emoji}</span>
+                    <div style={{ flex: 1 }}>
+                      <div className="tb-v2-dir-card-title">{tool.name}</div>
                     </div>
-                    <div className="tb-v2-dir-card-desc">{tool.description}</div>
-                    <div className="tb-v2-dir-card-foot">
-                      <span className="tb-v2-dir-tag">{tool.category}</span>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-
-            {/* Infinite scroll sentinel */}
-            {hasMore && (
-              <div ref={loadMoreRef} className="tb-v2-dir-loadmore" aria-hidden />
-            )}
-          </>
+                    <IconArrowUR className="tb-v2-ic tb-v2-dir-card-go" />
+                  </div>
+                  <div className="tb-v2-dir-card-desc">{tool.description}</div>
+                  <div className="tb-v2-dir-card-foot">
+                    <span className="tb-v2-dir-tag">{tool.category}</span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
         ) : (
           /* Empty state */
           <div className="tb-v2-dir-empty">
@@ -317,17 +229,6 @@ export default function DirectoryClient() {
           </div>
         )}
       </div>
-
-      {/* Scroll to top */}
-      <button
-        onClick={scrollToTop}
-        aria-label="Scroll to top"
-        className={`tb-v2-dir-topbtn${showTopBtn ? ' on' : ''}`}
-      >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M5 15l7-7 7 7" />
-        </svg>
-      </button>
     </div>
   );
 }
