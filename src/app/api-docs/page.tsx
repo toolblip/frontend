@@ -1,6 +1,5 @@
 'use client';
 
-import type { Metadata } from 'next';
 import { useState } from 'react';
 
 // ─── Base URL ─────────────────────────────────────────────────────────────────
@@ -476,5 +475,3 @@ export default function ApiDocsPage() {
   );
 }
 
-// Re-export metadata for Next.js
-export { metadata };
