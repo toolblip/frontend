@@ -1,32 +1,13 @@
 'use client';
 
 import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { tools } from '@/data/tools';
 import { getCategoryMeta } from '@/lib/v2/categoryMeta';
 import { IconArrowUR, IconSearch, IconClose } from '@/components/v2/icons';
 
-export type Category =
-  | 'All'
-  | 'Text'
-  | 'Developer'
-  | 'Encoder'
-  | 'Image'
-  | 'Conversion'
-  | 'Math'
-  | 'CSS'
-  | 'SEO'
-  | 'Color';
-
-export interface Tool {
-  slug: string;
-  name: string;
-  emoji: string;
-  category: Exclude<Category, 'All'>;
-  description: string;
-}
-
-const DIRECTORY_CATEGORIES: Category[] = [
+const DIRECTORY_CATEGORIES = [
   'All',
   'Text',
   'Developer',
@@ -38,22 +19,48 @@ const DIRECTORY_CATEGORIES: Category[] = [
   'SEO',
   'Color',
 ] as const;
+type Category = (typeof DIRECTORY_CATEGORIES)[number];
+
 export default function DirectoryClient() {
+  const searchParams = useSearchParams();
+  const urlCategory = searchParams.get('category');
+  const validCategory = DIRECTORY_CATEGORIES.includes(urlCategory as Category)
+    ? (urlCategory as Category)
+    : 'All';
+
   const [query, setQuery] = useState('');
-  const [activeTab, setActiveTab] = useState<Category>('All');
+  const [activeTab, setActiveTab] = useState<Category>(validCategory);
+  const [visibleCount, setVisibleCount] = useState(24);
   const [mounted, setMounted] = useState(false);
+  const [showTopBtn, setShowTopBtn] = useState(false);
+  const [animKey, setAnimKey] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => { setMounted(true); }, []);
 
-  // Debounced search
+  useEffect(() => {
+    if (urlCategory && DIRECTORY_CATEGORIES.includes(urlCategory as Category)) {
+      setActiveTab(urlCategory as Category);
+      setVisibleCount(24);
+    }
+  }, [urlCategory]);
+
   const [debouncedQuery, setDebouncedQuery] = useState('');
   useEffect(() => {
     const t = setTimeout(() => setDebouncedQuery(query), 150);
     return () => clearTimeout(t);
   }, [query]);
 
-  // Keyboard shortcut: / to focus search
+  useEffect(() => {
+    const handler = () => setShowTopBtn(window.scrollY > 600);
+    window.addEventListener('scroll', handler, { passive: true });
+    return () => window.removeEventListener('scroll', handler);
+  }, []);
+
+  const scrollToTop = useCallback(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
+
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (
@@ -68,6 +75,10 @@ export default function DirectoryClient() {
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, []);
+
+  useEffect(() => {
+    setAnimKey((k) => k + 1);
+  }, [debouncedQuery, activeTab]);
 
   const filtered = useMemo(() => {
     const q = debouncedQuery.trim().toLowerCase();
@@ -89,9 +100,15 @@ export default function DirectoryClient() {
     return counts;
   }, []);
 
+  const displayedTools = filtered.slice(0, visibleCount);
+  const hasMore = filtered.length > visibleCount;
+  const loadMore = () => setVisibleCount((c) => c + 24);
+
   const clearAll = () => {
     setQuery('');
     setActiveTab('All');
+    setVisibleCount(24);
+    inputRef.current?.focus();
   };
 
   return (
@@ -102,8 +119,8 @@ export default function DirectoryClient() {
           <div className="tb-v2-kicker">All tools</div>
           <h1 className="tb-v2-dir-title">Tool Directory</h1>
           <p className="tb-v2-dir-sub">
-            Browse {tools.length} free browser-based tools — text, developer,
-            image, conversion, math, CSS and more.
+            {tools.length} free browser-based tools — text, developer, image,
+            conversion, math, CSS and more.
           </p>
         </div>
       </div>
@@ -111,7 +128,6 @@ export default function DirectoryClient() {
       {/* ── Sticky search + filter bar ── */}
       <div className="tb-v2-dir-controls">
         <div className="tb-v2-container">
-          {/* Search row */}
           <div className="tb-v2-dir-search-row">
             <div className="tb-v2-dir-search-wrap">
               <IconSearch className="tb-v2-dir-search-ic" />
@@ -146,7 +162,10 @@ export default function DirectoryClient() {
               return (
                 <button
                   key={tab}
-                  onClick={() => setActiveTab(tab)}
+                  onClick={() => {
+                    setActiveTab(tab);
+                    setVisibleCount(24);
+                  }}
                   className={`tb-v2-dir-tab${isActive ? ' on' : ''}`}
                 >
                   <span>{tab}</span>
@@ -163,8 +182,10 @@ export default function DirectoryClient() {
         {/* Count bar */}
         <div className="tb-v2-dir-countbar">
           <p className="tb-v2-dir-count-text">
-            Showing <strong>{filtered.length}</strong>{' '}
-            {filtered.length === 1 ? 'tool' : 'tools'}
+            Showing{' '}
+            <strong>{displayedTools.length}</strong> of{' '}
+            <strong>{filtered.length}</strong>
+            {filtered.length === 1 ? ' tool' : ' tools'}
             {activeTab !== 'All' && (
               <span className="tb-v2-dir-count-cat"> in {activeTab}</span>
             )}
@@ -184,47 +205,60 @@ export default function DirectoryClient() {
 
         {/* Grid */}
         {filtered.length > 0 ? (
-          <div className="tb-v2-dir-grid">
-            {filtered.map((tool, i) => {
-              const meta = getCategoryMeta(tool.category);
-              return (
-                <Link
-                  key={tool.slug}
-                  href={`/tools/${tool.slug}`}
-                  className="tb-v2-dir-card"
-                  style={
-                    mounted
-                      ? ({
-                          '--cat-color': meta.color,
-                          '--cat-bg': meta.bg,
-                          animationName: 'fadeSlideUp',
-                          animationDuration: '350ms',
-                          animationTimingFunction: 'ease-out',
-                          animationFillMode: 'both',
-                          animationDelay: `${Math.min(i % 24, 12) * 35}ms`,
-                        } as React.CSSProperties)
-                      : ({
-                          '--cat-color': meta.color,
-                          '--cat-bg': meta.bg,
-                          opacity: 0,
-                        } as React.CSSProperties)
-                  }
-                >
-                  <div className="tb-v2-dir-card-top">
-                    <span className="tb-v2-dir-card-emoji">{tool.emoji}</span>
-                    <div style={{ flex: 1 }}>
-                      <div className="tb-v2-dir-card-title">{tool.name}</div>
+          <>
+            <div className="tb-v2-dir-grid" key={animKey}>
+              {displayedTools.map((tool, i) => {
+                const meta = getCategoryMeta(tool.category);
+                return (
+                  <Link
+                    key={tool.slug}
+                    href={`/tools/${tool.slug}`}
+                    className="tb-v2-dir-card"
+                    style={
+                      mounted
+                        ? ({
+                            '--cat-color': meta.color,
+                            '--cat-bg': meta.bg,
+                            animationName: 'fadeSlideUp',
+                            animationDuration: '350ms',
+                            animationTimingFunction: 'ease-out',
+                            animationFillMode: 'both',
+                            animationDelay: `${Math.min(i % 24, 12) * 35}ms`,
+                          } as React.CSSProperties)
+                        : ({
+                            '--cat-color': meta.color,
+                            '--cat-bg': meta.bg,
+                            opacity: 0,
+                          } as React.CSSProperties)
+                    }
+                  >
+                    <div className="tb-v2-dir-card-top">
+                      <span className="tb-v2-dir-card-emoji">{tool.emoji}</span>
+                      <div style={{ flex: 1 }}>
+                        <div className="tb-v2-dir-card-title">{tool.name}</div>
+                      </div>
+                      <IconArrowUR className="tb-v2-ic tb-v2-dir-card-go" />
                     </div>
-                    <IconArrowUR className="tb-v2-ic tb-v2-dir-card-go" />
-                  </div>
-                  <div className="tb-v2-dir-card-desc">{tool.description}</div>
-                  <div className="tb-v2-dir-card-foot">
-                    <span className="tb-v2-dir-tag">{tool.category}</span>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+                    <div className="tb-v2-dir-card-desc">{tool.description}</div>
+                    <div className="tb-v2-dir-card-foot">
+                      <span className="tb-v2-dir-tag">{tool.category}</span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+
+            {hasMore && (
+              <div className="tb-v2-dir-loadmore">
+                <button onClick={loadMore} className="tb-v2-btn tb-v2-btn-lg">
+                  Load more tools
+                  <span className="tb-v2-dir-loadmore-count">
+                    ({filtered.length - visibleCount} remaining)
+                  </span>
+                </button>
+              </div>
+            )}
+          </>
         ) : (
           /* Empty state */
           <div className="tb-v2-dir-empty">
@@ -247,6 +281,17 @@ export default function DirectoryClient() {
           </div>
         )}
       </div>
+
+      {/* Scroll to top */}
+      <button
+        onClick={scrollToTop}
+        aria-label="Scroll to top"
+        className={`tb-v2-dir-topbtn${showTopBtn ? ' on' : ''}`}
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M5 15l7-7 7 7" />
+        </svg>
+      </button>
     </div>
   );
 }
