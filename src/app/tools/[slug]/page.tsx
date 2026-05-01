@@ -8,6 +8,7 @@ import CaseConverterClient from '@/components/tools/CaseConverterClient';
 import Base64Client from '@/components/tools/Base64Client';
 import UrlEncodeClient from '@/components/tools/UrlEncodeClient';
 import JsonFormatterClient from '@/components/tools/JsonFormatterClient';
+import ShareButtons from '@/components/ShareButtons';
 
 const TOOL_COMPONENTS: Record<string, React.ComponentType> = {
   'word-counter': WordCounterClient,
@@ -133,6 +134,11 @@ export default async function ToolDetailPage({ params }: PageProps) {
               >
                 {tool.description}
               </p>
+
+              {/* Share buttons */}
+              <div style={{ marginTop: 20 }}>
+                <ShareButtons toolName={tool.name} toolSlug={tool.slug} />
+              </div>
             </div>
           </div>
         </div>
