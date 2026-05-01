@@ -3,8 +3,8 @@
 import { useState } from 'react';
 
 // ─── Base URL ─────────────────────────────────────────────────────────────────
-const BASE = 'https://api.toolblip.com';           // primary (SSL pending)
-const RAILWAY = 'https://toolblip-api-production.up.railway.app'; // fallback
+const BASE = 'https://toolblip-api-production.up.railway.app'; // primary (active)
+const CUSTOM = 'https://api.toolblip.com';                         // custom domain (SSL pending)
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
 const t = {
@@ -224,14 +224,14 @@ export default function ApiDocsPage() {
               <h2 style={{ fontFamily: 'var(--f-display)', fontWeight: 700, fontSize: 26, letterSpacing: '-0.022em', color: t.fg0, margin: '0 0 10px' }}>Base URL</h2>
               <p style={{ color: t.fg2, fontSize: 14.5, marginBottom: 28, lineHeight: 1.7 }}>All API requests are made to this base URL.</p>
               <div style={{ background: t.surface, border: `1px solid ${t.border}`, borderRadius: 12, padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-                <span style={{ fontSize: 10.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: t.fg3, flexShrink: 0 }}>Primary</span>
+                <span style={{ fontSize: 10.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: t.fg3, flexShrink: 0 }}>Active</span>
                 <code style={{ fontFamily: 'var(--f-mono)', fontSize: 13.5, color: t.fg0, fontWeight: 600 }}>{BASE}</code>
               </div>
               <div style={{ background: t.surface, border: `1px solid ${t.border}`, borderRadius: 12, padding: '16px 20px', display: 'flex', alignItems: 'center', gap: 12 }}>
-                <span style={{ fontSize: 10.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: t.fg3, flexShrink: 0 }}>Railway</span>
-                <code style={{ fontFamily: 'var(--f-mono)', fontSize: 13.5, color: t.fg2 }}>{RAILWAY}</code>
+                <span style={{ fontSize: 10.5, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: t.fg3, flexShrink: 0 }}>Custom Domain</span>
+                <code style={{ fontFamily: 'var(--f-mono)', fontSize: 13.5, color: t.fg2 }}>{CUSTOM}</code>
               </div>
-              <p style={{ color: t.fg3, fontSize: 12.5, marginTop: 12 }}>Use the Railway URL until api.toolblip.com SSL is ready.</p>
+              <p style={{ color: t.fg3, fontSize: 12.5, marginTop: 12 }}>Use the Railway URL now. The custom domain will be active once SSL is ready.</p>
             </section>
 
             <div style={{ height: 1, background: t.line, margin: '56px 0' }} />
