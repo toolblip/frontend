@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 
 // ─── Config ───────────────────────────────────────────────────────────────────
-const BASE_URL = 'https://api.toolblip.com';
+const BASE_URL = 'https://toolblip-api-production.up.railway.app';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
