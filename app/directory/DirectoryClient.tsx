@@ -3,6 +3,8 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { tools } from '@/data/tools';
+import { getCategoryMeta } from '@/lib/v2/categoryMeta';
+import { IconArrowUR } from '@/components/v2/icons';
 
 const DIRECTORY_CATEGORIES = [
   'All',
@@ -51,13 +53,28 @@ export default function DirectoryClient() {
     <div className="max-w-6xl mx-auto px-4 py-10">
       {/* Header */}
       <div className="mb-8">
-        <p className="text-sm font-medium text-red-600 dark:text-red-400 uppercase tracking-wider mb-1">
+        <p className="tb-v2-kicker" style={{ marginBottom: 6 }}>
           All tools
         </p>
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">
+        <h1
+          style={{
+            fontFamily: 'var(--f-display)',
+            letterSpacing: '-0.025em',
+            color: 'var(--fg-0)',
+            fontSize: 34,
+            fontWeight: 700,
+            lineHeight: 1.05,
+          }}
+        >
           Tool Directory
         </h1>
-        <p className="mt-2 text-gray-500 dark:text-gray-400">
+        <p
+          style={{
+            color: 'var(--fg-2)',
+            marginTop: 8,
+            fontSize: 15,
+          }}
+        >
           {tools.length} free browser-based tools — text, developer, image,
           conversion, math, and more.
         </p>
@@ -65,9 +82,19 @@ export default function DirectoryClient() {
 
       {/* Search bar */}
       <div className="relative mb-6">
-        <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500">
+        <div
+          style={{
+            position: 'absolute',
+            left: 14,
+            top: '50%',
+            transform: 'translateY(-50%)',
+            color: 'var(--fg-3)',
+            pointerEvents: 'none',
+          }}
+        >
           <svg
-            className="w-4 h-4"
+            width="16"
+            height="16"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -81,20 +108,52 @@ export default function DirectoryClient() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search tools by name, description, or category…"
-          className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg pl-10 pr-10 py-3 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-red-500 dark:focus:border-red-500 transition-colors text-sm"
+          style={{
+            width: '100%',
+            background: 'var(--surface)',
+            border: '1px solid var(--line)',
+            color: 'var(--fg-0)',
+            borderRadius: 'var(--radius)',
+            paddingLeft: 42,
+            paddingRight: query ? 42 : 16,
+            paddingTop: 11,
+            paddingBottom: 11,
+            fontSize: 14,
+            outline: 'none',
+            transition: 'border-color .15s',
+          }}
+          onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--red)')}
+          onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--line)')}
         />
         {query && (
           <button
             onClick={() => setQuery('')}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            style={{
+              position: 'absolute',
+              right: 12,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: 'var(--fg-3)',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: 4,
+              borderRadius: 6,
+              transition: 'color .12s',
+              display: 'flex',
+              alignItems: 'center',
+            }}
             aria-label="Clear search"
+            onMouseEnter={(e) =>
+              ((e.currentTarget as HTMLButtonElement).style.color =
+                'var(--fg-1)')
+            }
+            onMouseLeave={(e) =>
+              ((e.currentTarget as HTMLButtonElement).style.color =
+                'var(--fg-3)')
+            }
           >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -107,7 +166,14 @@ export default function DirectoryClient() {
       </div>
 
       {/* Category filter tabs */}
-      <div className="flex flex-wrap gap-2 mb-8">
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: 8,
+          marginBottom: 32,
+        }}
+      >
         {DIRECTORY_CATEGORIES.map((cat) => {
           const count = tabCounts[cat] ?? 0;
           if (count === 0 && cat !== 'All') return null;
@@ -116,19 +182,29 @@ export default function DirectoryClient() {
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                isActive
-                  ? 'bg-red-600 text-white dark:bg-red-700 dark:text-white'
-                  : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white'
-              }`}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                padding: '6px 14px',
+                borderRadius: 999,
+                fontSize: 13,
+                fontWeight: 600,
+                cursor: 'pointer',
+                border: 'none',
+                transition: 'background .15s, color .15s',
+                background: isActive ? 'var(--red)' : 'var(--surface-2)',
+                color: isActive
+                  ? '#fff'
+                  : 'var(--fg-2)',
+              }}
             >
               {cat}
               <span
-                className={`text-xs ${
-                  isActive
-                    ? 'opacity-80'
-                    : 'text-gray-400 dark:text-gray-500'
-                }`}
+                style={{
+                  fontSize: 11,
+                  opacity: isActive ? 0.8 : 0.6,
+                }}
               >
                 {count}
               </span>
@@ -139,7 +215,13 @@ export default function DirectoryClient() {
 
       {/* Results count */}
       {(query || activeCategory !== 'All') && (
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+        <p
+          style={{
+            fontSize: 13,
+            color: 'var(--fg-3)',
+            marginBottom: 16,
+          }}
+        >
           {filtered.length === 0
             ? 'No tools found'
             : `Showing ${filtered.length} tool${filtered.length !== 1 ? 's' : ''}${
@@ -150,49 +232,79 @@ export default function DirectoryClient() {
 
       {/* Tool grid */}
       {filtered.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {filtered.map((tool) => (
-            <Link
-              key={tool.slug}
-              href={`/tools/${tool.slug}`}
-              className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-red-500 dark:hover:border-red-600 rounded-xl p-4 transition-all"
-            >
-              <div className="flex items-start gap-3">
-                <span className="text-2xl leading-none mt-0.5">{tool.emoji}</span>
-                <div className="min-w-0 flex-1">
-                  <h2 className="font-semibold text-gray-900 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors truncate text-sm sm:text-base">
-                    {tool.name}
-                  </h2>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 leading-relaxed line-clamp-2">
-                    {tool.description}
-                  </p>
-                  <span className="inline-block mt-2 text-xs text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
-                    {tool.category}
-                  </span>
+        <div className="tb-v2-dir-grid">
+          {filtered.map((tool) => {
+            const meta = getCategoryMeta(tool.category);
+            return (
+              <Link
+                key={tool.slug}
+                href={`/tools/${tool.slug}`}
+                className="tb-v2-dir-card"
+                style={
+                  {
+                    '--cat-color': meta.color,
+                    '--cat-bg': meta.bg,
+                  } as React.CSSProperties
+                }
+              >
+                <div className="tb-v2-dir-card-top">
+                  <span className="tb-v2-dir-card-emoji">{tool.emoji}</span>
+                  <div style={{ flex: 1 }}>
+                    <div className="tb-v2-dir-card-title">{tool.name}</div>
+                  </div>
+                  <IconArrowUR className="tb-v2-ic tb-v2-dir-card-go" />
                 </div>
-              </div>
-            </Link>
-          ))}
+                <div className="tb-v2-dir-card-desc">
+                  {tool.description || 'No description available.'}
+                </div>
+                <div className="tb-v2-dir-card-foot">
+                  <span className="tb-v2-dir-tag">{tool.category}</span>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       ) : (
         /* Empty state */
-        <div className="text-center py-20">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-gray-100 dark:bg-gray-800 mb-4">
-            <svg
-              className="w-6 h-6 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.35-4.35" />
-              <path d="M8 11h6M11 8v6" opacity="0.4" />
-            </svg>
+        <div
+          style={{
+            textAlign: 'center',
+            paddingTop: 64,
+            paddingBottom: 80,
+          }}
+        >
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 56,
+              height: 56,
+              borderRadius: '50%',
+              background: 'var(--surface-2)',
+              marginBottom: 16,
+              fontSize: 24,
+            }}
+          >
+            🔍
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">
+          <h3
+            style={{
+              fontSize: 17,
+              fontWeight: 700,
+              color: 'var(--fg-0)',
+              marginBottom: 6,
+            }}
+          >
             No tools found
           </h3>
-          <p className="text-gray-500 dark:text-gray-400 text-sm mb-5">
+          <p
+            style={{
+              color: 'var(--fg-2)',
+              fontSize: 14,
+              marginBottom: 20,
+            }}
+          >
             {query
               ? `No results for "${query}"${
                   activeCategory === 'All' ? '' : ` in ${activeCategory}`
@@ -201,7 +313,15 @@ export default function DirectoryClient() {
           </p>
           <button
             onClick={clearAll}
-            className="text-sm font-medium text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition-colors"
+            style={{
+              background: 'none',
+              border: 'none',
+              fontSize: 13,
+              fontWeight: 600,
+              color: 'var(--red)',
+              cursor: 'pointer',
+              transition: 'opacity .12s',
+            }}
           >
             Clear all filters
           </button>
