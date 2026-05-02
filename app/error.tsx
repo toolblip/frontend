@@ -10,15 +10,15 @@ export default function Error({
 }) {
   return (
     <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4 py-20">
-      {/* Large 500 */}
+      {/* Large "Oops" */}
       <div
-        className="text-[clamp(100px,18vw,180px)] font-bold leading-none select-none mb-6"
+        className="text-[clamp(80px,14vw,140px)] font-bold leading-none select-none mb-6"
         style={{
           color: "var(--red-tint)",
           WebkitTextStroke: "2px var(--red)",
         }}
       >
-        500
+        Oops
       </div>
 
       <h1 className="text-2xl sm:text-3xl font-semibold mb-3" style={{ color: "var(--fg-0)" }}>
@@ -29,10 +29,7 @@ export default function Error({
       </p>
 
       <div className="flex flex-wrap gap-3 justify-center">
-        <Link
-          href="/"
-          className="tb-v2-btn tb-v2-btn-primary"
-        >
+        <Link href="/" className="tb-v2-btn tb-v2-btn-primary">
           Go home
         </Link>
         <button

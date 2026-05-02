@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function NotFound() {
   return (
     <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4 py-20">
-      {/* Large 404 */}
+      {/* Large friendly 404 */}
       <div
         className="text-[clamp(100px,18vw,180px)] font-bold leading-none select-none mb-6"
         style={{
@@ -22,16 +22,10 @@ export default function NotFound() {
       </p>
 
       <div className="flex flex-wrap gap-3 justify-center">
-        <Link
-          href="/"
-          className="tb-v2-btn tb-v2-btn-primary"
-        >
+        <Link href="/" className="tb-v2-btn tb-v2-btn-primary">
           Go home
         </Link>
-        <Link
-          href="/tools"
-          className="tb-v2-btn"
-        >
+        <Link href="/tools" className="tb-v2-btn">
           Browse tools
         </Link>
       </div>
