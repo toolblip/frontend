@@ -74,6 +74,18 @@ export default function FeaturedStrip() {
             );
           })}
         </div>
+        <div style={{ textAlign: 'center', marginTop: 18 }}>
+          <Link
+            href="/directory"
+            className="tb-v2-btn"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13.5, fontWeight: 600, padding: '8px 20px', borderRadius: 8, background: 'var(--surface-1)', border: '1px solid var(--border)', color: 'var(--fg-1)', textDecoration: 'none', transition: 'border-color 0.12s, color 0.12s' }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--fg-2)'; (e.currentTarget as HTMLElement).style.color = 'var(--fg-0)'; }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--border)'; (e.currentTarget as HTMLElement).style.color = 'var(--fg-1)'; }}
+          >
+            View all {tools.length} tools
+            <IconArrowUR style={{ width: 13, height: 13 }} />
+          </Link>
+        </div>
       </div>
     </section>
   );
