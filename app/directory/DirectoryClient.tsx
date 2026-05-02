@@ -6,16 +6,34 @@ import { tools } from '@/data/tools';
 import { getCategoryMeta } from '@/lib/v2/categoryMeta';
 import { IconArrowUR } from '@/components/v2/icons';
 
-const DIRECTORY_CATEGORIES = [
-  'All',
-  'Text',
-  'Developer',
-  'Encoder',
-  'Image',
-  'Conversion',
-  'Math',
-  'CSS',
-] as const;
+// Dynamically derive category tabs from the actual tools data, sorted logically.
+const ALL_CATEGORIES = [...new Set(tools.map((t) => t.category))].sort((a, b) => {
+  const order = [
+    'Text',
+    'Text Tools',
+    'Developer',
+    'Encoder',
+    'Image',
+    'Image Tools',
+    'Conversion',
+    'Math',
+    'CSS',
+    'Color',
+    'SEO',
+    'Network',
+    'Utility',
+    'Document Generator',
+    'PDF Tools',
+    'Date & Time',
+    'Video Tools',
+    'AI Tools',
+  ];
+  const ai = order.indexOf(a);
+  const bi = order.indexOf(b);
+  return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
+});
+
+const DIRECTORY_CATEGORIES = ['All', ...ALL_CATEGORIES] as const;
 type Category = typeof DIRECTORY_CATEGORIES[number];
 
 export default function DirectoryClient() {
