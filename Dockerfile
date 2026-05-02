@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1
-# Production Dockerfile — non-standalone Next.js
+# Railway: builds with npm ci + npm run build
 FROM node:22-alpine
 
 WORKDIR /app
