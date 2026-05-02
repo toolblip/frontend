@@ -491,7 +491,8 @@ export default function ApiDocsClient() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
             <div className="flex flex-col gap-1 bg-slate-900 dark:bg-slate-800 rounded-xl px-4 py-3">
               <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Base URL</span>
-              <code className="text-sm font-mono text-[#58D65D]">https://toolblip-api-production.up.railway.app</code>
+              <code className="text-sm font-mono text-[#58D65D]">https://api.toolblip.com</code>
+              <span className="text-xs text-slate-400 dark:text-slate-600 font-normal"> (railway fallback: toolblip-api-production.up.railway.app)</span>
             </div>
             <div className="flex items-center gap-2.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3">
               <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
