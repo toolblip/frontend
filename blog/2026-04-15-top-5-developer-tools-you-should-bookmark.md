@@ -14,6 +14,7 @@ tags:
   - hash
 author: Toolblip Team
 readingTime: 4 min read
+emoji: "\U0001F4BB"
 ---
 
 Every developer has a folder of browser tabs they never close because closing them means losing the tool. This post is for those tabs — the five browser-based tools you should have bookmarked right now.

@@ -12,6 +12,7 @@ tags:
   - no-install
 author: Toolblip Team
 readingTime: 4 min read
+emoji: "\U0001F30D"
 ---
 
 There's a quiet revolution happening in developer tooling. The apps you're using to format JSON, test regex, generate UUIDs, and encode Base64 are moving out of downloaded installers and directly into your browser tab. Here's why that's actually a big deal.

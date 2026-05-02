@@ -13,6 +13,7 @@ tags:
   - web-performance
 author: Toolblip Team
 readingTime: 4 min read
+emoji: "\U0001F5BC\U0001F4F7"
 ---
 
 Image optimization usually means one of two things: uploading to a third-party service and waiting, or installing desktop software that's slow and expensive. There's a better way.
