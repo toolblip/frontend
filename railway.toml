@@ -2,9 +2,5 @@
 schema = "v2"
 
 [deploy]
-builder = "nixpacks"
 healthcheckPath = "/"
 healthcheckPort = 8080
-
-[nixpacks]
-node_version = "22"
