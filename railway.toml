@@ -2,7 +2,9 @@
 schema = "v2"
 
 [deploy]
-builder = "docker"
-dockerfile = "Dockerfile.railway"
+builder = "nixpacks"
 healthcheckPath = "/"
 healthcheckPort = 8080
+
+[nixpacks]
+node_version = "22"
