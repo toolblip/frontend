@@ -3,6 +3,7 @@ node_modules/
 
 # External projects (not part of this repo)
 api/
+!app/api/
 legacy/
 
 # Build output
