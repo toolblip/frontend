@@ -1,6 +1,6 @@
 {
   "name": "toolblip",
-  "description": "Free client-side web developer tools \u2014 JSON formatter, Base64, UUID generator, and more. Astro static site deployed on Cloudflare Pages.",
+  "description": "Free browser-based developer tools \u2014 JSON formatter, Base64, UUID generator, and more. Next.js on Railway.",
   "version": "0.0.2",
   "scripts": {
     "dev": "next dev",
