@@ -8,7 +8,7 @@ import Hero from '@/components/v2/home/Hero';
 import HowItWorksStrip from '@/components/v2/home/HowItWorksStrip';
 import CategoryQuickAccess from '@/components/v2/home/CategoryQuickAccess';
 import WhyToolblip from '@/components/v2/home/WhyToolblip';
-import FeaturedStrip from '@/components/v2/home/FeaturedStrip';
+import CategoryGrid from '@/components/v2/home/CategoryGrid';
 
 export const metadata: Metadata = {
   title: 'Toolblip - Free Online Developer Tools',
@@ -80,7 +80,7 @@ export default function HomePage() {
       <HowItWorksStrip toolCount={toolCount} categoryCount={categoryCount} />
       <CategoryQuickAccess categories={categories} />
       <WhyToolblip />
-      <FeaturedStrip />
+      <CategoryGrid />
 
       {recentPosts.length > 0 && (
         <section className="tb-v2-band">
