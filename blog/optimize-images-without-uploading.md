@@ -12,19 +12,23 @@ author: "Toolblip Team"
 
 Image optimization usually means uploading your file to some service, waiting for a server to process it, and then downloading the result. That workflow is fine until you're dealing with sensitive screenshots, private photos, or just don't want another service holding a copy of your images.
 
-Browser-based image tools solve this. Everything happens locally, in your device's memory, processed by your own hardware. No upload, no server, no waiting for a progress bar to fill.
+Browser-based image tools solve this. Everything happens locally, in your device's memory, processed by your own hardware. No upload, no server, no waiting for a progress bar to fill. Just instant results.
 
-## Cropping Without Clipboards
+## Cropping Without the Clipboard Dance
 
-Traditional image cropping often means opening Photoshop, snipping to your clipboard, pasting into another app — a whole workflow just to remove some borders. A browser-based image cropper lets you open a file, drag your crop handles, and download the result. No app switching, no clipboard pollution, no quality loss from repeated compression.
+Traditional image cropping often means opening Photoshop, snipping to your clipboard, pasting into another app — a whole workflow just to remove some borders. A browser-based image cropper lets you open a file, drag your crop handles, and download the result. No app switching, no clipboard pollution, no quality loss from repeated paste-and-compress cycles.
 
 ## Format Conversion on the Fly
 
-JPEG to PNG, PNG to WebP, HEIC to JPEG — the web supports a surprising number of formats through the Canvas API. Need a PNG with a transparent background? Want to convert a photo to JPEG for a smaller file size? You can do all of this in-browser without installing ffmpeg or hunting for a converter site that isn't trying to upsell you.
+JPEG to PNG, PNG to WebP, HEIC to JPEG — the web supports a surprising number of formats through the Canvas API. Need a PNG with a transparent background? Want to convert a photo to JPEG for a smaller file size? You can do all of this in-browser without installing ffmpeg or hunting for a converter site that isn't trying to upsell you into a premium tier.
 
 ## Compression Without Artifacts
 
-Image compression is a tradeoff. Compress too hard and you get banding, blockiness, and artifacts. A good browser-based compressor gives you a live preview of quality vs. file size so you can find the sweet spot for your use case — blog hero image, social media thumbnail, document scan.
+Image compression is a tradeoff. Compress too hard and you get banding, blockiness, and visible artifacts. A good browser-based compressor gives you a live preview of quality vs. file size so you can find the sweet spot for your specific use case — blog hero image, social media thumbnail, document scan, favicon.
+
+## Resize Without Distortion
+
+Need to scale an image to a specific dimension without it looking stretched or squished? Browser-based resizers use high-quality interpolation algorithms to maintain aspect ratio and visual quality. Whether you're preparing images for a specific layout or generating responsive srcset variants, you can resize in seconds.
 
 ## Privacy by Design
 
@@ -32,4 +36,4 @@ The key advantage isn't just speed — it's philosophy. When processing happens 
 
 ---
 
-For most image tasks — crop, resize, convert, compress — you don't need a desktop app or an online service. You need a browser tab and about thirty seconds. Give it a try next time you need to prep an image and see how much faster the local workflow feels.
+For most image tasks — crop, resize, convert, compress — you don't need a desktop app or an online service. You need a browser tab and about thirty seconds. Give it a try next time you need to prep an image and see how much faster the local workflow feels. Toolblip's image tools are free, work entirely in your browser, and never upload your files anywhere.
