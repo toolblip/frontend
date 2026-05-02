@@ -1,4 +1,4 @@
-// Primary base URL - Railway production deployment (api.toolblip.com SSL verified)
+// Primary base URL - api.toolblip.com (SSL verified, Railway as fallback)
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.toolblip.com';
 
 interface RequestOptions {
