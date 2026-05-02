@@ -30,7 +30,7 @@ export default function DirectoryClient() {
   }, [query, activeCategory]);
 
   const tabCounts = useMemo(() => {
-    const validCats = new Set(DIRECTORY_CATEGORIES.filter((c) => c !== 'All'));
+    const validCats = new Set<string>(DIRECTORY_CATEGORIES.filter((c) => c !== 'All'));
     const counts: Record<string, number> = {};
     for (const cat of validCats) {
       counts[cat] = 0;
