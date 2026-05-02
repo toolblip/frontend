@@ -3,8 +3,8 @@
 import { useState } from 'react';
 
 // ─── Base URL ─────────────────────────────────────────────────────────────────
-const BASE   = 'https://toolblip-api-production.up.railway.app'; // active
-const CUSTOM = 'https://api.toolblip.com';                         // SSL pending
+const BASE   = 'https://toolblip-api-production.up.railway.app';
+const CUSTOM = 'https://api.toolblip.com'; // SSL pending — use once ready
 
 // ─── Design tokens ────────────────────────────────────────────────────────────
 const t = {
@@ -29,6 +29,9 @@ const t = {
   codeFg:    '#e2e8f0',
   accentBg:  '#f0f4ff',
   accentBdr: '#c7d7ff',
+  yellowBg:  '#fef9c3',
+  yellowFg:  '#854d0e',
+  yellowBdr: '#fde047',
 };
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
