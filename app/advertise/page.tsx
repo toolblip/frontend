@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     siteName: 'Toolblip',
     images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: 'Toolblip' }],
   },
-  twitter: { card: 'summary', title: 'Advertise on Toolblip', description: 'Sponsor a tool and reach developers using Toolblip every day. Slots from $100/month.' },
+  twitter: { card: 'summary', title: 'Advertise on Toolblip | Toolblip', description: 'Sponsor a tool and reach developers using Toolblip every day. Slots from $100/month.' },
 };
 
 export default function AdvertisePage() {
