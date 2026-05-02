@@ -4,10 +4,10 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 
 // ─── Config ───────────────────────────────────────────────────────────────────
-const BASE_URL = 'https://api.toolblip.com';
+const BASE_URL = 'https://toolblip-api-production.up.railway.app';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
+type HttpMethod = 'GET' | 'POST';
 
 interface Param {
   name: string;
@@ -37,7 +37,7 @@ interface Endpoint {
   response: string;
 }
 
-// ─── Data ─────────────────────────────────────────────────────────────────────
+// ─── Endpoints ────────────────────────────────────────────────────────────────
 const ENDPOINTS: Endpoint[] = [
   // ── Tools ──────────────────────────────────────────────────────────────────
   {
@@ -47,7 +47,7 @@ const ENDPOINTS: Endpoint[] = [
     path: '/api/tools',
     auth: false,
     title: 'List all tools',
-    description: 'Returns a paginated list of all available tools. Filter by category or search by name and description.',
+    description: 'Returns a paginated list of all tools. Supports filtering by category and full-text search.',
     queryParams: [
       { name: 'category', type: 'string', required: false, description: 'Filter by category slug (e.g. "developer", "image", "writing")' },
       { name: 'search', type: 'string', required: false, description: 'Full-text search across tool name and description' },
@@ -128,8 +128,8 @@ const ENDPOINTS: Endpoint[] = [
     description: 'Create a new user account. Returns a Bearer token to use in authenticated requests.',
     bodyParams: [
       { name: 'name', type: 'string', required: true, description: 'Full display name' },
-      { name: 'email', type: 'string', required: true, description: 'Email address - must be unique' },
-      { name: 'password', type: 'string', required: true, description: 'Password - minimum 8 characters' },
+      { name: 'email', type: 'string', required: true, description: 'Email address — must be unique' },
+      { name: 'password', type: 'string', required: true, description: 'Password — minimum 8 characters' },
       { name: 'password_confirmation', type: 'string', required: true, description: 'Must match password exactly' },
     ],
     responseFields: [
@@ -258,11 +258,8 @@ const STATUS_CODES = [
 ];
 
 const METHOD_COLORS: Record<HttpMethod, { bg: string; text: string; dark: string }> = {
-  GET:    { bg: 'bg-green-100 text-green-700',   text: 'text-green-700',   dark: 'dark:bg-green-950 dark:text-green-400' },
-  POST:   { bg: 'bg-blue-100 text-blue-700',      text: 'text-blue-700',    dark: 'dark:bg-blue-950 dark:text-blue-400' },
-  PUT:    { bg: 'bg-amber-100 text-amber-700',    text: 'text-amber-700',   dark: 'dark:bg-amber-950 dark:text-amber-400' },
-  DELETE: { bg: 'bg-red-100 text-red-700',       text: 'text-red-700',     dark: 'dark:bg-red-950 dark:text-red-400' },
-  PATCH:  { bg: 'bg-violet-100 text-violet-700', text: 'text-violet-700',  dark: 'dark:bg-violet-950 dark:text-violet-400' },
+  GET:  { bg: 'bg-green-100 text-green-700',   text: 'text-green-700',   dark: 'dark:bg-green-950 dark:text-green-400' },
+  POST: { bg: 'bg-blue-100 text-blue-700',     text: 'text-blue-700',    dark: 'dark:bg-blue-950 dark:text-blue-400' },
 };
 
 // ─── Components ───────────────────────────────────────────────────────────────
@@ -384,7 +381,7 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
       id={ep.id}
       className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transition-all hover:border-green-200 dark:hover:border-green-800 scroll-mt-20"
     >
-      {/* Header - always visible */}
+      {/* Header — always visible */}
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center gap-3 px-5 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-left"
@@ -448,9 +445,7 @@ export default function ApiDocsClient() {
     observerRef.current = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-          }
+          if (entry.isIntersecting) setActiveId(entry.target.id);
         });
       },
       { rootMargin: '-20% 0px -70% 0px' }
@@ -465,8 +460,7 @@ export default function ApiDocsClient() {
   }, []);
 
   const scrollTo = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   return (
@@ -483,7 +477,9 @@ export default function ApiDocsClient() {
             </div>
             <div>
               <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">API Documentation</h1>
-              <p className="text-slate-500 dark:text-slate-400 mt-0.5 text-sm">Toolblip REST API reference - integrate tools and user auth into any app</p>
+              <p className="text-slate-500 dark:text-slate-400 mt-0.5 text-sm">
+                Toolblip REST API — integrate tools and user auth into any app
+              </p>
             </div>
           </div>
 
@@ -491,8 +487,8 @@ export default function ApiDocsClient() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
             <div className="flex flex-col gap-1 bg-slate-900 dark:bg-slate-800 rounded-xl px-4 py-3">
               <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Base URL</span>
-              <code className="text-sm font-mono text-[#58D65D]">https://api.toolblip.com</code>
-              <span className="text-xs text-slate-400 dark:text-slate-600 font-normal"> (railway fallback: toolblip-api-production.up.railway.app)</span>
+              <code className="text-sm font-mono text-[#58D65D] break-all">https://toolblip-api-production.up.railway.app</code>
+              <span className="text-xs text-slate-500 font-normal">api.toolblip.com (SSL pending)</span>
             </div>
             <div className="flex items-center gap-2.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3">
               <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -531,8 +527,11 @@ export default function ApiDocsClient() {
             <div>
               <p className="text-sm font-semibold text-green-900 dark:text-green-300 mb-0.5">Authentication</p>
               <p className="text-sm text-green-700 dark:text-green-400 leading-relaxed">
-                Include the token from <code className="font-mono text-xs bg-green-100 dark:bg-green-900/50 px-1 rounded">register</code> or{' '}
-                <code className="font-mono text-xs bg-green-100 dark:bg-green-900/50 px-1 rounded">login</code> in every authenticated request:
+                Include the token from{' '}
+                <code className="font-mono text-xs bg-green-100 dark:bg-green-900/50 px-1 rounded">register</code>{' '}
+                or{' '}
+                <code className="font-mono text-xs bg-green-100 dark:bg-green-900/50 px-1 rounded">login</code>{' '}
+                in every authenticated request:
               </p>
               <code className="mt-2 block bg-slate-900 dark:bg-slate-800 text-[#58D65D] dark:text-green-300 rounded-lg px-3 py-2 text-xs font-mono">
                 Authorization: Bearer &lt;your-token&gt;
@@ -584,7 +583,6 @@ export default function ApiDocsClient() {
                 </nav>
               </div>
 
-              {/* On this page */}
               <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
                 <p className="text-[11px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest mb-3 px-1">On this page</p>
                 <div className="space-y-0.5">
@@ -624,7 +622,7 @@ export default function ApiDocsClient() {
                       </svg>
                     ),
                     title: 'Bearer Token Auth',
-                    desc: 'Pass the token from register or login in the Authorization header of every authenticated request.',
+                    desc: 'Pass the token from register or login in the Authorization header.',
                     code: 'Authorization: Bearer {token}',
                   },
                   {
@@ -634,7 +632,7 @@ export default function ApiDocsClient() {
                       </svg>
                     ),
                     title: 'JSON Throughout',
-                    desc: 'All requests and responses use JSON. Always include both Content-Type and Accept headers.',
+                    desc: 'All requests and responses use JSON. Always include both headers.',
                     code: 'Content-Type: application/json\nAccept: application/json',
                   },
                   {
