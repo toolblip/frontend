@@ -39,7 +39,6 @@ const Terminal = () => <svg width="12" height="12" viewBox="0 0 24 24" fill="non
 const Lock     = () => <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>;
 const Doc      = () => <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>;
 const Check    = () => <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>;
-const LinkIc  = () => <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>;
 const Copy    = () => <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>;
 const Shield  = () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>;
 const Box     = () => <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>;
@@ -145,7 +144,7 @@ function Endpoint({ id, method, path, description, auth, params, curl, response 
       </div>
       {/* params table */}
       {params && params.length > 0 && (
-        <div style={{ padding: '0 22px 20px', borderTop: `1px solid ${t.line}'` }}>
+        <div style={{ padding: '0 22px 20px', borderTop: `1px solid ${t.line}` }}>
           <ParamTable params={params} />
         </div>
       )}
@@ -160,6 +159,11 @@ function Endpoint({ id, method, path, description, auth, params, curl, response 
       </div>
     </div>
   );
+}
+
+// ─── Divider ───────────────────────────────────────────────────────────────────
+function Divider() {
+  return <div style={{ height: 1, background: t.line, margin: '56px 0' }} />;
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
@@ -200,7 +204,7 @@ export default function ApiDocsPage() {
             {[
               { label: 'Getting Started', links: [['Overview', '#overview'], ['Base URL', '#base-url'], ['Authentication', '#authentication']] },
               { label: 'Tools', links: [['GET /api/tools', '#get-tools'], ['GET /api/tools/{slug}', '#get-tool-slug']] },
-              { label: 'Auth', links: [['POST /api/auth/register', '#post-register'], ['POST /api/auth/login', '#post-login'], ['POST /api/auth/logout', '#post-logout'], ['GET /api/auth/me', '#get-user']] },
+              { label: 'Auth', links: [['POST /api/auth/register', '#post-register'], ['POST /api/auth/login', '#post-login'], ['POST /api/auth/logout', '#post-logout'], ['GET /api/auth/me', '#get-auth-me']] },
               { label: 'Reference', links: [['Errors', '#errors']] },
             ].map(section => (
               <div key={section.label} style={{ marginBottom: 28 }}>
@@ -264,7 +268,7 @@ export default function ApiDocsPage() {
                 <p style={{ color: t.fg2, fontSize: 14, margin: '0 0 10px' }}>Include your token on every authenticated request:</p>
                 <pre style={{ fontFamily: 'var(--f-mono)', background: t.codeBg, color: t.codeFg, borderRadius: 10, padding: '14px 18px', fontSize: 13, overflowX: 'auto' as const, whiteSpace: 'pre' as const, margin: 0 }}>{`Authorization: Bearer $TB_TOKEN`}</pre>
               </div>
-              <p style={{ color: t.fg3, fontSize: 12.5, marginTop: 12 }}>Tokens do not expire unless you log out. Store them securely — never expose them client-side.</p>
+              <p style={{ color: t.fg3, fontSize: 12.5, marginTop: 12 }}>Tokens are invalidated when you log out. Store them securely — never expose them client-side.</p>
             </section>
 
             <Divider />
@@ -278,12 +282,12 @@ export default function ApiDocsPage() {
                 id="get-tools"
                 method="GET"
                 path="/api/tools"
-                description="Returns a paginated list of all tools. Supports filtering by category and full-text search."
+                description="Returns a paginated list of all tools. Supports optional filtering by category slug and full-text search on name and description."
                 params={[
-                  { name: 'category',  in: 'query', type: 'string',   required: false, description: 'Filter by category slug (e.g. developer, text, image).' },
-                  { name: 'search',    in: 'query', type: 'string',   required: false, description: 'Search by name or keyword in the title and description.' },
-                  { name: 'page',      in: 'query', type: 'integer',  required: false, description: 'Page number for pagination (default: 1).' },
-                  { name: 'per_page', in: 'query', type: 'integer',  required: false, description: 'Results per page (default: 20, max: 100).' },
+                  { name: 'category',  in: 'query',  type: 'string',  required: false, description: 'Filter by category slug (e.g. developer, text, image).' },
+                  { name: 'search',    in: 'query',  type: 'string',  required: false, description: 'Search by name or keyword in the title and description.' },
+                  { name: 'page',      in: 'query',  type: 'integer', required: false, description: 'Page number for pagination (default: 1).' },
+                  { name: 'per_page',  in: 'query',  type: 'integer', required: false, description: 'Results per page (default: 20, max: 100).' },
                 ]}
                 curl={`curl -X GET "${BASE}/api/tools" \\
   -H "Accept: application/json"`}
@@ -296,8 +300,8 @@ export default function ApiDocsPage() {
       "name": "URL Encode",
       "description": "Encode text for safe URL usage.",
       "category": "encoder",
+      "icon": "🔗",
       "is_pro": false,
-      "emoji": "🔗",
       "created_at": "2026-01-15T09:23:00.000000Z"
     },
     {
@@ -306,15 +310,15 @@ export default function ApiDocsPage() {
       "name": "JSON Formatter",
       "description": "Format and validate JSON data instantly.",
       "category": "developer",
+      "icon": "📋",
       "is_pro": false,
-      "emoji": "📋",
       "created_at": "2026-01-20T14:11:00.000000Z"
     }
   ],
   "meta": {
     "current_page": 1,
-    "total": 47,
     "per_page": 20,
+    "total": 47,
     "last_page": 3
   }
 }`}
@@ -324,7 +328,7 @@ export default function ApiDocsPage() {
                 id="get-tool-slug"
                 method="GET"
                 path="/api/tools/{slug}"
-                description="Fetch a single tool by its unique slug. Returns full tool details."
+                description="Fetch a single tool by its unique slug. Returns full tool details including category, icon, and pro status."
                 params={[
                   { name: 'slug', in: 'path', type: 'string', required: true, description: 'URL-friendly slug of the tool (e.g. json-formatter).' },
                 ]}
@@ -338,8 +342,8 @@ export default function ApiDocsPage() {
     "name": "JSON Formatter",
     "description": "Format and validate JSON data instantly.",
     "category": "developer",
+    "icon": "📋",
     "is_pro": false,
-    "emoji": "📋",
     "created_at": "2026-01-20T14:11:00.000000Z"
   }
 }`}
@@ -359,10 +363,9 @@ export default function ApiDocsPage() {
                 path="/api/auth/register"
                 description="Create a new user account. Returns the user object and a Bearer token for immediate authentication."
                 params={[
-                  { name: 'name',                  in: 'body', type: 'string', required: true,  description: 'Full display name of the user.' },
-                  { name: 'email',                 in: 'body', type: 'string', required: true,  description: 'Valid email address (must be unique per account).' },
-                  { name: 'password',              in: 'body', type: 'string', required: true,  description: 'Account password (minimum 8 characters).' },
-
+                  { name: 'name',     in: 'body', type: 'string', required: true, description: 'Full display name of the user.' },
+                  { name: 'email',    in: 'body', type: 'string', required: true, description: 'Valid email address (must be unique per account).' },
+                  { name: 'password', in: 'body', type: 'string', required: true, description: 'Account password (minimum 8 characters).' },
                 ]}
                 curl={`curl -X POST "${BASE}/api/auth/register" \\
   -H "Content-Type: application/json" \\
@@ -402,13 +405,13 @@ export default function ApiDocsPage() {
   }'`}
                 response={`// 200 OK
 {
+  "token": "2|abcdef1234567890abcdef1234567890abcdef12",
   "user": {
     "id": 12,
     "name": "Alex Johnson",
     "email": "alex@example.com",
     "is_pro": false
-  },
-  "token": "2|abcdef1234567890abcdef1234567890abcdef12"
+  }
 }`}
               />
 
@@ -424,17 +427,17 @@ export default function ApiDocsPage() {
   -H "Authorization: Bearer $TB_TOKEN"`}
                 response={`// 200 OK
 {
-  "message": "Session terminated successfully."
+  "message": "Logged out"
 }`}
               />
 
               <Endpoint
-                id="get-user"
+                id="get-auth-me"
                 method="GET"
                 path="/api/auth/me"
                 description="Fetch the currently authenticated user. Use to verify a token or retrieve the latest profile data."
                 auth
-                curl={`curl -X GET "${BASE}/api/auth/user" \\
+                curl={`curl -X GET "${BASE}/api/auth/me" \\
   -H "Accept: application/json" \\
   -H "Authorization: Bearer $TB_TOKEN"`}
                 response={`// 200 OK
@@ -461,7 +464,7 @@ export default function ApiDocsPage() {
                 {([
                   { code: '400', label: 'Bad Request',             desc: 'Invalid or missing parameters in the request body.' },
                   { code: '401', label: 'Unauthorized',            desc: 'Missing or invalid auth token.' },
-                  { code: '403', label: 'Forbidden',               desc: 'Authenticated but not permitted for this resource.' },
+                  { code: '403', label: 'Forbidden',              desc: 'Authenticated but not permitted for this resource, or endpoint disabled.' },
                   { code: '404', label: 'Not Found',               desc: 'Resource does not exist (e.g. unknown tool slug).' },
                   { code: '422', label: 'Unprocessable Entity',    desc: 'Validation failed — check the message field for details.' },
                   { code: '429', label: 'Too Many Requests',       desc: 'Rate limit exceeded. Wait before retrying.' },
@@ -481,7 +484,7 @@ export default function ApiDocsPage() {
               <p style={{ color: t.fg1, fontSize: 14, lineHeight: 1.75, margin: 0 }}>
                 <strong style={{ color: t.fg0 }}>Quickstart — 3 steps:</strong>{' '}
                 <strong>1.</strong> Call <code style={{ fontFamily: 'var(--f-mono)', fontSize: 12.5, background: '#fff', padding: '1px 6px', borderRadius: 4 }}>POST /api/auth/register</code> to create an account and get a token.{' '}
-                <strong>2.</strong> Save the token — it doesn&apos;t expire unless you log out.{' '}
+                <strong>2.</strong> Save the token — it&apos;s invalidated when you log out.{' '}
                 <strong>3.</strong> Pass it as <code style={{ fontFamily: 'var(--f-mono)', fontSize: 12.5, background: '#fff', padding: '1px 6px', borderRadius: 4 }}>Authorization: Bearer &lt;token&gt;</code> on every authenticated request.
               </p>
             </div>
@@ -491,9 +494,4 @@ export default function ApiDocsPage() {
       </div>
     </div>
   );
-}
-
-// ─── Divider ───────────────────────────────────────────────────────────────────
-function Divider() {
-  return <div style={{ height: 1, background: t.line, margin: '56px 0' }} />;
 }
