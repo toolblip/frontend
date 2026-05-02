@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const PROTECTED_PREFIXES = ["/account", "/submit-tool", "/directory", "/pricing"];
+const PROTECTED_PREFIXES = ["/account", "/submit-tool"];
 const AUTH_ROUTES = ["/login", "/register"];
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const token = req.cookies.get("auth_token")?.value;
 
-  // Let Next.js API auth routes through — they're handled by route handlers
+  // Let Next.js API auth routes through — handled by route handlers
   if (pathname.startsWith("/api/auth")) {
     return NextResponse.next();
   }
@@ -32,12 +32,8 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
+  // Catch-all matcher: intercepts ALL routes so middleware runs on /account (not just /account/*)
   matcher: [
-    "/account/:path*",
-    "/submit-tool/:path*",
-    "/directory/:path*",
-    "/pricing/:path*",
-    "/login",
-    "/register",
+    "/((?!api/auth|_next/static|_next/image|favicon.svg|.*\..*).*)",
   ],
 };
