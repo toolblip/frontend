@@ -39,7 +39,7 @@ export const metadata: Metadata = {
 };
 
 function getRecentPosts() {
-  const blogDir = path.join(process.cwd(), 'src/content/blog');
+  const blogDir = path.join(process.cwd(), 'blog');
   if (!fs.existsSync(blogDir)) return [];
   return fs
     .readdirSync(blogDir)
