@@ -1,46 +1,47 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import PasswordStrength from '@/components/ui/PasswordStrength';
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import PasswordStrength from "@/components/ui/PasswordStrength";
+import { useAuth } from "@/app/providers/auth-provider";
+import { useRouter } from "next/navigation";
 
 export default function SignupForm() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirm, setConfirm] = useState('');
-  const [error, setError] = useState('');
+  const { login } = useAuth();
+  const router = useRouter();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setError('');
-    if (password !== confirm) { setError('Passwords do not match.'); return; }
-    if (password.length < 8) { setError('Password must be at least 8 characters.'); return; }
+    setError("");
+    if (password !== confirm) { setError("Passwords do not match."); return; }
+    if (password.length < 8) { setError("Password must be at least 8 characters."); return; }
     setLoading(true);
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || 'https://api.toolblip.com'}/api/auth/register`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-          },
-          body: JSON.stringify({ name, email, password, password_confirmation: confirm }),
-        }
-      );
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ name, email, password, password_confirmation: confirm }),
+        credentials: "include",
+      });
       const data = await res.json();
+
       if (res.ok && data.token) {
-        localStorage.setItem('toolblip_token', data.token);
-        localStorage.setItem('toolblip_user', JSON.stringify(data.user));
-        window.location.href = '/';
+        login(data.user, data.token);
+        router.push("/");
       } else {
-        const msg = data.message ?? (data.errors ? Object.values(data.errors).flat().join(', ') : 'Could not create account. Please try again.');
+        const msg =
+          data.message ??
+          (data.errors ? Object.values(data.errors).flat().join(", ") : "Could not create account. Please try again.");
         setError(msg);
       }
     } catch {
-      setError('Something went wrong. Please try again.');
+      setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -53,8 +54,8 @@ export default function SignupForm() {
     async function checkRegisterStatus() {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || 'https://api.toolblip.com'}/api/auth/register`,
-          { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: '', email: '', password: '' }) }
+          `${process.env.NEXT_PUBLIC_API_URL || "https://api.toolblip.com"}/api/auth/register`,
+          { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: "", email: "", password: "" }) }
         );
         if (res.status === 403) {
           setRegistrationDisabled(true);
@@ -72,8 +73,7 @@ export default function SignupForm() {
             <h1 className="tb-v2-auth-title">Registration closed</h1>
             <p className="tb-v2-auth-error">Registration is currently disabled. Please contact an administrator if you need access.</p>
             <p className="tb-v2-auth-footer">
-              Already have an account?{' '}
-              <Link href="/login">Sign in</Link>
+              Already have an account? <Link href="/login">Sign in</Link>
             </p>
           </div>
         </div>
@@ -88,10 +88,16 @@ export default function SignupForm() {
           <h1 className="tb-v2-auth-title">Create account</h1>
 
           <form onSubmit={handleSubmit} className="tb-v2-auth-form" noValidate>
-            {error && <p role="alert" className="tb-v2-auth-error">{error}</p>}
+            {error && (
+              <p role="alert" className="tb-v2-auth-error">
+                {error}
+              </p>
+            )}
 
             <div className="tb-v2-auth-field">
-              <label htmlFor="name" className="tb-v2-auth-label">Name</label>
+              <label htmlFor="name" className="tb-v2-auth-label">
+                Name
+              </label>
               <input
                 id="name"
                 type="text"
@@ -106,7 +112,9 @@ export default function SignupForm() {
             </div>
 
             <div className="tb-v2-auth-field">
-              <label htmlFor="email" className="tb-v2-auth-label">Email</label>
+              <label htmlFor="email" className="tb-v2-auth-label">
+                Email
+              </label>
               <input
                 id="email"
                 type="email"
@@ -121,7 +129,9 @@ export default function SignupForm() {
             </div>
 
             <div className="tb-v2-auth-field">
-              <label htmlFor="password" className="tb-v2-auth-label">Password</label>
+              <label htmlFor="password" className="tb-v2-auth-label">
+                Password
+              </label>
               <input
                 id="password"
                 type="password"
@@ -137,7 +147,9 @@ export default function SignupForm() {
             </div>
 
             <div className="tb-v2-auth-field">
-              <label htmlFor="password-confirm" className="tb-v2-auth-label">Confirm password</label>
+              <label htmlFor="password-confirm" className="tb-v2-auth-label">
+                Confirm password
+              </label>
               <input
                 id="password-confirm"
                 type="password"
@@ -151,18 +163,13 @@ export default function SignupForm() {
               />
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="tb-v2-auth-submit"
-            >
-              {loading ? 'Creating account...' : 'Create account'}
+            <button type="submit" disabled={loading} className="tb-v2-auth-submit">
+              {loading ? "Creating account..." : "Create account"}
             </button>
           </form>
 
           <p className="tb-v2-auth-footer">
-            Already have an account?{' '}
-            <Link href="/login">Sign in</Link>
+            Already have an account? <Link href="/login">Sign in</Link>
           </p>
         </div>
       </div>
