@@ -6,34 +6,7 @@ import { tools } from '@/data/tools';
 import { getCategoryMeta } from '@/lib/v2/categoryMeta';
 import { IconArrowUR } from '@/components/v2/icons';
 
-// Dynamically derive category tabs from the actual tools data, sorted logically.
-const ALL_CATEGORIES = [...new Set(tools.map((t) => t.category))].sort((a, b) => {
-  const order = [
-    'Text',
-    'Text Tools',
-    'Developer',
-    'Encoder',
-    'Image',
-    'Image Tools',
-    'Conversion',
-    'Math',
-    'CSS',
-    'Color',
-    'SEO',
-    'Network',
-    'Utility',
-    'Document Generator',
-    'PDF Tools',
-    'Date & Time',
-    'Video Tools',
-    'AI Tools',
-  ];
-  const ai = order.indexOf(a);
-  const bi = order.indexOf(b);
-  return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi);
-});
-
-const DIRECTORY_CATEGORIES = ['All', ...ALL_CATEGORIES] as const;
+const DIRECTORY_CATEGORIES = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS'] as const;
 type Category = typeof DIRECTORY_CATEGORIES[number];
 
 export default function DirectoryClient() {
@@ -57,10 +30,17 @@ export default function DirectoryClient() {
   }, [query, activeCategory]);
 
   const tabCounts = useMemo(() => {
-    const counts: Record<string, number> = { All: tools.length };
-    for (const tool of tools) {
-      counts[tool.category] = (counts[tool.category] ?? 0) + 1;
+    const validCats = new Set(DIRECTORY_CATEGORIES.filter((c) => c !== 'All'));
+    const counts: Record<string, number> = {};
+    for (const cat of validCats) {
+      counts[cat] = 0;
     }
+    for (const tool of tools) {
+      if (validCats.has(tool.category)) {
+        counts[tool.category]++;
+      }
+    }
+    counts['All'] = Object.values(counts).reduce((a, b) => a + b, 0);
     return counts;
   }, []);
 
@@ -90,7 +70,7 @@ export default function DirectoryClient() {
           </div>
           <h1 className="tb-v2-dir-title">Tool Directory</h1>
           <p className="tb-v2-dir-sub">
-            {tools.length} free browser-based tools — text, developer, image,
+            {tabCounts['All']} free browser-based tools — text, developer, image,
             conversion, math, CSS, and more. No signup, no uploads.
           </p>
         </div>
@@ -183,7 +163,7 @@ export default function DirectoryClient() {
           {/* Always show count when no filters */}
           {!hasFilters && (
             <p style={{ fontSize: 13.5, color: 'var(--fg-2)', marginBottom: 20 }}>
-              Showing <strong style={{ color: 'var(--fg-0)', fontWeight: 600 }}>{tools.length}</strong> tools
+              Showing <strong style={{ color: 'var(--fg-0)', fontWeight: 600 }}>{tabCounts['All']}</strong> tools
             </p>
           )}
 
