@@ -6,16 +6,21 @@ export default function NotFound() {
   return (
     <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4">
       <style>{`
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(12px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
         @keyframes float404 {
           0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-8px); }
+          50%       { transform: translateY(-8px); }
         }
-        .float-404 { animation: float404 3s ease-in-out infinite; }
+        .fade-up    { animation: fadeUp 0.45s ease-out both; }
+        .float-404  { animation: float404 3s ease-in-out infinite; }
       `}</style>
 
       {/* Compass icon — suggesting "you're lost" */}
       <svg
-        className="mb-6 opacity-30"
+        className="mb-6 opacity-30 fade-up"
         width="32"
         height="32"
         viewBox="0 0 24 24"
@@ -24,7 +29,7 @@ export default function NotFound() {
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
-        style={{ color: 'var(--green)' }}
+        style={{ color: 'var(--green)', animationDelay: '0.05s' }}
         aria-hidden="true"
       >
         <circle cx="12" cy="12" r="10" />
@@ -33,7 +38,7 @@ export default function NotFound() {
 
       {/* 404 glyph */}
       <div
-        className="select-none mb-8 float-404"
+        className="select-none mb-8 float-404 fade-up"
         style={{
           fontFamily: 'var(--f-display)',
           fontWeight: 800,
@@ -42,6 +47,7 @@ export default function NotFound() {
           lineHeight: 1,
           color: 'var(--green-tint)',
           WebkitTextStroke: '2px var(--green)',
+          animationDelay: '0.1s',
         }}
         aria-hidden="true"
       >
@@ -49,35 +55,30 @@ export default function NotFound() {
       </div>
 
       <h1
-        className="mb-3"
+        className="mb-3 fade-up"
         style={{
           fontFamily: 'var(--f-display)',
           fontWeight: 700,
           fontSize: 'clamp(1.5rem, 4vw, 2rem)',
           letterSpacing: '-0.025em',
           color: 'var(--fg-0)',
+          animationDelay: '0.18s',
         }}
       >
         Page not found
       </h1>
       <p
-        className="mb-10 max-w-xs"
-        style={{ fontSize: 15, color: 'var(--fg-2)', lineHeight: 1.6 }}
+        className="mb-10 max-w-xs fade-up"
+        style={{ fontSize: 15, color: 'var(--fg-2)', lineHeight: 1.6, animationDelay: '0.24s' }}
       >
         The page you&apos;re looking for doesn&apos;t exist.
       </p>
 
-      <div className="flex flex-wrap gap-3 justify-center">
-        <Link
-          href="/"
-          className="tb-v2-btn tb-v2-btn-primary"
-        >
+      <div className="flex flex-wrap gap-3 justify-center fade-up" style={{ animationDelay: '0.3s' }}>
+        <Link href="/" className="tb-v2-btn tb-v2-btn-primary">
           Go home
         </Link>
-        <Link
-          href="/tools"
-          className="tb-v2-btn"
-        >
+        <Link href="/tools" className="tb-v2-btn">
           Browse tools
         </Link>
       </div>
