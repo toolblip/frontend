@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-01T21:01:51.969Z",
+  "updatedAt": "2026-05-02T07:32:32.006Z",
   "entries": {
     "memory:memory/2026-04-29.md:4:7": {
       "key": "memory:memory/2026-04-29.md:4:7",
@@ -17281,15 +17281,16 @@
       "endLine": 64,
       "source": "memory",
       "snippet": "- Category filter tabs with tool counts - Tool card grid with emoji, name, category, description - \"Showing X of Y tools\" count display - Empty state with clear filters - Scroll-to-top button - Load more pagination - URL `?category=` sync All 5 requested features were already built. Task is complete. ## Homepage Sections [7/10] — Already Complete - All 3 homepage sections (HowItWorksStrip, CategoryQuickAccess, WhyToolblip) already implemented - Commits `df7ddedb` and `bda263b5` cover the work - Nothing to add; code matches spec",
-      "recallCount": 1,
+      "recallCount": 2,
       "dailyCount": 0,
       "groundedCount": 0,
-      "totalScore": 0.4999614596366882,
+      "totalScore": 0.9333404541015624,
       "maxScore": 0.4999614596366882,
       "firstRecalledAt": "2026-05-01T18:04:30.366Z",
-      "lastRecalledAt": "2026-05-01T18:04:30.366Z",
+      "lastRecalledAt": "2026-05-02T04:22:56.350Z",
       "queryHashes": [
-        "8e5944dee150"
+        "8e5944dee150",
+        "4692b3f092c6"
       ],
       "recallDays": [
         "2026-05-02",
@@ -19343,6 +19344,99 @@
         "completion",
         "event",
         "was"
+      ]
+    },
+    "memory:memory/2026-04-29.md:29:60": {
+      "key": "memory:memory/2026-04-29.md:29:60",
+      "path": "memory/2026-04-29.md",
+      "startLine": 29,
+      "endLine": 60,
+      "source": "memory",
+      "snippet": "- Multiple `railway up` commands sent - deployments stack up in QUEUED state - Current deployment `0cd6317b-6c2f-4a46-a56f-0a7a751008e0` has been QUEUED for ~35 minutes - Railway logs show \"Starting Container\" only - no build steps - **ROOT CAUSE**: Railway is likely using pre-built Docker image instead of building from GitHub - **FIX NEEDED**: In Railway dashboard → toolblip service → Settings → Build & Deploy → Change Build Method from \"Docker Image\" to \"Nixpacks\" or \"Dockerfile\" - Site CSS still 404ing - site is broken for users ## Recent Failed Deployments (before tonight) - 1251e1bc-dd98-469c-98e8-74d4c65c9987 | FAILED | 2026-04-29 08:39:03 - c885d90a-f8f2-448b-a972-2a7284f14cbd | FAIL",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.43114967942237853,
+      "maxScore": 0.43114967942237853,
+      "firstRecalledAt": "2026-05-02T04:22:56.350Z",
+      "lastRecalledAt": "2026-05-02T04:22:56.350Z",
+      "queryHashes": [
+        "4692b3f092c6"
+      ],
+      "recallDays": [
+        "2026-05-02"
+      ],
+      "conceptTags": [
+        "pre-built",
+        "multiple",
+        "railway",
+        "commands",
+        "sent",
+        "deployments",
+        "stack",
+        "queued"
+      ]
+    },
+    "memory:memory/2026-05-01.md:1:38": {
+      "key": "memory:memory/2026-05-01.md:1:38",
+      "path": "memory/2026-05-01.md",
+      "startLine": 1,
+      "endLine": 38,
+      "source": "memory",
+      "snippet": "# 2026-05-01 ## Git History Cleanup — COMPLETED - Cleaned git history using `git filter-repo` replacing secrets with `[REDACTED]` - Force-pushed to GitHub (commit `a8882f5` → `2746332`) - Backup at `/Users/ray/Work/toolblip-backup-*` ## Neon PostgreSQL Password Rotation — COMPLETED - Old exposed password: `[REDACTED]` (from Apr 29 commit bda263b5) - New password: `[REDACTED]` (rotated via browser automation) - API key generated: `[REDACTED]` - Updated `.env` files: - `/Users/ray/Work/toolblip/.env` - `/Users/ray/Work/toolblip/api/.env` ## Stripe Staging Mode Feature — COMPLETED (backend) - `api/app/Helpers/StripeHelper.php` — picks test vs prod keys based on staging mode - `api/app/Ht",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4474324494600296,
+      "maxScore": 0.4474324494600296,
+      "firstRecalledAt": "2026-05-02T07:32:32.006Z",
+      "lastRecalledAt": "2026-05-02T07:32:32.006Z",
+      "queryHashes": [
+        "a89f6f8dbdc6"
+      ],
+      "recallDays": [
+        "2026-05-02"
+      ],
+      "conceptTags": [
+        "backup",
+        "filter-repo",
+        "force-pushed",
+        "users/ray/work/toolblip-backup",
+        "users/ray/work/toolblip",
+        "users/ray/work/toolblip/api",
+        "api/app/helpers/stripehelper.php",
+        "api/app/ht"
+      ]
+    },
+    "memory:memory/2026-05-01.md:32:63": {
+      "key": "memory:memory/2026-05-01.md:32:63",
+      "path": "memory/2026-05-01.md",
+      "startLine": 32,
+      "endLine": 63,
+      "source": "memory",
+      "snippet": "- Updated in `/Users/ray/Work/toolblip/api/.env` - Railway CLI v4.37.2 uses OAuth login flow — headless not possible - GraphQL API at `https://backboard.railway.app/graphql/v2` works ## Railway Deployment — WORKING - API deployed via GraphQL: `bd40fae4-d2ad-4fb5-baf8-3aef9e90918c` - Service ID: `e39d0cb5-c516-4fb5-9b56-9ae3b7b39ad2` - API responding at: https://api.toolblip.com/api/stripe/status → `{\"staging_mode\":false}` - Source: GitHub `toolblip/toolblip-api` (made public temporarily) ## Stripe Staging Mode — Frontend - `src/lib/stripeStatus.ts` — client hook fetching `GET /api/stripe/status` - `src/components/StripeStagingBanner.tsx` — fixed bottom banner, dismissible - `src/app/donate",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4434384912252426,
+      "maxScore": 0.4434384912252426,
+      "firstRecalledAt": "2026-05-02T07:32:32.006Z",
+      "lastRecalledAt": "2026-05-02T07:32:32.006Z",
+      "queryHashes": [
+        "a89f6f8dbdc6"
+      ],
+      "recallDays": [
+        "2026-05-02"
+      ],
+      "conceptTags": [
+        "users/ray/work/toolblip/api",
+        "v4.37.2",
+        "backboard.railway.app/graphql/v2",
+        "staging-mode",
+        "toolblip/toolblip-api",
+        "src/lib/stripestatus.ts",
+        "api/stripe/status",
+        "src/app/donate"
       ]
     }
   }
