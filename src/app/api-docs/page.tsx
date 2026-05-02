@@ -200,7 +200,7 @@ export default function ApiDocsPage() {
             {[
               { label: 'Getting Started', links: [['Overview', '#overview'], ['Base URL', '#base-url'], ['Authentication', '#authentication']] },
               { label: 'Tools', links: [['GET /api/tools', '#get-tools'], ['GET /api/tools/{slug}', '#get-tool-slug']] },
-              { label: 'Auth', links: [['POST /api/auth/register', '#post-register'], ['POST /api/auth/login', '#post-login'], ['POST /api/auth/logout', '#post-logout'], ['GET /api/auth/user', '#get-user']] },
+              { label: 'Auth', links: [['POST /api/auth/register', '#post-register'], ['POST /api/auth/login', '#post-login'], ['POST /api/auth/logout', '#post-logout'], ['GET /api/auth/me', '#get-user']] },
               { label: 'Reference', links: [['Errors', '#errors']] },
             ].map(section => (
               <div key={section.label} style={{ marginBottom: 28 }}>
@@ -282,39 +282,40 @@ export default function ApiDocsPage() {
                 params={[
                   { name: 'category',  in: 'query', type: 'string',   required: false, description: 'Filter by category slug (e.g. developer, text, image).' },
                   { name: 'search',    in: 'query', type: 'string',   required: false, description: 'Search by name or keyword in the title and description.' },
-                  { name: 'page',       in: 'query', type: 'integer',  required: false, description: 'Page number for pagination (default: 1).' },
-                  { name: 'per_page',  in: 'query', type: 'integer',  required: false, description: 'Results per page (default: 20, max: 100).' },
+                  { name: 'page',      in: 'query', type: 'integer',  required: false, description: 'Page number for pagination (default: 1).' },
+                  { name: 'per_page', in: 'query', type: 'integer',  required: false, description: 'Results per page (default: 20, max: 100).' },
                 ]}
                 curl={`curl -X GET "${BASE}/api/tools" \\
   -H "Accept: application/json"`}
                 response={`// 200 OK
 {
-  "tools": {
-    "tools": [
-      {
-        "id": 1,
-        "slug": "url-encode",
-        "name": "URL Encode",
-        "description": "Encode text for safe URL usage.",
-        "category": "encoder",
-        "is_pro": false,
-        "emoji": "🔗",
-        "created_at": "2026-01-15T09:23:00.000000Z"
-      },
-      {
-        "id": 2,
-        "slug": "json-formatter",
-        "name": "JSON Formatter",
-        "description": "Format and validate JSON data instantly.",
-        "category": "developer",
-        "is_pro": false,
-        "emoji": "📋",
-        "created_at": "2026-01-20T14:11:00.000000Z"
-      }
-    ],
+  "data": [
+    {
+      "id": 1,
+      "slug": "url-encode",
+      "name": "URL Encode",
+      "description": "Encode text for safe URL usage.",
+      "category": "encoder",
+      "is_pro": false,
+      "emoji": "🔗",
+      "created_at": "2026-01-15T09:23:00.000000Z"
+    },
+    {
+      "id": 2,
+      "slug": "json-formatter",
+      "name": "JSON Formatter",
+      "description": "Format and validate JSON data instantly.",
+      "category": "developer",
+      "is_pro": false,
+      "emoji": "📋",
+      "created_at": "2026-01-20T14:11:00.000000Z"
+    }
+  ],
+  "meta": {
+    "current_page": 1,
     "total": 47,
-    "page": 1,
-    "per_page": 20
+    "per_page": 20,
+    "last_page": 3
   }
 }`}
               />
@@ -331,7 +332,7 @@ export default function ApiDocsPage() {
   -H "Accept: application/json"`}
                 response={`// 200 OK
 {
-  "tool": {
+  "data": {
     "id": 2,
     "slug": "json-formatter",
     "name": "JSON Formatter",
@@ -361,7 +362,7 @@ export default function ApiDocsPage() {
                   { name: 'name',                  in: 'body', type: 'string', required: true,  description: 'Full display name of the user.' },
                   { name: 'email',                 in: 'body', type: 'string', required: true,  description: 'Valid email address (must be unique per account).' },
                   { name: 'password',              in: 'body', type: 'string', required: true,  description: 'Account password (minimum 8 characters).' },
-                  { name: 'password_confirmation',  in: 'body', type: 'string', required: true,  description: 'Must match the password field exactly.' },
+
                 ]}
                 curl={`curl -X POST "${BASE}/api/auth/register" \\
   -H "Content-Type: application/json" \\
@@ -369,8 +370,7 @@ export default function ApiDocsPage() {
   -d '{
     "name": "Alex Johnson",
     "email": "alex@example.com",
-    "password": "securepass123",
-    "password_confirmation": "securepass123"
+    "password": "securepass123"
   }'`}
                 response={`// 201 Created
 {
@@ -431,7 +431,7 @@ export default function ApiDocsPage() {
               <Endpoint
                 id="get-user"
                 method="GET"
-                path="/api/auth/user"
+                path="/api/auth/me"
                 description="Fetch the currently authenticated user. Use to verify a token or retrieve the latest profile data."
                 auth
                 curl={`curl -X GET "${BASE}/api/auth/user" \\
