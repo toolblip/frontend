@@ -1,5 +1,0 @@
-[railway]
-schema = "v2"
-
-[deploy]
-healthcheckPath = "/"
