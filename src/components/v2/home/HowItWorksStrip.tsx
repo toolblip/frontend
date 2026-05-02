@@ -17,7 +17,7 @@ const STEPS = [
     bg: 'var(--red-tint)',
     color: 'var(--red)',
     title: 'Pick a tool',
-    desc: 'JSON formatter, Base64, UUID gen — 60+ tools.',
+    desc: 'JSON formatter, Base64, UUID gen — pick any tool.',
   },
   {
     num: '2',
@@ -31,7 +31,7 @@ const STEPS = [
     bg: 'var(--blue-tint)',
     color: 'var(--c-dev)',
     title: 'Paste your data',
-    desc: 'Nothing uploaded. Data stays in your tab.',
+    desc: 'Your input never leaves your browser.',
   },
   {
     num: '3',
@@ -43,7 +43,7 @@ const STEPS = [
     bg: 'var(--green-tint)',
     color: '#1e6b42',
     title: 'Get your result',
-    desc: 'Copy or download. No servers, no waiting.',
+    desc: 'Instant output — copy or download and go.',
   },
 ];
 
@@ -77,7 +77,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: HowItWorks
               ⚡
             </div>
             <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--fg-2)', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
-              {toolCount} tools · {categoryCount} categories · No signup needed
+              {toolCount} tools · {categoryCount} categories · 100% free, forever
             </span>
           </div>
 

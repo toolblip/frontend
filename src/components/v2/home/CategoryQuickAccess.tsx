@@ -77,7 +77,7 @@ export default function CategoryQuickAccess({ categories }: CategoryQuickAccessP
             marginRight: 4,
             whiteSpace: 'nowrap',
           }}>
-            Categories
+  Browse by category
           </span>
           {categories.map((cat) => {
             const { bg, color } = getCategoryStyle(cat.name);

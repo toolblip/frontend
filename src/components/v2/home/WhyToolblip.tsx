@@ -2,10 +2,9 @@
 
 const BENEFITS = [
   {
-    emoji: '🔒',
-    title: 'Totally Private',
-    tagline: 'No servers. No uploads. Nothing leaves your browser.',
-    desc: 'All processing happens in your tab. We can\'t see your data — no server, no tracking, no logs.',
+    title: '100% Private',
+    tagline: 'Data never leaves your browser',
+    desc: 'All processing happens locally in your tab. No servers, no uploads, no logs — not even we can see what you\'re working on.',
     tint: 'var(--green-tint)',
     color: '#1e6b42',
     icon: (
@@ -16,10 +15,9 @@ const BENEFITS = [
     ),
   },
   {
-    emoji: '⚡',
     title: 'Instantly Fast',
-    tagline: 'No API calls. No loading spinners.',
-    desc: 'Results appear the moment you paste. Everything runs client-side — no round-trips, no rate limits.',
+    tagline: 'No API calls, no loading spinners',
+    desc: 'Everything runs client-side in your browser tab. Instant results, no round-trips, no rate limits — open and go.',
     tint: 'var(--amber-tint)',
     color: '#7a4e00',
     icon: (
@@ -29,10 +27,9 @@ const BENEFITS = [
     ),
   },
   {
-    emoji: '🆓',
-    title: '100% Free',
-    tagline: 'No signup. No paywall. No usage caps.',
-    desc: 'Every tool, free forever. No account, no credit card, no artificial limits. Open the tab and go.',
+    title: 'Always Free',
+    tagline: 'No signup, no paywall, no limits',
+    desc: 'Every tool is free, forever. No account needed, no credit card, no artificial caps — just open the tab and use it.',
     tint: 'var(--blue-tint)',
     color: '#1d3fa0',
     icon: (
@@ -49,7 +46,7 @@ export default function WhyToolblip() {
       <div className="tb-v2-container">
         <div className="tb-v2-band-head" style={{ marginBottom: 40 }}>
           <div>
-            <div className="tb-v2-kicker">Our promise</div>
+            <div className="tb-v2-kicker">Why Toolblip?</div>
             <h2 style={{
               fontFamily: 'var(--f-display)',
               fontWeight: 700,
@@ -59,7 +56,7 @@ export default function WhyToolblip() {
               margin: '10px 0 0',
               color: 'var(--fg-0)',
             }}>
-              Why Toolblip?
+              Tools without the tradeoffs.
             </h2>
           </div>
         </div>
