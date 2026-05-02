@@ -3,4 +3,4 @@ schema = "v2"
 
 [deploy]
 healthcheckPath = "/"
-healthcheckPort = 8080
+healthcheckPort = 3000
