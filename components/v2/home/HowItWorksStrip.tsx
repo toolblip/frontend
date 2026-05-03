@@ -139,7 +139,8 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
             borderTop: '1px solid var(--border, var(--line))',
           }}
         >
-          <div
+          <a
+            href="/privacy"
             style={{
               display: 'inline-flex',
               alignItems: 'center',
@@ -150,8 +151,10 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               color: 'var(--green, #16a34a)',
               fontSize: 13,
               fontWeight: 600,
-              animation: 'privacy-pulse 4s ease-in-out infinite',
+              textDecoration: 'none',
+              transition: 'box-shadow 0.18s, transform 0.18s',
             }}
+            className="privacy-badge"
           >
             <svg
               width="14"
@@ -168,7 +171,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               <path d="M7 11V7a5 5 0 0 1 10 0v4" />
             </svg>
             No servers &nbsp;&middot;&nbsp; No uploads &nbsp;&middot;&nbsp; Nothing leaves your browser &mdash; ever.
-          </div>
+          </a>
         </div>
       </div>
       <style>{`
@@ -197,6 +200,14 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
         .hiw-icon:hover {
           transform: scale(1.12) rotate(-3deg);
           box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+
+        .privacy-badge {
+          animation: privacy-pulse 4s ease-in-out infinite;
+        }
+        .privacy-badge:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 16px rgba(22, 163, 74, 0.18);
         }
 
         @keyframes privacy-pulse {
