@@ -6,14 +6,20 @@ import { tools } from '@/data/tools';
 import { getCategoryMeta } from '@/lib/v2/categoryMeta';
 import { IconArrowUR } from '@/components/v2/icons';
 
-const DIRECTORY_CATEGORIES = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS'] as const;
-type Category = typeof DIRECTORY_CATEGORIES[number];
-
 export default function DirectoryClient() {
   const [query, setQuery] = useState('');
-  const [activeCategory, setActiveCategory] = useState<Category>('All');
+  const [activeCategory, setActiveCategory] = useState<string>('All');
   const [showTopBtn, setShowTopBtn] = useState(false);
   const bodyRef = useRef<HTMLDivElement>(null);
+
+  // Dynamically derive categories from tools data, sorted by tool count
+  const categories = useMemo(() => {
+    const counts: Record<string, number> = {};
+    for (const tool of tools) counts[tool.category] = (counts[tool.category] ?? 0) + 1;
+    return Object.entries(counts)
+      .sort(([, a], [, b]) => b - a)
+      .map(([name]) => name);
+  }, []);
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
@@ -28,21 +34,6 @@ export default function DirectoryClient() {
       return matchesQuery && matchesCategory;
     });
   }, [query, activeCategory]);
-
-  const tabCounts = useMemo(() => {
-    const validCats = new Set<string>(DIRECTORY_CATEGORIES.filter((c) => c !== 'All'));
-    const counts: Record<string, number> = {};
-    for (const cat of validCats) {
-      counts[cat] = 0;
-    }
-    for (const tool of tools) {
-      if (validCats.has(tool.category)) {
-        counts[tool.category]++;
-      }
-    }
-    counts['All'] = Object.values(counts).reduce((a, b) => a + b, 0);
-    return counts;
-  }, []);
 
   const clearAll = () => {
     setQuery('');
@@ -70,7 +61,7 @@ export default function DirectoryClient() {
           </div>
           <h1 className="tb-v2-dir-title">Tool Directory</h1>
           <p className="tb-v2-dir-sub">
-            {tabCounts['All']} free browser-based tools — text, developer, image,
+            {tools.length} free browser-based tools — text, developer, image,
             conversion, math, CSS, and more. No signup, no uploads.
           </p>
         </div>
@@ -109,9 +100,15 @@ export default function DirectoryClient() {
 
           {/* Category tabs */}
           <div className="tb-v2-dir-tabs">
-            {DIRECTORY_CATEGORIES.map((cat) => {
-              const count = tabCounts[cat] ?? 0;
-              if (count === 0 && cat !== 'All') return null;
+            <button
+              className={`tb-v2-dir-tab${activeCategory === 'All' ? ' on' : ''}`}
+              onClick={() => setActiveCategory('All')}
+            >
+              All
+              <span className="tb-v2-dir-tab-count">{tools.length}</span>
+            </button>
+            {categories.map((cat) => {
+              const count = tools.filter((t) => t.category === cat).length;
               const isActive = activeCategory === cat;
               return (
                 <button
@@ -163,7 +160,7 @@ export default function DirectoryClient() {
           {/* Always show count when no filters */}
           {!hasFilters && (
             <p style={{ fontSize: 13.5, color: 'var(--fg-2)', marginBottom: 20 }}>
-              Showing <strong style={{ color: 'var(--fg-0)', fontWeight: 600 }}>{tabCounts['All']}</strong> tools
+              Showing <strong style={{ color: 'var(--fg-0)', fontWeight: 600 }}>{tools.length}</strong> tools
             </p>
           )}
 
