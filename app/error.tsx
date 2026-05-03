@@ -10,7 +10,7 @@ export default function Error({
 }) {
   return (
     <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4 py-20">
-      {/* Large "Something went wrong" */}
+      {/* Large "Something went wrong" with red outline — matches brand */}
       <div
         className="text-[clamp(56px,10vw,96px)] font-bold leading-none select-none mb-6"
         style={{
@@ -18,7 +18,7 @@ export default function Error({
           WebkitTextStroke: "2px var(--red)",
         }}
       >
-        Something went wrong
+        Oops!
       </div>
 
       <h1 className="text-2xl sm:text-3xl font-semibold mb-3" style={{ color: "var(--fg-0)" }}>

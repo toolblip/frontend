@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function NotFound() {
   return (
     <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4 py-20">
-      {/* Large friendly "404" */}
+      {/* Large friendly "404" with green outline — matches brand */}
       <div
         className="text-[clamp(80px,14vw,140px)] font-bold leading-none select-none mb-6"
         style={{
