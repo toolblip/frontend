@@ -207,7 +207,7 @@ const ENDPOINTS: Endpoint[] = [
       { field: 'message', type: 'string', description: 'Confirmation message' },
     ],
     curl: `curl -X POST "${BASE_URL}/api/auth/logout" \\
-  -H "Authorization: Bearer {token}" \\
+  -H "Authorization: Bearer 1|Xr8KbP9mNoPqRsTuVwXyZaBcDeFgHiJkL" \\
   -H "Accept: application/json"`,
     response: `{
   "message": "Logged out successfully"
@@ -228,7 +228,7 @@ const ENDPOINTS: Endpoint[] = [
       { field: 'user.is_pro', type: 'boolean', description: 'Pro subscription status' },
     ],
     curl: `curl -X GET "${BASE_URL}/api/auth/user" \\
-  -H "Authorization: Bearer {token}" \\
+  -H "Authorization: Bearer 1|Xr8KbP9mNoPqRsTuVwXyZaBcDeFgHiJkL" \\
   -H "Accept: application/json"`,
     response: `{
   "user": {
