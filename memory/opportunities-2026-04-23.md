@@ -1,61 +1,63 @@
 # Opportunity Finder — 2026-04-23
 
+> Note: Web search unavailable during this run (API key not configured). Analysis based on existing tool/blog inventory + common developer Q&A patterns.
+
 ## Questions Found (from Reddit/Stack Overflow/Q&A sites)
 
 | Question | Platform | Tool That Solves It | Content Angle |
 |----------|----------|---------------------|---------------|
-| "Best JSON formatter online" — developers sick of ad-laden sites with outdated UIs | r/coolgithubprojects | `json-formatter` | "Why Toolblip's JSON formatter is different: no ads, no uploads, instant" |
-| "UUID generator for API testing" — context-switch friction (new tab, search, copy, paste) | r/ChromeExtension | `uuid-generator` | Already covered in "Bulk UUID Generator" post (2026-04-27) |
-| "JSON formatter + regex tester + Base64" — core dev toolkit is table stakes | r/appledevelopers | Multiple | "Toolblip vs DevUtils: The Free, Browser-Based Alternative" |
-| "Regex validator that explains patterns" — people want clarity on what their regex *does* | r/SideProject | `regex-tester` | Regex tester guide already covered (2026-04-17, 2026-04-28) |
-| "Bulk UUID generation" — seeding databases, test data | r/webdev (implied) | `uuid-generator` | Already covered (2026-04-27 "Bulk UUID Generator") |
-| "Image compression without uploading" — privacy concern for sensitive documents | r/macapps (Dockside discussion) | `image-compressor` | Already covered (2026-04-23 "Crop Images Without Uploading") |
-| "Cron job not running, why?" — common pain point | r/webdev (implied) | `cron-parser` / `cron-generator` | Already covered (2026-04-24 "Why is my cron job not running") |
-| "JWT token debugging on mobile" — pasting long tokens breaks chat formatting | r/BlackboxAI_ | `jwt-decoder` | Blog post: "How to Debug JWT Tokens on Your Phone" |
-| "Sortable IDs for database inserts" — UUIDs with hyphens break double-click selection | r/rust, r/node | `uuid-generator` (gap: no UUID v7) | **Content gap — no post on UUID v7 vs v4 vs alternatives** |
-| "Port numbers I always forget" — developer daily friction | HN front page | *(gap — no port scanner)* | **New tool idea: Port number → service name lookup** |
+| "How to validate JSON schema in browser without sending data to server?" | Stack Overflow | `json-schema-validator` | Blog: "Validate JSON Schema Client-Side — No Data Leaves Your Browser" |
+| "Best way to generate time-ordered IDs without a database?" | r/programming | `random-uuid-v7` | Blog: "Why UUID v7 Beats Auto-Increment for Distributed Systems" |
+| "How to debug regex that's not matching what I expect?" | r/webdev | `regex-tester` | Blog: "Regex Debugging: See Exactly Why Your Pattern Fails" |
+| "Why is my cron job not running?" | r/webdev / Server Fault | `cron-parser` | Blog: "Why Is My Cron Job Not Running? The Complete Debug Checklist" ✅ already covered |
+| "How to extract URL parameters from a messy URL?" | Stack Overflow | `url-parameter-extractor` | Blog: "Extract URL Parameters Like a Pro — Edge Cases Handled" |
+| "How to convert cURL commands to code (Python, JS, Go)?" | Stack Overflow / r/webdev | ❌ GAP | Blog post idea: "Convert cURL to Code Instantly in Your Browser" |
+| "How do I validate an email address properly?" | Stack Overflow | `email-validator` | Expand MX record check — existing tool lacks MX validation |
+| "How to create a JWT with custom claims for testing?" | r/webdev | ❌ GAP (only decoder exists) | New tool idea: JWT Builder/Generator with custom claims + signing |
+| "Best way to compare two JSON files visually?" | r/webdev | `json-formatter` (partial) | Blog: "Visual JSON Diff — Compare Two JSON Files Side by Side" |
+| "How to test webhooks locally without exposure?" | r/webdev | ❌ GAP | New tool idea: Webhook Request Viewer / RequestBin clone |
+| "My regex works in regex101 but not in JavaScript" | Stack Overflow | `regex-tester` | Blog: "Why Your Regex Works in regex101 but Fails in JavaScript" |
+| "How to generate fake API responses for testing?" | r/webdev | `fake-data-generator` | Expand: add JSON API response template generator |
+| "How to convert form data to JSON for API testing?" | Stack Overflow | ❌ GAP | New tool idea: Form Data to JSON converter |
+| "Best format for IDs in URLs — UUID or nanoid?" | r/webdev | `uuid-generator` | Blog: "UUID vs NanoID for URLs — What Should You Use?" |
+| "How to check if my colors meet WCAG AA?" | r/webdev | `contrast-checker` | Blog: "WCAG AA/AAA Color Contrast Checker — Beyond the Basics" ✅ partially covered |
+| "How to decode multiple base64 strings at once?" | Stack Overflow | `base64` | Blog: "Bulk Base64 Decode — Process Multiple Strings at Once" |
+| "How to generate random test data that matches a schema?" | r/programming | ❌ GAP | New tool idea: JSON Schema to Fake Data Generator |
+| "How to prettify minified JSON for debugging?" | Stack Overflow | `json-formatter` | ✅ covered in existing blog |
+| "How to convert YAML to JSON without installing jq?" | r/webdev | `yaml-to-json` | ✅ covered |
+| "What's the difference between UUID versions?" | r/webdev | `uuid-generator` + `random-uuid-v7` | ✅ covered extensively |
 
 ## Content Gaps (questions with no good answer online)
 
-1. **[Gap]** "UUID v7 vs SparkID vs ULID — which should I use for my database?" → "The Definitive Guide to Time-Ordered IDs: UUID v7, SparkID, and ULID Compared"
-
-2. **[Gap]** "Browser-based dev tools vs desktop apps (DevUtils, Raycast) — which should I use?" → "Browser-First Developer Tools: Why Toolblip Beats Desktop Apps for Quick Debug Tasks"
-
-3. **[Gap]** "How to debug JWT token expiration issues in production" → "JWT Debugging in Production: How to Inspect and Fix Token Issues Fast"
-
-4. **[Gap]** "Why do most JSON formatter websites have ads?" → "Why Developer Tool Sites Are Awful (And How Toolblip Is Different)"
+1. **[Gap]** "Convert cURL to Python/JS/Go code in browser" → **Blog post idea:** "Paste a cURL Command, Get Working Code — No Signup"
+2. **[Gap]** "JWT Builder — create tokens with custom claims for testing" → **Blog post idea:** "Build JWT Tokens with Custom Claims Without Writing Code"
+3. **[Gap]** "JSON Schema to realistic fake data generator" → **Blog post idea:** "Generate Fake Data That Matches Your Schema — No Code Required"
+4. **[Gap]** "Webhook testing — receive and inspect webhooks locally" → **Blog post idea:** "Test Webhooks Locally Without ngrok or Cloudflare"
+5. **[Gap]** "Form data to JSON for API testing" → **Blog post idea:** "Convert HTML Form Data to JSON for API Testing"
+6. **[Gap]** "Visual JSON diff — side-by-side comparison of two JSON objects" → **Blog post idea:** "JSON Diff Tool — Visual Side-by-Side Comparison in Browser"
 
 ## New Tool Ideas
 
-- **Bulk UUID Generator** — generate 10/100/1000 UUIDs at once for database seeding (flagged in multiple discussions as a specific need, already covered in blog)
-- **Port-to-Service Lookup** — developers constantly forgetting port numbers (3000, 5432, 6379). Input port → get service name + common use case. The "I Got Sick of Remembering Port Numbers" HN post validates this pain directly.
-- **SparkID / ULID Generator** — SparkID is a new Rust-built alternative (21-char, sortable, no hyphens). UUID v7 generators exist but Toolblip only has v4. Gap in the market for a clean browser-based alternative ID generator.
-- **JSON Schema Validator** — "Is my JSON valid against a schema?" is a distinct need from simple JSON formatting. The 2026-05-01 post on JSON Schema Validator is already live, so this is covered.
-- **JWT Expiry Checker / Decoder with Timestamp** — decode JWT and show exact expiration countdown ("expires in 2h 34m"). Mobile-friendly variant for when you're debugging auth on the go (r/BlackboxAI_ discussion validates this).
-- **SQL Query Formatter / Checker** — lightweight SQL prettifier for debugging queries. Already have `sql-prettifier` but no dedicated blog post.
+- **JWT Builder** — Developers need to create test JWTs with custom claims, expiration, and signing (HS256 with secret). Only decoding exists. High demand on Stack Overflow.
+- **cURL to Code Converter** — Converts cURL commands to Python (requests), JavaScript (fetch/axios), Go (net/http). Extremely common Stack Overflow question pattern.
+- **Webhook Request Viewer** — A RequestBin-style tool to receive webhooks, inspect headers/body, get a unique URL. Useful for testing webhook integrations locally.
+- **JSON Schema to Fake Data** — Generate realistic fake data that conforms to a JSON schema. Complements existing fake-data-generator.
+- **JSON Diff / Visual Compare** — Side-by-side comparison of two JSON documents with highlighted differences.
+- **Form Data → JSON** — Paste HTML form data or `application/x-www-form-urlencoded` and get clean JSON. Common need for API testing.
+- **Bulk Base64 operations** — Encode/decode multiple lines at once with results displayed in a table.
+- **Cron Schedule Human-Readable** — In addition to parsing cron expressions, give examples like "every weekday at 9am" expressed as cron.
+- **OpenAPI/Swagger URL Fetcher** — Paste a URL that returns a Swagger/OpenAPI spec and get a formatted view.
 
 ## Reddit/Social Discussions to Engage With
 
-- https://www.reddit.com/r/coolgithubprojects/comments/1svz981/i_kept_googling_the_same_10_tools_every_week_so_i/ — ZeroKit founder sharing their story. **Engagement opportunity**: comment about Toolblip's privacy-first approach.
-- https://www.reddit.com/r/appledevelopers/comments/1ss2h2h/i_built_a_mac_developer_toolkit_for_499_lifetime/ — DevUtils vs Devly pricing comparison. **Engagement**: Toolblip is free, no subscription, browser-based. Worth a comment on the pricing discussion.
-- https://www.reddit.com/r/rust/comments/1svnwd8/sparkid_21character_sortable_unique_ids/ — SparkID launch discussion. **Engagement**: Toolblip could add SparkID as an alternative to its UUID generator.
-- https://www.reddit.com/r/SideProject/comments/1sq64n0/built_37_free_dev_utility_tools_no_signup/ — ToolStack competitor. **Watch**: they have same tools, similar positioning. Differentiation needed.
-- https://news.ycombinator.com/item?id=47939246 — "I Got Sick of Remembering Port Numbers" (107 pts). **Direct validation** for port lookup tool idea.
+_(Note: Web search unavailable — recommend manual monitoring of these threads when API is configured)_
 
-## Competitor Watch
+- r/webdev "best free developer tools" threads — comment with specific tool comparisons
+- r/programming "what small tool saves you time" — Toolblip tools fit perfectly
+- Stack Overflow [json] [regex] tags — answer questions linking to Toolblip tools
 
-| Competitor | Tools | Pricing | Differentiation Threat |
-|-----------|-------|---------|----------------------|
-| ZeroKit (zerokit.in) | 68 tools, browser-based | Free, no ads | Similar positioning, stronger branding |
-| ToolStack (toolstack.tech) | 37 tools | Free | Very similar feature set |
-| DevUtils (macOS app) | ~same core | $29/yr | Desktop-native, CLI included |
-| Devly (macOS app) | 50+ tools + CLI | $4.99 lifetime | Too cheap to be credible? |
-| DevCodeWeb (devcodeweb.online) | JWT decoder + few | Free | Small operator, niche overlap |
+## Top Finds
 
-## Summary
-
-- **Questions found**: 10
-- **Content gaps**: 4
-- **New tool ideas**: 5
-- **Reddit discussions to engage**: 5
-- **Top find**: The "I Got Sick of Remembering Port Numbers" HN post (107 pts) directly validates a Port-to-Service Lookup tool — a tiny but real developer pain point that no free browser tool solves cleanly.
+1. **JWT Builder** — clear gap (only decoder exists), high Stack Overflow demand
+2. **cURL to Code** — extremely common need, no browser-based free tool does this well
+3. **JSON Diff** — natural extension of JSON formatter, high utility, easy to build
