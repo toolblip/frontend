@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-02T21:01:14.911Z",
+  "updatedAt": "2026-05-03T21:01:09.812Z",
   "entries": {
     "memory:memory/2026-04-29.md:4:7": {
       "key": "memory:memory/2026-04-29.md:4:7",
@@ -10,12 +10,12 @@
       "source": "memory",
       "snippet": "Railway Deployment Issue (UNRESOLVED): **Problem**: toolblip-frontend on Railway is serving old build with 404 CSS; **Root cause**: Railway is using pre-built Docker image, NOT building from GitHub source; **Evidence**: Deployment logs show \"Starting Container\" with no build step",
       "recallCount": 0,
-      "dailyCount": 3,
+      "dailyCount": 4,
       "groundedCount": 0,
-      "totalScore": 1.8599999999999999,
+      "totalScore": 2.48,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-05-02T21:00:46.860Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
       "queryHashes": [
         "312dd0eab707"
       ],
@@ -24,7 +24,8 @@
         "2026-04-29",
         "2026-05-01",
         "2026-05-03",
-        "2026-05-02"
+        "2026-05-02",
+        "2026-05-04"
       ],
       "conceptTags": [
         "toolblip-frontend",
@@ -45,12 +46,12 @@
       "source": "memory",
       "snippet": "Railway Deployment Issue (UNRESOLVED): **Also**: Check if GitHub repo reconnection needed (repo may have moved to toolblip/frontend)",
       "recallCount": 0,
-      "dailyCount": 3,
+      "dailyCount": 4,
       "groundedCount": 0,
-      "totalScore": 1.8599999999999999,
+      "totalScore": 2.48,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-05-02T21:00:46.860Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
       "queryHashes": [
         "312dd0eab707"
       ],
@@ -59,7 +60,8 @@
         "2026-04-29",
         "2026-05-01",
         "2026-05-03",
-        "2026-05-02"
+        "2026-05-02",
+        "2026-05-04"
       ],
       "conceptTags": [
         "toolblip/frontend",
@@ -80,12 +82,12 @@
       "source": "memory",
       "snippet": "GitHub Push Working: Pushed `railway.toml` and tsconfig.json fix to GitHub; Railway is NOT rebuilding from these pushes - confirmed by stale CSS hashes",
       "recallCount": 0,
-      "dailyCount": 3,
+      "dailyCount": 4,
       "groundedCount": 0,
-      "totalScore": 1.8599999999999999,
+      "totalScore": 2.48,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-05-02T21:00:46.860Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
       "queryHashes": [
         "312dd0eab707"
       ],
@@ -94,7 +96,8 @@
         "2026-04-29",
         "2026-05-01",
         "2026-05-03",
-        "2026-05-02"
+        "2026-05-02",
+        "2026-05-04"
       ],
       "conceptTags": [
         "railway.toml",
@@ -115,12 +118,12 @@
       "source": "memory",
       "snippet": "MCP Folder Issue (Fixed): The `mcp/` folder was causing TypeScript build errors; Added `mcp` to `tsconfig.json` exclude list",
       "recallCount": 0,
-      "dailyCount": 3,
+      "dailyCount": 4,
       "groundedCount": 0,
-      "totalScore": 1.8599999999999999,
+      "totalScore": 2.48,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-05-02T21:00:46.860Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
       "queryHashes": [
         "312dd0eab707"
       ],
@@ -129,7 +132,8 @@
         "2026-04-29",
         "2026-05-01",
         "2026-05-03",
-        "2026-05-02"
+        "2026-05-02",
+        "2026-05-04"
       ],
       "conceptTags": [
         "tsconfig.json",
@@ -150,12 +154,12 @@
       "source": "memory",
       "snippet": "Railway Cleanup Needed: 3 unused PostgreSQL instances on Railway: `Postgres-XDi-`, `Postgres-QAgG`, `Postgres`; These are garbage from testing - Neon is being used for Postgres; Can be deleted to save resources",
       "recallCount": 0,
-      "dailyCount": 3,
+      "dailyCount": 4,
       "groundedCount": 0,
-      "totalScore": 1.8599999999999999,
+      "totalScore": 2.48,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-05-02T21:00:46.860Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
       "queryHashes": [
         "312dd0eab707"
       ],
@@ -164,7 +168,8 @@
         "2026-04-29",
         "2026-05-01",
         "2026-05-03",
-        "2026-05-02"
+        "2026-05-02",
+        "2026-05-04"
       ],
       "conceptTags": [
         "postgres-xdi",
@@ -185,12 +190,12 @@
       "source": "memory",
       "snippet": "Keys/Tokens: Railway token: `[COMMITTED - REVOKED]`; Neon PostgreSQL: `[COMMITTED - REVOKED]`; Superadmin: `info@toolblip.com` / `[COMMITTED - REVOKED]`",
       "recallCount": 0,
-      "dailyCount": 3,
+      "dailyCount": 4,
       "groundedCount": 0,
-      "totalScore": 1.8599999999999999,
+      "totalScore": 2.48,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-05-02T21:00:46.860Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
       "queryHashes": [
         "312dd0eab707"
       ],
@@ -199,7 +204,8 @@
         "2026-04-29",
         "2026-05-01",
         "2026-05-03",
-        "2026-05-02"
+        "2026-05-02",
+        "2026-05-04"
       ],
       "conceptTags": [
         "keys/tokens",
@@ -220,12 +226,12 @@
       "source": "memory",
       "snippet": "Railway Deployment Issue (STILL UNRESOLVED): Multiple `railway up` commands sent - deployments stack up in QUEUED state; Current deployment `0cd6317b-6c2f-4a46-a56f-0a7a751008e0` has been QUEUED for ~35 minutes; Railway logs show \"Starting Container\" only - no build steps; **ROOT",
       "recallCount": 0,
-      "dailyCount": 3,
+      "dailyCount": 4,
       "groundedCount": 0,
-      "totalScore": 1.8599999999999999,
+      "totalScore": 2.48,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-05-02T21:00:46.860Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
       "queryHashes": [
         "312dd0eab707"
       ],
@@ -234,7 +240,8 @@
         "2026-04-29",
         "2026-05-01",
         "2026-05-03",
-        "2026-05-02"
+        "2026-05-02",
+        "2026-05-04"
       ],
       "conceptTags": [
         "railway",
@@ -255,12 +262,12 @@
       "source": "memory",
       "snippet": "Railway Deployment Issue (STILL UNRESOLVED): **FIX NEEDED**: In Railway dashboard → toolblip service → Settings → Build & Deploy → Change Build Method from \"Docker Image\" to \"Nixpacks\" or \"Dockerfile\"; Site CSS still 404ing - site is broken for users",
       "recallCount": 0,
-      "dailyCount": 3,
+      "dailyCount": 4,
       "groundedCount": 0,
-      "totalScore": 1.8599999999999999,
+      "totalScore": 2.48,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-05-02T21:00:46.860Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
       "queryHashes": [
         "312dd0eab707"
       ],
@@ -269,7 +276,8 @@
         "2026-04-29",
         "2026-05-01",
         "2026-05-03",
-        "2026-05-02"
+        "2026-05-02",
+        "2026-05-04"
       ],
       "conceptTags": [
         "railway",
@@ -15635,18 +15643,20 @@
       "source": "memory",
       "snippet": "SEO Files Already Done: app/sitemap.ts and app/robots.ts were already present (created in prior session); sitemap includes all required routes + tool slugs; robots.txt allows all crawlers and points to sitemap.xml; No action needed — verified existing implementation is correct",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-30T21:03:13.419Z",
-      "lastRecalledAt": "2026-04-30T21:03:13.419Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
       "queryHashes": [
         "e757f9360616"
       ],
       "recallDays": [
         "2026-05-01",
-        "2026-04-30"
+        "2026-04-30",
+        "2026-05-04",
+        "2026-05-03"
       ],
       "conceptTags": [
         "app/sitemap.ts",
@@ -20622,6 +20632,956 @@
         "deployed",
         "container",
         "let"
+      ]
+    },
+    "memory:memory/2026-05-03.md:5:5": {
+      "key": "memory:memory/2026-05-03.md:5:5",
+      "path": "memory/2026-05-03.md",
+      "startLine": 5,
+      "endLine": 5,
+      "source": "memory",
+      "snippet": "Directory Page — Already Complete: Cron task claimed `/directory` was a placeholder needing rebuild. Inspection showed `app/directory/DirectoryClient.tsx` is already fully implemented with:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "c2bf0c07fdd1"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "directory",
+        "page",
+        "already",
+        "complete",
+        "cron",
+        "task",
+        "claimed",
+        "was"
+      ]
+    },
+    "memory:memory/2026-05-03.md:6:9": {
+      "key": "memory:memory/2026-05-03.md:6:9",
+      "path": "memory/2026-05-03.md",
+      "startLine": 6,
+      "endLine": 9,
+      "source": "memory",
+      "snippet": "Directory Page — Already Complete: Search bar (live filters on name, description, category); Category tabs with counts (All, Text, Developer, Encoder, Image, Conversion, Math, CSS); Tool card grid using `tb-v2-dir-card` / `tb-v2-dir-grid` (same as homepage); \"Showing N tools\" cou",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "c2bf0c07fdd1"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "tb-v2-dir-card",
+        "tb-v2-dir-grid",
+        "directory",
+        "page",
+        "already",
+        "complete",
+        "bar",
+        "live"
+      ]
+    },
+    "memory:memory/2026-05-03.md:10:10": {
+      "key": "memory:memory/2026-05-03.md:10:10",
+      "path": "memory/2026-05-03.md",
+      "startLine": 10,
+      "endLine": 10,
+      "source": "memory",
+      "snippet": "Directory Page — Already Complete: Empty state with clear-all",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "c2bf0c07fdd1"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "clear-all",
+        "directory",
+        "page",
+        "already",
+        "complete",
+        "empty",
+        "state",
+        "clear"
+      ]
+    },
+    "memory:memory/2026-05-03.md:12:12": {
+      "key": "memory:memory/2026-05-03.md:12:12",
+      "path": "memory/2026-05-03.md",
+      "startLine": 12,
+      "endLine": 12,
+      "source": "memory",
+      "snippet": "Directory Page — Already Complete: No rebuild needed. Marking as done.",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "c2bf0c07fdd1"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "directory",
+        "page",
+        "already",
+        "complete",
+        "rebuild",
+        "needed",
+        "marking",
+        "done"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:27:27": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:27:27",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 27,
+      "endLine": 27,
+      "source": "memory",
+      "snippet": "Assistant: Wait - the real issue is Railway's Docker cache reusing an old builder stage. Let me add cache-busting to the Dockerfile:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "cache-busting",
+        "wait",
+        "real",
+        "issue",
+        "railway's",
+        "docker",
+        "cache",
+        "reusing"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:28:28": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:28:28",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 28,
+      "endLine": 28,
+      "source": "memory",
+      "snippet": "Assistant: Let me switch Railway to use Nixpacks instead of Docker — it won't have the cache issue:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "let",
+        "switch",
+        "railway",
+        "use",
+        "nixpacks",
+        "instead",
+        "docker",
+        "won't"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:29:29": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:29:29",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 29,
+      "endLine": 29,
+      "source": "memory",
+      "snippet": "Assistant: Actually, let me revert the nginx change too since Nixpacks handles routing differently:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "actually",
+        "let",
+        "revert",
+        "nginx",
+        "change",
+        "too",
+        "nixpacks",
+        "handles"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:30:30": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:30:30",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 30,
+      "endLine": 30,
+      "source": "memory",
+      "snippet": "Assistant: Now commit and push the railway.toml change to switch to Nixpacks:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "railway.toml",
+        "now",
+        "commit",
+        "push",
+        "change",
+        "switch",
+        "nixpacks"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:31:31": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:31:31",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 31,
+      "endLine": 31,
+      "source": "memory",
+      "snippet": "Assistant: Nixpacks deployment triggered. Let me check the status:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "nixpacks",
+        "deployment",
+        "triggered",
+        "let",
+        "check",
+        "status"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:32:32": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:32:32",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 32,
+      "endLine": 32,
+      "source": "memory",
+      "snippet": "Assistant: Nixpacks build succeeded! Let me check if CSS is working now:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "nixpacks",
+        "succeeded",
+        "let",
+        "check",
+        "css",
+        "working",
+        "now"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:33:33": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:33:33",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 33,
+      "endLine": 33,
+      "source": "memory",
+      "snippet": "Assistant: Railway is still using Docker despite the Nixpacks config. Let me try removing the Dockerfile to force Nixpacks:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "railway",
+        "still",
+        "docker",
+        "despite",
+        "nixpacks",
+        "config",
+        "let",
+        "try"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:34:34": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:34:34",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 34,
+      "endLine": 34,
+      "source": "memory",
+      "snippet": "Assistant: Railway isn't building at all — logs show \"Ready in 0ms\" with no build step. It's using a pre-built cached image. That's why CSS is missing. Let me restore the Dockerfile and force a proper build by adding it back:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "pre-built",
+        "railway",
+        "isn't",
+        "building",
+        "all",
+        "logs",
+        "show",
+        "ready"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:35:35": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:35:35",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 35,
+      "endLine": 35,
+      "source": "memory",
+      "snippet": "Assistant: Let me switch to Vercel — it's the native Next.js host and handles static files correctly:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "next.js",
+        "let",
+        "switch",
+        "vercel",
+        "it's",
+        "native",
+        "host",
+        "handles"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:36:36": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:36:36",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 36,
+      "endLine": 36,
+      "source": "memory",
+      "snippet": "Assistant: Let me try adding a pre-build cache destroy to force clean builds:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "pre-build",
+        "let",
+        "try",
+        "adding",
+        "pre",
+        "cache",
+        "destroy",
+        "force"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:37:37": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:37:37",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 37,
+      "endLine": 37,
+      "source": "memory",
+      "snippet": "Assistant: Actually, let me just remove the Dockerfile and let Railway use Nixpacks properly — no Docker caching:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "actually",
+        "let",
+        "remove",
+        "dockerfile",
+        "railway",
+        "use",
+        "nixpacks",
+        "properly"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:38:38": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:38:38",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 38,
+      "endLine": 38,
+      "source": "memory",
+      "snippet": "Assistant: New build is running (no Dockerfile = Nixpacks). Let me wait for it:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "new",
+        "running",
+        "dockerfile",
+        "nixpacks",
+        "let",
+        "wait"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-04.txt:1:1": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-04.txt:1:1",
+      "path": "memory/.dreams/session-corpus/2026-05-04.txt",
+      "startLine": 1,
+      "endLine": 1,
+      "source": "memory",
+      "snippet": "Assistant: ☀️ **Morning Digest — May 4, 2026** **Content published:** 1 post → *Why Your JSON Has `undefined`: How to Debug Invalid JSON in Any Language* — covers streaming bugs, BOM issues, cross-language gotchas (Python None, Go zero values, Rust serde). Cross-links json-format",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "4d9d9fab6a07"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "cross-language",
+        "cross-links",
+        "json-format",
+        "morning",
+        "digest",
+        "may",
+        "content",
+        "published"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-04.txt:2:2": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-04.txt:2:2",
+      "path": "memory/.dreams/session-corpus/2026-05-04.txt",
+      "startLine": 2,
+      "endLine": 2,
+      "source": "memory",
+      "snippet": "Assistant: **Tool ideas:** 8 new ideas queued. Top 3: 1. **JSON Diff** — compare two API responses; streaming JSON bugs confirm demand 2. **Regex Explainer** — add \"what does this regex mean?\" breakdown to existing regex-tester 3. **Base64 Charset Support** — UTF-16/UTF-32 encodi",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "4d9d9fab6a07"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "regex-tester",
+        "utf-16/utf-32",
+        "tool",
+        "ideas",
+        "new",
+        "queued",
+        "top",
+        "diff"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:39:39": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:39:39",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 39,
+      "endLine": 39,
+      "source": "memory",
+      "snippet": "Assistant: Railway is still using a cached image — no actual build happens. Let me check if Vercel is available:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "railway",
+        "still",
+        "cached",
+        "image",
+        "actual",
+        "happens",
+        "let",
+        "check"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:40:40": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:40:40",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 40,
+      "endLine": 40,
+      "source": "memory",
+      "snippet": "Assistant: Railway is completely broken for this use case — it refuses to rebuild. Let me try Cloudflare Pages instead:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "railway",
+        "completely",
+        "broken",
+        "use",
+        "case",
+        "refuses",
+        "rebuild",
+        "let"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:41:41": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:41:41",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 41,
+      "endLine": 41,
+      "source": "memory",
+      "snippet": "Assistant: Let me try deleting and recreating the Railway service to clear the cache:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "let",
+        "try",
+        "deleting",
+        "recreating",
+        "railway",
+        "service",
+        "clear",
+        "cache"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:42:42": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:42:42",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 42,
+      "endLine": 42,
+      "source": "memory",
+      "snippet": "Assistant: 🚨 **ToolBlip Frontend DOWN** **Site:** https://toolblip.com/ → HTTP 404 **Railway CLI:** Token expired (`invalid_grant`). Run `railway login` to restore. **Action needed:** Re-auth Railway CLI and redeploy.",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "toolblip.com",
+        "invalid-grant",
+        "re-auth",
+        "toolblip",
+        "frontend",
+        "down",
+        "site",
+        "https"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:43:43": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:43:43",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 43,
+      "endLine": 43,
+      "source": "memory",
+      "snippet": "Assistant: Service deleted! Now let me recreate it and connect to GitHub:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "service",
+        "deleted",
+        "now",
+        "let",
+        "recreate",
+        "connect",
+        "github"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:44:44": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:44:44",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 44,
+      "endLine": 44,
+      "source": "memory",
+      "snippet": "Assistant: Let me push a commit to trigger Railway's auto-deploy which should now target the new service:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "auto-deploy",
+        "let",
+        "push",
+        "commit",
+        "trigger",
+        "railway's",
+        "auto",
+        "which"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:45:45": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:45:45",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 45,
+      "endLine": 45,
+      "source": "memory",
+      "snippet": "Assistant: A FRESH build is running on the new service! Let me wait for it:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "fresh",
+        "running",
+        "new",
+        "service",
+        "let",
+        "wait"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:46:46": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:46:46",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 46,
+      "endLine": 46,
+      "source": "memory",
+      "snippet": "Assistant: Let me try disabling auto-deploy, waiting, then re-enabling to force a rebuild:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "auto-deploy",
+        "re-enabling",
+        "let",
+        "try",
+        "disabling",
+        "auto",
+        "waiting",
+        "enabling"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:47:47": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:47:47",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 47,
+      "endLine": 47,
+      "source": "memory",
+      "snippet": "Assistant: Let me check if the auto-deploy is actually working by looking at Railway's deployment trigger configuration:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "auto-deploy",
+        "let",
+        "check",
+        "auto",
+        "actually",
+        "working",
+        "looking",
+        "railway's"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:48:48": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:48:48",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 48,
+      "endLine": 48,
+      "source": "memory",
+      "snippet": "User: I turned it off, you can check and redeploy it via API",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "turned",
+        "off",
+        "can",
+        "check",
+        "redeploy",
+        "via",
+        "api"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:49:49": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:49:49",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 49,
+      "endLine": 49,
+      "source": "memory",
+      "snippet": "Assistant: The redeploy is still using cached image. Let me try a commit push to trigger a genuine new build:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "redeploy",
+        "still",
+        "cached",
+        "image",
+        "let",
+        "try",
+        "commit",
+        "push"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:50:50": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:50:50",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 50,
+      "endLine": 50,
+      "source": "memory",
+      "snippet": "Assistant: 🚨 *toolblip.com is DOWN* • HTTP Status: `404` • Railway status: Auth expired (invalid_grant — run `railway login`) • Cannot fetch Railway logs without re-auth. Site returning 404 since ~12:31 PM BDT. Railway login needs refreshing.",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-04",
+        "2026-05-03"
+      ],
+      "conceptTags": [
+        "toolblip.com",
+        "invalid-grant",
+        "re-auth",
+        "down",
+        "http",
+        "status",
+        "railway",
+        "auth"
       ]
     }
   }
