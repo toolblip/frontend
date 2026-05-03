@@ -468,7 +468,7 @@ export default function ApiDocsClient() {
     <div className="bg-slate-50 dark:bg-slate-950">
 
       {/* ── Hero ───────────────────────────────────────────────────── */}
-      <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+      <div id="overview" className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-start gap-4 mb-8">
             <div className="w-[52px] h-[52px] bg-[#58D65D] rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-green-200/50 dark:shadow-green-900/30">
