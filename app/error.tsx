@@ -32,10 +32,7 @@ export default function Error({
         <Link href="/" className="tb-v2-btn tb-v2-btn-primary">
           Go home
         </Link>
-        <button
-          onClick={reset}
-          className="tb-v2-btn"
-        >
+        <button onClick={reset} className="tb-v2-btn">
           Try again
         </button>
       </div>
