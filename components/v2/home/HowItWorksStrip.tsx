@@ -1,3 +1,5 @@
+'use client';
+
 interface Props {
   toolCount: number;
   categoryCount: number;
