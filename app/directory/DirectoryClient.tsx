@@ -1,25 +1,18 @@
 'use client';
 
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { tools } from '@/data/tools';
 import { getCategoryMeta } from '@/lib/v2/categoryMeta';
 import { IconArrowUR } from '@/components/v2/icons';
 
+const CATEGORIES = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS'] as const;
+type Category = typeof CATEGORIES[number];
+
 export default function DirectoryClient() {
   const [query, setQuery] = useState('');
-  const [activeCategory, setActiveCategory] = useState<string>('All');
+  const [activeCategory, setActiveCategory] = useState<Category>('All');
   const [showTopBtn, setShowTopBtn] = useState(false);
-  const bodyRef = useRef<HTMLDivElement>(null);
-
-  // Dynamically derive categories from tools data, sorted by tool count
-  const categories = useMemo(() => {
-    const counts: Record<string, number> = {};
-    for (const tool of tools) counts[tool.category] = (counts[tool.category] ?? 0) + 1;
-    return Object.entries(counts)
-      .sort(([, a], [, b]) => b - a)
-      .map(([name]) => name);
-  }, []);
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
@@ -40,7 +33,6 @@ export default function DirectoryClient() {
     setActiveCategory('All');
   };
 
-  // Scroll-to-top visibility
   useEffect(() => {
     const onScroll = () => setShowTopBtn(window.scrollY > 600);
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -51,9 +43,12 @@ export default function DirectoryClient() {
 
   const hasFilters = query || activeCategory !== 'All';
 
+  const catCount = (cat: string) =>
+    cat === 'All' ? tools.length : tools.filter((t) => t.category === cat).length;
+
   return (
     <>
-      {/* ── Header ── */}
+      {/* Header */}
       <div className="tb-v2-dir-header">
         <div className="tb-v2-container">
           <div className="tb-v2-kicker" style={{ marginBottom: 6 }}>
@@ -67,13 +62,13 @@ export default function DirectoryClient() {
         </div>
       </div>
 
-      {/* ── Sticky controls ── */}
+      {/* Sticky controls */}
       <div className="tb-v2-dir-controls">
         <div className="tb-v2-container">
-          {/* Search row */}
+          {/* Search */}
           <div className="tb-v2-dir-search-row">
             <div className="tb-v2-dir-search-wrap">
-              <svg className="tb-v2-dir-search-ic" viewBox="0 0 24 24">
+              <svg className="tb-v2-dir-search-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <circle cx="11" cy="11" r="8" />
                 <path d="m21 21-4.35-4.35" />
               </svg>
@@ -83,6 +78,7 @@ export default function DirectoryClient() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search tools by name, description, or category…"
+                aria-label="Search tools"
               />
               {query && (
                 <button
@@ -90,8 +86,8 @@ export default function DirectoryClient() {
                   onClick={() => setQuery('')}
                   aria-label="Clear search"
                 >
-                  <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
               )}
@@ -99,20 +95,16 @@ export default function DirectoryClient() {
           </div>
 
           {/* Category tabs */}
-          <div className="tb-v2-dir-tabs">
-            <button
-              className={`tb-v2-dir-tab${activeCategory === 'All' ? ' on' : ''}`}
-              onClick={() => setActiveCategory('All')}
-            >
-              All
-              <span className="tb-v2-dir-tab-count">{tools.length}</span>
-            </button>
-            {categories.map((cat) => {
-              const count = tools.filter((t) => t.category === cat).length;
+          <div className="tb-v2-dir-tabs" role="tablist" aria-label="Filter by category">
+            {CATEGORIES.map((cat) => {
+              const count = catCount(cat);
+              if (count === 0 && cat !== 'All') return null;
               const isActive = activeCategory === cat;
               return (
                 <button
                   key={cat}
+                  role="tab"
+                  aria-selected={isActive}
                   className={`tb-v2-dir-tab${isActive ? ' on' : ''}`}
                   onClick={() => setActiveCategory(cat)}
                 >
@@ -125,11 +117,11 @@ export default function DirectoryClient() {
         </div>
       </div>
 
-      {/* ── Results body ── */}
-      <div className="tb-v2-dir-body" ref={bodyRef}>
+      {/* Results */}
+      <div className="tb-v2-dir-body">
         <div className="tb-v2-container">
           {/* Count bar */}
-          {hasFilters && (
+          {hasFilters ? (
             <div className="tb-v2-dir-countbar">
               <p className="tb-v2-dir-count-text">
                 {filtered.length === 0 ? (
@@ -150,21 +142,18 @@ export default function DirectoryClient() {
               </p>
               <button className="tb-v2-dir-clear-btn" onClick={clearAll}>
                 Clear all
-                <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" />
+                <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
-          )}
-
-          {/* Always show count when no filters */}
-          {!hasFilters && (
-            <p style={{ fontSize: 13.5, color: 'var(--fg-2)', marginBottom: 20 }}>
+          ) : (
+            <p className="tb-v2-dir-count-text" style={{ fontSize: 13.5, color: 'var(--fg-2)', marginBottom: 20 }}>
               Showing <strong style={{ color: 'var(--fg-0)', fontWeight: 600 }}>{tools.length}</strong> tools
             </p>
           )}
 
-          {/* Tool grid */}
+          {/* Grid */}
           {filtered.length > 0 ? (
             <div className="tb-v2-dir-grid">
               {filtered.map((tool) => {
@@ -202,7 +191,7 @@ export default function DirectoryClient() {
             /* Empty state */
             <div className="tb-v2-dir-empty">
               <div className="tb-v2-dir-empty-icon">
-                <svg width="28" height="28" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                   <circle cx="11" cy="11" r="8" />
                   <path d="m21 21-4.35-4.35" />
                 </svg>
@@ -210,10 +199,10 @@ export default function DirectoryClient() {
               <h3 className="tb-v2-dir-empty-title">No tools found</h3>
               <p className="tb-v2-dir-empty-desc">
                 {query
-                  ? `No results for &ldquo;${query}&rdquo;${activeCategory === 'All' ? '' : ` in ${activeCategory}`}`
-                  : `No tools in the ${activeCategory} category yet`}
+                  ? <>No results for &ldquo;{query}&rdquo;{activeCategory === 'All' ? '' : ` in ${activeCategory}`}</>
+                  : <>No tools in the {activeCategory} category yet.</>}
               </p>
-              <button className="tb-v2-dir-clear-btn" onClick={clearAll} style={{ fontSize: 14 }}>
+              <button className="tb-v2-dir-clear-btn" onClick={clearAll} style={{ fontSize: 14, marginTop: 8 }}>
                 Clear all filters
               </button>
             </div>
@@ -227,8 +216,8 @@ export default function DirectoryClient() {
         onClick={scrollTop}
         aria-label="Scroll to top"
       >
-        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m18 15-6-6-6 6" />
+        <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="m18 15-6-6-6 6" />
         </svg>
       </button>
     </>
