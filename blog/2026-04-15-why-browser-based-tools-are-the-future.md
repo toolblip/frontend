@@ -34,7 +34,7 @@ This matters especially for developers handling proprietary code snippets, inter
 
 Local processing is fast. Not "fast for a web app" fast — genuinely fast. Base64-encoding a file, generating a hash, or prettifying JSON happens in milliseconds because there's no network round-trip, no server queue, no cold start.
 
-For developers who live in flow state, those seconds add up.打断一下 — it's not about saving time per se. It's about not breaking focus. A tool that responds instantly keeps you in the zone. Every time you switch context to wait for something to load, you're paying a cognitive tax.
+For developers who live in flow state, those seconds add up. It's not about saving time per se — it's about not breaking focus. A tool that responds instantly keeps you in the zone. Every time you switch context to wait for something to load, you're paying a cognitive tax.
 
 ## The Future Is Already Here
 
