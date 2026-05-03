@@ -37,15 +37,19 @@ export default function CategoryQuickAccess({ categories }: CategoryQuickAccessP
         .map(([name]) => name);
 
   return (
-    <section style={{ padding: '18px 0 6px' }}>
-      <div className="tb-v2-container" style={{ marginBottom: 8 }}>
-        <div style={{ textAlign: 'center', marginBottom: 6 }}>
-          <span className="tb-v2-kicker" style={{ fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase' }}>Browse by category</span>
+    <section style={{ padding: '20px 0 8px' }}>
+      <div className="tb-v2-container" style={{ marginBottom: 10 }}>
+        <div style={{ textAlign: 'center' }}>
+          <span
+            className="tb-v2-kicker"
+            style={{ fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase' }}
+          >
+            Browse by category
+          </span>
         </div>
       </div>
       <div className="tb-v2-container">
         <div
-          className="cat-pills-row"
           style={{
             display: 'flex',
             alignItems: 'center',
@@ -66,7 +70,7 @@ export default function CategoryQuickAccess({ categories }: CategoryQuickAccessP
                 }
               >
                 <span style={{ fontSize: 12 }}>{meta.icon}</span>
-                {name}
+                <span style={{ fontWeight: 600, fontSize: 13 }}>{name}</span>
                 <span className="cat-pill-count">{counts[name] ?? 0}</span>
               </Link>
             );
@@ -77,43 +81,44 @@ export default function CategoryQuickAccess({ categories }: CategoryQuickAccessP
         .category-pill {
           display: inline-flex;
           align-items: center;
-          gap: 5px;
-          padding: 5px 10px 5px 10px;
+          gap: 6px;
+          padding: 6px 12px 6px 10px;
           border-radius: 999px;
-          border: 1px solid var(--border);
-          background: var(--surface-1);
+          border: 1.5px solid var(--border);
+          background: var(--surface);
           color: var(--fg-1);
           font-size: 13px;
           font-weight: 500;
           text-decoration: none;
-          transition: border-color 0.12s, color 0.12s, transform 0.12s, box-shadow 0.12s;
+          transition: border-color 0.14s, color 0.14s, transform 0.14s, box-shadow 0.14s, background 0.14s;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
         .category-pill:hover {
           border-color: var(--pill-border);
           color: var(--pill-border);
-          transform: translateY(-1px);
-          box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+          background: var(--surface);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 14px rgba(0,0,0,0.10);
         }
         .cat-pill-count {
           font-size: 11px;
-          font-weight: 600;
+          font-weight: 700;
           background: var(--border);
           color: var(--fg-2);
           border-radius: 999;
-          padding: 1px 6px;
-          line-height: 1.5;
-          transition: background 0.12s, color 0.12s;
+          padding: 1px 7px;
+          line-height: 1.6;
+          transition: background 0.14s, color 0.14s;
         }
         .category-pill:hover .cat-pill-count {
           background: var(--pill-border);
           color: white;
         }
-        .cat-pills-row {
-          animation: cat-pills-in 0.4s ease-out both;
+        [data-theme="dark"] .category-pill {
+          box-shadow: 0 1px 4px rgba(0,0,0,0.25);
         }
-        @keyframes cat-pills-in {
-          from { opacity: 0; transform: translateY(6px); }
-          to   { opacity: 1; transform: translateY(0); }
+        [data-theme="dark"] .category-pill:hover {
+          box-shadow: 0 4px 16px rgba(0,0,0,0.4);
         }
       `}</style>
     </section>
