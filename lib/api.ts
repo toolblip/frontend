@@ -43,12 +43,6 @@ export async function getTool(slug: string) {
   return apiRequest<{ tool: Tool }>(`/api/tools/${slug}`);
 }
 
-// MCP Servers
-export async function getMcpServers(params?: { category?: string; page?: number }) {
-  const query = new URLSearchParams(params as Record<string, string>).toString();
-  return apiRequest<{ servers: { servers: McpServer[] } }>(`/api/mcp/servers${query ? `?${query}` : ''}`);
-}
-
 // Auth
 export async function login(email: string, password: string) {
   return apiRequest<{ user: User; token: string }>('/api/auth/login', {

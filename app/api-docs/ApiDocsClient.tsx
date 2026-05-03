@@ -217,7 +217,7 @@ const ENDPOINTS: Endpoint[] = [
     id: 'get-user',
     group: 'auth',
     method: 'GET',
-    path: '/api/auth/me',
+    path: '/api/auth/user',
     auth: true,
     title: 'Get authenticated user',
     description: 'Returns the profile of the currently authenticated user.',
@@ -227,7 +227,7 @@ const ENDPOINTS: Endpoint[] = [
       { field: 'user.email', type: 'string', description: 'Email address' },
       { field: 'user.is_pro', type: 'boolean', description: 'Pro subscription status' },
     ],
-    curl: `curl -X GET "${BASE_URL}/api/auth/me" \\
+    curl: `curl -X GET "${BASE_URL}/api/auth/user" \\
   -H "Authorization: Bearer {token}" \\
   -H "Accept: application/json"`,
     response: `{
