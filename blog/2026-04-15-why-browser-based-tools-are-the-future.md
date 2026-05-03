@@ -4,6 +4,7 @@ description: "Privacy, no-install convenience, and instant speed — browser-bas
 slug: "why-browser-based-tools-are-the-future"
 date: "2026-04-15T00:00:00.000Z"
 category: "Opinion"
+emoji: "🌐"
 tags:
   - "browser-tools"
   - "privacy"

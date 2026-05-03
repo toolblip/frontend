@@ -4,6 +4,7 @@ description: "JSON formatter, Base64 encoder, regex tester, cron parser, hash ge
 slug: "top-5-developer-tools-should-bookmark"
 date: "2026-04-15T00:00:00.000Z"
 category: "Developer Tools"
+emoji: "🔖"
 tags:
   - "developer-tools"
   - "productivity"

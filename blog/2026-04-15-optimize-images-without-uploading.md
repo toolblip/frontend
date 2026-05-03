@@ -4,6 +4,7 @@ description: "Crop, resize, and convert images entirely in your browser — no u
 slug: "optimize-images-without-uploading"
 date: "2026-04-15T00:00:00.000Z"
 category: "Developer Tools"
+emoji: "🖼️"
 tags:
   - "images"
   - "privacy"
