@@ -10,7 +10,7 @@ const benefits = [
     color: '#16a34a',
     bg: '#dcfce7',
     title: 'Private',
-    desc: 'Data never leaves your browser. Nothing uploaded, nothing stored, nothing transmitted.',
+    desc: 'Your data never leaves your browser. No uploads, no servers, nothing transmitted — ever.',
     glow: 'rgba(22, 163, 74, 0.12)',
   },
   {
@@ -22,7 +22,7 @@ const benefits = [
     color: '#d97706',
     bg: '#fef3c7',
     title: 'Fast',
-    desc: 'Runs instantly in your tab. No server round-trips, no loading spinners, no waiting around.',
+    desc: 'Runs instantly in your browser tab. No API calls, no loading spinners, no waiting around.',
     glow: 'rgba(217, 119, 6, 0.12)',
   },
   {
@@ -34,7 +34,7 @@ const benefits = [
     color: '#2563eb',
     bg: '#dbeafe',
     title: 'Free',
-    desc: 'No signup, no paywall. Every tool, every feature, every export — completely free forever.',
+    desc: 'No signup, no paywall. Every tool, every feature, every export — 100% free, always.',
     glow: 'rgba(37, 99, 235, 0.12)',
   },
 ];
@@ -54,7 +54,7 @@ export default function WhyToolblip() {
               color: 'var(--fg-0)',
             }}
           >
-            Simple tools that just work.
+            No nonsense. No paywall. Just working tools.
           </h2>
         </div>
 

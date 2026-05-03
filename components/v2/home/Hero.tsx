@@ -8,16 +8,15 @@ export default function Hero({ toolCount }: { toolCount: number }) {
       <div className="tb-v2-container">
         <div className="tb-v2-hero-grid">
           <div>
-            <div className="tb-v2-kicker">{toolCount} tools · free · in your browser</div>
+            <div className="tb-v2-kicker">{toolCount} tools · 100% free · runs in your browser</div>
             <h1>
-              A drawer of<br />
-              sharp little<br />
-              <em>instruments.</em>
+              The dev tools<br />
+              you actually<br />
+              <em>use every day.</em>
             </h1>
             <p className="tb-v2-hero-sub">
-              JSON formatters, QR generators, image resizers, regex testers - the
-              everyday utilities, rebuilt without the ads, dark patterns, or
-              upload-your-file-to-our-server routine.
+              JSON formatter, Base64, QR generator, word counter — rebuilt clean.
+              No signup. No tracking. No server round-trips. Just paste and go.
             </p>
             <div className="tb-v2-hero-cta">
               <Link href="/directory" className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg">
