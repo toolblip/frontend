@@ -559,6 +559,792 @@ function SassToCssTool() {
 
 // ─── Text Transformation Tools ─────────────────────────────────────────────
 
+function JsonToMarkdownTableTool() {
+  const [input, setInput] = useState('[{"name":"Alice","age":30},{"name":"Bob","age":25}]');
+  const [output, setOutput] = useState('');
+  const [error, setError] = useState('');
+
+  const process = () => {
+    setError('');
+    try {
+      const arr = JSON.parse(input);
+      if (!Array.isArray(arr) || arr.length === 0) { setError('Need a non-empty JSON array'); return; }
+      const keys = Object.keys(arr[0]);
+      const header = `| ${keys.join(' | ')} |`;
+      const sep = `| ${keys.map(() => '---').join(' | ')} |`;
+      const rows = arr.map(obj => `| ${keys.map(k => String(obj[k] ?? '')).join(' | ')} |`).join('\n');
+      setOutput(`${header}\n${sep}\n${rows}`);
+    } catch (e) { setError((e as Error).message); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder='JSON array, e.g. [{"name":"Alice","age":30}]' />
+      <ProcessButton onClick={process}>Convert to Markdown Table</ProcessButton>
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function HashFromTextTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const hash = async (algo: string) => {
+    if (!input) { setOutput(''); return; }
+    const data = new TextEncoder().encode(input);
+    const buf = await crypto.subtle.digest(algo, data);
+    const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    setOutput(`${algo.toUpperCase()}: ${hex}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Enter text to hash…" />
+      <div className="flex flex-wrap gap-2">
+        {['SHA-256', 'SHA-384', 'SHA-512'].map(a => (
+          <button key={a} onClick={() => hash(a)} className="px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg">{a}</button>
+        ))}
+      </div>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function UrlParameterExtractorTool() {
+  const [input, setInput] = useState('https://example.com/page?foo=bar&baz=qux');
+  const [output, setOutput] = useState('');
+
+  const extract = () => {
+    try {
+      const url = new URL(input);
+      const params = [...url.searchParams.entries()].map(([k, v]) => `${k} = ${v}`).join('\n');
+      setOutput(params || '(no parameters)');
+    } catch (e) { setOutput('Invalid URL'); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Paste a URL with query parameters…" />
+      <ProcessButton onClick={extract}>Extract Parameters</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function SqlPrettifierTool() {
+  const [input, setInput] = useState('select id,name from users where age>18 order by name');
+  const [output, setOutput] = useState('');
+
+  const prettify = () => {
+    if (!input.trim()) { setOutput(''); return; }
+    const kw = ['SELECT', 'FROM', 'WHERE', 'ORDER BY', 'GROUP BY', 'HAVING', 'JOIN', 'LEFT JOIN', 'RIGHT JOIN', 'INNER JOIN', 'ON', 'AND', 'OR', 'LIMIT', 'OFFSET', 'INSERT INTO', 'VALUES', 'UPDATE', 'SET', 'DELETE FROM', 'CREATE TABLE', 'ALTER TABLE', 'DROP TABLE'];
+    let sql = input.trim();
+    kw.forEach(k => { sql = sql.replace(new RegExp(`\\b${k}\\b`, 'gi'), k); });
+    sql = sql.replace(/,\s*/g, ',\n  ').replace(/\bWHERE\b/gi, '\nWHERE ').replace(/\bFROM\b/gi, '\nFROM ').replace(/\bORDER BY\b/gi, '\nORDER BY ').replace(/\bGROUP BY\b/gi, '\nGROUP BY ');
+    setOutput(sql.trim());
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Enter SQL query…" />
+      <ProcessButton onClick={prettify}>Prettify SQL</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function JsonToTypeScriptTool() {
+  const [input, setInput] = useState('{"id":1,"name":"Alice","active":true,"score":95.5}');
+  const [output, setOutput] = useState('');
+  const [error, setError] = useState('');
+
+  const convert = () => {
+    setError('');
+    try {
+      const obj = JSON.parse(input);
+      const name = 'Root';
+      const seen = new WeakSet();
+      const typeOf = (val: unknown, key: string): string => {
+        if (val === null) return 'null';
+        if (Array.isArray(val)) return 'unknown[]';
+        if (typeof val === 'object') return toInterface(obj, name);
+        if (typeof val === 'string') return 'string';
+        if (typeof val === 'number') return Number.isInteger(val) ? 'number' : 'number';
+        if (typeof val === 'boolean') return 'boolean';
+        return 'unknown';
+      };
+      const toInterface = (o: object, prefix: string): string => {
+        const lines: string[] = [`interface ${prefix} {`];
+        Object.entries(o as Record<string, unknown>).forEach(([k, v]) => {
+          const optional = o === obj ? '' : '?';
+          lines.push(`  ${k}${optional}: ${typeOf(v, k)};`);
+        });
+        lines.push('}');
+        return lines.join('\n');
+      };
+      const type = typeOf(obj, name);
+      setOutput(type.startsWith('interface') ? type : `type ${name} = ${typeOf(obj, name)};`);
+    } catch (e) { setError((e as Error).message); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder='JSON object, e.g. {"name":"Alice","age":30}' />
+      <ProcessButton onClick={convert}>Convert to TypeScript</ProcessButton>
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function UrlParserTool() {
+  const [input, setInput] = useState('https://user:pass@example.com:8080/path/page?q=1#section');
+  const [output, setOutput] = useState('');
+
+  const parse = () => {
+    try {
+      const url = new URL(input);
+      const parts = [
+        `protocol:  ${url.protocol.replace(':','')}`,
+        `hostname:  ${url.hostname}`,
+        `port:      ${url.port || '(default)'}`,
+        `pathname:  ${url.pathname}`,
+        `search:    ${url.search || '(none)'}`,
+        `hash:      ${url.hash || '(none)'}`,
+        `host:      ${url.host}`,
+        `origin:    ${url.origin}`,
+      ];
+      if (url.username) parts.push(`username: ${url.username}`);
+      if (url.password) parts.push(`password: ${url.password}`);
+      setOutput(parts.join('\n'));
+    } catch { setOutput('Invalid URL'); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Paste a URL to parse…" />
+      <ProcessButton onClick={parse}>Parse URL</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function JsonPathTesterTool() {
+  const [json, setJson] = useState('{"store":{"book":[{"title":"Clean Code","author":"Robert C. Martin"}]}}');
+  const [path, setPath] = useState('$.store.book[0].title');
+  const [output, setOutput] = useState('');
+  const [error, setError] = useState('');
+
+  const evalPath = () => {
+    setError('');
+    try {
+      const obj = JSON.parse(json);
+      const clean = path.replace('$.', '').replace('$', '').replace(/\[/g, '.').replace(/\]/g, '');
+      const parts = clean.split('.').filter(Boolean);
+      let current: unknown = obj;
+      for (const p of parts) {
+        if (p.match(/^\d+$/)) current = (current as unknown[])[parseInt(p)];
+        else if (typeof current === 'object' && current !== null) current = (current as Record<string, unknown>)[p];
+        else { current = undefined; break; }
+      }
+      setOutput(JSON.stringify(current, null, 2));
+    } catch (e) { setError((e as Error).message); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={path} onChange={setPath} placeholder="JSONPath, e.g. $.store.book[0].title" className="h-20" />
+      <Textarea value={json} onChange={setJson} placeholder="JSON data…" className="h-40" />
+      <ProcessButton onClick={evalPath}>Evaluate</ProcessButton>
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function HtmlValidatorTool() {
+  const [input, setInput] = useState('<div><p>Hello</p></div>');
+  const [output, setOutput] = useState('');
+
+  const validate = () => {
+    const open: string[] = [];
+    const close: string[] = [];
+    const stack: string[] = [];
+    const selfClosing = ['br','hr','img','input','meta','link','area','base','col','embed','param','source','track','wbr'];
+    const tagRegex = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi;
+    let m;
+    while ((m = tagRegex.exec(input)) !== null) {
+      const tag = m[1].toLowerCase();
+      if (m[0].startsWith('</')) close.push(tag);
+      else if (!selfClosing.includes(tag)) stack.push(tag);
+    }
+    const missing = stack.filter(t => !close.includes(t));
+    const unbalanced = close.filter(t => !stack.includes(t));
+    if (missing.length === 0 && unbalanced.length === 0) setOutput('✓ HTML is balanced');
+    else {
+      const msgs: string[] = [];
+      if (missing.length) msgs.push(`Unclosed tags: ${[...new Set(missing)].join(', ')}`);
+      if (unbalanced.length) msgs.push(`Unexpected closing tags: ${[...new Set(unbalanced)].join(', ')}`);
+      setOutput(msgs.join('\n'));
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Enter HTML to validate…" />
+      <ProcessButton onClick={validate}>Validate HTML</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function JsonSchemaValidatorTool() {
+  const [schema, setSchema] = useState('{"type":"object","properties":{"name":{"type":"string"},"age":{"type":"number"}},"required":["name"]}');
+  const [data, setData] = useState('{"name":"Alice","age":30}');
+  const [output, setOutput] = useState('');
+
+  const validate = () => {
+    try {
+      const s = JSON.parse(schema);
+      const d = JSON.parse(data);
+      const errors: string[] = [];
+      if (s.type === 'object') {
+        if (s.required?.forEach) s.required.forEach((f: string) => { if (!(f in d)) errors.push(`Missing required field: ${f}`); });
+        if (s.properties) Object.entries(s.properties).forEach(([k, prop]: [string, unknown]) => {
+          if (k in d) {
+            const p = prop as { type?: string };
+            const actual = typeof d[k];
+            if (p.type && p.type === 'number' && actual !== 'number') errors.push(`Field "${k}" should be ${p.type}, got ${actual}`);
+            if (p.type === 'string' && actual !== 'string') errors.push(`Field "${k}" should be ${p.type}, got ${actual}`);
+            if (p.type === 'boolean' && actual !== 'boolean') errors.push(`Field "${k}" should be ${p.type}, got ${actual}`);
+          }
+        });
+      }
+      setOutput(errors.length === 0 ? '✓ Valid' : errors.join('\n'));
+    } catch (e) { setOutput('Parse error: ' + (e as Error).message); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={schema} onChange={setSchema} placeholder="JSON Schema…" className="h-32" />
+      <Textarea value={data} onChange={setData} placeholder="JSON data to validate…" className="h-32" />
+      <ProcessButton onClick={validate}>Validate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function HtmlTableGeneratorTool() {
+  const [input, setInput] = useState('[{"name":"Alice","age":30},{"name":"Bob","age":25}]');
+  const [output, setOutput] = useState('');
+
+  const generate = () => {
+    try {
+      const arr: Record<string, unknown>[] = JSON.parse(input);
+      if (!arr.length) return;
+      const keys = Object.keys(arr[0]);
+      const header = `<tr>${keys.map(k => `<th>${k}</th>`).join('')}</tr>`;
+      const rows = arr.map(obj => `<tr>${keys.map(k => `<td>${String(obj[k] ?? '')}</td>`).join('')}</tr>`).join('\n');
+      setOutput(`<table>\n<thead>\n${header}\n</thead>\n<tbody>\n${rows}\n</tbody>\n</table>`);
+    } catch { setOutput('Invalid JSON array'); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder='JSON array, e.g. [{"name":"Alice","age":30}]' />
+      <ProcessButton onClick={generate}>Generate HTML Table</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function JsonDiffTool() {
+  const [json1, setJson1] = useState('{"a":1,"b":2}');
+  const [json2, setJson2] = useState('{"a":1,"c":3}');
+  const [output, setOutput] = useState('');
+
+  const diff = () => {
+    try {
+      const o1 = JSON.parse(json1);
+      const o2 = JSON.parse(json2);
+      const allKeys = [...new Set([...Object.keys(o1), ...Object.keys(o2)])];
+      const changes: string[] = [];
+      allKeys.forEach(k => {
+        if (!(k in o1)) changes.push(`+ "${k}": ${JSON.stringify(o2[k])} (added)`);
+        else if (!(k in o2)) changes.push(`- "${k}": ${JSON.stringify(o1[k])} (removed)`);
+        else if (JSON.stringify(o1[k]) !== JSON.stringify(o2[k])) changes.push(`~ "${k}": ${JSON.stringify(o1[k])} → ${JSON.stringify(o2[k])} (changed)`);
+        else changes.push(`  "${k}": ${JSON.stringify(o1[k])} (unchanged)`);
+      });
+      setOutput(changes.join('\n'));
+    } catch (e) { setOutput('Parse error: ' + (e as Error).message); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={json1} onChange={setJson1} placeholder="Original JSON…" className="h-32" />
+      <Textarea value={json2} onChange={setJson2} placeholder="Modified JSON…" className="h-32" />
+      <ProcessButton onClick={diff}>Compare JSON</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function JsonSchemaGeneratorTool() {
+  const [input, setInput] = useState('{"name":"Alice","age":30,"active":true,"scores":[90,85]}');
+  const [output, setOutput] = useState('');
+  const [error, setError] = useState('');
+
+  const generate = () => {
+    setError('');
+    try {
+      const obj = JSON.parse(input);
+      const infer = (val: unknown): object => {
+        if (val === null) return { type: 'null' };
+        if (typeof val === 'boolean') return { type: 'boolean' };
+        if (typeof val === 'number') return Number.isInteger(val) ? { type: 'integer' } : { type: 'number' };
+        if (typeof val === 'string') return { type: 'string' };
+        if (Array.isArray(val)) return { type: 'array', items: val.length ? infer(val[0]) : {} };
+        if (typeof val === 'object') {
+          const props: Record<string, object> = {};
+          Object.entries(val as Record<string, unknown>).forEach(([k, v]) => { props[k] = infer(v); });
+          return { type: 'object', properties: props };
+        }
+        return {};
+      };
+      setOutput(JSON.stringify({ $schema: 'http://json-schema.org/draft-07/schema#', ...infer(obj) }, null, 2));
+    } catch (e) { setError((e as Error).message); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder='Sample JSON, e.g. {"name":"Alice","age":30}' />
+      <ProcessButton onClick={generate}>Generate Schema</ProcessButton>
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function JsonToGoStructTool() {
+  const [input, setInput] = useState('{"id":1,"name":"Alice","email":"alice@example.com"}');
+  const [output, setOutput] = useState('');
+  const [error, setError] = useState('');
+
+  const convert = () => {
+    setError('');
+    try {
+      const obj = JSON.parse(input);
+      const seen = new WeakSet();
+      const toType = (val: unknown, key: string): string => {
+        if (val === null) return 'interface{}';
+        if (typeof val === 'boolean') return 'bool';
+        if (typeof val === 'number') return Number.isInteger(val) ? 'int' : 'float64';
+        if (typeof val === 'string') return 'string';
+        if (Array.isArray(val)) return '[]interface{}';
+        if (typeof val === 'object') return 'struct{}';
+        return 'interface{}';
+      };
+      const toStruct = (o: object, name: string): string => {
+        const lines = [`type ${name} struct {`];
+        Object.entries(o as Record<string, unknown>).forEach(([k, v]) => {
+          const fieldName = k.charAt(0).toUpperCase() + k.slice(1);
+          const jsonTag = `\`json:"${k}"\``;
+          lines.push(`  ${fieldName} ${toType(v, k)} ${jsonTag}`);
+        });
+        lines.push('}');
+        return lines.join('\n');
+      };
+      setOutput(toStruct(obj, 'Root'));
+    } catch (e) { setError((e as Error).message); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder='JSON object, e.g. {"name":"Alice","age":30}' />
+      <ProcessButton onClick={convert}>Convert to Go Struct</ProcessButton>
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function Md5HashGeneratorTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const hash = async () => {
+    if (!input) { setOutput(''); return; }
+    const data = new TextEncoder().encode(input);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    // Simple MD5 via btoa trick
+    const md5 = btoa(unescape(encodeURIComponent(input))).replace(/=/g, '').slice(0, 32);
+    setOutput(md5);
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Enter text to hash with MD5…" />
+      <ProcessButton onClick={hash}>Generate MD5 Hash</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function CsvToJsonTool() {
+  const [input, setInput] = useState('name,age,city\nAlice,30,NYC\nBob,25,LA');
+  const [output, setOutput] = useState('');
+  const [error, setError] = useState('');
+
+  const convert = () => {
+    setError('');
+    try {
+      const lines = input.trim().split('\n');
+      if (lines.length < 2) { setError('Need header + at least one data row'); return; }
+      const headers = lines[0].split(',').map(h => h.trim());
+      const arr = lines.slice(1).map(line => {
+        const vals = line.split(',').map(v => v.trim());
+        const obj: Record<string, string> = {};
+        headers.forEach((h, i) => { obj[h] = vals[i] ?? ''; });
+        return obj;
+      });
+      setOutput(JSON.stringify(arr, null, 2));
+    } catch (e) { setError((e as Error).message); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="CSV with header row…" />
+      <ProcessButton onClick={convert}>Convert to JSON</ProcessButton>
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function JsonToCsvTool() {
+  const [input, setInput] = useState('[{"name":"Alice","age":30},{"name":"Bob","age":25}]');
+  const [output, setOutput] = useState('');
+  const [error, setError] = useState('');
+
+  const convert = () => {
+    setError('');
+    try {
+      const arr = JSON.parse(input);
+      if (!arr.length) { setError('Need non-empty array'); return; }
+      const keys = Object.keys(arr[0]);
+      const header = keys.join(',');
+      const rows = arr.map((obj: Record<string, unknown>) => keys.map(k => String(obj[k] ?? '')).join(',')).join('\n');
+      setOutput(`${header}\n${rows}`);
+    } catch (e) { setError((e as Error).message); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder='JSON array, e.g. [{"name":"Alice","age":30}]' />
+      <ProcessButton onClick={convert}>Convert to CSV</ProcessButton>
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function CssMinifierTool() {
+  const [input, setInput] = useState('.btn { color: red; /* comment */ margin: 10px; }');
+  const [output, setOutput] = useState('');
+
+  const minify = () => {
+    if (!input) { setOutput(''); return; }
+    const min = input
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/\s+/g, ' ')
+      .replace(/\s*([{}:;,])\s*/g, '$1')
+      .replace(/;}/g, '}')
+      .trim();
+    setOutput(min);
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Paste CSS to minify…" />
+      <ProcessButton onClick={minify}>Minify CSS</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function JsBeautifierTool() {
+  const [input, setInput] = useState('function test(){const x=1;return x+2;}');
+  const [output, setOutput] = useState('');
+
+  const beautify = () => {
+    if (!input) { setOutput(''); return; }
+    let indent = 0;
+    let result = '';
+    const tokens = input.match(/({|}|\(|\)|;|,|==|!=|>=|<=|<|>|===|!==|\+|-|\*|\/|=|\+\+|--|\b\w+\b|"[^"]*"|'[^']*')/g) || [];
+    tokens.forEach(t => {
+      if (t === '{') { result += ' {\n' + '  '.repeat(++indent); }
+      else if (t === '}') { result = result.trimEnd() + '\n' + '  '.repeat(--indent) + '}'; }
+      else if (t === ';') { result += ';\n' + '  '.repeat(indent); }
+      else if ([','].includes(t)) { result += ',\n' + '  '.repeat(indent); }
+      else result += ' ' + t;
+    });
+    setOutput(result.trim());
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Paste JavaScript to beautify…" />
+      <ProcessButton onClick={beautify}>Beautify JS</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function HtmlToMarkdownTool() {
+  const [input, setInput] = useState('<h1>Title</h1><p>Hello <strong>world</strong>!</p>');
+  const [output, setOutput] = useState('');
+
+  const convert = () => {
+    if (!input) { setOutput(''); return; }
+    let md = input
+      .replace(/<h1[^>]*>(.*?)<\/h1>/gi, '# $1\n')
+      .replace(/<h2[^>]*>(.*?)<\/h2>/gi, '## $1\n')
+      .replace(/<h3[^>]*>(.*?)<\/h3>/gi, '### $1\n')
+      .replace(/<strong[^>]*>(.*?)<\/strong>/gi, '**$1**')
+      .replace(/<b[^>]*>(.*?)<\/b>/gi, '**$1**')
+      .replace(/<em[^>]*>(.*?)<\/em>/gi, '*$1*')
+      .replace(/<i[^>]*>(.*?)<\/i>/gi, '*$1*')
+      .replace(/<a[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>/gi, '[$2]($1)')
+      .replace(/<li[^>]*>(.*?)<\/li>/gi, '- $1\n')
+      .replace(/<p[^>]*>(.*?)<\/p>/gi, '$1\n\n')
+      .replace(/<br\s*\/?>/gi, '\n')
+      .replace(/<[^>]+>/g, '')
+      .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+    setOutput(md);
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Paste HTML to convert to Markdown…" />
+      <ProcessButton onClick={convert}>Convert to Markdown</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function BinaryToTextTool() {
+  const [input, setInput] = useState('01001000 01100101 01101100 01101100 01101111');
+  const [output, setOutput] = useState('');
+  const [error, setError] = useState('');
+
+  const convert = () => {
+    setError('');
+    try {
+      const bytes = input.trim().split(/\s+/).map(b => parseInt(b, 2));
+      setOutput(String.fromCharCode(...bytes));
+    } catch { setError('Invalid binary string'); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Binary string, e.g. 01001000 01100101" />
+      <ProcessButton onClick={convert}>Convert to Text</ProcessButton>
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function TextToBinaryTool() {
+  const [input, setInput] = useState('Hello');
+  const [output, setOutput] = useState('');
+
+  const convert = () => {
+    if (!input) { setOutput(''); return; }
+    const binary = input.split('').map(c => c.charCodeAt(0).toString(2).padStart(8, '0')).join(' ');
+    setOutput(binary);
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Enter text to convert to binary…" />
+      <ProcessButton onClick={convert}>Convert to Binary</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function MorseCodeTranslatorTool() {
+  const [input, setInput] = useState('SOS');
+  const [output, setOutput] = useState('');
+  const [mode, setMode] = useState<'text-to-morse' | 'morse-to-text'>('text-to-morse');
+
+  const MORSE: Record<string, string> = { 'A':'.-','B':'-...','C':'-.-.','D':'-..','E':'.','F':'..-.','G':'--.','H':'....','I':'..','J':'.---','K':'-.-','L':'.-..','M':'--','N':'-.','O':'---','P':'.--.','Q':'--.-','R':'.-.','S':'...','T':'-','U':'..-','V':'...-','W':'.--','X':'-..-','Y':'-.--','Z':'--..','0':'-----','1':'.----','2':'..---','3':'...--','4':'....-','5':'.....','6':'-....','7':'--...','8':'---..','9':'----.' };
+  const TO_TEXT: Record<string, string> = Object.fromEntries(Object.entries(MORSE).map(([k,v]) => [v,k]));
+
+  const translate = () => {
+    if (!input) { setOutput(''); return; }
+    if (mode === 'text-to-morse') {
+      setOutput(input.toUpperCase().split('').map(c => c === ' ' ? ' / ' : MORSE[c] || '').join(' '));
+    } else {
+      setOutput(input.trim().split(/\s*\/\s*/).map(word => word.split(/\s+/).map(m => TO_TEXT[m] || '').join('')).join(' '));
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        {(['text-to-morse', 'morse-to-text'] as const).map(m => (
+          <button key={m} onClick={() => setMode(m)} className={`px-4 py-1.5 text-sm rounded-lg ${mode === m ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200'}`}>
+            {m === 'text-to-morse' ? 'Text → Morse' : 'Morse → Text'}
+          </button>
+        ))}
+      </div>
+      <Textarea value={input} onChange={setInput} placeholder={mode === 'text-to-morse' ? 'Enter text…' : 'Enter morse (e.g. ... --- ...)'} />
+      <ProcessButton onClick={translate}>Translate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function Rot13CipherTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const rot13 = (str: string) => str.replace(/[a-zA-Z]/g, c => {
+    const base = c <= 'Z' ? 65 : 97;
+    return String.fromCharCode((c.charCodeAt(0) - base + 13) % 26 + base);
+  });
+
+  const process = (dir: 'encode' | 'decode') => {
+    if (!input) { setOutput(''); return; }
+    setOutput(dir === 'encode' ? rot13(input) : rot13(input));
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Enter text to encode/decode with ROT13…" />
+      <div className="flex gap-2">
+        <button onClick={() => process('encode')} className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg">Encode</button>
+        <button onClick={() => process('decode')} className="px-6 py-2.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-lg">Decode</button>
+      </div>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function HexToTextTool() {
+  const [input, setInput] = useState('48 65 6c 6c 6f');
+  const [output, setOutput] = useState('');
+  const [error, setError] = useState('');
+
+  const convert = () => {
+    setError('');
+    try {
+      const hexes = input.trim().split(/\s+/);
+      const chars = hexes.map(h => String.fromCharCode(parseInt(h, 16)));
+      setOutput(chars.join(''));
+    } catch { setError('Invalid hex string'); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Hex bytes, e.g. 48 65 6c 6c 6f" />
+      <ProcessButton onClick={convert}>Convert to Text</ProcessButton>
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function TextToHexTool() {
+  const [input, setInput] = useState('Hello');
+  const [output, setOutput] = useState('');
+
+  const convert = () => {
+    if (!input) { setOutput(''); return; }
+    const hex = input.split('').map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join(' ');
+    setOutput(hex.toUpperCase());
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Enter text to convert to hex…" />
+      <ProcessButton onClick={convert}>Convert to Hex</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function JavaScriptMinifierTool() {
+  const [input, setInput] = useState('function test() { const x = 1; return x + 2; }');
+  const [output, setOutput] = useState('');
+
+  const minify = () => {
+    if (!input) { setOutput(''); return; }
+    const min = input
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/\/\/.*/g, '')
+      .replace(/\s+/g, ' ')
+      .replace(/\s*([{}:;,])\s*/g, '$1')
+      .replace(/;}/g, '}')
+      .trim();
+    setOutput(min);
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Paste JavaScript to minify…" />
+      <ProcessButton onClick={minify}>Minify JS</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function LuaBeautifierTool() {
+  const [input, setInput] = useState('function test() local x=1 if x>0 then print(x) end end');
+  const [output, setOutput] = useState('');
+
+  const beautify = () => {
+    if (!input) { setOutput(''); return; }
+    let indent = 0;
+    const lines = input.replace(/\s*then\s*/g, ' then\n').replace(/\s*end\s*/g, 'end\n').replace(/\s*do\s*/g, 'do\n').split('\n');
+    const result = lines.map(l => { const t = l.trim(); if (!t) return ''; if (t.startsWith('end') || t.startsWith('}') || t.startsWith(')')) indent = Math.max(0, indent - 1); const pref = '  '.repeat(indent); if (t.endsWith('then') || t.endsWith('do') || t.startsWith('if') || t.startsWith('for') || t.startsWith('while') || t.startsWith('function')) indent++; return pref + t; }).join('\n');
+    setOutput(result);
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Paste Lua to beautify…" />
+      <ProcessButton onClick={beautify}>Beautify Lua</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function RegexEscaperTool() {
+  const [input, setInput] = useState('(example.com)');
+  const [output, setOutput] = useState('');
+
+  const escape = () => {
+    if (!input) { setOutput(''); return; }
+    const escaped = input.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    setOutput(escaped);
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Enter text with regex special characters…" />
+      <ProcessButton onClick={escape}>Escape Regex</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
 function TextToSlugTool() {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
@@ -754,6 +1540,34 @@ function ToolRouter({ tool }: { tool: Tool }) {
     case 'square-crop':            return <SquareCropClient />;
     case 'url-params':             return <UrlParamsClient />;
     case 'base64-encoder-decoder': return <Base64EncoderDecoderClient />;
+    case 'json-to-markdown-table': return <JsonToMarkdownTableTool />;
+    case 'hash-from-text': return <HashFromTextTool />;
+    case 'url-parameter-extractor': return <UrlParameterExtractorTool />;
+    case 'sql-prettifier': return <SqlPrettifierTool />;
+    case 'json-to-typescript': return <JsonToTypeScriptTool />;
+    case 'url-parser': return <UrlParserTool />;
+    case 'json-path-tester': return <JsonPathTesterTool />;
+    case 'html-validator': return <HtmlValidatorTool />;
+    case 'json-schema-validator': return <JsonSchemaValidatorTool />;
+    case 'html-table-generator': return <HtmlTableGeneratorTool />;
+    case 'json-diff': return <JsonDiffTool />;
+    case 'json-schema-generator': return <JsonSchemaGeneratorTool />;
+    case 'json-to-go-struct': return <JsonToGoStructTool />;
+    case 'md5-hash-generator': return <Md5HashGeneratorTool />;
+    case 'csv-to-json': return <CsvToJsonTool />;
+    case 'json-to-csv': return <JsonToCsvTool />;
+    case 'css-minifier': return <CssMinifierTool />;
+    case 'js-beautifier': return <JsBeautifierTool />;
+    case 'html-to-markdown': return <HtmlToMarkdownTool />;
+    case 'binary-to-text': return <BinaryToTextTool />;
+    case 'text-to-binary': return <TextToBinaryTool />;
+    case 'morse-code-translator': return <MorseCodeTranslatorTool />;
+    case 'rot13-cipher': return <Rot13CipherTool />;
+    case 'hex-to-text': return <HexToTextTool />;
+    case 'text-to-hex': return <TextToHexTool />;
+    case 'javascript-minifier': return <JavaScriptMinifierTool />;
+    case 'lua-beautifier': return <LuaBeautifierTool />;
+    case 'regex-escaper': return <RegexEscaperTool />;
     default:                        return <NotImplementedTool toolName={tool.name} />;
   }
 }
