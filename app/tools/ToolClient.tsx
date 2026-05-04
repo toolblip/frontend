@@ -12,6 +12,7 @@ import CaseConverterClient from '@/components/tools/CaseConverterClient';
 import Base64Client from '@/components/tools/Base64Client';
 import UrlEncodeClient from '@/components/tools/UrlEncodeClient';
 import JsonFormatterClient from '@/components/tools/JsonFormatterClient';
+import NotebookToHtmlClient from '@/components/tools/NotebookToHtmlClient';
 
 // ─── Coming Soon placeholder ────────────────────────────────────────────────
 function ComingSoonPlaceholder({ tool }: { tool: Tool }) {
@@ -58,6 +59,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
       return <UrlEncodeClient />;
     case 'json-formatter':
       return <JsonFormatterClient />;
+    case 'notebook-to-html':
+      return <NotebookToHtmlClient />;
     default:
       return <ComingSoonPlaceholder tool={tool} />;
   }

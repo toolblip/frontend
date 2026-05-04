@@ -45,6 +45,7 @@ import GrammarCheckerClient from '@/components/tools/GrammarCheckerClient';
 import FaviconGeneratorClient from '@/components/tools/FaviconGeneratorClient';
 import CssGradientGeneratorClient from '@/components/tools/CssGradientGeneratorClient';
 import CssBorderRadiusGeneratorClient from '@/components/tools/CssBorderRadiusGeneratorClient';
+import SassToCssClient from '@/components/tools/SassToCssClient';
 import CronParserClient from '@/components/tools/CronParserClient';
 import CronGeneratorClient from '@/components/tools/CronGeneratorClient';
 import CreditCardValidatorClient from '@/components/tools/CreditCardValidatorClient';
@@ -52,6 +53,7 @@ import ContrastCheckerClient from '@/components/tools/ContrastCheckerClient';
 import ColorPickerClient from '@/components/tools/ColorPickerClient';
 import CircleCropClient from '@/components/tools/CircleCropClient';
 import CharacterCounterClient from '@/components/tools/CharacterCounterClient';
+import OxfordCommaClient from '@/components/tools/OxfordCommaClient';
 
 // ─── Individual tool UIs ────────────────────────────────────────────────────
 
@@ -438,6 +440,8 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <SqlToJsonClient />;
     case 'serp-preview':
       return <SerpPreviewClient />;
+    case 'sass-to-css':
+      return <SassToCssClient />;
     case 'screen-resolution-tester':
       return <ScreenResolutionTesterClient />;
     case 'remove-duplicate-lines':
@@ -456,6 +460,8 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <PasswordGeneratorClient />;
     case 'number-base-converter':
       return <NumberBaseConverterClient />;
+    case 'oxford-comma':
+      return <OxfordCommaClient />;
     case 'meta-tag-generator':
       return <MetaTagGeneratorClient />;
     case 'markdown-to-html':
