@@ -1,7 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import type { Metadata } from 'next';
 import { tools } from '@/data/tools';
-import ToolDetailClient from './ToolDetailClient';
+import ToolClient from './ToolClient';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -37,5 +37,5 @@ export default async function ToolDetailPage({ params }: PageProps) {
   if (REDIRECTS[slug]) redirect(`/tools/${REDIRECTS[slug]}`);
   const tool = tools.find(t => t.slug === slug);
   if (!tool) notFound();
-  return <ToolDetailClient tool={tool} />;
+  return <ToolClient tool={tool} />;
 }
