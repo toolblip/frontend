@@ -105,8 +105,6 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <CharacterCounterClient />;
     case 'case-converter':
       return <CaseConverterClient />;
-    case 'base64':
-      return <Base64EncoderDecoderClient />;
     case 'base64-image-converter':
       return <Base64ImageEncoderClient />;
     case 'url-encode':
