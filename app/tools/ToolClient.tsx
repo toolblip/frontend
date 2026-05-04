@@ -63,6 +63,7 @@ import UuidGeneratorClient from '@/components/tools/UuidGeneratorClient';
 import XmlFormatterClient from '@/components/tools/XmlFormatterClient';
 import XmlToJsonClient from '@/components/tools/XmlToJsonClient';
 import YamlToJsonClient from '@/components/tools/YamlToJsonClient';
+import RegexTesterClient from '@/components/tools/RegexTesterClient';
 
 // ─── Coming Soon placeholder ────────────────────────────────────────────────
 function ComingSoonPlaceholder({ tool }: { tool: Tool }) {
@@ -177,6 +178,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
       return <RandomStringClient />;
     case 'readability-score':
       return <ReadabilityScoreClient />;
+    case 'regex-tester':
+      return <RegexTesterClient />;
     case 'remove-duplicate-lines':
       return <RemoveDuplicateLinesClient />;
     case 'rgb-to-hex':
