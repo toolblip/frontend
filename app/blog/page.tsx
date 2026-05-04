@@ -28,6 +28,7 @@ interface Post {
   author: string;
   readingTime: string;
   featuredImage?: string;
+  emoji?: string;
 }
 
 function getPosts(): Post[] {
@@ -49,6 +50,7 @@ function getPosts(): Post[] {
         author: (data.author as string) || 'Toolblip Team',
         readingTime: (data.readingTime as string) || '5 min read',
         featuredImage: data.featuredImage as string | undefined,
+        emoji: (data.emoji as string) || undefined,
       };
     })
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -104,7 +106,7 @@ export default function BlogPage() {
                       </time>
                     </div>
                     <Link href={`/blog/${post.slug}`}>
-                      <h2 className="tb-v2-blog-card-title">{post.title}</h2>
+                      <h2 className="tb-v2-blog-card-title">{post.emoji ? `${post.emoji} ${post.title}` : post.title}</h2>
                     </Link>
                     <p className="tb-v2-blog-card-desc">{post.description}</p>
                     <div className="tb-v2-blog-card-tags">
