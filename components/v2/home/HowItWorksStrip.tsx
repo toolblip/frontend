@@ -204,17 +204,9 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
           box-shadow: 0 4px 16px rgba(0,0,0,0.12);
         }
 
-        .privacy-badge {
-          animation: privacy-pulse 4s ease-in-out infinite;
-        }
         .privacy-badge:hover {
           transform: translateY(-2px);
           box-shadow: 0 4px 16px rgba(22, 163, 74, 0.18);
-        }
-
-        @keyframes privacy-pulse {
-          0%, 100% { box-shadow: 0 0 0 0 rgba(22, 197, 94, 0.18); }
-          50%       { box-shadow: 0 0 0 6px rgba(22, 197, 94, 0); }
         }
       `}</style>
     </section>
