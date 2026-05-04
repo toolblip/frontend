@@ -5,22 +5,22 @@ import { useState, useMemo } from 'react';
 const pinyinMap: Record<string, string> = {
   '一': 'yi', '二': 'er', '三': 'san', '四': 'si', '五': 'wu', '六': 'liu', '七': 'qi', '八': 'ba', '九': 'jiu', '十': 'shi',
   '百': 'bai', '千': 'qian', '万': 'wan', '亿': 'yi',
-  '零': 'ling', '一': 'yi', '两': 'liang',
+  '零': 'ling', '两': 'liang',
   '大': 'da', '小': 'xiao', '中': 'zhong', '国': 'guo', '人': 'ren', '我': 'wo', '你': 'ni', '他': 'ta', '她': 'ta', '它': 'ta',
   '是': 'shi', '不': 'bu', '了': 'le', '在': 'zai', '有': 'you', '和': 'he', '与': 'yu', '的': 'de', '地': 'di', '得': 'de',
   '这': 'zhe', '那': 'na', '个': 'ge', '们': 'men', '来': 'lai', '去': 'qu', '会': 'hui', '能': 'neng', '为': 'wei',
   '年': 'nian', '月': 'yue', '日': 'ri', '时': 'shi', '分': 'fen', '秒': 'miao',
   '好': 'hao', '很': 'hen', '都': 'dou', '说': 'shuo', '看': 'kan', '想': 'xiang', '知': 'zhi', '道': 'dao',
-  '爱': 'ai', '心': 'xin', '天': 'tian', '地': 'di', '山': 'shan', '水': 'shui', '火': 'huo', '木': 'mu', '金': 'jin', '土': 'tu',
+  '爱': 'ai', '心': 'xin', '天': 'tian', '气': 'qi', '雨': 'yu', '雪': 'xue', '风': 'feng', '云': 'yun',
+  '山': 'shan', '水': 'shui', '火': 'huo', '木': 'mu', '金': 'jin', '土': 'tu',
   '东': 'dong', '西': 'xi', '南': 'nan', '北': 'bei', '左': 'zuo', '右': 'you',
   '上': 'shang', '下': 'xia', '前': 'qian', '后': 'hou', '里': 'li', '外': 'wai',
-  '开': 'kai', '关': 'guan', '来': 'lai', '去': 'qu', '进': 'jin', '出': 'chu',
+  '开': 'kai', '关': 'guan', '进': 'jin', '出': 'chu',
   '学': 'xue', '习': 'xi', '工': 'gong', '作': 'zuo', '生': 'sheng', '活': 'huo',
   '书': 'shu', '本': 'ben', '字': 'zi', '文': 'wen', '言': 'yan', '语': 'yu',
-  '天': 'tian', '气': 'qi', '雨': 'yu', '雪': 'xue', '风': 'feng', '云': 'yun',
   '妈': 'ma', '爸': 'ba', '哥': 'ge', '姐': 'jie', '弟': 'di', '妹': 'mei',
-  '朋': 'peng', '友': 'you', '老': 'lao', '师': 'shi', '同': 'tong', '学': 'xue',
-  '谢': 'xie', '请': 'qing', '对': 'dui', '不': 'bu', '起': 'qi', '没关系': 'meiguanxi', '谢谢': 'xiexie',
+  '朋': 'peng', '友': 'you', '老': 'lao', '师': 'shi', '同': 'tong',
+  '谢': 'xie', '请': 'qing', '对': 'dui', '起': 'qi', '没关系': 'meiguanxi', '谢谢': 'xiexie',
 };
 
 const radicalStrokes: Record<string, { strokes: number; meaning: string }> = {

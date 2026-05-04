@@ -18,6 +18,7 @@ import FaviconGeneratorClient from '@/components/tools/FaviconGeneratorClient';
 import GrammarCheckerClient from '@/components/tools/GrammarCheckerClient';
 import HashGeneratorClient from '@/components/tools/HashGeneratorClient';
 import HexToRgbClient from '@/components/tools/HexToRgbClient';
+import HslToRgbClient from '@/components/tools/HslToRgbClient';
 import HtmlEncoderClient from '@/components/tools/HtmlEncoderClient';
 import HttpHeadersViewerClient from '@/components/tools/HttpHeadersViewerClient';
 import ImageCropperClient from '@/components/tools/ImageCropperClient';
@@ -1228,6 +1229,41 @@ function JsonToMarkdownTableTool() {
     <div className="space-y-4">
       <Textarea value={input} onChange={setInput} placeholder='JSON array, e.g. [{"name":"Alice","age":30}]' />
       <ProcessButton onClick={process}>Convert to Markdown Table</ProcessButton>
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function JsonToHtmlTableTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+  const [error, setError] = useState('');
+
+  const process = () => {
+    setError('');
+    try {
+      const arr = JSON.parse(input);
+      const items = Array.isArray(arr) ? arr : [arr];
+      if (items.length === 0) { setError('No data'); return; }
+      const keys = Object.keys(items[0]);
+      let html = '<table>\n<thead>\n<tr>';
+      for (const k of keys) html += `<th>${k}</th>`;
+      html += '</tr>\n</thead>\n<tbody>\n';
+      for (const row of items) {
+        html += '<tr>';
+        for (const k of keys) html += `<td>${row[k] ?? ''}</td>`;
+        html += '</tr>\n';
+      }
+      html += '</tbody>\n</table>';
+      setOutput(html);
+    } catch (e) { setError((e as Error).message); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder='[{"name":"Alice","age":30},{"name":"Bob","age":25}]' />
+      <ProcessButton onClick={process}>Convert to HTML Table</ProcessButton>
       {error && <p className="text-red-500 text-sm">{error}</p>}
       <OutputArea value={output} />
     </div>
@@ -6925,7 +6961,7 @@ function ToolRouter({ tool }: { tool: Tool }) {
     case 'html-to-markdown-v2':   return <HtmlToMarkdownTool />;
     case 'json-to-html-table':     return <JsonToHtmlTableTool />;
     case 'json-to-markdown-table': return <JsonToMarkdownTableTool />;
-    case 'xml-sitemap-parser':     return <XmlSitemapParserTool />;
+    case 'xml-sitemap-parser':     return <XmlSitemapGeneratorTool />;
     case 'json-path-tester':       return <JsonPathTesterTool />;
     case 'json-path-tester-new':  return <JsonPathTesterTool />;
     case 'jwt-decoder':            return <JwtDecoderClient />;

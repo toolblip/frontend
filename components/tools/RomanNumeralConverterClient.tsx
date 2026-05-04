@@ -91,7 +91,7 @@ export default function RomanNumeralConverterClient() {
 
   const handleCopy = () => {
     if (result && 'value' in result) {
-      navigator.clipboard.writeText(result.value);
+      navigator.clipboard.writeText(result.value || '');
     }
   };
 

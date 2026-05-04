@@ -159,7 +159,7 @@ export default function JsonSchemaValidatorClient() {
             message: `Array must have at most ${schema.maxItems} items`
           });
         }
-        if (schema.uniqueItems && new Set(value.map(JSON.stringify)).size !== value.length) {
+        if (schema.uniqueItems && new Set(value.map((v: any) => JSON.stringify(v))).size !== value.length) {
           validationErrors.push({
             path,
             message: 'Array items must be unique'

@@ -14,7 +14,7 @@ interface CrawlDelay {
 
 export default function RobotsTxtGeneratorClient() {
   const [siteUrl, setSiteUrl] = useState('');
-  const [rules, setRules] = useState<Rule[]>[{ path: '/', directive: 'Disallow' }]);
+  const [rules, setRules] = useState<Rule[]>([{ path: '/', directive: 'Disallow' }]);
   const [crawlDelays, setCrawlDelays] = useState<CrawlDelay[]>([]);
   const [sitemaps, setSitemaps] = useState<string[]>([]);
   const [generated, setGenerated] = useState('');

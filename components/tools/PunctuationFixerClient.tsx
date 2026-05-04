@@ -4,110 +4,36 @@ import { useState } from 'react';
 
 export default function PunctuationFixerClient() {
   const [input, setInput] = useState('');
+  const [style, setStyle] = useState<'smart' | 'straight'>('smart');
   const [output, setOutput] = useState('');
-  const [style, setStyle] = useState<'smart' | 'basic'>('smart');
 
-  const fixPunctuation = (text: string) => {
-    if (!text.trim()) return '';
+  const process = () => {
+    if (!input) { setOutput(''); return; }
+    let result = input;
 
-    // Fix spacing after punctuation
-    let result = text.replace(/([.!?:,;])([A-Za-z])/g, '$1 $2');
-    
-    // Fix multiple spaces
-    result = result.replace(/\s{2,}/g, ' ');
-    
-    // Fix quotes - convert to smart quotes if smart style
     if (style === 'smart') {
-      result = result.replace(/"/g, '"').replace(/"/g, '"');
-      result = result.replace(/'/g, ''').replace(/'/g, ''');
+      result = result.replace(/\u0022/g, '\u201C').replace(/\u0022/g, '\u201D'); // straight " -> curly "
+      result = result.replace(/\u0027/g, '\u2018').replace(/\u0027/g, '\u2019'); // straight ' -> curly '
+    } else {
+      result = result.replace(/\u201C|\u201D/g, '"').replace(/\u2018|\u2019/g, "'");
     }
-    
-    // Fix dashes
-    result = result.replace(/--/g, '—');
-    
-    // Add proper spacing around dashes
-    result = result.replace(/(\w)—(\w)/g, '$1 — $2');
-    
-    // Fix ellipsis
-    result = result.replace(/\.{3}/g, '…');
-    result = result.replace(/\s+\.{3}/g, '…');
-    
-    // Ensure proper sentence spacing
-    result = result.replace(/([.!?])\s*([A-Z])/g, '$1 $2');
-    
-    // Fix missing punctuation at end
-    if (result.length > 0 && !/[.!?]$/.test(result.trim())) {
-      result = result.trim() + '.';
-    }
-    
-    return result.trim();
-  };
 
-  const handleFix = () => {
-    setOutput(fixPunctuation(input));
-  };
+    // Fix common issues
+    result = result.replace(/([a-z])\s+([.!?,:;])/gi, '$1$2'); // space before punctuation
+    result = result.replace(/\s+/g, ' ').trim(); // multiple spaces
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(output);
+    setOutput(result);
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Punctuation Fixer</h1>
-      
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-2">Style</label>
-        <select
-          value={style}
-          onChange={(e) => setStyle(e.target.value as 'smart' | 'basic')}
-          className="w-full p-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
-        >
-          <option value="smart">Smart Quotes & Dashes</option>
-          <option value="basic">Basic Punctuation</option>
-        </select>
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        <button onClick={() => setStyle('smart')} className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${style === 'smart' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'}`}>Smart Quotes</button>
+        <button onClick={() => setStyle('straight')} className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${style === 'straight' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'}`}>Straight Quotes</button>
       </div>
-
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-2">Enter text with punctuation issues</label>
-        <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className="w-full p-3 border rounded-lg h-40 dark:bg-gray-800 dark:border-gray-700"
-          placeholder="Paste your text here..."
-        />
-      </div>
-
-      <div className="flex gap-3 mb-4">
-        <button
-          onClick={handleFix}
-          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-        >
-          Fix Punctuation
-        </button>
-        <button
-          onClick={() => { setInput(''); setOutput(''); }}
-          className="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition"
-        >
-          Clear
-        </button>
-      </div>
-
-      {output && (
-        <div className="mt-6">
-          <div className="flex justify-between items-center mb-2">
-            <label className="block text-sm font-medium">Fixed text</label>
-            <button
-              onClick={handleCopy}
-              className="text-sm text-blue-500 hover:text-blue-600"
-            >
-              Copy
-            </button>
-          </div>
-          <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 whitespace-pre-wrap">
-            {output}
-          </div>
-        </div>
-      )}
+      <textarea value={input} onChange={e => setInput(e.target.value)} rows={5} placeholder="Enter text..." className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-y" />
+      <button onClick={process} className="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2.5 rounded-lg transition-colors text-sm">Fix Punctuation</button>
+      {output && <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg"><pre className="text-sm whitespace-pre-wrap">{output}</pre></div>}
     </div>
   );
 }
