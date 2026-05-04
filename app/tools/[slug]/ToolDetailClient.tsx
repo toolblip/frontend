@@ -7081,6 +7081,9 @@ function ToolRouter({ tool }: { tool: Tool }) {
     case 'http-header-checker': return <HttpHeaderCheckerTool />;
     case 'cors-checker': return <CorsCheckerTool />;
     case 'argon2-hash-generator': return <Argon2HashGeneratorTool />;
+    case 'sha1-hash-generator': return <HashGeneratorClient />;
+    case 'uuid-v1-generator': return <UuidGeneratorClient />;
+    case 'random-id-generator': return <RandomStringClient />;
     default:                        return <NotImplementedTool toolName={tool.name} />;
   }
 }
