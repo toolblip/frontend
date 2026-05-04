@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import type { Tool } from '@/data/tools';
 import ShareButtons from '@/components/ShareButtons';
+import { marked } from 'marked';
 
 // ─── Shared UI primitives ────────────────────────────────────────────────
 
@@ -321,7 +322,9 @@ function JsonFormatterTool() {
   );
 }
 
-function ComingSoonTool({ toolName }: { toolName: string }) {
+// ─── Tool routers ──────────────────────────────────────────────────────────
+
+function NotImplementedTool({ toolName }: { toolName: string }) {
   const [input, setInput] = useState('');
   return (
     <div className="space-y-4">
@@ -332,13 +335,177 @@ function ComingSoonTool({ toolName }: { toolName: string }) {
           The <strong>{toolName}</strong> tool is being built. Paste some input below to preview the interface when it launches.
         </p>
       </div>
-      <Textarea value={input} onChange={setInput} placeholder="Input area (active when this tool launches)…" />
-      <OutputArea value="" />
+      <textarea
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        placeholder="Input area (active when this tool launches)…"
+        className="w-full h-40 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-red-500 transition-colors resize-y font-mono text-sm"
+      />
+      <pre className="w-full h-40 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm overflow-auto">
+        {'' || <span className="text-gray-400">Output will appear here…</span>}
+      </pre>
     </div>
   );
 }
 
-// ─── Tool router ──────────────────────────────────────────────────────────
+function NotebookToHtmlTool() {
+  const SAMPLE_NB = {
+    nbformat: 4,
+    metadata: { kernelspec: { display_name: 'Python 3', language: 'python' } },
+    cells: [
+      { cell_type: 'markdown', source: '# Welcome to Jupyter\n\nThis is a **markdown** cell with _formatting_.', },
+      { cell_type: 'code', execution_count: 1, source: "print('Hello, Jupyter!')", outputs: [{ output_type: 'stream', name: 'stdout', text: 'Hello, Jupyter!\n' }], },
+      { cell_type: 'markdown', source: '## Code cells also support multiple lines', },
+      { cell_type: 'code', execution_count: 2, source: 'def fib(n):\n    if n <= 1:\n        return n\n    return fib(n-1) + fib(n-2)\n\n[fib(i) for i in range(8)]', outputs: [{ output_type: 'execute_result', execution_count: 2, data: { 'text/plain': '[0, 1, 1, 2, 3, 5, 8, 13]' } }], },
+    ],
+  };
+  const [input, setInput] = useState(JSON.stringify(SAMPLE_NB, null, 2));
+  const [error, setError] = useState<string | null>(null);
+  const [output, setOutput] = useState('');
+  const [copied, setCopied] = useState(false);
+
+  const process = () => {
+    try {
+      const nb = JSON.parse(input);
+      if (!Array.isArray(nb.cells)) { setError('Invalid notebook: missing cells array'); return; }
+      setError(null);
+      // Render cells to HTML string for preview
+      const rendered = nb.cells.map((cell: { cell_type: string; source: string | string[] }) => {
+        const src = Array.isArray(cell.source) ? cell.source.join('') : cell.source;
+        if (cell.cell_type === 'markdown') {
+          try { return `<div class="nb-cell nb-md">${marked.parse(src)}</div>`; }
+          catch { return `<div class="nb-cell nb-md"><p>${src}</p></div>`; }
+        }
+        if (cell.cell_type === 'code') {
+          return `<div class="nb-cell nb-code"><pre><code>${src.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</code></pre></div>`;
+        }
+        return '';
+      }).join('\n');
+      setOutput(rendered);
+    } catch(e) { setError('Invalid JSON: ' + (e as Error).message); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <textarea
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        placeholder='Paste Jupyter notebook JSON here…'
+        className="w-full h-48 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-red-500 transition-colors resize-y font-mono text-sm"
+      />
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+      <button onClick={process} className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors">
+        Render Notebook
+      </button>
+      {output && (
+        <div className="space-y-2">
+          <div className="flex justify-between items-center">
+            <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Preview</span>
+            <button onClick={() => { navigator.clipboard.writeText(output); setCopied(true); setTimeout(()=>setCopied(false),1500); }}
+              className="px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg transition-colors">
+              {copied ? '✓ Copied' : 'Copy HTML'}
+            </button>
+          </div>
+          <div className="bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg p-4 overflow-auto max-h-96 prose dark:prose-invert prose-sm max-w-none"
+            dangerouslySetInnerHTML={{ __html: output }} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function OxfordCommaTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+  const [sep, setSep] = useState<'comma' | 'newline'>('comma');
+
+  const process = () => {
+    const items = input.split(sep === 'comma' ? /,\s*/ : /\n/).map(s => s.trim()).filter(Boolean);
+    if (items.length === 0) { setOutput(''); return; }
+    if (items.length === 1) setOutput(items[0]);
+    else if (items.length === 2) setOutput(`${items[0]} and ${items[1]}`);
+    else setOutput(items.slice(0,-1).join(', ') + ', and ' + items[items.length-1]);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        {(['comma', 'newline'] as const).map(s => (
+          <button key={s} onClick={() => setSep(s)}
+            className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${sep === s ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'}`}>
+            {s === 'comma' ? 'Comma-separated' : 'One per line'}
+          </button>
+        ))}
+      </div>
+      <textarea
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        placeholder={sep === 'comma' ? 'Alice, Bob, Carol, Diana…' : 'Alice\nBob\nCarol\nDiana'}
+        className="w-full h-32 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-red-500 transition-colors resize-y font-mono text-sm"
+      />
+      <button onClick={process} className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors">
+        Apply Oxford Comma
+      </button>
+      {output && (
+        <div className="space-y-1">
+          <div className="flex justify-between items-center">
+            <label className="text-xs text-gray-500 dark:text-gray-400 font-medium">Result</label>
+            <button onClick={() => navigator.clipboard.writeText(output)}
+              className="px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg transition-colors">
+              Copy
+            </button>
+          </div>
+          <div className="bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm text-gray-900 dark:text-white">{output}</div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SassToCssTool() {
+  const [input, setInput] = useState('$primary: #333;\nbody { color: $primary; }');
+  const [output, setOutput] = useState('');
+  const [error, setError] = useState('');
+
+  const process = async () => {
+    setError('');
+    try {
+      const { compileString } = await import('sass');
+      const result = compileString(input);
+      setOutput(result.css);
+    } catch(e) {
+      setError((e as Error).message);
+      setOutput('');
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <textarea
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        placeholder="Enter SCSS or SASS here…"
+        className="w-full h-40 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-red-500 transition-colors resize-y font-mono text-sm"
+      />
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+      <button onClick={process} className="px-6 py-2.5 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg transition-colors">
+        Compile to CSS
+      </button>
+      {output && (
+        <div className="space-y-1">
+          <div className="flex justify-between items-center">
+            <label className="text-xs text-gray-500 dark:text-gray-400 font-medium">CSS Output</label>
+            <button onClick={() => navigator.clipboard.writeText(output)}
+              className="px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg transition-colors">
+              Copy
+            </button>
+          </div>
+          <pre className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm text-gray-900 dark:text-white overflow-auto max-h-64">{output}</pre>
+        </div>
+      )}
+    </div>
+  );
+}
 
 function ToolRouter({ tool }: { tool: Tool }) {
   switch (tool.slug) {
@@ -348,7 +515,10 @@ function ToolRouter({ tool }: { tool: Tool }) {
     case 'base64':                return <Base64Tool />;
     case 'url-encode':            return <UrlEncodeTool />;
     case 'json-formatter':        return <JsonFormatterTool />;
-    default:                      return <ComingSoonTool toolName={tool.name} />;
+    case 'notebook-to-html':      return <NotebookToHtmlTool />;
+    case 'oxford-comma':          return <OxfordCommaTool />;
+    case 'sass-to-css':           return <SassToCssTool />;
+    default:                      return <NotImplementedTool toolName={tool.name} />;
   }
 }
 
