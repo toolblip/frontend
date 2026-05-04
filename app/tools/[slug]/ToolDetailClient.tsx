@@ -5,6 +5,55 @@ import Link from 'next/link';
 import type { Tool } from '@/data/tools';
 import ShareButtons from '@/components/ShareButtons';
 import { marked } from 'marked';
+import Base64EncoderDecoderClient from '@/components/tools/Base64EncoderDecoderClient';
+import CircleCropClient from '@/components/tools/CircleCropClient';
+import ColorPickerClient from '@/components/tools/ColorPickerClient';
+import ContrastCheckerClient from '@/components/tools/ContrastCheckerClient';
+import CreditCardValidatorClient from '@/components/tools/CreditCardValidatorClient';
+import CronGeneratorClient from '@/components/tools/CronGeneratorClient';
+import CronParserClient from '@/components/tools/CronParserClient';
+import CssBorderRadiusGeneratorClient from '@/components/tools/CssBorderRadiusGeneratorClient';
+import CssGradientGeneratorClient from '@/components/tools/CssGradientGeneratorClient';
+import FaviconGeneratorClient from '@/components/tools/FaviconGeneratorClient';
+import GrammarCheckerClient from '@/components/tools/GrammarCheckerClient';
+import HashGeneratorClient from '@/components/tools/HashGeneratorClient';
+import HexToRgbClient from '@/components/tools/HexToRgbClient';
+import HtmlEncoderClient from '@/components/tools/HtmlEncoderClient';
+import HttpHeadersViewerClient from '@/components/tools/HttpHeadersViewerClient';
+import ImageCropperClient from '@/components/tools/ImageCropperClient';
+import ImageFormatConverterClient from '@/components/tools/ImageFormatConverterClient';
+import ImageResizerClient from '@/components/tools/ImageResizerClient';
+import JsMinifierClient from '@/components/tools/JsMinifierClient';
+import JsonToYamlClient from '@/components/tools/JsonToYamlClient';
+import JsonValidatorClient from '@/components/tools/JsonValidatorClient';
+import JwtDecoderClient from '@/components/tools/JwtDecoderClient';
+import LoremIpsumGeneratorClient from '@/components/tools/LoremIpsumGeneratorClient';
+import MarkdownToHtmlClient from '@/components/tools/MarkdownToHtmlClient';
+import MetaTagGeneratorClient from '@/components/tools/MetaTagGeneratorClient';
+import NumberBaseConverterClient from '@/components/tools/NumberBaseConverterClient';
+import PasswordGeneratorClient from '@/components/tools/PasswordGeneratorClient';
+import PercentageCalculatorClient from '@/components/tools/PercentageCalculatorClient';
+import PercentageDifferenceClient from '@/components/tools/PercentageDifferenceClient';
+import QrCodeGeneratorClient from '@/components/tools/QrCodeGeneratorClient';
+import RandomStringClient from '@/components/tools/RandomStringClient';
+import ReadabilityScoreClient from '@/components/tools/ReadabilityScoreClient';
+import RegexTesterClient from '@/components/tools/RegexTesterClient';
+import RemoveDuplicateLinesClient from '@/components/tools/RemoveDuplicateLinesClient';
+import RgbToHexClient from '@/components/tools/RgbToHexClient';
+import ScreenResolutionTesterClient from '@/components/tools/ScreenResolutionTesterClient';
+import SerpPreviewClient from '@/components/tools/SerpPreviewClient';
+import Sha256HashClient from '@/components/tools/Sha256HashClient';
+import SqlToJsonClient from '@/components/tools/SqlToJsonClient';
+import SquareCropClient from '@/components/tools/SquareCropClient';
+import TextSorterClient from '@/components/tools/TextSorterClient';
+import UnitConverterClient from '@/components/tools/UnitConverterClient';
+import UnixTimestampConverterClient from '@/components/tools/UnixTimestampConverterClient';
+import UrlParamsClient from '@/components/tools/UrlParamsClient';
+import UrlSlugGeneratorClient from '@/components/tools/UrlSlugGeneratorClient';
+import UuidGeneratorClient from '@/components/tools/UuidGeneratorClient';
+import XmlFormatterClient from '@/components/tools/XmlFormatterClient';
+import XmlToJsonClient from '@/components/tools/XmlToJsonClient';
+import YamlToJsonClient from '@/components/tools/YamlToJsonClient';
 
 // ─── Shared UI primitives ────────────────────────────────────────────────
 
@@ -507,6 +556,174 @@ function SassToCssTool() {
   );
 }
 
+// ─── Text Transformation Tools ─────────────────────────────────────────────
+
+function TextToSlugTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const convert = () => {
+    if (!input.trim()) { setOutput(''); return; }
+    const slug = input
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, '')        // remove special characters
+      .replace(/[\s_-]+/g, '-')         // spaces/underscores to hyphens
+      .replace(/^-+|-+$/g, '');        // trim leading/trailing hyphens
+    setOutput(slug);
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Enter text to convert to a URL-friendly slug…" />
+      <ProcessButton onClick={convert}>Convert to Slug</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function SlugToTextTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const convert = () => {
+    if (!input.trim()) { setOutput(''); return; }
+    const text = input
+      .replace(/-/g, ' ')              // hyphens to spaces
+      .replace(/_/g, ' ')              // underscores to spaces
+      .replace(/\s+/g, ' ')            // collapse multiple spaces
+      .trim()
+      .split(' ')
+      .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+      .join(' ');
+    setOutput(text);
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Enter a slug to convert to readable text…" />
+      <ProcessButton onClick={convert}>Convert to Text</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function RemoveDuplicateLinesTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+  const [caseSensitive, setCaseSensitive] = useState(true);
+
+  const process = () => {
+    const lines = input.split('\n').filter(Boolean);
+    const seen = new Set<string>();
+    const unique = lines.filter(line => {
+      const key = caseSensitive ? line : line.toLowerCase();
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+    setOutput(unique.join('\n'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          id="caseSensitive"
+          checked={caseSensitive}
+          onChange={e => setCaseSensitive(e.target.checked)}
+          className="w-4 h-4 accent-red-600"
+        />
+        <label htmlFor="caseSensitive" className="text-sm text-gray-600 dark:text-gray-300">Case-sensitive</label>
+      </div>
+      <Textarea value={input} onChange={setInput} placeholder="Enter lines here — duplicates will be removed…" />
+      <ProcessButton onClick={process}>Remove Duplicates</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function SortLinesTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+  const [order, setOrder] = useState<'asc' | 'desc'>('asc');
+  const [numeric, setNumeric] = useState(false);
+
+  const process = () => {
+    const lines = input.split('\n').filter(Boolean);
+    const sorted = [...lines].sort((a, b) => {
+      if (numeric) {
+        const numA = parseFloat(a);
+        const numB = parseFloat(b);
+        return order === 'asc' ? numA - numB : numB - numA;
+      }
+      return order === 'asc' ? a.localeCompare(b) : b.localeCompare(a);
+    });
+    setOutput(sorted.join('\n'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap gap-4">
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-600 dark:text-gray-300">Order:</span>
+          {(['asc', 'desc'] as const).map(o => (
+            <button key={o} onClick={() => setOrder(o)}
+              className={`px-3 py-1 text-sm rounded-lg transition-colors ${order === o ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'}`}>
+              {o === 'asc' ? 'A → Z' : 'Z → A'}
+            </button>
+          ))}
+        </div>
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="numericSort"
+            checked={numeric}
+            onChange={e => setNumeric(e.target.checked)}
+            className="w-4 h-4 accent-red-600"
+          />
+          <label htmlFor="numericSort" className="text-sm text-gray-600 dark:text-gray-300">Numeric sort</label>
+        </div>
+      </div>
+      <Textarea value={input} onChange={setInput} placeholder="Enter lines to sort…" />
+      <ProcessButton onClick={process}>Sort Lines</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function ReverseLinesTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+  const [mode, setMode] = useState<'reverse' | 'flip'>('reverse');
+
+  const process = () => {
+    const lines = input.split('\n');
+    if (mode === 'reverse') {
+      setOutput([...lines].reverse().join('\n'));
+    } else {
+      setOutput(lines.map(line => line.split('').reverse().join('')).join('\n'));
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        {(['reverse', 'flip'] as const).map(m => (
+          <button key={m} onClick={() => setMode(m)}
+            className={`px-4 py-1.5 text-sm rounded-lg transition-colors ${mode === m ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'}`}>
+            {m === 'reverse' ? 'Reverse Order' : 'Flip Characters'}
+          </button>
+        ))}
+      </div>
+      <Textarea value={input} onChange={setInput} placeholder={mode === 'reverse' ? 'Enter lines to reverse their order…' : 'Enter lines to flip characters in each line…'} />
+      <ProcessButton onClick={process}>Reverse</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
 function ToolRouter({ tool }: { tool: Tool }) {
   switch (tool.slug) {
     case 'word-counter':          return <WordCounterTool />;
@@ -518,7 +735,61 @@ function ToolRouter({ tool }: { tool: Tool }) {
     case 'notebook-to-html':      return <NotebookToHtmlTool />;
     case 'oxford-comma':          return <OxfordCommaTool />;
     case 'sass-to-css':           return <SassToCssTool />;
-    default:                      return <NotImplementedTool toolName={tool.name} />;
+    case 'text-to-slug':          return <TextToSlugTool />;
+    case 'slug-to-text':          return <SlugToTextTool />;
+    case 'remove-duplicate-lines': return <RemoveDuplicateLinesTool />;
+    case 'sort-lines':            return <SortLinesTool />;
+    case 'reverse-lines':         return <ReverseLinesTool />;
+    case 'cron-parser':            return <CronParserClient />;
+    case 'cron-generator':         return <CronGeneratorClient />;
+    case 'html-encoder':           return <HtmlEncoderClient />;
+    case 'json-validator':         return <JsonValidatorClient />;
+    case 'jwt-decoder':            return <JwtDecoderClient />;
+    case 'text-sorter':            return <TextSorterClient />;
+    case 'remove-duplicate-lines': return <RemoveDuplicateLinesClient />;
+    case 'hex-to-rgb':             return <HexToRgbClient />;
+    case 'rgb-to-hex':             return <RgbToHexClient />;
+    case 'sha-256-hash':          return <Sha256HashClient />;
+    case 'hash-generator':         return <HashGeneratorClient />;
+    case 'xml-formatter':          return <XmlFormatterClient />;
+    case 'xml-to-json':            return <XmlToJsonClient />;
+    case 'json-to-yaml':           return <JsonToYamlClient />;
+    case 'sql-to-json':            return <SqlToJsonClient />;
+    case 'yaml-to-json':           return <YamlToJsonClient />;
+    case 'url-slug-generator':     return <UrlSlugGeneratorClient />;
+    case 'uuid-generator':         return <UuidGeneratorClient />;
+    case 'password-generator':     return <PasswordGeneratorClient />;
+    case 'lorem-ipsum-generator':  return <LoremIpsumGeneratorClient />;
+    case 'random-string-generator': return <RandomStringClient />;
+    case 'regex-tester':          return <RegexTesterClient />;
+    case 'grammar-checker':        return <GrammarCheckerClient />;
+    case 'unit-converter':         return <UnitConverterClient />;
+    case 'number-base-converter':  return <NumberBaseConverterClient />;
+    case 'unix-timestamp-converter': return <UnixTimestampConverterClient />;
+    case 'image-cropper':          return <ImageCropperClient />;
+    case 'image-resizer':          return <ImageResizerClient />;
+    case 'image-format-converter':  return <ImageFormatConverterClient />;
+    case 'color-picker':           return <ColorPickerClient />;
+    case 'contrast-checker':        return <ContrastCheckerClient />;
+    case 'credit-card-validator':  return <CreditCardValidatorClient />;
+    case 'favicon-generator':       return <FaviconGeneratorClient />;
+    case 'css-gradient-generator':  return <CssGradientGeneratorClient />;
+    case 'css-border-radius-generator': return <CssBorderRadiusGeneratorClient />;
+    case 'js-minifier':            return <JsMinifierClient />;
+    case 'http-headers-viewer':     return <HttpHeadersViewerClient />;
+    case 'markdown-to-html':        return <MarkdownToHtmlClient />;
+    case 'meta-tag-generator':      return <MetaTagGeneratorClient />;
+    case 'percentage-calculator':   return <PercentageCalculatorClient />;
+    case 'percentage-difference':   return <PercentageDifferenceClient />;
+    case 'qr-code-generator':       return <QrCodeGeneratorClient />;
+    case 'readability-score':       return <ReadabilityScoreClient />;
+    case 'screen-resolution-tester': return <ScreenResolutionTesterClient />;
+    case 'serp-preview':            return <SerpPreviewClient />;
+    case 'circle-crop':            return <CircleCropClient />;
+    case 'square-crop':            return <SquareCropClient />;
+    case 'url-params':             return <UrlParamsClient />;
+    case 'base64-encoder-decoder': return <Base64EncoderDecoderClient />;
+    default:                        return <NotImplementedTool toolName={tool.name} />;
   }
 }
 

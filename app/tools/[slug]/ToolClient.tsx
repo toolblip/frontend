@@ -7,6 +7,7 @@ import ShareButtons from '@/components/ShareButtons';
 // ─── Imported tool UIs ──────────────────────────────────────────────────────
 import YamlToJsonClient from '@/components/tools/YamlToJsonClient';
 import XmlToJsonClient from '@/components/tools/XmlToJsonClient';
+import XmlFormatterClient from '@/components/tools/XmlFormatterClient';
 import WordCounterClient from '@/components/tools/WordCounterClient';
 import UuidGeneratorClient from '@/components/tools/UuidGeneratorClient';
 import UrlSlugGeneratorClient from '@/components/tools/UrlSlugGeneratorClient';
@@ -34,6 +35,7 @@ import LoremIpsumGeneratorClient from '@/components/tools/LoremIpsumGeneratorCli
 import JwtDecoderClient from '@/components/tools/JwtDecoderClient';
 import JsonToYamlClient from '@/components/tools/JsonToYamlClient';
 import JsonFormatterClient from '@/components/tools/JsonFormatterClient';
+import JsonValidatorClient from '@/components/tools/JsonValidatorClient';
 import JsMinifierClient from '@/components/tools/JsMinifierClient';
 import ImageResizerClient from '@/components/tools/ImageResizerClient';
 import ImageFormatConverterClient from '@/components/tools/ImageFormatConverterClient';
@@ -41,6 +43,7 @@ import ImageCropperClient from '@/components/tools/ImageCropperClient';
 import HttpHeadersViewerClient from '@/components/tools/HttpHeadersViewerClient';
 import HtmlEncoderClient from '@/components/tools/HtmlEncoderClient';
 import HashGeneratorClient from '@/components/tools/HashGeneratorClient';
+import Sha256HashClient from '@/components/tools/Sha256HashClient';
 import GrammarCheckerClient from '@/components/tools/GrammarCheckerClient';
 import FaviconGeneratorClient from '@/components/tools/FaviconGeneratorClient';
 import CssGradientGeneratorClient from '@/components/tools/CssGradientGeneratorClient';
@@ -55,6 +58,10 @@ import CircleCropClient from '@/components/tools/CircleCropClient';
 import CharacterCounterClient from '@/components/tools/CharacterCounterClient';
 import OxfordCommaClient from '@/components/tools/OxfordCommaClient';
 import NotebookToHtmlClient from '@/components/tools/NotebookToHtmlClient';
+import HexToRgbClient from '@/components/tools/HexToRgbClient';
+import RgbToHexClient from '@/components/tools/RgbToHexClient';
+import RandomStringClient from '@/components/tools/RandomStringClient';
+import Base64EncoderDecoderClient from '@/components/tools/Base64EncoderDecoderClient';
 
 // ─── Individual tool UIs ────────────────────────────────────────────────────
 
@@ -417,10 +424,14 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <UrlEncodeClient />;
     case 'json-formatter':
       return <JsonFormatterClient />;
+    case 'json-validator':
+      return <JsonValidatorClient />;
     case 'yaml-to-json':
       return <YamlToJsonClient />;
     case 'xml-to-json':
       return <XmlToJsonClient />;
+    case 'xml-formatter':
+      return <XmlFormatterClient />;
     case 'uuid-generator':
       return <UuidGeneratorClient />;
     case 'url-slug-generator':
@@ -489,6 +500,8 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <HtmlEncoderClient />;
     case 'hash-generator':
       return <HashGeneratorClient />;
+    case 'sha-256-hash':
+      return <Sha256HashClient />;
     case 'grammar-checker':
       return <GrammarCheckerClient />;
     case 'favicon-generator':
@@ -509,6 +522,14 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <ColorPickerClient />;
     case 'circle-crop':
       return <CircleCropClient />;
+    case 'hex-to-rgb':
+      return <HexToRgbClient />;
+    case 'rgb-to-hex':
+      return <RgbToHexClient />;
+    case 'random-string-generator':
+      return <RandomStringClient />;
+    case 'base64-encoder-decoder':
+      return <Base64EncoderDecoderClient />;
     default:
       return <ComingSoonUI tool={tool} />;
   }
