@@ -29,6 +29,10 @@ import CssGradientGeneratorClient from '@/components/tools/CssGradientGeneratorC
 import FaviconGeneratorClient from '@/components/tools/FaviconGeneratorClient';
 import GrammarCheckerClient from '@/components/tools/GrammarCheckerClient';
 import HashGeneratorClient from '@/components/tools/HashGeneratorClient';
+import CorsHeaderGeneratorClient from '@/components/tools/CorsHeaderGeneratorClient';
+import HtaccessRedirectGeneratorClient from '@/components/tools/HtaccessRedirectGeneratorClient';
+import JsonLdGeneratorClient from '@/components/tools/JsonLdGeneratorClient';
+import SecurityHeadersGeneratorClient from '@/components/tools/SecurityHeadersGeneratorClient';
 import HexToRgbClient from '@/components/tools/HexToRgbClient';
 import HtmlEncoderClient from '@/components/tools/HtmlEncoderClient';
 import HttpHeadersViewerClient from '@/components/tools/HttpHeadersViewerClient';
@@ -183,6 +187,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
     case 'cron-expression-generator':
       return <CronGeneratorClient />;
     case 'cron-parser':
+    case 'cors-header-generator':
+      return <CorsHeaderGeneratorClient />;
       return <CronParserClient />;
     case 'curl-to-python':
       return <CurlToPythonClient />;
@@ -229,6 +235,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
     case 'html-table-generator':
       return <HtmlTableGeneratorClient />;
     case 'html-validator':
+    case 'htaccess-redirect-generator':
+      return <HtaccessRedirectGeneratorClient />;
       case 'html-to-markdown':
         return <HtmlToMarkdownClient />;
       return <HtmlValidatorClient />;
@@ -245,6 +253,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
     case 'js-minifier':
       return <JsMinifierClient />;
     case 'json-formatter':
+    case 'json-ld-generator':
+      return <JsonLdGeneratorClient />;
       return <JsonFormatterClient />;
     case 'json-path-tester':
       return <JsonPathTesterClient />;
@@ -321,6 +331,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
     case 'roman-numeral-converter':
       return <RomanNumeralConverterClient />;
     case 'sass-to-css':
+    case 'security-headers-generator':
+      return <SecurityHeadersGeneratorClient />;
       return <SassToCssClient />;
     case 'screen-resolution-tester':
       return <ScreenResolutionTesterClient />;
