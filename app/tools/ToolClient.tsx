@@ -16,7 +16,12 @@ import NotebookToHtmlClient from '@/components/tools/NotebookToHtmlClient';
 import CircleCropClient from '@/components/tools/CircleCropClient';
 import ColorPickerClient from '@/components/tools/ColorPickerClient';
 import ContrastCheckerClient from '@/components/tools/ContrastCheckerClient';
-import CreditCardValidatorClient from '@/components/tools/CreditCardValidatorClient';
+import AgeCalculatorClient from '@/components/tools/AgeCalculatorClient';
+import BacklinkCheckerClient from '@/components/tools/BacklinkCheckerClient';
+import BrokenLinkCheckerClient from '@/components/tools/BrokenLinkCheckerClient';
+import CidrCalculatorClient from '@/components/tools/CidrCalculatorClient';
+import CountdownTimerClient from '@/components/tools/CountdownTimerClient';
+import CreditCardValidatorClient from '@/components/tools/CreditCardValidatorClient';;
 import DnsLookupClient from '@/components/tools/DnsLookupClient';
 import KeywordDensityCheckerClient from '@/components/tools/KeywordDensityCheckerClient';
 import MetaDescriptionCheckerClient from '@/components/tools/MetaDescriptionCheckerClient';
@@ -106,6 +111,17 @@ import EmailValidatorClient from '@/components/tools/EmailValidatorClient';
 import EmojiFinderClient from '@/components/tools/EmojiFinderClient';
 import EnglishGrammarCheckerClient from '@/components/tools/EnglishGrammarCheckerClient';
 import FakeDataGeneratorClient from '@/components/tools/FakeDataGeneratorClient';
+import FakeTextGeneratorClient from '@/components/tools/FakeTextGeneratorClient';
+import ImageColorPickerClient from '@/components/tools/ImageColorPickerClient';
+import ImageMetadataViewerClient from '@/components/tools/ImageMetadataViewerClient';
+import IpRangeCalculatorClient from '@/components/tools/IpRangeCalculatorClient';
+import LineCounterClient from '@/components/tools/LineCounterClient';
+import RandomParagraphGeneratorClient from '@/components/tools/RandomParagraphGeneratorClient';
+import RandomSentenceGeneratorClient from '@/components/tools/RandomSentenceGeneratorClient';
+import TextRedundancyCheckerClient from '@/components/tools/TextRedundancyCheckerClient';
+import TextToSpeechClient from '@/components/tools/TextToSpeechClient';
+import UuidValidatorClient from '@/components/tools/UuidValidatorClient';
+import WhoisLookupClient from '@/components/tools/WhoisLookupClient';
 import HashFromTextClient from '@/components/tools/HashFromTextClient';
 import HashIdentifierClient from '@/components/tools/HashIdentifierClient';
 import HtmlValidatorClient from '@/components/tools/HtmlValidatorClient';
@@ -189,10 +205,16 @@ function ToolRenderer({ tool }: { tool: Tool }) {
     case 'contrast-checker':
       return <ContrastCheckerClient />;
     case 'binary-to-text':
+    case 'cidr-calculator':
+      return <CidrCalculatorClient />;
       return <BinaryToTextClient />;
     case 'binary-to-decimal':
       return <BinaryToDecimalClient />;
     case 'credit-card-validator':
+    case 'age-calculator':
+      return <AgeCalculatorClient />;
+    case 'countdown-timer':
+      return <CountdownTimerClient />;
       return <CreditCardValidatorClient />;
     case 'cron-expression-generator':
       return <CronGeneratorClient />;
@@ -225,6 +247,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
     case 'english-grammar-checker':
       return <EnglishGrammarCheckerClient />;
     case 'fake-data-generator':
+    case 'fake-text-generator':
+      return <FakeTextGeneratorClient />;
       return <FakeDataGeneratorClient />;
     case 'favicon-generator':
       return <FaviconGeneratorClient />;
@@ -253,6 +277,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
     case 'http-headers-viewer':
       return <HttpHeadersViewerClient />;
     case 'image-cropper':
+    case 'ip-range-calculator':
+      return <IpRangeCalculatorClient />;
       return <ImageCropperClient />;
     case 'image-format-converter':
       return <ImageFormatConverterClient />;
@@ -289,8 +315,14 @@ function ToolRenderer({ tool }: { tool: Tool }) {
     case 'list-comparator':
       return <ListComparatorClient />;
     case 'list-randomizer':
+    case 'line-counter':
+      return <LineCounterClient />;
       return <ListRandomizerClient />;
     case 'lorem-ipsum-generator':
+    case 'random-paragraph-generator':
+      return <RandomParagraphGeneratorClient />;
+    case 'random-sentence-generator':
+      return <RandomSentenceGeneratorClient />;
     case 'dns-lookup':
       return <DnsLookupClient />;
       return <LoremIpsumGeneratorClient />;
@@ -345,6 +377,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
     case 'roman-numeral-converter':
       return <RomanNumeralConverterClient />;
     case 'sass-to-css':
+    case 'backlink-checker':
+      return <BacklinkCheckerClient />;
     case 'ssl-certificate-checker':
       return <SslCertificateCheckerClient />;
     case 'security-headers-generator':
@@ -373,10 +407,14 @@ function ToolRenderer({ tool }: { tool: Tool }) {
     case 'text-sorter':
       return <TextSorterClient />;
     case 'text-statistics':
+    case 'text-redundancy-checker':
+      return <TextRedundancyCheckerClient />;
     case 'text-reverser':
       return <TextReverserClient />;
       return <TextStatisticsClient />;
     case 'text-to-slug':
+    case 'text-to-speech':
+      return <TextToSpeechClient />;
       return <TextToSlugClient />;
     case 'time-zone-converter':
       return <TimeZoneConverterClient />;
@@ -399,6 +437,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
     case 'url-slug-generator':
       return <UrlSlugGeneratorClient />;
     case 'uuid-generator':
+    case 'uuid-validator':
+      return <UuidValidatorClient />;
       return <UuidGeneratorClient />;
     case 'word-counter':
       return <WordCounterClient />;
