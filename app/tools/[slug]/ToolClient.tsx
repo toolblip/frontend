@@ -54,6 +54,7 @@ import ColorPickerClient from '@/components/tools/ColorPickerClient';
 import CircleCropClient from '@/components/tools/CircleCropClient';
 import CharacterCounterClient from '@/components/tools/CharacterCounterClient';
 import OxfordCommaClient from '@/components/tools/OxfordCommaClient';
+import NotebookToHtmlClient from '@/components/tools/NotebookToHtmlClient';
 
 // ─── Individual tool UIs ────────────────────────────────────────────────────
 
@@ -460,6 +461,8 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <PasswordGeneratorClient />;
     case 'number-base-converter':
       return <NumberBaseConverterClient />;
+    case 'notebook-to-html':
+      return <NotebookToHtmlClient />;
     case 'oxford-comma':
       return <OxfordCommaClient />;
     case 'meta-tag-generator':
