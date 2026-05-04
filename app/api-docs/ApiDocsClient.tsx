@@ -7,7 +7,7 @@ const BASE_URL = 'https://toolblip-api-production.up.railway.app';
 
 type HttpMethod = 'GET' | 'POST';
 
-interface Param {
+interface BodyParam {
   name: string;
   type: string;
   required: boolean;
@@ -28,8 +28,7 @@ interface Endpoint {
   auth: boolean;
   title: string;
   description: string;
-  queryParams?: Param[];
-  bodyParams?: Param[];
+  bodyParams?: BodyParam[];
   responseFields?: ResponseField[];
   curl: string;
   response: string;
@@ -44,41 +43,10 @@ const ENDPOINTS: Endpoint[] = [
     path: '/api/tools',
     auth: false,
     title: 'List all tools',
-    description:
-      'Returns a paginated list of tools. Supports filtering by category and full-text search.',
-    queryParams: [
-      {
-        name: 'category',
-        type: 'string',
-        required: false,
-        description: 'Filter by category slug (e.g. "developer", "image", "writing")',
-      },
-      {
-        name: 'search',
-        type: 'string',
-        required: false,
-        description: 'Full-text search across tool name and description',
-      },
-      {
-        name: 'page',
-        type: 'integer',
-        required: false,
-        description: 'Page number (default: 1)',
-      },
-      {
-        name: 'per_page',
-        type: 'integer',
-        required: false,
-        description: 'Results per page (default: 20, max: 100)',
-      },
-    ],
+    description: 'Returns a paginated list of all tools. Supports filtering by category and full-text search.',
     responseFields: [
       { field: 'tools.tools[]', type: 'array', description: 'Array of tool objects' },
-      {
-        field: 'tools.meta',
-        type: 'object',
-        description: 'Pagination metadata: current_page, total, per_page, last_page',
-      },
+      { field: 'tools.meta', type: 'object', description: 'Pagination metadata: current_page, total, per_page, last_page' },
     ],
     curl: `curl -X GET "${BASE_URL}/api/tools" \\
   -H "Accept: application/json"`,
@@ -112,8 +80,7 @@ const ENDPOINTS: Endpoint[] = [
     path: '/api/tools/{slug}',
     auth: false,
     title: 'Get tool by slug',
-    description:
-      'Returns a single tool by its URL-safe slug. Returns 404 if not found.',
+    description: 'Returns a single tool by its URL-safe slug. Returns 404 if not found.',
     responseFields: [
       { field: 'tool.id', type: 'integer', description: 'Unique tool ID' },
       { field: 'tool.slug', type: 'string', description: 'URL-safe identifier' },
@@ -148,18 +115,12 @@ const ENDPOINTS: Endpoint[] = [
     path: '/api/auth/register',
     auth: false,
     title: 'Register new account',
-    description:
-      'Create a new user account. Returns a Bearer token to use in authenticated requests.',
+    description: 'Create a new user account. Returns a Bearer token to use in authenticated requests.',
     bodyParams: [
       { name: 'name', type: 'string', required: true, description: 'Full display name' },
       { name: 'email', type: 'string', required: true, description: 'Email address — must be unique' },
       { name: 'password', type: 'string', required: true, description: 'Password — minimum 8 characters' },
-      {
-        name: 'password_confirmation',
-        type: 'string',
-        required: true,
-        description: 'Must match password exactly',
-      },
+      { name: 'password_confirmation', type: 'string', required: true, description: 'Must match password exactly' },
     ],
     responseFields: [
       { field: 'user.id', type: 'integer', description: 'User ID' },
@@ -194,8 +155,7 @@ const ENDPOINTS: Endpoint[] = [
     path: '/api/auth/login',
     auth: false,
     title: 'Login',
-    description:
-      'Authenticate an existing user. Returns a Bearer token for subsequent authenticated requests.',
+    description: 'Authenticate an existing user. Returns a Bearer token for subsequent authenticated requests.',
     bodyParams: [
       { name: 'email', type: 'string', required: true, description: 'Account email address' },
       { name: 'password', type: 'string', required: true, description: 'Account password' },
@@ -231,8 +191,7 @@ const ENDPOINTS: Endpoint[] = [
     path: '/api/auth/logout',
     auth: true,
     title: 'Logout',
-    description:
-      'Invalidate the current session token. After calling this, the token can no longer be used.',
+    description: 'Invalidate the current session token. After calling this, the token can no longer be used.',
     responseFields: [
       { field: 'message', type: 'string', description: 'Confirmation message' },
     ],
@@ -288,24 +247,10 @@ const STATUS_CODES = [
   { code: 500, label: 'Server Error', desc: 'Something went wrong on our end.', color: 'text-red-600 dark:text-red-400' },
 ];
 
-const METHOD_COLORS: Record<HttpMethod, { badge: string }> = {
-  GET: {
-    badge: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400',
-  },
-  POST: {
-    badge: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400',
-  },
+const METHOD_COLORS: Record<HttpMethod, string> = {
+  GET: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400',
+  POST: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400',
 };
-
-function MethodBadge({ method }: { method: HttpMethod }) {
-  return (
-    <span
-      className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold flex-shrink-0 ${METHOD_COLORS[method].badge}`}
-    >
-      {method}
-    </span>
-  );
-}
 
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
@@ -317,7 +262,7 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+      className="flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
     >
       {copied ? (
         <>
@@ -346,7 +291,7 @@ function CodeBlock({ code }: { code: string }) {
   );
 }
 
-function ParamTable({ params, body }: { params: Param[]; body?: boolean }) {
+function ParamTable({ params, body }: { params: BodyParam[]; body?: boolean }) {
   return (
     <div className="mb-5">
       <h4 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">
@@ -356,7 +301,7 @@ function ParamTable({ params, body }: { params: Param[]; body?: boolean }) {
         <table className="w-full text-sm">
           <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
             <tr>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs w-40">Name</th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs w-44">Name</th>
               <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs w-20">Type</th>
               <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs w-20">Required</th>
               <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs">Description</th>
@@ -392,7 +337,7 @@ function ResponseFieldsTable({ fields }: { fields: ResponseField[] }) {
         <table className="w-full text-sm">
           <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
             <tr>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs w-40">Field</th>
+              <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs w-44">Field</th>
               <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs w-20">Type</th>
               <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs">Description</th>
             </tr>
@@ -425,7 +370,9 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
         className="w-full flex items-center gap-3 px-5 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-left"
         aria-expanded={open}
       >
-        <MethodBadge method={ep.method} />
+        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold flex-shrink-0 ${METHOD_COLORS[ep.method]}`}>
+          {ep.method}
+        </span>
         <code className="font-mono text-sm text-slate-800 dark:text-slate-200 font-medium">{ep.path}</code>
         <span className="text-sm text-slate-500 dark:text-slate-400 flex-1 truncate">{ep.title}</span>
         {ep.auth && (
@@ -448,7 +395,6 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
         <div className="border-t border-slate-100 dark:border-slate-800 px-5 py-6 space-y-5 bg-slate-50/40 dark:bg-slate-900/50">
           <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{ep.description}</p>
 
-          {ep.queryParams && ep.queryParams.length > 0 && <ParamTable params={ep.queryParams} />}
           {ep.bodyParams && ep.bodyParams.length > 0 && <ParamTable params={ep.bodyParams} body />}
           {ep.responseFields && ep.responseFields.length > 0 && <ResponseFieldsTable fields={ep.responseFields} />}
 
@@ -512,16 +458,14 @@ export default function ApiDocsClient() {
               </svg>
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">
-                API Documentation
-              </h1>
+              <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">API Documentation</h1>
               <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">
                 Toolblip REST API — integrate tools and user auth into any app
               </p>
             </div>
           </div>
 
-          {/* Key fact cards */}
+          {/* Key info cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
             <div className="bg-slate-900 dark:bg-slate-800 rounded-xl px-4 py-3.5">
               <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest block mb-1">Base URL</span>
@@ -609,7 +553,7 @@ export default function ApiDocsClient() {
                                   : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-200'
                               }`}
                             >
-                              <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold flex-shrink-0 ${METHOD_COLORS[ep.method].badge}`}>
+                              <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold flex-shrink-0 ${METHOD_COLORS[ep.method]}`}>
                                 {ep.method}
                               </span>
                               <span className="truncate font-mono text-xs flex-1">{ep.path}</span>
@@ -629,6 +573,8 @@ export default function ApiDocsClient() {
                 {[
                   { id: 'overview', label: 'Overview' },
                   { id: 'quick-start', label: 'Quick Start' },
+                  { id: 'tools', label: 'Tools' },
+                  { id: 'auth', label: 'Authentication' },
                   { id: 'status-codes', label: 'Status Codes' },
                   { id: 'get-help', label: 'Get Help' },
                 ].map((item) => (
