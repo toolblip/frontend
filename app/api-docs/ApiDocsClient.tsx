@@ -3,11 +3,8 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 
-// ─── Config ───────────────────────────────────────────────────────────────────
-// Primary: Railway production. api.toolblip.com once SSL is ready.
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://toolblip-api-production.up.railway.app';
+const BASE_URL = 'https://toolblip-api-production.up.railway.app';
 
-// ─── Types ────────────────────────────────────────────────────────────────────
 type HttpMethod = 'GET' | 'POST';
 
 interface Param {
@@ -38,9 +35,8 @@ interface Endpoint {
   response: string;
 }
 
-// ─── Endpoints ────────────────────────────────────────────────────────────────
 const ENDPOINTS: Endpoint[] = [
-  // ── Tools ──────────────────────────────────────────────────────────────────
+  // ── Tools ───────────────────────────────────────────────────────────────
   {
     id: 'list-tools',
     group: 'tools',
@@ -48,16 +44,41 @@ const ENDPOINTS: Endpoint[] = [
     path: '/api/tools',
     auth: false,
     title: 'List all tools',
-    description: 'Returns a paginated list of all tools. Supports filtering by category and full-text search.',
+    description:
+      'Returns a paginated list of tools. Supports filtering by category and full-text search.',
     queryParams: [
-      { name: 'category', type: 'string', required: false, description: 'Filter by category slug (e.g. "developer", "image", "writing")' },
-      { name: 'search', type: 'string', required: false, description: 'Full-text search across tool name and description' },
-      { name: 'page', type: 'integer', required: false, description: 'Page number (default: 1)' },
-      { name: 'per_page', type: 'integer', required: false, description: 'Results per page (default: 20, max: 100)' },
+      {
+        name: 'category',
+        type: 'string',
+        required: false,
+        description: 'Filter by category slug (e.g. "developer", "image", "writing")',
+      },
+      {
+        name: 'search',
+        type: 'string',
+        required: false,
+        description: 'Full-text search across tool name and description',
+      },
+      {
+        name: 'page',
+        type: 'integer',
+        required: false,
+        description: 'Page number (default: 1)',
+      },
+      {
+        name: 'per_page',
+        type: 'integer',
+        required: false,
+        description: 'Results per page (default: 20, max: 100)',
+      },
     ],
     responseFields: [
-      { field: 'tools.tools[]', type: 'array', description: 'Array of Tool objects' },
-      { field: 'tools.meta', type: 'object', description: 'Pagination metadata: current_page, total, per_page, last_page' },
+      { field: 'tools.tools[]', type: 'array', description: 'Array of tool objects' },
+      {
+        field: 'tools.meta',
+        type: 'object',
+        description: 'Pagination metadata: current_page, total, per_page, last_page',
+      },
     ],
     curl: `curl -X GET "${BASE_URL}/api/tools" \\
   -H "Accept: application/json"`,
@@ -91,7 +112,8 @@ const ENDPOINTS: Endpoint[] = [
     path: '/api/tools/{slug}',
     auth: false,
     title: 'Get tool by slug',
-    description: 'Returns a single tool by its URL-safe slug. Returns 404 if not found.',
+    description:
+      'Returns a single tool by its URL-safe slug. Returns 404 if not found.',
     responseFields: [
       { field: 'tool.id', type: 'integer', description: 'Unique tool ID' },
       { field: 'tool.slug', type: 'string', description: 'URL-safe identifier' },
@@ -118,7 +140,7 @@ const ENDPOINTS: Endpoint[] = [
 }`,
   },
 
-  // ── Auth ────────────────────────────────────────────────────────────────────
+  // ── Auth ────────────────────────────────────────────────────────────────
   {
     id: 'register',
     group: 'auth',
@@ -126,12 +148,18 @@ const ENDPOINTS: Endpoint[] = [
     path: '/api/auth/register',
     auth: false,
     title: 'Register new account',
-    description: 'Create a new user account. Returns a Bearer token to use in authenticated requests.',
+    description:
+      'Create a new user account. Returns a Bearer token to use in authenticated requests.',
     bodyParams: [
       { name: 'name', type: 'string', required: true, description: 'Full display name' },
       { name: 'email', type: 'string', required: true, description: 'Email address — must be unique' },
       { name: 'password', type: 'string', required: true, description: 'Password — minimum 8 characters' },
-      { name: 'password_confirmation', type: 'string', required: true, description: 'Must match password exactly' },
+      {
+        name: 'password_confirmation',
+        type: 'string',
+        required: true,
+        description: 'Must match password exactly',
+      },
     ],
     responseFields: [
       { field: 'user.id', type: 'integer', description: 'User ID' },
@@ -166,7 +194,8 @@ const ENDPOINTS: Endpoint[] = [
     path: '/api/auth/login',
     auth: false,
     title: 'Login',
-    description: 'Authenticate an existing user. Returns a Bearer token for subsequent authenticated requests.',
+    description:
+      'Authenticate an existing user. Returns a Bearer token for subsequent authenticated requests.',
     bodyParams: [
       { name: 'email', type: 'string', required: true, description: 'Account email address' },
       { name: 'password', type: 'string', required: true, description: 'Account password' },
@@ -202,7 +231,8 @@ const ENDPOINTS: Endpoint[] = [
     path: '/api/auth/logout',
     auth: true,
     title: 'Logout',
-    description: 'Invalidate the current session token. After calling this, the token can no longer be used.',
+    description:
+      'Invalidate the current session token. After calling this, the token can no longer be used.',
     responseFields: [
       { field: 'message', type: 'string', description: 'Confirmation message' },
     ],
@@ -258,17 +288,20 @@ const STATUS_CODES = [
   { code: 500, label: 'Server Error', desc: 'Something went wrong on our end.', color: 'text-red-600 dark:text-red-400' },
 ];
 
-const METHOD_COLORS: Record<HttpMethod, { bg: string; text: string; dark: string }> = {
-  GET:  { bg: 'bg-green-100 text-green-700',   text: 'text-green-700',   dark: 'dark:bg-green-950 dark:text-green-400' },
-  POST: { bg: 'bg-blue-100 text-blue-700',     text: 'text-blue-700',    dark: 'dark:bg-blue-950 dark:text-blue-400' },
+const METHOD_COLORS: Record<HttpMethod, { badge: string }> = {
+  GET: {
+    badge: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400',
+  },
+  POST: {
+    badge: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400',
+  },
 };
 
-// ─── Components ───────────────────────────────────────────────────────────────
-
 function MethodBadge({ method }: { method: HttpMethod }) {
-  const c = METHOD_COLORS[method];
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold ${c.bg} ${c.text} ${c.dark}`}>
+    <span
+      className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold flex-shrink-0 ${METHOD_COLORS[method].badge}`}
+    >
       {method}
     </span>
   );
@@ -284,15 +317,14 @@ function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handleCopy}
-      className="flex items-center gap-1.5 px-2.5 py-1.5 text-slate-400 hover:text-slate-200 hover:bg-white/10 text-xs rounded-lg transition-colors"
-      aria-label="Copy to clipboard"
+      className="flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-500 dark:hover:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
     >
       {copied ? (
         <>
-          <svg className="w-3.5 h-3.5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="w-3.5 h-3.5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
-          <span className="text-green-400">Copied</span>
+          <span className="text-emerald-500">Copied</span>
         </>
       ) : (
         <>
@@ -320,7 +352,7 @@ function ParamTable({ params, body }: { params: Param[]; body?: boolean }) {
       <h4 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">
         {body ? 'Body Parameters' : 'Query Parameters'}
       </h4>
-      <div className="border border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden">
+      <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
             <tr>
@@ -330,12 +362,18 @@ function ParamTable({ params, body }: { params: Param[]; body?: boolean }) {
               <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs">Description</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-50 dark:divide-slate-800/60">
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
             {params.map((p, i) => (
               <tr key={i} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30">
-                <td className="px-4 py-2.5 font-mono text-xs text-green-600 dark:text-green-400 font-medium">{p.name}</td>
+                <td className="px-4 py-2.5 font-mono text-xs text-emerald-600 dark:text-emerald-400 font-medium">{p.name}</td>
                 <td className="px-4 py-2.5 text-xs text-slate-500 dark:text-slate-500">{p.type}</td>
-                <td className="px-4 py-2.5 text-xs">{p.required ? <span className="text-red-500 font-medium">Yes</span> : <span className="text-slate-400">No</span>}</td>
+                <td className="px-4 py-2.5 text-xs">
+                  {p.required ? (
+                    <span className="text-red-500 font-medium">Yes</span>
+                  ) : (
+                    <span className="text-slate-400">No</span>
+                  )}
+                </td>
                 <td className="px-4 py-2.5 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">{p.description}</td>
               </tr>
             ))}
@@ -350,7 +388,7 @@ function ResponseFieldsTable({ fields }: { fields: ResponseField[] }) {
   return (
     <div className="mb-5">
       <h4 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Response Fields</h4>
-      <div className="border border-slate-100 dark:border-slate-800 rounded-xl overflow-hidden">
+      <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
         <table className="w-full text-sm">
           <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
             <tr>
@@ -359,10 +397,10 @@ function ResponseFieldsTable({ fields }: { fields: ResponseField[] }) {
               <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs">Description</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-50 dark:divide-slate-800/60">
+          <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
             {fields.map((f, i) => (
               <tr key={i} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30">
-                <td className="px-4 py-2.5 font-mono text-xs text-green-600 dark:text-green-400 font-medium">{f.field}</td>
+                <td className="px-4 py-2.5 font-mono text-xs text-emerald-600 dark:text-emerald-400 font-medium">{f.field}</td>
                 <td className="px-4 py-2.5 text-xs text-slate-500 dark:text-slate-500">{f.type}</td>
                 <td className="px-4 py-2.5 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">{f.description}</td>
               </tr>
@@ -380,9 +418,8 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
   return (
     <div
       id={ep.id}
-      className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transition-all hover:border-green-200 dark:hover:border-green-800 scroll-mt-20"
+      className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transition-all hover:border-emerald-200 dark:hover:border-emerald-800 scroll-mt-20"
     >
-      {/* Header — always visible */}
       <button
         onClick={() => setOpen(!open)}
         className="w-full flex items-center gap-3 px-5 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-left"
@@ -407,7 +444,6 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
         </svg>
       </button>
 
-      {/* Expanded content */}
       {open && (
         <div className="border-t border-slate-100 dark:border-slate-800 px-5 py-6 space-y-5 bg-slate-50/40 dark:bg-slate-900/50">
           <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{ep.description}</p>
@@ -437,7 +473,6 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
   );
 }
 
-// ─── Main Component ───────────────────────────────────────────────────────────
 export default function ApiDocsClient() {
   const [activeId, setActiveId] = useState<string>('');
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -465,33 +500,35 @@ export default function ApiDocsClient() {
   };
 
   return (
-    <div className="bg-slate-50 dark:bg-slate-950">
+    <div className="bg-slate-50 dark:bg-slate-950 min-h-screen">
 
-      {/* ── Hero ───────────────────────────────────────────────────── */}
-      <div id="overview" className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="flex items-start gap-4 mb-8">
-            <div className="w-[52px] h-[52px] bg-[#58D65D] rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-green-200/50 dark:shadow-green-900/30">
+      {/* ── Hero ──────────────────────────────────────────────────────── */}
+      <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+          <div className="flex items-start gap-4 mb-10">
+            <div className="w-12 h-12 bg-[#58D65D] rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-emerald-200/50 dark:shadow-emerald-900/30">
               <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
               </svg>
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">API Documentation</h1>
-              <p className="text-slate-500 dark:text-slate-400 mt-0.5 text-sm">
+              <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">
+                API Documentation
+              </h1>
+              <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">
                 Toolblip REST API — integrate tools and user auth into any app
               </p>
             </div>
           </div>
 
-          {/* Key facts */}
+          {/* Key fact cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-            <div className="flex flex-col gap-1 bg-slate-900 dark:bg-slate-800 rounded-xl px-4 py-3">
-              <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Base URL</span>
+            <div className="bg-slate-900 dark:bg-slate-800 rounded-xl px-4 py-3.5">
+              <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest block mb-1">Base URL</span>
               <code className="text-sm font-mono text-[#58D65D] break-all">https://toolblip-api-production.up.railway.app</code>
-              <span className="text-xs text-slate-500 font-normal">SSL: https://api.toolblip.com (coming soon)</span>
+              <span className="text-xs text-slate-500 mt-0.5 block">SSL: api.toolblip.com (coming soon)</span>
             </div>
-            <div className="flex items-center gap-2.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3">
+            <div className="flex items-center gap-3 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3.5">
               <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
               </svg>
@@ -500,7 +537,7 @@ export default function ApiDocsClient() {
                 <code className="text-xs font-mono text-slate-700 dark:text-slate-300">Bearer token</code>
               </div>
             </div>
-            <div className="flex items-center gap-2.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3">
+            <div className="flex items-center gap-3 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3.5">
               <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
@@ -509,7 +546,7 @@ export default function ApiDocsClient() {
                 <span className="text-xs text-slate-700 dark:text-slate-300">JSON only</span>
               </div>
             </div>
-            <div className="flex items-center gap-2.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3">
+            <div className="flex items-center gap-3 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3.5">
               <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
@@ -521,20 +558,20 @@ export default function ApiDocsClient() {
           </div>
 
           {/* Auth callout */}
-          <div className="bg-green-50 dark:bg-green-950/50 border border-green-100 dark:border-green-900 rounded-xl p-4 flex items-start gap-3">
-            <svg className="w-5 h-5 text-[#58D65D] dark:text-green-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <div className="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900 rounded-xl p-4 flex items-start gap-3">
+            <svg className="w-5 h-5 text-[#58D65D] dark:text-emerald-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             <div>
-              <p className="text-sm font-semibold text-green-900 dark:text-green-300 mb-0.5">Authentication</p>
-              <p className="text-sm text-green-700 dark:text-green-400 leading-relaxed">
-                Include the token from{' '}
-                <code className="font-mono text-xs bg-green-100 dark:bg-green-900/50 px-1 rounded">register</code>{' '}
+              <p className="text-sm font-semibold text-emerald-900 dark:text-emerald-300 mb-0.5">Authentication</p>
+              <p className="text-sm text-emerald-700 dark:text-emerald-400 leading-relaxed">
+                Pass the token from{' '}
+                <code className="font-mono text-xs bg-emerald-100 dark:bg-emerald-900/50 px-1 rounded">register</code>{' '}
                 or{' '}
-                <code className="font-mono text-xs bg-green-100 dark:bg-green-900/50 px-1 rounded">login</code>{' '}
+                <code className="font-mono text-xs bg-emerald-100 dark:bg-emerald-900/50 px-1 rounded">login</code>{' '}
                 in every authenticated request:
               </p>
-              <code className="mt-2 block bg-slate-900 dark:bg-slate-800 text-[#58D65D] dark:text-green-300 rounded-lg px-3 py-2 text-xs font-mono">
+              <code className="mt-2 block bg-slate-900 dark:bg-slate-800 text-[#58D65D] dark:text-emerald-300 rounded-lg px-3 py-2 text-xs font-mono">
                 Authorization: Bearer &lt;your-token&gt;
               </code>
             </div>
@@ -550,7 +587,9 @@ export default function ApiDocsClient() {
           <aside className="lg:col-span-1">
             <div className="sticky top-20 space-y-6">
               <div>
-                <p className="text-[11px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest mb-3 px-1">Endpoints</p>
+                <p className="text-[11px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest mb-3 px-1">
+                  Endpoints
+                </p>
                 <nav className="space-y-5">
                   {GROUPS.map((g) => (
                     <div key={g.id}>
@@ -559,7 +598,6 @@ export default function ApiDocsClient() {
                       </p>
                       <div className="space-y-0.5">
                         {ENDPOINTS.filter((ep) => ep.group === g.id).map((ep) => {
-                          const c = METHOD_COLORS[ep.method];
                           const isActive = activeId === ep.id;
                           return (
                             <button
@@ -567,11 +605,11 @@ export default function ApiDocsClient() {
                               onClick={() => scrollTo(ep.id)}
                               className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all text-left ${
                                 isActive
-                                  ? 'bg-green-100 dark:bg-green-950 text-green-700 dark:text-green-400'
+                                  ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400'
                                   : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-200'
                               }`}
                             >
-                              <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold flex-shrink-0 ${c.bg} ${c.text} ${c.dark}`}>
+                              <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold flex-shrink-0 ${METHOD_COLORS[ep.method].badge}`}>
                                 {ep.method}
                               </span>
                               <span className="truncate font-mono text-xs flex-1">{ep.path}</span>
@@ -585,23 +623,23 @@ export default function ApiDocsClient() {
               </div>
 
               <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
-                <p className="text-[11px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest mb-3 px-1">On this page</p>
-                <div className="space-y-0.5">
-                  {[
-                    { id: 'overview', label: 'Overview' },
-                    { id: 'quick-start', label: '⚡ Quick Start' },
-                    { id: 'status-codes', label: 'Status Codes' },
-                    { id: 'get-help', label: 'Get Help' },
-                  ].map((item) => (
-                    <button
-                      key={item.id}
-                      onClick={() => scrollTo(item.id)}
-                      className="block w-full px-3 py-1.5 text-xs text-slate-500 dark:text-slate-500 hover:text-green-600 dark:hover:text-green-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-left"
-                    >
-                      {item.label}
-                    </button>
-                  ))}
-                </div>
+                <p className="text-[11px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest mb-3 px-1">
+                  On this page
+                </p>
+                {[
+                  { id: 'overview', label: 'Overview' },
+                  { id: 'quick-start', label: 'Quick Start' },
+                  { id: 'status-codes', label: 'Status Codes' },
+                  { id: 'get-help', label: 'Get Help' },
+                ].map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => scrollTo(item.id)}
+                    className="block w-full px-3 py-1.5 text-xs text-slate-500 dark:text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-left"
+                  >
+                    {item.label}
+                  </button>
+                ))}
               </div>
             </div>
           </aside>
@@ -619,7 +657,7 @@ export default function ApiDocsClient() {
                 {[
                   {
                     icon: (
-                      <svg className="w-5 h-5 text-[#58D65D] dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <svg className="w-5 h-5 text-[#58D65D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                       </svg>
                     ),
@@ -629,7 +667,7 @@ export default function ApiDocsClient() {
                   },
                   {
                     icon: (
-                      <svg className="w-5 h-5 text-[#58D65D] dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <svg className="w-5 h-5 text-[#58D65D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
                       </svg>
                     ),
@@ -639,7 +677,7 @@ export default function ApiDocsClient() {
                   },
                   {
                     icon: (
-                      <svg className="w-5 h-5 text-[#58D65D] dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <svg className="w-5 h-5 text-[#58D65D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
                       </svg>
                     ),
@@ -649,7 +687,7 @@ export default function ApiDocsClient() {
                   },
                   {
                     icon: (
-                      <svg className="w-5 h-5 text-[#58D65D] dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <svg className="w-5 h-5 text-[#58D65D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                       </svg>
                     ),
@@ -658,9 +696,14 @@ export default function ApiDocsClient() {
                     code: undefined,
                   },
                 ].map((card, i) => (
-                  <div key={i} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 hover:border-slate-300 dark:hover:border-slate-700 transition-colors">
+                  <div
+                    key={i}
+                    className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 hover:border-slate-300 dark:hover:border-slate-700 transition-colors"
+                  >
                     <div className="flex items-center gap-2.5 mb-3">
-                      <div className="w-9 h-9 bg-green-50 dark:bg-green-950/50 rounded-xl flex items-center justify-center flex-shrink-0">{card.icon}</div>
+                      <div className="w-9 h-9 bg-emerald-50 dark:bg-emerald-950/50 rounded-xl flex items-center justify-center flex-shrink-0">
+                        {card.icon}
+                      </div>
                       <h3 className="font-semibold text-slate-800 dark:text-slate-200 text-sm">{card.title}</h3>
                     </div>
                     <p className="text-sm text-slate-600 dark:text-slate-400 mb-3 leading-relaxed">{card.desc}</p>
@@ -673,13 +716,13 @@ export default function ApiDocsClient() {
             {/* Quick Start */}
             <section id="quick-start">
               <div className="flex items-center gap-3 mb-6">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">⚡ Quick Start</h2>
+                <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">Quick Start</h2>
                 <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
               </div>
               <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
                 <div className="bg-slate-900 dark:bg-slate-800 px-5 py-3 border-b border-slate-700/50 flex items-center gap-2">
                   <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">bash</span>
-                  <span className="text-[10px] text-slate-600 dark:text-slate-500">Quick 3-step example</span>
+                  <span className="text-[10px] text-slate-600 dark:text-slate-500">3-step example</span>
                 </div>
                 <pre className="text-[12.5px] font-mono text-slate-300 p-5 overflow-x-auto leading-relaxed whitespace-pre">{`# 1. Register a new account
 curl -X POST "${BASE_URL}/api/auth/register" \\
@@ -688,14 +731,14 @@ curl -X POST "${BASE_URL}/api/auth/register" \\
   -d '{"name":"Jane Doe","email":"jane@example.com","password":"secret123","password_confirmation":"secret123"}'
 
 # Response: { "user": {...}, "token": "1|Xr8Kb..." }
-# → Save the token — you'll need it for authenticated requests
+# → Save the token — you need it for authenticated requests
 
-# 2. Use the token to fetch your profile
+# 2. Fetch your user profile
 curl -X GET "${BASE_URL}/api/auth/user" \\
   -H "Authorization: Bearer $TOKEN" \\
   -H "Accept: application/json"
 
-# 3. List all available tools (no auth needed)
+# 3. List all tools (no auth required)
 curl -X GET "${BASE_URL}/api/tools" \\
   -H "Accept: application/json"`}</pre>
               </div>
@@ -705,7 +748,9 @@ curl -X GET "${BASE_URL}/api/tools" \\
             {GROUPS.map((g) => (
               <section key={g.id} id={g.id}>
                 <div className="flex items-center gap-3 mb-6">
-                  <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">{g.icon} {g.label}</h2>
+                  <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+                    {g.icon} {g.label}
+                  </h2>
                   <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
                 </div>
                 <div className="space-y-3">
@@ -731,7 +776,7 @@ curl -X GET "${BASE_URL}/api/tools" \\
                       <th className="px-5 py-3.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs">Description</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-50 dark:divide-slate-800/60">
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
                     {STATUS_CODES.map((s) => (
                       <tr key={s.code} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30">
                         <td className="px-5 py-3">
@@ -749,21 +794,34 @@ curl -X GET "${BASE_URL}/api/tools" \\
             </section>
 
             {/* Help CTA */}
-            <section id="get-help" className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 rounded-2xl border border-green-100 dark:border-green-900 p-7">
+            <section
+              id="get-help"
+              className="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30 rounded-2xl border border-emerald-100 dark:border-emerald-900 p-7"
+            >
               <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-1">Need help with the API?</h2>
               <p className="text-sm text-slate-600 dark:text-slate-400 mb-5 leading-relaxed">
                 Questions about integration? Reach out at{' '}
-                <a href="mailto:api@toolblip.com" className="text-[#58D65D] dark:text-green-400 hover:underline font-medium">api@toolblip.com</a>
-                {' '}or open an issue on GitHub.
+                <a href="mailto:api@toolblip.com" className="text-[#58D65D] dark:text-emerald-400 hover:underline font-medium">
+                  api@toolblip.com
+                </a>{' '}
+                or open an issue on GitHub.
               </p>
               <div className="flex flex-wrap gap-3">
-                <a href="https://github.com/toolblip" target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" /></svg>
+                <a
+                  href="https://github.com/toolblip"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                >
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+                  </svg>
                   View on GitHub
                 </a>
-                <Link href="/"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#58D65D] dark:bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-[#4bc44e] dark:hover:bg-green-500 transition-colors">
+                <Link
+                  href="/"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#58D65D] dark:bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-[#4bc44e] dark:hover:bg-emerald-500 transition-colors"
+                >
                   Explore Toolblip →
                 </Link>
               </div>
@@ -772,7 +830,6 @@ curl -X GET "${BASE_URL}/api/tools" \\
           </main>
         </div>
       </div>
-
     </div>
   );
 }
