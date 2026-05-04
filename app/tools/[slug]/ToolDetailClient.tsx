@@ -46,6 +46,7 @@ import Sha256HashClient from '@/components/tools/Sha256HashClient';
 import SqlToJsonClient from '@/components/tools/SqlToJsonClient';
 import SquareCropClient from '@/components/tools/SquareCropClient';
 import TextSorterClient from '@/components/tools/TextSorterClient';
+import TextDiffClient from '@/components/tools/TextDiffClient';
 import UnitConverterClient from '@/components/tools/UnitConverterClient';
 import UnixTimestampConverterClient from '@/components/tools/UnixTimestampConverterClient';
 import UrlParamsClient from '@/components/tools/UrlParamsClient';
@@ -608,42 +609,6 @@ function SlugToTextTool() {
   );
 }
 
-function RemoveDuplicateLinesTool() {
-  const [input, setInput] = useState('');
-  const [output, setOutput] = useState('');
-  const [caseSensitive, setCaseSensitive] = useState(true);
-
-  const process = () => {
-    const lines = input.split('\n').filter(Boolean);
-    const seen = new Set<string>();
-    const unique = lines.filter(line => {
-      const key = caseSensitive ? line : line.toLowerCase();
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    });
-    setOutput(unique.join('\n'));
-  };
-
-  return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-2">
-        <input
-          type="checkbox"
-          id="caseSensitive"
-          checked={caseSensitive}
-          onChange={e => setCaseSensitive(e.target.checked)}
-          className="w-4 h-4 accent-red-600"
-        />
-        <label htmlFor="caseSensitive" className="text-sm text-gray-600 dark:text-gray-300">Case-sensitive</label>
-      </div>
-      <Textarea value={input} onChange={setInput} placeholder="Enter lines here — duplicates will be removed…" />
-      <ProcessButton onClick={process}>Remove Duplicates</ProcessButton>
-      <OutputArea value={output} />
-    </div>
-  );
-}
-
 function SortLinesTool() {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
@@ -737,7 +702,6 @@ function ToolRouter({ tool }: { tool: Tool }) {
     case 'sass-to-css':           return <SassToCssTool />;
     case 'text-to-slug':          return <TextToSlugTool />;
     case 'slug-to-text':          return <SlugToTextTool />;
-    case 'remove-duplicate-lines': return <RemoveDuplicateLinesTool />;
     case 'sort-lines':            return <SortLinesTool />;
     case 'reverse-lines':         return <ReverseLinesTool />;
     case 'cron-parser':            return <CronParserClient />;
@@ -746,6 +710,7 @@ function ToolRouter({ tool }: { tool: Tool }) {
     case 'json-validator':         return <JsonValidatorClient />;
     case 'jwt-decoder':            return <JwtDecoderClient />;
     case 'text-sorter':            return <TextSorterClient />;
+    case 'text-diff':             return <TextDiffClient />;
     case 'remove-duplicate-lines': return <RemoveDuplicateLinesClient />;
     case 'hex-to-rgb':             return <HexToRgbClient />;
     case 'rgb-to-hex':             return <RgbToHexClient />;
