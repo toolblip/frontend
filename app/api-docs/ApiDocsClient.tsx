@@ -488,8 +488,8 @@ export default function ApiDocsClient() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
             <div className="flex flex-col gap-1 bg-slate-900 dark:bg-slate-800 rounded-xl px-4 py-3">
               <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest">Base URL</span>
-              <code className="text-sm font-mono text-[#58D65D] break-all">toolblip-api-production.up.railway.app</code>
-              <span className="text-xs text-slate-500 font-normal">SSL: api.toolblip.com (coming soon)</span>
+              <code className="text-sm font-mono text-[#58D65D] break-all">https://toolblip-api-production.up.railway.app</code>
+              <span className="text-xs text-slate-500 font-normal">SSL: https://api.toolblip.com (coming soon)</span>
             </div>
             <div className="flex items-center gap-2.5 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3">
               <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -589,6 +589,7 @@ export default function ApiDocsClient() {
                 <div className="space-y-0.5">
                   {[
                     { id: 'overview', label: 'Overview' },
+                    { id: 'quick-start', label: '⚡ Quick Start' },
                     { id: 'status-codes', label: 'Status Codes' },
                     { id: 'get-help', label: 'Get Help' },
                   ].map((item) => (
@@ -666,6 +667,37 @@ export default function ApiDocsClient() {
                     {card.code && <CodeBlock code={card.code} />}
                   </div>
                 ))}
+              </div>
+            </section>
+
+            {/* Quick Start */}
+            <section id="quick-start">
+              <div className="flex items-center gap-3 mb-6">
+                <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">⚡ Quick Start</h2>
+                <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
+              </div>
+              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+                <div className="bg-slate-900 dark:bg-slate-800 px-5 py-3 border-b border-slate-700/50 flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">bash</span>
+                  <span className="text-[10px] text-slate-600 dark:text-slate-500">Quick 3-step example</span>
+                </div>
+                <pre className="text-[12.5px] font-mono text-slate-300 p-5 overflow-x-auto leading-relaxed whitespace-pre">{`# 1. Register a new account
+curl -X POST "${BASE_URL}/api/auth/register" \\
+  -H "Content-Type: application/json" \\
+  -H "Accept: application/json" \\
+  -d '{"name":"Jane Doe","email":"jane@example.com","password":"secret123","password_confirmation":"secret123"}'
+
+# Response: { "user": {...}, "token": "1|Xr8Kb..." }
+# → Save the token — you'll need it for authenticated requests
+
+# 2. Use the token to fetch your profile
+curl -X GET "${BASE_URL}/api/auth/user" \\
+  -H "Authorization: Bearer $TOKEN" \\
+  -H "Accept: application/json"
+
+# 3. List all available tools (no auth needed)
+curl -X GET "${BASE_URL}/api/tools" \\
+  -H "Accept: application/json"`}</pre>
               </div>
             </section>
 
