@@ -3490,6 +3490,916 @@ function CssAnimationGeneratorTool() {
   );
 }
 
+// ─── Anagram Generator ──────────────────────────────────────────────────
+function AnagramGeneratorTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const generate = () => {
+    if (!input.trim()) { setOutput(''); return; }
+    const chars = input.toLowerCase().replace(/[^a-z]/g, '').split('');
+    const permute = (arr: string[], m: string[] = []): string[] => {
+      if (!arr.length) return [m.join('')];
+      return arr.flatMap((c, i) => permute([...arr.slice(0, i), ...arr.slice(i + 1)], [...m, c]));
+    };
+    const anagrams = permute(chars).filter((a, i, arr) => arr.indexOf(a) === i);
+    setOutput(anagrams.join('\n'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Word or phrase</label>
+        <input value={input} onChange={e => setInput(e.target.value)} placeholder="Enter word or phrase" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={generate}>Generate Anagrams</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Palindrome Checker ─────────────────────────────────────────────────
+function PalindromeCheckerTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const check = () => {
+    if (!input.trim()) { setOutput(''); return; }
+    const cleaned = input.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const reversed = cleaned.split('').reverse().join('');
+    const isPalindrome = cleaned === reversed;
+    setOutput(`Input: "${input}"\nCleaned: "${cleaned}"\nReversed: "${reversed}"\n\nResult: ${isPalindrome ? '✓ IS a palindrome' : '✗ NOT a palindrome'}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Text to check</label>
+        <input value={input} onChange={e => setInput(e.target.value)} placeholder="Enter text or number" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={check}>Check Palindrome</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Backslash Escape/Unescape ─────────────────────────────────────────
+function BackslashEscapeUnescapeTool() {
+  const [input, setInput] = useState('');
+  const [mode, setMode] = useState<'escape' | 'unescape'>('escape');
+  const [output, setOutput] = useState('');
+
+  const process = () => {
+    if (!input) { setOutput(''); return; }
+    setOutput(mode === 'escape' ? input.replace(/\\/g, '\\\\').replace(/"/g, '\\"') : input.replace(/\\"/g, '"').replace(/\\\\/g, '\\'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        {(['escape', 'unescape'] as const).map(m => (
+          <button key={m} onClick={() => setMode(m)} className={`px-4 py-2 text-sm rounded-lg ${mode === m ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200'}`}>{m.charAt(0).toUpperCase() + m.slice(1)}</button>
+        ))}
+      </div>
+      <Textarea value={input} onChange={setInput} placeholder="Enter text..." />
+      <ProcessButton onClick={process}>Process</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Character Frequency Counter ───────────────────────────────────────
+function CharacterFrequencyCounterTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const count = () => {
+    if (!input) { setOutput(''); return; }
+    const freq: Record<string, number> = {};
+    for (const c of input) freq[c] = (freq[c] || 0) + 1;
+    const sorted = Object.entries(freq).sort((a, b) => b[1] - a[1]);
+    setOutput(sorted.map(([c, n]) => `'${c === ' ' ? '(space)' : c}' : ${n}`).join('\n'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Enter text..." />
+      <ProcessButton onClick={count}>Count Frequency</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Base64 File Encoder ───────────────────────────────────────────────
+function Base64FileEncoderTool() {
+  const [mode, setMode] = useState<'encode' | 'decode'>('encode');
+  const [output, setOutput] = useState('');
+  const [fileName, setFileName] = useState('');
+
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setFileName(file.name);
+    const reader = new FileReader();
+    reader.onload = ev => setOutput(ev.target?.result as string);
+    reader.readAsText(file);
+  };
+
+  const handleDecode = () => {
+    try {
+      const decoded = atob(output);
+      const blob = new Blob([decoded], { type: 'application/octet-stream' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'decoded_file';
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch { setOutput('Invalid Base64 input'); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        {(['encode', 'decode'] as const).map(m => (
+          <button key={m} onClick={() => setMode(m)} className={`px-4 py-2 text-sm rounded-lg ${mode === m ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200'}`}>{m.charAt(0).toUpperCase() + m.slice(1)}</button>
+        ))}
+      </div>
+      {mode === 'encode' ? (
+        <>
+          <input type="file" onChange={handleFile} className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-red-50 dark:file:bg-red-900/30 file:text-red-600 file:font-medium hover:file:bg-red-100 dark:hover:file:bg-red-900/50" />
+          <Textarea value={output} onChange={setOutput} placeholder="Base64 output will appear here..." />
+        </>
+      ) : (
+        <>
+          <Textarea value={output} onChange={setOutput} placeholder="Paste Base64 data..." />
+          <ProcessButton onClick={handleDecode}>Decode & Download</ProcessButton>
+        </>
+      )}
+    </div>
+  );
+}
+
+// ─── Code Beautifier ───────────────────────────────────────────────────
+function CodeBeautifierTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+  const [lang, setLang] = useState('json');
+
+  const beautify = () => {
+    if (!input) { setOutput(''); return; }
+    try {
+      if (lang === 'json') {
+        setOutput(JSON.stringify(JSON.parse(input), null, 2));
+      } else if (lang === 'javascript') {
+        let formatted = input.replace(/\{/g, '{\n').replace(/\}/g, '}\n').replace(/;/g, ';\n');
+        setOutput(formatted);
+      } else if (lang === 'html') {
+        setOutput(input.replace(/></g, '>\n<'));
+      } else {
+        setOutput(input);
+      }
+    } catch { setOutput('Parse error'); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2 flex-wrap">
+        {['json', 'javascript', 'html', 'css'].map(l => (
+          <button key={l} onClick={() => setLang(l)} className={`px-3 py-1.5 text-sm rounded-lg ${lang === l ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200'}`}>{l}</button>
+        ))}
+      </div>
+      <Textarea value={input} onChange={setInput} placeholder="Paste code to beautify..." className="!h-32" />
+      <ProcessButton onClick={beautify}>Beautify</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── CSS to SCSS Converter ─────────────────────────────────────────────
+function CssToScssTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const convert = () => {
+    if (!input) { setOutput(''); return; }
+    let scss = input;
+    setOutput(scss);
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Paste CSS..." className="!h-32" />
+      <ProcessButton onClick={convert}>Convert to SCSS</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── TOML to JSON ───────────────────────────────────────────────────────
+function TomlToJsonTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const convert = () => {
+    if (!input) { setOutput(''); return; }
+    try {
+      const obj: Record<string, unknown> = {};
+      const lines = input.split('\n');
+      let currentSection = '';
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('#')) continue;
+        if (trimmed.startsWith('[')) {
+          currentSection = trimmed.slice(1, -1);
+          obj[currentSection] = {};
+        } else if (trimmed.includes('=')) {
+          const [key, ...valParts] = trimmed.split('=');
+          const value = valParts.join('=').trim().replace(/^["']|["']$/g, '');
+          if (currentSection) {
+            (obj[currentSection] as Record<string, string>)[key.trim()] = value;
+          } else {
+            obj[key.trim()] = value;
+          }
+        }
+      }
+      setOutput(JSON.stringify(obj, null, 2));
+    } catch { setOutput('Invalid TOML'); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Paste TOML..." className="!h-32" />
+      <ProcessButton onClick={convert}>Convert to JSON</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── List Randomizer ───────────────────────────────────────────────────
+function ListRandomizerTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const shuffle = () => {
+    if (!input) { setOutput(''); return; }
+    const items = input.split('\n').filter(l => l.trim());
+    for (let i = items.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [items[i], items[j]] = [items[j], items[i]];
+    }
+    setOutput(items.join('\n'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Enter items (one per line)..." />
+      <ProcessButton onClick={shuffle}>Shuffle List</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Random UUID v7 ────────────────────────────────────────────────────
+function RandomUuidV7Tool() {
+  const [count, setCount] = useState('5');
+  const [output, setOutput] = useState('');
+
+  const generate = () => {
+    const n = Math.min(Math.max(parseInt(count) || 1, 1), 100);
+    const uuidv7 = () => {
+      const now = Date.now();
+      const timeHex = now.toString(16).padStart(12, '0');
+      const rand = Array.from({ length: 10 }, () => Math.floor(Math.random() * 16).toString(16)).join('');
+      return `${timeHex.slice(0, 8)}-${timeHex.slice(8, 12)}-7${rand.slice(1, 4)}-${(parseInt(rand[4], 16) & 0x3f | 0x80).toString(16)}${rand.slice(5, 9)}-${rand.slice(9)}`;
+    };
+    setOutput(Array.from({ length: n }, uuidv7).join('\n'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Count</label>
+        <input type="number" value={count} onChange={e => setCount(e.target.value)} min="1" max="100" className="w-32 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={generate}>Generate UUIDs</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Random IP Address ─────────────────────────────────────────────────
+function RandomIpAddressTool() {
+  const [version, setVersion] = useState<'v4' | 'v6'>('v4');
+  const [count, setCount] = useState('5');
+  const [output, setOutput] = useState('');
+
+  const generate = () => {
+    const n = Math.min(Math.max(parseInt(count) || 1, 1), 100);
+    if (version === 'v4') {
+      setOutput(Array.from({ length: n }, () => `${Math.floor(Math.random()*256)}.${Math.floor(Math.random()*256)}.${Math.floor(Math.random()*256)}.${Math.floor(Math.random()*256)}`).join('\n'));
+    } else {
+      setOutput(Array.from({ length: n }, () => Array.from({ length: 8 }, () => Math.floor(Math.random()*65536).toString(16).padStart(4, '0')).join(':')).join('\n'));
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        <button onClick={() => setVersion('v4')} className={`px-4 py-2 text-sm rounded-lg ${version === 'v4' ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200'}`}>IPv4</button>
+        <button onClick={() => setVersion('v6')} className={`px-4 py-2 text-sm rounded-lg ${version === 'v6' ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200'}`}>IPv6</button>
+        <input type="number" value={count} onChange={e => setCount(e.target.value)} min="1" max="100" placeholder="Count" className="w-24 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={generate}>Generate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Random MAC Generator ───────────────────────────────────────────────
+function RandomMacGeneratorTool() {
+  const [count, setCount] = useState('5');
+  const [output, setOutput] = useState('');
+
+  const generate = () => {
+    const n = Math.min(Math.max(parseInt(count) || 1, 1), 100);
+    setOutput(Array.from({ length: n }, () => Array.from({ length: 6 }, () => Math.floor(Math.random()*256).toString(16).padStart(2, '0')).join('-')).join('\n'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Count</label>
+        <input type="number" value={count} onChange={e => setCount(e.target.value)} min="1" max="100" className="w-32 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={generate}>Generate MACs</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Random Choice Picker ───────────────────────────────────────────────
+function RandomChoicePickerTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+  const [count, setCount] = useState('1');
+
+  const pick = () => {
+    if (!input) { setOutput(''); return; }
+    const items = input.split('\n').filter(l => l.trim());
+    const n = Math.min(Math.max(parseInt(count) || 1, 1), items.length);
+    const shuffled = [...items].sort(() => Math.random() - 0.5);
+    setOutput(shuffled.slice(0, n).join('\n'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Enter choices (one per line)..." />
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">How many to pick?</label>
+        <input type="number" value={count} onChange={e => setCount(e.target.value)} min="1" className="w-24 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={pick}>Pick Random</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Random Password Generator ─────────────────────────────────────────
+function RandomPasswordGeneratorTool() {
+  const [length, setLength] = useState('16');
+  const [output, setOutput] = useState('');
+  const [options, setOptions] = useState({ upper: true, lower: true, number: true, symbol: true });
+
+  const generate = () => {
+    const n = Math.min(Math.max(parseInt(length) || 16, 4), 128);
+    let chars = '';
+    if (options.upper) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    if (options.lower) chars += 'abcdefghijklmnopqrstuvwxyz';
+    if (options.number) chars += '0123456789';
+    if (options.symbol) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+    if (!chars) { setOutput('Select at least one option'); return; }
+    setOutput(Array.from({ length: n }, () => chars[Math.floor(Math.random() * chars.length)]).join(''));
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Length: {length}</label>
+        <input type="range" value={length} onChange={e => setLength(e.target.value)} min="4" max="128" className="w-full" />
+      </div>
+      <div className="flex flex-wrap gap-4">
+        {Object.entries(options).map(([k, v]) => (
+          <label key={k} className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked={v} onChange={e => setOptions(p => ({ ...p, [k]: e.target.checked }))} className="w-4 h-4 accent-red-500" />
+            <span className="text-sm text-gray-600 dark:text-gray-300">{k.charAt(0).toUpperCase() + k.slice(1)}</span>
+          </label>
+        ))}
+      </div>
+      <ProcessButton onClick={generate}>Generate Password</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Email Generator ───────────────────────────────────────────────────
+function EmailGeneratorTool() {
+  const [count, setCount] = useState('5');
+  const [domain, setDomain] = useState('example.com');
+  const [output, setOutput] = useState('');
+
+  const firstNames = ['john', 'jane', 'alex', 'mary', 'david', 'sarah', 'mike', 'emma', 'chris', 'anna'];
+  const lastNames = ['smith', 'doe', 'jones', 'wilson', 'brown', 'taylor', 'anderson', 'thomas', 'jackson', 'white'];
+
+  const generate = () => {
+    const n = Math.min(Math.max(parseInt(count) || 1, 1), 100);
+    setOutput(Array.from({ length: n }, () => {
+      const fn = firstNames[Math.floor(Math.random() * firstNames.length)];
+      const ln = lastNames[Math.floor(Math.random() * lastNames.length)];
+      const num = Math.floor(Math.random() * 999);
+      return `${fn}.${ln}${num}@${domain}`;
+    }).join('\n'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Domain</label>
+          <input value={domain} onChange={e => setDomain(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+        </div>
+        <div>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Count</label>
+          <input type="number" value={count} onChange={e => setCount(e.target.value)} min="1" max="100" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+        </div>
+      </div>
+      <ProcessButton onClick={generate}>Generate Emails</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── MAC Address Generator ──────────────────────────────────────────────
+function MacAddressGeneratorTool() {
+  const [count, setCount] = useState('5');
+  const [format, setFormat] = useState<'dash' | 'colon' | 'period'>('dash');
+  const [output, setOutput] = useState('');
+
+  const generate = () => {
+    const n = Math.min(Math.max(parseInt(count) || 1, 1), 100);
+    const sep = format === 'dash' ? '-' : format === 'colon' ? ':' : '.';
+    setOutput(Array.from({ length: n }, () => Array.from({ length: 6 }, () => Math.floor(Math.random()*256).toString(16).padStart(2, '0')).join(sep)).join('\n'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        {(['dash', 'colon', 'period'] as const).map(f => (
+          <button key={f} onClick={() => setFormat(f)} className={`px-3 py-1.5 text-sm rounded-lg ${format === f ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200'}`}>{f}</button>
+        ))}
+        <input type="number" value={count} onChange={e => setCount(e.target.value)} min="1" max="100" placeholder="Count" className="w-24 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-1.5 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={generate}>Generate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── HMAC Generator ────────────────────────────────────────────────────
+function HmacGeneratorTool() {
+  const [input, setInput] = useState('');
+  const [key, setKey] = useState('');
+  const [algo, setAlgo] = useState('sha256');
+  const [output, setOutput] = useState('');
+
+  const generate = async () => {
+    if (!input || !key) { setOutput('Enter both text and key'); return; }
+    const enc = new TextEncoder();
+    const cryptoKey = await crypto.subtle.importKey('raw', enc.encode(key), { name: 'PBKDF2' }, false, ['deriveBits']);
+    const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt: enc.encode('hmac'), iterations: 100000, hash: algo }, cryptoKey, 256);
+    setOutput(Array.from(new Uint8Array(bits)).map(b => b.toString(16).padStart(2, '0')).join(''));
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Text to hash..." />
+      <input value={key} onChange={e => setKey(e.target.value)} placeholder="Secret key" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      <div className="flex gap-2">
+        {['sha1', 'sha256', 'sha512'].map(h => (
+          <button key={h} onClick={() => setAlgo(h)} className={`px-3 py-1.5 text-sm rounded-lg ${algo === h ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200'}`}>{h.toUpperCase()}</button>
+        ))}
+      </div>
+      <ProcessButton onClick={generate}>Generate HMAC</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── HTML Minifier ─────────────────────────────────────────────────────
+function HtmlMinifierTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const minify = () => {
+    if (!input) { setOutput(''); return; }
+    setOutput(input.replace(/\s+/g, ' ').replace(/>\s+</g, '><').trim());
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Paste HTML..." className="!h-32" />
+      <ProcessButton onClick={minify}>Minify HTML</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── JSON Escape/Unescape ──────────────────────────────────────────────
+function JsonEscapeUnescapeTool() {
+  const [input, setInput] = useState('');
+  const [mode, setMode] = useState<'escape' | 'unescape'>('escape');
+  const [output, setOutput] = useState('');
+
+  const process = () => {
+    if (!input) { setOutput(''); return; }
+    try {
+      setOutput(mode === 'escape' ? JSON.stringify(input) : JSON.parse(input));
+    } catch { setOutput('Invalid JSON'); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        {(['escape', 'unescape'] as const).map(m => (
+          <button key={m} onClick={() => setMode(m)} className={`px-4 py-2 text-sm rounded-lg ${mode === m ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200'}`}>{m.charAt(0).toUpperCase() + m.slice(1)}</button>
+        ))}
+      </div>
+      <Textarea value={input} onChange={setInput} placeholder="Enter text..." />
+      <ProcessButton onClick={process}>Process</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── SVG Minifier ─────────────────────────────────────────────────────
+function SvgMinifierTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const minify = () => {
+    if (!input) { setOutput(''); return; }
+    setOutput(input.replace(/\s+/g, ' ').replace(/>\s+</g, '><').replace(/\s+\/>/g, '/>').trim());
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Paste SVG..." className="!h-32" />
+      <ProcessButton onClick={minify}>Minify SVG</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── ASCII Art Generator ───────────────────────────────────────────────
+function AsciiArtGeneratorTool() {
+  const [input, setInput] = useState('');
+  const [font, setFont] = useState('block');
+  const [output, setOutput] = useState('');
+
+  const fonts: Record<string, string[]> = {
+    block: ['█████', '█   █', '█████', '█   █', '█   █'],
+    bubble: ['╭─────╮', '│     │', '╰─────╯'],
+    sharp: ['▄▄▄▄▄', '█▀▀▀█', '█▄▄▄█', '█   █', '█▄▄▄█'],
+  };
+
+  const generate = () => {
+    if (!input) { setOutput(''); return; }
+    const lines = input.toUpperCase().split('');
+    const artLines = Array.from({ length: 5 }, () => '');
+    for (const char of lines) {
+      const pattern = fonts[font] || fonts.block;
+      const idx = char.charCodeAt(0) - 65;
+      if (idx >= 0 && idx < 26) {
+        for (let i = 0; i < 5; i++) artLines[i] += pattern[i] + '  ';
+      } else {
+        for (let i = 0; i < 5; i++) artLines[i] += '     ';
+      }
+    }
+    setOutput(artLines.join('\n'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        {Object.keys(fonts).map(f => (
+          <button key={f} onClick={() => setFont(f)} className={`px-3 py-1.5 text-sm rounded-lg ${font === f ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200'}`}>{f}</button>
+        ))}
+      </div>
+      <input value={input} onChange={e => setInput(e.target.value)} placeholder="Enter text (A-Z only)" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-red-500" />
+      <ProcessButton onClick={generate}>Generate ASCII Art</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── IP Address Info ───────────────────────────────────────────────────
+function IpAddressInfoTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const analyze = () => {
+    if (!input) { setOutput(''); return; }
+    const parts = input.split('.');
+    if (parts.length !== 4 || parts.some(p => isNaN(parseInt(p)) || parseInt(p) < 0 || parseInt(p) > 255)) {
+      setOutput('Invalid IPv4 address');
+      return;
+    }
+    const first = parseInt(parts[0]);
+    let type = 'Public';
+    if (first === 10 || (first === 172 && parseInt(parts[1]) >= 16 && parseInt(parts[1]) <= 31) || first === 127 || first === 192 && parseInt(parts[1]) === 168) type = 'Private';
+    if (first === 0 || first === 255) type = 'Reserved';
+    const isLoopback = first === 127;
+    const isBroadcast = input === '255.255.255.255';
+    setOutput(`IP: ${input}\nType: ${type}\nLoopback: ${isLoopback ? 'Yes' : 'No'}\nBroadcast: ${isBroadcast ? 'Yes' : 'No'}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <input value={input} onChange={e => setInput(e.target.value)} placeholder="Enter IPv4 address" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      <ProcessButton onClick={analyze}>Analyze</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Markdown Table from JSON ──────────────────────────────────────────
+function MarkdownTableFromJsonTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const convert = () => {
+    if (!input) { setOutput(''); return; }
+    try {
+      const data = JSON.parse(input);
+      const items = Array.isArray(data) ? data : [data];
+      if (!items.length) { setOutput('Empty array'); return; }
+      const keys = Object.keys(items[0]);
+      const header = `| ${keys.join(' | ')} |`;
+      const separator = `| ${keys.map(() => '---').join(' | ')} |`;
+      const rows = items.map(item => `| ${keys.map(k => String(item[k] ?? '')).join(' | ')} |`).join('\n');
+      setOutput(`${header}\n${separator}\n${rows}`);
+    } catch { setOutput('Invalid JSON'); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder='[{"name": "John", "age": 30}]' className="!h-32" />
+      <ProcessButton onClick={convert}>Generate Table</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Random Paragraph Generator ────────────────────────────────────────
+function RandomParagraphGeneratorTool() {
+  const [count, setCount] = useState('3');
+  const [output, setOutput] = useState('');
+
+  const words = ['lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit', 'sed', 'do', 'eiusmod', 'tempor', 'incididunt', 'ut', 'labore', 'et', 'dolore', 'magna', 'aliqua', 'enim', 'ad', 'minim', 'veniam', 'quis', 'nostrud', 'exercitation', 'ullamco', 'laboris', 'nisi', 'aliquip', 'ex', 'ea', 'commodo', 'consequat', 'duis', 'aute', 'irure', 'in', 'reprehenderit', 'voluptate', 'velit', 'esse', 'cillum', 'fugiat', 'nulla', 'pariatur', 'excepteur', 'sint', 'occaecat', 'cupidatat', 'non', 'proident'];
+
+  const generate = () => {
+    const n = Math.min(Math.max(parseInt(count) || 1, 1), 20);
+    const paragraph = () => Array.from({ length: 50 + Math.floor(Math.random() * 50) }, () => words[Math.floor(Math.random() * words.length)]).join(' ').replace(/^(.)/, m => m.toUpperCase()) + '.';
+    setOutput(Array.from({ length: n }, paragraph).join('\n\n'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Number of paragraphs</label>
+        <input type="number" value={count} onChange={e => setCount(e.target.value)} min="1" max="20" className="w-32 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={generate}>Generate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Random Sentence Generator ─────────────────────────────────────────
+function RandomSentenceGeneratorTool() {
+  const [count, setCount] = useState('5');
+  const [output, setOutput] = useState('');
+
+  const words = ['lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit', 'sed', 'do', 'eiusmod', 'tempor', 'incididunt', 'ut', 'labore', 'et', 'dolore', 'magna', 'aliqua', 'enim', 'ad', 'minim', 'veniam', 'quis', 'nostrud', 'exercitation', 'ullamco', 'laboris', 'nisi', 'aliquip', 'ex', 'ea', 'commodo', 'consequat', 'duis', 'aute', 'irure', 'in', 'reprehenderit'];
+
+  const generate = () => {
+    const n = Math.min(Math.max(parseInt(count) || 1, 1), 50);
+    const sentence = () => {
+      const len = 8 + Math.floor(Math.random() * 12);
+      const w = Array.from({ length: len }, () => words[Math.floor(Math.random() * words.length)]);
+      return w.join(' ').replace(/^(.)/, m => m.toUpperCase()) + '.';
+    };
+    setOutput(Array.from({ length: n }, sentence).join('\n'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Number of sentences</label>
+        <input type="number" value={count} onChange={e => setCount(e.target.value)} min="1" max="50" className="w-32 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={generate}>Generate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Reading Time Calculator ───────────────────────────────────────────
+function ReadingTimeCalculatorTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const calculate = () => {
+    if (!input) { setOutput(''); return; }
+    const words = input.trim().split(/\s+/).length;
+    const chars = input.length;
+    const sentences = input.split(/[.!?]+/).filter(Boolean).length;
+    const minutes = Math.ceil(words / 200);
+    setOutput(`Words: ${words}\nCharacters: ${chars}\nSentences: ${sentences}\nReading time: ${minutes} min${minutes !== 1 ? 's' : ''} (at 200 WPM)`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Paste text..." />
+      <ProcessButton onClick={calculate}>Calculate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Smart Text Sorter ─────────────────────────────────────────────────
+function SmartTextSorterTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const sort = () => {
+    if (!input) { setOutput(''); return; }
+    const lines = input.split('\n').filter(l => l.trim());
+    setOutput([...lines].sort((a, b) => a.localeCompare(b)).join('\n'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Enter text to sort..." />
+      <ProcessButton onClick={sort}>Sort Alphabetically</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Text Reverser ────────────────────────────────────────────────────
+function TextReverserTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+  const [mode, setMode] = useState<'chars' | 'words' | 'lines'>('chars');
+
+  const reverse = () => {
+    if (!input) { setOutput(''); return; }
+    if (mode === 'chars') setOutput(input.split('').reverse().join(''));
+    else if (mode === 'words') setOutput(input.split(/\s+/).reverse().join(' '));
+    else setOutput(input.split('\n').reverse().join('\n'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        {(['chars', 'words', 'lines'] as const).map(m => (
+          <button key={m} onClick={() => setMode(m)} className={`px-3 py-1.5 text-sm rounded-lg ${mode === m ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200'}`}>{m.charAt(0).toUpperCase() + m.slice(1)}</button>
+        ))}
+      </div>
+      <Textarea value={input} onChange={setInput} placeholder="Enter text..." />
+      <ProcessButton onClick={reverse}>Reverse</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Duplicate Line Finder ──────────────────────────────────────────────
+function DuplicateLineFinderTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const find = () => {
+    if (!input) { setOutput(''); return; }
+    const lines = input.split('\n');
+    const seen: Record<string, number> = {};
+    const duplicates: string[] = [];
+    for (const line of lines) {
+      if (line.trim()) {
+        seen[line] = (seen[line] || 0) + 1;
+        if (seen[line] === 2) duplicates.push(line);
+      }
+    }
+    if (!duplicates.length) { setOutput('No duplicate lines found'); return; }
+    setOutput(`Found ${duplicates.length} duplicate line(s):\n\n${duplicates.join('\n')}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Paste text..." />
+      <ProcessButton onClick={find}>Find Duplicates</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Sentence Extractor ────────────────────────────────────────────────
+function SentenceExtractorTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const extract = () => {
+    if (!input) { setOutput(''); return; }
+    const sentences = input.split(/[.!?]+/).map(s => s.trim()).filter(s => s && s.length > 2);
+    setOutput(sentences.map((s, i) => `${i + 1}. ${s}`).join('\n'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Paste text..." className="!h-32" />
+      <ProcessButton onClick={extract}>Extract Sentences</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Line Counter ──────────────────────────────────────────────────────
+function LineCounterTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const count = () => {
+    if (!input) { setOutput(''); return; }
+    const lines = input.split('\n');
+    const nonEmpty = lines.filter(l => l.trim()).length;
+    const words = input.trim().split(/\s+/).filter(Boolean).length;
+    const chars = input.length;
+    setOutput(`Lines: ${lines.length}\nNon-empty lines: ${nonEmpty}\nWords: ${words}\nCharacters: ${chars}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Enter text..." />
+      <ProcessButton onClick={count}>Count</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Secure Random Generator ───────────────────────────────────────────
+function SecureRandomGeneratorTool() {
+  const [type, setType] = useState<'hex' | 'base64' | 'uuid' | 'number'>('hex');
+  const [length, setLength] = useState('32');
+  const [output, setOutput] = useState('');
+
+  const generate = () => {
+    const len = Math.min(Math.max(parseInt(length) || 32, 4), 256);
+    if (type === 'hex') {
+      const bytes = crypto.getRandomValues(new Uint8Array(len));
+      setOutput(Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join(''));
+    } else if (type === 'base64') {
+      const bytes = crypto.getRandomValues(new Uint8Array(len));
+      setOutput(btoa(String.fromCharCode(...bytes)));
+    } else if (type === 'uuid') {
+      const bytes = crypto.getRandomValues(new Uint8Array(16));
+      bytes[6] = (bytes[6] & 0x0f) | 0x40;
+      bytes[8] = (bytes[8] & 0x3f) | 0x80;
+      const hex = Array.from(bytes).map(b => b.toString(16).padStart(2, '0')).join('');
+      setOutput(`${hex.slice(0,8)}-${hex.slice(8,12)}-${hex.slice(12,16)}-${hex.slice(16,20)}-${hex.slice(20)}`);
+    } else {
+      const max = BigInt('1' + '0'.repeat(len));
+      const rand = BigInt('0x' + Array.from(crypto.getRandomValues(new Uint8Array(len))).map(b => b.toString(16).padStart(2, '0')).join(''));
+      setOutput((rand % max).toString());
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2 flex-wrap">
+        {(['hex', 'base64', 'uuid', 'number'] as const).map(t => (
+          <button key={t} onClick={() => setType(t)} className={`px-3 py-1.5 text-sm rounded-lg ${type === t ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200'}`}>{t}</button>
+        ))}
+      </div>
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Length ({length})</label>
+        <input type="range" value={length} onChange={e => setLength(e.target.value)} min="4" max="64" className="w-full" />
+      </div>
+      <ProcessButton onClick={generate}>Generate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
 function ToolRouter({ tool }: { tool: Tool }) {
   switch (tool.slug) {
     case 'word-counter':          return <WordCounterTool />;
@@ -3635,6 +4545,38 @@ function ToolRouter({ tool }: { tool: Tool }) {
     case 'punctuation-fixer': return <PunctuationFixerTool />;
     case 'capitalization-fixer': return <CapitalizationFixerTool />;
     case 'unicode-emoji-converter': return <UnicodeEmojiConverterTool />;
+    case 'anagram-generator': return <AnagramGeneratorTool />;
+    case 'palindrome-checker': return <PalindromeCheckerTool />;
+    case 'backslash-escape-unescape': return <BackslashEscapeUnescapeTool />;
+    case 'character-frequency-counter': return <CharacterFrequencyCounterTool />;
+    case 'base64-file-encoder': return <Base64FileEncoderTool />;
+    case 'code-beautifier': return <CodeBeautifierTool />;
+    case 'css-to-scss': return <CssToScssTool />;
+    case 'toml-to-json': return <TomlToJsonTool />;
+    case 'list-randomizer': return <ListRandomizerTool />;
+    case 'random-uuid-v7': return <RandomUuidV7Tool />;
+    case 'random-ip-address': return <RandomIpAddressTool />;
+    case 'random-mac-generator': return <RandomMacGeneratorTool />;
+    case 'random-choice-picker': return <RandomChoicePickerTool />;
+    case 'random-password-generator': return <RandomPasswordGeneratorTool />;
+    case 'email-generator': return <EmailGeneratorTool />;
+    case 'mac-address-generator': return <MacAddressGeneratorTool />;
+    case 'hmac-generator': return <HmacGeneratorTool />;
+    case 'html-minifier': return <HtmlMinifierTool />;
+    case 'json-escape-unescape': return <JsonEscapeUnescapeTool />;
+    case 'svg-minifier': return <SvgMinifierTool />;
+    case 'ascii-art-generator': return <AsciiArtGeneratorTool />;
+    case 'ip-address-info': return <IpAddressInfoTool />;
+    case 'markdown-table-from-json': return <MarkdownTableFromJsonTool />;
+    case 'random-paragraph-generator': return <RandomParagraphGeneratorTool />;
+    case 'random-sentence-generator': return <RandomSentenceGeneratorTool />;
+    case 'reading-time-calculator': return <ReadingTimeCalculatorTool />;
+    case 'smart-text-sorter': return <SmartTextSorterTool />;
+    case 'text-reverser': return <TextReverserTool />;
+    case 'duplicate-line-finder': return <DuplicateLineFinderTool />;
+    case 'sentence-extractor': return <SentenceExtractorTool />;
+    case 'line-counter': return <LineCounterTool />;
+    case 'secure-random-generator': return <SecureRandomGeneratorTool />;
     default:                        return <NotImplementedTool toolName={tool.name} />;
   }
 }
