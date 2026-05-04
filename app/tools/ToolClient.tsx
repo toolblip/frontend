@@ -64,6 +64,47 @@ import XmlFormatterClient from '@/components/tools/XmlFormatterClient';
 import XmlToJsonClient from '@/components/tools/XmlToJsonClient';
 import YamlToJsonClient from '@/components/tools/YamlToJsonClient';
 import RegexTesterClient from '@/components/tools/RegexTesterClient';
+// ─── New tool components ─────────────────────────────────────────────────────
+import AnagramGeneratorClient from '@/components/tools/AnagramGeneratorClient';
+import Base64EncoderDecoderClient from '@/components/tools/Base64EncoderDecoderClient';
+import ChineseCharConverterClient from '@/components/tools/ChineseCharConverterClient';
+import CssClassGeneratorClient from '@/components/tools/CssClassGeneratorClient';
+import CssValidatorClient from '@/components/tools/CssValidatorClient';
+import EmailGeneratorClient from '@/components/tools/EmailGeneratorClient';
+import EmailValidatorClient from '@/components/tools/EmailValidatorClient';
+import EmojiFinderClient from '@/components/tools/EmojiFinderClient';
+import EnglishGrammarCheckerClient from '@/components/tools/EnglishGrammarCheckerClient';
+import FakeDataGeneratorClient from '@/components/tools/FakeDataGeneratorClient';
+import HashFromTextClient from '@/components/tools/HashFromTextClient';
+import HashIdentifierClient from '@/components/tools/HashIdentifierClient';
+import HtmlValidatorClient from '@/components/tools/HtmlValidatorClient';
+import IpWhoisGeneratorClient from '@/components/tools/IpWhoisGeneratorClient';
+import JsonPathTesterClient from '@/components/tools/JsonPathTesterClient';
+import JsonSchemaValidatorClient from '@/components/tools/JsonSchemaValidatorClient';
+import JsonToMarkdownTableClient from '@/components/tools/JsonToMarkdownTableClient';
+import JsonToTypescriptClient from '@/components/tools/JsonToTypescriptClient';
+import ListComparatorClient from '@/components/tools/ListComparatorClient';
+import ListRandomizerClient from '@/components/tools/ListRandomizerClient';
+import PalindromeCheckerClient from '@/components/tools/PalindromeCheckerClient';
+import PasswordStrengthCheckerClient from '@/components/tools/PasswordStrengthCheckerClient';
+import PortScannerClient from '@/components/tools/PortScannerClient';
+import PunctuationFixerClient from '@/components/tools/PunctuationFixerClient';
+import RandomUuidV7Client from '@/components/tools/RandomUuidV7Client';
+import ReadingTimeCalculatorClient from '@/components/tools/ReadingTimeCalculatorClient';
+import RobotsTxtGeneratorClient from '@/components/tools/RobotsTxtGeneratorClient';
+import RomanNumeralConverterClient from '@/components/tools/RomanNumeralConverterClient';
+import SqlPrettifierClient from '@/components/tools/SqlPrettifierClient';
+import StickyNotesClient from '@/components/tools/StickyNotesClient';
+import SyllableCounterClient from '@/components/tools/SyllableCounterClient';
+import TextStatisticsClient from '@/components/tools/TextStatisticsClient';
+import TextToSlugClient from '@/components/tools/TextToSlugClient';
+import TimeZoneConverterClient from '@/components/tools/TimeZoneConverterClient';
+import TypoCheckerClient from '@/components/tools/TypoCheckerClient';
+import UnicodeCharacterInspectorClient from '@/components/tools/UnicodeCharacterInspectorClient';
+import UptimeCalculatorClient from '@/components/tools/UptimeCalculatorClient';
+import UrlParserClient from '@/components/tools/UrlParserClient';
+import WordFrequencyAnalyzerClient from '@/components/tools/WordFrequencyAnalyzerClient';
+import XmlSitemapGeneratorClient from '@/components/tools/XmlSitemapGeneratorClient';
 
 // ─── Coming Soon placeholder ────────────────────────────────────────────────
 function ComingSoonPlaceholder({ tool }: { tool: Tool }) {
@@ -98,22 +139,18 @@ function ComingSoonPlaceholder({ tool }: { tool: Tool }) {
 function ToolRenderer({ tool }: { tool: Tool }) {
   switch (tool.slug) {
     // ── Wired tools ──────────────────────────────────────────────────────────
-    case 'word-counter':
-      return <WordCounterClient />;
-    case 'character-counter':
-      return <CharacterCounterClient />;
-    case 'case-converter':
-      return <CaseConverterClient />;
+    case 'anagram-generator':
+      return <AnagramGeneratorClient />;
     case 'base64':
       return <Base64Client />;
-    case 'url-encode':
-      return <UrlEncodeClient />;
-    case 'json-formatter':
-      return <JsonFormatterClient />;
-    case 'notebook-to-html':
-      return <NotebookToHtmlClient />;
-
-    // ── Additional wired tools ───────────────────────────────────────────────
+    case 'base-encoder-decoder':
+      return <Base64EncoderDecoderClient />;
+    case 'case-converter':
+      return <CaseConverterClient />;
+    case 'character-counter':
+      return <CharacterCounterClient />;
+    case 'chinese-char-converter':
+      return <ChineseCharConverterClient />;
     case 'circle-crop':
       return <CircleCropClient />;
     case 'color-picker':
@@ -128,18 +165,38 @@ function ToolRenderer({ tool }: { tool: Tool }) {
       return <CronParserClient />;
     case 'css-border-radius-generator':
       return <CssBorderRadiusGeneratorClient />;
+    case 'css-class-generator':
+      return <CssClassGeneratorClient />;
     case 'css-gradient-generator':
       return <CssGradientGeneratorClient />;
+    case 'css-validator':
+      return <CssValidatorClient />;
+    case 'email-generator':
+      return <EmailGeneratorClient />;
+    case 'email-validator':
+      return <EmailValidatorClient />;
+    case 'emoji-finder':
+      return <EmojiFinderClient />;
+    case 'english-grammar-checker':
+      return <EnglishGrammarCheckerClient />;
+    case 'fake-data-generator':
+      return <FakeDataGeneratorClient />;
     case 'favicon-generator':
       return <FaviconGeneratorClient />;
     case 'grammar-checker':
       return <GrammarCheckerClient />;
+    case 'hash-from-text':
+      return <HashFromTextClient />;
     case 'hash-generator':
       return <HashGeneratorClient />;
+    case 'hash-identifier':
+      return <HashIdentifierClient />;
     case 'hex-to-rgb':
       return <HexToRgbClient />;
     case 'html-encoder':
       return <HtmlEncoderClient />;
+    case 'html-validator':
+      return <HtmlValidatorClient />;
     case 'http-headers-viewer':
       return <HttpHeadersViewerClient />;
     case 'image-cropper':
@@ -148,34 +205,64 @@ function ToolRenderer({ tool }: { tool: Tool }) {
       return <ImageFormatConverterClient />;
     case 'image-resizer':
       return <ImageResizerClient />;
+    case 'ip-whois-generator':
+      return <IpWhoisGeneratorClient />;
     case 'js-minifier':
       return <JsMinifierClient />;
+    case 'json-formatter':
+      return <JsonFormatterClient />;
+    case 'json-path-tester':
+      return <JsonPathTesterClient />;
+    case 'json-schema-validator':
+      return <JsonSchemaValidatorClient />;
+    case 'json-to-markdown-table':
+      return <JsonToMarkdownTableClient />;
+    case 'json-to-typescript':
+      return <JsonToTypescriptClient />;
     case 'json-to-yaml':
       return <JsonToYamlClient />;
     case 'json-validator':
       return <JsonValidatorClient />;
     case 'jwt-decoder':
       return <JwtDecoderClient />;
+    case 'list-comparator':
+      return <ListComparatorClient />;
+    case 'list-randomizer':
+      return <ListRandomizerClient />;
     case 'lorem-ipsum-generator':
       return <LoremIpsumGeneratorClient />;
     case 'markdown-to-html':
       return <MarkdownToHtmlClient />;
     case 'meta-tag-generator':
       return <MetaTagGeneratorClient />;
+    case 'notebook-to-html':
+      return <NotebookToHtmlClient />;
     case 'number-base-converter':
       return <NumberBaseConverterClient />;
     case 'oxford-comma':
       return <OxfordCommaClient />;
+    case 'palindrome-checker':
+      return <PalindromeCheckerClient />;
     case 'password-generator':
       return <PasswordGeneratorClient />;
+    case 'password-strength-checker':
+      return <PasswordStrengthCheckerClient />;
     case 'percentage-calculator':
       return <PercentageCalculatorClient />;
     case 'percentage-difference':
       return <PercentageDifferenceClient />;
+    case 'port-scanner':
+      return <PortScannerClient />;
+    case 'punctuation-fixer':
+      return <PunctuationFixerClient />;
     case 'qr-code-generator':
       return <QrCodeGeneratorClient />;
     case 'random-string-generator':
       return <RandomStringClient />;
+    case 'random-uuid-v7':
+      return <RandomUuidV7Client />;
+    case 'reading-time-calculator':
+      return <ReadingTimeCalculatorClient />;
     case 'readability-score':
       return <ReadabilityScoreClient />;
     case 'regex-tester':
@@ -184,6 +271,10 @@ function ToolRenderer({ tool }: { tool: Tool }) {
       return <RemoveDuplicateLinesClient />;
     case 'rgb-to-hex':
       return <RgbToHexClient />;
+    case 'robots-txt-generator':
+      return <RobotsTxtGeneratorClient />;
+    case 'roman-numeral-converter':
+      return <RomanNumeralConverterClient />;
     case 'sass-to-css':
       return <SassToCssClient />;
     case 'screen-resolution-tester':
@@ -192,26 +283,54 @@ function ToolRenderer({ tool }: { tool: Tool }) {
       return <SerpPreviewClient />;
     case 'sha-256-hash':
       return <Sha256HashClient />;
+    case 'sql-prettifier':
+      return <SqlPrettifierClient />;
     case 'sql-to-json':
       return <SqlToJsonClient />;
     case 'square-crop':
       return <SquareCropClient />;
+    case 'sticky-notes':
+      return <StickyNotesClient />;
+    case 'syllable-counter':
+      return <SyllableCounterClient />;
     case 'text-diff':
       return <TextDiffClient />;
     case 'text-sorter':
       return <TextSorterClient />;
+    case 'text-statistics':
+      return <TextStatisticsClient />;
+    case 'text-to-slug':
+      return <TextToSlugClient />;
+    case 'time-zone-converter':
+      return <TimeZoneConverterClient />;
+    case 'typo-checker':
+      return <TypoCheckerClient />;
+    case 'unicode-character-inspector':
+      return <UnicodeCharacterInspectorClient />;
     case 'unit-converter':
       return <UnitConverterClient />;
     case 'unix-timestamp-converter':
       return <UnixTimestampConverterClient />;
+    case 'uptime-calculator':
+      return <UptimeCalculatorClient />;
+    case 'url-encode':
+      return <UrlEncodeClient />;
     case 'url-parameter-extractor':
       return <UrlParamsClient />;
+    case 'url-parser':
+      return <UrlParserClient />;
     case 'url-slug-generator':
       return <UrlSlugGeneratorClient />;
     case 'uuid-generator':
       return <UuidGeneratorClient />;
+    case 'word-counter':
+      return <WordCounterClient />;
+    case 'word-frequency-analyzer':
+      return <WordFrequencyAnalyzerClient />;
     case 'xml-formatter':
       return <XmlFormatterClient />;
+    case 'xml-sitemap-generator':
+      return <XmlSitemapGeneratorClient />;
     case 'xml-to-json':
       return <XmlToJsonClient />;
     case 'yaml-to-json':
