@@ -4400,6 +4400,646 @@ function SecureRandomGeneratorTool() {
   );
 }
 
+// ─── New Tool Implementations ─────────────────────────────────────────────────
+
+function BmiCalculatorTool() {
+  const [height, setHeight] = useState('');
+  const [weight, setWeight] = useState('');
+  const [unit, setUnit] = useState<'metric' | 'imperial'>('metric');
+  const [output, setOutput] = useState('');
+
+  const calculate = () => {
+    const h = parseFloat(height);
+    const w = parseFloat(weight);
+    if (isNaN(h) || isNaN(w) || h <= 0 || w <= 0) {
+      setOutput('Enter valid positive numbers');
+      return;
+    }
+    let bmi: number;
+    if (unit === 'metric') {
+      bmi = w / (h * h);
+    } else {
+      bmi = (w / (h * h)) * 703;
+    }
+    const rounded = bmi.toFixed(1);
+    let category: string;
+    if (bmi < 18.5) category = 'Underweight';
+    else if (bmi < 25) category = 'Normal weight';
+    else if (bmi < 30) category = 'Overweight';
+    else category = 'Obese';
+    setOutput(`BMI: ${rounded}\nCategory: ${category}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        {(['metric', 'imperial'] as const).map(u => (
+          <button key={u} onClick={() => setUnit(u)} className={`px-3 py-1.5 text-sm rounded-lg ${unit === u ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}>{u}</button>
+        ))}
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="block text-xs text-gray-500 mb-1">{unit === 'metric' ? 'Height (m)' : 'Height (in)'}</label>
+          <input type="number" value={height} onChange={e => setHeight(e.target.value)} placeholder={unit === 'metric' ? '1.75' : '69'} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+        </div>
+        <div>
+          <label className="block text-xs text-gray-500 mb-1">{unit === 'metric' ? 'Weight (kg)' : 'Weight (lbs)'}</label>
+          <input type="number" value={weight} onChange={e => setWeight(e.target.value)} placeholder={unit === 'metric' ? '70' : '154'} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+        </div>
+      </div>
+      <ProcessButton onClick={calculate}>Calculate BMI</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function ByteConverterTool() {
+  const [value, setValue] = useState('1');
+  const [fromUnit, setFromUnit] = useState('GB');
+  const [output, setOutput] = useState('');
+  const units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB'];
+
+  const convert = () => {
+    const val = parseFloat(value);
+    if (isNaN(val)) { setOutput('Enter a number'); return; }
+    const bytes = val * Math.pow(1024, units.indexOf(fromUnit));
+    const results = units.map(u => {
+      const converted = bytes / Math.pow(1024, units.indexOf(u));
+      return `${converted.toLocaleString('en', { maximumFractionDigits: 6 })} ${u}`;
+    });
+    setOutput(results.join('\n'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-3 flex-wrap">
+        <input type="number" value={value} onChange={e => setValue(e.target.value)} placeholder="Enter value" className="flex-1 min-w-[120px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+        <select value={fromUnit} onChange={e => setFromUnit(e.target.value)} className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-red-500">
+          {units.map(u => <option key={u} value={u}>{u}</option>)}
+        </select>
+      </div>
+      <ProcessButton onClick={convert}>Convert</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function BillSplitterTool() {
+  const [amount, setAmount] = useState('');
+  const [tip, setTip] = useState('0');
+  const [people, setPeople] = useState('1');
+  const [output, setOutput] = useState('');
+
+  const split = () => {
+    const a = parseFloat(amount);
+    const t = parseFloat(tip);
+    const p = parseInt(people);
+    if (isNaN(a) || isNaN(t) || isNaN(p) || p <= 0) {
+      setOutput('Enter valid numbers');
+      return;
+    }
+    const total = a + (a * t / 100);
+    const perPerson = total / p;
+    setOutput(`Total with tip: $${total.toFixed(2)}\nEach person pays: $${perPerson.toFixed(2)}\nTip amount: $${(a * t / 100).toFixed(2)}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 mb-1">Bill Amount ($)</label>
+        <input type="number" value={amount} onChange={e => setAmount(e.target.value)} placeholder="100.00" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="block text-xs text-gray-500 mb-1">Tip (%)</label>
+          <input type="number" value={tip} onChange={e => setTip(e.target.value)} placeholder="0" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+        </div>
+        <div>
+          <label className="block text-xs text-gray-500 mb-1">Number of People</label>
+          <input type="number" value={people} onChange={e => setPeople(e.target.value)} placeholder="1" min="1" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+        </div>
+      </div>
+      <ProcessButton onClick={split}>Split Bill</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function BinaryToDecimalTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const convert = () => {
+    const cleaned = input.replace(/[^01]/g, '');
+    if (!cleaned) { setOutput('Enter binary digits (0s and 1s)'); return; }
+    const decimal = parseInt(cleaned, 2);
+    setOutput(`Binary: ${cleaned}\nDecimal: ${decimal}\nHex: 0x${decimal.toString(16).toUpperCase()}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 mb-1">Binary Number</label>
+        <input type="text" value={input} onChange={e => setInput(e.target.value)} placeholder="1010" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={convert}>Convert to Decimal</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function BinaryConverterTool() {
+  const [input, setInput] = useState('');
+  const [fromBase, setFromBase] = useState('2');
+  const [output, setOutput] = useState('');
+
+  const convert = () => {
+    const val = input.trim();
+    if (!val) { setOutput('Enter a number'); return; }
+    try {
+      const decimal = parseInt(val, parseInt(fromBase));
+      if (isNaN(decimal)) { setOutput('Invalid input for selected base'); return; }
+      setOutput(`Input (base ${fromBase}): ${val}\nDecimal: ${decimal}\nBinary: ${decimal.toString(2)}\nHex: 0x${decimal.toString(16).toUpperCase()}\nOctal: ${decimal.toString(8)}`);
+    } catch { setOutput('Invalid input'); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-3">
+        <input type="text" value={input} onChange={e => setInput(e.target.value)} placeholder="Enter number" className="flex-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+        <select value={fromBase} onChange={e => setFromBase(e.target.value)} className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-red-500">
+          <option value="2">Binary</option>
+          <option value="8">Octal</option>
+          <option value="10">Decimal</option>
+          <option value="16">Hexadecimal</option>
+        </select>
+      </div>
+      <ProcessButton onClick={convert}>Convert</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function BinHexDecConverterTool() {
+  const [input, setInput] = useState('');
+  const [mode, setMode] = useState<'bin' | 'hex' | 'dec'>('bin');
+  const [output, setOutput] = useState('');
+
+  const convert = () => {
+    const val = input.trim();
+    if (!val) { setOutput('Enter a value'); return; }
+    try {
+      let decimal: number;
+      if (mode === 'bin') {
+        decimal = parseInt(val, 2);
+      } else if (mode === 'hex') {
+        decimal = parseInt(val, 16);
+      } else {
+        decimal = parseInt(val, 10);
+      }
+      if (isNaN(decimal)) { setOutput('Invalid input'); return; }
+      setOutput(`Decimal: ${decimal}\nBinary: ${decimal.toString(2)}\nHex: 0x${decimal.toString(16).toUpperCase()}\nOctal: ${decimal.toString(8)}`);
+    } catch { setOutput('Error converting'); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2 flex-wrap">
+        {(['bin', 'hex', 'dec'] as const).map(m => (
+          <button key={m} onClick={() => setMode(m)} className={`px-3 py-1.5 text-sm rounded-lg ${mode === m ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}>{m.toUpperCase()}</button>
+        ))}
+      </div>
+      <input type="text" value={input} onChange={e => setInput(e.target.value)} placeholder={mode === 'bin' ? '1010' : mode === 'hex' ? 'FF' : '255'} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      <ProcessButton onClick={convert}>Convert</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function BaseNumberConverterTool() {
+  const [input, setInput] = useState('');
+  const [fromBase, setFromBase] = useState('10');
+  const [toBase, setToBase] = useState('16');
+  const [output, setOutput] = useState('');
+
+  const convert = () => {
+    const val = input.trim();
+    if (!val) { setOutput('Enter a value'); return; }
+    const fb = parseInt(fromBase);
+    const tb = parseInt(toBase);
+    if (isNaN(fb) || isNaN(tb) || fb < 2 || fb > 36 || tb < 2 || tb > 36) {
+      setOutput('Base must be between 2 and 36');
+      return;
+    }
+    try {
+      const decimal = parseInt(val, fb);
+      if (isNaN(decimal)) { setOutput('Invalid input for source base'); return; }
+      setOutput(`${val} (base ${fb}) = ${decimal.toString(tb).toUpperCase()} (base ${tb})\n\nDecimal: ${decimal}\nBinary: ${decimal.toString(2)}\nOctal: ${decimal.toString(8)}\nHex: ${decimal.toString(16).toUpperCase()}`);
+    } catch { setOutput('Error converting'); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <input type="text" value={input} onChange={e => setInput(e.target.value)} placeholder="Enter number" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="block text-xs text-gray-500 mb-1">From Base</label>
+          <select value={fromBase} onChange={e => setFromBase(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-red-500">
+            {Array.from({length: 35}, (_, i) => i + 2).map(b => <option key={b} value={b}>{b}</option>)}
+          </select>
+        </div>
+        <div>
+          <label className="block text-xs text-gray-500 mb-1">To Base</label>
+          <select value={toBase} onChange={e => setToBase(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-red-500">
+            {Array.from({length: 35}, (_, i) => i + 2).map(b => <option key={b} value={b}>{b}</option>)}
+          </select>
+        </div>
+      </div>
+      <ProcessButton onClick={convert}>Convert</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function BcryptHashGeneratorTool() {
+  const [input, setInput] = useState('');
+  const [rounds, setRounds] = useState('10');
+  const [output, setOutput] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const generate = async () => {
+    if (!input) { setOutput('Enter text to hash'); return; }
+    setLoading(true);
+    try {
+      const bcrypt = (await import('bcryptjs')).default;
+      const hash = await bcrypt.hash(input, parseInt(rounds));
+      setOutput(hash);
+    } catch { setOutput('Error generating hash'); }
+    setLoading(false);
+  };
+
+  return (
+    <div className="space-y-4">
+      <input type="text" value={input} onChange={e => setInput(e.target.value)} placeholder="Enter text to hash" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      <div>
+        <label className="block text-xs text-gray-500 mb-1">Rounds ({rounds})</label>
+        <input type="range" value={rounds} onChange={e => setRounds(e.target.value)} min="4" max="14" className="w-full" />
+      </div>
+      <ProcessButton onClick={generate} disabled={loading}>{loading ? 'Generating...' : 'Generate Hash'}</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function CounterTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const count = () => {
+    if (!input) { setOutput('Enter text to count'); return; }
+    const chars = input.length;
+    const words = input.trim().split(/\s+/).filter(w => w).length;
+    const lines = input.split('\n').length;
+    const paragraphs = input.split(/\n\n+/).filter(p => p.trim()).length;
+    const sentences = input.split(/[.!?]+/).filter(s => s.trim()).length;
+    setOutput(`Characters: ${chars}\nCharacters (no spaces): ${input.replace(/\s/g, '').length}\nWords: ${words}\nLines: ${lines}\nParagraphs: ${paragraphs}\nSentences: ${sentences}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Enter text to analyze..." />
+      <ProcessButton onClick={count}>Count</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function CmykToRgbTool() {
+  const [c, setC] = useState('0');
+  const [m, setM] = useState('0');
+  const [y, setY] = useState('0');
+  const [k, setK] = useState('100');
+  const [output, setOutput] = useState('');
+
+  const convert = () => {
+    const cv = parseFloat(c) / 100;
+    const mv = parseFloat(m) / 100;
+    const yv = parseFloat(y) / 100;
+    const kv = parseFloat(k) / 100;
+    if ([cv, mv, yv, kv].some(isNaN)) { setOutput('Enter CMYK values (0-100)'); return; }
+    const r = Math.round(255 * (1 - cv) * (1 - kv));
+    const g = Math.round(255 * (1 - mv) * (1 - kv));
+    const b = Math.round(255 * (1 - yv) * (1 - kv));
+    const hex = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`.toUpperCase();
+    setOutput(`CMYK(${c}, ${m}, ${y}, ${k})\nRGB(${r}, ${g}, ${b})\nHEX: ${hex}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-3">
+        <div><label className="block text-xs text-gray-500 mb-1">Cyan (0-100)</label><input type="number" value={c} onChange={e => setC(e.target.value)} placeholder="0" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" /></div>
+        <div><label className="block text-xs text-gray-500 mb-1">Magenta (0-100)</label><input type="number" value={m} onChange={e => setM(e.target.value)} placeholder="0" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" /></div>
+        <div><label className="block text-xs text-gray-500 mb-1">Yellow (0-100)</label><input type="number" value={y} onChange={e => setY(e.target.value)} placeholder="0" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" /></div>
+        <div><label className="block text-xs text-gray-500 mb-1">Key/Black (0-100)</label><input type="number" value={k} onChange={e => setK(e.target.value)} placeholder="100" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" /></div>
+      </div>
+      <ProcessButton onClick={convert}>Convert to RGB</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function CurrencyConverterTool() {
+  const [amount, setAmount] = useState('100');
+  const [from, setFrom] = useState('USD');
+  const [to, setTo] = useState('EUR');
+  const [output, setOutput] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const rates: Record<string, number> = { USD: 1, EUR: 0.92, GBP: 0.79, JPY: 149.5, CAD: 1.36, AUD: 1.53, CHF: 0.88, CNY: 7.24, INR: 83.12, MXN: 17.15 };
+
+  const convert = () => {
+    const amt = parseFloat(amount);
+    if (isNaN(amt)) { setOutput('Enter a valid amount'); return; }
+    const fromRate = rates[from] || 1;
+    const toRate = rates[to] || 1;
+    const result = (amt / fromRate) * toRate;
+    setOutput(`${amt} ${from} = ${result.toFixed(2)} ${to}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <input type="number" value={amount} onChange={e => setAmount(e.target.value)} placeholder="Enter amount" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      <div className="grid grid-cols-2 gap-3">
+        <select value={from} onChange={e => setFrom(e.target.value)} className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-red-500">
+          {Object.keys(rates).map(c => <option key={c} value={c}>{c}</option>)}
+        </select>
+        <select value={to} onChange={e => setTo(e.target.value)} className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-red-500">
+          {Object.keys(rates).map(c => <option key={c} value={c}>{c}</option>)}
+        </select>
+      </div>
+      <ProcessButton onClick={convert}>Convert</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function DataUriGeneratorTool() {
+  const [input, setInput] = useState('');
+  const [mimeType, setMimeType] = useState('text/plain');
+  const [output, setOutput] = useState('');
+
+  const generate = () => {
+    if (!input) { setOutput('Enter data to encode'); return; }
+    try {
+      const base64 = btoa(input);
+      setOutput(`data:${mimeType};base64,${base64}`);
+    } catch { setOutput('Error encoding data'); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <select value={mimeType} onChange={e => setMimeType(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-red-500">
+        <option value="text/plain">text/plain</option>
+        <option value="text/html">text/html</option>
+        <option value="text/css">text/css</option>
+        <option value="text/javascript">text/javascript</option>
+        <option value="application/json">application/json</option>
+        <option value="image/svg+xml">image/svg+xml</option>
+      </select>
+      <Textarea value={input} onChange={setInput} placeholder="Enter data content..." />
+      <ProcessButton onClick={generate}>Generate Data URI</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function DecimalToBinaryTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const convert = () => {
+    const num = parseInt(input);
+    if (isNaN(num)) { setOutput('Enter a decimal number'); return; }
+    const binary = num.toString(2);
+    setOutput(`Decimal: ${num}\nBinary: ${binary}\nHex: 0x${num.toString(16).toUpperCase()}\nOctal: ${num.toString(8)}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <input type="text" value={input} onChange={e => setInput(e.target.value)} placeholder="Enter decimal number (e.g. 42)" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      <ProcessButton onClick={convert}>Convert to Binary</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function DecimalToHexTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const convert = () => {
+    const num = parseInt(input);
+    if (isNaN(num)) { setOutput('Enter a decimal number'); return; }
+    const hex = num.toString(16).toUpperCase();
+    setOutput(`Decimal: ${num}\nHex: 0x${hex}\nBinary: ${num.toString(2)}\nOctal: ${num.toString(8)}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <input type="text" value={input} onChange={e => setInput(e.target.value)} placeholder="Enter decimal number (e.g. 255)" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      <ProcessButton onClick={convert}>Convert to Hex</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function BaseConvertTool() {
+  const [input, setInput] = useState('');
+  const [fromBase, setFromBase] = useState('10');
+  const [output, setOutput] = useState('');
+
+  const convert = () => {
+    const val = input.trim();
+    if (!val) { setOutput('Enter a number'); return; }
+    const fb = parseInt(fromBase);
+    if (isNaN(fb) || fb < 2 || fb > 36) { setOutput('Base must be 2-36'); return; }
+    try {
+      const decimal = parseInt(val, fb);
+      if (isNaN(decimal)) { setOutput('Invalid input'); return; }
+      setOutput(`Base ${fb}: ${val}\nDecimal: ${decimal}\nBinary: ${decimal.toString(2)}\nHex: 0x${decimal.toString(16).toUpperCase()}\nOctal: ${decimal.toString(8)}`);
+    } catch { setOutput('Conversion error'); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <input type="text" value={input} onChange={e => setInput(e.target.value)} placeholder="Enter number" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      <div>
+        <label className="block text-xs text-gray-500 mb-1">From Base</label>
+        <select value={fromBase} onChange={e => setFromBase(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-red-500">
+          {Array.from({length: 35}, (_, i) => i + 2).map(b => <option key={b} value={b}>{b}</option>)}
+        </select>
+      </div>
+      <ProcessButton onClick={convert}>Convert</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function BaseConverterTool() {
+  const [input, setInput] = useState('');
+  const [fromBase, setFromBase] = useState('2');
+  const [toBase, setToBase] = useState('10');
+  const [output, setOutput] = useState('');
+
+  const convert = () => {
+    const val = input.trim();
+    if (!val) { setOutput('Enter a number'); return; }
+    const fb = parseInt(fromBase), tb = parseInt(toBase);
+    if (isNaN(fb) || isNaN(tb)) { setOutput('Invalid bases'); return; }
+    try {
+      const decimal = parseInt(val, fb);
+      if (isNaN(decimal)) { setOutput('Invalid input'); return; }
+      setOutput(`${val} (base ${fb}) = ${decimal.toString(tb)} (base ${tb})`);
+    } catch { setOutput('Error'); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <input type="text" value={input} onChange={e => setInput(e.target.value)} placeholder="Enter number" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="block text-xs text-gray-500 mb-1">From</label>
+          <select value={fromBase} onChange={e => setFromBase(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-red-500">
+            {Array.from({length: 35}, (_, i) => i + 2).map(b => <option key={b} value={b}>{b}</option>)}
+          </select>
+        </div>
+        <div>
+          <label className="block text-xs text-gray-500 mb-1">To</label>
+          <select value={toBase} onChange={e => setToBase(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-red-500">
+            {Array.from({length: 35}, (_, i) => i + 2).map(b => <option key={b} value={b}>{b}</option>)}
+          </select>
+        </div>
+      </div>
+      <ProcessButton onClick={convert}>Convert</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function BaseConverterQuickTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const detectAndConvert = () => {
+    const val = input.trim();
+    if (!val) { setOutput('Enter a number'); return; }
+    let decimal: number;
+    if (val.startsWith('0x') || val.startsWith('0X')) {
+      decimal = parseInt(val, 16);
+    } else if (val.startsWith('0b') || val.startsWith('0B')) {
+      decimal = parseInt(val, 2);
+    } else if (val.startsWith('0o') || val.startsWith('0O')) {
+      decimal = parseInt(val, 8);
+    } else if (/^[01]+$/.test(val)) {
+      decimal = parseInt(val, 2);
+    } else if (/^[0-9a-fA-F]+$/.test(val)) {
+      decimal = parseInt(val, 16);
+    } else {
+      decimal = parseInt(val, 10);
+    }
+    if (isNaN(decimal)) { setOutput('Invalid number'); return; }
+    setOutput(`Detected: ${val}\nDecimal: ${decimal}\nBinary: ${decimal.toString(2)}\nHex: 0x${decimal.toString(16).toUpperCase()}\nOctal: ${decimal.toString(8)}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <input type="text" value={input} onChange={e => setInput(e.target.value)} placeholder="Enter number (auto-detects base: 0xFF, 0b1010, 0o77)" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      <ProcessButton onClick={detectAndConvert}>Auto-Detect & Convert</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function CitationGeneratorTool() {
+  const [authors, setAuthors] = useState('');
+  const [title, setTitle] = useState('');
+  const [year, setYear] = useState(new Date().getFullYear().toString());
+  const [url, setUrl] = useState('');
+  const [style, setStyle] = useState<'apa' | 'mla' | 'chicago'>('apa');
+  const [output, setOutput] = useState('');
+
+  const generate = () => {
+    if (!authors || !title) { setOutput('Enter authors and title'); return; }
+    const y = year || new Date().getFullYear().toString();
+    let citation = '';
+    if (style === 'apa') {
+      citation = `${authors} (${y}). ${title}. ${url ? `Retrieved from ${url}` : ''}`;
+    } else if (style === 'mla') {
+      citation = `${authors}. "${title}." ${y}. ${url ? url : ''}`;
+    } else {
+      citation = `${authors}. "${title}." ${y}. ${url ? url : ''}`;
+    }
+    setOutput(citation.trim());
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2 flex-wrap">
+        {(['apa', 'mla', 'chicago'] as const).map(s => (
+          <button key={s} onClick={() => setStyle(s)} className={`px-3 py-1.5 text-sm rounded-lg ${style === s ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}>{s.toUpperCase()}</button>
+        ))}
+      </div>
+      <input type="text" value={authors} onChange={e => setAuthors(e.target.value)} placeholder="Authors (e.g. Smith, J. & Doe, A.)" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-red-500" />
+      <input type="text" value={title} onChange={e => setTitle(e.target.value)} placeholder="Title" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-red-500" />
+      <div className="grid grid-cols-2 gap-3">
+        <input type="text" value={year} onChange={e => setYear(e.target.value)} placeholder="Year" className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-red-500" />
+        <input type="text" value={url} onChange={e => setUrl(e.target.value)} placeholder="URL (optional)" className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={generate}>Generate Citation</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function CsvToTsvTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+  const [mode, setMode] = useState<'csv-tsv' | 'tsv-csv'>('csv-tsv');
+
+  const convert = () => {
+    if (!input) { setOutput('Enter data to convert'); return; }
+    try {
+      if (mode === 'csv-tsv') {
+        const lines = input.split('\n');
+        const result = lines.map(line => {
+          const cells = line.split(',').map(c => c.trim());
+          return cells.join('\t');
+        });
+        setOutput(result.join('\n'));
+      } else {
+        const lines = input.split('\n');
+        const result = lines.map(line => {
+          const cells = line.split('\t');
+          return cells.join(',');
+        });
+        setOutput(result.join('\n'));
+      }
+    } catch { setOutput('Error converting'); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        <button onClick={() => setMode('csv-tsv')} className={`px-3 py-1.5 text-sm rounded-lg ${mode === 'csv-tsv' ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}>CSV → TSV</button>
+        <button onClick={() => setMode('tsv-csv')} className={`px-3 py-1.5 text-sm rounded-lg ${mode === 'tsv-csv' ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}>TSV → CSV</button>
+      </div>
+      <Textarea value={input} onChange={setInput} placeholder="Paste CSV or TSV data..." />
+      <ProcessButton onClick={convert}>Convert</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
 function ToolRouter({ tool }: { tool: Tool }) {
   switch (tool.slug) {
     case 'word-counter':          return <WordCounterTool />;
@@ -4577,6 +5217,25 @@ function ToolRouter({ tool }: { tool: Tool }) {
     case 'sentence-extractor': return <SentenceExtractorTool />;
     case 'line-counter': return <LineCounterTool />;
     case 'secure-random-generator': return <SecureRandomGeneratorTool />;
+    case 'bmi-calculator': return <BmiCalculatorTool />;
+    case 'byte-converter': return <ByteConverterTool />;
+    case 'bill-splitter': return <BillSplitterTool />;
+    case 'binary-to-decimal': return <BinaryToDecimalTool />;
+    case 'binary-converter': return <BinaryConverterTool />;
+    case 'bin-hex-dec-converter': return <BinHexDecConverterTool />;
+    case 'base-number-converter': return <BaseNumberConverterTool />;
+    case 'bcrypt-hash-generator': return <BcryptHashGeneratorTool />;
+    case 'counter': return <CounterTool />;
+    case 'cmyk-to-rgb': return <CmykToRgbTool />;
+    case 'currency-converter': return <CurrencyConverterTool />;
+    case 'data-uri-generator': return <DataUriGeneratorTool />;
+    case 'decimal-to-binary': return <DecimalToBinaryTool />;
+    case 'decimal-to-hex': return <DecimalToHexTool />;
+    case 'base-convert-tool': return <BaseConvertTool />;
+    case 'base-converter': return <BaseConverterTool />;
+    case 'base-converter-quick': return <BaseConverterQuickTool />;
+    case 'citation-generator': return <CitationGeneratorTool />;
+    case 'csv-to-tsv': return <CsvToTsvTool />;
     default:                        return <NotImplementedTool toolName={tool.name} />;
   }
 }
