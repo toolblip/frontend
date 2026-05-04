@@ -33,6 +33,7 @@ import ImageCropperClient from '@/components/tools/ImageCropperClient';
 import ImageFormatConverterClient from '@/components/tools/ImageFormatConverterClient';
 import ImageResizerClient from '@/components/tools/ImageResizerClient';
 import JsMinifierClient from '@/components/tools/JsMinifierClient';
+import HtmlTableGeneratorClient from '@/components/tools/HtmlTableGeneratorClient';
 import JsonToYamlClient from '@/components/tools/JsonToYamlClient';
 import JsonValidatorClient from '@/components/tools/JsonValidatorClient';
 import JwtDecoderClient from '@/components/tools/JwtDecoderClient';
@@ -56,6 +57,8 @@ import Sha256HashClient from '@/components/tools/Sha256HashClient';
 import SqlToJsonClient from '@/components/tools/SqlToJsonClient';
 import SquareCropClient from '@/components/tools/SquareCropClient';
 import TextDiffClient from '@/components/tools/TextDiffClient';
+import TomlToJsonClient from '@/components/tools/TomlToJsonClient';
+import OpenGraphGeneratorClient from '@/components/tools/OpenGraphGeneratorClient';
 import TextSorterClient from '@/components/tools/TextSorterClient';
 import UnitConverterClient from '@/components/tools/UnitConverterClient';
 import UnixTimestampConverterClient from '@/components/tools/UnixTimestampConverterClient';
@@ -199,6 +202,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
       return <HexToRgbClient />;
     case 'html-encoder':
       return <HtmlEncoderClient />;
+    case 'html-table-generator':
+      return <HtmlTableGeneratorClient />;
     case 'html-validator':
       return <HtmlValidatorClient />;
     case 'http-headers-viewer':
@@ -241,6 +246,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
       return <MetaTagGeneratorClient />;
     case 'notebook-to-html':
       return <NotebookToHtmlClient />;
+    case 'open-graph-generator':
+      return <OpenGraphGeneratorClient />;
     case 'number-base-converter':
       return <NumberBaseConverterClient />;
     case 'oxford-comma':
@@ -299,6 +306,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
       return <SyllableCounterClient />;
     case 'text-diff':
       return <TextDiffClient />;
+    case 'toml-to-json':
+      return <TomlToJsonClient />;
     case 'text-sorter':
       return <TextSorterClient />;
     case 'text-statistics':
