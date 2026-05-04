@@ -1980,6 +1980,879 @@ function HreflangTagGeneratorTool() {
   );
 }
 
+// ─── Color Utilities ────────────────────────────────────────────────────────
+
+function hexToHsl(hex: string): [number, number, number] {
+  const r = parseInt(hex.slice(1, 3), 16) / 255;
+  const g = parseInt(hex.slice(3, 5), 16) / 255;
+  const b = parseInt(hex.slice(5, 7), 16) / 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let h = 0, s = 0, l = (max + min) / 2;
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+      case g: h = ((b - r) / d + 2) / 6; break;
+      case b: h = ((r - g) / d + 4) / 6; break;
+    }
+  }
+  return [Math.round(h * 360), Math.round(s * 100), Math.round(l * 100)];
+}
+
+function hslToHex(h: number, s: number, l: number): string {
+  s /= 100; l /= 100;
+  const a = s * Math.min(l, 1 - l);
+  const f = (n: number) => {
+    const k = (n + h / 30) % 12;
+    const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+    return Math.round(255 * color).toString(16).padStart(2, '0');
+  };
+  return `#${f(0)}${f(8)}${f(4)}`;
+}
+
+function hexToRgb(hex: string): [number, number, number] {
+  return [
+    parseInt(hex.slice(1, 3), 16),
+    parseInt(hex.slice(3, 5), 16),
+    parseInt(hex.slice(5, 7), 16),
+  ];
+}
+
+function rgbToHex(r: number, g: number, b: number): string {
+  return `#${[r, g, b].map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0')).join('')}`;
+}
+
+function rgbToHsl(r: number, g: number, b: number): [number, number, number] {
+  r /= 255; g /= 255; b /= 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let h = 0, s = 0, l = (max + min) / 2;
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+      case g: h = ((b - r) / d + 2) / 6; break;
+      case b: h = ((r - g) / d + 4) / 6; break;
+    }
+  }
+  return [Math.round(h * 360), Math.round(s * 100), Math.round(l * 100)];
+}
+
+function hslToRgb(h: number, s: number, l: number): [number, number, number] {
+  s /= 100; l /= 100;
+  const a = s * Math.min(l, 1 - l);
+  const f = (n: number) => {
+    const k = (n + h / 30) % 12;
+    return l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+  };
+  return [Math.round(f(0) * 255), Math.round(f(8) * 255), Math.round(f(4) * 255)];
+}
+
+// ─── New Tool Implementations ─────────────────────────────────────────────
+
+function ColorPaletteGeneratorTool() {
+  const [hex, setHex] = useState('#6366f1');
+  const [palettes, setPalettes] = useState<Record<string, string[]>>({});
+  const [h, s, l] = hexToHsl(hex);
+
+  const generate = () => {
+    const base = hslToHex(h, s, l);
+    setPalettes({
+      monochromatic: [0, 10, 20, 30, 40].map(d => hslToHex(h, s, Math.max(0, l - 25 + d))),
+      complementary: [hslToHex(h, s, l), hslToHex((h + 180) % 360, s, l)],
+      analogous: [hslToHex((h - 30 + 360) % 360, s, l), base, hslToHex((h + 30) % 360, s, l)],
+      triadic: [base, hslToHex((h + 120) % 360, s, l), hslToHex((h + 240) % 360, s, l)],
+      splitComplementary: [base, hslToHex((h + 150) % 360, s, l), hslToHex((h + 210) % 360, s, l)],
+    });
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-3 items-center">
+        <input type="color" value={hex} onChange={e => setHex(e.target.value)} className="w-12 h-10 rounded cursor-pointer border-0" />
+        <input value={hex} onChange={e => setHex(e.target.value)} placeholder="#6366f1" className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono" />
+      </div>
+      <ProcessButton onClick={generate}>Generate Palette</ProcessButton>
+      <div className="space-y-4">
+        {Object.entries(palettes).map(([name, colors]) => (
+          <div key={name}>
+            <div className="text-xs text-gray-500 dark:text-gray-400 mb-2 capitalize">{name.replace(/([A-Z])/g, ' $1')}</div>
+            <div className="flex gap-2">
+              {colors.map((c, i) => (
+                <div key={i} className="flex-1 text-center">
+                  <div className="h-12 rounded-lg mb-1" style={{ backgroundColor: c }} />
+                  <code className="text-xs text-gray-600 dark:text-gray-300">{c}</code>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ColorMixerTool() {
+  const [color1, setColor1] = useState('#6366f1');
+  const [color2, setColor2] = useState('#ec4899');
+  const [ratio, setRatio] = useState(50);
+  const [blendMode, setBlendMode] = useState<'normal' | 'multiply' | 'screen'>('normal');
+
+  const mixColors = () => {
+    const [r1, g1, b1] = hexToRgb(color1);
+    const [r2, g2, b2] = hexToRgb(color2);
+    const t = ratio / 100;
+    let r: number, g: number, b: number;
+    if (blendMode === 'multiply') {
+      r = (r1 * r2) / 255; g = (g1 * g2) / 255; b = (b1 * b2) / 255;
+    } else if (blendMode === 'screen') {
+      r = 255 - ((255 - r1) * (255 - r2)) / 255;
+      g = 255 - ((255 - g1) * (255 - g2)) / 255;
+      b = 255 - ((255 - b1) * (255 - b2)) / 255;
+    } else {
+      r = r1 * (1 - t) + r2 * t;
+      g = g1 * (1 - t) + g2 * t;
+      b = b1 * (1 - t) + b2 * t;
+    }
+    return rgbToHex(Math.round(r), Math.round(g), Math.round(b));
+  };
+
+  const mixed = mixColors();
+  const [rm, gm, bm] = hexToRgb(mixed);
+  const [hm, sm, lm] = rgbToHsl(rm, gm, bm);
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <label className="text-xs text-gray-500">Color 1</label>
+          <div className="flex gap-2 items-center">
+            <input type="color" value={color1} onChange={e => setColor1(e.target.value)} className="w-10 h-10 rounded cursor-pointer border-0" />
+            <input value={color1} onChange={e => setColor1(e.target.value)} className="flex-1 px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono" />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <label className="text-xs text-gray-500">Color 2</label>
+          <div className="flex gap-2 items-center">
+            <input type="color" value={color2} onChange={e => setColor2(e.target.value)} className="w-10 h-10 rounded cursor-pointer border-0" />
+            <input value={color2} onChange={e => setColor2(e.target.value)} className="flex-1 px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono" />
+          </div>
+        </div>
+      </div>
+      <div className="space-y-2">
+        <div className="flex justify-between text-xs text-gray-500">
+          <span>Blend Mode</span>
+          <span className="capitalize">{blendMode}</span>
+        </div>
+        <div className="flex gap-1">
+          {(['normal', 'multiply', 'screen'] as const).map(m => (
+            <button key={m} onClick={() => setBlendMode(m)} className={`flex-1 py-1.5 text-sm rounded-lg transition-colors ${blendMode === m ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200'}`}>{m}</button>
+          ))}
+        </div>
+      </div>
+      <div className="space-y-2">
+        <div className="flex justify-between text-xs text-gray-500">
+          <span>Ratio</span>
+          <span>{ratio}%</span>
+        </div>
+        <input type="range" min={0} max={100} value={ratio} onChange={e => setRatio(Number(e.target.value))} className="w-full accent-red-500" />
+      </div>
+      <div className="flex gap-4 items-center">
+        <div className="w-20 h-20 rounded-xl shadow-inner" style={{ backgroundColor: mixed }} />
+        <div className="flex-1 space-y-1">
+          <div className="text-xs text-gray-500 dark:text-gray-400 space-y-1">
+            <div>HEX: <span className="font-mono text-gray-800 dark:text-gray-200">{mixed}</span></div>
+            <div>RGB: <span className="font-mono text-gray-800 dark:text-gray-200">{rm}, {gm}, {bm}</span></div>
+            <div>HSL: <span className="font-mono text-gray-800 dark:text-gray-200">{hm}°, {sm}%, {lm}%</span></div>
+          </div>
+          <CopyButton text={mixed} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ColorContrastCheckerTool() {
+  const [fg, setFg] = useState('#000000');
+  const [bg, setBg] = useState('#ffffff');
+
+  const getLuminance = (hex: string) => {
+    const [r, g, b] = hexToRgb(hex).map(v => {
+      const c = v / 255;
+      return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+
+  const ratio = () => {
+    const l1 = getLuminance(fg), l2 = getLuminance(bg);
+    const lighter = Math.max(l1, l2), darker = Math.min(l1, l2);
+    return ((lighter + 0.05) / (darker + 0.05)).toFixed(2);
+  };
+
+  const r = parseFloat(ratio());
+  const aaLarge = r >= 3, aaNormal = r >= 4.5, aaaLarge = r >= 4.5, aaaNormal = r >= 7;
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <label className="text-xs text-gray-500">Foreground</label>
+          <div className="flex gap-2 items-center">
+            <input type="color" value={fg} onChange={e => setFg(e.target.value)} className="w-10 h-10 rounded cursor-pointer border-0" />
+            <input value={fg} onChange={e => setFg(e.target.value)} className="flex-1 px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono" />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <label className="text-xs text-gray-500">Background</label>
+          <div className="flex gap-2 items-center">
+            <input type="color" value={bg} onChange={e => setBg(e.target.value)} className="w-10 h-10 rounded cursor-pointer border-0" />
+            <input value={bg} onChange={e => setBg(e.target.value)} className="flex-1 px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono" />
+          </div>
+        </div>
+      </div>
+      <div className="p-6 rounded-xl text-center" style={{ backgroundColor: bg }}>
+        <p className="text-2xl font-bold" style={{ color: fg }}>Sample Text Preview</p>
+        <p className="text-sm mt-1" style={{ color: fg }}>The quick brown fox jumps over the lazy dog.</p>
+      </div>
+      <div className="bg-gray-50 dark:bg-gray-900 rounded-xl p-6 text-center">
+        <div className="text-5xl font-bold text-red-600 mb-2">{r}:1</div>
+        <div className="text-sm text-gray-500">Contrast Ratio</div>
+        <div className="grid grid-cols-2 gap-4 mt-4 text-left">
+          <div className="space-y-1">
+            <div className="text-xs text-gray-500">WCAG AA</div>
+            <div className="text-sm">Normal Text: <span className={aaNormal ? 'text-green-600' : 'text-red-600'}>{aaNormal ? '✓ Pass' : '✗ Fail'}</span></div>
+            <div className="text-sm">Large Text: <span className={aaLarge ? 'text-green-600' : 'text-red-600'}>{aaLarge ? '✓ Pass' : '✗ Fail'}</span></div>
+          </div>
+          <div className="space-y-1">
+            <div className="text-xs text-gray-500">WCAG AAA</div>
+            <div className="text-sm">Normal Text: <span className={aaaNormal ? 'text-green-600' : 'text-red-600'}>{aaaNormal ? '✓ Pass' : '✗ Fail'}</span></div>
+            <div className="text-sm">Large Text: <span className={aaaLarge ? 'text-green-600' : 'text-red-600'}>{aaaLarge ? '✓ Pass' : '✗ Fail'}</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ColorHarmonyGeneratorTool() {
+  const [hex, setHex] = useState('#6366f1');
+  const [harmony, setHarmony] = useState<string[]>([]);
+  const [h, s, l] = hexToHsl(hex);
+
+  const generate = (type: string) => {
+    const base = hslToHex(h, s, l);
+    const angles: Record<string, number[]> = {
+      complementary: [0, 180],
+      analogous: [-30, 0, 30],
+      triadic: [0, 120, 240],
+      splitComplementary: [0, 150, 210],
+      tetradic: [0, 90, 180, 270],
+      monochromatic: [0, 0, 0, 0, 0],
+    };
+    const anglesArr = angles[type] || [0];
+    if (type === 'monochromatic') {
+      setHarmony([0, 15, 30, -15, -30].map(d => hslToHex(h, s, Math.max(0, Math.min(100, l + d)))));
+    } else {
+      setHarmony(anglesArr.map(a => hslToHex((h + a + 360) % 360, s, l)));
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-3 items-center">
+        <input type="color" value={hex} onChange={e => setHex(e.target.value)} className="w-12 h-10 rounded cursor-pointer border-0" />
+        <input value={hex} onChange={e => setHex(e.target.value)} className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono" />
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {['complementary', 'analogous', 'triadic', 'splitComplementary', 'tetradic', 'monochromatic'].map(type => (
+          <button key={type} onClick={() => generate(type)} className="px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg transition-colors capitalize">
+            {type.replace(/([A-Z])/g, ' $1').trim()}
+          </button>
+        ))}
+      </div>
+      {harmony.length > 0 && (
+        <div className="flex gap-3 items-center">
+          {harmony.map((c, i) => (
+            <div key={i} className="flex-1 text-center">
+              <div className="h-16 rounded-lg mb-1 shadow-sm" style={{ backgroundColor: c }} />
+              <code className="text-xs text-gray-600 dark:text-gray-300">{c}</code>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ColorShadeGeneratorTool() {
+  const [hex, setHex] = useState('#6366f1');
+  const [h, s, l] = hexToHsl(hex);
+  const getShade = (d: number) => hslToHex(h, s, Math.max(0, Math.min(100, l + d)));
+  const shades = [-40, -25, -10, 0, 10, 25, 40].map(d => ({ shade: d, color: getShade(d) }));
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-3 items-center">
+        <input type="color" value={hex} onChange={e => setHex(e.target.value)} className="w-12 h-10 rounded cursor-pointer border-0" />
+        <input value={hex} onChange={e => setHex(e.target.value)} className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono" />
+      </div>
+      <div className="space-y-2">
+        {shades.map(({ shade, color }) => (
+          <div key={shade} className="flex items-center gap-3">
+            <div className="w-16 text-xs text-gray-500 text-right">{shade > 0 ? `+${shade}` : shade}</div>
+            <div className="w-10 h-10 rounded-lg shadow-sm" style={{ backgroundColor: color }} />
+            <code className="flex-1 text-sm text-gray-800 dark:text-gray-200 font-mono">{color}</code>
+            <CopyButton text={color} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+const CSS_NAMED_COLORS: [string, string][] = [
+  ['black', '#000000'], ['silver', '#c0c0c0'], ['gray', '#808080'], ['white', '#ffffff'],
+  ['maroon', '#800000'], ['red', '#ff0000'], ['purple', '#800080'], ['fuchsia', '#ff00ff'],
+  ['green', '#008000'], ['lime', '#00ff00'], ['olive', '#808000'], ['yellow', '#ffff00'],
+  ['navy', '#000080'], ['blue', '#0000ff'], ['teal', '#008080'], ['aqua', '#00ffff'],
+  ['orange', '#ffa500'], ['aliceblue', '#f0f8ff'], ['antiquewhite', '#faebd7'], ['aquamarine', '#7fffd4'],
+  ['azure', '#f0ffff'], ['beige', '#f5f5dc'], ['bisque', '#ffe4c4'], ['blanchedalmond', '#ffebcd'],
+  ['blueviolet', '#8a2be2'], ['brown', '#a52a2a'], ['burlywood', '#deb887'], ['cadetblue', '#5f9ea0'],
+  ['chartreuse', '#7fff00'], ['chocolate', '#d2691e'], ['coral', '#ff7f50'], ['cornflowerblue', '#6495ed'],
+  ['cornsilk', '#fff8dc'], ['crimson', '#dc143c'], ['cyan', '#00ffff'], ['darkblue', '#00008b'],
+  ['darkcyan', '#008b8b'], ['darkgoldenrod', '#b8860b'], ['darkgray', '#a9a9a9'], ['darkgreen', '#006400'],
+  ['darkkhaki', '#bdb76b'], ['darkmagenta', '#8b008b'], ['darkolivegreen', '#556b2f'], ['darkorange', '#ff8c00'],
+  ['darkorchid', '#9932cc'], ['darkred', '#8b0000'], ['darksalmon', '#e9967a'], ['darkseagreen', '#8fbc8f'],
+  ['darkslateblue', '#483d8b'], ['darkslategray', '#2f4f4f'], ['darkturquoise', '#00ced1'], ['darkviolet', '#9400d3'],
+  ['deeppink', '#ff1493'], ['deepskyblue', '#00bfff'], ['dimgray', '#696969'], ['dodgerblue', '#1e90ff'],
+  ['firebrick', '#b22222'], ['floralwhite', '#fffaf0'], ['forestgreen', '#228b22'], ['gainsboro', '#dcdcdc'],
+  ['ghostwhite', '#f8f8ff'], ['gold', '#ffd700'], ['goldenrod', '#daa520'], ['greenyellow', '#adff2f'],
+  ['honeydew', '#f0fff0'], ['hotpink', '#ff69b4'], ['indianred', '#cd5c5c'], ['indigo', '#4b0082'],
+  ['ivory', '#fffff0'], ['khaki', '#f0e68c'], ['lavender', '#e6e6fa'], ['lavenderblush', '#fff0f5'],
+  ['lawngreen', '#7cfc00'], ['lemonchiffon', '#fffacd'], ['lightblue', '#add8e6'], ['lightcoral', '#f08080'],
+  ['lightcyan', '#e0ffff'], ['lightgoldenrodyellow', '#fafad2'], ['lightgray', '#d3d3d3'], ['lightgreen', '#90ee90'],
+  ['lightpink', '#ffb6c1'], ['lightsalmon', '#ffa07a'], ['lightseagreen', '#20b2aa'], ['lightskyblue', '#87cefa'],
+  ['lightslategray', '#778899'], ['lightsteelblue', '#b0c4de'], ['lightyellow', '#ffffe0'], ['limegreen', '#32cd32'],
+  ['linen', '#faf0e6'], ['magenta', '#ff00ff'], ['mediumaquamarine', '#66cdaa'], ['mediumblue', '#0000cd'],
+  ['mediumorchid', '#ba55d3'], ['mediumpurple', '#9370db'], ['mediumseagreen', '#3cb371'], ['mediumslateblue', '#7b68ee'],
+  ['mediumspringgreen', '#00fa9a'], ['mediumturquoise', '#48d1cc'], ['mediumvioletred', '#c71585'],
+  ['midnightblue', '#191970'], ['mintcream', '#f5fffa'], ['mistyrose', '#ffe4e1'], ['moccasin', '#ffe4b5'],
+  ['navajowhite', '#ffdead'], ['oldlace', '#fdf5e6'], ['olivedrab', '#6b8e23'], ['orangered', '#ff4500'],
+  ['orchid', '#da70d6'], ['palegoldenrod', '#eee8aa'], ['palegreen', '#98fb98'], ['paleturquoise', '#afeeee'],
+  ['palevioletred', '#db7093'], ['papayawhip', '#ffefd5'], ['peachpuff', '#ffdab9'], ['peru', '#cd853f'],
+  ['pink', '#ffc0cb'], ['plum', '#dda0dd'], ['powderblue', '#b0e0e6'], ['rosybrown', '#bc8f8f'],
+  ['royalblue', '#4169e1'], ['saddlebrown', '#8b4513'], ['salmon', '#fa8072'], ['sandybrown', '#f4a460'],
+  ['seagreen', '#2e8b57'], ['seashell', '#fff5ee'], ['sienna', '#a0522d'], ['skyblue', '#87ceeb'],
+  ['slateblue', '#6a5acd'], ['slategray', '#708090'], ['snow', '#fffafa'], ['springgreen', '#00ff7f'],
+  ['steelblue', '#4682b4'], ['tan', '#d2b48c'], ['thistle', '#d8bfd8'], ['tomato', '#ff6347'],
+  ['turquoise', '#40e0d0'], ['violet', '#ee82ee'], ['wheat', '#f5deb3'], ['whitesmoke', '#f5f5f5'],
+  ['yellowgreen', '#9acd32'],
+];
+
+function ColorNameFinderTool() {
+  const [hex, setHex] = useState('#6495ed');
+  const [result, setResult] = useState<[string, string] | null>(null);
+
+  const findClosest = (input: string) => {
+    let targetHex = input;
+    if (!input.startsWith('#')) targetHex = '#' + input;
+    if (!/^#[0-9a-fA-F]{6}$/.test(targetHex)) return;
+    const [r, g, b] = hexToRgb(targetHex);
+    let minDist = Infinity, closest: [string, string] = ['Unknown', targetHex];
+    for (const [name, hex2] of CSS_NAMED_COLORS) {
+      const [r2, g2, b2] = hexToRgb(hex2);
+      const dist = Math.sqrt((r - r2) ** 2 + (g - g2) ** 2 + (b - b2) ** 2);
+      if (dist < minDist) { minDist = dist; closest = [name, hex2]; }
+    }
+    setResult(closest);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-3 items-center">
+        <input type="color" value={hex} onChange={e => { setHex(e.target.value); findClosest(e.target.value); }} className="w-12 h-10 rounded cursor-pointer border-0" />
+        <input value={hex} onChange={e => { setHex(e.target.value); findClosest(e.target.value); }} placeholder="#6495ed" className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono" />
+      </div>
+      {result && (
+        <div className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-900 rounded-xl">
+          <div className="w-16 h-16 rounded-xl shadow-sm" style={{ backgroundColor: result[1] }} />
+          <div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-white capitalize">{result[0]}</div>
+            <div className="text-sm text-gray-500 font-mono">{result[1]}</div>
+          </div>
+          <CopyButton text={result[0]} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ColorFormatConverterTool() {
+  const [hex, setHex] = useState('#6366f1');
+  const [rgb, setRgb] = useState('99, 102, 241');
+  const [hsl, setHsl] = useState('239, 84%, 67%');
+  const [active, setActive] = useState<'hex' | 'rgb' | 'hsl'>('hex');
+
+  const updateFromHex = (h: string) => {
+    setHex(h);
+    const [r, g, b] = hexToRgb(h);
+    setRgb(`${r}, ${g}, ${b}`);
+    const [hh, ss, ll] = rgbToHsl(r, g, b);
+    setHsl(`${hh}, ${ss}%, ${ll}%`);
+  };
+
+  const updateFromRgb = (s: string) => {
+    setRgb(s);
+    const parts = s.split(',').map(v => parseInt(v.trim()));
+    if (parts.length === 3 && parts.every(v => !isNaN(v) && v >= 0 && v <= 255)) {
+      const h = rgbToHex(parts[0], parts[1], parts[2]);
+      setHex(h);
+      const [hh, ss, ll] = rgbToHsl(parts[0], parts[1], parts[2]);
+      setHsl(`${hh}, ${ss}%, ${ll}%`);
+    }
+  };
+
+  const updateFromHsl = (s: string) => {
+    setHsl(s);
+    const parts = s.replace(/%/g, '').split(',').map(v => parseInt(v.trim()));
+    if (parts.length === 3 && parts.every(v => !isNaN(v))) {
+      const [r, g, b] = hslToRgb(parts[0], parts[1], parts[2]);
+      const h = rgbToHex(r, g, b);
+      setHex(h);
+      setRgb(`${r}, ${g}, ${b}`);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        {(['hex', 'rgb', 'hsl'] as const).map(f => (
+          <button key={f} onClick={() => setActive(f)} className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${active === f ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200'}`}>{f.toUpperCase()}</button>
+        ))}
+      </div>
+      <div className="flex gap-3 items-center">
+        <div className="w-16 h-16 rounded-xl shadow-sm" style={{ backgroundColor: hex }} />
+        <div className="flex-1 space-y-2">
+          {active === 'hex' && <input value={hex} onChange={e => updateFromHex(e.target.value)} className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono" />}
+          {active === 'rgb' && <input value={rgb} onChange={e => updateFromRgb(e.target.value)} placeholder="99, 102, 241" className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono" />}
+          {active === 'hsl' && <input value={hsl} onChange={e => updateFromHsl(e.target.value)} placeholder="239, 84%, 67%" className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono" />}
+          <div className="flex gap-3 text-xs text-gray-500">
+            <span>HEX: <span className="font-mono">{hex}</span></span>
+            <span>RGB: <span className="font-mono">{rgb}</span></span>
+            <span>HSL: <span className="font-mono">{hsl}</span></span>
+          </div>
+        </div>
+        <CopyButton text={hex} />
+      </div>
+    </div>
+  );
+}
+
+function RgbToHslTool() {
+  const [input, setInput] = useState('99, 102, 241');
+  const [result, setResult] = useState<{ hex: string; hsl: string; preview: string } | null>(null);
+
+  const convert = () => {
+    const parts = input.split(',').map(v => parseInt(v.trim()));
+    if (parts.length !== 3 || parts.some(v => isNaN(v) || v < 0 || v > 255)) return;
+    const [r, g, b] = parts;
+    const [h, s, l] = rgbToHsl(r, g, b);
+    const hex = rgbToHex(r, g, b);
+    setResult({ hex, hsl: `${h}°, ${s}%, ${l}%`, preview: hex });
+  };
+
+  return (
+    <div className="space-y-4">
+      <input value={input} onChange={e => setInput(e.target.value)} placeholder="99, 102, 241" className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono" />
+      <ProcessButton onClick={convert}>Convert</ProcessButton>
+      {result && (
+        <div className="flex gap-4 items-center p-4 bg-gray-50 dark:bg-gray-900 rounded-xl">
+          <div className="w-16 h-16 rounded-xl" style={{ backgroundColor: result.preview }} />
+          <div className="space-y-1">
+            <div className="text-sm text-gray-500">HEX: <span className="font-mono text-gray-800 dark:text-gray-200">{result.hex}</span></div>
+            <div className="text-sm text-gray-500">HSL: <span className="font-mono text-gray-800 dark:text-gray-200">{result.hsl}</span></div>
+          </div>
+          <CopyButton text={result.hex} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function HslToRgbTool() {
+  const [input, setInput] = useState('239, 84%, 67%');
+  const [result, setResult] = useState<{ hex: string; rgb: string; preview: string } | null>(null);
+
+  const convert = () => {
+    const parts = input.replace(/%/g, '').split(',').map(v => parseInt(v.trim()));
+    if (parts.length !== 3 || parts.some(v => isNaN(v))) return;
+    const [h, s, l] = parts;
+    const [r, g, b] = hslToRgb(h, s, l);
+    const hex = rgbToHex(r, g, b);
+    setResult({ rgb: `${r}, ${g}, ${b}`, hex, preview: hex });
+  };
+
+  return (
+    <div className="space-y-4">
+      <input value={input} onChange={e => setInput(e.target.value)} placeholder="239, 84%, 67%" className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono" />
+      <ProcessButton onClick={convert}>Convert</ProcessButton>
+      {result && (
+        <div className="flex gap-4 items-center p-4 bg-gray-50 dark:bg-gray-900 rounded-xl">
+          <div className="w-16 h-16 rounded-xl" style={{ backgroundColor: result.preview }} />
+          <div className="space-y-1">
+            <div className="text-sm text-gray-500">RGB: <span className="font-mono text-gray-800 dark:text-gray-200">{result.rgb}</span></div>
+            <div className="text-sm text-gray-500">HEX: <span className="font-mono text-gray-800 dark:text-gray-200">{result.hex}</span></div>
+          </div>
+          <CopyButton text={result.rgb} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ImagePlaceholderGeneratorTool() {
+  const [width, setWidth] = useState('400');
+  const [height, setHeight] = useState('300');
+  const [bg, setBg] = useState('#e5e7eb');
+  const [text, setText] = useState('');
+  const [format, setFormat] = useState<'svg' | 'base64'>('svg');
+
+  const svg = () => {
+    const w = width || '400', h = height || '300';
+    const t = text || `${w}×${h}`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+  <rect fill="${bg}" width="${w}" height="${h}"/>
+  <text fill="#6b7280" font-family="sans-serif" font-size="14" x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">${t}</text>
+</svg>`;
+  };
+
+  const base64 = () => btoa(unescape(encodeURIComponent(svg())));
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">Width</label>
+          <input type="number" value={width} onChange={e => setWidth(e.target.value)} className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white" />
+        </div>
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">Height</label>
+          <input type="number" value={height} onChange={e => setHeight(e.target.value)} className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white" />
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">Background</label>
+          <div className="flex gap-2 items-center">
+            <input type="color" value={bg} onChange={e => setBg(e.target.value)} className="w-10 h-10 rounded cursor-pointer border-0" />
+            <input value={bg} onChange={e => setBg(e.target.value)} className="flex-1 px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono" />
+          </div>
+        </div>
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">Text</label>
+          <input value={text} onChange={e => setText(e.target.value)} placeholder="400×300" className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white" />
+        </div>
+      </div>
+      <div className="flex gap-2">
+        {(['svg', 'base64'] as const).map(f => (
+          <button key={f} onClick={() => setFormat(f)} className={`px-3 py-1.5 text-sm rounded-lg ${format === f ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200'}`}>{f.toUpperCase()}</button>
+        ))}
+      </div>
+      <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-xl flex items-center justify-center" dangerouslySetInnerHTML={{ __html: svg() }} />
+      <OutputArea value={format === 'svg' ? svg() : `data:image/svg+xml;base64,${base64()}`} />
+    </div>
+  );
+}
+
+function ImageToBase64Tool() {
+  const [dataUrl, setDataUrl] = useState('');
+  const [preview, setPreview] = useState('');
+
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const result = ev.target?.result as string;
+      setDataUrl(result);
+      setPreview(result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  return (
+    <div className="space-y-4">
+      <input type="file" accept="image/*" onChange={handleFile} className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-red-50 file:text-red-600 hover:file:bg-red-100" />
+      {preview && <img src={preview} alt="Preview" className="max-h-48 rounded-lg mx-auto" />}
+      {dataUrl && <OutputArea value={dataUrl} />}
+    </div>
+  );
+}
+
+function WordFrequencyAnalyzerTool() {
+  const [text, setText] = useState('');
+  const [top, setTop] = useState<[string, number][]>([]);
+
+  const analyze = () => {
+    const words = text.toLowerCase().replace(/[^a-z0-9\s]/g, '').split(/\s+/).filter(w => w.length > 2);
+    const freq: Record<string, number> = {};
+    words.forEach(w => { freq[w] = (freq[w] || 0) + 1; });
+    const sorted = Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, 20);
+    setTop(sorted);
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={text} onChange={setText} placeholder="Paste text to analyze word frequency…" className="h-40" />
+      <ProcessButton onClick={analyze}>Analyze</ProcessButton>
+      {top.length > 0 && (
+        <div className="space-y-1">
+          {top.map(([word, count], i) => (
+            <div key={word} className="flex items-center gap-3 py-1.5 border-b border-gray-100 dark:border-gray-800 last:border-0">
+              <span className="w-6 text-xs text-gray-400 text-right">{i + 1}</span>
+              <span className="flex-1 text-sm text-gray-800 dark:text-gray-200 font-medium">{word}</span>
+              <div className="w-24 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                <div className="h-full bg-red-500 rounded-full" style={{ width: `${(count / top[0][1]) * 100}%` }} />
+              </div>
+              <span className="w-8 text-xs text-gray-500 text-right">{count}</span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SentenceCounterTool() {
+  const [text, setText] = useState('');
+
+  const stats = {
+    sentences: (text.match(/[.!?]+/g) || []).length,
+    words: text.trim() ? text.trim().split(/\s+/).length : 0,
+    chars: text.length,
+    avgSentenceLen: 0,
+  };
+  if (stats.sentences > 0) stats.avgSentenceLen = Math.round(stats.words / stats.sentences);
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={text} onChange={setText} placeholder="Paste or type your text here…" />
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {[
+          { label: 'Sentences', value: stats.sentences },
+          { label: 'Words', value: stats.words },
+          { label: 'Characters', value: stats.chars },
+          { label: 'Avg Sentence Length', value: `${stats.avgSentenceLen} words` },
+        ].map(s => (
+          <div key={s.label} className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg px-4 py-3 text-center">
+            <div className="text-2xl font-bold text-red-600 dark:text-red-400">{s.value}</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{s.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ParagraphCounterTool() {
+  const [text, setText] = useState('');
+
+  const paragraphs = text.split(/\n\n+/).filter(Boolean);
+  const sentences = (text.match(/[.!?]+/g) || []).length;
+  const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+  const avgWordsPerPara = paragraphs.length > 0 ? Math.round(words / paragraphs.length) : 0;
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={text} onChange={setText} placeholder="Paste your text here…" />
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        {[
+          { label: 'Paragraphs', value: paragraphs.length },
+          { label: 'Sentences', value: sentences },
+          { label: 'Words', value: words },
+          { label: 'Avg Words/Paragraph', value: avgWordsPerPara },
+        ].map(s => (
+          <div key={s.label} className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg px-4 py-3 text-center">
+            <div className="text-2xl font-bold text-red-600 dark:text-red-400">{s.value}</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{s.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ReadingTimeEstimatorTool() {
+  const [text, setText] = useState('');
+
+  const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+  const wpm = 200;
+  const minutes = Math.max(1, Math.ceil(words / wpm));
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={text} onChange={setText} placeholder="Paste your text here to estimate reading time…" />
+      <div className="grid grid-cols-3 gap-3">
+        <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-6 text-center">
+          <div className="text-4xl font-bold text-red-600 dark:text-red-400">{words}</div>
+          <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">Words</div>
+        </div>
+        <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-6 text-center">
+          <div className="text-4xl font-bold text-red-600 dark:text-red-400">{minutes}</div>
+          <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">Minutes</div>
+        </div>
+        <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-6 text-center">
+          <div className="text-4xl font-bold text-red-600 dark:text-red-400">{wpm}</div>
+          <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">WPM</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LetterFrequencyCounterTool() {
+  const [text, setText] = useState('');
+
+  const freq = () => {
+    const f: Record<string, number> = {};
+    text.toLowerCase().replace(/[^a-z]/g, '').split('').forEach(c => { f[c] = (f[c] || 0) + 1; });
+    return Object.entries(f).sort((a, b) => b[1] - a[1]);
+  };
+
+  const total = text.replace(/[^a-z]/g, '').length;
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={text} onChange={setText} placeholder="Type or paste text here to count letter frequency…" />
+      <div className="text-sm text-gray-500 mb-2">{total} total letters</div>
+      <div className="grid grid-cols-6 sm:grid-cols-9 gap-1">
+        {freq().map(([letter, count]) => (
+          <div key={letter} className="flex flex-col items-center py-2 bg-gray-50 dark:bg-gray-900 rounded-lg">
+            <span className="text-lg font-bold text-gray-800 dark:text-gray-200 uppercase">{letter}</span>
+            <span className="text-xs text-gray-500">{count}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function WhitespaceRemoverTool() {
+  const [text, setText] = useState('');
+  const [output, setOutput] = useState('');
+
+  const remove = (type: 'all' | 'extra' | 'leading' | 'trailing') => {
+    if (!text) { setOutput(''); return; }
+    switch (type) {
+      case 'all': setOutput(text.replace(/\s+/g, '')); break;
+      case 'extra': setOutput(text.replace(/[ \t]+/g, ' ').replace(/\n\s*\n/g, '\n')); break;
+      case 'leading': setOutput(text.replace(/^[ \t]+/gm, '')); break;
+      case 'trailing': setOutput(text.replace(/[ \t]+$/gm, '')); break;
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={text} onChange={setText} placeholder="Paste text with extra whitespace…" />
+      <div className="flex flex-wrap gap-2">
+        {([
+          { key: 'all', label: 'Remove All Whitespace' },
+          { key: 'extra', label: 'Collapse Extra Whitespace' },
+          { key: 'leading', label: 'Remove Leading' },
+          { key: 'trailing', label: 'Remove Trailing' },
+        ] as const).map(s => (
+          <button key={s.key} onClick={() => remove(s.key)} className="px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg transition-colors">{s.label}</button>
+        ))}
+      </div>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function LineBreakRemoverTool() {
+  const [text, setText] = useState('');
+  const [output, setOutput] = useState('');
+
+  const remove = (type: 'all' | 'double') => {
+    if (!text) { setOutput(''); return; }
+    if (type === 'all') setOutput(text.replace(/[\r\n]+/g, ' '));
+    else setOutput(text.replace(/[\r\n]+/g, '\n').replace(/\n{3,}/g, '\n\n'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={text} onChange={setText} placeholder="Paste text with line breaks…" />
+      <div className="flex gap-2">
+        {([
+          { key: 'all', label: 'Replace All with Space' },
+          { key: 'double', label: 'Collapse Double Breaks' },
+        ] as const).map(s => (
+          <button key={s.key} onClick={() => remove(s.key)} className="px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg transition-colors">{s.label}</button>
+        ))}
+      </div>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function CssAnimationGeneratorTool() {
+  const [name, setName] = useState('myAnimation');
+  const [duration, setDuration] = useState('1s');
+  const [timing, setTiming] = useState('ease');
+  const [iterations, setIterations] = useState('infinite');
+  const [fromProps, setFromProps] = useState({ transform: 'translateX(0)', opacity: '0' });
+  const [toProps, setToProps] = useState({ transform: 'translateX(100px)', opacity: '1' });
+
+  const css = () => `@keyframes ${name} {
+  from { ${fromProps.transform}; opacity: ${fromProps.opacity}; }
+  to { ${toProps.transform}; opacity: ${toProps.opacity}; }
+}
+
+.animated-element {
+  animation: ${name} ${duration} ${timing} ${iterations};
+}`;
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">Name</label>
+          <input value={name} onChange={e => setName(e.target.value)} className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono" />
+        </div>
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">Duration</label>
+          <input value={duration} onChange={e => setDuration(e.target.value)} className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono" />
+        </div>
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">Timing</label>
+          <select value={timing} onChange={e => setTiming(e.target.value)} className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white">
+            {['ease', 'linear', 'ease-in', 'ease-out', 'ease-in-out'].map(t => <option key={t}>{t}</option>)}
+          </select>
+        </div>
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">Iterations</label>
+          <input value={iterations} onChange={e => setIterations(e.target.value)} className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono" />
+        </div>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">From (0%)</label>
+          <input value={fromProps.transform} onChange={e => setFromProps(p => ({ ...p, transform: e.target.value }))} placeholder="transform: translateX(0)" className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono mb-1" />
+          <input value={fromProps.opacity} onChange={e => setFromProps(p => ({ ...p, opacity: e.target.value }))} placeholder="opacity: 0" className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono" />
+        </div>
+        <div>
+          <label className="text-xs text-gray-500 mb-1 block">To (100%)</label>
+          <input value={toProps.transform} onChange={e => setToProps(p => ({ ...p, transform: e.target.value }))} placeholder="transform: translateX(100px)" className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono mb-1" />
+          <input value={toProps.opacity} onChange={e => setToProps(p => ({ ...p, opacity: e.target.value }))} placeholder="opacity: 1" className="w-full px-2 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono" />
+        </div>
+      </div>
+      <OutputArea value={css()} />
+    </div>
+  );
+}
+
 function ToolRouter({ tool }: { tool: Tool }) {
   switch (tool.slug) {
     case 'word-counter':          return <WordCounterTool />;
@@ -2086,6 +2959,25 @@ function ToolRouter({ tool }: { tool: Tool }) {
     case 'javascript-minifier': return <JavaScriptMinifierTool />;
     case 'lua-beautifier': return <LuaBeautifierTool />;
     case 'regex-escaper': return <RegexEscaperTool />;
+    case 'css-animation-generator': return <CssAnimationGeneratorTool />;
+    case 'color-palette-generator': return <ColorPaletteGeneratorTool />;
+    case 'color-mixer': return <ColorMixerTool />;
+    case 'color-contrast-checker': return <ColorContrastCheckerTool />;
+    case 'color-harmony-generator': return <ColorHarmonyGeneratorTool />;
+    case 'color-shade-generator': return <ColorShadeGeneratorTool />;
+    case 'color-name-finder': return <ColorNameFinderTool />;
+    case 'color-format-converter': return <ColorFormatConverterTool />;
+    case 'rgb-to-hsl': return <RgbToHslTool />;
+    case 'hsl-to-rgb': return <HslToRgbTool />;
+    case 'image-placeholder-generator': return <ImagePlaceholderGeneratorTool />;
+    case 'image-to-base64': return <ImageToBase64Tool />;
+    case 'word-frequency-analyzer': return <WordFrequencyAnalyzerTool />;
+    case 'sentence-counter': return <SentenceCounterTool />;
+    case 'paragraph-counter': return <ParagraphCounterTool />;
+    case 'reading-time-estimator': return <ReadingTimeEstimatorTool />;
+    case 'letter-frequency-counter': return <LetterFrequencyCounterTool />;
+    case 'whitespace-remover': return <WhitespaceRemoverTool />;
+    case 'line-break-remover': return <LineBreakRemoverTool />;
     default:                        return <NotImplementedTool toolName={tool.name} />;
   }
 }
