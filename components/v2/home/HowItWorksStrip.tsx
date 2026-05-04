@@ -18,7 +18,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
         <div style={{ textAlign: 'center', marginBottom: 22 }}>
           <div className="tb-v2-kicker">How it works</div>
           <h2 style={{ fontSize: 19, fontWeight: 700, margin: '4px 0 0', letterSpacing: '-0.3px' }}>
-            Pick a tool &rarr; Paste your data &rarr; Get your result — <em>done.</em>
+            Pick a tool → Paste your data → Get your result <em>— done.</em>
           </h2>
         </div>
 

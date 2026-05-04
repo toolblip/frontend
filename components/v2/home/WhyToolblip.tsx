@@ -50,14 +50,14 @@ export default function WhyToolblip() {
           <div className="tb-v2-kicker">Why Toolblip?</div>
           <h2
             style={{
-              fontSize: 24,
+              fontSize: 22,
               fontWeight: 700,
               margin: '4px 0 0',
               letterSpacing: '-0.4px',
               color: 'var(--fg-0)',
             }}
           >
-            No nonsense. No paywall. Just working tools.
+            Your data stays on your device — always.
           </h2>
         </div>
 
