@@ -4400,6 +4400,833 @@ function SecureRandomGeneratorTool() {
   );
 }
 
+// ─── Binary Decimal Hex Converter ─────────────────────────────────────────────
+function BinaryDecimalHexConverterTool() {
+  const [input, setInput] = useState('');
+  const [fromBase, setFromBase] = useState<number>(10);
+  const [output, setOutput] = useState('');
+
+  const convert = () => {
+    const num = parseInt(input, fromBase);
+    if (isNaN(num)) { setOutput('Invalid number for selected base'); return; }
+    setOutput(`Decimal: ${num}\nBinary: ${num.toString(2)}\nHex: ${num.toString(16).toUpperCase()}\nOctal: ${num.toString(8)}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap gap-2">
+        {[2, 8, 10, 16].map(b => (
+          <button key={b} onClick={() => setFromBase(b)} className={`px-3 py-1.5 text-sm rounded-lg ${fromBase === b ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}>{b === 2 ? 'BIN' : b === 8 ? 'OCT' : b === 10 ? 'DEC' : 'HEX'}</button>
+        ))}
+      </div>
+      <input type="text" value={input} onChange={e => setInput(e.target.value.toUpperCase())} placeholder={`Enter ${fromBase === 2 ? 'binary' : fromBase === 8 ? 'octal' : fromBase === 10 ? 'decimal' : 'hex'} number`} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      <ProcessButton onClick={convert}>Convert</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Character Variety Checker ───────────────────────────────────────────────
+function CharacterVarietyCheckerTool() {
+  const [text, setText] = useState('');
+  const [output, setOutput] = useState('');
+
+  const check = () => {
+    if (!text) { setOutput('Enter text to analyze'); return; }
+    const counts = { uppercase: 0, lowercase: 0, digits: 0, punctuation: 0, spaces: 0, special: 0 };
+    for (const c of text) {
+      if (/[A-Z]/.test(c)) counts.uppercase++;
+      else if (/[a-z]/.test(c)) counts.lowercase++;
+      else if (/[0-9]/.test(c)) counts.digits++;
+      else if (/\s/.test(c)) counts.spaces++;
+      else if (/[.,!?;:'"()-]/.test(c)) counts.punctuation++;
+      else counts.special++;
+    }
+    const total = text.length;
+    setOutput(`Total chars: ${total}\nUppercase: ${counts.uppercase} (${((counts.uppercase/total)*100).toFixed(1)}%)\nLowercase: ${counts.lowercase} (${((counts.lowercase/total)*100).toFixed(1)}%)\nDigits: ${counts.digits} (${((counts.digits/total)*100).toFixed(1)}%)\nSpaces: ${counts.spaces} (${((counts.spaces/total)*100).toFixed(1)}%)\nPunctuation: ${counts.punctuation} (${((counts.punctuation/total)*100).toFixed(1)}%)\nSpecial: ${counts.special} (${((counts.special/total)*100).toFixed(1)}%)`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={text} onChange={setText} placeholder="Enter text to check character variety..." />
+      <ProcessButton onClick={check}>Analyze</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── CIDR Calculator ─────────────────────────────────────────────────────────
+function CidrCalculatorTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const calculate = () => {
+    const cidr = input.trim();
+    const match = cidr.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\/(\d{1,2})$/);
+    if (!match) { setOutput('Enter a valid CIDR (e.g. 192.168.1.0/24)'); return; }
+    const octets = match.slice(1, 5).map(Number);
+    if (octets.some(o => o > 255)) { setOutput('Invalid IP address'); return; }
+    const bits = parseInt(match[5]);
+    if (bits < 0 || bits > 32) { setOutput('CIDR must be 0-32'); return; }
+    const ip = (octets[0] << 24) | (octets[1] << 16) | (octets[2] << 8) | octets[3];
+    const mask = bits === 0 ? 0 : (~0 << (32 - bits)) >>> 0;
+    const network = (ip & mask) >>> 0;
+    const broadcast = (network | ~mask) >>> 0;
+    const usable = Math.max(0, broadcast - network - 1);
+    const toIP = (n: number) => [(n >>> 24) & 255, (n >>> 16) & 255, (n >>> 8) & 255, n & 255].join('.');
+    setOutput(`Network: ${toIP(network)}/${bits}\nSubnet Mask: ${toIP(mask)}\nFirst IP: ${toIP(network + 1)}\nLast IP: ${toIP(broadcast - 1)}\nBroadcast: ${toIP(broadcast)}\nTotal Hosts: ${Math.pow(2, 32 - bits)}\nUsable Hosts: ${usable}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <input type="text" value={input} onChange={e => setInput(e.target.value)} placeholder="192.168.1.0/24" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      <ProcessButton onClick={calculate}>Calculate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Code Diff ───────────────────────────────────────────────────────────────
+function CodeDiffTool() {
+  const [oldText, setOldText] = useState('');
+  const [newText, setNewText] = useState('');
+  const [output, setOutput] = useState('');
+
+  const diff = () => {
+    const oldLines = oldText.split('\n');
+    const newLines = newText.split('\n');
+    const result: string[] = [];
+    const maxLen = Math.max(oldLines.length, newLines.length);
+    for (let i = 0; i < maxLen; i++) {
+      const o = oldLines[i] ?? '';
+      const n = newLines[i] ?? '';
+      if (o === n) result.push(`  ${o}`);
+      else {
+        if (o) result.push(`- ${o}`);
+        if (n) result.push(`+ ${n}`);
+      }
+    }
+    setOutput(result.join('\n'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Original</label>
+          <textarea value={oldText} onChange={e => setOldText(e.target.value)} placeholder="Original code..." className="w-full h-32 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm resize-y focus:outline-none focus:border-red-500" />
+        </div>
+        <div>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Modified</label>
+          <textarea value={newText} onChange={e => setNewText(e.target.value)} placeholder="Modified code..." className="w-full h-32 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm resize-y focus:outline-none focus:border-red-500" />
+        </div>
+      </div>
+      <ProcessButton onClick={diff}>Compare</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Color Blindness Simulator ────────────────────────────────────────────────
+function ColorBlindnessSimulatorTool() {
+  const [hex, setHex] = useState('#FF5733');
+  const [output, setOutput] = useState('');
+
+  const simulate = () => {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    const protanopia = [0.567, 0.433, 0, 0.558, 0.442, 0, 0, 0.242, 0.758];
+    const deuteranopia = [0.625, 0.375, 0, 0.7, 0.3, 0, 0, 0.3, 0.7];
+    const tritanopia = [0.95, 0.05, 0, 0, 0.433, 0.567, 0, 0.475, 0.525];
+    const apply = (m: number[]) => [Math.round(m[0]*r+m[1]*g+m[2]*b), Math.round(m[3]*r+m[4]*g+m[5]*b), Math.round(m[6]*r+m[7]*g+m[8]*b)].map(v=>Math.min(255,Math.max(0,v)));
+    const toHex = (c: number[]) => '#' + c.map(v=>v.toString(16).padStart(2,'0')).join('').toUpperCase();
+    setOutput(`Original: ${hex.toUpperCase()}\nProtanopia: ${toHex(apply(protanopia))}\nDeuteranopia: ${toHex(apply(deuteranopia))}\nTritanopia: ${toHex(apply(tritanopia))}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-3 items-center">
+        <input type="color" value={hex} onChange={e => setHex(e.target.value)} className="w-12 h-12 rounded cursor-pointer border-0" />
+        <input type="text" value={hex} onChange={e => setHex(e.target.value)} placeholder="#FF5733" className="flex-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={simulate}>Simulate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Color Contrast Auditor ───────────────────────────────────────────────────
+function ColorContrastAuditorTool() {
+  const [fg, setFg] = useState('#000000');
+  const [bg, setBg] = useState('#FFFFFF');
+  const [output, setOutput] = useState('');
+
+  const luminance = (hex: string) => {
+    const r = parseInt(hex.slice(1,3),16)/255, g = parseInt(hex.slice(3,5),16)/255, b = parseInt(hex.slice(5,7),16)/255;
+    const s = [r,g,b].map(v => v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4));
+    return 0.2126*s[0] + 0.7152*s[1] + 0.0722*s[2];
+  };
+
+  const contrast = () => {
+    const L1 = luminance(fg), L2 = luminance(bg);
+    const ratio = (Math.max(L1,L2) + 0.05) / (Math.min(L1,L2) + 0.05);
+    const passAA = ratio >= 4.5 ? '✓ AA Normal' : '✗ Fail AA Normal';
+    const passAAA = ratio >= 7 ? '✓ AAA Normal' : '✗ Fail AAA Normal';
+    setOutput(`Contrast Ratio: ${ratio.toFixed(2)}:1\n\nWCAG 2.1:\n${passAA}\n${passAAA}\n${ratio >= 3 ? '✓ AA Large Text' : '✗ Fail AA Large Text'}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Foreground</label>
+          <div className="flex gap-2 items-center">
+            <input type="color" value={fg} onChange={e => setFg(e.target.value)} className="w-10 h-10 rounded cursor-pointer border-0" />
+            <input type="text" value={fg} onChange={e => setFg(e.target.value)} className="flex-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" />
+          </div>
+        </div>
+        <div>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Background</label>
+          <div className="flex gap-2 items-center">
+            <input type="color" value={bg} onChange={e => setBg(e.target.value)} className="w-10 h-10 rounded cursor-pointer border-0" />
+            <input type="text" value={bg} onChange={e => setBg(e.target.value)} className="flex-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" />
+          </div>
+        </div>
+      </div>
+      <div className="p-4 rounded-lg text-center" style={{ backgroundColor: bg, color: fg }}>Preview Text</div>
+      <ProcessButton onClick={contrast}>Check Contrast</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Color Contrast Ratio Checker ─────────────────────────────────────────────
+function ColorContrastRatioCheckerTool() {
+  const [fg, setFg] = useState('#000000');
+  const [bg, setBg] = useState('#ffffff');
+  const [output, setOutput] = useState('');
+
+  const luminance = (hex: string) => {
+    const r = parseInt(hex.slice(1,3),16)/255, g = parseInt(hex.slice(3,5),16)/255, b = parseInt(hex.slice(5,7),16)/255;
+    const s = [r,g,b].map(v => v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4));
+    return 0.2126*s[0] + 0.7152*s[1] + 0.0722*s[2];
+  };
+
+  const check = () => {
+    const L1 = luminance(fg), L2 = luminance(bg);
+    const ratio = (Math.max(L1,L2) + 0.05) / (Math.min(L1,L2) + 0.05);
+    setOutput(`Contrast Ratio: ${ratio.toFixed(2)}:1\n\nAA (4.5:1): ${ratio >= 4.5 ? 'PASS ✓' : 'FAIL ✗'}\nAAA (7:1): ${ratio >= 7 ? 'PASS ✓' : 'FAIL ✗'}\nLarge Text AA (3:1): ${ratio >= 3 ? 'PASS ✓' : 'FAIL ✗'}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Foreground</label>
+          <div className="flex gap-2"><input type="color" value={fg} onChange={e=>setFg(e.target.value)} className="w-10 h-10 rounded border-0 cursor-pointer" /><input type="text" value={fg} onChange={e=>setFg(e.target.value)} className="flex-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" /></div>
+        </div>
+        <div>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Background</label>
+          <div className="flex gap-2"><input type="color" value={bg} onChange={e=>setBg(e.target.value)} className="w-10 h-10 rounded border-0 cursor-pointer" /><input type="text" value={bg} onChange={e=>setBg(e.target.value)} className="flex-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" /></div>
+        </div>
+      </div>
+      <ProcessButton onClick={check}>Check Ratio</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Color Format Converter V2 ──────────────────────────────────────────────
+function ColorFormatConverterV2Tool() {
+  const [input, setInput] = useState('#3498db');
+  const [output, setOutput] = useState('');
+
+  const convert = () => {
+    const hex = input.trim();
+    let r: number, g: number, b: number;
+    if (hex.startsWith('#') && hex.length === 7) {
+      r = parseInt(hex.slice(1,3),16); g = parseInt(hex.slice(3,5),16); b = parseInt(hex.slice(5,7),16);
+    } else if (hex.startsWith('rgb')) {
+      const m = hex.match(/\d+/g); if (!m || m.length < 3) { setOutput('Invalid RGB'); return; }
+      [r,g,b] = m.map(Number);
+    } else { setOutput('Enter HEX (#RRGGBB) or RGB(r, g, b)'); return; }
+    const hsl = (() => { const rn=r/255,gn=g/255,bn=b/255; const max=Math.max(rn,gn,bn),min=Math.min(rn,gn,bn); let h=0,s=0; const l=(max+min)/2; if(max!==min){const d=max-min; s=l>0.5?d/(2-max-min):d/(max+min); switch(max){case rn:h=((gn-bn)/d+(gn<bn?6:0))/6;break;case gn:h=((bn-rn)/d+2)/6;break;default:h=((rn-gn)/d+4)/6;}} return [Math.round(h*360),Math.round(s*100),Math.round(l*100)]; })();
+    setOutput(`HEX: #${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0').toUpperCase()}\nRGB: rgb(${r}, ${g}, ${b})\nRGBA: rgba(${r}, ${g}, ${b}, 1)\nHSL: hsl(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%)\nHSLA: hsla(${hsl[0]}, ${hsl[1]}%, ${hsl[2]}%, 1)`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <input type="text" value={input} onChange={e => setInput(e.target.value)} placeholder="#3498db or rgb(52, 152, 219)" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      <ProcessButton onClick={convert}>Convert</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Color Format Picker ─────────────────────────────────────────────────────
+function ColorFormatPickerTool() {
+  const [hex, setHex] = useState('#E74C3C');
+  const [format, setFormat] = useState<'hex'|'rgb'|'hsl'>('hex');
+
+  const toRgb = () => { const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16); return `rgb(${r}, ${g}, ${b})`; };
+  const toHsl = () => { const r=parseInt(hex.slice(1,3),16)/255,g=parseInt(hex.slice(3,5),16)/255,b=parseInt(hex.slice(5,7),16)/255; const max=Math.max(r,g,b),min=Math.min(r,g,b); let h=0,s=0; const l=(max+min)/2; if(max!==min){const d=max-min; s=l>0.5?d/(2-max-min):d/(max+min); switch(max){case r:h=((g-b)/d+(g<b?6:0))/6;break;case g:h=((b-r)/d+2)/6;break;default:h=((r-g)/d+4)/6;}} return `hsl(${Math.round(h*360)}, ${Math.round(s*100)}%, ${Math.round(l*100)}%)`; };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-3 items-center">
+        <input type="color" value={hex} onChange={e => setHex(e.target.value)} className="w-16 h-16 rounded-lg cursor-pointer border-0" />
+        <input type="text" value={hex} onChange={e => setHex(e.target.value)} className="flex-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <div className="flex gap-2">
+        {(['hex','rgb','hsl'] as const).map(f => (
+          <button key={f} onClick={() => setFormat(f)} className={`px-4 py-2 rounded-lg text-sm ${format===f?'bg-red-600 text-white':'bg-gray-100 dark:bg-gray-800'}`}>{f.toUpperCase()}</button>
+        ))}
+      </div>
+      <div className="p-6 rounded-lg text-center text-2xl font-mono" style={{ backgroundColor: hex }}>{format==='hex'?hex:format==='rgb'?toRgb():toHsl()}</div>
+    </div>
+  );
+}
+
+// ─── Color Harmony Express ───────────────────────────────────────────────────
+function ColorHarmonyExpressTool() {
+  const [base, setBase] = useState('#3498db');
+  const [output, setOutput] = useState('');
+
+  const hslToHex = (nh: number, ns: number, nl: number): string => {
+    const h = ((nh % 360 + 360) % 360) / 360;
+    const s = ns / 100;
+    const l = nl / 100;
+    let r: number, g: number, b: number;
+    if (s === 0) { r = g = b = l; }
+    else {
+      const q = l >= 0.5 ? l * (1 + s) : l + s * l;
+      const p = 2 * l - q;
+      const hue2rgb = (p: number, q: number, t: number): number => {
+        const tt = ((t % 360 + 360) % 360) / 360;
+        if (tt < 1/6) return p + (q - p) * 6 * tt;
+        if (tt < 0.5) return q;
+        if (tt < 2/3) return p + (q - p) * (2/3 - tt) * 6;
+        return p;
+      };
+      r = hue2rgb(p, q, h * 360 + 120);
+      g = hue2rgb(p, q, h * 360);
+      b = hue2rgb(p, q, h * 360 + 240);
+    }
+    return '#' + [r, g, b].map(v => Math.round(v * 255).toString(16).padStart(2, '0')).join('').toUpperCase();
+  };
+
+  const harmony = () => {
+    const h = parseInt(base.slice(1, 3), 16) / 255 * 360;
+    const s = parseInt(base.slice(3, 5), 16) / 255 * 100;
+    const l = parseInt(base.slice(5, 7), 16) / 255 * 100;
+    setOutput(`Complementary: ${hslToHex(h + 180, s, l)}\nAnalogous: ${hslToHex(h - 30, s, l)} | ${hslToHex(h, s, l)} | ${hslToHex(h + 30, s, l)}\nTriadic: ${hslToHex(h, s, l)} | ${hslToHex(h + 120, s, l)} | ${hslToHex(h + 240, s, l)}\nSplit-Complementary: ${hslToHex(h + 150, s, l)} | ${hslToHex(h + 210, s, l)}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-3 items-center">
+        <input type="color" value={base} onChange={e => setBase(e.target.value)} className="w-12 h-12 rounded cursor-pointer border-0" />
+        <input type="text" value={base} onChange={e => setBase(e.target.value)} className="flex-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={harmony}>Generate Harmony</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Color Luminance Calculator ──────────────────────────────────────────────
+function ColorLuminanceCalculatorTool() {
+  const [hex, setHex] = useState('#FFFFFF');
+  const [output, setOutput] = useState('');
+
+  const calc = () => {
+    const r = parseInt(hex.slice(1,3),16)/255, g = parseInt(hex.slice(3,5),16)/255, b = parseInt(hex.slice(5,7),16)/255;
+    const s = [r,g,b].map(v => v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4));
+    const lum = 0.2126*s[0] + 0.7152*s[1] + 0.0722*s[2];
+    setOutput(`Relative Luminance: ${lum.toFixed(4)}\n\n${lum > 0.179 ? 'Light color (luminance > 0.179)' : 'Dark color (luminance <= 0.179)'}\n\nContrast with white (#FFF): ${((lum + 0.05) / 0.05).toFixed(2)}:1\nContrast with black (#000): ${((0.05) / (lum + 0.05)).toFixed(2)}:1`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-3 items-center">
+        <input type="color" value={hex} onChange={e => setHex(e.target.value)} className="w-12 h-12 rounded cursor-pointer border-0" />
+        <input type="text" value={hex} onChange={e => setHex(e.target.value)} className="flex-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={calc}>Calculate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Color Mixer V2 ─────────────────────────────────────────────────────────
+function ColorMixerV2Tool() {
+  const [color1, setColor1] = useState('#FF0000');
+  const [color2, setColor2] = useState('#0000FF');
+  const [ratio, setRatio] = useState('50');
+  const [output, setOutput] = useState('');
+
+  const mix = () => {
+    const r = Math.round(parseInt(color1.slice(1,3),16)*(1-parseInt(ratio)/100) + parseInt(color2.slice(1,3),16)*parseInt(ratio)/100);
+    const g = Math.round(parseInt(color1.slice(3,5),16)*(1-parseInt(ratio)/100) + parseInt(color2.slice(3,5),16)*parseInt(ratio)/100);
+    const b = Math.round(parseInt(color1.slice(5,7),16)*(1-parseInt(ratio)/100) + parseInt(color2.slice(5,7),16)*parseInt(ratio)/100);
+    const hex = '#' + [r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('').toUpperCase();
+    setOutput(`Mixed Color: ${hex}\nRGB: rgb(${r}, ${g}, ${b})`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-3">
+        <div className="flex gap-2 items-center">
+          <input type="color" value={color1} onChange={e=>setColor1(e.target.value)} className="w-10 h-10 rounded border-0 cursor-pointer" />
+          <input type="text" value={color1} onChange={e=>setColor1(e.target.value)} className="flex-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" />
+        </div>
+        <div className="flex gap-2 items-center">
+          <input type="color" value={color2} onChange={e=>setColor2(e.target.value)} className="w-10 h-10 rounded border-0 cursor-pointer" />
+          <input type="text" value={color2} onChange={e=>setColor2(e.target.value)} className="flex-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" />
+        </div>
+      </div>
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Ratio: {ratio}% {color2}</label>
+        <input type="range" value={ratio} onChange={e=>setRatio(e.target.value)} min="0" max="100" className="w-full" />
+      </div>
+      <ProcessButton onClick={mix}>Mix Colors</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Color Name Finder V2 ────────────────────────────────────────────────────
+function ColorNameFinderV2Tool() {
+  const [hex, setHex] = useState('#3498db');
+  const [output, setOutput] = useState('');
+
+  const namedColors: [string,string][] = [['AliceBlue','#F0F8FF'],['AntiqueWhite','#FAEBD7'],['Aqua','#00FFFF'],['Aquamarine','#7FFFD4'],['Azure','#F0FFFF'],['Beige','#F5F5DC'],['Bisque','#FFE4C4'],['Black','#000000'],['BlanchedAlmond','#FFEBCD'],['Blue','#0000FF'],['BlueViolet','#8A2BE2'],['Brown','#A52A2A'],['BurlyWood','#DEB887'],['CadetBlue','#5F9EA0'],['Chartreuse','#7FFF00'],['Chocolate','#D2691E'],['Coral','#FF7F50'],['CornflowerBlue','#6495ED'],['Cornsilk','#FFF8DC'],['Crimson','#DC143C'],['Cyan','#00FFFF'],['DarkBlue','#00008B'],['DarkCyan','#008B8B'],['DarkGoldenRod','#B8860B'],['DarkGray','#A9A9A9'],['DarkGreen','#006400'],['DarkKhaki','#BDB76B'],['DarkMagenta','#8B008B'],['DarkOliveGreen','#556B2F'],['DarkOrange','#FF8C00'],['DarkOrchid','#9932CC'],['DarkRed','#8B0000'],['DarkSalmon','#E9967A'],['DarkSeaGreen','#8FBC8F'],['DarkSlateBlue','#483D8B'],['DarkSlateGray','#2F4F4F'],['DarkTurquoise','#00CED1'],['DarkViolet','#9400D3'],['DeepPink','#FF1493'],['DeepSkyBlue','#00BFFF'],['DimGray','#696969'],['DodgerBlue','#1E90FF'],['FireBrick','#B22222'],['FloralWhite','#FFFAF0'],['ForestGreen','#228B22'],['Fuchsia','#FF00FF'],['Gainsboro','#DCDCDC'],['GhostWhite','#F8F8FF'],['Gold','#FFD700'],['GoldenRod','#DAA520'],['Gray','#808080'],['Green','#008000'],['GreenYellow','#ADFF2F'],['HoneyDew','#F0FFF0'],['HotPink','#FF69B4'],['IndianRed','#CD5C5C'],['Indigo','#4B0082'],['Ivory','#FFFFF0'],['Khaki','#F0E68C'],['Lavender','#E6E6FA'],['LavenderBlush','#FFF0F5'],['LawnGreen','#7CFC00'],['LemonChiffon','#FFFACD'],['LightBlue','#ADD8E6'],['LightCoral','#F08080'],['LightCyan','#E0FFFF'],['LightGoldenRodYellow','#FAFAD2'],['LightGray','#D3D3D3'],['LightGreen','#90EE90'],['LightPink','#FFB6C1'],['LightSalmon','#FFA07A'],['LightSeaGreen','#20B2AA'],['LightSkyBlue','#87CEFA'],['LightSlateGray','#778899'],['LightSteelBlue','#B0C4DE'],['LightYellow','#FFFFE0'],['Lime','#00FF00'],['LimeGreen','#32CD32'],['Linen','#FAF0E6'],['Magenta','#FF00FF'],['Maroon','#800000'],['MediumAquaMarine','#66CDAA'],['MediumBlue','#0000CD'],['MediumOrchid','#BA55D3'],['MediumPurple','#9370DB'],['MediumSeaGreen','#3CB371'],['MediumSlateBlue','#7B68EE'],['MediumSpringGreen','#00FA9A'],['MediumTurquoise','#48D1CC'],['MediumVioletRed','#C71585'],['MidnightBlue','#191970'],['MintCream','#F5FFFA'],['MistyRose','#FFE4E1'],['Moccasin','#FFE4B5'],['NavajoWhite','#FFDEAD'],['Navy','#000080'],['OldLace','#FDF5E6'],['Olive','#808000'],['OliveDrab','#6B8E23'],['Orange','#FFA500'],['OrangeRed','#FF4500'],['Orchid','#DA70D6'],['PaleGoldenRod','#EEE8AA'],['PaleGreen','#98FB98'],['PaleTurquoise','#AFEEEE'],['PaleVioletRed','#DB7093'],['PapayaWhip','#FFEFD5'],['PeachPuff','#FFDAB9'],['Peru','#CD853F'],['Pink','#FFC0CB'],['Plum','#DDA0DD'],['PowderBlue','#B0E0E6'],['Purple','#800080'],['RebeccaPurple','#663399'],['Red','#FF0000'],['RosyBrown','#BC8F8F'],['RoyalBlue','#4169E1'],['SaddleBrown','#8B4513'],['Salmon','#FA8072'],['SandyBrown','#F4A460'],['SeaGreen','#2E8B57'],['SeaShell','#FFF5EE'],['Sienna','#A0522D'],['Silver','#C0C0C0'],['SkyBlue','#87CEEB'],['SlateBlue','#6A5ACD'],['SlateGray','#708090'],['Snow','#FFFAFA'],['SpringGreen','#00FF7F'],['SteelBlue','#4682B4'],['Tan','#D2B48C'],['Teal','#008080'],['Thistle','#D8BFD8'],['Tomato','#FF6347'],['Turquoise','#40E0D0'],['Violet','#EE82EE'],['Wheat','#F5DEB3'],['White','#FFFFFF'],['WhiteSmoke','#F5F5F5'],['Yellow','#FFFF00'],['YellowGreen','#9ACD32']];
+
+  const find = () => {
+    const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+    let closest = namedColors[0], minDist = Infinity;
+    for (const [name, col] of namedColors) {
+      const cr = parseInt(col.slice(1,3),16), cg = parseInt(col.slice(3,5),16), cb = parseInt(col.slice(5,7),16);
+      const d = Math.sqrt((r-cr)**2+(g-cg)**2+(b-cb)**2);
+      if (d < minDist) { minDist = d; closest = [name, col]; }
+    }
+    setOutput(`Closest named color: ${closest[0]}\nHex: ${closest[1]}\nDistance: ${minDist.toFixed(1)}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-3 items-center">
+        <input type="color" value={hex} onChange={e => setHex(e.target.value)} className="w-12 h-12 rounded cursor-pointer border-0" />
+        <input type="text" value={hex} onChange={e => setHex(e.target.value)} className="flex-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={find}>Find Color Name</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── API Auth Header Generator ───────────────────────────────────────────────
+function ApiAuthHeaderGeneratorTool() {
+  const [type, setType] = useState<'bearer'|'basic'|'apiKey'>('bearer');
+  const [token, setToken] = useState('');
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [keyName, setKeyName] = useState('X-API-Key');
+  const [output, setOutput] = useState('');
+
+  const generate = () => {
+    let header = '';
+    if (type === 'bearer') header = `Authorization: Bearer ${token}`;
+    else if (type === 'basic') header = `Authorization: Basic ${btoa(`${username}:${password}`)}`;
+    else header = `${keyName}: ${token}`;
+    setOutput(header);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2 flex-wrap">
+        {(['bearer','basic','apiKey'] as const).map(t => (
+          <button key={t} onClick={() => setType(t)} className={`px-3 py-1.5 text-sm rounded-lg ${type===t?'bg-red-600 text-white':'bg-gray-100 dark:bg-gray-800'}`}>{t==='bearer'?'Bearer Token':t==='basic'?'Basic Auth':'API Key'}</button>
+        ))}
+      </div>
+      {type === 'bearer' && <input type="text" value={token} onChange={e=>setToken(e.target.value)} placeholder="your-token-here" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />}
+      {type === 'basic' && <><input type="text" value={username} onChange={e=>setUsername(e.target.value)} placeholder="Username" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 mb-2 font-mono text-sm focus:outline-none focus:border-red-500" /><input type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Password" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" /></>}
+      {type === 'apiKey' && <><input type="text" value={keyName} onChange={e=>setKeyName(e.target.value)} placeholder="X-API-Key" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 mb-2 font-mono text-sm focus:outline-none focus:border-red-500" /><input type="text" value={token} onChange={e=>setToken(e.target.value)} placeholder="your-api-key" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" /></>}
+      <ProcessButton onClick={generate}>Generate Header</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── API Doc Generator ───────────────────────────────────────────────────────
+function ApiDocGeneratorTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const generate = () => {
+    try {
+      const json = JSON.parse(input);
+      const lines = ['## API Documentation\n'];
+      const processObj = (obj: Record<string,unknown>, prefix: string) => {
+        for (const [key, val] of Object.entries(obj)) {
+          const type = Array.isArray(val) ? 'array' : typeof val;
+          lines.push(`- **${prefix}${key}** (${type}): ${val === null ? 'null' : Array.isArray(val) ? `[${val.join(', ')}]` : String(val).substring(0, 50)}`);
+          if (typeof val === 'object' && val !== null && !Array.isArray(val)) processObj(val as Record<string,unknown>, prefix + key + '.');
+        }
+      };
+      if (Array.isArray(json)) json.forEach((item, i) => { if (typeof item === 'object') processObj(item as Record<string,unknown>, ''); else lines.push(`- [${i}]: ${item}`); });
+      else processObj(json, '');
+      setOutput(lines.join('\n'));
+    } catch { setOutput('Invalid JSON'); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder='{"endpoint": "/api/users", "method": "GET"}' />
+      <ProcessButton onClick={generate}>Generate Docs</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── API Spec Generator ───────────────────────────────────────────────────────
+function ApiSpecGeneratorTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const generate = () => {
+    try {
+      const data = JSON.parse(input);
+      const title = data.title || data.name || 'API';
+      const basePath = data.basePath || data.base_url || '/api';
+      const paths: string[] = [];
+      const schema = (obj: Record<string,unknown>, required: string[]): Record<string,unknown> => {
+        const properties: Record<string,unknown> = {};
+        const req: string[] = [];
+        for (const [k, v] of Object.entries(obj)) {
+          properties[k] = { type: Array.isArray(v) ? 'array' : typeof v === 'number' ? 'number' : 'string', example: v };
+          if (required.includes(k)) req.push(k);
+        }
+        return { type: 'object', properties, required: req.length ? req : undefined };
+      };
+      if (data.endpoints || data.routes) {
+        for (const ep of (data.endpoints || data.routes)) {
+          const method = (ep.method || 'get').toUpperCase();
+          const path = ep.path || ep.url || '/';
+          const params = ep.params || ep.query || {};
+          paths.push(`  ${method} ${basePath}${path}:\n    summary: ${ep.description || ep.name || path}\n    parameters: ${JSON.stringify(Object.keys(params))}\n    responses:\n      200:\n        description: Success`);
+        }
+      }
+      setOutput(`openapi: 3.0.0\ninfo:\n  title: ${title}\n  version: 1.0.0\npaths:\n${paths.join('\n')}`);
+    } catch { setOutput('Invalid JSON input'); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder='{"title": "My API", "basePath": "/api", "endpoints": [{"method": "GET", "path": "/users", "description": "List users"}]}' />
+      <ProcessButton onClick={generate}>Generate OpenAPI Spec</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Area Converter ──────────────────────────────────────────────────────────
+function AreaConverterTool() {
+  const [value, setValue] = useState('1');
+  const [fromUnit, setFromUnit] = useState('sqm');
+  const [output, setOutput] = useState('');
+  const units: Record<string, number> = { sqm: 1, sqkm: 1e6, sqcm: 1e-4, sqmm: 1e-6, sqft: 0.092903, sqin: 0.00064516, sqyd: 0.836127, acre: 4046.86, hectare: 10000 };
+
+  const convert = () => {
+    const val = parseFloat(value);
+    if (isNaN(val)) { setOutput('Enter a number'); return; }
+    const sqMeters = val * units[fromUnit];
+    const results = Object.entries(units).map(([u, v]) => `${(sqMeters / v).toLocaleString('en', { maximumFractionDigits: 6 })} ${u}`);
+    setOutput(results.join('\n'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-3 flex-wrap">
+        <input type="number" value={value} onChange={e => setValue(e.target.value)} placeholder="Enter value" className="flex-1 min-w-[120px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+        <select value={fromUnit} onChange={e => setFromUnit(e.target.value)} className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-red-500">
+          {Object.keys(units).map(u => <option key={u} value={u}>{u}</option>)}
+        </select>
+      </div>
+      <ProcessButton onClick={convert}>Convert</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Angle Unit Converter ────────────────────────────────────────────────────
+function AngleUnitConverterTool() {
+  const [value, setValue] = useState('180');
+  const [fromUnit, setFromUnit] = useState('deg');
+  const [output, setOutput] = useState('');
+
+  const convert = () => {
+    const val = parseFloat(value);
+    if (isNaN(val)) { setOutput('Enter a number'); return; }
+    let radians = val;
+    if (fromUnit === 'deg') radians = val * Math.PI / 180;
+    else if (fromUnit === 'grad') radians = val * Math.PI / 200;
+    else if (fromUnit === 'turn') radians = val * 2 * Math.PI;
+    setOutput(`Radians: ${radians.toFixed(6)}\nDegrees: ${(radians * 180 / Math.PI).toFixed(6)}\nGradians: ${(radians * 200 / Math.PI).toFixed(6)}\nTurns: ${(radians / 2 / Math.PI).toFixed(6)}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-3 flex-wrap">
+        <input type="number" value={value} onChange={e => setValue(e.target.value)} placeholder="Enter value" className="flex-1 min-w-[120px] bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+        <select value={fromUnit} onChange={e => setFromUnit(e.target.value)} className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-red-500">
+          <option value="deg">Degrees (°)</option>
+          <option value="rad">Radians (rad)</option>
+          <option value="grad">Gradians (grad)</option>
+          <option value="turn">Turns (turn)</option>
+        </select>
+      </div>
+      <ProcessButton onClick={convert}>Convert</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Base64 Image Converter ──────────────────────────────────────────────────
+function Base64ImageConverterTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => setInput(reader.result as string);
+    reader.readAsDataURL(file);
+  };
+
+  const toImage = () => {
+    if (!input.startsWith('data:')) { setOutput('Invalid Base64 image data'); return; }
+    setOutput(input);
+  };
+
+  return (
+    <div className="space-y-4">
+      <input type="file" accept="image/*" onChange={handleFile} className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-red-50 dark:file:bg-red-900/20 file:text-red-600 hover:file:bg-red-100 dark:hover:file:bg-red-900/30" />
+      {input && <div className="text-xs text-gray-500 break-all bg-gray-50 dark:bg-gray-900 p-2 rounded">Image loaded ({input.substring(0, 50)}...)</div>}
+      <ProcessButton onClick={toImage}>Convert to Base64</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Binary Text Express ─────────────────────────────────────────────────────
+function BinaryTextExpressTool() {
+  const [text, setText] = useState('');
+  const [output, setOutput] = useState('');
+
+  const encode = () => setOutput(text.split('').map(c => c.charCodeAt(0).toString(2).padStart(8, '0')).join(' '));
+  const decode = () => {
+    try { setOutput(text.split(' ').map(b => String.fromCharCode(parseInt(b, 2))).join('')); } catch { setOutput('Invalid binary string'); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={text} onChange={setText} placeholder="Enter text or binary (space-separated bytes)..." />
+      <div className="flex gap-3">
+        <ProcessButton onClick={encode}>Text → Binary</ProcessButton>
+        <ProcessButton onClick={decode}>Binary → Text</ProcessButton>
+      </div>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Binary to Text V2 ───────────────────────────────────────────────────────
+function BinaryToTextV2Tool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const convert = () => {
+    try {
+      const bytes = input.trim().split(/\s+/);
+      setOutput(bytes.map(b => String.fromCharCode(parseInt(b, 2))).join(''));
+    } catch { setOutput('Invalid binary input'); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Enter binary (e.g. 01001000 01100101 01101100 01101100 01101111)" />
+      <ProcessButton onClick={convert}>Convert Binary to Text</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Bulk Generator ──────────────────────────────────────────────────────────
+function BulkGeneratorTool() {
+  const [prefix, setPrefix] = useState('item');
+  const [start, setStart] = useState('1');
+  const [count, setCount] = useState('10');
+  const [suffix, setSuffix] = useState('');
+  const [padding, setPadding] = useState('0');
+  const [output, setOutput] = useState('');
+
+  const generate = () => {
+    const startNum = parseInt(start) || 1;
+    const cnt = Math.min(parseInt(count) || 10, 1000);
+    const pad = parseInt(padding) || 0;
+    const items: string[] = [];
+    for (let i = 0; i < cnt; i++) {
+      const num = (startNum + i).toString().padStart(pad, '0');
+      items.push(`${prefix}${num}${suffix}`);
+    }
+    setOutput(items.join('\n'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-3">
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Prefix</label><input type="text" value={prefix} onChange={e=>setPrefix(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-500" /></div>
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Suffix</label><input type="text" value={suffix} onChange={e=>setSuffix(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-500" /></div>
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Start Number</label><input type="number" value={start} onChange={e=>setStart(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-500" /></div>
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Count</label><input type="number" value={count} onChange={e=>setCount(e.target.value)} min="1" max="1000" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-500" /></div>
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Padding (digits)</label><input type="number" value={padding} onChange={e=>setPadding(e.target.value)} min="0" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-500" /></div>
+      </div>
+      <ProcessButton onClick={generate}>Generate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Color Palette Extractor ─────────────────────────────────────────────────
+function ColorPaletteExtractorTool() {
+  const [output, setOutput] = useState('');
+
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 100; canvas.height = 100;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        ctx.drawImage(img, 0, 0, 100, 100);
+        const data = ctx.getImageData(0, 0, 100, 100).data;
+        const colors: Map<string, number> = new Map();
+        for (let i = 0; i < data.length; i += 4) {
+          const hex = '#' + [data[i], data[i+1], data[i+2]].map(v => Math.round(v/32)*32).map(v => v.toString(16).padStart(2,'0')).join('').toUpperCase();
+          colors.set(hex, (colors.get(hex) || 0) + 1);
+        }
+        const sorted = [...colors.entries()].sort((a,b) => b[1]-a[1]).slice(0, 10);
+        setOutput('Top 10 colors:\n' + sorted.map(([c,n]) => `${c} (${n} pixels)`).join('\n'));
+      };
+      img.src = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  return (
+    <div className="space-y-4">
+      <input type="file" accept="image/*" onChange={handleFile} className="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-red-50 dark:file:bg-red-900/20 file:text-red-600 hover:file:bg-red-100 dark:hover:file:bg-red-900/30" />
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Color Opacity Generator ─────────────────────────────────────────────────
+function ColorOpacityGeneratorTool() {
+  const [hex, setHex] = useState('#3498db');
+  const [output, setOutput] = useState('');
+
+  const generate = () => {
+    const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+    const steps = [9, 8, 7, 6, 5, 4, 3, 2, 1].map(n => n/10);
+    setOutput(steps.map(s => `rgba(${r}, ${g}, ${b}, ${s})`).join('\n'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-3 items-center">
+        <input type="color" value={hex} onChange={e => setHex(e.target.value)} className="w-12 h-12 rounded cursor-pointer border-0" />
+        <input type="text" value={hex} onChange={e => setHex(e.target.value)} className="flex-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={generate}>Generate Opacities</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Color Luminance Checker ─────────────────────────────────────────────────
+function ColorLuminanceCheckerTool() {
+  const [hex, setHex] = useState('#000000');
+  const [output, setOutput] = useState('');
+
+  const check = () => {
+    const r = parseInt(hex.slice(1,3),16)/255, g = parseInt(hex.slice(3,5),16)/255, b = parseInt(hex.slice(5,7),16)/255;
+    const s = [r,g,b].map(v => v <= 0.03928 ? v/12.92 : Math.pow((v+0.055)/1.055, 2.4));
+    const lum = 0.2126*s[0] + 0.7152*s[1] + 0.0722*s[2];
+    setOutput(`Luminance: ${lum.toFixed(4)}\n${lum > 0.179 ? 'Light' : 'Dark'} color\nBest contrast: ${lum > 0.179 ? 'black' : 'white'} text`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-3 items-center">
+        <input type="color" value={hex} onChange={e => setHex(e.target.value)} className="w-12 h-12 rounded cursor-pointer border-0" />
+        <input type="text" value={hex} onChange={e => setHex(e.target.value)} className="flex-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={check}>Check Luminance</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Color Harmony New ───────────────────────────────────────────────────────
+function ColorHarmonyNewTool() {
+  const [hex, setHex] = useState('#9B59B6');
+  const [output, setOutput] = useState('');
+
+  const harmony = () => {
+    const h = parseInt(hex.slice(1,3),16)/255*360;
+    const s = parseInt(hex.slice(3,5),16)/255*100;
+    const l = parseInt(hex.slice(5,7),16)/255*100;
+    const hue2rgb = (p: number, q: number, t: number) => {
+      const nt = ((t%360+360)%360)/360;
+      if(nt < 1/6) return p+(q-p)*6*nt;
+      if(nt < 1/2) return q;
+      if(nt < 2/3) return p+(q-p)*(2/3-nt)*6;
+      return p;
+    };
+    const hslToHex = (nh: number) => {
+      const nhNorm = ((nh%360+360)%360)/360;
+      const s1 = s/100, l1 = l/100;
+      if(s1 === 0) { const v = Math.round(l1*255).toString(16).padStart(2,'0'); return '#'+(v+v+v).toUpperCase(); }
+      const q = l1 >= 0.5 ? l1*(1+s1) : l1+s1*l1;
+      const p = 2*l1-q;
+      const r = Math.round(hue2rgb(p,q,nh)*255);
+      const g = Math.round(hue2rgb(p,q,nh-120)*255);
+      const b = Math.round(hue2rgb(p,q,nh+120)*255);
+      return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('').toUpperCase();
+    };
+    setOutput(`Tetradic: ${hslToHex(h)} | ${hslToHex(h+90)} | ${hslToHex(h+180)} | ${hslToHex(h+270)}\nSquare: ${hslToHex(h)} | ${hslToHex(h+90)} | ${hslToHex(h+180)} | ${hslToHex(h+270)}\nMonochromatic: ${Array.from({length:5},(_,i)=>hslToHex(h+Math.round(i*5)-10)).join(' | ')}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-3 items-center">
+        <input type="color" value={hex} onChange={e => setHex(e.target.value)} className="w-12 h-12 rounded cursor-pointer border-0" />
+        <input type="text" value={hex} onChange={e => setHex(e.target.value)} className="flex-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={harmony}>Generate Harmony</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
 // ─── New Tool Implementations ─────────────────────────────────────────────────
 
 function BmiCalculatorTool() {
@@ -5236,6 +6063,32 @@ function ToolRouter({ tool }: { tool: Tool }) {
     case 'base-converter-quick': return <BaseConverterQuickTool />;
     case 'citation-generator': return <CitationGeneratorTool />;
     case 'csv-to-tsv': return <CsvToTsvTool />;
+    case 'binary-decimal-hex-converter': return <BinaryDecimalHexConverterTool />;
+    case 'character-variety-checker': return <CharacterVarietyCheckerTool />;
+    case 'cidr-calculator': return <CidrCalculatorTool />;
+    case 'code-diff': return <CodeDiffTool />;
+    case 'color-blindness-simulator': return <ColorBlindnessSimulatorTool />;
+    case 'color-contrast-auditor': return <ColorContrastAuditorTool />;
+    case 'color-contrast-ratio-checker': return <ColorContrastRatioCheckerTool />;
+    case 'color-format-converter-v2': return <ColorFormatConverterV2Tool />;
+    case 'color-format-picker': return <ColorFormatPickerTool />;
+    case 'color-harmony-express': return <ColorHarmonyExpressTool />;
+    case 'color-harmony-new': return <ColorHarmonyNewTool />;
+    case 'color-luminance-calculator': return <ColorLuminanceCalculatorTool />;
+    case 'color-luminance-checker': return <ColorLuminanceCheckerTool />;
+    case 'color-mixer-v2': return <ColorMixerV2Tool />;
+    case 'color-name-finder-v2': return <ColorNameFinderV2Tool />;
+    case 'color-opacity-generator': return <ColorOpacityGeneratorTool />;
+    case 'color-palette-extractor': return <ColorPaletteExtractorTool />;
+    case 'api-auth-header-generator': return <ApiAuthHeaderGeneratorTool />;
+    case 'api-doc-generator': return <ApiDocGeneratorTool />;
+    case 'api-spec-generator': return <ApiSpecGeneratorTool />;
+    case 'area-converter': return <AreaConverterTool />;
+    case 'angle-unit-converter': return <AngleUnitConverterTool />;
+    case 'base64-image-converter': return <Base64ImageConverterTool />;
+    case 'binary-text-express': return <BinaryTextExpressTool />;
+    case 'binary-to-text-v2': return <BinaryToTextV2Tool />;
+    case 'bulk-generator': return <BulkGeneratorTool />;
     default:                        return <NotImplementedTool toolName={tool.name} />;
   }
 }
