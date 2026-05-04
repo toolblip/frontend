@@ -39,13 +39,11 @@ export default function CategoryQuickAccess({ categories }: CategoryQuickAccessP
   return (
     <section style={{ padding: '20px 0 8px' }}>
       <div className="tb-v2-container" style={{ marginBottom: 10 }}>
-        <div style={{ textAlign: 'center' }}>
-          <span
-            className="tb-v2-kicker"
-            style={{ fontSize: 11, letterSpacing: '0.08em', textTransform: 'uppercase' }}
-          >
-            Browse by category
-          </span>
+        <div style={{ textAlign: 'center', marginBottom: 14 }}>
+          <div className="tb-v2-kicker">Browse by category</div>
+          <h2 style={{ fontSize: 17, fontWeight: 700, margin: '4px 0 0', letterSpacing: '-0.3px' }}>
+            Find the right tool, fast
+          </h2>
         </div>
       </div>
       <div className="tb-v2-container">

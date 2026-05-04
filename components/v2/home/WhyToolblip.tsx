@@ -9,8 +9,9 @@ const benefits = [
     ),
     color: '#16a34a',
     bg: '#dcfce7',
-    title: 'Private',
-    desc: 'Your data never leaves your browser. No uploads, no servers, nothing transmitted — ever.',
+    title: '100% Private',
+    tagline: 'Nothing leaves your browser',
+    desc: 'All processing happens in your tab. Your data never touches our servers — not even for a millisecond.',
     glow: 'rgba(22, 163, 74, 0.12)',
   },
   {
@@ -21,8 +22,9 @@ const benefits = [
     ),
     color: '#d97706',
     bg: '#fef3c7',
-    title: 'Fast',
-    desc: 'Runs instantly in your browser tab. No API calls, no loading spinners, no waiting around.',
+    title: 'Instantly Fast',
+    tagline: 'No loading, no waiting',
+    desc: 'Runs the moment you open it. No API calls, no spinners, no round-trips — just paste and get your result.',
     glow: 'rgba(217, 119, 6, 0.12)',
   },
   {
@@ -33,8 +35,9 @@ const benefits = [
     ),
     color: '#2563eb',
     bg: '#dbeafe',
-    title: 'Free',
-    desc: 'No signup, no paywall. Every tool, every feature, every export — 100% free, always.',
+    title: 'Completely Free',
+    tagline: 'No signup, no paywall',
+    desc: 'Every tool, every feature, every export. Use it now, use it forever — your credit card can stay in your wallet.',
     glow: 'rgba(37, 99, 235, 0.12)',
   },
 ];
@@ -125,8 +128,8 @@ export default function WhyToolblip() {
                 <div
                   style={{
                     fontWeight: 700,
-                    fontSize: 16,
-                    marginBottom: 6,
+                    fontSize: 15,
+                    marginBottom: 2,
                     color: 'var(--fg-0)',
                     letterSpacing: '-0.2px',
                   }}
@@ -135,7 +138,18 @@ export default function WhyToolblip() {
                 </div>
                 <div
                   style={{
-                    fontSize: 13.5,
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: b.color,
+                    marginBottom: 8,
+                    opacity: 0.85,
+                  }}
+                >
+                  {b.tagline}
+                </div>
+                <div
+                  style={{
+                    fontSize: 13,
                     color: 'var(--fg-2)',
                     lineHeight: 1.6,
                   }}

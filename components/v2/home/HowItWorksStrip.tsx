@@ -18,7 +18,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
         <div style={{ textAlign: 'center', marginBottom: 22 }}>
           <div className="tb-v2-kicker">How it works</div>
           <h2 style={{ fontSize: 19, fontWeight: 700, margin: '4px 0 0', letterSpacing: '-0.3px' }}>
-            Pick a tool &rarr; Paste your data &rarr; Get your result
+            Pick a tool &rarr; Paste your data &rarr; Get your result — <em>done.</em>
           </h2>
         </div>
 
@@ -55,7 +55,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               color: 'var(--green, #16a34a)',
               bg: 'var(--green-tint, #dcfce7)',
               title: 'Paste your data',
-              desc: 'Your clipboard, your browser tab. Nothing ever leaves it.',
+              desc: 'Your clipboard, your browser. Nothing leaves your machine — ever.'
             },
             {
               icon: (
@@ -66,7 +66,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               color: 'var(--purple-tint, #7c3aed)',
               bg: 'var(--purple-tint, #ebe0ff)',
               title: 'Get your result',
-              desc: 'Instantly. Copy it and move on — no server round-trips.',
+              desc: 'Instant. Copy the result and move on — zero server round-trips.'
             },
           ].map((item, i) => (
             <div
