@@ -2,116 +2,85 @@
 
 import { useState, useEffect } from 'react';
 
-function formatDate(unix: number): string {
-  return new Date(unix * 1000).toISOString().replace('T', ' ').replace('Z', ' UTC');
-}
-
 export default function UnixTimestampConverterClient() {
-  const [input, setInput] = useState('');
-  const [nowUnix, setNowUnix] = useState(Math.floor(Date.now() / 1000));
+  const [timestamp, setTimestamp] = useState('');
+  const [dateInput, setDateInput] = useState('');
+  const [mode, setMode] = useState<'toDate' | 'toTimestamp'>('toDate');
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNowUnix(Math.floor(Date.now() / 1000));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+  const now = Math.floor(Date.now() / 1000);
 
-  const unixToHuman = (val: string): string => {
-    const n = parseInt(val.trim(), 10);
+  const convertToDate = (ts: string) => {
+    const n = parseInt(ts);
     if (isNaN(n)) return '';
-    if (n < 0) return 'Invalid (negative)';
-    if (n > 9999999999) return 'Invalid (too large for 32-bit)';
-    return formatDate(n);
+    try {
+      return new Date(n * 1000).toISOString().replace('T', ' ').replace(/\.\d{3}Z$/, ' UTC');
+    } catch { return ''; }
   };
 
-  const humanToUnix = (val: string): string => {
-    const d = new Date(val);
-    if (isNaN(d.getTime())) return '';
-    return String(Math.floor(d.getTime() / 1000));
+  const convertToTimestamp = (date: string) => {
+    try {
+      return Math.floor(new Date(date).getTime() / 1000);
+    } catch { return null; }
+  };
+
+  const handleNow = () => {
+    setTimestamp(String(now));
+    setDateInput(new Date().toISOString().slice(0, 19).replace('T', ' '));
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-      {/* Current time */}
-      <div style={{
-        padding: '12px 16px', background: 'var(--surface-2)', borderRadius: 10,
-        border: '1px solid var(--line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8
-      }}>
-        <span style={{ fontSize: 13, color: 'var(--fg-2)' }}>Current Unix timestamp:</span>
-        <span style={{ fontFamily: 'var(--f-mono)', fontSize: 14, fontWeight: 600, color: 'var(--red)' }}>{nowUnix}</span>
-      </div>
-
-      {/* Unix → Human */}
-      <div>
-        <label style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--fg-1)', display: 'block', marginBottom: 6 }}>Unix Timestamp</label>
-        <input
-          type="number"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="e.g. 1745625600"
-          style={{
-            width: '100%', padding: '10px 14px', fontSize: 14, fontFamily: 'var(--f-mono)',
-            border: '1.5px solid var(--line)', borderRadius: 9, background: 'var(--surface)',
-            color: 'var(--fg-0)', outline: 'none', boxSizing: 'border-box',
-          }}
-        />
-        {input && (
-          <div style={{ marginTop: 10, padding: '10px 14px', background: 'var(--surface-2)', borderRadius: 8, fontSize: 13 }}>
-            <span style={{ color: 'var(--fg-2)' }}>UTC: </span>
-            <span style={{ fontFamily: 'var(--f-mono)', fontWeight: 600, color: 'var(--fg-0)' }}>{unixToHuman(input) || 'Invalid'}</span>
-          </div>
-        )}
-      </div>
-
-      {/* Common timestamps */}
-      <div>
-        <label style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--fg-1)', display: 'block', marginBottom: 8 }}>Common Timestamps</label>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 8 }}>
-          {[
-            { label: 'Now', val: nowUnix },
-            { label: '1 minute ago', val: nowUnix - 60 },
-            { label: '1 hour ago', val: nowUnix - 3600 },
-            { label: 'Today midnight UTC', val: Math.floor(new Date().setUTCHours(0, 0, 0, 0) / 1000) },
-            { label: 'Tomorrow midnight', val: Math.floor(new Date().setUTCHours(0, 0, 0, 0) / 1000) + 86400 },
-            { label: 'Jan 1 2027 UTC', val: 1767225600 },
-            { label: 'Jan 1 2030 UTC', val: 1893456000 },
-          ].map(({ label, val }) => (
-            <button
-              key={label}
-              onClick={() => setInput(String(val))}
-              style={{
-                padding: '8px 10px', fontSize: 12, fontWeight: 500, cursor: 'pointer',
-                background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 8,
-                color: 'var(--fg-1)', textAlign: 'left', transition: 'border-color .1s',
-              }}
-            >
-              <div style={{ fontWeight: 600, color: 'var(--fg-0)', fontFamily: 'var(--f-mono)', fontSize: 11 }}>{val}</div>
-              <div style={{ color: 'var(--fg-3)', marginTop: 2 }}>{label}</div>
-            </button>
-          ))}
+    <div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Converter</span>
+        <div className="tb-v2-mode-tabs" role="group">
+          <button type="button" onClick={() => setMode('toDate')} className={`tb-v2-mode-tab ${mode === 'toDate' ? 'on' : ''}`}>TS → Date</button>
+          <button type="button" onClick={() => setMode('toTimestamp')} className={`tb-v2-mode-tab ${mode === 'toTimestamp' ? 'on' : ''}`}>Date → TS</button>
         </div>
       </div>
-
-      {/* Human → Unix */}
-      <div>
-        <label style={{ fontSize: 12.5, fontWeight: 600, color: 'var(--fg-1)', display: 'block', marginBottom: 6 }}>Date/Time String to Unix</label>
-        <input
-          type="datetime-local"
-          defaultValue=""
-          onChange={(e) => {
-            const out = humanToUnix(e.target.value);
-            if (out) {
-              navigator.clipboard.writeText(out);
-            }
-          }}
-          style={{
-            width: '100%', padding: '10px 14px', fontSize: 14,
-            border: '1.5px solid var(--line)', borderRadius: 9, background: 'var(--surface)',
-            color: 'var(--fg-0)', outline: 'none', boxSizing: 'border-box',
-          }}
-        />
-        <p style={{ fontSize: 11.5, color: 'var(--fg-3)', marginTop: 5 }}>Click a date, then copy the timestamp that appears.</p>
+      <div className="tb-v2-tool-output-body" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {mode === 'toDate' ? (
+          <>
+            <input
+              type="number"
+              value={timestamp}
+              onChange={e => setTimestamp(e.target.value)}
+              placeholder={`e.g. ${now}`}
+              className="tb-v2-tool-textarea"
+              style={{ width: '100%', minHeight: 44, resize: 'none', fontFamily: 'var(--f-mono)' }}
+            />
+            <button type="button" onClick={handleNow} className="tb-v2-mode-tab" style={{ alignSelf: 'flex-start' }}>Use current time</button>
+          </>
+        ) : (
+          <input
+            type="datetime-local"
+            value={dateInput}
+            onChange={e => setDateInput(e.target.value)}
+            className="tb-v2-tool-textarea"
+            style={{ width: '100%', minHeight: 44, resize: 'none', fontFamily: 'var(--f-mono)' }}
+          />
+        )}
+      </div>
+      <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">Result</span></div>
+      <div className="tb-v2-tool-output-body">
+        {mode === 'toDate' ? (
+          timestamp ? (
+            <div style={{ fontFamily: 'var(--f-mono)', fontSize: 15 }}>
+              <div style={{ color: 'var(--tb-text)', marginBottom: 6 }}>{convertToDate(timestamp) || 'Invalid timestamp'}</div>
+              <div style={{ fontSize: 12, color: 'var(--tb-text-secondary)' }}>
+                Local: {timestamp ? new Date(parseInt(timestamp) * 1000).toString() : '—'}
+              </div>
+            </div>
+          ) : <div style={{ color: 'var(--tb-text-secondary)', fontSize: 14 }}>Enter a Unix timestamp</div>
+        ) : (
+          dateInput ? (
+            <div style={{ fontFamily: 'var(--f-mono)', fontSize: 15 }}>
+              <div style={{ color: 'var(--tb-text)' }}>{convertToTimestamp(dateInput) ?? 'Invalid date'}</div>
+              <div style={{ fontSize: 12, color: 'var(--tb-text-secondary)', marginTop: 6 }}>
+                {dateInput} → {convertToTimestamp(dateInput)} seconds since epoch
+              </div>
+            </div>
+          ) : <div style={{ color: 'var(--tb-text-secondary)', fontSize: 14 }}>Enter a date/time</div>
+        )}
       </div>
     </div>
   );

@@ -1,158 +1,82 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+
+function checkStrength(password: string): { score: number; entropy: number; feedback: string[] } {
+  const feedback: string[] = [];
+  let score = 0;
+  if (password.length >= 8) score++;
+  if (password.length >= 12) score++;
+  if (password.length >= 16) score++;
+  if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+  if (/\d/.test(password)) score++;
+  if (/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password)) score++;
+  if (/[^a-zA-Z0-9!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password)) score++;
+
+  if (password.length < 8) feedback.push('Use at least 8 characters');
+  if (!/[a-z]/.test(password)) feedback.push('Add lowercase letters');
+  if (!/[A-Z]/.test(password)) feedback.push('Add uppercase letters');
+  if (!/\d/.test(password)) feedback.push('Add numbers');
+  if (!/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password)) feedback.push('Add special characters');
+
+  const poolSize = (/[a-z]/.test(password) ? 26 : 0) + (/[A-Z]/.test(password) ? 26 : 0) + (/\d/.test(password) ? 10 : 0) + (/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password) ? 32 : 0);
+  const entropy = password.length * Math.log2(poolSize || 1);
+
+  return { score, entropy, feedback };
+}
 
 export default function PasswordStrengthCheckerClient() {
   const [password, setPassword] = useState('');
-  const [strength, setStrength] = useState(0);
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [show, setShow] = useState(false);
 
-  const checkStrength = (pwd: string) => {
-    let score = 0;
-    const tips: string[] = [];
-
-    if (pwd.length === 0) {
-      setStrength(0);
-      setSuggestions(['Enter a password to check']);
-      return;
-    }
-
-    // Length check
-    if (pwd.length >= 8) score++;
-    else tips.push('Use at least 8 characters');
-    
-    if (pwd.length >= 12) score++;
-    
-    // Character variety checks
-    if (/[a-z]/.test(pwd)) score++;
-    else tips.push('Add lowercase letters');
-    
-    if (/[A-Z]/.test(pwd)) score++;
-    else tips.push('Add uppercase letters');
-    
-    if (/[0-9]/.test(pwd)) score++;
-    else tips.push('Add numbers');
-    
-    if (/[^a-zA-Z0-9]/.test(pwd)) score++;
-    else tips.push('Add special characters (!@#$%^&*)');
-
-    // Penalty for common patterns
-    if (/^[a-zA-Z]+$/.test(pwd) || /^[0-9]+$/.test(pwd)) {
-      score = Math.max(0, score - 2);
-      tips.push('Avoid using only letters or only numbers');
-    }
-
-    // Check for common passwords
-    const commonPasswords = ['password', '123456', 'qwerty', 'admin', 'letmein'];
-    if (commonPasswords.includes(pwd.toLowerCase())) {
-      score = 1;
-      tips.push('Avoid common passwords');
-    }
-
-    setStrength(Math.min(6, score));
-    setSuggestions(tips.length > 0 ? tips : ['Strong password!']);
-  };
-
-  useEffect(() => {
-    checkStrength(password);
-  }, [password]);
-
-  const getStrengthLabel = () => {
-    if (strength === 0) return '';
-    if (strength <= 1) return 'Very Weak';
-    if (strength <= 2) return 'Weak';
-    if (strength <= 3) return 'Fair';
-    if (strength <= 4) return 'Good';
-    if (strength <= 5) return 'Strong';
-    return 'Very Strong';
-  };
-
-  const getStrengthColor = () => {
-    if (strength <= 1) return 'bg-red-500';
-    if (strength <= 2) return 'bg-orange-500';
-    if (strength <= 3) return 'bg-yellow-500';
-    if (strength <= 4) return 'bg-lime-500';
-    if (strength <= 5) return 'bg-green-500';
-    return 'bg-emerald-500';
-  };
+  const { score, entropy, feedback } = checkStrength(password);
+  const pct = Math.min(100, (score / 7) * 100);
+  const color = score <= 2 ? '#ef4444' : score <= 4 ? '#f59e0b' : '#10b981';
+  const label = score <= 2 ? 'Weak' : score <= 4 ? 'Fair' : score <= 5 ? 'Good' : 'Strong';
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Password
-        </label>
-        <input
-          type="text"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Enter password to check..."
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
-        />
+    <div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Password</span>
+        <button type="button" onClick={() => setShow(v => !v)} className="tb-v2-mode-tab" style={{ fontSize: 11 }}>
+          {show ? 'HIDE' : 'SHOW'}
+        </button>
       </div>
-
+      <input
+        type={show ? 'text' : 'password'}
+        value={password}
+        onChange={e => setPassword(e.target.value)}
+        placeholder="Enter your password..."
+        className="tb-v2-tool-textarea"
+        style={{ width: '100%', minHeight: 44, resize: 'none', fontFamily: show ? 'var(--f-mono)' : undefined }}
+      />
       {password && (
         <>
-          <div className="mb-4">
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm font-medium text-gray-700">Strength</span>
-              <span className="text-sm font-medium text-gray-700">{getStrengthLabel()}</span>
+          <div style={{ marginTop: 12 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
+              <span style={{ fontSize: 12, color: 'var(--tb-text-secondary)' }}>Strength</span>
+              <span style={{ fontSize: 12, fontWeight: 600, color }}>{label}</span>
             </div>
-            <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
-              <div
-                className={`h-full ${getStrengthColor()} transition-all duration-300 rounded-full`}
-                style={{ width: `${(strength / 6) * 100}%` }}
-              />
+            <div style={{ height: 6, background: 'var(--tb-bg-secondary)', borderRadius: 3, overflow: 'hidden' }}>
+              <div style={{ width: `${pct}%`, height: '100%', background: color, transition: 'width 0.3s, background 0.3s', borderRadius: 3 }} />
             </div>
           </div>
-
-          <div className="mb-4">
-            <h3 className="text-sm font-medium text-gray-700 mb-2">Suggestions</h3>
-            <ul className="space-y-1">
-              {suggestions.map((suggestion, index) => (
-                <li key={index} className="text-sm text-gray-600 flex items-center gap-2">
-                  <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                  {suggestion}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="mb-4 p-3 bg-gray-50 rounded-md">
-            <h3 className="text-sm font-medium text-gray-700 mb-2">Password Breakdown</h3>
-            <div className="grid grid-cols-2 gap-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Length:</span>
-                <span className="font-medium">{password.length}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Lowercase:</span>
-                <span className={/[a-z]/.test(password) ? 'text-green-600' : 'text-red-600'}>
-                  {/[a-z]/.test(password) ? '✓' : '✗'}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Uppercase:</span>
-                <span className={/[A-Z]/.test(password) ? 'text-green-600' : 'text-red-600'}>
-                  {/[A-Z]/.test(password) ? '✓' : '✗'}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Numbers:</span>
-                <span className={/[0-9]/.test(password) ? 'text-green-600' : 'text-red-600'}>
-                  {/[0-9]/.test(password) ? '✓' : '✗'}
-                </span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Special:</span>
-                <span className={/[^a-zA-Z0-9]/.test(password) ? 'text-green-600' : 'text-red-600'}>
-                  {/[^a-zA-Z0-9]/.test(password) ? '✓' : '✗'}
-                </span>
-              </div>
-            </div>
+          <div style={{ marginTop: 10, display: 'flex', gap: 16, fontSize: 12 }}>
+            <div><span style={{ color: 'var(--tb-text-secondary)' }}>Entropy: </span><span style={{ fontWeight: 600 }}>{entropy.toFixed(1)} bits</span></div>
+            <div><span style={{ color: 'var(--tb-text-secondary)' }}>Length: </span><span style={{ fontWeight: 600 }}>{password.length}</span></div>
           </div>
         </>
       )}
+      <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">Suggestions</span></div>
+      <div className="tb-v2-tool-output-body">
+        {feedback.length > 0 ? (
+          <ul style={{ margin: 0, paddingLeft: 18, display: 'flex', flexDirection: 'column', gap: 4 }}>
+            {feedback.map(f => <li key={f} style={{ fontSize: 13, color: 'var(--tb-text-secondary)' }}>{f}</li>)}
+          </ul>
+        ) : (
+          <div style={{ color: '#10b981', fontSize: 14, fontWeight: 500 }}>Great password! All recommendations met.</div>
+        )}
+      </div>
     </div>
   );
 }

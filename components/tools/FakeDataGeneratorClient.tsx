@@ -2,170 +2,70 @@
 
 import { useState } from 'react';
 
-type DataType = 'name' | 'email' | 'address' | 'phone' | 'company' | 'date' | 'number' | 'uuid';
+const FIRST = ['James', 'Mary', 'John', 'Patricia', 'Robert', 'Jennifer', 'Michael', 'Linda', 'William', 'Elizabeth', 'David', 'Barbara', 'Richard', 'Susan', 'Joseph', 'Jessica', 'Thomas', 'Sarah', 'Charles', 'Karen'];
+const LAST = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Taylor', 'Moore', 'Jackson', 'Martin'];
+const DOMAINS = ['example.com', 'mail.com', 'test.org', 'demo.net'];
+const STREETS = ['Main St', 'Oak Ave', 'Maple Dr', 'Cedar Ln', 'Pine Rd', 'Elm St', 'Washington Blvd', 'Park Ave'];
+const CITIES = ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix', 'Philadelphia', 'San Antonio', 'San Diego', 'Dallas', 'San Jose'];
+const ST = ['NY', 'CA', 'IL', 'TX', 'AZ', 'PA', 'CA'];
+const ZIPS = ['10001', '90001', '60601', '77001', '85001', '19101', '78201', '92101', '75201', '95101'];
+
+function rnd<T>(a: T[]): T { return a[Math.floor(Math.random() * a.length)]; }
+function ri(min: number, max: number) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+function gen() {
+  const f = rnd(FIRST), l = rnd(LAST);
+  return { name: `${f} ${l}`, email: `${f.toLowerCase()}.${l.toLowerCase()}${ri(1, 99)}@${rnd(DOMAINS)}`, phone: `(${ri(200, 999)}) ${ri(200, 999)}-${ri(1000, 9999)}`, address: `${ri(100, 9999)} ${rnd(STREETS)}, ${rnd(CITIES)} ${rnd(ST)} ${rnd(ZIPS)}`, username: `${f.toLowerCase()}${l.toLowerCase()}${ri(1, 99)}`, password: `P@ss${ri(100, 999)}!` };
+}
+
+type T = 'person' | 'email' | 'address' | 'username';
 
 export default function FakeDataGeneratorClient() {
-  const [dataType, setDataType] = useState<DataType>('name');
-  const [count, setCount] = useState(10);
-  const [output, setOutput] = useState('');
-  const [format, setFormat] = useState<'json' | 'csv' | 'text'>('json');
-
-  const generators: Record<DataType, () => string> = {
-    name: () => {
-      const firstNames = ['James', 'Emma', 'Oliver', 'Sophia', 'William', 'Ava', 'Benjamin', 'Isabella', 'Lucas', 'Mia', 'Henry', 'Charlotte', 'Alexander', 'Amelia', 'Michael', 'Harper'];
-      const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Wilson', 'Anderson', 'Taylor', 'Thomas', 'Moore'];
-      return `${firstNames[Math.floor(Math.random() * firstNames.length)]} ${lastNames[Math.floor(Math.random() * lastNames.length)]}`;
-    },
-    email: () => {
-      const domains = ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'example.com'];
-      const name = generators.name().toLowerCase().replace(' ', '.');
-      return `${name}${Math.floor(Math.random() * 100)}@${domains[Math.floor(Math.random() * domains.length)]}`;
-    },
-    address: () => {
-      const streets = ['Main St', 'Oak Ave', 'Maple Dr', 'Cedar Ln', 'Pine Rd', 'Elm St', 'Washington Blvd', 'Lake View Dr'];
-      const cities = ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix', 'Philadelphia', 'San Antonio', 'San Diego'];
-      const states = ['NY', 'CA', 'IL', 'TX', 'AZ', 'PA'];
-      const zip = Math.floor(10000 + Math.random() * 90000);
-      return `${Math.floor(Math.random() * 9999) + 1} ${streets[Math.floor(Math.random() * streets.length)]}, ${cities[Math.floor(Math.random() * cities.length)]}, ${states[Math.floor(Math.random() * states.length)]} ${zip}`;
-    },
-    phone: () => {
-      const area = Math.floor(200 + Math.random() * 800);
-      const first = Math.floor(200 + Math.random() * 800);
-      const second = Math.floor(1000 + Math.random() * 9000);
-      return `(${area}) ${first}-${second}`;
-    },
-    company: () => {
-      const prefixes = ['Tech', 'Global', 'United', 'Premier', 'Alpha', 'Omega', 'Nova', 'Apex', 'Summit', 'Pinnacle'];
-      const suffixes = ['Solutions', 'Systems', 'Industries', 'Corp', 'Inc', 'Group', 'Labs', 'Ventures', 'Partners', 'Services'];
-      return `${prefixes[Math.floor(Math.random() * prefixes.length)]} ${suffixes[Math.floor(Math.random() * suffixes.length)]}`;
-    },
-    date: () => {
-      const start = new Date(2020, 0, 1).getTime();
-      const end = new Date(2025, 11, 31).getTime();
-      const date = new Date(start + Math.random() * (end - start));
-      return date.toISOString().split('T')[0];
-    },
-    number: () => String(Math.floor(Math.random() * 10000)),
-    uuid: () => {
-      return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-        const r = Math.random() * 16 | 0;
-        const v = c === 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-      });
-    }
-  };
+  const [count, setCount] = useState(5);
+  const [type, setType] = useState<T>('person');
+  const [data, setData] = useState<Record<string, string>[]>([]);
 
   const generate = () => {
-    const items = Array.from({ length: count }, () => generators[dataType]());
-    
-    if (format === 'json') {
-      const json = count === 1 ? `"${dataType}": "${items[0]}"` : JSON.stringify(items, null, 2);
-      setOutput(json);
-    } else if (format === 'csv') {
-      setOutput(items.join('\n'));
-    } else {
-      setOutput(items.join('\n'));
-    }
+    const items = Array.from({ length: count }, () => {
+      const p = gen();
+      if (type === 'person') return p;
+      if (type === 'email') return { email: p.email };
+      if (type === 'address') return { address: p.address };
+      return { username: p.username };
+    });
+    setData(items as Record<string, string>[]);
   };
 
+  const keys = data[0] ? Object.keys(data[0]) : [];
+
   return (
-    <div className="flex flex-col h-full">
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Data Type
-          </label>
-          <select
-            value={dataType}
-            onChange={(e) => setDataType(e.target.value as DataType)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="name">Full Name</option>
-            <option value="email">Email</option>
-            <option value="address">Address</option>
-            <option value="phone">Phone</option>
-            <option value="company">Company</option>
-            <option value="date">Date</option>
-            <option value="number">Number</option>
-            <option value="uuid">UUID</option>
-          </select>
-        </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Count
-          </label>
-          <input
-            type="number"
-            min="1"
-            max="1000"
-            value={count}
-            onChange={(e) => setCount(Math.max(1, Math.min(1000, parseInt(e.target.value) || 1)))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-      </div>
-
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Output Format
-        </label>
-        <div className="flex gap-4">
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              checked={format === 'json'}
-              onChange={() => setFormat('json')}
-              className="w-4 h-4"
-            />
-            <span className="text-sm">JSON</span>
-          </label>
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              checked={format === 'csv'}
-              onChange={() => setFormat('csv')}
-              className="w-4 h-4"
-            />
-            <span className="text-sm">CSV</span>
-          </label>
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              checked={format === 'text'}
-              onChange={() => setFormat('text')}
-              className="w-4 h-4"
-            />
-            <span className="text-sm">Plain Text</span>
-          </label>
-        </div>
-      </div>
-
-      <button
-        onClick={generate}
-        className="mb-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-      >
-        Generate {count > 1 ? `${count} Items` : '1 Item'}
-      </button>
-
-      {output && (
-        <div className="flex-1">
-          <div className="flex justify-between items-center mb-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Generated Data
-            </label>
-            <button
-              onClick={() => navigator.clipboard.writeText(output)}
-              className="text-sm text-blue-600 hover:text-blue-700"
-            >
-              Copy to Clipboard
-            </button>
+    <div>
+      <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Options</span></div>
+      <div className="tb-v2-tool-output-body" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+          <input type="number" value={count} onChange={e => setCount(Math.max(1, parseInt(e.target.value) || 1))} className="tb-v2-tool-textarea" style={{ width: 64, minHeight: 32, resize: 'none', textAlign: 'center' }} min={1} max={100} />
+          <div className="tb-v2-mode-tabs" role="group">
+            {(['person', 'email', 'address', 'username'] as T[]).map(t => (
+              <button key={t} type="button" onClick={() => setType(t)} className={`tb-v2-mode-tab ${type === t ? 'on' : ''}`}>{t}</button>
+            ))}
           </div>
-          <pre className="w-full h-64 px-3 py-2 bg-gray-50 border border-gray-300 rounded-md overflow-auto font-mono text-sm">
-            {output}
-          </pre>
         </div>
-      )}
+      </div>
+      <button onClick={generate} className="tb-v2-btn-primary" style={{ marginTop: 12 }}>Generate</button>
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">Generated Data</span>
+        {data.length > 0 && <button type="button" onClick={() => navigator.clipboard.writeText(data.map(r => Object.values(r).join(',')).join('\n')).catch(() => {})} className="tb-v2-copy-btn">Copy CSV</button>}
+      </div>
+      <div className="tb-v2-tool-output-body">
+        {data.length > 0 ? (
+          <div style={{ fontFamily: 'var(--f-mono)', fontSize: 13, overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+              <thead><tr>{keys.map(k => <th key={k} style={{ textAlign: 'left', padding: '6px 8px', borderBottom: '1px solid var(--tb-border)', color: 'var(--tb-text-secondary)', fontSize: 11, textTransform: 'uppercase' }}>{k}</th>)}</tr></thead>
+              <tbody>{data.map((row, i) => <tr key={i}>{keys.map(k => <td key={k} style={{ padding: '5px 8px', borderBottom: '1px solid var(--tb-border)' }}>{row[k]}</td>)}</tr>)}</tbody>
+            </table>
+          </div>
+        ) : <div style={{ color: 'var(--tb-text-secondary)', fontSize: 14 }}>Click Generate to create fake data</div>}
+      </div>
     </div>
   );
 }

@@ -17,6 +17,16 @@ import CircleCropClient from '@/components/tools/CircleCropClient';
 import ColorPickerClient from '@/components/tools/ColorPickerClient';
 import ContrastCheckerClient from '@/components/tools/ContrastCheckerClient';
 import CreditCardValidatorClient from '@/components/tools/CreditCardValidatorClient';
+import DnsLookupClient from '@/components/tools/DnsLookupClient';
+import KeywordDensityCheckerClient from '@/components/tools/KeywordDensityCheckerClient';
+import MetaDescriptionCheckerClient from '@/components/tools/MetaDescriptionCheckerClient';
+import MorseCodeTranslatorClient from '@/components/tools/MorseCodeTranslatorClient';
+import NumberToWordsClient from '@/components/tools/NumberToWordsClient';
+import PingTestClient from '@/components/tools/PingTestClient';
+import RandomIpAddressClient from '@/components/tools/RandomIpAddressClient';
+import SslCertificateCheckerClient from '@/components/tools/SslCertificateCheckerClient';
+import TextReverserClient from '@/components/tools/TextReverserClient';
+import Rot13CipherClient from '@/components/tools/Rot13CipherClient';
 import CsvToJsonClient from '@/components/tools/CsvToJsonClient';
 import DecimalToBinaryClient from '@/components/tools/DecimalToBinaryClient';
 import DecimalToHexClient from '@/components/tools/DecimalToHexClient';
@@ -254,6 +264,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
       return <JsMinifierClient />;
     case 'json-formatter':
     case 'json-ld-generator':
+    case 'keyword-density-checker':
+      return <KeywordDensityCheckerClient />;
       return <JsonLdGeneratorClient />;
       return <JsonFormatterClient />;
     case 'json-path-tester':
@@ -279,6 +291,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
     case 'list-randomizer':
       return <ListRandomizerClient />;
     case 'lorem-ipsum-generator':
+    case 'dns-lookup':
+      return <DnsLookupClient />;
       return <LoremIpsumGeneratorClient />;
     case 'markdown-to-html':
       return <MarkdownToHtmlClient />;
@@ -331,6 +345,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
     case 'roman-numeral-converter':
       return <RomanNumeralConverterClient />;
     case 'sass-to-css':
+    case 'ssl-certificate-checker':
+      return <SslCertificateCheckerClient />;
     case 'security-headers-generator':
       return <SecurityHeadersGeneratorClient />;
       return <SassToCssClient />;
@@ -357,6 +373,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
     case 'text-sorter':
       return <TextSorterClient />;
     case 'text-statistics':
+    case 'text-reverser':
+      return <TextReverserClient />;
       return <TextStatisticsClient />;
     case 'text-to-slug':
       return <TextToSlugClient />;

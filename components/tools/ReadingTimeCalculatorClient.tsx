@@ -1,174 +1,74 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-
-interface ReadingStats {
-  words: number;
-  characters: number;
-  charactersNoSpaces: number;
-  sentences: number;
-  paragraphs: number;
-  readingTime: number;
-  speakingTime: number;
-  a4Pages: number;
-}
+import { useState } from 'react';
 
 export default function ReadingTimeCalculatorClient() {
   const [text, setText] = useState('');
   const [wpm, setWpm] = useState(200);
 
-  const stats = useMemo<ReadingStats>(() => {
-    if (!text.trim()) {
-      return {
-        words: 0,
-        characters: 0,
-        charactersNoSpaces: 0,
-        sentences: 0,
-        paragraphs: 0,
-        readingTime: 0,
-        speakingTime: 0,
-        a4Pages: 0,
-      };
-    }
-
-    const characters = text.length;
-    const charactersNoSpaces = text.replace(/\s/g, '').length;
-    const words = text.trim().split(/\s+/).filter(w => w.length > 0).length;
-    const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0).length;
-    const paragraphs = text.split(/\n\n+/).filter(p => p.trim().length > 0).length || (text.trim() ? 1 : 0);
-
-    // Reading time: based on words per minute
-    const readingTime = Math.ceil(words / wpm);
-    
-    // Speaking time: typically 150 wpm
-    const speakingTime = Math.ceil(words / 150);
-    
-    // A4 page is approximately 250 words with standard formatting
-    const a4Pages = Math.ceil(words / 250);
-
-    return {
-      words,
-      characters,
-      charactersNoSpaces,
-      sentences,
-      paragraphs,
-      readingTime,
-      speakingTime,
-      a4Pages,
-    };
-  }, [text, wpm]);
-
-  const handleCopy = () => {
-    const summary = `Reading Time Analysis:
-- Words: ${stats.words}
-- Characters: ${stats.characters}
-- Reading Time: ${stats.readingTime} min
-- Speaking Time: ${stats.speakingTime} min
-- A4 Pages: ${stats.a4Pages}`;
-    navigator.clipboard.writeText(summary);
-  };
+  const analysis = (() => {
+    if (!text.trim()) return null;
+    const words = text.trim().split(/\s+/);
+    const wordCount = words.length;
+    const charCount = text.replace(/\s/g, '').length;
+    const sentenceCount = (text.match(/[.!?]+/g) || []).length || (wordCount > 0 ? 1 : 0);
+    const paragraphCount = text.split(/\n\n+/).filter(p => p.trim()).length || (text.trim() ? 1 : 0);
+    const minutes = wordCount / wpm;
+    const seconds = Math.round((minutes % 1) * 60);
+    return { wordCount, charCount, sentenceCount, paragraphCount, minutes, seconds };
+  })();
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Reading Time Calculator</h1>
-
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-2">Enter your text</label>
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          className="w-full p-3 border rounded-lg h-48 dark:bg-gray-800 dark:border-gray-700"
-          placeholder="Paste or type your text here to calculate reading time..."
-        />
-      </div>
-
-      <div className="mb-6">
-        <label className="block text-sm font-medium mb-2">Reading speed (words per minute)</label>
-        <div className="flex items-center gap-4">
+    <div>
+      <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Text</span></div>
+      <textarea
+        value={text}
+        onChange={e => setText(e.target.value)}
+        placeholder="Paste text to calculate reading time..."
+        className="tb-v2-tool-textarea"
+        style={{ minHeight: 120 }}
+      />
+      <div className="tb-v2-tool-output-body" style={{ marginTop: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <span style={{ fontSize: 13, color: 'var(--tb-text-secondary)', whiteSpace: 'nowrap' }}>Reading speed:</span>
           <input
             type="range"
+            min={100} max={500} step={10}
             value={wpm}
-            onChange={(e) => setWpm(parseInt(e.target.value))}
-            className="flex-1"
-            min={100}
-            max={400}
-            step={10}
+            onChange={e => setWpm(parseInt(e.target.value))}
+            style={{ flex: 1, accentColor: 'var(--tb-accent)' }}
           />
-          <span className="font-mono w-16 text-center">{wpm} wpm</span>
-        </div>
-        <div className="flex justify-between text-xs text-gray-500 mt-1">
-          <span>Slow (100)</span>
-          <span>Average (200)</span>
-          <span>Fast (400)</span>
+          <span style={{ fontSize: 13, fontFamily: 'var(--f-mono)', minWidth: 50, textAlign: 'right' }}>{wpm} wpm</span>
         </div>
       </div>
-
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-        <StatCard label="Words" value={stats.words.toLocaleString()} />
-        <StatCard label="Characters" value={stats.characters.toLocaleString()} />
-        <StatCard label="Sentences" value={stats.sentences.toLocaleString()} />
-        <StatCard label="Paragraphs" value={stats.paragraphs.toLocaleString()} />
-      </div>
-
-      <div className="bg-blue-50 dark:bg-blue-900/30 p-6 rounded-lg mb-6">
-        <div className="text-center">
-          <div className="text-5xl font-bold text-blue-600 dark:text-blue-400 mb-2">
-            {stats.readingTime}
+      <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">Reading Time</span></div>
+      <div className="tb-v2-tool-output-body">
+        {analysis ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+              <div style={{ fontSize: 42, fontWeight: 700, color: 'var(--tb-accent)' }}>
+                {analysis.minutes < 1 ? `${analysis.seconds}s` : `${Math.floor(analysis.minutes)}m ${analysis.seconds}s`}
+              </div>
+              <div style={{ fontSize: 14, color: 'var(--tb-text-secondary)' }}>
+                {analysis.minutes < 1 ? 'Quick read!' : analysis.minutes < 3 ? 'Short read' : analysis.minutes < 7 ? 'Medium read' : 'Long read'}
+              </div>
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: 8 }}>
+              {[
+                ['Words', analysis.wordCount], ['Characters', analysis.charCount],
+                ['Sentences', analysis.sentenceCount], ['Paragraphs', analysis.paragraphCount],
+              ].map(([label, val]) => (
+                <div key={label} style={{ background: 'var(--tb-bg-secondary)', borderRadius: 8, padding: '8px 12px' }}>
+                  <div style={{ fontSize: 11, color: 'var(--tb-text-secondary)', textTransform: 'uppercase' }}>{label}</div>
+                  <div style={{ fontSize: 16, fontWeight: 600 }}>{val}</div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="text-gray-600 dark:text-gray-400">
-            minute{stats.readingTime !== 1 ? 's' : ''} to read
-          </div>
-        </div>
+        ) : (
+          <div style={{ color: 'var(--tb-text-secondary)', fontSize: 14 }}>Enter text to calculate reading time</div>
+        )}
       </div>
-
-      <div className="grid grid-cols-2 gap-4 mb-6">
-        <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg text-center">
-          <div className="text-2xl font-bold">{stats.speakingTime}</div>
-          <div className="text-sm text-gray-500">min speaking time</div>
-          <div className="text-xs text-gray-400 mt-1">at 150 wpm</div>
-        </div>
-        <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg text-center">
-          <div className="text-2xl font-bold">{stats.a4Pages}</div>
-          <div className="text-sm text-gray-500">A4 pages</div>
-          <div className="text-xs text-gray-400 mt-1">~250 words/page</div>
-        </div>
-      </div>
-
-      {text && (
-        <div className="flex gap-3">
-          <button
-            onClick={handleCopy}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-          >
-            Copy Summary
-          </button>
-          <button
-            onClick={() => { setText(''); }}
-            className="px-4 py-2 bg-gray-300 dark:bg-gray-700 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition"
-          >
-            Clear
-          </button>
-        </div>
-      )}
-
-      <div className="mt-8 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-        <h3 className="font-medium mb-2">Reading Speed Reference:</h3>
-        <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-          <li>• <strong>Slow:</strong> 100-150 wpm - Technical material, learning</li>
-          <li>• <strong>Average:</strong> 200-250 wpm - Novels, general reading</li>
-          <li>• <strong>Fast:</strong> 300-400 wpm - Skimming, familiar topics</li>
-          <li>• <strong>Speaking:</strong> 130-150 wpm - Natural conversation</li>
-        </ul>
-      </div>
-    </div>
-  );
-}
-
-function StatCard({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 text-center">
-      <div className="text-2xl font-bold text-gray-700 dark:text-gray-200">{value}</div>
-      <div className="text-sm text-gray-500 dark:text-gray-400">{label}</div>
     </div>
   );
 }
