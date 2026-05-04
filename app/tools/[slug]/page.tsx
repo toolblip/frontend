@@ -1,7 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import type { Metadata } from 'next';
 import { tools } from '@/data/tools';
-import ToolClient from './ToolClient';
+import ToolUI from './ToolUI';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -37,5 +37,37 @@ export default async function ToolDetailPage({ params }: PageProps) {
   if (REDIRECTS[slug]) redirect(`/tools/${REDIRECTS[slug]}`);
   const tool = tools.find(t => t.slug === slug);
   if (!tool) notFound();
-  return <ToolClient tool={tool} />;
+  return (
+    <div className="max-w-3xl mx-auto px-4 py-8">
+      {/* Breadcrumb */}
+      <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6">
+        <a href="/" className="hover:text-red-600 dark:hover:text-red-400 transition-colors">Home</a>
+        <span>/</span>
+        <a href="/tools" className="hover:text-red-600 dark:hover:text-red-400 transition-colors">Tools</a>
+        <span>/</span>
+        <a href={`/tools?category=${encodeURIComponent(tool.category)}`} className="hover:text-red-600 dark:hover:text-red-400 transition-colors">{tool.category}</a>
+        <span>/</span>
+        <span className="text-gray-900 dark:text-white">{tool.name}</span>
+      </nav>
+
+      {/* Header */}
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-3">
+          <span className="text-4xl">{tool.emoji}</span>
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{tool.name}</h1>
+            <span className="inline-block mt-1 text-xs text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950 px-2.5 py-0.5 rounded-full font-medium">
+              {tool.category}
+            </span>
+          </div>
+        </div>
+        <p className="text-gray-500 dark:text-gray-400 leading-relaxed">{tool.description}</p>
+      </div>
+
+      {/* Tool UI */}
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
+        <ToolUI tool={tool} />
+      </div>
+    </div>
+  );
 }
