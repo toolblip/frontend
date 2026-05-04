@@ -121,6 +121,643 @@ function ProcessButton({ onClick, children, disabled }: { onClick: () => void; c
 
 // ─── Individual Tool UIs ──────────────────────────────────────────────────
 
+// ─── Math & Number Tools ────────────────────────────────────────────────
+
+function RandomNumberGeneratorTool() {
+  const [min, setMin] = useState('1');
+  const [max, setMax] = useState('100');
+  const [count, setCount] = useState('1');
+  const [unique, setUnique] = useState(false);
+  const [output, setOutput] = useState('');
+
+  const generate = () => {
+    const minVal = parseInt(min);
+    const maxVal = parseInt(max);
+    const cnt = Math.min(parseInt(count), 1000);
+    if (isNaN(minVal) || isNaN(maxVal) || minVal > maxVal) {
+      setOutput('Invalid range');
+      return;
+    }
+    const nums: number[] = [];
+    if (unique && maxVal - minVal + 1 < cnt) {
+      setOutput('Cannot generate that many unique numbers in this range');
+      return;
+    }
+    while (nums.length < cnt) {
+      const n = Math.floor(Math.random() * (maxVal - minVal + 1)) + minVal;
+      if (!unique || !nums.includes(n)) nums.push(n);
+    }
+    setOutput(nums.join('\n'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Min</label>
+          <input type="number" value={min} onChange={e => setMin(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" />
+        </div>
+        <div>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Max</label>
+          <input type="number" value={max} onChange={e => setMax(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" />
+        </div>
+        <div>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Count</label>
+          <input type="number" value={count} onChange={e => setCount(e.target.value)} min="1" max="1000" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" />
+        </div>
+        <div className="flex items-end">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked={unique} onChange={e => setUnique(e.target.checked)} className="w-4 h-4 accent-red-500" />
+            <span className="text-sm text-gray-600 dark:text-gray-300">Unique</span>
+          </label>
+        </div>
+      </div>
+      <div className="flex gap-3">
+        <ProcessButton onClick={generate}>Generate</ProcessButton>
+      </div>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function PrimeNumberCheckerTool() {
+  const [num, setNum] = useState('');
+  const [output, setOutput] = useState('');
+
+  const check = () => {
+    const n = parseInt(num);
+    if (isNaN(n) || n < 2) { setOutput('Enter a number ≥ 2'); return; }
+    const isPrime = n > 1 && Array.from({ length: Math.sqrt(n) }, (_, i) => i + 2).every(i => n % i !== 0);
+    const factors: number[] = [];
+    for (let i = 1; i <= n; i++) if (n % i === 0) factors.push(i);
+    setOutput(`${n} is ${isPrime ? 'PRIME' : 'NOT PRIME'}\nFactors: ${factors.join(', ')}\nTotal factors: ${factors.length}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Number</label>
+        <input type="number" value={num} onChange={e => setNum(e.target.value)} placeholder="Enter a number" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={check}>Check Prime</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function FibonacciGeneratorTool() {
+  const [count, setCount] = useState('10');
+  const [output, setOutput] = useState('');
+
+  const generate = () => {
+    const n = Math.min(Math.max(parseInt(count) || 0, 1), 100);
+    const fib: bigint[] = [];
+    for (let i = 0; i < n; i++) fib.push(i < 2 ? BigInt(i) : fib[i - 1] + fib[i - 2]);
+    setOutput(fib.map(x => x.toString()).join('\n'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">How many numbers?</label>
+        <input type="number" value={count} onChange={e => setCount(e.target.value)} min="1" max="100" placeholder="10" className="w-32 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={generate}>Generate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function FactorialCalculatorTool() {
+  const [num, setNum] = useState('');
+  const [output, setOutput] = useState('');
+
+  const factorial = (n: number): string => {
+    if (n < 0) return 'undefined for negative numbers';
+    if (n > 170) return 'Infinity (overflow)';
+    let result = BigInt(1);
+    for (let i = 2; i <= n; i++) result *= BigInt(i);
+    return result.toString();
+  };
+
+  const calc = () => {
+    const n = parseInt(num);
+    if (isNaN(n)) { setOutput('Enter a number'); return; }
+    setOutput(`${n}! = ${factorial(n)}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Number</label>
+        <input type="number" value={num} onChange={e => setNum(e.target.value)} placeholder="Enter a non-negative integer" className="w-48 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={calc}>Calculate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function GcdCalculatorTool() {
+  const [a, setA] = useState('');
+  const [b, setB] = useState('');
+  const [output, setOutput] = useState('');
+
+  const gcd = (x: number, y: number): number => y === 0 ? Math.abs(x) : gcd(y, x % y);
+  const lcm = (x: number, y: number) => Math.abs(x * y) / gcd(x, y);
+
+  const calc = () => {
+    const x = parseInt(a), y = parseInt(b);
+    if (isNaN(x) || isNaN(y) || x === 0 || y === 0) { setOutput('Enter non-zero integers'); return; }
+    setOutput(`GCD(${x}, ${y}) = ${gcd(x, y)}\nLCM(${x}, ${y}) = ${lcm(x, y)}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Number A</label>
+          <input type="number" value={a} onChange={e => setA(e.target.value)} placeholder="e.g. 12" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+        </div>
+        <div>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Number B</label>
+          <input type="number" value={b} onChange={e => setB(e.target.value)} placeholder="e.g. 8" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+        </div>
+      </div>
+      <ProcessButton onClick={calc}>Calculate GCD & LCM</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function RatioSimplifierTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const simplify = () => {
+    const parts = input.split(':').map(s => parseInt(s.trim())).filter(n => !isNaN(n));
+    if (parts.length < 2) { setOutput('Enter two numbers separated by colon, e.g. 12:8'); return; }
+    const g = parts.reduce((acc, n) => gcd(acc, n));
+    setOutput(`Original: ${parts.join(':')}\nSimplified: ${parts.map(n => n / g).join(':')}`);
+  };
+
+  const gcd = (a: number, b: number): number => b === 0 ? Math.abs(a) : gcd(b, a % b);
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Ratio (e.g. 12:8)</label>
+        <input type="text" value={input} onChange={e => setInput(e.target.value)} placeholder="12:8" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={simplify}>Simplify</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function RandomDecimalGeneratorTool() {
+  const [min, setMin] = useState('0');
+  const [max, setMax] = useState('1');
+  const [count, setCount] = useState('5');
+  const [decimals, setDecimals] = useState('4');
+  const [output, setOutput] = useState('');
+
+  const generate = () => {
+    const minVal = parseFloat(min), maxVal = parseFloat(max), cnt = Math.min(parseInt(count), 100), dec = Math.min(Math.max(parseInt(decimals), 0), 15);
+    if (isNaN(minVal) || isNaN(maxVal) || minVal > maxVal) { setOutput('Invalid range'); return; }
+    const nums = Array.from({ length: cnt }, () => (Math.random() * (maxVal - minVal) + minVal).toFixed(dec)).join('\n');
+    setOutput(nums);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Min</label><input type="number" value={min} onChange={e => setMin(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" /></div>
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Max</label><input type="number" value={max} onChange={e => setMax(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" /></div>
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Count</label><input type="number" value={count} onChange={e => setCount(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" /></div>
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Decimals</label><input type="number" value={decimals} onChange={e => setDecimals(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" /></div>
+      </div>
+      <ProcessButton onClick={generate}>Generate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function QuadraticEquationSolverTool() {
+  const [a, setA] = useState('1');
+  const [b, setB] = useState('0');
+  const [c, setC] = useState('0');
+  const [output, setOutput] = useState('');
+
+  const solve = () => {
+    const A = parseFloat(a), B = parseFloat(b), Cv = parseFloat(c);
+    if (isNaN(A) || isNaN(B) || isNaN(Cv) || A === 0) { setOutput('Enter valid numbers with a ≠ 0'); return; }
+    const disc = B * B - 4 * A * Cv;
+    if (disc > 0) {
+      const r1 = (-B + Math.sqrt(disc)) / (2 * A), r2 = (-B - Math.sqrt(disc)) / (2 * A);
+      setOutput(`x² + ${B}x + ${Cv} = 0\nDiscriminant: ${disc}\nTwo real roots:\nx₁ = ${r1.toFixed(6)}\nx₂ = ${r2.toFixed(6)}`);
+    } else if (disc === 0) {
+      const r = -B / (2 * A);
+      setOutput(`x² + ${B}x + ${Cv} = 0\nDiscriminant: 0\nOne repeated root:\nx = ${r.toFixed(6)}`);
+    } else {
+      const re = (-B / (2 * A)).toFixed(6), im = (Math.sqrt(-disc) / (2 * A)).toFixed(6);
+      setOutput(`x² + ${B}x + ${Cv} = 0\nDiscriminant: ${disc} (negative)\nTwo complex roots:\nx₁ = ${re} + ${im}i\nx₂ = ${re} - ${im}i`);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-3 gap-3">
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">a (x²)</label><input type="number" value={a} onChange={e => setA(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" /></div>
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">b (x)</label><input type="number" value={b} onChange={e => setB(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" /></div>
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">c</label><input type="number" value={c} onChange={e => setC(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" /></div>
+      </div>
+      <ProcessButton onClick={solve}>Solve</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Date & Time Tools ────────────────────────────────────────────────
+
+function DateFormatConverterTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const formats = ['YYYY-MM-DD', 'MM/DD/YYYY', 'DD/MM/YYYY', 'MMMM DD, YYYY', 'YYYY/MM/DD', 'DD-MM-YYYY'];
+
+  const convert = () => {
+    const d = new Date(input);
+    if (isNaN(d.getTime())) { setOutput('Invalid date'); return; }
+    setOutput(formats.map(f => `${f}: ${new Intl.DateTimeFormat('en-US', { dateStyle: 'long' }).format(d)}`).join('\n'));
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Input Date</label>
+        <input type="date" value={input} onChange={e => setInput(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={convert}>Convert</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function TimeZoneConverterTool() {
+  const [time, setTime] = useState(() => new Date().toTimeString().slice(0, 5));
+  const [date, setDate] = useState(() => new Date().toISOString().slice(0, 10));
+  const [inputZone, setInputZone] = useState(Intl.DateTimeFormat().resolvedOptions().timeZone);
+  const [outputZone, setOutputZone] = useState('UTC');
+  const [output, setOutput] = useState('');
+
+  const zones = ['UTC', 'America/New_York', 'America/Los_Angeles', 'Europe/London', 'Europe/Paris', 'Asia/Tokyo', 'Asia/Shanghai', 'Australia/Sydney', 'Pacific/Auckland'];
+
+  const convert = () => {
+    try {
+      const input = new Date(`${date}T${time}`);
+      if (isNaN(input.getTime())) { setOutput('Invalid date/time'); return; }
+      const formatter = new Intl.DateTimeFormat('en-US', { timeZone: outputZone, dateStyle: 'full', timeStyle: 'medium' });
+      setOutput(`${inputZone} → ${outputZone}\n\n${formatter.format(input)}`);
+    } catch { setOutput('Conversion failed'); }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-3">
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Date</label><input type="date" value={date} onChange={e => setDate(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" /></div>
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Time</label><input type="time" value={time} onChange={e => setTime(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" /></div>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">From Timezone</label><select value={inputZone} onChange={e => setInputZone(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-500">{zones.map(z => <option key={z} value={z}>{z}</option>)}</select></div>
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">To Timezone</label><select value={outputZone} onChange={e => setOutputZone(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-500">{zones.map(z => <option key={z} value={z}>{z}</option>)}</select></div>
+      </div>
+      <ProcessButton onClick={convert}>Convert</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function AgeCalculatorTool() {
+  const [birthDate, setBirthDate] = useState('');
+  const [output, setOutput] = useState('');
+
+  const calc = () => {
+    const birth = new Date(birthDate);
+    const now = new Date();
+    if (isNaN(birth.getTime()) || birth > now) { setOutput('Enter a valid past date'); return; }
+    let years = now.getFullYear() - birth.getFullYear();
+    let months = now.getMonth() - birth.getMonth();
+    let days = now.getDate() - birth.getDate();
+    if (days < 0) { months--; days += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
+    if (months < 0) { years--; months += 12; }
+    const totalDays = Math.floor((now.getTime() - birth.getTime()) / (1000 * 60 * 60 * 24));
+    setOutput(`Years: ${years}\nMonths: ${years * 12 + months}\nDays: ${totalDays.toLocaleString()}\n\nFormatted: ${years} years, ${months} month${months !== 1 ? 's' : ''}, ${days} day${days !== 1 ? 's' : ''}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Birth Date</label>
+        <input type="date" value={birthDate} onChange={e => setBirthDate(e.target.value)} className="w-48 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={calc}>Calculate Age</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function DayOfWeekCalculatorTool() {
+  const [date, setDate] = useState('');
+  const [output, setOutput] = useState('');
+
+  const calc = () => {
+    const d = new Date(date);
+    if (isNaN(d.getTime())) { setOutput('Enter a valid date'); return; }
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    setOutput(`${date}\n\n${days[d.getDay()]}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Date</label>
+        <input type="date" value={date} onChange={e => setDate(e.target.value)} className="w-48 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={calc}>Find Day</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function WeekNumberCalculatorTool() {
+  const [date, setDate] = useState('');
+  const [output, setOutput] = useState('');
+
+  const calc = () => {
+    const d = new Date(date);
+    if (isNaN(d.getTime())) { setOutput('Enter a valid date'); return; }
+    const startOfYear = new Date(d.getFullYear(), 0, 1);
+    const days = Math.floor((d.getTime() - startOfYear.getTime()) / (24 * 60 * 60 * 1000));
+    const weekNum = Math.ceil((days + startOfYear.getDay() + 1) / 7);
+    const isoWeek = Math.ceil(((d.getTime() - startOfYear.getTime()) / 86400000 + startOfYear.getDay() + 1) / 7);
+    setOutput(`Date: ${date}\nWeek of Year: ${weekNum}\nISO Week Number: ${isoWeek}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Date</label>
+        <input type="date" value={date} onChange={e => setDate(e.target.value)} className="w-48 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={calc}>Find Week</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function DateDifferenceCalculatorTool() {
+  const [date1, setDate1] = useState('');
+  const [date2, setDate2] = useState('');
+  const [output, setOutput] = useState('');
+
+  const calc = () => {
+    const d1 = new Date(date1), d2 = new Date(date2);
+    if (isNaN(d1.getTime()) || isNaN(d2.getTime())) { setOutput('Enter valid dates'); return; }
+    const diff = Math.abs(d2.getTime() - d1.getTime());
+    const days = Math.floor(diff / (24 * 60 * 60 * 1000));
+    const hours = Math.floor(diff / (60 * 60 * 1000));
+    const minutes = Math.floor(diff / (60 * 1000));
+    const seconds = Math.floor(diff / 1000);
+    setOutput(`Days: ${days.toLocaleString()}\nHours: ${hours.toLocaleString()}\nMinutes: ${minutes.toLocaleString()}\nSeconds: ${seconds.toLocaleString()}\n\nWeeks: ${(days / 7).toFixed(2)}\nMonths: ${(days / 30.44).toFixed(2)}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-3">
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Start Date</label><input type="date" value={date1} onChange={e => setDate1(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" /></div>
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">End Date</label><input type="date" value={date2} onChange={e => setDate2(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" /></div>
+      </div>
+      <ProcessButton onClick={calc}>Calculate Difference</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function TimeDurationCalculatorTool() {
+  const [mode, setMode] = useState<'add' | 'subtract' | 'diff'>('add');
+  const [startDate, setStartDate] = useState('');
+  const [startTime, setStartTime] = useState('00:00');
+  const [durationDays, setDurationDays] = useState('0');
+  const [durationHours, setDurationHours] = useState('0');
+  const [durationMins, setDurationMins] = useState('0');
+  const [output, setOutput] = useState('');
+
+  const calc = () => {
+    const start = new Date(`${startDate}T${startTime}`);
+    if (isNaN(start.getTime())) { setOutput('Enter valid start date and time'); return; }
+    const durMs = (parseInt(durationDays) * 86400 + parseInt(durationHours) * 3600 + parseInt(durationMins) * 60) * 1000;
+    let result: Date;
+    if (mode === 'add') result = new Date(start.getTime() + durMs);
+    else if (mode === 'subtract') result = new Date(start.getTime() - durMs);
+    else {
+      const endDate = prompt('Enter end date (YYYY-MM-DD):');
+      const end = new Date(`${endDate}T${prompt('Enter end time (HH:MM):') || '00:00'}`);
+      if (isNaN(end.getTime())) { setOutput('Invalid end date/time'); return; }
+      const diff = Math.abs(end.getTime() - start.getTime());
+      setOutput(`Duration:\nDays: ${Math.floor(diff / 86400000)}\nHours: ${Math.floor((diff % 86400000) / 3600000)}\nMinutes: ${Math.floor((diff % 3600000) / 60000)}`);
+      return;
+    }
+    setOutput(`Result: ${result.toLocaleString()}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2 mb-2">
+        {(['add', 'subtract', 'diff'] as const).map(m => (
+          <button key={m} onClick={() => setMode(m)} className={`px-3 py-1 text-sm rounded-lg transition-colors ${mode === m ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'}`}>{m.charAt(0).toUpperCase() + m.slice(1)}</button>
+        ))}
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Start Date</label><input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" /></div>
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Start Time</label><input type="time" value={startTime} onChange={e => setStartTime(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" /></div>
+      </div>
+      <div className="grid grid-cols-3 gap-3">
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Days</label><input type="number" value={durationDays} onChange={e => setDurationDays(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" /></div>
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Hours</label><input type="number" value={durationHours} onChange={e => setDurationHours(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" /></div>
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Minutes</label><input type="number" value={durationMins} onChange={e => setDurationMins(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" /></div>
+      </div>
+      <ProcessButton onClick={calc}>Calculate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Conversion Tools ────────────────────────────────────────────────
+
+function VolumeConverterTool() {
+  const [value, setValue] = useState('');
+  const [fromUnit, setFromUnit] = useState('liters');
+  const [toUnit, setToUnit] = useState('gallons');
+  const [output, setOutput] = useState('');
+
+  const units = ['liters', 'milliliters', 'cubic-meters', 'gallons', 'quarts', 'pints', 'cups', 'fluid-ounces', 'cubic-feet'];
+
+  const toBase: Record<string, number> = { liters: 1, milliliters: 0.001, 'cubic-meters': 1000, gallons: 3.78541, quarts: 0.946353, pints: 0.473176, cups: 0.236588, 'fluid-ounces': 0.0295735, 'cubic-feet': 28.3168 };
+
+  const convert = () => {
+    const val = parseFloat(value);
+    if (isNaN(val)) { setOutput('Enter a number'); return; }
+    const result = (val * toBase[fromUnit]) / toBase[toUnit];
+    setOutput(`${val} ${fromUnit} = ${result.toFixed(6)} ${toUnit}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-3">
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Value</label><input type="number" value={value} onChange={e => setValue(e.target.value)} placeholder="Enter value" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" /></div>
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Result</label><input type="text" readOnly value={output.split('=')[1]?.trim() || ''} className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm" /></div>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">From</label><select value={fromUnit} onChange={e => setFromUnit(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-500">{units.map(u => <option key={u} value={u}>{u}</option>)}</select></div>
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">To</label><select value={toUnit} onChange={e => setToUnit(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-500">{units.map(u => <option key={u} value={u}>{u}</option>)}</select></div>
+      </div>
+      <ProcessButton onClick={convert}>Convert</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function DataStorageConverterTool() {
+  const [value, setValue] = useState('');
+  const [fromUnit, setFromUnit] = useState('bytes');
+  const [toUnit, setToUnit] = useState('kilobytes');
+  const [binary, setBinary] = useState(false);
+  const [output, setOutput] = useState('');
+
+  const units = ['bytes', 'kilobytes', 'megabytes', 'gigabytes', 'terabytes', 'petabytes'];
+  const base = binary ? 1024 : 1000;
+
+  const toBase = (v: number, from: string) => {
+    const idx = units.indexOf(from);
+    return v * Math.pow(base, idx);
+  };
+
+  const convert = () => {
+    const val = parseFloat(value);
+    if (isNaN(val)) { setOutput('Enter a number'); return; }
+    const inBase = toBase(val, fromUnit);
+    const idx = units.indexOf(toUnit);
+    const result = inBase / Math.pow(base, idx);
+    setOutput(`${val} ${fromUnit} (base ${base}) = ${result.toFixed(6)} ${toUnit}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-4 mb-2">
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input type="checkbox" checked={binary} onChange={e => setBinary(e.target.checked)} className="w-4 h-4 accent-red-500" />
+          <span className="text-sm text-gray-600 dark:text-gray-300">Binary (1024)</span>
+        </label>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Value</label><input type="number" value={value} onChange={e => setValue(e.target.value)} placeholder="Enter value" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" /></div>
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Result</label><input type="text" readOnly value={output.split('=')[1]?.trim() || ''} className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm" /></div>
+      </div>
+      <div className="grid grid-cols-2 gap-3">
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">From</label><select value={fromUnit} onChange={e => setFromUnit(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-500">{units.map(u => <option key={u} value={u}>{u}</option>)}</select></div>
+        <div><label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">To</label><select value={toUnit} onChange={e => setToUnit(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-red-500">{units.map(u => <option key={u} value={u}>{u}</option>)}</select></div>
+      </div>
+      <ProcessButton onClick={convert}>Convert</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+// ─── Text Tools ──────────────────────────────────────────────────────
+
+function PunctuationFixerTool() {
+  const [text, setText] = useState('');
+  const [output, setOutput] = useState('');
+
+  const fix = () => {
+    let fixed = text
+      .replace(/([a-z])\s+([.!?:])/gi, '$1$2')
+      .replace(/\.\.\./g, '…')
+      .replace(/"\s*(\w)/g, '"$1')
+      .replace(/(\w)\s*"/g, '$1"')
+      .replace(/'\s*(\w)/g, "'$1")
+      .replace(/(\w)\s*'/g, "$1'")
+      .replace(/\s+([,;:!?.])/g, '$1')
+      .replace(/([,;:])\s*(?=[,;:!?])/g, '')
+      .replace(/(\w)\s*\n\s*(\w)/gi, '$1 $2')
+      .replace(/  +/g, ' ')
+      .trim();
+    setOutput(fixed);
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={text} onChange={setText} placeholder="Enter text with punctuation issues…" />
+      <ProcessButton onClick={fix}>Fix Punctuation</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function CapitalizationFixerTool() {
+  const [text, setText] = useState('');
+  const [mode, setMode] = useState<'sentence' | 'title' | 'upper' | 'lower'>('sentence');
+  const [output, setOutput] = useState('');
+
+  const fix = () => {
+    if (mode === 'sentence') setOutput(text.charAt(0).toUpperCase() + text.slice(1).toLowerCase().replace(/\.\s+([a-z])/g, (_, c) => '. ' + c.toUpperCase()));
+    else if (mode === 'title') setOutput(text.replace(/\w\S*/g, w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()));
+    else if (mode === 'upper') setOutput(text.toUpperCase());
+    else setOutput(text.toLowerCase());
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={text} onChange={setText} placeholder="Enter text to fix capitalization…" />
+      <div className="flex gap-2 flex-wrap">
+        {(['sentence', 'title', 'upper', 'lower'] as const).map(m => (
+          <button key={m} onClick={() => setMode(m)} className={`px-3 py-1 text-sm rounded-lg transition-colors ${mode === m ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'}`}>{m.charAt(0).toUpperCase() + m.slice(1)} Case</button>
+        ))}
+      </div>
+      <ProcessButton onClick={fix}>Apply</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function UnicodeEmojiConverterTool() {
+  const [input, setInput] = useState('');
+  const [mode, setMode] = useState<'toEmoji' | 'toUnicode'>('toEmoji');
+  const [output, setOutput] = useState('');
+
+  const convert = () => {
+    if (mode === 'toEmoji') {
+      const codes = input.replace(/U\+/gi, '0x').split(/[\s,]+/).filter(Boolean);
+      setOutput(codes.map(c => String.fromCodePoint(parseInt(c, 16))).join(''));
+    } else {
+      setOutput([...input].map(c => 'U+' + c.codePointAt(0)!.toString(16).toUpperCase().padStart(4, '0')).join(' '));
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder={mode === 'toEmoji' ? 'Enter Unicode codes (e.g. 1F600 or U+1F600)…' : 'Enter emoji to convert to Unicode…'} />
+      <div className="flex gap-2">
+        <button onClick={() => setMode('toEmoji')} className={`px-3 py-1 text-sm rounded-lg transition-colors ${mode === 'toEmoji' ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'}`}>Unicode → Emoji</button>
+        <button onClick={() => setMode('toUnicode')} className={`px-3 py-1 text-sm rounded-lg transition-colors ${mode === 'toUnicode' ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'}`}>Emoji → Unicode</button>
+      </div>
+      <ProcessButton onClick={convert}>Convert</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
 function WordCounterTool() {
   const [text, setText] = useState('');
 
@@ -2978,6 +3615,26 @@ function ToolRouter({ tool }: { tool: Tool }) {
     case 'letter-frequency-counter': return <LetterFrequencyCounterTool />;
     case 'whitespace-remover': return <WhitespaceRemoverTool />;
     case 'line-break-remover': return <LineBreakRemoverTool />;
+    case 'random-number-generator': return <RandomNumberGeneratorTool />;
+    case 'prime-number-checker': return <PrimeNumberCheckerTool />;
+    case 'fibonacci-generator': return <FibonacciGeneratorTool />;
+    case 'factorial-calculator': return <FactorialCalculatorTool />;
+    case 'gcd-calculator': return <GcdCalculatorTool />;
+    case 'ratio-simplifier': return <RatioSimplifierTool />;
+    case 'random-decimal-generator': return <RandomDecimalGeneratorTool />;
+    case 'quadratic-equation-solver': return <QuadraticEquationSolverTool />;
+    case 'date-format-converter': return <DateFormatConverterTool />;
+    case 'time-zone-converter': return <TimeZoneConverterTool />;
+    case 'age-calculator': return <AgeCalculatorTool />;
+    case 'day-of-week-calculator': return <DayOfWeekCalculatorTool />;
+    case 'week-number-calculator': return <WeekNumberCalculatorTool />;
+    case 'date-difference-calculator': return <DateDifferenceCalculatorTool />;
+    case 'time-duration-calculator': return <TimeDurationCalculatorTool />;
+    case 'volume-converter': return <VolumeConverterTool />;
+    case 'data-storage-converter': return <DataStorageConverterTool />;
+    case 'punctuation-fixer': return <PunctuationFixerTool />;
+    case 'capitalization-fixer': return <CapitalizationFixerTool />;
+    case 'unicode-emoji-converter': return <UnicodeEmojiConverterTool />;
     default:                        return <NotImplementedTool toolName={tool.name} />;
   }
 }
