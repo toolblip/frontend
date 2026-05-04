@@ -37,8 +37,10 @@ import ImageFormatConverterClient from '@/components/tools/ImageFormatConverterC
 import ImageResizerClient from '@/components/tools/ImageResizerClient';
 import JsMinifierClient from '@/components/tools/JsMinifierClient';
 import HtmlTableGeneratorClient from '@/components/tools/HtmlTableGeneratorClient';
+import HtmlToMarkdownClient from '@/components/tools/HtmlToMarkdownClient';
 import JsonToYamlClient from '@/components/tools/JsonToYamlClient';
 import JsonValidatorClient from '@/components/tools/JsonValidatorClient';
+import JsonToXmlClient from '@/components/tools/JsonToXmlClient';
 import JwtDecoderClient from '@/components/tools/JwtDecoderClient';
 import LoremIpsumGeneratorClient from '@/components/tools/LoremIpsumGeneratorClient';
 import MarkdownToHtmlClient from '@/components/tools/MarkdownToHtmlClient';
@@ -77,6 +79,7 @@ import JsonToCsvClient from '@/components/tools/JsonToCsvClient';
 import MarkdownToPdfClient from '@/components/tools/MarkdownToPdfClient';
 import OctalToDecimalClient from '@/components/tools/OctalToDecimalClient';
 import YamlToJsonClient from '@/components/tools/YamlToJsonClient';
+import YamlValidatorClient from '@/components/tools/YamlValidatorClient';
 import RegexTesterClient from '@/components/tools/RegexTesterClient';
 // ─── New tool components ─────────────────────────────────────────────────────
 import AnagramGeneratorClient from '@/components/tools/AnagramGeneratorClient';
@@ -226,6 +229,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
     case 'html-table-generator':
       return <HtmlTableGeneratorClient />;
     case 'html-validator':
+      case 'html-to-markdown':
+        return <HtmlToMarkdownClient />;
       return <HtmlValidatorClient />;
     case 'http-headers-viewer':
       return <HttpHeadersViewerClient />;
@@ -254,6 +259,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
     case 'json-to-yaml':
       return <JsonToYamlClient />;
     case 'json-validator':
+      case 'json-to-xml':
+        return <JsonToXmlClient />;
       return <JsonValidatorClient />;
     case 'jwt-decoder':
       return <JwtDecoderClient />;
@@ -376,6 +383,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
     case 'xml-to-json':
       return <XmlToJsonClient />;
     case 'yaml-to-json':
+      case 'yaml-validator':
+        return <YamlValidatorClient />;
       return <YamlToJsonClient />;
 
     // ── Unwired ─────────────────────────────────────────────────────────────

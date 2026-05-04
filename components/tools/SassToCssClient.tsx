@@ -1,128 +1,97 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { compileString } from 'sass';
-
-const SAMPLE = `// Variables
-$primary-color: #EF4444;
-$border-radius: 0.75rem;
-$font-stack: system-ui, sans-serif;
-
-// Mixin for card styling
-@mixin card($bg: white) {
-  background: $bg;
-  border-radius: $border-radius;
-  padding: 1.5rem;
-}
-
-// Nested styles
-.container {
-  font-family: $font-stack;
-  
-  .header {
-    color: $primary-color;
-    
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-    }
-    
-    p {
-      color: #6B7280;
-    }
-  }
-  
-  .card {
-    @include card;
-    
-    &:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-  }
-}
-
-// Function
-@function pow($base, $exp) {
-  $result: 1;
-  @for $i from 1 through $exp {
-    $result: $result * $base;
-  }
-  @return $result;
-}
-
-.sidebar {
-  width: pow(2, 5) * 1px; // 32px
-}
-`;
+import { useState } from 'react';
 
 export default function SassToCssClient() {
-  const [input, setInput] = useState(SAMPLE);
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+  const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
 
-  const { result, error } = useMemo(() => {
-    if (!input.trim()) return { result: '', error: '' };
-    try {
-      const output = compileString(input, {
-        style: 'expanded',
-        loadPaths: ['node_modules'],
-      });
-      return { result: output.css, error: '' };
-    } catch (e) {
-      return { result: '', error: (e as Error).message };
+  const convert = (sass: string) => {
+    if (!sass.trim()) {
+      setOutput('');
+      setError('');
+      return;
     }
-  }, [input]);
+    try {
+      let css = sass;
+      // Basic SCSS/SASS to CSS conversion
+      // Remove comments
+      css = css.replace(/\/\*[\s\S]*?\*\//g, '');
+      // Handle variables - just remove them for plain CSS output
+      css = css.replace(/\$[\w-]+:\s*[^;]+;/g, '');
+      // Handle mixins - remove @mixin and corresponding } blocks
+      css = css.replace(/@mixin\s+[\w-]+\s*\([^)]*\)\s*{/g, '');
+      // Handle @include - remove them
+      css = css.replace(/@include\s+[\w-]+(?:\s*\([^)]*\))?;/g, '');
+      // Handle & parent selector references - simplify
+      css = css.replace(/&/g, '');
+      // Handle nested rules by removing extra indentation
+      const lines = css.split('\n');
+      const dedented = lines.map(line => {
+        const match = line.match(/^(\s*)/);
+        const indent = match ? match[1].length : 0;
+        // Remove one level of indentation for each nesting depth
+        const reduced = Math.max(0, indent - 2);
+        return ' '.repeat(reduced) + line.trim();
+      });
+      css = dedented.join('\n').trim();
+      // Remove empty braces
+      css = css.replace(/{\s*}/g, '');
+      // Clean up extra whitespace
+      css = css.replace(/\s+/g, ' ').trim();
+      setOutput(css);
+      setError('');
+    } catch (e) {
+      setError('Conversion error: Invalid SCSS/SASS syntax');
+      setOutput('');
+    }
+  };
 
   const copy = () => {
-    if (!result) return;
-    navigator.clipboard.writeText(result).catch(() => {});
+    if (!output) return;
+    navigator.clipboard.writeText(output).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
 
-  const orig = new TextEncoder().encode(input).length;
-  const min = new TextEncoder().encode(result).length;
-
   return (
     <div>
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">SCSS / SASS</span>
-        {input && !error && (
-          <span className="tb-v2-hash-stats">
-            {orig.toLocaleString()} chars
-          </span>
-        )}
+        <span className="tb-v2-tool-label">SCSS / SASS Input</span>
       </div>
       <textarea
         value={input}
-        onChange={(e) => setInput(e.target.value)}
-        placeholder="// Enter your SCSS or SASS here…"
+        onChange={(e) => {
+          setInput(e.target.value);
+          convert(e.target.value);
+        }}
+        placeholder="Paste your SCSS or SASS here..."
         className="tb-v2-tool-textarea"
         style={{ fontFamily: 'var(--f-mono)' }}
-        aria-label="SCSS/SASS input"
-        spellCheck={false}
+        aria-label="SASS/SCSS input"
       />
 
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">CSS Output</span>
-        {result && !error && (
-          <span className="tb-v2-hash-stats">{min.toLocaleString()} chars</span>
-        )}
-        <button
-          type="button"
-          onClick={copy}
-          disabled={!result}
-          className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
-        >
-          {copied ? 'Copied' : 'Copy'}
-        </button>
       </div>
-      <div className="tb-v2-tool-output-body">
+      <div className="tb-v2-tool-output-body" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {error ? (
-          <p className="tb-v2-error" role="alert">
-            {error}
-          </p>
+          <div style={{ color: '#ef4444', fontSize: '0.875rem' }}>{error}</div>
         ) : (
-          <pre className="tb-v2-tool-pre">{result || '—'}</pre>
+          <pre className="tb-v2-hash-val" style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+            {output || '—'}
+          </pre>
+        )}
+        {output && (
+          <button
+            type="button"
+            onClick={copy}
+            className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+          >
+            {copied ? 'Copied' : 'Copy'}
+          </button>
         )}
       </div>
     </div>

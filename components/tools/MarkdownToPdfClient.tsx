@@ -1,105 +1,193 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useRef } from 'react';
 
 export default function MarkdownToPdfClient() {
-  const [markdown, setMarkdown] = useState('');
-  const [html, setHtml] = useState('');
+  const [input, setInput] = useState('');
+  const [copied, setCopied] = useState(false);
+  const previewRef = useRef<HTMLDivElement>(null);
 
-  const convertToHtml = useCallback((md: string) => {
-    let result = md
-      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
-      .replace(/^## (.+)$/gm, '<h2>$1</h2>')
-      .replace(/^# (.+)$/gm, '<h1>$1</h1>')
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/\*(.+?)\*/g, '<em>$1</em>')
-      .replace(/`(.+?)`/g, '<code>$1</code>')
-      .replace(/^\* (.+)$/gm, '<li>$1</li>')
-      .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
-      .replace(/\n\n/g, '</p><p>')
-      .replace(/\n/g, '<br/>');
-    
-    result = `<p>${result}</p>`;
-    result = result.replace(/<p><\/p>/g, '');
-    return result;
-  }, []);
+  const handlePrint = () => {
+    if (!input.trim()) return;
+    const printContent = previewRef.current;
+    if (!printContent) return;
 
-  const handleConvert = useCallback(() => {
-    setHtml(convertToHtml(markdown));
-  }, [markdown, convertToHtml]);
+    const content = printContent.innerHTML;
+    const printWindow = window.open('', '_blank');
+    if (!printWindow) return;
 
-  const copyHtml = useCallback(() => {
-    navigator.clipboard.writeText(html).catch(() => {});
-  }, [html]);
-
-  const downloadPdf = useCallback(async () => {
-    const content = `
+    printWindow.document.write(`
+      <!DOCTYPE html>
       <html>
         <head>
+          <title>Markdown PDF</title>
           <style>
-            body { font-family: Arial, sans-serif; padding: 40px; line-height: 1.6; }
-            h1 { color: #333; } h2 { color: #444; } h3 { color: #555; }
-            code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px; }
-            pre { background: #f4f4f4; padding: 16px; border-radius: 8px; overflow-x: auto; }
+            body {
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+              max-width: 800px;
+              margin: 40px auto;
+              padding: 20px;
+              line-height: 1.6;
+              color: #333;
+            }
+            h1 { font-size: 2em; border-bottom: 2px solid #eee; padding-bottom: 0.3em; }
+            h2 { font-size: 1.5em; border-bottom: 1px solid #eee; padding-bottom: 0.3em; }
+            h3 { font-size: 1.25em; }
+            code { background: #f4f4f4; padding: 0.2em 0.4em; border-radius: 3px; font-family: monospace; }
+            pre { background: #f4f4f4; padding: 1em; border-radius: 5px; overflow-x: auto; }
+            pre code { background: none; padding: 0; }
+            blockquote { border-left: 4px solid #ddd; margin: 0; padding-left: 1em; color: #666; }
+            table { border-collapse: collapse; width: 100%; }
+            th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            th { background: #f4f4f4; }
+            a { color: #0066cc; }
+            img { max-width: 100%; height: auto; }
+            @media print {
+              body { margin: 0; padding: 20px; }
+            }
           </style>
         </head>
-        <body>${html}</body>
+        <body>
+          ${content}
+        </body>
       </html>
-    `;
-    
-    const printWindow = window.open('', '_blank');
-    if (printWindow) {
-      printWindow.document.write(content);
-      printWindow.document.close();
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    setTimeout(() => {
       printWindow.print();
-    }
-  }, [html]);
+      printWindow.close();
+    }, 250);
+  };
+
+  const copyHtml = () => {
+    if (!input) return;
+    navigator.clipboard.writeText(previewRef.current?.innerHTML || '').catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
+  // Simple markdown to HTML conversion for preview
+  const renderMarkdown = (md: string): string => {
+    if (!md.trim()) return '<p style="color: #999;">Preview will appear here...</p>';
+
+    let html = md;
+
+    // Escape HTML first
+    html = html.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+    // Code blocks (before other processing)
+    html = html.replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>');
+
+    // Inline code
+    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+    // Headings
+    html = html.replace(/^###### (.+)$/gm, '<h6>$1</h6>');
+    html = html.replace(/^##### (.+)$/gm, '<h5>$1</h5>');
+    html = html.replace(/^#### (.+)$/gm, '<h4>$1</h4>');
+    html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+    html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+    html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+
+    // Bold and italic
+    html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+    html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+    html = html.replace(/___(.+?)___/g, '<strong><em>$1</em></strong>');
+    html = html.replace(/__(.+?)__/g, '<strong>$1</strong>');
+    html = html.replace(/_(.+?)_/g, '<em>$1</em>');
+
+    // Blockquotes
+    html = html.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
+
+    // Unordered lists
+    html = html.replace(/^[\-\*] (.+)$/gm, '<li>$1</li>');
+    html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
+
+    // Ordered lists
+    html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+
+    // Links
+    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+
+    // Images
+    html = html.replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" />');
+
+    // Horizontal rules
+    html = html.replace(/^---$/gm, '<hr />');
+    html = html.replace(/^\*\*\*$/gm, '<hr />');
+
+    // Paragraphs - split by double newlines
+    html = html.replace(/\n\n+/g, '</p><p>');
+    html = '<p>' + html + '</p>';
+
+    // Clean up empty paragraphs
+    html = html.replace(/<p><\/p>/g, '');
+    html = html.replace(/<p>(<h[1-6]>)/g, '$1');
+    html = html.replace(/(<\/h[1-6]>)<\/p>/g, '$1');
+    html = html.replace(/<p>(<ul>)/g, '$1');
+    html = html.replace(/(<\/ul>)<\/p>/g, '$1');
+    html = html.replace(/<p>(<blockquote>)/g, '$1');
+    html = html.replace(/(<\/blockquote>)<\/p>/g, '$1');
+    html = html.replace(/<p>(<pre>)/g, '$1');
+    html = html.replace(/(<\/pre>)<\/p>/g, '$1');
+    html = html.replace(/<p>(<hr \/>)/g, '$1');
+    html = html.replace(/(<hr \/>)<\/p>/g, '$1');
+
+    // Line breaks
+    html = html.replace(/\n/g, '<br />');
+
+    return html;
+  };
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Markdown Input</label>
-          <textarea
-            value={markdown}
-            onChange={(e) => setMarkdown(e.target.value)}
-            placeholder="# Hello World&#10;&#10;This is **bold** and *italic* text.&#10;&#10;## Features&#10;- Item 1&#10;- Item 2&#10;&#10;```js&#10;const x = 1;&#10;```"
-            className="w-full h-80 px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white font-mono text-sm placeholder-gray-400 focus:outline-none focus:border-red-500 resize-y"
-          />
-        </div>
+    <div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Markdown Input</span>
+      </div>
+      <textarea
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder="# Title&#10;&#10;Write your markdown here..."
+        className="tb-v2-tool-textarea"
+        style={{ fontFamily: 'var(--f-mono)', minHeight: 120 }}
+        aria-label="Markdown input"
+      />
 
-        <div className="space-y-2">
-          <div className="flex justify-between items-center">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">HTML Preview</label>
-            <button
-              onClick={copyHtml}
-              disabled={!html}
-              className="text-xs text-red-600 dark:text-red-400 hover:underline disabled:opacity-50"
-            >
-              Copy HTML
-            </button>
-          </div>
-          <div
-            className="w-full h-80 px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white overflow-auto prose dark:prose-invert"
-            dangerouslySetInnerHTML={{ __html: html || '<p class="text-gray-400">HTML preview will appear here...</p>' }}
-          />
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">Preview</span>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button
+            type="button"
+            onClick={copyHtml}
+            disabled={!input}
+            className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+          >
+            {copied ? 'Copied' : 'Copy HTML'}
+          </button>
+          <button
+            type="button"
+            onClick={handlePrint}
+            disabled={!input}
+            className="tb-v2-mode-tab"
+          >
+            Print / Save PDF
+          </button>
         </div>
       </div>
-
-      <div className="flex gap-3">
-        <button
-          onClick={handleConvert}
-          className="flex-1 bg-red-600 hover:bg-red-700 text-white rounded-xl py-3 font-medium transition-colors"
-        >
-          Convert to HTML
-        </button>
-        <button
-          onClick={downloadPdf}
-          disabled={!html}
-          className="flex-1 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-white rounded-xl py-3 font-medium transition-colors disabled:opacity-50"
-        >
-          Print / Save PDF
-        </button>
+      <div className="tb-v2-tool-output-body">
+        <div
+          ref={previewRef}
+          style={{
+            padding: '1rem',
+            backgroundColor: '#fff',
+            borderRadius: '0.375rem',
+            minHeight: 200,
+            lineHeight: 1.6
+          }}
+          dangerouslySetInnerHTML={{ __html: renderMarkdown(input) }}
+        />
       </div>
     </div>
   );
