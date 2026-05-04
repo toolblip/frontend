@@ -18,6 +18,8 @@ import ColorPickerClient from '@/components/tools/ColorPickerClient';
 import ContrastCheckerClient from '@/components/tools/ContrastCheckerClient';
 import CreditCardValidatorClient from '@/components/tools/CreditCardValidatorClient';
 import CronGeneratorClient from '@/components/tools/CronGeneratorClient';
+import CurlToPythonClient from '@/components/tools/CurlToPythonClient';
+import XmlValidatorClient from '@/components/tools/XmlValidatorClient';
 import CronParserClient from '@/components/tools/CronParserClient';
 import CssBorderRadiusGeneratorClient from '@/components/tools/CssBorderRadiusGeneratorClient';
 import CssGradientGeneratorClient from '@/components/tools/CssGradientGeneratorClient';
@@ -163,6 +165,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
       return <CronGeneratorClient />;
     case 'cron-parser':
       return <CronParserClient />;
+    case 'curl-to-python':
+      return <CurlToPythonClient />;
     case 'css-border-radius-generator':
       return <CssBorderRadiusGeneratorClient />;
     case 'css-class-generator':
@@ -329,6 +333,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
       return <WordFrequencyAnalyzerClient />;
     case 'xml-formatter':
       return <XmlFormatterClient />;
+    case 'xml-validator':
+      return <XmlValidatorClient />;
     case 'xml-sitemap-generator':
       return <XmlSitemapGeneratorClient />;
     case 'xml-to-json':
