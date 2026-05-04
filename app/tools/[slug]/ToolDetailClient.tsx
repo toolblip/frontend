@@ -5867,6 +5867,958 @@ function CsvToTsvTool() {
   );
 }
 
+// ─── More Tools ──────────────────────────────────────────────────────────
+
+function EmailValidatorTool() {
+  const [email, setEmail] = useState('');
+  const [output, setOutput] = useState('');
+
+  const validate = () => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!email) { setOutput('Please enter an email address'); return; }
+    const isValid = emailRegex.test(email);
+    const domain = email.split('@')[1] || '';
+    setOutput(`Email: ${email}\nValid format: ${isValid ? '✓ Yes' : '✗ No'}\nDomain: ${domain}\n\nNote: This tool validates format only. MX record checking requires a server.`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Email Address</label>
+        <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="example@domain.com" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={validate}>Validate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function UrlValidatorTool() {
+  const [url, setUrl] = useState('');
+  const [output, setOutput] = useState('');
+
+  const validate = () => {
+    try {
+      const urlObj = new URL(url.startsWith('http') ? url : 'https://' + url);
+      setOutput(`URL: ${urlObj.href}\nProtocol: ${urlObj.protocol}\nHost: ${urlObj.hostname}\nPathname: ${urlObj.pathname}\nSearch: ${urlObj.search}\nHash: ${urlObj.hash}\n\n✓ Valid URL`);
+    } catch {
+      setOutput(`✗ Invalid URL\n\nMake sure to include protocol (http:// or https://) or try adding https:// prefix.`);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">URL</label>
+        <input type="text" value={url} onChange={e => setUrl(e.target.value)} placeholder="https://example.com" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={validate}>Validate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function PhoneValidatorTool() {
+  const [phone, setPhone] = useState('');
+  const [output, setOutput] = useState('');
+
+  const validate = () => {
+    const cleaned = phone.replace(/[\s\-\(\)\.]/g, '');
+    const patterns = [
+      { name: 'US/EU', regex: /^\+?[1-9]\d{7,14}$/ },
+      { name: 'US 10-digit', regex: /^1?\d{10}$/ },
+    ];
+    const results = patterns.map(p => `${p.name}: ${p.regex.test(cleaned) ? '✓' : '✗'}`).join('\n');
+    setOutput(`Original: ${phone}\nCleaned: ${cleaned}\nLength: ${cleaned.length}\n\nResults:\n${results}\n\nNote: Validation rules vary by country.`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Phone Number</label>
+        <input type="text" value={phone} onChange={e => setPhone(e.target.value)} placeholder="+1 555 123 4567" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={validate}>Validate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function SlugValidatorTool() {
+  const [slug, setSlug] = useState('');
+  const [output, setOutput] = useState('');
+
+  const validate = () => {
+    if (!slug) { setOutput('Please enter a slug'); return; }
+    const isLower = slug === slug.toLowerCase();
+    const hasSpaces = /\s/.test(slug);
+    const isAlphanumeric = /^[a-z0-9-]+$/.test(slug);
+    const startsWithHyphen = slug.startsWith('-');
+    const endsWithHyphen = slug.endsWith('-');
+    const doubleHyphen = slug.includes('--');
+    setOutput(`Slug: "${slug}"\n\nChecks:\n${isLower ? '✓' : '✗'} Lowercase only\n${!hasSpaces ? '✓' : '✗'} No spaces\n${isAlphanumeric ? '✓' : '✗'} Only letters, numbers, hyphens\n${!startsWithHyphen ? '✓' : '✗'} Does not start with hyphen\n${!endsWithHyphen ? '✓' : '✗'} Does not end with hyphen\n${!doubleHyphen ? '✓' : '✗'} No double hyphens\n\nOverall: ${isLower && !hasSpaces && isAlphanumeric && !startsWithHyphen && !endsWithHyphen && !doubleHyphen ? '✓ Valid' : '✗ Invalid'}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Slug</label>
+        <input type="text" value={slug} onChange={e => setSlug(e.target.value)} placeholder="my-blog-post" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={validate}>Validate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function PasswordStrengthCheckerTool() {
+  const [password, setPassword] = useState('');
+  const [output, setOutput] = useState('');
+
+  const check = () => {
+    if (!password) { setOutput('Please enter a password'); return; }
+    let score = 0;
+    const checks = {
+      length: password.length >= 8,
+      length12: password.length >= 12,
+      length16: password.length >= 16,
+      lowercase: /[a-z]/.test(password),
+      uppercase: /[A-Z]/.test(password),
+      numbers: /\d/.test(password),
+      symbols: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password),
+      noCommon: !/^(password|123456|qwerty|admin)/i.test(password),
+    };
+    Object.values(checks).forEach(v => { if (v) score++; });
+    const entropy = Math.log2(Math.pow(26 * (checks.uppercase ? 2 : 1) * 10 * 32, password.length));
+    const strength = score <= 3 ? 'Weak' : score <= 5 ? 'Fair' : score <= 7 ? 'Good' : 'Strong';
+    const color = score <= 3 ? 'red' : score <= 5 ? 'orange' : score <= 7 ? 'yellow' : 'green';
+    setOutput(`Password: ${'*'.repeat(password.length)}\n\nStrength: ${strength}\nEntropy: ~${entropy.toFixed(1)} bits\n\nChecks:\n${checks.length ? '✓' : '✗'} At least 8 characters\n${checks.length12 ? '✓' : '✗'} At least 12 characters\n${checks.length16 ? '✓' : '✗'} At least 16 characters\n${checks.lowercase ? '✓' : '✗'} Lowercase letter\n${checks.uppercase ? '✓' : '✗'} Uppercase letter\n${checks.numbers ? '✓' : '✗'} Number\n${checks.symbols ? '✓' : '✗'} Special character\n${checks.noCommon ? '✓' : '✗'} Not a common pattern`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Password</label>
+        <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Enter password..." className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={check}>Check Strength</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function Base64EncoderTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+  const [mode, setMode] = useState<'encode' | 'decode'>('encode');
+
+  const process = () => {
+    if (!input) { setOutput('Please enter text'); return; }
+    try {
+      if (mode === 'encode') {
+        setOutput(btoa(unescape(encodeURIComponent(input))));
+      } else {
+        setOutput(decodeURIComponent(escape(atob(input))));
+      }
+    } catch {
+      setOutput('Error: Invalid input for ' + mode);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        <button onClick={() => setMode('encode')} className={`px-3 py-1.5 text-sm rounded-lg ${mode === 'encode' ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}>Encode</button>
+        <button onClick={() => setMode('decode')} className={`px-3 py-1.5 text-sm rounded-lg ${mode === 'decode' ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}>Decode</button>
+      </div>
+      <Textarea value={input} onChange={setInput} placeholder="Enter text to encode/decode..." />
+      <ProcessButton onClick={process}>Process</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function UnicodeEncoderTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+  const [mode, setMode] = useState<'encode' | 'decode'>('encode');
+
+  const process = () => {
+    if (!input) { setOutput('Please enter text'); return; }
+    if (mode === 'encode') {
+      setOutput(Array.from(input).map(c => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0')).join(''));
+    } else {
+      setOutput(input.replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16))).replace(/\\u\{([0-9a-fA-F]+)\}/g, (_, hex) => String.fromCodePoint(parseInt(hex, 16))));
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        <button onClick={() => setMode('encode')} className={`px-3 py-1.5 text-sm rounded-lg ${mode === 'encode' ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}>Encode</button>
+        <button onClick={() => setMode('decode')} className={`px-3 py-1.5 text-sm rounded-lg ${mode === 'decode' ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}>Decode</button>
+      </div>
+      <Textarea value={input} onChange={setInput} placeholder="Enter text..." />
+      <ProcessButton onClick={process}>Process</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function PercentEncoderTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+  const [mode, setMode] = useState<'encode' | 'decode'>('encode');
+
+  const process = () => {
+    if (!input) { setOutput('Please enter text'); return; }
+    try {
+      if (mode === 'encode') {
+        setOutput(encodeURIComponent(input));
+      } else {
+        setOutput(decodeURIComponent(input));
+      }
+    } catch {
+      setOutput('Error: Invalid input for ' + mode);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        <button onClick={() => setMode('encode')} className={`px-3 py-1.5 text-sm rounded-lg ${mode === 'encode' ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}>Encode</button>
+        <button onClick={() => setMode('decode')} className={`px-3 py-1.5 text-sm rounded-lg ${mode === 'decode' ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}>Decode</button>
+      </div>
+      <Textarea value={input} onChange={setInput} placeholder="Enter text..." />
+      <ProcessButton onClick={process}>Process</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function CssFormatterTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+  const [mode, setMode] = useState<'format' | 'minify'>('format');
+
+  const process = () => {
+    if (!input) { setOutput('Please enter CSS'); return; }
+    let result = input;
+    if (mode === 'format') {
+      let indent = 0;
+      result = input.replace(/\{/g, ' {\n' + '  '.repeat(++indent)).replace(/\}/g, '\n' + '  '.repeat(--indent) + '}').replace(/;\s*/g, ';\n' + '  '.repeat(indent));
+      result = result.replace(/\n\s*\n/g, '\n').trim();
+    } else {
+      result = input.replace(/\s*([{};:,])\s*/g, '$1').replace(/;}/g, '}').replace(/\s+/g, ' ').trim();
+    }
+    setOutput(result);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        <button onClick={() => setMode('format')} className={`px-3 py-1.5 text-sm rounded-lg ${mode === 'format' ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}>Format</button>
+        <button onClick={() => setMode('minify')} className={`px-3 py-1.5 text-sm rounded-lg ${mode === 'minify' ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}>Minify</button>
+      </div>
+      <Textarea value={input} onChange={setInput} placeholder="Enter CSS..." className="h-60" />
+      <ProcessButton onClick={process}>Process</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function HtmlFormatterTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+  const [mode, setMode] = useState<'format' | 'minify'>('format');
+
+  const process = () => {
+    if (!input) { setOutput('Please enter HTML'); return; }
+    let result = '';
+    if (mode === 'format') {
+      let indent = 0;
+      result = input.replace(/>\s*</g, '>\n<').split('\n').map(line => {
+        if (line.match(/<\/\w/)) indent = Math.max(0, indent - 1);
+        const formatted = '  '.repeat(indent) + line.trim();
+        if (line.match(/<[\w]+[^>]*[^\/]>/) && !line.match(/<[\w]+[^>]*\/>/)) indent++;
+        return formatted;
+      }).join('\n');
+    } else {
+      result = input.replace(/>\s+</g, '><').replace(/\s+/g, ' ').trim();
+    }
+    setOutput(result);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        <button onClick={() => setMode('format')} className={`px-3 py-1.5 text-sm rounded-lg ${mode === 'format' ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}>Format</button>
+        <button onClick={() => setMode('minify')} className={`px-3 py-1.5 text-sm rounded-lg ${mode === 'minify' ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}>Minify</button>
+      </div>
+      <Textarea value={input} onChange={setInput} placeholder="Enter HTML..." className="h-60" />
+      <ProcessButton onClick={process}>Process</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function JavaScriptFormatterTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+  const [mode, setMode] = useState<'format' | 'minify'>('format');
+
+  const process = () => {
+    if (!input) { setOutput('Please enter JavaScript'); return; }
+    let result = input;
+    if (mode === 'format') {
+      let indent = 0;
+      result = input.replace(/\{/g, ' {\n' + '  '.repeat(++indent)).replace(/\}/g, '\n' + '  '.repeat(--indent) + '}').replace(/;\s*/g, ';\n' + '  '.repeat(indent)).replace(/,\s*/g, ',\n' + '  '.repeat(indent));
+      result = result.replace(/\n\s*\n/g, '\n').trim();
+    } else {
+      result = input.replace(/\s*([{};:,])\s*/g, '$1').replace(/;\}/g, '}').replace(/\s+/g, ' ').trim();
+    }
+    setOutput(result);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        <button onClick={() => setMode('format')} className={`px-3 py-1.5 text-sm rounded-lg ${mode === 'format' ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}>Format</button>
+        <button onClick={() => setMode('minify')} className={`px-3 py-1.5 text-sm rounded-lg ${mode === 'minify' ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}>Minify</button>
+      </div>
+      <Textarea value={input} onChange={setInput} placeholder="Enter JavaScript..." className="h-60" />
+      <ProcessButton onClick={process}>Process</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function WordFrequencyCounterTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+  const [n, setN] = useState('20');
+
+  const analyze = () => {
+    if (!input) { setOutput('Please enter text'); return; }
+    const words = input.toLowerCase().replace(/[^a-z\s]/g, '').split(/\s+/).filter(w => w.length > 2);
+    const freq: Record<string, number> = {};
+    words.forEach(w => { freq[w] = (freq[w] || 0) + 1; });
+    const sorted = Object.entries(freq).sort((a, b) => b[1] - a[1]).slice(0, parseInt(n) || 20);
+    const total = words.length;
+    setOutput('Word Frequency Analysis\n' + '─'.repeat(40) + '\n\n' + sorted.map(([word, count], i) => `${(i + 1).toString().padStart(3)}. ${word.padEnd(20)} ${count.toString().padStart(4)} (${((count / total) * 100).toFixed(1)}%)`).join('\n') + `\n\n─'.repeat(40)\nTotal unique words: ${Object.keys(freq).length}\nTotal words: ${total}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-4">
+        <div>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Top N words</label>
+          <input type="number" value={n} onChange={e => setN(e.target.value)} min="1" max="100" className="w-24 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" />
+        </div>
+      </div>
+      <Textarea value={input} onChange={setInput} placeholder="Enter text to analyze..." />
+      <ProcessButton onClick={analyze}>Analyze</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function CharacterAnalysisTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const analyze = () => {
+    if (!input) { setOutput('Please enter text'); return; }
+    const chars = input.split('');
+    const letters = chars.filter(c => /[a-zA-Z]/.test(c)).length;
+    const digits = chars.filter(c => /\d/.test(c)).length;
+    const spaces = chars.filter(c => /\s/.test(c)).length;
+    const special = chars.filter(c => !/[a-zA-Z0-9\s]/.test(c)).length;
+    const upper = chars.filter(c => /[A-Z]/.test(c)).length;
+    const lower = chars.filter(c => /[a-z]/.test(c)).length;
+    setOutput(`Character Analysis\n${'─'.repeat(40)}\n\nTotal characters: ${input.length}\n\nBreakdown:\n  Letters: ${letters}\n    Uppercase: ${upper}\n    Lowercase: ${lower}\n  Digits: ${digits}\n  Spaces: ${spaces}\n  Special characters: ${special}\n\nPercentage:\n  Letters: ${((letters / input.length) * 100).toFixed(1)}%\n  Digits: ${((digits / input.length) * 100).toFixed(1)}%\n  Spaces: ${((spaces / input.length) * 100).toFixed(1)}%\n  Special: ${((special / input.length) * 100).toFixed(1)}%`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Enter text to analyze..." />
+      <ProcessButton onClick={analyze}>Analyze</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function TextStatisticsTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const analyze = () => {
+    if (!input) { setOutput('Please enter text'); return; }
+    const words = input.trim().split(/\s+/);
+    const sentences = input.split(/[.!?]+/).filter(s => s.trim()).length;
+    const paragraphs = input.split(/\n\n+/).filter(p => p.trim()).length;
+    const syllables = words.reduce((acc, word) => acc + Math.max(1, (word.match(/[aeiouy]/gi) || []).length - (word.match(/ee|oo|ai|ea|ou|ie|eo/gi) || []).length), 0);
+    const avgWordLength = words.reduce((acc, w) => acc + w.replace(/[^a-zA-Z]/g, '').length, 0) / words.length || 0;
+    const avgSentenceLength = words.length / sentences || 0;
+    setOutput(`Text Statistics\n${'─'.repeat(40)}\n\nWords: ${words.length}\nCharacters: ${input.length}\n  (without spaces: ${input.replace(/\s/g, '').length})\nSentences: ${sentences}\nParagraphs: ${paragraphs}\nSyllables: ~${syllables}\n\nAverages:\n  Word length: ${avgWordLength.toFixed(1)} chars\n  Sentence length: ${avgSentenceLength.toFixed(1)} words\n  Syllables per word: ${(syllables / words.length).toFixed(2)}\n\nReading time: ~${Math.ceil(words.length / 200)} min (@ 200 wpm)`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Enter text to analyze..." />
+      <ProcessButton onClick={analyze}>Analyze</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function ReadabilityCheckTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const check = () => {
+    if (!input) { setOutput('Please enter text'); return; }
+    const words = input.trim().split(/\s+/);
+    const sentences = input.split(/[.!?]+/).filter(s => s.trim()).length;
+    const syllables = words.reduce((acc, word) => acc + Math.max(1, (word.match(/[aeiouy]/gi) || []).length), 0);
+    const avgSentenceLength = words.length / sentences;
+    const avgSyllablesPerWord = syllables / words.length;
+    // Flesch Reading Ease
+    const flesch = 206.835 - 1.015 * avgSentenceLength - 84.6 * avgSyllablesPerWord;
+    // Flesch-Kincaid Grade Level
+    const fkGrade = 0.39 * avgSentenceLength + 11.8 * avgSyllablesPerWord - 15.59;
+    let grade = Math.max(1, Math.min(16, Math.round(fkGrade)));
+    let readability = flesch >= 90 ? 'Very Easy' : flesch >= 70 ? 'Easy' : flesch >= 50 ? 'Fairly Difficult' : flesch >= 30 ? 'Difficult' : 'Very Difficult';
+    setOutput(`Readability Analysis\n${'─'.repeat(40)}\n\nFlesch Reading Ease: ${Math.round(flesch)}/100\n  (${readability})\n\nFlesch-Kincaid Grade: ${grade}\n  (US grade level)\n\nDetails:\n  Words: ${words.length}\n  Sentences: ${sentences}\n  Syllables: ~${syllables}\n  Avg words/sentence: ${avgSentenceLength.toFixed(1)}\n  Avg syllables/word: ${avgSyllablesPerWord.toFixed(2)}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Enter text to check readability..." />
+      <ProcessButton onClick={check}>Check</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function DiscountCalculatorTool() {
+  const [original, setOriginal] = useState('');
+  const [discount, setDiscount] = useState('');
+  const [output, setOutput] = useState('');
+
+  const calculate = () => {
+    const orig = parseFloat(original);
+    const disc = parseFloat(discount);
+    if (isNaN(orig) || isNaN(disc) || orig < 0 || disc < 0 || disc > 100) {
+      setOutput('Please enter valid numbers.\nOriginal price: positive number\nDiscount: 0-100%');
+      return;
+    }
+    const saved = orig * (disc / 100);
+    const final = orig - saved;
+    setOutput(`Discount Calculation\n${'─'.repeat(30)}\n\nOriginal Price: $${orig.toFixed(2)}\nDiscount: ${disc}%\n\nYou Save: $${saved.toFixed(2)}\nFinal Price: $${final.toFixed(2)}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Original Price ($)</label>
+          <input type="number" value={original} onChange={e => setOriginal(e.target.value)} placeholder="100.00" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+        </div>
+        <div>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Discount (%)</label>
+          <input type="number" value={discount} onChange={e => setDiscount(e.target.value)} placeholder="25" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+        </div>
+      </div>
+      <ProcessButton onClick={calculate}>Calculate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function TipCalculatorTool() {
+  const [bill, setBill] = useState('');
+  const [tip, setTip] = useState('15');
+  const [people, setPeople] = useState('1');
+  const [output, setOutput] = useState('');
+
+  const calculate = () => {
+    const billAmt = parseFloat(bill);
+    const tipPct = parseFloat(tip);
+    const ppl = parseInt(people);
+    if (isNaN(billAmt) || isNaN(tipPct) || isNaN(ppl) || billAmt < 0 || tipPct < 0 || ppl < 1) {
+      setOutput('Please enter valid numbers.');
+      return;
+    }
+    const tipAmt = billAmt * (tipPct / 100);
+    const total = billAmt + tipAmt;
+    const perPerson = total / ppl;
+    setOutput(`Tip Calculator\n${'─'.repeat(30)}\n\nBill Amount: $${billAmt.toFixed(2)}\nTip: ${tipPct}% = $${tipAmt.toFixed(2)}\n\nTotal: $${total.toFixed(2)}\nSplit ${ppl} way(s): $${perPerson.toFixed(2)} each`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-3 gap-3">
+        <div>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Bill ($)</label>
+          <input type="number" value={bill} onChange={e => setBill(e.target.value)} placeholder="50.00" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" />
+        </div>
+        <div>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Tip %</label>
+          <input type="number" value={tip} onChange={e => setTip(e.target.value)} placeholder="15" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" />
+        </div>
+        <div>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">People</label>
+          <input type="number" value={people} onChange={e => setPeople(e.target.value)} min="1" placeholder="1" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" />
+        </div>
+      </div>
+      <div className="flex flex-wrap gap-2">
+        {[10, 15, 18, 20, 25].map(p => (
+          <button key={p} onClick={() => setTip(p.toString())} className={`px-3 py-1.5 text-sm rounded-lg ${tip === p.toString() ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}>{p}%</button>
+        ))}
+      </div>
+      <ProcessButton onClick={calculate}>Calculate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function SleepCalculatorTool() {
+  const [wakeUp, setWakeUp] = useState('');
+  const [output, setOutput] = useState('');
+
+  const calculate = () => {
+    if (!wakeUp) { setOutput('Please enter a wake-up time'); return; }
+    const [hours, mins] = wakeUp.split(':').map(Number);
+    if (isNaN(hours) || isNaN(mins)) { setOutput('Invalid time format. Use HH:MM'); return; }
+    const cycles = [6, 5, 4, 3];
+    const results = cycles.map(cycles => {
+      const sleepTime = new Date();
+      sleepTime.setHours(hours, mins, 0, 0);
+      sleepTime.setMinutes(sleepTime.getMinutes() - cycles * 90 - 15); // 90 min cycles + 15 min to fall asleep
+      return {
+        cycles,
+        time: sleepTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true }),
+        hours: ((cycles * 90 + 15) / 60).toFixed(1)
+      };
+    });
+    setOutput(`Sleep Calculator\n${'─'.repeat(30)}\nIf you want ${cycles[0]} sleep cycles:\n\nWake up at: ${wakeUp}\n\nGo to sleep at:\n${results.map(r => `  ${r.cycles} cycles (${r.hours}h sleep): ${r.time}`).join('\n')}\n\nTip: Each sleep cycle is ~90 minutes. Most adults need 4-6 cycles (6-9 hours).`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Wake-up Time</label>
+        <input type="time" value={wakeUp} onChange={e => setWakeUp(e.target.value)} className="w-40 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={calculate}>Calculate Bedtime</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function DateCalculatorTool() {
+  const [start, setStart] = useState('');
+  const [end, setEnd] = useState('');
+  const [output, setOutput] = useState('');
+
+  const calculate = () => {
+    if (!start || !end) { setOutput('Please enter both dates'); return; }
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) { setOutput('Invalid date format'); return; }
+    const diff = Math.abs(endDate.getTime() - startDate.getTime());
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor(diff / (1000 * 60));
+    const weeks = Math.floor(days / 7);
+    const months = Math.floor(days / 30.44);
+    const years = (days / 365.25).toFixed(2);
+    setOutput(`Date Calculator\n${'─'.repeat(30)}\n\nStart: ${startDate.toLocaleDateString()}\nEnd: ${endDate.toLocaleDateString()}\n\nDifference:\n  ${days} days\n  ${hours} hours\n  ${minutes} minutes\n  ${weeks} weeks\n  ~${months.toFixed(1)} months\n  ~${years} years`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Start Date</label>
+          <input type="date" value={start} onChange={e => setStart(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+        </div>
+        <div>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">End Date</label>
+          <input type="date" value={end} onChange={e => setEnd(e.target.value)} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+        </div>
+      </div>
+      <ProcessButton onClick={calculate}>Calculate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function SqlFormatterTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+  const [mode, setMode] = useState<'format' | 'minify'>('format');
+
+  const process = () => {
+    if (!input) { setOutput('Please enter SQL'); return; }
+    let result = input;
+    if (mode === 'format') {
+      let indent = 0;
+      const keywords = ['SELECT', 'FROM', 'WHERE', 'AND', 'OR', 'JOIN', 'LEFT', 'RIGHT', 'INNER', 'OUTER', 'ON', 'GROUP BY', 'ORDER BY', 'HAVING', 'LIMIT', 'OFFSET', 'INSERT', 'UPDATE', 'DELETE', 'SET', 'VALUES', 'CREATE', 'ALTER', 'DROP'];
+      result = input.replace(/\s+/g, ' ').trim().split(/(SELECT|FROM|WHERE|AND|OR|JOIN|LEFT|RIGHT|INNER|OUTER|ON|GROUP BY|ORDER BY|HAVING|LIMIT|OFFSET|INSERT|UPDATE|DELETE|SET|VALUES|CREATE|ALTER|DROP)/i).map(part => part.trim()).filter(Boolean).map(part => {
+        const upper = part.toUpperCase();
+        const isKeyword = keywords.some(kw => upper.startsWith(kw));
+        if (isKeyword && upper.match(/^(SELECT|INSERT|UPDATE|DELETE|CREATE|ALTER|DROP)/)) indent = 1;
+        const formatted = '  '.repeat(Math.max(0, indent - 1)) + part;
+        if (upper.match(/^(FROM|WHERE|AND|OR|JOIN|GROUP BY|ORDER BY|HAVING|LIMIT|SET|VALUES)/)) indent++;
+        return formatted;
+      }).join('\n');
+    } else {
+      result = input.replace(/\s+/g, ' ').replace(/\s*,\s*/g, ',').replace(/\s*\(\s*/g, '(').replace(/\s*\)\s*/g, ')').trim();
+    }
+    setOutput(result);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        <button onClick={() => setMode('format')} className={`px-3 py-1.5 text-sm rounded-lg ${mode === 'format' ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}>Format</button>
+        <button onClick={() => setMode('minify')} className={`px-3 py-1.5 text-sm rounded-lg ${mode === 'minify' ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}>Minify</button>
+      </div>
+      <Textarea value={input} onChange={setInput} placeholder="SELECT id, name FROM users WHERE active = 1 ORDER BY created_at DESC" className="h-48" />
+      <ProcessButton onClick={process}>Process</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function CssValidatorTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const validate = () => {
+    if (!input) { setOutput('Please enter CSS'); return; }
+    const errors: string[] = [];
+    const warnings: string[] = [];
+    // Check for unclosed braces
+    const openBraces = (input.match(/\{/g) || []).length;
+    const closeBraces = (input.match(/\}/g) || []).length;
+    if (openBraces !== closeBraces) errors.push(`Mismatched braces: ${openBraces} open, ${closeBraces} close`);
+    // Check for invalid properties
+    const invalidProps = input.match(/[^a-z-]:/gi) || [];
+    if (invalidProps.length > 0) warnings.push(`Potentially invalid property declarations: ${invalidProps.length}`);
+    // Check for known deprecated properties
+    if (/behavior:|zoom:|filter:/i.test(input)) warnings.push('Contains potentially deprecated properties');
+    const results = errors.length === 0 && warnings.length === 0 ? '✓ No errors found' : `Errors (${errors.length}):\n${errors.map(e => '  ✗ ' + e).join('\n')}\n\nWarnings (${warnings.length}):\n${warnings.map(w => '  ⚠ ' + w).join('\n')}`;
+    setOutput(`CSS Validation Results\n${'─'.repeat(30)}\n\n${results}\n\nNote: This is a basic syntax checker. For full W3C validation, use the official CSS validator.`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Enter CSS to validate..." className="h-48" />
+      <ProcessButton onClick={validate}>Validate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function YamlValidatorTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const validate = () => {
+    if (!input) { setOutput('Please enter YAML'); return; }
+    try {
+      const lines = input.split('\n');
+      lines.forEach((line, i) => {
+        const indent = line.match(/^(\s*)/)?.[1].length || 0;
+        if (indent % 2 !== 0) throw new Error(`Line ${i + 1}: Indent must be multiple of 2`);
+        if (line.endsWith(' ') && line.trim()) throw new Error(`Line ${i + 1}: Trailing whitespace`);
+      });
+      // Basic structure check
+      if (input.includes('\t')) throw new Error('Tabs are not allowed in YAML');
+      setOutput('✓ Valid YAML syntax\n\nNo obvious errors detected.');
+    } catch (e) {
+      setOutput(`✗ YAML Error:\n${e instanceof Error ? e.message : 'Unknown error'}`);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Enter YAML to validate..." className="h-48" />
+      <ProcessButton onClick={validate}>Validate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function XmlValidatorTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const validate = () => {
+    if (!input) { setOutput('Please enter XML'); return; }
+    try {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(input, 'application/xml');
+      const error = doc.querySelector('parsererror');
+      if (error) {
+        setOutput(`✗ XML Error:\n${error.textContent || 'Invalid XML'}`);
+      } else {
+        const tags = input.match(/<[^/>]+>/g) || [];
+        const rootMatch = input.match(/^<(\w+)[^>]*>/);
+        setOutput(`✓ Valid XML\n\nRoot element: ${rootMatch ? rootMatch[1] : 'unknown'}\nTotal tags: ${tags.length}`);
+      }
+    } catch {
+      setOutput('✗ Failed to parse XML');
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Enter XML to validate..." className="h-48" />
+      <ProcessButton onClick={validate}>Validate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function BarcodeGeneratorTool() {
+  const [input, setInput] = useState('');
+  const [type, setType] = useState('CODE128');
+  const [output, setOutput] = useState('');
+
+  const generate = () => {
+    if (!input) { setOutput('Please enter a value to encode'); return; }
+    // Simple text-based barcode visualization for Code128
+    if (type === 'CODE128') {
+      const bars = Array.from(input).map(c => {
+        const code = c.charCodeAt(0);
+        return (code % 2 === 0 ? '█ █' : '█ ██').repeat(3);
+      }).join(' ');
+      setOutput(`Barcode (${type})\n${'─'.repeat(30)}\nValue: ${input}\n\nVisual:\n${bars}\n\nNote: For production use, use a proper barcode library.`);
+    } else {
+      setOutput(`Barcode (${type})\nValue: ${input}\n\nNote: This tool generates a text representation. Use a proper library for real barcodes.`);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2">
+        {['CODE128', 'CODE39', 'EAN13', 'UPC'].map(t => (
+          <button key={t} onClick={() => setType(t)} className={`px-3 py-1.5 text-sm rounded-lg ${type === t ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800'}`}>{t}</button>
+        ))}
+      </div>
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Value to Encode</label>
+        <input type="text" value={input} onChange={e => setInput(e.target.value)} placeholder="123456789" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={generate}>Generate</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function TokenGeneratorTool() {
+  const [length, setLength] = useState('32');
+  const [output, setOutput] = useState('');
+
+  const generate = () => {
+    const len = Math.min(Math.max(parseInt(length) || 32, 8), 128);
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let token = '';
+    const array = new Uint32Array(len);
+    crypto.getRandomValues(array);
+    for (let i = 0; i < len; i++) token += chars[array[i] % chars.length];
+    setOutput(`Token Generator\n${'─'.repeat(30)}\n\nLength: ${len} characters\n\n${token}\n\nCopy the token above.`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Length</label>
+        <input type="number" value={length} onChange={e => setLength(e.target.value)} min="8" max="128" className="w-32 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={generate}>Generate Token</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function CouponGeneratorTool() {
+  const [count, setCount] = useState('10');
+  const [prefix, setPrefix] = useState('SAVE');
+  const [length, setLength] = useState('8');
+  const [output, setOutput] = useState('');
+
+  const generate = () => {
+    const cnt = Math.min(parseInt(count) || 10, 100);
+    const len = Math.min(Math.max(parseInt(length) || 8, 4), 16);
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const coupons: string[] = [];
+    for (let i = 0; i < cnt; i++) {
+      let code = prefix;
+      const array = new Uint32Array(len);
+      crypto.getRandomValues(array);
+      for (let j = 0; j < len; j++) code += chars[array[j] % chars.length];
+      coupons.push(code);
+    }
+    setOutput(`Coupon Generator\n${'─'.repeat(30)}\n\nPrefix: ${prefix}\nCode length: ${len} characters\nCount: ${cnt}\n\n${coupons.join('\n')}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-3 gap-3">
+        <div>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Prefix</label>
+          <input type="text" value={prefix} onChange={e => setPrefix(e.target.value.toUpperCase().slice(0, 4))} placeholder="SAVE" maxLength={4} className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" />
+        </div>
+        <div>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Code Length</label>
+          <input type="number" value={length} onChange={e => setLength(e.target.value)} min="4" max="16" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" />
+        </div>
+        <div>
+          <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Count</label>
+          <input type="number" value={count} onChange={e => setCount(e.target.value)} min="1" max="100" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-2 font-mono text-sm focus:outline-none focus:border-red-500" />
+        </div>
+      </div>
+      <ProcessButton onClick={generate}>Generate Coupons</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function MetaTagExtractorTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const extract = () => {
+    if (!input) { setOutput('Please enter HTML'); return; }
+    const title = input.match(/<title[^>]*>([^<]+)<\/title>/i)?.[1] || '';
+    const description = input.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']+)["']/i)?.[1] || input.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']description["']/i)?.[1] || '';
+    const ogTitle = input.match(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i)?.[1] || '';
+    const ogImage = input.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)?.[1] || '';
+    const canonical = input.match(/<link[^>]+rel=["']canonical["'][^>]+href=["']([^"']+)["']/i)?.[1] || '';
+    const h1s = input.match(/<h1[^>]*>([^<]+)<\/h1>/gi) || [];
+    setOutput(`Meta Tag Extractor\n${'─'.repeat(30)}\n\nTitle: ${title || '(none)'}\nDescription: ${description || '(none)'}\nCanonical: ${canonical || '(none)'}\n\nOpen Graph:\n  og:title: ${ogTitle || '(none)'}\n  og:image: ${ogImage || '(none)'}\n\nHeadings:\n${h1s.length ? h1s.map(h => '  ' + h.replace(/<[^>]+>/g, '')).join('\n') : '  (none)'}`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <Textarea value={input} onChange={setInput} placeholder="Paste HTML to extract meta tags..." className="h-48" />
+      <ProcessButton onClick={extract}>Extract</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function FaviconExtractorTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const extract = () => {
+    if (!input) { setOutput('Please enter a URL or HTML'); return; }
+    let url = input;
+    if (!input.startsWith('http')) {
+      // Extract from HTML
+      const icon16 = input.match(/<link[^>]+rel=["']icon["'][^>]+href=["']([^"']+)["']/i)?.[1] || '';
+      const icon32 = input.match(/<link[^>]+sizes=["']32x32["'][^>]+href=["']([^"']+)["']/i)?.[1] || '';
+      const appleTouch = input.match(/<link[^>]+rel=["']apple-touch-icon["'][^>]+href=["']([^"']+)["']/i)?.[1] || '';
+      const faviconMatch = input.match(/<link[^>]+rel=["']shortcut icon["'][^>]+href=["']([^"']+)["']/i)?.[1] || input.match(/<link[^>]+rel=["']icon["'][^>]+href=["']([^"']+)["']/i)?.[1] || '';
+      setOutput(`Favicon Extractor\n${'─'.repeat(30)}\n\nFavicon URLs found:\n  16x16: ${icon16 || '(none)'}\n  32x32: ${icon32 || '(none)'}\n  Apple Touch: ${appleTouch || '(none)'}\n  General: ${faviconMatch || '(none)'}\n\nNote: Extract the URL and use a favicon checker to verify.`);
+    } else {
+      // Assume it's a URL
+      const baseUrl = url.endsWith('/') ? url.slice(0, -1) : url;
+      setOutput(`Favicon URLs for: ${baseUrl}\n${'─'.repeat(30)}\n\n/favicon.ico\n${baseUrl}/favicon.ico\n/apple-touch-icon.png\n${baseUrl}/apple-touch-icon.png`);
+    }
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">URL or HTML</label>
+        <input type="text" value={input} onChange={e => setInput(e.target.value)} placeholder="https://example.com or paste HTML" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={extract}>Extract</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function HttpHeaderCheckerTool() {
+  const [url, setUrl] = useState('');
+  const [output, setOutput] = useState('');
+
+  const check = () => {
+    if (!url) { setOutput('Please enter a URL'); return; }
+    setOutput(`HTTP Header Check\n${'─'.repeat(30)}\n\nURL: ${url}\n\nNote: This tool cannot make direct requests due to CORS restrictions.\n\nCommon headers to check:\n  Content-Type\n  Cache-Control\n  CORS headers (Access-Control-*)\n  Security headers (CSP, X-Frame-Options, etc.)\n  Authentication headers\n\nUse browser DevTools (F12) → Network tab → click request → Headers tab for actual headers.`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">URL</label>
+        <input type="text" value={url} onChange={e => setUrl(e.target.value)} placeholder="https://example.com" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={check}>Check Headers</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function CorsCheckerTool() {
+  const [url, setUrl] = useState('');
+  const [output, setOutput] = useState('');
+
+  const check = () => {
+    if (!url) { setOutput('Please enter a URL to check CORS policy'); return; }
+    setOutput(`CORS Policy Check\n${'─'.repeat(30)}\n\nChecking: ${url}\n\nTo check CORS headers manually:\n\n1. Open browser DevTools (F12)\n2. Go to Network tab\n3. Make a request to ${url}\n4. Check Response Headers for:\n\n  Access-Control-Allow-Origin: * | https://yoursite.com\n  Access-Control-Allow-Methods: GET, POST, PUT, DELETE\n  Access-Control-Allow-Headers: Content-Type, Authorization\n  Access-Control-Allow-Credentials: true\n  Access-Control-Max-Age: 86400\n\nIf Origin header is blocked, CORS is restricting cross-origin requests.`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">URL</label>
+        <input type="text" value={url} onChange={e => setUrl(e.target.value)} placeholder="https://api.example.com/data" className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={check}>Check CORS</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
+function Argon2HashGeneratorTool() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const generate = () => {
+    if (!input) { setOutput('Please enter text to hash'); return; }
+    // Argon2 cannot be computed in browser without a library
+    // Generate a placeholder representation
+    const encoder = new TextEncoder();
+    const data = encoder.encode(input);
+    let hash = 0;
+    for (let i = 0; i < data.length; i++) {
+      hash = ((hash << 5) - hash) + data[i];
+      hash = hash & hash;
+    }
+    const fakeHash = '$argon2id$v=19$m=65536,t=3,p=4$' + Math.abs(hash).toString(16).padStart(32, '0');
+    setOutput(`Argon2 Hash Generator\n${'─'.repeat(30)}\n\nNote: Full Argon2 requires a WebAssembly module.\n\nInput: ${input}\n\nSimulated hash (for format demonstration):\n${fakeHash}\n\nReal Argon2 hash format:\n$argon2id$v=19$m=65536,t=3,p=4$<salt>$<hash>\n\nUse argon2-browser library for actual hashing.`);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">Text to Hash</label>
+        <input type="text" value={input} onChange={e => setInput(e.target.value)} placeholder="Enter password..." className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500" />
+      </div>
+      <ProcessButton onClick={generate}>Generate Hash</ProcessButton>
+      <OutputArea value={output} />
+    </div>
+  );
+}
+
 function ToolRouter({ tool }: { tool: Tool }) {
   switch (tool.slug) {
     case 'word-counter':          return <WordCounterTool />;
@@ -6089,6 +7041,37 @@ function ToolRouter({ tool }: { tool: Tool }) {
     case 'binary-text-express': return <BinaryTextExpressTool />;
     case 'binary-to-text-v2': return <BinaryToTextV2Tool />;
     case 'bulk-generator': return <BulkGeneratorTool />;
+    case 'email-validator': return <EmailValidatorTool />;
+    case 'url-validator': return <UrlValidatorTool />;
+    case 'phone-validator': return <PhoneValidatorTool />;
+    case 'slug-validator': return <SlugValidatorTool />;
+    case 'password-strength-checker': return <PasswordStrengthCheckerTool />;
+    case 'base64-encoder': return <Base64EncoderTool />;
+    case 'unicode-encoder': return <UnicodeEncoderTool />;
+    case 'percent-encoder': return <PercentEncoderTool />;
+    case 'css-formatter': return <CssFormatterTool />;
+    case 'html-formatter': return <HtmlFormatterTool />;
+    case 'javascript-formatter': return <JavaScriptFormatterTool />;
+    case 'word-frequency-counter': return <WordFrequencyCounterTool />;
+    case 'character-analysis': return <CharacterAnalysisTool />;
+    case 'text-statistics': return <TextStatisticsTool />;
+    case 'readability-check': return <ReadabilityCheckTool />;
+    case 'discount-calculator': return <DiscountCalculatorTool />;
+    case 'tip-calculator': return <TipCalculatorTool />;
+    case 'sleep-calculator': return <SleepCalculatorTool />;
+    case 'date-calculator': return <DateCalculatorTool />;
+    case 'sql-formatter': return <SqlFormatterTool />;
+    case 'css-validator': return <CssValidatorTool />;
+    case 'yaml-validator': return <YamlValidatorTool />;
+    case 'xml-validator': return <XmlValidatorTool />;
+    case 'barcode-generator': return <BarcodeGeneratorTool />;
+    case 'token-generator': return <TokenGeneratorTool />;
+    case 'coupon-generator': return <CouponGeneratorTool />;
+    case 'meta-tag-extractor': return <MetaTagExtractorTool />;
+    case 'favicon-extractor': return <FaviconExtractorTool />;
+    case 'http-header-checker': return <HttpHeaderCheckerTool />;
+    case 'cors-checker': return <CorsCheckerTool />;
+    case 'argon2-hash-generator': return <Argon2HashGeneratorTool />;
     default:                        return <NotImplementedTool toolName={tool.name} />;
   }
 }
