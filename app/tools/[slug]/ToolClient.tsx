@@ -4,6 +4,55 @@ import { useState, useMemo } from 'react';
 import type { Tool } from '@/data/tools';
 import ShareButtons from '@/components/ShareButtons';
 
+// ─── Imported tool UIs ──────────────────────────────────────────────────────
+import YamlToJsonClient from '@/components/tools/YamlToJsonClient';
+import XmlToJsonClient from '@/components/tools/XmlToJsonClient';
+import WordCounterClient from '@/components/tools/WordCounterClient';
+import UuidGeneratorClient from '@/components/tools/UuidGeneratorClient';
+import UrlSlugGeneratorClient from '@/components/tools/UrlSlugGeneratorClient';
+import UrlParamsClient from '@/components/tools/UrlParamsClient';
+import UrlEncodeClient from '@/components/tools/UrlEncodeClient';
+import UnixTimestampConverterClient from '@/components/tools/UnixTimestampConverterClient';
+import UnitConverterClient from '@/components/tools/UnitConverterClient';
+import TextSorterClient from '@/components/tools/TextSorterClient';
+import TextDiffClient from '@/components/tools/TextDiffClient';
+import SquareCropClient from '@/components/tools/SquareCropClient';
+import SqlToJsonClient from '@/components/tools/SqlToJsonClient';
+import SerpPreviewClient from '@/components/tools/SerpPreviewClient';
+import ScreenResolutionTesterClient from '@/components/tools/ScreenResolutionTesterClient';
+import RemoveDuplicateLinesClient from '@/components/tools/RemoveDuplicateLinesClient';
+import RegexTesterClient from '@/components/tools/RegexTesterClient';
+import ReadabilityScoreClient from '@/components/tools/ReadabilityScoreClient';
+import QrCodeGeneratorClient from '@/components/tools/QrCodeGeneratorClient';
+import PercentageDifferenceClient from '@/components/tools/PercentageDifferenceClient';
+import PercentageCalculatorClient from '@/components/tools/PercentageCalculatorClient';
+import PasswordGeneratorClient from '@/components/tools/PasswordGeneratorClient';
+import NumberBaseConverterClient from '@/components/tools/NumberBaseConverterClient';
+import MetaTagGeneratorClient from '@/components/tools/MetaTagGeneratorClient';
+import MarkdownToHtmlClient from '@/components/tools/MarkdownToHtmlClient';
+import LoremIpsumGeneratorClient from '@/components/tools/LoremIpsumGeneratorClient';
+import JwtDecoderClient from '@/components/tools/JwtDecoderClient';
+import JsonToYamlClient from '@/components/tools/JsonToYamlClient';
+import JsonFormatterClient from '@/components/tools/JsonFormatterClient';
+import JsMinifierClient from '@/components/tools/JsMinifierClient';
+import ImageResizerClient from '@/components/tools/ImageResizerClient';
+import ImageFormatConverterClient from '@/components/tools/ImageFormatConverterClient';
+import ImageCropperClient from '@/components/tools/ImageCropperClient';
+import HttpHeadersViewerClient from '@/components/tools/HttpHeadersViewerClient';
+import HtmlEncoderClient from '@/components/tools/HtmlEncoderClient';
+import HashGeneratorClient from '@/components/tools/HashGeneratorClient';
+import GrammarCheckerClient from '@/components/tools/GrammarCheckerClient';
+import FaviconGeneratorClient from '@/components/tools/FaviconGeneratorClient';
+import CssGradientGeneratorClient from '@/components/tools/CssGradientGeneratorClient';
+import CssBorderRadiusGeneratorClient from '@/components/tools/CssBorderRadiusGeneratorClient';
+import CronParserClient from '@/components/tools/CronParserClient';
+import CronGeneratorClient from '@/components/tools/CronGeneratorClient';
+import CreditCardValidatorClient from '@/components/tools/CreditCardValidatorClient';
+import ContrastCheckerClient from '@/components/tools/ContrastCheckerClient';
+import ColorPickerClient from '@/components/tools/ColorPickerClient';
+import CircleCropClient from '@/components/tools/CircleCropClient';
+import CharacterCounterClient from '@/components/tools/CharacterCounterClient';
+
 // ─── Individual tool UIs ────────────────────────────────────────────────────
 
 function WordCounterUI({ output, setOutput }: { output: string; setOutput: (v: string) => void }) {
@@ -354,17 +403,103 @@ function ToolUI({ tool }: { tool: Tool }) {
 
   switch (tool.slug) {
     case 'word-counter':
-      return <WordCounterUI output={text} setOutput={setText} />;
+      return <WordCounterClient />;
     case 'character-counter':
-      return <CharacterCounterUI output={text} setOutput={setText} />;
+      return <CharacterCounterClient />;
     case 'case-converter':
       return <CaseConverterUI output={text} setOutput={setText} />;
     case 'base64':
       return <Base64UI />;
     case 'url-encode':
-      return <UrlEncodeUI />;
+      return <UrlEncodeClient />;
     case 'json-formatter':
-      return <JsonFormatterUI />;
+      return <JsonFormatterClient />;
+    case 'yaml-to-json':
+      return <YamlToJsonClient />;
+    case 'xml-to-json':
+      return <XmlToJsonClient />;
+    case 'uuid-generator':
+      return <UuidGeneratorClient />;
+    case 'url-slug-generator':
+      return <UrlSlugGeneratorClient />;
+    case 'url-parameter-extractor':
+      return <UrlParamsClient />;
+    case 'unix-timestamp-converter':
+      return <UnixTimestampConverterClient />;
+    case 'unit-converter':
+      return <UnitConverterClient />;
+    case 'text-sorter':
+      return <TextSorterClient />;
+    case 'text-diff':
+      return <TextDiffClient />;
+    case 'square-crop':
+      return <SquareCropClient />;
+    case 'sql-to-json':
+      return <SqlToJsonClient />;
+    case 'serp-preview':
+      return <SerpPreviewClient />;
+    case 'screen-resolution-tester':
+      return <ScreenResolutionTesterClient />;
+    case 'remove-duplicate-lines':
+      return <RemoveDuplicateLinesClient />;
+    case 'regex-tester':
+      return <RegexTesterClient />;
+    case 'readability-score':
+      return <ReadabilityScoreClient />;
+    case 'qr-code-generator':
+      return <QrCodeGeneratorClient />;
+    case 'percentage-difference':
+      return <PercentageDifferenceClient />;
+    case 'percentage-calculator':
+      return <PercentageCalculatorClient />;
+    case 'password-generator':
+      return <PasswordGeneratorClient />;
+    case 'number-base-converter':
+      return <NumberBaseConverterClient />;
+    case 'meta-tag-generator':
+      return <MetaTagGeneratorClient />;
+    case 'markdown-to-html':
+      return <MarkdownToHtmlClient />;
+    case 'lorem-ipsum-generator':
+      return <LoremIpsumGeneratorClient />;
+    case 'jwt-decoder':
+      return <JwtDecoderClient />;
+    case 'json-to-yaml':
+      return <JsonToYamlClient />;
+    case 'js-minifier':
+      return <JsMinifierClient />;
+    case 'image-resizer':
+      return <ImageResizerClient />;
+    case 'image-format-converter':
+      return <ImageFormatConverterClient />;
+    case 'image-cropper':
+      return <ImageCropperClient />;
+    case 'http-headers-viewer':
+      return <HttpHeadersViewerClient />;
+    case 'html-encoder':
+      return <HtmlEncoderClient />;
+    case 'hash-generator':
+      return <HashGeneratorClient />;
+    case 'grammar-checker':
+      return <GrammarCheckerClient />;
+    case 'favicon-generator':
+      return <FaviconGeneratorClient />;
+    case 'css-gradient-generator':
+      return <CssGradientGeneratorClient />;
+    case 'css-border-radius-generator':
+      return <CssBorderRadiusGeneratorClient />;
+    case 'cron-parser':
+      return <CronParserClient />;
+    case 'cron-generator':
+      return <CronGeneratorClient />;
+    case 'credit-card-validator':
+      return <CreditCardValidatorClient />;
+    case 'contrast-checker':
+      return <ContrastCheckerClient />;
+    case 'color-picker':
+      return <ColorPickerClient />;
+    case 'circle-crop':
+      return <CircleCropClient />;
     default:
       return <ComingSoonUI tool={tool} />;
   }
