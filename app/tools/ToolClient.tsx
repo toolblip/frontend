@@ -17,6 +17,9 @@ import CircleCropClient from '@/components/tools/CircleCropClient';
 import ColorPickerClient from '@/components/tools/ColorPickerClient';
 import ContrastCheckerClient from '@/components/tools/ContrastCheckerClient';
 import CreditCardValidatorClient from '@/components/tools/CreditCardValidatorClient';
+import CsvToJsonClient from '@/components/tools/CsvToJsonClient';
+import DecimalToBinaryClient from '@/components/tools/DecimalToBinaryClient';
+import DecimalToHexClient from '@/components/tools/DecimalToHexClient';
 import CronGeneratorClient from '@/components/tools/CronGeneratorClient';
 import CurlToPythonClient from '@/components/tools/CurlToPythonClient';
 import XmlValidatorClient from '@/components/tools/XmlValidatorClient';
@@ -67,6 +70,12 @@ import UrlSlugGeneratorClient from '@/components/tools/UrlSlugGeneratorClient';
 import UuidGeneratorClient from '@/components/tools/UuidGeneratorClient';
 import XmlFormatterClient from '@/components/tools/XmlFormatterClient';
 import XmlToJsonClient from '@/components/tools/XmlToJsonClient';
+import BinaryToTextClient from '@/components/tools/BinaryToTextClient';
+import BinaryToDecimalClient from '@/components/tools/BinaryToDecimalClient';
+import HexToDecimalClient from '@/components/tools/HexToDecimalClient';
+import JsonToCsvClient from '@/components/tools/JsonToCsvClient';
+import MarkdownToPdfClient from '@/components/tools/MarkdownToPdfClient';
+import OctalToDecimalClient from '@/components/tools/OctalToDecimalClient';
 import YamlToJsonClient from '@/components/tools/YamlToJsonClient';
 import RegexTesterClient from '@/components/tools/RegexTesterClient';
 // ─── New tool components ─────────────────────────────────────────────────────
@@ -162,6 +171,10 @@ function ToolRenderer({ tool }: { tool: Tool }) {
       return <ColorPickerClient />;
     case 'contrast-checker':
       return <ContrastCheckerClient />;
+    case 'binary-to-text':
+      return <BinaryToTextClient />;
+    case 'binary-to-decimal':
+      return <BinaryToDecimalClient />;
     case 'credit-card-validator':
       return <CreditCardValidatorClient />;
     case 'cron-expression-generator':
@@ -176,8 +189,14 @@ function ToolRenderer({ tool }: { tool: Tool }) {
       return <CssClassGeneratorClient />;
     case 'css-gradient-generator':
       return <CssGradientGeneratorClient />;
+    case 'csv-to-json':
+      return <CsvToJsonClient />;
     case 'css-validator':
       return <CssValidatorClient />;
+    case 'decimal-to-binary':
+      return <DecimalToBinaryClient />;
+    case 'decimal-to-hex':
+      return <DecimalToHexClient />;
     case 'email-generator':
       return <EmailGeneratorClient />;
     case 'email-validator':
@@ -200,6 +219,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
       return <HashIdentifierClient />;
     case 'hex-to-rgb':
       return <HexToRgbClient />;
+    case 'hex-to-decimal':
+      return <HexToDecimalClient />;
     case 'html-encoder':
       return <HtmlEncoderClient />;
     case 'html-table-generator':
@@ -224,6 +245,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
       return <JsonPathTesterClient />;
     case 'json-schema-validator':
       return <JsonSchemaValidatorClient />;
+    case 'json-to-csv':
+      return <JsonToCsvClient />;
     case 'json-to-markdown-table':
       return <JsonToMarkdownTableClient />;
     case 'json-to-typescript':
@@ -242,6 +265,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
       return <LoremIpsumGeneratorClient />;
     case 'markdown-to-html':
       return <MarkdownToHtmlClient />;
+    case 'markdown-to-pdf':
+      return <MarkdownToPdfClient />;
     case 'meta-tag-generator':
       return <MetaTagGeneratorClient />;
     case 'notebook-to-html':
@@ -250,6 +275,8 @@ function ToolRenderer({ tool }: { tool: Tool }) {
       return <OpenGraphGeneratorClient />;
     case 'number-base-converter':
       return <NumberBaseConverterClient />;
+    case 'octal-to-decimal':
+      return <OctalToDecimalClient />;
     case 'oxford-comma':
       return <OxfordCommaClient />;
     case 'palindrome-checker':
