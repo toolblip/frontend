@@ -55,6 +55,15 @@ import UuidGeneratorClient from '@/components/tools/UuidGeneratorClient';
 import XmlFormatterClient from '@/components/tools/XmlFormatterClient';
 import XmlToJsonClient from '@/components/tools/XmlToJsonClient';
 import YamlToJsonClient from '@/components/tools/YamlToJsonClient';
+import Base64Client from '@/components/tools/Base64Client';
+import CaseConverterClient from '@/components/tools/CaseConverterClient';
+import CharacterCounterClient from '@/components/tools/CharacterCounterClient';
+import JsonFormatterClient from '@/components/tools/JsonFormatterClient';
+import NotebookToHtmlClient from '@/components/tools/NotebookToHtmlClient';
+import OxfordCommaClient from '@/components/tools/OxfordCommaClient';
+import SassToCssClient from '@/components/tools/SassToCssClient';
+import UrlEncodeClient from '@/components/tools/UrlEncodeClient';
+import WordCounterClient from '@/components/tools/WordCounterClient';
 
 // ─── Shared UI primitives ────────────────────────────────────────────────
 
