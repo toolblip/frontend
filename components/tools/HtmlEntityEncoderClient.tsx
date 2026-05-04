@@ -8,7 +8,7 @@ const HTML_ENTITIES: Record<string, string> = {
 
 const DECODE_ENTITIES: Record<string, string> = {
   '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'", '&nbsp;': ' ',
-  '&copy;': '©', '&reg;': '®', '&trade;': '™', '&amp;': '&',
+  '&copy;': '©', '&reg;': '®', '&trade;': '™',
 };
 
 export default function HtmlEntityEncoderClient() {

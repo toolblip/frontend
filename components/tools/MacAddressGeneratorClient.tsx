@@ -67,7 +67,7 @@ export default function MacAddressGeneratorClient() {
         <>
           <div className="tb-v2-tool-output-head">
             <span className="tb-v2-tool-label">MAC Addresses</span>
-            <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}>
+            <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
               {copied ? 'Copied' : 'Copy'}
             </button>
           </div>
