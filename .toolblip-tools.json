@@ -240,66 +240,6 @@
     }
   },
   "all_needing_component": {
-    "cooking-unit-converter": {
-      "status": "todo",
-      "notes": ""
-    },
-    "counter": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-builder": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-expander": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-expr-gen": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-expr-gen-adv": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-expr-gen-prime": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-expr-gen-pro": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-expr-gen-ultra": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-expression-builder": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-expression-generator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-expression-parser": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-generator-2025": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-generator-advanced": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-generator-api": {
-      "status": "todo",
-      "notes": ""
-    },
     "cron-generator-browser": {
       "status": "todo",
       "notes": ""
@@ -5058,6 +4998,21 @@
     "contrast-checker-xl",
     "contrast-fresh",
     "contrast-quick",
-    "contrast-toolblip"
+    "contrast-toolblip",
+    "cooking-unit-converter",
+    "counter",
+    "cron-builder",
+    "cron-expander",
+    "cron-expr-gen",
+    "cron-expr-gen-adv",
+    "cron-expr-gen-prime",
+    "cron-expr-gen-pro",
+    "cron-expr-gen-ultra",
+    "cron-expression-builder",
+    "cron-expression-generator",
+    "cron-expression-parser",
+    "cron-generator-2025",
+    "cron-generator-advanced",
+    "cron-generator-api"
   ]
 }
