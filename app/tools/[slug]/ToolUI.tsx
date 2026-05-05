@@ -477,6 +477,36 @@ import CsvToXmlClient from '@/components/tools/CsvToXmlClient';
 import CurlCommandBuilderClient from '@/components/tools/CurlCommandBuilderClient';
 import CurlGenExpressClient from '@/components/tools/CurlGenExpressClient';
 import CurlToJavascriptClient from '@/components/tools/CurlToJavascriptClient';
+import CurrencyConverterV2Client from '@/components/tools/CurrencyConverterV2Client';
+import CutterClient from '@/components/tools/CutterClient';
+import DataSizeConverterClient from '@/components/tools/DataSizeConverterClient';
+import DataSizeConverterExpressClient from '@/components/tools/DataSizeConverterExpressClient';
+import DataUriGeneratorClient from '@/components/tools/DataUriGeneratorClient';
+import DbQueryFormatterClient from '@/components/tools/DbQueryFormatterClient';
+import DecimalToHexConverterClient from '@/components/tools/DecimalToHexConverterClient';
+import DetectClient from '@/components/tools/DetectClient';
+import DiscountCalculatorClient from '@/components/tools/DiscountCalculatorClient';
+import DnsLookupExpressClient from '@/components/tools/DnsLookupExpressClient';
+import DnsLookupToolClient from '@/components/tools/DnsLookupToolClient';
+import DnsLookupV2Client from '@/components/tools/DnsLookupV2Client';
+import DockerComposeGeneratorClient from '@/components/tools/DockerComposeGeneratorClient';
+import DomainAgeCheckerClient from '@/components/tools/DomainAgeCheckerClient';
+import DominantColorExtractorClient from '@/components/tools/DominantColorExtractorClient';
+import DpiPpiCalculatorClient from '@/components/tools/DpiPpiCalculatorClient';
+import DummyTextDetectorClient from '@/components/tools/DummyTextDetectorClient';
+import DuplicatePhraseDetectorClient from '@/components/tools/DuplicatePhraseDetectorClient';
+import DuplicateUrlDetectorClient from '@/components/tools/DuplicateUrlDetectorClient';
+import EditClient from '@/components/tools/EditClient';
+import EncodingsRefClient from '@/components/tools/EncodingsRefClient';
+import EncodingsReferenceClient from '@/components/tools/EncodingsReferenceClient';
+import EnergyConverterClient from '@/components/tools/EnergyConverterClient';
+import EnglishCollocationCheckerClient from '@/components/tools/EnglishCollocationCheckerClient';
+import EnglishCollocationUniqueClient from '@/components/tools/EnglishCollocationUniqueClient';
+import EnglishDictionaryClient from '@/components/tools/EnglishDictionaryClient';
+import EnvParserClient from '@/components/tools/EnvParserClient';
+import EpsToJpgClient from '@/components/tools/EpsToJpgClient';
+import EpsToPngClient from '@/components/tools/EpsToPngClient';
+import EpsToSvgClient from '@/components/tools/EpsToSvgClient';
 import ColorTemperatureAdjusterClient from '@/components/tools/ColorTemperatureAdjusterClient';
 import ChartMakerClient from '@/components/tools/ChartMakerClient';
 import CitationGeneratorClient from '@/components/tools/CitationGeneratorClient';
@@ -1532,6 +1562,66 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <CurlGenExpressClient />;
     case 'curl-to-javascript':
       return <CurlToJavascriptClient />;
+    case 'currency-converter-v2':
+      return <CurrencyConverterV2Client />;
+    case 'cutter':
+      return <CutterClient />;
+    case 'data-size-converter':
+      return <DataSizeConverterClient />;
+    case 'data-size-converter-express':
+      return <DataSizeConverterExpressClient />;
+    case 'data-uri-generator':
+      return <DataUriGeneratorClient />;
+    case 'db-query-formatter':
+      return <DbQueryFormatterClient />;
+    case 'decimal-to-hex-converter':
+      return <DecimalToHexConverterClient />;
+    case 'detect':
+      return <DetectClient />;
+    case 'discount-calculator':
+      return <DiscountCalculatorClient />;
+    case 'dns-lookup-express':
+      return <DnsLookupExpressClient />;
+    case 'dns-lookup-tool':
+      return <DnsLookupToolClient />;
+    case 'dns-lookup-v2':
+      return <DnsLookupV2Client />;
+    case 'docker-compose-generator':
+      return <DockerComposeGeneratorClient />;
+    case 'domain-age-checker':
+      return <DomainAgeCheckerClient />;
+    case 'dominant-color-extractor':
+      return <DominantColorExtractorClient />;
+    case 'dpi-ppi-calculator':
+      return <DpiPpiCalculatorClient />;
+    case 'dummy-text-detector':
+      return <DummyTextDetectorClient />;
+    case 'duplicate-phrase-detector':
+      return <DuplicatePhraseDetectorClient />;
+    case 'duplicate-url-detector':
+      return <DuplicateUrlDetectorClient />;
+    case 'edit':
+      return <EditClient />;
+    case 'encodings-ref':
+      return <EncodingsRefClient />;
+    case 'encodings-reference':
+      return <EncodingsReferenceClient />;
+    case 'energy-converter':
+      return <EnergyConverterClient />;
+    case 'english-collocations-checker':
+      return <EnglishCollocationCheckerClient />;
+    case 'english-collocations-unique':
+      return <EnglishCollocationUniqueClient />;
+    case 'english-dictionary':
+      return <EnglishDictionaryClient />;
+    case 'env-parser':
+      return <EnvParserClient />;
+    case 'eps-to-jpg':
+      return <EpsToJpgClient />;
+    case 'eps-to-png':
+      return <EpsToPngClient />;
+    case 'eps-to-svg':
+      return <EpsToSvgClient />;
     case 'color-temperature-adjuster':
       return <ColorTemperatureAdjusterClient />;
     case 'collage-maker':

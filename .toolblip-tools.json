@@ -240,126 +240,6 @@
     }
   },
   "all_needing_component": {
-    "cron-schedule-checker": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-schedule-explainer": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-schedule-generator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-schedule-validator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-toolblip": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-validator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-visual-builder": {
-      "status": "todo",
-      "notes": ""
-    },
-    "crop-circle": {
-      "status": "todo",
-      "notes": ""
-    },
-    "css-animation-generator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "css-cursor-generator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "css-filter-generator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "css-flexbox-generator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "css-grid-generator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "css-naming-convention": {
-      "status": "todo",
-      "notes": ""
-    },
-    "css-preview": {
-      "status": "todo",
-      "notes": ""
-    },
-    "css-to-scss": {
-      "status": "todo",
-      "notes": ""
-    },
-    "css-to-styled-components": {
-      "status": "todo",
-      "notes": ""
-    },
-    "css-to-tailwind": {
-      "status": "todo",
-      "notes": ""
-    },
-    "css-units-converter": {
-      "status": "todo",
-      "notes": ""
-    },
-    "css-units-converter-new": {
-      "status": "todo",
-      "notes": ""
-    },
-    "css-variable-generator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "csv-generator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "csv-json-express": {
-      "status": "todo",
-      "notes": ""
-    },
-    "csv-to-excel": {
-      "status": "todo",
-      "notes": ""
-    },
-    "csv-to-json-v2": {
-      "status": "todo",
-      "notes": ""
-    },
-    "csv-to-tsv-v2": {
-      "status": "todo",
-      "notes": ""
-    },
-    "csv-to-xml": {
-      "status": "todo",
-      "notes": ""
-    },
-    "curl-command-builder": {
-      "status": "todo",
-      "notes": ""
-    },
-    "curl-gen-express": {
-      "status": "todo",
-      "notes": ""
-    },
-    "curl-to-javascript": {
-      "status": "todo",
-      "notes": ""
-    },
     "currency-converter-v2": {
       "status": "todo",
       "notes": ""
@@ -4923,6 +4803,36 @@
     "cron-generator-x",
     "cron-generator-xl",
     "cron-human-readable",
-    "cron-schedule-builder"
+    "cron-schedule-builder",
+    "cron-schedule-checker",
+    "cron-schedule-explainer",
+    "cron-schedule-generator",
+    "cron-schedule-validator",
+    "cron-toolblip",
+    "cron-validator",
+    "cron-visual-builder",
+    "crop-circle",
+    "css-animation-generator",
+    "css-cursor-generator",
+    "css-filter-generator",
+    "css-flexbox-generator",
+    "css-grid-generator",
+    "css-naming-convention",
+    "css-preview",
+    "css-to-scss",
+    "css-to-styled-components",
+    "css-to-tailwind",
+    "css-units-converter",
+    "css-units-converter-new",
+    "css-variable-generator",
+    "csv-generator",
+    "csv-json-express",
+    "csv-to-excel",
+    "csv-to-json-v2",
+    "csv-to-tsv-v2",
+    "csv-to-xml",
+    "curl-command-builder",
+    "curl-gen-express",
+    "curl-to-javascript"
   ]
 }
