@@ -240,66 +240,6 @@
     }
   },
   "all_needing_component": {
-    "compress-mov": {
-      "status": "todo",
-      "notes": ""
-    },
-    "content-brief-generator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "content-improver": {
-      "status": "todo",
-      "notes": ""
-    },
-    "content-planner": {
-      "status": "todo",
-      "notes": ""
-    },
-    "content-summarizer": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-browser": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-check-all": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-check-tool": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-check-toolblip": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-2025": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-adv": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-advanced": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-api": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-browser": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-classic": {
-      "status": "todo",
-      "notes": ""
-    },
     "contrast-checker-complete": {
       "status": "todo",
       "notes": ""
@@ -5193,6 +5133,21 @@
     "colorize-photo",
     "compress",
     "compress-avi",
-    "compress-mkv"
+    "compress-mkv",
+    "compress-mov",
+    "content-brief-generator",
+    "content-improver",
+    "content-planner",
+    "content-summarizer",
+    "contrast-browser",
+    "contrast-check-all",
+    "contrast-check-tool",
+    "contrast-check-toolblip",
+    "contrast-checker-2025",
+    "contrast-checker-adv",
+    "contrast-checker-advanced",
+    "contrast-checker-api",
+    "contrast-checker-browser",
+    "contrast-checker-classic"
   ]
 }
