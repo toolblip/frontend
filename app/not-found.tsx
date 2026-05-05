@@ -1,45 +1,91 @@
 import Link from "next/link";
-import { Home, Wrench } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "404 — Page Not Found | Toolblip",
+};
 
 export default function NotFound() {
   return (
-    <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4 py-20">
-      {/* Outlined 404 number with soft green bg circle */}
-      <div className="relative mb-10">
+    <main className="tb-v2-shell">
+      <div
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "80px 24px",
+          textAlign: "center",
+        }}
+      >
+        {/* Large 404 */}
         <div
-          className="w-44 h-44 rounded-full flex items-center justify-center select-none"
-          style={{ background: "var(--green-tint)" }}
-          aria-hidden="true"
+          style={{
+            fontFamily: "var(--f-display)",
+            fontWeight: 700,
+            fontSize: "clamp(80px, 18vw, 160px)",
+            lineHeight: 1,
+            letterSpacing: "-0.04em",
+            color: "var(--green)",
+            marginBottom: "8px",
+            userSelect: "none",
+          }}
         >
-          <span
-            className="text-[clamp(72px,12vw,120px)] font-bold leading-none tracking-tight"
-            style={{
-              color: "var(--green-tint)",
-              WebkitTextStroke: "2px var(--green)",
-            }}
-          >
-            404
-          </span>
+          404
+        </div>
+
+        {/* Heading */}
+        <h1
+          style={{
+            fontFamily: "var(--f-display)",
+            fontWeight: 700,
+            fontSize: "clamp(22px, 4vw, 32px)",
+            letterSpacing: "-0.025em",
+            color: "var(--fg-0)",
+            margin: "0 0 12px",
+          }}
+        >
+          Page not found
+        </h1>
+
+        {/* Message */}
+        <p
+          style={{
+            color: "var(--fg-1)",
+            fontSize: "16px",
+            maxWidth: "36ch",
+            lineHeight: 1.6,
+            margin: "0 0 36px",
+          }}
+        >
+          The page you&apos;re looking for doesn&apos;t exist.
+        </p>
+
+        {/* Links */}
+        <div
+          style={{
+            display: "flex",
+            gap: "10px",
+            flexWrap: "wrap",
+            justifyContent: "center",
+          }}
+        >
+          <Link href="/" className="tb-v2-btn tb-v2-btn-primary">
+            <svg
+              className="tb-v2-ic"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path d="M3 12L12 3l9 9M5 10v9a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1v-9" />
+            </svg>
+            Go home
+          </Link>
+          <Link href="/tools" className="tb-v2-btn">
+            Browse tools
+          </Link>
         </div>
       </div>
-
-      <h1 className="text-3xl sm:text-4xl font-semibold mb-3" style={{ color: "var(--fg-0)" }}>
-        Page not found
-      </h1>
-      <p className="mb-10 max-w-sm text-base" style={{ color: "var(--fg-2)" }}>
-        The page you&apos;re looking for doesn&apos;t exist.
-      </p>
-
-      <div className="flex flex-wrap gap-3 justify-center">
-        <Link href="/" className="tb-v2-btn tb-v2-btn-primary">
-          <Home size={15} />
-          Go home
-        </Link>
-        <Link href="/tools" className="tb-v2-btn">
-          <Wrench size={15} />
-          Browse tools
-        </Link>
-      </div>
-    </div>
+    </main>
   );
 }
