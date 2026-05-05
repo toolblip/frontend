@@ -91,4 +91,3 @@ export default function FaviconGeneratorV6Client() {
     </div>
   );
 }
-</parameter>

@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 const entities = [
   { char: "<", name: "Less than", hex: "&#60;", decimal: "&lt;" },
   { char: ">", name: "Greater than", hex: "&#62;", decimal: "&gt;" },
@@ -20,8 +22,8 @@ const entities = [
   { char: "…", name: "Ellipsis", hex: "&#8230;", decimal: "&hellip;" },
   { char: "'", name: "Left single quote", hex: "&#8216;", decimal: "&lsquo;" },
   { char: "'", name: "Right single quote", hex: "&#8217;", decimal: "&rsquo;" },
-  { char: """, name: "Left double quote", hex: "&#8220;", decimal: "&ldquo;" },
-  { char: """, name: "Right double quote", hex: "&#8221;", decimal: "&rdquo;" },
+  { char: '\u201C', name: "Left double quote", hex: "&#8220;", decimal: "&ldquo;" },
+  { char: '\u201D', name: "Right double quote", hex: "&#8221;", decimal: "&rdquo;" },
   { char: "–", name: "En dash", hex: "&#8211;", decimal: "&ndash;" },
   { char: "—", name: "Em dash", hex: "&#8212;", decimal: "&mdash;" },
   { char: "×", name: "Multiplication", hex: "&#215;", decimal: "&times;" },
