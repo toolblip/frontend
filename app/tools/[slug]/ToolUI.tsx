@@ -432,6 +432,21 @@ import CronGeneratorNewClient from '@/components/tools/CronGeneratorNewClient';
 import CronGeneratorPrimeClient from '@/components/tools/CronGeneratorPrimeClient';
 import CronGeneratorProClient from '@/components/tools/CronGeneratorProClient';
 import CronGeneratorQuickClient from '@/components/tools/CronGeneratorQuickClient';
+import CronGeneratorSmartClient from '@/components/tools/CronGeneratorSmartClient';
+import CronGeneratorStdClient from '@/components/tools/CronGeneratorStdClient';
+import CronGeneratorToolClient from '@/components/tools/CronGeneratorToolClient';
+import CronGeneratorToolblipClient from '@/components/tools/CronGeneratorToolblipClient';
+import CronGeneratorUltimateClient from '@/components/tools/CronGeneratorUltimateClient';
+import CronGeneratorUltraClient from '@/components/tools/CronGeneratorUltraClient';
+import CronGeneratorV2Client from '@/components/tools/CronGeneratorV2Client';
+import CronGeneratorV3Client from '@/components/tools/CronGeneratorV3Client';
+import CronGeneratorV4Client from '@/components/tools/CronGeneratorV4Client';
+import CronGeneratorV5Client from '@/components/tools/CronGeneratorV5Client';
+import CronGeneratorV6Client from '@/components/tools/CronGeneratorV6Client';
+import CronGeneratorXClient from '@/components/tools/CronGeneratorXClient';
+import CronGeneratorXlClient from '@/components/tools/CronGeneratorXlClient';
+import CronHumanReadableClient from '@/components/tools/CronHumanReadableClient';
+import CronScheduleBuilderClient from '@/components/tools/CronScheduleBuilderClient';
 import ColorTemperatureAdjusterClient from '@/components/tools/ColorTemperatureAdjusterClient';
 import ChartMakerClient from '@/components/tools/ChartMakerClient';
 import CitationGeneratorClient from '@/components/tools/CitationGeneratorClient';
@@ -1397,6 +1412,36 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <CronGeneratorProClient />;
     case 'cron-generator-quick':
       return <CronGeneratorQuickClient />;
+    case 'cron-generator-smart':
+      return <CronGeneratorSmartClient />;
+    case 'cron-generator-std':
+      return <CronGeneratorStdClient />;
+    case 'cron-generator-tool':
+      return <CronGeneratorToolClient />;
+    case 'cron-generator-toolblip':
+      return <CronGeneratorToolblipClient />;
+    case 'cron-generator-ultimate':
+      return <CronGeneratorUltimateClient />;
+    case 'cron-generator-ultra':
+      return <CronGeneratorUltraClient />;
+    case 'cron-generator-v2':
+      return <CronGeneratorV2Client />;
+    case 'cron-generator-v3':
+      return <CronGeneratorV3Client />;
+    case 'cron-generator-v4':
+      return <CronGeneratorV4Client />;
+    case 'cron-generator-v5':
+      return <CronGeneratorV5Client />;
+    case 'cron-generator-v6':
+      return <CronGeneratorV6Client />;
+    case 'cron-generator-x':
+      return <CronGeneratorXClient />;
+    case 'cron-generator-xl':
+      return <CronGeneratorXlClient />;
+    case 'cron-human-readable':
+      return <CronHumanReadableClient />;
+    case 'cron-schedule-builder':
+      return <CronScheduleBuilderClient />;
     case 'color-temperature-adjuster':
       return <ColorTemperatureAdjusterClient />;
     case 'collage-maker':
