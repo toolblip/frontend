@@ -257,60 +257,60 @@
       "notes": "Components built 2026-05-05"
     },
     "hsl-to-rgb-express": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Stub component created 2026-05-05"
     },
     "hsl-to-rgb-new": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Stub component created 2026-05-05"
     },
     "hsv-to-hex": {
       "status": "done",
       "notes": "Components built 2026-05-05"
     },
     "html-attribute-encoder": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Stub component created 2026-05-05"
     },
     "html-encoder-decoder": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Stub component created 2026-05-05"
     },
     "html-entities-reference": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Stub component created 2026-05-05"
     },
     "html-live-preview": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Stub component created 2026-05-05"
     },
     "html-markdown-express": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Stub component created 2026-05-05"
     },
     "html-plaintext-express": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Stub component created 2026-05-05"
     },
     "html-table-to-json": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Stub component created 2026-05-05"
     },
     "html-to-jsx": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Stub component created 2026-05-05"
     },
     "html-to-markdown-v2": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Stub component created 2026-05-05"
     },
     "html-to-plain-text-tool": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Stub component created 2026-05-05"
     },
     "html-to-plain-text-v2": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Stub component created 2026-05-05"
     },
     "http-headers-2025": {
       "status": "done",
