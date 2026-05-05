@@ -537,6 +537,36 @@ import FaviconGenToolblipClient from '@/components/tools/FaviconGenToolblipClien
 import FaviconGenUltraClient from '@/components/tools/FaviconGenUltraClient';
 import FaviconGenerator2025Client from '@/components/tools/FaviconGenerator2025Client';
 import FaviconGeneratorAdvancedClient from '@/components/tools/FaviconGeneratorAdvancedClient';
+import FaviconGeneratorApiClient from '@/components/tools/FaviconGeneratorApiClient';
+import FaviconGeneratorBrowserClient from '@/components/tools/FaviconGeneratorBrowserClient';
+import FaviconGeneratorClassicClient from '@/components/tools/FaviconGeneratorClassicClient';
+import FaviconGeneratorCompleteClient from '@/components/tools/FaviconGeneratorCompleteClient';
+import FaviconGeneratorDgClient from '@/components/tools/FaviconGeneratorDgClient';
+import FaviconGeneratorEasyClient from '@/components/tools/FaviconGeneratorEasyClient';
+import FaviconGeneratorEnhancedClient from '@/components/tools/FaviconGeneratorEnhancedClient';
+import FaviconGeneratorExpanderClient from '@/components/tools/FaviconGeneratorExpanderClient';
+import FaviconGeneratorExpressClient from '@/components/tools/FaviconGeneratorExpressClient';
+import FaviconGeneratorFinalClient from '@/components/tools/FaviconGeneratorFinalClient';
+import FaviconGeneratorFreshClient from '@/components/tools/FaviconGeneratorFreshClient';
+import FaviconGeneratorFullClient from '@/components/tools/FaviconGeneratorFullClient';
+import FaviconGeneratorNewClient from '@/components/tools/FaviconGeneratorNewClient';
+import FaviconGeneratorPrimeClient from '@/components/tools/FaviconGeneratorPrimeClient';
+import FaviconGeneratorProClient from '@/components/tools/FaviconGeneratorProClient';
+import FaviconGeneratorQuickClient from '@/components/tools/FaviconGeneratorQuickClient';
+import FaviconGeneratorSmartClient from '@/components/tools/FaviconGeneratorSmartClient';
+import FaviconGeneratorStdClient from '@/components/tools/FaviconGeneratorStdClient';
+import FaviconGeneratorToolClient from '@/components/tools/FaviconGeneratorToolClient';
+import FaviconGeneratorUltimateClient from '@/components/tools/FaviconGeneratorUltimateClient';
+import FaviconGeneratorUltraClient from '@/components/tools/FaviconGeneratorUltraClient';
+import FaviconGeneratorV2Client from '@/components/tools/FaviconGeneratorV2Client';
+import FaviconGeneratorV3Client from '@/components/tools/FaviconGeneratorV3Client';
+import FaviconGeneratorV4Client from '@/components/tools/FaviconGeneratorV4Client';
+import FaviconGeneratorV5Client from '@/components/tools/FaviconGeneratorV5Client';
+import FaviconGeneratorV6Client from '@/components/tools/FaviconGeneratorV6Client';
+import FaviconGeneratorXClient from '@/components/tools/FaviconGeneratorXClient';
+import FaviconGeneratorXlClient from '@/components/tools/FaviconGeneratorXlClient';
+import FaviconGrabberClient from '@/components/tools/FaviconGrabberClient';
+import FaviconIconGeneratorClient from '@/components/tools/FaviconIconGeneratorClient';
 import ColorTemperatureAdjusterClient from '@/components/tools/ColorTemperatureAdjusterClient';
 import ChartMakerClient from '@/components/tools/ChartMakerClient';
 import CitationGeneratorClient from '@/components/tools/CitationGeneratorClient';
@@ -1711,6 +1741,66 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <FaviconGenerator2025Client />;
     case 'favicon-generator-advanced':
       return <FaviconGeneratorAdvancedClient />;
+    case 'favicon-generator-api':
+      return <FaviconGeneratorApiClient />;
+    case 'favicon-generator-browser':
+      return <FaviconGeneratorBrowserClient />;
+    case 'favicon-generator-classic':
+      return <FaviconGeneratorClassicClient />;
+    case 'favicon-generator-complete':
+      return <FaviconGeneratorCompleteClient />;
+    case 'favicon-generator-dg':
+      return <FaviconGeneratorDgClient />;
+    case 'favicon-generator-easy':
+      return <FaviconGeneratorEasyClient />;
+    case 'favicon-generator-enhanced':
+      return <FaviconGeneratorEnhancedClient />;
+    case 'favicon-generator-expander':
+      return <FaviconGeneratorExpanderClient />;
+    case 'favicon-generator-express':
+      return <FaviconGeneratorExpressClient />;
+    case 'favicon-generator-final':
+      return <FaviconGeneratorFinalClient />;
+    case 'favicon-generator-fresh':
+      return <FaviconGeneratorFreshClient />;
+    case 'favicon-generator-full':
+      return <FaviconGeneratorFullClient />;
+    case 'favicon-generator-new':
+      return <FaviconGeneratorNewClient />;
+    case 'favicon-generator-prime':
+      return <FaviconGeneratorPrimeClient />;
+    case 'favicon-generator-pro':
+      return <FaviconGeneratorProClient />;
+    case 'favicon-generator-quick':
+      return <FaviconGeneratorQuickClient />;
+    case 'favicon-generator-smart':
+      return <FaviconGeneratorSmartClient />;
+    case 'favicon-generator-std':
+      return <FaviconGeneratorStdClient />;
+    case 'favicon-generator-tool':
+      return <FaviconGeneratorToolClient />;
+    case 'favicon-generator-ultimate':
+      return <FaviconGeneratorUltimateClient />;
+    case 'favicon-generator-ultra':
+      return <FaviconGeneratorUltraClient />;
+    case 'favicon-generator-v2':
+      return <FaviconGeneratorV2Client />;
+    case 'favicon-generator-v3':
+      return <FaviconGeneratorV3Client />;
+    case 'favicon-generator-v4':
+      return <FaviconGeneratorV4Client />;
+    case 'favicon-generator-v5':
+      return <FaviconGeneratorV5Client />;
+    case 'favicon-generator-v6':
+      return <FaviconGeneratorV6Client />;
+    case 'favicon-generator-x':
+      return <FaviconGeneratorXClient />;
+    case 'favicon-generator-xl':
+      return <FaviconGeneratorXlClient />;
+    case 'favicon-grabber':
+      return <FaviconGrabberClient />;
+    case 'favicon-icon-generator':
+      return <FaviconIconGeneratorClient />;
     case 'color-temperature-adjuster':
       return <ColorTemperatureAdjusterClient />;
     case 'collage-maker':

@@ -240,126 +240,6 @@
     }
   },
   "all_needing_component": {
-    "epub-to-azw3": {
-      "status": "todo",
-      "notes": ""
-    },
-    "epub-to-mobi": {
-      "status": "todo",
-      "notes": ""
-    },
-    "essay-writer": {
-      "status": "todo",
-      "notes": ""
-    },
-    "excel-to-csv": {
-      "status": "todo",
-      "notes": ""
-    },
-    "excel-to-pdf": {
-      "status": "todo",
-      "notes": ""
-    },
-    "excel-to-xml": {
-      "status": "todo",
-      "notes": ""
-    },
-    "exif-remover": {
-      "status": "todo",
-      "notes": ""
-    },
-    "explain-like-five": {
-      "status": "todo",
-      "notes": ""
-    },
-    "extract-audio": {
-      "status": "todo",
-      "notes": ""
-    },
-    "extract-img": {
-      "status": "todo",
-      "notes": ""
-    },
-    "extract-text": {
-      "status": "todo",
-      "notes": ""
-    },
-    "facebook-ad-headlines": {
-      "status": "todo",
-      "notes": ""
-    },
-    "faq-generator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-browser": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-checker": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-checker-express": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-checker-tool": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-creator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-creator-tool": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-fresh": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-from-emoji": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-full": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-gen-adv": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-gen-prime": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-gen-pro": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-gen-tool": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-gen-toolblip": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-gen-ultra": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-2025": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-advanced": {
-      "status": "todo",
-      "notes": ""
-    },
     "favicon-generator-api": {
       "status": "todo",
       "notes": ""
@@ -4743,6 +4623,36 @@
     "env-parser",
     "eps-to-jpg",
     "eps-to-png",
-    "eps-to-svg"
+    "eps-to-svg",
+    "epub-to-azw3",
+    "epub-to-mobi",
+    "essay-writer",
+    "excel-to-csv",
+    "excel-to-pdf",
+    "excel-to-xml",
+    "exif-remover",
+    "explain-like-five",
+    "extract-audio",
+    "extract-img",
+    "extract-text",
+    "facebook-ad-headlines",
+    "faq-generator",
+    "favicon-browser",
+    "favicon-checker",
+    "favicon-checker-express",
+    "favicon-checker-tool",
+    "favicon-creator",
+    "favicon-creator-tool",
+    "favicon-fresh",
+    "favicon-from-emoji",
+    "favicon-full",
+    "favicon-gen-adv",
+    "favicon-gen-prime",
+    "favicon-gen-pro",
+    "favicon-gen-tool",
+    "favicon-gen-toolblip",
+    "favicon-gen-ultra",
+    "favicon-generator-2025",
+    "favicon-generator-advanced"
   ]
 }
