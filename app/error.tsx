@@ -18,7 +18,7 @@ export default function Error({
           WebkitTextStroke: "2px var(--red)",
         }}
       >
-        Something went wrong
+        Oops
       </div>
 
       <h1 className="text-3xl sm:text-4xl font-semibold mb-4" style={{ color: "var(--fg-0)" }}>
