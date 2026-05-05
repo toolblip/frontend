@@ -327,6 +327,21 @@ import ColorPickerHexRgbHslClient from '@/components/tools/ColorPickerHexRgbHslC
 import ColorPickerNewClient from '@/components/tools/ColorPickerNewClient';
 import ColorPickerPrimeClient from '@/components/tools/ColorPickerPrimeClient';
 import ColorPickerProClient from '@/components/tools/ColorPickerProClient';
+import ColorPickerQuickClient from '@/components/tools/ColorPickerQuickClient';
+import ColorPickerSmartClient from '@/components/tools/ColorPickerSmartClient';
+import ColorPickerStdClient from '@/components/tools/ColorPickerStdClient';
+import ColorPickerToolClient from '@/components/tools/ColorPickerToolClient';
+import ColorPickerUltimateClient from '@/components/tools/ColorPickerUltimateClient';
+import ColorPickerUltraClient from '@/components/tools/ColorPickerUltraClient';
+import ColorPickerV2Client from '@/components/tools/ColorPickerV2Client';
+import ColorPickerV3Client from '@/components/tools/ColorPickerV3Client';
+import ColorPickerV4Client from '@/components/tools/ColorPickerV4Client';
+import ColorPickerV5Client from '@/components/tools/ColorPickerV5Client';
+import ColorPickerV6Client from '@/components/tools/ColorPickerV6Client';
+import ColorPickerWebClient from '@/components/tools/ColorPickerWebClient';
+import ColorPickerWheelClient from '@/components/tools/ColorPickerWheelClient';
+import ColorPickerXClient from '@/components/tools/ColorPickerXClient';
+import ColorPickerXLClient from '@/components/tools/ColorPickerXLClient';
 import ColorTemperatureAdjusterClient from '@/components/tools/ColorTemperatureAdjusterClient';
 import ChartMakerClient from '@/components/tools/ChartMakerClient';
 import CitationGeneratorClient from '@/components/tools/CitationGeneratorClient';
@@ -1082,6 +1097,36 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <ColorPickerPrimeClient />;
     case 'color-picker-pro':
       return <ColorPickerProClient />;
+    case 'color-picker-quick':
+      return <ColorPickerQuickClient />;
+    case 'color-picker-smart':
+      return <ColorPickerSmartClient />;
+    case 'color-picker-std':
+      return <ColorPickerStdClient />;
+    case 'color-picker-tool':
+      return <ColorPickerToolClient />;
+    case 'color-picker-ultimate':
+      return <ColorPickerUltimateClient />;
+    case 'color-picker-ultra':
+      return <ColorPickerUltraClient />;
+    case 'color-picker-v2':
+      return <ColorPickerV2Client />;
+    case 'color-picker-v3':
+      return <ColorPickerV3Client />;
+    case 'color-picker-v4':
+      return <ColorPickerV4Client />;
+    case 'color-picker-v5':
+      return <ColorPickerV5Client />;
+    case 'color-picker-v6':
+      return <ColorPickerV6Client />;
+    case 'color-picker-web':
+      return <ColorPickerWebClient />;
+    case 'color-picker-wheel':
+      return <ColorPickerWheelClient />;
+    case 'color-picker-x':
+      return <ColorPickerXClient />;
+    case 'color-picker-xl':
+      return <ColorPickerXLClient />;
     case 'color-temperature-adjuster':
       return <ColorTemperatureAdjusterClient />;
     case 'collage-maker':
