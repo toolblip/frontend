@@ -240,66 +240,6 @@
     }
   },
   "all_needing_component": {
-    "color-picker-quick": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-picker-smart": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-picker-std": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-picker-tool": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-picker-ultimate": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-picker-ultra": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-picker-v2": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-picker-v3": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-picker-v4": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-picker-v5": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-picker-v6": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-picker-web": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-picker-wheel": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-picker-x": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-picker-xl": {
-      "status": "todo",
-      "notes": ""
-    },
     "color-quick": {
       "status": "todo",
       "notes": ""
@@ -5283,6 +5223,21 @@
     "color-picker-hex-rgb-hsl",
     "color-picker-new",
     "color-picker-prime",
-    "color-picker-pro"
+    "color-picker-pro",
+    "color-picker-quick",
+    "color-picker-smart",
+    "color-picker-std",
+    "color-picker-tool",
+    "color-picker-ultimate",
+    "color-picker-ultra",
+    "color-picker-v2",
+    "color-picker-v3",
+    "color-picker-v4",
+    "color-picker-v5",
+    "color-picker-v6",
+    "color-picker-web",
+    "color-picker-wheel",
+    "color-picker-x",
+    "color-picker-xl"
   ]
 }

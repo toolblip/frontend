@@ -342,6 +342,21 @@ import ColorPickerWebClient from '@/components/tools/ColorPickerWebClient';
 import ColorPickerWheelClient from '@/components/tools/ColorPickerWheelClient';
 import ColorPickerXClient from '@/components/tools/ColorPickerXClient';
 import ColorPickerXLClient from '@/components/tools/ColorPickerXLClient';
+import ColorQuickClient from '@/components/tools/ColorQuickClient';
+import ColorSaturationAdjusterClient from '@/components/tools/ColorSaturationAdjusterClient';
+import ColorSelectToolClient from '@/components/tools/ColorSelectToolClient';
+import ColorShadeGenClient from '@/components/tools/ColorShadeGenClient';
+import ColorShadeGeneratorClient from '@/components/tools/ColorShadeGeneratorClient';
+import ColorShadeGeneratorV2Client from '@/components/tools/ColorShadeGeneratorV2Client';
+import ColorShadeTintsClient from '@/components/tools/ColorShadeTintsClient';
+import ColorShadeToolClient from '@/components/tools/ColorShadeToolClient';
+import ColorTintGeneratorClient from '@/components/tools/ColorTintGeneratorClient';
+import ColorToneGeneratorClient from '@/components/tools/ColorToneGeneratorClient';
+import ColorToolblipClient from '@/components/tools/ColorToolblipClient';
+import ColorizePhotoClient from '@/components/tools/ColorizePhotoClient';
+import CompressAviClient from '@/components/tools/CompressAviClient';
+import CompressClient from '@/components/tools/CompressClient';
+import CompressMkvClient from '@/components/tools/CompressMkvClient';
 import ColorTemperatureAdjusterClient from '@/components/tools/ColorTemperatureAdjusterClient';
 import ChartMakerClient from '@/components/tools/ChartMakerClient';
 import CitationGeneratorClient from '@/components/tools/CitationGeneratorClient';
@@ -1127,6 +1142,36 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <ColorPickerXClient />;
     case 'color-picker-xl':
       return <ColorPickerXLClient />;
+    case 'color-quick':
+      return <ColorQuickClient />;
+    case 'color-saturation-adjuster':
+      return <ColorSaturationAdjusterClient />;
+    case 'color-select-tool':
+      return <ColorSelectToolClient />;
+    case 'color-shade-gen':
+      return <ColorShadeGenClient />;
+    case 'color-shade-generator':
+      return <ColorShadeGeneratorClient />;
+    case 'color-shade-generator-v2':
+      return <ColorShadeGeneratorV2Client />;
+    case 'color-shade-tints':
+      return <ColorShadeTintsClient />;
+    case 'color-shade-tool':
+      return <ColorShadeToolClient />;
+    case 'color-tint-generator':
+      return <ColorTintGeneratorClient />;
+    case 'color-tone-generator':
+      return <ColorToneGeneratorClient />;
+    case 'color-toolblip':
+      return <ColorToolblipClient />;
+    case 'colorize-photo':
+      return <ColorizePhotoClient />;
+    case 'compress':
+      return <CompressClient />;
+    case 'compress-avi':
+      return <CompressAviClient />;
+    case 'compress-mkv':
+      return <CompressMkvClient />;
     case 'color-temperature-adjuster':
       return <ColorTemperatureAdjusterClient />;
     case 'collage-maker':
