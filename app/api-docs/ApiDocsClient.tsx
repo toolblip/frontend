@@ -130,6 +130,7 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
       { name: 'name', type: 'string', required: true, description: 'Full display name' },
       { name: 'email', type: 'string', required: true, description: 'Email address — must be unique' },
       { name: 'password', type: 'string', required: true, description: 'Password — minimum 8 characters' },
+      { name: 'password_confirmation', type: 'string', required: true, description: 'Must match the password field exactly' },
     ],
     responseFields: [
       { field: 'user.id', type: 'integer', description: 'User ID' },
@@ -145,7 +146,8 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
     "name": "Jane Doe",
     "email": "jane@example.com",
     "password": "secretpass123",
-  }'`,
+    "password_confirmation": "secretpass123"
+  }'`
     response: `{
   "user": {
     "id": 42,
