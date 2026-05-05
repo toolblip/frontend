@@ -197,6 +197,58 @@ import WordFrequencyCounterClient from '@/components/tools/WordFrequencyCounterC
 import XmlSitemapGeneratorClient from '@/components/tools/XmlSitemapGeneratorClient';
 import XmlValidatorClient from '@/components/tools/XmlValidatorClient';
 import YamlValidatorClient from '@/components/tools/YamlValidatorClient';
+import AiDetectorClient from '@/components/tools/AiDetectorClient';
+import BlurBackgroundClient from '@/components/tools/BlurBackgroundClient';
+import ColorBlindnessSimulatorClient from '@/components/tools/ColorBlindnessSimulatorClient';
+import ColorContrastCheckerClient from '@/components/tools/ColorContrastCheckerClient';
+import ColorLuminanceCalculatorClient from '@/components/tools/ColorLuminanceCalculatorClient';
+import ColorMixerClient from '@/components/tools/ColorMixerClient';
+import ColorPaletteGeneratorClient from '@/components/tools/ColorPaletteGeneratorClient';
+import ColorTemperatureAdjusterClient from '@/components/tools/ColorTemperatureAdjusterClient';
+import CollageMakerClient from '@/components/tools/CollageMakerClient';
+import CombineImagesClient from '@/components/tools/CombineImagesClient';
+import CropClient from '@/components/tools/CropClient';
+import CssMinifierClient from '@/components/tools/CssMinifierClient';
+import CurrencyConverterClient from '@/components/tools/CurrencyConverterClient';
+import DockerCommandGeneratorClient from '@/components/tools/DockerCommandGeneratorClient';
+import FakeAddressGeneratorClient from '@/components/tools/FakeAddressGeneratorClient';
+import FillerWordCounterClient from '@/components/tools/FillerWordCounterClient';
+import FleschKincaidCalculatorClient from '@/components/tools/FleschKincaidCalculatorClient';
+import GifMakerClient from '@/components/tools/GifMakerClient';
+import GrayscaleClient from '@/components/tools/GrayscaleClient';
+import HomophoneCheckerClient from '@/components/tools/HomophoneCheckerClient';
+import HtmlMinifierClient from '@/components/tools/HtmlMinifierClient';
+import HttpStatusCheckerClient from '@/components/tools/HttpStatusCheckerClient';
+import ImageBackgroundRemoverClient from '@/components/tools/ImageBackgroundRemoverClient';
+import ImageBorderAdderClient from '@/components/tools/ImageBorderAdderClient';
+import ImageCompressorClient from '@/components/tools/ImageCompressorClient';
+import ImageFlipToolClient from '@/components/tools/ImageFlipToolClient';
+import ImageOptimizerClient from '@/components/tools/ImageOptimizerClient';
+import ImageRotateToolClient from '@/components/tools/ImageRotateToolClient';
+import ImageShadowGeneratorClient from '@/components/tools/ImageShadowGeneratorClient';
+import MergeClient from '@/components/tools/MergeClient';
+import MemeMakerClient from '@/components/tools/MemeMakerClient';
+import OgTagDebuggerClient from '@/components/tools/OgTagDebuggerClient';
+import OpenGraphPreviewClient from '@/components/tools/OpenGraphPreviewClient';
+import ParagraphCounterClient from '@/components/tools/ParagraphCounterClient';
+import ParaphrasingClient from '@/components/tools/ParaphrasingClient';
+import PassiveVoiceDetectorClient from '@/components/tools/PassiveVoiceDetectorClient';
+import PixelateClient from '@/components/tools/PixelateClient';
+import PngCompressorClient from '@/components/tools/PngCompressorClient';
+import QrCodeScannerClient from '@/components/tools/QrCodeScannerClient';
+import ReadabilityCheckerClient from '@/components/tools/ReadabilityCheckerClient';
+import RemoveBgClient from '@/components/tools/RemoveBgClient';
+import RobotsTxtEditorClient from '@/components/tools/RobotsTxtEditorClient';
+import SentenceCounterClient from '@/components/tools/SentenceCounterClient';
+import SentenceRewriterClient from '@/components/tools/SentenceRewriterClient';
+import SharpenClient from '@/components/tools/SharpenClient';
+import SitemapAnalyzerClient from '@/components/tools/SitemapAnalyzerClient';
+import SqlFormatterClient from '@/components/tools/SqlFormatterClient';
+import TemperatureUnitConverterClient from '@/components/tools/TemperatureUnitConverterClient';
+import TextUniquenessCheckerClient from '@/components/tools/TextUniquenessCheckerClient';
+import TsvToJsonClient from '@/components/tools/TsvToJsonClient';
+import UrlRedirectCheckerClient from '@/components/tools/UrlRedirectCheckerClient';
+import WebpConverterClient from '@/components/tools/WebpConverterClient';
 
 // ─── Individual tool UIs ────────────────────────────────────────────────────
 
@@ -620,6 +672,110 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <RandomSentenceGeneratorClient />;
     case 'random-string-generator-tool':
       return <RandomStringGeneratorToolClient />;
+    case 'ai-detector':
+      return <AiDetectorClient />;
+    case 'blur-background':
+      return <BlurBackgroundClient />;
+    case 'color-blindness-simulator':
+      return <ColorBlindnessSimulatorClient />;
+    case 'color-contrast-checker':
+      return <ColorContrastCheckerClient />;
+    case 'color-luminance-calculator':
+      return <ColorLuminanceCalculatorClient />;
+    case 'color-mixer':
+      return <ColorMixerClient />;
+    case 'color-palette-generator':
+      return <ColorPaletteGeneratorClient />;
+    case 'color-temperature-adjuster':
+      return <ColorTemperatureAdjusterClient />;
+    case 'collage-maker':
+      return <CollageMakerClient />;
+    case 'combine-images':
+      return <CombineImagesClient />;
+    case 'crop':
+      return <CropClient />;
+    case 'css-minifier':
+      return <CssMinifierClient />;
+    case 'currency-converter':
+      return <CurrencyConverterClient />;
+    case 'docker-command-generator':
+      return <DockerCommandGeneratorClient />;
+    case 'fake-address-generator':
+      return <FakeAddressGeneratorClient />;
+    case 'filler-word-counter':
+      return <FillerWordCounterClient />;
+    case 'flesch-kincaid-calculator':
+      return <FleschKincaidCalculatorClient />;
+    case 'gif-maker':
+      return <GifMakerClient />;
+    case 'grayscale':
+      return <GrayscaleClient />;
+    case 'homophone-checker':
+      return <HomophoneCheckerClient />;
+    case 'html-minifier':
+      return <HtmlMinifierClient />;
+    case 'http-status-checker':
+      return <HttpStatusCheckerClient />;
+    case 'image-background-remover':
+      return <ImageBackgroundRemoverClient />;
+    case 'image-border-adder':
+      return <ImageBorderAdderClient />;
+    case 'image-compressor':
+      return <ImageCompressorClient />;
+    case 'image-flip-tool':
+      return <ImageFlipToolClient />;
+    case 'image-optimizer':
+      return <ImageOptimizerClient />;
+    case 'image-rotate-tool':
+      return <ImageRotateToolClient />;
+    case 'image-shadow-generator':
+      return <ImageShadowGeneratorClient />;
+    case 'merge':
+      return <MergeClient />;
+    case 'meme-maker':
+      return <MemeMakerClient />;
+    case 'og-tag-debugger':
+      return <OgTagDebuggerClient />;
+    case 'open-graph-preview':
+      return <OpenGraphPreviewClient />;
+    case 'paragraph-counter':
+      return <ParagraphCounterClient />;
+    case 'paraphrasing':
+      return <ParaphrasingClient />;
+    case 'passive-voice-detector':
+      return <PassiveVoiceDetectorClient />;
+    case 'pixelate':
+      return <PixelateClient />;
+    case 'png-compressor':
+      return <PngCompressorClient />;
+    case 'qr-code-scanner':
+      return <QrCodeScannerClient />;
+    case 'readability-checker':
+      return <ReadabilityCheckerClient />;
+    case 'remove-bg':
+      return <RemoveBgClient />;
+    case 'robots-txt-editor':
+      return <RobotsTxtEditorClient />;
+    case 'sentence-counter':
+      return <SentenceCounterClient />;
+    case 'sentence-rewriter':
+      return <SentenceRewriterClient />;
+    case 'sharpen':
+      return <SharpenClient />;
+    case 'sitemap-analyzer':
+      return <SitemapAnalyzerClient />;
+    case 'sql-formatter':
+      return <SqlFormatterClient />;
+    case 'temperature-unit-converter':
+      return <TemperatureUnitConverterClient />;
+    case 'text-uniqueness-checker':
+      return <TextUniquenessCheckerClient />;
+    case 'tsv-to-json':
+      return <TsvToJsonClient />;
+    case 'url-redirect-checker':
+      return <UrlRedirectCheckerClient />;
+    case 'webp-converter':
+      return <WebpConverterClient />;
     default:
       return <ComingSoonUI tool={tool} />;
   }

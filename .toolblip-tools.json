@@ -2,9 +2,9 @@
   "_meta": {
     "note": "Toolblip tool implementation tracker. Update status as you go. Do NOT reset \u2014 this persists across sessions.",
     "last_updated": "2026-05-05",
-    "total_wired": 192,
+    "total_wired": 247,
     "total_in_catalog": 1563,
-    "needs_new_component": 1400,
+    "needs_new_component": 1398,
     "high_value_needing_work": 54
   },
   "priorities": {
@@ -12,12 +12,12 @@
       "description": "Has component, not wired \u2014 just needs a case statement",
       "tools": {
         "base64-encoder-decoder": {
-          "status": "todo",
-          "notes": "component exists, wired"
+          "status": "done",
+          "notes": "Wired 2026-05-05"
         },
         "csv-to-tsv": {
-          "status": "todo",
-          "notes": "component exists"
+          "status": "done",
+          "notes": "Wired 2026-05-05"
         }
       }
     },
@@ -25,220 +25,216 @@
       "description": "High-traffic, commonly-used tools \u2014 prioritize building these first",
       "tools": {
         "ai-detector": {
-          "status": "todo",
-          "notes": ""
-        },
-        "base64-encoder-decoder": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "blur-background": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "collage-maker": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "color-blindness-simulator": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "color-contrast-checker": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "color-luminance-calculator": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "color-mixer": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "color-palette-generator": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "color-temperature-adjuster": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "combine-images": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "crop": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "css-minifier": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "curl-generator": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "currency-converter": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "docker-command-generator": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "fake-address-generator": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "filler-word-counter": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "flesch-kincaid-calculator": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "gif-maker": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "grayscale": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "homophone-checker": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "html-minifier": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "http-status-checker": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "image-background-remover": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "image-border-adder": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "image-compressor": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "image-flip-tool": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "image-optimizer": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "image-rotate-tool": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "image-shadow-generator": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "meme-maker": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "merge": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "og-tag-debugger": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "open-graph-preview": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "paragraph-counter": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "paraphrasing": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "passive-voice-detector": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "pixelate": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "png-compressor": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "qr-code-scanner": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "readability-checker": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "remove-bg": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "robots-txt-editor": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "sentence-counter": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "sentence-rewriter": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "sharpen": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "sitemap-analyzer": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "sql-formatter": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "temperature-unit-converter": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "text-uniqueness-checker": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "tsv-to-json": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "url-redirect-checker": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         },
         "webp-converter": {
-          "status": "todo",
-          "notes": ""
+          "status": "done",
+          "notes": "Components built + wired 2026-05-05"
         }
       }
     }
