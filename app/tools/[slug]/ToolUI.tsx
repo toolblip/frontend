@@ -2251,6 +2251,894 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <UrlRedirectCheckerClient />;
     case 'webp-converter':
       return <WebpConverterClient />;
+    case 'http-headers-viewer-advanced':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-viewer-api':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-viewer-browser':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-viewer-classic':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-viewer-complete':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-viewer-enhanced':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-viewer-express':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-viewer-final':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-viewer-fresh':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-viewer-full':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-viewer-new':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-viewer-prime':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-viewer-pro':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-viewer-quick':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-viewer-smart':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-viewer-std':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-viewer-tool':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-viewer-ultimate':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-viewer-ultra':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-viewer-v2':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-viewer-v3':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-viewer-v4':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-viewer-v5':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-viewer-v6':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-viewer-x':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-viewer-xl':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-simple':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-tool':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-toolblip':
+      return <HttpHeadersViewerClient />;
+    case 'http-headers-ultra':
+      return <HttpHeadersViewerClient />;
+    case 'http-request-builder':
+      return <HttpHeadersViewerClient />;
+    case 'http-request-headers-inspector':
+      return <HttpHeadersViewerClient />;
+    case 'http-response-headers':
+      return <HttpHeadersViewerClient />;
+    case 'http-status-codes':
+      return <HttpHeadersViewerClient />;
+    case 'http-status-code-lookup':
+      return <HttpHeadersViewerClient />;
+    case 'http-status-ref':
+      return <HttpHeadersViewerClient />;
+    case 'http-method-tester':
+      return <HttpHeadersViewerClient />;
+    case 'humanizer-ai':
+      return <AiRephraserClient />;
+    case 'image-alt-text-generator':
+      return <ComingSoonUI tool={tool} />;
+    case 'image-aspect-ratio-calculator':
+      return <ImageResizerClient />;
+    case 'image-resizer-adv':
+      return <ImageResizerClient />;
+    case 'image-resizer-complete':
+      return <ImageResizerClient />;
+    case 'image-resizer-enhanced':
+      return <ImageResizerClient />;
+    case 'image-resizer-fresh':
+      return <ImageResizerClient />;
+    case 'image-resizer-new':
+      return <ImageResizerClient />;
+    case 'image-resizer-prime':
+      return <ImageResizerClient />;
+    case 'image-resizer-quick':
+      return <ImageResizerClient />;
+    case 'image-resizer-smart':
+      return <ImageResizerClient />;
+    case 'image-resizer-v2':
+      return <ImageResizerClient />;
+    case 'image-resizer-v3':
+      return <ImageResizerClient />;
+    case 'image-cropper':
+      return <ImageCropperClient />;
+    case 'image-clipper':
+      return <ImageCropperClient />;
+    case 'image-blur-hash-generator':
+      return <ImageCropperClient />;
+    case 'image-brightness-adjuster':
+      return <ImageCropperClient />;
+    case 'image-dimension-checker':
+      return <ImageResizerClient />;
+    case 'image-dpi-resizer':
+      return <ImageResizerClient />;
+    case 'image-enlarger':
+      return <ImageCropperClient />;
+    case 'image-metadata-remover':
+      return <ImageCropperClient />;
+    case 'image-orientation-fixer':
+      return <ImageCropperClient />;
+    case 'image-blur':
+      return <ImageCropperClient />;
+    case 'image-bw':
+      return <ImageCropperClient />;
+    case 'image-grayscale':
+      return <ImageCropperClient />;
+    case 'image-watermark':
+      return <ImageCropperClient />;
+    case 'image-effects':
+      return <ImageCropperClient />;
+    case 'image-styler':
+      return <ImageCropperClient />;
+    case 'image-background-changer':
+      return <ImageCropperClient />;
+    case 'image-compressor-v2':
+      return <ImageCompressorClient />;
+    case 'image-compressor-adv':
+      return <ImageCompressorClient />;
+    case 'image-compressor-new':
+      return <ImageCompressorClient />;
+    case 'image-compressor-pro':
+      return <ImageCompressorClient />;
+    case 'png-to-jpg':
+      return <ImageFormatConverterClient />;
+    case 'png-to-webp':
+      return <ImageFormatConverterClient />;
+    case 'jpg-to-png':
+      return <ImageFormatConverterClient />;
+    case 'jpg-to-webp':
+      return <ImageFormatConverterClient />;
+    case 'webp-to-png':
+      return <ImageFormatConverterClient />;
+    case 'webp-to-jpg':
+      return <ImageFormatConverterClient />;
+    case 'avif-converter':
+      return <ImageFormatConverterClient />;
+    case 'heic-converter':
+      return <ImageFormatConverterClient />;
+    case 'heif-converter':
+      return <ImageFormatConverterClient />;
+    case 'svg-to-png':
+      return <ImageFormatConverterClient />;
+    case 'svg-to-jpg':
+      return <ImageFormatConverterClient />;
+    case 'svg-to-webp':
+      return <ImageFormatConverterClient />;
+    case 'favicon-ico-generator':
+      return <FaviconGeneratorClient />;
+    case 'favicon-png-generator':
+      return <FaviconGeneratorClient />;
+    case 'favicon-from-image':
+      return <FaviconGeneratorClient />;
+    case 'favicon-from-emoji':
+      return <FaviconGeneratorClient />;
+    case 'favicon-from-text':
+      return <FaviconGeneratorClient />;
+    case 'favicon-creator':
+      return <FaviconGeneratorClient />;
+    case 'favicon-maker':
+      return <FaviconGeneratorClient />;
+    case 'favicon-generator-v2':
+      return <FaviconGeneratorClient />;
+    case 'favicon-generator-new':
+      return <FaviconGeneratorClient />;
+    case 'favicon-generator-adv':
+      return <FaviconGeneratorClient />;
+    case 'favicon-generator-pro':
+      return <FaviconGeneratorClient />;
+    case 'favicon-generator-premium':
+      return <FaviconGeneratorClient />;
+    case 'ico-generator':
+      return <FaviconGeneratorClient />;
+    case 'ico-file-generator':
+      return <FaviconGeneratorClient />;
+    case 'icon-favicon-creator':
+      return <FaviconGeneratorClient />;
+    case 'favicon-grabber':
+      return <FaviconGeneratorClient />;
+    case 'favicon-preview':
+      return <FaviconGeneratorClient />;
+    case 'favicon-checker':
+      return <FaviconGeneratorClient />;
+    case 'color-palette-from-image':
+      return <ColorPaletteGeneratorClient />;
+    case 'color-palette-extractor':
+      return <ColorPaletteGeneratorClient />;
+    case 'color-from-image':
+      return <ColorPaletteGeneratorClient />;
+    case 'image-color-picker':
+      return <ColorPickerClient />;
+    case 'color-picker-v2':
+      return <ColorPickerClient />;
+    case 'color-picker-v3':
+      return <ColorPickerClient />;
+    case 'color-picker-new':
+      return <ColorPickerClient />;
+    case 'color-picker-adv':
+      return <ColorPickerClient />;
+    case 'color-picker-advanced':
+      return <ColorPickerClient />;
+    case 'color-picker-pro':
+      return <ColorPickerClient />;
+    case 'color-picker-complete':
+      return <ColorPickerClient />;
+    case 'color-picker-full':
+      return <ColorPickerClient />;
+    case 'color-picker-ultimate':
+      return <ColorPickerClient />;
+    case 'color-picker-ultra':
+      return <ColorPickerClient />;
+    case 'color-picker-express':
+      return <ColorPickerClient />;
+    case 'color-picker-quick':
+      return <ColorPickerClient />;
+    case 'color-picker-easy':
+      return <ColorPickerClient />;
+    case 'color-picker-fresh':
+      return <ColorPickerClient />;
+    case 'color-picker-final':
+      return <ColorPickerClient />;
+    case 'color-picker-handy':
+      return <ColorPickerClient />;
+    case 'color-picker-prime':
+      return <ColorPickerClient />;
+    case 'color-picker-smart':
+      return <ColorPickerClient />;
+    case 'color-picker-expander':
+      return <ColorPickerClient />;
+    case 'color-picker-xl':
+      return <ColorPickerClient />;
+    case 'color-picker-x':
+      return <ColorPickerClient />;
+    case 'color-picker-dg':
+      return <ColorPickerClient />;
+    case 'color-picker-wheel':
+      return <ColorPickerClient />;
+    case 'color-picker-web':
+      return <ColorPickerClient />;
+    case 'color-picker-browser':
+      return <ColorPickerClient />;
+    case 'color-picker-api':
+      return <ColorPickerClient />;
+    case 'color-picker-std':
+      return <ColorPickerClient />;
+    case 'color-picker-tool':
+      return <ColorPickerClient />;
+    case 'color-format-converter-v2':
+      return <ColorFormatConverterClient />;
+    case 'color-format-picker':
+      return <ColorFormatConverterClient />;
+    case 'hex-to-rgb':
+      return <HexToRgbClient />;
+    case 'rgb-to-hex':
+      return <RgbToHexClient />;
+    case 'hex-to-hsl':
+      return <HexToHslClient />;
+    case 'hsl-to-hex':
+      return <HslToHexClient />;
+    case 'hex-to-hsv':
+      return <HexToHsvClient />;
+    case 'hsv-to-hex':
+      return <HsvToHexClient />;
+    case 'hex-to-cmyk':
+      return <HexToCmykClient />;
+    case 'cmyk-to-rgb':
+      return <CmykToRgbClient />;
+    case 'color-mixer':
+      return <ColorMixerClient />;
+    case 'color-mixer-v2':
+      return <ColorMixerClient />;
+    case 'color-harmony':
+      return <ColorHarmonyGeneratorClient />;
+    case 'color-contrast-ratio':
+      return <ContrastCheckerClient />;
+    case 'color-contrast-auditor':
+      return <ContrastCheckerClient />;
+    case 'wcag-contrast-checker':
+      return <ContrastCheckerClient />;
+    case 'accessibility-contrast-checker':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-v2':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-adv':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-advanced':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-pro':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-complete':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-full':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-ultimate':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-ultra':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-express':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-quick':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-easy':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-fresh':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-final':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-handy':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-prime':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-smart':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-expander':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-xl':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-x':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-dg':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-new':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-v3':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-v4':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-v5':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-v6':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-browser':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-api':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-std':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-tool':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-wcag':
+      return <ContrastCheckerClient />;
+    case 'contrast-fresh':
+      return <ContrastCheckerClient />;
+    case 'contrast-quick':
+      return <ContrastCheckerClient />;
+    case 'contrast-toolblip':
+      return <ContrastCheckerClient />;
+    case 'contrast-browser':
+      return <ContrastCheckerClient />;
+    case 'contrast-check-all':
+      return <ContrastCheckerClient />;
+    case 'contrast-tool':
+      return <ContrastCheckerClient />;
+    case 'contrast-2025':
+      return <ContrastCheckerClient />;
+    case 'contrast-checker-2025':
+      return <ContrastCheckerClient />;
+    case 'json-formatter-v2':
+      return <JsonFormatterClient />;
+    case 'json-formatter-new':
+      return <JsonFormatterClient />;
+    case 'json-formatter-adv':
+      return <JsonFormatterClient />;
+    case 'json-formatter-pro':
+      return <JsonFormatterClient />;
+    case 'json-beautifier':
+      return <JsonFormatterClient />;
+    case 'json-prettifier':
+      return <JsonFormatterClient />;
+    case 'json-pretty-print':
+      return <JsonFormatterClient />;
+    case 'json-validator-v2':
+      return <JsonValidatorClient />;
+    case 'json-validate':
+      return <JsonValidatorClient />;
+    case 'json-lint':
+      return <JsonValidatorClient />;
+    case 'json-to-csv':
+      return <JsonToCsvClient />;
+    case 'json-to-tsv':
+      return <JsonToCsvClient />;
+    case 'json-to-html':
+      return <JsonToHtmlTableClient />;
+    case 'json-to-markdown':
+      return <JsonToMarkdownTableClient />;
+    case 'yaml-validator':
+      return <YamlValidatorClient />;
+    case 'yaml-lint':
+      return <YamlValidatorClient />;
+    case 'yaml-formatter':
+      return <YamlToJsonClient />;
+    case 'xml-validator':
+      return <XmlFormatterClient />;
+    case 'xml-formatter-v2':
+      return <XmlFormatterClient />;
+    case 'xml-beautifier':
+      return <XmlFormatterClient />;
+    case 'xml-prettifier':
+      return <XmlFormatterClient />;
+    case 'xml-to-json-v2':
+      return <XmlToJsonClient />;
+    case 'xml-to-yaml':
+      return <XmlToJsonClient />;
+    case 'yaml-to-xml':
+      return <YamlToJsonClient />;
+    case 'toml-to-json':
+      return <YamlToJsonClient />;
+    case 'toml-to-yaml':
+      return <YamlToJsonClient />;
+    case 'base64-encode':
+      return <Base64EncoderDecoderClient />;
+    case 'base64-decode':
+      return <Base64EncoderDecoderClient />;
+    case 'base64-encoder':
+      return <Base64EncoderDecoderClient />;
+    case 'base64-decoder':
+      return <Base64EncoderDecoderClient />;
+    case 'base64-file-encoder':
+      return <Base64FileEncoderClient />;
+    case 'base64-file-decoder':
+      return <Base64FileEncoderClient />;
+    case 'base64-image-encoder':
+      return <Base64ImageEncoderClient />;
+    case 'base64-image-decoder':
+      return <Base64ImageDecoderClient />;
+    case 'url-encoder':
+      return <UrlEncodeClient />;
+    case 'url-decoder':
+      return <UrlEncodeClient />;
+    case 'url-encode-decode':
+      return <UrlEncodeClient />;
+    case 'percent-encoding':
+      return <UrlEncodeClient />;
+    case 'html-encoder':
+      return <HtmlEncoderClient />;
+    case 'html-decoder':
+      return <HtmlEncoderClient />;
+    case 'html-entity-encoder':
+      return <HtmlEncoderClient />;
+    case 'html-entity-decoder':
+      return <HtmlEncoderClient />;
+    case 'html-escape':
+      return <HtmlEncoderClient />;
+    case 'html-unescape':
+      return <HtmlEncoderClient />;
+    case 'markdown-preview':
+      return <MarkdownToHtmlClient />;
+    case 'markdown-editor':
+      return <MarkdownToHtmlClient />;
+    case 'markdown-to-markdown':
+      return <MarkdownToHtmlClient />;
+    case 'css-minifier':
+      return <CssMinifierClient />;
+    case 'css-beautifier':
+      return <CssMinifierClient />;
+    case 'css-prettifier':
+      return <CssMinifierClient />;
+    case 'js-minifier':
+      return <JsMinifierClient />;
+    case 'js-beautifier':
+      return <JsMinifierClient />;
+    case 'javascript-minifier':
+      return <JsMinifierClient />;
+    case 'javascript-beautifier':
+      return <JsMinifierClient />;
+    case 'regex-builder':
+      return <RegexTesterClient />;
+    case 'regex-generator':
+      return <RegexTesterClient />;
+    case 'regex-cheatsheet':
+      return <RegexTesterClient />;
+    case 'regex-101':
+      return <RegexTesterClient />;
+    case 'regex-playground':
+      return <RegexTesterClient />;
+    case 'jwt-encoder':
+      return <JwtDecoderClient />;
+    case 'jwt-generator':
+      return <JwtDecoderClient />;
+    case 'jwt-creator':
+      return <JwtDecoderClient />;
+    case 'jwt-inspector':
+      return <JwtDecoderClient />;
+    case 'jwt-verifier':
+      return <JwtDecoderClient />;
+    case 'hash-generator-v2':
+      return <HashGeneratorClient />;
+    case 'hash-generator-pro':
+      return <HashGeneratorClient />;
+    case 'hash-from-text-v2':
+      return <HashGeneratorClient />;
+    case 'md5-generator':
+      return <HashGeneratorClient />;
+    case 'sha1-generator':
+      return <HashGeneratorClient />;
+    case 'sha256-generator':
+      return <HashGeneratorClient />;
+    case 'sha512-generator':
+      return <HashGeneratorClient />;
+    case 'bcrypt-generator':
+      return <HashGeneratorClient />;
+    case 'argon2-generator':
+      return <HashGeneratorClient />;
+    case 'hmac-generator':
+      return <HashGeneratorClient />;
+    case 'hash-identifier':
+      return <HashIdentifierClient />;
+    case 'word-counter-v2':
+      return <WordCounterClient />;
+    case 'word-counter-new':
+      return <WordCounterClient />;
+    case 'word-count':
+      return <WordCounterClient />;
+    case 'character-count':
+      return <CharacterCounterClient />;
+    case 'char-counter':
+      return <CharacterCounterClient />;
+    case 'letter-counter':
+      return <WordCounterClient />;
+    case 'sentence-count':
+      return <SentenceCounterClient />;
+    case 'paragraph-count':
+      return <ParagraphCounterClient />;
+    case 'sentence-counter-v2':
+      return <SentenceCounterClient />;
+    case 'paragraph-counter-v2':
+      return <ParagraphCounterClient />;
+    case 'text-stats':
+      return <TextStatisticsClient />;
+    case 'text-analyzer':
+      return <TextStatisticsClient />;
+    case 'readability-checker':
+      return <ReadabilityScoreClient />;
+    case 'readability-scorer':
+      return <ReadabilityScoreClient />;
+    case 'flesch-kincaid':
+      return <ReadabilityScoreClient />;
+    case 'grammar-check':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-v2':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-new':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-adv':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-advanced':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-pro':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-complete':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-full':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-ultimate':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-ultra':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-express':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-quick':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-easy':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-fresh':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-final':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-handy':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-prime':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-smart':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-expander':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-xl':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-x':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-dg':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-new':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-v3':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-v4':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-v5':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-v6':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-browser':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-api':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-std':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-tool':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-toolblip':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-instant':
+      return <GrammarCheckerClient />;
+    case 'grammar-checker-lite':
+      return <GrammarCheckerClient />;
+    case 'grammar-fixer':
+      return <GrammarCheckerClient />;
+    case 'grammar-fix':
+      return <GrammarCheckerClient />;
+    case 'grammar-score':
+      return <GrammarCheckerClient />;
+    case 'spell-check':
+      return <GrammarCheckerClient />;
+    case 'spelling-checker':
+      return <GrammarCheckerClient />;
+    case 'speller':
+      return <GrammarCheckerClient />;
+    case 'typo-checker':
+      return <TypoCheckerClient />;
+    case 'typo-finder':
+      return <TypoCheckerClient />;
+    case 'case-converter-v2':
+      return <CaseConverterClient />;
+    case 'case-converter-new':
+      return <CaseConverterClient />;
+    case 'case-changer':
+      return <CaseConverterClient />;
+    case 'text-to-case':
+      return <CaseConverterClient />;
+    case 'text-to-slug':
+      return <UrlSlugGeneratorClient />;
+    case 'slugify':
+      return <UrlSlugGeneratorClient />;
+    case 'url-slug':
+      return <UrlSlugGeneratorClient />;
+    case 'lorem-ipsum-v2':
+      return <LoremIpsumGeneratorClient />;
+    case 'lorem-ipsum-generator-v2':
+      return <LoremIpsumGeneratorClient />;
+    case 'lorem-ipsum-new':
+      return <LoremIpsumGeneratorClient />;
+    case 'lorem-generator':
+      return <LoremIpsumGeneratorClient />;
+    case 'placeholder-text':
+      return <LoremIpsumGeneratorClient />;
+    case 'dummy-text':
+      return <LoremIpsumGeneratorClient />;
+    case 'fake-text':
+      return <LoremIpsumGeneratorClient />;
+    case 'random-text':
+      return <RandomStringGeneratorToolClient />;
+    case 'random-sentence':
+      return <RandomSentenceGeneratorClient />;
+    case 'random-paragraph':
+      return <RandomParagraphGeneratorClient />;
+    case 'random-word':
+      return <RandomStringGeneratorToolClient />;
+    case 'uuid-v4-generator':
+      return <UuidGeneratorClient />;
+    case 'uuid-generator-v2':
+      return <UuidGeneratorClient />;
+    case 'uuid-v7-generator':
+      return <UuidGeneratorClient />;
+    case 'ulid-generator':
+      return <UuidGeneratorClient />;
+    case 'nanoid-generator':
+      return <UuidGeneratorClient />;
+    case 'hashids':
+      return <UuidGeneratorClient />;
+    case 'cuid-generator':
+      return <UuidGeneratorClient />;
+    case 'hashid-encoder':
+      return <UuidGeneratorClient />;
+    case 'unix-timestamp-converter-v2':
+      return <UnixTimestampConverterClient />;
+    case 'unix-timestamp-generator':
+      return <UnixTimestampConverterClient />;
+    case 'epoch-converter':
+      return <UnixTimestampConverterClient />;
+    case 'epoch-time':
+      return <UnixTimestampConverterClient />;
+    case 'date-from-timestamp':
+      return <UnixTimestampConverterClient />;
+    case 'timestamp-to-date':
+      return <UnixTimestampConverterClient />;
+    case 'unit-converter-v2':
+      return <UnitConverterClient />;
+    case 'unit-converter-new':
+      return <UnitConverterClient />;
+    case 'unit-converter-adv':
+      return <UnitConverterClient />;
+    case 'all-in-one-unit-converter':
+      return <UnitConverterClient />;
+    case 'length-converter':
+      return <UnitConverterClient />;
+    case 'weight-converter':
+      return <UnitConverterClient />;
+    case 'temperature-converter':
+      return <UnitConverterClient />;
+    case 'speed-converter':
+      return <UnitConverterClient />;
+    case 'volume-converter':
+      return <UnitConverterClient />;
+    case 'area-converter':
+      return <UnitConverterClient />;
+    case 'time-converter':
+      return <UnitConverterClient />;
+    case 'data-converter':
+      return <UnitConverterClient />;
+    case 'number-base-converter-v2':
+      return <NumberBaseConverterClient />;
+    case 'binary-decimal-converter':
+      return <NumberBaseConverterClient />;
+    case 'hex-decimal-converter':
+      return <NumberBaseConverterClient />;
+    case 'octal-converter':
+      return <NumberBaseConverterClient />;
+    case 'binary-converter':
+      return <NumberBaseConverterClient />;
+    case 'hex-converter':
+      return <NumberBaseConverterClient />;
+    case 'decimal-converter':
+      return <NumberBaseConverterClient />;
+    case 'percentage-calculator-v2':
+      return <PercentageCalculatorClient />;
+    case 'percentage-calculator-new':
+      return <PercentageCalculatorClient />;
+    case 'percentage-change':
+      return <PercentageCalculatorClient />;
+    case 'percentage-difference-v2':
+      return <PercentageDifferenceClient />;
+    case 'percentage-increase':
+      return <PercentageCalculatorClient />;
+    case 'percentage-decrease':
+      return <PercentageCalculatorClient />;
+    case 'discount-calculator':
+      return <PercentageCalculatorClient />;
+    case 'tip-calculator':
+      return <PercentageCalculatorClient />;
+    case 'markup-calculator':
+      return <PercentageCalculatorClient />;
+    case 'password-generator-v2':
+      return <PasswordGeneratorClient />;
+    case 'password-generator-new':
+      return <PasswordGeneratorClient />;
+    case 'password-generator-adv':
+      return <PasswordGeneratorClient />;
+    case 'password-generator-pro':
+      return <PasswordGeneratorClient />;
+    case 'random-password':
+      return <PasswordGeneratorClient />;
+    case 'password-strength':
+      return <PasswordStrengthCheckerClient />;
+    case 'password-strength-checker':
+      return <PasswordStrengthCheckerClient />;
+    case 'qr-code-generator-v2':
+      return <QrCodeGeneratorClient />;
+    case 'qr-code-generator-new':
+      return <QrCodeGeneratorClient />;
+    case 'qr-code-generator-adv':
+      return <QrCodeGeneratorClient />;
+    case 'qr-code-generator-pro':
+      return <QrCodeGeneratorClient />;
+    case 'qr-code-from-url':
+      return <QrCodeGeneratorClient />;
+    case 'qr-code-from-text':
+      return <QrCodeGeneratorClient />;
+    case 'wifi-qr-code':
+      return <QrCodeGeneratorClient />;
+    case 'meta-tags':
+      return <MetaTagGeneratorClient />;
+    case 'meta-description-generator':
+      return <MetaTagGeneratorClient />;
+    case 'open-graph-generator':
+      return <MetaTagGeneratorClient />;
+    case 'twitter-card-generator':
+      return <MetaTagGeneratorClient />;
+    case 'og-tags':
+      return <MetaTagGeneratorClient />;
+    case 'serp-preview-v2':
+      return <SerpPreviewClient />;
+    case 'serp-simulator':
+      return <SerpPreviewClient />;
+    case 'google-serp-preview':
+      return <SerpPreviewClient />;
+    case 'screen-resolution':
+      return <ScreenResolutionTesterClient />;
+    case 'viewport-tester':
+      return <ScreenResolutionTesterClient />;
+    case 'responsive-checker':
+      return <ScreenResolutionTesterClient />;
+    case 'device-viewport':
+      return <ScreenResolutionTesterClient />;
+    case 'robots-txt-v2':
+      return <RobotsTxtEditorClient />;
+    case 'robots-txt-generator-v2':
+      return <RobotsTxtEditorClient />;
+    case 'robots-txt-create':
+      return <RobotsTxtEditorClient />;
+    case 'robots-txt-checker':
+      return <RobotsTxtEditorClient />;
+    case 'robots-txt-validator':
+      return <RobotsTxtEditorClient />;
+    case 'sitemap-xml':
+      return <XmlSitemapGeneratorClient />;
+    case 'xml-sitemap-v2':
+      return <XmlSitemapGeneratorClient />;
+    case 'sitemap-generator-v2':
+      return <XmlSitemapGeneratorClient />;
+    case 'html-sitemap':
+      return <XmlSitemapGeneratorClient />;
+    case 'cron-parser-v2':
+      return <CronParserClient />;
+    case 'cron-validator':
+      return <CronParserClient />;
+    case 'cron-explainer':
+      return <CronParserClient />;
+    case 'cron-generator-v2':
+      return <CronGeneratorClient />;
+    case 'cron-builder':
+      return <CronGeneratorClient />;
+    case 'cron-expression-generator':
+      return <CronGeneratorClient />;
+    case 'cors-configuration':
+      return <CorsHeaderGeneratorClient />;
+    case 'cors-options':
+      return <CorsHeaderGeneratorClient />;
+    case 'cors Origins':
+      return <CorsHeaderGeneratorClient />;
+    case 'sql-to-json-v2':
+      return <SqlToJsonClient />;
+    case 'sql-to-yaml':
+      return <SqlToJsonClient />;
+    case 'csv-to-json':
+      return <TsvToJsonClient />;
+    case 'tsv-to-csv':
+      return <TsvToJsonClient />;
+    case 'tsv-to-yaml':
+      return <TsvToJsonClient />;
+    case 'text-diff-v2':
+      return <TextDiffClient />;
+    case 'text-compare':
+      return <TextDiffClient />;
+    case 'text-comparison':
+      return <TextDiffClient />;
+    case 'string-diff':
+      return <TextDiffClient />;
+    case 'code-diff':
+      return <TextDiffClient />;
+    case 'json-diff':
+      return <TextDiffClient />;
+    case 'remove-duplicates':
+      return <RemoveDuplicateLinesClient />;
+    case 'dedupe':
+      return <RemoveDuplicateLinesClient />;
+    case 'remove-duplicate-lines-v2':
+      return <RemoveDuplicateLinesClient />;
+    case 'duplicate-line-remover':
+      return <RemoveDuplicateLinesClient />;
+    case 'sort-lines':
+      return <TextSorterClient />;
+    case 'text-sorter-v2':
+      return <TextSorterClient />;
+    case 'alphabetize':
+      return <TextSorterClient />;
+    case 'randomize-lines':
+      return <ListRandomizerClient />;
+    case 'shuffle-list':
+      return <ListRandomizerClient />;
+    case 'list-randomizer-v2':
+      return <ListRandomizerClient />;
     default:
       return <ComingSoonUI tool={tool} />;
   }
