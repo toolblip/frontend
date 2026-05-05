@@ -57,7 +57,7 @@ export default function WhyToolblip() {
               color: 'var(--fg-0)',
             }}
           >
-            Your data stays on your device — always.
+            Private. Fast. Free. Always.
           </h2>
         </div>
 
