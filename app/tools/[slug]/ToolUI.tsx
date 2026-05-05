@@ -254,7 +254,15 @@ import BaseConverterClient from '@/components/tools/BaseConverterClient';
 import BaseConverterQuickClient from '@/components/tools/BaseConverterQuickClient';
 import BaseNumberConverterClient from '@/components/tools/BaseNumberConverterClient';
 import BaseToolblipClient from '@/components/tools/BaseToolblipClient';
+import BinHexDecConverterClient from '@/components/tools/BinHexDecConverterClient';
+import BinaryConverterClient from '@/components/tools/BinaryConverterClient';
+import BinaryDecimalHexConverterClient from '@/components/tools/BinaryDecimalHexConverterClient';
+import BinaryTextExpressClient from '@/components/tools/BinaryTextExpressClient';
+import BinaryToTextV2Client from '@/components/tools/BinaryToTextV2Client';
 import BlurBackgroundClient from '@/components/tools/BlurBackgroundClient';
+import BlogOutlineClient from '@/components/tools/BlogOutlineClient';
+import BorderClient from '@/components/tools/BorderClient';
+import BmiCalculatorClient from '@/components/tools/BmiCalculatorClient';
 import BatchFaviconDownloaderClient from '@/components/tools/BatchFaviconDownloaderClient';
 import BatchImageResizerClient from '@/components/tools/BatchImageResizerClient';
 import ColorBlindnessSimulatorClient from '@/components/tools/ColorBlindnessSimulatorClient';
@@ -576,12 +584,30 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <BillSaleGeneratorClient />;
     case 'bill-splitter':
       return <BillSplitterClient />;
-    case 'bash-command-generator':
-      return <BashCommandGeneratorClient />;
+    case 'bin-hex-dec-converter':
+      return <BinHexDecConverterClient />;
+    case 'binary-converter':
+      return <BinaryConverterClient />;
+    case 'binary-decimal-hex-converter':
+      return <BinaryDecimalHexConverterClient />;
+    case 'binary-text-express':
+      return <BinaryTextExpressClient />;
     case 'binary-to-decimal':
       return <BinaryToDecimalClient />;
     case 'binary-to-text':
       return <BinaryToTextClient />;
+    case 'binary-to-text-v2':
+      return <BinaryToTextV2Client />;
+    case 'blog-outline':
+      return <BlogOutlineClient />;
+    case 'blur-background':
+      return <BlurBackgroundClient />;
+    case 'border':
+      return <BorderClient />;
+    case 'bmi-calculator':
+      return <BmiCalculatorClient />;
+    case 'bash-command-generator':
+      return <BashCommandGeneratorClient />;
     case 'broken-link-checker':
       return <BrokenLinkCheckerClient />;
     case 'chinese-char-converter':

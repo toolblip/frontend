@@ -1,140 +1,97 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef } from 'react';
 
 export default function BlurBackgroundClient() {
-  const [image, setImage] = useState<string | null>(null);
-  const [blurRadius, setBlurRadius] = useState(10);
-  const [processedImage, setProcessedImage] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState('');
+  const [blurAmount, setBlurAmount] = useState(10);
+  const [processedUrl, setProcessedUrl] = useState('');
+  const [loading, setLoading] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => setImage(event.target?.result as string);
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const applyBlur = useCallback(() => {
-    if (!image || !canvasRef.current) return;
-    
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+  const applyBlur = () => {
+    if (!imageUrl) return;
+    setLoading(true);
 
     const img = new Image();
+    img.crossOrigin = 'anonymous';
     img.onload = () => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      
       canvas.width = img.width;
       canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      ctx.filter = `blur(${blurAmount}px)`;
       ctx.drawImage(img, 0, 0);
-
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const data = imageData.data;
-      const width = canvas.width;
-      const height = canvas.height;
-      const radius = blurRadius;
-
-      const getPixel = (x: number, y: number) => {
-        x = Math.max(0, Math.min(width - 1, x));
-        y = Math.max(0, Math.min(height - 1, y));
-        const idx = (y * width + x) * 4;
-        return [data[idx], data[idx + 1], data[idx + 2], data[idx + 3]];
-      };
-
-      const blurredData = ctx.createImageData(width, height);
-      const blurredPixels = blurredData.data;
-
-      for (let y = 0; y < height; y++) {
-        for (let x = 0; x < width; x++) {
-          let r = 0, g = 0, b = 0, a = 0, count = 0;
-
-          for (let dy = -radius; dy <= radius; dy++) {
-            for (let dx = -radius; dx <= radius; dx++) {
-              const [pr, pg, pb, pa] = getPixel(x + dx, y + dy);
-              r += pr;
-              g += pg;
-              b += pb;
-              a += pa;
-              count++;
-            }
-          }
-
-          const idx = (y * width + x) * 4;
-          blurredPixels[idx] = r / count;
-          blurredPixels[idx + 1] = g / count;
-          blurredPixels[idx + 2] = b / count;
-          blurredPixels[idx + 3] = a / count;
-        }
-      }
-
-      ctx.putImageData(blurredData, 0, 0);
-      setProcessedImage(canvas.toDataURL('image/png'));
+      setProcessedUrl(canvas.toDataURL());
+      setLoading(false);
     };
-    img.src = image;
-  }, [image, blurRadius]);
+    img.onerror = () => {
+      setLoading(false);
+      alert('Failed to load image');
+    };
+    img.src = imageUrl;
+  };
 
-  const handleDownload = () => {
-    if (!processedImage) return;
+  const downloadImage = () => {
+    if (!processedUrl) return;
     const link = document.createElement('a');
     link.download = 'blurred-image.png';
-    link.href = processedImage;
+    link.href = processedUrl;
     link.click();
   };
 
   return (
-    <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-4 tb-v2-p-4">
-      <h2 className="tb-v2-text-2xl tb-v2-font-bold">Blur Background</h2>
-      
+    <div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Image URL</span>
+      </div>
       <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        onChange={handleImageUpload}
-        className="tb-v2-file-input"
+        type="text"
+        value={imageUrl}
+        onChange={(e) => setImageUrl(e.target.value)}
+        placeholder="Enter image URL..."
+        className="tb-v2-tool-input"
+        aria-label="Image URL"
       />
-
-      {image && (
-        <>
-          <div className="tb-v2-flex tb-v2-items-center tb-v2-gap-4">
-            <label className="tb-v2-text-sm tb-v2-font-medium">Blur Radius: {blurRadius}px</label>
-            <input
-              type="range"
-              min="1"
-              max="50"
-              value={blurRadius}
-              onChange={(e) => setBlurRadius(Number(e.target.value))}
-              className="tb-v2-range"
-            />
-          </div>
-
-          <button onClick={applyBlur} className="tb-v2-btn tb-v2-btn-primary">
-            Apply Blur
+      <div style={{ margin: '0.75rem 0' }}>
+        <label className="tb-v2-hint">
+          Blur Amount: {blurAmount}px
+          <input
+            type="range"
+            min="0"
+            max="50"
+            value={blurAmount}
+            onChange={(e) => setBlurAmount(Number(e.target.value))}
+            className="tb-v2-range"
+            style={{ marginLeft: '1rem', width: '200px' }}
+          />
+        </label>
+      </div>
+      <div style={{ margin: '0.75rem 0' }}>
+        <button type="button" onClick={applyBlur} className="tb-v2-btn tb-v2-btn-primary" disabled={loading}>
+          {loading ? 'Processing...' : 'Apply Blur'}
+        </button>
+      </div>
+      <canvas ref={canvasRef} style={{ display: 'none' }} />
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">Result</span>
+        {processedUrl && (
+          <button type="button" onClick={downloadImage} className="tb-v2-copy-btn">
+            Download
           </button>
-        </>
-      )}
-
-      <canvas ref={canvasRef} className="tb-v2-hidden" />
-
-      {image && (
-        <div className="tb-v2-grid tb-v2-grid-cols-2 tb-v2-gap-4">
-          <div>
-            <p className="tb-v2-text-sm tb-v2-font-medium tb-v2-mb-2">Original</p>
-            <img src={image} alt="Original" className="tb-v2-max-w-full tb-v2-rounded-lg" />
-          </div>
-          {processedImage && (
-            <div>
-              <p className="tb-v2-text-sm tb-v2-font-medium tb-v2-mb-2">Blurred</p>
-              <img src={processedImage} alt="Blurred" className="tb-v2-max-w-full tb-v2-rounded-lg" />
-              <button onClick={handleDownload} className="tb-v2-btn tb-v2-btn-secondary tb-v2-mt-2">
-                Download
-              </button>
-            </div>
-          )}
-        </div>
-      )}
+        )}
+      </div>
+      <div className="tb-v2-tool-output-body" style={{ textAlign: 'center' }}>
+        {processedUrl ? (
+          <img src={processedUrl} alt="Blurred" style={{ maxWidth: '100%', maxHeight: '400px', borderRadius: '0.5rem' }} />
+        ) : (
+          <p className="tb-v2-hint">Enter an image URL and adjust blur to preview</p>
+        )}
+      </div>
     </div>
   );
 }
