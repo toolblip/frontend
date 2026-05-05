@@ -292,6 +292,11 @@ import ChartMakerClient from '@/components/tools/ChartMakerClient';
 import CitationGeneratorClient from '@/components/tools/CitationGeneratorClient';
 import CleanupPictureClient from '@/components/tools/CleanupPictureClient';
 import CodeBeautifierClient from '@/components/tools/CodeBeautifierClient';
+import CodeDiffClient from '@/components/tools/CodeDiffClient';
+import CodeDiffToolClient from '@/components/tools/CodeDiffToolClient';
+import CodeToDiagramGeneratorClient from '@/components/tools/CodeToDiagramGeneratorClient';
+import ColdEmailWriterClient from '@/components/tools/ColdEmailWriterClient';
+import CollocationsCheckerClient from '@/components/tools/CollocationsCheckerClient';
 import CollageMakerClient from '@/components/tools/CollageMakerClient';
 import CombineImagesClient from '@/components/tools/CombineImagesClient';
 import CropClient from '@/components/tools/CropClient';
@@ -673,6 +678,18 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <CmykToRgbToolClient />;
     case 'code-beautifier':
       return <CodeBeautifierClient />;
+    case 'code-diff':
+      return <CodeDiffClient />;
+    case 'code-diff-tool':
+      return <CodeDiffToolClient />;
+    case 'code-to-diagram-generator':
+      return <CodeToDiagramGeneratorClient />;
+    case 'cold-email-writer':
+      return <ColdEmailWriterClient />;
+    case 'collocations-checker':
+      return <CollocationsCheckerClient />;
+    case 'color-blindness-simulator':
+      return <ColorBlindnessSimulatorClient />;
     case 'citation-generator':
       return <CitationGeneratorClient />;
     case 'cleanup-picture':
