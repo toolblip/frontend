@@ -74,6 +74,16 @@ import BashCommandGeneratorClient from '@/components/tools/BashCommandGeneratorC
 import BinaryToDecimalClient from '@/components/tools/BinaryToDecimalClient';
 import BinaryToTextClient from '@/components/tools/BinaryToTextClient';
 import BrokenLinkCheckerClient from '@/components/tools/BrokenLinkCheckerClient';
+import BrokenImageCheckerClient from '@/components/tools/BrokenImageCheckerClient';
+import BrokenLinkCheckerExpressClient from '@/components/tools/BrokenLinkCheckerExpressClient';
+import BrokenLinkCheckerV2Client from '@/components/tools/BrokenLinkCheckerV2Client';
+import BrowserImageResizerClient from '@/components/tools/BrowserImageResizerClient';
+import BulkGeneratorClient from '@/components/tools/BulkGeneratorClient';
+import BusinessNameGeneratorClient from '@/components/tools/BusinessNameGeneratorClient';
+import BusinessPlanGeneratorClient from '@/components/tools/BusinessPlanGeneratorClient';
+import BusinessSloganGeneratorClient from '@/components/tools/BusinessSloganGeneratorClient';
+import ByteConverterClient from '@/components/tools/ByteConverterClient';
+import CanonicalTagCheckerClient from '@/components/tools/CanonicalTagCheckerClient';
 import ChineseCharConverterClient from '@/components/tools/ChineseCharConverterClient';
 import CidrCalculatorClient from '@/components/tools/CidrCalculatorClient';
 import CmykToRgbConverterClient from '@/components/tools/CmykToRgbConverterClient';
@@ -610,6 +620,26 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <BashCommandGeneratorClient />;
     case 'broken-link-checker':
       return <BrokenLinkCheckerClient />;
+    case 'broken-image-checker':
+      return <BrokenImageCheckerClient />;
+    case 'broken-link-checker-express':
+      return <BrokenLinkCheckerExpressClient />;
+    case 'broken-link-checker-v2':
+      return <BrokenLinkCheckerV2Client />;
+    case 'browser-image-resizer':
+      return <BrowserImageResizerClient />;
+    case 'bulk-generator':
+      return <BulkGeneratorClient />;
+    case 'business-name-generator':
+      return <BusinessNameGeneratorClient />;
+    case 'business-plan-generator':
+      return <BusinessPlanGeneratorClient />;
+    case 'business-slogan-generator':
+      return <BusinessSloganGeneratorClient />;
+    case 'byte-converter':
+      return <ByteConverterClient />;
+    case 'canonical-tag-checker':
+      return <CanonicalTagCheckerClient />;
     case 'chinese-char-converter':
       return <ChineseCharConverterClient />;
     case 'cidr-calculator':
