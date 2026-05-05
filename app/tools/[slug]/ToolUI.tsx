@@ -444,6 +444,8 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <BacklinkCheckerClient />;
     case 'base64':
       return <Base64Client />;
+    case 'base64-encoder-decoder':
+      return <Base64EncoderDecoderClient />;
     case 'bash-command-generator':
       return <BashCommandGeneratorClient />;
     case 'binary-to-decimal':
@@ -474,6 +476,8 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <CssValidatorClient />;
     case 'csv-to-json':
       return <CsvToJsonClient />;
+    case 'csv-to-tsv':
+      return <CsvToTsvClient />;
     case 'curl-to-python':
       return <CurlToPythonClient />;
     case 'decimal-to-binary':
