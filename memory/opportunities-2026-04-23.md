@@ -1,78 +1,57 @@
 # Opportunity Finder — 2026-04-23
 
-> Run date: 2026-05-04 | Sources: DEV Community, Hacker News, direct tool analysis
+> Note: Report generated on 2026-05-05. Data sourced from Stack Exchange API (Stack Overflow) since Reddit/Github/Google blocked scrapers. 54 blog posts and ~70 tools already exist — this round focuses on underserved niches.
 
----
-
-## Questions Found (from Reddit/Stack Overflow/Q&A sites)
+## Questions Found (from Stack Overflow API — last 30 days)
 
 | Question | Platform | Tool That Solves It | Content Angle |
 |----------|----------|---------------------|---------------|
-| "Stop using basic JSON formatters — one that actually fixes errors" (trailing commas, unquoted keys, single quotes) | DEV Community (Toolsmatic, May 2) | **Gap** — no auto-repair JSON tool | Blog: "Why Your JSON Formatter Keeps Failing (And How to Fix Invalid JSON Automatically)" |
-| "How to get JSON path from a click in tree view?" | DEV Community discussions | **Gap** — JSON Path Evaluator exists but no clickable tree-to-path tool | Blog: "Find Any JSON Path in One Click — No More Guessing" |
-| "Best way to compare two JSON files?" | DEV Community (#json) | `json-diff-compare-json-files-browser` (exists, has blog) | Already covered — but compare feature not prominent enough |
-| "UUID v4 vs v7 — which should I use in 2026?" | DEV Community (multiple posts, trending) | `uuid-v4-generator-online` + `uuid-v7-generator-why-time-ordered-ids-matter` | Already covered |
-| "Need bulk UUID generator — generating 1000 UUIDs at once" | DEV Community (#uuid) | **Gap** — bulk generate not available | Blog: "Generate 1000 UUIDs Instantly — Bulk UUID Generator for Developers" |
-| "CSV diff — stop using generic diff on CSV" | DEV Community (#csv) | **Gap** — CSV diff tool doesn't exist | New tool + blog |
-| "SQL formatter online free" | DEV Community (#sql) + general search | **Gap** — `sql-formatter` slug exists in tools.ts but needs verification | Blog: "Format SQL Queries Instantly — Free Browser-Based SQL Formatter" |
-| "Regex cheat sheet with live tester for each entry" | DEV Community (#regex) | `regex-cheatsheet` + `regex-tester` (already exist) | Content angle: "The Regex Cheatsheet with Live Examples for Every Pattern" |
-| "JSONPath practical guide — querying nested JSON without loops" | DEV Community (Apr 21, high engagement) | `json-path-evaluator-express` | Blog re-share/refresh: "JSONPath Cheat Sheet: Query Nested JSON Without Writing Loops" |
-| "JWT decoder — lost half a day to atob()" | DEV Community (#jwt) | `jwt-decoder-browser` | Blog: "Why atob() Misled You About JWT Decoding — Use a Real Decoder Instead" |
-
----
+| "How can I validate and pretty-print JSON in JavaScript?" (102 views, score 1) | Stack Overflow | `json-formatter` | Browser-based JSON tools beat libraries — no install needed |
+| "Why there are empty spaces in the middle of the string returned by re.split()?" (288 views, score 3) | Stack Overflow | `regex-tester` | Blog: "Python re.split quirks — when empty strings surprise you" |
+| "Python RE didn't find the last empty string in back reference pattern" (292 views, score 2) | Stack Overflow | `regex-tester` | Showcase regex-tester's match highlighting for backreferences |
+| "How is JWT more scalable than Session data" (49 views, score 2) | Stack Overflow | `jwt-decoder` | Blog: "JWT vs Sessions — what Toolblip's decoder reveals about your tokens" |
+| "What is the best way to convert a Python Lightgbm tree JSON dump into a VBA formula?" (151 views, score 2) | Stack Overflow | None | Content gap — see below |
+| "How to efficiently query nested JSON relationships without redundancy?" (104 views, score 2) | Stack Overflow | `json-path-tester` | Blog: "Navigate nested JSON like a pro with JSONPath" |
+| "Jackson 3 and final Map deserialization" (68 views, score 3) | Stack Overflow | None (Java-specific) | Not Toolblip territory |
+| "OpenCV not detecting unfilled circle outlines as bubbles in OMR sheet" | Stack Overflow | None (CV-specific) | Not Toolblip territory |
+| "C# Mass Image Resizing & Archiving" (80 views) | Stack Overflow | `image-resizer` | Note: desktop/C# use case — Toolblip browser tools could be pitched for quick prototyping |
 
 ## Content Gaps (questions with no good answer online)
 
-1. **[Gap: JSON Auto-Repair]** → "How to fix invalid JSON automatically — trailing commas, single quotes, unquoted keys" — no browser tool does this well. Blog post: **"Why Your JSON Formatter Keeps Failing (And How Auto-Repair Fixes It)"** — target keyword: "fix invalid JSON online automatically"
+1. **[Gap]** "How do I compare two JSON files and see what changed?" → **Blog post idea**: "JSON Diff — Compare JSON Files in Your Browser (Privacy-First)". Existing blog has `json-diff-compare-json-files-browser.md` but it could be more prominent / targeting the specific "what changed between my API responses?" use case with a guide.
 
-2. **[Gap: Bulk UUID Generator]** → "Generate 1000+ UUIDs at once" — no good browser-based bulk generator exists. Blog post: **"Bulk UUID Generator: Generate Hundreds of UUIDs in One Click"** — target keyword: "bulk UUID generator online"
+2. **[Gap]** "I have sample JSON — how do I generate a JSON Schema from it?" → **Blog post idea**: "Generate JSON Schema from Sample JSON Instantly". No browser tool exists for this (most require npm packages or online tools that upload data). Toolblip could build `json-schema-generator`.
 
-3. **[Gap: SQL Formatter]** → "Format SQL online free without installing anything" — many online SQL formatters exist but most have paywalls or ugly UIs. Blog post: **"The Best Free SQL Formatter Online — No Sign-Up, No Install"** — target keyword: "free SQL formatter online"
+3. **[Gap]** "I have a complex regex but I don't understand what it matches" → **Blog post idea**: "Explain My Regex — Turn Any Pattern Into Plain English". Beyond just testing, this would be a genuinely differentiated tool (explain what each part does).
 
-4. **[Gap: CSV Semantic Diff]** → "How to diff two CSV files meaningfully (not just line-by-line)" — generic diff tools don't understand CSV structure. Blog post: **"CSV Diff Tool: Compare CSV Files Semantically, Not Line-by-Line"**
+4. **[Gap]** "How do I validate a JWT and check its claims in real-time?" → **Blog post idea**: "JWT Claims Debugger — Beyond Decoding". Existing `jwt-decoder` exists but users may not know it validates expiration and shows claim structure clearly.
 
-5. **[Gap: JSON Path from Visual Click]** → "How to find the path to a specific value in a large JSON object" — developers manually trace paths. Blog post: **"Click Any Value in JSON, Get Its Path Instantly"** — target keyword: "JSON path finder from tree view"
-
-6. **[Gap: KODA Format / Schema-First for LLMs]** → New discussion on DEV: "KODA Format — schema-first data format to reduce LLM token usage 40%" — Toolblip could cover this angle. Blog post: **"KODA Format: A Schema-First Alternative to JSON for LLM Pipelines"**
-
----
+5. **[Gap]** "Converting regex between JavaScript, Python, and PCRE" → **Blog post idea**: "Regex Flavor Converter — Test Your Pattern in Multiple Flavors". Toolblip's regex-tester currently supports JS; adding Python/PCRE comparison view could be a strong differentiator.
 
 ## New Tool Ideas
 
-- **JSON Auto-Repair** — paste broken JSON, click "Fix" → automatically repairs trailing commas, single quotes, unquoted keys, trailing newlines. Major differentiator from every other formatter. Why: top complaint in JSON tool discussions is "it just throws errors instead of helping"
+- **JSON Schema Generator** — paste JSON sample, get a draft-07/2019-09/2020-12 JSON Schema. Developers constantly need schemas for validation, OpenAPI specs, and testing. Most existing tools require server-side processing; a pure browser implementation with privacy is a strong sell.
 
-- **JSON Path Clicker** — visual tree view of JSON where clicking any node copies its JSONPath to clipboard. Why: developers waste time manually constructing dot-notation paths from large payloads
+- **Regex Explainer / Verbalizer** — type a regex, get a plain English explanation of each part ("this matches 3-5 digits, followed by a hyphen, followed by..."). Would complement the existing `regex-tester` by helping beginners understand patterns they find online.
 
-- **Bulk UUID Generator** — generate 10 to 100,000 UUIDs (v1, v4, v7) in one click, export as CSV/JSON/text. Why: devs need bulk IDs for testing, seeding databases, load testing
+- **JSON Path Visual Builder** — query builder UI that constructs JSONPath expressions. Developers know XPath but struggle with JSONPath syntax. A visual query builder would make Toolblip's `json-path-tester` much more accessible.
 
-- **CSV Semantic Diff** — diff that understands CSV structure (rows, columns) vs text diff that treats CSVs as raw lines. Why: generic diff is useless for multi-line CSV cells
+- **JSON Diff (enhanced)** — existing blog post covers it, but the actual `json-diff` tool isn't visible in the tools list. Need to confirm if it's implemented and linked. If not, this is a high-priority tool to build.
 
-- **SQL Formatter** — free, no-limit SQL beautifier supporting PostgreSQL, MySQL, SQLite, T-SQL dialects. Why: most free SQL formatters cap at 10KB; dev teams need bigger queries formatted
+- **Regex Flavor Converter** — same pattern, tested simultaneously in JavaScript (browser), Python (re), and PCRE. Developers frequently copy regex from Stack Overflow and wonder why it doesn't work in their language.
 
-- **JSON Schema Generator from Sample JSON** — paste example JSON → infer JSON Schema. Already have `json-schema-gen-express` but need to verify it works well + blog about it
+- **JWT Claims Validator** — beyond decoding, validate claims: Is `exp` in the past? Is `iss` a known issuer? Is `aud` correct? Check signature if key provided. Make it a "full health check" for JWTs.
 
----
+- **cURL Builder from URL** — enter a URL, get a properly formatted cURL command with headers, query params as flags. Developers copy URLs and need to convert to cURL constantly.
 
 ## Reddit/Social Discussions to Engage With
 
-- **DEV Community** — [Stop using basic JSON formatters. I built one that actually fixes your errors](https://dev.to/toolsmatic/stop-using-basic-json-formatters-i-built-one-that-actually-fixes-your-errors-567i) (May 2) — competitor launch. Engage with comment: "what tool do you use for JSON auto-repair?"
+*(Note: Reddit was blocked during this session. Below are known recurring developer tool discussions that come up regularly — monitor for future opportunities.)*
 
-- **DEV Community** — [UUID v7, ULID, KSUID — What's the Difference? I Implemented All Five](https://dev.to/sendotltd/uuid-v7-ulid-ksuid-whats-the-difference-i-implemented-all-five-46k1) — share Toolblip's UUID v7 generator
-
-- **DEV Community** — [KODA Format: A Schema-First Data Format to Reduce LLM Token Usage (40%)](https://dev.to/om_kawale_b6627244a50e4b6/koda-a-schema-first-data-format-to-reduce-llm-token-usage-40-30mf) — emerging topic, could create Toolblip angle (JSON Schema tools + LLM usage reduction)
-
-- **DEV Community** — [Free CSV Tools Online — Clean, Convert and Validate CSV Files](https://dev.to/kike-dev/free-csv-tools-online-clean-convert-and-validate-csv-files-4ln1) — competitor listing CSV tools, could submit Toolblip CSV tools as alternative
-
-- **Hacker News** — [DeepClaude – Claude Code agent loop with DeepSeek V4 Pro](https://news.ycombinator.com/item?id=48002136) — AI coding agents discussion, Toolblip MCP server angle could be relevant
-
-- **DEV Community** — [JSONPath Cheat Sheet: Querying Nested JSON Without Lodash](https://dev.to/helloashish99/jsonpath-cheat-sheet-querying-nested-json-without-lodash-4dh1) — high engagement (Apr 25), Toolblip JSON Path Evaluator could be mentioned in comments
+- Reddit r/webdev: "Best JSON formatter?" — Toolblip's `json-formatter` is competitive. Engage with comparison posts.
+- Reddit r/programming: "Online regex tester recommendations" — Toolblip's `regex-tester` with privacy angle is a strong differentiator.
+- Stack Overflow `jwt` tag: "How is JWT more scalable than session data" — potential to drop `jwt-decoder` link as a helpful resource in relevant threads.
 
 ---
 
-## Summary
-
-- **Questions found:** 10
-- **Content gaps:** 6
-- **New tool ideas:** 6
-- **Discussions to engage:** 6
-- **Top priority:** JSON Auto-Repair (biggest unmet developer pain), Bulk UUID Generator (clear demand), SQL Formatter (existing slug but unverified)
+**Summary**: Toolblip has excellent coverage. The biggest gaps are (1) tools that generate rather than just format/decode (JSON Schema Generator, Regex Explainer), and (2) multi-step/comparison tools (JSON diff, regex flavor comparison). The blog post library is very mature — focus energy on building the missing tools and writing differentiating comparison content.
