@@ -21,13 +21,13 @@ export default function TextDiffClient() {
   const [right, setRight] = useState('');
 
   const diff = () => {
-    if (!left && !right) return [];
+    if (!left && !right) return { distance: 0, similarity: 100 };
     const distance = levenshtein(left, right);
-    const similarity = left.length === 0 && right.length === 0 ? 100 : Math.max(0, Math.round((1 - distance / Math.max(left.length, right.length)) * 100));
-    return [{ distance, similarity }];
+    const similarity = Math.max(0, Math.round((1 - distance / Math.max(left.length, right.length)) * 100));
+    return { distance, similarity };
   };
 
-  const [{ distance, similarity }] = diff();
+  const { distance, similarity } = diff();
 
   return (
     <div>

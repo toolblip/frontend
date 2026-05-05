@@ -110,12 +110,13 @@ function renderCell(cell: Cell): { html: string; type: string } {
     const outputs = (cell as { outputs?: unknown[] }).outputs || cell.output ? (cell as { outputs?: unknown[] }).outputs || [] : [];
 
     for (const out of outputs) {
-      const o = out as { output_type: string; data?: Record<string, string[]>; text?: string | string[]; name?: string };
+      const o = out as { output_type: string; data?: Record<string, string | string[]>; text?: string | string[]; name?: string };
       if (o.output_type === 'stream') {
         const text = Array.isArray(o.text) ? o.text.join('') : (o.text || '');
         outputsHtml += `<pre class="nb-output nb-stream">${escapeHtml(text)}</pre>`;
       } else if (o.output_type === 'execute_result' && o.data) {
-        const text = o.data['text/plain'] ? o.data['text/plain'].join('') : '';
+        const raw = o.data['text/plain'];
+        const text = Array.isArray(raw) ? raw.join('') : (typeof raw === 'string' ? raw : '');
         outputsHtml += `<pre class="nb-output nb-result">${escapeHtml(text)}</pre>`;
       } else if (o.output_type === 'error') {
         const en = out as { ename?: string; evalue?: string; traceback?: string[] };
