@@ -387,6 +387,21 @@ import ContrastCheckerPrimeClient from '@/components/tools/ContrastCheckerPrimeC
 import ContrastCheckerProClient from '@/components/tools/ContrastCheckerProClient';
 import ContrastCheckerQuickClient from '@/components/tools/ContrastCheckerQuickClient';
 import ContrastCheckerSmartClient from '@/components/tools/ContrastCheckerSmartClient';
+import ContrastCheckerStdClient from '@/components/tools/ContrastCheckerStdClient';
+import ContrastCheckerToolClient from '@/components/tools/ContrastCheckerToolClient';
+import ContrastCheckerUltimateClient from '@/components/tools/ContrastCheckerUltimateClient';
+import ContrastCheckerUltraClient from '@/components/tools/ContrastCheckerUltraClient';
+import ContrastCheckerV2Client from '@/components/tools/ContrastCheckerV2Client';
+import ContrastCheckerV3Client from '@/components/tools/ContrastCheckerV3Client';
+import ContrastCheckerV4Client from '@/components/tools/ContrastCheckerV4Client';
+import ContrastCheckerV5Client from '@/components/tools/ContrastCheckerV5Client';
+import ContrastCheckerV6Client from '@/components/tools/ContrastCheckerV6Client';
+import ContrastCheckerWcagClient from '@/components/tools/ContrastCheckerWcagClient';
+import ContrastCheckerXClient from '@/components/tools/ContrastCheckerXClient';
+import ContrastCheckerXlClient from '@/components/tools/ContrastCheckerXlClient';
+import ContrastFreshClient from '@/components/tools/ContrastFreshClient';
+import ContrastQuickClient from '@/components/tools/ContrastQuickClient';
+import ContrastToolblipClient from '@/components/tools/ContrastToolblipClient';
 import ColorTemperatureAdjusterClient from '@/components/tools/ColorTemperatureAdjusterClient';
 import ChartMakerClient from '@/components/tools/ChartMakerClient';
 import CitationGeneratorClient from '@/components/tools/CitationGeneratorClient';
@@ -1262,6 +1277,36 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <ContrastCheckerQuickClient />;
     case 'contrast-checker-smart':
       return <ContrastCheckerSmartClient />;
+    case 'contrast-checker-std':
+      return <ContrastCheckerStdClient />;
+    case 'contrast-checker-tool':
+      return <ContrastCheckerToolClient />;
+    case 'contrast-checker-ultimate':
+      return <ContrastCheckerUltimateClient />;
+    case 'contrast-checker-ultra':
+      return <ContrastCheckerUltraClient />;
+    case 'contrast-checker-v2':
+      return <ContrastCheckerV2Client />;
+    case 'contrast-checker-v3':
+      return <ContrastCheckerV3Client />;
+    case 'contrast-checker-v4':
+      return <ContrastCheckerV4Client />;
+    case 'contrast-checker-v5':
+      return <ContrastCheckerV5Client />;
+    case 'contrast-checker-v6':
+      return <ContrastCheckerV6Client />;
+    case 'contrast-checker-wcag':
+      return <ContrastCheckerWcagClient />;
+    case 'contrast-checker-x':
+      return <ContrastCheckerXClient />;
+    case 'contrast-checker-xl':
+      return <ContrastCheckerXlClient />;
+    case 'contrast-fresh':
+      return <ContrastFreshClient />;
+    case 'contrast-quick':
+      return <ContrastQuickClient />;
+    case 'contrast-toolblip':
+      return <ContrastToolblipClient />;
     case 'color-temperature-adjuster':
       return <ColorTemperatureAdjusterClient />;
     case 'collage-maker':

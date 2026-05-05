@@ -240,66 +240,6 @@
     }
   },
   "all_needing_component": {
-    "contrast-checker-complete": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-dg": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-easy": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-enhanced": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-expander": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-express": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-final": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-fresh": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-full": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-handy": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-new": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-prime": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-pro": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-quick": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-smart": {
-      "status": "todo",
-      "notes": ""
-    },
     "contrast-checker-std": {
       "status": "todo",
       "notes": ""
@@ -5148,6 +5088,21 @@
     "contrast-checker-advanced",
     "contrast-checker-api",
     "contrast-checker-browser",
-    "contrast-checker-classic"
+    "contrast-checker-classic",
+    "contrast-checker-complete",
+    "contrast-checker-dg",
+    "contrast-checker-easy",
+    "contrast-checker-enhanced",
+    "contrast-checker-expander",
+    "contrast-checker-express",
+    "contrast-checker-final",
+    "contrast-checker-fresh",
+    "contrast-checker-full",
+    "contrast-checker-handy",
+    "contrast-checker-new",
+    "contrast-checker-prime",
+    "contrast-checker-pro",
+    "contrast-checker-quick",
+    "contrast-checker-smart"
   ]
 }
