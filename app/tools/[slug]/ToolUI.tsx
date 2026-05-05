@@ -657,6 +657,36 @@ import HexToNamedColorClient from '@/components/tools/HexToNamedColorClient';
 import HexToRgbExpressClient from '@/components/tools/HexToRgbExpressClient';
 import HexToRgbNewClient from '@/components/tools/HexToRgbNewClient';
 import HexToRgbaClient from '@/components/tools/HexToRgbaClient';
+import HmacGeneratorClient from '@/components/tools/HmacGeneratorClient';
+import HomoglyphDetectorClient from '@/components/tools/HomoglyphDetectorClient';
+import HreflangTagGeneratorClient from '@/components/tools/HreflangTagGeneratorClient';
+import HslToHexClient from '@/components/tools/HslToHexClient';
+import HslToRgbExpressClient from '@/components/tools/HslToRgbExpressClient';
+import HslToRgbNewClient from '@/components/tools/HslToRgbNewClient';
+import HsvToHexClient from '@/components/tools/HsvToHexClient';
+import HtmlAttributeEncoderClient from '@/components/tools/HtmlAttributeEncoderClient';
+import HtmlEncoderDecoderClient from '@/components/tools/HtmlEncoderDecoderClient';
+import HtmlEntitiesReferenceClient from '@/components/tools/HtmlEntitiesReferenceClient';
+import HtmlLivePreviewClient from '@/components/tools/HtmlLivePreviewClient';
+import HtmlMarkdownExpressClient from '@/components/tools/HtmlMarkdownExpressClient';
+import HtmlPlaintextExpressClient from '@/components/tools/HtmlPlaintextExpressClient';
+import HtmlTableToJsonClient from '@/components/tools/HtmlTableToJsonClient';
+import HtmlToJsxClient from '@/components/tools/HtmlToJsxClient';
+import HtmlToMarkdownV2Client from '@/components/tools/HtmlToMarkdownV2Client';
+import HtmlToPlainTextToolClient from '@/components/tools/HtmlToPlainTextToolClient';
+import HtmlToPlainTextV2Client from '@/components/tools/HtmlToPlainTextV2Client';
+import HttpHeaders2025Client from '@/components/tools/HttpHeaders2025Client';
+import HttpHeadersAnalyzerClient from '@/components/tools/HttpHeadersAnalyzerClient';
+import HttpHeadersBrowserClient from '@/components/tools/HttpHeadersBrowserClient';
+import HttpHeadersCheckClient from '@/components/tools/HttpHeadersCheckClient';
+import HttpHeadersCheckerClient from '@/components/tools/HttpHeadersCheckerClient';
+import HttpHeadersDgClient from '@/components/tools/HttpHeadersDgClient';
+import HttpHeadersEasyClient from '@/components/tools/HttpHeadersEasyClient';
+import HttpHeadersExpanderClient from '@/components/tools/HttpHeadersExpanderClient';
+import HttpHeadersFreshClient from '@/components/tools/HttpHeadersFreshClient';
+import HttpHeadersFullClient from '@/components/tools/HttpHeadersFullClient';
+import HttpHeadersInspectorClient from '@/components/tools/HttpHeadersInspectorClient';
+import HttpHeadersQuickClient from '@/components/tools/HttpHeadersQuickClient';
 import ColorTemperatureAdjusterClient from '@/components/tools/ColorTemperatureAdjusterClient';
 import ChartMakerClient from '@/components/tools/ChartMakerClient';
 import CitationGeneratorClient from '@/components/tools/CitationGeneratorClient';
@@ -2071,6 +2101,66 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <HexToRgbNewClient />;
     case 'hex-to-rgba':
       return <HexToRgbaClient />;
+    case 'hmac-generator':
+      return <HmacGeneratorClient />;
+    case 'homoglyph-detector':
+      return <HomoglyphDetectorClient />;
+    case 'hreflang-tag-generator':
+      return <HreflangTagGeneratorClient />;
+    case 'hsl-to-hex':
+      return <HslToHexClient />;
+    case 'hsl-to-rgb-express':
+      return <HslToRgbExpressClient />;
+    case 'hsl-to-rgb-new':
+      return <HslToRgbNewClient />;
+    case 'hsv-to-hex':
+      return <HsvToHexClient />;
+    case 'html-attribute-encoder':
+      return <HtmlAttributeEncoderClient />;
+    case 'html-encoder-decoder':
+      return <HtmlEncoderDecoderClient />;
+    case 'html-entities-reference':
+      return <HtmlEntitiesReferenceClient />;
+    case 'html-live-preview':
+      return <HtmlLivePreviewClient />;
+    case 'html-markdown-express':
+      return <HtmlMarkdownExpressClient />;
+    case 'html-plaintext-express':
+      return <HtmlPlaintextExpressClient />;
+    case 'html-table-to-json':
+      return <HtmlTableToJsonClient />;
+    case 'html-to-jsx':
+      return <HtmlToJsxClient />;
+    case 'html-to-markdown-v2':
+      return <HtmlToMarkdownV2Client />;
+    case 'html-to-plain-text-tool':
+      return <HtmlToPlainTextToolClient />;
+    case 'html-to-plain-text-v2':
+      return <HtmlToPlainTextV2Client />;
+    case 'http-headers-2025':
+      return <HttpHeaders2025Client />;
+    case 'http-headers-analyzer':
+      return <HttpHeadersAnalyzerClient />;
+    case 'http-headers-browser':
+      return <HttpHeadersBrowserClient />;
+    case 'http-headers-check':
+      return <HttpHeadersCheckClient />;
+    case 'http-headers-checker':
+      return <HttpHeadersCheckerClient />;
+    case 'http-headers-dg':
+      return <HttpHeadersDgClient />;
+    case 'http-headers-easy':
+      return <HttpHeadersEasyClient />;
+    case 'http-headers-expander':
+      return <HttpHeadersExpanderClient />;
+    case 'http-headers-fresh':
+      return <HttpHeadersFreshClient />;
+    case 'http-headers-full':
+      return <HttpHeadersFullClient />;
+    case 'http-headers-inspector':
+      return <HttpHeadersInspectorClient />;
+    case 'http-headers-quick':
+      return <HttpHeadersQuickClient />;
     case 'color-temperature-adjuster':
       return <ColorTemperatureAdjusterClient />;
     case 'collage-maker':

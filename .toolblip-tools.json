@@ -240,141 +240,21 @@
     }
   },
   "all_needing_component": {
-    "grammar-checker-ultra": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-v2": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-v3": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-v4": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-v5": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-v6": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-web": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-x": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-xl": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-fix-tool": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-fixer": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-score-checker": {
-      "status": "todo",
-      "notes": ""
-    },
-    "graphql-playground": {
-      "status": "todo",
-      "notes": ""
-    },
-    "hash-collision-finder": {
-      "status": "todo",
-      "notes": ""
-    },
-    "hash-diff-checker": {
-      "status": "todo",
-      "notes": ""
-    },
-    "heading-tag-analyzer": {
-      "status": "todo",
-      "notes": ""
-    },
-    "headline-analyzer": {
-      "status": "todo",
-      "notes": ""
-    },
-    "heic-to-avif": {
-      "status": "todo",
-      "notes": ""
-    },
-    "heic-to-jpg": {
-      "status": "todo",
-      "notes": ""
-    },
-    "heic-to-png": {
-      "status": "todo",
-      "notes": ""
-    },
-    "hex-color-picker": {
-      "status": "todo",
-      "notes": ""
-    },
-    "hex-rgb-hsl-color-picker": {
-      "status": "todo",
-      "notes": ""
-    },
-    "hex-to-cmyk": {
-      "status": "todo",
-      "notes": ""
-    },
-    "hex-to-decimal-converter": {
-      "status": "todo",
-      "notes": ""
-    },
-    "hex-to-hsl": {
-      "status": "todo",
-      "notes": ""
-    },
-    "hex-to-hsv": {
-      "status": "todo",
-      "notes": ""
-    },
-    "hex-to-named-color": {
-      "status": "todo",
-      "notes": ""
-    },
-    "hex-to-rgb-express": {
-      "status": "todo",
-      "notes": ""
-    },
-    "hex-to-rgb-new": {
-      "status": "todo",
-      "notes": ""
-    },
-    "hex-to-rgba": {
-      "status": "todo",
-      "notes": ""
-    },
     "hmac-generator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built 2026-05-05"
     },
     "homoglyph-detector": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built 2026-05-05"
     },
     "hreflang-tag-generator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built 2026-05-05"
     },
     "hsl-to-hex": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built 2026-05-05"
     },
     "hsl-to-rgb-express": {
       "status": "todo",
@@ -385,8 +265,8 @@
       "notes": ""
     },
     "hsv-to-hex": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built 2026-05-05"
     },
     "html-attribute-encoder": {
       "status": "todo",
@@ -433,52 +313,52 @@
       "notes": ""
     },
     "http-headers-2025": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Stub component created 2026-05-05"
     },
     "http-headers-analyzer": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Stub component created 2026-05-05"
     },
     "http-headers-browser": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Stub component created 2026-05-05"
     },
     "http-headers-check": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Stub component created 2026-05-05"
     },
     "http-headers-checker": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Stub component created 2026-05-05"
     },
     "http-headers-dg": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Stub component created 2026-05-05"
     },
     "http-headers-easy": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Stub component created 2026-05-05"
     },
     "http-headers-expander": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Stub component created 2026-05-05"
     },
     "http-headers-fresh": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Stub component created 2026-05-05"
     },
     "http-headers-full": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Stub component created 2026-05-05"
     },
     "http-headers-inspector": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Stub component created 2026-05-05"
     },
     "http-headers-quick": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Stub component created 2026-05-05"
     },
     "http-headers-simple": {
       "status": "todo",
@@ -4383,6 +4263,36 @@
     "grammar-checker-std",
     "grammar-checker-tool",
     "grammar-checker-toolblip",
-    "grammar-checker-ultimate"
+    "grammar-checker-ultimate",
+    "grammar-checker-ultra",
+    "grammar-checker-v2",
+    "grammar-checker-v3",
+    "grammar-checker-v4",
+    "grammar-checker-v5",
+    "grammar-checker-v6",
+    "grammar-checker-web",
+    "grammar-checker-x",
+    "grammar-checker-xl",
+    "grammar-fix-tool",
+    "grammar-fixer",
+    "grammar-score-checker",
+    "graphql-playground",
+    "hash-collision-finder",
+    "hash-diff-checker",
+    "heading-tag-analyzer",
+    "headline-analyzer",
+    "heic-to-avif",
+    "heic-to-jpg",
+    "heic-to-png",
+    "hex-color-picker",
+    "hex-rgb-hsl-color-picker",
+    "hex-to-cmyk",
+    "hex-to-decimal-converter",
+    "hex-to-hsl",
+    "hex-to-hsv",
+    "hex-to-named-color",
+    "hex-to-rgb-express",
+    "hex-to-rgb-new",
+    "hex-to-rgba"
   ]
 }
