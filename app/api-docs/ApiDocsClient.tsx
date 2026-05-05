@@ -682,7 +682,7 @@ export default function ApiDocsClient() {
 curl -X POST "${BASE_URL}/api/auth/register" \\
   -H "Content-Type: application/json" \\
   -H "Accept: application/json" \\
-  -d '{"name":"Jane Doe","email":"jane@example.com","password":"secret123"}'
+  -d '{"name":"Jane Doe","email":"jane@example.com","password":"secret123","password_confirmation":"secret123"}'
 
 # Response: { "user": {...}, "token": "1|Xr8Kb..." }
 # → Save the token — you need it for authenticated requests
