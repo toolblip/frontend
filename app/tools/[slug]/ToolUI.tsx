@@ -597,6 +597,36 @@ import GifToWebmClient from '@/components/tools/GifToWebmClient';
 import GoogleAlgorithmTrackerClient from '@/components/tools/GoogleAlgorithmTrackerClient';
 import GoogleRankCheckerClient from '@/components/tools/GoogleRankCheckerClient';
 import GoogleSerpPreviewClient from '@/components/tools/GoogleSerpPreviewClient';
+import GoogleSerpSimulatorClient from '@/components/tools/GoogleSerpSimulatorClient';
+import GradientGeneratorClient from '@/components/tools/GradientGeneratorClient';
+import GrammarCheckToolClient from '@/components/tools/GrammarCheckToolClient';
+import GrammarChecker2025Client from '@/components/tools/GrammarChecker2025Client';
+import GrammarCheckerAdvClient from '@/components/tools/GrammarCheckerAdvClient';
+import GrammarCheckerAdvancedClient from '@/components/tools/GrammarCheckerAdvancedClient';
+import GrammarCheckerAiClient from '@/components/tools/GrammarCheckerAiClient';
+import GrammarCheckerApiClient from '@/components/tools/GrammarCheckerApiClient';
+import GrammarCheckerBrowserClient from '@/components/tools/GrammarCheckerBrowserClient';
+import GrammarCheckerClassicClient from '@/components/tools/GrammarCheckerClassicClient';
+import GrammarCheckerCompleteClient from '@/components/tools/GrammarCheckerCompleteClient';
+import GrammarCheckerDgClient from '@/components/tools/GrammarCheckerDgClient';
+import GrammarCheckerEasyClient from '@/components/tools/GrammarCheckerEasyClient';
+import GrammarCheckerEnhancedClient from '@/components/tools/GrammarCheckerEnhancedClient';
+import GrammarCheckerExpanderClient from '@/components/tools/GrammarCheckerExpanderClient';
+import GrammarCheckerExpressClient from '@/components/tools/GrammarCheckerExpressClient';
+import GrammarCheckerFinalClient from '@/components/tools/GrammarCheckerFinalClient';
+import GrammarCheckerFreshClient from '@/components/tools/GrammarCheckerFreshClient';
+import GrammarCheckerFullClient from '@/components/tools/GrammarCheckerFullClient';
+import GrammarCheckerInstantClient from '@/components/tools/GrammarCheckerInstantClient';
+import GrammarCheckerLiteClient from '@/components/tools/GrammarCheckerLiteClient';
+import GrammarCheckerNewClient from '@/components/tools/GrammarCheckerNewClient';
+import GrammarCheckerPrimeClient from '@/components/tools/GrammarCheckerPrimeClient';
+import GrammarCheckerProClient from '@/components/tools/GrammarCheckerProClient';
+import GrammarCheckerQuickClient from '@/components/tools/GrammarCheckerQuickClient';
+import GrammarCheckerSmartClient from '@/components/tools/GrammarCheckerSmartClient';
+import GrammarCheckerStdClient from '@/components/tools/GrammarCheckerStdClient';
+import GrammarCheckerToolClient from '@/components/tools/GrammarCheckerToolClient';
+import GrammarCheckerToolblipClient from '@/components/tools/GrammarCheckerToolblipClient';
+import GrammarCheckerUltimateClient from '@/components/tools/GrammarCheckerUltimateClient';
 import ColorTemperatureAdjusterClient from '@/components/tools/ColorTemperatureAdjusterClient';
 import ChartMakerClient from '@/components/tools/ChartMakerClient';
 import CitationGeneratorClient from '@/components/tools/CitationGeneratorClient';
@@ -1891,6 +1921,66 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <GoogleRankCheckerClient />;
     case 'google-serp-preview':
       return <GoogleSerpPreviewClient />;
+    case 'google-serp-simulator':
+      return <GoogleSerpSimulatorClient />;
+    case 'gradient-generator':
+      return <GradientGeneratorClient />;
+    case 'grammar-check-tool':
+      return <GrammarCheckToolClient />;
+    case 'grammar-checker-2025':
+      return <GrammarChecker2025Client />;
+    case 'grammar-checker-adv':
+      return <GrammarCheckerAdvClient />;
+    case 'grammar-checker-advanced':
+      return <GrammarCheckerAdvancedClient />;
+    case 'grammar-checker-ai':
+      return <GrammarCheckerAiClient />;
+    case 'grammar-checker-api':
+      return <GrammarCheckerApiClient />;
+    case 'grammar-checker-browser':
+      return <GrammarCheckerBrowserClient />;
+    case 'grammar-checker-classic':
+      return <GrammarCheckerClassicClient />;
+    case 'grammar-checker-complete':
+      return <GrammarCheckerCompleteClient />;
+    case 'grammar-checker-dg':
+      return <GrammarCheckerDgClient />;
+    case 'grammar-checker-easy':
+      return <GrammarCheckerEasyClient />;
+    case 'grammar-checker-enhanced':
+      return <GrammarCheckerEnhancedClient />;
+    case 'grammar-checker-expander':
+      return <GrammarCheckerExpanderClient />;
+    case 'grammar-checker-express':
+      return <GrammarCheckerExpressClient />;
+    case 'grammar-checker-final':
+      return <GrammarCheckerFinalClient />;
+    case 'grammar-checker-fresh':
+      return <GrammarCheckerFreshClient />;
+    case 'grammar-checker-full':
+      return <GrammarCheckerFullClient />;
+    case 'grammar-checker-instant':
+      return <GrammarCheckerInstantClient />;
+    case 'grammar-checker-lite':
+      return <GrammarCheckerLiteClient />;
+    case 'grammar-checker-new':
+      return <GrammarCheckerNewClient />;
+    case 'grammar-checker-prime':
+      return <GrammarCheckerPrimeClient />;
+    case 'grammar-checker-pro':
+      return <GrammarCheckerProClient />;
+    case 'grammar-checker-quick':
+      return <GrammarCheckerQuickClient />;
+    case 'grammar-checker-smart':
+      return <GrammarCheckerSmartClient />;
+    case 'grammar-checker-std':
+      return <GrammarCheckerStdClient />;
+    case 'grammar-checker-tool':
+      return <GrammarCheckerToolClient />;
+    case 'grammar-checker-toolblip':
+      return <GrammarCheckerToolblipClient />;
+    case 'grammar-checker-ultimate':
+      return <GrammarCheckerUltimateClient />;
     case 'color-temperature-adjuster':
       return <ColorTemperatureAdjusterClient />;
     case 'collage-maker':

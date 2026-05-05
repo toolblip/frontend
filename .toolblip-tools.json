@@ -240,126 +240,6 @@
     }
   },
   "all_needing_component": {
-    "favicon-make-tool": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-maker": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-png-creator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-png-generator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-png-maker": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-preview": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-preview-tool": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-quick": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-quick-generator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-simple": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-tool": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-toolblip": {
-      "status": "todo",
-      "notes": ""
-    },
-    "flip": {
-      "status": "todo",
-      "notes": ""
-    },
-    "font-to-png": {
-      "status": "todo",
-      "notes": ""
-    },
-    "force-converter": {
-      "status": "todo",
-      "notes": ""
-    },
-    "fraction-calculator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "fraction-to-decimal-express": {
-      "status": "todo",
-      "notes": ""
-    },
-    "fraction-to-decimal-v2": {
-      "status": "todo",
-      "notes": ""
-    },
-    "frequency-converter": {
-      "status": "todo",
-      "notes": ""
-    },
-    "general-unit-converter": {
-      "status": "todo",
-      "notes": ""
-    },
-    "gif-to-apng": {
-      "status": "todo",
-      "notes": ""
-    },
-    "gif-to-avif": {
-      "status": "todo",
-      "notes": ""
-    },
-    "gif-to-jpg": {
-      "status": "todo",
-      "notes": ""
-    },
-    "gif-to-mov": {
-      "status": "todo",
-      "notes": ""
-    },
-    "gif-to-mp4": {
-      "status": "todo",
-      "notes": ""
-    },
-    "gif-to-png": {
-      "status": "todo",
-      "notes": ""
-    },
-    "gif-to-webm": {
-      "status": "todo",
-      "notes": ""
-    },
-    "google-algorithm-tracker": {
-      "status": "todo",
-      "notes": ""
-    },
-    "google-rank-checker": {
-      "status": "todo",
-      "notes": ""
-    },
-    "google-serp-preview": {
-      "status": "todo",
-      "notes": ""
-    },
     "google-serp-simulator": {
       "status": "todo",
       "notes": ""
@@ -4563,6 +4443,36 @@
     "favicon-generator-x",
     "favicon-generator-xl",
     "favicon-grabber",
-    "favicon-icon-generator"
+    "favicon-icon-generator",
+    "favicon-make-tool",
+    "favicon-maker",
+    "favicon-png-creator",
+    "favicon-png-generator",
+    "favicon-png-maker",
+    "favicon-preview",
+    "favicon-preview-tool",
+    "favicon-quick",
+    "favicon-quick-generator",
+    "favicon-simple",
+    "favicon-tool",
+    "favicon-toolblip",
+    "flip",
+    "font-to-png",
+    "force-converter",
+    "fraction-calculator",
+    "fraction-to-decimal-express",
+    "fraction-to-decimal-v2",
+    "frequency-converter",
+    "general-unit-converter",
+    "gif-to-apng",
+    "gif-to-avif",
+    "gif-to-jpg",
+    "gif-to-mov",
+    "gif-to-mp4",
+    "gif-to-png",
+    "gif-to-webm",
+    "google-algorithm-tracker",
+    "google-rank-checker",
+    "google-serp-preview"
   ]
 }
