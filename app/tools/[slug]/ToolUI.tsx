@@ -96,6 +96,7 @@ import CssToScssConverterClient from '@/components/tools/CssToScssConverterClien
 import CssValidatorClient from '@/components/tools/CssValidatorClient';
 import CsvToJsonClient from '@/components/tools/CsvToJsonClient';
 import CsvToTsvClient from '@/components/tools/CsvToTsvClient';
+import CurlGeneratorClient from '@/components/tools/CurlGeneratorClient';
 import CurlToPythonClient from '@/components/tools/CurlToPythonClient';
 import DecimalToBinaryClient from '@/components/tools/DecimalToBinaryClient';
 import DecimalToHexClient from '@/components/tools/DecimalToHexClient';
@@ -660,6 +661,8 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <CssToScssConverterClient />;
     case 'css-validator':
       return <CssValidatorClient />;
+    case 'curl-generator':
+      return <CurlGeneratorClient />;
     case 'csv-to-json':
       return <CsvToJsonClient />;
     case 'csv-to-tsv':
