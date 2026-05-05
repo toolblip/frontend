@@ -240,66 +240,6 @@
     }
   },
   "all_needing_component": {
-    "cron-generator-smart": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-generator-std": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-generator-tool": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-generator-toolblip": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-generator-ultimate": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-generator-ultra": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-generator-v2": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-generator-v3": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-generator-v4": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-generator-v5": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-generator-v6": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-generator-x": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-generator-xl": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-human-readable": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cron-schedule-builder": {
-      "status": "todo",
-      "notes": ""
-    },
     "cron-schedule-checker": {
       "status": "todo",
       "notes": ""
@@ -4968,6 +4908,21 @@
     "cron-generator-new",
     "cron-generator-prime",
     "cron-generator-pro",
-    "cron-generator-quick"
+    "cron-generator-quick",
+    "cron-generator-smart",
+    "cron-generator-std",
+    "cron-generator-tool",
+    "cron-generator-toolblip",
+    "cron-generator-ultimate",
+    "cron-generator-ultra",
+    "cron-generator-v2",
+    "cron-generator-v3",
+    "cron-generator-v4",
+    "cron-generator-v5",
+    "cron-generator-v6",
+    "cron-generator-x",
+    "cron-generator-xl",
+    "cron-human-readable",
+    "cron-schedule-builder"
   ]
 }

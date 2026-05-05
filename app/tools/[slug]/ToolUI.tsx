@@ -447,6 +447,36 @@ import CronGeneratorXClient from '@/components/tools/CronGeneratorXClient';
 import CronGeneratorXlClient from '@/components/tools/CronGeneratorXlClient';
 import CronHumanReadableClient from '@/components/tools/CronHumanReadableClient';
 import CronScheduleBuilderClient from '@/components/tools/CronScheduleBuilderClient';
+import CronScheduleCheckerClient from '@/components/tools/CronScheduleCheckerClient';
+import CronScheduleExplainerClient from '@/components/tools/CronScheduleExplainerClient';
+import CronScheduleGeneratorClient from '@/components/tools/CronScheduleGeneratorClient';
+import CronScheduleValidatorClient from '@/components/tools/CronScheduleValidatorClient';
+import CronToolblipClient from '@/components/tools/CronToolblipClient';
+import CronValidatorClient from '@/components/tools/CronValidatorClient';
+import CronVisualBuilderClient from '@/components/tools/CronVisualBuilderClient';
+import CropCircleClient from '@/components/tools/CropCircleClient';
+import CssAnimationGeneratorClient from '@/components/tools/CssAnimationGeneratorClient';
+import CssCursorGeneratorClient from '@/components/tools/CssCursorGeneratorClient';
+import CssFilterGeneratorClient from '@/components/tools/CssFilterGeneratorClient';
+import CssFlexboxGeneratorClient from '@/components/tools/CssFlexboxGeneratorClient';
+import CssGridGeneratorClient from '@/components/tools/CssGridGeneratorClient';
+import CssNamingConventionClient from '@/components/tools/CssNamingConventionClient';
+import CssPreviewClient from '@/components/tools/CssPreviewClient';
+import CssToScssClient from '@/components/tools/CssToScssClient';
+import CssToStyledComponentsClient from '@/components/tools/CssToStyledComponentsClient';
+import CssToTailwindClient from '@/components/tools/CssToTailwindClient';
+import CssUnitsConverterClient from '@/components/tools/CssUnitsConverterClient';
+import CssUnitsConverterNewClient from '@/components/tools/CssUnitsConverterNewClient';
+import CssVariableGeneratorClient from '@/components/tools/CssVariableGeneratorClient';
+import CsvGeneratorClient from '@/components/tools/CsvGeneratorClient';
+import CsvJsonExpressClient from '@/components/tools/CsvJsonExpressClient';
+import CsvToExcelClient from '@/components/tools/CsvToExcelClient';
+import CsvToJsonV2Client from '@/components/tools/CsvToJsonV2Client';
+import CsvToTsvV2Client from '@/components/tools/CsvToTsvV2Client';
+import CsvToXmlClient from '@/components/tools/CsvToXmlClient';
+import CurlCommandBuilderClient from '@/components/tools/CurlCommandBuilderClient';
+import CurlGenExpressClient from '@/components/tools/CurlGenExpressClient';
+import CurlToJavascriptClient from '@/components/tools/CurlToJavascriptClient';
 import ColorTemperatureAdjusterClient from '@/components/tools/ColorTemperatureAdjusterClient';
 import ChartMakerClient from '@/components/tools/ChartMakerClient';
 import CitationGeneratorClient from '@/components/tools/CitationGeneratorClient';
@@ -1442,6 +1472,66 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <CronHumanReadableClient />;
     case 'cron-schedule-builder':
       return <CronScheduleBuilderClient />;
+    case 'cron-schedule-checker':
+      return <CronScheduleCheckerClient />;
+    case 'cron-schedule-explainer':
+      return <CronScheduleExplainerClient />;
+    case 'cron-schedule-generator':
+      return <CronScheduleGeneratorClient />;
+    case 'cron-schedule-validator':
+      return <CronScheduleValidatorClient />;
+    case 'cron-toolblip':
+      return <CronToolblipClient />;
+    case 'cron-validator':
+      return <CronValidatorClient />;
+    case 'cron-visual-builder':
+      return <CronVisualBuilderClient />;
+    case 'crop-circle':
+      return <CropCircleClient />;
+    case 'css-animation-generator':
+      return <CssAnimationGeneratorClient />;
+    case 'css-cursor-generator':
+      return <CssCursorGeneratorClient />;
+    case 'css-filter-generator':
+      return <CssFilterGeneratorClient />;
+    case 'css-flexbox-generator':
+      return <CssFlexboxGeneratorClient />;
+    case 'css-grid-generator':
+      return <CssGridGeneratorClient />;
+    case 'css-naming-convention':
+      return <CssNamingConventionClient />;
+    case 'css-preview':
+      return <CssPreviewClient />;
+    case 'css-to-scss':
+      return <CssToScssClient />;
+    case 'css-to-styled-components':
+      return <CssToStyledComponentsClient />;
+    case 'css-to-tailwind':
+      return <CssToTailwindClient />;
+    case 'css-units-converter':
+      return <CssUnitsConverterClient />;
+    case 'css-units-converter-new':
+      return <CssUnitsConverterNewClient />;
+    case 'css-variable-generator':
+      return <CssVariableGeneratorClient />;
+    case 'csv-generator':
+      return <CsvGeneratorClient />;
+    case 'csv-json-express':
+      return <CsvJsonExpressClient />;
+    case 'csv-to-excel':
+      return <CsvToExcelClient />;
+    case 'csv-to-json-v2':
+      return <CsvToJsonV2Client />;
+    case 'csv-to-tsv-v2':
+      return <CsvToTsvV2Client />;
+    case 'csv-to-xml':
+      return <CsvToXmlClient />;
+    case 'curl-command-builder':
+      return <CurlCommandBuilderClient />;
+    case 'curl-gen-express':
+      return <CurlGenExpressClient />;
+    case 'curl-to-javascript':
+      return <CurlToJavascriptClient />;
     case 'color-temperature-adjuster':
       return <ColorTemperatureAdjusterClient />;
     case 'collage-maker':
