@@ -240,46 +240,6 @@
     }
   },
   "all_needing_component": {
-    "color-contrast-auditor": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-contrast-matrix": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-contrast-ratio-checker": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-format-converter": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-format-converter-v2": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-format-picker": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-harmony-express": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-harmony-generator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-harmony-new": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-luminance-checker": {
-      "status": "todo",
-      "notes": ""
-    },
     "color-mixer-v2": {
       "status": "todo",
       "notes": ""
@@ -5403,6 +5363,16 @@
     "text-uniqueness-checker",
     "tsv-to-json",
     "url-redirect-checker",
-    "webp-converter"
+    "webp-converter",
+    "color-contrast-auditor",
+    "color-contrast-matrix",
+    "color-contrast-ratio-checker",
+    "color-format-converter",
+    "color-format-converter-v2",
+    "color-format-picker",
+    "color-harmony-express",
+    "color-harmony-generator",
+    "color-harmony-new",
+    "color-luminance-checker"
   ]
 }

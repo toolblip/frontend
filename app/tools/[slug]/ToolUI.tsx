@@ -296,7 +296,22 @@ import ColorHarmonyNewClient from '@/components/tools/ColorHarmonyNewClient';
 import ColorLuminanceCalculatorClient from '@/components/tools/ColorLuminanceCalculatorClient';
 import ColorLuminanceCheckerClient from '@/components/tools/ColorLuminanceCheckerClient';
 import ColorMixerClient from '@/components/tools/ColorMixerClient';
+import ColorMixerV2Client from '@/components/tools/ColorMixerV2Client';
+import ColorNameFinderClient from '@/components/tools/ColorNameFinderClient';
+import ColorNameFinderV2Client from '@/components/tools/ColorNameFinderV2Client';
+import ColorNameToolClient from '@/components/tools/ColorNameToolClient';
+import ColorOpacityGeneratorClient from '@/components/tools/ColorOpacityGeneratorClient';
+import ColorPaletteExtractorClient from '@/components/tools/ColorPaletteExtractorClient';
+import ColorPaletteFromImageClient from '@/components/tools/ColorPaletteFromImageClient';
 import ColorPaletteGeneratorClient from '@/components/tools/ColorPaletteGeneratorClient';
+import ColorPickAllClient from '@/components/tools/ColorPickAllClient';
+import ColorPickToolClient from '@/components/tools/ColorPickToolClient';
+import ColorPickToolblipClient from '@/components/tools/ColorPickToolblipClient';
+import ColorPicker2025Client from '@/components/tools/ColorPicker2025Client';
+import ColorPickerAdvClient from '@/components/tools/ColorPickerAdvClient';
+import ColorPickerAdvancedClient from '@/components/tools/ColorPickerAdvancedClient';
+import ColorPickerApiClient from '@/components/tools/ColorPickerApiClient';
+import ColorPickerBrowserClient from '@/components/tools/ColorPickerBrowserClient';
 import ColorTemperatureAdjusterClient from '@/components/tools/ColorTemperatureAdjusterClient';
 import ChartMakerClient from '@/components/tools/ChartMakerClient';
 import CitationGeneratorClient from '@/components/tools/CitationGeneratorClient';
@@ -990,8 +1005,38 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <ColorLuminanceCheckerClient />;
     case 'color-mixer':
       return <ColorMixerClient />;
+    case 'color-mixer-v2':
+      return <ColorMixerV2Client />;
+    case 'color-name-finder':
+      return <ColorNameFinderClient />;
+    case 'color-name-finder-v2':
+      return <ColorNameFinderV2Client />;
+    case 'color-name-tool':
+      return <ColorNameToolClient />;
+    case 'color-opacity-generator':
+      return <ColorOpacityGeneratorClient />;
+    case 'color-palette-extractor':
+      return <ColorPaletteExtractorClient />;
+    case 'color-palette-from-image':
+      return <ColorPaletteFromImageClient />;
     case 'color-palette-generator':
       return <ColorPaletteGeneratorClient />;
+    case 'color-pick-all':
+      return <ColorPickAllClient />;
+    case 'color-pick-tool':
+      return <ColorPickToolClient />;
+    case 'color-pick-toolblip':
+      return <ColorPickToolblipClient />;
+    case 'color-picker-2025':
+      return <ColorPicker2025Client />;
+    case 'color-picker-adv':
+      return <ColorPickerAdvClient />;
+    case 'color-picker-advanced':
+      return <ColorPickerAdvancedClient />;
+    case 'color-picker-api':
+      return <ColorPickerApiClient />;
+    case 'color-picker-browser':
+      return <ColorPickerBrowserClient />;
     case 'color-temperature-adjuster':
       return <ColorTemperatureAdjusterClient />;
     case 'collage-maker':
