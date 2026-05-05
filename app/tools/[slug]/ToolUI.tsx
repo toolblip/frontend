@@ -627,6 +627,36 @@ import GrammarCheckerStdClient from '@/components/tools/GrammarCheckerStdClient'
 import GrammarCheckerToolClient from '@/components/tools/GrammarCheckerToolClient';
 import GrammarCheckerToolblipClient from '@/components/tools/GrammarCheckerToolblipClient';
 import GrammarCheckerUltimateClient from '@/components/tools/GrammarCheckerUltimateClient';
+import GrammarCheckerUltraClient from '@/components/tools/GrammarCheckerUltraClient';
+import GrammarCheckerV2Client from '@/components/tools/GrammarCheckerV2Client';
+import GrammarCheckerV3Client from '@/components/tools/GrammarCheckerV3Client';
+import GrammarCheckerV4Client from '@/components/tools/GrammarCheckerV4Client';
+import GrammarCheckerV5Client from '@/components/tools/GrammarCheckerV5Client';
+import GrammarCheckerV6Client from '@/components/tools/GrammarCheckerV6Client';
+import GrammarCheckerWebClient from '@/components/tools/GrammarCheckerWebClient';
+import GrammarCheckerXClient from '@/components/tools/GrammarCheckerXClient';
+import GrammarCheckerXlClient from '@/components/tools/GrammarCheckerXlClient';
+import GrammarFixToolClient from '@/components/tools/GrammarFixToolClient';
+import GrammarFixerClient from '@/components/tools/GrammarFixerClient';
+import GrammarScoreCheckerClient from '@/components/tools/GrammarScoreCheckerClient';
+import GraphqlPlaygroundClient from '@/components/tools/GraphqlPlaygroundClient';
+import HashCollisionFinderClient from '@/components/tools/HashCollisionFinderClient';
+import HashDiffCheckerClient from '@/components/tools/HashDiffCheckerClient';
+import HeadingTagAnalyzerClient from '@/components/tools/HeadingTagAnalyzerClient';
+import HeadlineAnalyzerClient from '@/components/tools/HeadlineAnalyzerClient';
+import HeicToAvifClient from '@/components/tools/HeicToAvifClient';
+import HeicToJpgClient from '@/components/tools/HeicToJpgClient';
+import HeicToPngClient from '@/components/tools/HeicToPngClient';
+import HexColorPickerClient from '@/components/tools/HexColorPickerClient';
+import HexRgbHslColorPickerClient from '@/components/tools/HexRgbHslColorPickerClient';
+import HexToCmykClient from '@/components/tools/HexToCmykClient';
+import HexToDecimalConverterClient from '@/components/tools/HexToDecimalConverterClient';
+import HexToHslClient from '@/components/tools/HexToHslClient';
+import HexToHsvClient from '@/components/tools/HexToHsvClient';
+import HexToNamedColorClient from '@/components/tools/HexToNamedColorClient';
+import HexToRgbExpressClient from '@/components/tools/HexToRgbExpressClient';
+import HexToRgbNewClient from '@/components/tools/HexToRgbNewClient';
+import HexToRgbaClient from '@/components/tools/HexToRgbaClient';
 import ColorTemperatureAdjusterClient from '@/components/tools/ColorTemperatureAdjusterClient';
 import ChartMakerClient from '@/components/tools/ChartMakerClient';
 import CitationGeneratorClient from '@/components/tools/CitationGeneratorClient';
@@ -1981,6 +2011,66 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <GrammarCheckerToolblipClient />;
     case 'grammar-checker-ultimate':
       return <GrammarCheckerUltimateClient />;
+    case 'grammar-checker-ultra':
+      return <GrammarCheckerUltraClient />;
+    case 'grammar-checker-v2':
+      return <GrammarCheckerV2Client />;
+    case 'grammar-checker-v3':
+      return <GrammarCheckerV3Client />;
+    case 'grammar-checker-v4':
+      return <GrammarCheckerV4Client />;
+    case 'grammar-checker-v5':
+      return <GrammarCheckerV5Client />;
+    case 'grammar-checker-v6':
+      return <GrammarCheckerV6Client />;
+    case 'grammar-checker-web':
+      return <GrammarCheckerWebClient />;
+    case 'grammar-checker-x':
+      return <GrammarCheckerXClient />;
+    case 'grammar-checker-xl':
+      return <GrammarCheckerXlClient />;
+    case 'grammar-fix-tool':
+      return <GrammarFixToolClient />;
+    case 'grammar-fixer':
+      return <GrammarFixerClient />;
+    case 'grammar-score-checker':
+      return <GrammarScoreCheckerClient />;
+    case 'graphql-playground':
+      return <GraphqlPlaygroundClient />;
+    case 'hash-collision-finder':
+      return <HashCollisionFinderClient />;
+    case 'hash-diff-checker':
+      return <HashDiffCheckerClient />;
+    case 'heading-tag-analyzer':
+      return <HeadingTagAnalyzerClient />;
+    case 'headline-analyzer':
+      return <HeadlineAnalyzerClient />;
+    case 'heic-to-avif':
+      return <HeicToAvifClient />;
+    case 'heic-to-jpg':
+      return <HeicToJpgClient />;
+    case 'heic-to-png':
+      return <HeicToPngClient />;
+    case 'hex-color-picker':
+      return <HexColorPickerClient />;
+    case 'hex-rgb-hsl-color-picker':
+      return <HexRgbHslColorPickerClient />;
+    case 'hex-to-cmyk':
+      return <HexToCmykClient />;
+    case 'hex-to-decimal-converter':
+      return <HexToDecimalConverterClient />;
+    case 'hex-to-hsl':
+      return <HexToHslClient />;
+    case 'hex-to-hsv':
+      return <HexToHsvClient />;
+    case 'hex-to-named-color':
+      return <HexToNamedColorClient />;
+    case 'hex-to-rgb-express':
+      return <HexToRgbExpressClient />;
+    case 'hex-to-rgb-new':
+      return <HexToRgbNewClient />;
+    case 'hex-to-rgba':
+      return <HexToRgbaClient />;
     case 'color-temperature-adjuster':
       return <ColorTemperatureAdjusterClient />;
     case 'collage-maker':

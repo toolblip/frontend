@@ -240,126 +240,6 @@
     }
   },
   "all_needing_component": {
-    "google-serp-simulator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "gradient-generator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-check-tool": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-2025": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-adv": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-advanced": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-ai": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-api": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-browser": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-classic": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-complete": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-dg": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-easy": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-enhanced": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-expander": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-express": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-final": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-fresh": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-full": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-instant": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-lite": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-new": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-prime": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-pro": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-quick": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-smart": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-std": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-tool": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-toolblip": {
-      "status": "todo",
-      "notes": ""
-    },
-    "grammar-checker-ultimate": {
-      "status": "todo",
-      "notes": ""
-    },
     "grammar-checker-ultra": {
       "status": "todo",
       "notes": ""
@@ -4473,6 +4353,36 @@
     "gif-to-webm",
     "google-algorithm-tracker",
     "google-rank-checker",
-    "google-serp-preview"
+    "google-serp-preview",
+    "google-serp-simulator",
+    "gradient-generator",
+    "grammar-check-tool",
+    "grammar-checker-2025",
+    "grammar-checker-adv",
+    "grammar-checker-advanced",
+    "grammar-checker-ai",
+    "grammar-checker-api",
+    "grammar-checker-browser",
+    "grammar-checker-classic",
+    "grammar-checker-complete",
+    "grammar-checker-dg",
+    "grammar-checker-easy",
+    "grammar-checker-enhanced",
+    "grammar-checker-expander",
+    "grammar-checker-express",
+    "grammar-checker-final",
+    "grammar-checker-fresh",
+    "grammar-checker-full",
+    "grammar-checker-instant",
+    "grammar-checker-lite",
+    "grammar-checker-new",
+    "grammar-checker-prime",
+    "grammar-checker-pro",
+    "grammar-checker-quick",
+    "grammar-checker-smart",
+    "grammar-checker-std",
+    "grammar-checker-tool",
+    "grammar-checker-toolblip",
+    "grammar-checker-ultimate"
   ]
 }
