@@ -283,8 +283,18 @@ import BmiCalculatorClient from '@/components/tools/BmiCalculatorClient';
 import BatchFaviconDownloaderClient from '@/components/tools/BatchFaviconDownloaderClient';
 import BatchImageResizerClient from '@/components/tools/BatchImageResizerClient';
 import ColorBlindnessSimulatorClient from '@/components/tools/ColorBlindnessSimulatorClient';
+import ColorContrastAuditorClient from '@/components/tools/ColorContrastAuditorClient';
 import ColorContrastCheckerClient from '@/components/tools/ColorContrastCheckerClient';
+import ColorContrastMatrixClient from '@/components/tools/ColorContrastMatrixClient';
+import ColorContrastRatioCheckerClient from '@/components/tools/ColorContrastRatioCheckerClient';
+import ColorFormatConverterClient from '@/components/tools/ColorFormatConverterClient';
+import ColorFormatConverterV2Client from '@/components/tools/ColorFormatConverterV2Client';
+import ColorFormatPickerClient from '@/components/tools/ColorFormatPickerClient';
+import ColorHarmonyExpressClient from '@/components/tools/ColorHarmonyExpressClient';
+import ColorHarmonyGeneratorClient from '@/components/tools/ColorHarmonyGeneratorClient';
+import ColorHarmonyNewClient from '@/components/tools/ColorHarmonyNewClient';
 import ColorLuminanceCalculatorClient from '@/components/tools/ColorLuminanceCalculatorClient';
+import ColorLuminanceCheckerClient from '@/components/tools/ColorLuminanceCheckerClient';
 import ColorMixerClient from '@/components/tools/ColorMixerClient';
 import ColorPaletteGeneratorClient from '@/components/tools/ColorPaletteGeneratorClient';
 import ColorTemperatureAdjusterClient from '@/components/tools/ColorTemperatureAdjusterClient';
@@ -690,12 +700,18 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <CollocationsCheckerClient />;
     case 'color-blindness-simulator':
       return <ColorBlindnessSimulatorClient />;
-    case 'citation-generator':
-      return <CitationGeneratorClient />;
+    case 'color-contrast-auditor':
+      return <ColorContrastAuditorClient />;
+    case 'color-contrast-matrix':
+      return <ColorContrastMatrixClient />;
+    case 'color-contrast-ratio-checker':
+      return <ColorContrastRatioCheckerClient />;
     case 'cleanup-picture':
       return <CleanupPictureClient />;
     case 'cors-header-generator':
       return <CorsHeaderGeneratorClient />;
+    case 'citation-generator':
+      return <CitationGeneratorClient />;
     case 'countdown-timer':
       return <CountdownTimerClient />;
     case 'crontab-generator':
@@ -954,12 +970,24 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <BaseConverterClient />;
     case 'base-converter-quick':
       return <BaseConverterQuickClient />;
-    case 'color-blindness-simulator':
-      return <ColorBlindnessSimulatorClient />;
     case 'color-contrast-checker':
       return <ColorContrastCheckerClient />;
+    case 'color-format-converter':
+      return <ColorFormatConverterClient />;
+    case 'color-format-converter-v2':
+      return <ColorFormatConverterV2Client />;
+    case 'color-format-picker':
+      return <ColorFormatPickerClient />;
+    case 'color-harmony-express':
+      return <ColorHarmonyExpressClient />;
+    case 'color-harmony-generator':
+      return <ColorHarmonyGeneratorClient />;
+    case 'color-harmony-new':
+      return <ColorHarmonyNewClient />;
     case 'color-luminance-calculator':
       return <ColorLuminanceCalculatorClient />;
+    case 'color-luminance-checker':
+      return <ColorLuminanceCheckerClient />;
     case 'color-mixer':
       return <ColorMixerClient />;
     case 'color-palette-generator':

@@ -240,26 +240,6 @@
     }
   },
   "all_needing_component": {
-    "code-diff": {
-      "status": "todo",
-      "notes": ""
-    },
-    "code-diff-tool": {
-      "status": "todo",
-      "notes": ""
-    },
-    "code-to-diagram-generator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cold-email-writer": {
-      "status": "todo",
-      "notes": ""
-    },
-    "collocations-checker": {
-      "status": "todo",
-      "notes": ""
-    },
     "color-contrast-auditor": {
       "status": "todo",
       "notes": ""
@@ -5367,7 +5347,12 @@
     "cmyk-to-rgb",
     "cmyk-to-rgb-tool",
     "code-beautifier",
+    "code-diff",
+    "code-diff-tool",
+    "code-to-diagram-generator",
+    "cold-email-writer",
     "collage-maker",
+    "collocations-checker",
     "color-blindness-simulator",
     "color-contrast-checker",
     "color-luminance-calculator",
