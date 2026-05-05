@@ -10,15 +10,15 @@ export default function Error({
 }) {
   return (
     <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4 py-20">
-      {/* Decorative heading — red outline, matches brand */}
+      {/* Large friendly "500" — red outline, matches brand */}
       <div
-        className="text-[clamp(48px,9vw,80px)] font-bold leading-none select-none mb-8"
+        className="text-[clamp(80px,14vw,140px)] font-bold leading-none select-none mb-8"
         style={{
           color: "var(--red-tint)",
           WebkitTextStroke: "2px var(--red)",
         }}
       >
-        Oops
+        500
       </div>
 
       <h1 className="text-3xl sm:text-4xl font-semibold mb-4" style={{ color: "var(--fg-0)" }}>
