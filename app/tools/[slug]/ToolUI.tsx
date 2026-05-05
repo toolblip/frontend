@@ -61,7 +61,10 @@ import HexToRgbClient from '@/components/tools/HexToRgbClient';
 import RgbToHexClient from '@/components/tools/RgbToHexClient';
 import RandomStringClient from '@/components/tools/RandomStringClient';
 import Base64EncoderDecoderClient from '@/components/tools/Base64EncoderDecoderClient';
+import Base64FileEncoderClient from '@/components/tools/Base64FileEncoderClient';
+import Base64ImageDecoderClient from '@/components/tools/Base64ImageDecoderClient';
 import Base64ImageEncoderClient from '@/components/tools/Base64ImageEncoderClient';
+import Base64ImageViewerClient from '@/components/tools/Base64ImageViewerClient';
 import CaseConverterClient from '@/components/tools/CaseConverterClient';
 import AgeCalculatorClient from '@/components/tools/AgeCalculatorClient';
 import AnagramGeneratorClient from '@/components/tools/AnagramGeneratorClient';
@@ -228,7 +231,32 @@ import ArticleRewriterClient from '@/components/tools/ArticleRewriterClient';
 import ArticleTitleGenClient from '@/components/tools/ArticleTitleGenClient';
 import ArticleTitleGeneratorClient from '@/components/tools/ArticleTitleGeneratorClient';
 import ArticleWriterClient from '@/components/tools/ArticleWriterClient';
+import AudioToTextClient from '@/components/tools/AudioToTextClient';
+import AutomationWizardClient from '@/components/tools/AutomationWizardClient';
+import AviToGifClient from '@/components/tools/AviToGifClient';
+import AviToMkvClient from '@/components/tools/AviToMkvClient';
+import AviToMovClient from '@/components/tools/AviToMovClient';
+import AviToMp3Client from '@/components/tools/AviToMp3Client';
+import AviToMp4Client from '@/components/tools/AviToMp4Client';
+import Azw3ToEpubClient from '@/components/tools/Azw3ToEpubClient';
+import Azw3ToMobiClient from '@/components/tools/Azw3ToMobiClient';
+import BacklinkAnalyzerClient from '@/components/tools/BacklinkAnalyzerClient';
+import BacklinkCheckerExpressClient from '@/components/tools/BacklinkCheckerExpressClient';
+import BacklinkCheckerV2Client from '@/components/tools/BacklinkCheckerV2Client';
+import BackslashEscapeUnescapeClient from '@/components/tools/BackslashEscapeUnescapeClient';
+import BarcodeGeneratorClient from '@/components/tools/BarcodeGeneratorClient';
+import BarcodeScannerClient from '@/components/tools/BarcodeScannerClient';
+import BaseConvertToolClient from '@/components/tools/BaseConvertToolClient';
+import BcryptHashGeneratorClient from '@/components/tools/BcryptHashGeneratorClient';
+import BillSaleGeneratorClient from '@/components/tools/BillSaleGeneratorClient';
+import BillSplitterClient from '@/components/tools/BillSplitterClient';
+import BaseConverterClient from '@/components/tools/BaseConverterClient';
+import BaseConverterQuickClient from '@/components/tools/BaseConverterQuickClient';
+import BaseNumberConverterClient from '@/components/tools/BaseNumberConverterClient';
+import BaseToolblipClient from '@/components/tools/BaseToolblipClient';
 import BlurBackgroundClient from '@/components/tools/BlurBackgroundClient';
+import BatchFaviconDownloaderClient from '@/components/tools/BatchFaviconDownloaderClient';
+import BatchImageResizerClient from '@/components/tools/BatchImageResizerClient';
 import ColorBlindnessSimulatorClient from '@/components/tools/ColorBlindnessSimulatorClient';
 import ColorContrastCheckerClient from '@/components/tools/ColorContrastCheckerClient';
 import ColorLuminanceCalculatorClient from '@/components/tools/ColorLuminanceCalculatorClient';
@@ -528,6 +556,26 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <Base64Client />;
     case 'base64-encoder-decoder':
       return <Base64EncoderDecoderClient />;
+    case 'base64-file-encoder':
+      return <Base64FileEncoderClient />;
+    case 'base64-image-decoder':
+      return <Base64ImageDecoderClient />;
+    case 'base64-image-viewer':
+      return <Base64ImageViewerClient />;
+    case 'base-number-converter':
+      return <BaseNumberConverterClient />;
+    case 'base-toolblip':
+      return <BaseToolblipClient />;
+    case 'batch-favicon-downloader':
+      return <BatchFaviconDownloaderClient />;
+    case 'batch-image-resizer':
+      return <BatchImageResizerClient />;
+    case 'bcrypt-hash-generator':
+      return <BcryptHashGeneratorClient />;
+    case 'bill-sale-generator':
+      return <BillSaleGeneratorClient />;
+    case 'bill-splitter':
+      return <BillSplitterClient />;
     case 'bash-command-generator':
       return <BashCommandGeneratorClient />;
     case 'binary-to-decimal':
@@ -764,6 +812,42 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <ArticleTitleGeneratorClient />;
     case 'article-writer':
       return <ArticleWriterClient />;
+    case 'audio-to-text':
+      return <AudioToTextClient />;
+    case 'automation-wizard':
+      return <AutomationWizardClient />;
+    case 'avi-to-gif':
+      return <AviToGifClient />;
+    case 'avi-to-mkv':
+      return <AviToMkvClient />;
+    case 'avi-to-mov':
+      return <AviToMovClient />;
+    case 'avi-to-mp3':
+      return <AviToMp3Client />;
+    case 'avi-to-mp4':
+      return <AviToMp4Client />;
+    case 'azw3-to-epub':
+      return <Azw3ToEpubClient />;
+    case 'azw3-to-mobi':
+      return <Azw3ToMobiClient />;
+    case 'backlink-analyzer':
+      return <BacklinkAnalyzerClient />;
+    case 'backlink-checker-express':
+      return <BacklinkCheckerExpressClient />;
+    case 'backlink-checker-v2':
+      return <BacklinkCheckerV2Client />;
+    case 'backslash-escape-unescape':
+      return <BackslashEscapeUnescapeClient />;
+    case 'barcode-generator':
+      return <BarcodeGeneratorClient />;
+    case 'barcode-scanner':
+      return <BarcodeScannerClient />;
+    case 'base-convert-tool':
+      return <BaseConvertToolClient />;
+    case 'base-converter':
+      return <BaseConverterClient />;
+    case 'base-converter-quick':
+      return <BaseConverterQuickClient />;
     case 'blur-background':
       return <BlurBackgroundClient />;
     case 'color-blindness-simulator':

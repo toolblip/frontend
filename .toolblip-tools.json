@@ -2,9 +2,9 @@
   "_meta": {
     "note": "Toolblip tool implementation tracker. Update status as you go. Do NOT reset \u2014 this persists across sessions.",
     "last_updated": "2026-05-05",
-    "total_wired": 277,
+    "total_wired": 305,
     "total_in_catalog": 1563,
-    "needs_new_component": 1286,
+    "needs_new_component": 1258,
     "high_value_needing_work": 54
   },
   "priorities": {
