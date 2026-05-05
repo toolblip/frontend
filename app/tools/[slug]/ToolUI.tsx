@@ -717,6 +717,7 @@ import GrayscaleClient from '@/components/tools/GrayscaleClient';
 import HomophoneCheckerClient from '@/components/tools/HomophoneCheckerClient';
 import HtmlMinifierClient from '@/components/tools/HtmlMinifierClient';
 import HttpStatusCheckerClient from '@/components/tools/HttpStatusCheckerClient';
+import ImageAltTextGeneratorClient from '@/components/tools/ImageAltTextGeneratorClient';
 import ImageBackgroundRemoverClient from '@/components/tools/ImageBackgroundRemoverClient';
 import ImageBorderAdderClient from '@/components/tools/ImageBorderAdderClient';
 import ImageCompressorClient from '@/components/tools/ImageCompressorClient';
@@ -898,7 +899,6 @@ import PressReleaseGeneratorClient from '@/components/tools/PressReleaseGenerato
 import PrivacyPolicyGeneratorClient from '@/components/tools/PrivacyPolicyGeneratorClient';
 import TokenBuilderClient from '@/components/tools/TokenBuilderClient';
 import PixelDensityCalculatorClient from '@/components/tools/PixelDensityCalculatorClient';
-import SSHKeyGeneratorClient from '@/components/tools/SSHKeyGeneratorClient';
 
 // ─── Individual tool UIs ────────────────────────────────────────────────────
 
@@ -2487,7 +2487,7 @@ function ToolUI({ tool }: { tool: Tool }) {
     case 'humanizer-ai':
       return <AiRephraserClient />;
     case 'image-alt-text-generator':
-      return <ComingSoonUI tool={tool} />;
+      return <ImageAltTextGeneratorClient />;
     case 'image-aspect-ratio-calculator':
       return <ImageResizerClient />;
     case 'image-resizer-adv':
@@ -3299,7 +3299,7 @@ function ToolUI({ tool }: { tool: Tool }) {
     case 'list-randomizer-v2':
       return <ListRandomizerClient />;
     case 'http-headers-viewer-adv': return <HttpHeadersViewerClient />;
-    case 'image-alt-text-generator': return <FakeTextGeneratorClient />;
+    case 'image-alt-text-generator': return <ImageAltTextGeneratorClient />;
     case 'image-compression-tool': return <ImageFlipToolClient />;
     case 'image-metadata-express': return <ImageMetadataViewerClient />;
     case 'image-metadata-tool': return <ImageFlipToolClient />;
