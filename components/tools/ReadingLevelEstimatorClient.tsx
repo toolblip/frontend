@@ -3,14 +3,14 @@
 import { useState } from 'react';
 
 interface Props {
-  tool: {
+  tool?: {
     name: string;
     slug: string;
     description: string;
   };
 }
 
-export default function ReadingLevelEstimatorClient({ tool }: Props) {
+export default function ReadingLevelEstimatorClient({ tool = { name: "", slug: "", description: "" } }: Props) {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [isLoading, setIsLoading] = useState(false);

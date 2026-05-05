@@ -3,14 +3,14 @@
 import { useState } from 'react';
 
 interface Props {
-  tool: {
+  tool?: {
     name: string;
     slug: string;
     description: string;
   };
 }
 
-export default function ImageScaleCalculatorClient({ tool }: Props) {
+export default function ImageScaleCalculatorClient({ tool = { name: "", slug: "", description: "" } }: Props) {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [isLoading, setIsLoading] = useState(false);

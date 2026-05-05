@@ -3,14 +3,14 @@
 import { useState } from 'react';
 
 interface Props {
-  tool: {
+  tool?: {
     name: string;
     slug: string;
     description: string;
   };
 }
 
-export default function SynonymFinderClient({ tool }: Props) {
+export default function SynonymFinderClient({ tool = { name: "", slug: "", description: "" } }: Props) {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
