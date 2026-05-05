@@ -9,9 +9,9 @@ const benefits = [
     ),
     color: '#16a34a',
     bg: '#dcfce7',
-    title: '100% Private',
-    tagline: 'Nothing leaves your browser',
-    desc: 'All processing happens in your tab. Your data never touches our servers — not even for a millisecond.',
+    title: 'Private',
+    tagline: 'Data never leaves your browser',
+    desc: 'All processing happens locally in your tab. Your data never touches our servers — not even for a millisecond.',
     glow: 'rgba(22, 163, 74, 0.12)',
   },
   {
@@ -22,9 +22,9 @@ const benefits = [
     ),
     color: '#d97706',
     bg: '#fef3c7',
-    title: 'Instantly Fast',
-    tagline: 'No loading, no waiting',
-    desc: 'Runs the moment you open it. No API calls, no spinners, no round-trips — just paste and get your result.',
+    title: 'Fast',
+    tagline: 'Runs instantly in your tab',
+    desc: 'No API calls, no spinners, no round-trips. Paste your data and get your result right there.',
     glow: 'rgba(217, 119, 6, 0.12)',
   },
   {
@@ -35,9 +35,9 @@ const benefits = [
     ),
     color: '#2563eb',
     bg: '#dbeafe',
-    title: 'Completely Free',
+    title: 'Free',
     tagline: 'No signup, no paywall',
-    desc: 'Every tool, every feature, every export. Use it now, use it forever — your credit card can stay in your wallet.',
+    desc: 'Every tool, every feature, every export. Use it now, use it forever — no credit card needed.',
     glow: 'rgba(37, 99, 235, 0.12)',
   },
 ];
@@ -68,7 +68,7 @@ export default function WhyToolblip() {
             gap: 18,
           }}
         >
-          {benefits.map((b, i) => (
+          {benefits.map((b) => (
             <div
               key={b.title}
               className="why-card"

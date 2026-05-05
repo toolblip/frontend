@@ -1,0 +1,171 @@
+[
+  {
+    "slug": "json-formatter",
+    "status": "pass",
+    "output": "{\n  \"name\": \"Ada\",\n  \"age\": 36\n}"
+  },
+  {
+    "slug": "json-to-markdown-table",
+    "status": "pass",
+    "output": "| name | age |\n| --- | --- |\n| Ada | 36 |\n"
+  },
+  {
+    "slug": "yaml-to-json",
+    "status": "fail",
+    "output": "",
+    "expected": "YAML→JSON"
+  },
+  {
+    "slug": "json-to-yaml",
+    "status": "pass",
+    "output": "name: Ada\nage: 36"
+  },
+  {
+    "slug": "sql-to-json",
+    "status": "pass",
+    "output": "[\n  {\n    \"id\": 1,\n    \"name\": \"Ada\"\n  }\n]"
+  },
+  {
+    "slug": "url-encode",
+    "status": "pass",
+    "output": "hello%20world%20%26%20foo%3Dbar"
+  },
+  {
+    "slug": "case-converter",
+    "status": "fail",
+    "output": "",
+    "expected": "Case convert"
+  },
+  {
+    "slug": "word-counter",
+    "status": "fail",
+    "output": "",
+    "expected": "Word count"
+  },
+  {
+    "slug": "character-counter",
+    "status": "fail",
+    "output": "",
+    "expected": "Char count"
+  },
+  {
+    "slug": "regex-tester",
+    "status": "pass",
+    "output": "hello world"
+  },
+  {
+    "slug": "regex-escape",
+    "status": "fail",
+    "output": "Processed: hello.world",
+    "expected": "Regex escape"
+  },
+  {
+    "slug": "hash-from-text",
+    "status": "pass",
+    "output": "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
+  },
+  {
+    "slug": "css-minifier",
+    "status": "pass",
+    "output": ".foo{ color: red;}"
+  },
+  {
+    "slug": "jwt-decoder",
+    "status": "fail",
+    "output": "{\n  \"alg\": \"HS256\"\n}",
+    "expected": "JWT decoded"
+  },
+  {
+    "slug": "xml-formatter",
+    "status": "fail",
+    "output": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<root>Hello</root>",
+    "expected": "XML formatted"
+  },
+  {
+    "slug": "cron-parser",
+    "status": "error",
+    "error": "page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('textarea') to be "
+  },
+  {
+    "slug": "markdown-to-html",
+    "status": "fail",
+    "output": "",
+    "expected": "Markdown→HTML"
+  },
+  {
+    "slug": "meta-tag-generator",
+    "status": "pass",
+    "output": "<!-- Primary Meta Tags -->\n<title>Page Title</title>\n<meta name=\"title\" content=\"Page Title\">\n<meta name=\"description\" content=\"My Page\">\n\n<!-- Open Graph -->\n<meta property=\"og:type\" content=\"website"
+  },
+  {
+    "slug": "url-slug-generator",
+    "status": "pass",
+    "output": "my-blog-post"
+  },
+  {
+    "slug": "color-palette-generator",
+    "status": "error",
+    "error": "page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('textarea') to be "
+  },
+  {
+    "slug": "age-calculator",
+    "status": "error",
+    "error": "page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('textarea') to be "
+  },
+  {
+    "slug": "binary-to-text",
+    "status": "fail",
+    "output": "",
+    "expected": "Binary decode"
+  },
+  {
+    "slug": "number-to-words",
+    "status": "error",
+    "error": "page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('textarea') to be "
+  },
+  {
+    "slug": "readability-score",
+    "status": "fail",
+    "output": "",
+    "expected": "Readability score"
+  },
+  {
+    "slug": "html-encoder",
+    "status": "fail",
+    "output": "",
+    "expected": "HTML encoded"
+  },
+  {
+    "slug": "base64-encoder-decoder",
+    "status": "fail",
+    "output": "",
+    "expected": "Base64 encoded"
+  },
+  {
+    "slug": "html-encoder-decoder",
+    "status": "fail",
+    "output": "",
+    "expected": "HTML enc/dec"
+  },
+  {
+    "slug": "regex-explainer",
+    "status": "fail",
+    "output": "",
+    "expected": "Regex explain"
+  },
+  {
+    "slug": "password-generator",
+    "status": "error",
+    "error": "page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('textarea') to be "
+  },
+  {
+    "slug": "uuid-generator",
+    "status": "error",
+    "error": "page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('textarea') to be "
+  },
+  {
+    "slug": "random-number-generator",
+    "status": "error",
+    "error": "page.waitForSelector: Timeout 10000ms exceeded.\nCall log:\n  - waiting for locator('textarea') to be "
+  }
+]
