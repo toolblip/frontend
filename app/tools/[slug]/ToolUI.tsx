@@ -198,6 +198,36 @@ import XmlSitemapGeneratorClient from '@/components/tools/XmlSitemapGeneratorCli
 import XmlValidatorClient from '@/components/tools/XmlValidatorClient';
 import YamlValidatorClient from '@/components/tools/YamlValidatorClient';
 import AiDetectorClient from '@/components/tools/AiDetectorClient';
+import AiRephraserClient from '@/components/tools/AiRephraserClient';
+import AiTwitterGeneratorClient from '@/components/tools/AiTwitterGeneratorClient';
+import ApiAuthHeaderGeneratorClient from '@/components/tools/ApiAuthHeaderGeneratorClient';
+import ApiDocGeneratorClient from '@/components/tools/ApiDocGeneratorClient';
+import AacToFlacClient from '@/components/tools/AacToFlacClient';
+import AacToM4rClient from '@/components/tools/AacToM4rClient';
+import AacToMp3Client from '@/components/tools/AacToMp3Client';
+import AacToMp4Client from '@/components/tools/AacToMp4Client';
+import AacToWavClient from '@/components/tools/AacToWavClient';
+import AddImagesClient from '@/components/tools/AddImagesClient';
+import AddPagesClient from '@/components/tools/AddPagesClient';
+import AddSubtitlesClient from '@/components/tools/AddSubtitlesClient';
+import AddTextClient from '@/components/tools/AddTextClient';
+import AlgorithmVisualizerClient from '@/components/tools/AlgorithmVisualizerClient';
+import AnnotateClient from '@/components/tools/AnnotateClient';
+import AsciiArtGeneratorClient from '@/components/tools/AsciiArtGeneratorClient';
+import AllInOneUnitConverterClient from '@/components/tools/AllInOneUnitConverterClient';
+import AngleUnitConverterClient from '@/components/tools/AngleUnitConverterClient';
+import ApiEndpointDebuggerClient from '@/components/tools/ApiEndpointDebuggerClient';
+import ApiEndpointDocumenterClient from '@/components/tools/ApiEndpointDocumenterClient';
+import ApiEndpointTesterClient from '@/components/tools/ApiEndpointTesterClient';
+import ApiSpecGeneratorClient from '@/components/tools/ApiSpecGeneratorClient';
+import AccessibilityCheckerClient from '@/components/tools/AccessibilityCheckerClient';
+import AreaConverterClient from '@/components/tools/AreaConverterClient';
+import Argon2HashGeneratorClient from '@/components/tools/Argon2HashGeneratorClient';
+import ArticleGeneratorClient from '@/components/tools/ArticleGeneratorClient';
+import ArticleRewriterClient from '@/components/tools/ArticleRewriterClient';
+import ArticleTitleGenClient from '@/components/tools/ArticleTitleGenClient';
+import ArticleTitleGeneratorClient from '@/components/tools/ArticleTitleGeneratorClient';
+import ArticleWriterClient from '@/components/tools/ArticleWriterClient';
 import BlurBackgroundClient from '@/components/tools/BlurBackgroundClient';
 import ColorBlindnessSimulatorClient from '@/components/tools/ColorBlindnessSimulatorClient';
 import ColorContrastCheckerClient from '@/components/tools/ColorContrastCheckerClient';
@@ -674,6 +704,66 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <RandomStringGeneratorToolClient />;
     case 'ai-detector':
       return <AiDetectorClient />;
+    case 'ai-rephraser':
+      return <AiRephraserClient />;
+    case 'ai-twitter-generator':
+      return <AiTwitterGeneratorClient />;
+    case 'api-auth-header-generator':
+      return <ApiAuthHeaderGeneratorClient />;
+    case 'api-doc-generator':
+      return <ApiDocGeneratorClient />;
+    case 'accessibility-checker':
+      return <AccessibilityCheckerClient />;
+    case 'aac-to-flac':
+      return <AacToFlacClient />;
+    case 'aac-to-m4r':
+      return <AacToM4rClient />;
+    case 'aac-to-mp3':
+      return <AacToMp3Client />;
+    case 'aac-to-mp4':
+      return <AacToMp4Client />;
+    case 'aac-to-wav':
+      return <AacToWavClient />;
+    case 'add-images':
+      return <AddImagesClient />;
+    case 'add-pages':
+      return <AddPagesClient />;
+    case 'add-subtitles':
+      return <AddSubtitlesClient />;
+    case 'add-text':
+      return <AddTextClient />;
+    case 'algorithm-visualizer':
+      return <AlgorithmVisualizerClient />;
+    case 'annotate':
+      return <AnnotateClient />;
+    case 'ascii-art-generator':
+      return <AsciiArtGeneratorClient />;
+    case 'all-in-one-unit-converter':
+      return <AllInOneUnitConverterClient />;
+    case 'angle-unit-converter':
+      return <AngleUnitConverterClient />;
+    case 'api-endpoint-debugger':
+      return <ApiEndpointDebuggerClient />;
+    case 'api-endpoint-documenter':
+      return <ApiEndpointDocumenterClient />;
+    case 'api-endpoint-tester':
+      return <ApiEndpointTesterClient />;
+    case 'api-spec-generator':
+      return <ApiSpecGeneratorClient />;
+    case 'area-converter':
+      return <AreaConverterClient />;
+    case 'argon2-hash-generator':
+      return <Argon2HashGeneratorClient />;
+    case 'article-generator':
+      return <ArticleGeneratorClient />;
+    case 'article-rewriter':
+      return <ArticleRewriterClient />;
+    case 'article-title-gen':
+      return <ArticleTitleGenClient />;
+    case 'article-title-generator':
+      return <ArticleTitleGeneratorClient />;
+    case 'article-writer':
+      return <ArticleWriterClient />;
     case 'blur-background':
       return <BlurBackgroundClient />;
     case 'color-blindness-simulator':

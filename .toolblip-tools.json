@@ -2,9 +2,9 @@
   "_meta": {
     "note": "Toolblip tool implementation tracker. Update status as you go. Do NOT reset \u2014 this persists across sessions.",
     "last_updated": "2026-05-05",
-    "total_wired": 247,
+    "total_wired": 277,
     "total_in_catalog": 1563,
-    "needs_new_component": 1398,
+    "needs_new_component": 1286,
     "high_value_needing_work": 54
   },
   "priorities": {
@@ -241,43 +241,43 @@
   },
   "all_needing_component": {
     "aac-to-flac": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "aac-to-m4r": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "aac-to-mp3": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "aac-to-mp4": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "aac-to-wav": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "accessibility-checker": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "add-images": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "add-pages": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "add-subtitles": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "add-text": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "ai-detector": {
@@ -285,83 +285,83 @@
       "notes": ""
     },
     "ai-rephraser": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "ai-twitter-generator": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "algorithm-visualizer": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "all-in-one-unit-converter": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "angle-unit-converter": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "annotate": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "api-auth-header-generator": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "api-doc-generator": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "api-endpoint-debugger": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "api-endpoint-documenter": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "api-endpoint-tester": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "api-spec-generator": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "area-converter": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "argon2-hash-generator": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "article-generator": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "article-rewriter": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "article-title-gen": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "article-title-generator": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "article-writer": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "ascii-art-generator": {
-      "status": "todo",
+      "status": "done",
       "notes": ""
     },
     "audio-to-text": {
