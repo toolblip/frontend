@@ -1,0 +1,19 @@
+import type { Metadata } from 'next';
+import ApiDocsClient from './ApiDocsClient';
+
+export const metadata: Metadata = {
+  title: 'API Documentation | Toolblip',
+  description:
+    'Toolblip REST API reference. Authenticate with Bearer tokens, query tools, and manage user accounts. Base URL, rate limits, and example requests included.',
+  openGraph: {
+    title: 'API Documentation | Toolblip',
+    description:
+      'Toolblip REST API reference. Authenticate with Bearer tokens, query tools, and manage user accounts.',
+    url: 'https://toolblip.com/api-docs',
+    siteName: 'Toolblip',
+  },
+};
+
+export default function ApiDocsPage() {
+  return <ApiDocsClient />;
+}
