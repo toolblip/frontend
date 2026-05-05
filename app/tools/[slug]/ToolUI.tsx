@@ -500,13 +500,43 @@ import EditClient from '@/components/tools/EditClient';
 import EncodingsRefClient from '@/components/tools/EncodingsRefClient';
 import EncodingsReferenceClient from '@/components/tools/EncodingsReferenceClient';
 import EnergyConverterClient from '@/components/tools/EnergyConverterClient';
-import EnglishCollocationCheckerClient from '@/components/tools/EnglishCollocationCheckerClient';
-import EnglishCollocationUniqueClient from '@/components/tools/EnglishCollocationUniqueClient';
+import CollocationsCheckerClient from '@/components/tools/CollocationsCheckerClient';
+import EnglishCollocationsUniqueClient from '@/components/tools/EnglishCollocationsUniqueClient';
 import EnglishDictionaryClient from '@/components/tools/EnglishDictionaryClient';
 import EnvParserClient from '@/components/tools/EnvParserClient';
 import EpsToJpgClient from '@/components/tools/EpsToJpgClient';
 import EpsToPngClient from '@/components/tools/EpsToPngClient';
 import EpsToSvgClient from '@/components/tools/EpsToSvgClient';
+import EpubToAzw3Client from '@/components/tools/EpubToAzw3Client';
+import EpubToMobiClient from '@/components/tools/EpubToMobiClient';
+import EssayWriterClient from '@/components/tools/EssayWriterClient';
+import ExcelToCsvClient from '@/components/tools/ExcelToCsvClient';
+import ExcelToPdfClient from '@/components/tools/ExcelToPdfClient';
+import ExcelToXmlClient from '@/components/tools/ExcelToXmlClient';
+import ExifRemoverClient from '@/components/tools/ExifRemoverClient';
+import ExplainLikeFiveClient from '@/components/tools/ExplainLikeFiveClient';
+import ExtractAudioClient from '@/components/tools/ExtractAudioClient';
+import ExtractImgClient from '@/components/tools/ExtractImgClient';
+import ExtractTextClient from '@/components/tools/ExtractTextClient';
+import FacebookAdHeadlinesClient from '@/components/tools/FacebookAdHeadlinesClient';
+import FaqGeneratorClient from '@/components/tools/FaqGeneratorClient';
+import FaviconBrowserClient from '@/components/tools/FaviconBrowserClient';
+import FaviconCheckerClient from '@/components/tools/FaviconCheckerClient';
+import FaviconCheckerExpressClient from '@/components/tools/FaviconCheckerExpressClient';
+import FaviconCheckerToolClient from '@/components/tools/FaviconCheckerToolClient';
+import FaviconCreatorClient from '@/components/tools/FaviconCreatorClient';
+import FaviconCreatorToolClient from '@/components/tools/FaviconCreatorToolClient';
+import FaviconFreshClient from '@/components/tools/FaviconFreshClient';
+import FaviconFromEmojiClient from '@/components/tools/FaviconFromEmojiClient';
+import FaviconFullClient from '@/components/tools/FaviconFullClient';
+import FaviconGenAdvClient from '@/components/tools/FaviconGenAdvClient';
+import FaviconGenPrimeClient from '@/components/tools/FaviconGenPrimeClient';
+import FaviconGenProClient from '@/components/tools/FaviconGenProClient';
+import FaviconGenToolClient from '@/components/tools/FaviconGenToolClient';
+import FaviconGenToolblipClient from '@/components/tools/FaviconGenToolblipClient';
+import FaviconGenUltraClient from '@/components/tools/FaviconGenUltraClient';
+import FaviconGenerator2025Client from '@/components/tools/FaviconGenerator2025Client';
+import FaviconGeneratorAdvancedClient from '@/components/tools/FaviconGeneratorAdvancedClient';
 import ColorTemperatureAdjusterClient from '@/components/tools/ColorTemperatureAdjusterClient';
 import ChartMakerClient from '@/components/tools/ChartMakerClient';
 import CitationGeneratorClient from '@/components/tools/CitationGeneratorClient';
@@ -516,7 +546,6 @@ import CodeDiffClient from '@/components/tools/CodeDiffClient';
 import CodeDiffToolClient from '@/components/tools/CodeDiffToolClient';
 import CodeToDiagramGeneratorClient from '@/components/tools/CodeToDiagramGeneratorClient';
 import ColdEmailWriterClient from '@/components/tools/ColdEmailWriterClient';
-import CollocationsCheckerClient from '@/components/tools/CollocationsCheckerClient';
 import CollageMakerClient from '@/components/tools/CollageMakerClient';
 import CombineImagesClient from '@/components/tools/CombineImagesClient';
 import CropClient from '@/components/tools/CropClient';
@@ -1609,9 +1638,9 @@ function ToolUI({ tool }: { tool: Tool }) {
     case 'energy-converter':
       return <EnergyConverterClient />;
     case 'english-collocations-checker':
-      return <EnglishCollocationCheckerClient />;
+      return <CollocationsCheckerClient />;
     case 'english-collocations-unique':
-      return <EnglishCollocationUniqueClient />;
+      return <EnglishCollocationsUniqueClient />;
     case 'english-dictionary':
       return <EnglishDictionaryClient />;
     case 'env-parser':
@@ -1622,6 +1651,66 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <EpsToPngClient />;
     case 'eps-to-svg':
       return <EpsToSvgClient />;
+    case 'epub-to-azw3':
+      return <EpubToAzw3Client />;
+    case 'epub-to-mobi':
+      return <EpubToMobiClient />;
+    case 'essay-writer':
+      return <EssayWriterClient />;
+    case 'excel-to-csv':
+      return <ExcelToCsvClient />;
+    case 'excel-to-pdf':
+      return <ExcelToPdfClient />;
+    case 'excel-to-xml':
+      return <ExcelToXmlClient />;
+    case 'exif-remover':
+      return <ExifRemoverClient />;
+    case 'explain-like-five':
+      return <ExplainLikeFiveClient />;
+    case 'extract-audio':
+      return <ExtractAudioClient />;
+    case 'extract-img':
+      return <ExtractImgClient />;
+    case 'extract-text':
+      return <ExtractTextClient />;
+    case 'facebook-ad-headlines':
+      return <FacebookAdHeadlinesClient />;
+    case 'faq-generator':
+      return <FaqGeneratorClient />;
+    case 'favicon-browser':
+      return <FaviconBrowserClient />;
+    case 'favicon-checker':
+      return <FaviconCheckerClient />;
+    case 'favicon-checker-express':
+      return <FaviconCheckerExpressClient />;
+    case 'favicon-checker-tool':
+      return <FaviconCheckerToolClient />;
+    case 'favicon-creator':
+      return <FaviconCreatorClient />;
+    case 'favicon-creator-tool':
+      return <FaviconCreatorToolClient />;
+    case 'favicon-fresh':
+      return <FaviconFreshClient />;
+    case 'favicon-from-emoji':
+      return <FaviconFromEmojiClient />;
+    case 'favicon-full':
+      return <FaviconFullClient />;
+    case 'favicon-gen-adv':
+      return <FaviconGenAdvClient />;
+    case 'favicon-gen-prime':
+      return <FaviconGenPrimeClient />;
+    case 'favicon-gen-pro':
+      return <FaviconGenProClient />;
+    case 'favicon-gen-tool':
+      return <FaviconGenToolClient />;
+    case 'favicon-gen-toolblip':
+      return <FaviconGenToolblipClient />;
+    case 'favicon-gen-ultra':
+      return <FaviconGenUltraClient />;
+    case 'favicon-generator-2025':
+      return <FaviconGenerator2025Client />;
+    case 'favicon-generator-advanced':
+      return <FaviconGeneratorAdvancedClient />;
     case 'color-temperature-adjuster':
       return <ColorTemperatureAdjusterClient />;
     case 'collage-maker':

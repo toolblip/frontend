@@ -240,126 +240,6 @@
     }
   },
   "all_needing_component": {
-    "currency-converter-v2": {
-      "status": "todo",
-      "notes": ""
-    },
-    "cutter": {
-      "status": "todo",
-      "notes": ""
-    },
-    "data-size-converter": {
-      "status": "todo",
-      "notes": ""
-    },
-    "data-size-converter-express": {
-      "status": "todo",
-      "notes": ""
-    },
-    "data-uri-generator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "db-query-formatter": {
-      "status": "todo",
-      "notes": ""
-    },
-    "decimal-to-hex-converter": {
-      "status": "todo",
-      "notes": ""
-    },
-    "detect": {
-      "status": "todo",
-      "notes": ""
-    },
-    "discount-calculator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "dns-lookup-express": {
-      "status": "todo",
-      "notes": ""
-    },
-    "dns-lookup-tool": {
-      "status": "todo",
-      "notes": ""
-    },
-    "dns-lookup-v2": {
-      "status": "todo",
-      "notes": ""
-    },
-    "docker-compose-generator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "domain-age-checker": {
-      "status": "todo",
-      "notes": ""
-    },
-    "dominant-color-extractor": {
-      "status": "todo",
-      "notes": ""
-    },
-    "dpi-ppi-calculator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "dummy-text-detector": {
-      "status": "todo",
-      "notes": ""
-    },
-    "duplicate-phrase-detector": {
-      "status": "todo",
-      "notes": ""
-    },
-    "duplicate-url-detector": {
-      "status": "todo",
-      "notes": ""
-    },
-    "edit": {
-      "status": "todo",
-      "notes": ""
-    },
-    "encodings-ref": {
-      "status": "todo",
-      "notes": ""
-    },
-    "encodings-reference": {
-      "status": "todo",
-      "notes": ""
-    },
-    "energy-converter": {
-      "status": "todo",
-      "notes": ""
-    },
-    "english-collocations-checker": {
-      "status": "todo",
-      "notes": ""
-    },
-    "english-collocations-unique": {
-      "status": "todo",
-      "notes": ""
-    },
-    "english-dictionary": {
-      "status": "todo",
-      "notes": ""
-    },
-    "env-parser": {
-      "status": "todo",
-      "notes": ""
-    },
-    "eps-to-jpg": {
-      "status": "todo",
-      "notes": ""
-    },
-    "eps-to-png": {
-      "status": "todo",
-      "notes": ""
-    },
-    "eps-to-svg": {
-      "status": "todo",
-      "notes": ""
-    },
     "epub-to-azw3": {
       "status": "todo",
       "notes": ""
@@ -4833,6 +4713,36 @@
     "csv-to-xml",
     "curl-command-builder",
     "curl-gen-express",
-    "curl-to-javascript"
+    "curl-to-javascript",
+    "currency-converter-v2",
+    "cutter",
+    "data-size-converter",
+    "data-size-converter-express",
+    "data-uri-generator",
+    "db-query-formatter",
+    "decimal-to-hex-converter",
+    "detect",
+    "discount-calculator",
+    "dns-lookup-express",
+    "dns-lookup-tool",
+    "dns-lookup-v2",
+    "docker-compose-generator",
+    "domain-age-checker",
+    "dominant-color-extractor",
+    "dpi-ppi-calculator",
+    "dummy-text-detector",
+    "duplicate-phrase-detector",
+    "duplicate-url-detector",
+    "edit",
+    "encodings-ref",
+    "encodings-reference",
+    "energy-converter",
+    "english-collocations-checker",
+    "english-collocations-unique",
+    "english-dictionary",
+    "env-parser",
+    "eps-to-jpg",
+    "eps-to-png",
+    "eps-to-svg"
   ]
 }
