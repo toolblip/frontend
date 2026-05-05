@@ -10,7 +10,7 @@ interface Props {
   };
 }
 
-export default function WordCombinationsGeneratorClient({ tool }: Props) {
+export default function WordCombinationsGeneratorClient({ tool = { name: "", slug: "", description: "" } }: Props) {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [isLoading, setIsLoading] = useState(false);

@@ -3,14 +3,14 @@
 import { useState } from 'react';
 
 interface Props {
-  tool: {
+  tool?: {
     name: string;
     slug: string;
     description: string;
   };
 }
 
-export default function SVGMinifierClient({ tool }: Props) {
+export default function SVGMinifierClient({ tool = { name: "", slug: "", description: "" } }: Props) {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [isLoading, setIsLoading] = useState(false);

@@ -10,7 +10,7 @@ interface Props {
   };
 }
 
-export default function RemoveWatermarkFromPhotoClient({ tool }: Props) {
+export default function RemoveWatermarkFromPhotoClient({ tool = { name: "", slug: "", description: "" } }: Props) {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
