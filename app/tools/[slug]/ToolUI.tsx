@@ -877,6 +877,8 @@ import InstagramCaptionGeneratorClient from '@/components/tools/InstagramCaption
 import InstagramStoryIdeasGeneratorClient from '@/components/tools/InstagramStoryIdeasGeneratorClient';
 import JupyterCleanerClient from '@/components/tools/JupyterCleanerClient';
 import JsonTreeViewClient from '@/components/tools/JsonTreeViewClient';
+import JSONToURLEncodedV2Client from '@/components/tools/JSONToURLEncodedV2Client';
+import ParagraphRewriterClient from '@/components/tools/ParagraphRewriterClient';
 import AIParagraphWriterClient from '@/components/tools/AIParagraphWriterClient';
 import AISocialPostWriterClient from '@/components/tools/AISocialPostWriterClient';
 import SearchConsoleInsightsClient from '@/components/tools/SearchConsoleInsightsClient';
@@ -890,6 +892,13 @@ import PortToolClient from '@/components/tools/PortToolClient';
 import SerpToolClient from '@/components/tools/SerpToolClient';
 import RegexToolClient from '@/components/tools/RegexToolClient';
 import JwtToolClient from '@/components/tools/JwtToolClient';
+
+import WordCloudGeneratorClient from '@/components/tools/WordCloudGeneratorClient';
+import PressReleaseGeneratorClient from '@/components/tools/PressReleaseGeneratorClient';
+import PrivacyPolicyGeneratorClient from '@/components/tools/PrivacyPolicyGeneratorClient';
+import TokenBuilderClient from '@/components/tools/TokenBuilderClient';
+import PixelDensityCalculatorClient from '@/components/tools/PixelDensityCalculatorClient';
+import SSHKeyGeneratorClient from '@/components/tools/SSHKeyGeneratorClient';
 
 // ─── Individual tool UIs ────────────────────────────────────────────────────
 
@@ -4048,6 +4057,16 @@ function ToolUI({ tool }: { tool: Tool }) {
     case 'meta-toolblip': return <MetaToolClient />;
     case 'serp-toolblip': return <SerpToolClient />;
     case 'mock-port-check': return <MockPortCheckClient />;
+    case 'word-cloud-generator': return <WordCloudGeneratorClient />;
+    case 'word-combinations-generator': return <WordCombinationsGeneratorClient />;
+    case 'json-to-url-encoded-v2': return <JSONToURLEncodedV2Client />;
+    case 'ssh-key-generator': return <SSHKeyGeneratorClient />;
+    case 'jwt-tester': return <JwtTokenTesterClient />;
+    case 'paragraph-rewriter': return <ParagraphRewriterClient />;
+    case 'press-release-generator': return <PressReleaseGeneratorClient />;
+    case 'privacy-policy-generator': return <PrivacyPolicyGeneratorClient />;
+    case 'token-builder': return <TokenBuilderClient />;
+    case 'pixel-density-calculator': return <PixelDensityCalculatorClient />;
     default:
       return <ComingSoonUI tool={tool} />;
   }
