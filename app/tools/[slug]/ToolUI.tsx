@@ -54,7 +54,10 @@ import CreditCardValidatorClient from '@/components/tools/CreditCardValidatorCli
 import ContrastCheckerClient from '@/components/tools/ContrastCheckerClient';
 import ColorPickerClient from '@/components/tools/ColorPickerClient';
 import CircleCropClient from '@/components/tools/CircleCropClient';
+import ChangeBgPhotoClient from '@/components/tools/ChangeBgPhotoClient';
 import CharacterCounterClient from '@/components/tools/CharacterCounterClient';
+import CharacterFrequencyCounterClient from '@/components/tools/CharacterFrequencyCounterClient';
+import CharacterVarietyCheckerClient from '@/components/tools/CharacterVarietyCheckerClient';
 import OxfordCommaClient from '@/components/tools/OxfordCommaClient';
 import NotebookToHtmlClient from '@/components/tools/NotebookToHtmlClient';
 import HexToRgbClient from '@/components/tools/HexToRgbClient';
@@ -84,9 +87,12 @@ import BusinessPlanGeneratorClient from '@/components/tools/BusinessPlanGenerato
 import BusinessSloganGeneratorClient from '@/components/tools/BusinessSloganGeneratorClient';
 import ByteConverterClient from '@/components/tools/ByteConverterClient';
 import CanonicalTagCheckerClient from '@/components/tools/CanonicalTagCheckerClient';
+import CanonicalUrlGeneratorClient from '@/components/tools/CanonicalUrlGeneratorClient';
 import ChineseCharConverterClient from '@/components/tools/ChineseCharConverterClient';
 import CidrCalculatorClient from '@/components/tools/CidrCalculatorClient';
 import CmykToRgbConverterClient from '@/components/tools/CmykToRgbConverterClient';
+import CmykToRgbClient from '@/components/tools/CmykToRgbClient';
+import CmykToRgbToolClient from '@/components/tools/CmykToRgbToolClient';
 import CorsHeaderGeneratorClient from '@/components/tools/CorsHeaderGeneratorClient';
 import CountdownTimerClient from '@/components/tools/CountdownTimerClient';
 import CrontabGeneratorClient from '@/components/tools/CrontabGeneratorClient';
@@ -282,6 +288,10 @@ import ColorLuminanceCalculatorClient from '@/components/tools/ColorLuminanceCal
 import ColorMixerClient from '@/components/tools/ColorMixerClient';
 import ColorPaletteGeneratorClient from '@/components/tools/ColorPaletteGeneratorClient';
 import ColorTemperatureAdjusterClient from '@/components/tools/ColorTemperatureAdjusterClient';
+import ChartMakerClient from '@/components/tools/ChartMakerClient';
+import CitationGeneratorClient from '@/components/tools/CitationGeneratorClient';
+import CleanupPictureClient from '@/components/tools/CleanupPictureClient';
+import CodeBeautifierClient from '@/components/tools/CodeBeautifierClient';
 import CollageMakerClient from '@/components/tools/CollageMakerClient';
 import CombineImagesClient from '@/components/tools/CombineImagesClient';
 import CropClient from '@/components/tools/CropClient';
@@ -366,6 +376,10 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <WordCounterClient />;
     case 'character-counter':
       return <CharacterCounterClient />;
+    case 'character-frequency-counter':
+      return <CharacterFrequencyCounterClient />;
+    case 'character-variety-checker':
+      return <CharacterVarietyCheckerClient />;
     case 'case-converter':
       return <CaseConverterClient />;
     case 'base64-image-converter':
@@ -471,8 +485,12 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <ContrastCheckerClient />;
     case 'color-picker':
       return <ColorPickerClient />;
+    case 'change-bg-photo':
+      return <ChangeBgPhotoClient />;
     case 'circle-crop':
       return <CircleCropClient />;
+    case 'chart-maker':
+      return <ChartMakerClient />;
     case 'hex-to-rgb':
       return <HexToRgbClient />;
     case 'rgb-to-hex':
@@ -641,12 +659,24 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <ByteConverterClient />;
     case 'canonical-tag-checker':
       return <CanonicalTagCheckerClient />;
+    case 'canonical-url-generator':
+      return <CanonicalUrlGeneratorClient />;
     case 'chinese-char-converter':
       return <ChineseCharConverterClient />;
     case 'cidr-calculator':
       return <CidrCalculatorClient />;
+    case 'cmyk-to-rgb':
+      return <CmykToRgbClient />;
     case 'cmyk-to-rgb-converter':
       return <CmykToRgbConverterClient />;
+    case 'cmyk-to-rgb-tool':
+      return <CmykToRgbToolClient />;
+    case 'code-beautifier':
+      return <CodeBeautifierClient />;
+    case 'citation-generator':
+      return <CitationGeneratorClient />;
+    case 'cleanup-picture':
+      return <CleanupPictureClient />;
     case 'cors-header-generator':
       return <CorsHeaderGeneratorClient />;
     case 'countdown-timer':
@@ -907,8 +937,6 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <BaseConverterClient />;
     case 'base-converter-quick':
       return <BaseConverterQuickClient />;
-    case 'blur-background':
-      return <BlurBackgroundClient />;
     case 'color-blindness-simulator':
       return <ColorBlindnessSimulatorClient />;
     case 'color-contrast-checker':
