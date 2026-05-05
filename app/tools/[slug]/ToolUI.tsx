@@ -567,6 +567,36 @@ import FaviconGeneratorXClient from '@/components/tools/FaviconGeneratorXClient'
 import FaviconGeneratorXlClient from '@/components/tools/FaviconGeneratorXlClient';
 import FaviconGrabberClient from '@/components/tools/FaviconGrabberClient';
 import FaviconIconGeneratorClient from '@/components/tools/FaviconIconGeneratorClient';
+import FaviconMakeToolClient from '@/components/tools/FaviconMakeToolClient';
+import FaviconMakerClient from '@/components/tools/FaviconMakerClient';
+import FaviconPngCreatorClient from '@/components/tools/FaviconPngCreatorClient';
+import FaviconPngGeneratorClient from '@/components/tools/FaviconPngGeneratorClient';
+import FaviconPngMakerClient from '@/components/tools/FaviconPngMakerClient';
+import FaviconPreviewClient from '@/components/tools/FaviconPreviewClient';
+import FaviconPreviewToolClient from '@/components/tools/FaviconPreviewToolClient';
+import FaviconQuickClient from '@/components/tools/FaviconQuickClient';
+import FaviconQuickGeneratorClient from '@/components/tools/FaviconQuickGeneratorClient';
+import FaviconSimpleClient from '@/components/tools/FaviconSimpleClient';
+import FaviconToolClient from '@/components/tools/FaviconToolClient';
+import FaviconToolblipClient from '@/components/tools/FaviconToolblipClient';
+import FlipClient from '@/components/tools/FlipClient';
+import FontToPngClient from '@/components/tools/FontToPngClient';
+import ForceConverterClient from '@/components/tools/ForceConverterClient';
+import FractionCalculatorClient from '@/components/tools/FractionCalculatorClient';
+import FractionToDecimalExpressClient from '@/components/tools/FractionToDecimalExpressClient';
+import FractionToDecimalV2Client from '@/components/tools/FractionToDecimalV2Client';
+import FrequencyConverterClient from '@/components/tools/FrequencyConverterClient';
+import GeneralUnitConverterClient from '@/components/tools/GeneralUnitConverterClient';
+import GifToApngClient from '@/components/tools/GifToApngClient';
+import GifToAvifClient from '@/components/tools/GifToAvifClient';
+import GifToJpgClient from '@/components/tools/GifToJpgClient';
+import GifToMovClient from '@/components/tools/GifToMovClient';
+import GifToMp4Client from '@/components/tools/GifToMp4Client';
+import GifToPngClient from '@/components/tools/GifToPngClient';
+import GifToWebmClient from '@/components/tools/GifToWebmClient';
+import GoogleAlgorithmTrackerClient from '@/components/tools/GoogleAlgorithmTrackerClient';
+import GoogleRankCheckerClient from '@/components/tools/GoogleRankCheckerClient';
+import GoogleSerpPreviewClient from '@/components/tools/GoogleSerpPreviewClient';
 import ColorTemperatureAdjusterClient from '@/components/tools/ColorTemperatureAdjusterClient';
 import ChartMakerClient from '@/components/tools/ChartMakerClient';
 import CitationGeneratorClient from '@/components/tools/CitationGeneratorClient';
@@ -1801,6 +1831,66 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <FaviconGrabberClient />;
     case 'favicon-icon-generator':
       return <FaviconIconGeneratorClient />;
+    case 'favicon-make-tool':
+      return <FaviconMakeToolClient />;
+    case 'favicon-maker':
+      return <FaviconMakerClient />;
+    case 'favicon-png-creator':
+      return <FaviconPngCreatorClient />;
+    case 'favicon-png-generator':
+      return <FaviconPngGeneratorClient />;
+    case 'favicon-png-maker':
+      return <FaviconPngMakerClient />;
+    case 'favicon-preview':
+      return <FaviconPreviewClient />;
+    case 'favicon-preview-tool':
+      return <FaviconPreviewToolClient />;
+    case 'favicon-quick':
+      return <FaviconQuickClient />;
+    case 'favicon-quick-generator':
+      return <FaviconQuickGeneratorClient />;
+    case 'favicon-simple':
+      return <FaviconSimpleClient />;
+    case 'favicon-tool':
+      return <FaviconToolClient />;
+    case 'favicon-toolblip':
+      return <FaviconToolblipClient />;
+    case 'flip':
+      return <FlipClient />;
+    case 'font-to-png':
+      return <FontToPngClient />;
+    case 'force-converter':
+      return <ForceConverterClient />;
+    case 'fraction-calculator':
+      return <FractionCalculatorClient />;
+    case 'fraction-to-decimal-express':
+      return <FractionToDecimalExpressClient />;
+    case 'fraction-to-decimal-v2':
+      return <FractionToDecimalV2Client />;
+    case 'frequency-converter':
+      return <FrequencyConverterClient />;
+    case 'general-unit-converter':
+      return <GeneralUnitConverterClient />;
+    case 'gif-to-apng':
+      return <GifToApngClient />;
+    case 'gif-to-avif':
+      return <GifToAvifClient />;
+    case 'gif-to-jpg':
+      return <GifToJpgClient />;
+    case 'gif-to-mov':
+      return <GifToMovClient />;
+    case 'gif-to-mp4':
+      return <GifToMp4Client />;
+    case 'gif-to-png':
+      return <GifToPngClient />;
+    case 'gif-to-webm':
+      return <GifToWebmClient />;
+    case 'google-algorithm-tracker':
+      return <GoogleAlgorithmTrackerClient />;
+    case 'google-rank-checker':
+      return <GoogleRankCheckerClient />;
+    case 'google-serp-preview':
+      return <GoogleSerpPreviewClient />;
     case 'color-temperature-adjuster':
       return <ColorTemperatureAdjusterClient />;
     case 'collage-maker':

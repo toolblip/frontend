@@ -240,126 +240,6 @@
     }
   },
   "all_needing_component": {
-    "favicon-generator-api": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-browser": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-classic": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-complete": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-dg": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-easy": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-enhanced": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-expander": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-express": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-final": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-fresh": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-full": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-new": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-prime": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-pro": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-quick": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-smart": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-std": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-tool": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-ultimate": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-ultra": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-v2": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-v3": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-v4": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-v5": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-v6": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-x": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-generator-xl": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-grabber": {
-      "status": "todo",
-      "notes": ""
-    },
-    "favicon-icon-generator": {
-      "status": "todo",
-      "notes": ""
-    },
     "favicon-make-tool": {
       "status": "todo",
       "notes": ""
@@ -4653,6 +4533,36 @@
     "favicon-gen-toolblip",
     "favicon-gen-ultra",
     "favicon-generator-2025",
-    "favicon-generator-advanced"
+    "favicon-generator-advanced",
+    "favicon-generator-api",
+    "favicon-generator-browser",
+    "favicon-generator-classic",
+    "favicon-generator-complete",
+    "favicon-generator-dg",
+    "favicon-generator-easy",
+    "favicon-generator-enhanced",
+    "favicon-generator-expander",
+    "favicon-generator-express",
+    "favicon-generator-final",
+    "favicon-generator-fresh",
+    "favicon-generator-full",
+    "favicon-generator-new",
+    "favicon-generator-prime",
+    "favicon-generator-pro",
+    "favicon-generator-quick",
+    "favicon-generator-smart",
+    "favicon-generator-std",
+    "favicon-generator-tool",
+    "favicon-generator-ultimate",
+    "favicon-generator-ultra",
+    "favicon-generator-v2",
+    "favicon-generator-v3",
+    "favicon-generator-v4",
+    "favicon-generator-v5",
+    "favicon-generator-v6",
+    "favicon-generator-x",
+    "favicon-generator-xl",
+    "favicon-grabber",
+    "favicon-icon-generator"
   ]
 }
