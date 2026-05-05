@@ -214,7 +214,7 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
     id: 'get-user',
     group: 'auth',
     method: 'GET',
-    path: '/api/auth/me',
+    path: '/api/auth/user',
     auth: true,
     title: 'Get authenticated user',
     description: 'Returns the profile of the currently authenticated user.',
@@ -224,7 +224,7 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
       { field: 'user.email', type: 'string', description: 'Email address' },
       { field: 'user.is_pro', type: 'boolean', description: 'Pro subscription status' },
     ],
-    curl: `curl -X GET "${BASE_URL}/api/auth/me" \\
+    curl: `curl -X GET "${BASE_URL}/api/auth/user" \\
   -H "Authorization: Bearer 1|Xr8KbP9mNoPqRsTuVwXyZaBcDeFgHiJkL" \\
   -H "Accept: application/json"`,
     response: `{
@@ -688,7 +688,7 @@ curl -X POST "${BASE_URL}/api/auth/register" \\
 # → Save the token — you need it for authenticated requests
 
 # 2. Fetch your user profile
-curl -X GET "${BASE_URL}/api/auth/me" \\
+curl -X GET "${BASE_URL}/api/auth/user" \\
   -H "Authorization: Bearer $TOKEN" \\
   -H "Accept: application/json"
 
