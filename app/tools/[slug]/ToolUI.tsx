@@ -312,6 +312,21 @@ import ColorPickerAdvClient from '@/components/tools/ColorPickerAdvClient';
 import ColorPickerAdvancedClient from '@/components/tools/ColorPickerAdvancedClient';
 import ColorPickerApiClient from '@/components/tools/ColorPickerApiClient';
 import ColorPickerBrowserClient from '@/components/tools/ColorPickerBrowserClient';
+import ColorPickerClassicClient from '@/components/tools/ColorPickerClassicClient';
+import ColorPickerCompleteClient from '@/components/tools/ColorPickerCompleteClient';
+import ColorPickerDgClient from '@/components/tools/ColorPickerDgClient';
+import ColorPickerEasyClient from '@/components/tools/ColorPickerEasyClient';
+import ColorPickerEnhancedClient from '@/components/tools/ColorPickerEnhancedClient';
+import ColorPickerExpanderClient from '@/components/tools/ColorPickerExpanderClient';
+import ColorPickerExpressClient from '@/components/tools/ColorPickerExpressClient';
+import ColorPickerFinalClient from '@/components/tools/ColorPickerFinalClient';
+import ColorPickerFreshClient from '@/components/tools/ColorPickerFreshClient';
+import ColorPickerFullClient from '@/components/tools/ColorPickerFullClient';
+import ColorPickerHandyClient from '@/components/tools/ColorPickerHandyClient';
+import ColorPickerHexRgbHslClient from '@/components/tools/ColorPickerHexRgbHslClient';
+import ColorPickerNewClient from '@/components/tools/ColorPickerNewClient';
+import ColorPickerPrimeClient from '@/components/tools/ColorPickerPrimeClient';
+import ColorPickerProClient from '@/components/tools/ColorPickerProClient';
 import ColorTemperatureAdjusterClient from '@/components/tools/ColorTemperatureAdjusterClient';
 import ChartMakerClient from '@/components/tools/ChartMakerClient';
 import CitationGeneratorClient from '@/components/tools/CitationGeneratorClient';
@@ -1037,6 +1052,36 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <ColorPickerApiClient />;
     case 'color-picker-browser':
       return <ColorPickerBrowserClient />;
+    case 'color-picker-classic':
+      return <ColorPickerClassicClient />;
+    case 'color-picker-complete':
+      return <ColorPickerCompleteClient />;
+    case 'color-picker-dg':
+      return <ColorPickerDgClient />;
+    case 'color-picker-easy':
+      return <ColorPickerEasyClient />;
+    case 'color-picker-enhanced':
+      return <ColorPickerEnhancedClient />;
+    case 'color-picker-expander':
+      return <ColorPickerExpanderClient />;
+    case 'color-picker-express':
+      return <ColorPickerExpressClient />;
+    case 'color-picker-final':
+      return <ColorPickerFinalClient />;
+    case 'color-picker-fresh':
+      return <ColorPickerFreshClient />;
+    case 'color-picker-full':
+      return <ColorPickerFullClient />;
+    case 'color-picker-handy':
+      return <ColorPickerHandyClient />;
+    case 'color-picker-hex-rgb-hsl':
+      return <ColorPickerHexRgbHslClient />;
+    case 'color-picker-new':
+      return <ColorPickerNewClient />;
+    case 'color-picker-prime':
+      return <ColorPickerPrimeClient />;
+    case 'color-picker-pro':
+      return <ColorPickerProClient />;
     case 'color-temperature-adjuster':
       return <ColorTemperatureAdjusterClient />;
     case 'collage-maker':

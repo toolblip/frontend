@@ -1,0 +1,87 @@
+'use client';
+
+import React, { useState } from 'react';
+
+export default function ColorPickerFullClient() {
+  const [color, setColor] = useState('#ef4444');
+
+  const toRgb = (hex: string) => {
+    const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return r ? { r: parseInt(r[1], 16), g: parseInt(r[2], 16), b: parseInt(r[3], 16) } : null;
+  };
+
+  const toHsl = (hex: string) => {
+    const rgb = toRgb(hex);
+    if (!rgb) return null;
+    const rn = rgb.r / 255, gn = rgb.g / 255, bn = rgb.b / 255;
+    const max = Math.max(rn, gn, bn), min = Math.min(rn, gn, bn);
+    let h = 0, s = 0;
+    const l = (max + min) / 2;
+    if (max !== min) {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case rn: h = ((gn - bn) / d + (gn < bn ? 6 : 0)) / 6; break;
+        case gn: h = ((bn - rn) / d + 2) / 6; break;
+        case bn: h = ((rn - gn) / d + 4) / 6; break;
+      }
+    }
+    return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+  };
+
+  const toHsv = (hex: string) => {
+    const rgb = toRgb(hex);
+    if (!rgb) return null;
+    const rn = rgb.r / 255, gn = rgb.g / 255, bn = rgb.b / 255;
+    const max = Math.max(rn, gn, bn), min = Math.min(rn, gn, bn);
+    const d = max - min;
+    const v = max;
+    const s = max === 0 ? 0 : d / max;
+    let h = 0;
+    if (max !== min) {
+      switch (max) {
+        case rn: h = ((gn - bn) / d + (gn < bn ? 6 : 0)) / 6; break;
+        case gn: h = ((bn - rn) / d + 2) / 6; break;
+        case bn: h = ((rn - gn) / d + 4) / 6; break;
+      }
+    }
+    return { h: Math.round(h * 360), s: Math.round(s * 100), v: Math.round(v * 100) };
+  };
+
+  const rgb = toRgb(color);
+  const hsl = toHsl(color);
+  const hsv = toHsv(color);
+
+  return (
+    <div className="space-y-6">
+      <input type="color" value={color} onChange={e => setColor(e.target.value)} className="w-full h-56 rounded-2xl cursor-pointer border-0 shadow-lg" />
+
+      <div className="flex flex-col md:flex-row gap-3">
+        <div className="flex-1 bg-gray-50 rounded-xl p-4">
+          <div className="text-xs text-gray-500 mb-1">HEX</div>
+          <div className="font-mono font-bold text-2xl">{color.toUpperCase()}</div>
+        </div>
+        {rgb && (
+          <div className="flex-1 bg-gray-50 rounded-xl p-4">
+            <div className="text-xs text-gray-500 mb-1">RGB</div>
+            <div className="font-mono font-bold text-2xl">{rgb.r},{rgb.g},{rgb.b}</div>
+          </div>
+        )}
+        {hsl && (
+          <div className="flex-1 bg-gray-50 rounded-xl p-4">
+            <div className="text-xs text-gray-500 mb-1">HSL</div>
+            <div className="font-mono font-bold text-2xl">{hsl.h}°, {hsl.s}%, {hsl.l}%</div>
+          </div>
+        )}
+        {hsv && (
+          <div className="flex-1 bg-gray-50 rounded-xl p-4">
+            <div className="text-xs text-gray-500 mb-1">HSV</div>
+            <div className="font-mono font-bold text-2xl">{hsv.h}°, {hsv.s}%, {hsv.v}%</div>
+          </div>
+        )}
+      </div>
+
+      <div className="rounded-2xl h-24 shadow-lg" style={{ backgroundColor: color }} />
+    </div>
+  );
+}

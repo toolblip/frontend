@@ -240,66 +240,6 @@
     }
   },
   "all_needing_component": {
-    "color-mixer-v2": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-name-finder": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-name-finder-v2": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-name-tool": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-opacity-generator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-palette-extractor": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-palette-from-image": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-pick-all": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-pick-tool": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-pick-toolblip": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-picker-2025": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-picker-adv": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-picker-advanced": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-picker-api": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-picker-browser": {
-      "status": "todo",
-      "notes": ""
-    },
     "color-picker-classic": {
       "status": "todo",
       "notes": ""
@@ -5373,6 +5313,21 @@
     "color-harmony-express",
     "color-harmony-generator",
     "color-harmony-new",
-    "color-luminance-checker"
+    "color-luminance-checker",
+    "color-mixer-v2",
+    "color-name-finder",
+    "color-name-finder-v2",
+    "color-name-tool",
+    "color-opacity-generator",
+    "color-palette-extractor",
+    "color-palette-from-image",
+    "color-pick-all",
+    "color-pick-tool",
+    "color-pick-toolblip",
+    "color-picker-2025",
+    "color-picker-adv",
+    "color-picker-advanced",
+    "color-picker-api",
+    "color-picker-browser"
   ]
 }
