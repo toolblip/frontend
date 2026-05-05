@@ -130,7 +130,6 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
       { name: 'name', type: 'string', required: true, description: 'Full display name' },
       { name: 'email', type: 'string', required: true, description: 'Email address — must be unique' },
       { name: 'password', type: 'string', required: true, description: 'Password — minimum 8 characters' },
-      { name: 'password_confirmation', type: 'string', required: true, description: 'Must match password exactly' },
     ],
     responseFields: [
       { field: 'user.id', type: 'integer', description: 'User ID' },
@@ -146,7 +145,6 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
     "name": "Jane Doe",
     "email": "jane@example.com",
     "password": "secretpass123",
-    "password_confirmation": "secretpass123"
   }'`,
     response: `{
   "user": {
@@ -209,14 +207,14 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
   -H "Authorization: Bearer 1|Xr8KbP9mNoPqRsTuVwXyZaBcDeFgHiJkL" \\
   -H "Accept: application/json"`,
     response: `{
-  "message": "Logged out successfully"
+  "message": "Logged out"
 }`,
   },
   {
     id: 'get-user',
     group: 'auth',
     method: 'GET',
-    path: '/api/auth/user',
+    path: '/api/auth/me',
     auth: true,
     title: 'Get authenticated user',
     description: 'Returns the profile of the currently authenticated user.',
@@ -226,7 +224,7 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
       { field: 'user.email', type: 'string', description: 'Email address' },
       { field: 'user.is_pro', type: 'boolean', description: 'Pro subscription status' },
     ],
-    curl: `curl -X GET "${BASE_URL}/api/auth/user" \\
+    curl: `curl -X GET "${BASE_URL}/api/auth/me" \\
   -H "Authorization: Bearer 1|Xr8KbP9mNoPqRsTuVwXyZaBcDeFgHiJkL" \\
   -H "Accept: application/json"`,
     response: `{
@@ -506,7 +504,7 @@ export default function ApiDocsClient() {
               </svg>
               <div>
                 <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest block">Rate Limit</span>
-                <span className="text-xs text-slate-700 dark:text-slate-300">60 req/min</span>
+                <span className="text-xs text-slate-700 dark:text-slate-300">60 req/min (public) · 300 req/min (auth)</span>
               </div>
             </div>
           </div>
@@ -684,13 +682,13 @@ export default function ApiDocsClient() {
 curl -X POST "${BASE_URL}/api/auth/register" \\
   -H "Content-Type: application/json" \\
   -H "Accept: application/json" \\
-  -d '{"name":"Jane Doe","email":"jane@example.com","password":"secret123","password_confirmation":"secret123"}'
+  -d '{"name":"Jane Doe","email":"jane@example.com","password":"secret123"}'
 
 # Response: { "user": {...}, "token": "1|Xr8Kb..." }
 # → Save the token — you need it for authenticated requests
 
 # 2. Fetch your user profile
-curl -X GET "${BASE_URL}/api/auth/user" \\
+curl -X GET "${BASE_URL}/api/auth/me" \\
   -H "Authorization: Bearer $TOKEN" \\
   -H "Accept: application/json"
 
