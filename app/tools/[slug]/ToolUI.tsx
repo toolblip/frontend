@@ -402,6 +402,21 @@ import ContrastCheckerXlClient from '@/components/tools/ContrastCheckerXlClient'
 import ContrastFreshClient from '@/components/tools/ContrastFreshClient';
 import ContrastQuickClient from '@/components/tools/ContrastQuickClient';
 import ContrastToolblipClient from '@/components/tools/ContrastToolblipClient';
+import CookingUnitConverterClient from '@/components/tools/CookingUnitConverterClient';
+import CounterClient from '@/components/tools/CounterClient';
+import CronBuilderClient from '@/components/tools/CronBuilderClient';
+import CronExpanderClient from '@/components/tools/CronExpanderClient';
+import CronExprGenClient from '@/components/tools/CronExprGenClient';
+import CronExprGenAdvClient from '@/components/tools/CronExprGenAdvClient';
+import CronExprGenPrimeClient from '@/components/tools/CronExprGenPrimeClient';
+import CronExprGenProClient from '@/components/tools/CronExprGenProClient';
+import CronExprGenUltraClient from '@/components/tools/CronExprGenUltraClient';
+import CronExpressionBuilderClient from '@/components/tools/CronExpressionBuilderClient';
+import CronExpressionGeneratorClient from '@/components/tools/CronExpressionGeneratorClient';
+import CronExpressionParserClient from '@/components/tools/CronExpressionParserClient';
+import CronGenerator2025Client from '@/components/tools/CronGenerator2025Client';
+import CronGeneratorAdvancedClient from '@/components/tools/CronGeneratorAdvancedClient';
+import CronGeneratorApiClient from '@/components/tools/CronGeneratorApiClient';
 import ColorTemperatureAdjusterClient from '@/components/tools/ColorTemperatureAdjusterClient';
 import ChartMakerClient from '@/components/tools/ChartMakerClient';
 import CitationGeneratorClient from '@/components/tools/CitationGeneratorClient';
@@ -1307,6 +1322,36 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <ContrastQuickClient />;
     case 'contrast-toolblip':
       return <ContrastToolblipClient />;
+    case 'cooking-unit-converter':
+      return <CookingUnitConverterClient />;
+    case 'counter':
+      return <CounterClient />;
+    case 'cron-builder':
+      return <CronBuilderClient />;
+    case 'cron-expander':
+      return <CronExpanderClient />;
+    case 'cron-expr-gen':
+      return <CronExprGenClient />;
+    case 'cron-expr-gen-adv':
+      return <CronExprGenAdvClient />;
+    case 'cron-expr-gen-prime':
+      return <CronExprGenPrimeClient />;
+    case 'cron-expr-gen-pro':
+      return <CronExprGenProClient />;
+    case 'cron-expr-gen-ultra':
+      return <CronExprGenUltraClient />;
+    case 'cron-expression-builder':
+      return <CronExpressionBuilderClient />;
+    case 'cron-expression-generator':
+      return <CronExpressionGeneratorClient />;
+    case 'cron-expression-parser':
+      return <CronExpressionParserClient />;
+    case 'cron-generator-2025':
+      return <CronGenerator2025Client />;
+    case 'cron-generator-advanced':
+      return <CronGeneratorAdvancedClient />;
+    case 'cron-generator-api':
+      return <CronGeneratorApiClient />;
     case 'color-temperature-adjuster':
       return <ColorTemperatureAdjusterClient />;
     case 'collage-maker':

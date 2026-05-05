@@ -240,66 +240,6 @@
     }
   },
   "all_needing_component": {
-    "contrast-checker-std": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-tool": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-ultimate": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-ultra": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-v2": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-v3": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-v4": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-v5": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-v6": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-wcag": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-x": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-checker-xl": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-fresh": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-quick": {
-      "status": "todo",
-      "notes": ""
-    },
-    "contrast-toolblip": {
-      "status": "todo",
-      "notes": ""
-    },
     "cooking-unit-converter": {
       "status": "todo",
       "notes": ""
@@ -5103,6 +5043,21 @@
     "contrast-checker-prime",
     "contrast-checker-pro",
     "contrast-checker-quick",
-    "contrast-checker-smart"
+    "contrast-checker-smart",
+    "contrast-checker-std",
+    "contrast-checker-tool",
+    "contrast-checker-ultimate",
+    "contrast-checker-ultra",
+    "contrast-checker-v2",
+    "contrast-checker-v3",
+    "contrast-checker-v4",
+    "contrast-checker-v5",
+    "contrast-checker-v6",
+    "contrast-checker-wcag",
+    "contrast-checker-x",
+    "contrast-checker-xl",
+    "contrast-fresh",
+    "contrast-quick",
+    "contrast-toolblip"
   ]
 }
