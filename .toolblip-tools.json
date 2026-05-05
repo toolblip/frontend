@@ -240,66 +240,6 @@
     }
   },
   "all_needing_component": {
-    "color-quick": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-saturation-adjuster": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-select-tool": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-shade-gen": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-shade-generator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-shade-generator-v2": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-shade-tints": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-shade-tool": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-tint-generator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-tone-generator": {
-      "status": "todo",
-      "notes": ""
-    },
-    "color-toolblip": {
-      "status": "todo",
-      "notes": ""
-    },
-    "colorize-photo": {
-      "status": "todo",
-      "notes": ""
-    },
-    "compress": {
-      "status": "todo",
-      "notes": ""
-    },
-    "compress-avi": {
-      "status": "todo",
-      "notes": ""
-    },
-    "compress-mkv": {
-      "status": "todo",
-      "notes": ""
-    },
     "compress-mov": {
       "status": "todo",
       "notes": ""
@@ -5238,6 +5178,21 @@
     "color-picker-web",
     "color-picker-wheel",
     "color-picker-x",
-    "color-picker-xl"
+    "color-picker-xl",
+    "color-quick",
+    "color-saturation-adjuster",
+    "color-select-tool",
+    "color-shade-gen",
+    "color-shade-generator",
+    "color-shade-generator-v2",
+    "color-shade-tints",
+    "color-shade-tool",
+    "color-tint-generator",
+    "color-tone-generator",
+    "color-toolblip",
+    "colorize-photo",
+    "compress",
+    "compress-avi",
+    "compress-mkv"
   ]
 }

@@ -357,6 +357,21 @@ import ColorizePhotoClient from '@/components/tools/ColorizePhotoClient';
 import CompressAviClient from '@/components/tools/CompressAviClient';
 import CompressClient from '@/components/tools/CompressClient';
 import CompressMkvClient from '@/components/tools/CompressMkvClient';
+import CompressMovClient from '@/components/tools/CompressMovClient';
+import ContentBriefGeneratorClient from '@/components/tools/ContentBriefGeneratorClient';
+import ContentImproverClient from '@/components/tools/ContentImproverClient';
+import ContentPlannerClient from '@/components/tools/ContentPlannerClient';
+import ContentSummarizerClient from '@/components/tools/ContentSummarizerClient';
+import ContrastBrowserClient from '@/components/tools/ContrastBrowserClient';
+import ContrastCheckAllClient from '@/components/tools/ContrastCheckAllClient';
+import ContrastCheckToolClient from '@/components/tools/ContrastCheckToolClient';
+import ContrastCheckToolblipClient from '@/components/tools/ContrastCheckToolblipClient';
+import ContrastChecker2025Client from '@/components/tools/ContrastChecker2025Client';
+import ContrastCheckerAdvClient from '@/components/tools/ContrastCheckerAdvClient';
+import ContrastCheckerAdvancedClient from '@/components/tools/ContrastCheckerAdvancedClient';
+import ContrastCheckerApiClient from '@/components/tools/ContrastCheckerApiClient';
+import ContrastCheckerBrowserClient from '@/components/tools/ContrastCheckerBrowserClient';
+import ContrastCheckerClassicClient from '@/components/tools/ContrastCheckerClassicClient';
 import ColorTemperatureAdjusterClient from '@/components/tools/ColorTemperatureAdjusterClient';
 import ChartMakerClient from '@/components/tools/ChartMakerClient';
 import CitationGeneratorClient from '@/components/tools/CitationGeneratorClient';
@@ -1172,6 +1187,36 @@ function ToolUI({ tool }: { tool: Tool }) {
       return <CompressAviClient />;
     case 'compress-mkv':
       return <CompressMkvClient />;
+    case 'compress-mov':
+      return <CompressMovClient />;
+    case 'content-brief-generator':
+      return <ContentBriefGeneratorClient />;
+    case 'content-improver':
+      return <ContentImproverClient />;
+    case 'content-planner':
+      return <ContentPlannerClient />;
+    case 'content-summarizer':
+      return <ContentSummarizerClient />;
+    case 'contrast-browser':
+      return <ContrastBrowserClient />;
+    case 'contrast-check-all':
+      return <ContrastCheckAllClient />;
+    case 'contrast-check-tool':
+      return <ContrastCheckToolClient />;
+    case 'contrast-check-toolblip':
+      return <ContrastCheckToolblipClient />;
+    case 'contrast-checker-2025':
+      return <ContrastChecker2025Client />;
+    case 'contrast-checker-adv':
+      return <ContrastCheckerAdvClient />;
+    case 'contrast-checker-advanced':
+      return <ContrastCheckerAdvancedClient />;
+    case 'contrast-checker-api':
+      return <ContrastCheckerApiClient />;
+    case 'contrast-checker-browser':
+      return <ContrastCheckerBrowserClient />;
+    case 'contrast-checker-classic':
+      return <ContrastCheckerClassicClient />;
     case 'color-temperature-adjuster':
       return <ColorTemperatureAdjusterClient />;
     case 'collage-maker':
