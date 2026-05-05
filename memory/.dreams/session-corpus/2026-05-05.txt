@@ -1,0 +1,3 @@
+[tb/sessions/ff4f04cb-a9c6-4850-bb22-069428c3853b.jsonl#L9] Assistant: ☀️ **Morning Digest — May 5, 2026** **Overnight summary:** Very quiet night — no new content published May 4th. The overnight cron only checked API docs (already comprehensive, no changes needed). **Last published:** - 2026-05-03 — *Why JSON Has `undefined`* (JSON debu
+[tb/sessions/ff4f04cb-a9c6-4850-bb22-069428c3853b.jsonl#L9] Assistant: **Build JSON Diff** — top confirmed gap, multiple GitHub issues backing it 2. **Publish JWT vs OAuth 2.0 post** — been sitting in the queue since April 30
+[tb/sessions/f5cb3893-f926-4de6-b78b-5604ae531212-topic-8.jsonl#L1234] Assistant: ✍️ Content #2 published: HTTP Methods Explained: GET vs POST vs PUT vs PATCH vs DELETE

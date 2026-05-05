@@ -1,211 +1,126 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-
-type Mode = 'x2j' | 'j2x';
-type JsonValue = string | number | boolean | null | JsonObject | JsonValue[];
-interface JsonObject { [k: string]: JsonValue }
-
-function nodeToJson(node: Element): JsonValue {
-  const obj: JsonObject = {};
-
-  if (node.attributes.length > 0) {
-    const attrs: JsonObject = {};
-    for (const attr of Array.from(node.attributes)) {
-      attrs[attr.name] = attr.value;
-    }
-    obj['@attributes'] = attrs;
-  }
-
-  const childElements = Array.from(node.children);
-  const textContent = node.childNodes.length > 0 && childElements.length === 0
-    ? node.textContent?.trim() ?? ''
-    : '';
-
-  if (childElements.length === 0 && textContent !== '') {
-    if (Object.keys(obj).length === 0) return textContent;
-    obj['#text'] = textContent;
-    return obj;
-  }
-
-  for (const child of childElements) {
-    const val = nodeToJson(child);
-    if (obj[child.tagName] === undefined) {
-      obj[child.tagName] = val;
-    } else {
-      const cur = obj[child.tagName];
-      if (Array.isArray(cur)) cur.push(val);
-      else obj[child.tagName] = [cur, val];
-    }
-  }
-
-  return obj;
-}
-
-function xmlToJson(xml: string): string {
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(xml, 'application/xml');
-  const err = doc.querySelector('parsererror');
-  if (err) throw new Error(err.textContent || 'Invalid XML');
-  const root = doc.documentElement;
-  if (!root) throw new Error('Empty XML document');
-  const out = { [root.tagName]: nodeToJson(root) };
-  return JSON.stringify(out, null, 2);
-}
-
-function isJsonObject(v: JsonValue): v is JsonObject {
-  return typeof v === 'object' && v !== null && !Array.isArray(v);
-}
-
-function escapeXml(s: string): string {
-  return s
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
-
-function buildXml(name: string, value: JsonValue, depth: number): string {
-  const pad = '  '.repeat(depth);
-  if (value === null || value === undefined) return `${pad}<${name} />`;
-  if (typeof value !== 'object') return `${pad}<${name}>${escapeXml(String(value))}</${name}>`;
-  if (Array.isArray(value)) {
-    return value.map((v) => buildXml(name, v, depth)).join('\n');
-  }
-
-  const obj = value as JsonObject;
-  const attrs = isJsonObject(obj['@attributes']) ? obj['@attributes'] : null;
-  const text = typeof obj['#text'] === 'string' ? obj['#text'] : null;
-
-  let attrStr = '';
-  if (attrs) {
-    for (const [k, v] of Object.entries(attrs)) {
-      attrStr += ` ${k}="${escapeXml(String(v))}"`;
-    }
-  }
-
-  const childKeys = Object.keys(obj).filter((k) => k !== '@attributes' && k !== '#text');
-  if (childKeys.length === 0 && text === null) {
-    return `${pad}<${name}${attrStr} />`;
-  }
-  if (childKeys.length === 0 && text !== null) {
-    return `${pad}<${name}${attrStr}>${escapeXml(text)}</${name}>`;
-  }
-
-  const children = childKeys.map((k) => buildXml(k, obj[k], depth + 1)).join('\n');
-  return `${pad}<${name}${attrStr}>\n${children}\n${pad}</${name}>`;
-}
-
-function jsonToXml(json: string): string {
-  const parsed: JsonValue = JSON.parse(json);
-  if (!isJsonObject(parsed)) {
-    throw new Error('JSON must be an object with a single root key');
-  }
-  const keys = Object.keys(parsed);
-  if (keys.length !== 1) {
-    throw new Error('JSON must have exactly one root key');
-  }
-  const root = keys[0];
-  const body = buildXml(root, parsed[root], 0);
-  return `<?xml version="1.0" encoding="UTF-8"?>\n${body}`;
-}
-
-function convert(input: string, mode: Mode): { result: string; error: string } {
-  if (!input.trim()) return { result: '', error: '' };
-  try {
-    return { result: mode === 'x2j' ? xmlToJson(input) : jsonToXml(input), error: '' };
-  } catch (e) {
-    return { result: '', error: (e as Error).message };
-  }
-}
+import { useState } from 'react';
 
 export default function XmlToJsonClient() {
   const [input, setInput] = useState('');
-  const [mode, setMode] = useState<Mode>('x2j');
+  const [output, setOutput] = useState('');
+  const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
 
-  const { result, error } = useMemo(() => convert(input, mode), [input, mode]);
+  const convert = (xml: string) => {
+    if (!xml.trim()) {
+      setOutput('');
+      setError('');
+      return;
+    }
+    try {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(xml, 'text/xml');
+
+      const parseError = doc.querySelector('parsererror');
+      if (parseError) {
+        throw new Error('Invalid XML syntax');
+      }
+
+      const jsonObj = xmlToJson(doc.documentElement);
+      setOutput(JSON.stringify(jsonObj, null, 2));
+      setError('');
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Conversion failed');
+      setOutput('');
+    }
+  };
+
+  const xmlToJson = (node: Element): unknown => {
+    const obj: Record<string, unknown> = {};
+
+    if (node.attributes) {
+      for (let i = 0; i < node.attributes.length; i++) {
+        const attr = node.attributes[i];
+        if (attr.name.startsWith('xmlns')) continue;
+        obj[`@${attr.name}`] = attr.value;
+      }
+    }
+
+    const children = Array.from(node.childNodes).filter(
+      (n) => n.nodeType === Node.ELEMENT_NODE || n.nodeType === Node.TEXT_NODE
+    );
+
+    if (children.length === 0) {
+      const text = node.textContent?.trim() ?? '';
+      return text || null;
+    }
+
+    children.forEach((child) => {
+      if (child.nodeType === Node.TEXT_NODE) {
+        const text = child.textContent?.trim() ?? '';
+        if (text && Object.keys(obj).length === 0) {
+          return text;
+        }
+        if (text) obj['#text'] = text;
+      } else {
+        const childElement = child as Element;
+        const childName = childElement.nodeName;
+        const childValue = xmlToJson(childElement);
+
+        if (obj[childName]) {
+          if (!Array.isArray(obj[childName])) {
+            obj[childName] = [obj[childName]];
+          }
+          (obj[childName] as unknown[]).push(childValue);
+        } else {
+          obj[childName] = childValue;
+        }
+      }
+    });
+
+    return obj;
+  };
 
   const copy = () => {
-    if (!result) return;
-    navigator.clipboard.writeText(result).catch(() => {});
+    if (!output) return;
+    navigator.clipboard.writeText(output).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
 
-  const swap = () => {
-    if (!result) return;
-    setInput(result);
-    setMode((m) => (m === 'x2j' ? 'j2x' : 'x2j'));
-  };
-
-  const inputLbl = mode === 'x2j' ? 'XML' : 'JSON';
-  const outputLbl = mode === 'x2j' ? 'JSON' : 'XML';
-  const placeholder = mode === 'x2j'
-    ? '<book id="1">\n  <title>Hello</title>\n  <author>Toolblip</author>\n</book>'
-    : '{\n  "book": {\n    "@attributes": { "id": "1" },\n    "title": "Hello"\n  }\n}';
-
   return (
     <div>
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">{inputLbl}</span>
-        <div className="tb-v2-mode-tabs" role="tablist" aria-label="Conversion direction">
-          <button
-            type="button"
-            role="tab"
-            aria-selected={mode === 'x2j'}
-            onClick={() => setMode('x2j')}
-            className={`tb-v2-mode-tab ${mode === 'x2j' ? 'on' : ''}`}
-          >
-            XML → JSON
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={mode === 'j2x'}
-            onClick={() => setMode('j2x')}
-            className={`tb-v2-mode-tab ${mode === 'j2x' ? 'on' : ''}`}
-          >
-            JSON → XML
-          </button>
-          <button
-            type="button"
-            onClick={swap}
-            className="tb-v2-mode-tab"
-            disabled={!result}
-            aria-label="Swap output back to input"
-          >
-            ⇅ Swap
-          </button>
-        </div>
+        <span className="tb-v2-tool-label">XML Input</span>
       </div>
       <textarea
         value={input}
-        onChange={(e) => setInput(e.target.value)}
-        placeholder={placeholder}
+        onChange={(e) => {
+          setInput(e.target.value);
+          convert(e.target.value);
+        }}
+        placeholder="Paste your XML here..."
         className="tb-v2-tool-textarea"
         style={{ fontFamily: 'var(--f-mono)' }}
-        aria-label={`${inputLbl} input`}
+        aria-label="XML input"
       />
 
       <div className="tb-v2-tool-output-head">
-        <span className="tb-v2-tool-label">{outputLbl}</span>
-        <button
-          type="button"
-          onClick={copy}
-          disabled={!result}
-          className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
-        >
-          {copied ? 'Copied' : 'Copy'}
-        </button>
+        <span className="tb-v2-tool-label">JSON Output</span>
       </div>
-      <div className="tb-v2-tool-output-body">
+      <div className="tb-v2-tool-output-body" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {error ? (
-          <p className="tb-v2-error" role="alert">
-            <strong>Parse error:</strong> {error}
-          </p>
+          <div style={{ color: '#ef4444', fontSize: '0.875rem' }}>{error}</div>
         ) : (
-          <pre className="tb-v2-tool-pre">{result || '—'}</pre>
+          <pre className="tb-v2-hash-val" style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+            {output || '—'}
+          </pre>
+        )}
+        {output && (
+          <button
+            type="button"
+            onClick={copy}
+            className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+          >
+            {copied ? 'Copied' : 'Copy'}
+          </button>
         )}
       </div>
     </div>

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-03T21:01:09.812Z",
+  "updatedAt": "2026-05-04T21:01:41.821Z",
   "entries": {
     "memory:memory/2026-04-29.md:4:7": {
       "key": "memory:memory/2026-04-29.md:4:7",
@@ -10,12 +10,12 @@
       "source": "memory",
       "snippet": "Railway Deployment Issue (UNRESOLVED): **Problem**: toolblip-frontend on Railway is serving old build with 404 CSS; **Root cause**: Railway is using pre-built Docker image, NOT building from GitHub source; **Evidence**: Deployment logs show \"Starting Container\" with no build step",
       "recallCount": 0,
-      "dailyCount": 4,
+      "dailyCount": 5,
       "groundedCount": 0,
-      "totalScore": 2.48,
+      "totalScore": 3.1,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
       "queryHashes": [
         "312dd0eab707"
       ],
@@ -25,7 +25,8 @@
         "2026-05-01",
         "2026-05-03",
         "2026-05-02",
-        "2026-05-04"
+        "2026-05-04",
+        "2026-05-05"
       ],
       "conceptTags": [
         "toolblip-frontend",
@@ -46,12 +47,12 @@
       "source": "memory",
       "snippet": "Railway Deployment Issue (UNRESOLVED): **Also**: Check if GitHub repo reconnection needed (repo may have moved to toolblip/frontend)",
       "recallCount": 0,
-      "dailyCount": 4,
+      "dailyCount": 5,
       "groundedCount": 0,
-      "totalScore": 2.48,
+      "totalScore": 3.1,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
       "queryHashes": [
         "312dd0eab707"
       ],
@@ -61,7 +62,8 @@
         "2026-05-01",
         "2026-05-03",
         "2026-05-02",
-        "2026-05-04"
+        "2026-05-04",
+        "2026-05-05"
       ],
       "conceptTags": [
         "toolblip/frontend",
@@ -82,12 +84,12 @@
       "source": "memory",
       "snippet": "GitHub Push Working: Pushed `railway.toml` and tsconfig.json fix to GitHub; Railway is NOT rebuilding from these pushes - confirmed by stale CSS hashes",
       "recallCount": 0,
-      "dailyCount": 4,
+      "dailyCount": 5,
       "groundedCount": 0,
-      "totalScore": 2.48,
+      "totalScore": 3.1,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
       "queryHashes": [
         "312dd0eab707"
       ],
@@ -97,7 +99,8 @@
         "2026-05-01",
         "2026-05-03",
         "2026-05-02",
-        "2026-05-04"
+        "2026-05-04",
+        "2026-05-05"
       ],
       "conceptTags": [
         "railway.toml",
@@ -118,12 +121,12 @@
       "source": "memory",
       "snippet": "MCP Folder Issue (Fixed): The `mcp/` folder was causing TypeScript build errors; Added `mcp` to `tsconfig.json` exclude list",
       "recallCount": 0,
-      "dailyCount": 4,
+      "dailyCount": 5,
       "groundedCount": 0,
-      "totalScore": 2.48,
+      "totalScore": 3.1,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
       "queryHashes": [
         "312dd0eab707"
       ],
@@ -133,7 +136,8 @@
         "2026-05-01",
         "2026-05-03",
         "2026-05-02",
-        "2026-05-04"
+        "2026-05-04",
+        "2026-05-05"
       ],
       "conceptTags": [
         "tsconfig.json",
@@ -154,12 +158,12 @@
       "source": "memory",
       "snippet": "Railway Cleanup Needed: 3 unused PostgreSQL instances on Railway: `Postgres-XDi-`, `Postgres-QAgG`, `Postgres`; These are garbage from testing - Neon is being used for Postgres; Can be deleted to save resources",
       "recallCount": 0,
-      "dailyCount": 4,
+      "dailyCount": 5,
       "groundedCount": 0,
-      "totalScore": 2.48,
+      "totalScore": 3.1,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
       "queryHashes": [
         "312dd0eab707"
       ],
@@ -169,7 +173,8 @@
         "2026-05-01",
         "2026-05-03",
         "2026-05-02",
-        "2026-05-04"
+        "2026-05-04",
+        "2026-05-05"
       ],
       "conceptTags": [
         "postgres-xdi",
@@ -190,12 +195,12 @@
       "source": "memory",
       "snippet": "Keys/Tokens: Railway token: `[COMMITTED - REVOKED]`; Neon PostgreSQL: `[COMMITTED - REVOKED]`; Superadmin: `info@toolblip.com` / `[COMMITTED - REVOKED]`",
       "recallCount": 0,
-      "dailyCount": 4,
+      "dailyCount": 5,
       "groundedCount": 0,
-      "totalScore": 2.48,
+      "totalScore": 3.1,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
       "queryHashes": [
         "312dd0eab707"
       ],
@@ -205,7 +210,8 @@
         "2026-05-01",
         "2026-05-03",
         "2026-05-02",
-        "2026-05-04"
+        "2026-05-04",
+        "2026-05-05"
       ],
       "conceptTags": [
         "keys/tokens",
@@ -226,12 +232,12 @@
       "source": "memory",
       "snippet": "Railway Deployment Issue (STILL UNRESOLVED): Multiple `railway up` commands sent - deployments stack up in QUEUED state; Current deployment `0cd6317b-6c2f-4a46-a56f-0a7a751008e0` has been QUEUED for ~35 minutes; Railway logs show \"Starting Container\" only - no build steps; **ROOT",
       "recallCount": 0,
-      "dailyCount": 4,
+      "dailyCount": 5,
       "groundedCount": 0,
-      "totalScore": 2.48,
+      "totalScore": 3.1,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
       "queryHashes": [
         "312dd0eab707"
       ],
@@ -241,7 +247,8 @@
         "2026-05-01",
         "2026-05-03",
         "2026-05-02",
-        "2026-05-04"
+        "2026-05-04",
+        "2026-05-05"
       ],
       "conceptTags": [
         "railway",
@@ -15643,12 +15650,12 @@
       "source": "memory",
       "snippet": "SEO Files Already Done: app/sitemap.ts and app/robots.ts were already present (created in prior session); sitemap includes all required routes + tool slugs; robots.txt allows all crawlers and points to sitemap.xml; No action needed — verified existing implementation is correct",
       "recallCount": 0,
-      "dailyCount": 2,
+      "dailyCount": 3,
       "groundedCount": 0,
-      "totalScore": 1.24,
+      "totalScore": 1.8599999999999999,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-30T21:03:13.419Z",
-      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
       "queryHashes": [
         "e757f9360616"
       ],
@@ -15656,7 +15663,8 @@
         "2026-05-01",
         "2026-04-30",
         "2026-05-04",
-        "2026-05-03"
+        "2026-05-03",
+        "2026-05-05"
       ],
       "conceptTags": [
         "app/sitemap.ts",
@@ -17345,18 +17353,20 @@
       "source": "memory",
       "snippet": "Git History Cleanup — COMPLETED: Cleaned git history using `git filter-repo` replacing secrets with `[REDACTED]`; Force-pushed to GitHub (commit `a8882f5` → `2746332`); Backup at `/Users/ray/Work/toolblip-backup-*`",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-01T21:01:07.176Z",
-      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
       "queryHashes": [
         "f16f2797a8f9"
       ],
       "recallDays": [
         "2026-05-02",
-        "2026-05-01"
+        "2026-05-01",
+        "2026-05-05",
+        "2026-05-04"
       ],
       "conceptTags": [
         "backup",
@@ -17377,18 +17387,20 @@
       "source": "memory",
       "snippet": "Neon PostgreSQL Password Rotation — COMPLETED: Old exposed password: `[REDACTED]` (from Apr 29 commit bda263b5); New password: `[REDACTED]` (rotated via browser automation); API key generated: `[REDACTED]`; Updated `.env` files:",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-01T21:01:07.176Z",
-      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
       "queryHashes": [
         "f16f2797a8f9"
       ],
       "recallDays": [
         "2026-05-02",
-        "2026-05-01"
+        "2026-05-01",
+        "2026-05-05",
+        "2026-05-04"
       ],
       "conceptTags": [
         "neon",
@@ -17409,18 +17421,20 @@
       "source": "memory",
       "snippet": "Neon PostgreSQL Password Rotation — COMPLETED: `/Users/ray/Work/toolblip/.env`; `/Users/ray/Work/toolblip/api/.env`",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-01T21:01:07.176Z",
-      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
       "queryHashes": [
         "f16f2797a8f9"
       ],
       "recallDays": [
         "2026-05-02",
-        "2026-05-01"
+        "2026-05-01",
+        "2026-05-05",
+        "2026-05-04"
       ],
       "conceptTags": [
         "users/ray/work/toolblip",
@@ -17441,18 +17455,20 @@
       "source": "memory",
       "snippet": "Stripe Staging Mode Feature — COMPLETED (backend): `api/app/Helpers/StripeHelper.php` — picks test vs prod keys based on staging mode; `api/app/Http/Middleware/EnsureStripeStagingMode.php` — blocks non-admins when staging on; `config/services.php` — added test keys and staging_mo",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-01T21:01:07.176Z",
-      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
       "queryHashes": [
         "f16f2797a8f9"
       ],
       "recallDays": [
         "2026-05-02",
-        "2026-05-01"
+        "2026-05-01",
+        "2026-05-05",
+        "2026-05-04"
       ],
       "conceptTags": [
         "api/app/helpers/stripehelper.php",
@@ -17473,18 +17489,20 @@
       "source": "memory",
       "snippet": "Stripe Staging Mode Feature — COMPLETED (backend): `.env` — test keys and `STRIPE_STAGING_MODE=false`",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-01T21:01:07.176Z",
-      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
       "queryHashes": [
         "f16f2797a8f9"
       ],
       "recallDays": [
         "2026-05-02",
-        "2026-05-01"
+        "2026-05-01",
+        "2026-05-05",
+        "2026-05-04"
       ],
       "conceptTags": [
         "stripe-staging-mode",
@@ -17505,18 +17523,20 @@
       "source": "memory",
       "snippet": "Gitignore Updated — COMPLETED: Added explicit OpenClaw protection:",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-01T21:01:07.176Z",
-      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
       "queryHashes": [
         "f16f2797a8f9"
       ],
       "recallDays": [
         "2026-05-02",
-        "2026-05-01"
+        "2026-05-01",
+        "2026-05-05",
+        "2026-05-04"
       ],
       "conceptTags": [
         "gitignore",
@@ -17536,18 +17556,20 @@
       "source": "memory",
       "snippet": "Gitignore Updated — COMPLETED: .claude-home/ .openclaw/",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-01T21:01:07.176Z",
-      "lastRecalledAt": "2026-05-01T21:01:07.176Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
       "queryHashes": [
         "f16f2797a8f9"
       ],
       "recallDays": [
         "2026-05-02",
-        "2026-05-01"
+        "2026-05-01",
+        "2026-05-05",
+        "2026-05-04"
       ],
       "conceptTags": [
         "claude-home",
@@ -21582,6 +21604,739 @@
         "status",
         "railway",
         "auth"
+      ]
+    },
+    "memory:memory/2026-05-04.md:5:8": {
+      "key": "memory:memory/2026-05-04.md:5:8",
+      "path": "memory/2026-05-04.md",
+      "startLine": 5,
+      "endLine": 8,
+      "source": "memory",
+      "snippet": "Session: API Docs Task (cron): Cron task asked to \"build\" API docs at /api-docs — **already existed and was comprehensive**; File: `app/api-docs/page.tsx` + `app/api-docs/ApiDocsClient.tsx`; Already covers:; Base URL: `https://toolblip-api-production.up.railway.app`",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-04T21:01:17.053Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
+      "queryHashes": [
+        "ad6c7e6ef235"
+      ],
+      "recallDays": [
+        "2026-05-05",
+        "2026-05-04"
+      ],
+      "conceptTags": [
+        "api-docs",
+        "app/api-docs/page.tsx",
+        "app/api-docs/apidocsclient.tsx",
+        "api",
+        "docs",
+        "task",
+        "cron",
+        "asked"
+      ]
+    },
+    "memory:memory/2026-05-04.md:9:12": {
+      "key": "memory:memory/2026-05-04.md:9:12",
+      "path": "memory/2026-05-04.md",
+      "startLine": 9,
+      "endLine": 12,
+      "source": "memory",
+      "snippet": "Session: API Docs Task (cron): Bearer token auth in Authorization header; All 6 required endpoints with curl + JSON response examples; HTTP status codes table; Quick start guide",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-04T21:01:17.053Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
+      "queryHashes": [
+        "ad6c7e6ef235"
+      ],
+      "recallDays": [
+        "2026-05-05",
+        "2026-05-04"
+      ],
+      "conceptTags": [
+        "api",
+        "docs",
+        "task",
+        "cron",
+        "bearer",
+        "token",
+        "auth",
+        "authorization"
+      ]
+    },
+    "memory:memory/2026-05-04.md:13:16": {
+      "key": "memory:memory/2026-05-04.md:13:16",
+      "path": "memory/2026-05-04.md",
+      "startLine": 13,
+      "endLine": 16,
+      "source": "memory",
+      "snippet": "Session: API Docs Task (cron): Sidebar with scroll-spy navigation; Copy-to-clipboard on code blocks; Responsive dark mode support; No changes needed. No commit required.",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-04T21:01:17.053Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
+      "queryHashes": [
+        "ad6c7e6ef235"
+      ],
+      "recallDays": [
+        "2026-05-05",
+        "2026-05-04"
+      ],
+      "conceptTags": [
+        "scroll-spy",
+        "copy-to-clipboard",
+        "api",
+        "docs",
+        "task",
+        "cron",
+        "sidebar",
+        "scroll"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:51:51": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:51:51",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 51,
+      "endLine": 51,
+      "source": "memory",
+      "snippet": "Assistant: 🚨 **Toolblip Frontend is DOWN** - **HTTP Status:** `404` (https://toolblip.com/) - **Railway:** Auth token expired — please run `railway login` - **Railway CLI:** Unable to check service status or logs due to expired token **Action needed:** Re-authenticate Railway CL",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-04T21:01:17.053Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-05",
+        "2026-05-04"
+      ],
+      "conceptTags": [
+        "toolblip.com",
+        "re-authenticate",
+        "toolblip",
+        "frontend",
+        "down",
+        "http",
+        "status",
+        "https"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:52:52": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:52:52",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 52,
+      "endLine": 52,
+      "source": "memory",
+      "snippet": "Assistant: 🚨 **Toolblip Frontend is DOWN** - **URL:** https://toolblip.com/ → HTTP 404 - **Railway status:** ❌ Auth failure (token expired — need `railway login`) - **Action needed:** Railway CLI auth needs re-login, and site is returning 404. Check Railway dashboard + re-auth C",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-04T21:01:17.053Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-05",
+        "2026-05-04"
+      ],
+      "conceptTags": [
+        "toolblip.com",
+        "re-login",
+        "re-auth",
+        "toolblip",
+        "frontend",
+        "down",
+        "url",
+        "https"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:53:53": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:53:53",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 53,
+      "endLine": 53,
+      "source": "memory",
+      "snippet": "Assistant: 🚨 **Toolblip Frontend is DOWN** - **URL:** https://toolblip.com/ - **HTTP Status:** 404 - **Railway CLI:** Auth expired — cannot pull service status/logs **Action needed:** Run `railway login` to re-authenticate, then check the Railway dashboard.",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-04T21:01:17.053Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-05",
+        "2026-05-04"
+      ],
+      "conceptTags": [
+        "toolblip.com",
+        "status/logs",
+        "re-authenticate",
+        "toolblip",
+        "frontend",
+        "down",
+        "url",
+        "https"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:54:54": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:54:54",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 54,
+      "endLine": 54,
+      "source": "memory",
+      "snippet": "Assistant: ✍️ Content #1 published: Time-Ordered IDs Explained: UUID v7 vs SparkID vs ULID for Database Design — time-ordered-ids-uuid-v7-sparkid-ulid-guide",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-04T21:01:17.053Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-05",
+        "2026-05-04"
+      ],
+      "conceptTags": [
+        "time-ordered",
+        "content",
+        "published",
+        "time",
+        "ordered",
+        "ids",
+        "explained",
+        "uuid"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:55:55": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:55:55",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 55,
+      "endLine": 55,
+      "source": "memory",
+      "snippet": "Assistant: 🚨 **Toolblip.com is DOWN** HTTP 404 on toolblip.com — site is unreachable. Also, Railway auth has expired: > `grant request is invalid. Please run railway login again.` You'll need to re-authenticate with Railway CLI and redeploy. Anyone available to handle this?",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-04T21:01:17.053Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-05",
+        "2026-05-04"
+      ],
+      "conceptTags": [
+        "toolblip.com",
+        "re-authenticate",
+        "down",
+        "http",
+        "site",
+        "unreachable",
+        "railway",
+        "auth"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:56:56": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:56:56",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 56,
+      "endLine": 56,
+      "source": "memory",
+      "snippet": "Assistant: 🔍 Opportunity Finder done. Found 6 questions, 6 content gaps, 8 tool ideas. Top find: Regex Explainer feature for existing regex-tester (low effort, high SEO value for \"what does this regex mean\" queries); Base64 charset support also confirmed by a GitHub issue reques",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-04T21:01:17.053Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-05",
+        "2026-05-04"
+      ],
+      "conceptTags": [
+        "regex-tester",
+        "opportunity",
+        "finder",
+        "done",
+        "found",
+        "questions",
+        "content",
+        "gaps"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:57:57": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:57:57",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 57,
+      "endLine": 57,
+      "source": "memory",
+      "snippet": "User: remove all the health check cron",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-04T21:01:17.053Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-05",
+        "2026-05-04"
+      ],
+      "conceptTags": [
+        "remove",
+        "all",
+        "health",
+        "check",
+        "cron"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:58:58": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:58:58",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 58,
+      "endLine": 58,
+      "source": "memory",
+      "snippet": "Assistant: Removing health check crons — Railway frontend check, toolblip-api-healthcheck, and toolblip-frontend-healthcheck:",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-04T21:01:17.053Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-05",
+        "2026-05-04"
+      ],
+      "conceptTags": [
+        "toolblip-api-healthcheck",
+        "toolblip-frontend-healthcheck",
+        "removing",
+        "health",
+        "check",
+        "crons",
+        "railway",
+        "frontend"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-02.txt:59:59": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-02.txt:59:59",
+      "path": "memory/.dreams/session-corpus/2026-05-02.txt",
+      "startLine": 59,
+      "endLine": 59,
+      "source": "memory",
+      "snippet": "Assistant: Done. Removed 3 health check crons: - ❌ **Railway frontend deployment status** (`*/30 * * * *` — was alerting when Railway showed stale status even when site was up) - ❌ **toolblip-api-healthcheck** (disabled) - ❌ **toolblip-frontend-healthcheck** (disabled)",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-04T21:01:17.053Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
+      "queryHashes": [
+        "815cc1934125"
+      ],
+      "recallDays": [
+        "2026-05-05",
+        "2026-05-04"
+      ],
+      "conceptTags": [
+        "toolblip-api-healthcheck",
+        "toolblip-frontend-healthcheck",
+        "done",
+        "removed",
+        "health",
+        "check",
+        "crons",
+        "railway"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-03.txt:1:1": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-03.txt:1:1",
+      "path": "memory/.dreams/session-corpus/2026-05-03.txt",
+      "startLine": 1,
+      "endLine": 1,
+      "source": "memory",
+      "snippet": "Assistant: ✍️ Content #2 published: The Definitive Guide to Time-Ordered Database IDs: UUID v7 vs ULID vs SparkID",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-04T21:01:17.053Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
+      "queryHashes": [
+        "b2bd51325196"
+      ],
+      "recallDays": [
+        "2026-05-05",
+        "2026-05-04"
+      ],
+      "conceptTags": [
+        "time-ordered",
+        "content",
+        "published",
+        "definitive",
+        "guide",
+        "time",
+        "ordered",
+        "database"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-03.txt:2:2": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-03.txt:2:2",
+      "path": "memory/.dreams/session-corpus/2026-05-03.txt",
+      "startLine": 2,
+      "endLine": 2,
+      "source": "memory",
+      "snippet": "Assistant: ☀️ **Morning Digest — May 3, 2026** --- **Content published:** 1 post → *Time-Ordered IDs Explained: UUID v7 vs SparkID vs ULID for Database Design* — comparison post on a confirmed content gap. Cross-links the UUID generator tool. **Research:** 1 session (Apr 30 PM) →",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-04T21:01:17.053Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
+      "queryHashes": [
+        "b2bd51325196"
+      ],
+      "recallDays": [
+        "2026-05-05",
+        "2026-05-04"
+      ],
+      "conceptTags": [
+        "time-ordered",
+        "cross-links",
+        "morning",
+        "digest",
+        "may",
+        "content",
+        "published",
+        "post"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-03.txt:3:3": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-03.txt:3:3",
+      "path": "memory/.dreams/session-corpus/2026-05-03.txt",
+      "startLine": 3,
+      "endLine": 3,
+      "source": "memory",
+      "snippet": "Assistant: meaning\" queries across Chinese and English dev communities. 3. **Base64 charset support** — GitHub issue explicitly requests UTF-16/UTF-32 decode. Current tool only handles UTF-8. --- **Competitor watch:** qubittool and codama-dev both launching \"86+ free dev tools\" s",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-04T21:01:17.053Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
+      "queryHashes": [
+        "b2bd51325196"
+      ],
+      "recallDays": [
+        "2026-05-05",
+        "2026-05-04"
+      ],
+      "conceptTags": [
+        "utf-16/utf-32",
+        "utf-8",
+        "codama-dev",
+        "meaning",
+        "queries",
+        "across",
+        "chinese",
+        "english"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-05.txt:1:1": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-05.txt:1:1",
+      "path": "memory/.dreams/session-corpus/2026-05-05.txt",
+      "startLine": 1,
+      "endLine": 1,
+      "source": "memory",
+      "snippet": "Assistant: ☀️ **Morning Digest — May 5, 2026** **Overnight summary:** Very quiet night — no new content published May 4th. The overnight cron only checked API docs (already comprehensive, no changes needed). **Last published:** - 2026-05-03 — *Why JSON Has `undefined`* (JSON debu",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-04T21:01:17.053Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
+      "queryHashes": [
+        "8437f7355b64"
+      ],
+      "recallDays": [
+        "2026-05-05",
+        "2026-05-04"
+      ],
+      "conceptTags": [
+        "morning",
+        "digest",
+        "may",
+        "overnight",
+        "summary",
+        "very",
+        "quiet",
+        "night"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-05.txt:2:2": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-05.txt:2:2",
+      "path": "memory/.dreams/session-corpus/2026-05-05.txt",
+      "startLine": 2,
+      "endLine": 2,
+      "source": "memory",
+      "snippet": "Assistant: **Build JSON Diff** — top confirmed gap, multiple GitHub issues backing it 2. **Publish JWT vs OAuth 2.0 post** — been sitting in the queue since April 30",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-04T21:01:17.053Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
+      "queryHashes": [
+        "8437f7355b64"
+      ],
+      "recallDays": [
+        "2026-05-05",
+        "2026-05-04"
+      ],
+      "conceptTags": [
+        "2.0",
+        "diff",
+        "top",
+        "confirmed",
+        "gap",
+        "multiple",
+        "github",
+        "issues"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-03.txt:4:4": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-03.txt:4:4",
+      "path": "memory/.dreams/session-corpus/2026-05-03.txt",
+      "startLine": 4,
+      "endLine": 4,
+      "source": "memory",
+      "snippet": "Assistant: The homepage already has all three sections you described — they're committed and live: 1. **HowItWorksStrip** — 3 steps (Pick a tool → Paste your data → Get your result) + animated privacy badge (\"No servers · No uploads · Nothing leaves your browser\") 2. **CategoryQu",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-04T21:01:17.053Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
+      "queryHashes": [
+        "b2bd51325196"
+      ],
+      "recallDays": [
+        "2026-05-05",
+        "2026-05-04"
+      ],
+      "conceptTags": [
+        "homepage",
+        "already",
+        "has",
+        "all",
+        "three",
+        "sections",
+        "described",
+        "they're"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-03.txt:5:5": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-03.txt:5:5",
+      "path": "memory/.dreams/session-corpus/2026-05-03.txt",
+      "startLine": 5,
+      "endLine": 5,
+      "source": "memory",
+      "snippet": "Assistant: ✍️ Content #1 published: Why Your JSON Has `undefined`: How to Debug Invalid JSON in Any Language — 2026-05-03-why-json-has-undefined",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-04T21:01:17.053Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
+      "queryHashes": [
+        "b2bd51325196"
+      ],
+      "recallDays": [
+        "2026-05-05",
+        "2026-05-04"
+      ],
+      "conceptTags": [
+        "content",
+        "published",
+        "why",
+        "has",
+        "undefined",
+        "how",
+        "debug",
+        "invalid"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-03.txt:6:6": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-03.txt:6:6",
+      "path": "memory/.dreams/session-corpus/2026-05-03.txt",
+      "startLine": 6,
+      "endLine": 6,
+      "source": "memory",
+      "snippet": "Assistant: 🔍 Opportunity Finder done. Found 19 questions, 6 content gaps, 6 new tool ideas. Top find: JWT Builder (only decoder exists, no builder — huge Stack Overflow demand). cURL to Code and JSON Diff also strong gaps. Note: web search API not configured, analysis based on e",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-04T21:01:17.053Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
+      "queryHashes": [
+        "b2bd51325196"
+      ],
+      "recallDays": [
+        "2026-05-05",
+        "2026-05-04"
+      ],
+      "conceptTags": [
+        "opportunity",
+        "finder",
+        "done",
+        "found",
+        "questions",
+        "content",
+        "gaps",
+        "new"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-04.txt:3:3": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-04.txt:3:3",
+      "path": "memory/.dreams/session-corpus/2026-05-04.txt",
+      "startLine": 3,
+      "endLine": 3,
+      "source": "memory",
+      "snippet": "Assistant: ✍️ Content #1 published: JSON Diff: Compare Two JSON Files Side-by-Side in Your Browser — 2026-04-23-json-diff-compare-json-files-browser",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-04T21:01:17.053Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
+      "queryHashes": [
+        "4d9d9fab6a07"
+      ],
+      "recallDays": [
+        "2026-05-05",
+        "2026-05-04"
+      ],
+      "conceptTags": [
+        "side-by-side",
+        "content",
+        "published",
+        "diff",
+        "compare",
+        "two",
+        "side",
+        "browser"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-04.txt:4:4": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-04.txt:4:4",
+      "path": "memory/.dreams/session-corpus/2026-05-04.txt",
+      "startLine": 4,
+      "endLine": 4,
+      "source": "memory",
+      "snippet": "Assistant: 🔍 Opportunity Finder done. Found 10 questions, 6 content gaps, 6 tool ideas. Top find: JSON auto-repair — devs frustrated that formatters throw errors instead of fixing common issues (trailing commas, single quotes, unquoted keys). ToolsMatic competitor launched same",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-04T21:01:17.053Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
+      "queryHashes": [
+        "4d9d9fab6a07"
+      ],
+      "recallDays": [
+        "2026-05-05",
+        "2026-05-04"
+      ],
+      "conceptTags": [
+        "auto-repair",
+        "opportunity",
+        "finder",
+        "done",
+        "found",
+        "questions",
+        "content",
+        "gaps"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-05.txt:3:3": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-05.txt:3:3",
+      "path": "memory/.dreams/session-corpus/2026-05-05.txt",
+      "startLine": 3,
+      "endLine": 3,
+      "source": "memory",
+      "snippet": "Assistant: ✍️ Content #2 published: HTTP Methods Explained: GET vs POST vs PUT vs PATCH vs DELETE",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-04T21:01:17.053Z",
+      "lastRecalledAt": "2026-05-04T21:01:17.053Z",
+      "queryHashes": [
+        "8437f7355b64"
+      ],
+      "recallDays": [
+        "2026-05-05",
+        "2026-05-04"
+      ],
+      "conceptTags": [
+        "content",
+        "published",
+        "http",
+        "methods",
+        "explained",
+        "get",
+        "post",
+        "put"
       ]
     }
   }

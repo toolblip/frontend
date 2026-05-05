@@ -43,12 +43,22 @@ const ENDPOINTS: Endpoint[] = [
     path: '/api/tools',
     auth: false,
     title: 'List all tools',
-    description: 'Returns a paginated list of all tools. Supports filtering by category and full-text search.',
+    description: 'Returns a paginated list of all tools. Supports optional filtering by category and full-text search.',
+    bodyParams: [
+      { name: 'category', type: 'string', required: false, description: 'Filter tools by category slug (e.g. developer, productivity)' },
+      { name: 'search', type: 'string', required: false, description: 'Full-text search across tool names and descriptions' },
+      { name: 'page', type: 'integer', required: false, description: 'Page number for pagination (default: 1)' },
+      { name: 'per_page', type: 'integer', required: false, description: 'Results per page (default: 20, max: 100)' },
+    ],
     responseFields: [
       { field: 'tools.tools[]', type: 'array', description: 'Array of tool objects' },
       { field: 'tools.meta', type: 'object', description: 'Pagination metadata: current_page, total, per_page, last_page' },
     ],
     curl: `curl -X GET "${BASE_URL}/api/tools" \\
+  -H "Accept: application/json"
+
+# With filters and pagination
+curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_page=10" \\
   -H "Accept: application/json"`,
     response: `{
   "tools": {
@@ -470,7 +480,7 @@ export default function ApiDocsClient() {
             <div className="bg-slate-900 dark:bg-slate-800 rounded-xl px-4 py-3.5">
               <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest block mb-1">Base URL</span>
               <code className="text-sm font-mono text-[#58D65D] break-all">https://toolblip-api-production.up.railway.app</code>
-              <span className="text-xs text-slate-500 mt-0.5 block">SSL: api.toolblip.com (coming soon)</span>
+              <span className="text-xs text-slate-500 mt-0.5 block">api.toolblip.com (SSL pending)</span>
             </div>
             <div className="flex items-center gap-3 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3.5">
               <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

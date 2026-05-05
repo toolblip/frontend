@@ -1,687 +1,2298 @@
 'use client';
 
-import { useState, useCallback } from 'react';
 import type { Tool } from '@/data/tools';
+import ShareButtons from '@/components/ShareButtons';
 
-// ─── Word Counter ───────────────────────────────────────────────
-function WordCounter() {
-  const [text, setText] = useState('');
-  const stats = {
-    words: text.trim() ? text.trim().split(/\s+/).length : 0,
-    chars: text.length,
-    charsNoSpaces: text.replace(/\s/g, '').length,
-    sentences: text.split(/[.!?]+/).filter(Boolean).length,
-    paragraphs: text.split(/\n\n+/).filter(Boolean).length,
-    readingTime: Math.max(1, Math.ceil(text.trim().split(/\s+/).length / 200)),
-  };
+// ─── Imported tool UIs ──────────────────────────────────────────────────────
+import YamlToJsonClient from '@/components/tools/YamlToJsonClient';
+import XmlToJsonClient from '@/components/tools/XmlToJsonClient';
+import XmlFormatterClient from '@/components/tools/XmlFormatterClient';
+import WordCounterClient from '@/components/tools/WordCounterClient';
+import UuidGeneratorClient from '@/components/tools/UuidGeneratorClient';
+import UrlSlugGeneratorClient from '@/components/tools/UrlSlugGeneratorClient';
+import UrlParamsClient from '@/components/tools/UrlParamsClient';
+import UrlEncodeClient from '@/components/tools/UrlEncodeClient';
+import UnixTimestampConverterClient from '@/components/tools/UnixTimestampConverterClient';
+import UnitConverterClient from '@/components/tools/UnitConverterClient';
+import TextSorterClient from '@/components/tools/TextSorterClient';
+import TextDiffClient from '@/components/tools/TextDiffClient';
+import SquareCropClient from '@/components/tools/SquareCropClient';
+import SqlToJsonClient from '@/components/tools/SqlToJsonClient';
+import SerpPreviewClient from '@/components/tools/SerpPreviewClient';
+import ScreenResolutionTesterClient from '@/components/tools/ScreenResolutionTesterClient';
+import RemoveDuplicateLinesClient from '@/components/tools/RemoveDuplicateLinesClient';
+import RegexTesterClient from '@/components/tools/RegexTesterClient';
+import ReadabilityScoreClient from '@/components/tools/ReadabilityScoreClient';
+import QrCodeGeneratorClient from '@/components/tools/QrCodeGeneratorClient';
+import PercentageDifferenceClient from '@/components/tools/PercentageDifferenceClient';
+import PercentageCalculatorClient from '@/components/tools/PercentageCalculatorClient';
+import PasswordGeneratorClient from '@/components/tools/PasswordGeneratorClient';
+import NumberBaseConverterClient from '@/components/tools/NumberBaseConverterClient';
+import MetaTagGeneratorClient from '@/components/tools/MetaTagGeneratorClient';
+import MarkdownToHtmlClient from '@/components/tools/MarkdownToHtmlClient';
+import LoremIpsumGeneratorClient from '@/components/tools/LoremIpsumGeneratorClient';
+import JwtDecoderClient from '@/components/tools/JwtDecoderClient';
+import JsonToYamlClient from '@/components/tools/JsonToYamlClient';
+import JsonFormatterClient from '@/components/tools/JsonFormatterClient';
+import JsonValidatorClient from '@/components/tools/JsonValidatorClient';
+import JsMinifierClient from '@/components/tools/JsMinifierClient';
+import ImageResizerClient from '@/components/tools/ImageResizerClient';
+import ImageFormatConverterClient from '@/components/tools/ImageFormatConverterClient';
+import ImageCropperClient from '@/components/tools/ImageCropperClient';
+import HttpHeadersViewerClient from '@/components/tools/HttpHeadersViewerClient';
+import HtmlEncoderClient from '@/components/tools/HtmlEncoderClient';
+import HashGeneratorClient from '@/components/tools/HashGeneratorClient';
+import Sha256HashClient from '@/components/tools/Sha256HashClient';
+import GrammarCheckerClient from '@/components/tools/GrammarCheckerClient';
+import FaviconGeneratorClient from '@/components/tools/FaviconGeneratorClient';
+import CssGradientGeneratorClient from '@/components/tools/CssGradientGeneratorClient';
+import CssBorderRadiusGeneratorClient from '@/components/tools/CssBorderRadiusGeneratorClient';
+import SassToCssClient from '@/components/tools/SassToCssClient';
+import CronParserClient from '@/components/tools/CronParserClient';
+import CronGeneratorClient from '@/components/tools/CronGeneratorClient';
+import CreditCardValidatorClient from '@/components/tools/CreditCardValidatorClient';
+import ContrastCheckerClient from '@/components/tools/ContrastCheckerClient';
+import ColorPickerClient from '@/components/tools/ColorPickerClient';
+import CircleCropClient from '@/components/tools/CircleCropClient';
+import ChangeBgPhotoClient from '@/components/tools/ChangeBgPhotoClient';
+import CharacterCounterClient from '@/components/tools/CharacterCounterClient';
+import CharacterFrequencyCounterClient from '@/components/tools/CharacterFrequencyCounterClient';
+import CharacterVarietyCheckerClient from '@/components/tools/CharacterVarietyCheckerClient';
+import OxfordCommaClient from '@/components/tools/OxfordCommaClient';
+import NotebookToHtmlClient from '@/components/tools/NotebookToHtmlClient';
+import HexToRgbClient from '@/components/tools/HexToRgbClient';
+import RgbToHexClient from '@/components/tools/RgbToHexClient';
+import RandomStringClient from '@/components/tools/RandomStringClient';
+import Base64EncoderDecoderClient from '@/components/tools/Base64EncoderDecoderClient';
+import Base64FileEncoderClient from '@/components/tools/Base64FileEncoderClient';
+import Base64ImageDecoderClient from '@/components/tools/Base64ImageDecoderClient';
+import Base64ImageEncoderClient from '@/components/tools/Base64ImageEncoderClient';
+import Base64ImageViewerClient from '@/components/tools/Base64ImageViewerClient';
+import CaseConverterClient from '@/components/tools/CaseConverterClient';
+import AgeCalculatorClient from '@/components/tools/AgeCalculatorClient';
+import AnagramGeneratorClient from '@/components/tools/AnagramGeneratorClient';
+import BacklinkCheckerClient from '@/components/tools/BacklinkCheckerClient';
+import Base64Client from '@/components/tools/Base64Client';
+import BashCommandGeneratorClient from '@/components/tools/BashCommandGeneratorClient';
+import BinaryToDecimalClient from '@/components/tools/BinaryToDecimalClient';
+import BinaryToTextClient from '@/components/tools/BinaryToTextClient';
+import BrokenLinkCheckerClient from '@/components/tools/BrokenLinkCheckerClient';
+import BrokenImageCheckerClient from '@/components/tools/BrokenImageCheckerClient';
+import BrokenLinkCheckerExpressClient from '@/components/tools/BrokenLinkCheckerExpressClient';
+import BrokenLinkCheckerV2Client from '@/components/tools/BrokenLinkCheckerV2Client';
+import BrowserImageResizerClient from '@/components/tools/BrowserImageResizerClient';
+import BulkGeneratorClient from '@/components/tools/BulkGeneratorClient';
+import BusinessNameGeneratorClient from '@/components/tools/BusinessNameGeneratorClient';
+import BusinessPlanGeneratorClient from '@/components/tools/BusinessPlanGeneratorClient';
+import BusinessSloganGeneratorClient from '@/components/tools/BusinessSloganGeneratorClient';
+import ByteConverterClient from '@/components/tools/ByteConverterClient';
+import CanonicalTagCheckerClient from '@/components/tools/CanonicalTagCheckerClient';
+import CanonicalUrlGeneratorClient from '@/components/tools/CanonicalUrlGeneratorClient';
+import ChineseCharConverterClient from '@/components/tools/ChineseCharConverterClient';
+import CidrCalculatorClient from '@/components/tools/CidrCalculatorClient';
+import CmykToRgbConverterClient from '@/components/tools/CmykToRgbConverterClient';
+import CmykToRgbClient from '@/components/tools/CmykToRgbClient';
+import CmykToRgbToolClient from '@/components/tools/CmykToRgbToolClient';
+import CorsHeaderGeneratorClient from '@/components/tools/CorsHeaderGeneratorClient';
+import CountdownTimerClient from '@/components/tools/CountdownTimerClient';
+import CrontabGeneratorClient from '@/components/tools/CrontabGeneratorClient';
+import CssClassGeneratorClient from '@/components/tools/CssClassGeneratorClient';
+import CssPreprocessorClient from '@/components/tools/CssPreprocessorClient';
+import CssToScssConverterClient from '@/components/tools/CssToScssConverterClient';
+import CssValidatorClient from '@/components/tools/CssValidatorClient';
+import CsvToJsonClient from '@/components/tools/CsvToJsonClient';
+import CsvToTsvClient from '@/components/tools/CsvToTsvClient';
+import CurlGeneratorClient from '@/components/tools/CurlGeneratorClient';
+import CurlToPythonClient from '@/components/tools/CurlToPythonClient';
+import DecimalToBinaryClient from '@/components/tools/DecimalToBinaryClient';
+import DecimalToHexClient from '@/components/tools/DecimalToHexClient';
+import DecodeToolClient from '@/components/tools/DecodeToolClient';
+import DiffToolClient from '@/components/tools/DiffToolClient';
+import DnsLookupClient from '@/components/tools/DnsLookupClient';
+import DuplicateLineFinderClient from '@/components/tools/DuplicateLineFinderClient';
+import DuplicateLineRemovalClient from '@/components/tools/DuplicateLineRemovalClient';
+import EmailGeneratorClient from '@/components/tools/EmailGeneratorClient';
+import EmailValidatorClient from '@/components/tools/EmailValidatorClient';
+import EmojiFinderClient from '@/components/tools/EmojiFinderClient';
+import EncodeToolClient from '@/components/tools/EncodeToolClient';
+import EnglishGrammarCheckerClient from '@/components/tools/EnglishGrammarCheckerClient';
+import FakeDataGeneratorClient from '@/components/tools/FakeDataGeneratorClient';
+import FakeTextGeneratorClient from '@/components/tools/FakeTextGeneratorClient';
+import FormattersToolClient from '@/components/tools/FormattersToolClient';
+import FractionToDecimalClient from '@/components/tools/FractionToDecimalClient';
+import GitignoreGeneratorClient from '@/components/tools/GitignoreGeneratorClient';
+import HashFromTextClient from '@/components/tools/HashFromTextClient';
+import HashIdentifierClient from '@/components/tools/HashIdentifierClient';
+import HexToDecimalClient from '@/components/tools/HexToDecimalClient';
+import HslToRgbClient from '@/components/tools/HslToRgbClient';
+import HtaccessRedirectGeneratorClient from '@/components/tools/HtaccessRedirectGeneratorClient';
+import HtmlEntityEncoderClient from '@/components/tools/HtmlEntityEncoderClient';
+import HtmlOptimizerClient from '@/components/tools/HtmlOptimizerClient';
+import HtmlTableGeneratorClient from '@/components/tools/HtmlTableGeneratorClient';
+import HtmlToMarkdownClient from '@/components/tools/HtmlToMarkdownClient';
+import HtmlToPlainTextClient from '@/components/tools/HtmlToPlainTextClient';
+import HtmlValidatorClient from '@/components/tools/HtmlValidatorClient';
+import ImageColorPickerClient from '@/components/tools/ImageColorPickerClient';
+import ImageMetadataViewerClient from '@/components/tools/ImageMetadataViewerClient';
+import IpRangeCalculatorClient from '@/components/tools/IpRangeCalculatorClient';
+import IpWhoisGeneratorClient from '@/components/tools/IpWhoisGeneratorClient';
+import Ipv6GeneratorClient from '@/components/tools/Ipv6GeneratorClient';
+import JavascriptObfuscatorClient from '@/components/tools/JavascriptObfuscatorClient';
+import JavascriptPlaygroundClient from '@/components/tools/JavascriptPlaygroundClient';
+import JsonLdGeneratorClient from '@/components/tools/JsonLdGeneratorClient';
+import JsonPathTesterClient from '@/components/tools/JsonPathTesterClient';
+import JsonSchemaValidatorClient from '@/components/tools/JsonSchemaValidatorClient';
+import JsonToCsvClient from '@/components/tools/JsonToCsvClient';
+import JsonToHtmlTableClient from '@/components/tools/JsonToHtmlTableClient';
+import JsonToMarkdownTableClient from '@/components/tools/JsonToMarkdownTableClient';
+import JsonToPythonClient from '@/components/tools/JsonToPythonClient';
+import JsonToTypescriptClient from '@/components/tools/JsonToTypescriptClient';
+import JsonToXmlClient from '@/components/tools/JsonToXmlClient';
+import KeywordDensityCheckerClient from '@/components/tools/KeywordDensityCheckerClient';
+import LengthConverterClient from '@/components/tools/LengthConverterClient';
+import LineCounterClient from '@/components/tools/LineCounterClient';
+import LineNumberRemoverClient from '@/components/tools/LineNumberRemoverClient';
+import ListComparatorClient from '@/components/tools/ListComparatorClient';
+import ListRandomizerClient from '@/components/tools/ListRandomizerClient';
+import MacAddressGeneratorClient from '@/components/tools/MacAddressGeneratorClient';
+import MarkdownToPdfClient from '@/components/tools/MarkdownToPdfClient';
+import MetaDescriptionCheckerClient from '@/components/tools/MetaDescriptionCheckerClient';
+import MorseCodeTranslatorClient from '@/components/tools/MorseCodeTranslatorClient';
+import NpmDependencyCheckerClient from '@/components/tools/NpmDependencyCheckerClient';
+import NumberToWordsClient from '@/components/tools/NumberToWordsClient';
+import OctalToDecimalClient from '@/components/tools/OctalToDecimalClient';
+import OpenGraphGeneratorClient from '@/components/tools/OpenGraphGeneratorClient';
+import PalindromeCheckerClient from '@/components/tools/PalindromeCheckerClient';
+import PasswordStrengthCheckerClient from '@/components/tools/PasswordStrengthCheckerClient';
+import PingTestClient from '@/components/tools/PingTestClient';
+import PlainTextCounterClient from '@/components/tools/PlainTextCounterClient';
+import PortScannerClient from '@/components/tools/PortScannerClient';
+import PunctuationFixerClient from '@/components/tools/PunctuationFixerClient';
+import RandomFractionGeneratorClient from '@/components/tools/RandomFractionGeneratorClient';
+import RandomIpAddressClient from '@/components/tools/RandomIpAddressClient';
+import RandomNumberGeneratorClient from '@/components/tools/RandomNumberGeneratorClient';
+import RandomParagraphGeneratorClient from '@/components/tools/RandomParagraphGeneratorClient';
+import RandomSentenceGeneratorClient from '@/components/tools/RandomSentenceGeneratorClient';
+import RandomStringGeneratorToolClient from '@/components/tools/RandomStringGeneratorToolClient';
+import RandomUuidV7Client from '@/components/tools/RandomUuidV7Client';
+import ReadingTimeCalculatorClient from '@/components/tools/ReadingTimeCalculatorClient';
+import RegexVisualizerClient from '@/components/tools/RegexVisualizerClient';
+import RgbaToHslConverterClient from '@/components/tools/RgbaToHslConverterClient';
+import RobotsTxtGeneratorClient from '@/components/tools/RobotsTxtGeneratorClient';
+import RomanNumeralConverterClient from '@/components/tools/RomanNumeralConverterClient';
+import Rot13CipherClient from '@/components/tools/Rot13CipherClient';
+import Rot47CipherClient from '@/components/tools/Rot47CipherClient';
+import SecurityHeadersGeneratorClient from '@/components/tools/SecurityHeadersGeneratorClient';
+import SemanticVersioningClient from '@/components/tools/SemanticVersioningClient';
+import SemverCheckerClient from '@/components/tools/SemverCheckerClient';
+import SlugGeneratorClient from '@/components/tools/SlugGeneratorClient';
+import SqlPrettifierClient from '@/components/tools/SqlPrettifierClient';
+import SslCertificateCheckerClient from '@/components/tools/SslCertificateCheckerClient';
+import StickyNotesClient from '@/components/tools/StickyNotesClient';
+import SvgCleanerClient from '@/components/tools/SvgCleanerClient';
+import SyllableCounterClient from '@/components/tools/SyllableCounterClient';
+import TemperatureConverterClient from '@/components/tools/TemperatureConverterClient';
+import TextPermutationGeneratorClient from '@/components/tools/TextPermutationGeneratorClient';
+import TextRedundancyCheckerClient from '@/components/tools/TextRedundancyCheckerClient';
+import TextReverserClient from '@/components/tools/TextReverserClient';
+import TextStatisticsClient from '@/components/tools/TextStatisticsClient';
+import TextToSlugClient from '@/components/tools/TextToSlugClient';
+import TextToSpeechClient from '@/components/tools/TextToSpeechClient';
+import TimeZoneConverterClient from '@/components/tools/TimeZoneConverterClient';
+import TimestampConverterClient from '@/components/tools/TimestampConverterClient';
+import TomlToJsonClient from '@/components/tools/TomlToJsonClient';
+import TsvToCsvClient from '@/components/tools/TsvToCsvClient';
+import TypoCheckerClient from '@/components/tools/TypoCheckerClient';
+import UnicodeCharacterInspectorClient from '@/components/tools/UnicodeCharacterInspectorClient';
+import UptimeCalculatorClient from '@/components/tools/UptimeCalculatorClient';
+import UrlParserClient from '@/components/tools/UrlParserClient';
+import UserAgentParserClient from '@/components/tools/UserAgentParserClient';
+import UuidValidatorClient from '@/components/tools/UuidValidatorClient';
+import WebpackConfigGeneratorClient from '@/components/tools/WebpackConfigGeneratorClient';
+import WeightConverterClient from '@/components/tools/WeightConverterClient';
+import WhoisLookupClient from '@/components/tools/WhoisLookupClient';
+import WordAssociationClient from '@/components/tools/WordAssociationClient';
+import WordFrequencyAnalyzerClient from '@/components/tools/WordFrequencyAnalyzerClient';
+import WordFrequencyCounterClient from '@/components/tools/WordFrequencyCounterClient';
+import XmlSitemapGeneratorClient from '@/components/tools/XmlSitemapGeneratorClient';
+import XmlValidatorClient from '@/components/tools/XmlValidatorClient';
+import YamlValidatorClient from '@/components/tools/YamlValidatorClient';
+import AiDetectorClient from '@/components/tools/AiDetectorClient';
+import AiRephraserClient from '@/components/tools/AiRephraserClient';
+import AiTwitterGeneratorClient from '@/components/tools/AiTwitterGeneratorClient';
+import ApiAuthHeaderGeneratorClient from '@/components/tools/ApiAuthHeaderGeneratorClient';
+import ApiDocGeneratorClient from '@/components/tools/ApiDocGeneratorClient';
+import AacToFlacClient from '@/components/tools/AacToFlacClient';
+import AacToM4rClient from '@/components/tools/AacToM4rClient';
+import AacToMp3Client from '@/components/tools/AacToMp3Client';
+import AacToMp4Client from '@/components/tools/AacToMp4Client';
+import AacToWavClient from '@/components/tools/AacToWavClient';
+import AddImagesClient from '@/components/tools/AddImagesClient';
+import AddPagesClient from '@/components/tools/AddPagesClient';
+import AddSubtitlesClient from '@/components/tools/AddSubtitlesClient';
+import AddTextClient from '@/components/tools/AddTextClient';
+import AlgorithmVisualizerClient from '@/components/tools/AlgorithmVisualizerClient';
+import AnnotateClient from '@/components/tools/AnnotateClient';
+import AsciiArtGeneratorClient from '@/components/tools/AsciiArtGeneratorClient';
+import AllInOneUnitConverterClient from '@/components/tools/AllInOneUnitConverterClient';
+import AngleUnitConverterClient from '@/components/tools/AngleUnitConverterClient';
+import ApiEndpointDebuggerClient from '@/components/tools/ApiEndpointDebuggerClient';
+import ApiEndpointDocumenterClient from '@/components/tools/ApiEndpointDocumenterClient';
+import ApiEndpointTesterClient from '@/components/tools/ApiEndpointTesterClient';
+import ApiSpecGeneratorClient from '@/components/tools/ApiSpecGeneratorClient';
+import AccessibilityCheckerClient from '@/components/tools/AccessibilityCheckerClient';
+import AreaConverterClient from '@/components/tools/AreaConverterClient';
+import Argon2HashGeneratorClient from '@/components/tools/Argon2HashGeneratorClient';
+import ArticleGeneratorClient from '@/components/tools/ArticleGeneratorClient';
+import ArticleRewriterClient from '@/components/tools/ArticleRewriterClient';
+import ArticleTitleGenClient from '@/components/tools/ArticleTitleGenClient';
+import ArticleTitleGeneratorClient from '@/components/tools/ArticleTitleGeneratorClient';
+import ArticleWriterClient from '@/components/tools/ArticleWriterClient';
+import AudioToTextClient from '@/components/tools/AudioToTextClient';
+import AutomationWizardClient from '@/components/tools/AutomationWizardClient';
+import AviToGifClient from '@/components/tools/AviToGifClient';
+import AviToMkvClient from '@/components/tools/AviToMkvClient';
+import AviToMovClient from '@/components/tools/AviToMovClient';
+import AviToMp3Client from '@/components/tools/AviToMp3Client';
+import AviToMp4Client from '@/components/tools/AviToMp4Client';
+import Azw3ToEpubClient from '@/components/tools/Azw3ToEpubClient';
+import Azw3ToMobiClient from '@/components/tools/Azw3ToMobiClient';
+import BacklinkAnalyzerClient from '@/components/tools/BacklinkAnalyzerClient';
+import BacklinkCheckerExpressClient from '@/components/tools/BacklinkCheckerExpressClient';
+import BacklinkCheckerV2Client from '@/components/tools/BacklinkCheckerV2Client';
+import BackslashEscapeUnescapeClient from '@/components/tools/BackslashEscapeUnescapeClient';
+import BarcodeGeneratorClient from '@/components/tools/BarcodeGeneratorClient';
+import BarcodeScannerClient from '@/components/tools/BarcodeScannerClient';
+import BaseConvertToolClient from '@/components/tools/BaseConvertToolClient';
+import BcryptHashGeneratorClient from '@/components/tools/BcryptHashGeneratorClient';
+import BillSaleGeneratorClient from '@/components/tools/BillSaleGeneratorClient';
+import BillSplitterClient from '@/components/tools/BillSplitterClient';
+import BaseConverterClient from '@/components/tools/BaseConverterClient';
+import BaseConverterQuickClient from '@/components/tools/BaseConverterQuickClient';
+import BaseNumberConverterClient from '@/components/tools/BaseNumberConverterClient';
+import BaseToolblipClient from '@/components/tools/BaseToolblipClient';
+import BinHexDecConverterClient from '@/components/tools/BinHexDecConverterClient';
+import BinaryConverterClient from '@/components/tools/BinaryConverterClient';
+import BinaryDecimalHexConverterClient from '@/components/tools/BinaryDecimalHexConverterClient';
+import BinaryTextExpressClient from '@/components/tools/BinaryTextExpressClient';
+import BinaryToTextV2Client from '@/components/tools/BinaryToTextV2Client';
+import BlurBackgroundClient from '@/components/tools/BlurBackgroundClient';
+import BlogOutlineClient from '@/components/tools/BlogOutlineClient';
+import BorderClient from '@/components/tools/BorderClient';
+import BmiCalculatorClient from '@/components/tools/BmiCalculatorClient';
+import BatchFaviconDownloaderClient from '@/components/tools/BatchFaviconDownloaderClient';
+import BatchImageResizerClient from '@/components/tools/BatchImageResizerClient';
+import ColorBlindnessSimulatorClient from '@/components/tools/ColorBlindnessSimulatorClient';
+import ColorContrastAuditorClient from '@/components/tools/ColorContrastAuditorClient';
+import ColorContrastCheckerClient from '@/components/tools/ColorContrastCheckerClient';
+import ColorContrastMatrixClient from '@/components/tools/ColorContrastMatrixClient';
+import ColorContrastRatioCheckerClient from '@/components/tools/ColorContrastRatioCheckerClient';
+import ColorFormatConverterClient from '@/components/tools/ColorFormatConverterClient';
+import ColorFormatConverterV2Client from '@/components/tools/ColorFormatConverterV2Client';
+import ColorFormatPickerClient from '@/components/tools/ColorFormatPickerClient';
+import ColorHarmonyExpressClient from '@/components/tools/ColorHarmonyExpressClient';
+import ColorHarmonyGeneratorClient from '@/components/tools/ColorHarmonyGeneratorClient';
+import ColorHarmonyNewClient from '@/components/tools/ColorHarmonyNewClient';
+import ColorLuminanceCalculatorClient from '@/components/tools/ColorLuminanceCalculatorClient';
+import ColorLuminanceCheckerClient from '@/components/tools/ColorLuminanceCheckerClient';
+import ColorMixerClient from '@/components/tools/ColorMixerClient';
+import ColorMixerV2Client from '@/components/tools/ColorMixerV2Client';
+import ColorNameFinderClient from '@/components/tools/ColorNameFinderClient';
+import ColorNameFinderV2Client from '@/components/tools/ColorNameFinderV2Client';
+import ColorNameToolClient from '@/components/tools/ColorNameToolClient';
+import ColorOpacityGeneratorClient from '@/components/tools/ColorOpacityGeneratorClient';
+import ColorPaletteExtractorClient from '@/components/tools/ColorPaletteExtractorClient';
+import ColorPaletteFromImageClient from '@/components/tools/ColorPaletteFromImageClient';
+import ColorPaletteGeneratorClient from '@/components/tools/ColorPaletteGeneratorClient';
+import ColorPickAllClient from '@/components/tools/ColorPickAllClient';
+import ColorPickToolClient from '@/components/tools/ColorPickToolClient';
+import ColorPickToolblipClient from '@/components/tools/ColorPickToolblipClient';
+import ColorPicker2025Client from '@/components/tools/ColorPicker2025Client';
+import ColorPickerAdvClient from '@/components/tools/ColorPickerAdvClient';
+import ColorPickerAdvancedClient from '@/components/tools/ColorPickerAdvancedClient';
+import ColorPickerApiClient from '@/components/tools/ColorPickerApiClient';
+import ColorPickerBrowserClient from '@/components/tools/ColorPickerBrowserClient';
+import ColorPickerClassicClient from '@/components/tools/ColorPickerClassicClient';
+import ColorPickerCompleteClient from '@/components/tools/ColorPickerCompleteClient';
+import ColorPickerDgClient from '@/components/tools/ColorPickerDgClient';
+import ColorPickerEasyClient from '@/components/tools/ColorPickerEasyClient';
+import ColorPickerEnhancedClient from '@/components/tools/ColorPickerEnhancedClient';
+import ColorPickerExpanderClient from '@/components/tools/ColorPickerExpanderClient';
+import ColorPickerExpressClient from '@/components/tools/ColorPickerExpressClient';
+import ColorPickerFinalClient from '@/components/tools/ColorPickerFinalClient';
+import ColorPickerFreshClient from '@/components/tools/ColorPickerFreshClient';
+import ColorPickerFullClient from '@/components/tools/ColorPickerFullClient';
+import ColorPickerHandyClient from '@/components/tools/ColorPickerHandyClient';
+import ColorPickerHexRgbHslClient from '@/components/tools/ColorPickerHexRgbHslClient';
+import ColorPickerNewClient from '@/components/tools/ColorPickerNewClient';
+import ColorPickerPrimeClient from '@/components/tools/ColorPickerPrimeClient';
+import ColorPickerProClient from '@/components/tools/ColorPickerProClient';
+import ColorPickerQuickClient from '@/components/tools/ColorPickerQuickClient';
+import ColorPickerSmartClient from '@/components/tools/ColorPickerSmartClient';
+import ColorPickerStdClient from '@/components/tools/ColorPickerStdClient';
+import ColorPickerToolClient from '@/components/tools/ColorPickerToolClient';
+import ColorPickerUltimateClient from '@/components/tools/ColorPickerUltimateClient';
+import ColorPickerUltraClient from '@/components/tools/ColorPickerUltraClient';
+import ColorPickerV2Client from '@/components/tools/ColorPickerV2Client';
+import ColorPickerV3Client from '@/components/tools/ColorPickerV3Client';
+import ColorPickerV4Client from '@/components/tools/ColorPickerV4Client';
+import ColorPickerV5Client from '@/components/tools/ColorPickerV5Client';
+import ColorPickerV6Client from '@/components/tools/ColorPickerV6Client';
+import ColorPickerWebClient from '@/components/tools/ColorPickerWebClient';
+import ColorPickerWheelClient from '@/components/tools/ColorPickerWheelClient';
+import ColorPickerXClient from '@/components/tools/ColorPickerXClient';
+import ColorPickerXLClient from '@/components/tools/ColorPickerXLClient';
+import ColorQuickClient from '@/components/tools/ColorQuickClient';
+import ColorSaturationAdjusterClient from '@/components/tools/ColorSaturationAdjusterClient';
+import ColorSelectToolClient from '@/components/tools/ColorSelectToolClient';
+import ColorShadeGenClient from '@/components/tools/ColorShadeGenClient';
+import ColorShadeGeneratorClient from '@/components/tools/ColorShadeGeneratorClient';
+import ColorShadeGeneratorV2Client from '@/components/tools/ColorShadeGeneratorV2Client';
+import ColorShadeTintsClient from '@/components/tools/ColorShadeTintsClient';
+import ColorShadeToolClient from '@/components/tools/ColorShadeToolClient';
+import ColorTintGeneratorClient from '@/components/tools/ColorTintGeneratorClient';
+import ColorToneGeneratorClient from '@/components/tools/ColorToneGeneratorClient';
+import ColorToolblipClient from '@/components/tools/ColorToolblipClient';
+import ColorizePhotoClient from '@/components/tools/ColorizePhotoClient';
+import CompressAviClient from '@/components/tools/CompressAviClient';
+import CompressClient from '@/components/tools/CompressClient';
+import CompressMkvClient from '@/components/tools/CompressMkvClient';
+import CompressMovClient from '@/components/tools/CompressMovClient';
+import ContentBriefGeneratorClient from '@/components/tools/ContentBriefGeneratorClient';
+import ContentImproverClient from '@/components/tools/ContentImproverClient';
+import ContentPlannerClient from '@/components/tools/ContentPlannerClient';
+import ContentSummarizerClient from '@/components/tools/ContentSummarizerClient';
+import ContrastBrowserClient from '@/components/tools/ContrastBrowserClient';
+import ContrastCheckAllClient from '@/components/tools/ContrastCheckAllClient';
+import ContrastCheckToolClient from '@/components/tools/ContrastCheckToolClient';
+import ContrastCheckToolblipClient from '@/components/tools/ContrastCheckToolblipClient';
+import ContrastChecker2025Client from '@/components/tools/ContrastChecker2025Client';
+import ContrastCheckerAdvClient from '@/components/tools/ContrastCheckerAdvClient';
+import ContrastCheckerAdvancedClient from '@/components/tools/ContrastCheckerAdvancedClient';
+import ContrastCheckerApiClient from '@/components/tools/ContrastCheckerApiClient';
+import ContrastCheckerBrowserClient from '@/components/tools/ContrastCheckerBrowserClient';
+import ContrastCheckerClassicClient from '@/components/tools/ContrastCheckerClassicClient';
+import ContrastCheckerCompleteClient from '@/components/tools/ContrastCheckerCompleteClient';
+import ContrastCheckerDgClient from '@/components/tools/ContrastCheckerDgClient';
+import ContrastCheckerEasyClient from '@/components/tools/ContrastCheckerEasyClient';
+import ContrastCheckerEnhancedClient from '@/components/tools/ContrastCheckerEnhancedClient';
+import ContrastCheckerExpanderClient from '@/components/tools/ContrastCheckerExpanderClient';
+import ContrastCheckerExpressClient from '@/components/tools/ContrastCheckerExpressClient';
+import ContrastCheckerFinalClient from '@/components/tools/ContrastCheckerFinalClient';
+import ContrastCheckerFreshClient from '@/components/tools/ContrastCheckerFreshClient';
+import ContrastCheckerFullClient from '@/components/tools/ContrastCheckerFullClient';
+import ContrastCheckerHandyClient from '@/components/tools/ContrastCheckerHandyClient';
+import ContrastCheckerNewClient from '@/components/tools/ContrastCheckerNewClient';
+import ContrastCheckerPrimeClient from '@/components/tools/ContrastCheckerPrimeClient';
+import ContrastCheckerProClient from '@/components/tools/ContrastCheckerProClient';
+import ContrastCheckerQuickClient from '@/components/tools/ContrastCheckerQuickClient';
+import ContrastCheckerSmartClient from '@/components/tools/ContrastCheckerSmartClient';
+import ContrastCheckerStdClient from '@/components/tools/ContrastCheckerStdClient';
+import ContrastCheckerToolClient from '@/components/tools/ContrastCheckerToolClient';
+import ContrastCheckerUltimateClient from '@/components/tools/ContrastCheckerUltimateClient';
+import ContrastCheckerUltraClient from '@/components/tools/ContrastCheckerUltraClient';
+import ContrastCheckerV2Client from '@/components/tools/ContrastCheckerV2Client';
+import ContrastCheckerV3Client from '@/components/tools/ContrastCheckerV3Client';
+import ContrastCheckerV4Client from '@/components/tools/ContrastCheckerV4Client';
+import ContrastCheckerV5Client from '@/components/tools/ContrastCheckerV5Client';
+import ContrastCheckerV6Client from '@/components/tools/ContrastCheckerV6Client';
+import ContrastCheckerWcagClient from '@/components/tools/ContrastCheckerWcagClient';
+import ContrastCheckerXClient from '@/components/tools/ContrastCheckerXClient';
+import ContrastCheckerXlClient from '@/components/tools/ContrastCheckerXlClient';
+import ContrastFreshClient from '@/components/tools/ContrastFreshClient';
+import ContrastQuickClient from '@/components/tools/ContrastQuickClient';
+import ContrastToolblipClient from '@/components/tools/ContrastToolblipClient';
+import CookingUnitConverterClient from '@/components/tools/CookingUnitConverterClient';
+import CounterClient from '@/components/tools/CounterClient';
+import CronBuilderClient from '@/components/tools/CronBuilderClient';
+import CronExpanderClient from '@/components/tools/CronExpanderClient';
+import CronExprGenClient from '@/components/tools/CronExprGenClient';
+import CronExprGenAdvClient from '@/components/tools/CronExprGenAdvClient';
+import CronExprGenPrimeClient from '@/components/tools/CronExprGenPrimeClient';
+import CronExprGenProClient from '@/components/tools/CronExprGenProClient';
+import CronExprGenUltraClient from '@/components/tools/CronExprGenUltraClient';
+import CronExpressionBuilderClient from '@/components/tools/CronExpressionBuilderClient';
+import CronExpressionGeneratorClient from '@/components/tools/CronExpressionGeneratorClient';
+import CronExpressionParserClient from '@/components/tools/CronExpressionParserClient';
+import CronGenerator2025Client from '@/components/tools/CronGenerator2025Client';
+import CronGeneratorAdvancedClient from '@/components/tools/CronGeneratorAdvancedClient';
+import CronGeneratorApiClient from '@/components/tools/CronGeneratorApiClient';
+import CronGeneratorBrowserClient from '@/components/tools/CronGeneratorBrowserClient';
+import CronGeneratorClassicClient from '@/components/tools/CronGeneratorClassicClient';
+import CronGeneratorCompleteClient from '@/components/tools/CronGeneratorCompleteClient';
+import CronGeneratorDgClient from '@/components/tools/CronGeneratorDgClient';
+import CronGeneratorEasyClient from '@/components/tools/CronGeneratorEasyClient';
+import CronGeneratorEnhancedClient from '@/components/tools/CronGeneratorEnhancedClient';
+import CronGeneratorExpressClient from '@/components/tools/CronGeneratorExpressClient';
+import CronGeneratorFinalClient from '@/components/tools/CronGeneratorFinalClient';
+import CronGeneratorFreshClient from '@/components/tools/CronGeneratorFreshClient';
+import CronGeneratorFullClient from '@/components/tools/CronGeneratorFullClient';
+import CronGeneratorHandyClient from '@/components/tools/CronGeneratorHandyClient';
+import CronGeneratorNewClient from '@/components/tools/CronGeneratorNewClient';
+import CronGeneratorPrimeClient from '@/components/tools/CronGeneratorPrimeClient';
+import CronGeneratorProClient from '@/components/tools/CronGeneratorProClient';
+import CronGeneratorQuickClient from '@/components/tools/CronGeneratorQuickClient';
+import CronGeneratorSmartClient from '@/components/tools/CronGeneratorSmartClient';
+import CronGeneratorStdClient from '@/components/tools/CronGeneratorStdClient';
+import CronGeneratorToolClient from '@/components/tools/CronGeneratorToolClient';
+import CronGeneratorToolblipClient from '@/components/tools/CronGeneratorToolblipClient';
+import CronGeneratorUltimateClient from '@/components/tools/CronGeneratorUltimateClient';
+import CronGeneratorUltraClient from '@/components/tools/CronGeneratorUltraClient';
+import CronGeneratorV2Client from '@/components/tools/CronGeneratorV2Client';
+import CronGeneratorV3Client from '@/components/tools/CronGeneratorV3Client';
+import CronGeneratorV4Client from '@/components/tools/CronGeneratorV4Client';
+import CronGeneratorV5Client from '@/components/tools/CronGeneratorV5Client';
+import CronGeneratorV6Client from '@/components/tools/CronGeneratorV6Client';
+import CronGeneratorXClient from '@/components/tools/CronGeneratorXClient';
+import CronGeneratorXlClient from '@/components/tools/CronGeneratorXlClient';
+import CronHumanReadableClient from '@/components/tools/CronHumanReadableClient';
+import CronScheduleBuilderClient from '@/components/tools/CronScheduleBuilderClient';
+import CronScheduleCheckerClient from '@/components/tools/CronScheduleCheckerClient';
+import CronScheduleExplainerClient from '@/components/tools/CronScheduleExplainerClient';
+import CronScheduleGeneratorClient from '@/components/tools/CronScheduleGeneratorClient';
+import CronScheduleValidatorClient from '@/components/tools/CronScheduleValidatorClient';
+import CronToolblipClient from '@/components/tools/CronToolblipClient';
+import CronValidatorClient from '@/components/tools/CronValidatorClient';
+import CronVisualBuilderClient from '@/components/tools/CronVisualBuilderClient';
+import CropCircleClient from '@/components/tools/CropCircleClient';
+import CssAnimationGeneratorClient from '@/components/tools/CssAnimationGeneratorClient';
+import CssCursorGeneratorClient from '@/components/tools/CssCursorGeneratorClient';
+import CssFilterGeneratorClient from '@/components/tools/CssFilterGeneratorClient';
+import CssFlexboxGeneratorClient from '@/components/tools/CssFlexboxGeneratorClient';
+import CssGridGeneratorClient from '@/components/tools/CssGridGeneratorClient';
+import CssNamingConventionClient from '@/components/tools/CssNamingConventionClient';
+import CssPreviewClient from '@/components/tools/CssPreviewClient';
+import CssToScssClient from '@/components/tools/CssToScssClient';
+import CssToStyledComponentsClient from '@/components/tools/CssToStyledComponentsClient';
+import CssToTailwindClient from '@/components/tools/CssToTailwindClient';
+import CssUnitsConverterClient from '@/components/tools/CssUnitsConverterClient';
+import CssUnitsConverterNewClient from '@/components/tools/CssUnitsConverterNewClient';
+import CssVariableGeneratorClient from '@/components/tools/CssVariableGeneratorClient';
+import CsvGeneratorClient from '@/components/tools/CsvGeneratorClient';
+import CsvJsonExpressClient from '@/components/tools/CsvJsonExpressClient';
+import CsvToExcelClient from '@/components/tools/CsvToExcelClient';
+import CsvToJsonV2Client from '@/components/tools/CsvToJsonV2Client';
+import CsvToTsvV2Client from '@/components/tools/CsvToTsvV2Client';
+import CsvToXmlClient from '@/components/tools/CsvToXmlClient';
+import CurlCommandBuilderClient from '@/components/tools/CurlCommandBuilderClient';
+import CurlGenExpressClient from '@/components/tools/CurlGenExpressClient';
+import CurlToJavascriptClient from '@/components/tools/CurlToJavascriptClient';
+import CurrencyConverterV2Client from '@/components/tools/CurrencyConverterV2Client';
+import CutterClient from '@/components/tools/CutterClient';
+import DataSizeConverterClient from '@/components/tools/DataSizeConverterClient';
+import DataSizeConverterExpressClient from '@/components/tools/DataSizeConverterExpressClient';
+import DataUriGeneratorClient from '@/components/tools/DataUriGeneratorClient';
+import DbQueryFormatterClient from '@/components/tools/DbQueryFormatterClient';
+import DecimalToHexConverterClient from '@/components/tools/DecimalToHexConverterClient';
+import DetectClient from '@/components/tools/DetectClient';
+import DiscountCalculatorClient from '@/components/tools/DiscountCalculatorClient';
+import DnsLookupExpressClient from '@/components/tools/DnsLookupExpressClient';
+import DnsLookupToolClient from '@/components/tools/DnsLookupToolClient';
+import DnsLookupV2Client from '@/components/tools/DnsLookupV2Client';
+import DockerComposeGeneratorClient from '@/components/tools/DockerComposeGeneratorClient';
+import DomainAgeCheckerClient from '@/components/tools/DomainAgeCheckerClient';
+import DominantColorExtractorClient from '@/components/tools/DominantColorExtractorClient';
+import DpiPpiCalculatorClient from '@/components/tools/DpiPpiCalculatorClient';
+import DummyTextDetectorClient from '@/components/tools/DummyTextDetectorClient';
+import DuplicatePhraseDetectorClient from '@/components/tools/DuplicatePhraseDetectorClient';
+import DuplicateUrlDetectorClient from '@/components/tools/DuplicateUrlDetectorClient';
+import EditClient from '@/components/tools/EditClient';
+import EncodingsRefClient from '@/components/tools/EncodingsRefClient';
+import EncodingsReferenceClient from '@/components/tools/EncodingsReferenceClient';
+import EnergyConverterClient from '@/components/tools/EnergyConverterClient';
+import CollocationsCheckerClient from '@/components/tools/CollocationsCheckerClient';
+import EnglishCollocationsUniqueClient from '@/components/tools/EnglishCollocationsUniqueClient';
+import EnglishDictionaryClient from '@/components/tools/EnglishDictionaryClient';
+import EnvParserClient from '@/components/tools/EnvParserClient';
+import EpsToJpgClient from '@/components/tools/EpsToJpgClient';
+import EpsToPngClient from '@/components/tools/EpsToPngClient';
+import EpsToSvgClient from '@/components/tools/EpsToSvgClient';
+import EpubToAzw3Client from '@/components/tools/EpubToAzw3Client';
+import EpubToMobiClient from '@/components/tools/EpubToMobiClient';
+import EssayWriterClient from '@/components/tools/EssayWriterClient';
+import ExcelToCsvClient from '@/components/tools/ExcelToCsvClient';
+import ExcelToPdfClient from '@/components/tools/ExcelToPdfClient';
+import ExcelToXmlClient from '@/components/tools/ExcelToXmlClient';
+import ExifRemoverClient from '@/components/tools/ExifRemoverClient';
+import ExplainLikeFiveClient from '@/components/tools/ExplainLikeFiveClient';
+import ExtractAudioClient from '@/components/tools/ExtractAudioClient';
+import ExtractImgClient from '@/components/tools/ExtractImgClient';
+import ExtractTextClient from '@/components/tools/ExtractTextClient';
+import FacebookAdHeadlinesClient from '@/components/tools/FacebookAdHeadlinesClient';
+import FaqGeneratorClient from '@/components/tools/FaqGeneratorClient';
+import FaviconBrowserClient from '@/components/tools/FaviconBrowserClient';
+import FaviconCheckerClient from '@/components/tools/FaviconCheckerClient';
+import FaviconCheckerExpressClient from '@/components/tools/FaviconCheckerExpressClient';
+import FaviconCheckerToolClient from '@/components/tools/FaviconCheckerToolClient';
+import FaviconCreatorClient from '@/components/tools/FaviconCreatorClient';
+import FaviconCreatorToolClient from '@/components/tools/FaviconCreatorToolClient';
+import FaviconFreshClient from '@/components/tools/FaviconFreshClient';
+import FaviconFromEmojiClient from '@/components/tools/FaviconFromEmojiClient';
+import FaviconFullClient from '@/components/tools/FaviconFullClient';
+import FaviconGenAdvClient from '@/components/tools/FaviconGenAdvClient';
+import FaviconGenPrimeClient from '@/components/tools/FaviconGenPrimeClient';
+import FaviconGenProClient from '@/components/tools/FaviconGenProClient';
+import FaviconGenToolClient from '@/components/tools/FaviconGenToolClient';
+import FaviconGenToolblipClient from '@/components/tools/FaviconGenToolblipClient';
+import FaviconGenUltraClient from '@/components/tools/FaviconGenUltraClient';
+import FaviconGenerator2025Client from '@/components/tools/FaviconGenerator2025Client';
+import FaviconGeneratorAdvancedClient from '@/components/tools/FaviconGeneratorAdvancedClient';
+import FaviconGeneratorApiClient from '@/components/tools/FaviconGeneratorApiClient';
+import FaviconGeneratorBrowserClient from '@/components/tools/FaviconGeneratorBrowserClient';
+import FaviconGeneratorClassicClient from '@/components/tools/FaviconGeneratorClassicClient';
+import FaviconGeneratorCompleteClient from '@/components/tools/FaviconGeneratorCompleteClient';
+import FaviconGeneratorDgClient from '@/components/tools/FaviconGeneratorDgClient';
+import FaviconGeneratorEasyClient from '@/components/tools/FaviconGeneratorEasyClient';
+import FaviconGeneratorEnhancedClient from '@/components/tools/FaviconGeneratorEnhancedClient';
+import FaviconGeneratorExpanderClient from '@/components/tools/FaviconGeneratorExpanderClient';
+import FaviconGeneratorExpressClient from '@/components/tools/FaviconGeneratorExpressClient';
+import FaviconGeneratorFinalClient from '@/components/tools/FaviconGeneratorFinalClient';
+import FaviconGeneratorFreshClient from '@/components/tools/FaviconGeneratorFreshClient';
+import FaviconGeneratorFullClient from '@/components/tools/FaviconGeneratorFullClient';
+import FaviconGeneratorNewClient from '@/components/tools/FaviconGeneratorNewClient';
+import FaviconGeneratorPrimeClient from '@/components/tools/FaviconGeneratorPrimeClient';
+import FaviconGeneratorProClient from '@/components/tools/FaviconGeneratorProClient';
+import FaviconGeneratorQuickClient from '@/components/tools/FaviconGeneratorQuickClient';
+import FaviconGeneratorSmartClient from '@/components/tools/FaviconGeneratorSmartClient';
+import FaviconGeneratorStdClient from '@/components/tools/FaviconGeneratorStdClient';
+import FaviconGeneratorToolClient from '@/components/tools/FaviconGeneratorToolClient';
+import FaviconGeneratorUltimateClient from '@/components/tools/FaviconGeneratorUltimateClient';
+import FaviconGeneratorUltraClient from '@/components/tools/FaviconGeneratorUltraClient';
+import FaviconGeneratorV2Client from '@/components/tools/FaviconGeneratorV2Client';
+import FaviconGeneratorV3Client from '@/components/tools/FaviconGeneratorV3Client';
+import FaviconGeneratorV4Client from '@/components/tools/FaviconGeneratorV4Client';
+import FaviconGeneratorV5Client from '@/components/tools/FaviconGeneratorV5Client';
+import FaviconGeneratorV6Client from '@/components/tools/FaviconGeneratorV6Client';
+import FaviconGeneratorXClient from '@/components/tools/FaviconGeneratorXClient';
+import FaviconGeneratorXlClient from '@/components/tools/FaviconGeneratorXlClient';
+import FaviconGrabberClient from '@/components/tools/FaviconGrabberClient';
+import FaviconIconGeneratorClient from '@/components/tools/FaviconIconGeneratorClient';
+import FaviconMakeToolClient from '@/components/tools/FaviconMakeToolClient';
+import FaviconMakerClient from '@/components/tools/FaviconMakerClient';
+import FaviconPngCreatorClient from '@/components/tools/FaviconPngCreatorClient';
+import FaviconPngGeneratorClient from '@/components/tools/FaviconPngGeneratorClient';
+import FaviconPngMakerClient from '@/components/tools/FaviconPngMakerClient';
+import FaviconPreviewClient from '@/components/tools/FaviconPreviewClient';
+import FaviconPreviewToolClient from '@/components/tools/FaviconPreviewToolClient';
+import FaviconQuickClient from '@/components/tools/FaviconQuickClient';
+import FaviconQuickGeneratorClient from '@/components/tools/FaviconQuickGeneratorClient';
+import FaviconSimpleClient from '@/components/tools/FaviconSimpleClient';
+import FaviconToolClient from '@/components/tools/FaviconToolClient';
+import FaviconToolblipClient from '@/components/tools/FaviconToolblipClient';
+import FlipClient from '@/components/tools/FlipClient';
+import FontToPngClient from '@/components/tools/FontToPngClient';
+import ForceConverterClient from '@/components/tools/ForceConverterClient';
+import FractionCalculatorClient from '@/components/tools/FractionCalculatorClient';
+import FractionToDecimalExpressClient from '@/components/tools/FractionToDecimalExpressClient';
+import FractionToDecimalV2Client from '@/components/tools/FractionToDecimalV2Client';
+import FrequencyConverterClient from '@/components/tools/FrequencyConverterClient';
+import GeneralUnitConverterClient from '@/components/tools/GeneralUnitConverterClient';
+import GifToApngClient from '@/components/tools/GifToApngClient';
+import GifToAvifClient from '@/components/tools/GifToAvifClient';
+import GifToJpgClient from '@/components/tools/GifToJpgClient';
+import GifToMovClient from '@/components/tools/GifToMovClient';
+import GifToMp4Client from '@/components/tools/GifToMp4Client';
+import GifToPngClient from '@/components/tools/GifToPngClient';
+import GifToWebmClient from '@/components/tools/GifToWebmClient';
+import GoogleAlgorithmTrackerClient from '@/components/tools/GoogleAlgorithmTrackerClient';
+import GoogleRankCheckerClient from '@/components/tools/GoogleRankCheckerClient';
+import GoogleSerpPreviewClient from '@/components/tools/GoogleSerpPreviewClient';
+import GoogleSerpSimulatorClient from '@/components/tools/GoogleSerpSimulatorClient';
+import GradientGeneratorClient from '@/components/tools/GradientGeneratorClient';
+import GrammarCheckToolClient from '@/components/tools/GrammarCheckToolClient';
+import GrammarChecker2025Client from '@/components/tools/GrammarChecker2025Client';
+import GrammarCheckerAdvClient from '@/components/tools/GrammarCheckerAdvClient';
+import GrammarCheckerAdvancedClient from '@/components/tools/GrammarCheckerAdvancedClient';
+import GrammarCheckerAiClient from '@/components/tools/GrammarCheckerAiClient';
+import GrammarCheckerApiClient from '@/components/tools/GrammarCheckerApiClient';
+import GrammarCheckerBrowserClient from '@/components/tools/GrammarCheckerBrowserClient';
+import GrammarCheckerClassicClient from '@/components/tools/GrammarCheckerClassicClient';
+import GrammarCheckerCompleteClient from '@/components/tools/GrammarCheckerCompleteClient';
+import GrammarCheckerDgClient from '@/components/tools/GrammarCheckerDgClient';
+import GrammarCheckerEasyClient from '@/components/tools/GrammarCheckerEasyClient';
+import GrammarCheckerEnhancedClient from '@/components/tools/GrammarCheckerEnhancedClient';
+import GrammarCheckerExpanderClient from '@/components/tools/GrammarCheckerExpanderClient';
+import GrammarCheckerExpressClient from '@/components/tools/GrammarCheckerExpressClient';
+import GrammarCheckerFinalClient from '@/components/tools/GrammarCheckerFinalClient';
+import GrammarCheckerFreshClient from '@/components/tools/GrammarCheckerFreshClient';
+import GrammarCheckerFullClient from '@/components/tools/GrammarCheckerFullClient';
+import GrammarCheckerInstantClient from '@/components/tools/GrammarCheckerInstantClient';
+import GrammarCheckerLiteClient from '@/components/tools/GrammarCheckerLiteClient';
+import GrammarCheckerNewClient from '@/components/tools/GrammarCheckerNewClient';
+import GrammarCheckerPrimeClient from '@/components/tools/GrammarCheckerPrimeClient';
+import GrammarCheckerProClient from '@/components/tools/GrammarCheckerProClient';
+import GrammarCheckerQuickClient from '@/components/tools/GrammarCheckerQuickClient';
+import GrammarCheckerSmartClient from '@/components/tools/GrammarCheckerSmartClient';
+import GrammarCheckerStdClient from '@/components/tools/GrammarCheckerStdClient';
+import GrammarCheckerToolClient from '@/components/tools/GrammarCheckerToolClient';
+import GrammarCheckerToolblipClient from '@/components/tools/GrammarCheckerToolblipClient';
+import GrammarCheckerUltimateClient from '@/components/tools/GrammarCheckerUltimateClient';
+import GrammarCheckerUltraClient from '@/components/tools/GrammarCheckerUltraClient';
+import GrammarCheckerV2Client from '@/components/tools/GrammarCheckerV2Client';
+import GrammarCheckerV3Client from '@/components/tools/GrammarCheckerV3Client';
+import GrammarCheckerV4Client from '@/components/tools/GrammarCheckerV4Client';
+import GrammarCheckerV5Client from '@/components/tools/GrammarCheckerV5Client';
+import GrammarCheckerV6Client from '@/components/tools/GrammarCheckerV6Client';
+import GrammarCheckerWebClient from '@/components/tools/GrammarCheckerWebClient';
+import GrammarCheckerXClient from '@/components/tools/GrammarCheckerXClient';
+import GrammarCheckerXlClient from '@/components/tools/GrammarCheckerXlClient';
+import GrammarFixToolClient from '@/components/tools/GrammarFixToolClient';
+import GrammarFixerClient from '@/components/tools/GrammarFixerClient';
+import GrammarScoreCheckerClient from '@/components/tools/GrammarScoreCheckerClient';
+import GraphqlPlaygroundClient from '@/components/tools/GraphqlPlaygroundClient';
+import HashCollisionFinderClient from '@/components/tools/HashCollisionFinderClient';
+import HashDiffCheckerClient from '@/components/tools/HashDiffCheckerClient';
+import HeadingTagAnalyzerClient from '@/components/tools/HeadingTagAnalyzerClient';
+import HeadlineAnalyzerClient from '@/components/tools/HeadlineAnalyzerClient';
+import HeicToAvifClient from '@/components/tools/HeicToAvifClient';
+import HeicToJpgClient from '@/components/tools/HeicToJpgClient';
+import HeicToPngClient from '@/components/tools/HeicToPngClient';
+import HexColorPickerClient from '@/components/tools/HexColorPickerClient';
+import HexRgbHslColorPickerClient from '@/components/tools/HexRgbHslColorPickerClient';
+import HexToCmykClient from '@/components/tools/HexToCmykClient';
+import HexToDecimalConverterClient from '@/components/tools/HexToDecimalConverterClient';
+import HexToHslClient from '@/components/tools/HexToHslClient';
+import HexToHsvClient from '@/components/tools/HexToHsvClient';
+import HexToNamedColorClient from '@/components/tools/HexToNamedColorClient';
+import HexToRgbExpressClient from '@/components/tools/HexToRgbExpressClient';
+import HexToRgbNewClient from '@/components/tools/HexToRgbNewClient';
+import HexToRgbaClient from '@/components/tools/HexToRgbaClient';
+import HmacGeneratorClient from '@/components/tools/HmacGeneratorClient';
+import HomoglyphDetectorClient from '@/components/tools/HomoglyphDetectorClient';
+import HreflangTagGeneratorClient from '@/components/tools/HreflangTagGeneratorClient';
+import HslToHexClient from '@/components/tools/HslToHexClient';
+import HslToRgbExpressClient from '@/components/tools/HslToRgbExpressClient';
+import HslToRgbNewClient from '@/components/tools/HslToRgbNewClient';
+import HsvToHexClient from '@/components/tools/HsvToHexClient';
+import HtmlAttributeEncoderClient from '@/components/tools/HtmlAttributeEncoderClient';
+import HtmlEncoderDecoderClient from '@/components/tools/HtmlEncoderDecoderClient';
+import HtmlEntitiesReferenceClient from '@/components/tools/HtmlEntitiesReferenceClient';
+import HtmlLivePreviewClient from '@/components/tools/HtmlLivePreviewClient';
+import HtmlMarkdownExpressClient from '@/components/tools/HtmlMarkdownExpressClient';
+import HtmlPlaintextExpressClient from '@/components/tools/HtmlPlaintextExpressClient';
+import HtmlTableToJsonClient from '@/components/tools/HtmlTableToJsonClient';
+import HtmlToJsxClient from '@/components/tools/HtmlToJsxClient';
+import HtmlToMarkdownV2Client from '@/components/tools/HtmlToMarkdownV2Client';
+import HtmlToPlainTextToolClient from '@/components/tools/HtmlToPlainTextToolClient';
+import HtmlToPlainTextV2Client from '@/components/tools/HtmlToPlainTextV2Client';
+import HttpHeaders2025Client from '@/components/tools/HttpHeaders2025Client';
+import HttpHeadersAnalyzerClient from '@/components/tools/HttpHeadersAnalyzerClient';
+import HttpHeadersBrowserClient from '@/components/tools/HttpHeadersBrowserClient';
+import HttpHeadersCheckClient from '@/components/tools/HttpHeadersCheckClient';
+import HttpHeadersCheckerClient from '@/components/tools/HttpHeadersCheckerClient';
+import HttpHeadersDgClient from '@/components/tools/HttpHeadersDgClient';
+import HttpHeadersEasyClient from '@/components/tools/HttpHeadersEasyClient';
+import HttpHeadersExpanderClient from '@/components/tools/HttpHeadersExpanderClient';
+import HttpHeadersFreshClient from '@/components/tools/HttpHeadersFreshClient';
+import HttpHeadersFullClient from '@/components/tools/HttpHeadersFullClient';
+import HttpHeadersInspectorClient from '@/components/tools/HttpHeadersInspectorClient';
+import HttpHeadersQuickClient from '@/components/tools/HttpHeadersQuickClient';
+import ColorTemperatureAdjusterClient from '@/components/tools/ColorTemperatureAdjusterClient';
+import ChartMakerClient from '@/components/tools/ChartMakerClient';
+import CitationGeneratorClient from '@/components/tools/CitationGeneratorClient';
+import CleanupPictureClient from '@/components/tools/CleanupPictureClient';
+import CodeBeautifierClient from '@/components/tools/CodeBeautifierClient';
+import CodeDiffClient from '@/components/tools/CodeDiffClient';
+import CodeDiffToolClient from '@/components/tools/CodeDiffToolClient';
+import CodeToDiagramGeneratorClient from '@/components/tools/CodeToDiagramGeneratorClient';
+import ColdEmailWriterClient from '@/components/tools/ColdEmailWriterClient';
+import CollageMakerClient from '@/components/tools/CollageMakerClient';
+import CombineImagesClient from '@/components/tools/CombineImagesClient';
+import CropClient from '@/components/tools/CropClient';
+import CssMinifierClient from '@/components/tools/CssMinifierClient';
+import CurrencyConverterClient from '@/components/tools/CurrencyConverterClient';
+import DockerCommandGeneratorClient from '@/components/tools/DockerCommandGeneratorClient';
+import FakeAddressGeneratorClient from '@/components/tools/FakeAddressGeneratorClient';
+import FillerWordCounterClient from '@/components/tools/FillerWordCounterClient';
+import FleschKincaidCalculatorClient from '@/components/tools/FleschKincaidCalculatorClient';
+import GifMakerClient from '@/components/tools/GifMakerClient';
+import GrayscaleClient from '@/components/tools/GrayscaleClient';
+import HomophoneCheckerClient from '@/components/tools/HomophoneCheckerClient';
+import HtmlMinifierClient from '@/components/tools/HtmlMinifierClient';
+import HttpStatusCheckerClient from '@/components/tools/HttpStatusCheckerClient';
+import ImageBackgroundRemoverClient from '@/components/tools/ImageBackgroundRemoverClient';
+import ImageBorderAdderClient from '@/components/tools/ImageBorderAdderClient';
+import ImageCompressorClient from '@/components/tools/ImageCompressorClient';
+import ImageFlipToolClient from '@/components/tools/ImageFlipToolClient';
+import ImageOptimizerClient from '@/components/tools/ImageOptimizerClient';
+import ImageRotateToolClient from '@/components/tools/ImageRotateToolClient';
+import ImageShadowGeneratorClient from '@/components/tools/ImageShadowGeneratorClient';
+import MergeClient from '@/components/tools/MergeClient';
+import MemeMakerClient from '@/components/tools/MemeMakerClient';
+import OgTagDebuggerClient from '@/components/tools/OgTagDebuggerClient';
+import OpenGraphPreviewClient from '@/components/tools/OpenGraphPreviewClient';
+import ParagraphCounterClient from '@/components/tools/ParagraphCounterClient';
+import ParaphrasingClient from '@/components/tools/ParaphrasingClient';
+import PassiveVoiceDetectorClient from '@/components/tools/PassiveVoiceDetectorClient';
+import PixelateClient from '@/components/tools/PixelateClient';
+import PngCompressorClient from '@/components/tools/PngCompressorClient';
+import QrCodeScannerClient from '@/components/tools/QrCodeScannerClient';
+import ReadabilityCheckerClient from '@/components/tools/ReadabilityCheckerClient';
+import RemoveBgClient from '@/components/tools/RemoveBgClient';
+import RobotsTxtEditorClient from '@/components/tools/RobotsTxtEditorClient';
+import SentenceCounterClient from '@/components/tools/SentenceCounterClient';
+import SentenceRewriterClient from '@/components/tools/SentenceRewriterClient';
+import SharpenClient from '@/components/tools/SharpenClient';
+import SitemapAnalyzerClient from '@/components/tools/SitemapAnalyzerClient';
+import SqlFormatterClient from '@/components/tools/SqlFormatterClient';
+import TemperatureUnitConverterClient from '@/components/tools/TemperatureUnitConverterClient';
+import TextUniquenessCheckerClient from '@/components/tools/TextUniquenessCheckerClient';
+import TsvToJsonClient from '@/components/tools/TsvToJsonClient';
+import UrlRedirectCheckerClient from '@/components/tools/UrlRedirectCheckerClient';
+import WebpConverterClient from '@/components/tools/WebpConverterClient';
 
-  return (
-    <div className="space-y-4">
-      <textarea
-        value={text}
-        onChange={e => setText(e.target.value)}
-        placeholder="Paste or type your text here..."
-        className="w-full h-48 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl p-4 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-red-500 dark:focus:border-red-500 resize-y font-mono text-sm"
-      />
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-        {[
-          { label: 'Words', value: stats.words },
-          { label: 'Characters', value: stats.chars },
-          { label: 'No Spaces', value: stats.charsNoSpaces },
-          { label: 'Sentences', value: stats.sentences },
-          { label: 'Paragraphs', value: stats.paragraphs },
-        ].map(s => (
-          <div key={s.label} className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-3 text-center">
-            <div className="text-2xl font-bold text-red-600 dark:text-red-400">{s.value}</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">{s.label}</div>
-          </div>
-        ))}
-      </div>
-      <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
-        Estimated reading time: <strong>{stats.readingTime} min{stats.readingTime !== 1 ? 's' : ''}</strong>
-      </p>
-    </div>
-  );
-}
+// ─── Individual tool UIs ────────────────────────────────────────────────────
 
-// ─── Character Counter ──────────────────────────────────────────
-function CharacterCounter() {
-  const [text, setText] = useState('');
-
-  const limits = [
-    { name: 'Twitter / X', limit: 280 },
-    { name: 'LinkedIn', limit: 3000 },
-    { name: 'Meta Description', limit: 160 },
-    { name: 'Reddit Post', limit: 40000 },
-  ];
-
-  return (
-    <div className="space-y-4">
-      <textarea
-        value={text}
-        onChange={e => setText(e.target.value)}
-        placeholder="Type or paste your text here..."
-        className="w-full h-40 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl p-4 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-red-500 resize-y font-mono text-sm"
-      />
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Total characters</span>
-          <span className="text-lg font-bold text-gray-900 dark:text-white">{text.length}</span>
-        </div>
-        <div className="h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-red-500 rounded-full transition-all duration-200"
-            style={{ width: `${Math.min(100, (text.length / 3000) * 100)}%` }}
-          />
-        </div>
-        <div className="text-xs text-gray-400 dark:text-gray-500 mt-1">with spaces</div>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {limits.map(l => (
-          <div key={l.name} className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-3">
-            <div className="flex justify-between items-center mb-1">
-              <span className="text-xs text-gray-500 dark:text-gray-400">{l.name}</span>
-              <span className={`text-xs font-medium ${text.length > l.limit ? 'text-red-600 dark:text-red-400' : 'text-green-600 dark:text-green-400'}`}>
-                {text.length}/{l.limit}
-              </span>
-            </div>
-            <div className="h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
-              <div
-                className={`h-full rounded-full transition-all duration-200 ${text.length > l.limit ? 'bg-red-500' : 'bg-green-500'}`}
-                style={{ width: `${Math.min(100, (text.length / l.limit) * 100)}%` }}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ─── Case Converter ─────────────────────────────────────────────
-function CaseConverter() {
-  const [text, setText] = useState('');
-  const [output, setOutput] = useState('');
-
-  const convert = useCallback((type: string) => {
-    if (!text) { setOutput(''); return; }
-    let result = '';
-    switch (type) {
-      case 'upper': result = text.toUpperCase(); break;
-      case 'lower': result = text.toLowerCase(); break;
-      case 'title': result = text.replace(/\b\w/g, c => c.toUpperCase()); break;
-      case 'camel': result = text.replace(/[-_\s]+(.)?/g, (_, c) => c ? c.toUpperCase() : '').replace(/^./, c => c.toLowerCase()); break;
-      case 'snake': result = text.replace(/[- ]+/g, '_').replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase(); break;
-      case 'kebab': result = text.replace(/[-_ ]+/g, '-').replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase(); break;
-      case 'pascal': result = text.replace(/[-_\s]+(.)?/g, (_, c) => c ? c.toUpperCase() : '').replace(/^./, c => c.toUpperCase()); break;
-      case 'sentence': result = text.charAt(0).toUpperCase() + text.slice(1).toLowerCase(); break;
-      default: result = text;
-    }
-    setOutput(result);
-  }, [text]);
-
-  const copy = () => navigator.clipboard.writeText(output);
-
-  const cases = [
-    { key: 'upper', label: 'UPPERCASE' },
-    { key: 'lower', label: 'lowercase' },
-    { key: 'title', label: 'Title Case' },
-    { key: 'camel', label: 'camelCase' },
-    { key: 'snake', label: 'snake_case' },
-    { key: 'kebab', label: 'kebab-case' },
-    { key: 'pascal', label: 'PascalCase' },
-    { key: 'sentence', label: 'Sentence case' },
-  ];
-
-  return (
-    <div className="space-y-4">
-      <textarea
-        value={text}
-        onChange={e => setText(e.target.value)}
-        placeholder="Enter text to convert..."
-        className="w-full h-32 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl p-4 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-red-500 resize-y font-mono text-sm"
-      />
-      <div className="flex flex-wrap gap-2">
-        {cases.map(c => (
-          <button
-            key={c.key}
-            onClick={() => convert(c.key)}
-            className="px-3 py-1.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg text-sm text-gray-700 dark:text-gray-300 hover:border-red-500 dark:hover:border-red-500 hover:text-red-600 dark:hover:text-red-400 transition-colors"
-          >
-            {c.label}
-          </button>
-        ))}
-      </div>
-      {output && (
-        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Output</span>
-            <button onClick={copy} className="text-xs text-red-600 dark:text-red-400 hover:text-red-700 font-medium">
-              Copy
-            </button>
-          </div>
-          <pre className="text-sm text-gray-900 dark:text-white whitespace-pre-wrap break-all font-mono">{output}</pre>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ─── Base64 Encode / Decode ─────────────────────────────────────
-function Base64Tool() {
-  const [text, setText] = useState('');
-  const [output, setOutput] = useState('');
-  const [mode, setMode] = useState<'encode' | 'decode'>('encode');
-  const [error, setError] = useState('');
-
-  const process = () => {
-    setError('');
-    try {
-      if (mode === 'encode') {
-        setOutput(btoa(unescape(encodeURIComponent(text))));
-      } else {
-        setOutput(decodeURIComponent(escape(atob(text))));
-      }
-    } catch {
-      setError('Invalid input for ' + (mode === 'encode' ? 'encoding' : 'decoding') + '.');
-      setOutput('');
-    }
-  };
-
-  const copy = () => navigator.clipboard.writeText(output);
-
-  return (
-    <div className="space-y-4">
-      <div className="flex gap-2">
-        {(['encode', 'decode'] as const).map(m => (
-          <button
-            key={m}
-            onClick={() => { setMode(m); setOutput(''); setError(''); }}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              mode === m
-                ? 'bg-red-600 text-white'
-                : 'bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-red-500'
-            }`}
-          >
-            {m === 'encode' ? 'Encode' : 'Decode'}
-          </button>
-        ))}
-      </div>
-      <textarea
-        value={text}
-        onChange={e => setText(e.target.value)}
-        placeholder={mode === 'encode' ? 'Enter text to encode...' : 'Enter Base64 to decode...'}
-        className="w-full h-32 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl p-4 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-red-500 resize-y font-mono text-sm"
-      />
-      <button
-        onClick={process}
-        className="px-6 py-2.5 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors"
-      >
-        {mode === 'encode' ? 'Encode to Base64' : 'Decode from Base64'}
-      </button>
-      {error && <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>}
-      {output && (
-        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Result</span>
-            <button onClick={copy} className="text-xs text-red-600 dark:text-red-400 hover:text-red-700 font-medium">
-              Copy
-            </button>
-          </div>
-          <pre className="text-sm text-gray-900 dark:text-white whitespace-pre-wrap break-all font-mono">{output}</pre>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ─── URL Encode / Decode ─────────────────────────────────────────
-function URLEncodeTool() {
-  const [text, setText] = useState('');
-  const [output, setOutput] = useState('');
-  const [mode, setMode] = useState<'encode' | 'decode'>('encode');
-  const [error, setError] = useState('');
-
-  const process = () => {
-    setError('');
-    try {
-      if (mode === 'encode') {
-        setOutput(encodeURIComponent(text));
-      } else {
-        setOutput(decodeURIComponent(text));
-      }
-    } catch {
-      setError('Invalid input for ' + (mode === 'encode' ? 'encoding' : 'decoding') + '.');
-      setOutput('');
-    }
-  };
-
-  const copy = () => navigator.clipboard.writeText(output);
-
-  return (
-    <div className="space-y-4">
-      <div className="flex gap-2">
-        {(['encode', 'decode'] as const).map(m => (
-          <button
-            key={m}
-            onClick={() => { setMode(m); setOutput(''); setError(''); }}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              mode === m
-                ? 'bg-red-600 text-white'
-                : 'bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-red-500'
-            }`}
-          >
-            {m === 'encode' ? 'Encode' : 'Decode'}
-          </button>
-        ))}
-      </div>
-      <textarea
-        value={text}
-        onChange={e => setText(e.target.value)}
-        placeholder={mode === 'encode' ? 'Enter URL or text to encode...' : 'Enter encoded URL or text to decode...'}
-        className="w-full h-32 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl p-4 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-red-500 resize-y font-mono text-sm"
-      />
-      <button
-        onClick={process}
-        className="px-6 py-2.5 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors"
-      >
-        {mode === 'encode' ? 'Encode URL' : 'Decode URL'}
-      </button>
-      {error && <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>}
-      {output && (
-        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Result</span>
-            <button onClick={copy} className="text-xs text-red-600 dark:text-red-400 hover:text-red-700 font-medium">
-              Copy
-            </button>
-          </div>
-          <pre className="text-sm text-gray-900 dark:text-white whitespace-pre-wrap break-all font-mono">{output}</pre>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ─── JSON Formatter ─────────────────────────────────────────────
-function JSONFormatter() {
-  const [input, setInput] = useState('');
-  const [output, setOutput] = useState('');
-  const [error, setError] = useState('');
-  const [indent, setIndent] = useState(2);
-
-  const format = () => {
-    setError('');
-    try {
-      const parsed = JSON.parse(input);
-      setOutput(JSON.stringify(parsed, null, indent));
-    } catch (e) {
-      setError('Invalid JSON: ' + (e as Error).message);
-      setOutput('');
-    }
-  };
-
-  const minify = () => {
-    setError('');
-    try {
-      const parsed = JSON.parse(input);
-      setOutput(JSON.stringify(parsed));
-    } catch (e) {
-      setError('Invalid JSON: ' + (e as Error).message);
-    }
-  };
-
-  const copy = () => navigator.clipboard.writeText(output);
-
-  return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="flex items-center gap-2">
-          <label className="text-xs text-gray-500 dark:text-gray-400">Indent:</label>
-          <select
-            value={indent}
-            onChange={e => setIndent(Number(e.target.value))}
-            className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded px-2 py-1 text-sm text-gray-700 dark:text-gray-300"
-          >
-            <option value={2}>2 spaces</option>
-            <option value={4}>4 spaces</option>
-            <option value={1}>1 space</option>
-          </select>
-        </div>
-      </div>
-      <textarea
-        value={input}
-        onChange={e => setInput(e.target.value)}
-        placeholder='{"name": "Toolblip", "tools": 300, "free": true}'
-        className="w-full h-40 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl p-4 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-red-500 resize-y font-mono text-sm"
-      />
-      <div className="flex gap-2">
-        <button
-          onClick={format}
-          className="px-5 py-2.5 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors"
-        >
-          Format / Pretty Print
-        </button>
-        <button
-          onClick={minify}
-          className="px-5 py-2.5 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:border-red-500 transition-colors"
-        >
-          Minify
-        </button>
-      </div>
-      {error && <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>}
-      {output && (
-        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Output</span>
-            <button onClick={copy} className="text-xs text-red-600 dark:text-red-400 hover:text-red-700 font-medium">
-              Copy
-            </button>
-          </div>
-          <pre className="text-sm text-gray-900 dark:text-white whitespace-pre-wrap break-all font-mono overflow-x-auto">{output}</pre>
-        </div>
-      )}
-    </div>
-  );
-}
-
-// ─── Favicon Checker ─────────────────────────────────────────────
-function FaviconChecker() {
-  const [url, setUrl] = useState('');
-  const [domain, setDomain] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [checks, setChecks] = useState<Record<string, { status: 'pass' | 'fail' | 'warn' | 'pending'; detail: string; iconUrl?: string }>>({});
-  const [allDone, setAllDone] = useState(false);
-
-  type CheckKey = 'favicon_ico' | 'favicon_png' | 'apple_touch' | 'google_serp' | 'android_manifest' | 'og_image';
-  type CheckResult = { status: 'pass' | 'fail' | 'warn' | 'pending'; detail: string; iconUrl?: string };
-
-  const extractDomain = (input: string) => {
-    const raw = input.trim();
-    try {
-      const withProto = raw.startsWith('http') ? raw : `https://${raw}`;
-      return new URL(withProto).hostname.replace(/^www\./, '');
-    } catch {
-      return raw.replace(/^https?:\/\//, '').split('/')[0].replace(/^www\./, '');
-    }
-  };
-
-  const gcdn = (d: string, sz = 128) =>
-    `https://www.google.com/s2/favicons?domain=${encodeURIComponent(d)}&sz=${sz}`;
-
-  const check = async () => {
-    if (!url.trim()) return;
-    const d = extractDomain(url);
-    setDomain(d);
-    setLoading(true);
-    setAllDone(false);
-    setChecks({});
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const run = async (key: CheckKey, fn: () => Promise<any>) => {
-      const result = await fn();
-      setChecks(prev => ({ ...prev, [key]: result }));
-    };
-
-    const checks: Record<CheckKey, () => Promise<CheckResult>> = {
-      favicon_ico: async () => {
-        try {
-          const r = await fetch(gcdn(d, 64), { method: 'HEAD' });
-          return { status: 'pass', detail: 'favicon.ico found via Google CDN', iconUrl: gcdn(d, 64) };
-        } catch {
-          return { status: 'fail', detail: 'favicon.ico not found or blocked' };
-        }
-      },
-      favicon_png: async () => {
-        try {
-          const r = await fetch(gcdn(d, 192), { method: 'HEAD' });
-          return { status: 'pass', detail: 'PNG icon (192×192) found', iconUrl: gcdn(d, 192) };
-        } catch {
-          return { status: 'warn', detail: 'No PNG icon detected (recommended: 192×192 and 512×512)' };
-        }
-      },
-      apple_touch: async () => {
-        try {
-          const r = await fetch(gcdn(d, 180), { method: 'HEAD' });
-          return { status: 'pass', detail: 'Apple Touch icon available (180×180, ideal for iOS)', iconUrl: gcdn(d, 180) };
-        } catch {
-          return { status: 'warn', detail: 'No Apple Touch icon detected. Add <link rel="apple-touch-icon"> for iOS home screen.' };
-        }
-      },
-      google_serp: async () => {
-        try {
-          const r = await fetch(gcdn(d, 48), { method: 'HEAD' });
-          return { status: 'pass', detail: 'Favicon shown in Google search results (48×48 recommended)', iconUrl: gcdn(d, 48) };
-        } catch {
-          return { status: 'fail', detail: 'Favicon not visible in Google SERP. Ensure /favicon.ico is at least 48×48.' };
-        }
-      },
-      android_manifest: async () => {
-        try {
-          const r = await fetch(`https://${d}/site.webmanifest`, { method: 'HEAD' });
-          const ok = r.ok;
-          return {
-            status: ok ? 'pass' : 'warn',
-            detail: ok ? 'Web App Manifest found (needed for Android PWA install)' : 'No web app manifest (site.webmanifest). Chrome on Android needs this for "Add to Home Screen".'
-          };
-        } catch {
-          return { status: 'warn', detail: 'Could not check manifest. Ensure site.webmanifest exists for Android PWA support.' };
-        }
-      },
-      og_image: async () => {
-        try {
-          const r = await fetch(gcdn(d, 256), { method: 'HEAD' });
-          return { status: 'pass', detail: 'Open Graph image available for social sharing (Facebook, LinkedIn, Slack)', iconUrl: gcdn(d, 256) };
-        } catch {
-          return { status: 'warn', detail: 'No OG image detected. Add <meta property="og:image"> for rich social previews.' };
-        }
-      },
-    };
-
-    await Promise.all(Object.entries(checks).map(([key, fn]) => run(key as CheckKey, fn)));
-    setLoading(false);
-    setAllDone(true);
-  };
-
-  const handleKey = (e: React.KeyboardEvent) => { if (e.key === 'Enter') check(); };
-
-  const passCount = Object.values(checks).filter(c => c.status === 'pass').length;
-  const warnCount = Object.values(checks).filter(c => c.status === 'warn').length;
-  const failCount = Object.values(checks).filter(c => c.status === 'fail').length;
-
-  const sections: { key: CheckKey; label: string; desc: string; platform: string }[] = [
-    { key: 'favicon_ico', label: 'Favicon File', desc: 'Checks /favicon.ico availability', platform: 'All Browsers' },
-    { key: 'favicon_png', label: 'PNG Favicon', desc: 'Checks modern PNG icon at 192×192', platform: 'Modern Browsers' },
-    { key: 'apple_touch', label: 'Apple Touch Icon', desc: 'Checks icon for iOS home screen', platform: 'iOS / iPadOS' },
-    { key: 'google_serp', label: 'Google SERP', desc: 'Checks if favicon appears in search results', platform: 'Google Search' },
-    { key: 'android_manifest', label: 'Web App Manifest', desc: 'Checks site.webmanifest for Android PWA', platform: 'Android Chrome' },
-    { key: 'og_image', label: 'Open Graph Image', desc: 'Checks OG image for social sharing', platform: 'Facebook, LinkedIn, X' },
-  ];
-
-  const StatusBadge = ({ status }: { status: string }) => {
-    if (status === 'pass') return <span className="text-green-600 dark:text-green-400 font-bold text-lg">✓</span>;
-    if (status === 'fail') return <span className="text-red-600 dark:text-red-400 font-bold text-lg">✗</span>;
-    if (status === 'warn') return <span className="text-yellow-500 dark:text-yellow-400 font-bold text-lg">⚠</span>;
-    return <span className="text-gray-400 font-bold text-lg">⋯</span>;
-  };
-
-  const gcdn256 = domain ? gcdn(domain, 256) : '';
-
+function ComingSoonUI({ tool }: { tool: Tool }) {
   return (
     <div className="space-y-6">
-      {/* Input */}
-      <div className="flex gap-3">
-        <input
-          type="text"
-          value={url}
-          onChange={e => setUrl(e.target.value)}
-          onKeyDown={handleKey}
-          placeholder="Enter any URL or domain (e.g. github.com, stripe.com)"
-          className="flex-1 h-12 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl px-4 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-red-500 dark:focus:border-red-500 text-sm"
+      <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 text-center">
+        <div className="text-5xl mb-4">{tool.emoji}</div>
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{tool.name}</h2>
+        <p className="text-gray-500 dark:text-gray-400 text-sm max-w-sm mx-auto">{tool.description}</p>
+      </div>
+      <div className="space-y-3">
+        <textarea
+          disabled
+          placeholder="This tool is coming soon..."
+          className="w-full h-40 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-400 dark:text-gray-500 rounded-xl p-4 resize-y placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none cursor-not-allowed opacity-60"
         />
         <button
-          onClick={check}
-          disabled={loading || !url.trim()}
-          className="h-12 px-6 bg-red-600 text-white rounded-xl text-sm font-medium hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2 shrink-0"
+          disabled
+          className="w-full bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded-xl py-3 font-medium cursor-not-allowed opacity-60"
         >
-          {loading ? <span className="animate-spin">⟳</span> : 'Check Favicon'}
+          Coming Soon
         </button>
+        <p className="text-center text-sm text-gray-400 dark:text-gray-500">
+          This tool&apos;s interactive UI is under development.
+        </p>
       </div>
-
-      {/* Summary */}
-      {allDone && (
-        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 flex flex-wrap gap-4 items-center justify-start">
-          {[
-            { count: passCount, label: 'Passed', color: 'text-green-600 dark:text-green-400' },
-            { count: warnCount, label: 'Warnings', color: 'text-yellow-500 dark:text-yellow-400' },
-            { count: failCount, label: 'Failed', color: 'text-red-600 dark:text-red-400' },
-          ].map(({ count, label, color }) => (
-            <div key={label} className="flex items-center gap-2">
-              <span className={`text-2xl font-bold ${color}`}>{count}</span>
-              <span className="text-sm text-gray-500 dark:text-gray-400">{label}</span>
-            </div>
-          ))}
-          {passCount === sections.length && (
-            <span className="ml-auto text-green-600 dark:text-green-400 text-sm font-medium">🎉 All checks passed!</span>
-          )}
-        </div>
-      )}
-
-      {/* Domain Favicon Hero */}
-      {domain && (
-        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6 flex items-center gap-6">
-          <img
-            src={gcdn256}
-            alt={`${domain} favicon`}
-            className="w-20 h-20 object-contain rounded-xl bg-gray-50 dark:bg-gray-800 shrink-0"
-          />
-          <div>
-            <p className="text-sm font-semibold text-gray-900 dark:text-white">{domain}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Live favicon via Google CDN</p>
-            <div className="flex gap-4 mt-3">
-              {[16, 32, 48, 64, 128, 256].map(sz => (
-                <div key={sz} className="flex flex-col items-center gap-1">
-                  <img
-                    src={gcdn(domain, sz)}
-                    alt={`${sz}px`}
-                    className="w-8 h-8 object-contain rounded"
-                    style={{ width: Math.min(sz / 4, 40), height: Math.min(sz / 4, 40) }}
-                  />
-                  <span className="text-xs text-gray-400">{sz}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Checks Grid */}
-      {(allDone || loading) && !loading && Object.keys(checks).length === 0 && (
-        <div className="text-center py-12 text-gray-400 dark:text-gray-600">
-          <div className="text-4xl mb-3">🔍</div>
-          <p className="text-sm">Running checks…</p>
-        </div>
-      )}
-
-      {sections.map(section => {
-        const check = checks[section.key];
-        const isPending = !check || loading;
-        const borderColor = check?.status === 'pass' ? 'border-green-200 dark:border-green-900'
-          : check?.status === 'fail' ? 'border-red-200 dark:border-red-900'
-          : check?.status === 'warn' ? 'border-yellow-200 dark:border-yellow-900'
-          : 'border-gray-200 dark:border-gray-800';
-
-        return (
-          <div
-            key={section.key}
-            className={`bg-white dark:bg-gray-900 border ${borderColor} rounded-xl p-4 flex items-start gap-4 transition-colors`}
-          >
-            <div className="shrink-0 mt-0.5">
-              {isPending ? (
-                <span className="text-gray-300 dark:text-gray-600 text-lg">⋯</span>
-              ) : (
-                <StatusBadge status={check!.status} />
-              )}
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 flex-wrap">
-                <p className="text-sm font-semibold text-gray-900 dark:text-white">{section.label}</p>
-                <span className="text-xs text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-full">
-                  {section.platform}
-                </span>
-              </div>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{section.desc}</p>
-              {check && !loading && (
-                <p className={`text-xs mt-2 font-medium ${
-                  check.status === 'pass' ? 'text-green-600 dark:text-green-400'
-                  : check.status === 'fail' ? 'text-red-600 dark:text-red-400'
-                  : 'text-yellow-600 dark:text-yellow-400'
-                }`}>
-                  {check.detail}
-                </p>
-              )}
-            </div>
-            {check?.iconUrl && (
-              <img
-                src={check.iconUrl}
-                alt=""
-                className="w-10 h-10 object-contain rounded bg-gray-50 dark:bg-gray-800 shrink-0"
-              />
-            )}
-          </div>
-        );
-      })}
-
-      {!domain && !loading && (
-        <div className="text-center py-12 text-gray-400 dark:text-gray-600">
-          <div className="text-4xl mb-3">🌐</div>
-          <p className="text-sm">Enter a URL to check its favicon across all platforms</p>
-          <div className="mt-4 text-xs text-gray-400 space-y-1">
-            <p>Checks: favicon.ico · PNG icon · Apple Touch · Google SERP · Android Manifest · OG Image</p>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
 
-// ─── Coming Soon ────────────────────────────────────────────────
-function ComingSoon() {
-  return (
-    <div className="text-center py-16">
-      <div className="text-5xl mb-4">🚧</div>
-      <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">Coming Soon</h2>
-      <p className="text-gray-500 dark:text-gray-400 max-w-sm mx-auto">
-        This tool is currently being built. Check back soon for a fully functional experience.
-      </p>
-    </div>
-  );
-}
+// ─── Tool routing ────────────────────────────────────────────────────────────
 
-// ─── Tool Dispatcher ────────────────────────────────────────────
-export default function ToolUI({ tool }: { tool: { slug: string } }) {
+function ToolUI({ tool }: { tool: Tool }) {
+
   switch (tool.slug) {
     case 'word-counter':
-    case 'plain-text-counter':
-      return <WordCounter />;
+      return <WordCounterClient />;
     case 'character-counter':
-      return <CharacterCounter />;
+      return <CharacterCounterClient />;
+    case 'character-frequency-counter':
+      return <CharacterFrequencyCounterClient />;
+    case 'character-variety-checker':
+      return <CharacterVarietyCheckerClient />;
     case 'case-converter':
-    case 'text-to-slug':
-      return <CaseConverter />;
-    case 'base64':
+      return <CaseConverterClient />;
     case 'base64-image-converter':
-    case 'image-to-base64':
-      return <Base64Tool />;
+      return <Base64ImageEncoderClient />;
     case 'url-encode':
     case 'url-encoder':
-      return <URLEncodeTool />;
+      return <UrlEncodeClient />;
     case 'json-formatter':
-    case 'json-editor':
-      return <JSONFormatter />;
+      return <JsonFormatterClient />;
+    case 'json-validator':
+      return <JsonValidatorClient />;
+    case 'yaml-to-json':
+      return <YamlToJsonClient />;
+    case 'xml-to-json':
+      return <XmlToJsonClient />;
+    case 'xml-formatter':
+      return <XmlFormatterClient />;
+    case 'uuid-generator':
+      return <UuidGeneratorClient />;
+    case 'url-slug-generator':
+      return <UrlSlugGeneratorClient />;
+    case 'url-parameter-extractor':
+      return <UrlParamsClient />;
+    case 'unix-timestamp-converter':
+      return <UnixTimestampConverterClient />;
+    case 'unit-converter':
+      return <UnitConverterClient />;
+    case 'text-sorter':
+      return <TextSorterClient />;
+    case 'text-diff':
+      return <TextDiffClient />;
+    case 'square-crop':
+      return <SquareCropClient />;
+    case 'sql-to-json':
+      return <SqlToJsonClient />;
+    case 'serp-preview':
+      return <SerpPreviewClient />;
+    case 'sass-to-css':
+      return <SassToCssClient />;
+    case 'screen-resolution-tester':
+      return <ScreenResolutionTesterClient />;
+    case 'remove-duplicate-lines':
+      return <RemoveDuplicateLinesClient />;
+    case 'regex-tester':
+      return <RegexTesterClient />;
+    case 'readability-score':
+      return <ReadabilityScoreClient />;
+    case 'qr-code-generator':
+      return <QrCodeGeneratorClient />;
+    case 'percentage-difference':
+      return <PercentageDifferenceClient />;
+    case 'percentage-calculator':
+      return <PercentageCalculatorClient />;
+    case 'password-generator':
+      return <PasswordGeneratorClient />;
+    case 'number-base-converter':
+      return <NumberBaseConverterClient />;
+    case 'notebook-to-html':
+      return <NotebookToHtmlClient />;
+    case 'oxford-comma':
+      return <OxfordCommaClient />;
+    case 'meta-tag-generator':
+      return <MetaTagGeneratorClient />;
+    case 'markdown-to-html':
+      return <MarkdownToHtmlClient />;
+    case 'lorem-ipsum-generator':
+      return <LoremIpsumGeneratorClient />;
+    case 'jwt-decoder':
+      return <JwtDecoderClient />;
+    case 'json-to-yaml':
+      return <JsonToYamlClient />;
+    case 'js-minifier':
+      return <JsMinifierClient />;
+    case 'image-resizer':
+      return <ImageResizerClient />;
+    case 'image-format-converter':
+      return <ImageFormatConverterClient />;
+    case 'image-cropper':
+      return <ImageCropperClient />;
+    case 'http-headers-viewer':
+      return <HttpHeadersViewerClient />;
+    case 'html-encoder':
+      return <HtmlEncoderClient />;
+    case 'hash-generator':
+      return <HashGeneratorClient />;
+    case 'sha-256-hash':
+      return <Sha256HashClient />;
+    case 'grammar-checker':
+      return <GrammarCheckerClient />;
+    case 'favicon-generator':
+      return <FaviconGeneratorClient />;
+    case 'css-gradient-generator':
+      return <CssGradientGeneratorClient />;
+    case 'css-border-radius-generator':
+      return <CssBorderRadiusGeneratorClient />;
+    case 'cron-parser':
+      return <CronParserClient />;
+    case 'cron-generator':
+      return <CronGeneratorClient />;
+    case 'credit-card-validator':
+      return <CreditCardValidatorClient />;
+    case 'contrast-checker':
+      return <ContrastCheckerClient />;
+    case 'color-picker':
+      return <ColorPickerClient />;
+    case 'change-bg-photo':
+      return <ChangeBgPhotoClient />;
+    case 'circle-crop':
+      return <CircleCropClient />;
+    case 'chart-maker':
+      return <ChartMakerClient />;
+    case 'hex-to-rgb':
+      return <HexToRgbClient />;
+    case 'rgb-to-hex':
+      return <RgbToHexClient />;
+    case 'random-string-generator':
+      return <RandomStringClient />;
+    case 'random-uuid-v7':
+      return <RandomUuidV7Client />;
+    case 'reading-time-calculator':
+      return <ReadingTimeCalculatorClient />;
+    case 'regex-visualizer':
+      return <RegexVisualizerClient />;
+    case 'rgba-to-hsl-converter':
+      return <RgbaToHslConverterClient />;
+    case 'robots-txt-generator':
+      return <RobotsTxtGeneratorClient />;
+    case 'roman-numeral-converter':
+      return <RomanNumeralConverterClient />;
+    case 'rot13-cipher':
+      return <Rot13CipherClient />;
+    case 'rot47-cipher':
+      return <Rot47CipherClient />;
+    case 'security-headers-generator':
+      return <SecurityHeadersGeneratorClient />;
+    case 'semantic-versioning':
+      return <SemanticVersioningClient />;
+    case 'semver-checker':
+      return <SemverCheckerClient />;
+    case 'slug-generator':
+      return <SlugGeneratorClient />;
+    case 'sql-prettifier':
+      return <SqlPrettifierClient />;
+    case 'ssl-certificate-checker':
+      return <SslCertificateCheckerClient />;
+    case 'sticky-notes':
+      return <StickyNotesClient />;
+    case 'svg-cleaner':
+      return <SvgCleanerClient />;
+    case 'syllable-counter':
+      return <SyllableCounterClient />;
+    case 'temperature-converter':
+      return <TemperatureConverterClient />;
+    case 'text-permutation-generator':
+      return <TextPermutationGeneratorClient />;
+    case 'text-redundancy-checker':
+      return <TextRedundancyCheckerClient />;
+    case 'text-reverser':
+      return <TextReverserClient />;
+    case 'text-statistics':
+      return <TextStatisticsClient />;
+    case 'text-to-slug':
+      return <TextToSlugClient />;
+    case 'text-to-speech':
+      return <TextToSpeechClient />;
+    case 'time-zone-converter':
+      return <TimeZoneConverterClient />;
+    case 'timestamp-converter':
+      return <TimestampConverterClient />;
+    case 'toml-to-json':
+      return <TomlToJsonClient />;
+    case 'tsv-to-csv':
+      return <TsvToCsvClient />;
+    case 'typo-checker':
+      return <TypoCheckerClient />;
+    case 'unicode-character-inspector':
+      return <UnicodeCharacterInspectorClient />;
+    case 'uptime-calculator':
+      return <UptimeCalculatorClient />;
+    case 'url-parser':
+      return <UrlParserClient />;
+    case 'user-agent-parser':
+      return <UserAgentParserClient />;
+    case 'uuid-validator':
+      return <UuidValidatorClient />;
+    case 'webpack-config-generator':
+      return <WebpackConfigGeneratorClient />;
+    case 'weight-converter':
+      return <WeightConverterClient />;
+    case 'whois-lookup':
+      return <WhoisLookupClient />;
+    case 'word-association':
+      return <WordAssociationClient />;
+    case 'word-frequency-analyzer':
+      return <WordFrequencyAnalyzerClient />;
+    case 'word-frequency-counter':
+      return <WordFrequencyCounterClient />;
+    case 'xml-sitemap-generator':
+      return <XmlSitemapGeneratorClient />;
+    case 'xml-validator':
+      return <XmlValidatorClient />;
+    case 'yaml-validator':
+      return <YamlValidatorClient />;
+    case 'age-calculator':
+      return <AgeCalculatorClient />;
+    case 'anagram-generator':
+      return <AnagramGeneratorClient />;
+    case 'backlink-checker':
+      return <BacklinkCheckerClient />;
+    case 'base64':
+      return <Base64Client />;
+    case 'base64-encoder-decoder':
+      return <Base64EncoderDecoderClient />;
+    case 'base64-file-encoder':
+      return <Base64FileEncoderClient />;
+    case 'base64-image-decoder':
+      return <Base64ImageDecoderClient />;
+    case 'base64-image-viewer':
+      return <Base64ImageViewerClient />;
+    case 'base-number-converter':
+      return <BaseNumberConverterClient />;
+    case 'base-toolblip':
+      return <BaseToolblipClient />;
+    case 'batch-favicon-downloader':
+      return <BatchFaviconDownloaderClient />;
+    case 'batch-image-resizer':
+      return <BatchImageResizerClient />;
+    case 'bcrypt-hash-generator':
+      return <BcryptHashGeneratorClient />;
+    case 'bill-sale-generator':
+      return <BillSaleGeneratorClient />;
+    case 'bill-splitter':
+      return <BillSplitterClient />;
+    case 'bin-hex-dec-converter':
+      return <BinHexDecConverterClient />;
+    case 'binary-converter':
+      return <BinaryConverterClient />;
+    case 'binary-decimal-hex-converter':
+      return <BinaryDecimalHexConverterClient />;
+    case 'binary-text-express':
+      return <BinaryTextExpressClient />;
+    case 'binary-to-decimal':
+      return <BinaryToDecimalClient />;
+    case 'binary-to-text':
+      return <BinaryToTextClient />;
+    case 'binary-to-text-v2':
+      return <BinaryToTextV2Client />;
+    case 'blog-outline':
+      return <BlogOutlineClient />;
+    case 'blur-background':
+      return <BlurBackgroundClient />;
+    case 'border':
+      return <BorderClient />;
+    case 'bmi-calculator':
+      return <BmiCalculatorClient />;
+    case 'bash-command-generator':
+      return <BashCommandGeneratorClient />;
+    case 'broken-link-checker':
+      return <BrokenLinkCheckerClient />;
+    case 'broken-image-checker':
+      return <BrokenImageCheckerClient />;
+    case 'broken-link-checker-express':
+      return <BrokenLinkCheckerExpressClient />;
+    case 'broken-link-checker-v2':
+      return <BrokenLinkCheckerV2Client />;
+    case 'browser-image-resizer':
+      return <BrowserImageResizerClient />;
+    case 'bulk-generator':
+      return <BulkGeneratorClient />;
+    case 'business-name-generator':
+      return <BusinessNameGeneratorClient />;
+    case 'business-plan-generator':
+      return <BusinessPlanGeneratorClient />;
+    case 'business-slogan-generator':
+      return <BusinessSloganGeneratorClient />;
+    case 'byte-converter':
+      return <ByteConverterClient />;
+    case 'canonical-tag-checker':
+      return <CanonicalTagCheckerClient />;
+    case 'canonical-url-generator':
+      return <CanonicalUrlGeneratorClient />;
+    case 'chinese-char-converter':
+      return <ChineseCharConverterClient />;
+    case 'cidr-calculator':
+      return <CidrCalculatorClient />;
+    case 'cmyk-to-rgb':
+      return <CmykToRgbClient />;
+    case 'cmyk-to-rgb-converter':
+      return <CmykToRgbConverterClient />;
+    case 'cmyk-to-rgb-tool':
+      return <CmykToRgbToolClient />;
+    case 'code-beautifier':
+      return <CodeBeautifierClient />;
+    case 'code-diff':
+      return <CodeDiffClient />;
+    case 'code-diff-tool':
+      return <CodeDiffToolClient />;
+    case 'code-to-diagram-generator':
+      return <CodeToDiagramGeneratorClient />;
+    case 'cold-email-writer':
+      return <ColdEmailWriterClient />;
+    case 'collocations-checker':
+      return <CollocationsCheckerClient />;
+    case 'color-blindness-simulator':
+      return <ColorBlindnessSimulatorClient />;
+    case 'color-contrast-auditor':
+      return <ColorContrastAuditorClient />;
+    case 'color-contrast-matrix':
+      return <ColorContrastMatrixClient />;
+    case 'color-contrast-ratio-checker':
+      return <ColorContrastRatioCheckerClient />;
+    case 'cleanup-picture':
+      return <CleanupPictureClient />;
+    case 'cors-header-generator':
+      return <CorsHeaderGeneratorClient />;
+    case 'citation-generator':
+      return <CitationGeneratorClient />;
+    case 'countdown-timer':
+      return <CountdownTimerClient />;
+    case 'crontab-generator':
+      return <CrontabGeneratorClient />;
+    case 'css-class-generator':
+      return <CssClassGeneratorClient />;
+    case 'css-preprocessor':
+      return <CssPreprocessorClient />;
+    case 'css-to-scss-converter':
+      return <CssToScssConverterClient />;
+    case 'css-validator':
+      return <CssValidatorClient />;
+    case 'curl-generator':
+      return <CurlGeneratorClient />;
+    case 'csv-to-json':
+      return <CsvToJsonClient />;
+    case 'csv-to-tsv':
+      return <CsvToTsvClient />;
+    case 'curl-to-python':
+      return <CurlToPythonClient />;
+    case 'decimal-to-binary':
+      return <DecimalToBinaryClient />;
+    case 'decimal-to-hex':
+      return <DecimalToHexClient />;
+    case 'decode-tool':
+      return <DecodeToolClient />;
+    case 'diff-tool':
+      return <DiffToolClient />;
+    case 'dns-lookup':
+      return <DnsLookupClient />;
+    case 'duplicate-line-finder':
+      return <DuplicateLineFinderClient />;
+    case 'duplicate-line-removal':
+      return <DuplicateLineRemovalClient />;
+    case 'email-generator':
+      return <EmailGeneratorClient />;
+    case 'email-validator':
+      return <EmailValidatorClient />;
+    case 'emoji-finder':
+      return <EmojiFinderClient />;
+    case 'encode-tool':
+      return <EncodeToolClient />;
+    case 'english-grammar-checker':
+      return <EnglishGrammarCheckerClient />;
+    case 'fake-data-generator':
+      return <FakeDataGeneratorClient />;
+    case 'fake-text-generator':
+      return <FakeTextGeneratorClient />;
+    case 'formatters-tool':
+      return <FormattersToolClient />;
+    case 'fraction-to-decimal':
+      return <FractionToDecimalClient />;
+    case 'gitignore-generator':
+      return <GitignoreGeneratorClient />;
+    case 'hash-from-text':
+      return <HashFromTextClient />;
+    case 'hash-identifier':
+      return <HashIdentifierClient />;
+    case 'hex-to-decimal':
+      return <HexToDecimalClient />;
+    case 'hsl-to-rgb':
+      return <HslToRgbClient />;
+    case 'htaccess-redirect-generator':
+      return <HtaccessRedirectGeneratorClient />;
+    case 'html-entity-encoder':
+      return <HtmlEntityEncoderClient />;
+    case 'html-optimizer':
+      return <HtmlOptimizerClient />;
+    case 'html-table-generator':
+      return <HtmlTableGeneratorClient />;
+    case 'html-to-markdown':
+      return <HtmlToMarkdownClient />;
+    case 'html-to-plain-text':
+      return <HtmlToPlainTextClient />;
+    case 'html-validator':
+      return <HtmlValidatorClient />;
+    case 'image-color-picker':
+      return <ImageColorPickerClient />;
+    case 'image-metadata-viewer':
+      return <ImageMetadataViewerClient />;
+    case 'ip-range-calculator':
+      return <IpRangeCalculatorClient />;
+    case 'ip-whois-generator':
+      return <IpWhoisGeneratorClient />;
+    case 'ipv6-generator':
+      return <Ipv6GeneratorClient />;
+    case 'javascript-obfuscator':
+      return <JavascriptObfuscatorClient />;
+    case 'javascript-playground':
+      return <JavascriptPlaygroundClient />;
+    case 'json-ld-generator':
+      return <JsonLdGeneratorClient />;
+    case 'json-path-tester':
+      return <JsonPathTesterClient />;
+    case 'json-schema-validator':
+      return <JsonSchemaValidatorClient />;
+    case 'json-to-csv':
+      return <JsonToCsvClient />;
+    case 'json-to-html-table':
+      return <JsonToHtmlTableClient />;
+    case 'json-to-markdown-table':
+      return <JsonToMarkdownTableClient />;
+    case 'json-to-python':
+      return <JsonToPythonClient />;
+    case 'json-to-typescript':
+      return <JsonToTypescriptClient />;
+    case 'json-to-xml':
+      return <JsonToXmlClient />;
+    case 'keyword-density-checker':
+      return <KeywordDensityCheckerClient />;
+    case 'length-converter':
+      return <LengthConverterClient />;
+    case 'line-counter':
+      return <LineCounterClient />;
+    case 'line-number-remover':
+      return <LineNumberRemoverClient />;
+    case 'list-comparator':
+      return <ListComparatorClient />;
+    case 'list-randomizer':
+      return <ListRandomizerClient />;
+    case 'mac-address-generator':
+      return <MacAddressGeneratorClient />;
+    case 'markdown-to-pdf':
+      return <MarkdownToPdfClient />;
+    case 'meta-description-checker':
+      return <MetaDescriptionCheckerClient />;
+    case 'morse-code-translator':
+      return <MorseCodeTranslatorClient />;
+    case 'npm-dependency-checker':
+      return <NpmDependencyCheckerClient />;
+    case 'number-to-words':
+      return <NumberToWordsClient />;
+    case 'octal-to-decimal':
+      return <OctalToDecimalClient />;
+    case 'open-graph-generator':
+      return <OpenGraphGeneratorClient />;
+    case 'palindrome-checker':
+      return <PalindromeCheckerClient />;
+    case 'password-strength-checker':
+      return <PasswordStrengthCheckerClient />;
+    case 'ping-test':
+      return <PingTestClient />;
+    case 'plain-text-counter':
+      return <PlainTextCounterClient />;
+    case 'port-scanner':
+      return <PortScannerClient />;
+    case 'punctuation-fixer':
+      return <PunctuationFixerClient />;
+    case 'random-fraction-generator':
+      return <RandomFractionGeneratorClient />;
+    case 'random-ip-address':
+      return <RandomIpAddressClient />;
+    case 'random-number-generator':
+      return <RandomNumberGeneratorClient />;
+    case 'random-paragraph-generator':
+      return <RandomParagraphGeneratorClient />;
+    case 'random-sentence-generator':
+      return <RandomSentenceGeneratorClient />;
+    case 'random-string-generator-tool':
+      return <RandomStringGeneratorToolClient />;
+    case 'ai-detector':
+      return <AiDetectorClient />;
+    case 'ai-rephraser':
+      return <AiRephraserClient />;
+    case 'ai-twitter-generator':
+      return <AiTwitterGeneratorClient />;
+    case 'api-auth-header-generator':
+      return <ApiAuthHeaderGeneratorClient />;
+    case 'api-doc-generator':
+      return <ApiDocGeneratorClient />;
+    case 'accessibility-checker':
+      return <AccessibilityCheckerClient />;
+    case 'aac-to-flac':
+      return <AacToFlacClient />;
+    case 'aac-to-m4r':
+      return <AacToM4rClient />;
+    case 'aac-to-mp3':
+      return <AacToMp3Client />;
+    case 'aac-to-mp4':
+      return <AacToMp4Client />;
+    case 'aac-to-wav':
+      return <AacToWavClient />;
+    case 'add-images':
+      return <AddImagesClient />;
+    case 'add-pages':
+      return <AddPagesClient />;
+    case 'add-subtitles':
+      return <AddSubtitlesClient />;
+    case 'add-text':
+      return <AddTextClient />;
+    case 'algorithm-visualizer':
+      return <AlgorithmVisualizerClient />;
+    case 'annotate':
+      return <AnnotateClient />;
+    case 'ascii-art-generator':
+      return <AsciiArtGeneratorClient />;
+    case 'all-in-one-unit-converter':
+      return <AllInOneUnitConverterClient />;
+    case 'angle-unit-converter':
+      return <AngleUnitConverterClient />;
+    case 'api-endpoint-debugger':
+      return <ApiEndpointDebuggerClient />;
+    case 'api-endpoint-documenter':
+      return <ApiEndpointDocumenterClient />;
+    case 'api-endpoint-tester':
+      return <ApiEndpointTesterClient />;
+    case 'api-spec-generator':
+      return <ApiSpecGeneratorClient />;
+    case 'area-converter':
+      return <AreaConverterClient />;
+    case 'argon2-hash-generator':
+      return <Argon2HashGeneratorClient />;
+    case 'article-generator':
+      return <ArticleGeneratorClient />;
+    case 'article-rewriter':
+      return <ArticleRewriterClient />;
+    case 'article-title-gen':
+      return <ArticleTitleGenClient />;
+    case 'article-title-generator':
+      return <ArticleTitleGeneratorClient />;
+    case 'article-writer':
+      return <ArticleWriterClient />;
+    case 'audio-to-text':
+      return <AudioToTextClient />;
+    case 'automation-wizard':
+      return <AutomationWizardClient />;
+    case 'avi-to-gif':
+      return <AviToGifClient />;
+    case 'avi-to-mkv':
+      return <AviToMkvClient />;
+    case 'avi-to-mov':
+      return <AviToMovClient />;
+    case 'avi-to-mp3':
+      return <AviToMp3Client />;
+    case 'avi-to-mp4':
+      return <AviToMp4Client />;
+    case 'azw3-to-epub':
+      return <Azw3ToEpubClient />;
+    case 'azw3-to-mobi':
+      return <Azw3ToMobiClient />;
+    case 'backlink-analyzer':
+      return <BacklinkAnalyzerClient />;
+    case 'backlink-checker-express':
+      return <BacklinkCheckerExpressClient />;
+    case 'backlink-checker-v2':
+      return <BacklinkCheckerV2Client />;
+    case 'backslash-escape-unescape':
+      return <BackslashEscapeUnescapeClient />;
+    case 'barcode-generator':
+      return <BarcodeGeneratorClient />;
+    case 'barcode-scanner':
+      return <BarcodeScannerClient />;
+    case 'base-convert-tool':
+      return <BaseConvertToolClient />;
+    case 'base-converter':
+      return <BaseConverterClient />;
+    case 'base-converter-quick':
+      return <BaseConverterQuickClient />;
+    case 'color-contrast-checker':
+      return <ColorContrastCheckerClient />;
+    case 'color-format-converter':
+      return <ColorFormatConverterClient />;
+    case 'color-format-converter-v2':
+      return <ColorFormatConverterV2Client />;
+    case 'color-format-picker':
+      return <ColorFormatPickerClient />;
+    case 'color-harmony-express':
+      return <ColorHarmonyExpressClient />;
+    case 'color-harmony-generator':
+      return <ColorHarmonyGeneratorClient />;
+    case 'color-harmony-new':
+      return <ColorHarmonyNewClient />;
+    case 'color-luminance-calculator':
+      return <ColorLuminanceCalculatorClient />;
+    case 'color-luminance-checker':
+      return <ColorLuminanceCheckerClient />;
+    case 'color-mixer':
+      return <ColorMixerClient />;
+    case 'color-mixer-v2':
+      return <ColorMixerV2Client />;
+    case 'color-name-finder':
+      return <ColorNameFinderClient />;
+    case 'color-name-finder-v2':
+      return <ColorNameFinderV2Client />;
+    case 'color-name-tool':
+      return <ColorNameToolClient />;
+    case 'color-opacity-generator':
+      return <ColorOpacityGeneratorClient />;
+    case 'color-palette-extractor':
+      return <ColorPaletteExtractorClient />;
+    case 'color-palette-from-image':
+      return <ColorPaletteFromImageClient />;
+    case 'color-palette-generator':
+      return <ColorPaletteGeneratorClient />;
+    case 'color-pick-all':
+      return <ColorPickAllClient />;
+    case 'color-pick-tool':
+      return <ColorPickToolClient />;
+    case 'color-pick-toolblip':
+      return <ColorPickToolblipClient />;
+    case 'color-picker-2025':
+      return <ColorPicker2025Client />;
+    case 'color-picker-adv':
+      return <ColorPickerAdvClient />;
+    case 'color-picker-advanced':
+      return <ColorPickerAdvancedClient />;
+    case 'color-picker-api':
+      return <ColorPickerApiClient />;
+    case 'color-picker-browser':
+      return <ColorPickerBrowserClient />;
+    case 'color-picker-classic':
+      return <ColorPickerClassicClient />;
+    case 'color-picker-complete':
+      return <ColorPickerCompleteClient />;
+    case 'color-picker-dg':
+      return <ColorPickerDgClient />;
+    case 'color-picker-easy':
+      return <ColorPickerEasyClient />;
+    case 'color-picker-enhanced':
+      return <ColorPickerEnhancedClient />;
+    case 'color-picker-expander':
+      return <ColorPickerExpanderClient />;
+    case 'color-picker-express':
+      return <ColorPickerExpressClient />;
+    case 'color-picker-final':
+      return <ColorPickerFinalClient />;
+    case 'color-picker-fresh':
+      return <ColorPickerFreshClient />;
+    case 'color-picker-full':
+      return <ColorPickerFullClient />;
+    case 'color-picker-handy':
+      return <ColorPickerHandyClient />;
+    case 'color-picker-hex-rgb-hsl':
+      return <ColorPickerHexRgbHslClient />;
+    case 'color-picker-new':
+      return <ColorPickerNewClient />;
+    case 'color-picker-prime':
+      return <ColorPickerPrimeClient />;
+    case 'color-picker-pro':
+      return <ColorPickerProClient />;
+    case 'color-picker-quick':
+      return <ColorPickerQuickClient />;
+    case 'color-picker-smart':
+      return <ColorPickerSmartClient />;
+    case 'color-picker-std':
+      return <ColorPickerStdClient />;
+    case 'color-picker-tool':
+      return <ColorPickerToolClient />;
+    case 'color-picker-ultimate':
+      return <ColorPickerUltimateClient />;
+    case 'color-picker-ultra':
+      return <ColorPickerUltraClient />;
+    case 'color-picker-v2':
+      return <ColorPickerV2Client />;
+    case 'color-picker-v3':
+      return <ColorPickerV3Client />;
+    case 'color-picker-v4':
+      return <ColorPickerV4Client />;
+    case 'color-picker-v5':
+      return <ColorPickerV5Client />;
+    case 'color-picker-v6':
+      return <ColorPickerV6Client />;
+    case 'color-picker-web':
+      return <ColorPickerWebClient />;
+    case 'color-picker-wheel':
+      return <ColorPickerWheelClient />;
+    case 'color-picker-x':
+      return <ColorPickerXClient />;
+    case 'color-picker-xl':
+      return <ColorPickerXLClient />;
+    case 'color-quick':
+      return <ColorQuickClient />;
+    case 'color-saturation-adjuster':
+      return <ColorSaturationAdjusterClient />;
+    case 'color-select-tool':
+      return <ColorSelectToolClient />;
+    case 'color-shade-gen':
+      return <ColorShadeGenClient />;
+    case 'color-shade-generator':
+      return <ColorShadeGeneratorClient />;
+    case 'color-shade-generator-v2':
+      return <ColorShadeGeneratorV2Client />;
+    case 'color-shade-tints':
+      return <ColorShadeTintsClient />;
+    case 'color-shade-tool':
+      return <ColorShadeToolClient />;
+    case 'color-tint-generator':
+      return <ColorTintGeneratorClient />;
+    case 'color-tone-generator':
+      return <ColorToneGeneratorClient />;
+    case 'color-toolblip':
+      return <ColorToolblipClient />;
+    case 'colorize-photo':
+      return <ColorizePhotoClient />;
+    case 'compress':
+      return <CompressClient />;
+    case 'compress-avi':
+      return <CompressAviClient />;
+    case 'compress-mkv':
+      return <CompressMkvClient />;
+    case 'compress-mov':
+      return <CompressMovClient />;
+    case 'content-brief-generator':
+      return <ContentBriefGeneratorClient />;
+    case 'content-improver':
+      return <ContentImproverClient />;
+    case 'content-planner':
+      return <ContentPlannerClient />;
+    case 'content-summarizer':
+      return <ContentSummarizerClient />;
+    case 'contrast-browser':
+      return <ContrastBrowserClient />;
+    case 'contrast-check-all':
+      return <ContrastCheckAllClient />;
+    case 'contrast-check-tool':
+      return <ContrastCheckToolClient />;
+    case 'contrast-check-toolblip':
+      return <ContrastCheckToolblipClient />;
+    case 'contrast-checker-2025':
+      return <ContrastChecker2025Client />;
+    case 'contrast-checker-adv':
+      return <ContrastCheckerAdvClient />;
+    case 'contrast-checker-advanced':
+      return <ContrastCheckerAdvancedClient />;
+    case 'contrast-checker-api':
+      return <ContrastCheckerApiClient />;
+    case 'contrast-checker-browser':
+      return <ContrastCheckerBrowserClient />;
+    case 'contrast-checker-classic':
+      return <ContrastCheckerClassicClient />;
+    case 'contrast-checker-complete':
+      return <ContrastCheckerCompleteClient />;
+    case 'contrast-checker-dg':
+      return <ContrastCheckerDgClient />;
+    case 'contrast-checker-easy':
+      return <ContrastCheckerEasyClient />;
+    case 'contrast-checker-enhanced':
+      return <ContrastCheckerEnhancedClient />;
+    case 'contrast-checker-expander':
+      return <ContrastCheckerExpanderClient />;
+    case 'contrast-checker-express':
+      return <ContrastCheckerExpressClient />;
+    case 'contrast-checker-final':
+      return <ContrastCheckerFinalClient />;
+    case 'contrast-checker-fresh':
+      return <ContrastCheckerFreshClient />;
+    case 'contrast-checker-full':
+      return <ContrastCheckerFullClient />;
+    case 'contrast-checker-handy':
+      return <ContrastCheckerHandyClient />;
+    case 'contrast-checker-new':
+      return <ContrastCheckerNewClient />;
+    case 'contrast-checker-prime':
+      return <ContrastCheckerPrimeClient />;
+    case 'contrast-checker-pro':
+      return <ContrastCheckerProClient />;
+    case 'contrast-checker-quick':
+      return <ContrastCheckerQuickClient />;
+    case 'contrast-checker-smart':
+      return <ContrastCheckerSmartClient />;
+    case 'contrast-checker-std':
+      return <ContrastCheckerStdClient />;
+    case 'contrast-checker-tool':
+      return <ContrastCheckerToolClient />;
+    case 'contrast-checker-ultimate':
+      return <ContrastCheckerUltimateClient />;
+    case 'contrast-checker-ultra':
+      return <ContrastCheckerUltraClient />;
+    case 'contrast-checker-v2':
+      return <ContrastCheckerV2Client />;
+    case 'contrast-checker-v3':
+      return <ContrastCheckerV3Client />;
+    case 'contrast-checker-v4':
+      return <ContrastCheckerV4Client />;
+    case 'contrast-checker-v5':
+      return <ContrastCheckerV5Client />;
+    case 'contrast-checker-v6':
+      return <ContrastCheckerV6Client />;
+    case 'contrast-checker-wcag':
+      return <ContrastCheckerWcagClient />;
+    case 'contrast-checker-x':
+      return <ContrastCheckerXClient />;
+    case 'contrast-checker-xl':
+      return <ContrastCheckerXlClient />;
+    case 'contrast-fresh':
+      return <ContrastFreshClient />;
+    case 'contrast-quick':
+      return <ContrastQuickClient />;
+    case 'contrast-toolblip':
+      return <ContrastToolblipClient />;
+    case 'cooking-unit-converter':
+      return <CookingUnitConverterClient />;
+    case 'counter':
+      return <CounterClient />;
+    case 'cron-builder':
+      return <CronBuilderClient />;
+    case 'cron-expander':
+      return <CronExpanderClient />;
+    case 'cron-expr-gen':
+      return <CronExprGenClient />;
+    case 'cron-expr-gen-adv':
+      return <CronExprGenAdvClient />;
+    case 'cron-expr-gen-prime':
+      return <CronExprGenPrimeClient />;
+    case 'cron-expr-gen-pro':
+      return <CronExprGenProClient />;
+    case 'cron-expr-gen-ultra':
+      return <CronExprGenUltraClient />;
+    case 'cron-expression-builder':
+      return <CronExpressionBuilderClient />;
+    case 'cron-expression-generator':
+      return <CronExpressionGeneratorClient />;
+    case 'cron-expression-parser':
+      return <CronExpressionParserClient />;
+    case 'cron-generator-2025':
+      return <CronGenerator2025Client />;
+    case 'cron-generator-advanced':
+      return <CronGeneratorAdvancedClient />;
+    case 'cron-generator-api':
+      return <CronGeneratorApiClient />;
+    case 'cron-generator-browser':
+      return <CronGeneratorBrowserClient />;
+    case 'cron-generator-classic':
+      return <CronGeneratorClassicClient />;
+    case 'cron-generator-complete':
+      return <CronGeneratorCompleteClient />;
+    case 'cron-generator-dg':
+      return <CronGeneratorDgClient />;
+    case 'cron-generator-easy':
+      return <CronGeneratorEasyClient />;
+    case 'cron-generator-enhanced':
+      return <CronGeneratorEnhancedClient />;
+    case 'cron-generator-express':
+      return <CronGeneratorExpressClient />;
+    case 'cron-generator-final':
+      return <CronGeneratorFinalClient />;
+    case 'cron-generator-fresh':
+      return <CronGeneratorFreshClient />;
+    case 'cron-generator-full':
+      return <CronGeneratorFullClient />;
+    case 'cron-generator-handy':
+      return <CronGeneratorHandyClient />;
+    case 'cron-generator-new':
+      return <CronGeneratorNewClient />;
+    case 'cron-generator-prime':
+      return <CronGeneratorPrimeClient />;
+    case 'cron-generator-pro':
+      return <CronGeneratorProClient />;
+    case 'cron-generator-quick':
+      return <CronGeneratorQuickClient />;
+    case 'cron-generator-smart':
+      return <CronGeneratorSmartClient />;
+    case 'cron-generator-std':
+      return <CronGeneratorStdClient />;
+    case 'cron-generator-tool':
+      return <CronGeneratorToolClient />;
+    case 'cron-generator-toolblip':
+      return <CronGeneratorToolblipClient />;
+    case 'cron-generator-ultimate':
+      return <CronGeneratorUltimateClient />;
+    case 'cron-generator-ultra':
+      return <CronGeneratorUltraClient />;
+    case 'cron-generator-v2':
+      return <CronGeneratorV2Client />;
+    case 'cron-generator-v3':
+      return <CronGeneratorV3Client />;
+    case 'cron-generator-v4':
+      return <CronGeneratorV4Client />;
+    case 'cron-generator-v5':
+      return <CronGeneratorV5Client />;
+    case 'cron-generator-v6':
+      return <CronGeneratorV6Client />;
+    case 'cron-generator-x':
+      return <CronGeneratorXClient />;
+    case 'cron-generator-xl':
+      return <CronGeneratorXlClient />;
+    case 'cron-human-readable':
+      return <CronHumanReadableClient />;
+    case 'cron-schedule-builder':
+      return <CronScheduleBuilderClient />;
+    case 'cron-schedule-checker':
+      return <CronScheduleCheckerClient />;
+    case 'cron-schedule-explainer':
+      return <CronScheduleExplainerClient />;
+    case 'cron-schedule-generator':
+      return <CronScheduleGeneratorClient />;
+    case 'cron-schedule-validator':
+      return <CronScheduleValidatorClient />;
+    case 'cron-toolblip':
+      return <CronToolblipClient />;
+    case 'cron-validator':
+      return <CronValidatorClient />;
+    case 'cron-visual-builder':
+      return <CronVisualBuilderClient />;
+    case 'crop-circle':
+      return <CropCircleClient />;
+    case 'css-animation-generator':
+      return <CssAnimationGeneratorClient />;
+    case 'css-cursor-generator':
+      return <CssCursorGeneratorClient />;
+    case 'css-filter-generator':
+      return <CssFilterGeneratorClient />;
+    case 'css-flexbox-generator':
+      return <CssFlexboxGeneratorClient />;
+    case 'css-grid-generator':
+      return <CssGridGeneratorClient />;
+    case 'css-naming-convention':
+      return <CssNamingConventionClient />;
+    case 'css-preview':
+      return <CssPreviewClient />;
+    case 'css-to-scss':
+      return <CssToScssClient />;
+    case 'css-to-styled-components':
+      return <CssToStyledComponentsClient />;
+    case 'css-to-tailwind':
+      return <CssToTailwindClient />;
+    case 'css-units-converter':
+      return <CssUnitsConverterClient />;
+    case 'css-units-converter-new':
+      return <CssUnitsConverterNewClient />;
+    case 'css-variable-generator':
+      return <CssVariableGeneratorClient />;
+    case 'csv-generator':
+      return <CsvGeneratorClient />;
+    case 'csv-json-express':
+      return <CsvJsonExpressClient />;
+    case 'csv-to-excel':
+      return <CsvToExcelClient />;
+    case 'csv-to-json-v2':
+      return <CsvToJsonV2Client />;
+    case 'csv-to-tsv-v2':
+      return <CsvToTsvV2Client />;
+    case 'csv-to-xml':
+      return <CsvToXmlClient />;
+    case 'curl-command-builder':
+      return <CurlCommandBuilderClient />;
+    case 'curl-gen-express':
+      return <CurlGenExpressClient />;
+    case 'curl-to-javascript':
+      return <CurlToJavascriptClient />;
+    case 'currency-converter-v2':
+      return <CurrencyConverterV2Client />;
+    case 'cutter':
+      return <CutterClient />;
+    case 'data-size-converter':
+      return <DataSizeConverterClient />;
+    case 'data-size-converter-express':
+      return <DataSizeConverterExpressClient />;
+    case 'data-uri-generator':
+      return <DataUriGeneratorClient />;
+    case 'db-query-formatter':
+      return <DbQueryFormatterClient />;
+    case 'decimal-to-hex-converter':
+      return <DecimalToHexConverterClient />;
+    case 'detect':
+      return <DetectClient />;
+    case 'discount-calculator':
+      return <DiscountCalculatorClient />;
+    case 'dns-lookup-express':
+      return <DnsLookupExpressClient />;
+    case 'dns-lookup-tool':
+      return <DnsLookupToolClient />;
+    case 'dns-lookup-v2':
+      return <DnsLookupV2Client />;
+    case 'docker-compose-generator':
+      return <DockerComposeGeneratorClient />;
+    case 'domain-age-checker':
+      return <DomainAgeCheckerClient />;
+    case 'dominant-color-extractor':
+      return <DominantColorExtractorClient />;
+    case 'dpi-ppi-calculator':
+      return <DpiPpiCalculatorClient />;
+    case 'dummy-text-detector':
+      return <DummyTextDetectorClient />;
+    case 'duplicate-phrase-detector':
+      return <DuplicatePhraseDetectorClient />;
+    case 'duplicate-url-detector':
+      return <DuplicateUrlDetectorClient />;
+    case 'edit':
+      return <EditClient />;
+    case 'encodings-ref':
+      return <EncodingsRefClient />;
+    case 'encodings-reference':
+      return <EncodingsReferenceClient />;
+    case 'energy-converter':
+      return <EnergyConverterClient />;
+    case 'english-collocations-checker':
+      return <CollocationsCheckerClient />;
+    case 'english-collocations-unique':
+      return <EnglishCollocationsUniqueClient />;
+    case 'english-dictionary':
+      return <EnglishDictionaryClient />;
+    case 'env-parser':
+      return <EnvParserClient />;
+    case 'eps-to-jpg':
+      return <EpsToJpgClient />;
+    case 'eps-to-png':
+      return <EpsToPngClient />;
+    case 'eps-to-svg':
+      return <EpsToSvgClient />;
+    case 'epub-to-azw3':
+      return <EpubToAzw3Client />;
+    case 'epub-to-mobi':
+      return <EpubToMobiClient />;
+    case 'essay-writer':
+      return <EssayWriterClient />;
+    case 'excel-to-csv':
+      return <ExcelToCsvClient />;
+    case 'excel-to-pdf':
+      return <ExcelToPdfClient />;
+    case 'excel-to-xml':
+      return <ExcelToXmlClient />;
+    case 'exif-remover':
+      return <ExifRemoverClient />;
+    case 'explain-like-five':
+      return <ExplainLikeFiveClient />;
+    case 'extract-audio':
+      return <ExtractAudioClient />;
+    case 'extract-img':
+      return <ExtractImgClient />;
+    case 'extract-text':
+      return <ExtractTextClient />;
+    case 'facebook-ad-headlines':
+      return <FacebookAdHeadlinesClient />;
+    case 'faq-generator':
+      return <FaqGeneratorClient />;
+    case 'favicon-browser':
+      return <FaviconBrowserClient />;
     case 'favicon-checker':
-      return <FaviconChecker />;
+      return <FaviconCheckerClient />;
+    case 'favicon-checker-express':
+      return <FaviconCheckerExpressClient />;
+    case 'favicon-checker-tool':
+      return <FaviconCheckerToolClient />;
+    case 'favicon-creator':
+      return <FaviconCreatorClient />;
+    case 'favicon-creator-tool':
+      return <FaviconCreatorToolClient />;
+    case 'favicon-fresh':
+      return <FaviconFreshClient />;
+    case 'favicon-from-emoji':
+      return <FaviconFromEmojiClient />;
+    case 'favicon-full':
+      return <FaviconFullClient />;
+    case 'favicon-gen-adv':
+      return <FaviconGenAdvClient />;
+    case 'favicon-gen-prime':
+      return <FaviconGenPrimeClient />;
+    case 'favicon-gen-pro':
+      return <FaviconGenProClient />;
+    case 'favicon-gen-tool':
+      return <FaviconGenToolClient />;
+    case 'favicon-gen-toolblip':
+      return <FaviconGenToolblipClient />;
+    case 'favicon-gen-ultra':
+      return <FaviconGenUltraClient />;
+    case 'favicon-generator-2025':
+      return <FaviconGenerator2025Client />;
+    case 'favicon-generator-advanced':
+      return <FaviconGeneratorAdvancedClient />;
+    case 'favicon-generator-api':
+      return <FaviconGeneratorApiClient />;
+    case 'favicon-generator-browser':
+      return <FaviconGeneratorBrowserClient />;
+    case 'favicon-generator-classic':
+      return <FaviconGeneratorClassicClient />;
+    case 'favicon-generator-complete':
+      return <FaviconGeneratorCompleteClient />;
+    case 'favicon-generator-dg':
+      return <FaviconGeneratorDgClient />;
+    case 'favicon-generator-easy':
+      return <FaviconGeneratorEasyClient />;
+    case 'favicon-generator-enhanced':
+      return <FaviconGeneratorEnhancedClient />;
+    case 'favicon-generator-expander':
+      return <FaviconGeneratorExpanderClient />;
+    case 'favicon-generator-express':
+      return <FaviconGeneratorExpressClient />;
+    case 'favicon-generator-final':
+      return <FaviconGeneratorFinalClient />;
+    case 'favicon-generator-fresh':
+      return <FaviconGeneratorFreshClient />;
+    case 'favicon-generator-full':
+      return <FaviconGeneratorFullClient />;
+    case 'favicon-generator-new':
+      return <FaviconGeneratorNewClient />;
+    case 'favicon-generator-prime':
+      return <FaviconGeneratorPrimeClient />;
+    case 'favicon-generator-pro':
+      return <FaviconGeneratorProClient />;
+    case 'favicon-generator-quick':
+      return <FaviconGeneratorQuickClient />;
+    case 'favicon-generator-smart':
+      return <FaviconGeneratorSmartClient />;
+    case 'favicon-generator-std':
+      return <FaviconGeneratorStdClient />;
+    case 'favicon-generator-tool':
+      return <FaviconGeneratorToolClient />;
+    case 'favicon-generator-ultimate':
+      return <FaviconGeneratorUltimateClient />;
+    case 'favicon-generator-ultra':
+      return <FaviconGeneratorUltraClient />;
+    case 'favicon-generator-v2':
+      return <FaviconGeneratorV2Client />;
+    case 'favicon-generator-v3':
+      return <FaviconGeneratorV3Client />;
+    case 'favicon-generator-v4':
+      return <FaviconGeneratorV4Client />;
+    case 'favicon-generator-v5':
+      return <FaviconGeneratorV5Client />;
+    case 'favicon-generator-v6':
+      return <FaviconGeneratorV6Client />;
+    case 'favicon-generator-x':
+      return <FaviconGeneratorXClient />;
+    case 'favicon-generator-xl':
+      return <FaviconGeneratorXlClient />;
+    case 'favicon-grabber':
+      return <FaviconGrabberClient />;
+    case 'favicon-icon-generator':
+      return <FaviconIconGeneratorClient />;
+    case 'favicon-make-tool':
+      return <FaviconMakeToolClient />;
+    case 'favicon-maker':
+      return <FaviconMakerClient />;
+    case 'favicon-png-creator':
+      return <FaviconPngCreatorClient />;
+    case 'favicon-png-generator':
+      return <FaviconPngGeneratorClient />;
+    case 'favicon-png-maker':
+      return <FaviconPngMakerClient />;
+    case 'favicon-preview':
+      return <FaviconPreviewClient />;
+    case 'favicon-preview-tool':
+      return <FaviconPreviewToolClient />;
+    case 'favicon-quick':
+      return <FaviconQuickClient />;
+    case 'favicon-quick-generator':
+      return <FaviconQuickGeneratorClient />;
+    case 'favicon-simple':
+      return <FaviconSimpleClient />;
+    case 'favicon-tool':
+      return <FaviconToolClient />;
+    case 'favicon-toolblip':
+      return <FaviconToolblipClient />;
+    case 'flip':
+      return <FlipClient />;
+    case 'font-to-png':
+      return <FontToPngClient />;
+    case 'force-converter':
+      return <ForceConverterClient />;
+    case 'fraction-calculator':
+      return <FractionCalculatorClient />;
+    case 'fraction-to-decimal-express':
+      return <FractionToDecimalExpressClient />;
+    case 'fraction-to-decimal-v2':
+      return <FractionToDecimalV2Client />;
+    case 'frequency-converter':
+      return <FrequencyConverterClient />;
+    case 'general-unit-converter':
+      return <GeneralUnitConverterClient />;
+    case 'gif-to-apng':
+      return <GifToApngClient />;
+    case 'gif-to-avif':
+      return <GifToAvifClient />;
+    case 'gif-to-jpg':
+      return <GifToJpgClient />;
+    case 'gif-to-mov':
+      return <GifToMovClient />;
+    case 'gif-to-mp4':
+      return <GifToMp4Client />;
+    case 'gif-to-png':
+      return <GifToPngClient />;
+    case 'gif-to-webm':
+      return <GifToWebmClient />;
+    case 'google-algorithm-tracker':
+      return <GoogleAlgorithmTrackerClient />;
+    case 'google-rank-checker':
+      return <GoogleRankCheckerClient />;
+    case 'google-serp-preview':
+      return <GoogleSerpPreviewClient />;
+    case 'google-serp-simulator':
+      return <GoogleSerpSimulatorClient />;
+    case 'gradient-generator':
+      return <GradientGeneratorClient />;
+    case 'grammar-check-tool':
+      return <GrammarCheckToolClient />;
+    case 'grammar-checker-2025':
+      return <GrammarChecker2025Client />;
+    case 'grammar-checker-adv':
+      return <GrammarCheckerAdvClient />;
+    case 'grammar-checker-advanced':
+      return <GrammarCheckerAdvancedClient />;
+    case 'grammar-checker-ai':
+      return <GrammarCheckerAiClient />;
+    case 'grammar-checker-api':
+      return <GrammarCheckerApiClient />;
+    case 'grammar-checker-browser':
+      return <GrammarCheckerBrowserClient />;
+    case 'grammar-checker-classic':
+      return <GrammarCheckerClassicClient />;
+    case 'grammar-checker-complete':
+      return <GrammarCheckerCompleteClient />;
+    case 'grammar-checker-dg':
+      return <GrammarCheckerDgClient />;
+    case 'grammar-checker-easy':
+      return <GrammarCheckerEasyClient />;
+    case 'grammar-checker-enhanced':
+      return <GrammarCheckerEnhancedClient />;
+    case 'grammar-checker-expander':
+      return <GrammarCheckerExpanderClient />;
+    case 'grammar-checker-express':
+      return <GrammarCheckerExpressClient />;
+    case 'grammar-checker-final':
+      return <GrammarCheckerFinalClient />;
+    case 'grammar-checker-fresh':
+      return <GrammarCheckerFreshClient />;
+    case 'grammar-checker-full':
+      return <GrammarCheckerFullClient />;
+    case 'grammar-checker-instant':
+      return <GrammarCheckerInstantClient />;
+    case 'grammar-checker-lite':
+      return <GrammarCheckerLiteClient />;
+    case 'grammar-checker-new':
+      return <GrammarCheckerNewClient />;
+    case 'grammar-checker-prime':
+      return <GrammarCheckerPrimeClient />;
+    case 'grammar-checker-pro':
+      return <GrammarCheckerProClient />;
+    case 'grammar-checker-quick':
+      return <GrammarCheckerQuickClient />;
+    case 'grammar-checker-smart':
+      return <GrammarCheckerSmartClient />;
+    case 'grammar-checker-std':
+      return <GrammarCheckerStdClient />;
+    case 'grammar-checker-tool':
+      return <GrammarCheckerToolClient />;
+    case 'grammar-checker-toolblip':
+      return <GrammarCheckerToolblipClient />;
+    case 'grammar-checker-ultimate':
+      return <GrammarCheckerUltimateClient />;
+    case 'grammar-checker-ultra':
+      return <GrammarCheckerUltraClient />;
+    case 'grammar-checker-v2':
+      return <GrammarCheckerV2Client />;
+    case 'grammar-checker-v3':
+      return <GrammarCheckerV3Client />;
+    case 'grammar-checker-v4':
+      return <GrammarCheckerV4Client />;
+    case 'grammar-checker-v5':
+      return <GrammarCheckerV5Client />;
+    case 'grammar-checker-v6':
+      return <GrammarCheckerV6Client />;
+    case 'grammar-checker-web':
+      return <GrammarCheckerWebClient />;
+    case 'grammar-checker-x':
+      return <GrammarCheckerXClient />;
+    case 'grammar-checker-xl':
+      return <GrammarCheckerXlClient />;
+    case 'grammar-fix-tool':
+      return <GrammarFixToolClient />;
+    case 'grammar-fixer':
+      return <GrammarFixerClient />;
+    case 'grammar-score-checker':
+      return <GrammarScoreCheckerClient />;
+    case 'graphql-playground':
+      return <GraphqlPlaygroundClient />;
+    case 'hash-collision-finder':
+      return <HashCollisionFinderClient />;
+    case 'hash-diff-checker':
+      return <HashDiffCheckerClient />;
+    case 'heading-tag-analyzer':
+      return <HeadingTagAnalyzerClient />;
+    case 'headline-analyzer':
+      return <HeadlineAnalyzerClient />;
+    case 'heic-to-avif':
+      return <HeicToAvifClient />;
+    case 'heic-to-jpg':
+      return <HeicToJpgClient />;
+    case 'heic-to-png':
+      return <HeicToPngClient />;
+    case 'hex-color-picker':
+      return <HexColorPickerClient />;
+    case 'hex-rgb-hsl-color-picker':
+      return <HexRgbHslColorPickerClient />;
+    case 'hex-to-cmyk':
+      return <HexToCmykClient />;
+    case 'hex-to-decimal-converter':
+      return <HexToDecimalConverterClient />;
+    case 'hex-to-hsl':
+      return <HexToHslClient />;
+    case 'hex-to-hsv':
+      return <HexToHsvClient />;
+    case 'hex-to-named-color':
+      return <HexToNamedColorClient />;
+    case 'hex-to-rgb-express':
+      return <HexToRgbExpressClient />;
+    case 'hex-to-rgb-new':
+      return <HexToRgbNewClient />;
+    case 'hex-to-rgba':
+      return <HexToRgbaClient />;
+    case 'hmac-generator':
+      return <HmacGeneratorClient />;
+    case 'homoglyph-detector':
+      return <HomoglyphDetectorClient />;
+    case 'hreflang-tag-generator':
+      return <HreflangTagGeneratorClient />;
+    case 'hsl-to-hex':
+      return <HslToHexClient />;
+    case 'hsl-to-rgb-express':
+      return <HslToRgbExpressClient />;
+    case 'hsl-to-rgb-new':
+      return <HslToRgbNewClient />;
+    case 'hsv-to-hex':
+      return <HsvToHexClient />;
+    case 'html-attribute-encoder':
+      return <HtmlAttributeEncoderClient />;
+    case 'html-encoder-decoder':
+      return <HtmlEncoderDecoderClient />;
+    case 'html-entities-reference':
+      return <HtmlEntitiesReferenceClient />;
+    case 'html-live-preview':
+      return <HtmlLivePreviewClient />;
+    case 'html-markdown-express':
+      return <HtmlMarkdownExpressClient />;
+    case 'html-plaintext-express':
+      return <HtmlPlaintextExpressClient />;
+    case 'html-table-to-json':
+      return <HtmlTableToJsonClient />;
+    case 'html-to-jsx':
+      return <HtmlToJsxClient />;
+    case 'html-to-markdown-v2':
+      return <HtmlToMarkdownV2Client />;
+    case 'html-to-plain-text-tool':
+      return <HtmlToPlainTextToolClient />;
+    case 'html-to-plain-text-v2':
+      return <HtmlToPlainTextV2Client />;
+    case 'http-headers-2025':
+      return <HttpHeaders2025Client />;
+    case 'http-headers-analyzer':
+      return <HttpHeadersAnalyzerClient />;
+    case 'http-headers-browser':
+      return <HttpHeadersBrowserClient />;
+    case 'http-headers-check':
+      return <HttpHeadersCheckClient />;
+    case 'http-headers-checker':
+      return <HttpHeadersCheckerClient />;
+    case 'http-headers-dg':
+      return <HttpHeadersDgClient />;
+    case 'http-headers-easy':
+      return <HttpHeadersEasyClient />;
+    case 'http-headers-expander':
+      return <HttpHeadersExpanderClient />;
+    case 'http-headers-fresh':
+      return <HttpHeadersFreshClient />;
+    case 'http-headers-full':
+      return <HttpHeadersFullClient />;
+    case 'http-headers-inspector':
+      return <HttpHeadersInspectorClient />;
+    case 'http-headers-quick':
+      return <HttpHeadersQuickClient />;
+    case 'color-temperature-adjuster':
+      return <ColorTemperatureAdjusterClient />;
+    case 'collage-maker':
+      return <CollageMakerClient />;
+    case 'combine-images':
+      return <CombineImagesClient />;
+    case 'crop':
+      return <CropClient />;
+    case 'css-minifier':
+      return <CssMinifierClient />;
+    case 'currency-converter':
+      return <CurrencyConverterClient />;
+    case 'docker-command-generator':
+      return <DockerCommandGeneratorClient />;
+    case 'fake-address-generator':
+      return <FakeAddressGeneratorClient />;
+    case 'filler-word-counter':
+      return <FillerWordCounterClient />;
+    case 'flesch-kincaid-calculator':
+      return <FleschKincaidCalculatorClient />;
+    case 'gif-maker':
+      return <GifMakerClient />;
+    case 'grayscale':
+      return <GrayscaleClient />;
+    case 'homophone-checker':
+      return <HomophoneCheckerClient />;
+    case 'html-minifier':
+      return <HtmlMinifierClient />;
+    case 'http-status-checker':
+      return <HttpStatusCheckerClient />;
+    case 'image-background-remover':
+      return <ImageBackgroundRemoverClient />;
+    case 'image-border-adder':
+      return <ImageBorderAdderClient />;
+    case 'image-compressor':
+      return <ImageCompressorClient />;
+    case 'image-flip-tool':
+      return <ImageFlipToolClient />;
+    case 'image-optimizer':
+      return <ImageOptimizerClient />;
+    case 'image-rotate-tool':
+      return <ImageRotateToolClient />;
+    case 'image-shadow-generator':
+      return <ImageShadowGeneratorClient />;
+    case 'merge':
+      return <MergeClient />;
+    case 'meme-maker':
+      return <MemeMakerClient />;
+    case 'og-tag-debugger':
+      return <OgTagDebuggerClient />;
+    case 'open-graph-preview':
+      return <OpenGraphPreviewClient />;
+    case 'paragraph-counter':
+      return <ParagraphCounterClient />;
+    case 'paraphrasing':
+      return <ParaphrasingClient />;
+    case 'passive-voice-detector':
+      return <PassiveVoiceDetectorClient />;
+    case 'pixelate':
+      return <PixelateClient />;
+    case 'png-compressor':
+      return <PngCompressorClient />;
+    case 'qr-code-scanner':
+      return <QrCodeScannerClient />;
+    case 'readability-checker':
+      return <ReadabilityCheckerClient />;
+    case 'remove-bg':
+      return <RemoveBgClient />;
+    case 'robots-txt-editor':
+      return <RobotsTxtEditorClient />;
+    case 'sentence-counter':
+      return <SentenceCounterClient />;
+    case 'sentence-rewriter':
+      return <SentenceRewriterClient />;
+    case 'sharpen':
+      return <SharpenClient />;
+    case 'sitemap-analyzer':
+      return <SitemapAnalyzerClient />;
+    case 'sql-formatter':
+      return <SqlFormatterClient />;
+    case 'temperature-unit-converter':
+      return <TemperatureUnitConverterClient />;
+    case 'text-uniqueness-checker':
+      return <TextUniquenessCheckerClient />;
+    case 'tsv-to-json':
+      return <TsvToJsonClient />;
+    case 'url-redirect-checker':
+      return <UrlRedirectCheckerClient />;
+    case 'webp-converter':
+      return <WebpConverterClient />;
     default:
-      return <ComingSoon />;
+      return <ComingSoonUI tool={tool} />;
   }
+}
+
+// ─── Main component ─────────────────────────────────────────────────────────
+
+export default function ToolClient({ tool }: { tool: Tool }) {
+  return (
+    <div className="max-w-3xl mx-auto px-4 py-8">
+      {/* Breadcrumb */}
+      <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6">
+        <a href="/" className="hover:text-red-600 dark:hover:text-red-400 transition-colors">Home</a>
+        <span>/</span>
+        <a href="/tools" className="hover:text-red-600 dark:hover:text-red-400 transition-colors">Tools</a>
+        <span>/</span>
+        <a href={`/tools?category=${encodeURIComponent(tool.category)}`} className="hover:text-red-600 dark:hover:text-red-400 transition-colors">{tool.category}</a>
+        <span>/</span>
+        <span className="text-gray-900 dark:text-white">{tool.name}</span>
+      </nav>
+
+      {/* Header */}
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-3">
+          <span className="text-4xl">{tool.emoji}</span>
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">{tool.name}</h1>
+            <span className="inline-block mt-1 text-xs text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950 px-2.5 py-0.5 rounded-full font-medium">
+              {tool.category}
+            </span>
+          </div>
+        </div>
+        <p className="text-gray-500 dark:text-gray-400 leading-relaxed">{tool.description}</p>
+        <div className="mt-4">
+          <ShareButtons toolName={tool.name} toolSlug={tool.slug} />
+        </div>
+      </div>
+
+      {/* Tool UI */}
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
+        <ToolUI tool={tool} />
+      </div>
+    </div>
+  );
 }

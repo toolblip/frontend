@@ -2,75 +2,41 @@
 
 import { useState } from 'react';
 
-const LIMITS = [
-  { label: 'Tweet (X)', limit: 280 },
-  { label: 'LinkedIn', limit: 3000 },
-  { label: 'Meta Description', limit: 160 },
-  { label: 'Google Title', limit: 60 },
-];
-
 export default function CharacterCounterClient() {
-  const [text, setText] = useState('');
+  const [input, setInput] = useState('');
 
-  const counts = {
-    withSpaces: text.length,
-    noSpaces: text.replace(/\s/g, '').length,
-    words: text.trim() === '' ? 0 : text.trim().split(/\s+/).length,
+  const stats = () => {
+    const text = input;
+    return {
+      total: text.length,
+      noSpaces: text.replace(/\s/g, '').length,
+      noNewlines: text.replace(/\n/g, '').length,
+      letters: text.replace(/[^a-zA-Z]/g, '').length,
+      digits: text.replace(/[^0-9]/g, '').length,
+    };
   };
 
-  const copyText = () => navigator.clipboard.writeText(text);
+  const s = stats();
 
   return (
-    <div className="tb-v2-cc-root">
-      <textarea
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Type or paste your text here..."
-        className="tb-v2-wc-input"
-        aria-label="Text input"
-      />
-
-      <div className="tb-v2-wc-stats" aria-live="polite">
-        <div className="tb-v2-wc-stat">
-          <div className="tb-v2-wc-stat-num">{counts.withSpaces.toLocaleString()}</div>
-          <div className="tb-v2-wc-stat-lbl">Characters</div>
-        </div>
-        <div className="tb-v2-wc-stat">
-          <div className="tb-v2-wc-stat-num">{counts.noSpaces.toLocaleString()}</div>
-          <div className="tb-v2-wc-stat-lbl">No spaces</div>
-        </div>
-        <div className="tb-v2-wc-stat">
-          <div className="tb-v2-wc-stat-num">{counts.words.toLocaleString()}</div>
-          <div className="tb-v2-wc-stat-lbl">Words</div>
-        </div>
+    <div>
+      <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Text</span></div>
+      <textarea value={input} onChange={e => setInput(e.target.value)} placeholder="Enter text to count..." className="tb-v2-tool-textarea" />
+      <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">Character Count</span></div>
+      <div className="tb-v2-tool-output-body" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {[
+          { label: 'Total Characters', value: s.total },
+          { label: 'Without Spaces', value: s.noSpaces },
+          { label: 'Without Newlines', value: s.noNewlines },
+          { label: 'Letters Only', value: s.letters },
+          { label: 'Digits Only', value: s.digits },
+        ].map(row => (
+          <div key={row.label} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--tb-border)' }}>
+            <span style={{ color: 'var(--tb-text-secondary)', fontSize: 13 }}>{row.label}</span>
+            <span style={{ fontWeight: 600, fontFamily: 'var(--f-mono)' }}>{row.value}</span>
+          </div>
+        ))}
       </div>
-
-      <div className="tb-v2-cc-limits">
-        <div className="tb-v2-cc-limits-title">Platform Limits</div>
-        {LIMITS.map(({ label, limit }) => {
-          const over = counts.withSpaces > limit;
-          const near = counts.withSpaces > limit * 0.9 && !over;
-          const pct = Math.min(100, (counts.withSpaces / limit) * 100);
-          return (
-            <div key={label} className="tb-v2-cc-limit-row">
-              <span className="tb-v2-cc-limit-lbl">{label}</span>
-              <div className="tb-v2-cc-limit-bar">
-                <div
-                  className={`tb-v2-cc-limit-fill ${over ? 'over' : near ? 'near' : ''}`}
-                  style={{ width: `${pct}%` }}
-                />
-              </div>
-              <span className={`tb-v2-cc-limit-count ${over ? 'over' : near ? 'near' : ''}`}>
-                {counts.withSpaces}/{limit}
-              </span>
-            </div>
-          );
-        })}
-      </div>
-
-      <button onClick={copyText} className="tb-v2-wc-copy-btn">
-        Copy text
-      </button>
     </div>
   );
 }
