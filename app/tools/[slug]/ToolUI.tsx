@@ -932,7 +932,7 @@ function ComingSoonUI({ tool }: { tool: Tool }) {
 
 // ─── Tool routing ────────────────────────────────────────────────────────────
 
-function ToolUI({ tool }: { tool: Tool }) {
+export function ToolUI({ tool }: { tool: Tool }) {
 
   switch (tool.slug) {
     case 'word-counter':

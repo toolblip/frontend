@@ -1,7 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import type { Metadata } from 'next';
 import { tools } from '@/data/tools';
-import ToolUI from './ToolUI';
+import { ToolUI } from './ToolUI';
 import ShareButtons from '@/components/ShareButtons';
 
 interface PageProps {
