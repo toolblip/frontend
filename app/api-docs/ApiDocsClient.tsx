@@ -147,7 +147,7 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
     "email": "jane@example.com",
     "password": "secretpass123",
     "password_confirmation": "secretpass123"
-  }'`
+  }'`,
     response: `{
   "user": {
     "id": 42,
