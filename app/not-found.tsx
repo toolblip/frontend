@@ -2,18 +2,21 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: '404 — Page Not Found | Toolblip',
-  description: 'The page you\'re looking for doesn\'t exist. Head back to Toolblip\'s free online tools.',
+  title: "404 — Page Not Found | Toolblip",
+  description:
+    "The page you're looking for doesn't exist. Head back to Toolblip's free online tools.",
   openGraph: {
-    title: '404 — Page Not Found | Toolblip',
-    description: 'The page you\'re looking for doesn\'t exist. Head back to Toolblip\'s free online tools.',
-    url: 'https://toolblip.com',
-    siteName: 'Toolblip',
+    title: "404 — Page Not Found | Toolblip",
+    description:
+      "The page you're looking for doesn't exist. Head back to Toolblip's free online tools.",
+    url: "https://toolblip.com",
+    siteName: "Toolblip",
   },
   twitter: {
-    card: 'summary',
-    title: '404 — Page Not Found | Toolblip',
-    description: 'The page you\'re looking for doesn\'t exist. Head back to Toolblip\'s free online tools.',
+    card: "summary",
+    title: "404 — Page Not Found | Toolblip",
+    description:
+      "The page you're looking for doesn't exist. Head back to Toolblip's free online tools.",
   },
 };
 
@@ -31,7 +34,7 @@ export default function NotFound() {
           textAlign: "center",
         }}
       >
-        {/* Large 404 */}
+        {/* Large 404 with glow */}
         <div
           style={{
             fontFamily: "var(--f-display)",
@@ -42,6 +45,7 @@ export default function NotFound() {
             color: "var(--green)",
             marginBottom: "8px",
             userSelect: "none",
+            textShadow: "0 0 60px color-mix(in srgb, var(--green) 30%, transparent)",
           }}
         >
           404
@@ -89,11 +93,18 @@ export default function NotFound() {
               viewBox="0 0 24 24"
               aria-hidden="true"
             >
-              <path d="M3 12L12 3l9 9M5 10v9a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1v-9" />
+              <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
             Go home
           </Link>
           <Link href="/tools" className="tb-v2-btn">
+            <svg
+              className="tb-v2-ic"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path d="M4 6h16M4 10h16M4 14h16M4 18h16" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
             Browse tools
           </Link>
         </div>

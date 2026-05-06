@@ -7,18 +7,21 @@ import type { Metadata } from "next";
 // NOTE: metadata exports are inert in "use client" components.
 // The root layout's openGraph/twitter defaults apply instead.
 export const metadata: Metadata = {
-  title: 'Something Went Wrong | Toolblip',
-  description: 'An unexpected error occurred. Try refreshing the page or head back to Toolblip.',
+  title: "Something Went Wrong | Toolblip",
+  description:
+    "An unexpected error occurred. Try refreshing the page or head back to Toolblip.",
   openGraph: {
-    title: 'Something Went Wrong | Toolblip',
-    description: 'An unexpected error occurred. Try refreshing the page or head back to Toolblip.',
-    url: 'https://toolblip.com',
-    siteName: 'Toolblip',
+    title: "Something Went Wrong | Toolblip",
+    description:
+      "An unexpected error occurred. Try refreshing the page or head back to Toolblip.",
+    url: "https://toolblip.com",
+    siteName: "Toolblip",
   },
   twitter: {
-    card: 'summary',
-    title: 'Something Went Wrong | Toolblip',
-    description: 'An unexpected error occurred. Try refreshing or head back to Toolblip.',
+    card: "summary",
+    title: "Something Went Wrong | Toolblip",
+    description:
+      "An unexpected error occurred. Try refreshing or head back to Toolblip.",
   },
 };
 
@@ -107,10 +110,18 @@ export default function Error({
             justifyContent: "center",
           }}
         >
-          <button
-            onClick={reset}
-            className="tb-v2-btn"
-          >
+          <button onClick={reset} className="tb-v2-btn">
+            <svg
+              className="tb-v2-ic"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
             Try again
           </button>
           <Link href="/" className="tb-v2-btn tb-v2-btn-primary">
@@ -119,7 +130,7 @@ export default function Error({
               viewBox="0 0 24 24"
               aria-hidden="true"
             >
-              <path d="M3 12L12 3l9 9M5 10v9a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1v-9" />
+              <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
             Go home
           </Link>
