@@ -4,8 +4,22 @@ import { useEffect } from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
 
+// NOTE: metadata exports are inert in "use client" components.
+// The root layout's openGraph/twitter defaults apply instead.
 export const metadata: Metadata = {
-  title: "Something Went Wrong | Toolblip",
+  title: 'Something Went Wrong | Toolblip',
+  description: 'An unexpected error occurred. Try refreshing the page or head back to Toolblip.',
+  openGraph: {
+    title: 'Something Went Wrong | Toolblip',
+    description: 'An unexpected error occurred. Try refreshing the page or head back to Toolblip.',
+    url: 'https://toolblip.com',
+    siteName: 'Toolblip',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Something Went Wrong | Toolblip',
+    description: 'An unexpected error occurred. Try refreshing or head back to Toolblip.',
+  },
 };
 
 export default function Error({
