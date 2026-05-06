@@ -57,8 +57,11 @@ export default function WhyToolblip() {
               color: 'var(--fg-0)',
             }}
           >
-            Private. Fast. Free. Always.
+            Built different — by default
           </h2>
+          <p style={{ fontSize: 14, color: 'var(--fg-2)', marginTop: 8 }}>
+            Private by architecture, fast by design, free by choice.
+          </p>
         </div>
 
         <div

@@ -1,8 +1,10 @@
 {
   "pending": [],
-  "in_progress": [
-    "test topic a",
-    "test topic b"
-  ],
-  "done": []
+  "in_progress": [],
+  "done": [
+    {
+      "topic": "how to monitor API endpoint latency",
+      "completed_at": "2026-05-06T18:32:35Z"
+    }
+  ]
 }

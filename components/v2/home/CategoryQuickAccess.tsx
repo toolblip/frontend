@@ -42,7 +42,7 @@ export default function CategoryQuickAccess({ categories }: CategoryQuickAccessP
         <div style={{ textAlign: 'center', marginBottom: 14 }}>
           <div className="tb-v2-kicker">Browse by category</div>
           <h2 style={{ fontSize: 17, fontWeight: 700, margin: '4px 0 0', letterSpacing: '-0.3px' }}>
-            Find exactly what you need
+            Find the right tool, fast
           </h2>
         </div>
       </div>
