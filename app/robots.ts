@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 
-export default async function robots(): Promise<MetadataRoute.Robots> {
+export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: '*',
