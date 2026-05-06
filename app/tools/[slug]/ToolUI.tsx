@@ -650,6 +650,9 @@ import GraphqlPlaygroundClient from '@/components/tools/GraphqlPlaygroundClient'
 import HashCollisionFinderClient from '@/components/tools/HashCollisionFinderClient';
 import HashDiffCheckerClient from '@/components/tools/HashDiffCheckerClient';
 import HeadingTagAnalyzerClient from '@/components/tools/HeadingTagAnalyzerClient';
+import JpgToPngClient from '@/components/tools/JpgToPngClient';
+import SeoMetaTagAnalyzerClient from '@/components/tools/SeoMetaTagAnalyzerClient';
+import LoremIpsumGeneratorProClient from '@/components/tools/LoremIpsumGeneratorProClient';
 import HeadlineAnalyzerClient from '@/components/tools/HeadlineAnalyzerClient';
 import HeicToAvifClient from '@/components/tools/HeicToAvifClient';
 import HeicToJpgClient from '@/components/tools/HeicToJpgClient';
@@ -2555,7 +2558,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'png-to-webp':
       return <ImageFormatConverterClient />;
     case 'jpg-to-png':
-      return <ImageFormatConverterClient />;
+      return <JpgToPngClient />;
     case 'jpg-to-webp':
       return <ImageFormatConverterClient />;
     case 'webp-to-png':
@@ -3403,7 +3406,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'lorem-ipsum-full': return <LoremIpsumGeneratorClient />;
     case 'lorem-ipsum-gen': return <LoremIpsumGeneratorClient />;
     case 'lorem-ipsum-gen-tool': return <FaviconGenToolClient />;
-    case 'lorem-ipsum-generator-pro': return <LoremIpsumGeneratorClient />;
+    case 'lorem-ipsum-generator-pro': return <LoremIpsumGeneratorProClient />;
     case 'lorem-ipsum-generator-v3': return <LoremIpsumGeneratorClient />;
     case 'lorem-ipsum-generator-v4': return <LoremIpsumGeneratorClient />;
     case 'lorem-ipsum-generator-v5': return <LoremIpsumGeneratorClient />;
@@ -3687,7 +3690,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'secure-random-generator': return <RandomFractionGeneratorClient />;
     case 'sentence-lorem-ipsum': return <LoremIpsumGeneratorClient />;
     case 'seo-meta-generator': return <MetaTagGeneratorClient />;
-    case 'seo-meta-tag-analyzer': return <HeadingTagAnalyzerClient />;
+    case 'seo-meta-tag-analyzer': return <SeoMetaTagAnalyzerClient />;
     case 'seo-meta-tag-builder': return <MetaTagGeneratorClient />;
     case 'seo-meta-tag-creator': return <MetaTagGeneratorClient />;
     case 'seo-tag-analyzer': return <HeadingTagAnalyzerClient />;

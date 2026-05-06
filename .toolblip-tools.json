@@ -693,8 +693,8 @@
       "notes": ""
     },
     "jpg-to-png": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Fixed 2026-05-06: real functionality added, component wired"
     },
     "jpg-to-svg": {
       "status": "todo",
@@ -1141,8 +1141,8 @@
       "notes": ""
     },
     "lorem-ipsum-generator-pro": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Fixed 2026-05-06: real functionality added, component wired"
     },
     "lorem-ipsum-generator-v2": {
       "status": "todo",
@@ -2669,8 +2669,8 @@
       "notes": ""
     },
     "seo-meta-tag-analyzer": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Fixed 2026-05-06: real functionality added, component wired"
     },
     "seo-meta-tag-builder": {
       "status": "todo",
@@ -5302,5 +5302,58 @@
     "youtube-to-text",
     "youtube-transcript",
     "zip"
-  ]
+  ],
+  "Jpg To Png": {
+    "title": "JPG to PNG Converter",
+    "category": "Image",
+    "tags": [
+      "image",
+      "convert",
+      "jpg",
+      "png",
+      "photo"
+    ],
+    "icon": "image",
+    "url": "/tools/jpg-to-png"
+  },
+  "Seo Meta Tag Analyzer": {
+    "title": "SEO Meta Tag Analyzer",
+    "category": "SEO",
+    "tags": [
+      "seo",
+      "meta",
+      "tags",
+      "analyzer",
+      "web"
+    ],
+    "icon": "search",
+    "url": "/tools/seo-meta-tag-analyzer"
+  },
+  "Lorem Ipsum Generator": {
+    "title": "Lorem Ipsum Generator",
+    "category": "Text",
+    "tags": [
+      "lorem",
+      "ipsum",
+      "text",
+      "generator",
+      "placeholder"
+    ],
+    "icon": "type",
+    "url": "/tools/lorem-ipsum-generator"
+  },
+  "Lorem Ipsum Generator Pro": {
+    "title": "Lorem Ipsum Generator Pro",
+    "category": "Text",
+    "tags": [
+      "lorem",
+      "ipsum",
+      "text",
+      "generator",
+      "placeholder",
+      "pro"
+    ],
+    "icon": "type",
+    "url": "/tools/lorem-ipsum-generator-pro"
+  }
 }
