@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useEffect } from 'react';
 
 const SIZES = [
   { label: 'S', value: 128 },
@@ -10,48 +10,39 @@ const SIZES = [
 ];
 
 export default function QrCodeGeneratorClient() {
-  const [text, setText] = useState('');
+  const [text, setText] = useState('https://toolblip.com');
   const [size, setSize] = useState(256);
   const [imageUrl, setImageUrl] = useState('');
   const [error, setError] = useState('');
-  const [generating, setGenerating] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [loading, setLoading] = useState(false);
 
   function generate() {
     if (!text.trim()) {
       setError('Please enter a URL or text to encode.');
       setImageUrl('');
-      inputRef.current?.focus();
       return;
     }
     setError('');
-    setGenerating(true);
-    try {
-      // Use Google Charts API to generate QR code — reliable, no canvas needed
-      const encoded = encodeURIComponent(text);
-      const url = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encoded}&format=png&margin=2`;
+    setLoading(true);
+    setImageUrl('');
+    const encoded = encodeURIComponent(text);
+    const url = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encoded}&format=png&margin=2`;
+    const img = new window.Image();
+    img.onload = () => {
       setImageUrl(url);
-    } catch {
-      setError('Could not generate QR code. Please check your input.');
-      setImageUrl('');
-    } finally {
-      setGenerating(false);
-    }
+      setLoading(false);
+    };
+    img.onerror = () => {
+      setError('Could not generate QR code. Please try again.');
+      setLoading(false);
+    };
+    img.src = url;
   }
 
-  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      generate();
-    }
-  }
+  // Auto-generate on mount
+  useEffect(() => { generate(); }, []);
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setText(e.target.value);
-    if (error) setError('');
-  }
-
-  function downloadPng() {
+  function download() {
     if (!imageUrl) return;
     const a = document.createElement('a');
     a.href = imageUrl;
@@ -65,38 +56,25 @@ export default function QrCodeGeneratorClient() {
       <div className="tb-v2-qr-input-row">
         <div className="tb-v2-qr-input-wrap">
           <input
-            ref={inputRef}
             type="text"
             value={text}
-            onChange={handleChange}
-            onKeyDown={handleKeyDown}
+            onChange={e => { setText(e.target.value); if (error) setError(''); }}
+            onKeyDown={e => e.key === 'Enter' && generate()}
             placeholder="Enter URL, text, WiFi, email…"
             className={`tb-v2-qr-input ${error ? 'tb-v2-qr-input--err' : ''}`}
             aria-label="QR code content"
-            aria-describedby={error ? 'qr-error' : undefined}
           />
-          {error && (
-            <p className="tb-v2-qr-error" id="qr-error" role="alert">{error}</p>
-          )}
+          {error && <p className="tb-v2-qr-error" role="alert">{error}</p>}
         </div>
-        <button
-          type="button"
-          className="tb-v2-qr-gen-btn"
-          onClick={generate}
-          disabled={generating}
-        >
-          {generating ? (
-            <span className="tb-v2-qr-spinner" aria-hidden="true" />
-          ) : (
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <polygon points="5 3 19 12 5 21 5 3" />
-            </svg>
-          )}
+        <button type="button" className="tb-v2-qr-gen-btn" onClick={generate}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <polygon points="5 3 19 12 5 21 5 3" />
+          </svg>
           Generate
         </button>
       </div>
 
-      {/* Size + Download row */}
+      {/* Size + Download */}
       <div className="tb-v2-qr-controls">
         <div className="tb-v2-qr-size-group">
           <span className="tb-v2-qr-label">Size</span>
@@ -119,7 +97,7 @@ export default function QrCodeGeneratorClient() {
           <div className="tb-v2-qr-dl-group">
             <span className="tb-v2-qr-label">Download</span>
             <div className="tb-v2-qr-dl-btns">
-              <button type="button" className="tb-v2-qr-dl-btn" onClick={downloadPng}>
+              <button type="button" className="tb-v2-qr-dl-btn" onClick={download}>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                   <polyline points="7 10 12 15 17 10" />
@@ -133,7 +111,12 @@ export default function QrCodeGeneratorClient() {
       </div>
 
       {/* Preview */}
-      {imageUrl ? (
+      {loading ? (
+        <div className="tb-v2-qr-placeholder">
+          <div className="tb-v2-qr-spinner" aria-hidden="true" />
+          <p>Generating…</p>
+        </div>
+      ) : imageUrl ? (
         <div className="tb-v2-qr-preview">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={imageUrl} alt="Generated QR code" className="tb-v2-qr-img" />
