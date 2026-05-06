@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 export default function FaviconGeneratorClient() {
   const [emoji, setEmoji] = useState('🔧');
@@ -9,6 +9,12 @@ export default function FaviconGeneratorClient() {
   const [size, setSize] = useState(32);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [downloadReady, setDownloadReady] = useState(false);
+  const [hasGenerated, setHasGenerated] = useState(false);
+
+  // Generate on mount and whenever parameters change
+  useEffect(() => {
+    generate();
+  }, [emoji, fg, bg, size]);
 
   const generate = () => {
     const canvas = canvasRef.current;
@@ -32,6 +38,7 @@ export default function FaviconGeneratorClient() {
     ctx.fillText(emoji, size / 2, size / 2 + size * 0.02);
 
     setDownloadReady(true);
+    setHasGenerated(true);
   };
 
   const download = (format: 'png' | 'ico' | 'svg') => {
@@ -107,7 +114,7 @@ export default function FaviconGeneratorClient() {
       </button>
 
       <div className="flex items-center gap-6">
-        <canvas ref={canvasRef} className="rounded-lg" style={{ display: downloadReady ? 'block' : 'none' }} />
+        <canvas ref={canvasRef} className="rounded-lg" style={{ display: hasGenerated ? 'block' : 'none' }} />
         {downloadReady && (
           <div className="flex gap-2 flex-wrap">
             <button onClick={() => download('png')} className="px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">PNG</button>

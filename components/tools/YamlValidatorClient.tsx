@@ -116,13 +116,20 @@ export default function YamlValidatorClient() {
         value={input}
         onChange={(e) => {
           setInput(e.target.value);
-          validate(e.target.value);
         }}
         placeholder="Paste your YAML here..."
         className="tb-v2-tool-textarea"
         style={{ fontFamily: 'var(--f-mono)' }}
         aria-label="YAML input"
       />
+
+      <button
+        onClick={() => validate(input)}
+        className="tb-v2-btn-primary"
+        style={{ marginTop: 12 }}
+      >
+        Validate YAML
+      </button>
 
       {error && (
         <div className="tb-v2-tool-output-body" style={{ marginTop: 12 }}>
