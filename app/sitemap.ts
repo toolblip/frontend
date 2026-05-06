@@ -4,7 +4,7 @@ import { tools } from '@/src/data/tools';
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://toolblip.com';
 
-  const staticRoutes: MetadataRoute.Sitemap = [
+  const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
       lastModified: new Date(),
@@ -49,12 +49,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  const toolRoutes: MetadataRoute.Sitemap = tools.map((tool) => ({
+  const toolPages: MetadataRoute.Sitemap = tools.map((tool) => ({
     url: `${baseUrl}/tools/${tool.slug}`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.7,
   }));
 
-  return [...staticRoutes, ...toolRoutes];
+  return [...staticPages, ...toolPages];
 }
