@@ -42,7 +42,7 @@ export default function CategoryQuickAccess({ categories }: CategoryQuickAccessP
         <div style={{ textAlign: 'center', marginBottom: 14 }}>
           <div className="tb-v2-kicker">Browse by category</div>
           <h2 style={{ fontSize: 17, fontWeight: 700, margin: '4px 0 0', letterSpacing: '-0.3px' }}>
-            Find the right tool, fast
+            Find exactly what you need
           </h2>
         </div>
       </div>
@@ -112,6 +112,23 @@ export default function CategoryQuickAccess({ categories }: CategoryQuickAccessP
           background: var(--pill-border);
           color: white;
         }
+
+        .category-pill {
+          animation: pill-in 0.35s ease-out both;
+        }
+        @keyframes pill-in {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .category-pill:nth-child(2) { animation-delay: 0.04s; }
+        .category-pill:nth-child(3) { animation-delay: 0.08s; }
+        .category-pill:nth-child(4) { animation-delay: 0.12s; }
+        .category-pill:nth-child(5) { animation-delay: 0.16s; }
+        .category-pill:nth-child(6) { animation-delay: 0.20s; }
+        .category-pill:nth-child(7) { animation-delay: 0.24s; }
+        .category-pill:nth-child(8) { animation-delay: 0.28s; }
+        .category-pill:nth-child(9) { animation-delay: 0.32s; }
+        .category-pill:nth-child(10) { animation-delay: 0.36s; }
         [data-theme="dark"] .category-pill {
           box-shadow: 0 1px 4px rgba(0,0,0,0.25);
         }

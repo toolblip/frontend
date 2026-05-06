@@ -19,9 +19,14 @@ with open(QUEUE_FILE, 'r') as f:
 pending = q.get('pending', [])
 in_progress = q.get('in_progress', [])
 
+# done items are objects {'topic': ...}, pending/in_progress are strings
+def get_topic(item):
+    return item if isinstance(item, str) else item.get('topic', '')
+
 picked = []
 while len(picked) < count and pending:
-    picked.append(pending.pop(0))
+    item = pending.pop(0)
+    picked.append(get_topic(item))
 
 q['pending'] = pending
 q['in_progress'] = in_progress + picked

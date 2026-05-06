@@ -27,7 +27,7 @@ in_overnight_window() {
     utc_hour=$(date -u +%H)
     # 11PM Dhaka = 5PM UTC, 6AM Dhaka = 12AM UTC
     # Window: 17:00–23:59 UTC (11PM–5:59AM Dhaka)
-    [[ "$utc_hour" -ge 17 && "$utc_hour" -lt 6 ]]
+    [[ "$utc_hour" -ge 17 || "$utc_hour" -lt 6 ]]
 }
 
 check_window() {

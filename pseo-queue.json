@@ -1,21 +1,8 @@
 {
-  "pending": [
-    "how to monitor cron job failures in production",
-    "best uptime monitoring tools for startups",
-    "how to detect website downtime before users notice",
-    "cron job monitoring best practices",
-    "how to set up automated health checks for web apps",
-    "error tracking vs log monitoring what's the difference",
-    "how to monitor API endpoint latency",
-    "setting up alerts for server resource usage",
-    "how to monitor background job queue depths",
-    "automated incident response workflows",
-    "how to reduce alert fatigue in monitoring",
-    "monitoring tool integrations which ones matter",
-    "how to choose a monitoring tool for your stack",
-    "free vs paid monitoring services comparison",
-    "how to debug intermittent production errors"
+  "pending": [],
+  "in_progress": [
+    "test topic a",
+    "test topic b"
   ],
-  "in_progress": [],
   "done": []
 }

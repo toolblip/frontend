@@ -17,6 +17,7 @@ with open(QUEUE_FILE, 'r') as f:
 
 q['in_progress'] = [t for t in q.get('in_progress', []) if t != topic]
 q['done'] = q.get('done', [])
+q['done'] = [d for d in q['done'] if (d.get('topic') if isinstance(d, dict) else d) != topic]
 q['done'].insert(0, {'topic': topic, 'completed_at': datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')})
 
 with open(QUEUE_FILE, 'w') as f:
