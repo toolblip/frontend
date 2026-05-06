@@ -48,7 +48,7 @@ export default function LoremIpsumGeneratorClient() {
         </div>
         <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <input type="checkbox" checked={startLorem} onChange={e => setStartLorem(e.target.checked)} />
-          <span style={{ fontSize: 13 }}>Start with &quot;Lorem ipsum...&quot;</span>
+          <span style={{ fontSize: 13 }}>Start with "Lorem ipsum..."</span>
         </label>
       </div>
       <button onClick={generate} className="tb-v2-btn-primary" style={{ marginTop: 12 }}>Generate</button>
