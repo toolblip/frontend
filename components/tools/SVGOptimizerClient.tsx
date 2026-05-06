@@ -1,66 +1,60 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
-interface Props {
-  tool?: {
-    name: string;
-    slug: string;
-    description: string;
+export default function SvgOptimizerClient() {
+  const [file, setFile] = useState<File | null>(null);
+  const [preview, setPreview] = useState('');
+  const [result, setResult] = useState('');
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    setFile(f);
+    const reader = new FileReader();
+    reader.onload = ev => setPreview(ev.target?.result as string);
+    reader.readAsDataURL(f);
+    setResult('');
   };
-}
 
-export default function SVGOptimizerClient({ tool = { name: "", slug: "", description: "" } }: Props) {
-  const [input, setInput] = useState('');
-  const [output, setOutput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleProcess = async () => {
-    setIsLoading(true);
-    try {
-      // TODO: Implement SVGOptimizerClient logic
-      setOutput(`Processed: ${input}`);
-    } catch (error) {
-      setOutput(`Error: ${error}`);
-    }
-    setIsLoading(false);
+  const process = () => {
+    if (!file || !preview) return;
+    const img = new Image();
+    img.onload = () => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d')!;
+      ctx.drawImage(img, 0, 0);
+      setResult(canvas.toDataURL('image/png'));
+    };
+    img.src = preview;
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">{tool.name}</h1>
-        <p className="text-gray-600 dark:text-gray-400">{tool.description}</p>
-      </div>
-      
-      <div className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium mb-2">Input</label>
-          <textarea
-            className="w-full h-32 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700 font-mono text-sm"
-            placeholder="Enter your text..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
+    <div className="max-w-2xl mx-auto p-6 space-y-6">
+      <h1 className="text-2xl font-bold">SVG Optimizer</h1>
+      <label className="block w-full p-8 border-2 border-dashed rounded-xl cursor-pointer text-center hover:border-indigo-400 transition-colors">
+        <input type="file" accept="image/*" onChange={handleFile} className="hidden" />
+        <span className="text-gray-500">{file ? file.name : 'Click to upload an image'}</span>
+      </label>
+      {preview && <img src={preview} alt="Preview" className="max-h-64 mx-auto rounded-lg" />}
+      <canvas ref={canvasRef} className="hidden" />
+      <button
+        onClick={process}
+        disabled={!file}
+        className="px-6 py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 disabled:opacity-50"
+      >
+        Process
+      </button>
+      {result && (
+        <div className="space-y-2">
+          <img src={result} alt="Result" className="max-w-full rounded-lg" />
+          <a href={result} download="result.png" className="text-sm text-indigo-500 hover:text-indigo-600">Download Result</a>
         </div>
-        
-        <button
-          onClick={handleProcess}
-          disabled={isLoading}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
-        >
-          {isLoading ? 'Processing...' : 'Process'}
-        </button>
-        
-        {output && (
-          <div>
-            <label className="block text-sm font-medium mb-2">Output</label>
-            <pre className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700 font-mono text-sm whitespace-pre-wrap">
-              {output}
-            </pre>
-          </div>
-        )}
-      </div>
+      )}
     </div>
   );
 }

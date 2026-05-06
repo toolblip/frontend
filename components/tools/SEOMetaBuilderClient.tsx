@@ -1,41 +1,43 @@
-"use client";
+'use client';
+
 import { useState } from 'react';
 
-interface Props {
-  tool?: {
-    name: string;
-    description: string;
-  };
-}
+export default function SeoMetaBuilderClient() {
+  const [url, setUrl] = useState('');
+  const [result, setResult] = useState('');
 
-export default function SEOMetaBuilder({ tool = { name: "", description: "" } }: Props) {
-  const [input, setInput] = useState('');
-  const [output, setOutput] = useState('');
-
-  const process = () => {
-    setOutput('Processed: ' + input);
+  const generate = () => {
+    if (!url) return;
+    setResult('<!-- Meta tags for ' + url + ' -->');
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">{tool?.name ?? "SEOMetaBuilder"}</h1>
-      <p className="text-gray-600 mb-6">{tool?.description ?? 'Tool description'}</p>
-      <textarea
-        className="w-full p-3 border rounded-lg mb-4 font-mono text-sm"
-        rows={6}
-        value={input}
-        onChange={e => setInput(e.target.value)}
-        placeholder="Enter input..."
+    <div className="max-w-2xl mx-auto p-6 space-y-6">
+      <h1 className="text-2xl font-bold">Meta Tag Generator</h1>
+      <input
+        type="url"
+        value={url}
+        onChange={e => setUrl(e.target.value)}
+        className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700 font-mono text-sm"
+        placeholder="https://example.com"
       />
       <button
-        onClick={process}
-        className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700"
+        onClick={generate}
+        className="px-6 py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600"
       >
-        Process
+        Generate
       </button>
-      {output && (
-        <div className="mt-4 p-3 bg-gray-50 rounded-lg font-mono text-sm whitespace-pre-wrap">
-          {output}
+      {result && (
+        <div className="space-y-2">
+          <div className="flex justify-between text-sm text-gray-500">
+            <span>Generated Code</span>
+            <button onClick={() => navigator.clipboard.writeText(result)} className="text-indigo-500 hover:text-indigo-600">Copy</button>
+          </div>
+          <textarea
+            value={result}
+            readOnly
+            className="w-full h-40 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700 font-mono text-sm bg-gray-50 dark:bg-gray-900"
+          />
         </div>
       )}
     </div>
