@@ -31,13 +31,10 @@ in_overnight_window() {
 }
 
 check_window() {
-    echo "DEBUG check_window ENTRY" >> /tmp/pick-topics-debug.log
     if ! in_overnight_window; then
         echo "[$(date)] Outside overnight window. Exiting." >> "$LOGFILE"
-        echo "DEBUG check_window: outside window" >> /tmp/pick-topics-debug.log
         exit 0
     fi
-    echo "DEBUG check_window: passed" >> /tmp/pick-topics-debug.log
 }
 
 # ─── Lock ─────────────────────────────────────────────────────────────────────
@@ -65,10 +62,8 @@ log() {
 # ─── Queue Management ──────────────────────────────────────────────────────────
 # Move N topics from pending → in_progress in pseo-queue.json
 pick_topics() {
-    echo "DEBUG pick_topics ENTRY count=$1" >> /tmp/pick-topics-debug.log
     local count="${1:-3}"
-    python3 "$HOME/Work/toolblip/scripts/pick-topics.py" "$count"
-    echo "DEBUG pick_topics python done, exit=$?" >> /tmp/pick-topics-debug.log
+    cd "$(dirname "${BASH_SOURCE[0]}")" && python3 pick-topics.py "$count"
 }
 
 # Mark a topic as done (move from in_progress → done)
@@ -193,10 +188,6 @@ generate_one_post() {
         --max-turns 10 \
         > "$output" 2>&1
 
-    log "  Claude raw output: $(head -c 300 "$output" 2>/dev/null | tr '\n' ' ')"
-
-    rm -f "$prompt_file"
-
     # Parse Claude output with Python (avoids grep|sed|tr issues with paths containing /)
     local generated_file url title
     generated_file=$(python3 -c "
@@ -224,14 +215,11 @@ for line in content.split('\n'):
         break
 " 2>/dev/null)
 
-    local date_slug
-    date_slug=$(date '+%Y-%m-%d')
-    local slug
-    slug=$(echo "$best_kw" | sed 's/[^a-z0-9-]/ /g' | sed 's/  */-/g' | tr '[:upper:]' '[:lower:]' | sed 's/^-//' | sed 's/-$//' | cut -c1-60)
-
-    log "  DEBUG: generated_file=[$generated_file] exists=$([[ -f "$generated_file" ]] && echo YES || echo NO)"
-
     if [[ -n "$generated_file" && -f "$generated_file" ]]; then
+        local date_slug
+        date_slug=$(date '+%Y-%m-%d')
+        local slug
+        slug=$(echo "$best_kw" | sed 's/[^a-z0-9-]/ /g' | sed 's/  */-/g' | tr '[:upper:]' '[:lower:]' | sed 's/^-//' | sed 's/-$//' | cut -c1-60)
         echo "{\"file\": \"$generated_file\", \"url\": \"$url\", \"slug\": \"${date_slug}-${slug}\", \"topic\": \"$topic\", \"keyword\": \"$best_kw\"}" >> "$GENERATED_FILE"
         log "  Generated: $url"
         echo "$generated_file"
@@ -480,9 +468,7 @@ main() {
     local num_topics="${1:-3}"
     log "Picking $num_topics topics from queue..."
     local topics
-    echo "DEBUG before pick: HOME=$HOME" >> /tmp/pick-topics-debug.log
     topics=$(pick_topics "$num_topics")
-    echo "DEBUG after pick: topics=[$topics] len=${#topics} HOME=$HOME" >> /tmp/pick-topics-debug.log
 
     if [[ -z "$topics" ]]; then
         log "No topics in queue. Add topics to pseo-queue.json to run."
@@ -496,12 +482,9 @@ main() {
     # Write topics to temp file to avoid bash 3.2 read pipeline issues
     local topics_file="/tmp/topics-${$}.txt"
     echo "$topics" > "$topics_file"
-    echo "DEBUG: topics_file=$topics_file lines=$(wc -l < "$topics_file")" >> /tmp/loop-debug.log
 
     local topic_num=1
     while IFS= read -r topic; do
-        echo "DEBUG: inside while, topic=[$topic]" >> /tmp/loop-debug.log
-        echo "DEBUG: read topic=[$topic]" >> /tmp/loop-debug.log
         [[ -z "$topic" ]] && continue
         log "--- Topic $topic_num/$topic_count: $topic ---"
 

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Run claude -p with a prompt from a file, avoiding shell quoting issues.
 
-Uses subprocess with shell=False and passes the prompt as stdin to avoid
-ALL shell quoting issues with double quotes and special characters.
+Key insight: pass prompt as a DIRECT ARGUMENT (not stdin) with stdin=DEVNULL.
+This prevents claude from waiting for stdin when also receiving a prompt argument.
 """
 import subprocess
 import sys
@@ -19,19 +19,21 @@ claude_args = sys.argv[2:]
 with open(prompt_file) as f:
     prompt = f.read()
 
-# Build claude command
-cmd = ['claude', '-p'] + claude_args
+# Pass prompt as DIRECT ARGUMENT (not stdin) with stdin=DEVNULL
+# This prevents claude from reading stdin and getting confused
+cmd = ['claude', '-p', prompt] + claude_args
 
 proc = subprocess.Popen(
     cmd,
-    stdin=subprocess.PIPE,
+    stdin=subprocess.DEVNULL,
     stdout=subprocess.PIPE,
     stderr=subprocess.STDOUT,
     text=True,
     cwd='/Users/ray/Work/toolblip',
+    env=os.environ.copy()
 )
 try:
-    out, _ = proc.communicate(input=prompt, timeout=240)
+    out, _ = proc.communicate(timeout=240)
     sys.stdout.write(out)
     sys.stdout.flush()
 except subprocess.TimeoutExpired:

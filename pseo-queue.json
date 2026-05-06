@@ -1,10 +1,13 @@
 {
   "pending": [],
-  "in_progress": [],
+  "in_progress": [
+    "cron job monitoring best practices",
+    "error tracking vs log monitoring"
+  ],
   "done": [
     {
       "topic": "how to monitor API endpoint latency",
-      "completed_at": "2026-05-06T18:32:35Z"
+      "completed_at": "2026-05-06T19:11:34Z"
     }
   ]
 }
