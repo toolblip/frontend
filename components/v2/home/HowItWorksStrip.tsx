@@ -40,8 +40,8 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
                   <rect x="3" y="14" width="7" height="7" rx="1" /><rect x="14" y="14" width="7" height="7" rx="1" />
                 </svg>
               ),
-              color: 'var(--blue, #2563eb)',
-              bg: 'var(--blue-tint, #dbeafe)',
+              color: 'var(--blue)',
+              bg: 'var(--blue-tint)',
               title: 'Pick a tool',
               desc: `${toolCount} tools across ${categoryCount} categories — JSON, Base64, images, text and more.`,
             },
@@ -63,8 +63,8 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               ),
-              color: 'var(--purple-tint, #7c3aed)',
-              bg: 'var(--purple-tint, #ebe0ff)',
+              color: 'var(--purple)',
+              bg: 'var(--purple-tint)',
               title: 'Get your result',
               desc: 'Instant. Copy the result and move on — zero server round-trips.'
             },

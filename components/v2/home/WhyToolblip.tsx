@@ -7,12 +7,12 @@ const benefits = [
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
       </svg>
     ),
-    color: '#16a34a',
-    bg: '#dcfce7',
+    colorVar: 'var(--green)',
+    bgVar: 'var(--green-tint)',
     title: 'Private',
     tagline: 'Data never leaves your browser',
     desc: 'All processing happens locally in your tab. Your data never touches our servers — not even for a millisecond.',
-    glow: 'rgba(22, 163, 74, 0.12)',
+    glowVar: 'rgba(22, 163, 74, 0.12)',
   },
   {
     icon: (
@@ -20,12 +20,12 @@ const benefits = [
         <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
       </svg>
     ),
-    color: '#d97706',
-    bg: '#fef3c7',
+    colorVar: 'var(--amber, #d97706)',
+    bgVar: 'var(--amber-tint, #fef3c7)',
     title: 'Fast',
     tagline: 'Runs instantly in your tab',
     desc: 'No API calls, no spinners, no round-trips. Paste your data and get your result right there.',
-    glow: 'rgba(217, 119, 6, 0.12)',
+    glowVar: 'rgba(217, 119, 6, 0.12)',
   },
   {
     icon: (
@@ -33,12 +33,12 @@ const benefits = [
         <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
       </svg>
     ),
-    color: '#2563eb',
-    bg: '#dbeafe',
+    colorVar: 'var(--blue)',
+    bgVar: 'var(--blue-tint)',
     title: 'Free',
     tagline: 'No signup, no paywall',
     desc: 'Every tool, every feature, every export. Use it now, use it forever — no credit card needed.',
-    glow: 'rgba(37, 99, 235, 0.12)',
+    glowVar: 'rgba(37, 99, 235, 0.12)',
   },
 ];
 
@@ -95,7 +95,7 @@ export default function WhyToolblip() {
                   width: 100,
                   height: 100,
                   borderRadius: '50%',
-                  background: b.glow,
+                  background: b.glowVar,
                   filter: 'blur(24px)',
                   opacity: 0.6,
                   pointerEvents: 'none',
@@ -108,8 +108,8 @@ export default function WhyToolblip() {
                   width: 52,
                   height: 52,
                   borderRadius: 14,
-                  background: b.bg,
-                  color: b.color,
+                  background: b.bgVar,
+                  color: b.colorVar,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -140,7 +140,7 @@ export default function WhyToolblip() {
                   style={{
                     fontSize: 12,
                     fontWeight: 600,
-                    color: b.color,
+                    color: b.colorVar,
                     marginBottom: 8,
                     opacity: 0.85,
                   }}
