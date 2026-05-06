@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const LOREM = 'Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur Excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum';
 
@@ -15,7 +15,7 @@ export default function LoremIpsumGeneratorClient() {
   const [startLorem, setStartLorem] = useState(true);
   const [output, setOutput] = useState('');
 
-  const generate = () => {
+  function generate() {
     if (unit === 'words') {
       const w = getWords(count, 0);
       setOutput(startLorem ? w.charAt(0).toUpperCase() + w.slice(1) : w);
@@ -32,14 +32,34 @@ export default function LoremIpsumGeneratorClient() {
       }
       setOutput(text.trim());
     }
-  };
+  }
+
+  // Auto-generate on mount and when options change
+  useEffect(() => {
+    generate();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Re-generate when unit or count changes
+  useEffect(() => {
+    generate();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [unit, count]);
 
   return (
     <div>
       <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Options</span></div>
       <div className="tb-v2-tool-output-body" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
-          <input type="number" value={count} onChange={e => setCount(Math.max(1, parseInt(e.target.value) || 1))} className="tb-v2-tool-textarea" style={{ width: 64, minHeight: 32, resize: 'none', textAlign: 'center' }} min={1} max={100} />
+          <input
+            type="number"
+            value={count}
+            onChange={e => setCount(Math.max(1, parseInt(e.target.value) || 1))}
+            className="tb-v2-tool-textarea"
+            style={{ width: 64, minHeight: 32, resize: 'none', textAlign: 'center' }}
+            min={1}
+            max={100}
+          />
           <div className="tb-v2-mode-tabs" role="group">
             {(['words', 'sentences', 'paragraphs'] as const).map(u => (
               <button key={u} type="button" onClick={() => setUnit(u)} className={`tb-v2-mode-tab ${unit === u ? 'on' : ''}`}>{u}</button>
@@ -48,16 +68,16 @@ export default function LoremIpsumGeneratorClient() {
         </div>
         <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <input type="checkbox" checked={startLorem} onChange={e => setStartLorem(e.target.checked)} />
-          <span style={{ fontSize: 13 }}>Start with "Lorem ipsum..."</span>
+          <span style={{ fontSize: 13 }}>Start with &quot;Lorem ipsum...&quot;</span>
         </label>
       </div>
-      <button onClick={generate} className="tb-v2-btn-primary" style={{ marginTop: 12 }}>Generate</button>
+      <button onClick={generate} className="tb-v2-btn-primary" style={{ marginTop: 12 }}>Regenerate</button>
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">Output</span>
         {output && <button type="button" onClick={() => navigator.clipboard.writeText(output).catch(() => {})} className="tb-v2-copy-btn">Copy</button>}
       </div>
       <div className="tb-v2-tool-output-body">
-        <div style={{ fontFamily: 'var(--f-mono)', fontSize: 14, whiteSpace: 'pre-wrap', color: 'var(--tb-text-secondary)' }}>{output || '—'}</div>
+        <div style={{ fontFamily: 'var(--f-mono)', fontSize: 14, whiteSpace: 'pre-wrap', color: 'var(--tb-text-secondary)' }}>{output}</div>
       </div>
     </div>
   );
