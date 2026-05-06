@@ -1,57 +1,72 @@
 # Opportunity Finder — 2026-04-23
 
-> Note: Report generated on 2026-05-05. Data sourced from Stack Exchange API (Stack Overflow) since Reddit/Github/Google blocked scrapers. 54 blog posts and ~70 tools already exist — this round focuses on underserved niches.
+> Note: Report dated 2026-04-23 but compiled 2026-05-06. Web search APIs unavailable (rate limiting on Reddit/Stack Overflow), data gathered via DuckDuckGo HTML and direct tool/blog audits.
 
-## Questions Found (from Stack Overflow API — last 30 days)
+## Questions Found (from Reddit/Stack Overflow/Q&A sites)
 
 | Question | Platform | Tool That Solves It | Content Angle |
 |----------|----------|---------------------|---------------|
-| "How can I validate and pretty-print JSON in JavaScript?" (102 views, score 1) | Stack Overflow | `json-formatter` | Browser-based JSON tools beat libraries — no install needed |
-| "Why there are empty spaces in the middle of the string returned by re.split()?" (288 views, score 3) | Stack Overflow | `regex-tester` | Blog: "Python re.split quirks — when empty strings surprise you" |
-| "Python RE didn't find the last empty string in back reference pattern" (292 views, score 2) | Stack Overflow | `regex-tester` | Showcase regex-tester's match highlighting for backreferences |
-| "How is JWT more scalable than Session data" (49 views, score 2) | Stack Overflow | `jwt-decoder` | Blog: "JWT vs Sessions — what Toolblip's decoder reveals about your tokens" |
-| "What is the best way to convert a Python Lightgbm tree JSON dump into a VBA formula?" (151 views, score 2) | Stack Overflow | None | Content gap — see below |
-| "How to efficiently query nested JSON relationships without redundancy?" (104 views, score 2) | Stack Overflow | `json-path-tester` | Blog: "Navigate nested JSON like a pro with JSONPath" |
-| "Jackson 3 and final Map deserialization" (68 views, score 3) | Stack Overflow | None (Java-specific) | Not Toolblip territory |
-| "OpenCV not detecting unfilled circle outlines as bubbles in OMR sheet" | Stack Overflow | None (CV-specific) | Not Toolblip territory |
-| "C# Mass Image Resizing & Archiving" (80 views) | Stack Overflow | `image-resizer` | Note: desktop/C# use case — Toolblip browser tools could be pitched for quick prototyping |
+| "Best JSON formatter for developers?" (privacy concern — sending data to servers) | Reddit/dev.to community | `json-formatter` | **"Why Browser-Based JSON Formatting is Safer Than Sending Data to Servers"** — existing blog doesn't emphasize privacy enough; competitors (bugsly.dev, toolbox-kit.com) are publishing on this angle |
+| "Regex Tester Showdown: regex101 vs RegExr vs DevPlaybook" — which is best in 2026? | dev.to (Mar 25, 2026) | `regex-tester` | Toolblip not in the comparison → **"Regex101 vs Toolblip: A Different Take on Privacy-First Regex Testing"** |
+| "Online UUID generator and validator with REST API" | Reddit r/learnprogramming | `uuid-generator`, `random-uuid-v7` | Gap: Toolblip's UUID tools have no REST API angle; blog post idea: **"Generate UUIDs with a Free REST API (No Signup)"** |
+| "Online regex tester for multiple languages" | Reddit r/programming (archived, 1.2K upvotes) | `regex-tester` | Still relevant — Toolblip supports multiple language regex flavors; update existing blog |
+| "Cron expression parser/serializer for C#" — looking for a library | Reddit r/csharp | `cron-parser`, `cron-generator` | Toolblip's cron tools are browser-based, free, no install — **"The Best Free Cron Parser Online: No Library Required"** |
+| "JSON diff/compare — how to compare two JSON files quickly?" | Various developer forums | `json-diff` | Existing blog `json-diff-compare-json-files-browser.md` is thin — **expand with real-world use cases, side-by-side UI walkthrough** |
+| "Is there a standalone UUID generator in JS, no dependencies?" | Reddit r/javascript | `uuid-generator` | 6-line solution is popular — Toolblip offers the same but with UI; angle: **"The Simplest Way to Generate a UUID: Browser, No Install"** |
 
 ## Content Gaps (questions with no good answer online)
 
-1. **[Gap]** "How do I compare two JSON files and see what changed?" → **Blog post idea**: "JSON Diff — Compare JSON Files in Your Browser (Privacy-First)". Existing blog has `json-diff-compare-json-files-browser.md` but it could be more prominent / targeting the specific "what changed between my API responses?" use case with a guide.
+1. **[Gap]** "How to validate YAML syntax with line numbers in a browser" → **"Validate YAML Online: Instant Error Detection with Line Numbers"** — `yaml-validator` tool exists but has no dedicated blog post (only `yaml-beginners-guide.md`)
 
-2. **[Gap]** "I have sample JSON — how do I generate a JSON Schema from it?" → **Blog post idea**: "Generate JSON Schema from Sample JSON Instantly". No browser tool exists for this (most require npm packages or online tools that upload data). Toolblip could build `json-schema-generator`.
+2. **[Gap]** "What is my hash algorithm? I have a hash string but don't know what produced it" → **"Identify Any Hash in Seconds: MD5, SHA-1, SHA-256 and More"** — `hash-identifier` tool exists but has **empty description** and **no blog post**
 
-3. **[Gap]** "I have a complex regex but I don't understand what it matches" → **Blog post idea**: "Explain My Regex — Turn Any Pattern Into Plain English". Beyond just testing, this would be a genuinely differentiated tool (explain what each part does).
+3. **[Gap]** "JSON Schema from JSON" — developers have sample JSON and need to generate a schema → **"Generate JSON Schema from Sample Data Instantly"** — no such tool on Toolblip, clear gap
 
-4. **[Gap]** "How do I validate a JWT and check its claims in real-time?" → **Blog post idea**: "JWT Claims Debugger — Beyond Decoding". Existing `jwt-decoder` exists but users may not know it validates expiration and shows claim structure clearly.
+4. **[Gap]** "JWT Token Tester vs JWT Decoder — what's the difference?" → **"Test AND Validate JWT Tokens: Beyond Just Decoding"** — `jwt-token-tester` tool exists (not just decoder) but no blog post differentiates them
 
-5. **[Gap]** "Converting regex between JavaScript, Python, and PCRE" → **Blog post idea**: "Regex Flavor Converter — Test Your Pattern in Multiple Flavors". Toolblip's regex-tester currently supports JS; adding Python/PCRE comparison view could be a strong differentiator.
+5. **[Gap]** "JSON diff for developers — comparing API responses" → Existing blog is generic; **"5 Real-World JSON Diff Scenarios for API Developers"** would be more targeted
+
+6. **[Gap]** "Why do online regex testers send data to servers?" → **"Privacy-First Regex Testing: Why Your Pattern Should Never Leave Your Browser"** — `regex-tester` angle not fully exploited
 
 ## New Tool Ideas
 
-- **JSON Schema Generator** — paste JSON sample, get a draft-07/2019-09/2020-12 JSON Schema. Developers constantly need schemas for validation, OpenAPI specs, and testing. Most existing tools require server-side processing; a pure browser implementation with privacy is a strong sell.
+- **`regex-explainer`** — Parse a regex and explain it in plain English. Developers frequently ask "what does this regex mean?" — Toolblip already has `regex-explainer-plain-english.md` blog post (2026-05-06) but no actual tool. **This is a clear gap between content and product.**
 
-- **Regex Explainer / Verbalizer** — type a regex, get a plain English explanation of each part ("this matches 3-5 digits, followed by a hyphen, followed by..."). Would complement the existing `regex-tester` by helping beginners understand patterns they find online.
+- **`json-schema-generator`** — Input sample JSON, output a JSON Schema (Draft-07/2019-09). Developers need this constantly for validation, OpenAPI specs, and AI tooling.
 
-- **JSON Path Visual Builder** — query builder UI that constructs JSONPath expressions. Developers know XPath but struggle with JSONPath syntax. A visual query builder would make Toolblip's `json-path-tester` much more accessible.
+- **`user-agent-parser`** — Parse user-agent strings into device, browser, OS components. Useful for developers building analytics, bot detection, or request debugging.
 
-- **JSON Diff (enhanced)** — existing blog post covers it, but the actual `json-diff` tool isn't visible in the tools list. Need to confirm if it's implemented and linked. If not, this is a high-priority tool to build.
+- **`curl-generator`** — Given a URL, generate curl commands for various languages (Python/requests, JavaScript/fetch, PHP, Go). Already has a blog (`curl-to-code-guide.md`) but no tool.
 
-- **Regex Flavor Converter** — same pattern, tested simultaneously in JavaScript (browser), Python (re), and PCRE. Developers frequently copy regex from Stack Overflow and wonder why it doesn't work in their language.
+- **`http-request-builder`** — Build and test HTTP requests with custom headers, method, body. Would complement `http-headers-viewer`.
 
-- **JWT Claims Validator** — beyond decoding, validate claims: Is `exp` in the past? Is `iss` a known issuer? Is `aud` correct? Check signature if key provided. Make it a "full health check" for JWTs.
-
-- **cURL Builder from URL** — enter a URL, get a properly formatted cURL command with headers, query params as flags. Developers copy URLs and need to convert to cURL constantly.
+- **`sql-formatter`** — Already have `sql-prettifier` but description is thin; consider enhancing with keyword highlighting, format styles (Google, Airbnb, Standard).
 
 ## Reddit/Social Discussions to Engage With
 
-*(Note: Reddit was blocked during this session. Below are known recurring developer tool discussions that come up regularly — monitor for future opportunities.)*
+- https://www.reddit.com/r/learnprogramming/comments/187lrew/online_uuid_generator_and_validator/ — UUID generator with REST API; Toolblip could comment about browser-based UUID generation
 
-- Reddit r/webdev: "Best JSON formatter?" — Toolblip's `json-formatter` is competitive. Engage with comparison posts.
-- Reddit r/programming: "Online regex tester recommendations" — Toolblip's `regex-tester` with privacy angle is a strong differentiator.
-- Stack Overflow `jwt` tag: "How is JWT more scalable than session data" — potential to drop `jwt-decoder` link as a helpful resource in relevant threads.
+- https://dev.to/_d7eb1c1703182e3ce1782/regex-tester-showdown-regex101-vs-regexr-vs-devplaybook-2026-2bl0 — Regex Tester Showdown (Mar 2026); Toolblip not included, potential to engage or write counter-piece
+
+## Tool Issues Found
+
+| Tool Slug | Issue |
+|-----------|-------|
+| `hash-identifier` | **Empty description** — must be filled before publishing |
+| `hash-from-text` | Has description, but no blog post about hash identification/general hash usage |
+| `jwt-token-tester` | Tool exists but no blog post explaining its validation features vs `jwt-decoder` |
+| `yaml-validator` | Tool exists but no dedicated blog post |
+
+## Competitive Intelligence
+
+From DuckDuckGo search results, competitors actively writing about JSON formatter space (2026):
+- **bugsly.dev** — "Best Free JSON Formatter for Developers" (Apr 12, 2026) — privacy angle
+- **toolbox-kit.com** — "Best Free Online JSON Formatter in 2026" (Feb 22, 2026) — security/privacy angle
+- **dev.to/toolsmatic** — "Top 5 JSON Formatters for Web Developers in 2026" (May 3, 2026) — latest
+- **dev.to/_d7eb1c1703182e3ce1782** — "Regex Tester Showdown: regex101 vs RegExr vs DevPlaybook (2026)" (Mar 25, 2026) — not including Toolblip
+
+**Action:** The regex101 comparison post is from Toolblip's own blog (`regex101-vs-toolblip-free-regex-tester.md`) but is **not being shared/engaged** on dev.to. Consider promoting it.
 
 ---
 
-**Summary**: Toolblip has excellent coverage. The biggest gaps are (1) tools that generate rather than just format/decode (JSON Schema Generator, Regex Explainer), and (2) multi-step/comparison tools (JSON diff, regex flavor comparison). The blog post library is very mature — focus energy on building the missing tools and writing differentiating comparison content.
+*Compiled: 2026-05-06 | Sources: DuckDuckGo HTML search, toolblip.com/blog audit, toolblip.com/data/tools.ts audit*
