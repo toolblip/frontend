@@ -456,6 +456,288 @@ $related
     done <<< "$recent_posts"
 }
 
+# ─── Step 7: Self-Improvement Loop ───────────────────────────────────────────
+# Pulls 30-day GSC data, identifies winning/failing patterns, adapts strategy.
+step_self_improve() {
+    log "STEP 7: Self-Improvement Analysis"
+
+    local insights_file="/tmp/seo-insights.json"
+
+    # Pull GSC blog performance data from past 30 days
+    local gsc_data
+    gsc_data=$(cd "$HOME/Work/toolblip" && python3 -c "
+import json, os, sys
+sys.path.insert(0, 'scripts')
+for line in open('.env'):
+    if line.startswith('GSC_SERVICE_ACCOUNT='):
+        val = line.split('=', 1)[1].strip()
+        os.environ['GSC_SERVICE_ACCOUNT'] = val
+
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+from datetime import datetime, timezone
+
+info = json.loads(os.environ['GSC_SERVICE_ACCOUNT'])
+creds = service_account.Credentials.from_service_account_info(info, scopes=['https://www.googleapis.com/auth/webmasters'])
+gsc = build('searchconsole', 'v1', credentials=creds)
+
+now = datetime.now(timezone.utc)
+start = (now - __import__('datetime').timedelta(days=30)).strftime('%Y-%m-%d')
+end = now.strftime('%Y-%m-%d')
+
+try:
+    result = gsc.searchanalytics().query(
+        siteUrl='https://toolblip.com/',
+        body={
+            'startDate': start,
+            'endDate': end,
+            'dimensions': ['page', 'query'],
+            'rowCount': 500,
+            'aggregationType': 'byPage'
+        }
+    ).execute()
+    rows = result.get('rows', [])
+    blog_rows = [r for r in rows if '/blog/' in r['keys'][0]]
+    print(json.dumps(blog_rows))
+except Exception as e:
+    print('ERROR:' + str(e))
+" 2>&1 | grep -v FutureWarning | grep -v "warnings.warn" | grep -v "^$" || echo "[]")
+
+    if [[ "$gsc_data" == "[]" || -z "$gsc_data" || "$gsc_data" == *"ERROR"* ]]; then
+        log "No GSC blog data yet — self-improvement skipped (expected on first runs)"
+        return
+    fi
+
+    local page_count
+    page_count=$(echo "$gsc_data" | python3 -c "import sys,json; d=json.load(sys.stdin); print(len(d))" 2>/dev/null || echo "0")
+    log "Analyzing $page_count blog pages from GSC (30-day window)..."
+
+    # Build performance insights
+    local insights
+    insights=$(echo "$gsc_data" | python3 -c "
+import json, sys
+
+data = json.load(sys.stdin)
+if not data:
+    print('{}')
+    sys.exit(0)
+
+high_ctr = []
+mid_ctr = []
+low_ctr = []
+
+for row in data:
+    page = row['keys'][0]
+    query = row['keys'][1]
+    clicks = row.get('clicks', 0)
+    impressions = row.get('impressions', 0)
+    position = row.get('position', 999)
+    ctr = round(clicks / impressions * 100, 2) if impressions > 0 else 0
+    entry = {'page': page, 'query': query, 'clicks': clicks, 'impressions': impressions, 'position': position, 'ctr': ctr}
+
+    if impressions == 0:
+        continue
+    if ctr > 5:
+        high_ctr.append(entry)
+    elif ctr >= 1:
+        mid_ctr.append(entry)
+    else:
+        low_ctr.append(entry)
+
+avg_ctr = round(sum(r.get('clicks',0)/r.get('impressions',1)*100 for r in data if r.get('impressions',0)>0) / max(len(data), 1), 2)
+
+insights = {
+    'total_pages': len(data),
+    'pages_with_clicks': sum(1 for r in data if r.get('clicks', 0) > 0),
+    'avg_ctr': avg_ctr,
+    'top_pages': sorted(data, key=lambda x: x.get('clicks', 0), reverse=True)[:5],
+    'high_ctr_pages': high_ctr[:5],
+    'low_ctr_pages': sorted(low_ctr, key=lambda x: x['impressions'], reverse=True)[:5],
+    'high_ranking_pages': [r for r in data if r.get('position', 999) <= 10][:5],
+    'winning_queries': list(set([r['query'] for r in high_ctr])),
+    'failing_queries': list(set([r['query'] for r in sorted(low_ctr, key=lambda x: x['impressions'], reverse=True)])),
+    'total_clicks': sum(r.get('clicks',0) for r in data),
+    'total_impressions': sum(r.get('impressions',0) for r in data)
+}
+print(json.dumps(insights, indent=2))
+" 2>&1 || echo "{}")
+
+    if [[ -z "$insights" || "$insights" == "{}" ]]; then
+        log "Could not generate insights — skipping self-improvement"
+        return
+    fi
+
+    echo "$insights" > "$insights_file"
+
+    # Log key metrics
+    echo "$insights" | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+print(f\"  Total blog pages tracked: {d.get('total_pages', 0)}\")
+print(f\"  Pages with clicks: {d.get('pages_with_clicks', 0)}\")
+print(f\"  Average CTR: {d.get('avg_ctr', 0)}%\")
+print(f\"  Total clicks (30d): {d.get('total_clicks', 0)}\")
+print(f\"  Top winning queries: {d.get('winning_queries', [])[:3]}\")
+print(f\"  Failing queries to improve: {d.get('failing_queries', [])[:3]}\")
+" 2>/dev/null
+
+    # Apply learnings
+    apply_seo_learnings "$insights"
+
+    # If we have winning queries, expand coverage
+    local top_winning
+    top_winning=$(echo "$insights" | python3 -c "import sys,json; d=json.load(sys.stdin); w=d.get('winning_queries',[]); print(w[0] if w else '')" 2>/dev/null || echo "")
+
+    if [[ -n "$top_winning" ]]; then
+        log "Winning query detected: '$top_winning' — generating expansion content..."
+        generate_expansion_content "$top_winning" "$insights"
+    fi
+}
+
+# ─── Step 7b: Apply SEO learnings to future content strategy ──────────────────
+apply_seo_learnings() {
+    local insights="$1"
+
+    local winning_queries failing_queries avg_ctr total_clicks
+    winning_queries=$(echo "$insights" | python3 -c "import sys,json; d=json.load(sys.stdin); print(' | '.join(d.get('winning_queries',[])[:5]))" 2>/dev/null || echo "")
+    failing_queries=$(echo "$insights" | python3 -c "import sys,json; d=json.load(sys.stdin); print(' | '.join(d.get('failing_queries',[])[:5]))" 2>/dev/null || echo "")
+    avg_ctr=$(echo "$insights" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('avg_ctr','N/A'))" 2>/dev/null || echo "N/A")
+    total_clicks=$(echo "$insights" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('total_clicks','0'))" 2>/dev/null || echo "0")
+
+    # Write strategy file that the next content generation step will read
+    local strategy_file="$HOME/Work/toolblip/src/content/seo-strategy.md"
+    mkdir -p "$(dirname "$strategy_file")"
+
+    cat > "$strategy_file" << EOF
+# Toolblip SEO Strategy
+Auto-generated: $(date '+%Y-%m-%d %H:%M')
+
+## Current Performance (30-day window)
+- Blog pages tracked: see GSC
+- Average CTR: $avg_ctr%
+- Total clicks: $total_clicks
+
+## What is WORKING (write more of this):
+$winning_queries
+
+## What is NOT working (stop / fix):
+$failing_queries
+
+## Content rules for next run:
+1. Titles must match exact search intent — if CTR is high, title is aligned
+2. Use "how to", "vs", "best" prefixes for informational queries (higher CTR)
+3. FAQ sections capture People Also Ask — always include for how-to queries
+4. If impressions are high but clicks are zero: rewrite title (too generic) or description (no call-to-action)
+5. Internal links between blog posts boost crawlability and time-on-site
+EOF
+
+    log "SEO strategy updated: $strategy_file"
+}
+
+# ─── Step 7c: Expand content for winning queries ───────────────────────────────
+generate_expansion_content() {
+    local query="$1"
+    local insights="$2"
+
+    # Check if we already covered this query well (already have a high-CTR page)
+    local existing_pages
+    existing_pages=$(echo "$insights" | python3 -c "
+import sys, json
+d = json.load(sys.stdin)
+pages = [r for r in d.get('high_ctr_pages', []) if r['query'].lower() == '$query'.lower()]
+for p in pages:
+    print(f\"  - {p['page']} (CTR: {p['ctr']}%, pos: {p['position']})\")
+" 2>/dev/null || echo "")
+
+    if [[ -n "$existing_pages" ]]; then
+        log "Query '$query' already has high-CTR pages, skipping expansion:"
+        echo "$existing_pages"
+        return
+    fi
+
+    log "Generating expansion content for winning query: '$query'"
+
+    local strategy_file="$HOME/Work/toolblip/src/content/seo-strategy.md"
+    local strategy_ref=""
+    if [[ -f "$strategy_file" ]]; then
+        strategy_ref="Current SEO strategy:
+$(cat "$strategy_file")"
+    fi
+
+    local prompt="You are the Toolblip SEO writer.
+
+Generate ONE in-depth blog post targeting this query: '$query'
+
+This query is already generating impressions and rankings — create the definitive piece that captures more clicks.
+
+$strategy_ref
+
+Requirements:
+- 1500-2000 words
+- Include FAQ section (schema.org FAQPage markup) to capture People Also Ask
+- Use clear H2/H3 hierarchy
+- Include a comparison table if comparing tools/approaches
+- Add code examples or tool usage examples where relevant
+- End with a clear CTA linking to the relevant tool on toolblip.com
+- Internal links to other toolblip tools
+
+Format as markdown with frontmatter:
+---
+title: YOUR TITLE
+description: >-
+  155 char SEO description
+slug: url-slug
+date: $(date '+%Y-%m-%d')T00:00:00.000Z
+category: Developer Tools
+tags:
+  - Tag1
+  - Tag2
+author: Toolblip Team
+readingTime: X min
+featuredImage: https://api.radtx.com/gradient/6b7280-374151/1200/630
+---
+
+After saving, report:
+FILE: {full path}
+URL: https://toolblip.com/blog/{slug}
+TITLE: {title}
+QUERY_TARGETED: $query
+
+Project dir: $HOME/Work/toolblip
+Save to: $BLOG_DIR/{date}-{slug}.md"
+
+    local output
+    output=$(claude -p "$prompt" \
+        --model sonnet \
+        --maxTurns 15 \
+        2>&1 || echo "CLAUDE_FAILED")
+
+    if echo "$output" | grep -q "CLAUDE_FAILED\|Error"; then
+        log "Expansion content failed for: $query"
+        return
+    fi
+
+    local generated_file
+    generated_file=$(echo "$output" | grep "^FILE:" | head -1 | sed 's/FILE: //' || echo "")
+
+    if [[ -n "$generated_file" && -f "$generated_file" ]]; then
+        local slug
+        slug=$(basename "$generated_file" .md)
+        local url="https://toolblip.com/blog/$slug"
+        echo "{\"file\": \"$generated_file\", \"url\": \"$url\", \"slug\": \"$slug\", \"query\": \"$query\"}" >> /tmp/generated-posts.json
+        log "Expansion post generated: $url"
+
+        # Immediately submit to GSC
+        cd "$HOME/Work/toolblip"
+        python3 scripts/seo-content-generator.py submit "$url" >> "$LOGFILE" 2>&1
+        log "Expansion post submitted to GSC: $url"
+
+        # Also commit it
+        git add "$generated_file" 2>/dev/null || true
+        git commit -m "feat(seo): expansion content for '$query' - $(date '+%Y-%m-%d')" >> "$LOGFILE" 2>&1 || true
+    fi
+}
+
 # ─── Main ───────────────────────────────────────────────────────────────────
 main() {
     mkdir -p "$(dirname "$LOGFILE")"
@@ -484,6 +766,7 @@ main() {
     step_submit_gsc
     step_check_and_fix
     step_internal_linking
+    step_self_improve
 
     log "=== SEO Pipeline COMPLETED ==="
     echo "=== DONE at $(date) ===" >> "$LOGFILE"
