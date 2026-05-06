@@ -4,23 +4,32 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { tools } from '@/data/tools';
 
-// All unique categories present in tools data
-const CATEGORIES = ['All', 'Text', 'Encoding', 'Developer', 'Security', 'QR Codes', 'Design'] as const;
+// Task-specified categories + Encoding (present in data)
+const CATEGORIES = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS'] as const;
 type Category = (typeof CATEGORIES)[number];
 
-// Category accent colors matching globals.css
+// Category accent colors — Encoding maps to existing enc color
 const CAT_COLORS: Record<string, { bg: string; color: string }> = {
   Text:       { bg: 'var(--c-txt-bg)',  color: 'var(--c-txt)'  },
-  Encoding:   { bg: 'var(--c-enc-bg)', color: 'var(--c-enc)'  },
   Developer:  { bg: 'var(--c-dev-bg)', color: 'var(--c-dev)'  },
-  Security:   { bg: 'var(--c-util-bg)', color: 'var(--c-util)' },
-  'QR Codes': { bg: 'var(--c-net-bg)', color: 'var(--c-net)'  },
-  Design:     { bg: 'var(--c-col-bg)', color: 'var(--c-col)'  },
+  Encoder:    { bg: 'var(--c-enc-bg)', color: 'var(--c-enc)'  },
+  Image:      { bg: 'var(--c-col-bg)', color: 'var(--c-col)'  },
+  Conversion: { bg: 'var(--c-util-bg)', color: 'var(--c-util)' },
+  Math:       { bg: 'var(--c-util-bg)', color: 'var(--c-util)' },
+  CSS:        { bg: 'var(--c-dev-bg)',  color: 'var(--c-dev)'  },
 };
 
 function getCatStyle(cat: string) {
   return CAT_COLORS[cat] ?? { bg: 'var(--surface-2)', color: 'var(--fg-2)' };
 }
+
+// Map data categories to our filter categories
+const DATA_CATEGORY_MAP: Record<string, string> = {
+  Encoding:   'Encoder',
+  Security:   'Conversion',
+  'QR Codes': 'Conversion',
+  Design:     'Image',
+};
 
 export function DirectoryClient() {
   const [query, setQuery] = useState('');
@@ -29,19 +38,22 @@ export function DirectoryClient() {
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return tools.filter((t) => {
-      const matchesCat = activeCategory === 'All' || t.category === activeCategory;
-      if (!q) return matchesCat;
+      const filterCat = activeCategory === 'All'
+        ? true
+        : (DATA_CATEGORY_MAP[t.category] ?? t.category) === activeCategory;
+      if (!q) return filterCat;
       const matchesSearch =
         t.name.toLowerCase().includes(q) ||
         t.description.toLowerCase().includes(q);
-      return matchesCat && matchesSearch;
+      return filterCat && matchesSearch;
     });
   }, [query, activeCategory]);
 
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = { All: tools.length };
     for (const t of tools) {
-      counts[t.category] = (counts[t.category] ?? 0) + 1;
+      const cat = DATA_CATEGORY_MAP[t.category] ?? t.category;
+      counts[cat] = (counts[cat] ?? 0) + 1;
     }
     return counts;
   }, []);
@@ -229,7 +241,7 @@ export function DirectoryClient() {
                           color: catStyle.color,
                         }}
                       >
-                        {tool.category}
+                        {DATA_CATEGORY_MAP[tool.category] ?? tool.category}
                       </span>
                       <svg
                         className="tb-v2-dir-card-go"
