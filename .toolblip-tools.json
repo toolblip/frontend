@@ -313,8 +313,8 @@
       "notes": "Stub component created 2026-05-05"
     },
     "http-headers-2025": {
-      "status": "done",
-      "notes": "Stub component created 2026-05-05"
+      "status": "todo",
+      "notes": "Auto-fixed by tb: status corrected 2026-05-06"
     },
     "http-headers-analyzer": {
       "status": "done",
@@ -525,8 +525,8 @@
       "notes": ""
     },
     "image-alt-text-generator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "image-aspect-ratio-calculator": {
       "status": "todo",
@@ -633,20 +633,20 @@
       "notes": ""
     },
     "image-scale-calculator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "image-size-resizer": {
       "status": "todo",
       "notes": ""
     },
     "image-square-fit": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "image-to-base64": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "image-to-svg": {
       "status": "todo",
@@ -657,8 +657,8 @@
       "notes": ""
     },
     "instagram-caption-generator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "instagram-story-ideas": {
       "status": "todo",
@@ -681,8 +681,8 @@
       "notes": ""
     },
     "ipynb-formatter": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "jpg-to-avif": {
       "status": "todo",
@@ -721,8 +721,8 @@
       "notes": ""
     },
     "json-editor": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "json-escape-unescape": {
       "status": "todo",
@@ -801,8 +801,8 @@
       "notes": ""
     },
     "json-tree-view": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "json-xml-express": {
       "status": "todo",
@@ -813,16 +813,16 @@
       "notes": ""
     },
     "jsonpath-query-tester": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "jsonpath-query-tool": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "jupyter-cleaner": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "jwt-decode-tool": {
       "status": "todo",
@@ -981,16 +981,16 @@
       "notes": ""
     },
     "jwt-token-inspector": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "jwt-token-tester": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "jwt-tool": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "jwt-toolblip": {
       "status": "todo",
@@ -1001,28 +1001,28 @@
       "notes": ""
     },
     "keyword-difficulty-checker": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "keyword-difficulty-tool": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "keyword-extractor": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "keyword-generator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "keyword-generator-express": {
       "status": "todo",
       "notes": ""
     },
     "keyword-generator-v2": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "keyword-position-checker": {
       "status": "todo",
@@ -1053,12 +1053,12 @@
       "notes": ""
     },
     "list-difference-finder": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "listicle-writer": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "lorem-ipsum-adv": {
       "status": "todo",
@@ -1245,8 +1245,8 @@
       "notes": ""
     },
     "make-background-transparent": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "markdown-editor": {
       "status": "todo",
@@ -1393,8 +1393,8 @@
       "notes": ""
     },
     "meta-tag-generator-tool": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "meta-tag-generator-ultimate": {
       "status": "todo",
@@ -1441,8 +1441,8 @@
       "notes": ""
     },
     "meta-tags-tool": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "meta-toolblip": {
       "status": "todo",
@@ -1453,8 +1453,8 @@
       "notes": ""
     },
     "metric-imperial-converter": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "mime-types-reference": {
       "status": "todo",
@@ -1493,12 +1493,12 @@
       "notes": ""
     },
     "mock-port-check": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "mock-port-scanner": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "mock-port-scanner-full": {
       "status": "todo",
@@ -1545,12 +1545,12 @@
       "notes": ""
     },
     "mp4-to-mp3": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "mp4-to-ogg": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "mp4-to-wav": {
       "status": "todo",
@@ -1569,8 +1569,8 @@
       "notes": ""
     },
     "network-port-checker": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "network-port-scanner": {
       "status": "todo",
@@ -1745,12 +1745,12 @@
       "notes": ""
     },
     "page-speed-preview": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "page-title-checker": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "pagespeed-preview": {
       "status": "todo",
@@ -1761,8 +1761,8 @@
       "notes": ""
     },
     "paragraph-completer": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "paragraph-generator": {
       "status": "todo",
@@ -1773,8 +1773,8 @@
       "notes": ""
     },
     "paragraph-rewriter": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "paragraph-writer": {
       "status": "todo",
@@ -1793,32 +1793,32 @@
       "notes": ""
     },
     "photo-metadata-remover": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "photo-resize-tool": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "physics-constants-reference": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "ping-test-v2": {
       "status": "todo",
       "notes": ""
     },
     "pixel-density-calculator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "placeholder-image-generator": {
       "status": "todo",
       "notes": ""
     },
     "plagiarism-checker": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "plain-text-formatter": {
       "status": "todo",
@@ -1857,12 +1857,12 @@
       "notes": ""
     },
     "podcast-writer": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "poll-generator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "port-check-tool": {
       "status": "todo",
@@ -2025,36 +2025,36 @@
       "notes": ""
     },
     "post-generator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "post-ideas": {
       "status": "todo",
       "notes": ""
     },
     "post-rewriter": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "post-writer": {
       "status": "todo",
       "notes": ""
     },
     "press-release-generator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "pressure-converter": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "pressure-unit-converter": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "privacy-policy-generator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "profile-photo": {
       "status": "todo",
@@ -2085,28 +2085,28 @@
       "notes": ""
     },
     "punycode-encoder": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "purchase-agreement-generator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "qr-code": {
       "status": "todo",
       "notes": ""
     },
     "quote-of-the-day": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "random-choice-picker": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "random-choice-wheel": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "random-color-generator": {
       "status": "todo",
@@ -2157,8 +2157,8 @@
       "notes": ""
     },
     "readability-improver": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "readability-quick": {
       "status": "todo",
@@ -2301,8 +2301,8 @@
       "notes": ""
     },
     "reading-level-estimator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "reading-pace-calculator": {
       "status": "todo",
@@ -2329,16 +2329,16 @@
       "notes": ""
     },
     "regex-description-generator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "regex-escape": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "regex-explainer": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "regex-live-tester": {
       "status": "todo",
@@ -2357,16 +2357,16 @@
       "notes": ""
     },
     "regex-pattern-builder": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "regex-pattern-generator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "regex-pattern-generator-v2": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "regex-pattern-tester": {
       "status": "todo",
@@ -2513,8 +2513,8 @@
       "notes": ""
     },
     "regex-tool": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "regex-toolblip": {
       "status": "todo",
@@ -2525,8 +2525,8 @@
       "notes": ""
     },
     "remove-extra-spaces": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "remove-objects": {
       "status": "todo",
@@ -2537,28 +2537,28 @@
       "notes": ""
     },
     "remove-text-photo": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "remove-watermark": {
       "status": "todo",
       "notes": ""
     },
     "remove-watermark-photo": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "repair-defects": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "resize": {
       "status": "todo",
       "notes": ""
     },
     "response-header-analyzer": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "rgb-hsl-color-picker": {
       "status": "todo",
@@ -2629,16 +2629,16 @@
       "notes": ""
     },
     "scientific-notation-converter": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "screen-density-simulator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "screenshot-maker": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "scrypt-hash-generator": {
       "status": "todo",
@@ -2649,16 +2649,16 @@
       "notes": ""
     },
     "sentence-extractor": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "sentence-lorem-ipsum": {
       "status": "todo",
       "notes": ""
     },
     "sentiment-analyzer": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "seo-meta-builder": {
       "status": "todo",
@@ -2881,12 +2881,12 @@
       "notes": ""
     },
     "shell-command-reference": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "shorten-content": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "sign": {
       "status": "todo",
@@ -2905,8 +2905,8 @@
       "notes": ""
     },
     "sitemap-urls-extractor": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "sitemap-xml-validator": {
       "status": "todo",
@@ -2921,20 +2921,20 @@
       "notes": ""
     },
     "sleep-duration-calculator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "slideshow-generator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "slug-health-checker": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "slug-permalink-checker": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "smart-text-sorter": {
       "status": "todo",
@@ -2993,8 +2993,8 @@
       "notes": ""
     },
     "story-generator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "summarize-podcast": {
       "status": "todo",
@@ -3037,8 +3037,8 @@
       "notes": ""
     },
     "synonym-finder": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "table-to-markdown": {
       "status": "todo",
@@ -3057,12 +3057,12 @@
       "notes": ""
     },
     "text-complexity-analyzer": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "text-deduplicator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "text-diff-checker": {
       "status": "todo",
@@ -3081,28 +3081,28 @@
       "notes": ""
     },
     "text-highlighter": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "text-improver": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "text-line-deduplicator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "text-line-sorter": {
       "status": "todo",
       "notes": ""
     },
     "text-sentence-shuffler": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "text-sort-tool": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "text-sorter-2025": {
       "status": "todo",
@@ -3257,8 +3257,8 @@
       "notes": ""
     },
     "text-structure-validator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "text-to-handwriting": {
       "status": "todo",
@@ -3297,8 +3297,8 @@
       "notes": ""
     },
     "timestamp-diff-calculator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "tip-calculator": {
       "status": "todo",
@@ -3309,12 +3309,12 @@
       "notes": ""
     },
     "title-rewriter": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "token-builder": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "toml-to-json-v2": {
       "status": "todo",
@@ -3329,16 +3329,16 @@
       "notes": ""
     },
     "transcribe-podcast": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "translate": {
       "status": "todo",
       "notes": ""
     },
     "trivia-generator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "tsv-json-express": {
       "status": "todo",
@@ -3353,8 +3353,8 @@
       "notes": ""
     },
     "twitter-card-preview": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "ua-parser-express": {
       "status": "todo",
@@ -3369,12 +3369,12 @@
       "notes": ""
     },
     "unicode-escape-encoder": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "unit-conversion-tool": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "unit-convert-toolblip": {
       "status": "todo",
@@ -3577,8 +3577,8 @@
       "notes": ""
     },
     "vsd-to-docx": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "vsd-to-jpg": {
       "status": "todo",
@@ -3589,12 +3589,12 @@
       "notes": ""
     },
     "vsd-to-pptx": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "vsdx-to-docx": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "vsdx-to-jpg": {
       "status": "todo",
@@ -3605,8 +3605,8 @@
       "notes": ""
     },
     "vsdx-to-pptx": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "watermark": {
       "status": "todo",
@@ -3621,8 +3621,8 @@
       "notes": ""
     },
     "webhook-tester": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "webm-to-mov": {
       "status": "todo",
@@ -3665,8 +3665,8 @@
       "notes": ""
     },
     "what-if-scenario-calculator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "whois-lookup-v2": {
       "status": "todo",
@@ -3677,48 +3677,48 @@
       "notes": ""
     },
     "word-alphabetizer": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "word-cloud-generator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "word-combinations": {
       "status": "todo",
       "notes": ""
     },
     "word-combinations-generator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "word-complexity-analyzer": {
       "status": "todo",
       "notes": ""
     },
     "word-count-from-url": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "word-density-analyzer": {
       "status": "todo",
       "notes": ""
     },
     "word-finder": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "word-freq-express": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "word-frequency-table": {
       "status": "todo",
       "notes": ""
     },
     "word-scramble-generator": {
-      "status": "todo",
-      "notes": ""
+      "status": "done",
+      "notes": "Components built - auto-fixed by tb (2026-05-06)"
     },
     "xml-json-express": {
       "status": "todo",
@@ -4293,6 +4293,166 @@
     "hex-to-named-color",
     "hex-to-rgb-express",
     "hex-to-rgb-new",
-    "hex-to-rgba"
+    "hex-to-rgba",
+    "age-calculator",
+    "anagram-generator",
+    "backlink-checker",
+    "binary-to-decimal",
+    "binary-to-text",
+    "broken-link-checker",
+    "case-converter",
+    "character-counter",
+    "cidr-calculator",
+    "circle-crop",
+    "color-picker",
+    "contrast-checker",
+    "cors-header-generator",
+    "countdown-timer",
+    "credit-card-validator",
+    "cron-generator",
+    "cron-parser",
+    "css-border-radius-generator",
+    "css-class-generator",
+    "css-gradient-generator",
+    "css-validator",
+    "csv-to-json",
+    "curl-to-python",
+    "decimal-to-binary",
+    "decimal-to-hex",
+    "dns-lookup",
+    "duplicate-line-finder",
+    "email-generator",
+    "email-validator",
+    "emoji-finder",
+    "english-grammar-checker",
+    "fake-data-generator",
+    "fake-text-generator",
+    "favicon-generator",
+    "fraction-to-decimal",
+    "grammar-checker",
+    "hash-from-text",
+    "hash-identifier",
+    "hex-to-decimal",
+    "hex-to-rgb",
+    "hsl-to-rgb",
+    "htaccess-redirect-generator",
+    "html-encoder",
+    "html-entity-encoder",
+    "html-table-generator",
+    "html-to-markdown",
+    "html-to-plain-text",
+    "html-validator",
+    "http-headers-viewer",
+    "image-color-picker",
+    "image-cropper",
+    "image-format-converter",
+    "image-metadata-viewer",
+    "image-resizer",
+    "ip-range-calculator",
+    "ipv6-generator",
+    "js-minifier",
+    "json-formatter",
+    "json-ld-generator",
+    "json-path-tester",
+    "json-schema-validator",
+    "json-to-csv",
+    "json-to-markdown-table",
+    "json-to-python",
+    "json-to-typescript",
+    "json-to-xml",
+    "json-to-yaml",
+    "json-validator",
+    "jwt-decoder",
+    "keyword-density-checker",
+    "length-converter",
+    "line-counter",
+    "list-randomizer",
+    "lorem-ipsum-generator",
+    "mac-address-generator",
+    "markdown-to-html",
+    "markdown-to-pdf",
+    "meta-description-checker",
+    "meta-tag-generator",
+    "morse-code-translator",
+    "notebook-to-html",
+    "number-base-converter",
+    "number-to-words",
+    "octal-to-decimal",
+    "open-graph-generator",
+    "oxford-comma",
+    "palindrome-checker",
+    "password-generator",
+    "password-strength-checker",
+    "percentage-calculator",
+    "percentage-difference",
+    "ping-test",
+    "plain-text-counter",
+    "punctuation-fixer",
+    "qr-code-generator",
+    "random-fraction-generator",
+    "random-ip-address",
+    "random-number-generator",
+    "random-paragraph-generator",
+    "random-sentence-generator",
+    "random-string-generator",
+    "random-uuid-v7",
+    "readability-score",
+    "reading-time-calculator",
+    "regex-tester",
+    "remove-duplicate-lines",
+    "rgb-to-hex",
+    "robots-txt-generator",
+    "roman-numeral-converter",
+    "rot13-cipher",
+    "rot47-cipher",
+    "sass-to-css",
+    "screen-resolution-tester",
+    "security-headers-generator",
+    "semver-checker",
+    "serp-preview",
+    "slug-generator",
+    "sql-prettifier",
+    "sql-to-json",
+    "square-crop",
+    "ssl-certificate-checker",
+    "sticky-notes",
+    "syllable-counter",
+    "temperature-converter",
+    "text-diff",
+    "text-permutation-generator",
+    "text-redundancy-checker",
+    "text-reverser",
+    "text-sorter",
+    "text-statistics",
+    "text-to-slug",
+    "text-to-speech",
+    "time-zone-converter",
+    "timestamp-converter",
+    "toml-to-json",
+    "tsv-to-csv",
+    "typo-checker",
+    "unicode-character-inspector",
+    "unit-converter",
+    "unix-timestamp-converter",
+    "uptime-calculator",
+    "url-encode",
+    "url-parameter-extractor",
+    "url-parser",
+    "url-slug-generator",
+    "user-agent-parser",
+    "uuid-generator",
+    "uuid-validator",
+    "weight-converter",
+    "whois-lookup",
+    "word-association",
+    "word-counter",
+    "word-frequency-analyzer",
+    "word-frequency-counter",
+    "xml-formatter",
+    "xml-sitemap-generator",
+    "xml-to-json",
+    "xml-validator",
+    "yaml-to-json",
+    "yaml-validator"
   ]
 }
