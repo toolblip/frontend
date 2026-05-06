@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-05T21:01:17.898Z",
+  "updatedAt": "2026-05-06T21:04:44.930Z",
   "entries": {
     "memory:memory/2026-04-29.md:4:7": {
       "key": "memory:memory/2026-04-29.md:4:7",
@@ -10,12 +10,12 @@
       "source": "memory",
       "snippet": "Railway Deployment Issue (UNRESOLVED): **Problem**: toolblip-frontend on Railway is serving old build with 404 CSS; **Root cause**: Railway is using pre-built Docker image, NOT building from GitHub source; **Evidence**: Deployment logs show \"Starting Container\" with no build step",
       "recallCount": 0,
-      "dailyCount": 6,
+      "dailyCount": 7,
       "groundedCount": 0,
-      "totalScore": 3.72,
+      "totalScore": 4.34,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-05-05T21:00:44.340Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
       "queryHashes": [
         "312dd0eab707"
       ],
@@ -27,7 +27,8 @@
         "2026-05-02",
         "2026-05-04",
         "2026-05-05",
-        "2026-05-06"
+        "2026-05-06",
+        "2026-05-07"
       ],
       "conceptTags": [
         "toolblip-frontend",
@@ -48,12 +49,12 @@
       "source": "memory",
       "snippet": "Railway Deployment Issue (UNRESOLVED): **Also**: Check if GitHub repo reconnection needed (repo may have moved to toolblip/frontend)",
       "recallCount": 0,
-      "dailyCount": 6,
+      "dailyCount": 7,
       "groundedCount": 0,
-      "totalScore": 3.72,
+      "totalScore": 4.34,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-05-05T21:00:44.340Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
       "queryHashes": [
         "312dd0eab707"
       ],
@@ -65,7 +66,8 @@
         "2026-05-02",
         "2026-05-04",
         "2026-05-05",
-        "2026-05-06"
+        "2026-05-06",
+        "2026-05-07"
       ],
       "conceptTags": [
         "toolblip/frontend",
@@ -86,12 +88,12 @@
       "source": "memory",
       "snippet": "GitHub Push Working: Pushed `railway.toml` and tsconfig.json fix to GitHub; Railway is NOT rebuilding from these pushes - confirmed by stale CSS hashes",
       "recallCount": 0,
-      "dailyCount": 6,
+      "dailyCount": 7,
       "groundedCount": 0,
-      "totalScore": 3.72,
+      "totalScore": 4.34,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-05-05T21:00:44.340Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
       "queryHashes": [
         "312dd0eab707"
       ],
@@ -103,7 +105,8 @@
         "2026-05-02",
         "2026-05-04",
         "2026-05-05",
-        "2026-05-06"
+        "2026-05-06",
+        "2026-05-07"
       ],
       "conceptTags": [
         "railway.toml",
@@ -124,12 +127,12 @@
       "source": "memory",
       "snippet": "MCP Folder Issue (Fixed): The `mcp/` folder was causing TypeScript build errors; Added `mcp` to `tsconfig.json` exclude list",
       "recallCount": 0,
-      "dailyCount": 6,
+      "dailyCount": 7,
       "groundedCount": 0,
-      "totalScore": 3.72,
+      "totalScore": 4.34,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-05-05T21:00:44.340Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
       "queryHashes": [
         "312dd0eab707"
       ],
@@ -141,7 +144,8 @@
         "2026-05-02",
         "2026-05-04",
         "2026-05-05",
-        "2026-05-06"
+        "2026-05-06",
+        "2026-05-07"
       ],
       "conceptTags": [
         "tsconfig.json",
@@ -162,12 +166,12 @@
       "source": "memory",
       "snippet": "Railway Cleanup Needed: 3 unused PostgreSQL instances on Railway: `Postgres-XDi-`, `Postgres-QAgG`, `Postgres`; These are garbage from testing - Neon is being used for Postgres; Can be deleted to save resources",
       "recallCount": 0,
-      "dailyCount": 6,
+      "dailyCount": 7,
       "groundedCount": 0,
-      "totalScore": 3.72,
+      "totalScore": 4.34,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-05-05T21:00:44.340Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
       "queryHashes": [
         "312dd0eab707"
       ],
@@ -179,7 +183,8 @@
         "2026-05-02",
         "2026-05-04",
         "2026-05-05",
-        "2026-05-06"
+        "2026-05-06",
+        "2026-05-07"
       ],
       "conceptTags": [
         "postgres-xdi",
@@ -200,12 +205,12 @@
       "source": "memory",
       "snippet": "Keys/Tokens: Railway token: `[COMMITTED - REVOKED]`; Neon PostgreSQL: `[COMMITTED - REVOKED]`; Superadmin: `info@toolblip.com` / `[COMMITTED - REVOKED]`",
       "recallCount": 0,
-      "dailyCount": 6,
+      "dailyCount": 7,
       "groundedCount": 0,
-      "totalScore": 3.72,
+      "totalScore": 4.34,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-29T21:00:52.096Z",
-      "lastRecalledAt": "2026-05-05T21:00:44.340Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
       "queryHashes": [
         "312dd0eab707"
       ],
@@ -217,7 +222,8 @@
         "2026-05-02",
         "2026-05-04",
         "2026-05-05",
-        "2026-05-06"
+        "2026-05-06",
+        "2026-05-07"
       ],
       "conceptTags": [
         "keys/tokens",
@@ -15656,12 +15662,12 @@
       "source": "memory",
       "snippet": "SEO Files Already Done: app/sitemap.ts and app/robots.ts were already present (created in prior session); sitemap includes all required routes + tool slugs; robots.txt allows all crawlers and points to sitemap.xml; No action needed — verified existing implementation is correct",
       "recallCount": 0,
-      "dailyCount": 4,
+      "dailyCount": 5,
       "groundedCount": 0,
-      "totalScore": 2.48,
+      "totalScore": 3.1,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-04-30T21:03:13.419Z",
-      "lastRecalledAt": "2026-05-05T21:00:44.340Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
       "queryHashes": [
         "e757f9360616"
       ],
@@ -15671,7 +15677,8 @@
         "2026-05-04",
         "2026-05-03",
         "2026-05-05",
-        "2026-05-06"
+        "2026-05-06",
+        "2026-05-07"
       ],
       "conceptTags": [
         "app/sitemap.ts",
@@ -17360,12 +17367,12 @@
       "source": "memory",
       "snippet": "Git History Cleanup — COMPLETED: Cleaned git history using `git filter-repo` replacing secrets with `[REDACTED]`; Force-pushed to GitHub (commit `a8882f5` → `2746332`); Backup at `/Users/ray/Work/toolblip-backup-*`",
       "recallCount": 0,
-      "dailyCount": 3,
+      "dailyCount": 4,
       "groundedCount": 0,
-      "totalScore": 1.8599999999999999,
+      "totalScore": 2.48,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-01T21:01:07.176Z",
-      "lastRecalledAt": "2026-05-05T21:00:44.340Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
       "queryHashes": [
         "f16f2797a8f9"
       ],
@@ -17374,7 +17381,8 @@
         "2026-05-01",
         "2026-05-05",
         "2026-05-04",
-        "2026-05-06"
+        "2026-05-06",
+        "2026-05-07"
       ],
       "conceptTags": [
         "backup",
@@ -17395,12 +17403,12 @@
       "source": "memory",
       "snippet": "Neon PostgreSQL Password Rotation — COMPLETED: Old exposed password: `[REDACTED]` (from Apr 29 commit bda263b5); New password: `[REDACTED]` (rotated via browser automation); API key generated: `[REDACTED]`; Updated `.env` files:",
       "recallCount": 0,
-      "dailyCount": 3,
+      "dailyCount": 4,
       "groundedCount": 0,
-      "totalScore": 1.8599999999999999,
+      "totalScore": 2.48,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-01T21:01:07.176Z",
-      "lastRecalledAt": "2026-05-05T21:00:44.340Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
       "queryHashes": [
         "f16f2797a8f9"
       ],
@@ -17409,7 +17417,8 @@
         "2026-05-01",
         "2026-05-05",
         "2026-05-04",
-        "2026-05-06"
+        "2026-05-06",
+        "2026-05-07"
       ],
       "conceptTags": [
         "neon",
@@ -17430,12 +17439,12 @@
       "source": "memory",
       "snippet": "Neon PostgreSQL Password Rotation — COMPLETED: `/Users/ray/Work/toolblip/.env`; `/Users/ray/Work/toolblip/api/.env`",
       "recallCount": 0,
-      "dailyCount": 3,
+      "dailyCount": 4,
       "groundedCount": 0,
-      "totalScore": 1.8599999999999999,
+      "totalScore": 2.48,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-01T21:01:07.176Z",
-      "lastRecalledAt": "2026-05-05T21:00:44.340Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
       "queryHashes": [
         "f16f2797a8f9"
       ],
@@ -17444,7 +17453,8 @@
         "2026-05-01",
         "2026-05-05",
         "2026-05-04",
-        "2026-05-06"
+        "2026-05-06",
+        "2026-05-07"
       ],
       "conceptTags": [
         "users/ray/work/toolblip",
@@ -17465,12 +17475,12 @@
       "source": "memory",
       "snippet": "Stripe Staging Mode Feature — COMPLETED (backend): `api/app/Helpers/StripeHelper.php` — picks test vs prod keys based on staging mode; `api/app/Http/Middleware/EnsureStripeStagingMode.php` — blocks non-admins when staging on; `config/services.php` — added test keys and staging_mo",
       "recallCount": 0,
-      "dailyCount": 3,
+      "dailyCount": 4,
       "groundedCount": 0,
-      "totalScore": 1.8599999999999999,
+      "totalScore": 2.48,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-01T21:01:07.176Z",
-      "lastRecalledAt": "2026-05-05T21:00:44.340Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
       "queryHashes": [
         "f16f2797a8f9"
       ],
@@ -17479,7 +17489,8 @@
         "2026-05-01",
         "2026-05-05",
         "2026-05-04",
-        "2026-05-06"
+        "2026-05-06",
+        "2026-05-07"
       ],
       "conceptTags": [
         "api/app/helpers/stripehelper.php",
@@ -17500,12 +17511,12 @@
       "source": "memory",
       "snippet": "Stripe Staging Mode Feature — COMPLETED (backend): `.env` — test keys and `STRIPE_STAGING_MODE=false`",
       "recallCount": 0,
-      "dailyCount": 3,
+      "dailyCount": 4,
       "groundedCount": 0,
-      "totalScore": 1.8599999999999999,
+      "totalScore": 2.48,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-01T21:01:07.176Z",
-      "lastRecalledAt": "2026-05-05T21:00:44.340Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
       "queryHashes": [
         "f16f2797a8f9"
       ],
@@ -17514,7 +17525,8 @@
         "2026-05-01",
         "2026-05-05",
         "2026-05-04",
-        "2026-05-06"
+        "2026-05-06",
+        "2026-05-07"
       ],
       "conceptTags": [
         "stripe-staging-mode",
@@ -17535,12 +17547,12 @@
       "source": "memory",
       "snippet": "Gitignore Updated — COMPLETED: Added explicit OpenClaw protection:",
       "recallCount": 0,
-      "dailyCount": 3,
+      "dailyCount": 4,
       "groundedCount": 0,
-      "totalScore": 1.8599999999999999,
+      "totalScore": 2.48,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-01T21:01:07.176Z",
-      "lastRecalledAt": "2026-05-05T21:00:44.340Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
       "queryHashes": [
         "f16f2797a8f9"
       ],
@@ -17549,7 +17561,8 @@
         "2026-05-01",
         "2026-05-05",
         "2026-05-04",
-        "2026-05-06"
+        "2026-05-06",
+        "2026-05-07"
       ],
       "conceptTags": [
         "gitignore",
@@ -19512,12 +19525,12 @@
       "source": "memory",
       "snippet": "Session: Cron task — directory page improvement: Cron task asked to improve /directory page with search, filters, tool grid, count display, empty state.",
       "recallCount": 0,
-      "dailyCount": 2,
+      "dailyCount": 3,
       "groundedCount": 0,
-      "totalScore": 1.24,
+      "totalScore": 1.8599999999999999,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-02T21:00:46.860Z",
-      "lastRecalledAt": "2026-05-05T21:00:44.340Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
       "queryHashes": [
         "f110005857c9"
       ],
@@ -19525,7 +19538,8 @@
         "2026-05-03",
         "2026-05-02",
         "2026-05-06",
-        "2026-05-05"
+        "2026-05-05",
+        "2026-05-07"
       ],
       "conceptTags": [
         "cron",
@@ -19546,12 +19560,12 @@
       "source": "memory",
       "snippet": "Session: Cron task — directory page improvement: **Finding:** The directory page was already fully rebuilt in commit `9d0147b` with the exact same commit message. All features were already in place:",
       "recallCount": 0,
-      "dailyCount": 2,
+      "dailyCount": 3,
       "groundedCount": 0,
-      "totalScore": 1.24,
+      "totalScore": 1.8599999999999999,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-02T21:00:46.860Z",
-      "lastRecalledAt": "2026-05-05T21:00:44.340Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
       "queryHashes": [
         "f110005857c9"
       ],
@@ -19559,7 +19573,8 @@
         "2026-05-03",
         "2026-05-02",
         "2026-05-06",
-        "2026-05-05"
+        "2026-05-05",
+        "2026-05-07"
       ],
       "conceptTags": [
         "cron",
@@ -19580,12 +19595,12 @@
       "source": "memory",
       "snippet": "Session: Cron task — directory page improvement: Search bar filtering by name/description; Category filter tabs (dynamically derived); Grid of tool cards with emoji, name, category, description; \"Showing N tools\" count display",
       "recallCount": 0,
-      "dailyCount": 2,
+      "dailyCount": 3,
       "groundedCount": 0,
-      "totalScore": 1.24,
+      "totalScore": 1.8599999999999999,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-02T21:00:46.860Z",
-      "lastRecalledAt": "2026-05-05T21:00:44.340Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
       "queryHashes": [
         "f110005857c9"
       ],
@@ -19593,7 +19608,8 @@
         "2026-05-03",
         "2026-05-02",
         "2026-05-06",
-        "2026-05-05"
+        "2026-05-05",
+        "2026-05-07"
       ],
       "conceptTags": [
         "name/description",
@@ -19614,12 +19630,12 @@
       "source": "memory",
       "snippet": "Session: Cron task — directory page improvement: Empty state when no results",
       "recallCount": 0,
-      "dailyCount": 2,
+      "dailyCount": 3,
       "groundedCount": 0,
-      "totalScore": 1.24,
+      "totalScore": 1.8599999999999999,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-02T21:00:46.860Z",
-      "lastRecalledAt": "2026-05-05T21:00:44.340Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
       "queryHashes": [
         "f110005857c9"
       ],
@@ -19627,7 +19643,8 @@
         "2026-05-03",
         "2026-05-02",
         "2026-05-06",
-        "2026-05-05"
+        "2026-05-05",
+        "2026-05-07"
       ],
       "conceptTags": [
         "cron",
@@ -19648,12 +19665,12 @@
       "source": "memory",
       "snippet": "Session: Cron task — directory page improvement: **Action:** No work needed. Confirmed clean git status.",
       "recallCount": 0,
-      "dailyCount": 2,
+      "dailyCount": 3,
       "groundedCount": 0,
-      "totalScore": 1.24,
+      "totalScore": 1.8599999999999999,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-02T21:00:46.860Z",
-      "lastRecalledAt": "2026-05-05T21:00:44.340Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
       "queryHashes": [
         "f110005857c9"
       ],
@@ -19661,7 +19678,8 @@
         "2026-05-03",
         "2026-05-02",
         "2026-05-06",
-        "2026-05-05"
+        "2026-05-05",
+        "2026-05-07"
       ],
       "conceptTags": [
         "cron",
@@ -19682,12 +19700,12 @@
       "source": "memory",
       "snippet": "Project State: Toolblip is a Next.js app with flat directory structure (no `src/` prefix). Key paths:",
       "recallCount": 0,
-      "dailyCount": 2,
+      "dailyCount": 3,
       "groundedCount": 0,
-      "totalScore": 1.24,
+      "totalScore": 1.8599999999999999,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-02T21:00:46.860Z",
-      "lastRecalledAt": "2026-05-05T21:00:44.340Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
       "queryHashes": [
         "f110005857c9"
       ],
@@ -19695,7 +19713,8 @@
         "2026-05-03",
         "2026-05-02",
         "2026-05-06",
-        "2026-05-05"
+        "2026-05-05",
+        "2026-05-07"
       ],
       "conceptTags": [
         "next.js",
@@ -20689,18 +20708,20 @@
       "source": "memory",
       "snippet": "Directory Page — Already Complete: Cron task claimed `/directory` was a placeholder needing rebuild. Inspection showed `app/directory/DirectoryClient.tsx` is already fully implemented with:",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-03T21:00:40.483Z",
-      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
       "queryHashes": [
         "c2bf0c07fdd1"
       ],
       "recallDays": [
         "2026-05-04",
-        "2026-05-03"
+        "2026-05-03",
+        "2026-05-07",
+        "2026-05-06"
       ],
       "conceptTags": [
         "directory",
@@ -20721,18 +20742,20 @@
       "source": "memory",
       "snippet": "Directory Page — Already Complete: Search bar (live filters on name, description, category); Category tabs with counts (All, Text, Developer, Encoder, Image, Conversion, Math, CSS); Tool card grid using `tb-v2-dir-card` / `tb-v2-dir-grid` (same as homepage); \"Showing N tools\" cou",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-03T21:00:40.483Z",
-      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
       "queryHashes": [
         "c2bf0c07fdd1"
       ],
       "recallDays": [
         "2026-05-04",
-        "2026-05-03"
+        "2026-05-03",
+        "2026-05-07",
+        "2026-05-06"
       ],
       "conceptTags": [
         "tb-v2-dir-card",
@@ -20753,18 +20776,20 @@
       "source": "memory",
       "snippet": "Directory Page — Already Complete: Empty state with clear-all",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-03T21:00:40.483Z",
-      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
       "queryHashes": [
         "c2bf0c07fdd1"
       ],
       "recallDays": [
         "2026-05-04",
-        "2026-05-03"
+        "2026-05-03",
+        "2026-05-07",
+        "2026-05-06"
       ],
       "conceptTags": [
         "clear-all",
@@ -20785,18 +20810,20 @@
       "source": "memory",
       "snippet": "Directory Page — Already Complete: No rebuild needed. Marking as done.",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-03T21:00:40.483Z",
-      "lastRecalledAt": "2026-05-03T21:00:40.483Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
       "queryHashes": [
         "c2bf0c07fdd1"
       ],
       "recallDays": [
         "2026-05-04",
-        "2026-05-03"
+        "2026-05-03",
+        "2026-05-07",
+        "2026-05-06"
       ],
       "conceptTags": [
         "directory",
@@ -22749,6 +22776,130 @@
         "regex",
         "differences",
         "break"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-06.txt:2:2": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-06.txt:2:2",
+      "path": "memory/.dreams/session-corpus/2026-05-06.txt",
+      "startLine": 2,
+      "endLine": 2,
+      "source": "memory",
+      "snippet": "User: ✅ Toolblip healthy — frontend: 200, api: 200 | 06:21 PM",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-06T21:02:41.334Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
+      "queryHashes": [
+        "a4942137f8fd"
+      ],
+      "recallDays": [
+        "2026-05-07",
+        "2026-05-06"
+      ],
+      "conceptTags": [
+        "toolblip",
+        "healthy",
+        "frontend",
+        "api"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-06.txt:3:3": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-06.txt:3:3",
+      "path": "memory/.dreams/session-corpus/2026-05-06.txt",
+      "startLine": 3,
+      "endLine": 3,
+      "source": "memory",
+      "snippet": "Assistant: 🔍 Opportunity Finder done. Found 7 questions, 6 content gaps, 6 tool ideas. Top find: `hash-identifier` tool has an EMPTY description and no supporting blog post — clear quick win. Also: regex-explainer blog post exists (2026-05-06) but no corresponding tool — content",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-06T21:02:41.334Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
+      "queryHashes": [
+        "a4942137f8fd"
+      ],
+      "recallDays": [
+        "2026-05-07",
+        "2026-05-06"
+      ],
+      "conceptTags": [
+        "hash-identifier",
+        "regex-explainer",
+        "opportunity",
+        "finder",
+        "done",
+        "found",
+        "questions",
+        "content"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-07.txt:1:1": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-07.txt:1:1",
+      "path": "memory/.dreams/session-corpus/2026-05-07.txt",
+      "startLine": 1,
+      "endLine": 1,
+      "source": "memory",
+      "snippet": "Assistant: ☀️ **Morning Digest — May 7, 2026** No new research sessions or posts were produced overnight. Here's the last meaningful status: **Recent work (May 5):** - ✅ Homepage & /directory pages — fully implemented, no changes needed - ✅ API docs at /api-docs — comprehensive,",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-06T21:02:41.334Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
+      "queryHashes": [
+        "a259255c9ad9"
+      ],
+      "recallDays": [
+        "2026-05-07",
+        "2026-05-06"
+      ],
+      "conceptTags": [
+        "api-docs",
+        "morning",
+        "digest",
+        "may",
+        "new",
+        "research",
+        "posts",
+        "produced"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-07.txt:2:2": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-07.txt:2:2",
+      "path": "memory/.dreams/session-corpus/2026-05-07.txt",
+      "startLine": 2,
+      "endLine": 2,
+      "source": "memory",
+      "snippet": "Assistant: top priority: **JSON Diff** (confirmed by GitHub issues) - 💡 6 engagement opportunities on Reddit/GitHub **Today's priority:** 1. **JSON Diff tool** — highest confirmed demand, GitHub issues back it up 2. **Pick off 5–10 route-only slugs** from the 131 batch — low eff",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-06T21:02:41.334Z",
+      "lastRecalledAt": "2026-05-06T21:02:41.334Z",
+      "queryHashes": [
+        "a259255c9ad9"
+      ],
+      "recallDays": [
+        "2026-05-07",
+        "2026-05-06"
+      ],
+      "conceptTags": [
+        "reddit/github",
+        "route-only",
+        "top",
+        "priority",
+        "diff",
+        "confirmed",
+        "github",
+        "issues"
       ]
     }
   }
