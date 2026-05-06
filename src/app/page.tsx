@@ -6,6 +6,21 @@ export const metadata: Metadata = {
   title: 'Toolblip — Free Browser-Based Online Tools',
   description:
     'Free, fast, and private online tools. No signup, no uploads, nothing leaves your browser.',
+  openGraph: {
+    title: 'Toolblip — Free Browser-Based Online Tools',
+    description:
+      'Free, fast, and private online tools. No signup, no uploads, nothing leaves your browser.',
+    url: 'https://toolblip.com',
+    siteName: 'Toolblip',
+    type: 'website',
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Toolblip — Free Browser-Based Online Tools',
+    description:
+      'Free, fast, and private online tools. No signup, no uploads, nothing leaves your browser.',
+  },
 };
 
 const CATEGORIES = ['Text', 'Encoding', 'Developer', 'Security', 'QR Codes', 'Design'];
