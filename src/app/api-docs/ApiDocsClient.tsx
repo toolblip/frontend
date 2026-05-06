@@ -43,16 +43,45 @@ const ENDPOINTS: Endpoint[] = [
     path: '/api/tools',
     auth: false,
     title: 'List all tools',
-    description: 'Returns a paginated list of all tools. Supports optional filtering by category and full-text search.',
+    description:
+      'Returns a paginated list of all tools. Supports optional filtering by category slug and full-text search.',
     bodyParams: [
-      { name: 'category', type: 'string', required: false, description: 'Filter tools by category slug (e.g. developer, productivity)' },
-      { name: 'search', type: 'string', required: false, description: 'Full-text search across tool names and descriptions' },
-      { name: 'page', type: 'integer', required: false, description: 'Page number for pagination (default: 1)' },
-      { name: 'per_page', type: 'integer', required: false, description: 'Results per page (default: 20, max: 100)' },
+      {
+        name: 'category',
+        type: 'string',
+        required: false,
+        description: 'Filter tools by category slug (e.g. developer, productivity)',
+      },
+      {
+        name: 'search',
+        type: 'string',
+        required: false,
+        description: 'Full-text search across tool names and descriptions',
+      },
+      {
+        name: 'page',
+        type: 'integer',
+        required: false,
+        description: 'Page number for pagination (default: 1)',
+      },
+      {
+        name: 'per_page',
+        type: 'integer',
+        required: false,
+        description: 'Results per page (default: 20, max: 100)',
+      },
     ],
     responseFields: [
-      { field: 'tools.tools[]', type: 'array', description: 'Array of tool objects' },
-      { field: 'tools.meta', type: 'object', description: 'Pagination metadata: current_page, total, per_page, last_page' },
+      {
+        field: 'tools.tools[]',
+        type: 'array',
+        description: 'Array of tool objects',
+      },
+      {
+        field: 'tools.meta',
+        type: 'object',
+        description: 'Pagination metadata: current_page, total, per_page, last_page',
+      },
     ],
     curl: `curl -X GET "${BASE_URL}/api/tools" \\
   -H "Accept: application/json"
@@ -90,7 +119,8 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
     path: '/api/tools/{slug}',
     auth: false,
     title: 'Get tool by slug',
-    description: 'Returns a single tool by its URL-safe slug. Returns 404 if not found.',
+    description:
+      'Returns a single tool by its URL-safe slug. Returns 404 if not found.',
     responseFields: [
       { field: 'tool.id', type: 'integer', description: 'Unique tool ID' },
       { field: 'tool.slug', type: 'string', description: 'URL-safe identifier' },
@@ -125,12 +155,33 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
     path: '/api/auth/register',
     auth: false,
     title: 'Register new account',
-    description: 'Create a new user account. Returns a Bearer token to use in authenticated requests.',
+    description:
+      'Create a new user account. Returns a Bearer token to use in authenticated requests.',
     bodyParams: [
-      { name: 'name', type: 'string', required: true, description: 'Full display name' },
-      { name: 'email', type: 'string', required: true, description: 'Email address — must be unique' },
-      { name: 'password', type: 'string', required: true, description: 'Password — minimum 8 characters' },
-      { name: 'password_confirmation', type: 'string', required: true, description: 'Must match the password field exactly' },
+      {
+        name: 'name',
+        type: 'string',
+        required: true,
+        description: 'Full display name',
+      },
+      {
+        name: 'email',
+        type: 'string',
+        required: true,
+        description: 'Email address — must be unique',
+      },
+      {
+        name: 'password',
+        type: 'string',
+        required: true,
+        description: 'Password — minimum 8 characters',
+      },
+      {
+        name: 'password_confirmation',
+        type: 'string',
+        required: true,
+        description: "Must match the password field exactly",
+      },
     ],
     responseFields: [
       { field: 'user.id', type: 'integer', description: 'User ID' },
@@ -165,10 +216,21 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
     path: '/api/auth/login',
     auth: false,
     title: 'Login',
-    description: 'Authenticate an existing user. Returns a Bearer token for subsequent authenticated requests.',
+    description:
+      'Authenticate an existing user. Returns a Bearer token for subsequent authenticated requests.',
     bodyParams: [
-      { name: 'email', type: 'string', required: true, description: 'Account email address' },
-      { name: 'password', type: 'string', required: true, description: 'Account password' },
+      {
+        name: 'email',
+        type: 'string',
+        required: true,
+        description: 'Account email address',
+      },
+      {
+        name: 'password',
+        type: 'string',
+        required: true,
+        description: 'Account password',
+      },
     ],
     responseFields: [
       { field: 'user.id', type: 'integer', description: 'User ID' },
@@ -201,7 +263,8 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
     path: '/api/auth/logout',
     auth: true,
     title: 'Logout',
-    description: 'Invalidate the current session token. After calling this, the token can no longer be used.',
+    description:
+      'Invalidate the current session token. After calling this, the token can no longer be used.',
     responseFields: [
       { field: 'message', type: 'string', description: 'Confirmation message' },
     ],
