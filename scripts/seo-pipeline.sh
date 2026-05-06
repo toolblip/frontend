@@ -180,11 +180,9 @@ generate_one_post() {
     rm -f "$output"
 
     cd "$HOME/Work/toolblip"
-    # Use Python helper to avoid shell quote mangling
-    # --dangerously-skip-permissions needed because stdin=DEVNULL means no TTY for auto-confirm
+    # Use Python helper with --append-system-prompt-file to avoid stdin/argument conflicts
     python3 "$HOME/Work/toolblip/scripts/run-claude.py" \
         "$prompt_file" \
-        --dangerously-skip-permissions \
         --model sonnet \
         --allowedTools Read,Write,Edit \
         --max-turns 10 \
