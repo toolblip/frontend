@@ -210,27 +210,11 @@ export function DirectoryClient() {
       {/* ── Results ── */}
       <div className="max-w-4xl mx-auto px-4 py-8">
         {/* Count bar */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-5">
           <p className="text-sm" style={{ color: 'var(--fg-2)', fontFamily: 'var(--f-mono)' }}>
-            {query ? (
-              <>
-                <strong style={{ color: 'var(--fg-0)' }}>{filtered.length}</strong>
-                {' '}result{filtered.length !== 1 ? 's' : ''} for &ldquo;{query}&rdquo;
-                {activeCategory !== 'All' && (
-                  <> in <span style={{ color: 'var(--fg-1)' }}>{activeCategory}</span></>
-                )}
-              </>
-            ) : (
-              <>
-                Showing{' '}
-                <strong style={{ color: 'var(--fg-0)' }}>
-                  {filtered.length} tool{filtered.length !== 1 ? 's' : ''}
-                </strong>
-                {activeCategory !== 'All' && (
-                  <> in <span style={{ color: 'var(--fg-1)' }}>{activeCategory}</span></>
-                )}
-              </>
-            )}
+            Showing <strong style={{ color: 'var(--fg-0)' }}>{filtered.length}</strong> tool{filtered.length !== 1 ? 's' : ''}
+            {activeCategory !== 'All' && <> in {activeCategory}</>}
+            {query && <> for &ldquo;{query}&rdquo;</>}
           </p>
 
           {(query || activeCategory !== 'All') && (
