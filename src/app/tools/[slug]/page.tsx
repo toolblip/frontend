@@ -29,6 +29,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     openGraph: {
       title: `${tool.name} | Toolblip`,
       description: tool.description,
+      url: `https://toolblip.com/tools/${slug}`,
+      siteName: 'Toolblip',
+      type: 'website',
+      locale: 'en_US',
+    },
+    twitter: {
+      card: 'summary',
+      title: `${tool.name} | Toolblip`,
+      description: tool.description,
     },
   };
 }

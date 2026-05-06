@@ -22,7 +22,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     openGraph: {
       title: `${post.title} | Toolblip`,
       description: post.description,
+      url: `https://toolblip.com/blog/${slug}`,
+      siteName: 'Toolblip',
+      type: 'article',
+      locale: 'en_US',
       images: post.featuredImage ? [post.featuredImage] : [],
+    },
+    twitter: {
+      card: 'summary',
+      title: `${post.title} | Toolblip`,
+      description: post.description,
     },
   };
 }

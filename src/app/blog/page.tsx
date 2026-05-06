@@ -1,9 +1,23 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { getBlogPosts } from '@/lib/blog';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Blog — Toolblip',
   description: 'Articles on developer tools, productivity tips, and browser-based utilities.',
+  openGraph: {
+    title: 'Blog — Toolblip',
+    description: 'Articles on developer tools, productivity tips, and browser-based utilities.',
+    url: 'https://toolblip.com/blog',
+    siteName: 'Toolblip',
+    type: 'website',
+    locale: 'en_US',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Blog — Toolblip',
+    description: 'Articles on developer tools, productivity tips, and browser-based utilities.',
+  },
 };
 
 export default async function BlogPage() {
