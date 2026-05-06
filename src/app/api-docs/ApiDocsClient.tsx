@@ -643,22 +643,44 @@ export default function ApiDocsClient() {
                 <p className="text-[11px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest mb-3 px-1">
                   On this page
                 </p>
-                {[
-                  { id: 'overview', label: 'Overview' },
-                  { id: 'quick-start', label: 'Quick Start' },
-                  { id: 'tools', label: 'Tools' },
-                  { id: 'auth', label: 'Authentication' },
-                  { id: 'status-codes', label: 'Status Codes' },
-                  { id: 'get-help', label: 'Get Help' },
-                ].map((item) => (
+                <nav className="space-y-0.5">
                   <button
-                    key={item.id}
-                    onClick={() => scrollTo(item.id)}
+                    onClick={() => scrollTo('overview')}
                     className="block w-full px-3 py-1.5 text-xs text-slate-500 dark:text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-left"
                   >
-                    {item.label}
+                    Overview
                   </button>
-                ))}
+                  <button
+                    onClick={() => scrollTo('quick-start')}
+                    className="block w-full px-3 py-1.5 text-xs text-slate-500 dark:text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-left"
+                  >
+                    Quick Start
+                  </button>
+                  <button
+                    onClick={() => scrollTo('tools')}
+                    className="block w-full px-3 py-1.5 text-xs text-slate-500 dark:text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-left"
+                  >
+                    Tools
+                  </button>
+                  <button
+                    onClick={() => scrollTo('auth')}
+                    className="block w-full px-3 py-1.5 text-xs text-slate-500 dark:text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-left"
+                  >
+                    Authentication
+                  </button>
+                  <button
+                    onClick={() => scrollTo('status-codes')}
+                    className="block w-full px-3 py-1.5 text-xs text-slate-500 dark:text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-left"
+                  >
+                    Status Codes
+                  </button>
+                  <button
+                    onClick={() => scrollTo('get-help')}
+                    className="block w-full px-3 py-1.5 text-xs text-slate-500 dark:text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-left"
+                  >
+                    Get Help
+                  </button>
+                </nav>
               </div>
             </div>
           </aside>
