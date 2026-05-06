@@ -168,6 +168,14 @@ export const tools: Tool[] = [
     category: 'Encoding',
     tags: ['html', 'encode', 'decode', 'entities'],
   },
+  {
+    slug: 'regex-explainer',
+    name: 'Regex Explainer',
+    emoji: '🔍',
+    description: 'Paste any regex pattern and get a line-by-line plain English explanation. Understand lookaheads, backreferences, and quantifiers without reading dense documentation.',
+    category: 'Developer',
+    tags: ['regex', 'regular expression', 'explain', 'debug', 'pattern'],
+  },
 ];
 
 export function getToolBySlug(slug: string): Tool | undefined {
