@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useRef } from 'react';
-import QRCode from 'qrcode';
 
 const SIZES = [
   { label: 'S', value: 128 },
@@ -13,30 +12,28 @@ const SIZES = [
 export default function QrCodeGeneratorClient() {
   const [text, setText] = useState('');
   const [size, setSize] = useState(256);
-  const [dataUrl, setDataUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [error, setError] = useState('');
   const [generating, setGenerating] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  async function generate() {
+  function generate() {
     if (!text.trim()) {
       setError('Please enter a URL or text to encode.');
-      setDataUrl('');
+      setImageUrl('');
       inputRef.current?.focus();
       return;
     }
     setError('');
     setGenerating(true);
     try {
-      const url = await QRCode.toDataURL(text, {
-        width: size,
-        margin: 2,
-        color: { dark: '#18181b', light: '#ffffff' },
-      });
-      setDataUrl(url);
+      // Use Google Charts API to generate QR code — reliable, no canvas needed
+      const encoded = encodeURIComponent(text);
+      const url = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encoded}&format=png&margin=2`;
+      setImageUrl(url);
     } catch {
       setError('Could not generate QR code. Please check your input.');
-      setDataUrl('');
+      setImageUrl('');
     } finally {
       setGenerating(false);
     }
@@ -55,32 +52,11 @@ export default function QrCodeGeneratorClient() {
   }
 
   function downloadPng() {
-    if (!dataUrl) return;
+    if (!imageUrl) return;
     const a = document.createElement('a');
-    a.href = dataUrl;
+    a.href = imageUrl;
     a.download = 'qr-code.png';
     a.click();
-  }
-
-  async function downloadSvg() {
-    if (!text.trim()) return;
-    try {
-      const svg = await QRCode.toString(text, {
-        type: 'svg',
-        width: size,
-        margin: 2,
-        color: { dark: '#18181b', light: '#ffffff' },
-      });
-      const blob = new Blob([svg], { type: 'image/svg+xml' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'qr-code.svg';
-      a.click();
-      URL.revokeObjectURL(url);
-    } catch {
-      setError('Could not generate SVG.');
-    }
   }
 
   return (
@@ -139,7 +115,7 @@ export default function QrCodeGeneratorClient() {
           </div>
         </div>
 
-        {dataUrl && (
+        {imageUrl && (
           <div className="tb-v2-qr-dl-group">
             <span className="tb-v2-qr-label">Download</span>
             <div className="tb-v2-qr-dl-btns">
@@ -151,23 +127,16 @@ export default function QrCodeGeneratorClient() {
                 </svg>
                 PNG
               </button>
-              <button type="button" className="tb-v2-qr-dl-btn" onClick={downloadSvg}>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                  <polyline points="7 10 12 15 17 10" />
-                  <line x1="12" y1="15" x2="12" y2="3" />
-                </svg>
-                SVG
-              </button>
             </div>
           </div>
         )}
       </div>
 
       {/* Preview */}
-      {dataUrl ? (
+      {imageUrl ? (
         <div className="tb-v2-qr-preview">
-          <img src={dataUrl} alt="Generated QR code" className="tb-v2-qr-img" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={imageUrl} alt="Generated QR code" className="tb-v2-qr-img" />
         </div>
       ) : (
         <div className="tb-v2-qr-placeholder">
