@@ -153,6 +153,14 @@ export const tools: Tool[] = [
     tags: ['color', 'hex', 'rgb', 'hsl', 'converter'],
   },
   {
+    slug: 'percentage-calculator',
+    name: 'Percentage Calculator',
+    emoji: '📊',
+    description: 'Calculate percentages in different ways: find X% of Y, what percent is X of Y, or increase/decrease a number by X%.',
+    category: 'Math',
+    tags: ['percentage', 'math', 'calculator', 'percent'],
+  },
+  {
     slug: 'cron-parser',
     name: 'Cron Expression Parser',
     emoji: '⏰',
@@ -176,7 +184,51 @@ export const tools: Tool[] = [
     category: 'Developer',
     tags: ['regex', 'regular expression', 'explain', 'debug', 'pattern'],
   },
+  {
+    slug: 'css-gradient-generator',
+    name: 'CSS Gradient Generator',
+    emoji: '🌈',
+    description: 'Create beautiful CSS gradients visually. Choose colors, set direction and angle, and copy the generated CSS code instantly.',
+    category: 'CSS',
+    tags: ['css', 'gradient', 'generator', 'design', 'background'],
+  },
+  {
+    slug: 'css-box-shadow-generator',
+    name: 'CSS Box Shadow Generator',
+    emoji: '📦',
+    description: 'Visually create box shadow effects and get clean CSS code. Adjust offset, blur, spread, and color with live preview.',
+    category: 'CSS',
+    tags: ['css', 'box-shadow', 'generator', 'design'],
+  },
+  {
+    slug: 'unit-converter',
+    name: 'Unit Converter',
+    emoji: '⚖️',
+    description: 'Convert between units of length, weight, temperature, data, speed, and more. Fast and accurate conversions for everyday use.',
+    category: 'Conversion',
+    tags: ['conversion', 'units', 'length', 'weight', 'temperature'],
+  },
+  {
+    slug: 'image-converter',
+    name: 'Image Format Converter',
+    emoji: '🖼️',
+    description: 'Convert images between PNG, JPEG, WebP, and GIF formats. Adjust quality and dimensions while preserving transparency.',
+    category: 'Image',
+    tags: ['image', 'convert', 'png', 'jpeg', 'webp', 'format'],
+  },
+  {
+    slug: 'math-evaluator',
+    name: 'Math Expression Evaluator',
+    emoji: '🔢',
+    description: 'Evaluate mathematical expressions instantly. Supports arithmetic, powers, roots, trigonometric functions, logarithms, and constants like pi and e.',
+    category: 'Math',
+    tags: ['math', 'calculator', 'expression', 'evaluate'],
+  },
 ];
+
+export function getToolBySlug(slug: string): Tool | undefined {
+  return tools.find(t => t.slug === slug);
+}
 
 export function getToolBySlug(slug: string): Tool | undefined {
   return tools.find(t => t.slug === slug);
