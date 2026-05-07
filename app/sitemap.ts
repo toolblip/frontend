@@ -1,59 +1,59 @@
 import { MetadataRoute } from 'next';
 import { tools } from '@/data/tools';
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://toolblip.com';
+const BASE_URL = 'https://toolblip.com';
 
+export default function sitemap(): MetadataRoute.Sitemap {
   const staticPages: MetadataRoute.Sitemap = [
     {
-      url: baseUrl,
+      url: BASE_URL,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 1,
     },
     {
-      url: `${baseUrl}/tools`,
+      url: `${BASE_URL}/tools`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/directory`,
+      url: `${BASE_URL}/directory`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/about`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/login`,
+      url: `${BASE_URL}/about`,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 0.5,
     },
     {
-      url: `${baseUrl}/signup`,
+      url: `${BASE_URL}/login`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.5,
+      changeFrequency: 'yearly',
+      priority: 0.3,
     },
     {
-      url: `${baseUrl}/blog`,
+      url: `${BASE_URL}/signup`,
       lastModified: new Date(),
-      changeFrequency: 'daily',
+      changeFrequency: 'yearly',
+      priority: 0.3,
+    },
+    {
+      url: `${BASE_URL}/blog`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
       priority: 0.8,
     },
   ];
 
   const toolPages: MetadataRoute.Sitemap = tools.map((tool) => ({
-    url: `${baseUrl}/tools/${tool.slug}`,
+    url: `${BASE_URL}/tools/${tool.slug}`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
-    priority: 0.7,
+    priority: 0.6,
   }));
 
   return [...staticPages, ...toolPages];
