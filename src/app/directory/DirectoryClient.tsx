@@ -4,7 +4,7 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { tools } from '@/data/tools';
 
-const ALL_TABS = ['All', 'Text', 'Developer', 'Encoding', 'Security', 'QR Codes', 'Design'];
+const ALL_TABS = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS'];
 
 export function DirectoryClient() {
   const [query, setQuery] = useState('');
