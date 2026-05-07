@@ -559,7 +559,6 @@ export default function ApiDocsClient() {
                     { id: 'tools', label: 'Tools' },
                     { id: 'auth', label: 'Authentication' },
                     { id: 'status-codes', label: 'Status Codes' },
-                    { id: 'get-help', label: 'Get Help' },
                   ].map((item) => (
                     <button
                       key={item.id}
@@ -644,7 +643,7 @@ export default function ApiDocsClient() {
             </section>
 
             {/* Quick Start */}
-            <section id="quick-start" className="scroll-mt-20">
+            <section id="quick-start">
               <div className="flex items-center gap-3 mb-6">
                 <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">Quick Start</h2>
                 <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
@@ -676,7 +675,7 @@ curl -X GET "${BASE_URL}/api/tools" \\
 
             {/* Endpoint sections */}
             {GROUPS.map((g) => (
-              <section key={g.id} id={g.id}>
+              <section key={g.id} id={g.id} className="scroll-mt-20">
                 <div className="flex items-center gap-3 mb-6">
                   <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
                     {g.icon} {g.label}
