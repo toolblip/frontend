@@ -113,7 +113,7 @@ export default function ArticleGeneratorClient() {
       <div className="tb-v2-tool-output-body">
         <textarea
           value={output}
-          readOnly
+          onChange={(e) => setOutput(e.target.value)}
           className="tb-v2-tool-textarea"
           style={{ minHeight: 300, fontFamily: 'var(--f-mono)' }}
           aria-label="Generated article output"

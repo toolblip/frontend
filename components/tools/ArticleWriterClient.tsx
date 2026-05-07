@@ -99,11 +99,11 @@ export default function ArticleWriterClient() {
       </div>
 
       <button type="button" onClick={generate} className="tb-v2-primary-btn" style={{ width: '100%' }}>
-        Generate Article
+        Write Article
       </button>
 
       <div className="tb-v2-tool-output-head" style={{ marginTop: 16 }}>
-        <span className="tb-v2-tool-label">Generated Article (Markdown)</span>
+        <span className="tb-v2-tool-label">Written Article (Markdown)</span>
         {output && (
           <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
             {copied ? 'Copied' : 'Copy'}
@@ -113,10 +113,10 @@ export default function ArticleWriterClient() {
       <div className="tb-v2-tool-output-body">
         <textarea
           value={output}
-          readOnly
+          onChange={(e) => setOutput(e.target.value)}
           className="tb-v2-tool-textarea"
           style={{ minHeight: 300, fontFamily: 'var(--f-mono)' }}
-          aria-label="Generated article output"
+          aria-label="Written article output"
         />
       </div>
     </div>

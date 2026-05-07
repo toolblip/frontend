@@ -70,6 +70,7 @@ import Base64FileEncoderClient from '@/components/tools/Base64FileEncoderClient'
 import Base64ImageDecoderClient from '@/components/tools/Base64ImageDecoderClient';
 import Base64ImageEncoderClient from '@/components/tools/Base64ImageEncoderClient';
 import Base64ImageViewerClient from '@/components/tools/Base64ImageViewerClient';
+import Base64ImageConverterClient from '@/components/tools/Base64ImageConverterClient';
 import CaseConverterClient from '@/components/tools/CaseConverterClient';
 import AgeCalculatorClient from '@/components/tools/AgeCalculatorClient';
 import AnagramGeneratorClient from '@/components/tools/AnagramGeneratorClient';
@@ -177,6 +178,8 @@ import RandomParagraphGeneratorClient from '@/components/tools/RandomParagraphGe
 import RandomSentenceGeneratorClient from '@/components/tools/RandomSentenceGeneratorClient';
 import RandomStringGeneratorToolClient from '@/components/tools/RandomStringGeneratorToolClient';
 import RandomUuidV7Client from '@/components/tools/RandomUuidV7Client';
+import UlidGeneratorClient from '@/components/tools/UlidGeneratorClient';
+import UuidV1GeneratorClient from '@/components/tools/UuidV1GeneratorClient';
 import ReadingTimeCalculatorClient from '@/components/tools/ReadingTimeCalculatorClient';
 import RegexVisualizerClient from '@/components/tools/RegexVisualizerClient';
 import RgbaToHslConverterClient from '@/components/tools/RgbaToHslConverterClient';
@@ -992,7 +995,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'case-converter':
       return <CaseConverterClient />;
     case 'base64-image-converter':
-      return <Base64ImageEncoderClient />;
+      return <Base64ImageConverterClient />;
     case 'url-encode':
     case 'url-encoder':
       return <UrlEncodeClient />;
@@ -3073,7 +3076,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'uuid-v7-generator':
       return <UuidGeneratorClient />;
     case 'ulid-generator':
-      return <UuidGeneratorClient />;
+      return <UlidGeneratorClient />;
     case 'nanoid-generator':
       return <UuidGeneratorClient />;
     case 'hashids':
@@ -3223,15 +3226,15 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'cron-parser-v2':
       return <CronParserClient />;
     case 'cron-validator':
-      return <CronParserClient />;
+      return <CronValidatorClient />;
     case 'cron-explainer':
       return <CronParserClient />;
     case 'cron-generator-v2':
-      return <CronGeneratorClient />;
+      return <CronGeneratorV2Client />;
     case 'cron-builder':
-      return <CronGeneratorClient />;
+      return <CronBuilderClient />;
     case 'cron-expression-generator':
-      return <CronGeneratorClient />;
+      return <CronExpressionGeneratorClient />;
     case 'cors-configuration':
       return <CorsHeaderGeneratorClient />;
     case 'cors-options':
@@ -3718,7 +3721,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'sitemap-xml-validator-express': return <XmlValidatorClient />;
     case 'sla-uptime-calculator': return <UptimeCalculatorClient />;
     case 'smart-text-sorter': return <TextSorterClient />;
-    case 'speech-to-text': return <TextToSpeechClient />;
+    case 'speech-to-text': return <AudioToTextClient />;
     case 'spelling-checker-tool': return <ContrastCheckerToolClient />;
     case 'srt-to-json': return <CsvToJsonClient />;
     case 'srt-to-json-v2': return <CsvToJsonClient />;
@@ -3822,7 +3825,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'url-encoder-decoder': return <Base64EncoderDecoderClient />;
     case 'url-similarity-checker': return <UrlRedirectCheckerClient />;
     case 'user-agent-parser-v2': return <UserAgentParserClient />;
-    case 'uuid-v1-generator': return <UuidGeneratorClient />;
+    case 'uuid-v1-generator': return <UuidV1GeneratorClient />;
     case 'vcard-qr-generator': return <QrCodeGeneratorClient />;
     case 'volume-unit-converter': return <UnitConverterClient />;
     case 'vsd-to-jpg': return <EpsToJpgClient />;
