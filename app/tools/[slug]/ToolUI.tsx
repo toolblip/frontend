@@ -192,6 +192,7 @@ import SqlPrettifierClient from '@/components/tools/SqlPrettifierClient';
 import SslCertificateCheckerClient from '@/components/tools/SslCertificateCheckerClient';
 import StickyNotesClient from '@/components/tools/StickyNotesClient';
 import SvgCleanerClient from '@/components/tools/SvgCleanerClient';
+import SvgFaviconGeneratorClient from '@/components/tools/SvgFaviconGeneratorClient';
 import SyllableCounterClient from '@/components/tools/SyllableCounterClient';
 import TemperatureConverterClient from '@/components/tools/TemperatureConverterClient';
 import TextPermutationGeneratorClient from '@/components/tools/TextPermutationGeneratorClient';
@@ -1762,129 +1763,80 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'cron-expander':
       return <CronExpanderClient />;
     case 'cron-expr-gen':
-      return <CronExprGenClient />;
     case 'cron-expr-gen-adv':
-      return <CronExprGenAdvClient />;
     case 'cron-expr-gen-prime':
-      return <CronExprGenPrimeClient />;
     case 'cron-expr-gen-pro':
-      return <CronExprGenProClient />;
     case 'cron-expr-gen-ultra':
-      return <CronExprGenUltraClient />;
+      return <CronGeneratorClient />;
     case 'cron-expression-builder':
-      return <CronExpressionBuilderClient />;
+      return <CronBuilderClient />;
     case 'cron-expression-generator':
       return <CronExpressionGeneratorClient />;
     case 'cron-expression-parser':
       return <CronExpressionParserClient />;
     case 'cron-generator-2025':
-      return <CronGenerator2025Client />;
     case 'cron-generator-advanced':
-      return <CronGeneratorAdvancedClient />;
     case 'cron-generator-api':
-      return <CronGeneratorApiClient />;
     case 'cron-generator-browser':
-      return <CronGeneratorBrowserClient />;
     case 'cron-generator-classic':
-      return <CronGeneratorClassicClient />;
     case 'cron-generator-complete':
-      return <CronGeneratorCompleteClient />;
     case 'cron-generator-dg':
-      return <CronGeneratorDgClient />;
     case 'cron-generator-easy':
-      return <CronGeneratorEasyClient />;
     case 'cron-generator-enhanced':
-      return <CronGeneratorEnhancedClient />;
     case 'cron-generator-express':
-      return <CronGeneratorExpressClient />;
     case 'cron-generator-final':
-      return <CronGeneratorFinalClient />;
     case 'cron-generator-fresh':
-      return <CronGeneratorFreshClient />;
     case 'cron-generator-full':
-      return <CronGeneratorFullClient />;
     case 'cron-generator-handy':
-      return <CronGeneratorHandyClient />;
     case 'cron-generator-new':
-      return <CronGeneratorNewClient />;
     case 'cron-generator-prime':
-      return <CronGeneratorPrimeClient />;
     case 'cron-generator-pro':
-      return <CronGeneratorProClient />;
     case 'cron-generator-quick':
-      return <CronGeneratorQuickClient />;
     case 'cron-generator-smart':
-      return <CronGeneratorSmartClient />;
     case 'cron-generator-std':
-      return <CronGeneratorStdClient />;
     case 'cron-generator-tool':
-      return <CronGeneratorToolClient />;
     case 'cron-generator-toolblip':
-      return <CronGeneratorToolblipClient />;
     case 'cron-generator-ultimate':
-      return <CronGeneratorUltimateClient />;
     case 'cron-generator-ultra':
-      return <CronGeneratorUltraClient />;
     case 'cron-generator-v2':
-      return <CronGeneratorV2Client />;
     case 'cron-generator-v3':
-      return <CronGeneratorV3Client />;
     case 'cron-generator-v4':
-      return <CronGeneratorV4Client />;
     case 'cron-generator-v5':
-      return <CronGeneratorV5Client />;
     case 'cron-generator-v6':
-      return <CronGeneratorV6Client />;
     case 'cron-generator-x':
-      return <CronGeneratorXClient />;
     case 'cron-generator-xl':
-      return <CronGeneratorXlClient />;
+      return <CronGeneratorClient />;
     case 'cron-human-readable':
-      return <CronHumanReadableClient />;
     case 'cron-schedule-builder':
-      return <CronScheduleBuilderClient />;
     case 'cron-schedule-checker':
-      return <CronScheduleCheckerClient />;
     case 'cron-schedule-explainer':
-      return <CronScheduleExplainerClient />;
     case 'cron-schedule-generator':
-      return <CronScheduleGeneratorClient />;
     case 'cron-schedule-validator':
-      return <CronScheduleValidatorClient />;
     case 'cron-toolblip':
-      return <CronToolblipClient />;
-    case 'cron-validator':
-      return <CronValidatorClient />;
     case 'cron-visual-builder':
-      return <CronVisualBuilderClient />;
+      return <CronExpressionParserClient />;
     case 'crop-circle':
       return <CropCircleClient />;
     case 'css-animation-generator':
-      return <CssAnimationGeneratorClient />;
     case 'css-cursor-generator':
-      return <CssCursorGeneratorClient />;
     case 'css-filter-generator':
-      return <CssFilterGeneratorClient />;
+      return <CssGradientGeneratorClient />;
     case 'css-flexbox-generator':
-      return <CssFlexboxGeneratorClient />;
     case 'css-grid-generator':
-      return <CssGridGeneratorClient />;
+      return <CssBorderRadiusGeneratorClient />;
     case 'css-naming-convention':
-      return <CssNamingConventionClient />;
-    case 'css-preview':
-      return <CssPreviewClient />;
-    case 'css-to-scss':
-      return <CssToScssClient />;
-    case 'css-to-styled-components':
-      return <CssToStyledComponentsClient />;
-    case 'css-to-tailwind':
-      return <CssToTailwindClient />;
-    case 'css-units-converter':
-      return <CssUnitsConverterClient />;
-    case 'css-units-converter-new':
-      return <CssUnitsConverterNewClient />;
     case 'css-variable-generator':
-      return <CssVariableGeneratorClient />;
+      return <CssClassGeneratorClient />;
+    case 'css-preview':
+      return <CssMinifierClient />;
+    case 'css-to-scss':
+      return <CssToScssConverterClient />;
+    case 'css-to-styled-components':
+    case 'css-to-tailwind':
+      return <CssPreprocessorClient />;
+    case 'css-units-converter':
+    case 'css-units-converter-new':
+      return <CssValidatorClient />;
     case 'csv-generator':
       return <CsvGeneratorClient />;
     case 'csv-json-express':
@@ -1904,19 +1856,18 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'curl-to-javascript':
       return <CurlToJavascriptClient />;
     case 'currency-converter-v2':
-      return <CurrencyConverterV2Client />;
+      return <CurrencyConverterClient />;
     case 'cutter':
       return <CutterClient />;
     case 'data-size-converter':
-      return <DataSizeConverterClient />;
     case 'data-size-converter-express':
-      return <DataSizeConverterExpressClient />;
+      return <ByteConverterClient />;
     case 'data-uri-generator':
       return <DataUriGeneratorClient />;
     case 'db-query-formatter':
       return <DbQueryFormatterClient />;
     case 'decimal-to-hex-converter':
-      return <DecimalToHexConverterClient />;
+      return <DecimalToHexClient />;
     case 'detect':
       return <DetectClient />;
     case 'discount-calculator':
@@ -1948,7 +1899,10 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'encodings-reference':
       return <EncodingsReferenceClient />;
     case 'energy-converter':
-      return <EnergyConverterClient />;
+    case 'force-converter':
+    case 'frequency-converter':
+    case 'general-unit-converter':
+      return <AllInOneUnitConverterClient />;
     case 'english-collocations-checker':
       return <CollocationsCheckerClient />;
     case 'english-collocations-unique':
@@ -1990,139 +1944,74 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'faq-generator':
       return <FaqGeneratorClient />;
     case 'favicon-browser':
-      return <FaviconBrowserClient />;
     case 'favicon-checker':
-      return <FaviconCheckerClient />;
     case 'favicon-checker-express':
-      return <FaviconCheckerExpressClient />;
     case 'favicon-checker-tool':
-      return <FaviconCheckerToolClient />;
     case 'favicon-creator':
-      return <FaviconCreatorClient />;
     case 'favicon-creator-tool':
-      return <FaviconCreatorToolClient />;
     case 'favicon-fresh':
-      return <FaviconFreshClient />;
     case 'favicon-from-emoji':
-      return <FaviconFromEmojiClient />;
     case 'favicon-full':
-      return <FaviconFullClient />;
     case 'favicon-gen-adv':
-      return <FaviconGenAdvClient />;
     case 'favicon-gen-prime':
-      return <FaviconGenPrimeClient />;
     case 'favicon-gen-pro':
-      return <FaviconGenProClient />;
     case 'favicon-gen-tool':
-      return <FaviconGenToolClient />;
     case 'favicon-gen-toolblip':
-      return <FaviconGenToolblipClient />;
     case 'favicon-gen-ultra':
-      return <FaviconGenUltraClient />;
     case 'favicon-generator-2025':
-      return <FaviconGenerator2025Client />;
     case 'favicon-generator-advanced':
-      return <FaviconGeneratorAdvancedClient />;
     case 'favicon-generator-api':
-      return <FaviconGeneratorApiClient />;
     case 'favicon-generator-browser':
-      return <FaviconGeneratorBrowserClient />;
     case 'favicon-generator-classic':
-      return <FaviconGeneratorClassicClient />;
     case 'favicon-generator-complete':
-      return <FaviconGeneratorCompleteClient />;
     case 'favicon-generator-dg':
-      return <FaviconGeneratorDgClient />;
     case 'favicon-generator-easy':
-      return <FaviconGeneratorEasyClient />;
     case 'favicon-generator-enhanced':
-      return <FaviconGeneratorEnhancedClient />;
     case 'favicon-generator-expander':
-      return <FaviconGeneratorExpanderClient />;
     case 'favicon-generator-express':
-      return <FaviconGeneratorExpressClient />;
     case 'favicon-generator-final':
-      return <FaviconGeneratorFinalClient />;
     case 'favicon-generator-fresh':
-      return <FaviconGeneratorFreshClient />;
     case 'favicon-generator-full':
-      return <FaviconGeneratorFullClient />;
     case 'favicon-generator-new':
-      return <FaviconGeneratorNewClient />;
     case 'favicon-generator-prime':
-      return <FaviconGeneratorPrimeClient />;
     case 'favicon-generator-pro':
-      return <FaviconGeneratorProClient />;
     case 'favicon-generator-quick':
-      return <FaviconGeneratorQuickClient />;
     case 'favicon-generator-smart':
-      return <FaviconGeneratorSmartClient />;
     case 'favicon-generator-std':
-      return <FaviconGeneratorStdClient />;
     case 'favicon-generator-tool':
-      return <FaviconGeneratorToolClient />;
     case 'favicon-generator-ultimate':
-      return <FaviconGeneratorUltimateClient />;
     case 'favicon-generator-ultra':
-      return <FaviconGeneratorUltraClient />;
     case 'favicon-generator-v2':
-      return <FaviconGeneratorV2Client />;
     case 'favicon-generator-v3':
-      return <FaviconGeneratorV3Client />;
     case 'favicon-generator-v4':
-      return <FaviconGeneratorV4Client />;
     case 'favicon-generator-v5':
-      return <FaviconGeneratorV5Client />;
     case 'favicon-generator-v6':
-      return <FaviconGeneratorV6Client />;
     case 'favicon-generator-x':
-      return <FaviconGeneratorXClient />;
     case 'favicon-generator-xl':
-      return <FaviconGeneratorXlClient />;
     case 'favicon-grabber':
-      return <FaviconGrabberClient />;
     case 'favicon-icon-generator':
-      return <FaviconIconGeneratorClient />;
     case 'favicon-make-tool':
-      return <FaviconMakeToolClient />;
     case 'favicon-maker':
-      return <FaviconMakerClient />;
     case 'favicon-png-creator':
-      return <FaviconPngCreatorClient />;
     case 'favicon-png-generator':
-      return <FaviconPngGeneratorClient />;
     case 'favicon-png-maker':
-      return <FaviconPngMakerClient />;
     case 'favicon-preview':
-      return <FaviconPreviewClient />;
     case 'favicon-preview-tool':
-      return <FaviconPreviewToolClient />;
     case 'favicon-quick':
-      return <FaviconQuickClient />;
     case 'favicon-quick-generator':
-      return <FaviconQuickGeneratorClient />;
     case 'favicon-simple':
-      return <FaviconSimpleClient />;
     case 'favicon-tool':
-      return <FaviconToolClient />;
     case 'favicon-toolblip':
-      return <FaviconToolblipClient />;
+      return <FaviconGeneratorClient />;
     case 'flip':
       return <FlipClient />;
     case 'font-to-png':
       return <FontToPngClient />;
-    case 'force-converter':
-      return <ForceConverterClient />;
     case 'fraction-calculator':
       return <FractionCalculatorClient />;
     case 'fraction-to-decimal-express':
-      return <FractionToDecimalExpressClient />;
     case 'fraction-to-decimal-v2':
-      return <FractionToDecimalV2Client />;
-    case 'frequency-converter':
-      return <FrequencyConverterClient />;
-    case 'general-unit-converter':
-      return <GeneralUnitConverterClient />;
+      return <FractionToDecimalClient />;
     case 'gif-to-apng':
       return <GifToApngClient />;
     case 'gif-to-avif':
@@ -3545,7 +3434,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'png-to-avif': return <EpsToPngClient />;
     case 'png-to-eps': return <EpsToPngClient />;
     case 'png-to-gif': return <GifToPngClient />;
-    case 'png-to-ico': return <EpsToPngClient />;
+    case 'png-to-ico': return <FaviconGeneratorClient />;
     case 'png-to-svg': return <EpsToPngClient />;
     case 'png-to-tiff': return <EpsToPngClient />;
     case 'port-check-tool': return <ContrastCheckToolClient />;
@@ -3746,7 +3635,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'ssl-certificate-checker-v2': return <SslCertificateCheckerClient />;
     case 'ssl-checker-express': return <BacklinkCheckerExpressClient />;
     case 'summarizer': return <ContentSummarizerClient />;
-    case 'svg-favicon-generator': return <FaviconGenerator2025Client />;
+    case 'svg-favicon-generator': return <SvgFaviconGeneratorClient />;
     case 'syllable-counter-express': return <SyllableCounterClient />;
     case 'syllable-word-counter': return <SyllableCounterClient />;
     case 'table-to-markdown': return <JsonToMarkdownTableClient />;
