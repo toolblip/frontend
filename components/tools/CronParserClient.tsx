@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -126,7 +126,7 @@ function parseCron(expr: string): CronResult {
   if (!rawDow) return { valid: false, error: 'Invalid weekday field — expected 0–7 or SUN–SAT' };
   const daysOfWeek = [...new Set(rawDow.map((d) => (d === 7 ? 0 : d)))].sort((a, b) => a - b);
   const parsed: ParsedCron = { minutes, hours, daysOfMonth, months, daysOfWeek, parts };
-  return { valid: true, parsed, description: describeSchedule(parsed), nextRuns: computeNextRuns(parsed, 5) };
+  return { valid: true, parsed, description: describeSchedule(parsed) };
 }
 
 function ordinal(n: number): string {
@@ -274,8 +274,8 @@ function formatDate(d: Date): string {
   return `${day}, ${month} ${date}, ${year} · ${h12}:${String(m).padStart(2, '0')} ${ampm}`;
 }
 
-function relativeTime(d: Date): string {
-  const diffMs = d.getTime() - Date.now();
+function relativeTime(d: Date, now: number): string {
+  const diffMs = d.getTime() - now;
   const diffMin = Math.floor(diffMs / 60_000);
   const diffHr = Math.floor(diffMin / 60);
   const diffDay = Math.floor(diffHr / 24);
@@ -290,7 +290,18 @@ function relativeTime(d: Date): string {
 
 export default function CronParserClient() {
   const [expression, setExpression] = useState('0 9 * * 1-5');
+  const [now, setNow] = useState<number | null>(null);
+  const [nextRuns, setNextRuns] = useState<Date[] | null>(null);
   const result = useMemo(() => parseCron(expression), [expression]);
+
+  useEffect(() => {
+    setNow(Date.now());
+    const interval = setInterval(() => setNow(Date.now()), 1000);
+    if (result.valid && result.parsed) {
+      setNextRuns(computeNextRuns(result.parsed, 5));
+    }
+    return () => clearInterval(interval);
+  }, [result]);
 
   return (
     <div>
@@ -337,18 +348,18 @@ export default function CronParserClient() {
             <p className="tb-v2-cron-summary-text">{result.description}</p>
           </div>
 
-          {result.nextRuns && result.nextRuns.length > 0 ? (
+          {nextRuns && nextRuns.length > 0 ? (
             <>
               <div className="tb-v2-tool-output-head">
                 <span className="tb-v2-tool-label">Next 5 run times</span>
               </div>
               <div className="tb-v2-tool-output-body">
                 <ul className="tb-v2-cron-list">
-                  {result.nextRuns.map((d, i) => (
+                  {nextRuns.map((d, i) => (
                     <li key={i} className="tb-v2-cron-row">
                       <span className="tb-v2-cron-num">{i + 1}</span>
                       <code className="tb-v2-cron-when">{formatDate(d)}</code>
-                      <span className="tb-v2-cron-rel">{relativeTime(d)}</span>
+                      <span className="tb-v2-cron-rel">{now != null ? relativeTime(d, now) : '—'}</span>
                     </li>
                   ))}
                 </ul>

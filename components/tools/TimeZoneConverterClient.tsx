@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 
 const timeZones = [
   { value: 'America/New_York', label: 'New York (EST/EDT)', offset: -5 },
@@ -28,13 +28,21 @@ export default function TimeZoneConverterClient() {
   const [inputDate, setInputDate] = useState('');
   const [fromZone, setFromZone] = useState('America/New_York');
   const [targetZones, setTargetZones] = useState<string[]>(['Europe/London', 'Asia/Tokyo']);
+  const [localTimezone, setLocalTimezone] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
-  const getLocalTimezone = () => {
+  useEffect(() => {
+    setIsMounted(true);
     const offset = new Date().getTimezoneOffset();
     const hours = Math.abs(Math.floor(offset / 60));
     const minutes = offset % 60;
     const sign = offset <= 0 ? '+' : '-';
-    return `UTC${sign}${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    setLocalTimezone(`UTC${sign}${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`);
+  }, []);
+
+  const getLocalTimezone = () => {
+    if (!localTimezone) return '...';
+    return localTimezone;
   };
 
   const convertedTimes = useMemo(() => {
@@ -87,6 +95,8 @@ export default function TimeZoneConverterClient() {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
+      {isMounted ? (
+      <>
       <h1 className="text-2xl font-bold mb-6">Time Zone Converter</h1>
 
       <div className="grid md:grid-cols-2 gap-6 mb-6">
@@ -187,6 +197,8 @@ export default function TimeZoneConverterClient() {
           <li>• DST (Daylight Saving Time) transitions are not automatically handled</li>
         </ul>
       </div>
+      </>
+      ) : <div className="max-w-4xl mx-auto p-6"><span className="text-gray-400">Loading…</span></div>}
     </div>
   );
 }

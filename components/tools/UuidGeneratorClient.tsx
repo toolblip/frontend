@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const HISTORY_SIZE = 5;
 
@@ -11,13 +11,17 @@ function format(uuid: string, opts: { hyphens: boolean; uppercase: boolean }): s
 }
 
 export default function UuidGeneratorClient() {
-  const [history, setHistory] = useState<string[]>([crypto.randomUUID()]);
+  const [history, setHistory] = useState<string[]>([]);
   const [hyphens, setHyphens] = useState(true);
   const [uppercase, setUppercase] = useState(false);
   const [copied, setCopied] = useState<number | null>(null);
 
+  useEffect(() => {
+    setHistory([crypto.randomUUID()]);
+  }, []);
+
   const generate = () => {
-    setHistory((prev) => [crypto.randomUUID(), ...prev].slice(0, HISTORY_SIZE));
+    setHistory((prev) => [crypto.randomUUID(), ...(prev ?? [])].slice(0, HISTORY_SIZE));
   };
 
   const copy = (val: string, idx: number) => {
@@ -27,6 +31,7 @@ export default function UuidGeneratorClient() {
   };
 
   const copyAll = () => {
+    if (!history) return;
     const all = history.map((u) => format(u, { hyphens, uppercase })).join('\n');
     navigator.clipboard.writeText(all).catch(() => {});
     setCopied(-1);
@@ -67,7 +72,7 @@ export default function UuidGeneratorClient() {
         </button>
 
         <div className="tb-v2-uuid-list" aria-live="polite">
-          {history.map((uuid, i) => {
+          {history?.map((uuid, i) => {
             const formatted = format(uuid, { hyphens, uppercase });
             return (
               <div key={uuid} className="tb-v2-uuid-row">
@@ -86,14 +91,14 @@ export default function UuidGeneratorClient() {
           })}
         </div>
 
-        {history.length > 1 && (
+        {(history?.length ?? 0) > 1 && (
           <div className="tb-v2-uuid-foot">
             <button
               type="button"
               onClick={copyAll}
               className={`tb-v2-copy-btn ${copied === -1 ? 'done' : ''}`}
             >
-              {copied === -1 ? 'Copied' : `Copy all ${history.length}`}
+              {copied === -1 ? 'Copied' : `Copy all ${history!.length}`}
             </button>
           </div>
         )}

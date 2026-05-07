@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function TextToSpeechClient() {
   const [text, setText] = useState('');
@@ -19,10 +19,10 @@ export default function TextToSpeechClient() {
     }
   };
 
-  if (typeof window !== 'undefined' && voices.length === 0) {
+  useEffect(() => {
     loadVoices();
     window.speechSynthesis.onvoiceschanged = loadVoices;
-  }
+  }, []);
 
   const speak = () => {
     if (!text.trim()) return;

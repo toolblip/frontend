@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 
 const PRESETS = [
   { label: 'Every minute', value: '* * * * *', desc: 'Runs every minute' },
@@ -85,9 +85,12 @@ export default function CronGeneratorV2Client() {
   const [mon, setMon] = useState('*');
   const [dow, setDow] = useState('*');
   const [showPresets, setShowPresets] = useState(true);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   const expr = `${min} ${hour} ${dom} ${mon} ${dow}`;
-  const nextRuns = useMemo(() => getNextRuns(expr, 5), [expr]);
+  const nextRuns = useMemo(() => mounted ? getNextRuns(expr, 5) : [], [expr, mounted]);
 
   const applyPreset = (preset: string) => {
     const [m, h, d, mo, w] = preset.split(' ');

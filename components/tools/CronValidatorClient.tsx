@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 
 const PRESETS = [
   { label: 'Every minute', value: '* * * * *' },
@@ -175,8 +175,8 @@ function formatDate(d: Date): string {
   return `${day}, ${month} ${date}, ${year} · ${h12}:${String(m).padStart(2, '0')} ${ampm}`;
 }
 
-function relativeTime(d: Date): string {
-  const diffMs = d.getTime() - Date.now();
+function relativeTime(d: Date, now: number): string {
+  const diffMs = d.getTime() - now;
   const diffMin = Math.floor(diffMs / 60000);
   const diffHr = Math.floor(diffMin / 60);
   const diffDay = Math.floor(diffHr / 24);
@@ -191,7 +191,17 @@ function relativeTime(d: Date): string {
 
 export default function CronValidatorClient() {
   const [expression, setExpression] = useState('0 9 * * 1-5');
+  const [now, setNow] = useState<number>(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const result = useMemo(() => validateCron(expression), [expression]);
+
+  useEffect(() => {
+    setNow(Date.now());
+    intervalRef.current = setInterval(() => setNow(Date.now()), 1000);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -255,7 +265,7 @@ export default function CronValidatorClient() {
                     <li key={i} className="tb-v2-cron-row">
                       <span className="tb-v2-cron-num">{i + 1}</span>
                       <code className="tb-v2-cron-when">{formatDate(d)}</code>
-                      <span className="tb-v2-cron-rel">{relativeTime(d)}</span>
+                      {now > 0 && <span className="tb-v2-cron-rel">{relativeTime(d, now)}</span>}
                     </li>
                   ))}
                 </ul>

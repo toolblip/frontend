@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 // UUID v1 structure: time_low (32 bits) | time_mid (16 bits) | time_hi_and_version (16 bits) | clock_seq (16 bits) | node (48 bits)
 // Total: 128 bits
@@ -60,6 +60,11 @@ export default function UuidV1GeneratorClient() {
     }
     setUuids(newUuids);
   }, [count, uppercase, includeBraces]);
+
+  // Generate initial UUIDs on client mount only to avoid hydration mismatch
+  useEffect(() => {
+    generate();
+  }, [generate]);
 
   const copyToClipboard = (uuid: string, index: number) => {
     navigator.clipboard.writeText(uuid).catch(() => {});

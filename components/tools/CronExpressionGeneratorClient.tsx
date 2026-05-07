@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 
 const PRESETS = [
   { label: 'Every minute', value: '* * * * *' },
@@ -81,9 +81,12 @@ export default function CronExpressionGeneratorClient() {
   const [dom, setDom] = useState('*');
   const [mon, setMon] = useState('*');
   const [dow, setDow] = useState('1-5');
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   const expr = `${min} ${hour} ${dom} ${mon} ${dow}`;
-  const nextRuns = useMemo(() => getNextRuns(expr, 5), [expr]);
+  const nextRuns = useMemo(() => mounted ? getNextRuns(expr, 5) : [], [expr, mounted]);
 
   const applyPreset = (preset: string) => {
     const [m, h, d, mo, w] = preset.split(' ');
@@ -152,7 +155,7 @@ export default function CronExpressionGeneratorClient() {
               <li key={i} className="tb-v2-cron-row">
                 <span className="tb-v2-cron-num">{i + 1}</span>
                 <code className="tb-v2-cron-when">{formatDate(d)}</code>
-                <span className="tb-v2-cron-rel">{relativeTime(d)}</span>
+                <span className="tb-v2-cron-rel">{mounted ? relativeTime(d) : ''}</span>
               </li>
             ))}
           </ul>

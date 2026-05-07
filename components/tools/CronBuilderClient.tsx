@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 const PRESETS = [
   { label: 'Every minute', value: '* * * * *' },
@@ -83,10 +83,13 @@ export default function CronBuilderClient() {
   const [dom, setDom] = useState('*');
   const [mon, setMon] = useState('*');
   const [dow, setDow] = useState('*');
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   const expr = `${min} ${hour} ${dom} ${mon} ${dow}`;
   const description = describeSchedule(expr);
-  const nextRuns = getNextRuns(expr);
+  const nextRuns = mounted ? getNextRuns(expr) : [];
 
   const applyPreset = useCallback((preset: string) => {
     const [m, h, d, mo, w] = preset.split(' ');

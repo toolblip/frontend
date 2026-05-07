@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Base64ImageConverterClient() {
   const [input, setInput] = useState('');
@@ -8,6 +8,11 @@ export default function Base64ImageConverterClient() {
   const [mode, setMode] = useState<'encode' | 'decode'>('encode');
   const [error, setError] = useState('');
   const [preview, setPreview] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const encodeImage = (file: File) => {
     const reader = new FileReader();
@@ -111,6 +116,8 @@ export default function Base64ImageConverterClient() {
 
   return (
     <div className="max-w-2xl mx-auto p-6 space-y-6">
+      {isMounted && (
+      <>
       <h1 className="text-2xl font-bold">Base64 Image Converter</h1>
       
       <div className="flex gap-4 mb-4">
@@ -192,6 +199,8 @@ export default function Base64ImageConverterClient() {
             className="w-full h-40 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700 font-mono text-sm bg-gray-50 dark:bg-gray-900"
           />
         </div>
+      )}
+      </>
       )}
     </div>
   );

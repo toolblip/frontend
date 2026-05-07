@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 // ULID structure: timestamp (48 bits) | randomness (80 bits)
 // Total: 128 bits (same as UUID)
@@ -55,6 +55,11 @@ export default function UlidGeneratorClient() {
     }
     setUlids(newUlids);
   }, [count, uppercase]);
+
+  // Generate initial ULIDs in useEffect to avoid hydration mismatch
+  useEffect(() => {
+    generate();
+  }, [generate]);
 
   const copyToClipboard = (ulid: string, index: number) => {
     navigator.clipboard.writeText(ulid).catch(() => {});

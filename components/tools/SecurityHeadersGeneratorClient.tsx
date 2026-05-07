@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 
 interface HeaderConfig {
   enabled: boolean;
@@ -140,9 +140,15 @@ export default function SecurityHeadersGeneratorClient() {
     }
   };
 
+  const [generatedAt, setGeneratedAt] = useState<string>('…');
+
+  useEffect(() => {
+    setGeneratedAt(new Date().toISOString());
+  }, []);
+
   const generate = () => {
     let output = '# Security Headers\n';
-    output += `# Generated: ${new Date().toISOString()}\n\n`;
+    output += `# Generated: ${generatedAt || '...'}\n\n`;
 
     Object.entries(headers).forEach(([name, config]) => {
       if (config.enabled) {
@@ -161,7 +167,7 @@ export default function SecurityHeadersGeneratorClient() {
 
   const generateNginx = () => {
     let output = '# Nginx Security Headers\n';
-    output += `# Generated: ${new Date().toISOString()}\n\n`;
+    output += `# Generated: ${generatedAt || '...'}\n\n`;
     output += 'server {\n';
 
     Object.entries(headers).forEach(([name, config]) => {
@@ -183,7 +189,7 @@ export default function SecurityHeadersGeneratorClient() {
 
   const generateApache = () => {
     let output = '# Apache Security Headers\n';
-    output += `# Generated: ${new Date().toISOString()}\n\n`;
+    output += `# Generated: ${generatedAt || '...'}\n\n`;
     output += '<IfModule mod_headers.c>\n';
 
     Object.entries(headers).forEach(([name, config]) => {

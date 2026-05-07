@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const streetNames = [
   'Main', 'Oak', 'Maple', 'Cedar', 'Pine', 'Elm', 'Washington', 'Park', 'Lake', 'Hill',
@@ -115,10 +115,16 @@ function generateAddress(): GeneratedAddress {
 }
 
 export default function FakeAddressGeneratorClient() {
-  const [address, setAddress] = useState<GeneratedAddress>(generateAddress());
+  const [address, setAddress] = useState<GeneratedAddress | null>(null);
   const [count, setCount] = useState(1);
   const [allAddresses, setAllAddresses] = useState<GeneratedAddress[]>([]);
   const [showAll, setShowAll] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setAddress(generateAddress());
+    setMounted(true);
+  }, []);
 
   const generate = () => {
     const newAddresses = Array.from({ length: count }, () => generateAddress());
@@ -170,53 +176,59 @@ export default function FakeAddressGeneratorClient() {
       </div>
 
       <div className="tb-v2-card p-6 mb-6">
-        <div className="flex justify-between items-start mb-4">
-          <div>
-            <p className="text-sm text-gray-500 mb-1">Full Address</p>
-            <p className="font-medium">{address.fullAddress}</p>
-          </div>
-          <button
-            onClick={() => copyToClipboard(address.fullAddress)}
-            className="tb-v2-button tb-v2-button-secondary text-sm"
-          >
-            Copy
-          </button>
-        </div>
+        {address ? (
+          <>
+            <div className="flex justify-between items-start mb-4">
+              <div>
+                <p className="text-sm text-gray-500 mb-1">Full Address</p>
+                <p className="font-medium">{address.fullAddress}</p>
+              </div>
+              <button
+                onClick={() => copyToClipboard(address.fullAddress)}
+                className="tb-v2-button tb-v2-button-secondary text-sm"
+              >
+                Copy
+              </button>
+            </div>
 
-        <div className="border-t pt-4 mt-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <p className="text-xs text-gray-500">Name</p>
-              <p className="font-medium">{address.firstName} {address.lastName}</p>
+            <div className="border-t pt-4 mt-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-xs text-gray-500">Name</p>
+                  <p className="font-medium">{address.firstName} {address.lastName}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Street Address</p>
+                  <p className="font-medium">
+                    {address.streetNumber} {address.streetName}
+                    {address.unit && `, ${address.unit}`}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">City</p>
+                  <p className="font-medium">{address.city}</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">State</p>
+                  <p className="font-medium">{address.state} ({address.stateCode})</p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">ZIP Code</p>
+                  <p className="font-medium">{address.zipCode}</p>
+                </div>
+              </div>
             </div>
-            <div>
-              <p className="text-xs text-gray-500">Street Address</p>
-              <p className="font-medium">
-                {address.streetNumber} {address.streetName}
-                {address.unit && `, ${address.unit}`}
-              </p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-500">City</p>
-              <p className="font-medium">{address.city}</p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-500">State</p>
-              <p className="font-medium">{address.state} ({address.stateCode})</p>
-            </div>
-            <div>
-              <p className="text-xs text-gray-500">ZIP Code</p>
-              <p className="font-medium">{address.zipCode}</p>
-            </div>
-          </div>
-        </div>
 
-        <div className="border-t pt-4 mt-4">
-          <p className="text-xs text-gray-500 mb-1">Formatted</p>
-          <pre className="text-sm bg-gray-50 p-3 rounded font-mono whitespace-pre-wrap">
-            {address.formattedAddress}
-          </pre>
-        </div>
+            <div className="border-t pt-4 mt-4">
+              <p className="text-xs text-gray-500 mb-1">Formatted</p>
+              <pre className="text-sm bg-gray-50 p-3 rounded font-mono whitespace-pre-wrap">
+                {address.formattedAddress}
+              </pre>
+            </div>
+          </>
+        ) : (
+          <p className="text-gray-500 text-center py-4">Click "Generate Address" to create an address</p>
+        )}
       </div>
 
       {allAddresses.length > 1 && (
@@ -271,23 +283,23 @@ export default function FakeAddressGeneratorClient() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
           <div className="tb-v2-card p-2 text-center">
             <div className="text-xs text-gray-500">First Name</div>
-            <div className="font-mono text-sm">{address.firstName}</div>
+            <div className="font-mono text-sm">{address?.firstName || '—'}</div>
           </div>
           <div className="tb-v2-card p-2 text-center">
             <div className="text-xs text-gray-500">Last Name</div>
-            <div className="font-mono text-sm">{address.lastName}</div>
+            <div className="font-mono text-sm">{address?.lastName || '—'}</div>
           </div>
           <div className="tb-v2-card p-2 text-center">
             <div className="text-xs text-gray-500">Street #</div>
-            <div className="font-mono text-sm">{address.streetNumber}</div>
+            <div className="font-mono text-sm">{address?.streetNumber || '—'}</div>
           </div>
           <div className="tb-v2-card p-2 text-center">
             <div className="text-xs text-gray-500">Unit</div>
-            <div className="font-mono text-sm">{address.unit || 'None'}</div>
+            <div className="font-mono text-sm">{address?.unit || 'None'}</div>
           </div>
           <div className="tb-v2-card p-2 text-center">
             <div className="text-xs text-gray-500">ZIP</div>
-            <div className="font-mono text-sm">{address.zipCode}</div>
+            <div className="font-mono text-sm">{address?.zipCode || '—'}</div>
           </div>
         </div>
       </div>

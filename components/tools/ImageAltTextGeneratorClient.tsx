@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Props {
   tool?: {
@@ -17,6 +17,11 @@ export default function ImageAltTextGeneratorClient({ tool = { name: "Image Alt 
   const [isGenerating, setIsGenerating] = useState(false);
   const [copied, setCopied] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -163,6 +168,7 @@ export default function ImageAltTextGeneratorClient({ tool = { name: "Image Alt 
 
         <div className="space-y-2">
           <label className="block text-sm font-medium">Generated Alt Text</label>
+          {isMounted && (
           <textarea
             rows={3}
             placeholder="Alt text will appear here..."
@@ -170,6 +176,8 @@ export default function ImageAltTextGeneratorClient({ tool = { name: "Image Alt 
             value={altText}
             onChange={(e) => setAltText(e.target.value)}
           />
+          )}
+          {isMounted && altText && (
           <button
             type="button"
             onClick={copyToClipboard}
@@ -177,6 +185,7 @@ export default function ImageAltTextGeneratorClient({ tool = { name: "Image Alt 
           >
             {copied ? '✓ Copied!' : 'Copy to Clipboard'}
           </button>
+          )}
         </div>
       </div>
     </div>
