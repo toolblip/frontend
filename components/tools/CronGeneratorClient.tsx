@@ -100,71 +100,75 @@ export default function CronGeneratorClient() {
   };
 
   return (
-    <div>
-      <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Cron Expression</span>
-        <code className="tb-v2-hash-stats">{expr}</code>
-      </div>
-
-      <div className="grid grid-cols-5 gap-3">
-        {[
-          { label: 'Minute', value: min, set: setMin, options: ['*', '0', '5', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55', '*/5', '*/10', '*/15', '*/30'] },
-          { label: 'Hour', value: hour, set: setHour, options: ['*', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '*/2', '*/4', '*/6', '*/12'] },
-          { label: 'Day', value: dom, set: setDom, options: ['*', '1', '15', '*/2', '*/7'] },
-          { label: 'Month', value: mon, set: setMon, options: ['*', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'] },
-          { label: 'Weekday', value: dow, set: setDow, options: ['*', '0', '1', '2', '3', '4', '5', '6', '1-5', '0,6'] },
-        ].map(({ label, value, set, options }) => (
-          <div key={label} className="space-y-1">
-            <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 text-center">
-              {label}
-            </label>
-            <select
-              value={value}
-              onChange={(e) => set(e.target.value)}
-              className="w-full px-2 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            >
-              {options.map((o) => (
-                <option key={o} value={o}>
-                  {o === '*' ? 'Every' : o}
-                </option>
-              ))}
-            </select>
-            <span className="block text-xs text-gray-400 text-center">{value === '*' ? '' : value}</span>
+    <>
+      {mounted && (
+        <div>
+          <div className="tb-v2-tool-input-head">
+            <span className="tb-v2-tool-label">Cron Expression</span>
+            <code className="tb-v2-hash-stats">{expr}</code>
           </div>
-        ))}
-      </div>
 
-      <div className="tb-v2-cron-presets">
-        {PRESETS.map((p) => (
-          <button
-            key={p.value}
-            type="button"
-            onClick={() => applyPreset(p.value)}
-            className={`tb-v2-mode-tab ${expr === p.value ? 'on' : ''}`}
-          >
-            {p.label}
-          </button>
-        ))}
-      </div>
-
-      <div className="tb-v2-tool-output-head">
-        <span className="tb-v2-tool-label">Next 5 Run Times</span>
-      </div>
-      <div className="tb-v2-tool-output-body">
-        {nextRuns.length > 0 ? (
-          <ul className="tb-v2-cron-list">
-            {nextRuns.map((d, i) => (
-              <li key={i} className="tb-v2-cron-row">
-                <span className="tb-v2-cron-num">{i + 1}</span>
-                <code className="tb-v2-cron-when">{formatDate(d)}</code>
-                <span className="tb-v2-cron-rel">{mounted ? relativeTime(d) : ''}</span>
-              </li>
+          <div className="grid grid-cols-5 gap-3">
+            {[
+              { label: 'Minute', value: min, set: setMin, options: ['*', '0', '5', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55', '*/5', '*/10', '*/15', '*/30'] },
+              { label: 'Hour', value: hour, set: setHour, options: ['*', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '*/2', '*/4', '*/6', '*/12'] },
+              { label: 'Day', value: dom, set: setDom, options: ['*', '1', '15', '*/2', '*/7'] },
+              { label: 'Month', value: mon, set: setMon, options: ['*', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'] },
+              { label: 'Weekday', value: dow, set: setDow, options: ['*', '0', '1', '2', '3', '4', '5', '6', '1-5', '0,6'] },
+            ].map(({ label, value, set, options }) => (
+              <div key={label} className="space-y-1">
+                <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 text-center">
+                  {label}
+                </label>
+                <select
+                  value={value}
+                  onChange={(e) => set(e.target.value)}
+                  className="w-full px-2 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  {options.map((o) => (
+                    <option key={o} value={o}>
+                      {o === '*' ? 'Every' : o}
+                    </option>
+                  ))}
+                </select>
+                <span className="block text-xs text-gray-400 text-center">{value === '*' ? '' : value}</span>
+              </div>
             ))}
-          </ul>
-        ) : (
-          <p className="text-gray-500 dark:text-gray-400 text-sm">No upcoming runs found.</p>
-        )}
-      </div>
-    </div>
+          </div>
+
+          <div className="tb-v2-cron-presets">
+            {PRESETS.map((p) => (
+              <button
+                key={p.value}
+                type="button"
+                onClick={() => applyPreset(p.value)}
+                className={`tb-v2-mode-tab ${expr === p.value ? 'on' : ''}`}
+              >
+                {p.label}
+              </button>
+            ))}
+          </div>
+
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">Next 5 Run Times</span>
+          </div>
+          <div className="tb-v2-tool-output-body">
+            {nextRuns.length > 0 ? (
+              <ul className="tb-v2-cron-list">
+                {nextRuns.map((d, i) => (
+                  <li key={i} className="tb-v2-cron-row">
+                    <span className="tb-v2-cron-num">{i + 1}</span>
+                    <code className="tb-v2-cron-when">{formatDate(d)}</code>
+                    <span className="tb-v2-cron-rel">{relativeTime(d)}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400 text-sm">No upcoming runs found.</p>
+            )}
+          </div>
+        </div>
+      )}
+    </>
   );
 }

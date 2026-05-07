@@ -63,8 +63,16 @@ export default function UuidV1GeneratorClient() {
 
   // Generate initial UUIDs on client mount only to avoid hydration mismatch
   useEffect(() => {
-    generate();
-  }, [generate]);
+    const newUuids: string[] = [];
+    for (let i = 0; i < count; i++) {
+      let uuid = generateUuidV1();
+      if (uppercase) uuid = uuid.toUpperCase();
+      if (includeBraces) uuid = `{${uuid}}`;
+      newUuids.push(uuid);
+    }
+    setUuids(newUuids);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const copyToClipboard = (uuid: string, index: number) => {
     navigator.clipboard.writeText(uuid).catch(() => {});

@@ -514,7 +514,7 @@ export default function ToolClient({ tool }: { tool: Tool }) {
       {/* Share */}
       <div className="mt-6 pt-6 border-t border-gray-100 dark:border-gray-800">
         <p className="text-xs text-gray-400 dark:text-gray-500 mb-3 font-medium uppercase tracking-wide">Share this tool</p>
-        <ShareButtons toolName={tool.name} />
+        <ShareButtons toolName={tool.name} toolSlug={tool.slug} />
       </div>
 
       {/* Footer note */}

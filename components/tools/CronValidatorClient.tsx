@@ -192,10 +192,12 @@ function relativeTime(d: Date, now: number): string {
 export default function CronValidatorClient() {
   const [expression, setExpression] = useState('0 9 * * 1-5');
   const [now, setNow] = useState<number>(0);
+  const [isMounted, setIsMounted] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const result = useMemo(() => validateCron(expression), [expression]);
 
   useEffect(() => {
+    setIsMounted(true);
     setNow(Date.now());
     intervalRef.current = setInterval(() => setNow(Date.now()), 1000);
     return () => {
@@ -245,7 +247,7 @@ export default function CronValidatorClient() {
         ))}
       </div>
 
-      {result.valid ? (
+      {isMounted && result.valid ? (
         <>
           <div className="tb-v2-cron-summary">
             <span className="tb-v2-cron-summary-label">Schedule</span>
@@ -277,11 +279,11 @@ export default function CronValidatorClient() {
             </p>
           )}
         </>
-      ) : (
+      ) : isMounted ? (
         <p className="tb-v2-error" role="alert" style={{ marginTop: 12 }}>
           <strong>Invalid:</strong> {result.error}
         </p>
-      )}
+      ) : null}
     </div>
   );
 }

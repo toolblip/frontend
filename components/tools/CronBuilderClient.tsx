@@ -83,13 +83,14 @@ export default function CronBuilderClient() {
   const [dom, setDom] = useState('*');
   const [mon, setMon] = useState('*');
   const [dow, setDow] = useState('*');
-  const [mounted, setMounted] = useState(false);
+  const [nextRuns, setNextRuns] = useState<string[]>([]);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    setNextRuns(getNextRuns(`${min} ${hour} ${dom} ${mon} ${dow}`));
+  }, [min, hour, dom, mon, dow]);
 
   const expr = `${min} ${hour} ${dom} ${mon} ${dow}`;
   const description = describeSchedule(expr);
-  const nextRuns = mounted ? getNextRuns(expr) : [];
 
   const applyPreset = useCallback((preset: string) => {
     const [m, h, d, mo, w] = preset.split(' ');

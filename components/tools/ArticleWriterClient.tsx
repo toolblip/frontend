@@ -24,6 +24,14 @@ export default function ArticleWriterClient() {
     setIsMounted(true);
   }, []);
 
+  // Guard clipboard access to prevent hydration mismatch
+  const copy = () => {
+    if (!isMounted || !output) return;
+    navigator.clipboard.writeText(output).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
   const generate = () => {
     if (!topic.trim()) return;
 
@@ -55,13 +63,6 @@ export default function ArticleWriterClient() {
     }
 
     setOutput(article);
-  };
-
-  const copy = () => {
-    if (!output) return;
-    navigator.clipboard.writeText(output).catch(() => {});
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
   };
 
   return (

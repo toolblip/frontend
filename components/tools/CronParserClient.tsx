@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -292,15 +292,23 @@ export default function CronParserClient() {
   const [expression, setExpression] = useState('0 9 * * 1-5');
   const [now, setNow] = useState<number | null>(null);
   const [nextRuns, setNextRuns] = useState<Date[] | null>(null);
+  const isMountedRef = useRef(false);
   const result = useMemo(() => parseCron(expression), [expression]);
 
   useEffect(() => {
+    isMountedRef.current = true;
     setNow(Date.now());
     const interval = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    if (!isMountedRef.current) return;
     if (result.valid && result.parsed) {
       setNextRuns(computeNextRuns(result.parsed, 5));
+    } else {
+      setNextRuns(null);
     }
-    return () => clearInterval(interval);
   }, [result]);
 
   return (

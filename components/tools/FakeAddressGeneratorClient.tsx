@@ -144,6 +144,22 @@ export default function FakeAddressGeneratorClient() {
     }
   };
 
+  if (!mounted) {
+    return (
+      <div className="tb-v2-card">
+        <div className="tb-v2-card-header">
+          <h2 className="tb-v2-card-title">Fake Address Generator</h2>
+          <p className="tb-v2-card-description">
+            Generate realistic fake USA addresses for testing and development
+          </p>
+        </div>
+        <div className="tb-v2-card p-6 mb-6 text-center text-gray-500">
+          Loading...
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="tb-v2-card">
       <div className="tb-v2-card-header">

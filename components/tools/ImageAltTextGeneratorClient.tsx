@@ -108,6 +108,8 @@ export default function ImageAltTextGeneratorClient({ tool = { name: "Image Alt 
           </p>
         </div>
 
+        {isMounted && (
+        <>
         <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center hover:border-blue-500 transition-colors cursor-pointer">
           <input 
             type="file" 
@@ -168,7 +170,6 @@ export default function ImageAltTextGeneratorClient({ tool = { name: "Image Alt 
 
         <div className="space-y-2">
           <label className="block text-sm font-medium">Generated Alt Text</label>
-          {isMounted && (
           <textarea
             rows={3}
             placeholder="Alt text will appear here..."
@@ -176,8 +177,7 @@ export default function ImageAltTextGeneratorClient({ tool = { name: "Image Alt 
             value={altText}
             onChange={(e) => setAltText(e.target.value)}
           />
-          )}
-          {isMounted && altText && (
+          {altText && (
           <button
             type="button"
             onClick={copyToClipboard}
@@ -187,6 +187,8 @@ export default function ImageAltTextGeneratorClient({ tool = { name: "Image Alt 
           </button>
           )}
         </div>
+        </>
+        )}
       </div>
     </div>
   );

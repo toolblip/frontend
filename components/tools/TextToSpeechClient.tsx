@@ -9,6 +9,7 @@ export default function TextToSpeechClient() {
   const [selectedVoice, setSelectedVoice] = useState<string>('');
   const [rate, setRate] = useState(1);
   const [pitch, setPitch] = useState(1);
+  const [isMounted, setIsMounted] = useState(false);
 
   const loadVoices = () => {
     const availableVoices = window.speechSynthesis.getVoices();
@@ -20,6 +21,7 @@ export default function TextToSpeechClient() {
   };
 
   useEffect(() => {
+    setIsMounted(true);
     loadVoices();
     window.speechSynthesis.onvoiceschanged = loadVoices;
   }, []);
@@ -45,6 +47,23 @@ export default function TextToSpeechClient() {
     window.speechSynthesis.cancel();
     setIsSpeaking(false);
   };
+
+  if (!isMounted) {
+    return (
+      <div>
+        <div className="tb-v2-tool-input-head">
+          <span className="tb-v2-tool-label">Text to Convert</span>
+        </div>
+        <textarea
+          placeholder="Enter text to convert to speech..."
+          className="tb-v2-tool-textarea"
+          style={{ minHeight: 120 }}
+          disabled
+          aria-label="Text input for speech synthesis"
+        />
+      </div>
+    );
+  }
 
   return (
     <div>

@@ -80,6 +80,11 @@ export default function SecurityHeadersGeneratorClient() {
   const [customHeaders, setCustomHeaders] = useState<{ name: string; value: string }[]>([]);
   const [newHeaderName, setNewHeaderName] = useState('');
   const [newHeaderValue, setNewHeaderValue] = useState('');
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const applyPreset = (presetName: string) => {
     setPreset(presetName);
@@ -244,7 +249,9 @@ export default function SecurityHeadersGeneratorClient() {
     return output;
   };
 
+  // Guard clipboard access to prevent hydration mismatch
   const copy = (text: string) => {
+    if (!isMounted) return;
     navigator.clipboard.writeText(text).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);

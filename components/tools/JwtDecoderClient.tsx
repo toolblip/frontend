@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 
 const SAMPLE = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0Ijo3NTE2MjM5MDIyLCJleHAiOjkwMDAwMDAwMDB9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
 
@@ -57,8 +57,13 @@ function fmtTime(t: unknown): string | null {
 export default function JwtDecoderClient() {
   const [token, setToken] = useState(SAMPLE);
   const [copied, setCopied] = useState<string | null>(null);
+  const [decoded, setDecoded] = useState<{ result: Decoded | null; error: string }>({ result: null, error: '' });
 
-  const { result, error } = useMemo(() => decodeJwt(token), [token]);
+  useEffect(() => {
+    setDecoded(decodeJwt(token));
+  }, [token]);
+
+  const { result, error } = decoded;
 
   const claims = useMemo(() => {
     if (!result || typeof result.payload !== 'object' || !result.payload) return null;
