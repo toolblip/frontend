@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 
+// Primary base URL — api.toolblip.com once SSL is ready (Railway URL is current production)
 const BASE_URL = 'https://toolblip-api-production.up.railway.app';
 
 type HttpMethod = 'GET' | 'POST';
@@ -500,8 +501,8 @@ export default function ApiDocsClient() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
             <div className="bg-slate-900 dark:bg-slate-800 rounded-xl px-4 py-3.5">
               <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest block mb-1">Base URL</span>
-              <code className="text-sm font-mono text-[#58D65D] break-all">https://toolblip-api-production.up.railway.app</code>
-              <span className="text-xs text-slate-500 mt-0.5 block">api.toolblip.com (SSL pending)</span>
+              <code className="text-sm font-mono text-[#58D65D] break-all">api.toolblip.com</code>
+              <span className="text-xs text-slate-500 mt-0.5 block">https://toolblip-api-production.up.railway.app (currently)</span>
             </div>
             <div className="flex items-center gap-3 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3.5">
               <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
