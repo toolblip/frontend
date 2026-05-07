@@ -290,17 +290,23 @@ function relativeTime(d: Date, now: number): string {
 
 export default function CronParserClient() {
   const [expression, setExpression] = useState('0 9 * * 1-5');
+  const [isMounted, setIsMounted] = useState(false);
   const [now, setNow] = useState<number | null>(null);
   const [nextRuns, setNextRuns] = useState<Date[] | null>(null);
   const isMountedRef = useRef(false);
-  const result = useMemo(() => parseCron(expression), [expression]);
 
   useEffect(() => {
+    setIsMounted(true);
     isMountedRef.current = true;
     setNow(Date.now());
     const interval = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(interval);
   }, []);
+
+  const result = useMemo(() => {
+    if (!isMounted) return { valid: false, error: null, parsed: null, description: null, parts: [] };
+    return parseCron(expression);
+  }, [expression, isMounted]);
 
   useEffect(() => {
     if (!isMountedRef.current) return;
@@ -310,6 +316,31 @@ export default function CronParserClient() {
       setNextRuns(null);
     }
   }, [result]);
+
+  if (!isMounted) {
+    return (
+      <div>
+        <div className="tb-v2-tool-input-head">
+          <span className="tb-v2-tool-label">Cron expression</span>
+          <span className="tb-v2-hash-stats">—</span>
+        </div>
+        <input type="text" placeholder="* * * * *" className="tb-v2-cron-input" aria-label="Cron expression" />
+        <div className="tb-v2-cron-fields" aria-hidden="true">
+          {FIELD_LABELS.map((label, i) => (
+            <div key={label} className="tb-v2-cron-field">
+              <span className="tb-v2-cron-field-label">{label}</span>
+              <span className="tb-v2-cron-field-range">{FIELD_RANGES[i]}</span>
+            </div>
+          ))}
+        </div>
+        <div className="tb-v2-cron-presets">
+          {PRESETS.map((p) => (
+            <button key={p.value} type="button" className="tb-v2-mode-tab">{p.label}</button>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>

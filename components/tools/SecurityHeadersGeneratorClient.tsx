@@ -274,6 +274,23 @@ export default function SecurityHeadersGeneratorClient() {
   const apacheOutput = generateApache();
   const nextJsOutput = generateNextJs();
 
+  if (!isMounted) {
+    return (
+      <div>
+        <div className="tb-v2-tool-input-head">
+          <span className="tb-v2-tool-label">Presets</span>
+        </div>
+        <div className="tb-v2-mode-tabs" role="tablist">
+          {HEADER_PRESETS.map((p) => (
+            <button key={p.name} type="button" role="tab" className="tb-v2-mode-tab">
+              {p.name}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="tb-v2-tool-input-head">
