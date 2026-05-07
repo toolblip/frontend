@@ -694,11 +694,7 @@ import JsonCsvExpressClient from '@/components/tools/JsonCsvExpressClient';
 import JsonEditorClient from '@/components/tools/JsonEditorClient';
 import JsonPathEvaluatorExpressClient from '@/components/tools/JsonPathEvaluatorExpressClient';
 import JsonSchemaGenExpressClient from '@/components/tools/JsonSchemaGenExpressClient';
-import JsonToXmlClient from '@/components/tools/JsonToXmlClient';
-import XmlToJsonClient from '@/components/tools/XmlToJsonClient';
 import XmlToCsvClient from '@/components/tools/XmlToCsvClient';
-import ExcelToXmlClient from '@/components/tools/ExcelToXmlClient';
-import TsvToJsonClient from '@/components/tools/TsvToJsonClient';
 import WebsiteAgeCheckerClient from '@/components/tools/WebsiteAgeCheckerClient';
 import HeadlineAnalyzerClient from '@/components/tools/HeadlineAnalyzerClient';
 import HeicToAvifClient from '@/components/tools/HeicToAvifClient';
@@ -3454,7 +3450,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'meta-tag-generator-x': return <MetaTagGeneratorClient />;
     case 'meta-tag-generator-xl': return <MetaTagGeneratorClient />;
     case 'meta-tag-quick': return <MetaTagGeneratorClient />;
-    case 'meta-tags-gen-tool': return <MetaTagsGenToolClient />;
+    case 'meta-tags-gen-tool': return <MetaTagGeneratorClient />;
     case 'mkv-to-avi': return <AviToMkvClient />;
     case 'mkv-to-gif': return <AviToGifClient />;
     case 'mkv-to-mov': return <AviToMkvClient />;
@@ -4146,12 +4142,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'force-converter': return <AllInOneUnitConverterClient />;
     case 'fraction-to-decimal-express': return <FractionToDecimalClient />;
     case 'frequency-converter': return <AllInOneUnitConverterClient />;
-    case 'json-csv-express': return <JsonFormatterClient />;
-    case 'json-editor': return <JsonFormatterClient />;
-    case 'json-path-evaluator-express': return <JsonFormatterClient />;
-    case 'json-schema-gen-express': return <JsonFormatterClient />;
-    case 'json-xml-express': return <JsonFormatterClient />;
-    case 'json-yaml-express': return <JsonFormatterClient />;
+
     case 'keyword-generator-express': return <KeywordGeneratorClient />;
     case 'meta-gen-toolblip': return <MetaTagGeneratorClient />;
     case 'meta-tag-gen-adv': return <MetaTagGeneratorClient />;
@@ -4165,15 +4156,10 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'seo-tag-analyzer': return <MetaTagGeneratorClient />;
     case 'svg-favicon-generator': return <SvgFaviconGeneratorClient />;
     case 'temp-converter-express': return <TemperatureConverterClient />;
-    case 'tsv-json-express': return <JsonFormatterClient />;
     case 'vsd-to-jpg': return <ImageResizerClient />;
     case 'vsd-to-pdf': return <ImageResizerClient />;
     case 'vsdx-to-jpg': return <ImageResizerClient />;
     case 'vsdx-to-pdf': return <ImageResizerClient />;
-    case 'xml-json-express': return <XmlFormatterClient />;
-    case 'xml-to-csv': return <XmlFormatterClient />;
-    case 'xml-to-excel': return <XmlFormatterClient />;
-    case 'yaml-json-express': return <YamlToJsonClient />;
     default:
       return <ComingSoonUI tool={tool} />;
   }
