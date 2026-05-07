@@ -70,3 +70,18 @@ From DuckDuckGo search results, competitors actively writing about JSON formatte
 ---
 
 *Compiled: 2026-05-06 | Sources: DuckDuckGo HTML search, toolblip.com/blog audit, toolblip.com/data/tools.ts audit*
+
+
+## Content Published (2026-05-07)
+
+| Date | Post | Slug |
+|------|------|------|
+| 2026-04-23 | Validate YAML Online: Find Errors by Line Number in Seconds |  |
+
+
+
+## Content Published (2026-05-07)
+
+| Date | Post | Slug |
+|------|------|------|
+| 2026-04-23 | Validate YAML Online: Find Errors by Line Number in Seconds | validate-yaml-online-instant-error-detection-line-numbers.md |
