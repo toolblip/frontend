@@ -3,21 +3,16 @@
 import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 
-// Primary base URL — api.toolblip.com once SSL is ready (Railway URL is current production)
 const BASE_URL = 'https://toolblip-api-production.up.railway.app';
+const BASE_URL_DISPLAY = 'https://toolblip-api-production.up.railway.app';
+const API_TOOLBLIP_COM = 'api.toolblip.com (SSL pending)';
 
 type HttpMethod = 'GET' | 'POST';
 
-interface BodyParam {
+interface Param {
   name: string;
   type: string;
   required: boolean;
-  description: string;
-}
-
-interface ResponseField {
-  field: string;
-  type: string;
   description: string;
 }
 
@@ -29,14 +24,15 @@ interface Endpoint {
   auth: boolean;
   title: string;
   description: string;
-  bodyParams?: BodyParam[];
-  responseFields?: ResponseField[];
+  bodyParams?: Param[];
+  queryParams?: Param[];
+  responseShape?: string;
   curl: string;
   response: string;
 }
 
 const ENDPOINTS: Endpoint[] = [
-  // ── Tools ───────────────────────────────────────────────────────────────
+  // ── Tools ─────────────────────────────────────────────────────────────
   {
     id: 'list-tools',
     group: 'tools',
@@ -45,37 +41,14 @@ const ENDPOINTS: Endpoint[] = [
     auth: false,
     title: 'List all tools',
     description:
-      'Returns a paginated list of all tools. Supports optional filtering by category and full-text search.',
-    bodyParams: [
-      {
-        name: 'category',
-        type: 'string',
-        required: false,
-        description: 'Filter tools by category slug (e.g. developer, productivity)',
-      },
-      {
-        name: 'search',
-        type: 'string',
-        required: false,
-        description: 'Full-text search across tool names and descriptions',
-      },
-      {
-        name: 'page',
-        type: 'integer',
-        required: false,
-        description: 'Page number (default: 1)',
-      },
-      {
-        name: 'per_page',
-        type: 'integer',
-        required: false,
-        description: 'Results per page (default: 20, max: 100)',
-      },
+      'Returns a paginated list of all tools. Optionally filter by category or search by keyword.',
+    queryParams: [
+      { name: 'category', type: 'string', required: false, description: 'Filter by category slug, e.g. developer, productivity' },
+      { name: 'search', type: 'string', required: false, description: 'Full-text search across tool names and descriptions' },
+      { name: 'page', type: 'integer', required: false, description: 'Page number (default: 1)' },
+      { name: 'per_page', type: 'integer', required: false, description: 'Results per page (default: 20, max: 100)' },
     ],
-    responseFields: [
-      { field: 'tools.tools[]', type: 'array', description: 'Array of tool objects' },
-      { field: 'tools.meta', type: 'object', description: 'Pagination: current_page, total, per_page, last_page' },
-    ],
+    responseShape: '{ tools: { tools: Tool[], meta: { current_page, total, per_page, last_page } } }',
     curl: `curl -X GET "${BASE_URL}/api/tools" \\
   -H "Accept: application/json"
 
@@ -105,6 +78,7 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
   }
 }`,
   },
+
   {
     id: 'get-tool',
     group: 'tools',
@@ -113,16 +87,7 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
     auth: false,
     title: 'Get a single tool',
     description: 'Returns a single tool by its URL-safe slug. Returns 404 if not found.',
-    responseFields: [
-      { field: 'tool.id', type: 'integer', description: 'Unique tool ID' },
-      { field: 'tool.slug', type: 'string', description: 'URL-safe identifier' },
-      { field: 'tool.name', type: 'string', description: 'Display name' },
-      { field: 'tool.description', type: 'string', description: 'Full description' },
-      { field: 'tool.category', type: 'string', description: 'Category slug' },
-      { field: 'tool.is_pro', type: 'boolean', description: 'Requires Pro subscription' },
-      { field: 'tool.emoji', type: 'string', description: 'Emoji icon (optional)' },
-      { field: 'tool.created_at', type: 'string', description: 'ISO 8601 timestamp' },
-    ],
+    responseShape: '{ tool: Tool }',
     curl: `curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
   -H "Accept: application/json"`,
     response: `{
@@ -139,14 +104,14 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
 }`,
   },
 
-  // ── Auth ────────────────────────────────────────────────────────────────
+  // ── Auth ───────────────────────────────────────────────────────────────
   {
     id: 'register',
     group: 'auth',
     method: 'POST',
     path: '/api/auth/register',
     auth: false,
-    title: 'Register new account',
+    title: 'Register',
     description: 'Create a new user account. Returns a Bearer token for use in authenticated requests.',
     bodyParams: [
       { name: 'name', type: 'string', required: true, description: 'Full display name' },
@@ -154,13 +119,7 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
       { name: 'password', type: 'string', required: true, description: 'Password — minimum 8 characters' },
       { name: 'password_confirmation', type: 'string', required: true, description: 'Must match password exactly' },
     ],
-    responseFields: [
-      { field: 'user.id', type: 'integer', description: 'User ID' },
-      { field: 'user.name', type: 'string', description: 'Display name' },
-      { field: 'user.email', type: 'string', description: 'Email address' },
-      { field: 'user.is_pro', type: 'boolean', description: 'Pro subscription status' },
-      { field: 'token', type: 'string', description: 'Bearer token for authenticated requests' },
-    ],
+    responseShape: '{ user: User, token: string }',
     curl: `curl -X POST "${BASE_URL}/api/auth/register" \\
   -H "Content-Type: application/json" \\
   -H "Accept: application/json" \\
@@ -180,6 +139,7 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
   "token": "1|Xr8KbP9mNoPqRsTuVwXyZaBcDeFgHiJkL"
 }`,
   },
+
   {
     id: 'login',
     group: 'auth',
@@ -192,13 +152,7 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
       { name: 'email', type: 'string', required: true, description: 'Account email address' },
       { name: 'password', type: 'string', required: true, description: 'Account password' },
     ],
-    responseFields: [
-      { field: 'user.id', type: 'integer', description: 'User ID' },
-      { field: 'user.name', type: 'string', description: 'Display name' },
-      { field: 'user.email', type: 'string', description: 'Email address' },
-      { field: 'user.is_pro', type: 'boolean', description: 'Pro subscription status' },
-      { field: 'token', type: 'string', description: 'Bearer token for authenticated requests' },
-    ],
+    responseShape: '{ user: User, token: string }',
     curl: `curl -X POST "${BASE_URL}/api/auth/login" \\
   -H "Content-Type: application/json" \\
   -H "Accept: application/json" \\
@@ -216,6 +170,7 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
   "token": "2|Yz7LcQ3aMbNcOdPeQfGhRiJsTkL"
 }`,
   },
+
   {
     id: 'logout',
     group: 'auth',
@@ -224,16 +179,15 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
     auth: true,
     title: 'Logout',
     description: 'Invalidate the current session token. After calling this, the token can no longer be used.',
-    responseFields: [
-      { field: 'message', type: 'string', description: 'Confirmation message' },
-    ],
+    responseShape: '{ message: string }',
     curl: `curl -X POST "${BASE_URL}/api/auth/logout" \\
-  -H "Authorization: Bearer 1|Xr8KbP9mNoPqRsTuVwXyZaBcDeFgHiJkL" \\
+  -H "Authorization: Bearer YOUR_TOKEN" \\
   -H "Accept: application/json"`,
     response: `{
   "message": "Logged out"
 }`,
   },
+
   {
     id: 'get-user',
     group: 'auth',
@@ -242,14 +196,9 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
     auth: true,
     title: 'Get authenticated user',
     description: 'Returns the profile of the currently authenticated user.',
-    responseFields: [
-      { field: 'user.id', type: 'integer', description: 'User ID' },
-      { field: 'user.name', type: 'string', description: 'Display name' },
-      { field: 'user.email', type: 'string', description: 'Email address' },
-      { field: 'user.is_pro', type: 'boolean', description: 'Pro subscription status' },
-    ],
+    responseShape: '{ user: User }',
     curl: `curl -X GET "${BASE_URL}/api/auth/user" \\
-  -H "Authorization: Bearer 1|Xr8KbP9mNoPqRsTuVwXyZaBcDeFgHiJkL" \\
+  -H "Authorization: Bearer YOUR_TOKEN" \\
   -H "Accept: application/json"`,
     response: `{
   "user": {
@@ -284,6 +233,13 @@ const METHOD_COLORS: Record<HttpMethod, string> = {
   POST: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400',
 };
 
+const METHOD_BORDER: Record<HttpMethod, string> = {
+  GET: 'border-emerald-300 dark:border-emerald-800',
+  POST: 'border-blue-300 dark:border-blue-800',
+};
+
+// ── Copy button ─────────────────────────────────────────────────────────────────
+
 function CopyButton({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
   const handleCopy = async () => {
@@ -315,6 +271,8 @@ function CopyButton({ text }: { text: string }) {
   );
 }
 
+// ── Code block ─────────────────────────────────────────────────────────────────
+
 function CodeBlock({ code }: { code: string }) {
   return (
     <pre className="bg-[#0d1117] text-slate-300 rounded-xl p-4 text-[12.5px] font-mono overflow-x-auto leading-relaxed whitespace-pre">
@@ -323,7 +281,9 @@ function CodeBlock({ code }: { code: string }) {
   );
 }
 
-function ParamTable({ params, body }: { params: BodyParam[]; body?: boolean }) {
+// ── Param table ────────────────────────────────────────────────────────────────
+
+function ParamTable({ params, body }: { params: Param[]; body?: boolean }) {
   return (
     <div className="mb-5">
       <h4 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">
@@ -361,33 +321,20 @@ function ParamTable({ params, body }: { params: BodyParam[]; body?: boolean }) {
   );
 }
 
-function ResponseFieldsTable({ fields }: { fields: ResponseField[] }) {
+// ── Response shape badge ───────────────────────────────────────────────────────
+
+function ResponseShape({ shape }: { shape: string }) {
   return (
     <div className="mb-5">
-      <h4 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Response Fields</h4>
-      <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
-            <tr>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs w-44">Field</th>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs w-20">Type</th>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs">Description</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
-            {fields.map((f, i) => (
-              <tr key={i} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30">
-                <td className="px-4 py-2.5 font-mono text-xs text-emerald-600 dark:text-emerald-400 font-medium">{f.field}</td>
-                <td className="px-4 py-2.5 text-xs text-slate-500 dark:text-slate-500">{f.type}</td>
-                <td className="px-4 py-2.5 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">{f.description}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <h4 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Response Shape</h4>
+      <code className="text-xs font-mono bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 block">
+        {shape}
+      </code>
     </div>
   );
 }
+
+// ── Endpoint card ─────────────────────────────────────────────────────────────
 
 function EndpointCard({ ep }: { ep: Endpoint }) {
   const [open, setOpen] = useState(false);
@@ -395,7 +342,7 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
   return (
     <div
       id={ep.id}
-      className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transition-all hover:border-emerald-200 dark:hover:border-emerald-800 scroll-mt-20"
+      className={`bg-white dark:bg-slate-900 rounded-2xl border ${METHOD_BORDER[ep.method]} dark:border-slate-800 overflow-hidden transition-all hover:shadow-sm scroll-mt-20`}
     >
       <button
         onClick={() => setOpen(!open)}
@@ -428,7 +375,8 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
           <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{ep.description}</p>
 
           {ep.bodyParams && ep.bodyParams.length > 0 && <ParamTable params={ep.bodyParams} body />}
-          {ep.responseFields && ep.responseFields.length > 0 && <ResponseFieldsTable fields={ep.responseFields} />}
+          {ep.queryParams && ep.queryParams.length > 0 && <ParamTable params={ep.queryParams} />}
+          {ep.responseShape && <ResponseShape shape={ep.responseShape} />}
 
           <div>
             <div className="flex items-center justify-between mb-2">
@@ -450,6 +398,8 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
     </div>
   );
 }
+
+// ── Main component ─────────────────────────────────────────────────────────────
 
 export default function ApiDocsClient() {
   const [activeId, setActiveId] = useState<string>('');
@@ -501,8 +451,8 @@ export default function ApiDocsClient() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
             <div className="bg-slate-900 dark:bg-slate-800 rounded-xl px-4 py-3.5">
               <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest block mb-1">Base URL</span>
-              <code className="text-sm font-mono text-[#58D65D] break-all">https://toolblip-api-production.up.railway.app</code>
-              <span className="text-xs text-slate-500 mt-0.5 block">api.toolblip.com (SSL pending)</span>
+              <code className="text-sm font-mono text-[#58D65D] break-all">{BASE_URL_DISPLAY}</code>
+              <span className="text-xs text-slate-500 mt-0.5 block">{API_TOOLBLIP_COM}</span>
             </div>
             <div className="flex items-center gap-3 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3.5">
               <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
