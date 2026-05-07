@@ -644,7 +644,7 @@ export default function ApiDocsClient() {
             </section>
 
             {/* Quick Start */}
-            <section id="quick-start">
+            <section id="quick-start" className="scroll-mt-20">
               <div className="flex items-center gap-3 mb-6">
                 <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">Quick Start</h2>
                 <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
