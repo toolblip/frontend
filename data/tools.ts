@@ -4,6 +4,7 @@ export interface Tool {
   description: string;
   emoji: string;
   category: string;
+  tags?: string[];
 }
 
 export const tools: Tool[] = [
