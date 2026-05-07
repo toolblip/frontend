@@ -88,7 +88,11 @@ export default function CronGeneratorClient() {
   }, []);
 
   const expr = `${min} ${hour} ${dom} ${mon} ${dow}`;
-  const nextRuns = useMemo(() => getNextRuns(expr, 5), [expr]);
+  const [nextRuns, setNextRuns] = useState<Date[]>([]);
+
+  useEffect(() => {
+    setNextRuns(getNextRuns(expr, 5));
+  }, [expr]);
 
   const applyPreset = (preset: string) => {
     const [m, h, d, mo, w] = preset.split(' ');
