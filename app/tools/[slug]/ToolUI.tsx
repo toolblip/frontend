@@ -652,8 +652,54 @@ import HashCollisionFinderClient from '@/components/tools/HashCollisionFinderCli
 import HashDiffCheckerClient from '@/components/tools/HashDiffCheckerClient';
 import HeadingTagAnalyzerClient from '@/components/tools/HeadingTagAnalyzerClient';
 import JpgToPngClient from '@/components/tools/JpgToPngClient';
+import JpgToAvifClient from '@/components/tools/JpgToAvifClient';
+import JpgToGifClient from '@/components/tools/JpgToGifClient';
+import JpgToSvgClient from '@/components/tools/JpgToSvgClient';
+import JpgToTiffClient from '@/components/tools/JpgToTiffClient';
+import PngToAvifClient from '@/components/tools/PngToAvifClient';
+import PngToEpsClient from '@/components/tools/PngToEpsClient';
+import PngToGifClient from '@/components/tools/PngToGifClient';
+import PngToSvgClient from '@/components/tools/PngToSvgClient';
+import PngToTiffClient from '@/components/tools/PngToTiffClient';
+import TiffToJpgClient from '@/components/tools/TiffToJpgClient';
+import TiffToPngClient from '@/components/tools/TiffToPngClient';
+import TiffToSvgClient from '@/components/tools/TiffToSvgClient';
+import PsdToJpgClient from '@/components/tools/PsdToJpgClient';
+import PsdToPdfClient from '@/components/tools/PsdToPdfClient';
+import PsdToPngClient from '@/components/tools/PsdToPngClient';
+import PsdToSvgClient from '@/components/tools/PsdToSvgClient';
+import WebmToMp3Client from '@/components/tools/WebmToMp3Client';
+import WebmToMp4Client from '@/components/tools/WebmToMp4Client';
+import MovToGifClient from '@/components/tools/MovToGifClient';
+import Mp4ToWebmClient from '@/components/tools/Mp4ToWebmClient';
+import MobiToEpubClient from '@/components/tools/MobiToEpubClient';
+import ImageToSvgClient from '@/components/tools/ImageToSvgClient';
+import ImageToSvgConverterClient from '@/components/tools/ImageToSvgConverterClient';
+import WebpToAvifClient from '@/components/tools/WebpToAvifClient';
 import SeoMetaTagAnalyzerClient from '@/components/tools/SeoMetaTagAnalyzerClient';
 import LoremIpsumGeneratorProClient from '@/components/tools/LoremIpsumGeneratorProClient';
+import LdapFilterGeneratorClient from '@/components/tools/LdapFilterGeneratorClient';
+import RegexVisualBuilderClient from '@/components/tools/RegexVisualBuilderClient';
+import KeywordGeneratorExpressClient from '@/components/tools/KeywordGeneratorExpressClient';
+import MetaGenToolblipClient from '@/components/tools/MetaGenToolblipClient';
+import MetaTagGenAdvClient from '@/components/tools/MetaTagGenAdvClient';
+import MetaTagGenPrimeClient from '@/components/tools/MetaTagGenPrimeClient';
+import MetaTagGenProClient from '@/components/tools/MetaTagGenProClient';
+import MetaTagGenToolClient from '@/components/tools/MetaTagGenToolClient';
+import MetaTagGenUltraClient from '@/components/tools/MetaTagGenUltraClient';
+import ShellCommandGenExpressClient from '@/components/tools/ShellCommandGenExpressClient';
+import TempConverterExpressClient from '@/components/tools/TempConverterExpressClient';
+import LoremIpsumGenToolClient from '@/components/tools/LoremIpsumGenToolClient';
+import JsonCsvExpressClient from '@/components/tools/JsonCsvExpressClient';
+import JsonEditorClient from '@/components/tools/JsonEditorClient';
+import JsonPathEvaluatorExpressClient from '@/components/tools/JsonPathEvaluatorExpressClient';
+import JsonSchemaGenExpressClient from '@/components/tools/JsonSchemaGenExpressClient';
+import JsonToXmlClient from '@/components/tools/JsonToXmlClient';
+import XmlToJsonClient from '@/components/tools/XmlToJsonClient';
+import XmlToCsvClient from '@/components/tools/XmlToCsvClient';
+import ExcelToXmlClient from '@/components/tools/ExcelToXmlClient';
+import TsvToJsonClient from '@/components/tools/TsvToJsonClient';
+import WebsiteAgeCheckerClient from '@/components/tools/WebsiteAgeCheckerClient';
 import HeadlineAnalyzerClient from '@/components/tools/HeadlineAnalyzerClient';
 import HeicToAvifClient from '@/components/tools/HeicToAvifClient';
 import HeicToJpgClient from '@/components/tools/HeicToJpgClient';
@@ -2448,6 +2494,54 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <ImageFormatConverterClient />;
     case 'jpg-to-png':
       return <JpgToPngClient />;
+    case 'jpg-to-avif':
+      return <JpgToAvifClient />;
+    case 'jpg-to-gif':
+      return <JpgToGifClient />;
+    case 'jpg-to-svg':
+      return <JpgToSvgClient />;
+    case 'jpg-to-tiff':
+      return <JpgToTiffClient />;
+    case 'png-to-avif':
+      return <PngToAvifClient />;
+    case 'png-to-eps':
+      return <PngToEpsClient />;
+    case 'png-to-gif':
+      return <PngToGifClient />;
+    case 'png-to-svg':
+      return <PngToSvgClient />;
+    case 'png-to-tiff':
+      return <PngToTiffClient />;
+    case 'tiff-to-jpg':
+      return <TiffToJpgClient />;
+    case 'tiff-to-png':
+      return <TiffToPngClient />;
+    case 'tiff-to-svg':
+      return <TiffToSvgClient />;
+    case 'psd-to-jpg':
+      return <PsdToJpgClient />;
+    case 'psd-to-pdf':
+      return <PsdToPdfClient />;
+    case 'psd-to-png':
+      return <PsdToPngClient />;
+    case 'psd-to-svg':
+      return <PsdToSvgClient />;
+    case 'webm-to-mp3':
+      return <WebmToMp3Client />;
+    case 'webm-to-mp4':
+      return <WebmToMp4Client />;
+    case 'mov-to-gif':
+      return <MovToGifClient />;
+    case 'mp4-to-webm':
+      return <Mp4ToWebmClient />;
+    case 'mobi-to-epub':
+      return <MobiToEpubClient />;
+    case 'image-to-svg':
+      return <ImageToSvgClient />;
+    case 'image-to-svg-converter':
+      return <ImageToSvgConverterClient />;
+    case 'webp-to-avif':
+      return <WebpToAvifClient />;
     case 'jpg-to-webp':
       return <ImageFormatConverterClient />;
     case 'webp-to-png':
@@ -3212,14 +3306,14 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'jpg-to-gif': return <GifToJpgClient />;
     case 'jpg-to-svg': return <EpsToJpgClient />;
     case 'jpg-to-tiff': return <EpsToJpgClient />;
-    case 'json-csv-express': return <CsvJsonExpressClient />;
+    case 'json-csv-express': return <JsonCsvExpressClient />;
     case 'json-escape-unescape': return <BackslashEscapeUnescapeClient />;
     case 'json-patch-generator': return <JsonLdGeneratorClient />;
     case 'json-path-evaluator': return <JsonPathTesterClient />;
-    case 'json-path-evaluator-express': return <CsvJsonExpressClient />;
+    case 'json-path-evaluator-express': return <JsonPathEvaluatorExpressClient />;
     case 'json-path-tester-new': return <JsonPathTesterClient />;
     case 'json-schema-editor': return <JsonSchemaValidatorClient />;
-    case 'json-schema-gen-express': return <CsvJsonExpressClient />;
+    case 'json-schema-gen-express': return <JsonSchemaGenExpressClient />;
     case 'json-schema-generator': return <JsonLdGeneratorClient />;
     case 'json-schema-viewer': return <JsonSchemaValidatorClient />;
     case 'json-to-csv-v2': return <CsvToJsonClient />;
@@ -3230,8 +3324,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'json-to-url-encoded': return <CsvToJsonClient />;
     case 'json-to-xml-v2': return <JsonToXmlClient />;
     case 'json-to-yaml-v2': return <JsonToYamlClient />;
-    case 'json-xml-express': return <CsvJsonExpressClient />;
-    case 'json-yaml-express': return <CsvJsonExpressClient />;
+    case 'json-xml-express': return <JsonToXmlClient />;
+    case 'json-yaml-express': return <JsonToYamlClient />;
     case 'jwt-decode-tool': return <DecodeToolClient />;
     case 'jwt-decoder-2025': return <JwtDecoderClient />;
     case 'jwt-decoder-adv': return <JwtDecoderClient />;
@@ -3270,9 +3364,9 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'jwt-token-decoder': return <JwtDecoderClient />;
     case 'keyword-density-analyzer-new': return <KeywordDensityCheckerClient />;
     case 'keyword-difficulty-checker': return <KeywordDensityCheckerClient />;
-    case 'keyword-generator-express': return <CronGeneratorExpressClient />;
+    case 'keyword-generator-express': return <KeywordGeneratorExpressClient />;
     case 'keyword-position-checker': return <KeywordDensityCheckerClient />;
-    case 'ldap-filter-generator': return <CssFilterGeneratorClient />;
+    case 'ldap-filter-generator': return <LdapFilterGeneratorClient />;
     case 'length-converter-express': return <LengthConverterClient />;
     case 'length-weight-converter': return <LengthConverterClient />;
     case 'lorem-ipsum-adv': return <LoremIpsumGeneratorClient />;
@@ -3294,7 +3388,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'lorem-ipsum-fresh': return <LoremIpsumGeneratorClient />;
     case 'lorem-ipsum-full': return <LoremIpsumGeneratorClient />;
     case 'lorem-ipsum-gen': return <LoremIpsumGeneratorClient />;
-    case 'lorem-ipsum-gen-tool': return <FaviconGenToolClient />;
+    case 'lorem-ipsum-gen-tool': return <LoremIpsumGenToolClient />;
     case 'lorem-ipsum-generator-pro': return <LoremIpsumGeneratorProClient />;
     case 'lorem-ipsum-generator-v3': return <LoremIpsumGeneratorClient />;
     case 'lorem-ipsum-generator-v4': return <LoremIpsumGeneratorClient />;
@@ -3319,15 +3413,15 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'm4a-to-wav': return <AacToWavClient />;
     case 'markdown-table-from-json': return <JsonToMarkdownTableClient />;
     case 'md5-hash-generator': return <HashGeneratorClient />;
-    case 'meta-gen-toolblip': return <FaviconGenToolblipClient />;
+    case 'meta-gen-toolblip': return <MetaGenToolblipClient />;
     case 'meta-tag-browser': return <MetaTagGeneratorClient />;
     case 'meta-tag-fresh': return <MetaTagGeneratorClient />;
     case 'meta-tag-full': return <MetaTagGeneratorClient />;
-    case 'meta-tag-gen-adv': return <FaviconGenAdvClient />;
-    case 'meta-tag-gen-prime': return <FaviconGenPrimeClient />;
-    case 'meta-tag-gen-pro': return <FaviconGenProClient />;
-    case 'meta-tag-gen-tool': return <FaviconGenToolClient />;
-    case 'meta-tag-gen-ultra': return <FaviconGenUltraClient />;
+    case 'meta-tag-gen-adv': return <MetaTagGenAdvClient />;
+    case 'meta-tag-gen-prime': return <MetaTagGenPrimeClient />;
+    case 'meta-tag-gen-pro': return <MetaTagGenProClient />;
+    case 'meta-tag-gen-tool': return <MetaTagGenToolClient />;
+    case 'meta-tag-gen-ultra': return <MetaTagGenUltraClient />;
     case 'meta-tag-generator-2025': return <MetaTagGeneratorClient />;
     case 'meta-tag-generator-advanced': return <MetaTagGeneratorClient />;
     case 'meta-tag-generator-api': return <MetaTagGeneratorClient />;
@@ -3360,7 +3454,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'meta-tag-generator-x': return <MetaTagGeneratorClient />;
     case 'meta-tag-generator-xl': return <MetaTagGeneratorClient />;
     case 'meta-tag-quick': return <MetaTagGeneratorClient />;
-    case 'meta-tags-gen-tool': return <FaviconGenToolClient />;
+    case 'meta-tags-gen-tool': return <MetaTagsGenToolClient />;
     case 'mkv-to-avi': return <AviToMkvClient />;
     case 'mkv-to-gif': return <AviToGifClient />;
     case 'mkv-to-mov': return <AviToMkvClient />;
@@ -3562,7 +3656,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'regex-tester-web': return <RegexTesterClient />;
     case 'regex-tester-x': return <RegexTesterClient />;
     case 'regex-tester-xl': return <RegexTesterClient />;
-    case 'regex-visual-builder': return <CronVisualBuilderClient />;
+    case 'regex-visual-builder': return <RegexVisualBuilderClient />;
     case 'rgb-hsl-color-picker': return <ColorPickerHexRgbHslClient />;
     case 'rgb-to-hex-express': return <HexToRgbExpressClient />;
     case 'rgb-to-hex-new': return <HexToRgbNewClient />;
@@ -3582,7 +3676,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'seo-meta-tag-analyzer': return <SeoMetaTagAnalyzerClient />;
     case 'seo-meta-tag-builder': return <MetaTagGeneratorClient />;
     case 'seo-meta-tag-creator': return <MetaTagGeneratorClient />;
-    case 'seo-tag-analyzer': return <HeadingTagAnalyzerClient />;
+    case 'seo-tag-analyzer': return <SeoMetaTagAnalyzerClient />;
     case 'seo-title-tag-generator': return <ArticleTitleGeneratorClient />;
     case 'serp-preview-2025': return <SerpPreviewClient />;
     case 'serp-preview-adv': return <SerpPreviewClient />;
@@ -3620,7 +3714,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'serp-snippet-preview': return <SerpPreviewClient />;
     case 'sha1-hash-generator': return <HashGeneratorClient />;
     case 'sha256-hash-generator': return <HashGeneratorClient />;
-    case 'shell-command-gen-express': return <CurlGenExpressClient />;
+    case 'shell-command-gen-express': return <ShellCommandGenExpressClient />;
     case 'shell-command-generator': return <BashCommandGeneratorClient />;
     case 'shell-command-generator-new': return <BashCommandGeneratorClient />;
     case 'sitemap-html-generator': return <HtmlTableGeneratorClient />;
@@ -3639,7 +3733,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'syllable-counter-express': return <SyllableCounterClient />;
     case 'syllable-word-counter': return <SyllableCounterClient />;
     case 'table-to-markdown': return <JsonToMarkdownTableClient />;
-    case 'temp-converter-express': return <DataSizeConverterExpressClient />;
+    case 'temp-converter-express': return <TempConverterExpressClient />;
     case 'text-case-converter': return <CaseConverterClient />;
     case 'text-combinations-generator': return <FakeTextGeneratorClient />;
     case 'text-diff-checker': return <TextDiffClient />;
@@ -3693,7 +3787,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'time-zone-tool': return <TimeZoneConverterClient />;
     case 'title-case-converter': return <CaseConverterClient />;
     case 'toml-to-json-v2': return <TomlToJsonClient />;
-    case 'tsv-json-express': return <CsvJsonExpressClient />;
+    case 'tsv-json-express': return <TsvToJsonClient />;
     case 'tsv-to-csv-v2': return <CsvToTsvClient />;
     case 'tsv-to-json-v2': return <TsvToJsonClient />;
     case 'unit-converter-2025': return <UnitConverterClient />;
@@ -3741,22 +3835,22 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'vsdx-to-pdf': return <ExcelToPdfClient />;
     case 'wcag-contrast-auditor': return <ColorContrastAuditorClient />;
     case 'webm-to-mov': return <AviToMovClient />;
-    case 'webm-to-mp3': return <GifToWebmClient />;
-    case 'webm-to-mp4': return <GifToWebmClient />;
-    case 'webp-to-avif': return <GifToAvifClient />;
+    case 'webm-to-mp3': return <WebmToMp3Client />;
+    case 'webm-to-mp4': return <WebmToMp4Client />;
+    case 'webp-to-avif': return <WebpToAvifClient />;
     case 'webp-to-gif': return <AviToGifClient />;
-    case 'website-age-checker': return <DomainAgeCheckerClient />;
+    case 'website-age-checker': return <WebsiteAgeCheckerClient />;
     case 'weight-converter-express': return <WeightConverterClient />;
     case 'whois-lookup-v2': return <WhoisLookupClient />;
     case 'wifi-qr-code-generator': return <QrCodeGeneratorClient />;
     case 'word-complexity-analyzer': return <WordFrequencyAnalyzerClient />;
     case 'word-density-analyzer': return <WordFrequencyAnalyzerClient />;
     case 'word-frequency-table': return <WordFrequencyAnalyzerClient />;
-    case 'xml-json-express': return <CsvJsonExpressClient />;
+    case 'xml-json-express': return <XmlToJsonClient />;
     case 'xml-sitemap-parser': return <XmlSitemapGeneratorClient />;
-    case 'xml-to-csv': return <CsvToXmlClient />;
+    case 'xml-to-csv': return <XmlToCsvClient />;
     case 'xml-to-excel': return <ExcelToXmlClient />;
-    case 'yaml-json-express': return <CsvJsonExpressClient />;
+    case 'yaml-json-express': return <YamlToJsonClient />;
     case 'yaml-to-json-v2': return <JsonToYamlClient />;
     case 'yaml-to-toml': return <JsonToYamlClient />;
     case 'yaml-to-toml-v2': return <JsonToYamlClient />;
@@ -3799,7 +3893,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'ipa-phonetic-finder': return <IPAPhoneticFinderClient />;
     case 'ipynb-formatter': return <IPynbFormatterClient />;
     case 'jupyter-cleaner': return <JupyterCleanerClient />;
-    case 'json-editor': return <EditClient />;
+    case 'json-editor': return <JsonEditorClient />;
     case 'json-tree-view': return <JsonTreeViewClient />;
     case 'jsonpath-query-tester': return <JSONPathQueryTesterClient />;
     case 'jsonpath-query-tool': return <JSONPathQueryToolClient />;
