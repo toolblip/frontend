@@ -191,6 +191,10 @@ const endpointGroups = [
   { label: 'Authentication', endpoints: endpoints.filter((endpoint) => endpoint.group === 'Authentication') },
 ];
 
+const starterRequest = `curl "${BASE_URL}/api/tools" \\\n  -H "Accept: application/json"`;
+
+const authenticatedRequest = `curl "${BASE_URL}/api/auth/user" \\\n  -H "Authorization: Bearer YOUR_TOKEN" \\\n  -H "Accept: application/json"`;
+
 function CopyButton({ value }: { value: string }) {
   const [copied, setCopied] = useState(false);
 
@@ -352,6 +356,17 @@ export default function ApiDocsClient() {
 curl "${BASE_URL}/api/auth/user" \\
   -H "Authorization: Bearer $TOKEN" \\
   -H "Accept: application/json"`} />
+            </div>
+          </section>
+
+          <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
+            <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Before you start</h2>
+            <p className="mt-3 text-slate-600 dark:text-slate-300">
+              All endpoints are JSON over HTTPS. Use the Railway production base URL now, and switch to <InlineCode>{FUTURE_BASE_URL}</InlineCode> after SSL is ready.
+            </p>
+            <div className="mt-5 grid gap-4 xl:grid-cols-2">
+              <CodeBlock label="Public request" code={starterRequest} />
+              <CodeBlock label="Authenticated request" code={authenticatedRequest} />
             </div>
           </section>
 
