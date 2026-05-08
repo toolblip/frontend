@@ -1,87 +1,47 @@
 # Opportunity Finder — 2026-04-23
 
-> Note: Report dated 2026-04-23 but compiled 2026-05-06. Web search APIs unavailable (rate limiting on Reddit/Stack Overflow), data gathered via DuckDuckGo HTML and direct tool/blog audits.
+## Research Notes
+- Existing blog source checked: `content/blog/` (the requested `frontend/content/blog/` path does not exist in this repo). Toolblip already has posts covering JSON formatter, JSON validation/debugging, regex tester/cheatsheet/explainer, UUID v4/v7, Base64, URL encoding, image crop/privacy, and JSON Schema.
+- Existing tools checked: `data/tools.ts` (the requested `frontend/data/tools.ts` path does not exist). Relevant live/declared slugs include `json-formatter`, `json-editor`, `json-tree-view`, `json-path-tester`, `json-diff`, `json-schema-validator`, `regex-tester`, `regex-pattern-generator`, `base64-encoder-decoder`, `url-encoder-decoder`, `url-parameter-extractor`, `uuid-generator`, `random-uuid-v7`, `image-cropper`, and `square-crop`.
+- Stack Overflow API check for `[json]`, `[regex]`, `[url-encoding]`, and `[base64]` from the last 30 days with 10+ votes returned 0 results; I used the highest-voted/most relevant recent questions instead.
+- Reddit search was blocked by Reddit network policy from this environment, and `web_search` was unavailable due missing MiniMax API credentials. Hacker News and Stack Exchange APIs were used as social/Q&A fallbacks.
 
 ## Questions Found (from Reddit/Stack Overflow/Q&A sites)
-
 | Question | Platform | Tool That Solves It | Content Angle |
 |----------|----------|---------------------|---------------|
-| "Best JSON formatter for developers?" (privacy concern — sending data to servers) | Reddit/dev.to community | `json-formatter` | **"Why Browser-Based JSON Formatting is Safer Than Sending Data to Servers"** — existing blog doesn't emphasize privacy enough; competitors (bugsly.dev, toolbox-kit.com) are publishing on this angle |
-| "Regex Tester Showdown: regex101 vs RegExr vs DevPlaybook" — which is best in 2026? | dev.to (Mar 25, 2026) | `regex-tester` | Toolblip not in the comparison → **"Regex101 vs Toolblip: A Different Take on Privacy-First Regex Testing"** |
-| "Online UUID generator and validator with REST API" | Reddit r/learnprogramming | `uuid-generator`, `random-uuid-v7` | Gap: Toolblip's UUID tools have no REST API angle; blog post idea: **"Generate UUIDs with a Free REST API (No Signup)"** |
-| "Online regex tester for multiple languages" | Reddit r/programming (archived, 1.2K upvotes) | `regex-tester` | Still relevant — Toolblip supports multiple language regex flavors; update existing blog |
-| "Cron expression parser/serializer for C#" — looking for a library | Reddit r/csharp | `cron-parser`, `cron-generator` | Toolblip's cron tools are browser-based, free, no install — **"The Best Free Cron Parser Online: No Library Required"** |
-| "JSON diff/compare — how to compare two JSON files quickly?" | Various developer forums | `json-diff` | Existing blog `json-diff-compare-json-files-browser.md` is thin — **expand with real-world use cases, side-by-side UI walkthrough** |
-| "Is there a standalone UUID generator in JS, no dependencies?" | Reddit r/javascript | `uuid-generator` | 6-line solution is popular — Toolblip offers the same but with UI; angle: **"The Simplest Way to Generate a UUID: Browser, No Install"** |
+| “JSON formatter Chrome plugin now closed and injecting adware” — discussion about a popular formatter extension becoming unsafe. <https://news.ycombinator.com/item?id=47721946> | Hacker News | `json-formatter`, `json-editor` | High-intent security angle: “Stop pasting JSON into extensions: use a browser-local JSON formatter instead.” Differentiate Toolblip as no-install and no extension supply-chain risk. |
+| “Jsonl Viewer – An offline JSON Lines viewer in a single HTML file.” <https://news.ycombinator.com/item?id=47699179> | Hacker News | Partial: `json-formatter`, `json-tree-view` | Gap around JSONL: “How to inspect JSON Lines logs locally without uploading them.” This is adjacent to current JSON tooling but not fully solved. |
+| “Show HN: Idt – A Swiss Army Knife for UUID, ULID, Snowflake, and More.” <https://news.ycombinator.com/item?id=47690138> | Hacker News | `uuid-generator`, `random-uuid-v7` | Developers want one place to generate/inspect sortable IDs. Existing UUID posts are strong; add comparison content for UUID v7 vs ULID vs Snowflake. |
+| “Jackson 3 and final Map deserialization.” <https://stackoverflow.com/questions/79926972/jackson-3-and-final-map-deserialization> | Stack Overflow `[json]` | `json-formatter`, `json-schema-validator`, `json-to-typescript` (diagnostic support, not Java-specific) | Content gap: “How to debug JSON object shapes before blaming your serializer.” Include Jackson-specific troubleshooting examples. |
+| “How to efficiently query nested JSON relationships … without redundancy?” <https://stackoverflow.com/questions/79931394/how-to-efficiently-query-nested-json-relationships-reacts-with-affected-by-wi> | Stack Overflow `[json]` | `json-path-tester`, `json-path-evaluator`, `json-tree-view` | Write “JSONPath vs jq for nested relationship data” with examples for adjacency lists, dependency graphs, and duplicate references. |
+| “What is the best way to convert a Python LightGBM tree JSON dump into a VBA formula?” <https://stackoverflow.com/questions/79930413/what-is-the-best-way-to-convert-a-python-lightgbm-tree-json-dump-into-a-vba-form> | Stack Overflow `[json]` | Partial: `json-tree-view`, `json-to-csv`, `json-to-typescript` | New-tool/content opportunity around turning deeply nested model/export JSON into readable rules or tabular paths. |
+| “`jq`: cannot shorten my convoluted expression.” <https://stackoverflow.com/questions/79926576/jq-cannot-shorten-my-convoluted-expression> | Stack Overflow `[json]` | Partial: `json-path-tester`, `json-path-evaluator` | Gap: “Convert common jq filters to JSONPath” and/or add a jq playground. Developers are looking for simpler extraction workflows. |
+| “How to extract a value from received json field?” <https://stackoverflow.com/questions/79925217/how-to-extract-a-value-from-received-json-field> | Stack Overflow `[json]` | `json-tree-view`, `json-path-tester`, `json-formatter` | Practical tutorial: “Find the path to any JSON value in seconds” using tree view + path copy. |
+| “Why there are empty spaces in the middle of the string returned by re.split()?” <https://stackoverflow.com/questions/79928370/why-there-are-empty-spaces-in-the-middle-of-the-string-returned-by-re-split> | Stack Overflow `[regex]` | `regex-tester`, `regex-explainer`, `regex-cheatsheet` | Blog post: “Why regex split returns empty strings and captured separators.” Good long-tail educational query. |
+| “How to do multi-line matches where some of the later matches are optional?” <https://stackoverflow.com/questions/79937314/how-to-do-multi-line-matches-where-some-of-the-later-matches-are-optional> | Stack Overflow `[regex]` | `regex-tester`, `regex-pattern-generator` | Add examples for multiline mode, optional groups, and lazy vs greedy matching. Potential in-tool preset. |
+| “REGEX: splitting up bank transaction statements.” <https://stackoverflow.com/questions/79931400/regex-splitting-up-bank-transaction-statements> | Stack Overflow `[regex]` | `regex-tester`, `regex-pattern-generator` | Content/tool preset: parse statement lines with dates, descriptions, debit/credit columns; warn about privacy and local-only testing. |
+| “base64 to hex conversion with spacer in the result.” <https://stackoverflow.com/questions/79931274/base64-to-hex-conversion-with-spacer-in-the-result> | Stack Overflow `[base64]` | `base64-encoder-decoder`, `binary-decimal-hex-converter` | Gap: “Base64 to hex, bytes, and spaced hex: the complete encoding conversion guide.” Could use a combined encoding converter. |
 
 ## Content Gaps (questions with no good answer online)
-
-1. **[Gap]** "How to validate YAML syntax with line numbers in a browser" → **"Validate YAML Online: Instant Error Detection with Line Numbers"** — `yaml-validator` tool exists but has no dedicated blog post (only `yaml-beginners-guide.md`)
-
-2. **[Gap]** "What is my hash algorithm? I have a hash string but don't know what produced it" → **"Identify Any Hash in Seconds: MD5, SHA-1, SHA-256 and More"** — `hash-identifier` tool exists but has **empty description** and **no blog post**
-
-3. **[Gap]** "JSON Schema from JSON" — developers have sample JSON and need to generate a schema → **"Generate JSON Schema from Sample Data Instantly"** — no such tool on Toolblip, clear gap
-
-4. **[Gap]** "JWT Token Tester vs JWT Decoder — what's the difference?" → **"Test AND Validate JWT Tokens: Beyond Just Decoding"** — `jwt-token-tester` tool exists (not just decoder) but no blog post differentiates them
-
-5. **[Gap]** "JSON diff for developers — comparing API responses" → Existing blog is generic; **"5 Real-World JSON Diff Scenarios for API Developers"** would be more targeted
-
-6. **[Gap]** "Why do online regex testers send data to servers?" → **"Privacy-First Regex Testing: Why Your Pattern Should Never Leave Your Browser"** — `regex-tester` angle not fully exploited
+1. JSON formatter extension/adware risk → blog post idea: “Online JSON Formatter vs Browser Extension: Which Is Safer for API Payloads?”
+2. JSON Lines inspection → blog post idea: “How to Format, Search, and Debug JSONL Logs Locally.”
+3. JSONPath vs jq for nested data extraction → blog post idea: “JSONPath vs jq: Which One Should You Use to Extract Nested Values?”
+4. Regex split edge cases → blog post idea: “Why Regex Split Returns Empty Strings — and How to Fix It.”
+5. Multiline optional regex groups → blog post idea: “Regex for Multiline Records: Optional Fields Without Overmatching.”
+6. Base64-to-hex conversion → blog post idea: “Base64, Hex, and Bytes Explained for Developers Debugging Binary Data.”
+7. Model/export JSON to rules/table → blog post idea: “Turn Nested JSON Exports into Tables, Paths, and Decision Rules.”
 
 ## New Tool Ideas
-
-- **`regex-explainer`** — Parse a regex and explain it in plain English. Developers frequently ask "what does this regex mean?" — Toolblip already has `regex-explainer-plain-english.md` blog post (2026-05-06) but no actual tool. **This is a clear gap between content and product.**
-
-- **`json-schema-generator`** — Input sample JSON, output a JSON Schema (Draft-07/2019-09). Developers need this constantly for validation, OpenAPI specs, and AI tooling.
-
-- **`user-agent-parser`** — Parse user-agent strings into device, browser, OS components. Useful for developers building analytics, bot detection, or request debugging.
-
-- **`curl-generator`** — Given a URL, generate curl commands for various languages (Python/requests, JavaScript/fetch, PHP, Go). Already has a blog (`curl-to-code-guide.md`) but no tool.
-
-- **`http-request-builder`** — Build and test HTTP requests with custom headers, method, body. Would complement `http-headers-viewer`.
-
-- **`sql-formatter`** — Already have `sql-prettifier` but description is thin; consider enhancing with keyword highlighting, format styles (Google, Airbnb, Standard).
+- JSONL Viewer — developers need to inspect newline-delimited API logs, LLM traces, and event streams without uploading data.
+- jq Playground / jq to JSONPath Converter — Stack Overflow questions show developers often struggle to simplify jq filters or translate them into UI-friendly selectors.
+- JSON Path Copier in Tree View — a small feature/tool: click a nested value and copy dot-path, bracket-path, JSONPath, or jq path.
+- Encoding Converter Workbench — one panel to convert Base64 ⇄ UTF-8 ⇄ hex ⇄ bytes, with spaced-hex formatting for protocol/debugging questions.
+- Regex Split Debugger — explain split results, captured separators, empty strings, multiline flags, and optional groups on sample text.
+- ID Inspector — paste UUID/ULID/Snowflake/SparkID and identify version, timestamp, sortability, entropy, and collision notes.
+- JSON Export Flattener — flatten nested JSON/model dumps into path-value tables, CSV, or pseudo-rules.
 
 ## Reddit/Social Discussions to Engage With
-
-- https://www.reddit.com/r/learnprogramming/comments/187lrew/online_uuid_generator_and_validator/ — UUID generator with REST API; Toolblip could comment about browser-based UUID generation
-
-- https://dev.to/_d7eb1c1703182e3ce1782/regex-tester-showdown-regex101-vs-regexr-vs-devplaybook-2026-2bl0 — Regex Tester Showdown (Mar 2026); Toolblip not included, potential to engage or write counter-piece
-
-## Tool Issues Found
-
-| Tool Slug | Issue |
-|-----------|-------|
-| `hash-identifier` | **Empty description** — must be filled before publishing |
-| `hash-from-text` | Has description, but no blog post about hash identification/general hash usage |
-| `jwt-token-tester` | Tool exists but no blog post explaining its validation features vs `jwt-decoder` |
-| `yaml-validator` | Tool exists but no dedicated blog post |
-
-## Competitive Intelligence
-
-From DuckDuckGo search results, competitors actively writing about JSON formatter space (2026):
-- **bugsly.dev** — "Best Free JSON Formatter for Developers" (Apr 12, 2026) — privacy angle
-- **toolbox-kit.com** — "Best Free Online JSON Formatter in 2026" (Feb 22, 2026) — security/privacy angle
-- **dev.to/toolsmatic** — "Top 5 JSON Formatters for Web Developers in 2026" (May 3, 2026) — latest
-- **dev.to/_d7eb1c1703182e3ce1782** — "Regex Tester Showdown: regex101 vs RegExr vs DevPlaybook (2026)" (Mar 25, 2026) — not including Toolblip
-
-**Action:** The regex101 comparison post is from Toolblip's own blog (`regex101-vs-toolblip-free-regex-tester.md`) but is **not being shared/engaged** on dev.to. Consider promoting it.
-
----
-
-*Compiled: 2026-05-06 | Sources: DuckDuckGo HTML search, toolblip.com/blog audit, toolblip.com/data/tools.ts audit*
-
-
-## Content Published (2026-05-07)
-
-| Date | Post | Slug |
-|------|------|------|
-| 2026-04-23 | Validate YAML Online: Find Errors by Line Number in Seconds |  |
-
-
-
-## Content Published (2026-05-07)
-
-| Date | Post | Slug |
-|------|------|------|
-| 2026-04-23 | Validate YAML Online: Find Errors by Line Number in Seconds | validate-yaml-online-instant-error-detection-line-numbers.md |
+- <https://news.ycombinator.com/item?id=47721946> — JSON formatter Chrome extension became adware; engage with a privacy-first, no-extension JSON formatter angle.
+- <https://news.ycombinator.com/item?id=47699179> — offline JSONL viewer discussion; useful place to validate demand for a Toolblip JSONL viewer.
+- <https://news.ycombinator.com/item?id=47690138> — UUID/ULID/Snowflake Swiss-army-knife project surfaced on HN; use as competitive research for an ID inspector/generator cluster.
+- <https://news.ycombinator.com/item?id=47888337> — “nowhere: an entire website encoded in a URL”; tangential but relevant to URL encoding limits/content.
