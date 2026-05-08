@@ -23,9 +23,14 @@ export const metadata: Metadata = {
   },
 };
 
-const categories = Array.from(new Set(tools.map((tool) => tool.category))).sort((a, b) =>
-  a.localeCompare(b),
-);
+const categoryCounts = tools.reduce<Record<string, number>>((acc, tool) => {
+  acc[tool.category] = (acc[tool.category] ?? 0) + 1;
+  return acc;
+}, {});
+
+const categories = Object.entries(categoryCounts)
+  .map(([name, count]) => ({ name, count }))
+  .sort((a, b) => a.name.localeCompare(b.name));
 
 // ─── How it works ───────────────────────────────────────────────────────
 
@@ -148,11 +153,14 @@ export default function HomePage() {
         <div className="flex flex-wrap justify-center gap-2">
           {categories.map((cat) => (
             <Link
-              key={cat}
-              href={`/tools?category=${encodeURIComponent(cat)}`}
-              className="px-4 py-1.5 text-sm font-medium rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-red-100 dark:hover:bg-red-900/40 hover:text-red-700 dark:hover:text-red-300 transition-colors"
+              key={cat.name}
+              href={`/tools?category=${encodeURIComponent(cat.name)}`}
+              className="inline-flex items-center gap-2 px-4 py-1.5 text-sm font-medium rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-red-100 dark:hover:bg-red-900/40 hover:text-red-700 dark:hover:text-red-300 transition-colors"
             >
-              {cat}
+              <span>{cat.name}</span>
+              <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded-full bg-white/80 dark:bg-gray-950/60 text-gray-400 dark:text-gray-500">
+                {cat.count}
+              </span>
             </Link>
           ))}
         </div>
