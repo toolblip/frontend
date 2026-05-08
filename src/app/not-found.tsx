@@ -5,6 +5,7 @@ export default function NotFound() {
     <main className="flex min-h-dvh items-center justify-center bg-[var(--bg)] px-6 py-20 text-[var(--fg-0)]">
       <section aria-labelledby="not-found-title" className="w-full max-w-md text-center">
         <p
+          aria-hidden="true"
           className="mb-5 select-none font-bold leading-none tracking-[-0.07em] text-[var(--green)]"
           style={{
             fontFamily: 'var(--f-display)',

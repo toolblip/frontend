@@ -5,7 +5,7 @@ import Link from 'next/link';
 export default function Error() {
   return (
     <main className="flex min-h-dvh items-center justify-center bg-[var(--bg)] px-6 py-20 text-[var(--fg-0)]">
-      <section aria-labelledby="error-title" className="w-full max-w-md text-center">
+      <section aria-labelledby="error-title" className="w-full max-w-md text-center" role="alert">
         <h1
           id="error-title"
           className="mb-3 text-3xl font-bold tracking-[-0.03em] sm:text-4xl"
