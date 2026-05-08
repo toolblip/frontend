@@ -74,7 +74,7 @@ export default function SignupForm() {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="tb-v2-auth-input"
-                placeholder="Harun Rayhan"
+                placeholder="Your name"
               />
             </div>
 
