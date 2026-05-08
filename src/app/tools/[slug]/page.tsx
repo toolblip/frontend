@@ -103,6 +103,22 @@ export default async function ToolPage({ params }: PageProps) {
         >
           <ToolUI tool={tool} />
         </section>
+
+        <section className="mt-8 grid gap-4 sm:grid-cols-3" aria-label="Tool details">
+          {[
+            ['Private by default', 'Your input is processed in the browser UI, not uploaded to Toolblip.'],
+            ['Fast workflow', 'Paste input, choose an action, and copy the result without signing in.'],
+            ['Free utility', `${tool.name} is part of Toolblip’s growing free online toolkit.`],
+          ].map(([title, body]) => (
+            <div
+              key={title}
+              className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/70 p-5"
+            >
+              <h2 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">{title}</h2>
+              <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{body}</p>
+            </div>
+          ))}
+        </section>
       </div>
     </main>
   );

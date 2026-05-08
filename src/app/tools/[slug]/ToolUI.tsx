@@ -2,7 +2,7 @@
 
 import type { ReactNode } from 'react';
 import { useState } from 'react';
-import type { Tool } from '@/data/tools';
+import type { Tool } from '@/src/data/tools';
 
 // ─── Shared UI primitives ─────────────────────────────────────────────────
 
