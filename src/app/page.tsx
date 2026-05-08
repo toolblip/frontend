@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   },
 };
 
-const CATEGORIES = Array.from(new Set(tools.map((tool) => tool.category))).sort();
+const CATEGORIES = ['Text', 'Encoding', 'Developer', 'Security', 'QR Codes', 'Design'];
 
 // ─── How it works ───────────────────────────────────────────────────────
 
@@ -98,36 +98,36 @@ export default function HomePage() {
       </section>
 
       {/* ── How it works ── */}
-      <section className="bg-gray-50 dark:bg-gray-950 border border-gray-200 dark:border-gray-800 rounded-3xl p-5 sm:p-6">
-        <p className="text-center text-sm font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-5">
+      <section>
+        <p className="text-center text-sm font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-6">
           How it works
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {STEPS.map((s, index) => (
-            <div key={s.n} className="relative flex items-center gap-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 shadow-sm">
-              {index < STEPS.length - 1 && (
-                <span className="hidden sm:block absolute -right-3 top-1/2 -translate-y-1/2 text-gray-300 dark:text-gray-700">→</span>
-              )}
-              <div className="w-11 h-11 rounded-full bg-red-50 dark:bg-red-950 text-red-600 dark:text-red-400 flex items-center justify-center shrink-0">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          {STEPS.map((s) => (
+            <div
+              key={s.n}
+              className="flex flex-col items-center text-center gap-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm"
+            >
+              <div className="w-12 h-12 rounded-full bg-red-50 dark:bg-red-950 text-red-600 dark:text-red-400 flex items-center justify-center">
                 {s.icon}
               </div>
-              <div className="min-w-0">
-                <h3 className="font-semibold text-gray-900 dark:text-white text-base">{s.title}</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5 leading-relaxed">{s.desc}</p>
+              <div>
+                <h3 className="font-semibold text-gray-900 dark:text-white text-base">
+                  <span className="text-red-600 dark:text-red-400 font-mono text-sm mr-1">{s.n}.</span>
+                  {s.title}
+                </h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">{s.desc}</p>
               </div>
             </div>
           ))}
         </div>
-        <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-4">
-          No servers, no uploads — nothing leaves your browser.
+        <p className="text-center text-sm text-gray-400 dark:text-gray-500 mt-4">
+          No servers. No uploads. Nothing leaves your browser.
         </p>
       </section>
 
       {/* ── Category quick-access ── */}
-      <section className="space-y-3">
-        <p className="text-center text-sm font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">
-          Jump to a category
-        </p>
+      <section>
         <div className="flex flex-wrap justify-center gap-2">
           {CATEGORIES.map((cat) => (
             <Link

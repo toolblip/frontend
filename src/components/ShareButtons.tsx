@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 interface ShareButtonsProps {
   toolName: string;
@@ -9,12 +9,8 @@ interface ShareButtonsProps {
 
 export default function ShareButtons({ toolName, toolSlug }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
-  const [pageUrl, setPageUrl] = useState(`https://toolblip.com/tools/${toolSlug}`);
 
-  useEffect(() => {
-    setPageUrl(window.location.href);
-  }, []);
-
+  const pageUrl = `https://toolblip.com/tools/${toolSlug}`;
   const twitterText = encodeURIComponent(`Check out ${toolName} on @toolblip`);
   const twitterUrl = `https://twitter.com/intent/tweet?text=${twitterText}&url=${encodeURIComponent(pageUrl)}`;
   const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}`;

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { getToolBySlug, tools } from '@/data/tools';
+import { tools } from '@/data/tools';
 import { ToolUI } from './ToolUI';
 import ShareButtons from '@/components/ShareButtons';
 
@@ -14,7 +14,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const tool = getToolBySlug(slug);
+  const tool = tools.find(t => t.slug === slug);
   if (!tool) return {};
   return {
     title: `${tool.name} — Free Online Tool | Toolblip`,
@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ToolPage({ params }: PageProps) {
   const { slug } = await params;
-  const tool = getToolBySlug(slug);
+  const tool = tools.find(t => t.slug === slug);
   if (!tool) notFound();
 
   return (
