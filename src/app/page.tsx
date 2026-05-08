@@ -107,7 +107,7 @@ export default function HomePage() {
               How it works
             </p>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-              Local-first tools in three quick steps.
+              Pick a tool → paste your data → get your result.
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1">
@@ -125,9 +125,9 @@ export default function HomePage() {
                   {s.icon}
                 </div>
                 <div className="min-w-0">
-                  <h3 className="font-semibold text-gray-900 dark:text-white text-sm">
-                    <span className="text-red-600 dark:text-red-400 font-mono mr-1">{s.n}.</span>
-                    {s.title}
+                  <h3 className="font-semibold text-gray-900 dark:text-white text-sm flex items-center gap-1.5">
+                    <span className="text-red-600 dark:text-red-400 font-mono">{s.n}.</span>
+                    <span>{s.title}</span>
                   </h3>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 leading-relaxed">{s.desc}</p>
                 </div>
@@ -136,7 +136,7 @@ export default function HomePage() {
           </div>
         </div>
         <p className="text-center text-sm font-medium text-gray-500 dark:text-gray-400 mt-5">
-          No servers. No uploads. Nothing leaves your browser.
+          Browser-only by default: no servers, no uploads, nothing leaves your browser.
         </p>
       </section>
 
