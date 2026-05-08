@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import Link from 'next/link';
 
 const BASE_URL = 'https://toolblip-api-production.up.railway.app';
 const FUTURE_BASE_URL = 'https://api.toolblip.com';
 
 type Method = 'GET' | 'POST';
+type AuthMode = 'Public' | 'Bearer token required';
 
 type Field = {
   name: string;
@@ -22,7 +23,7 @@ type Endpoint = {
   path: string;
   title: string;
   description: string;
-  auth: 'None' | 'Bearer token';
+  auth: AuthMode;
   status: string;
   body?: Field[];
   curl: string;
@@ -36,8 +37,8 @@ const endpoints: Endpoint[] = [
     method: 'GET',
     path: '/api/tools',
     title: 'List all tools',
-    description: 'Returns the public Toolblip directory. The response is nested as tools.tools for compatibility with the app client.',
-    auth: 'None',
+    description: 'Returns the public Toolblip directory. The tool array is nested at tools.tools to match the app client contract.',
+    auth: 'Public',
     status: '200 OK',
     curl: `curl "${BASE_URL}/api/tools" \\\n  -H "Accept: application/json"`,
     response: `{
@@ -63,8 +64,8 @@ const endpoints: Endpoint[] = [
     method: 'GET',
     path: '/api/tools/{slug}',
     title: 'Get a single tool',
-    description: 'Fetch one tool by its URL slug. Use the slug value returned by the list endpoint.',
-    auth: 'None',
+    description: 'Fetch metadata for one tool by slug. Use the slug returned by GET /api/tools.',
+    auth: 'Public',
     status: '200 OK',
     curl: `curl "${BASE_URL}/api/tools/json-formatter" \\\n  -H "Accept: application/json"`,
     response: `{
@@ -86,8 +87,8 @@ const endpoints: Endpoint[] = [
     method: 'POST',
     path: '/api/auth/register',
     title: 'Register',
-    description: 'Create a user account and receive an API token for authenticated requests.',
-    auth: 'None',
+    description: 'Create a user account and receive a Bearer token for authenticated API requests.',
+    auth: 'Public',
     status: '201 Created',
     body: [
       { name: 'name', type: 'string', required: true, description: 'Display name for the account.' },
@@ -117,8 +118,8 @@ const endpoints: Endpoint[] = [
     method: 'POST',
     path: '/api/auth/login',
     title: 'Login',
-    description: 'Exchange valid account credentials for a Bearer token.',
-    auth: 'None',
+    description: 'Exchange an email and password for a Bearer token.',
+    auth: 'Public',
     status: '200 OK',
     body: [
       { name: 'email', type: 'string', required: true, description: 'Account email address.' },
@@ -144,8 +145,8 @@ const endpoints: Endpoint[] = [
     method: 'POST',
     path: '/api/auth/logout',
     title: 'Logout',
-    description: 'Revoke the current token. The token used for this request will stop working immediately.',
-    auth: 'Bearer token',
+    description: 'Revoke the current token. The token used for the request stops working immediately.',
+    auth: 'Bearer token required',
     status: '200 OK',
     curl: `curl -X POST "${BASE_URL}/api/auth/logout" \\\n  -H "Authorization: Bearer YOUR_TOKEN" \\\n  -H "Accept: application/json"`,
     response: `{
@@ -158,8 +159,8 @@ const endpoints: Endpoint[] = [
     method: 'GET',
     path: '/api/auth/user',
     title: 'Get authenticated user',
-    description: 'Returns the user profile attached to the supplied Bearer token.',
-    auth: 'Bearer token',
+    description: 'Return the user profile attached to the supplied Bearer token.',
+    auth: 'Bearer token required',
     status: '200 OK',
     curl: `curl "${BASE_URL}/api/auth/user" \\\n  -H "Authorization: Bearer YOUR_TOKEN" \\\n  -H "Accept: application/json"`,
     response: `{
@@ -182,22 +183,24 @@ function CopyButton({ value }: { value: string }) {
   const [copied, setCopied] = useState(false);
 
   async function copy() {
-    if (navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(value);
-    }
+    await navigator.clipboard?.writeText(value);
     setCopied(true);
-    window.setTimeout(() => setCopied(false), 1600);
+    window.setTimeout(() => setCopied(false), 1400);
   }
 
   return (
     <button
       type="button"
       onClick={copy}
-      className="rounded-md border border-slate-700/70 px-2 py-1 text-xs text-slate-300 transition hover:border-slate-500 hover:text-white"
+      className="rounded-md border border-slate-700/70 px-2 py-1 text-xs font-medium text-slate-300 transition hover:border-slate-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-[#58D65D]"
     >
       {copied ? 'Copied' : 'Copy'}
     </button>
   );
+}
+
+function InlineCode({ children }: { children: ReactNode }) {
+  return <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm dark:bg-slate-800">{children}</code>;
 }
 
 function CodeBlock({ code, label }: { code: string; label: string }) {
@@ -214,40 +217,40 @@ function CodeBlock({ code, label }: { code: string; label: string }) {
 
 function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
   return (
-    <article id={endpoint.id} className="scroll-mt-28 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+    <article id={endpoint.id} className="scroll-mt-28 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/60 sm:p-6">
+      <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
         <div>
           <p className="text-sm font-medium text-[#58D65D] dark:text-emerald-400">{endpoint.group}</p>
           <h3 className="mt-1 text-2xl font-bold text-slate-950 dark:text-white">{endpoint.title}</h3>
           <p className="mt-2 max-w-2xl text-slate-600 dark:text-slate-300">{endpoint.description}</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <span className="w-fit rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-600 dark:border-slate-700 dark:text-slate-300">
-            Auth: {endpoint.auth}
+          <span className="w-fit rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-600 dark:border-slate-700 dark:bg-slate-950/60 dark:text-slate-300">
+            {endpoint.auth}
           </span>
           <span className="w-fit rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-600 dark:border-slate-700 dark:bg-slate-950/60 dark:text-slate-300">
-            Response: {endpoint.status}
+            {endpoint.status}
           </span>
         </div>
       </div>
 
       <div className="mt-5 flex flex-wrap items-center gap-3 rounded-2xl bg-slate-50 p-3 font-mono text-sm dark:bg-slate-950/60">
         <span className={`rounded-lg border px-2.5 py-1 text-xs font-black ${methodClass[endpoint.method]}`}>{endpoint.method}</span>
-        <span className="text-slate-900 dark:text-slate-100">{endpoint.path}</span>
+        <span className="break-all text-slate-900 dark:text-slate-100">{endpoint.path}</span>
       </div>
 
       {endpoint.body ? (
         <div className="mt-6">
           <h4 className="text-sm font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Request body</h4>
           <div className="mt-3 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800">
-            <div className="grid grid-cols-[1.1fr_0.8fr_0.7fr_2fr] bg-slate-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:bg-slate-950 dark:text-slate-400">
+            <div className="hidden grid-cols-[1.1fr_0.8fr_0.7fr_2fr] bg-slate-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:bg-slate-950 dark:text-slate-400 md:grid">
               <span>Field</span><span>Type</span><span>Required</span><span>Description</span>
             </div>
             {endpoint.body.map((field) => (
-              <div key={field.name} className="grid grid-cols-[1.1fr_0.8fr_0.7fr_2fr] gap-3 border-t border-slate-200 px-4 py-3 text-sm dark:border-slate-800">
+              <div key={field.name} className="grid gap-2 border-t border-slate-200 px-4 py-3 text-sm first:border-t-0 dark:border-slate-800 md:grid-cols-[1.1fr_0.8fr_0.7fr_2fr] md:gap-3 md:first:border-t">
                 <code className="text-slate-900 dark:text-slate-100">{field.name}</code>
                 <span className="text-slate-600 dark:text-slate-400">{field.type}</span>
-                <span className={field.required ? 'font-semibold text-rose-600 dark:text-rose-400' : 'text-slate-500'}>{field.required ? 'Yes' : 'No'}</span>
+                <span className={field.required ? 'font-semibold text-rose-600 dark:text-rose-400' : 'text-slate-500'}>{field.required ? 'Required' : 'Optional'}</span>
                 <span className="text-slate-600 dark:text-slate-300">{field.description}</span>
               </div>
             ))}
@@ -255,7 +258,7 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
         </div>
       ) : null}
 
-      <div className="mt-6 grid gap-4 lg:grid-cols-2">
+      <div className="mt-6 grid gap-4 xl:grid-cols-2">
         <CodeBlock label="curl" code={endpoint.curl} />
         <CodeBlock label="JSON response" code={endpoint.response} />
       </div>
@@ -269,24 +272,28 @@ export default function ApiDocsClient() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-white via-slate-50 to-white text-slate-900 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900 dark:text-white">
-      <section className="border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-800 dark:bg-slate-950/80">
+      <section className="border-b border-slate-200 bg-white/85 backdrop-blur dark:border-slate-800 dark:bg-slate-950/85">
         <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
           <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition hover:text-[#58D65D] dark:text-slate-400 dark:hover:text-emerald-400">
             ← Back to Toolblip
           </Link>
-          <div className="mt-10 grid gap-8 lg:grid-cols-[1.4fr_0.8fr] lg:items-end">
+          <div className="mt-10 grid gap-8 lg:grid-cols-[1.35fr_0.9fr] lg:items-end">
             <div>
               <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#58D65D] dark:text-emerald-400">REST API Reference</p>
               <h1 className="mt-4 text-4xl font-black tracking-tight text-slate-950 dark:text-white sm:text-6xl">Toolblip API Docs</h1>
               <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600 dark:text-slate-300">
-                Use the Toolblip API to list tools, fetch individual tool metadata, and authenticate users with Bearer tokens.
+                Integrate with the Toolblip API to list tools, fetch tool metadata, and authenticate users using simple JSON requests.
               </p>
+              <div className="mt-6 flex flex-wrap gap-3 text-sm">
+                <a href="#list-tools" className="rounded-full bg-[#58D65D] px-4 py-2 font-bold text-slate-950 transition hover:bg-emerald-400">View endpoints</a>
+                <a href="#authentication" className="rounded-full border border-slate-300 px-4 py-2 font-bold text-slate-700 transition hover:border-slate-400 dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-500">Auth quick start</a>
+              </div>
             </div>
             <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Base URL</p>
               <code className="mt-3 block break-all rounded-xl bg-white p-3 text-sm text-slate-900 dark:bg-slate-950 dark:text-slate-100">{BASE_URL}</code>
               <p className="mt-4 text-sm text-slate-600 dark:text-slate-300">
-                Use Railway production today. Once SSL is ready, the canonical API domain will be <code className="font-mono">{FUTURE_BASE_URL}</code>.
+                Use Railway production today. Once SSL is ready, switch to <code className="font-mono">{FUTURE_BASE_URL}</code>.
               </p>
             </div>
           </div>
@@ -312,9 +319,9 @@ export default function ApiDocsClient() {
           <section id="authentication" className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
             <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Authentication</h2>
             <p className="mt-3 text-slate-600 dark:text-slate-300">
-              Register or log in to receive a token, then send it in the <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm dark:bg-slate-800">Authorization</code> header.
+              Register or log in to receive a token, then send it in the <InlineCode>Authorization</InlineCode> header as <InlineCode>Bearer YOUR_TOKEN</InlineCode>.
             </p>
-            <div className="mt-5 grid gap-4 lg:grid-cols-2">
+            <div className="mt-5 grid gap-4 xl:grid-cols-2">
               <CodeBlock label="Authorization header" code={'Authorization: Bearer YOUR_TOKEN'} />
               <CodeBlock label="Quick start" code={`TOKEN=$(curl -s -X POST "${BASE_URL}/api/auth/login" \\
   -H "Content-Type: application/json" \\
@@ -328,13 +335,19 @@ curl "${BASE_URL}/api/auth/user" \\
             </div>
           </section>
 
-          <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
-            <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Request format</h2>
-            <ul className="mt-4 space-y-3 text-slate-600 dark:text-slate-300">
-              <li>Send JSON request bodies for <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm dark:bg-slate-800">POST</code> endpoints with <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm dark:bg-slate-800">Content-Type: application/json</code>.</li>
-              <li>Set <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm dark:bg-slate-800">Accept: application/json</code> on every request for consistent JSON responses.</li>
-              <li>Authenticated endpoints require <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm dark:bg-slate-800">Authorization: Bearer YOUR_TOKEN</code>.</li>
-            </ul>
+          <section className="grid gap-4 md:grid-cols-3">
+            <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Format</p>
+              <p className="mt-2 text-slate-600 dark:text-slate-300">Send JSON bodies and set <InlineCode>Content-Type: application/json</InlineCode> for POST requests.</p>
+            </div>
+            <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Responses</p>
+              <p className="mt-2 text-slate-600 dark:text-slate-300">Set <InlineCode>Accept: application/json</InlineCode> for consistent JSON responses.</p>
+            </div>
+            <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Auth</p>
+              <p className="mt-2 text-slate-600 dark:text-slate-300">Protected endpoints require <InlineCode>Authorization: Bearer YOUR_TOKEN</InlineCode>.</p>
+            </div>
           </section>
 
           <section className="space-y-5">
@@ -356,7 +369,7 @@ curl "${BASE_URL}/api/auth/user" \\
           <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
             <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Errors</h2>
             <p className="mt-3 text-slate-600 dark:text-slate-300">Errors are returned as JSON with a message. Validation errors may include an errors object keyed by field name.</p>
-            <div className="mt-5 grid gap-4 lg:grid-cols-2">
+            <div className="mt-5 grid gap-4 xl:grid-cols-2">
               <CodeBlock label="Validation error" code={`{
   "message": "The given data was invalid.",
   "errors": {
