@@ -175,7 +175,9 @@ function CopyButton({ value }: { value: string }) {
   const [copied, setCopied] = useState(false);
 
   async function copy() {
-    await navigator.clipboard.writeText(value);
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(value);
+    }
     setCopied(true);
     window.setTimeout(() => setCopied(false), 1600);
   }
@@ -272,7 +274,7 @@ export default function ApiDocsClient() {
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Base URL</p>
               <code className="mt-3 block break-all rounded-xl bg-white p-3 text-sm text-slate-900 dark:bg-slate-950 dark:text-slate-100">{BASE_URL}</code>
               <p className="mt-4 text-sm text-slate-600 dark:text-slate-300">
-                Custom API domain coming once SSL is ready: <code className="font-mono">{FUTURE_BASE_URL}</code>
+                Use Railway production today. Once SSL is ready, the canonical API domain will be <code className="font-mono">{FUTURE_BASE_URL}</code>.
               </p>
             </div>
           </div>
@@ -300,7 +302,27 @@ export default function ApiDocsClient() {
             <p className="mt-3 text-slate-600 dark:text-slate-300">
               Register or log in to receive a token, then send it in the <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm dark:bg-slate-800">Authorization</code> header.
             </p>
-            <CodeBlock label="Authorization header" code={'Authorization: Bearer YOUR_TOKEN'} />
+            <div className="mt-5 grid gap-4 lg:grid-cols-2">
+              <CodeBlock label="Authorization header" code={'Authorization: Bearer YOUR_TOKEN'} />
+              <CodeBlock label="Quick start" code={`TOKEN=$(curl -s -X POST "${BASE_URL}/api/auth/login" \\
+  -H "Content-Type: application/json" \\
+  -H "Accept: application/json" \\
+  -d '{"email":"jane@example.com","password":"your-password"}' \\
+  | jq -r .token)
+
+curl "${BASE_URL}/api/auth/user" \\
+  -H "Authorization: Bearer $TOKEN" \\
+  -H "Accept: application/json"`} />
+            </div>
+          </section>
+
+          <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
+            <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Request format</h2>
+            <ul className="mt-4 space-y-3 text-slate-600 dark:text-slate-300">
+              <li>Send JSON request bodies for <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm dark:bg-slate-800">POST</code> endpoints with <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm dark:bg-slate-800">Content-Type: application/json</code>.</li>
+              <li>Set <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm dark:bg-slate-800">Accept: application/json</code> on every request for consistent JSON responses.</li>
+              <li>Authenticated endpoints require <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm dark:bg-slate-800">Authorization: Bearer YOUR_TOKEN</code>.</li>
+            </ul>
           </section>
 
           <section className="space-y-5">
