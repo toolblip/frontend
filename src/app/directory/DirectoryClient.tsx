@@ -69,11 +69,17 @@ export function DirectoryClient() {
   }
 
   function handleTabKeyboard(event: KeyboardEvent<HTMLDivElement>) {
-    if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+    if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) return;
 
     event.preventDefault();
-    const direction = event.key === 'ArrowRight' ? 1 : -1;
-    const nextIndex = (focusedTabIndex + direction + CATEGORY_TABS.length) % CATEGORY_TABS.length;
+
+    const nextIndex = (() => {
+      if (event.key === 'Home') return 0;
+      if (event.key === 'End') return CATEGORY_TABS.length - 1;
+
+      const direction = event.key === 'ArrowRight' ? 1 : -1;
+      return (focusedTabIndex + direction + CATEGORY_TABS.length) % CATEGORY_TABS.length;
+    })();
 
     setFocusedTabIndex(nextIndex);
     tabRefs.current[nextIndex]?.focus();
@@ -162,6 +168,7 @@ export function DirectoryClient() {
                 type="button"
                 role="tab"
                 aria-selected={isActive}
+                tabIndex={focusedTabIndex === index ? 0 : -1}
                 onClick={() => {
                   setActiveTab(tab);
                   setFocusedTabIndex(index);
