@@ -32,6 +32,7 @@ npm-debug.log*
 .vercel
 .railway/
 api/
+!app/api/
 
 # OpenClaw
 .claude-home/
