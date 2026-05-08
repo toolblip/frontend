@@ -21,10 +21,16 @@ dist/
 npm-debug.log*
 health-logs/
 
+# Playwright test artifacts
+playwright-report/
+test-results/
+.playwright/
+
 # Local agent/runtime state — never commit
 .claude-home/
 .openclaw/
 .hermes/
+.learnings/
 memory/
 
 # TypeScript
