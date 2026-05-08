@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 const BASE_URL = 'https://toolblip-api-production.up.railway.app';
 const FUTURE_BASE_URL = 'https://api.toolblip.com';
+const API_VERSION = 'v1';
 
 type HttpMethod = 'GET' | 'POST';
 
@@ -40,14 +41,14 @@ const ENDPOINTS: Endpoint[] = [
     auth: false,
     title: 'List all tools',
     description:
-      'Returns a paginated list of all tools. Optionally filter by category or search by keyword.',
+      'Returns the public Toolblip tool directory. Public endpoint; no token required.',
     queryParams: [
       { name: 'category', type: 'string', required: false, description: 'Filter by category slug, e.g. developer, productivity, qr-codes' },
       { name: 'search', type: 'string', required: false, description: 'Full-text search across tool names and descriptions' },
       { name: 'page', type: 'integer', required: false, description: 'Page number (default: 1)' },
       { name: 'per_page', type: 'integer', required: false, description: 'Results per page (default: 20, max: 100)' },
     ],
-    responseShape: '{ tools: { tools: Tool[], meta: { current_page, total, per_page, last_page } } }',
+    responseShape: '{ tools: { tools: Tool[] } }',
     curl: `curl -X GET "${BASE_URL}/api/tools" \\
   -H "Accept: application/json"
 
@@ -66,14 +67,18 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
         "is_pro": false,
         "emoji": "📋",
         "created_at": "2026-01-15T10:30:00Z"
+      },
+      {
+        "id": 2,
+        "slug": "base64-encoder-decoder",
+        "name": "Base64 Encoder / Decoder",
+        "description": "Encode and decode Base64 strings in your browser.",
+        "category": "encoding",
+        "is_pro": false,
+        "emoji": "🔐",
+        "created_at": "2026-01-15T10:35:00Z"
       }
-    ],
-    "meta": {
-      "current_page": 1,
-      "total": 48,
-      "per_page": 20,
-      "last_page": 3
-    }
+    ]
   }
 }`,
   },
@@ -475,7 +480,7 @@ export default function ApiDocsClient() {
             <div>
               <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">API Documentation</h1>
               <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">
-                Complete Toolblip REST API reference for tools, accounts, Bearer tokens, and JSON responses
+                Clean REST reference for Toolblip tools, account auth, Bearer tokens, curl examples, and JSON responses
               </p>
             </div>
           </div>
@@ -501,8 +506,8 @@ export default function ApiDocsClient() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <div>
-                <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest block">Format</span>
-                <span className="text-xs text-slate-700 dark:text-slate-300">JSON only</span>
+                <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest block">Version</span>
+                <span className="text-xs text-slate-700 dark:text-slate-300">{API_VERSION} · JSON only</span>
               </div>
             </div>
             <div className="flex items-center gap-3 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3.5">
