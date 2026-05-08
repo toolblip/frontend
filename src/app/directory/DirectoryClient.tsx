@@ -181,7 +181,10 @@ export function DirectoryClient() {
           })}
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 text-sm text-gray-500 dark:text-gray-400">
+        <div
+          className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 text-sm text-gray-500 dark:text-gray-400"
+          aria-live="polite"
+        >
           <span>
             Showing <span className="font-medium text-gray-700 dark:text-gray-200">{visibleCountLabel}</span>
             {query.trim() && <> for &ldquo;<span className="text-gray-700 dark:text-gray-200">{query.trim()}</span>&rdquo;</>}
