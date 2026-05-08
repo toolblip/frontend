@@ -1,5 +1,6 @@
 'use client';
 
+import ShareButtons from '../../../components/ShareButtons';
 import type { Tool } from '../../../data/tools';
 import { ToolUI } from './ToolUI';
 
@@ -35,6 +36,9 @@ export default function ToolDetailClient({ tool }: { tool: Tool }) {
         <p className="max-w-3xl text-base leading-7 text-gray-600 dark:text-gray-300">
           {tool.description}
         </p>
+        <div className="mt-5">
+          <ShareButtons toolName={tool.name} toolSlug={tool.slug} />
+        </div>
       </header>
 
       <section className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-gray-900 sm:p-6">
