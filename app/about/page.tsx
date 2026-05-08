@@ -8,7 +8,6 @@ export const metadata: Metadata = {
     description: 'Toolblip is a collection of free developer and productivity tools that run entirely in your browser. No servers, no uploads, no accounts required.',
     url: 'https://toolblip.com/about',
     siteName: 'Toolblip',
-    type: 'website',
     images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: 'Toolblip' }],
   },
   twitter: {
