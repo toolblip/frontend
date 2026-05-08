@@ -4,8 +4,8 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 
 const BASE_URL = 'https://toolblip-api-production.up.railway.app';
-const BASE_URL_DISPLAY = 'https://toolblip-api-production.up.railway.app';
-const API_TOOLBLIP_COM = 'api.toolblip.com (SSL pending)';
+const BASE_URL_DISPLAY = 'https://api.toolblip.com';
+const API_TOOLBLIP_RAILWAY = 'toolblip-api-production.up.railway.app (alt)';
 
 type HttpMethod = 'GET' | 'POST';
 
@@ -43,7 +43,7 @@ const ENDPOINTS: Endpoint[] = [
     description:
       'Returns a paginated list of all tools. Optionally filter by category or search by keyword.',
     queryParams: [
-      { name: 'category', type: 'string', required: false, description: 'Filter by category slug, e.g. developer, productivity' },
+      { name: 'category', type: 'string', required: false, description: 'Filter by category slug, e.g. developer, productivity, qr-codes' },
       { name: 'search', type: 'string', required: false, description: 'Full-text search across tool names and descriptions' },
       { name: 'page', type: 'integer', required: false, description: 'Page number (default: 1)' },
       { name: 'per_page', type: 'integer', required: false, description: 'Results per page (default: 20, max: 100)' },
@@ -86,7 +86,7 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
     path: '/api/tools/{slug}',
     auth: false,
     title: 'Get a single tool',
-    description: 'Returns a single tool by its URL-safe slug. Returns 404 if not found.',
+    description: 'Returns a single tool by its URL-safe slug. Returns 404 if the slug does not exist.'
     responseShape: '{ tool: Tool }',
     curl: `curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
   -H "Accept: application/json"`,
@@ -452,7 +452,7 @@ export default function ApiDocsClient() {
             <div className="bg-slate-900 dark:bg-slate-800 rounded-xl px-4 py-3.5">
               <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest block mb-1">Base URL</span>
               <code className="text-sm font-mono text-[#58D65D] break-all">{BASE_URL_DISPLAY}</code>
-              <span className="text-xs text-slate-500 mt-0.5 block">{API_TOOLBLIP_COM}</span>
+              <span className="text-xs text-slate-500 mt-0.5 block">{API_TOOLBLIP_RAILWAY}</span>
             </div>
             <div className="flex items-center gap-3 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3.5">
               <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
