@@ -1,193 +1,219 @@
 'use client';
 
-import { useState, useMemo, useRef, useEffect, KeyboardEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import Link from 'next/link';
 import { tools } from '@/data/tools';
 
-const TABS = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS'] as const;
-type Tab = (typeof TABS)[number];
+const CATEGORY_TABS = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS'] as const;
+type CategoryTab = (typeof CATEGORY_TABS)[number];
 
-function categoryForTab(tab: Tab) {
-  return tab === 'Encoder' ? 'Encoding' : tab;
+const TAB_TO_CATEGORY: Record<CategoryTab, string | null> = {
+  All: null,
+  Text: 'Text',
+  Developer: 'Developer',
+  Encoder: 'Encoding',
+  Image: 'Image',
+  Conversion: 'Conversion',
+  Math: 'Math',
+  CSS: 'CSS',
+};
+
+function toolsForTab(tab: CategoryTab) {
+  const category = TAB_TO_CATEGORY[tab];
+  return category ? tools.filter((tool) => tool.category === category) : tools;
 }
 
-function countForTab(tab: Tab) {
-  if (tab === 'All') return tools.length;
-  const category = categoryForTab(tab);
-  return tools.filter(t => t.category === category).length;
+function normalizeSearch(value: string) {
+  return value.trim().toLowerCase();
 }
 
 export function DirectoryClient() {
   const [query, setQuery] = useState('');
-  const [activeTab, setActiveTab] = useState<Tab>('All');
-  const [focusedTabIdx, setFocusedTabIdx] = useState(0);
+  const [activeTab, setActiveTab] = useState<CategoryTab>('All');
+  const [focusedTabIndex, setFocusedTabIndex] = useState(0);
   const searchRef = useRef<HTMLInputElement>(null);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
-  const filtered = useMemo(() => {
-    const q = query.toLowerCase().trim();
-    return tools.filter(t => {
-      const matchesTab = activeTab === 'All' || t.category === categoryForTab(activeTab);
-      const matchesSearch =
-        !q ||
-        t.name.toLowerCase().includes(q) ||
-        t.description.toLowerCase().includes(q);
-      return matchesTab && matchesSearch;
-    });
-  }, [query, activeTab]);
+  const filteredTools = useMemo(() => {
+    const normalizedQuery = normalizeSearch(query);
 
-  // "/" shortcut focuses search
+    return toolsForTab(activeTab).filter((tool) => {
+      if (!normalizedQuery) return true;
+
+      return (
+        tool.name.toLowerCase().includes(normalizedQuery) ||
+        tool.description.toLowerCase().includes(normalizedQuery)
+      );
+    });
+  }, [activeTab, query]);
+
   useEffect(() => {
-    function onKeyDown(e: globalThis.KeyboardEvent) {
-      if (
-        e.key === '/' &&
-        document.activeElement?.tagName !== 'INPUT' &&
-        document.activeElement?.tagName !== 'TEXTAREA'
-      ) {
-        e.preventDefault();
+    function focusSearch(event: globalThis.KeyboardEvent) {
+      const target = event.target as HTMLElement | null;
+      const isTyping = target?.tagName === 'INPUT' || target?.tagName === 'TEXTAREA' || target?.isContentEditable;
+
+      if (event.key === '/' && !isTyping) {
+        event.preventDefault();
         searchRef.current?.focus();
       }
     }
-    document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
+
+    document.addEventListener('keydown', focusSearch);
+    return () => document.removeEventListener('keydown', focusSearch);
   }, []);
 
-  function handleTabKey(e: KeyboardEvent<HTMLDivElement>) {
-    if (e.key === 'ArrowRight') {
-      const next = (focusedTabIdx + 1) % TABS.length;
-      setFocusedTabIdx(next);
-      tabRefs.current[next]?.focus();
-    } else if (e.key === 'ArrowLeft') {
-      const prev = (focusedTabIdx - 1 + TABS.length) % TABS.length;
-      setFocusedTabIdx(prev);
-      tabRefs.current[prev]?.focus();
-    }
+  function clearFilters() {
+    setQuery('');
+    setActiveTab('All');
+    setFocusedTabIndex(0);
   }
 
-  const hasFilters = query || activeTab !== 'All';
+  function handleTabKeyboard(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+
+    event.preventDefault();
+    const direction = event.key === 'ArrowRight' ? 1 : -1;
+    const nextIndex = (focusedTabIndex + direction + CATEGORY_TABS.length) % CATEGORY_TABS.length;
+
+    setFocusedTabIndex(nextIndex);
+    tabRefs.current[nextIndex]?.focus();
+  }
+
+  const hasActiveFilters = query.trim().length > 0 || activeTab !== 'All';
+  const visibleCountLabel = `${filteredTools.length} ${filteredTools.length === 1 ? 'tool' : 'tools'}`;
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-10 space-y-8">
-
-      {/* ── Header ── */}
-      <div className="text-center space-y-2">
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">
-          All Tools
-        </h1>
-        <p className="text-gray-500 dark:text-gray-400 text-base">
-          Browse {tools.length} free browser-based utilities — no signup, no ads.
+      <section className="text-center space-y-3">
+        <p className="text-sm font-semibold uppercase tracking-widest text-red-600 dark:text-red-400">
+          Tool directory
         </p>
-      </div>
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white tracking-tight">
+          Browse every Toolblip utility
+        </h1>
+        <p className="text-gray-500 dark:text-gray-400 text-base max-w-2xl mx-auto leading-relaxed">
+          Search {tools.length} free browser-based tools for writing, development, encoding, images, CSS, conversions, and quick calculations.
+        </p>
+      </section>
 
-      {/* ── Search bar ── */}
-      <div className="relative max-w-lg mx-auto">
-        <div className="absolute inset-y-0 left-3.5 flex items-center pointer-events-none">
-          <svg
-            className="w-4 h-4 text-gray-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-            />
-          </svg>
-        </div>
-        <input
-          ref={searchRef}
-          type="text"
-          placeholder="Search by name or description…"
-          value={query}
-          onChange={e => setQuery(e.target.value)}
-          aria-label="Search tools"
-          className="w-full pl-10 pr-16 py-2.5 text-sm bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-transparent transition-shadow"
-        />
-        <div className="absolute inset-y-0 right-3 flex items-center gap-1.5">
-          {query && (
-            <button
-              onClick={() => setQuery('')}
-              aria-label="Clear search"
-              className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors rounded"
+      <section className="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/70 shadow-sm p-4 sm:p-6 space-y-5">
+        <div className="relative max-w-2xl mx-auto">
+          <div className="absolute inset-y-0 left-3.5 flex items-center pointer-events-none">
+            <svg
+              aria-hidden="true"
+              className="w-4 h-4 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
             >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-              </svg>
-            </button>
-          )}
-          {!query && (
-            <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 text-xs text-gray-400 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded font-mono">
-              /
-            </kbd>
-          )}
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+              />
+            </svg>
+          </div>
+          <input
+            ref={searchRef}
+            type="search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search tools by name or description…"
+            aria-label="Search tools by name or description"
+            className="w-full pl-10 pr-16 py-3 text-sm bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-transparent transition-shadow"
+          />
+          <div className="absolute inset-y-0 right-3 flex items-center gap-1.5">
+            {query ? (
+              <button
+                type="button"
+                onClick={() => setQuery('')}
+                aria-label="Clear search"
+                className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors rounded"
+              >
+                <svg aria-hidden="true" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                </svg>
+              </button>
+            ) : (
+              <kbd className="hidden sm:inline-flex items-center px-1.5 py-0.5 text-xs text-gray-400 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded font-mono">
+                /
+              </kbd>
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* ── Category tabs ── */}
-      <div
-        className="flex flex-wrap justify-center gap-1.5"
-        role="tablist"
-        aria-label="Filter by category"
-        onKeyDown={handleTabKey}
-      >
-        {TABS.map((tab, i) => {
-          const count = countForTab(tab);
-          const isActive = activeTab === tab;
-          return (
-            <button
-              key={tab}
-              ref={el => { tabRefs.current[i] = el; }}
-              role="tab"
-              aria-selected={isActive}
-              onClick={() => { setActiveTab(tab); setFocusedTabIdx(i); }}
-              className={`px-3 py-1.5 text-sm font-medium rounded-full transition-all ${
-                isActive
-                  ? 'bg-red-600 text-white shadow-sm'
-                  : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-red-100 dark:hover:bg-red-900/40 hover:text-red-700 dark:hover:text-red-300'
-              }`}
-            >
-              {tab}
-              <span className={`ml-1.5 text-xs ${isActive ? 'text-red-200' : 'text-gray-400 dark:text-gray-500'}`}>
-                {count}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* ── Count + clear ── */}
-      <div className="flex items-center justify-center gap-3 text-sm text-gray-400 dark:text-gray-500">
-        <span>
-          Showing {filtered.length} {filtered.length === 1 ? 'tool' : 'tools'}
-          {query && <> for &ldquo;<span className="text-gray-600 dark:text-gray-300">{query}</span>&rdquo;</>}
-          {activeTab !== 'All' && <> in <span className="text-gray-600 dark:text-gray-300">{activeTab}</span></>}
-        </span>
-        {hasFilters && (
-          <button
-            onClick={() => { setQuery(''); setActiveTab('All'); }}
-            className="text-xs text-red-600 dark:text-red-400 hover:underline"
-          >
-            Clear filters
-          </button>
-        )}
-      </div>
-
-      {/* ── Grid ── */}
-      {filtered.length > 0 ? (
         <div
+          className="flex flex-wrap justify-center gap-1.5"
+          role="tablist"
+          aria-label="Filter tools by category"
+          onKeyDown={handleTabKeyboard}
+        >
+          {CATEGORY_TABS.map((tab, index) => {
+            const isActive = activeTab === tab;
+            const count = toolsForTab(tab).length;
+
+            return (
+              <button
+                key={tab}
+                ref={(element) => {
+                  tabRefs.current[index] = element;
+                }}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                onClick={() => {
+                  setActiveTab(tab);
+                  setFocusedTabIndex(index);
+                }}
+                className={`px-3 py-1.5 text-sm font-medium rounded-full transition-all ${
+                  isActive
+                    ? 'bg-red-600 text-white shadow-sm'
+                    : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-red-100 dark:hover:bg-red-900/40 hover:text-red-700 dark:hover:text-red-300'
+                }`}
+              >
+                {tab}
+                <span className={`ml-1.5 text-xs ${isActive ? 'text-red-200' : 'text-gray-400 dark:text-gray-500'}`}>
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 text-sm text-gray-500 dark:text-gray-400">
+          <span>
+            Showing <span className="font-medium text-gray-700 dark:text-gray-200">{visibleCountLabel}</span>
+            {query.trim() && <> for &ldquo;<span className="text-gray-700 dark:text-gray-200">{query.trim()}</span>&rdquo;</>}
+            {activeTab !== 'All' && <> in <span className="text-gray-700 dark:text-gray-200">{activeTab}</span></>}
+          </span>
+          {hasActiveFilters && (
+            <button
+              type="button"
+              onClick={clearFilters}
+              className="text-xs font-medium text-red-600 dark:text-red-400 hover:underline"
+            >
+              Clear filters
+            </button>
+          )}
+        </div>
+      </section>
+
+      {filteredTools.length > 0 ? (
+        <section
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
           role="tabpanel"
           aria-label={`${activeTab} tools`}
         >
-          {filtered.map(tool => (
+          {filteredTools.map((tool) => (
             <Link
               key={tool.slug}
               href={`/tools/${tool.slug}`}
               className="group flex items-start gap-3 p-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl hover:border-red-400 dark:hover:border-red-600 hover:shadow-md transition-all"
             >
-              <span className="text-2xl shrink-0 mt-0.5">{tool.emoji}</span>
+              <span className="text-2xl shrink-0 mt-0.5" aria-hidden="true">
+                {tool.emoji}
+              </span>
               <div className="min-w-0">
                 <div className="font-semibold text-gray-900 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors text-sm leading-snug">
                   {tool.name}
@@ -199,26 +225,24 @@ export function DirectoryClient() {
               </div>
             </Link>
           ))}
-        </div>
+        </section>
       ) : (
-        /* ── Empty state ── */
-        <div className="flex flex-col items-center justify-center py-20 space-y-4 text-center">
-          <span className="text-5xl">🔍</span>
+        <section className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-gray-200 dark:border-gray-800 bg-white/60 dark:bg-gray-900/50 py-16 px-4 space-y-4 text-center">
+          <span className="text-5xl" aria-hidden="true">🔍</span>
           <div>
-            <p className="text-gray-900 dark:text-white font-semibold text-base">
-              No tools found
-            </p>
+            <h2 className="text-gray-900 dark:text-white font-semibold text-base">No tools found</h2>
             <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
-              Try a different search term or select another category.
+              Try a different search term or choose another category.
             </p>
           </div>
           <button
-            onClick={() => { setQuery(''); setActiveTab('All'); }}
+            type="button"
+            onClick={clearFilters}
             className="px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
           >
             Clear filters
           </button>
-        </div>
+        </section>
       )}
     </div>
   );
