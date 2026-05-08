@@ -1,15 +1,18 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { useRouter, useParams } from "next/navigation";
+import { useSearchParams, useParams } from "next/navigation";
+import { Suspense } from "react";
 import PasswordStrength from "@/components/ui/PasswordStrength";
 
-export default function ResetPasswordPage() {
-  const router = useRouter();
+function ResetPasswordForm() {
   const params = useParams();
+  const searchParams = useSearchParams();
   const token = params.token as string;
+  const emailFromUrl = searchParams.get("email") ?? "";
 
+  const [email, setEmail] = useState(emailFromUrl);
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,26 +22,32 @@ export default function ResetPasswordPage() {
 
   useEffect(() => {
     if (!token) setTokenError(true);
-  }, [token]);
+    if (emailFromUrl) setEmail(emailFromUrl);
+  }, [token, emailFromUrl]);
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
 
-    if (password !== confirm) { setError("Passwords do not match."); return; }
-    if (password.length < 8) { setError("Password must be at least 8 characters."); return; }
+    if (!email || !email.includes("@")) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+    if (password !== confirm) {
+      setError("Passwords do not match.");
+      return;
+    }
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters.");
+      return;
+    }
 
     setLoading(true);
     try {
       const res = await fetch("/api/auth/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({
-          email: "", // User should provide this too — fetch from form
-          token,
-          password,
-          password_confirmation: confirm,
-        }),
+        body: JSON.stringify({ email, token, password, password_confirmation: confirm }),
       });
       const data = await res.json();
 
@@ -52,7 +61,7 @@ export default function ResetPasswordPage() {
     } finally {
       setLoading(false);
     }
-  }
+  }, [email, token, password, confirm]);
 
   if (tokenError) {
     return (
@@ -60,7 +69,9 @@ export default function ResetPasswordPage() {
         <div className="tb-v2-container">
           <div className="tb-v2-auth-card">
             <h1 className="tb-v2-auth-title">Invalid reset link</h1>
-            <p className="tb-v2-auth-error">This password reset link is invalid or has expired.</p>
+            <p className="tb-v2-auth-error">
+              This password reset link is invalid or has expired.
+            </p>
             <p className="tb-v2-auth-footer">
               <Link href="/forgot-password">Request a new one</Link>
             </p>
@@ -78,7 +89,9 @@ export default function ResetPasswordPage() {
 
           {success ? (
             <div>
-              <p style={{ marginBottom: "1rem" }}>Your password has been reset successfully.</p>
+              <p style={{ marginBottom: "1rem" }}>
+                Your password has been reset successfully.
+              </p>
               <p className="tb-v2-auth-footer">
                 <Link href="/login">Sign in with your new password</Link>
               </p>
@@ -90,6 +103,23 @@ export default function ResetPasswordPage() {
                   {error}
                 </p>
               )}
+
+              <div className="tb-v2-auth-field">
+                <label htmlFor="email" className="tb-v2-auth-label">
+                  Email
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  name="email"
+                  required
+                  autoComplete="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="tb-v2-auth-input"
+                  placeholder="you@example.com"
+                />
+              </div>
 
               <div className="tb-v2-auth-field">
                 <label htmlFor="password" className="tb-v2-auth-label">
@@ -138,5 +168,21 @@ export default function ResetPasswordPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={
+      <div className="tb-v2-auth">
+        <div className="tb-v2-container">
+          <div className="tb-v2-auth-card">
+            <p className="tb-v2-auth-error">Loading...</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <ResetPasswordForm />
+    </Suspense>
   );
 }
