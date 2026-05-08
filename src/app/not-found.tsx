@@ -3,7 +3,7 @@ import Link from 'next/link';
 export default function NotFound() {
   return (
     <main className="flex min-h-dvh items-center justify-center bg-[var(--bg)] px-6 py-20 text-[var(--fg-0)]">
-      <section className="w-full max-w-md text-center">
+      <section aria-labelledby="not-found-title" className="w-full max-w-md text-center">
         <p
           className="mb-5 select-none font-bold leading-none tracking-[-0.07em] text-[var(--green)]"
           style={{
@@ -16,6 +16,7 @@ export default function NotFound() {
         </p>
 
         <h1
+          id="not-found-title"
           className="mb-3 text-3xl font-bold tracking-[-0.03em] sm:text-4xl"
           style={{ fontFamily: 'var(--f-display)' }}
         >
