@@ -77,7 +77,7 @@ export const tools: Tool[] = [
   { name: 'Random Number Generator', slug: 'random-number-generator', description: 'Generate random integers or decimals within a custom range with optional unique values.', emoji: '🎲', category: 'Utility' },
   { name: 'List Randomizer', slug: 'list-randomizer', description: 'Shuffle a list of items into a random order with one-click copy of results.', emoji: '🔀', category: 'Utility' },
   { name: 'Fake Data Generator', slug: 'fake-data-generator', description: 'Generate realistic fake names, emails, addresses, and other data for testing and prototyping.', emoji: '🧪', category: 'Developer' },
-  { name: 'Hash Identifier', slug: 'hash-identifier', description: '', emoji: '🔎', category: 'Developer' },
+  { name: 'Hash Identifier', slug: 'hash-identifier', description: 'Identify likely hash algorithms from a pasted digest by length, format, and known prefixes such as MD5, SHA-1, SHA-256, bcrypt, and Argon2.', emoji: '🔎', category: 'Developer' },
   { name: 'Uptime Calculator', slug: 'uptime-calculator', description: 'Free online uptime calculator. Convert SLA percentages to downtime per year, month, week, and day. Plan availability targets for your services.', emoji: '📈', category: 'Utility' },
   { name: 'JSON to TypeScript', slug: 'json-to-typescript', description: 'Convert JSON data into TypeScript interfaces and types with optional strict mode.', emoji: '📘', category: 'Developer' },
   { name: 'Random String Generator', slug: 'random-string-generator', description: 'Generate random strings with custom character sets, length, and format for tokens and keys.', emoji: '🔣', category: 'Developer' },
