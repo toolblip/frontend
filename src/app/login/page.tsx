@@ -2,23 +2,21 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Log In | Toolblip',
-  description:
-    'Log in to your Toolblip account to access saved tools, preferences, and API keys.',
+  title: 'Sign In | Toolblip',
+  description: 'Sign in to your Toolblip account to save API keys, manage your profile, and submit MCP servers.',
   openGraph: {
-    title: 'Log In | Toolblip',
-    description:
-      'Log in to your Toolblip account to access saved tools, preferences, and API keys.',
+    title: 'Sign In | Toolblip',
+    description: 'Sign in to your Toolblip account to save API keys, manage your profile, and submit MCP servers.',
     url: 'https://toolblip.com/login',
     siteName: 'Toolblip',
     type: 'website',
     locale: 'en_US',
+    images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: 'Toolblip' }],
   },
   twitter: {
     card: 'summary',
-    title: 'Log In | Toolblip',
-    description:
-      'Log in to your Toolblip account to access saved tools, preferences, and API keys.',
+    title: 'Sign In | Toolblip',
+    description: 'Sign in to your Toolblip account to save API keys, manage your profile, and submit MCP servers.',
   },
 };
 

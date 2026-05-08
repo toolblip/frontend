@@ -3,22 +3,20 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Terms of Service | Toolblip',
-  description:
-    'Toolblip terms of service. Free browser-based tools provided as-is. Read our terms covering usage, liability, and intellectual property.',
+  description: 'Terms for using Toolblip. Tools are free for personal and commercial use. No attribution required. Read the full terms of service here.',
   openGraph: {
     title: 'Terms of Service | Toolblip',
-    description:
-      'Toolblip terms of service. Free browser-based tools provided as-is. Read our terms covering usage, liability, and intellectual property.',
+    description: 'Terms for using Toolblip. Tools are free for personal and commercial use. No attribution required. Read the full terms of service here.',
     url: 'https://toolblip.com/terms',
     siteName: 'Toolblip',
     type: 'website',
     locale: 'en_US',
+    images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: 'Toolblip' }],
   },
   twitter: {
     card: 'summary',
     title: 'Terms of Service | Toolblip',
-    description:
-      'Toolblip terms of service. Free browser-based tools provided as-is.',
+    description: 'Terms for using Toolblip. Tools are free for personal and commercial use. No attribution required. Read the full terms of service here.',
   },
 };
 

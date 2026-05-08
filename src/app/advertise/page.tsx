@@ -2,23 +2,21 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Advertise | Toolblip',
-  description:
-    'Reach developers and tech professionals with Toolblip advertising. Sponsor our free browser-based tools and connect with a tech-savvy audience.',
+  title: 'Advertise on Toolblip | Toolblip',
+  description: 'Sponsor a tool on Toolblip and reach developers who use JSON formatters, Base64 encoders, UUID generators, and more every day. Slots start at $100/month.',
   openGraph: {
-    title: 'Advertise | Toolblip',
-    description:
-      'Reach developers and tech professionals with Toolblip advertising. Sponsor our free browser-based tools and connect with a tech-savvy audience.',
+    title: 'Advertise on Toolblip | Toolblip',
+    description: 'Sponsor a tool on Toolblip and reach developers who use JSON formatters, Base64 encoders, UUID generators, and more every day. Slots start at $100/month.',
     url: 'https://toolblip.com/advertise',
     siteName: 'Toolblip',
     type: 'website',
     locale: 'en_US',
+    images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: 'Toolblip' }],
   },
   twitter: {
     card: 'summary',
-    title: 'Advertise | Toolblip',
-    description:
-      'Reach developers and tech professionals with Toolblip advertising. Sponsor our free browser-based tools.',
+    title: 'Advertise on Toolblip | Toolblip',
+    description: 'Sponsor a tool on Toolblip and reach developers who use JSON formatters, Base64 encoders, UUID generators, and more every day. Slots start at $100/month.',
   },
 };
 

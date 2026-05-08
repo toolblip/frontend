@@ -2,23 +2,21 @@ import type { Metadata } from 'next';
 import { DirectoryClient } from './DirectoryClient';
 
 export const metadata: Metadata = {
-  title: 'All Tools — Free Browser-Based Utilities | Toolblip',
-  description:
-    'Browse all free browser-based tools. Text editors, encoders, developers utilities, QR generators, and more. No sign-up, no ads, instant results.',
+  title: 'Tool Directory | Toolblip',
+  description: 'Browse all free browser-based tools on Toolblip. Text, developer, image, conversion, math, CSS tools and more.',
   openGraph: {
-    title: 'All Tools — Free Browser-Based Utilities | Toolblip',
-    description:
-      'Browse all free browser-based tools. Text editors, encoders, developers utilities, QR generators, and more. No sign-up, no ads, instant results.',
+    title: 'Tool Directory | Toolblip',
+    description: 'Browse all free browser-based tools on Toolblip. Text, developer, image, conversion, math, CSS tools and more.',
     url: 'https://toolblip.com/directory',
     siteName: 'Toolblip',
     type: 'website',
     locale: 'en_US',
+    images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: 'Toolblip' }],
   },
   twitter: {
     card: 'summary',
-    title: 'All Tools — Free Browser-Based Utilities | Toolblip',
-    description:
-      'Browse all free browser-based tools. Text editors, encoders, developers utilities, QR generators, and more. No sign-up, no ads, instant results.',
+    title: 'Tool Directory | Toolblip',
+    description: 'Browse all free browser-based tools on Toolblip. Text, developer, image, conversion, math, CSS tools and more.',
   },
 };
 

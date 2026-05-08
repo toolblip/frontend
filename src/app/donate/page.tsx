@@ -2,23 +2,21 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Donate | Toolblip',
-  description:
-    'Support Toolblip. Help us keep our free browser-based tools running with no ads, no tracking, and no paywalls.',
+  title: 'Support Toolblip | Toolblip',
+  description: 'Toolblip is free, forever. No login, no paywalls. If it saved you time, a coffee keeps the lights on. Donate via GitHub Sponsors or Ko-fi.',
   openGraph: {
-    title: 'Donate | Toolblip',
-    description:
-      'Support Toolblip. Help us keep our free browser-based tools running with no ads, no tracking, and no paywalls.',
+    title: 'Support Toolblip | Toolblip',
+    description: 'Toolblip is free, forever. No login, no paywalls. If it saved you time, a coffee keeps the lights on. Donate via GitHub Sponsors or Ko-fi.',
     url: 'https://toolblip.com/donate',
     siteName: 'Toolblip',
     type: 'website',
     locale: 'en_US',
+    images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: 'Toolblip' }],
   },
   twitter: {
     card: 'summary',
-    title: 'Donate | Toolblip',
-    description:
-      'Support Toolblip. Help us keep our free browser-based tools running with no ads, no tracking, and no paywalls.',
+    title: 'Support Toolblip | Toolblip',
+    description: 'Toolblip is free, forever. No login, no paywalls. If it saved you time, a coffee keeps the lights on. Donate via GitHub Sponsors or Ko-fi.',
   },
 };
 

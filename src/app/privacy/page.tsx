@@ -3,22 +3,20 @@ import Link from 'next/link';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy | Toolblip',
-  description:
-    'Toolblip privacy policy. All tools run client-side — we don\'t collect, store, or transmit your data. Learn how we handle your information.',
+  description: 'Toolblip tools run 100% in your browser. Nothing you paste or upload is sent to any server. No account required. Read the full privacy policy.',
   openGraph: {
     title: 'Privacy Policy | Toolblip',
-    description:
-      'Toolblip privacy policy. All tools run client-side — we don\'t collect, store, or transmit your data.',
+    description: 'Toolblip tools run 100% in your browser. Nothing you paste or upload is sent to any server. No account required. Read the full privacy policy.',
     url: 'https://toolblip.com/privacy',
     siteName: 'Toolblip',
     type: 'website',
     locale: 'en_US',
+    images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: 'Toolblip' }],
   },
   twitter: {
     card: 'summary',
     title: 'Privacy Policy | Toolblip',
-    description:
-      'Toolblip privacy policy. All tools run client-side — we don\'t collect, store, or transmit your data.',
+    description: 'Toolblip tools run 100% in your browser. Nothing you paste or upload is sent to any server. No account required. Read the full privacy policy.',
   },
 };
 
