@@ -100,35 +100,42 @@ export default function HomePage() {
       </section>
 
       {/* ── How it works ── */}
-      <section>
-        <p className="text-center text-sm font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-6">
-          How it works
-        </p>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {STEPS.map((s, index) => (
-            <div
-              key={s.n}
-              className="relative flex flex-col items-center text-center gap-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow"
-            >
-              {index < STEPS.length - 1 && (
-                <span className="hidden sm:block absolute -right-3 top-1/2 -translate-y-1/2 text-gray-300 dark:text-gray-700 text-xl">
-                  →
-                </span>
-              )}
-              <div className="w-12 h-12 rounded-full bg-red-50 dark:bg-red-950/60 text-red-600 dark:text-red-400 flex items-center justify-center">
-                {s.icon}
+      <section className="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/70 shadow-sm px-5 py-6 sm:px-8">
+        <div className="flex flex-col lg:flex-row lg:items-center gap-5">
+          <div className="lg:w-48 text-center lg:text-left">
+            <p className="text-sm font-semibold uppercase tracking-widest text-red-600 dark:text-red-400">
+              How it works
+            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              Local-first tools in three quick steps.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1">
+            {STEPS.map((s, index) => (
+              <div
+                key={s.n}
+                className="relative flex items-center gap-3 rounded-2xl bg-gray-50 dark:bg-gray-950/50 border border-gray-100 dark:border-gray-800 p-4"
+              >
+                {index < STEPS.length - 1 && (
+                  <span className="hidden sm:block absolute -right-2 top-1/2 -translate-y-1/2 text-gray-300 dark:text-gray-700 text-lg">
+                    →
+                  </span>
+                )}
+                <div className="w-11 h-11 shrink-0 rounded-full bg-red-50 dark:bg-red-950/60 text-red-600 dark:text-red-400 flex items-center justify-center">
+                  {s.icon}
+                </div>
+                <div className="min-w-0">
+                  <h3 className="font-semibold text-gray-900 dark:text-white text-sm">
+                    <span className="text-red-600 dark:text-red-400 font-mono mr-1">{s.n}.</span>
+                    {s.title}
+                  </h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 leading-relaxed">{s.desc}</p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 dark:text-white text-base">
-                  <span className="text-red-600 dark:text-red-400 font-mono text-sm mr-1">{s.n}.</span>
-                  {s.title}
-                </h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">{s.desc}</p>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-        <p className="text-center text-sm text-gray-400 dark:text-gray-500 mt-4">
+        <p className="text-center text-sm font-medium text-gray-500 dark:text-gray-400 mt-5">
           No servers. No uploads. Nothing leaves your browser.
         </p>
       </section>
@@ -136,7 +143,7 @@ export default function HomePage() {
       {/* ── Category quick-access ── */}
       <section aria-label="Browse tools by category" className="space-y-3">
         <p className="text-center text-sm font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">
-          Browse by category
+          Jump to a category
         </p>
         <div className="flex flex-wrap justify-center gap-2">
           {categories.map((cat) => (
@@ -152,21 +159,26 @@ export default function HomePage() {
       </section>
 
       {/* ── Why Toolblip? ── */}
-      <section>
-        <p className="text-center text-sm font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-6">
-          Why Toolblip?
-        </p>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+      <section className="space-y-5">
+        <div className="text-center">
+          <p className="text-sm font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">
+            Why Toolblip?
+          </p>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
+            Handy utilities without the usual friction.
+          </h2>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {BENEFITS.map((b) => (
             <div
               key={b.title}
-              className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm flex gap-4 items-start"
+              className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow"
             >
-              <span className="text-3xl shrink-0">{b.emoji}</span>
-              <div>
-                <h3 className="font-semibold text-gray-900 dark:text-white text-base">{b.title}</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5 leading-relaxed">{b.desc}</p>
+              <div className="w-11 h-11 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-2xl mb-4">
+                {b.emoji}
               </div>
+              <h3 className="font-semibold text-gray-900 dark:text-white text-base">{b.title}</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">{b.desc}</p>
             </div>
           ))}
         </div>
