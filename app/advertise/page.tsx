@@ -8,6 +8,7 @@ export const metadata: Metadata = {
     description: 'Sponsor a tool on Toolblip and reach developers who use JSON formatters, Base64 encoders, UUID generators, and more every day. Slots start at $100/month.',
     url: 'https://toolblip.com/advertise',
     siteName: 'Toolblip',
+    type: 'website',
     images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: 'Toolblip' }],
   },
   twitter: {
