@@ -227,6 +227,40 @@ const STATUS_CODES = [
   { code: 500, label: 'Server Error', desc: 'Something went wrong on our end.', color: 'text-red-600 dark:text-red-400' },
 ];
 
+const TYPES = [
+  {
+    name: 'Tool',
+    shape: `{
+  "id": 1,
+  "slug": "json-formatter",
+  "name": "JSON Formatter",
+  "description": "Format, validate, and prettify JSON data instantly.",
+  "category": "developer",
+  "is_pro": false,
+  "emoji": "📋",
+  "created_at": "2026-01-15T10:30:00Z"
+}`,
+  },
+  {
+    name: 'User',
+    shape: `{
+  "id": 42,
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "is_pro": false
+}`,
+  },
+  {
+    name: 'Error',
+    shape: `{
+  "message": "The given data was invalid.",
+  "errors": {
+    "email": ["The email field is required."]
+  }
+}`,
+  },
+];
+
 const METHOD_COLORS: Record<HttpMethod, string> = {
   GET: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400',
   POST: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400',
@@ -557,6 +591,7 @@ export default function ApiDocsClient() {
                     { id: 'quick-start', label: 'Quick Start' },
                     { id: 'tools', label: 'Tools' },
                     { id: 'auth', label: 'Authentication' },
+                    { id: 'schemas', label: 'Schemas' },
                     { id: 'status-codes', label: 'Status Codes' },
                   ].map((item) => (
                     <button
@@ -688,6 +723,26 @@ curl -X GET "${BASE_URL}/api/tools" \\
                 </div>
               </section>
             ))}
+
+            {/* Schemas */}
+            <section id="schemas" className="scroll-mt-20">
+              <div className="flex items-center gap-3 mb-6">
+                <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">Schemas</h2>
+                <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
+              </div>
+              <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+                {TYPES.map((type) => (
+                  <div key={type.name} className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
+                    <div className="px-5 py-3 border-b border-slate-100 dark:border-slate-800">
+                      <h3 className="text-sm font-semibold text-slate-800 dark:text-slate-200">{type.name}</h3>
+                    </div>
+                    <div className="p-4">
+                      <CodeBlock code={type.shape} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
 
             {/* HTTP Status Codes */}
             <section id="status-codes">
