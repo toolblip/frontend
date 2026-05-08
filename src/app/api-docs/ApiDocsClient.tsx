@@ -179,6 +179,11 @@ const methodClass: Record<Method, string> = {
   POST: 'border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-900 dark:bg-blue-950/60 dark:text-blue-300',
 };
 
+const endpointGroups = [
+  { label: 'Tools', endpoints: endpoints.filter((endpoint) => endpoint.group === 'Tools') },
+  { label: 'Authentication', endpoints: endpoints.filter((endpoint) => endpoint.group === 'Authentication') },
+];
+
 function CopyButton({ value }: { value: string }) {
   const [copied, setCopied] = useState(false);
 
@@ -267,8 +272,8 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
 }
 
 export default function ApiDocsClient() {
-  const tools = endpoints.filter((endpoint) => endpoint.group === 'Tools');
-  const auth = endpoints.filter((endpoint) => endpoint.group === 'Authentication');
+  const tools = endpointGroups.find((group) => group.label === 'Tools')?.endpoints ?? [];
+  const auth = endpointGroups.find((group) => group.label === 'Authentication')?.endpoints ?? [];
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-white via-slate-50 to-white text-slate-900 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900 dark:text-white">
@@ -293,7 +298,7 @@ export default function ApiDocsClient() {
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Base URL</p>
               <code className="mt-3 block break-all rounded-xl bg-white p-3 text-sm text-slate-900 dark:bg-slate-950 dark:text-slate-100">{BASE_URL}</code>
               <p className="mt-4 text-sm text-slate-600 dark:text-slate-300">
-                Use Railway production today. Once SSL is ready, switch to <code className="font-mono">{FUTURE_BASE_URL}</code>.
+                Use Railway production today. Once SSL is ready, switch requests to <code className="font-mono">{FUTURE_BASE_URL}</code>.
               </p>
             </div>
           </div>
@@ -305,11 +310,16 @@ export default function ApiDocsClient() {
           <div className="sticky top-24 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Endpoints</p>
             <nav className="mt-4 space-y-2">
-              {endpoints.map((endpoint) => (
-                <a key={endpoint.id} href={`#${endpoint.id}`} className="block rounded-xl px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white">
-                  <span className="mr-2 font-mono text-xs font-black text-[#58D65D] dark:text-emerald-400">{endpoint.method}</span>
-                  {endpoint.path}
-                </a>
+              {endpointGroups.map((group) => (
+                <div key={group.label} className="pt-2 first:pt-0">
+                  <p className="px-3 pb-1 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">{group.label}</p>
+                  {group.endpoints.map((endpoint) => (
+                    <a key={endpoint.id} href={`#${endpoint.id}`} className="block rounded-xl px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white">
+                      <span className="mr-2 font-mono text-xs font-black text-[#58D65D] dark:text-emerald-400">{endpoint.method}</span>
+                      {endpoint.path}
+                    </a>
+                  ))}
+                </div>
               ))}
             </nav>
           </div>
@@ -332,6 +342,23 @@ export default function ApiDocsClient() {
 curl "${BASE_URL}/api/auth/user" \\
   -H "Authorization: Bearer $TOKEN" \\
   -H "Accept: application/json"`} />
+            </div>
+          </section>
+
+          <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
+            <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Endpoint overview</h2>
+            <div className="mt-5 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800">
+              <div className="hidden grid-cols-[0.7fr_1.7fr_1fr_2fr] bg-slate-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:bg-slate-950 dark:text-slate-400 md:grid">
+                <span>Method</span><span>Path</span><span>Auth</span><span>Purpose</span>
+              </div>
+              {endpoints.map((endpoint) => (
+                <a key={endpoint.id} href={`#${endpoint.id}`} className="grid gap-2 border-t border-slate-200 px-4 py-3 text-sm first:border-t-0 transition hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/50 md:grid-cols-[0.7fr_1.7fr_1fr_2fr] md:gap-3 md:first:border-t">
+                  <span className="font-mono font-black text-[#58D65D] dark:text-emerald-400">{endpoint.method}</span>
+                  <code className="break-all text-slate-900 dark:text-slate-100">{endpoint.path}</code>
+                  <span className="text-slate-600 dark:text-slate-300">{endpoint.auth === 'Public' ? 'None' : 'Bearer token'}</span>
+                  <span className="text-slate-600 dark:text-slate-300">{endpoint.title}</span>
+                </a>
+              ))}
             </div>
           </section>
 
