@@ -475,7 +475,7 @@ export default function ApiDocsClient() {
             <div>
               <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">API Documentation</h1>
               <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">
-                Toolblip REST API — integrate tools and user auth into any app
+                Complete Toolblip REST API reference for tools, accounts, Bearer tokens, and JSON responses
               </p>
             </div>
           </div>
@@ -483,7 +483,7 @@ export default function ApiDocsClient() {
           {/* Key info cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
             <div className="bg-slate-900 dark:bg-slate-800 rounded-xl px-4 py-3.5">
-              <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest block mb-1">Base URL</span>
+              <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest block mb-1">Production Base URL</span>
               <code className="text-sm font-mono text-[#58D65D] break-all">{BASE_URL}</code>
               <span className="text-xs text-slate-500 mt-0.5 block">{FUTURE_BASE_URL} once SSL is ready</span>
             </div>
@@ -493,7 +493,7 @@ export default function ApiDocsClient() {
               </svg>
               <div>
                 <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest block">Auth</span>
-                <code className="text-xs font-mono text-slate-700 dark:text-slate-300">Bearer token</code>
+                <code className="text-xs font-mono text-slate-700 dark:text-slate-300">Authorization: Bearer TOKEN</code>
               </div>
             </div>
             <div className="flex items-center gap-3 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3.5">
