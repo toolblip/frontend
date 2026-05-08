@@ -11,7 +11,7 @@ export default function Error({
 }) {
   return (
     <main className="min-h-screen flex items-center justify-center px-6" style={{ background: 'var(--bg)' }}>
-      <div className="text-center max-w-md w-full">
+      <div className="text-center max-w-md w-full animate-in fade-in zoom-in duration-500">
         {/* Icon */}
         <div
           className="mb-6 inline-flex items-center justify-center rounded-2xl"
@@ -24,6 +24,9 @@ export default function Error({
         >
           ⚠️
         </div>
+
+        {/* Divider */}
+        <div className="mx-auto mb-8 h-px w-12" style={{ background: 'var(--red)', opacity: 0.3 }} />
 
         {/* Heading */}
         <h1

@@ -3,7 +3,7 @@ import Link from 'next/link';
 export default function NotFound() {
   return (
     <main className="min-h-screen flex items-center justify-center px-6" style={{ background: 'var(--bg)' }}>
-      <div className="text-center max-w-md w-full">
+      <div className="text-center max-w-md w-full animate-in fade-in zoom-in duration-500">
         {/* Large 404 */}
         <div
           className="font-bold leading-none mb-6"
@@ -17,6 +17,9 @@ export default function NotFound() {
         >
           404
         </div>
+
+        {/* Divider */}
+        <div className="mx-auto mb-8 h-px w-12" style={{ background: 'var(--green)', opacity: 0.3 }} />
 
         {/* Heading */}
         <h1
@@ -42,7 +45,7 @@ export default function NotFound() {
             lineHeight: 1.6,
           }}
         >
-          The page you're looking for doesn't exist.
+          The page you&apos;re looking for doesn&apos;t exist.
         </p>
 
         {/* Links */}
