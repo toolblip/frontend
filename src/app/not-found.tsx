@@ -8,7 +8,7 @@ export default function NotFound() {
           className="mb-4 select-none font-bold leading-none tracking-[-0.06em] text-[var(--green)]"
           style={{
             fontFamily: 'var(--f-display)',
-            fontSize: 'clamp(84px, 20vw, 152px)',
+            fontSize: 'clamp(88px, 22vw, 160px)',
             textShadow: '0 0 56px color-mix(in srgb, var(--green) 24%, transparent)',
           }}
         >
