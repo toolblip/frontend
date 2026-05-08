@@ -102,6 +102,20 @@ export default function HomePage() {
         <p className="text-lg text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
           20+ tools for text, encoding, development, and more. No signup, no uploads — everything stays on your device.
         </p>
+        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <a
+            href="#tools"
+            className="inline-flex items-center justify-center rounded-full bg-red-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-red-700 dark:bg-red-500 dark:hover:bg-red-600 transition-colors"
+          >
+            Browse all tools
+          </a>
+          <a
+            href="#categories"
+            className="inline-flex items-center justify-center rounded-full border border-gray-200 dark:border-gray-800 px-5 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:border-red-300 dark:hover:border-red-700 hover:text-red-700 dark:hover:text-red-300 transition-colors"
+          >
+            Explore categories
+          </a>
+        </div>
       </section>
 
       {/* ── How it works ── */}
@@ -146,7 +160,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Category quick-access ── */}
-      <section aria-label="Browse tools by category" className="space-y-3">
+      <section id="categories" aria-label="Browse tools by category" className="space-y-3 scroll-mt-6">
         <p className="text-center text-sm font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">
           Jump to a category
         </p>
@@ -180,7 +194,7 @@ export default function HomePage() {
           {BENEFITS.map((b) => (
             <div
               key={b.title}
-              className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm hover:shadow-md transition-shadow"
+              className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-red-200 dark:hover:border-red-900 transition-all"
             >
               <div className="w-11 h-11 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-2xl mb-4">
                 {b.emoji}
@@ -193,7 +207,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Tools grid ── */}
-      <section>
+      <section id="tools" className="scroll-mt-6">
         <p className="text-center text-sm font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-6">
           All tools
         </p>
