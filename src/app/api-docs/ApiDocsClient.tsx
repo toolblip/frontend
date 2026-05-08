@@ -86,7 +86,7 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
     path: '/api/tools/{slug}',
     auth: false,
     title: 'Get a single tool',
-    description: 'Returns a single tool by its URL-safe slug. Returns 404 if the slug does not exist.'
+    description: 'Returns a single tool by its URL-safe slug. Returns 404 if the slug does not exist.',
     responseShape: '{ tool: Tool }',
     curl: `curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
   -H "Accept: application/json"`,

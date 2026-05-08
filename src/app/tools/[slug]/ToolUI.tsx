@@ -1,24 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import type { Tool } from '@/data/tools';
 
-// ─── Shared UI primitives ────────────────────────────────────────────────
+// ─── Shared UI primitives ─────────────────────────────────────────────────
 
-function CopyButton({ text }: { text: string }) {
-  const [copied, setCopied] = useState(false);
-  const copy = async () => {
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  };
+function Card({
+  children,
+  className = '',
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <button
-      onClick={copy}
-      className="px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg transition-colors"
+    <div
+      className={`rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-6 ${className}`}
     >
-      {copied ? '✓ Copied' : 'Copy'}
-    </button>
+      {children}
+    </div>
   );
 }
 
@@ -27,149 +26,245 @@ function Textarea({
   onChange,
   placeholder,
   className = '',
+  rows = 6,
 }: {
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
   className?: string;
+  rows?: number;
 }) {
   return (
     <textarea
       value={value}
       onChange={e => onChange(e.target.value)}
       placeholder={placeholder}
-      className={`w-full h-40 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-red-500 transition-colors resize-y font-mono text-sm ${className}`}
+      rows={rows}
+      className={`w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-500 resize-y font-mono text-sm ${className}`}
     />
   );
 }
 
-function OutputArea({ value }: { value: string }) {
+function OutputArea({
+  value,
+  label,
+}: {
+  value: string;
+  label?: string;
+}) {
+  const [copied, setCopied] = useState(false);
+  const handleCopy = () => {
+    navigator.clipboard.writeText(value).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    });
+  };
+
   return (
     <div className="relative">
-      <pre className="w-full h-40 bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm overflow-auto">
-        {value || <span className="text-gray-400">Output will appear here…</span>}
-      </pre>
-      {value && <CopyButton text={value} />}
+      {label && (
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+            {label}
+          </span>
+          <button
+            onClick={handleCopy}
+            className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+          >
+            {copied ? '✓ Copied' : 'Copy'}
+          </button>
+        </div>
+      )}
+      <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3 text-sm font-mono text-gray-800 dark:text-gray-200 whitespace-pre-wrap break-all min-h-[80px]">
+        {value || <span className="text-gray-400 dark:text-gray-500 italic">Output will appear here…</span>}
+      </div>
     </div>
   );
 }
 
-function ProcessButton({ onClick, children, disabled }: { onClick: () => void; children: React.ReactNode; disabled?: boolean }) {
+function ActionRow({ children }: { children: React.ReactNode }) {
+  return <div className="flex gap-2 flex-wrap">{children}</div>;
+}
+
+function Button({
+  onClick,
+  variant = 'primary',
+  children,
+}: {
+  onClick?: () => void;
+  variant?: 'primary' | 'secondary';
+  children: React.ReactNode;
+}) {
+  const base =
+    'px-4 py-2 rounded-xl text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-green-500';
+  const variants = {
+    primary:
+      'bg-green-600 hover:bg-green-700 text-white',
+    secondary:
+      'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700',
+  };
   return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      className="px-6 py-2.5 bg-red-600 hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors"
-    >
+    <button onClick={onClick} className={`${base} ${variants[variant]}`}>
       {children}
     </button>
   );
 }
 
-// ─── Tool UIs ──────────────────────────────────────────────────────────
-
-function WordCounterTool() {
-  const [text, setText] = useState('');
-  const stats = {
-    words: text.trim() ? text.trim().split(/\s+/).length : 0,
-    chars: text.length,
-    charsNoSpaces: text.replace(/\s/g, '').length,
-    sentences: (text.match(/[.!?]+/g) || []).length,
-    paragraphs: text.split(/\n\n+/).filter(Boolean).length,
-    readingTime: Math.max(1, Math.ceil(text.trim().split(/\s+/).length / 200)),
-  };
-  const statCards = [
-    { label: 'Words', value: stats.words },
-    { label: 'Characters', value: stats.chars },
-    { label: 'Characters (no spaces)', value: stats.charsNoSpaces },
-    { label: 'Sentences', value: stats.sentences },
-    { label: 'Paragraphs', value: stats.paragraphs },
-    { label: 'Reading time', value: `${stats.readingTime} min` },
-  ];
+function Stat({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="space-y-4">
-      <Textarea value={text} onChange={setText} placeholder="Paste or type your text here…" />
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        {statCards.map(s => (
-          <div key={s.label} className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg px-4 py-3 text-center">
-            <div className="text-2xl font-bold text-red-600 dark:text-red-400">{s.value}</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{s.label}</div>
-          </div>
-        ))}
-      </div>
+    <div className="text-center">
+      <div className="text-2xl font-bold text-gray-900 dark:text-white">{value}</div>
+      <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{label}</div>
     </div>
   );
 }
 
-function CharacterCounterTool() {
+function Divider({ label }: { label?: string }) {
+  return (
+    <div className="flex items-center gap-3 my-4">
+      {label ? (
+        <>
+          <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
+          <span className="text-xs text-gray-400 dark:text-gray-500">{label}</span>
+          <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
+        </>
+      ) : (
+        <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
+      )}
+    </div>
+  );
+}
+
+// ─── Tool-specific UIs ─────────────────────────────────────────────────────
+
+function WordCounterUI() {
   const [text, setText] = useState('');
+
+  const stats = useCallback(() => {
+    if (!text.trim()) return null;
+    const words = text.trim().split(/\s+/).filter(Boolean);
+    const chars = text.length;
+    const charsNoSpaces = text.replace(/\s/g, '').length;
+    const sentences = (text.match(/[.!?]+/g) || []).length || (text.trim() ? 1 : 0);
+    const paragraphs = text.split(/\n\n+/).filter(t => t.trim()).length || (text.trim() ? 1 : 0);
+    const readingTime = Math.max(1, Math.round(words.length / 200));
+    return { words: words.length, chars, charsNoSpaces, sentences, paragraphs, readingTime };
+  }, [text]);
+
+  const s = stats();
+
+  return (
+    <div className="space-y-4">
+      <Textarea
+        value={text}
+        onChange={setText}
+        placeholder="Paste or type your text here…"
+        rows={8}
+      />
+      {s ? (
+        <Card>
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
+            <Stat label="Words" value={s.words} />
+            <Stat label="Characters" value={s.chars} />
+            <Stat label="No Spaces" value={s.charsNoSpaces} />
+            <Stat label="Sentences" value={s.sentences} />
+            <Stat label="Paragraphs" value={s.paragraphs} />
+            <Stat label="Min Read" value={`${s.readingTime}m`} />
+          </div>
+        </Card>
+      ) : (
+        <p className="text-sm text-gray-400 dark:text-gray-500 text-center py-4">
+          Start typing to see stats…
+        </p>
+      )}
+    </div>
+  );
+}
+
+function CharacterCounterUI() {
+  const [text, setText] = useState('');
+
   const limits = [
     { label: 'Twitter / X', max: 280 },
     { label: 'LinkedIn', max: 3000 },
     { label: 'Meta Description', max: 160 },
-    { label: 'Google Title', max: 60 },
+    { label: 'Reddit Title', max: 300 },
+    { label: 'Reddit Body', max: 40000 },
+    { label: 'SMS', max: 160 },
   ];
+
+  const chars = text.length;
+  const charsNoSpaces = text.replace(/\s/g, '').length;
+
   return (
     <div className="space-y-4">
-      <Textarea value={text} onChange={setText} placeholder="Type or paste your text here…" />
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        {limits.map(l => {
-          const pct = Math.min(100, (text.length / l.max) * 100);
-          const over = text.length > l.max;
-          return (
-            <div key={l.label} className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg px-3 py-2.5">
-              <div className="flex justify-between items-center mb-1">
-                <span className="text-xs text-gray-500 dark:text-gray-400">{l.label}</span>
-                <span className={`text-xs font-medium ${over ? 'text-red-500' : 'text-gray-700 dark:text-gray-200'}`}>
-                  {text.length}/{l.max}
-                </span>
-              </div>
-              <div className="h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                <div
-                  className={`h-full rounded-full transition-all ${over ? 'bg-red-500' : pct > 80 ? 'bg-yellow-400' : 'bg-red-500'}`}
-                  style={{ width: `${Math.min(100, pct)}%` }}
-                />
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      <div className="grid grid-cols-2 gap-3">
-        <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg px-4 py-3 text-center">
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">{text.length}</div>
-          <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">With spaces</div>
+      <Textarea
+        value={text}
+        onChange={setText}
+        placeholder="Type or paste your text here…"
+        rows={6}
+      />
+      <Card>
+        <div className="grid grid-cols-2 gap-4 mb-4">
+          <Stat label="With Spaces" value={chars} />
+          <Stat label="Without Spaces" value={charsNoSpaces} />
         </div>
-        <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg px-4 py-3 text-center">
-          <div className="text-2xl font-bold text-gray-900 dark:text-white">{text.replace(/\s/g, '').length}</div>
-          <div className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Without spaces</div>
+        <Divider label="Platform Limits" />
+        <div className="space-y-2">
+          {limits.map(l => {
+            const pct = Math.min(100, (chars / l.max) * 100);
+            const over = chars > l.max;
+            return (
+              <div key={l.label}>
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-gray-600 dark:text-gray-400">{l.label}</span>
+                  <span className={over ? 'text-red-500 font-medium' : 'text-gray-500 dark:text-gray-400'}>
+                    {chars} / {l.max}
+                  </span>
+                </div>
+                <div className="h-1.5 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all ${over ? 'bg-red-500' : pct > 80 ? 'bg-yellow-400' : 'bg-green-500'}`}
+                    style={{ width: `${pct}%` }}
+                  />
+                </div>
+              </div>
+            );
+          })}
         </div>
-      </div>
+      </Card>
     </div>
   );
 }
 
-function CaseConverterTool() {
+function CaseConverterUI() {
   const [text, setText] = useState('');
   const [output, setOutput] = useState('');
-  const [activeStyle, setActiveStyle] = useState<string>('');
 
   const convert = (style: string) => {
-    setActiveStyle(style);
     if (!text) { setOutput(''); return; }
+    let result = '';
     switch (style) {
-      case 'upper': setOutput(text.toUpperCase()); break;
-      case 'lower': setOutput(text.toLowerCase()); break;
-      case 'title': setOutput(text.replace(/\w\S*/g, w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())); break;
+      case 'upper': result = text.toUpperCase(); break;
+      case 'lower': result = text.toLowerCase(); break;
+      case 'title': result = text.replace(/\w\S*/g, w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()); break;
       case 'camel': {
-        const w = text.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (_, c) => c.toUpperCase());
-        setOutput(w.charAt(0).toLowerCase() + w.slice(1));
+        const words = text.trim().split(/[\s_-]+/);
+        result = words[0].toLowerCase() + words.slice(1).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join('');
         break;
       }
-      case 'snake': setOutput(text.toLowerCase().replace(/\s+/g, '_').replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase()); break;
-      case 'kebab': setOutput(text.toLowerCase().replace(/\s+/g, '-').replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()); break;
-      case 'pascal': setOutput(text.replace(/\w\S*/g, w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).replace(/\s/g, '')); break;
-      case 'constant': setOutput(text.toUpperCase().replace(/\s+/g, '_').replace(/([a-z])([A-Z])/g, '$1_$2')); break;
+      case 'snake': result = text.trim().toLowerCase().replace(/[\s]+/g, '_').replace(/[^\w_]/g, ''); break;
+      case 'kebab': result = text.trim().toLowerCase().replace(/[\s]+/g, '-').replace(/[^\w-]/g, ''); break;
+      case 'pascal': {
+        const words = text.trim().split(/[\s_-]+/);
+        result = words.map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join('');
+        break;
+      }
+      case 'constant': result = text.trim().toUpperCase().replace(/[\s]+/g, '_').replace(/[^\w_]/g, ''); break;
+      case 'sentence': result = text.charAt(0).toUpperCase() + text.slice(1).toLowerCase(); break;
+      default: result = text;
     }
+    setOutput(result);
   };
 
   const styles = [
@@ -181,190 +276,231 @@ function CaseConverterTool() {
     { key: 'kebab', label: 'kebab-case' },
     { key: 'pascal', label: 'PascalCase' },
     { key: 'constant', label: 'CONSTANT_CASE' },
+    { key: 'sentence', label: 'Sentence case' },
   ];
 
   return (
     <div className="space-y-4">
-      <Textarea value={text} onChange={setText} placeholder="Enter text to convert…" />
-      <div className="flex flex-wrap gap-2">
+      <Textarea
+        value={text}
+        onChange={v => { setText(v); setOutput(''); }}
+        placeholder="Enter text to convert…"
+        rows={5}
+      />
+      <ActionRow>
         {styles.map(s => (
-          <button
-            key={s.key}
-            onClick={() => convert(s.key)}
-            className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${activeStyle === s.key
-              ? 'bg-red-600 text-white'
-              : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
-            }`}
-          >
-            {s.label}
-          </button>
+          <Button key={s.key} onClick={() => convert(s.key)} variant="secondary">{s.label}</Button>
         ))}
-      </div>
-      <OutputArea value={output} />
+      </ActionRow>
+      <OutputArea value={output} label="Result" />
     </div>
   );
 }
 
-function Base64Tool() {
+function Base64UI() {
   const [input, setInput] = useState('');
-  const [mode, setMode] = useState<'encode' | 'decode'>('encode');
   const [output, setOutput] = useState('');
+  const [mode, setMode] = useState<'encode' | 'decode'>('encode');
   const [error, setError] = useState('');
 
-  const run = () => {
+  const process = () => {
     setError('');
     if (!input) { setOutput(''); return; }
     try {
-      if (mode === 'encode') setOutput(btoa(unescape(encodeURIComponent(input))));
-      else {
-        const decoded = decodeURIComponent(escape(atob(input.trim())));
-        setOutput(decoded);
+      if (mode === 'encode') {
+        setOutput(btoa(unescape(encodeURIComponent(input))));
+      } else {
+        setOutput(decodeURIComponent(escape(atob(input.replace(/\s/g, '')))));
       }
     } catch {
-      setError('Invalid input for the selected mode.');
+      setError('Invalid Base64 string for decoding.');
       setOutput('');
     }
   };
 
   return (
     <div className="space-y-4">
-      <div className="flex gap-2">
+      <div className="flex gap-2 mb-2">
         {(['encode', 'decode'] as const).map(m => (
-          <button key={m} onClick={() => { setMode(m); setOutput(''); setError(''); }}
-            className={`px-4 py-1.5 text-sm rounded-lg transition-colors ${mode === m ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'}`}>
+          <button
+            key={m}
+            onClick={() => { setMode(m); setOutput(''); setError(''); }}
+            className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 ${mode === m ? 'bg-green-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'}`}
+          >
             {m === 'encode' ? 'Encode' : 'Decode'}
           </button>
         ))}
       </div>
-      <Textarea value={input} onChange={setInput} placeholder={mode === 'encode' ? 'Enter text to Base64 encode…' : 'Enter Base64 string to decode…'} />
-      <ProcessButton onClick={run}>Convert</ProcessButton>
-      {error && <p className="text-red-500 text-sm">{error}</p>}
-      <OutputArea value={output} />
+      <Textarea
+        value={input}
+        onChange={v => { setInput(v); setError(''); }}
+        placeholder={mode === 'encode' ? 'Enter text to encode…' : 'Enter Base64 string to decode…'}
+        rows={5}
+      />
+      <Button onClick={process}>{mode === 'encode' ? 'Encode → Base64' : 'Decode ← Base64'}</Button>
+      {error && <p className="text-sm text-red-500">{error}</p>}
+      <OutputArea value={output} label="Output" />
     </div>
   );
 }
 
-function UrlEncodeTool() {
+function URLEncodeUI() {
   const [input, setInput] = useState('');
-  const [mode, setMode] = useState<'encode' | 'decode'>('encode');
   const [output, setOutput] = useState('');
+  const [mode, setMode] = useState<'encode' | 'decode'>('encode');
   const [error, setError] = useState('');
 
-  const run = () => {
+  const process = () => {
     setError('');
     if (!input) { setOutput(''); return; }
     try {
-      if (mode === 'encode') setOutput(encodeURIComponent(input));
-      else setOutput(decodeURIComponent(input));
+      if (mode === 'encode') {
+        setOutput(encodeURIComponent(input));
+      } else {
+        setOutput(decodeURIComponent(input));
+      }
     } catch {
-      setError('Invalid input for URL decoding.');
+      setError('Invalid percent-encoded string for decoding.');
       setOutput('');
     }
   };
 
   return (
     <div className="space-y-4">
-      <div className="flex gap-2">
+      <div className="flex gap-2 mb-2">
         {(['encode', 'decode'] as const).map(m => (
-          <button key={m} onClick={() => { setMode(m); setOutput(''); setError(''); }}
-            className={`px-4 py-1.5 text-sm rounded-lg transition-colors ${mode === m ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'}`}>
+          <button
+            key={m}
+            onClick={() => { setMode(m); setOutput(''); setError(''); }}
+            className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 ${mode === m ? 'bg-green-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'}`}
+          >
             {m === 'encode' ? 'Encode' : 'Decode'}
           </button>
         ))}
       </div>
-      <Textarea value={input} onChange={setInput} placeholder={mode === 'encode' ? 'Enter URL or text to encode…' : 'Enter encoded URL to decode…'} />
-      <ProcessButton onClick={run}>Convert</ProcessButton>
-      {error && <p className="text-red-500 text-sm">{error}</p>}
-      <OutputArea value={output} />
+      <Textarea
+        value={input}
+        onChange={v => { setInput(v); setError(''); }}
+        placeholder={mode === 'encode' ? 'Enter URL or text to encode…' : 'Enter percent-encoded string to decode…'}
+        rows={5}
+      />
+      <Button onClick={process}>{mode === 'encode' ? 'Encode → URL' : 'Decode ← URL'}</Button>
+      {error && <p className="text-sm text-red-500">{error}</p>}
+      <OutputArea value={output} label="Output" />
     </div>
   );
 }
 
-function JsonFormatterTool() {
+function JSONFormatterUI() {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [error, setError] = useState('');
-  const [indent, setIndent] = useState(2);
 
-  const process = (minify = false) => {
+  const format = () => {
     setError('');
-    if (!input.trim()) { setOutput(''); return; }
+    setOutput('');
+    if (!input.trim()) return;
     try {
       const parsed = JSON.parse(input);
-      setOutput(minify ? JSON.stringify(parsed) : JSON.stringify(parsed, null, indent));
+      setOutput(JSON.stringify(parsed, null, 2));
     } catch (e) {
-      setError(`JSON Error: ${(e as Error).message}`);
-      setOutput('');
+      setError(`Invalid JSON: ${(e as Error).message}`);
+    }
+  };
+
+  const minify = () => {
+    setError('');
+    setOutput('');
+    if (!input.trim()) return;
+    try {
+      const parsed = JSON.parse(input);
+      setOutput(JSON.stringify(parsed));
+    } catch (e) {
+      setError(`Invalid JSON: ${(e as Error).message}`);
+    }
+  };
+
+  const validate = () => {
+    setError('');
+    setOutput('');
+    if (!input.trim()) return;
+    try {
+      JSON.parse(input);
+      setOutput('✓ Valid JSON');
+    } catch (e) {
+      setError(`Invalid JSON: ${(e as Error).message}`);
     }
   };
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-3">
-        <span className="text-sm text-gray-600 dark:text-gray-300">Indent:</span>
-        {[2, 4].map(n => (
-          <button key={n} onClick={() => setIndent(n)}
-            className={`px-3 py-1 text-sm rounded-lg transition-colors ${indent === n ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200'}`}>
-            {n} spaces
-          </button>
-        ))}
-      </div>
-      <Textarea value={input} onChange={setInput} placeholder='Paste JSON here… {"key": "value"}' className="h-32" />
-      <div className="flex gap-2">
-        <ProcessButton onClick={() => process(false)}>Format</ProcessButton>
-        <button onClick={() => process(true)} className="px-6 py-2.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-lg transition-colors">
-          Minify
-        </button>
-        <button onClick={() => {
-          try { JSON.parse(input); setError(''); }
-          catch (e) { setError(`Invalid JSON: ${(e as Error).message}`); }
-        }}
-          className="px-6 py-2.5 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-lg transition-colors">
-          Validate
-        </button>
-      </div>
-      {error ? <p className="text-red-500 text-sm">{error}</p> : <OutputArea value={output} />}
+      <Textarea
+        value={input}
+        onChange={v => { setInput(v); setError(''); }}
+        placeholder='Paste your JSON here…&#10;&#10;{"name": "Toolblip", "tools": 27}'
+        rows={8}
+      />
+      <ActionRow>
+        <Button onClick={format}>Format</Button>
+        <Button onClick={minify} variant="secondary">Minify</Button>
+        <Button onClick={validate} variant="secondary">Validate</Button>
+      </ActionRow>
+      {error && <p className="text-sm text-red-500">{error}</p>}
+      {output && output !== '✓ Valid JSON' && <OutputArea value={output} label="Output" />}
+      {output === '✓ Valid JSON' && (
+        <div className="rounded-xl border border-green-200 dark:border-green-900 bg-green-50 dark:bg-green-950/30 px-4 py-3 text-sm text-green-700 dark:text-green-400">
+          ✓ Valid JSON
+        </div>
+      )}
     </div>
   );
 }
 
-function NotImplementedTool({ toolName }: { toolName: string }) {
+function ComingSoonUI({ tool }: { tool: Tool }) {
   const [input, setInput] = useState('');
+
   return (
-    <div className="space-y-4">
-      <div className="bg-gray-50 dark:bg-gray-900 border border-dashed border-gray-300 dark:border-gray-700 rounded-xl p-8 text-center">
-        <div className="text-4xl mb-3">🚧</div>
-        <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-1">Coming Soon</h3>
-        <p className="text-gray-500 dark:text-gray-400 text-sm max-w-xs mx-auto">
-          The <strong>{toolName}</strong> tool UI is being built. Check back soon!
+    <Card>
+      <div className="text-center py-8 space-y-3">
+        <span className="text-5xl">{tool.emoji}</span>
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{tool.name}</h2>
+        <p className="text-gray-500 dark:text-gray-400 text-sm max-w-sm mx-auto">
+          This tool is coming soon! The interactive UI is being built.
         </p>
       </div>
-      <Textarea value={input} onChange={setInput} placeholder="Preview coming soon…" />
-      <OutputArea value="" />
-    </div>
+      <Divider label="Preview" />
+      <p className="text-xs text-gray-400 dark:text-gray-500 mb-2 font-medium uppercase tracking-wide">
+        Try the concept
+      </p>
+      <Textarea
+        value={input}
+        onChange={setInput}
+        placeholder="Enter input to preview…"
+        rows={4}
+      />
+      <div className="mt-4 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800/50 px-4 py-6 text-center text-sm text-gray-400 dark:text-gray-500">
+        Interactive UI coming soon…
+      </div>
+    </Card>
   );
 }
 
-// ─── Tool router ────────────────────────────────────────────────────────
+// ─── Router ─────────────────────────────────────────────────────────────────
+
+const TOOL_UIS: Record<string, (tool: Tool) => React.ReactNode> = {
+  'word-counter': () => <WordCounterUI />,
+  'character-counter': () => <CharacterCounterUI />,
+  'case-converter': () => <CaseConverterUI />,
+  'base64': () => <Base64UI />,
+  'base64-encode': () => <Base64UI />,
+  'base64-encoder-decoder': () => <Base64UI />,
+  'url-encode': () => <URLEncodeUI />,
+  'url-encoder': () => <URLEncodeUI />,
+  'json-formatter': () => <JSONFormatterUI />,
+};
 
 export function ToolUI({ tool }: { tool: Tool }) {
-  switch (tool.slug) {
-    case 'word-counter':
-      return <WordCounterTool />;
-    case 'character-counter':
-      return <CharacterCounterTool />;
-    case 'case-converter':
-      return <CaseConverterTool />;
-    case 'base64':
-    case 'base64-encode':
-    case 'base64-encoder-decoder':
-      return <Base64Tool />;
-    case 'url-encode':
-    case 'url-encoder':
-      return <UrlEncodeTool />;
-    case 'json-formatter':
-      return <JsonFormatterTool />;
-    default:
-      return <NotImplementedTool toolName={tool.name} />;
-  }
+  const render = TOOL_UIS[tool.slug];
+  if (render) return <>{render(tool)}</>;
+  return <ComingSoonUI tool={tool} />;
 }
