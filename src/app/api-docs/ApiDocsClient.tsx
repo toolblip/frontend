@@ -23,6 +23,7 @@ type Endpoint = {
   title: string;
   description: string;
   auth: 'None' | 'Bearer token';
+  status: string;
   body?: Field[];
   curl: string;
   response: string;
@@ -37,6 +38,7 @@ const endpoints: Endpoint[] = [
     title: 'List all tools',
     description: 'Returns the public Toolblip directory. The response is nested as tools.tools for compatibility with the app client.',
     auth: 'None',
+    status: '200 OK',
     curl: `curl "${BASE_URL}/api/tools" \\\n  -H "Accept: application/json"`,
     response: `{
   "tools": {
@@ -63,6 +65,7 @@ const endpoints: Endpoint[] = [
     title: 'Get a single tool',
     description: 'Fetch one tool by its URL slug. Use the slug value returned by the list endpoint.',
     auth: 'None',
+    status: '200 OK',
     curl: `curl "${BASE_URL}/api/tools/json-formatter" \\\n  -H "Accept: application/json"`,
     response: `{
   "tool": {
@@ -85,6 +88,7 @@ const endpoints: Endpoint[] = [
     title: 'Register',
     description: 'Create a user account and receive an API token for authenticated requests.',
     auth: 'None',
+    status: '201 Created',
     body: [
       { name: 'name', type: 'string', required: true, description: 'Display name for the account.' },
       { name: 'email', type: 'string', required: true, description: 'Unique email address.' },
@@ -115,6 +119,7 @@ const endpoints: Endpoint[] = [
     title: 'Login',
     description: 'Exchange valid account credentials for a Bearer token.',
     auth: 'None',
+    status: '200 OK',
     body: [
       { name: 'email', type: 'string', required: true, description: 'Account email address.' },
       { name: 'password', type: 'string', required: true, description: 'Account password.' },
@@ -141,6 +146,7 @@ const endpoints: Endpoint[] = [
     title: 'Logout',
     description: 'Revoke the current token. The token used for this request will stop working immediately.',
     auth: 'Bearer token',
+    status: '200 OK',
     curl: `curl -X POST "${BASE_URL}/api/auth/logout" \\\n  -H "Authorization: Bearer YOUR_TOKEN" \\\n  -H "Accept: application/json"`,
     response: `{
   "message": "Logged out successfully"
@@ -154,6 +160,7 @@ const endpoints: Endpoint[] = [
     title: 'Get authenticated user',
     description: 'Returns the user profile attached to the supplied Bearer token.',
     auth: 'Bearer token',
+    status: '200 OK',
     curl: `curl "${BASE_URL}/api/auth/user" \\\n  -H "Authorization: Bearer YOUR_TOKEN" \\\n  -H "Accept: application/json"`,
     response: `{
   "user": {
@@ -214,9 +221,14 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
           <h3 className="mt-1 text-2xl font-bold text-slate-950 dark:text-white">{endpoint.title}</h3>
           <p className="mt-2 max-w-2xl text-slate-600 dark:text-slate-300">{endpoint.description}</p>
         </div>
-        <span className="w-fit rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-600 dark:text-slate-300 dark:border-slate-700">
-          Auth: {endpoint.auth}
-        </span>
+        <div className="flex flex-wrap gap-2">
+          <span className="w-fit rounded-full border px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-600 dark:border-slate-700 dark:text-slate-300">
+            Auth: {endpoint.auth}
+          </span>
+          <span className="w-fit rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-600 dark:border-slate-700 dark:bg-slate-950/60 dark:text-slate-300">
+            Response: {endpoint.status}
+          </span>
+        </div>
       </div>
 
       <div className="mt-5 flex flex-wrap items-center gap-3 rounded-2xl bg-slate-50 p-3 font-mono text-sm dark:bg-slate-950/60">
