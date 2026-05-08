@@ -7,7 +7,7 @@ export default function Error() {
     <main className="flex min-h-dvh items-center justify-center bg-[var(--bg)] px-6 py-20 text-[var(--fg-0)]">
       <section
         aria-labelledby="error-title"
-        className="relative isolate w-full max-w-md overflow-hidden rounded-[2rem] border border-black/5 bg-white/50 p-8 text-center shadow-[0_24px_80px_rgba(0,0,0,0.08)] backdrop-blur dark:border-white/10 dark:bg-white/[0.035] sm:p-10"
+        className="relative isolate w-full max-w-md overflow-hidden rounded-[2rem] border border-black/5 bg-white/55 p-8 text-center shadow-[0_24px_80px_rgba(0,0,0,0.08)] backdrop-blur dark:border-white/10 dark:bg-white/[0.035] sm:p-10"
         role="alert"
       >
         <div className="pointer-events-none absolute inset-x-10 top-0 -z-10 h-28 rounded-full bg-[var(--green)]/10 blur-3xl" />
