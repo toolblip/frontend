@@ -13,7 +13,6 @@ export const metadata: Metadata = {
     description: 'Guides, tutorials, and updates from the Toolblip team. Learn about developer tools, MCP, and how to get the most out of Toolblip.',
     url: 'https://toolblip.com/blog',
     siteName: 'Toolblip',
-    type: 'website',
     images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: 'Toolblip' }],
   },
   twitter: {

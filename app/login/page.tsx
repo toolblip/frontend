@@ -9,7 +9,6 @@ export const metadata: Metadata = {
     description: 'Sign in to your Toolblip account to save API keys, manage your profile, and submit MCP servers.',
     url: 'https://toolblip.com/login',
     siteName: 'Toolblip',
-    type: 'website',
     images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: 'Toolblip' }],
   },
   twitter: {
