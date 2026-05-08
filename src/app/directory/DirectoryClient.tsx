@@ -4,12 +4,17 @@ import { useState, useMemo, useRef, useEffect, KeyboardEvent } from 'react';
 import Link from 'next/link';
 import { tools } from '@/data/tools';
 
-const TABS = ['All', 'Text', 'Developer', 'Encoding', 'Image', 'Conversion', 'Math', 'CSS'] as const;
+const TABS = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS'] as const;
 type Tab = (typeof TABS)[number];
+
+function categoryForTab(tab: Tab) {
+  return tab === 'Encoder' ? 'Encoding' : tab;
+}
 
 function countForTab(tab: Tab) {
   if (tab === 'All') return tools.length;
-  return tools.filter(t => t.category === tab).length;
+  const category = categoryForTab(tab);
+  return tools.filter(t => t.category === category).length;
 }
 
 export function DirectoryClient() {
@@ -22,7 +27,7 @@ export function DirectoryClient() {
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
     return tools.filter(t => {
-      const matchesTab = activeTab === 'All' || t.category === activeTab;
+      const matchesTab = activeTab === 'All' || t.category === categoryForTab(activeTab);
       const matchesSearch =
         !q ||
         t.name.toLowerCase().includes(q) ||
