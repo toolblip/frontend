@@ -88,6 +88,7 @@ const BENEFITS = [
 ];
 
 const PRIVACY_PROMISES = ['No servers', 'No uploads', 'Nothing leaves your browser'];
+const CATEGORY_SUMMARY = `${categories.length} categories · ${tools.length} tools`;
 
 // ─── Page ──────────────────────────────────────────────────────────────
 
@@ -128,7 +129,7 @@ export default function HomePage() {
               How it works
             </p>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-              Pick a tool → paste your data → get your result.
+              A browser-only workflow: pick a tool → paste your data → get your result.
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1">
@@ -175,7 +176,7 @@ export default function HomePage() {
             Jump to a category
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Start with the kind of task you have in mind.
+            {CATEGORY_SUMMARY} ready for the kind of task you have in mind.
           </p>
         </div>
         <div className="flex flex-wrap justify-center gap-2">
