@@ -2,13 +2,13 @@ import Link from 'next/link';
 
 export default function NotFound() {
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[var(--bg)] px-6 py-20">
+    <main className="flex min-h-dvh items-center justify-center bg-[var(--bg)] px-6 py-20 text-[var(--fg-0)]">
       <section className="w-full max-w-md text-center">
         <p
-          className="mb-4 select-none font-bold leading-none tracking-[-0.06em] text-[var(--green)]"
+          className="mb-5 select-none font-bold leading-none tracking-[-0.07em] text-[var(--green)]"
           style={{
             fontFamily: 'var(--f-display)',
-            fontSize: 'clamp(88px, 22vw, 160px)',
+            fontSize: 'clamp(96px, 24vw, 168px)',
             textShadow: '0 0 56px color-mix(in srgb, var(--green) 24%, transparent)',
           }}
         >
@@ -16,7 +16,7 @@ export default function NotFound() {
         </p>
 
         <h1
-          className="mb-3 text-3xl font-bold tracking-[-0.03em] text-[var(--fg-0)] sm:text-4xl"
+          className="mb-3 text-3xl font-bold tracking-[-0.03em] sm:text-4xl"
           style={{ fontFamily: 'var(--f-display)' }}
         >
           Page not found
