@@ -16,9 +16,16 @@ dist/
 .env.*
 !.env.example
 
-# Logs
+# Logs / local health checks
 *.log
 npm-debug.log*
+health-logs/
+
+# Local agent/runtime state — never commit
+.claude-home/
+.openclaw/
+.hermes/
+memory/
 
 # TypeScript
 *.tsbuildinfo
