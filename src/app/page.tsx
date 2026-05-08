@@ -102,7 +102,7 @@ export default function HomePage() {
           <span className="text-red-600 dark:text-red-400">, in Your Browser</span>
         </h1>
         <p className="text-lg text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
-          20+ tools for text, encoding, development, and more. No signup, no uploads — everything stays on your device.
+          {tools.length}+ focused utilities for text, encoding, development, and more. No signup, no uploads — everything stays on your device.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <a
@@ -204,7 +204,7 @@ export default function HomePage() {
             Handy utilities without the usual friction.
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 max-w-2xl mx-auto">
-            Toolblip keeps everyday text, developer, and encoding tasks simple: open a tool, paste, copy, done.
+            Toolblip keeps everyday text, developer, and encoding tasks simple: pick a tool, paste your data, copy the result.
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

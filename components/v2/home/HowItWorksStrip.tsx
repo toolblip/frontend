@@ -21,7 +21,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
             Pick a tool&nbsp;→ Paste your data&nbsp;→ Get your result
           </h2>
           <p style={{ fontSize: 13.5, color: 'var(--fg-2)', marginTop: 6 }}>
-            No servers,&nbsp;&nbsp;No uploads,&nbsp;&nbsp;Nothing leaves your browser — ever.
+            No servers. No uploads. Nothing leaves your browser.
           </p>
         </div>
 
@@ -46,7 +46,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               color: 'var(--blue)',
               bg: 'var(--blue-tint)',
               title: 'Pick a tool',
-              desc: `${toolCount} tools across ${categoryCount} categories — JSON, Base64, images, text and more.`,
+              desc: `${toolCount} tools across ${categoryCount} categories — pick the one for the job.`,
             },
             {
               icon: (
@@ -58,7 +58,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               color: 'var(--green, #16a34a)',
               bg: 'var(--green-tint, #dcfce7)',
               title: 'Paste your data',
-              desc: 'Your clipboard, your browser. Nothing leaves your machine — ever.'
+              desc: 'Paste or type directly in the page. No uploads, no account.'
             },
             {
               icon: (
@@ -69,7 +69,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               color: 'var(--purple)',
               bg: 'var(--purple-tint)',
               title: 'Get your result',
-              desc: 'Instant. Copy the result and move on — zero server round-trips.'
+              desc: 'Copy the result instantly. Everything runs inside your tab.'
             },
           ].map((item, i) => (
             <div
@@ -175,7 +175,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
               <path d="M7 11V7a5 5 0 0 1 10 0v4" />
             </svg>
-            No servers &nbsp;&middot;&nbsp; No uploads &nbsp;&middot;&nbsp; Nothing leaves your browser &mdash; ever.
+            No servers &nbsp;&middot;&nbsp; No uploads &nbsp;&middot;&nbsp; Nothing leaves your browser.
           </a>
         </div>
       </div>

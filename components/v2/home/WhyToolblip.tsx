@@ -11,7 +11,7 @@ const benefits = [
     bgVar: 'var(--green-tint)',
     title: 'Private',
     tagline: 'Data never leaves your browser',
-    desc: 'All processing happens locally in your tab. Your data never touches our servers — not for a millisecond, not ever.',
+    desc: 'Paste sensitive text, JSON, images, or snippets with confidence: processing happens locally in your tab.',
     glowVar: 'rgba(22, 163, 74, 0.12)',
   },
   {
@@ -24,7 +24,7 @@ const benefits = [
     bgVar: 'var(--amber-tint, #fef3c7)',
     title: 'Fast',
     tagline: 'Runs instantly in your tab',
-    desc: 'No API calls, no spinners, no waiting. Your data is processed the instant you paste it.',
+    desc: 'No API round trips or upload queues. Most results appear the moment you paste or click.',
     glowVar: 'rgba(217, 119, 6, 0.12)',
   },
   {
@@ -37,7 +37,7 @@ const benefits = [
     bgVar: 'var(--blue-tint)',
     title: 'Free',
     tagline: 'No signup, no paywall',
-    desc: 'Every tool, every feature, every export — 100% free, forever. No account, no paywall, no catch.',
+    desc: 'Open the tool and use it. No account, no trial modal, no surprise limits blocking the result.',
     glowVar: 'rgba(37, 99, 235, 0.12)',
   },
 ];
@@ -57,10 +57,10 @@ export default function WhyToolblip() {
               color: 'var(--fg-0)',
             }}
           >
-            Built different — by default
+            Useful tools without the usual friction
           </h2>
           <p style={{ fontSize: 14, color: 'var(--fg-2)', marginTop: 8 }}>
-            Private by architecture, fast by design, free by choice.
+            Private by architecture, fast in practice, free from the first click.
           </p>
         </div>
 
