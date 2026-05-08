@@ -480,6 +480,13 @@ function JSONFormatterUI() {
 
 function ComingSoonUI({ tool }: { tool: Tool }) {
   const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const preview = () => {
+    setOutput(input.trim()
+      ? `Preview received for ${tool.name}:\n\n${input}`
+      : `The ${tool.name} interface is coming soon. Paste sample input above to reserve this space for the result.`);
+  };
 
   return (
     <Card>
@@ -487,21 +494,24 @@ function ComingSoonUI({ tool }: { tool: Tool }) {
         <span className="text-5xl">{tool.emoji}</span>
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white">{tool.name}</h2>
         <p className="text-gray-500 dark:text-gray-400 text-sm max-w-sm mx-auto">
-          This tool is coming soon! The interactive UI is being built.
+          This tool is coming soon! The input and output shell is ready while the full interactive UI is being built.
         </p>
       </div>
       <Divider label="Preview" />
       <p className="text-xs text-gray-400 dark:text-gray-500 mb-2 font-medium uppercase tracking-wide">
-        Try the concept
+        Placeholder input
       </p>
       <Textarea
         value={input}
-        onChange={setInput}
+        onChange={v => { setInput(v); setOutput(''); }}
         placeholder="Enter input to preview…"
         rows={4}
       />
-      <div className="mt-4 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800/50 px-4 py-6 text-center text-sm text-gray-400 dark:text-gray-500">
-        Interactive UI coming soon…
+      <div className="mt-4">
+        <Button onClick={preview}>Process preview</Button>
+      </div>
+      <div className="mt-4">
+        <OutputArea value={output} label="Placeholder output" />
       </div>
     </Card>
   );
