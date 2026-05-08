@@ -78,7 +78,7 @@ const BENEFITS = [
   {
     emoji: '⚡',
     title: 'Fast',
-    desc: 'Everything runs instantly in your tab, so common cleanup tasks feel immediate.',
+    desc: 'Runs instantly in your tab, so common cleanup and conversion tasks feel immediate.',
   },
   {
     emoji: '🎁',
@@ -86,6 +86,8 @@ const BENEFITS = [
     desc: 'No signup, no paywall, no hidden limits. Every tool is ready when you are.',
   },
 ];
+
+const PRIVACY_PROMISES = ['No servers', 'No uploads', 'Nothing leaves your browser'];
 
 // ─── Page ──────────────────────────────────────────────────────────────
 
@@ -154,16 +156,28 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-        <p className="text-center text-sm font-medium text-gray-500 dark:text-gray-400 mt-5">
-          Browser-only by default: no servers, no uploads, nothing leaves your browser.
-        </p>
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+          {PRIVACY_PROMISES.map((promise) => (
+            <span
+              key={promise}
+              className="rounded-full border border-red-100 dark:border-red-900/70 bg-red-50/70 dark:bg-red-950/30 px-3 py-1 text-xs font-semibold text-red-700 dark:text-red-300"
+            >
+              {promise}
+            </span>
+          ))}
+        </div>
       </section>
 
       {/* ── Category quick-access ── */}
       <section id="categories" aria-label="Browse tools by category" className="space-y-3 scroll-mt-6">
-        <p className="text-center text-sm font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">
-          Jump to a category
-        </p>
+        <div className="text-center space-y-1">
+          <p className="text-sm font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">
+            Jump to a category
+          </p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Start with the kind of task you have in mind.
+          </p>
+        </div>
         <div className="flex flex-wrap justify-center gap-2">
           {categories.map((cat) => (
             <Link
@@ -189,6 +203,9 @@ export default function HomePage() {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
             Handy utilities without the usual friction.
           </h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 max-w-2xl mx-auto">
+            Toolblip keeps everyday text, developer, and encoding tasks simple: open a tool, paste, copy, done.
+          </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {BENEFITS.map((b) => (
