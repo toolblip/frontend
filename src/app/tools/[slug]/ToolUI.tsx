@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import type { ReactNode } from 'react';
+import { useState } from 'react';
 import type { Tool } from '@/data/tools';
 
 // ─── Shared UI primitives ─────────────────────────────────────────────────
@@ -9,7 +10,7 @@ function Card({
   children,
   className = '',
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
 }) {
   return (
@@ -82,7 +83,7 @@ function OutputArea({
   );
 }
 
-function ActionRow({ children }: { children: React.ReactNode }) {
+function ActionRow({ children }: { children: ReactNode }) {
   return <div className="flex gap-2 flex-wrap">{children}</div>;
 }
 
@@ -93,7 +94,7 @@ function Button({
 }: {
   onClick?: () => void;
   variant?: 'primary' | 'secondary';
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const base =
     'px-4 py-2 rounded-xl text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-green-500';
@@ -139,37 +140,49 @@ function Divider({ label }: { label?: string }) {
 
 function WordCounterUI() {
   const [text, setText] = useState('');
+  const [stats, setStats] = useState<{
+    words: number;
+    chars: number;
+    charsNoSpaces: number;
+    sentences: number;
+    paragraphs: number;
+    readingTime: number;
+  } | null>(null);
 
-  const stats = useCallback(() => {
-    if (!text.trim()) return null;
+  const analyze = () => {
+    if (!text.trim()) {
+      setStats(null);
+      return;
+    }
     const words = text.trim().split(/\s+/).filter(Boolean);
-    const chars = text.length;
-    const charsNoSpaces = text.replace(/\s/g, '').length;
-    const sentences = (text.match(/[.!?]+/g) || []).length || (text.trim() ? 1 : 0);
-    const paragraphs = text.split(/\n\n+/).filter(t => t.trim()).length || (text.trim() ? 1 : 0);
-    const readingTime = Math.max(1, Math.round(words.length / 200));
-    return { words: words.length, chars, charsNoSpaces, sentences, paragraphs, readingTime };
-  }, [text]);
-
-  const s = stats();
+    setStats({
+      words: words.length,
+      chars: text.length,
+      charsNoSpaces: text.replace(/\s/g, '').length,
+      sentences: (text.match(/[.!?]+/g) || []).length || 1,
+      paragraphs: text.split(/\n\n+/).filter(t => t.trim()).length || 1,
+      readingTime: Math.max(1, Math.round(words.length / 200)),
+    });
+  };
 
   return (
     <div className="space-y-4">
       <Textarea
         value={text}
-        onChange={setText}
+        onChange={v => { setText(v); setStats(null); }}
         placeholder="Paste or type your text here…"
         rows={8}
       />
-      {s ? (
+      <Button onClick={analyze}>Count words</Button>
+      {stats ? (
         <Card>
           <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
-            <Stat label="Words" value={s.words} />
-            <Stat label="Characters" value={s.chars} />
-            <Stat label="No Spaces" value={s.charsNoSpaces} />
-            <Stat label="Sentences" value={s.sentences} />
-            <Stat label="Paragraphs" value={s.paragraphs} />
-            <Stat label="Min Read" value={`${s.readingTime}m`} />
+            <Stat label="Words" value={stats.words} />
+            <Stat label="Characters" value={stats.chars} />
+            <Stat label="No Spaces" value={stats.charsNoSpaces} />
+            <Stat label="Sentences" value={stats.sentences} />
+            <Stat label="Paragraphs" value={stats.paragraphs} />
+            <Stat label="Min Read" value={`${stats.readingTime}m`} />
           </div>
         </Card>
       ) : (
@@ -183,6 +196,7 @@ function WordCounterUI() {
 
 function CharacterCounterUI() {
   const [text, setText] = useState('');
+  const [counts, setCounts] = useState<{ chars: number; charsNoSpaces: number } | null>(null);
 
   const limits = [
     { label: 'Twitter / X', max: 280 },
@@ -193,17 +207,25 @@ function CharacterCounterUI() {
     { label: 'SMS', max: 160 },
   ];
 
-  const chars = text.length;
-  const charsNoSpaces = text.replace(/\s/g, '').length;
+  const analyze = () => {
+    setCounts({
+      chars: text.length,
+      charsNoSpaces: text.replace(/\s/g, '').length,
+    });
+  };
+
+  const chars = counts?.chars ?? 0;
+  const charsNoSpaces = counts?.charsNoSpaces ?? 0;
 
   return (
     <div className="space-y-4">
       <Textarea
         value={text}
-        onChange={setText}
+        onChange={v => { setText(v); setCounts(null); }}
         placeholder="Type or paste your text here…"
         rows={6}
       />
+      <Button onClick={analyze}>Count characters</Button>
       <Card>
         <div className="grid grid-cols-2 gap-4 mb-4">
           <Stat label="With Spaces" value={chars} />
