@@ -33,4 +33,4 @@ MD5, SHA-1, SHA-256, SHA-512 — needing to generate a hash comes up more often 
 
 ## Keep These Handy
 
-The best tools are the ones you don't have to think about. Bookmark them once and forget they're there — until you need them, and they're already open. All Toolblip tools are free, require no signup, and process everything locally in your browser.
+The best tools are the ones you don't have to think about. Bookmark them once and forget they're there — until you need them, and they're already open. [Try the free developer tools on Toolblip](/tools) — no signup, local processing, and ready whenever you need them.

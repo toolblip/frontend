@@ -33,4 +33,4 @@ Tools like our JSON Formatter or Base64 Encoder load instantly, process data in 
 
 Browser-based tools aren't a compromise — they're an upgrade. Better privacy, zero setup, cross-platform by default, and performance that keeps getting better. The desktop app era is fading. Your browser is the operating system of the future.
 
-Ready to try it out? All Toolblip tools run entirely in your browser. No signup, no servers, no tracking.
+Ready to try it out? [Explore Toolblip's browser-based tools](/tools) — no signup, no servers, no tracking.

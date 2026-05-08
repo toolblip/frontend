@@ -35,4 +35,4 @@ Resizing images often distorts them if you don't maintain aspect ratio. A good t
 
 The gap between browser-based and native image tools has narrowed dramatically. For the 95% of tasks that aren't production-quality photo editing, your browser handles it fine. Faster, privately, and without the subscription.
 
-Give it a try — crop, resize, or convert an image right here. No upload. No signup. Just results.
+Give it a try — [crop, resize, or convert an image with Toolblip](/tools). No upload. No signup. Just results.
