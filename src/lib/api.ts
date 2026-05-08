@@ -58,8 +58,15 @@ export async function register(name: string, email: string, password: string, pa
   });
 }
 
-export async function getMe() {
-  return apiRequest<{ user: User }>('/api/auth/user');
+export async function getMe(token: string) {
+  return apiRequest<{ user: User }>('/api/auth/user', { token });
+}
+
+export async function logout(token: string) {
+  return apiRequest<{ message: string }>('/api/auth/logout', {
+    method: 'POST',
+    token,
+  });
 }
 
 // Subscription
