@@ -4,12 +4,24 @@ import { useState, useMemo, useRef, useEffect, KeyboardEvent } from 'react';
 import Link from 'next/link';
 import { tools } from '@/data/tools';
 
-const TABS = ['All', 'Text', 'Developer', 'Encoding', 'Image', 'Conversion', 'Math', 'CSS'] as const;
+const TABS = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS'] as const;
 type Tab = (typeof TABS)[number];
 
+const CATEGORY_BY_TAB: Record<Tab, string | null> = {
+  All: null,
+  Text: 'Text',
+  Developer: 'Developer',
+  Encoder: 'Encoding',
+  Image: 'Image',
+  Conversion: 'Conversion',
+  Math: 'Math',
+  CSS: 'CSS',
+};
+
 function countForTab(tab: Tab) {
-  if (tab === 'All') return tools.length;
-  return tools.filter(t => t.category === tab).length;
+  const category = CATEGORY_BY_TAB[tab];
+  if (!category) return tools.length;
+  return tools.filter(t => t.category === category).length;
 }
 
 export function DirectoryClient() {
@@ -22,7 +34,8 @@ export function DirectoryClient() {
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
     return tools.filter(t => {
-      const matchesTab = activeTab === 'All' || t.category === activeTab;
+      const activeCategory = CATEGORY_BY_TAB[activeTab];
+      const matchesTab = !activeCategory || t.category === activeCategory;
       const matchesSearch =
         !q ||
         t.name.toLowerCase().includes(q) ||
