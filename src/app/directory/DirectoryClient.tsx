@@ -31,9 +31,7 @@ export function DirectoryClient() {
       const matchesSearch =
         !q ||
         t.name.toLowerCase().includes(q) ||
-        t.description.toLowerCase().includes(q) ||
-        t.category.toLowerCase().includes(q) ||
-        (t.tags ?? []).some(tag => tag.toLowerCase().includes(q));
+        t.description.toLowerCase().includes(q);
       return matchesTab && matchesSearch;
     });
   }, [query, activeTab]);
