@@ -4,11 +4,11 @@ import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { tools } from '@/data/tools';
 
-const ALL_TABS = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'Security'];
+const ALL_TABS = ['All', 'Text', 'Developer', 'Encoding', 'Image', 'Conversion', 'Math', 'CSS'] as const;
 
 export function DirectoryClient() {
   const [query, setQuery] = useState('');
-  const [activeTab, setActiveTab] = useState('All');
+  const [activeTab, setActiveTab] = useState<string>('All');
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
@@ -60,11 +60,12 @@ export function DirectoryClient() {
           placeholder="Search tools…"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="w-full pl-10 pr-4 py-2.5 text-sm bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-transparent transition-shadow"
+          className="w-full pl-10 pr-10 py-2.5 text-sm bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-transparent transition-shadow"
         />
         {query && (
           <button
             onClick={() => setQuery('')}
+            aria-label="Clear search"
             className="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
