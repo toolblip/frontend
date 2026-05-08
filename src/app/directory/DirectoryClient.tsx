@@ -99,7 +99,7 @@ export function DirectoryClient() {
         <input
           ref={searchRef}
           type="text"
-          placeholder="Search tools…"
+          placeholder="Search by name or description…"
           value={query}
           onChange={e => setQuery(e.target.value)}
           aria-label="Search tools"
