@@ -67,6 +67,25 @@ export default async function BlogPage() {
 
       {/* Posts */}
       <div className="max-w-4xl mx-auto px-4 py-12">
+        <div className="mb-6 flex items-end justify-between gap-4">
+          <h2
+            style={{
+              fontFamily: 'var(--f-display)',
+              fontSize: '24px',
+              fontWeight: 700,
+              letterSpacing: '-0.02em',
+              color: 'var(--fg-0)',
+            }}
+          >
+            Latest posts
+          </h2>
+          <span
+            className="text-xs"
+            style={{ color: 'var(--fg-3)', fontFamily: 'var(--f-mono)' }}
+          >
+            {posts.length} {posts.length === 1 ? 'article' : 'articles'}
+          </span>
+        </div>
         {posts.length === 0 ? (
           <p style={{ color: 'var(--fg-2)' }}>No posts yet. Check back soon!</p>
         ) : (

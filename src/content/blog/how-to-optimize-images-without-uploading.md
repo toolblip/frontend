@@ -9,13 +9,13 @@ tags: ["images", "optimization", "privacy", "browser-tools"]
 author: "Toolblip Team"
 ---
 
-Every time you upload an image to optimize it, you're trusting someone else with your data. Photos of documents, screenshots with sensitive info, personal images — they all leave your machine when you use a cloud-based tool. But it doesn't have to be that way.
+Every time you upload an image to optimize it, you’re trusting someone else with your data. Photos of documents, screenshots with sensitive info, personal images — they all leave your machine when you use a cloud-based tool. But it doesn’t have to be that way.
 
 Modern browsers can handle serious image processing locally. No upload. No server round-trip. No waiting. Just drag, adjust, and download.
 
 ## Why Local Processing Wins
 
-Cloud image tools have to upload your file, process it on a server, then send it back. That's slow, and it means your image is sitting on someone else's machine, however briefly. Local processing skips all of that — your image never leaves your device.
+Cloud image tools have to upload your file, process it on a server, then send it back. That’s slow, and it means your image is sitting on someone else’s machine, however briefly. Local processing skips all of that — your image never leaves your device.
 
 For anyone handling screenshots, documents, or images with private information, this isn't optional. It's the only acceptable workflow.
 
