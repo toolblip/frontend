@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   },
 };
 
-const CATEGORIES = ['Text', 'Encoding', 'Developer', 'Security', 'QR Codes', 'Design'];
+const categories = Array.from(new Set(tools.map((tool) => tool.category)));
 
 // ─── How it works ───────────────────────────────────────────────────────
 
@@ -102,12 +102,17 @@ export default function HomePage() {
         <p className="text-center text-sm font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-6">
           How it works
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          {STEPS.map((s) => (
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {STEPS.map((s, index) => (
             <div
               key={s.n}
-              className="flex flex-col items-center text-center gap-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm"
+              className="relative flex flex-col items-center text-center gap-3 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm"
             >
+              {index < STEPS.length - 1 && (
+                <span className="hidden sm:block absolute -right-3 top-1/2 -translate-y-1/2 text-gray-300 dark:text-gray-700 text-xl">
+                  →
+                </span>
+              )}
               <div className="w-12 h-12 rounded-full bg-red-50 dark:bg-red-950 text-red-600 dark:text-red-400 flex items-center justify-center">
                 {s.icon}
               </div>
@@ -127,9 +132,12 @@ export default function HomePage() {
       </section>
 
       {/* ── Category quick-access ── */}
-      <section>
+      <section aria-label="Browse tools by category" className="space-y-3">
+        <p className="text-center text-sm font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">
+          Browse by category
+        </p>
         <div className="flex flex-wrap justify-center gap-2">
-          {CATEGORIES.map((cat) => (
+          {categories.map((cat) => (
             <Link
               key={cat}
               href={`/tools?category=${encodeURIComponent(cat)}`}
