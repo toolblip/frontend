@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 const BASE_URL = 'https://toolblip-api-production.up.railway.app';
 const FUTURE_BASE_URL = 'https://api.toolblip.com';
-const API_VERSION = 'v1';
+const API_FORMAT = 'REST · JSON';
 
 type HttpMethod = 'GET' | 'POST';
 
@@ -507,7 +507,7 @@ export default function ApiDocsClient() {
               </svg>
               <div>
                 <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest block">Version</span>
-                <span className="text-xs text-slate-700 dark:text-slate-300">{API_VERSION} · JSON only</span>
+                <span className="text-xs text-slate-700 dark:text-slate-300">{API_FORMAT}</span>
               </div>
             </div>
             <div className="flex items-center gap-3 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3.5">
