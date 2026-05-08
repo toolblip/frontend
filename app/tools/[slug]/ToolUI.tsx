@@ -1,7 +1,7 @@
 'use client';
 
 import type { Tool } from '@/data/tools';
-import ShareButtons from '@/components/ShareButtons';
+import ShareButtons from '@/src/components/ShareButtons';
 
 // ─── Imported tool UIs ──────────────────────────────────────────────────────
 import YamlToJsonClient from '@/components/tools/YamlToJsonClient';

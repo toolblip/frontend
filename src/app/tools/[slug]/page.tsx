@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { tools } from '@/data/tools';
 import { ToolUI } from './ToolUI';
-import ShareButtons from '@/components/ShareButtons';
+import ShareButtons from '@/src/components/ShareButtons';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
