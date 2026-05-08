@@ -3,12 +3,10 @@ import ApiDocsClient from './ApiDocsClient';
 
 export const metadata: Metadata = {
   title: 'API Documentation | Toolblip',
-  description:
-    'Toolblip REST API reference. Authenticate with Bearer tokens, query tools, and manage user accounts. Base URL, rate limits, and example requests included.',
+  description: 'Toolblip REST API reference. Authenticate with Bearer tokens, query tools, and manage user accounts. Base URL, rate limits, and example requests included.',
   openGraph: {
     title: 'API Documentation | Toolblip',
-    description:
-      'Toolblip REST API reference. Authenticate with Bearer tokens, query tools, and manage user accounts. Base URL, rate limits, and example requests included.',
+    description: 'Toolblip REST API reference. Authenticate with Bearer tokens, query tools, and manage user accounts. Base URL, rate limits, and example requests included.',
     url: 'https://toolblip.com/api-docs',
     siteName: 'Toolblip',
     images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: 'Toolblip' }],
@@ -16,8 +14,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary',
     title: 'API Documentation | Toolblip',
-    description:
-      'Toolblip REST API reference — Bearer token auth, tool endpoints, rate limits, and example requests.',
+    description: 'Toolblip REST API reference. Authenticate with Bearer tokens, query tools, and manage user accounts. Base URL, rate limits, and example requests included.',
   },
 };
 

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Privacy Policy',
+  title: 'Privacy Policy | Toolblip',
   description: 'Toolblip tools run 100% in your browser. Nothing you paste or upload is sent to any server. No account required. Read the full privacy policy.',
   openGraph: {
     title: 'Privacy Policy | Toolblip',
@@ -10,7 +10,11 @@ export const metadata: Metadata = {
     siteName: 'Toolblip',
     images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: 'Toolblip' }],
   },
-  twitter: { card: 'summary', title: 'Privacy Policy | Toolblip', description: 'Toolblip tools run 100% in your browser. Nothing you paste or upload is sent to any server.' },
+  twitter: {
+    card: 'summary',
+    title: 'Privacy Policy | Toolblip',
+    description: 'Toolblip tools run 100% in your browser. Nothing you paste or upload is sent to any server. No account required. Read the full privacy policy.',
+  },
 };
 
 export default function PrivacyPage() {

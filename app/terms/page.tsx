@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Terms of Service',
+  title: 'Terms of Service | Toolblip',
   description: 'Terms for using Toolblip. Tools are free for personal and commercial use. No attribution required. Read the full terms of service here.',
   openGraph: {
     title: 'Terms of Service | Toolblip',
@@ -10,7 +10,11 @@ export const metadata: Metadata = {
     siteName: 'Toolblip',
     images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: 'Toolblip' }],
   },
-  twitter: { card: 'summary', title: 'Terms of Service | Toolblip', description: 'Toolblip terms of service. Free for personal and commercial use.' },
+  twitter: {
+    card: 'summary',
+    title: 'Terms of Service | Toolblip',
+    description: 'Terms for using Toolblip. Tools are free for personal and commercial use. No attribution required. Read the full terms of service here.',
+  },
 };
 
 export default function TermsPage() {

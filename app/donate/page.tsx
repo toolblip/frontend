@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Support Toolblip',
+  title: 'Support Toolblip | Toolblip',
   description: 'Toolblip is free, forever. No login, no paywalls. If it saved you time, a coffee keeps the lights on. Donate via GitHub Sponsors or Ko-fi.',
   openGraph: {
     title: 'Support Toolblip | Toolblip',
@@ -10,7 +10,11 @@ export const metadata: Metadata = {
     siteName: 'Toolblip',
     images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: 'Toolblip' }],
   },
-  twitter: { card: 'summary', title: 'Support Toolblip | Toolblip', description: 'Toolblip is free forever. If it saved you time, a coffee keeps the lights on.' },
+  twitter: {
+    card: 'summary',
+    title: 'Support Toolblip | Toolblip',
+    description: 'Toolblip is free, forever. No login, no paywalls. If it saved you time, a coffee keeps the lights on. Donate via GitHub Sponsors or Ko-fi.',
+  },
 };
 
 export default function DonatePage() {

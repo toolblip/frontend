@@ -6,7 +6,7 @@ import type { Metadata } from 'next';
 import FeaturedImage from '@/components/blog/FeaturedImage';
 
 export const metadata: Metadata = {
-  title: 'Blog',
+  title: 'Blog | Toolblip',
   description: 'Guides, tutorials, and updates from the Toolblip team. Learn about developer tools, MCP, and how to get the most out of Toolblip.',
   openGraph: {
     title: 'Blog | Toolblip',
@@ -15,7 +15,11 @@ export const metadata: Metadata = {
     siteName: 'Toolblip',
     images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: 'Toolblip' }],
   },
-  twitter: { card: 'summary', title: 'Blog | Toolblip', description: 'Guides, tutorials, and updates from the Toolblip team.' },
+  twitter: {
+    card: 'summary',
+    title: 'Blog | Toolblip',
+    description: 'Guides, tutorials, and updates from the Toolblip team. Learn about developer tools, MCP, and how to get the most out of Toolblip.',
+  },
 };
 
 interface Post {

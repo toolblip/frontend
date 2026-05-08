@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'About',
-  description:
-    'Toolblip is a collection of free developer and productivity tools that run entirely in your browser. No servers, no uploads, no accounts required.',
+  title: 'About | Toolblip',
+  description: 'Toolblip is a collection of free developer and productivity tools that run entirely in your browser. No servers, no uploads, no accounts required.',
   openGraph: {
     title: 'About | Toolblip',
     description: 'Toolblip is a collection of free developer and productivity tools that run entirely in your browser. No servers, no uploads, no accounts required.',
@@ -11,7 +10,11 @@ export const metadata: Metadata = {
     siteName: 'Toolblip',
     images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: 'Toolblip' }],
   },
-  twitter: { card: 'summary', title: 'About | Toolblip', description: 'Toolblip is a collection of free developer and productivity tools that run entirely in your browser.' },
+  twitter: {
+    card: 'summary',
+    title: 'About | Toolblip',
+    description: 'Toolblip is a collection of free developer and productivity tools that run entirely in your browser. No servers, no uploads, no accounts required.',
+  },
 };
 
 export default function AboutPage() {
