@@ -1,5 +1,5 @@
 import { MetadataRoute } from 'next';
-import { tools } from '@/data/tools';
+import { tools } from '@/src/data/tools';
 
 const BASE_URL = 'https://toolblip.com';
 
