@@ -51,30 +51,6 @@ export default function LoginForm() {
     }
   }
 
-  // Check if login is disabled for non-admin users
-  const [loginDisabled, setLoginDisabled] = useState(false);
-
-  useEffect(() => {
-    async function checkLoginStatus() {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || "https://api.toolblip.com"}/api/auth/login`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email: "", password: "" }),
-          }
-        );
-        if (res.status === 403) {
-          const data = await res.json();
-          if (data.message?.includes("non-admin")) {
-            setLoginDisabled(true);
-          }
-        }
-      } catch {}
-    }
-    checkLoginStatus();
-  }, []);
 
   return (
     <div className="tb-v2-auth">
@@ -128,11 +104,6 @@ export default function LoginForm() {
             </button>
           </form>
 
-          {loginDisabled && (
-            <p className="tb-v2-auth-error" style={{ marginBottom: "1rem" }}>
-              Login is disabled for non-admin users.
-            </p>
-          )}
           <p className="tb-v2-auth-footer">
             <Link href="/forgot-password">Forgot password?</Link>
             <br />

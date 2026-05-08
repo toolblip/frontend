@@ -27,8 +27,8 @@ export async function GET() {
       return NextResponse.json({ user: null }, { status: 401 });
     }
 
-    const user = await laravelRes.json();
-    return NextResponse.json({ user, token });
+    const data = await laravelRes.json();
+    return NextResponse.json({ user: data.user ?? null, token });
   } catch {
     return NextResponse.json({ user: null }, { status: 500 });
   }

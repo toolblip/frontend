@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import PasswordStrength from "@/components/ui/PasswordStrength";
 import { useAuth } from "@/app/providers/auth-provider";
@@ -47,39 +47,6 @@ export default function SignupForm() {
     }
   }
 
-  // Check if registration is disabled
-  const [registrationDisabled, setRegistrationDisabled] = useState(false);
-
-  useEffect(() => {
-    async function checkRegisterStatus() {
-      try {
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || "https://api.toolblip.com"}/api/auth/register`,
-          { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: "", email: "", password: "" }) }
-        );
-        if (res.status === 403) {
-          setRegistrationDisabled(true);
-        }
-      } catch {}
-    }
-    checkRegisterStatus();
-  }, []);
-
-  if (registrationDisabled) {
-    return (
-      <div className="tb-v2-auth">
-        <div className="tb-v2-container">
-          <div className="tb-v2-auth-card">
-            <h1 className="tb-v2-auth-title">Registration closed</h1>
-            <p className="tb-v2-auth-error">Registration is currently disabled. Please contact an administrator if you need access.</p>
-            <p className="tb-v2-auth-footer">
-              Already have an account? <Link href="/login">Sign in</Link>
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="tb-v2-auth">

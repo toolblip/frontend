@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
       maxAge: 60 * 60 * 24 * 7, // 7 days
     });
 
-    return NextResponse.json({ user: data.user, token: data.token }, { status: 200 });
+    return NextResponse.json({ user: data.user, token: data.token }, { status: 201 });
   } catch {
     return NextResponse.json(
       { message: "Internal server error." },
