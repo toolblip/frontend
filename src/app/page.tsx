@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   },
 };
 
-const CATEGORIES = ['Text', 'Encoding', 'Developer', 'Security', 'QR Codes', 'Design'];
+const CATEGORIES = Array.from(new Set(tools.map((tool) => tool.category)));
 
 // ─── How it works ───────────────────────────────────────────────────────
 
@@ -99,10 +99,15 @@ export default function HomePage() {
 
       {/* ── How it works ── */}
       <section>
-        <p className="text-center text-sm font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500 mb-6">
-          How it works
-        </p>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+        <div className="text-center mb-6">
+          <p className="text-sm font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">
+            How it works
+          </p>
+          <p className="mt-2 text-base font-medium text-gray-900 dark:text-white">
+            Pick a tool <span className="text-red-500">→</span> Paste your data <span className="text-red-500">→</span> Get your result
+          </p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {STEPS.map((s) => (
             <div
               key={s.n}
@@ -134,6 +139,7 @@ export default function HomePage() {
               key={cat}
               href={`/tools?category=${encodeURIComponent(cat)}`}
               className="px-4 py-1.5 text-sm font-medium rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-red-100 dark:hover:bg-red-900/40 hover:text-red-700 dark:hover:text-red-300 transition-colors"
+              aria-label={`Browse ${cat} tools`}
             >
               {cat}
             </Link>
