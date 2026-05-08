@@ -22,6 +22,8 @@ export default function ShareButtons({ toolName, toolSlug }: ShareButtonsProps) 
   const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?${new URLSearchParams({
     url: pageUrl,
   }).toString()}`;
+  const buttonClass =
+    'inline-flex items-center gap-1.5 px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg transition-colors';
 
   const copyLink = async () => {
     try {
@@ -35,12 +37,12 @@ export default function ShareButtons({ toolName, toolSlug }: ShareButtonsProps) 
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <div className="flex flex-wrap items-center gap-2" aria-label="Share this tool">
       {/* Copy link */}
       <button
         type="button"
         onClick={copyLink}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg transition-colors"
+        className={buttonClass}
         aria-label={`Copy link to ${toolName}`}
       >
         {copied ? (
@@ -65,7 +67,7 @@ export default function ShareButtons({ toolName, toolSlug }: ShareButtonsProps) 
         href={twitterUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg transition-colors"
+        className={buttonClass}
         aria-label={`Share ${toolName} on X`}
       >
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -79,7 +81,7 @@ export default function ShareButtons({ toolName, toolSlug }: ShareButtonsProps) 
         href={linkedinUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg transition-colors"
+        className={buttonClass}
         aria-label={`Share ${toolName} on LinkedIn`}
       >
         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
