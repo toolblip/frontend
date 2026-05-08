@@ -136,13 +136,16 @@ async function testTool(browser, tool, component) {
       }
     }
 
-    // Auto-detect: check for textarea + auto-generate on mount
+    // Auto-detect: check for editable textarea + auto-generate on mount.
+    // Some tools have readonly output textareas only (AI/file tools, generated output).
+    // Filling those causes false timeout errors even when the page renders cleanly.
     const textareas = await page.locator('textarea').count();
+    const editableTextareas = await page.locator('textarea:not([readonly])').count();
     const inputs = await page.locator('input').count();
-    if ((textareas > 0 || inputs > 0) && hasContent) {
-      // Fill first textarea and click first button
-      if (textareas > 0) {
-        await page.locator('textarea').first().fill('test input');
+    if ((editableTextareas > 0 || inputs > 0) && hasContent) {
+      // Fill first editable textarea and click first button
+      if (editableTextareas > 0) {
+        await page.locator('textarea:not([readonly])').first().fill('test input');
         await page.waitForTimeout(500);
         const btns = await page.locator('button').all();
         if (btns.length > 0) {
