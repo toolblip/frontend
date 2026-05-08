@@ -18,12 +18,35 @@ export async function generateMetadata({ params }: ToolDetailPageProps): Promise
   if (!tool) {
     return {
       title: 'Tool Not Found | Toolblip',
+      description: 'The requested Toolblip tool could not be found.',
+      openGraph: {
+        title: 'Tool Not Found | Toolblip',
+        description: 'The requested Toolblip tool could not be found.',
+        url: `https://toolblip.com/tools/${slug}`,
+        siteName: 'Toolblip',
+      },
+      twitter: {
+        card: 'summary',
+        title: 'Tool Not Found | Toolblip',
+        description: 'The requested Toolblip tool could not be found.',
+      },
     };
   }
 
   return {
     title: `${tool.name} | Toolblip`,
     description: tool.description,
+    openGraph: {
+      title: `${tool.name} | Toolblip`,
+      description: tool.description,
+      url: `https://toolblip.com/tools/${slug}`,
+      siteName: 'Toolblip',
+    },
+    twitter: {
+      card: 'summary',
+      title: `${tool.name} | Toolblip`,
+      description: tool.description,
+    },
   };
 }
 
