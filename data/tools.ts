@@ -1574,4 +1574,8 @@ export const tools: Tool[] = [
   { name: 'Oxford Comma Fixer', slug: 'oxford-comma', description: 'Automatically apply the Oxford comma rule to any list of items. Paste comma-separated or newline-separated items to get properly formatted output with the serial/Oxford comma.', emoji: '📝', category: 'Text' }
 ]
 
+export function getToolBySlug(slug: string): Tool | undefined {
+  return tools.find(tool => tool.slug === slug);
+}
+
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'AI Tools', 'Document Generator', 'Image Tools'] as const;
