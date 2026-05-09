@@ -308,10 +308,20 @@ submit_to_gsc() {
     local topic="$2"
 
     cd "$HOME/Work/toolblip"
-    python3 scripts/seo-content-generator.py submit "$url" >> "$LOGFILE" 2>&1
+    local submit_output
+    submit_output=$(python3 scripts/seo-content-generator.py submit "$url" 2>&1 || true)
+    echo "$submit_output" >> "$LOGFILE"
+
+    local submit_status
+    submit_status=$(echo "$submit_output" | python3 -c "import sys,json,re; text=sys.stdin.read(); m=re.search(r'\{.*\}', text, re.S); print(json.loads(m.group(0)).get('status','error') if m else 'error')" 2>/dev/null || echo "error")
+
     enqueue_gsc_url "$url" "$topic"
-    mark_gsc_submitted "$url"
-    log "  GSC submitted: $url"
+    if [[ "$submit_status" == "submitted" ]]; then
+        mark_gsc_submitted "$url"
+        log "  GSC submitted: $url"
+    else
+        log "  GSC submission failed; left queued for retry: $url"
+    fi
 }
 
 # ─── Step 6: GSC Error Check & Fix for Single URL ─────────────────────────────
