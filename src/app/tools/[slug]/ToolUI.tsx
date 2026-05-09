@@ -325,15 +325,24 @@ function Base64UI() {
   const [mode, setMode] = useState<'encode' | 'decode'>('encode');
   const [error, setError] = useState('');
 
+  const encodeBase64 = (value: string) => {
+    const bytes = new TextEncoder().encode(value);
+    let binary = '';
+    bytes.forEach(byte => { binary += String.fromCharCode(byte); });
+    return btoa(binary);
+  };
+
+  const decodeBase64 = (value: string) => {
+    const binary = atob(value.replace(/\s/g, ''));
+    const bytes = Uint8Array.from(binary, char => char.charCodeAt(0));
+    return new TextDecoder().decode(bytes);
+  };
+
   const process = () => {
     setError('');
     if (!input) { setOutput(''); return; }
     try {
-      if (mode === 'encode') {
-        setOutput(btoa(unescape(encodeURIComponent(input))));
-      } else {
-        setOutput(decodeURIComponent(escape(atob(input.replace(/\s/g, '')))));
-      }
+      setOutput(mode === 'encode' ? encodeBase64(input) : decodeBase64(input));
     } catch {
       setError('Invalid Base64 string for decoding.');
       setOutput('');
