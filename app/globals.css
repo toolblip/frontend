@@ -2555,8 +2555,10 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 .tb-v2-auth { padding: 52px 0 80px; }
 .tb-v2-auth-card { max-width: 420px; margin: 0 auto; }
 .tb-v2-auth-title { font-family: var(--f-display); font-weight: 700; font-size: 28px; letter-spacing: -0.025em; color: var(--fg-0); text-align: center; margin-bottom: 28px; }
-.tb-v2-auth-oauth { display: flex; align-items: center; justify-content: center; width: 100%; height: 44px; border: 1.5px solid var(--line); border-radius: var(--radius-sm); background: var(--surface); color: var(--fg-0); font-size: 14px; font-weight: 600; text-decoration: none; margin-bottom: 18px; transition: border-color .15s, background .15s; }
-.tb-v2-auth-oauth:hover { border-color: var(--red); background: var(--surface-hover); }
+.tb-v2-auth-oauth { display: flex; align-items: center; justify-content: center; gap: 12px; width: 100%; min-height: 44px; border: 1px solid #dadce0; border-radius: 4px; background: #fff; color: #3c4043; font-size: 14px; font-weight: 500; letter-spacing: .01em; text-decoration: none; margin-bottom: 18px; box-shadow: 0 1px 2px rgba(60, 64, 67, .08); transition: background .15s, border-color .15s, box-shadow .15s; }
+.tb-v2-auth-oauth:hover { border-color: #d2e3fc; background: #f8fafd; box-shadow: 0 1px 3px rgba(60, 64, 67, .2); }
+.tb-v2-auth-oauth:focus-visible { outline: 3px solid rgba(66, 133, 244, .28); outline-offset: 2px; }
+.tb-v2-auth-oauth-icon { width: 18px; height: 18px; flex: 0 0 18px; }
 .tb-v2-auth-divider { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; color: var(--fg-3); font-size: 12px; }
 .tb-v2-auth-divider::before, .tb-v2-auth-divider::after { content: ""; flex: 1; height: 1px; background: var(--line); }
 .tb-v2-auth-divider-line { flex: 1; height: 1px; background: var(--line); }
