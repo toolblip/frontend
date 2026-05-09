@@ -215,6 +215,12 @@ const starterRequest = `curl "${BASE_URL}/api/tools" \\\n  -H "Accept: applicati
 
 const authenticatedRequest = `curl "${BASE_URL}/api/auth/user" \\\n  -H "Authorization: Bearer YOUR_TOKEN" \\\n  -H "Accept: application/json"`;
 
+const baseUrlSwap = `# Current production API
+BASE_URL="${BASE_URL}"
+
+# Planned custom domain after SSL is ready
+BASE_URL="${FUTURE_BASE_URL}"`;
+
 function CopyButton({ value }: { value: string }) {
   const [copied, setCopied] = useState(false);
 
@@ -403,6 +409,16 @@ curl "${BASE_URL}/api/auth/user" \\
             <div className="mt-5 grid gap-4 xl:grid-cols-2">
               <CodeBlock label="Public request" code={starterRequest} />
               <CodeBlock label="Authenticated request" code={authenticatedRequest} />
+            </div>
+          </section>
+
+          <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
+            <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Base URL strategy</h2>
+            <p className="mt-3 text-slate-600 dark:text-slate-300">
+              Store the API host in one environment variable so the Railway URL can be replaced cleanly by the custom API domain when SSL is live.
+            </p>
+            <div className="mt-5">
+              <CodeBlock label="Environment setup" code={baseUrlSwap} />
             </div>
           </section>
 
