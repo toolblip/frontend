@@ -34,6 +34,10 @@ function matchesSearch(tool: (typeof tools)[number], normalizedQuery: string) {
   return searchableText.includes(normalizedQuery);
 }
 
+function getShortDescription(description: string) {
+  return description.split('. ')[0].replace(/\.$/, '');
+}
+
 export function DirectoryClient() {
   const [query, setQuery] = useState('');
   const [activeTab, setActiveTab] = useState<CategoryTab>('All');
@@ -243,7 +247,7 @@ export function DirectoryClient() {
                 </div>
                 <div className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{tool.category}</div>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed line-clamp-2">
-                  {tool.description}
+                  {getShortDescription(tool.description)}
                 </p>
               </div>
             </Link>
