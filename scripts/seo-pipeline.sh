@@ -31,9 +31,24 @@ in_overnight_window() {
 }
 
 check_window() {
+    if [[ "${FORCE_SEO_PIPELINE:-0}" == "1" ]]; then
+        log "FORCE_SEO_PIPELINE=1 set; bypassing overnight window."
+        return
+    fi
+
     if ! in_overnight_window; then
         echo "[$(date)] Outside overnight window. Exiting." >> "$LOGFILE"
         exit 0
+    fi
+}
+
+check_git_branch() {
+    cd "$HOME/Work/toolblip"
+    local branch
+    branch=$(git branch --show-current 2>/dev/null || echo "")
+    if [[ "$branch" != "main" ]]; then
+        log "ERROR: SEO pipeline must run from main, current branch is '$branch'."
+        exit 1
     fi
 }
 
@@ -132,7 +147,7 @@ except:
 
     # Claude keyword selection
     local kw_result
-    kw_result=$(claude -p "$(cat "$prompt_file")" --model sonnet --maxTurns 3 2>/dev/null || echo "BEST: $topic
+    kw_result=$(claude -p "$(cat "$prompt_file")" --model sonnet --max-turns 3 2>/dev/null || echo "BEST: $topic
 RELATED: $gsc_kw")
 
     rm -f "$prompt_file"
@@ -180,10 +195,10 @@ generate_one_post() {
     rm -f "$output"
 
     cd "$HOME/Work/toolblip"
-    # Use Python helper with --append-system-prompt-file to avoid stdin/argument conflicts
+    # Use Python helper to pass the prompt via stdin and avoid shell quoting conflicts
     python3 "$HOME/Work/toolblip/scripts/run-claude.py" \
         "$prompt_file" \
-        --model sonnet \
+        --model opus \
         --allowedTools Read,Write,Edit \
         --max-turns 10 \
         > "$output" 2>&1
@@ -264,7 +279,7 @@ $(cat "$article_file")"
 
     # Run humanizer
     local humanized
-    humanized=$(claude -p "$full_prompt" --model sonnet --maxTurns 5 2>/dev/null || echo "")
+    humanized=$(claude -p "$full_prompt" --model sonnet --max-turns 5 2>/dev/null || echo "")
 
     local tmp_humanized="/tmp/humanized-${$}.txt"
     echo "$humanized" > "$tmp_humanized"
@@ -283,7 +298,7 @@ commit_post() {
 
     cd "$HOME/Work/toolblip"
     git add "$file"
-    git commit -m "feat(seo): $topic article - $(date '+%Y-%m-%d')" >> "$LOGFILE" 2>&1 || true
+    git commit -m "seo: add $topic article $(date '+%Y-%m-%d')" >> "$LOGFILE" 2>&1 || true
     git push origin main >> "$LOGFILE" 2>&1 || true
 }
 
@@ -367,7 +382,7 @@ PROMPTEOF
     sed -i "s|TO_REPLACE_URL|$url|g" "$prompt_file"
 
     local rewrite
-    rewrite=$(claude -p "$(cat "$prompt_file")" --model sonnet --maxTurns 5 2>/dev/null || echo "")
+    rewrite=$(claude -p "$(cat "$prompt_file")" --model sonnet --max-turns 5 2>/dev/null || echo "")
 
     rm -f "$prompt_file"
 
@@ -454,6 +469,7 @@ main() {
     log "=== SEO Pipeline STARTED ==="
 
     check_window
+    check_git_branch
     check_lock
     trap release_lock EXIT
 
@@ -466,6 +482,8 @@ main() {
 
     # Pick 3-5 topics from queue
     local num_topics="${1:-3}"
+    if [[ "$num_topics" -lt 1 ]]; then num_topics=1; fi
+    if [[ "$num_topics" -gt 3 ]]; then num_topics=3; fi
     log "Picking $num_topics topics from queue..."
     local topics
     topics=$(pick_topics "$num_topics")
