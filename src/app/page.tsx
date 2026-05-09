@@ -34,11 +34,13 @@ const categories = Object.entries(categoryCounts)
 
 // ─── How it works ───────────────────────────────────────────────────────
 
+const WORKFLOW = 'Pick a tool → Paste your data → Get your result';
+
 const STEPS = [
   {
     n: '1',
     title: 'Pick a tool',
-    desc: 'Choose a focused browser tool for text, encoding, development, and more.',
+    desc: 'Choose the focused utility that matches the quick job in front of you.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17 9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z" />
@@ -48,7 +50,7 @@ const STEPS = [
   {
     n: '2',
     title: 'Paste your data',
-    desc: 'Type or paste right into the page. No servers, no uploads, no account.',
+    desc: 'Type or paste directly into the page — no servers, no uploads, no account.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" />
@@ -58,7 +60,7 @@ const STEPS = [
   {
     n: '3',
     title: 'Get your result',
-    desc: 'Copy the result instantly. Nothing leaves your browser.',
+    desc: 'Copy the output instantly. Nothing leaves your browser at any point.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
@@ -78,12 +80,12 @@ const BENEFITS = [
   {
     emoji: '⚡',
     title: 'Fast',
-    desc: 'Runs instantly in your tab, so common cleanup and conversion tasks feel immediate.',
+    desc: 'Runs instantly in your tab, so cleanup and conversion tasks feel immediate.',
   },
   {
     emoji: '🎁',
     title: 'Free',
-    desc: 'No signup, no paywall, no hidden limits. Every tool is ready when you are.',
+    desc: 'No signup, no paywall, no hidden limits. Open a tool and get straight to work.',
   },
 ];
 
@@ -129,7 +131,7 @@ export default function HomePage() {
               How it works
             </p>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-              A simple browser-only workflow: pick a tool → paste your data → get your result.
+              {WORKFLOW} — no servers, no uploads, nothing leaves your browser.
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1">
@@ -170,7 +172,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Category quick-access ── */}
-      <section id="categories" aria-label="Browse tools by category" className="space-y-3 scroll-mt-6">
+      <section id="categories" aria-label="Browse tools by category" className="rounded-3xl border border-gray-200 dark:border-gray-800 bg-gray-50/70 dark:bg-gray-900/40 px-5 py-5 sm:px-6 space-y-3 scroll-mt-6">
         <div className="text-center space-y-1">
           <p className="text-sm font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">
             Jump to a category
@@ -213,14 +215,14 @@ export default function HomePage() {
           {BENEFITS.map((b) => (
             <div
               key={b.title}
-              className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:border-red-200 dark:hover:border-red-900 transition-all"
+              className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:border-red-200 dark:hover:border-red-900 transition-all"
             >
-              <div className="w-11 h-11 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-2xl mb-4">
+              <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-xl mb-3">
                 {b.emoji}
               </div>
               <h3 className="font-semibold text-gray-900 dark:text-white text-base">{b.title}</h3>
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">{b.desc}</p>
-              <div className="mt-4 h-1 w-10 rounded-full bg-red-100 dark:bg-red-900/60" aria-hidden="true" />
+              <div className="mt-3 h-1 w-10 rounded-full bg-red-100 dark:bg-red-900/60" aria-hidden="true" />
             </div>
           ))}
         </div>
