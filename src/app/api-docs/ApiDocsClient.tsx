@@ -448,7 +448,7 @@ export default function ApiDocsClient() {
           <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
             <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Before you start</h2>
             <p className="mt-3 text-slate-600 dark:text-slate-300">
-              All endpoints are JSON over HTTPS. Prefix every path below with <InlineCode>{BASE_URL}</InlineCode> today, and switch to <InlineCode>{FUTURE_BASE_URL}</InlineCode> after SSL is ready.
+              All endpoints are JSON over HTTPS and currently live under the <InlineCode>/api</InlineCode> path. Prefix every path below with <InlineCode>{BASE_URL}</InlineCode> today, and switch to <InlineCode>{FUTURE_BASE_URL}</InlineCode> after SSL is ready.
             </p>
             <div className="mt-5 grid gap-4 xl:grid-cols-2">
               <CodeBlock label="Public request" code={starterRequest} />
