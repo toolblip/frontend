@@ -368,7 +368,7 @@ function ResponseFieldsTable({ fields }: { fields: ResponseField[] }) {
 }
 
 function EndpointCard({ ep }: { ep: Endpoint }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   return (
     <div
@@ -405,7 +405,7 @@ function EndpointCard({ ep }: { ep: Endpoint }) {
         <div className="border-t border-slate-100 dark:border-slate-800 px-5 py-6 space-y-5 bg-slate-50/40 dark:bg-slate-900/50">
           <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{ep.description}</p>
 
-          {ep.bodyParams && ep.bodyParams.length > 0 && <ParamTable params={ep.bodyParams} body />}
+          {ep.bodyParams && ep.bodyParams.length > 0 && <ParamTable params={ep.bodyParams} body={ep.method !== 'GET'} />}
           {ep.responseFields && ep.responseFields.length > 0 && <ResponseFieldsTable fields={ep.responseFields} />}
 
           <div>
