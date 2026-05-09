@@ -494,14 +494,15 @@ export default function ApiDocsClient() {
           <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
             <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Endpoint overview</h2>
             <div className="mt-5 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800">
-              <div className="hidden grid-cols-[0.7fr_1.7fr_1fr_2fr] bg-slate-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:bg-slate-950 dark:text-slate-400 md:grid">
-                <span>Method</span><span>Path</span><span>Auth</span><span>Purpose</span>
+              <div className="hidden grid-cols-[0.7fr_1.55fr_1fr_1.2fr_1.8fr] bg-slate-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:bg-slate-950 dark:text-slate-400 md:grid">
+                <span>Method</span><span>Path</span><span>Auth</span><span>Response</span><span>Purpose</span>
               </div>
               {endpoints.map((endpoint) => (
-                <a key={endpoint.id} href={`#${endpoint.id}`} className="grid gap-2 border-t border-slate-200 px-4 py-3 text-sm first:border-t-0 transition hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/50 md:grid-cols-[0.7fr_1.7fr_1fr_2fr] md:gap-3 md:first:border-t">
+                <a key={endpoint.id} href={`#${endpoint.id}`} className="grid gap-2 border-t border-slate-200 px-4 py-3 text-sm first:border-t-0 transition hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/50 md:grid-cols-[0.7fr_1.55fr_1fr_1.2fr_1.8fr] md:gap-3 md:first:border-t">
                   <span className="font-mono font-black text-[#58D65D] dark:text-emerald-400">{endpoint.method}</span>
                   <code className="break-all text-slate-900 dark:text-slate-100">{endpoint.path}</code>
                   <span className="text-slate-600 dark:text-slate-300">{endpoint.auth === 'No auth required' ? 'None' : 'Bearer token'}</span>
+                  <code className="break-all text-slate-600 dark:text-slate-300">{endpoint.responseShape}</code>
                   <span className="text-slate-600 dark:text-slate-300">{endpoint.title}</span>
                 </a>
               ))}
