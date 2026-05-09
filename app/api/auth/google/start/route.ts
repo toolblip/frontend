@@ -16,9 +16,16 @@ function appOrigin(req: NextRequest): string {
     try {
       return new URL(referer).origin;
     } catch {
-      // fall through to Next's request origin
+      // fall through to forwarded/request headers
     }
   }
+
+  const forwardedHost = req.headers.get("x-forwarded-host") ?? req.headers.get("host");
+  if (forwardedHost && !forwardedHost.includes("localhost")) {
+    const forwardedProto = req.headers.get("x-forwarded-proto") ?? "https";
+    return `${forwardedProto}://${forwardedHost}`;
+  }
+
   return new URL(req.url).origin;
 }
 
