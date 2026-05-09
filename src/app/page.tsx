@@ -103,7 +103,7 @@ export default function HomePage() {
           <span className="text-red-600 dark:text-red-400">, in Your Browser</span>
         </h1>
         <p className="text-lg text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
-          {tools.length}+ focused utilities for text, encoding, development, and more. No signup, no uploads — everything stays on your device.
+          {tools.length}+ focused utilities for text, encoding, development, and more — built to run locally in your browser, with no signup and no uploads.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <a
@@ -129,7 +129,7 @@ export default function HomePage() {
               How it works
             </p>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-              A browser-only workflow: pick a tool → paste your data → get your result.
+              Pick a tool → paste your data → get your result. No servers, no uploads, nothing leaves your browser.
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1">
@@ -184,7 +184,8 @@ export default function HomePage() {
             <Link
               key={cat.name}
               href={`/tools?category=${encodeURIComponent(cat.name)}`}
-              className="inline-flex items-center gap-2 px-4 py-1.5 text-sm font-medium rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-red-100 dark:hover:bg-red-900/40 hover:text-red-700 dark:hover:text-red-300 transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-1.5 text-sm font-medium rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-red-100 dark:hover:bg-red-900/40 hover:text-red-700 dark:hover:text-red-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-950 transition-colors"
+              aria-label={`Browse ${cat.count} ${cat.name} tools`}
             >
               <span>{cat.name}</span>
               <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded-full bg-white/80 dark:bg-gray-950/60 text-gray-400 dark:text-gray-500">
@@ -205,7 +206,7 @@ export default function HomePage() {
             Handy utilities without the usual friction.
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 max-w-2xl mx-auto">
-            Toolblip keeps everyday text, developer, and encoding tasks simple: pick a tool, paste your data, copy the result.
+            Toolblip keeps everyday text, developer, and encoding tasks simple: choose the utility you need, work locally, copy the result.
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
