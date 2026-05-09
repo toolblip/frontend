@@ -30,7 +30,7 @@ export default function NavbarAuth() {
         <button
           type="button"
           onClick={() => setMenuOpen(!menuOpen)}
-          className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
+          className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
           aria-expanded={menuOpen}
           aria-haspopup="true"
           aria-label="Account menu"
@@ -38,7 +38,6 @@ export default function NavbarAuth() {
           <span className="w-7 h-7 rounded-full bg-red-600 flex items-center justify-center text-white text-xs font-semibold uppercase">
             {displayName.charAt(0)}
           </span>
-          <span className="hidden sm:inline max-w-36 truncate text-gray-700 dark:text-gray-200">{displayEmail || displayName}</span>
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>

@@ -14,12 +14,13 @@ test.describe('Session BDD regression', () => {
     await expect(page.locator('#main-content').getByText(VALID_USER.email)).toBeVisible();
   });
 
-  test('Given a logged-in user on the homepage, Then the navbar shows profile identity instead of Sign In', async ({ page }) => {
+  test('Given a logged-in user on the homepage, Then the navbar shows a compact account trigger and keeps email inside the menu', async ({ page }) => {
     await loginViaApi(page, VALID_USER);
 
     await page.goto('/');
 
     await expect(page.getByRole('link', { name: 'Sign In' })).toBeHidden();
+    await expect(page.getByRole('button', { name: 'Account menu' })).not.toContainText(VALID_USER.email);
     await page.getByRole('button', { name: 'Account menu' }).click();
     await expect(page.getByRole('paragraph').filter({ hasText: VALID_USER.email })).toBeVisible();
   });
