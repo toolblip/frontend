@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, type CSSProperties } from 'react';
 import Link from 'next/link';
 import { tools } from '@/data/tools';
 import { getCategoryMeta } from '@/lib/v2/categoryMeta';
@@ -8,6 +8,17 @@ import { IconArrowUR } from '@/components/v2/icons';
 
 const CATEGORIES = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS'] as const;
 type Category = typeof CATEGORIES[number];
+
+const CATEGORY_TO_TOOL_CATEGORY: Record<Category, string | null> = {
+  All: null,
+  Text: 'Text',
+  Developer: 'Developer',
+  Encoder: 'Encoding',
+  Image: 'Image',
+  Conversion: 'Conversion',
+  Math: 'Math',
+  CSS: 'CSS',
+};
 
 export default function DirectoryClient() {
   const [query, setQuery] = useState('');
@@ -20,10 +31,10 @@ export default function DirectoryClient() {
       const matchesQuery =
         !q ||
         tool.name.toLowerCase().includes(q) ||
-        tool.description.toLowerCase().includes(q) ||
-        tool.category.toLowerCase().includes(q);
+        tool.description.toLowerCase().includes(q);
+      const selectedToolCategory = CATEGORY_TO_TOOL_CATEGORY[activeCategory];
       const matchesCategory =
-        activeCategory === 'All' || tool.category === activeCategory;
+        !selectedToolCategory || tool.category === selectedToolCategory;
       return matchesQuery && matchesCategory;
     });
   }, [query, activeCategory]);
@@ -43,8 +54,10 @@ export default function DirectoryClient() {
 
   const hasFilters = query || activeCategory !== 'All';
 
-  const catCount = (cat: string) =>
-    cat === 'All' ? tools.length : tools.filter((t) => t.category === cat).length;
+  const catCount = (cat: Category) => {
+    const toolCategory = CATEGORY_TO_TOOL_CATEGORY[cat];
+    return toolCategory ? tools.filter((tool) => tool.category === toolCategory).length : tools.length;
+  };
 
   return (
     <>
@@ -167,7 +180,7 @@ export default function DirectoryClient() {
                       {
                         '--cat-color': meta.color,
                         '--cat-bg': meta.bg,
-                      } as React.CSSProperties
+                      } as CSSProperties
                     }
                   >
                     <div className="tb-v2-dir-card-top">
