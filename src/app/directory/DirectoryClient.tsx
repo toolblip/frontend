@@ -85,8 +85,12 @@ export function DirectoryClient() {
     tabRefs.current[nextIndex]?.focus();
   }
 
-  const hasActiveFilters = query.trim().length > 0 || activeTab !== 'All';
+  const trimmedQuery = query.trim();
+  const hasActiveFilters = trimmedQuery.length > 0 || activeTab !== 'All';
   const visibleCountLabel = `${filteredTools.length} ${filteredTools.length === 1 ? 'tool' : 'tools'}`;
+  const emptyStateFilterLabel = [trimmedQuery && `“${trimmedQuery}”`, activeTab !== 'All' && activeTab]
+    .filter(Boolean)
+    .join(' in ');
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-10 space-y-8">
@@ -125,7 +129,7 @@ export function DirectoryClient() {
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search tools by name or description…"
+            placeholder={`Search ${tools.length} tools by name or description…`}
             aria-label="Search tools by name or description"
             className="w-full pl-10 pr-16 py-3 text-sm bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-transparent transition-shadow"
           />
@@ -194,7 +198,7 @@ export function DirectoryClient() {
         >
           <span>
             Showing <span className="font-medium text-gray-700 dark:text-gray-200">{visibleCountLabel}</span>
-            {query.trim() && <> for &ldquo;<span className="text-gray-700 dark:text-gray-200">{query.trim()}</span>&rdquo;</>}
+            {trimmedQuery && <> for &ldquo;<span className="text-gray-700 dark:text-gray-200">{trimmedQuery}</span>&rdquo;</>}
             {activeTab !== 'All' && <> in <span className="text-gray-700 dark:text-gray-200">{activeTab}</span></>}
           </span>
           {hasActiveFilters && (
@@ -242,7 +246,9 @@ export function DirectoryClient() {
           <div>
             <h2 className="text-gray-900 dark:text-white font-semibold text-base">No tools found</h2>
             <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
-              Try a different search term or choose another category.
+              {emptyStateFilterLabel
+                ? `No matches for ${emptyStateFilterLabel}. Try a different search term or choose another category.`
+                : 'Try a different search term or choose another category.'}
             </p>
           </div>
           <button
