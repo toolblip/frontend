@@ -31,7 +31,9 @@ function matchesSearch(tool: (typeof tools)[number], normalizedQuery: string) {
   if (!normalizedQuery) return true;
 
   const searchableText = `${tool.name} ${tool.description}`.toLowerCase();
-  return searchableText.includes(normalizedQuery);
+  return normalizedQuery
+    .split(/\s+/)
+    .every((term) => searchableText.includes(term));
 }
 
 function getShortDescription(description: string) {
@@ -100,7 +102,7 @@ export function DirectoryClient() {
 
   const trimmedQuery = query.trim();
   const hasActiveFilters = trimmedQuery.length > 0 || activeTab !== 'All';
-  const visibleCountLabel = `${filteredTools.length} ${filteredTools.length === 1 ? 'tool' : 'tools'}`;
+  const visibleCountLabel = `Showing ${filteredTools.length} ${filteredTools.length === 1 ? 'tool' : 'tools'}`;
   const emptyStateFilterLabel = [trimmedQuery && `“${trimmedQuery}”`, activeTab !== 'All' && activeTab]
     .filter(Boolean)
     .join(' in ');
@@ -144,6 +146,7 @@ export function DirectoryClient() {
             onChange={(event) => setQuery(event.target.value)}
             placeholder={`Search ${tools.length} tools by name or description…`}
             aria-label="Search tools by name or description"
+            aria-controls="directory-results"
             autoComplete="off"
             spellCheck={false}
             className="w-full pl-10 pr-16 py-3 text-sm bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-transparent transition-shadow"
@@ -212,7 +215,7 @@ export function DirectoryClient() {
           aria-live="polite"
         >
           <span>
-            Showing <span className="font-medium text-gray-700 dark:text-gray-200">{visibleCountLabel}</span>
+            <span className="font-medium text-gray-700 dark:text-gray-200">{visibleCountLabel}</span>
             {trimmedQuery && <> for &ldquo;<span className="text-gray-700 dark:text-gray-200">{trimmedQuery}</span>&rdquo;</>}
             {activeTab !== 'All' && <> in <span className="text-gray-700 dark:text-gray-200">{activeTab}</span></>}
           </span>
@@ -230,6 +233,7 @@ export function DirectoryClient() {
 
       {filteredTools.length > 0 ? (
         <section
+          id="directory-results"
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
           role="tabpanel"
           aria-label={`${activeTab} tools`}
