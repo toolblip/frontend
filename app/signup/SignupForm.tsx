@@ -32,14 +32,14 @@ export default function SignupForm() {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ name, email, password, password_confirmation: confirm }),
+        body: JSON.stringify({ name, email, password, password_confirmation: confirm, accepted_terms: true }),
         credentials: "include",
       });
       const data = await res.json();
 
       if (res.ok && data.token) {
         login(data.user, data.token);
-        router.push("/");
+        router.push("/account");
       } else {
         const msg =
           data.message ??
@@ -60,7 +60,7 @@ export default function SignupForm() {
         <div className="tb-v2-auth-card">
           <h1 className="tb-v2-auth-title">Create account</h1>
 
-          <GoogleAuthButton href="/api/auth/google/start?next=/" />
+          <GoogleAuthButton href="/api/auth/google/start?next=/account" />
 
           <div className="tb-v2-auth-divider" aria-hidden="true">
             <span>or</span>
@@ -157,7 +157,7 @@ export default function SignupForm() {
               </label>
             </div>
 
-            <button type="submit" disabled={loading} className="tb-v2-auth-submit">
+            <button type="submit" disabled={loading || !acceptedLegal} className="tb-v2-auth-submit">
               {loading ? "Creating account..." : "Create account"}
             </button>
           </form>

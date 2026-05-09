@@ -6,7 +6,7 @@ function safeNext(value: string | undefined): string {
   if (value && value.startsWith("/") && !value.startsWith("//")) {
     return value;
   }
-  return "/";
+  return "/account";
 }
 
 function appOrigin(req: NextRequest): string {

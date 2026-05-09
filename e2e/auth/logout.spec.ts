@@ -9,7 +9,7 @@ test.describe('Logout BDD regression', () => {
   test('Given a logged-in user, When they sign out, Then the auth cookie is cleared and the account route is protected again', async ({ page }) => {
     await loginViaApi(page, VALID_USER);
     await page.goto('/account');
-    await expect(page.getByText(VALID_USER.email)).toBeVisible();
+    await expect(page.locator('#main-content').getByText(VALID_USER.email)).toBeVisible();
 
     await page.getByRole('button', { name: 'Sign out' }).click();
 

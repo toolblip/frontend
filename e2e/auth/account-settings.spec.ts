@@ -8,7 +8,7 @@ test.describe('Account settings BDD regression', () => {
 
   test('Given a logged-in user, When they update profile details, Then the account page shows the new name and email verification prompt', async ({ page }) => {
     await loginByForm(page, VALID_USER);
-    await expect(page).toHaveURL(/\/$/);
+    await expect(page).toHaveURL(/\/account$/);
 
     await page.goto('/account');
     await expect(page.getByText('BDD User')).toBeVisible();
@@ -41,7 +41,7 @@ test.describe('Account settings BDD regression', () => {
 
   test('Given a logged-in user, When they change password, Then they are signed out and sent to login', async ({ page }) => {
     await loginByForm(page, VALID_USER);
-    await expect(page).toHaveURL(/\/$/);
+    await expect(page).toHaveURL(/\/account$/);
 
     await page.goto('/account');
     await page.getByLabel('Current password').fill('Password123!');

@@ -6,10 +6,11 @@ test.describe('Login BDD regression', () => {
     await resetMockBackend(request);
   });
 
-  test('Given valid credentials, When the user submits the login form, Then they are redirected home and get an auth cookie', async ({ page }) => {
+  test('Given valid credentials, When the user submits the login form, Then they are redirected to account dashboard and get an auth cookie', async ({ page }) => {
     await loginByForm(page, VALID_USER);
 
-    await expect(page).toHaveURL(/\/$/);
+    await expect(page).toHaveURL(/\/account$/);
+    await expect(page.locator('#main-content').getByText(VALID_USER.email)).toBeVisible();
     await expectLoggedInCookie(page);
   });
 
@@ -20,7 +21,7 @@ test.describe('Login BDD regression', () => {
     await page.getByRole('button', { name: 'Sign in' }).click();
 
     await expect(page).toHaveURL(/\/account$/);
-    await expect(page.getByText(VALID_USER.email)).toBeVisible();
+    await expect(page.locator('#main-content').getByText(VALID_USER.email)).toBeVisible();
     await expectLoggedInCookie(page);
   });
 

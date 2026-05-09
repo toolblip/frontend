@@ -13,7 +13,7 @@ export default function LoginForm() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [next, setNext] = useState("/");
+  const [next, setNext] = useState("/account");
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);

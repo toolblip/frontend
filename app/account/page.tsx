@@ -40,6 +40,9 @@ export default function AccountPage() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [acceptedOnboardingTerms, setAcceptedOnboardingTerms] = useState(false);
+  const [acceptingTerms, setAcceptingTerms] = useState(false);
+  const [termsError, setTermsError] = useState("");
 
   // Redirect to login if not authenticated (after auth has finished loading)
   useEffect(() => {
@@ -88,7 +91,7 @@ export default function AccountPage() {
   async function checkSubscription() {
     if (!token) return;
     try {
-      const res = await fetch(`${API_BASE}/api/subscription`, {
+      const res = await fetch(`/api/subscription`, {
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: "application/json",
@@ -222,6 +225,38 @@ export default function AccountPage() {
     router.replace("/");
   }
 
+  async function handleAcceptTerms() {
+    setTermsError("");
+    if (!acceptedOnboardingTerms) {
+      setTermsError("Please accept the Terms and Conditions and Privacy Policy to continue.");
+      return;
+    }
+
+    setAcceptingTerms(true);
+    try {
+      const res = await fetch("/api/auth/accept-terms", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ accepted_terms: true }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || (data.errors ? Object.values(data.errors).flat().join(", ") : "Could not accept terms."));
+      }
+
+      if (data.user && token) {
+        login(data.user, token);
+      }
+      await checkSubscription();
+    } catch (error) {
+      setTermsError(error instanceof Error ? error.message : "Could not accept terms.");
+    } finally {
+      setAcceptingTerms(false);
+    }
+  }
+
   if (authLoading || !user) {
     return (
       <div className="max-w-md mx-auto px-4 py-20 text-center">
@@ -241,9 +276,55 @@ export default function AccountPage() {
   const tierName = subscription?.tier
     ? subscription.tier.charAt(0).toUpperCase() + subscription.tier.slice(1)
     : null;
+  const showTermsOnboarding = Boolean(user.requires_terms_acceptance);
 
   return (
     <div className="max-w-lg mx-auto px-4 sm:px-6 py-10 sm:py-16">
+      {showTermsOnboarding && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="onboarding-title"
+            className="w-full max-w-lg rounded-2xl border border-gray-200 bg-white p-6 shadow-2xl dark:border-gray-700 dark:bg-gray-900"
+          >
+            <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-red-600 dark:text-red-400">Welcome to Toolblip</p>
+            <h2 id="onboarding-title" className="mb-3 text-2xl font-bold text-gray-900 dark:text-white">Complete your account setup</h2>
+            <p className="mb-5 text-sm text-gray-600 dark:text-gray-300">
+              Accept the Terms and Conditions and Privacy Policy to continue. After this, you can choose a subscription or keep using the free plan.
+            </p>
+            <div className="mb-5 rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700 dark:border-gray-700 dark:bg-gray-950 dark:text-gray-300">
+              <p className="font-medium text-gray-900 dark:text-white">Included in onboarding:</p>
+              <ul className="mt-2 list-disc space-y-1 pl-5">
+                <li>Legal agreement confirmation</li>
+                <li>Profile setup</li>
+                <li>Subscription options</li>
+              </ul>
+            </div>
+            <label htmlFor="onboarding-terms" className="mb-4 flex gap-3 text-sm text-gray-700 dark:text-gray-300">
+              <input
+                id="onboarding-terms"
+                type="checkbox"
+                checked={acceptedOnboardingTerms}
+                onChange={(event) => setAcceptedOnboardingTerms(event.target.checked)}
+                className="mt-1 h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500"
+              />
+              <span>
+                I agree to the <Link href="/terms" className="text-red-600 hover:underline">Terms and Conditions</Link> and <Link href="/privacy" className="text-red-600 hover:underline">Privacy Policy</Link>.
+              </span>
+            </label>
+            {termsError && <p role="alert" className="mb-4 text-sm text-red-600 dark:text-red-400">{termsError}</p>}
+            <button
+              type="button"
+              onClick={handleAcceptTerms}
+              disabled={!acceptedOnboardingTerms || acceptingTerms}
+              className="w-full rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {acceptingTerms ? "Saving..." : "Continue to subscription options"}
+            </button>
+          </div>
+        </div>
+      )}
       <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Account</h1>
       <p className="text-gray-500 dark:text-gray-400 mb-8">Manage your subscription and profile.</p>
 
