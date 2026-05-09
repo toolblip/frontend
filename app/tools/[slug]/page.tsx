@@ -47,7 +47,7 @@ export default async function ToolDetailPage({ params }: PageProps) {
   const tool = tools.find(t => t.slug === slug);
   if (!tool) notFound();
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
+    <div data-testid="tool-detail-shell" className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6">
         <a href="/" className="hover:text-red-600 dark:hover:text-red-400 transition-colors">Home</a>
