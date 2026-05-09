@@ -62,6 +62,7 @@ import CharacterFrequencyCounterClient from '@/components/tools/CharacterFrequen
 import CharacterVarietyCheckerClient from '@/components/tools/CharacterVarietyCheckerClient';
 import OxfordCommaClient from '@/components/tools/OxfordCommaClient';
 import NotebookToHtmlClient from '@/components/tools/NotebookToHtmlClient';
+import OgImageGeneratorClient from '@/components/tools/OgImageGeneratorClient';
 import HexToRgbClient from '@/components/tools/HexToRgbClient';
 import RgbToHexClient from '@/components/tools/RgbToHexClient';
 import RandomStringClient from '@/components/tools/RandomStringClient';
@@ -3515,7 +3516,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'number-base-toolblip': return <BaseToolblipClient />;
     case 'number-to-words-express': return <NumberToWordsClient />;
     case 'number-to-words-tool': return <NumberToWordsClient />;
-    case 'og-image-generator': return <ImageShadowGeneratorClient />;
+    case 'og-image-generator': return <OgImageGeneratorClient />;
     case 'ogg-to-wav': return <AacToWavClient />;
     case 'palindrome-checker-express': return <PalindromeCheckerClient />;
     case 'paragraph-generator': return <RandomParagraphGeneratorClient />;
