@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/app/providers/auth-provider";
 import { useRouter } from "next/navigation";
+import GoogleAuthButton from "@/components/auth/GoogleAuthButton";
 
 export default function LoginForm() {
   const { login } = useAuth();
@@ -63,9 +64,7 @@ export default function LoginForm() {
         <div className="tb-v2-auth-card">
           <h1 className="tb-v2-auth-title">Sign in</h1>
 
-          <a href={googleHref} className="tb-v2-auth-oauth">
-            Continue with Google
-          </a>
+          <GoogleAuthButton href={googleHref} />
 
           <div className="tb-v2-auth-divider" aria-hidden="true">
             <span>or</span>

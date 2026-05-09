@@ -5,6 +5,7 @@ import Link from "next/link";
 import PasswordStrength from "@/components/ui/PasswordStrength";
 import { useAuth } from "@/app/providers/auth-provider";
 import { useRouter } from "next/navigation";
+import GoogleAuthButton from "@/components/auth/GoogleAuthButton";
 
 export default function SignupForm() {
   const { login } = useAuth();
@@ -59,9 +60,7 @@ export default function SignupForm() {
         <div className="tb-v2-auth-card">
           <h1 className="tb-v2-auth-title">Create account</h1>
 
-          <a href="/api/auth/google/start?next=/" className="tb-v2-auth-oauth">
-            Continue with Google
-          </a>
+          <GoogleAuthButton href="/api/auth/google/start?next=/" />
 
           <div className="tb-v2-auth-divider" aria-hidden="true">
             <span>or</span>
