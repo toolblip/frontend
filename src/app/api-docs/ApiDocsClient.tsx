@@ -8,6 +8,7 @@ const FUTURE_BASE_URL = 'https://api.toolblip.com';
 
 type Method = 'GET' | 'POST';
 type AuthMode = 'No auth required' | 'Bearer token required';
+type HeaderSpec = { name: string; value: string; when: string };
 
 type Field = {
   name: string;
@@ -26,6 +27,7 @@ type Endpoint = {
   auth: AuthMode;
   status: string;
   responseShape: string;
+  headers: HeaderSpec[];
   body?: Field[];
   curl: string;
   response: string;
@@ -42,6 +44,7 @@ const endpoints: Endpoint[] = [
     auth: 'No auth required',
     status: '200 OK',
     responseShape: '{ tools: { tools: [...] } }',
+    headers: [{ name: 'Accept', value: 'application/json', when: 'Recommended for all requests' }],
     curl: `curl "${BASE_URL}/api/tools" \\\n  -H "Accept: application/json"`,
     response: `{
   "tools": {
@@ -70,6 +73,7 @@ const endpoints: Endpoint[] = [
     auth: 'No auth required',
     status: '200 OK',
     responseShape: '{ tool }',
+    headers: [{ name: 'Accept', value: 'application/json', when: 'Recommended for all requests' }],
     curl: `curl "${BASE_URL}/api/tools/json-formatter" \\\n  -H "Accept: application/json"`,
     response: `{
   "tool": {
@@ -94,6 +98,10 @@ const endpoints: Endpoint[] = [
     auth: 'No auth required',
     status: '201 Created',
     responseShape: '{ user, token }',
+    headers: [
+      { name: 'Content-Type', value: 'application/json', when: 'Required when sending JSON body' },
+      { name: 'Accept', value: 'application/json', when: 'Recommended for all requests' },
+    ],
     body: [
       { name: 'name', type: 'string', required: true, description: 'Display name for the account.' },
       { name: 'email', type: 'string', required: true, description: 'Unique email address.' },
@@ -126,6 +134,10 @@ const endpoints: Endpoint[] = [
     auth: 'No auth required',
     status: '200 OK',
     responseShape: '{ user, token }',
+    headers: [
+      { name: 'Content-Type', value: 'application/json', when: 'Required when sending JSON body' },
+      { name: 'Accept', value: 'application/json', when: 'Recommended for all requests' },
+    ],
     body: [
       { name: 'email', type: 'string', required: true, description: 'Account email address.' },
       { name: 'password', type: 'string', required: true, description: 'Account password.' },
@@ -154,6 +166,10 @@ const endpoints: Endpoint[] = [
     auth: 'Bearer token required',
     status: '200 OK',
     responseShape: '{ message }',
+    headers: [
+      { name: 'Authorization', value: 'Bearer YOUR_TOKEN', when: 'Required' },
+      { name: 'Accept', value: 'application/json', when: 'Recommended for all requests' },
+    ],
     curl: `curl -X POST "${BASE_URL}/api/auth/logout" \\\n  -H "Authorization: Bearer YOUR_TOKEN" \\\n  -H "Accept: application/json"`,
     response: `{
   "message": "Logged out successfully"
@@ -169,6 +185,10 @@ const endpoints: Endpoint[] = [
     auth: 'Bearer token required',
     status: '200 OK',
     responseShape: '{ user }',
+    headers: [
+      { name: 'Authorization', value: 'Bearer YOUR_TOKEN', when: 'Required' },
+      { name: 'Accept', value: 'application/json', when: 'Recommended for all requests' },
+    ],
     curl: `curl "${BASE_URL}/api/auth/user" \\\n  -H "Authorization: Bearer YOUR_TOKEN" \\\n  -H "Accept: application/json"`,
     response: `{
   "user": {
@@ -256,6 +276,22 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
       <div className="mt-5 flex flex-wrap items-center gap-3 rounded-2xl bg-slate-50 p-3 font-mono text-sm dark:bg-slate-950/60">
         <span className={`rounded-lg border px-2.5 py-1 text-xs font-black ${methodClass[endpoint.method]}`}>{endpoint.method}</span>
         <span className="break-all text-slate-900 dark:text-slate-100">{endpoint.path}</span>
+      </div>
+
+      <div className="mt-6">
+        <h4 className="text-sm font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Headers</h4>
+        <div className="mt-3 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800">
+          <div className="hidden grid-cols-[1fr_1.4fr_1.4fr] bg-slate-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:bg-slate-950 dark:text-slate-400 md:grid">
+            <span>Name</span><span>Value</span><span>When</span>
+          </div>
+          {endpoint.headers.map((header) => (
+            <div key={`${endpoint.id}-${header.name}`} className="grid gap-2 border-t border-slate-200 px-4 py-3 text-sm first:border-t-0 dark:border-slate-800 md:grid-cols-[1fr_1.4fr_1.4fr] md:gap-3 md:first:border-t">
+              <code className="text-slate-900 dark:text-slate-100">{header.name}</code>
+              <code className="break-all text-slate-700 dark:text-slate-300">{header.value}</code>
+              <span className="text-slate-600 dark:text-slate-300">{header.when}</span>
+            </div>
+          ))}
+        </div>
       </div>
 
       {endpoint.body ? (
