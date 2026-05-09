@@ -437,7 +437,7 @@ export default function ApiDocsClient() {
           <section id="authentication" className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
             <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Authentication</h2>
             <p className="mt-3 text-slate-600 dark:text-slate-300">
-              Register or log in to receive a token, then send it in the <InlineCode>Authorization</InlineCode> header as <InlineCode>Bearer YOUR_TOKEN</InlineCode>.
+              Register or log in to receive a token, then send it in the <InlineCode>Authorization</InlineCode> header as <InlineCode>Bearer YOUR_TOKEN</InlineCode>. Keep tokens private and never send them in query strings.
             </p>
             <div className="mt-5 grid gap-4 xl:grid-cols-2">
               <CodeBlock label="Authorization header" code={'Authorization: Bearer YOUR_TOKEN'} />
