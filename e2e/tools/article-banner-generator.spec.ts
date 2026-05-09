@@ -56,6 +56,7 @@ test.describe('Banner Generator tool', () => {
     await expect(page.getByText('CONTENT', { exact: true })).toBeVisible();
     await expect(page.getByText('BACKGROUND', { exact: true })).toBeVisible();
     await expect(page.getByText('TYPOGRAPHY', { exact: true })).toBeVisible();
+    await expect(page.getByText('PATTERN OVERLAY', { exact: true })).toBeVisible();
 
     await expect(page.getByRole('button', { name: 'Solid' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Gradient' })).toBeVisible();
@@ -83,6 +84,19 @@ test.describe('Banner Generator tool', () => {
     await expect(page.getByLabel('Subtitle font size', { exact: true })).toHaveValue('20');
     await expect(page.getByRole('group', { name: 'Text alignment' }).getByRole('button')).toHaveCount(3);
 
+    const patternOverlay = page.getByLabel('Pattern overlay');
+    await expect(patternOverlay).toBeVisible();
+    await expect(patternOverlay).toHaveValue('dots');
+    await expect(patternOverlay.locator('option')).toHaveText([
+      'None',
+      'Diagonal Lines',
+      'Dots',
+      'Grid',
+      'Zigzag',
+      'Crosses',
+      'Triangles',
+    ]);
+
     const download = page.getByRole('link', { name: /Download PNG/i });
     await expect(download).toHaveAttribute('href', /^data:image\/png;base64,/);
     const before = await download.getAttribute('href');
@@ -92,6 +106,8 @@ test.describe('Banner Generator tool', () => {
     await expect(page.getByRole('button', { name: 'Teal Midnight' })).toHaveAttribute('aria-pressed', 'false');
     await page.getByLabel('Title font size', { exact: true }).fill('58');
     await page.getByRole('button', { name: 'Align center' }).click();
+    await patternOverlay.selectOption('grid');
+    await expect(patternOverlay).toHaveValue('grid');
 
     await expect(download).not.toHaveAttribute('href', before ?? '');
   });
