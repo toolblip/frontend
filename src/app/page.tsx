@@ -40,7 +40,7 @@ const STEPS = [
   {
     n: '1',
     title: 'Pick a tool',
-    desc: 'Choose the focused utility that matches the quick job in front of you.',
+    desc: 'Choose the utility that matches the quick job in front of you.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17 9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z" />
@@ -50,7 +50,7 @@ const STEPS = [
   {
     n: '2',
     title: 'Paste your data',
-    desc: 'Type or paste directly into the page — no servers, no uploads, no account.',
+    desc: 'Type or paste in the page — no servers, no uploads, no account.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" />
@@ -60,7 +60,7 @@ const STEPS = [
   {
     n: '3',
     title: 'Get your result',
-    desc: 'Copy the output instantly. Nothing leaves your browser at any point.',
+    desc: 'Copy the output instantly. Nothing leaves your browser.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
@@ -75,7 +75,7 @@ const BENEFITS = [
   {
     emoji: '🔒',
     title: 'Private',
-    desc: 'Your data never leaves your browser — no uploads, no storage, no server roundtrips.',
+    desc: 'Your data never leaves your browser — no uploads, no storage.',
   },
   {
     emoji: '⚡',
@@ -85,7 +85,7 @@ const BENEFITS = [
   {
     emoji: '🎁',
     title: 'Free',
-    desc: 'No signup, no paywall, no hidden limits. Open a tool and get straight to work.',
+    desc: 'No signup, no paywall. Open a tool and get straight to work.',
   },
 ];
 
@@ -124,7 +124,7 @@ export default function HomePage() {
       </section>
 
       {/* ── How it works ── */}
-      <section className="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white/85 dark:bg-gray-900/75 shadow-sm px-5 py-6 sm:px-8">
+      <section className="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white/85 dark:bg-gray-900/75 shadow-sm px-5 py-5 sm:px-7">
         <div className="flex flex-col lg:flex-row lg:items-center gap-5">
           <div className="lg:w-52 text-center lg:text-left">
             <p className="text-sm font-semibold uppercase tracking-widest text-red-600 dark:text-red-400">
@@ -159,7 +159,7 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-        <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-xs font-semibold text-red-700 dark:text-red-300">
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-xs font-semibold text-red-700 dark:text-red-300">
           {PRIVACY_PROMISES.map((promise) => (
             <span
               key={promise}
@@ -199,7 +199,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Why Toolblip? ── */}
-      <section className="space-y-5">
+      <section className="space-y-4">
         <div className="text-center">
           <p className="text-sm font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">
             Why Toolblip?
