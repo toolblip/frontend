@@ -99,11 +99,11 @@ export default function HomePage() {
       {/* ── Hero ── */}
       <section className="text-center space-y-4">
         <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white tracking-tight">
-          Free Online Tools
-          <span className="text-red-600 dark:text-red-400">, in Your Browser</span>
+          Tiny tools for quick fixes
+          <span className="text-red-600 dark:text-red-400">, right in your browser</span>
         </h1>
         <p className="text-lg text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
-          {tools.length}+ focused utilities for text, encoding, development, and more — built to run locally in your browser, with no signup and no uploads.
+          {tools.length}+ focused utilities for text, encoding, development, and more — private by default, instant to use, and built with no signup or uploads.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <a
@@ -220,6 +220,7 @@ export default function HomePage() {
               </div>
               <h3 className="font-semibold text-gray-900 dark:text-white text-base">{b.title}</h3>
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">{b.desc}</p>
+              <div className="mt-4 h-1 w-10 rounded-full bg-red-100 dark:bg-red-900/60" aria-hidden="true" />
             </div>
           ))}
         </div>
