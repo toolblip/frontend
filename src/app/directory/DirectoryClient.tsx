@@ -144,6 +144,8 @@ export function DirectoryClient() {
             onChange={(event) => setQuery(event.target.value)}
             placeholder={`Search ${tools.length} tools by name or description…`}
             aria-label="Search tools by name or description"
+            autoComplete="off"
+            spellCheck={false}
             className="w-full pl-10 pr-16 py-3 text-sm bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400 focus:border-transparent transition-shadow"
           />
           <div className="absolute inset-y-0 right-3 flex items-center gap-1.5">
