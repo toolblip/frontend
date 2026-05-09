@@ -35,13 +35,13 @@ const categories = Object.entries(categoryCounts)
 // ─── How it works ───────────────────────────────────────────────────────
 
 const WORKFLOW = 'Pick a tool → Paste your data → Get your result';
-const LOCAL_FIRST_NOTE = 'Everything runs locally in your tab — no servers, no uploads, no account gate.';
+const LOCAL_FIRST_NOTE = 'Everything runs locally in your tab — no servers, no uploads, nothing leaves your browser.';
 
 const STEPS = [
   {
     n: '1',
     title: 'Pick a tool',
-    desc: 'Choose the focused utility that matches the job in front of you.',
+    desc: 'Jump straight into the focused utility that matches the job in front of you.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17 9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z" />
@@ -51,7 +51,7 @@ const STEPS = [
   {
     n: '2',
     title: 'Paste your data',
-    desc: 'Drop text, JSON, URLs, or values straight into the page.',
+    desc: 'Drop text, JSON, URLs, or values directly into the page — never into an upload queue.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" />
@@ -107,7 +107,7 @@ export default function HomePage() {
           <span className="text-red-600 dark:text-red-400"> that don’t touch your data</span>
         </h1>
         <p className="text-lg text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
-          {tools.length}+ focused utilities for text, encoding, development, and everyday cleanup — instant, private, and ready without signup.
+          {tools.length}+ focused utilities for text, encoding, development, and everyday cleanup — open a tool, paste data, and get the result without signup or uploads.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <a
@@ -190,7 +190,7 @@ export default function HomePage() {
             Jump to a category
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            {CATEGORY_SUMMARY} grouped so you can skip straight to the job.
+            {CATEGORY_SUMMARY} grouped so you can skip browsing and land on the right utility.
           </p>
         </div>
         <div className="flex flex-wrap justify-center gap-2">
@@ -220,7 +220,7 @@ export default function HomePage() {
             Handy utilities without the usual friction.
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 max-w-2xl mx-auto">
-            Toolblip keeps everyday text, developer, and encoding tasks local, immediate, and refreshingly low-friction.
+            Toolblip keeps everyday text, developer, and encoding tasks local, immediate, and refreshingly low-friction — exactly how quick tools should feel.
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
