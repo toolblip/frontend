@@ -103,7 +103,7 @@ export default function HomePage() {
           <span className="text-red-600 dark:text-red-400">, right in your browser</span>
         </h1>
         <p className="text-lg text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
-          {tools.length}+ focused utilities for text, encoding, development, and more — private by default, instant to use, and built with no signup or uploads.
+          {tools.length}+ focused utilities for text, encoding, development, and more — private by default, instant in your tab, and built with no signup or uploads.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <a
@@ -206,7 +206,7 @@ export default function HomePage() {
             Handy utilities without the usual friction.
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 max-w-2xl mx-auto">
-            Toolblip keeps everyday text, developer, and encoding tasks simple: choose the utility you need, work locally, copy the result.
+            Toolblip keeps everyday text, developer, and encoding tasks simple: choose a utility, work locally, copy the result.
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
