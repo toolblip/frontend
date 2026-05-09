@@ -27,6 +27,15 @@ function normalizeSearch(value: string) {
   return value.trim().toLowerCase();
 }
 
+function matchesSearch(tool: (typeof tools)[number], normalizedQuery: string) {
+  if (!normalizedQuery) return true;
+
+  return (
+    tool.name.toLowerCase().includes(normalizedQuery) ||
+    tool.description.toLowerCase().includes(normalizedQuery)
+  );
+}
+
 export function DirectoryClient() {
   const [query, setQuery] = useState('');
   const [activeTab, setActiveTab] = useState<CategoryTab>('All');
@@ -37,15 +46,17 @@ export function DirectoryClient() {
   const filteredTools = useMemo(() => {
     const normalizedQuery = normalizeSearch(query);
 
-    return toolsForTab(activeTab).filter((tool) => {
-      if (!normalizedQuery) return true;
-
-      return (
-        tool.name.toLowerCase().includes(normalizedQuery) ||
-        tool.description.toLowerCase().includes(normalizedQuery)
-      );
-    });
+    return toolsForTab(activeTab).filter((tool) => matchesSearch(tool, normalizedQuery));
   }, [activeTab, query]);
+
+  const tabCounts = useMemo(() => {
+    const normalizedQuery = normalizeSearch(query);
+
+    return CATEGORY_TABS.reduce<Record<CategoryTab, number>>((counts, tab) => {
+      counts[tab] = toolsForTab(tab).filter((tool) => matchesSearch(tool, normalizedQuery)).length;
+      return counts;
+    }, {} as Record<CategoryTab, number>);
+  }, [query]);
 
   useEffect(() => {
     function focusSearch(event: globalThis.KeyboardEvent) {
@@ -161,7 +172,7 @@ export function DirectoryClient() {
         >
           {CATEGORY_TABS.map((tab, index) => {
             const isActive = activeTab === tab;
-            const count = toolsForTab(tab).length;
+            const count = tabCounts[tab];
 
             return (
               <button
