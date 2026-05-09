@@ -17,6 +17,38 @@ test.describe('Banner Generator tool', () => {
     expect(shellBox?.width).toBeGreaterThan(1080);
   });
 
+  test('renders FAQs and FAQPage structured data on tool detail pages', async ({ page }) => {
+    await page.goto('/tools/og-image-generator');
+
+    await expect(page.getByRole('heading', { name: /Frequently asked questions about the Banner Generator/i })).toBeVisible();
+    await expect(page.getByText('What is the Banner Generator?')).toBeVisible();
+
+    const faqSchema = await page.locator('script[type="application/ld+json"]').evaluateAll((scripts) =>
+      scripts.map((script) => {
+        try {
+          return JSON.parse(script.textContent || '{}');
+        } catch {
+          return null;
+        }
+      })
+    );
+
+    expect(faqSchema).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: expect.arrayContaining([
+            expect.objectContaining({
+              '@type': 'Question',
+              name: 'What is the Banner Generator?',
+            }),
+          ]),
+        }),
+      ])
+    );
+  });
+
   test('renders a true 1200x630 preview and exports the same canvas as PNG', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 1000 });
     await page.goto('/tools/og-image-generator');

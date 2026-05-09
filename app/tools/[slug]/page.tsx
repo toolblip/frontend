@@ -3,6 +3,8 @@ import type { Metadata } from 'next';
 import { tools } from '@/data/tools';
 import { ToolUI } from './ToolUI';
 import ShareButtons from '@/src/components/ShareButtons';
+import FaqSection from '@/components/v2/FaqSection';
+import { getFaqs } from '@/lib/faq';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -46,6 +48,8 @@ export default async function ToolDetailPage({ params }: PageProps) {
   if (REDIRECTS[slug]) redirect(`/tools/${REDIRECTS[slug]}`);
   const tool = tools.find(t => t.slug === slug);
   if (!tool) notFound();
+  const faqs = getFaqs(tool);
+
   return (
     <div data-testid="tool-detail-shell" className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       {/* Breadcrumb */}
@@ -78,6 +82,8 @@ export default async function ToolDetailPage({ params }: PageProps) {
       <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
         <ToolUI tool={tool} />
       </div>
+
+      <FaqSection toolName={tool.name} faqs={faqs} />
     </div>
   );
 }
