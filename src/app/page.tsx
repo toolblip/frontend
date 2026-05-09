@@ -40,7 +40,7 @@ const STEPS = [
   {
     n: '1',
     title: 'Pick a tool',
-    desc: 'Choose the utility that matches the quick job in front of you.',
+    desc: 'Start with the tiny utility that matches the job in front of you.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17 9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z" />
@@ -50,7 +50,7 @@ const STEPS = [
   {
     n: '2',
     title: 'Paste your data',
-    desc: 'Type or paste in the page — no servers, no uploads, no account.',
+    desc: 'Drop text, JSON, URLs, or values straight into the page.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" />
@@ -60,7 +60,7 @@ const STEPS = [
   {
     n: '3',
     title: 'Get your result',
-    desc: 'Copy the output instantly. Nothing leaves your browser.',
+    desc: 'Copy the finished output instantly from your own tab.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
@@ -75,7 +75,7 @@ const BENEFITS = [
   {
     emoji: '🔒',
     title: 'Private',
-    desc: 'Your data never leaves your browser — no uploads, no storage.',
+    desc: 'Data never leaves your browser — no uploads, no hidden storage.',
   },
   {
     emoji: '⚡',
@@ -85,7 +85,7 @@ const BENEFITS = [
   {
     emoji: '🎁',
     title: 'Free',
-    desc: 'No signup, no paywall. Open a tool and get straight to work.',
+    desc: 'No signup, no paywall, no “trial expired” surprise. Just open and use.',
   },
 ];
 
@@ -101,11 +101,11 @@ export default function HomePage() {
       {/* ── Hero ── */}
       <section className="text-center space-y-4">
         <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white tracking-tight">
-          Tiny tools for quick fixes
-          <span className="text-red-600 dark:text-red-400">, right in your browser</span>
+          Quick browser tools
+          <span className="text-red-600 dark:text-red-400"> that don’t touch your data</span>
         </h1>
         <p className="text-lg text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
-          {tools.length}+ focused utilities for text, encoding, development, and more — private by default, instant in your tab, and built with no signup or uploads.
+          {tools.length}+ focused utilities for text, encoding, development, and more — local-first, instant in your tab, and built with no signup or uploads.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <a
@@ -130,7 +130,7 @@ export default function HomePage() {
             <p className="text-sm font-semibold uppercase tracking-widest text-red-600 dark:text-red-400">
               How it works
             </p>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">
               {WORKFLOW} — no servers, no uploads, nothing leaves your browser.
             </p>
           </div>
@@ -208,7 +208,7 @@ export default function HomePage() {
             Handy utilities without the usual friction.
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 max-w-2xl mx-auto">
-            Toolblip keeps everyday text, developer, and encoding tasks local, immediate, and easy to trust.
+            Toolblip keeps everyday text, developer, and encoding tasks local, immediate, and refreshingly low-friction.
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
