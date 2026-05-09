@@ -27,6 +27,16 @@ const DIRECTIONS = [
   { label: '140° Angle', value: '140' },
 ] as const;
 
+const PATTERN_OVERLAYS = [
+  { label: 'None', value: 'none' },
+  { label: 'Diagonal Lines', value: 'diagonal-lines' },
+  { label: 'Dots', value: 'dots' },
+  { label: 'Grid', value: 'grid' },
+  { label: 'Zigzag', value: 'zigzag' },
+  { label: 'Crosses', value: 'crosses' },
+  { label: 'Triangles', value: 'triangles' },
+] as const;
+
 const WIDTH = 1200;
 const HEIGHT = 630;
 
@@ -34,6 +44,7 @@ type PresetName = (typeof PRESETS)[number]['name'];
 type BackgroundMode = 'solid' | 'gradient';
 type TextAlign = 'left' | 'center' | 'right';
 type DirectionValue = (typeof DIRECTIONS)[number]['value'];
+type PatternOverlay = (typeof PATTERN_OVERLAYS)[number]['value'];
 
 function normalizeHex(value: string, fallback: string) {
   const trimmed = value.trim();
@@ -82,6 +93,93 @@ function textPosition(align: TextAlign) {
   return { x: 88, canvasAlign: 'left' as CanvasTextAlign, maxWidth: 980 };
 }
 
+function drawPatternOverlay(ctx: CanvasRenderingContext2D, pattern: PatternOverlay) {
+  if (pattern === 'none') return;
+
+  ctx.save();
+  ctx.strokeStyle = '#ffffff';
+  ctx.fillStyle = '#ffffff';
+  ctx.lineWidth = 2;
+  ctx.globalAlpha = 0.14;
+
+  if (pattern === 'diagonal-lines') {
+    for (let x = -HEIGHT; x < WIDTH; x += 72) {
+      ctx.beginPath();
+      ctx.moveTo(x, HEIGHT);
+      ctx.lineTo(x + HEIGHT, 0);
+      ctx.stroke();
+    }
+  }
+
+  if (pattern === 'dots') {
+    ctx.globalAlpha = 0.18;
+    for (let y = 54; y < HEIGHT; y += 72) {
+      for (let x = 54; x < WIDTH; x += 72) {
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+
+  if (pattern === 'grid') {
+    for (let x = 0; x <= WIDTH; x += 72) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, HEIGHT);
+      ctx.stroke();
+    }
+    for (let y = 0; y <= HEIGHT; y += 72) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(WIDTH, y);
+      ctx.stroke();
+    }
+  }
+
+  if (pattern === 'zigzag') {
+    for (let y = 52; y < HEIGHT; y += 86) {
+      ctx.beginPath();
+      for (let x = -40; x <= WIDTH + 40; x += 40) {
+        const pointY = y + (Math.floor((x + 40) / 40) % 2 === 0 ? 18 : -18);
+        if (x === -40) ctx.moveTo(x, pointY);
+        else ctx.lineTo(x, pointY);
+      }
+      ctx.stroke();
+    }
+  }
+
+  if (pattern === 'crosses') {
+    ctx.globalAlpha = 0.16;
+    for (let y = 58; y < HEIGHT; y += 88) {
+      for (let x = 58; x < WIDTH; x += 88) {
+        ctx.beginPath();
+        ctx.moveTo(x - 10, y - 10);
+        ctx.lineTo(x + 10, y + 10);
+        ctx.moveTo(x + 10, y - 10);
+        ctx.lineTo(x - 10, y + 10);
+        ctx.stroke();
+      }
+    }
+  }
+
+  if (pattern === 'triangles') {
+    ctx.globalAlpha = 0.13;
+    for (let y = 64; y < HEIGHT; y += 92) {
+      for (let x = 64; x < WIDTH; x += 92) {
+        ctx.beginPath();
+        ctx.moveTo(x, y - 14);
+        ctx.lineTo(x + 14, y + 12);
+        ctx.lineTo(x - 14, y + 12);
+        ctx.closePath();
+        ctx.stroke();
+      }
+    }
+  }
+
+  ctx.restore();
+}
+
 function SliderLabel({ children, value }: { children: string; value: number }) {
   return (
     <div className="flex items-center justify-between text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -104,6 +202,7 @@ export default function OgImageGeneratorClient() {
   const [titleFontSize, setTitleFontSize] = useState(44);
   const [subtitleFontSize, setSubtitleFontSize] = useState(20);
   const [alignment, setAlignment] = useState<TextAlign>('left');
+  const [patternOverlay, setPatternOverlay] = useState<PatternOverlay>('dots');
   const [downloadUrl, setDownloadUrl] = useState('');
 
   const preset = useMemo(
@@ -144,16 +243,7 @@ export default function OgImageGeneratorClient() {
       }
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-      ctx.globalAlpha = 0.14;
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 2;
-      for (let x = -HEIGHT; x < WIDTH; x += 72) {
-        ctx.beginPath();
-        ctx.moveTo(x, HEIGHT);
-        ctx.lineTo(x + HEIGHT, 0);
-        ctx.stroke();
-      }
-      ctx.globalAlpha = 1;
+      drawPatternOverlay(ctx, patternOverlay);
 
       ctx.fillStyle = 'rgba(255,255,255,0.12)';
       ctx.beginPath();
@@ -214,7 +304,20 @@ export default function OgImageGeneratorClient() {
       cancelled = true;
       window.clearTimeout(timeout);
     };
-  }, [alignment, backgroundMode, direction, footer, fromColor, preset, subtitle, subtitleFontSize, title, titleFontSize, toColor]);
+  }, [
+    alignment,
+    backgroundMode,
+    direction,
+    footer,
+    fromColor,
+    patternOverlay,
+    preset,
+    subtitle,
+    subtitleFontSize,
+    title,
+    titleFontSize,
+    toColor,
+  ]);
 
   const choosePreset = (item: (typeof PRESETS)[number]) => {
     setPresetName(item.name);
@@ -439,6 +542,29 @@ export default function OgImageGeneratorClient() {
                   {icon}
                 </button>
               ))}
+            </div>
+
+            <div className="space-y-4 border-t border-gray-100 pt-5 dark:border-gray-800">
+              <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
+                <span className="text-base text-violet-500" aria-hidden="true">▦</span>
+                <span>PATTERN OVERLAY</span>
+              </div>
+
+              <label className="block space-y-2">
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Pattern</span>
+                <select
+                  aria-label="Pattern overlay"
+                  value={patternOverlay}
+                  onChange={(event) => setPatternOverlay(event.target.value as PatternOverlay)}
+                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                >
+                  {PATTERN_OVERLAYS.map((item) => (
+                    <option key={item.value} value={item.value}>
+                      {item.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
             </div>
 
             {downloadUrl && (
