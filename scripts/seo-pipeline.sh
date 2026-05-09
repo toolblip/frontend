@@ -71,7 +71,7 @@ release_lock() {
 }
 
 log() {
-    echo "[$(date '+%H:%M:%S')] $1" | tee -a "$LOGFILE"
+    echo "[$(date '+%H:%M:%S')] $1" | tee -a "$LOGFILE" >&2
 }
 
 # ─── Queue Management ──────────────────────────────────────────────────────────
@@ -517,7 +517,18 @@ main() {
 
         if [[ -z "$generated_file" || ! -f "$generated_file" ]]; then
             log "  Skipping remaining steps — no file generated"
-            complete_topic "$topic"
+            qtmp=$(mktemp)
+            python3 - "$QUEUE_FILE" "$topic" > "$qtmp" <<'PYQ'
+import json, sys
+queue_file, topic = sys.argv[1], sys.argv[2]
+with open(queue_file) as f:
+    q = json.load(f)
+q['in_progress'] = [t for t in q.get('in_progress', []) if t != topic]
+if topic not in q.get('pending', []):
+    q.setdefault('pending', []).insert(0, topic)
+print(json.dumps(q, indent=2))
+PYQ
+            mv "$qtmp" "$QUEUE_FILE"
             topic_num=$((topic_num + 1))
             continue
         fi
