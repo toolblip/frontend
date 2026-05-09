@@ -17,7 +17,7 @@ test.describe('Banner Generator tool', () => {
     expect(shellBox?.width).toBeGreaterThan(1080);
   });
 
-  test('renders FAQs and FAQPage structured data on every tool detail page', async ({ page }) => {
+  test('renders FAQs and FAQPage structured data on tool detail pages', async ({ page }) => {
     await page.goto('/tools/og-image-generator');
 
     await expect(page.getByRole('heading', { name: /Frequently asked questions about the Banner Generator/i })).toBeVisible();
@@ -36,6 +36,7 @@ test.describe('Banner Generator tool', () => {
     expect(faqSchema).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
+          '@context': 'https://schema.org',
           '@type': 'FAQPage',
           mainEntity: expect.arrayContaining([
             expect.objectContaining({
