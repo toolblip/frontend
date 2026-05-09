@@ -225,7 +225,19 @@ function CopyButton({ value }: { value: string }) {
   const [copied, setCopied] = useState(false);
 
   async function copy() {
-    await navigator.clipboard?.writeText(value);
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(value);
+    } else {
+      const textarea = document.createElement('textarea');
+      textarea.value = value;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'fixed';
+      textarea.style.left = '-9999px';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+    }
     setCopied(true);
     window.setTimeout(() => setCopied(false), 1400);
   }
@@ -234,6 +246,7 @@ function CopyButton({ value }: { value: string }) {
     <button
       type="button"
       onClick={copy}
+      aria-label={`Copy ${value.split('\n')[0]}`}
       className="rounded-md border border-slate-700/70 px-2 py-1 text-xs font-medium text-slate-300 transition hover:border-slate-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-[#58D65D]"
     >
       {copied ? 'Copied' : 'Copy'}
