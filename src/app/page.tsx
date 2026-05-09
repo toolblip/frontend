@@ -122,21 +122,21 @@ export default function HomePage() {
       </section>
 
       {/* ── How it works ── */}
-      <section className="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/70 shadow-sm px-5 py-6 sm:px-8">
+      <section className="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white/85 dark:bg-gray-900/75 shadow-sm px-5 py-6 sm:px-8">
         <div className="flex flex-col lg:flex-row lg:items-center gap-5">
-          <div className="lg:w-48 text-center lg:text-left">
+          <div className="lg:w-52 text-center lg:text-left">
             <p className="text-sm font-semibold uppercase tracking-widest text-red-600 dark:text-red-400">
               How it works
             </p>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-              Pick a tool → paste your data → get your result. No servers, no uploads, nothing leaves your browser.
+              A simple browser-only workflow: pick a tool → paste your data → get your result.
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1">
             {STEPS.map((s, index) => (
               <div
                 key={s.n}
-                className="relative flex items-center gap-3 rounded-2xl bg-gray-50 dark:bg-gray-950/50 border border-gray-100 dark:border-gray-800 p-4"
+                className="relative flex items-center gap-3 rounded-2xl bg-gray-50 dark:bg-gray-950/50 border border-gray-100 dark:border-gray-800 p-4 hover:border-red-200 dark:hover:border-red-900/70 transition-colors"
               >
                 {index < STEPS.length - 1 && (
                   <span className="hidden sm:block absolute -right-2 top-1/2 -translate-y-1/2 text-gray-300 dark:text-gray-700 text-lg">
@@ -157,11 +157,11 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-        <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+        <div className="mt-5 flex flex-wrap items-center justify-center gap-2 text-xs font-semibold text-red-700 dark:text-red-300">
           {PRIVACY_PROMISES.map((promise) => (
             <span
               key={promise}
-              className="rounded-full border border-red-100 dark:border-red-900/70 bg-red-50/70 dark:bg-red-950/30 px-3 py-1 text-xs font-semibold text-red-700 dark:text-red-300"
+              className="rounded-full border border-red-100 dark:border-red-900/70 bg-red-50/70 dark:bg-red-950/30 px-3 py-1"
             >
               {promise}
             </span>
@@ -176,7 +176,7 @@ export default function HomePage() {
             Jump to a category
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            {CATEGORY_SUMMARY} ready for the kind of task you have in mind.
+            {CATEGORY_SUMMARY} grouped so you can skip straight to the job.
           </p>
         </div>
         <div className="flex flex-wrap justify-center gap-2">
@@ -184,7 +184,7 @@ export default function HomePage() {
             <Link
               key={cat.name}
               href={`/tools?category=${encodeURIComponent(cat.name)}`}
-              className="inline-flex items-center gap-2 px-4 py-1.5 text-sm font-medium rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-red-100 dark:hover:bg-red-900/40 hover:text-red-700 dark:hover:text-red-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-950 transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-1.5 text-sm font-medium rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-gray-700 dark:text-gray-200 hover:bg-red-50 dark:hover:bg-red-950/30 hover:border-red-200 dark:hover:border-red-900 hover:text-red-700 dark:hover:text-red-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-950 transition-colors"
               aria-label={`Browse ${cat.count} ${cat.name} tools`}
             >
               <span>{cat.name}</span>
@@ -206,14 +206,14 @@ export default function HomePage() {
             Handy utilities without the usual friction.
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 max-w-2xl mx-auto">
-            Toolblip keeps everyday text, developer, and encoding tasks simple: choose a utility, work locally, copy the result.
+            Toolblip keeps everyday text, developer, and encoding tasks local, immediate, and easy to trust.
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {BENEFITS.map((b) => (
             <div
               key={b.title}
-              className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-red-200 dark:hover:border-red-900 transition-all"
+              className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:border-red-200 dark:hover:border-red-900 transition-all"
             >
               <div className="w-11 h-11 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-2xl mb-4">
                 {b.emoji}
