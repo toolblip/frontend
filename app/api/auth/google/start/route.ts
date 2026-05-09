@@ -33,12 +33,15 @@ export async function GET(req: NextRequest) {
 
   try {
     const laravelRes = await fetch(upstream, {
-      headers: { Accept: "application/json" },
+      headers: {
+        Accept: "application/json",
+        "User-Agent": "Mozilla/5.0 (compatible; ToolblipOAuth/1.0; +https://toolblip.com)",
+      },
     });
     const data = await laravelRes.json();
 
     if (!laravelRes.ok || !data.authorization_url) {
-      return NextResponse.redirect(new URL("/login?oauth_error=google_unavailable", req.nextUrl.origin));
+      return NextResponse.redirect(new URL("/login?oauth_error=google_unavailable", origin));
     }
 
     const response = NextResponse.redirect(data.authorization_url);
@@ -65,6 +68,6 @@ export async function GET(req: NextRequest) {
     });
     return response;
   } catch {
-    return NextResponse.redirect(new URL("/login?oauth_error=google_unavailable", req.nextUrl.origin));
+    return NextResponse.redirect(new URL("/login?oauth_error=google_unavailable", origin));
   }
 }
