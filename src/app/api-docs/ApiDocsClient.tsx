@@ -222,6 +222,19 @@ const starterRequest = `curl "${BASE_URL}/api/tools" \\\n  -H "Accept: applicati
 
 const authenticatedRequest = `curl "${BASE_URL}/api/auth/user" \\\n  -H "Authorization: Bearer YOUR_TOKEN" \\\n  -H "Accept: application/json"`;
 
+const tokenFlow = `# 1. Register or login to receive a token
+TOKEN=$(curl -s -X POST "${BASE_URL}/api/auth/login" \\\n  -H "Content-Type: application/json" \\\n  -H "Accept: application/json" \\\n  -d '{"email":"jane@example.com","password":"your-password"}' \\\n  | jq -r .token)
+
+# 2. Use the token on protected endpoints
+curl "${BASE_URL}/api/auth/user" \\\n  -H "Authorization: Bearer $TOKEN" \\\n  -H "Accept: application/json"
+
+# 3. Revoke the token when done
+curl -X POST "${BASE_URL}/api/auth/logout" \\\n  -H "Authorization: Bearer $TOKEN" \\\n  -H "Accept: application/json"`;
+
+const unauthorizedResponse = `{
+  "message": "Unauthenticated."
+}`;
+
 const baseUrlSwap = `# Current production API
 BASE_URL="${BASE_URL}"
 
@@ -428,15 +441,7 @@ export default function ApiDocsClient() {
             </p>
             <div className="mt-5 grid gap-4 xl:grid-cols-2">
               <CodeBlock label="Authorization header" code={'Authorization: Bearer YOUR_TOKEN'} />
-              <CodeBlock label="Quick start" code={`TOKEN=$(curl -s -X POST "${BASE_URL}/api/auth/login" \\
-  -H "Content-Type: application/json" \\
-  -H "Accept: application/json" \\
-  -d '{"email":"jane@example.com","password":"your-password"}' \\
-  | jq -r .token)
-
-curl "${BASE_URL}/api/auth/user" \\
-  -H "Authorization: Bearer $TOKEN" \\
-  -H "Accept: application/json"`} />
+              <CodeBlock label="Token lifecycle" code={tokenFlow} />
             </div>
           </section>
 
@@ -544,6 +549,7 @@ curl "${BASE_URL}/api/auth/user" \\
     "email": ["The email field is required."]
   }
 }`} />
+              <CodeBlock label="Unauthorized" code={unauthorizedResponse} />
               <div className="rounded-2xl border border-slate-200 p-4 text-sm dark:border-slate-800">
                 <p className="font-semibold text-slate-950 dark:text-white">Common status codes</p>
                 <ul className="mt-3 space-y-2 text-slate-600 dark:text-slate-300">
