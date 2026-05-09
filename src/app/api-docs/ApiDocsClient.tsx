@@ -54,9 +54,9 @@ const endpoints: Endpoint[] = [
         "slug": "json-formatter",
         "name": "JSON Formatter",
         "description": "Format, validate, and prettify JSON data instantly.",
-        "category": "developer",
+        "category": "Developer",
         "is_pro": false,
-        "emoji": "{}",
+        "emoji": "🧰",
         "created_at": "2026-01-15T10:30:00.000000Z"
       }
     ]
@@ -81,9 +81,9 @@ const endpoints: Endpoint[] = [
     "slug": "json-formatter",
     "name": "JSON Formatter",
     "description": "Format, validate, and prettify JSON data instantly.",
-    "category": "developer",
+    "category": "Developer",
     "is_pro": false,
-    "emoji": "{}",
+    "emoji": "🧰",
     "created_at": "2026-01-15T10:30:00.000000Z"
   }
 }`,
@@ -419,6 +419,31 @@ curl "${BASE_URL}/api/auth/user" \\
             </p>
             <div className="mt-5">
               <CodeBlock label="Environment setup" code={baseUrlSwap} />
+            </div>
+          </section>
+
+          <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
+            <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Response models</h2>
+            <p className="mt-3 text-slate-600 dark:text-slate-300">
+              Toolblip wraps resources in top-level objects. Tools are returned under <InlineCode>tool</InlineCode> for a single item and under <InlineCode>tools.tools</InlineCode> for the directory list.
+            </p>
+            <div className="mt-5 grid gap-4 xl:grid-cols-2">
+              <CodeBlock label="Tool" code={`{
+  "id": 1,
+  "slug": "json-formatter",
+  "name": "JSON Formatter",
+  "description": "Format, validate, and prettify JSON data instantly.",
+  "category": "Developer",
+  "is_pro": false,
+  "emoji": "🧰",
+  "created_at": "2026-01-15T10:30:00.000000Z"
+}`} />
+              <CodeBlock label="User" code={`{
+  "id": 42,
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "is_pro": false
+}`} />
             </div>
           </section>
 
