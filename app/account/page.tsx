@@ -22,19 +22,58 @@ interface Subscription {
 }
 
 export default function AccountPage() {
-  const { user, token, logout, loading: authLoading } = useAuth();
+  const { user, token, login, logout, loading: authLoading } = useAuth();
   const router = useRouter();
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [loadingPortal, setLoadingPortal] = useState(false);
   const [portalError, setPortalError] = useState<string | null>(null);
   const [checkingSession, setCheckingSession] = useState(false);
+  const [profileName, setProfileName] = useState("");
+  const [profileEmail, setProfileEmail] = useState("");
+  const [profileMessage, setProfileMessage] = useState("");
+  const [profileError, setProfileError] = useState("");
+  const [profileSaving, setProfileSaving] = useState(false);
+  const [verificationMessage, setVerificationMessage] = useState("");
+  const [passwordMessage, setPasswordMessage] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordSaving, setPasswordSaving] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   // Redirect to login if not authenticated (after auth has finished loading)
   useEffect(() => {
-    if (!authLoading && !token) {
+    async function restoreCookieSessionBeforeRedirect() {
+      if (authLoading || token) return;
+
+      for (let attempt = 0; attempt < 2; attempt += 1) {
+        try {
+          const res = await fetch("/api/auth/me", { credentials: "include" });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.user && data.token) {
+              login(data.user, data.token);
+              return;
+            }
+          }
+        } catch {
+          // retry once before redirecting
+        }
+
+        await new Promise((resolve) => setTimeout(resolve, 250));
+      }
+
       router.replace("/login?next=/account");
     }
-  }, [authLoading, token, router]);
+
+    restoreCookieSessionBeforeRedirect();
+  }, [authLoading, token, login, router]);
+
+  useEffect(() => {
+    if (!user) return;
+    setProfileName(user.name);
+    setProfileEmail(user.email);
+  }, [user]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -88,6 +127,93 @@ export default function AccountPage() {
     } catch (err) {
       setPortalError(err instanceof Error ? err.message : "Something went wrong");
       setLoadingPortal(false);
+    }
+  }
+
+  async function handleProfileSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setProfileMessage("");
+    setProfileError("");
+    setVerificationMessage("");
+    setProfileSaving(true);
+
+    try {
+      const res = await fetch("/api/auth/profile", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ name: profileName, email: profileEmail }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || (data.errors ? Object.values(data.errors).flat().join(", ") : "Could not update profile."));
+      }
+
+      if (data.user && token) {
+        login(data.user, token);
+      }
+      setProfileMessage("Profile updated successfully.");
+    } catch (error) {
+      setProfileError(error instanceof Error ? error.message : "Could not update profile.");
+    } finally {
+      setProfileSaving(false);
+    }
+  }
+
+  async function handleResendVerification() {
+    setVerificationMessage("");
+    try {
+      const res = await fetch("/api/auth/resend-verification", {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        credentials: "include",
+      });
+      const data = await res.json();
+      setVerificationMessage(data.message || (res.ok ? "Verification email sent." : "Could not send verification email."));
+    } catch {
+      setVerificationMessage("Could not send verification email.");
+    }
+  }
+
+  async function handlePasswordSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setPasswordMessage("");
+    setPasswordError("");
+
+    if (newPassword !== confirmPassword) {
+      setPasswordError("New passwords do not match.");
+      return;
+    }
+
+    setPasswordSaving(true);
+    try {
+      const res = await fetch("/api/auth/change-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          current_password: currentPassword,
+          password: newPassword,
+          password_confirmation: confirmPassword,
+        }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || (data.errors ? Object.values(data.errors).flat().join(", ") : "Could not change password."));
+      }
+
+      setPasswordMessage("Password changed successfully. Please sign in again.");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      await logout();
+      router.replace("/login?next=/account");
+    } catch (error) {
+      setPasswordError(error instanceof Error ? error.message : "Could not change password.");
+    } finally {
+      setPasswordSaving(false);
     }
   }
 
@@ -149,6 +275,81 @@ export default function AccountPage() {
             Sign out
           </button>
         </div>
+      </div>
+
+      {user.email_verified_at ? null : (
+        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4 mb-6">
+          <p className="text-sm text-amber-800 dark:text-amber-300 font-medium">Email verification needed</p>
+          <p className="text-sm text-amber-700 dark:text-amber-400 mt-1">Verify your email before using paid and account-sensitive features.</p>
+          <button
+            type="button"
+            onClick={handleResendVerification}
+            className="mt-3 px-3 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-sm font-medium transition-colors"
+          >
+            Resend verification email
+          </button>
+          {verificationMessage && <p role="status" className="text-sm text-amber-700 dark:text-amber-300 mt-2">{verificationMessage}</p>}
+        </div>
+      )}
+
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 mb-6">
+        <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">
+          Profile settings
+        </h2>
+        <form onSubmit={handleProfileSubmit} className="space-y-4">
+          {profileMessage && <p role="status" className="text-sm text-green-600 dark:text-green-400">{profileMessage}</p>}
+          {profileError && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{profileError}</p>}
+          <div>
+            <label htmlFor="profile-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
+            <input
+              id="profile-name"
+              type="text"
+              value={profileName}
+              onChange={(e) => setProfileName(e.target.value)}
+              className="w-full px-3 py-2 bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-lg text-sm"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="profile-email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+            <input
+              id="profile-email"
+              type="email"
+              value={profileEmail}
+              onChange={(e) => setProfileEmail(e.target.value)}
+              className="w-full px-3 py-2 bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-lg text-sm"
+              required
+            />
+          </div>
+          <button type="submit" disabled={profileSaving} className="px-4 py-2 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-lg text-sm font-medium disabled:opacity-50">
+            {profileSaving ? "Saving..." : "Save profile"}
+          </button>
+        </form>
+      </div>
+
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 mb-6">
+        <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">
+          Change password
+        </h2>
+        <form onSubmit={handlePasswordSubmit} className="space-y-4">
+          {passwordMessage && <p role="status" className="text-sm text-green-600 dark:text-green-400">{passwordMessage}</p>}
+          {passwordError && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{passwordError}</p>}
+          <div>
+            <label htmlFor="current-password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Current password</label>
+            <input id="current-password" type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} className="w-full px-3 py-2 bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-lg text-sm" required />
+          </div>
+          <div>
+            <label htmlFor="new-password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">New password</label>
+            <input id="new-password" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className="w-full px-3 py-2 bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-lg text-sm" minLength={8} required />
+          </div>
+          <div>
+            <label htmlFor="confirm-new-password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirm new password</label>
+            <input id="confirm-new-password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="w-full px-3 py-2 bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-lg text-sm" minLength={8} required />
+          </div>
+          <button type="submit" disabled={passwordSaving} className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium disabled:opacity-50">
+            {passwordSaving ? "Changing..." : "Change password"}
+          </button>
+        </form>
       </div>
 
       {/* Subscription Card */}

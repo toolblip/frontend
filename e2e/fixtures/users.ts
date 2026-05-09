@@ -41,6 +41,7 @@ export async function signupByForm(page: Page, user: TestUser) {
   await page.getByLabel('Email').fill(user.email);
   await page.getByLabel('Password', { exact: true }).fill(user.password);
   await page.getByLabel('Confirm password').fill(user.password);
+  await page.getByLabel(/I agree to the Terms and Conditions and Privacy Policy/i).check();
   await page.getByRole('button', { name: 'Create account' }).click();
 }
 

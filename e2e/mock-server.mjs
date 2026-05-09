@@ -36,7 +36,7 @@ function bearer(req) {
 
 function publicUser(user) {
   if (!user) return null;
-  return { id: user.id, name: user.name, email: user.email, role: user.role ?? 'user' };
+  return { id: user.id, name: user.name, email: user.email, role: user.role ?? 'user', email_verified_at: user.email_verified_at ?? null, avatar_url: user.avatar_url ?? null };
 }
 
 function issueToken(email) {
@@ -56,6 +56,7 @@ function reset() {
     email: 'bdd@toolblip.test',
     password: 'Password123!',
     role: 'user',
+    email_verified_at: '2026-01-01T00:00:00.000Z',
   });
   users.set('taken@toolblip.test', {
     id: nextId++,
@@ -63,6 +64,7 @@ function reset() {
     email: 'taken@toolblip.test',
     password: 'Password123!',
     role: 'user',
+    email_verified_at: '2026-01-01T00:00:00.000Z',
   });
 }
 
@@ -98,6 +100,7 @@ const server = http.createServer(async (req, res) => {
       email,
       password: String(body.password),
       role: 'user',
+      email_verified_at: null,
     };
     users.set(email, user);
     const token = issueToken(email);
@@ -116,6 +119,89 @@ const server = http.createServer(async (req, res) => {
     }
     const token = issueToken(email);
     return json(res, 200, { user: publicUser(user), token });
+  }
+
+  if (req.method === 'GET' && url.pathname === '/api/auth/google/redirect') {
+    const state = url.searchParams.get('state') ?? '';
+    const redirectUri = url.searchParams.get('redirect_uri') ?? 'http://127.0.0.1:3200/api/auth/google/callback';
+    const callback = new URL(redirectUri);
+    callback.searchParams.set('code', 'mock-google-code');
+    callback.searchParams.set('state', state);
+    return json(res, 200, { provider: 'google', authorization_url: callback.toString() });
+  }
+
+  if (req.method === 'POST' && url.pathname === '/api/auth/google/callback') {
+    const user = {
+      id: nextId++,
+      name: 'Google OAuth User',
+      email: 'google-oauth@toolblip.test',
+      password: '',
+      role: 'user',
+      google_id: 'mock-google-sub',
+      email_verified_at: '2026-01-01T00:00:00.000Z',
+    };
+    users.set(user.email, user);
+    const token = issueToken(user.email);
+    return json(res, 200, { user: publicUser(user), token });
+  }
+
+
+  if (req.method === 'POST' && url.pathname === '/api/auth/verify-email') {
+    const body = await readJson(req);
+    const email = String(body.email ?? '').toLowerCase();
+    const user = users.get(email);
+    if (!user || body.token !== 'mock-verification-token') {
+      return json(res, 422, { message: 'This verification link is invalid or expired.' });
+    }
+    user.email_verified_at = '2026-01-01T00:00:00.000Z';
+    return json(res, 200, { message: 'Email verified successfully.', user: publicUser(user) });
+  }
+
+  if (req.method === 'POST' && url.pathname === '/api/auth/resend-verification') {
+    const email = tokens.get(bearer(req));
+    const user = email ? users.get(email) : null;
+    if (!user) return json(res, 401, { message: 'Unauthenticated.' });
+    user.email_verification_token = 'mock-verification-token';
+    return json(res, 200, { message: 'Verification email sent.' });
+  }
+
+  if (req.method === 'PATCH' && url.pathname === '/api/auth/profile') {
+    const email = tokens.get(bearer(req));
+    const user = email ? users.get(email) : null;
+    if (!user) return json(res, 401, { message: 'Unauthenticated.' });
+    const body = await readJson(req);
+    const nextEmail = String(body.email ?? '').toLowerCase();
+    if (!body.name || !nextEmail) return json(res, 422, { message: 'Name and email are required.' });
+    if (nextEmail !== email && users.has(nextEmail)) {
+      return json(res, 422, { message: 'The email has already been taken.', errors: { email: ['The email has already been taken.'] } });
+    }
+    users.delete(email);
+    user.name = String(body.name);
+    if (nextEmail !== email) {
+      user.email = nextEmail;
+      user.email_verified_at = null;
+      user.email_verification_token = 'mock-verification-token';
+      for (const [token, tokenEmail] of tokens.entries()) {
+        if (tokenEmail === email) tokens.set(token, nextEmail);
+      }
+    }
+    users.set(user.email, user);
+    return json(res, 200, { message: 'Profile updated successfully.', user: publicUser(user) });
+  }
+
+  if (req.method === 'POST' && url.pathname === '/api/auth/change-password') {
+    const email = tokens.get(bearer(req));
+    const user = email ? users.get(email) : null;
+    if (!user) return json(res, 401, { message: 'Unauthenticated.' });
+    const body = await readJson(req);
+    if (body.current_password !== user.password) {
+      return json(res, 422, { message: 'The current password is incorrect.', errors: { current_password: ['The current password is incorrect.'] } });
+    }
+    user.password = String(body.password ?? '');
+    for (const [token, tokenEmail] of tokens.entries()) {
+      if (tokenEmail === email) tokens.delete(token);
+    }
+    return json(res, 200, { message: 'Password changed successfully.' });
   }
 
   if (req.method === 'GET' && url.pathname === '/api/auth/me') {
