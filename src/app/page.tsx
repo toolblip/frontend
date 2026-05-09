@@ -91,6 +91,7 @@ const BENEFITS = [
 ];
 
 const PRIVACY_PROMISES = ['No servers', 'No uploads', 'Nothing leaves your browser'];
+const HERO_BADGES = ['Private by default', 'Instant results', 'Free forever'];
 const CATEGORY_SUMMARY = `${categories.length} categories · ${tools.length} tools`;
 
 // ─── Page ──────────────────────────────────────────────────────────────
@@ -121,6 +122,16 @@ export default function HomePage() {
           >
             Explore categories
           </a>
+        </div>
+        <div className="flex flex-wrap items-center justify-center gap-2 pt-1 text-xs font-semibold text-gray-500 dark:text-gray-400">
+          {HERO_BADGES.map((badge) => (
+            <span
+              key={badge}
+              className="rounded-full border border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/60 px-3 py-1"
+            >
+              {badge}
+            </span>
+          ))}
         </div>
       </section>
 
