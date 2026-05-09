@@ -7,7 +7,7 @@ const BASE_URL = 'https://toolblip-api-production.up.railway.app';
 const FUTURE_BASE_URL = 'https://api.toolblip.com';
 
 type Method = 'GET' | 'POST';
-type AuthMode = 'Public' | 'Bearer token required';
+type AuthMode = 'No auth required' | 'Bearer token required';
 
 type Field = {
   name: string;
@@ -39,7 +39,7 @@ const endpoints: Endpoint[] = [
     path: '/api/tools',
     title: 'List all tools',
     description: 'Returns the public Toolblip directory. The tool array is nested at tools.tools to match the app client contract.',
-    auth: 'Public',
+    auth: 'No auth required',
     status: '200 OK',
     responseShape: '{ tools: { tools: [...] } }',
     curl: `curl "${BASE_URL}/api/tools" \\\n  -H "Accept: application/json"`,
@@ -67,7 +67,7 @@ const endpoints: Endpoint[] = [
     path: '/api/tools/{slug}',
     title: 'Get a single tool',
     description: 'Fetch metadata for one tool by slug. Use the slug returned by GET /api/tools.',
-    auth: 'Public',
+    auth: 'No auth required',
     status: '200 OK',
     responseShape: '{ tool }',
     curl: `curl "${BASE_URL}/api/tools/json-formatter" \\\n  -H "Accept: application/json"`,
@@ -91,7 +91,7 @@ const endpoints: Endpoint[] = [
     path: '/api/auth/register',
     title: 'Register',
     description: 'Create a user account and receive a Bearer token for authenticated API requests.',
-    auth: 'Public',
+    auth: 'No auth required',
     status: '201 Created',
     responseShape: '{ user, token }',
     body: [
@@ -123,7 +123,7 @@ const endpoints: Endpoint[] = [
     path: '/api/auth/login',
     title: 'Login',
     description: 'Exchange an email and password for a Bearer token.',
-    auth: 'Public',
+    auth: 'No auth required',
     status: '200 OK',
     responseShape: '{ user, token }',
     body: [
@@ -362,7 +362,7 @@ curl "${BASE_URL}/api/auth/user" \\
           <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
             <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Before you start</h2>
             <p className="mt-3 text-slate-600 dark:text-slate-300">
-              All endpoints are JSON over HTTPS. Use the Railway production base URL now, and switch to <InlineCode>{FUTURE_BASE_URL}</InlineCode> after SSL is ready.
+              All endpoints are JSON over HTTPS. Prefix every path below with <InlineCode>{BASE_URL}</InlineCode> today, and switch to <InlineCode>{FUTURE_BASE_URL}</InlineCode> after SSL is ready.
             </p>
             <div className="mt-5 grid gap-4 xl:grid-cols-2">
               <CodeBlock label="Public request" code={starterRequest} />
@@ -380,7 +380,7 @@ curl "${BASE_URL}/api/auth/user" \\
                 <a key={endpoint.id} href={`#${endpoint.id}`} className="grid gap-2 border-t border-slate-200 px-4 py-3 text-sm first:border-t-0 transition hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/50 md:grid-cols-[0.7fr_1.7fr_1fr_2fr] md:gap-3 md:first:border-t">
                   <span className="font-mono font-black text-[#58D65D] dark:text-emerald-400">{endpoint.method}</span>
                   <code className="break-all text-slate-900 dark:text-slate-100">{endpoint.path}</code>
-                  <span className="text-slate-600 dark:text-slate-300">{endpoint.auth === 'Public' ? 'None' : 'Bearer token'}</span>
+                  <span className="text-slate-600 dark:text-slate-300">{endpoint.auth === 'No auth required' ? 'None' : 'Bearer token'}</span>
                   <span className="text-slate-600 dark:text-slate-300">{endpoint.title}</span>
                 </a>
               ))}
@@ -398,7 +398,7 @@ curl "${BASE_URL}/api/auth/user" \\
             </div>
             <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Auth</p>
-              <p className="mt-2 text-slate-600 dark:text-slate-300">Protected endpoints require <InlineCode>Authorization: Bearer YOUR_TOKEN</InlineCode>.</p>
+              <p className="mt-2 text-slate-600 dark:text-slate-300">Protected endpoints require <InlineCode>Authorization: Bearer YOUR_TOKEN</InlineCode>. Tokens are returned by register and login.</p>
             </div>
           </section>
 
