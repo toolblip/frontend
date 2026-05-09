@@ -1,13 +1,11 @@
 import type { Metadata } from 'next';
 
-const description = 'Privacy Policy for Toolblip, including account data, cookies, analytics, retention, and user rights.';
-
 export const metadata: Metadata = {
   title: 'Privacy Policy | Toolblip',
-  description,
+  description: 'Privacy Policy for Toolblip, including account data, cookies, analytics, retention, and user rights.',
   openGraph: {
     title: 'Privacy Policy | Toolblip',
-    description,
+    description: 'Privacy Policy for Toolblip, including account data, cookies, analytics, retention, and user rights.',
     url: 'https://toolblip.com/privacy',
     siteName: 'Toolblip',
     type: 'website',
@@ -17,7 +15,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary',
     title: 'Privacy Policy | Toolblip',
-    description,
+    description: 'Privacy Policy for Toolblip, including account data, cookies, analytics, retention, and user rights.',
   },
 };
 
