@@ -9,7 +9,7 @@ tags: ["json", "base64", "regex", "cron", "hash"]
 author: "Toolblip Team"
 ---
 
-Every developer has a mental toolkit — a collection of sites they open fifty times a week. If your bookmarks bar is looking a little thin, here’s where to start. These five tools handle the small, repetitive tasks that quietly eat up your day.
+Every developer has a mental toolkit — a collection of sites they open constantly. If your bookmarks bar is looking thin, here’s where to start. These five tools handle the small, repetitive tasks that quietly eat up your day.
 
 ## 1. JSON Formatter
 
@@ -33,4 +33,4 @@ MD5, SHA-1, SHA-256, SHA-512 — needing to generate a hash comes up more often 
 
 ## Keep These Handy
 
-The best tools are the ones you don’t have to think about. Bookmark them once and forget they’re there — until you need them, and they’re already open. [Try the free developer tools on Toolblip](/tools) — no signup, local processing, and ready whenever you need them.
+The best tools are the ones you don’t have to think about. Bookmark them and forget they’re there — until you need them, and they’re already open. [Try the free developer tools on Toolblip](/tools) — no signup, local processing, and ready whenever you need them.
