@@ -65,6 +65,7 @@ def check_gsc_errors(gsc) -> dict:
         inspection = gsc.urlInspection().index().inspect(
             body={
                 "inspectionUrl": PUBLIC_SITE_URL,
+                "siteUrl": SITE_URL,
                 "languageCode": "en-US"
             }
         ).execute()
@@ -123,6 +124,7 @@ def submit_url(gsc, url: str) -> dict:
         result = gsc.urlInspection().index().inspect(
             body={
                 "inspectionUrl": url,
+                "siteUrl": SITE_URL,
                 "languageCode": "en-US"
             }
         ).execute()
@@ -161,7 +163,7 @@ def submit_sitemap(gsc) -> dict:
         sitemap_url = PUBLIC_SITE_URL + "sitemap.xml"
         result = gsc.sitemaps().submit(
             siteUrl=SITE_URL,
-            feedPath=sitemap_url
+            feedpath=sitemap_url
         ).execute()
         return {"status": "ok", "sitemap": sitemap_url, "response": result}
     except Exception as e:
@@ -224,6 +226,7 @@ def fix_zero_click_page(gsc, page_url: str, query: str, position: int, impressio
         inspection = gsc.urlInspection().index().inspect(
             body={
                 "inspectionUrl": page_url,
+                "siteUrl": SITE_URL,
                 "languageCode": "en-US"
             }
         ).execute()
