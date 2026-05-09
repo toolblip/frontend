@@ -5,9 +5,32 @@ import { tools } from '@/data/tools';
 import { getCategoryMeta } from '@/lib/v2/categoryMeta';
 import { IconArrowUR } from '@/components/v2/icons';
 
+const FEATURED_GRID_SLUGS = [
+  'lorem-ipsum-generator',
+  'punctuation-fixer',
+  'text-statistics',
+  'json-to-markdown-table',
+  'css-class-generator',
+  'robots-txt-generator',
+  'xml-sitemap-generator',
+  'image-alt-text-generator',
+  'color-palette-generator',
+  'image-aspect-ratio-calculator',
+  'hash-from-text',
+  'url-parameter-extractor',
+  'word-counter',
+  'character-counter',
+  'remove-duplicate-lines',
+  'case-converter',
+  'grammar-checker',
+  'og-image-generator',
+];
+
 export default function CategoryGrid() {
   // Show a curated set of ~18 popular/common tools
-  const displayTools = tools.slice(0, 18);
+  const displayTools = FEATURED_GRID_SLUGS.map((slug) => tools.find((tool) => tool.slug === slug)).filter(
+    (tool): tool is (typeof tools)[number] => Boolean(tool),
+  );
 
   return (
     <section style={{ padding: '0 0 56px' }}>
