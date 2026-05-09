@@ -48,4 +48,51 @@ test.describe('Banner Generator tool', () => {
 
     expect(downloadUrl).toBe(canvasUrl);
   });
+
+  test('exposes screenshot-style banner configuration controls and updates the export', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 1100 });
+    await page.goto('/tools/og-image-generator');
+
+    await expect(page.getByText('CONTENT', { exact: true })).toBeVisible();
+    await expect(page.getByText('BACKGROUND', { exact: true })).toBeVisible();
+    await expect(page.getByText('TYPOGRAPHY', { exact: true })).toBeVisible();
+
+    await expect(page.getByRole('button', { name: 'Solid' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Gradient' })).toBeVisible();
+    await expect(page.getByRole('group', { name: 'Background presets' }).getByRole('button')).toHaveCount(12);
+
+    const fromColor = page.getByLabel('From color hex');
+    const toColor = page.getByLabel('To color hex');
+    await expect(fromColor).toHaveValue('#4CC8C8');
+    await expect(toColor).toHaveValue('#202033');
+
+    const direction = page.getByLabel('Gradient direction');
+    await expect(direction).toBeVisible();
+    await expect(direction).toHaveValue('140');
+    await expect(direction.locator('option')).toHaveText([
+      'Left → Right',
+      'Top → Bottom',
+      'Diagonal ↘',
+      'Diagonal ↗',
+      '45° Angle',
+      '135° Angle',
+      '140° Angle',
+    ]);
+
+    await expect(page.getByLabel('Title font size', { exact: true })).toHaveValue('44');
+    await expect(page.getByLabel('Subtitle font size', { exact: true })).toHaveValue('20');
+    await expect(page.getByRole('group', { name: 'Text alignment' }).getByRole('button')).toHaveCount(3);
+
+    const download = page.getByRole('link', { name: /Download PNG/i });
+    await expect(download).toHaveAttribute('href', /^data:image\/png;base64,/);
+    const before = await download.getAttribute('href');
+
+    await page.getByRole('button', { name: 'Solid' }).click();
+    await page.getByLabel('From color hex').fill('#111827');
+    await expect(page.getByRole('button', { name: 'Teal Midnight' })).toHaveAttribute('aria-pressed', 'false');
+    await page.getByLabel('Title font size', { exact: true }).fill('58');
+    await page.getByRole('button', { name: 'Align center' }).click();
+
+    await expect(download).not.toHaveAttribute('href', before ?? '');
+  });
 });
