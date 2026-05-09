@@ -30,10 +30,8 @@ function normalizeSearch(value: string) {
 function matchesSearch(tool: (typeof tools)[number], normalizedQuery: string) {
   if (!normalizedQuery) return true;
 
-  return (
-    tool.name.toLowerCase().includes(normalizedQuery) ||
-    tool.description.toLowerCase().includes(normalizedQuery)
-  );
+  const searchableText = `${tool.name} ${tool.description}`.toLowerCase();
+  return searchableText.includes(normalizedQuery);
 }
 
 export function DirectoryClient() {
