@@ -1,65 +1,58 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, type ReactNode } from 'react';
 import Link from 'next/link';
 
 const BASE_URL = 'https://toolblip-api-production.up.railway.app';
+const FUTURE_BASE_URL = 'https://api.toolblip.com';
 
-type HttpMethod = 'GET' | 'POST';
+type Method = 'GET' | 'POST';
+type AuthMode = 'No auth required' | 'Bearer token required';
+type HeaderSpec = { name: string; value: string; when: string };
 
-interface BodyParam {
+type Field = {
   name: string;
   type: string;
   required: boolean;
   description: string;
-}
+};
 
-interface ResponseField {
-  field: string;
-  type: string;
-  description: string;
-}
-
-interface Endpoint {
+type Endpoint = {
   id: string;
-  group: string;
-  method: HttpMethod;
+  group: 'Tools' | 'Authentication';
+  method: Method;
   path: string;
-  auth: boolean;
   title: string;
   description: string;
-  bodyParams?: BodyParam[];
-  responseFields?: ResponseField[];
+  auth: AuthMode;
+  status: string;
+  responseShape: string;
+  headers: HeaderSpec[];
+  query?: Field[];
+  body?: Field[];
   curl: string;
   response: string;
-}
+};
 
-const ENDPOINTS: Endpoint[] = [
-  // ── Tools ───────────────────────────────────────────────────────────────
+const endpoints: Endpoint[] = [
   {
     id: 'list-tools',
-    group: 'tools',
+    group: 'Tools',
     method: 'GET',
     path: '/api/tools',
-    auth: false,
     title: 'List all tools',
-    description: 'Returns a paginated list of all tools. Supports optional filtering by category and full-text search.',
-    bodyParams: [
-      { name: 'category', type: 'string', required: false, description: 'Filter tools by category slug (e.g. developer, productivity)' },
-      { name: 'search', type: 'string', required: false, description: 'Full-text search across tool names and descriptions' },
-      { name: 'page', type: 'integer', required: false, description: 'Page number for pagination (default: 1)' },
-      { name: 'per_page', type: 'integer', required: false, description: 'Results per page (default: 20, max: 100)' },
+    description: 'Returns the public Toolblip directory. The tool array is nested at tools.tools to match the app client contract.',
+    auth: 'No auth required',
+    status: '200 OK',
+    responseShape: '{ tools: { tools: [...] } }',
+    headers: [{ name: 'Accept', value: 'application/json', when: 'Recommended for all requests' }],
+    query: [
+      { name: 'category', type: 'string', required: false, description: 'Filter tools by category slug or name.' },
+      { name: 'search', type: 'string', required: false, description: 'Search tool names and descriptions.' },
+      { name: 'page', type: 'number', required: false, description: 'Pagination page number.' },
+      { name: 'per_page', type: 'number', required: false, description: 'Number of tools to return per page.' },
     ],
-    responseFields: [
-      { field: 'tools.tools[]', type: 'array', description: 'Array of tool objects' },
-      { field: 'tools.meta', type: 'object', description: 'Pagination metadata: current_page, total, per_page, last_page' },
-    ],
-    curl: `curl -X GET "${BASE_URL}/api/tools" \\
-  -H "Accept: application/json"
-
-# With filters and pagination
-curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_page=10" \\
-  -H "Accept: application/json"`,
+    curl: `curl "${BASE_URL}/api/tools?search=json&per_page=10" \\\n  -H "Accept: application/json"`,
     response: `{
   "tools": {
     "tools": [
@@ -68,85 +61,65 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
         "slug": "json-formatter",
         "name": "JSON Formatter",
         "description": "Format, validate, and prettify JSON data instantly.",
-        "category": "developer",
+        "category": "Developer",
         "is_pro": false,
-        "emoji": "📋",
-        "created_at": "2026-01-15T10:30:00Z"
+        "emoji": "🧰",
+        "created_at": "2026-01-15T10:30:00.000000Z"
       }
-    ],
-    "meta": {
-      "current_page": 1,
-      "total": 48,
-      "per_page": 20,
-      "last_page": 3
-    }
+    ]
   }
 }`,
   },
   {
     id: 'get-tool',
-    group: 'tools',
+    group: 'Tools',
     method: 'GET',
     path: '/api/tools/{slug}',
-    auth: false,
-    title: 'Get tool by slug',
-    description: 'Returns a single tool by its URL-safe slug. Returns 404 if not found.',
-    responseFields: [
-      { field: 'tool.id', type: 'integer', description: 'Unique tool ID' },
-      { field: 'tool.slug', type: 'string', description: 'URL-safe identifier' },
-      { field: 'tool.name', type: 'string', description: 'Display name' },
-      { field: 'tool.description', type: 'string', description: 'Full description' },
-      { field: 'tool.category', type: 'string', description: 'Category slug' },
-      { field: 'tool.is_pro', type: 'boolean', description: 'Requires Pro subscription' },
-      { field: 'tool.emoji', type: 'string', description: 'Emoji icon (optional)' },
-      { field: 'tool.created_at', type: 'string', description: 'ISO 8601 timestamp' },
-    ],
-    curl: `curl -X GET "${BASE_URL}/api/tools/json-formatter" \\
-  -H "Accept: application/json"`,
+    title: 'Get a single tool',
+    description: 'Fetch metadata for one tool by slug. Use the slug returned by GET /api/tools.',
+    auth: 'No auth required',
+    status: '200 OK',
+    responseShape: '{ tool }',
+    headers: [{ name: 'Accept', value: 'application/json', when: 'Recommended for all requests' }],
+    curl: `curl "${BASE_URL}/api/tools/json-formatter" \\\n  -H "Accept: application/json"`,
     response: `{
   "tool": {
     "id": 1,
     "slug": "json-formatter",
     "name": "JSON Formatter",
     "description": "Format, validate, and prettify JSON data instantly.",
-    "category": "developer",
+    "category": "Developer",
     "is_pro": false,
-    "emoji": "📋",
-    "created_at": "2026-01-15T10:30:00Z"
+    "emoji": "🧰",
+    "created_at": "2026-01-15T10:30:00.000000Z"
   }
 }`,
   },
-
-  // ── Auth ────────────────────────────────────────────────────────────────
   {
     id: 'register',
-    group: 'auth',
+    group: 'Authentication',
     method: 'POST',
     path: '/api/auth/register',
-    auth: false,
-    title: 'Register new account',
-    description: 'Create a new user account. Returns a Bearer token to use in authenticated requests.',
-    bodyParams: [
-      { name: 'name', type: 'string', required: true, description: 'Full display name' },
-      { name: 'email', type: 'string', required: true, description: 'Email address — must be unique' },
-      { name: 'password', type: 'string', required: true, description: 'Password — minimum 8 characters' },
-      { name: 'password_confirmation', type: 'string', required: true, description: 'Must match the password field exactly' },
+    title: 'Register',
+    description: 'Create a user account and receive a Bearer token for authenticated API requests.',
+    auth: 'No auth required',
+    status: '201 Created',
+    responseShape: '{ user, token }',
+    headers: [
+      { name: 'Content-Type', value: 'application/json', when: 'Required when sending JSON body' },
+      { name: 'Accept', value: 'application/json', when: 'Recommended for all requests' },
     ],
-    responseFields: [
-      { field: 'user.id', type: 'integer', description: 'User ID' },
-      { field: 'user.name', type: 'string', description: 'Display name' },
-      { field: 'user.email', type: 'string', description: 'Email address' },
-      { field: 'user.is_pro', type: 'boolean', description: 'Pro subscription status' },
-      { field: 'token', type: 'string', description: 'Bearer token for authenticated requests' },
+    body: [
+      { name: 'name', type: 'string', required: true, description: 'Display name for the account.' },
+      { name: 'email', type: 'string', required: true, description: 'Unique email address.' },
+      { name: 'password', type: 'string', required: true, description: 'Account password.' },
+      { name: 'password_confirmation', type: 'string', required: true, description: 'Must match password.' },
     ],
-    curl: `curl -X POST "${BASE_URL}/api/auth/register" \\
-  -H "Content-Type: application/json" \\
-  -H "Accept: application/json" \\
-  -d '{
+    curl: `curl -X POST "${BASE_URL}/api/auth/register" \\\n  -H "Content-Type: application/json" \\\n  -H "Accept: application/json" \\\n  -d '{
     "name": "Jane Doe",
     "email": "jane@example.com",
-    "password": "secretpass123",
-    "password_confirmation": "secretpass123"
+    "password": "correct-horse-battery-staple",
+    "password_confirmation": "correct-horse-battery-staple"
   }'`,
     response: `{
   "user": {
@@ -155,34 +128,30 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
     "email": "jane@example.com",
     "is_pro": false
   },
-  "token": "1|Xr8KbP9mNoPqRsTuVwXyZaBcDeFgHiJkL"
+  "token": "1|exampleBearerToken"
 }`,
   },
   {
     id: 'login',
-    group: 'auth',
+    group: 'Authentication',
     method: 'POST',
     path: '/api/auth/login',
-    auth: false,
     title: 'Login',
-    description: 'Authenticate an existing user. Returns a Bearer token for subsequent authenticated requests.',
-    bodyParams: [
-      { name: 'email', type: 'string', required: true, description: 'Account email address' },
-      { name: 'password', type: 'string', required: true, description: 'Account password' },
+    description: 'Exchange an email and password for a Bearer token.',
+    auth: 'No auth required',
+    status: '200 OK',
+    responseShape: '{ user, token }',
+    headers: [
+      { name: 'Content-Type', value: 'application/json', when: 'Required when sending JSON body' },
+      { name: 'Accept', value: 'application/json', when: 'Recommended for all requests' },
     ],
-    responseFields: [
-      { field: 'user.id', type: 'integer', description: 'User ID' },
-      { field: 'user.name', type: 'string', description: 'Display name' },
-      { field: 'user.email', type: 'string', description: 'Email address' },
-      { field: 'user.is_pro', type: 'boolean', description: 'Pro subscription status' },
-      { field: 'token', type: 'string', description: 'Bearer token for authenticated requests' },
+    body: [
+      { name: 'email', type: 'string', required: true, description: 'Account email address.' },
+      { name: 'password', type: 'string', required: true, description: 'Account password.' },
     ],
-    curl: `curl -X POST "${BASE_URL}/api/auth/login" \\
-  -H "Content-Type: application/json" \\
-  -H "Accept: application/json" \\
-  -d '{
+    curl: `curl -X POST "${BASE_URL}/api/auth/login" \\\n  -H "Content-Type: application/json" \\\n  -H "Accept: application/json" \\\n  -d '{
     "email": "jane@example.com",
-    "password": "secretpass123"
+    "password": "correct-horse-battery-staple"
   }'`,
     response: `{
   "user": {
@@ -191,44 +160,43 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
     "email": "jane@example.com",
     "is_pro": false
   },
-  "token": "2|Yz7LcQ3aMbNcOdPeQfGhRiJsTkL"
+  "token": "2|exampleBearerToken"
 }`,
   },
   {
     id: 'logout',
-    group: 'auth',
+    group: 'Authentication',
     method: 'POST',
     path: '/api/auth/logout',
-    auth: true,
     title: 'Logout',
-    description: 'Invalidate the current session token. After calling this, the token can no longer be used.',
-    responseFields: [
-      { field: 'message', type: 'string', description: 'Confirmation message' },
+    description: 'Revoke the current token. The token used for the request stops working immediately.',
+    auth: 'Bearer token required',
+    status: '200 OK',
+    responseShape: '{ message }',
+    headers: [
+      { name: 'Authorization', value: 'Bearer YOUR_TOKEN', when: 'Required' },
+      { name: 'Accept', value: 'application/json', when: 'Recommended for all requests' },
     ],
-    curl: `curl -X POST "${BASE_URL}/api/auth/logout" \\
-  -H "Authorization: Bearer 1|Xr8KbP9mNoPqRsTuVwXyZaBcDeFgHiJkL" \\
-  -H "Accept: application/json"`,
+    curl: `curl -X POST "${BASE_URL}/api/auth/logout" \\\n  -H "Authorization: Bearer YOUR_TOKEN" \\\n  -H "Accept: application/json"`,
     response: `{
-  "message": "Logged out"
+  "message": "Logged out successfully"
 }`,
   },
   {
-    id: 'get-user',
-    group: 'auth',
+    id: 'auth-user',
+    group: 'Authentication',
     method: 'GET',
     path: '/api/auth/user',
-    auth: true,
     title: 'Get authenticated user',
-    description: 'Returns the profile of the currently authenticated user.',
-    responseFields: [
-      { field: 'user.id', type: 'integer', description: 'User ID' },
-      { field: 'user.name', type: 'string', description: 'Display name' },
-      { field: 'user.email', type: 'string', description: 'Email address' },
-      { field: 'user.is_pro', type: 'boolean', description: 'Pro subscription status' },
+    description: 'Return the user profile attached to the supplied Bearer token.',
+    auth: 'Bearer token required',
+    status: '200 OK',
+    responseShape: '{ user }',
+    headers: [
+      { name: 'Authorization', value: 'Bearer YOUR_TOKEN', when: 'Required' },
+      { name: 'Accept', value: 'application/json', when: 'Recommended for all requests' },
     ],
-    curl: `curl -X GET "${BASE_URL}/api/auth/user" \\
-  -H "Authorization: Bearer 1|Xr8KbP9mNoPqRsTuVwXyZaBcDeFgHiJkL" \\
-  -H "Accept: application/json"`,
+    curl: `curl "${BASE_URL}/api/auth/user" \\\n  -H "Authorization: Bearer YOUR_TOKEN" \\\n  -H "Accept: application/json"`,
     response: `{
   "user": {
     "id": 42,
@@ -240,552 +208,364 @@ curl -X GET "${BASE_URL}/api/tools?category=developer&search=json&page=1&per_pag
   },
 ];
 
-const GROUPS = [
-  { id: 'tools', label: 'Tools', icon: '🔧' },
-  { id: 'auth', label: 'Authentication', icon: '🔑' },
-];
-
-const STATUS_CODES = [
-  { code: 200, label: 'OK', desc: 'Request succeeded.', color: 'text-green-600 dark:text-green-400' },
-  { code: 201, label: 'Created', desc: 'Resource created successfully.', color: 'text-green-600 dark:text-green-400' },
-  { code: 400, label: 'Bad Request', desc: 'Invalid request body or parameters.', color: 'text-red-600 dark:text-red-400' },
-  { code: 401, label: 'Unauthorized', desc: 'Missing or invalid Bearer token.', color: 'text-red-600 dark:text-red-400' },
-  { code: 403, label: 'Forbidden', desc: 'Authenticated but not permitted.', color: 'text-red-600 dark:text-red-400' },
-  { code: 404, label: 'Not Found', desc: 'The requested resource does not exist.', color: 'text-amber-600 dark:text-amber-400' },
-  { code: 422, label: 'Unprocessable Entity', desc: 'Request body failed validation.', color: 'text-amber-600 dark:text-amber-400' },
-  { code: 429, label: 'Too Many Requests', desc: 'Rate limit exceeded.', color: 'text-amber-600 dark:text-amber-400' },
-  { code: 500, label: 'Server Error', desc: 'Something went wrong on our end.', color: 'text-red-600 dark:text-red-400' },
-];
-
-const METHOD_COLORS: Record<HttpMethod, string> = {
-  GET: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400',
-  POST: 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-400',
+const methodClass: Record<Method, string> = {
+  GET: 'border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950/60 dark:text-emerald-300',
+  POST: 'border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-900 dark:bg-blue-950/60 dark:text-blue-300',
 };
 
-function CopyButton({ text }: { text: string }) {
+const endpointGroups = [
+  { label: 'Tools', endpoints: endpoints.filter((endpoint) => endpoint.group === 'Tools') },
+  { label: 'Authentication', endpoints: endpoints.filter((endpoint) => endpoint.group === 'Authentication') },
+];
+
+const starterRequest = `curl "${BASE_URL}/api/tools" \\\n  -H "Accept: application/json"`;
+
+const authenticatedRequest = `curl "${BASE_URL}/api/auth/user" \\\n  -H "Authorization: Bearer YOUR_TOKEN" \\\n  -H "Accept: application/json"`;
+
+const tokenFlow = `# 1. Register or login to receive a token
+TOKEN=$(curl -s -X POST "${BASE_URL}/api/auth/login" \\\n  -H "Content-Type: application/json" \\\n  -H "Accept: application/json" \\\n  -d '{"email":"jane@example.com","password":"your-password"}' \\\n  | jq -r .token)
+
+# 2. Use the token on protected endpoints
+curl "${BASE_URL}/api/auth/user" \\\n  -H "Authorization: Bearer $TOKEN" \\\n  -H "Accept: application/json"
+
+# 3. Revoke the token when done
+curl -X POST "${BASE_URL}/api/auth/logout" \\\n  -H "Authorization: Bearer $TOKEN" \\\n  -H "Accept: application/json"`;
+
+const unauthorizedResponse = `{
+  "message": "Unauthenticated."
+}`;
+
+const baseUrlSwap = `# Current production API
+BASE_URL="${BASE_URL}"
+
+# Planned custom domain after SSL is ready
+BASE_URL="${FUTURE_BASE_URL}"`;
+
+function CopyButton({ value }: { value: string }) {
   const [copied, setCopied] = useState(false);
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(text);
+
+  async function copy() {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(value);
+    } else {
+      const textarea = document.createElement('textarea');
+      textarea.value = value;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'fixed';
+      textarea.style.left = '-9999px';
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+    }
     setCopied(true);
-    setTimeout(() => setCopied(false), 1800);
-  };
+    window.setTimeout(() => setCopied(false), 1400);
+  }
+
   return (
     <button
-      onClick={handleCopy}
-      className="flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+      type="button"
+      onClick={copy}
+      aria-label={`Copy ${value.split('\n')[0]}`}
+      className="rounded-md border border-slate-700/70 px-2 py-1 text-xs font-medium text-slate-300 transition hover:border-slate-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-[#58D65D]"
     >
-      {copied ? (
-        <>
-          <svg className="w-3.5 h-3.5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-          </svg>
-          <span className="text-emerald-500">Copied</span>
-        </>
-      ) : (
-        <>
-          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-          </svg>
-          Copy
-        </>
-      )}
+      {copied ? 'Copied' : 'Copy'}
     </button>
   );
 }
 
-function CodeBlock({ code }: { code: string }) {
-  return (
-    <pre className="bg-[#0d1117] text-slate-300 rounded-xl p-4 text-[12.5px] font-mono overflow-x-auto leading-relaxed whitespace-pre">
-      {code}
-    </pre>
-  );
+function InlineCode({ children }: { children: ReactNode }) {
+  return <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm dark:bg-slate-800">{children}</code>;
 }
 
-function ParamTable({ params, body }: { params: BodyParam[]; body?: boolean }) {
+function CodeBlock({ code, label }: { code: string; label: string }) {
   return (
-    <div className="mb-5">
-      <h4 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">
-        {body ? 'Body Parameters' : 'Query Parameters'}
-      </h4>
-      <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
-            <tr>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs w-44">Name</th>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs w-20">Type</th>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs w-20">Required</th>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs">Description</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
-            {params.map((p, i) => (
-              <tr key={i} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30">
-                <td className="px-4 py-2.5 font-mono text-xs text-emerald-600 dark:text-emerald-400 font-medium">{p.name}</td>
-                <td className="px-4 py-2.5 text-xs text-slate-500 dark:text-slate-500">{p.type}</td>
-                <td className="px-4 py-2.5 text-xs">
-                  {p.required ? (
-                    <span className="text-red-500 font-medium">Yes</span>
-                  ) : (
-                    <span className="text-slate-400">No</span>
-                  )}
-                </td>
-                <td className="px-4 py-2.5 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">{p.description}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950 shadow-sm">
+      <div className="flex items-center justify-between border-b border-slate-800 px-4 py-2">
+        <span className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{label}</span>
+        <CopyButton value={code} />
       </div>
+      <pre className="overflow-x-auto p-4 text-sm leading-6 text-slate-100"><code>{code}</code></pre>
     </div>
   );
 }
 
-function ResponseFieldsTable({ fields }: { fields: ResponseField[] }) {
+function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
   return (
-    <div className="mb-5">
-      <h4 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-2">Response Fields</h4>
-      <div className="border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
-            <tr>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs w-44">Field</th>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs w-20">Type</th>
-              <th className="px-4 py-2.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs">Description</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
-            {fields.map((f, i) => (
-              <tr key={i} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30">
-                <td className="px-4 py-2.5 font-mono text-xs text-emerald-600 dark:text-emerald-400 font-medium">{f.field}</td>
-                <td className="px-4 py-2.5 text-xs text-slate-500 dark:text-slate-500">{f.type}</td>
-                <td className="px-4 py-2.5 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">{f.description}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
-function EndpointCard({ ep }: { ep: Endpoint }) {
-  const [open, setOpen] = useState(true);
-
-  return (
-    <div
-      id={ep.id}
-      className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden transition-all hover:border-emerald-200 dark:hover:border-emerald-800 scroll-mt-20"
-    >
-      <button
-        onClick={() => setOpen(!open)}
-        className="w-full flex items-center gap-3 px-5 py-4 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-left"
-        aria-expanded={open}
-      >
-        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold flex-shrink-0 ${METHOD_COLORS[ep.method]}`}>
-          {ep.method}
-        </span>
-        <code className="font-mono text-sm text-slate-800 dark:text-slate-200 font-medium">{ep.path}</code>
-        <span className="text-sm text-slate-500 dark:text-slate-400 flex-1 truncate">{ep.title}</span>
-        {ep.auth && (
-          <span className="flex items-center gap-1 text-[11px] text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/50 border border-amber-100 dark:border-amber-900 px-2 py-0.5 rounded-full flex-shrink-0">
-            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-            </svg>
-            Auth
+    <article id={endpoint.id} className="scroll-mt-28 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/60 sm:p-6">
+      <div className="flex flex-col gap-4 xl:flex-row xl:items-start xl:justify-between">
+        <div>
+          <p className="text-sm font-medium text-[#58D65D] dark:text-emerald-400">{endpoint.group}</p>
+          <h3 className="mt-1 text-2xl font-bold text-slate-950 dark:text-white">{endpoint.title}</h3>
+          <p className="mt-2 max-w-2xl text-slate-600 dark:text-slate-300">{endpoint.description}</p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <span className="w-fit rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-600 dark:border-slate-700 dark:bg-slate-950/60 dark:text-slate-300">
+            {endpoint.auth}
           </span>
-        )}
-        <svg
-          className={`w-4 h-4 text-slate-400 transition-transform flex-shrink-0 ${open ? 'rotate-180' : ''}`}
-          fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-        </svg>
-      </button>
+          <span className="w-fit rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold uppercase tracking-wide text-slate-600 dark:border-slate-700 dark:bg-slate-950/60 dark:text-slate-300">
+            {endpoint.status}
+          </span>
+          <span className="w-fit rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-bold text-slate-600 dark:border-slate-700 dark:bg-slate-950/60 dark:text-slate-300">
+            Response: <code className="font-mono">{endpoint.responseShape}</code>
+          </span>
+        </div>
+      </div>
 
-      {open && (
-        <div className="border-t border-slate-100 dark:border-slate-800 px-5 py-6 space-y-5 bg-slate-50/40 dark:bg-slate-900/50">
-          <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{ep.description}</p>
+      <div className="mt-5 flex flex-wrap items-center gap-3 rounded-2xl bg-slate-50 p-3 font-mono text-sm dark:bg-slate-950/60">
+        <span className={`rounded-lg border px-2.5 py-1 text-xs font-black ${methodClass[endpoint.method]}`}>{endpoint.method}</span>
+        <span className="break-all text-slate-900 dark:text-slate-100">{endpoint.path}</span>
+      </div>
 
-          {ep.bodyParams && ep.bodyParams.length > 0 && <ParamTable params={ep.bodyParams} body={ep.method !== 'GET'} />}
-          {ep.responseFields && ep.responseFields.length > 0 && <ResponseFieldsTable fields={ep.responseFields} />}
-
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <h4 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Example Request</h4>
-              <CopyButton text={ep.curl} />
-            </div>
-            <CodeBlock code={ep.curl} />
+      <div className="mt-6">
+        <h4 className="text-sm font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Headers</h4>
+        <div className="mt-3 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800">
+          <div className="hidden grid-cols-[1fr_1.4fr_1.4fr] bg-slate-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:bg-slate-950 dark:text-slate-400 md:grid">
+            <span>Name</span><span>Value</span><span>When</span>
           </div>
-
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <h4 className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Example Response</h4>
-              <CopyButton text={ep.response} />
+          {endpoint.headers.map((header) => (
+            <div key={`${endpoint.id}-${header.name}`} className="grid gap-2 border-t border-slate-200 px-4 py-3 text-sm first:border-t-0 dark:border-slate-800 md:grid-cols-[1fr_1.4fr_1.4fr] md:gap-3 md:first:border-t">
+              <code className="text-slate-900 dark:text-slate-100">{header.name}</code>
+              <code className="break-all text-slate-700 dark:text-slate-300">{header.value}</code>
+              <span className="text-slate-600 dark:text-slate-300">{header.when}</span>
             </div>
-            <CodeBlock code={ep.response} />
+          ))}
+        </div>
+      </div>
+
+      {endpoint.query ? (
+        <div className="mt-6">
+          <h4 className="text-sm font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Query parameters</h4>
+          <div className="mt-3 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800">
+            <div className="hidden grid-cols-[1.1fr_0.8fr_0.7fr_2fr] bg-slate-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:bg-slate-950 dark:text-slate-400 md:grid">
+              <span>Parameter</span><span>Type</span><span>Required</span><span>Description</span>
+            </div>
+            {endpoint.query.map((field) => (
+              <div key={field.name} className="grid gap-2 border-t border-slate-200 px-4 py-3 text-sm first:border-t-0 dark:border-slate-800 md:grid-cols-[1.1fr_0.8fr_0.7fr_2fr] md:gap-3 md:first:border-t">
+                <code className="text-slate-900 dark:text-slate-100">{field.name}</code>
+                <span className="text-slate-600 dark:text-slate-400">{field.type}</span>
+                <span className={field.required ? 'font-semibold text-rose-600 dark:text-rose-400' : 'text-slate-500'}>{field.required ? 'Required' : 'Optional'}</span>
+                <span className="text-slate-600 dark:text-slate-300">{field.description}</span>
+              </div>
+            ))}
           </div>
         </div>
-      )}
-    </div>
+      ) : null}
+
+      {endpoint.body ? (
+        <div className="mt-6">
+          <h4 className="text-sm font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Request body</h4>
+          <div className="mt-3 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800">
+            <div className="hidden grid-cols-[1.1fr_0.8fr_0.7fr_2fr] bg-slate-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:bg-slate-950 dark:text-slate-400 md:grid">
+              <span>Field</span><span>Type</span><span>Required</span><span>Description</span>
+            </div>
+            {endpoint.body.map((field) => (
+              <div key={field.name} className="grid gap-2 border-t border-slate-200 px-4 py-3 text-sm first:border-t-0 dark:border-slate-800 md:grid-cols-[1.1fr_0.8fr_0.7fr_2fr] md:gap-3 md:first:border-t">
+                <code className="text-slate-900 dark:text-slate-100">{field.name}</code>
+                <span className="text-slate-600 dark:text-slate-400">{field.type}</span>
+                <span className={field.required ? 'font-semibold text-rose-600 dark:text-rose-400' : 'text-slate-500'}>{field.required ? 'Required' : 'Optional'}</span>
+                <span className="text-slate-600 dark:text-slate-300">{field.description}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : null}
+
+      <div className="mt-6 grid gap-4 xl:grid-cols-2">
+        <CodeBlock label="curl" code={endpoint.curl} />
+        <CodeBlock label="JSON response" code={endpoint.response} />
+      </div>
+    </article>
   );
 }
 
 export default function ApiDocsClient() {
-  const [activeId, setActiveId] = useState<string>('');
-  const observerRef = useRef<IntersectionObserver | null>(null);
-
-  useEffect(() => {
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveId(entry.target.id);
-        });
-      },
-      { rootMargin: '-20% 0px -70% 0px' }
-    );
-
-    ENDPOINTS.forEach((ep) => {
-      const el = document.getElementById(ep.id);
-      if (el) observerRef.current?.observe(el);
-    });
-
-    return () => observerRef.current?.disconnect();
-  }, []);
-
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  };
+  const tools = endpointGroups.find((group) => group.label === 'Tools')?.endpoints ?? [];
+  const auth = endpointGroups.find((group) => group.label === 'Authentication')?.endpoints ?? [];
 
   return (
-    <div className="bg-slate-50 dark:bg-slate-950 min-h-screen">
-
-      {/* ── Hero ──────────────────────────────────────────────────────── */}
-      <div className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-          <div className="flex items-start gap-4 mb-10">
-            <div className="w-12 h-12 bg-[#58D65D] rounded-2xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-emerald-200/50 dark:shadow-emerald-900/30">
-              <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
-              </svg>
-            </div>
+    <main className="min-h-screen bg-gradient-to-b from-white via-slate-50 to-white text-slate-900 dark:from-slate-950 dark:via-slate-950 dark:to-slate-900 dark:text-white">
+      <section className="border-b border-slate-200 bg-white/85 backdrop-blur dark:border-slate-800 dark:bg-slate-950/85">
+        <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8">
+          <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition hover:text-[#58D65D] dark:text-slate-400 dark:hover:text-emerald-400">
+            ← Back to Toolblip
+          </Link>
+          <div className="mt-10 grid gap-8 lg:grid-cols-[1.35fr_0.9fr] lg:items-end">
             <div>
-              <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">API Documentation</h1>
-              <p className="text-slate-500 dark:text-slate-400 mt-1 text-sm">
-                Toolblip REST API — integrate tools and user auth into any app
+              <p className="text-sm font-bold uppercase tracking-[0.25em] text-[#58D65D] dark:text-emerald-400">REST API Reference</p>
+              <h1 className="mt-4 text-4xl font-black tracking-tight text-slate-950 dark:text-white sm:text-6xl">Toolblip API Docs</h1>
+              <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600 dark:text-slate-300">
+                Integrate with the Toolblip API to list tools, fetch tool metadata, and authenticate users using simple JSON requests.
               </p>
-            </div>
-          </div>
-
-          {/* Key info cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-            <div className="bg-slate-900 dark:bg-slate-800 rounded-xl px-4 py-3.5">
-              <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest block mb-1">Base URL</span>
-              <code className="text-sm font-mono text-[#58D65D] break-all">https://toolblip-api-production.up.railway.app</code>
-              <span className="text-xs text-slate-500 mt-0.5 block">api.toolblip.com (SSL pending)</span>
-            </div>
-            <div className="flex items-center gap-3 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3.5">
-              <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-              <div>
-                <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest block">Auth</span>
-                <code className="text-xs font-mono text-slate-700 dark:text-slate-300">Bearer token</code>
+              <div className="mt-6 flex flex-wrap gap-3 text-sm">
+                <a href="#list-tools" className="rounded-full bg-[#58D65D] px-4 py-2 font-bold text-slate-950 transition hover:bg-emerald-400">View endpoints</a>
+                <a href="#authentication" className="rounded-full border border-slate-300 px-4 py-2 font-bold text-slate-700 transition hover:border-slate-400 dark:border-slate-700 dark:text-slate-200 dark:hover:border-slate-500">Auth quick start</a>
               </div>
             </div>
-            <div className="flex items-center gap-3 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3.5">
-              <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <div>
-                <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest block">Format</span>
-                <span className="text-xs text-slate-700 dark:text-slate-300">JSON only</span>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-3.5">
-              <svg className="w-4 h-4 text-slate-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-              </svg>
-              <div>
-                <span className="text-[10px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-widest block">Rate Limit</span>
-                <span className="text-xs text-slate-700 dark:text-slate-300">60 req/min (public) · 300 req/min (auth)</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Auth callout */}
-          <div className="bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-100 dark:border-emerald-900 rounded-xl p-4 flex items-start gap-3">
-            <svg className="w-5 h-5 text-[#58D65D] dark:text-emerald-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <div>
-              <p className="text-sm font-semibold text-emerald-900 dark:text-emerald-300 mb-0.5">Authentication</p>
-              <p className="text-sm text-emerald-700 dark:text-emerald-400 leading-relaxed">
-                Pass the token from{' '}
-                <code className="font-mono text-xs bg-emerald-100 dark:bg-emerald-900/50 px-1 rounded">register</code>{' '}
-                or{' '}
-                <code className="font-mono text-xs bg-emerald-100 dark:bg-emerald-900/50 px-1 rounded">login</code>{' '}
-                in every authenticated request:
+            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Base URL</p>
+              <code className="mt-3 block break-all rounded-xl bg-white p-3 text-sm text-slate-900 dark:bg-slate-950 dark:text-slate-100">{BASE_URL}</code>
+              <p className="mt-4 text-sm text-slate-600 dark:text-slate-300">
+                Use Railway production today. Once SSL is ready, switch requests to <code className="font-mono">{FUTURE_BASE_URL}</code>.
               </p>
-              <code className="mt-2 block bg-slate-900 dark:bg-slate-800 text-[#58D65D] dark:text-emerald-300 rounded-lg px-3 py-2 text-xs font-mono">
-                Authorization: Bearer &lt;your-token&gt;
-              </code>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* ── Content ─────────────────────────────────────────────────── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
-
-          {/* ── Sidebar ── */}
-          <aside className="lg:col-span-1">
-            <div className="sticky top-20 space-y-6">
-              <div>
-                <p className="text-[11px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest mb-3 px-1">
-                  Endpoints
-                </p>
-                <nav className="space-y-5">
-                  {GROUPS.map((g) => (
-                    <div key={g.id}>
-                      <p className="text-[11px] font-semibold text-slate-400 dark:text-slate-600 uppercase tracking-wider mb-1.5 px-1">
-                        {g.icon} {g.label}
-                      </p>
-                      <div className="space-y-0.5">
-                        {ENDPOINTS.filter((ep) => ep.group === g.id).map((ep) => {
-                          const isActive = activeId === ep.id;
-                          return (
-                            <button
-                              key={ep.id}
-                              onClick={() => scrollTo(ep.id)}
-                              className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-all text-left ${
-                                isActive
-                                  ? 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400'
-                                  : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-200'
-                              }`}
-                            >
-                              <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold flex-shrink-0 ${METHOD_COLORS[ep.method]}`}>
-                                {ep.method}
-                              </span>
-                              <span className="truncate font-mono text-xs flex-1">{ep.path}</span>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </div>
+      <div className="mx-auto grid max-w-7xl gap-8 px-6 py-12 lg:grid-cols-[280px_1fr] lg:px-8">
+        <aside className="hidden lg:block">
+          <div className="sticky top-24 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Endpoints</p>
+            <nav className="mt-4 space-y-2">
+              {endpointGroups.map((group) => (
+                <div key={group.label} className="pt-2 first:pt-0">
+                  <p className="px-3 pb-1 text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">{group.label}</p>
+                  {group.endpoints.map((endpoint) => (
+                    <a key={endpoint.id} href={`#${endpoint.id}`} className="block rounded-xl px-3 py-2 text-sm text-slate-600 transition hover:bg-slate-50 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white">
+                      <span className="mr-2 font-mono text-xs font-black text-[#58D65D] dark:text-emerald-400">{endpoint.method}</span>
+                      {endpoint.path}
+                    </a>
                   ))}
-                </nav>
-              </div>
+                </div>
+              ))}
+            </nav>
+          </div>
+        </aside>
 
-              <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
-                <p className="text-[11px] font-bold text-slate-400 dark:text-slate-600 uppercase tracking-widest mb-3 px-1">
-                  On this page
-                </p>
-                {[
-                  { id: 'overview', label: 'Overview' },
-                  { id: 'quick-start', label: 'Quick Start' },
-                  { id: 'tools', label: 'Tools' },
-                  { id: 'auth', label: 'Authentication' },
-                  { id: 'status-codes', label: 'Status Codes' },
-                  { id: 'get-help', label: 'Get Help' },
-                ].map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => scrollTo(item.id)}
-                    className="block w-full px-3 py-1.5 text-xs text-slate-500 dark:text-slate-500 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors text-left"
-                  >
-                    {item.label}
-                  </button>
-                ))}
-              </div>
+        <div className="space-y-12">
+          <section id="authentication" className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
+            <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Authentication</h2>
+            <p className="mt-3 text-slate-600 dark:text-slate-300">
+              Register or log in to receive a token, then send it in the <InlineCode>Authorization</InlineCode> header as <InlineCode>Bearer YOUR_TOKEN</InlineCode>.
+            </p>
+            <div className="mt-5 grid gap-4 xl:grid-cols-2">
+              <CodeBlock label="Authorization header" code={'Authorization: Bearer YOUR_TOKEN'} />
+              <CodeBlock label="Token lifecycle" code={tokenFlow} />
             </div>
-          </aside>
+          </section>
 
-          {/* ── Main content ── */}
-          <main className="lg:col-span-4 space-y-14">
+          <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
+            <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Before you start</h2>
+            <p className="mt-3 text-slate-600 dark:text-slate-300">
+              All endpoints are JSON over HTTPS and currently live under the <InlineCode>/api</InlineCode> path. Prefix every path below with <InlineCode>{BASE_URL}</InlineCode> today, and switch to <InlineCode>{FUTURE_BASE_URL}</InlineCode> after SSL is ready.
+            </p>
+            <div className="mt-5 grid gap-4 xl:grid-cols-2">
+              <CodeBlock label="Public request" code={starterRequest} />
+              <CodeBlock label="Authenticated request" code={authenticatedRequest} />
+            </div>
+          </section>
 
-            {/* Overview */}
-            <section id="overview">
-              <div className="flex items-center gap-3 mb-6">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">Overview</h2>
-                <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
+          <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
+            <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Base URL strategy</h2>
+            <p className="mt-3 text-slate-600 dark:text-slate-300">
+              Store the API host in one environment variable so the Railway URL can be replaced cleanly by the custom API domain when SSL is live.
+            </p>
+            <div className="mt-5">
+              <CodeBlock label="Environment setup" code={baseUrlSwap} />
+            </div>
+          </section>
+
+          <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
+            <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Response models</h2>
+            <p className="mt-3 text-slate-600 dark:text-slate-300">
+              Toolblip wraps resources in top-level objects. Tools are returned under <InlineCode>tool</InlineCode> for a single item and under <InlineCode>tools.tools</InlineCode> for the directory list.
+            </p>
+            <div className="mt-5 grid gap-4 xl:grid-cols-2">
+              <CodeBlock label="Tool" code={`{
+  "id": 1,
+  "slug": "json-formatter",
+  "name": "JSON Formatter",
+  "description": "Format, validate, and prettify JSON data instantly.",
+  "category": "Developer",
+  "is_pro": false,
+  "emoji": "🧰",
+  "created_at": "2026-01-15T10:30:00.000000Z"
+}`} />
+              <CodeBlock label="User" code={`{
+  "id": 42,
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "is_pro": false
+}`} />
+            </div>
+          </section>
+
+          <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
+            <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Endpoint overview</h2>
+            <div className="mt-5 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800">
+              <div className="hidden grid-cols-[0.7fr_1.55fr_1fr_1.2fr_1.8fr] bg-slate-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:bg-slate-950 dark:text-slate-400 md:grid">
+                <span>Method</span><span>Path</span><span>Auth</span><span>Response</span><span>Purpose</span>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {[
-                  {
-                    icon: (
-                      <svg className="w-5 h-5 text-[#58D65D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                      </svg>
-                    ),
-                    title: 'Bearer Token Auth',
-                    desc: 'Pass the token from register or login in the Authorization header.',
-                    code: 'Authorization: Bearer {token}',
-                  },
-                  {
-                    icon: (
-                      <svg className="w-5 h-5 text-[#58D65D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
-                      </svg>
-                    ),
-                    title: 'JSON Throughout',
-                    desc: 'All requests and responses use JSON. Always include both headers.',
-                    code: 'Content-Type: application/json\nAccept: application/json',
-                  },
-                  {
-                    icon: (
-                      <svg className="w-5 h-5 text-[#58D65D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                      </svg>
-                    ),
-                    title: 'Rate Limits',
-                    desc: 'Public endpoints: 60 requests/minute. Authenticated: 120 requests/minute.',
-                    code: undefined,
-                  },
-                  {
-                    icon: (
-                      <svg className="w-5 h-5 text-[#58D65D]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                      </svg>
-                    ),
-                    title: 'Error Format',
-                    desc: 'Errors return JSON with a message field. Common codes: 400, 401, 403, 404, 422, 500.',
-                    code: undefined,
-                  },
-                ].map((card, i) => (
-                  <div
-                    key={i}
-                    className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-5 hover:border-slate-300 dark:hover:border-slate-700 transition-colors"
-                  >
-                    <div className="flex items-center gap-2.5 mb-3">
-                      <div className="w-9 h-9 bg-emerald-50 dark:bg-emerald-950/50 rounded-xl flex items-center justify-center flex-shrink-0">
-                        {card.icon}
-                      </div>
-                      <h3 className="font-semibold text-slate-800 dark:text-slate-200 text-sm">{card.title}</h3>
-                    </div>
-                    <p className="text-sm text-slate-600 dark:text-slate-400 mb-3 leading-relaxed">{card.desc}</p>
-                    {card.code && <CodeBlock code={card.code} />}
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            {/* Quick Start */}
-            <section id="quick-start">
-              <div className="flex items-center gap-3 mb-6">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">Quick Start</h2>
-                <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
-              </div>
-              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
-                <div className="bg-slate-900 dark:bg-slate-800 px-5 py-3 border-b border-slate-700/50 flex items-center gap-2">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">bash</span>
-                  <span className="text-[10px] text-slate-600 dark:text-slate-500">3-step example</span>
-                </div>
-                <pre className="text-[12.5px] font-mono text-slate-300 p-5 overflow-x-auto leading-relaxed whitespace-pre">{`# 1. Register a new account
-curl -X POST "${BASE_URL}/api/auth/register" \\
-  -H "Content-Type: application/json" \\
-  -H "Accept: application/json" \\
-  -d '{"name":"Jane Doe","email":"jane@example.com","password":"secret123","password_confirmation":"secret123"}'
-
-# Response: { "user": {...}, "token": "1|Xr8Kb..." }
-# → Save the token — you need it for authenticated requests
-
-# 2. Fetch your user profile
-curl -X GET "${BASE_URL}/api/auth/user" \\
-  -H "Authorization: Bearer $TOKEN" \\
-  -H "Accept: application/json"
-
-# 3. List all tools (no auth required)
-curl -X GET "${BASE_URL}/api/tools" \\
-  -H "Accept: application/json"`}</pre>
-              </div>
-            </section>
-
-            {/* Endpoint sections */}
-            {GROUPS.map((g) => (
-              <section key={g.id} id={g.id}>
-                <div className="flex items-center gap-3 mb-6">
-                  <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
-                    {g.icon} {g.label}
-                  </h2>
-                  <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
-                </div>
-                <div className="space-y-3">
-                  {ENDPOINTS.filter((ep) => ep.group === g.id).map((ep) => (
-                    <EndpointCard key={ep.id} ep={ep} />
-                  ))}
-                </div>
-              </section>
-            ))}
-
-            {/* HTTP Status Codes */}
-            <section id="status-codes">
-              <div className="flex items-center gap-3 mb-6">
-                <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">HTTP Status Codes</h2>
-                <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
-              </div>
-              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden">
-                <table className="w-full text-sm">
-                  <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-800">
-                    <tr>
-                      <th className="px-5 py-3.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs w-24">Code</th>
-                      <th className="px-5 py-3.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs w-36">Status</th>
-                      <th className="px-5 py-3.5 text-left font-semibold text-slate-500 dark:text-slate-400 text-xs">Description</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800/60">
-                    {STATUS_CODES.map((s) => (
-                      <tr key={s.code} className="hover:bg-slate-50/60 dark:hover:bg-slate-800/30">
-                        <td className="px-5 py-3">
-                          <span className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-mono font-bold border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 ${s.color}`}>
-                            {s.code}
-                          </span>
-                        </td>
-                        <td className="px-5 py-3 text-xs font-semibold text-slate-700 dark:text-slate-300">{s.label}</td>
-                        <td className="px-5 py-3 text-xs text-slate-600 dark:text-slate-400">{s.desc}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </section>
-
-            {/* Help CTA */}
-            <section
-              id="get-help"
-              className="bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30 rounded-2xl border border-emerald-100 dark:border-emerald-900 p-7"
-            >
-              <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 mb-1">Need help with the API?</h2>
-              <p className="text-sm text-slate-600 dark:text-slate-400 mb-5 leading-relaxed">
-                Questions about integration? Reach out at{' '}
-                <a href="mailto:api@toolblip.com" className="text-[#58D65D] dark:text-emerald-400 hover:underline font-medium">
-                  api@toolblip.com
-                </a>{' '}
-                or open an issue on GitHub.
-              </p>
-              <div className="flex flex-wrap gap-3">
-                <a
-                  href="https://github.com/toolblip"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-sm font-medium rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
-                >
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-                  </svg>
-                  View on GitHub
+              {endpoints.map((endpoint) => (
+                <a key={endpoint.id} href={`#${endpoint.id}`} className="grid gap-2 border-t border-slate-200 px-4 py-3 text-sm first:border-t-0 transition hover:bg-slate-50 dark:border-slate-800 dark:hover:bg-slate-800/50 md:grid-cols-[0.7fr_1.55fr_1fr_1.2fr_1.8fr] md:gap-3 md:first:border-t">
+                  <span className="font-mono font-black text-[#58D65D] dark:text-emerald-400">{endpoint.method}</span>
+                  <code className="break-all text-slate-900 dark:text-slate-100">{endpoint.path}</code>
+                  <span className="text-slate-600 dark:text-slate-300">{endpoint.auth === 'No auth required' ? 'None' : 'Bearer token'}</span>
+                  <code className="break-all text-slate-600 dark:text-slate-300">{endpoint.responseShape}</code>
+                  <span className="text-slate-600 dark:text-slate-300">{endpoint.title}</span>
                 </a>
-                <Link
-                  href="/"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-[#58D65D] dark:bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-[#4bc44e] dark:hover:bg-emerald-500 transition-colors"
-                >
-                  Explore Toolblip →
-                </Link>
-              </div>
-            </section>
+              ))}
+            </div>
+          </section>
 
-          </main>
+          <section className="grid gap-4 md:grid-cols-3">
+            <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Format</p>
+              <p className="mt-2 text-slate-600 dark:text-slate-300">Send JSON bodies and set <InlineCode>Content-Type: application/json</InlineCode> for POST requests.</p>
+            </div>
+            <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Responses</p>
+              <p className="mt-2 text-slate-600 dark:text-slate-300">Set <InlineCode>Accept: application/json</InlineCode> for consistent JSON responses.</p>
+            </div>
+            <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Auth</p>
+              <p className="mt-2 text-slate-600 dark:text-slate-300">Protected endpoints require <InlineCode>Authorization: Bearer YOUR_TOKEN</InlineCode>. Tokens are returned by register and login.</p>
+            </div>
+          </section>
+
+          <section className="space-y-5">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-[#58D65D] dark:text-emerald-400">Tools</p>
+              <h2 className="mt-2 text-3xl font-black text-slate-950 dark:text-white">Tool endpoints</h2>
+            </div>
+            {tools.map((endpoint) => <EndpointCard key={endpoint.id} endpoint={endpoint} />)}
+          </section>
+
+          <section className="space-y-5">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-[0.2em] text-[#58D65D] dark:text-emerald-400">Auth</p>
+              <h2 className="mt-2 text-3xl font-black text-slate-950 dark:text-white">Authentication endpoints</h2>
+            </div>
+            {auth.map((endpoint) => <EndpointCard key={endpoint.id} endpoint={endpoint} />)}
+          </section>
+
+          <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
+            <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Errors</h2>
+            <p className="mt-3 text-slate-600 dark:text-slate-300">Errors are returned as JSON with a message. Validation errors may include an errors object keyed by field name.</p>
+            <div className="mt-5 grid gap-4 xl:grid-cols-2">
+              <CodeBlock label="Validation error" code={`{
+  "message": "The given data was invalid.",
+  "errors": {
+    "email": ["The email field is required."]
+  }
+}`} />
+              <CodeBlock label="Unauthorized" code={unauthorizedResponse} />
+              <div className="rounded-2xl border border-slate-200 p-4 text-sm dark:border-slate-800">
+                <p className="font-semibold text-slate-950 dark:text-white">Common status codes</p>
+                <ul className="mt-3 space-y-2 text-slate-600 dark:text-slate-300">
+                  <li><strong>200</strong> OK</li>
+                  <li><strong>201</strong> Created</li>
+                  <li><strong>401</strong> Missing or invalid token</li>
+                  <li><strong>404</strong> Resource not found</li>
+                  <li><strong>422</strong> Validation failed</li>
+                  <li><strong>500</strong> Server error</li>
+                </ul>
+              </div>
+            </div>
+          </section>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
