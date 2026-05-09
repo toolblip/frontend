@@ -480,7 +480,7 @@ main() {
         log "Strategy loaded from previous run"
     fi
 
-    # Pick 3-5 topics from queue
+    # Pick 1-3 topics from queue
     local num_topics="${1:-3}"
     if [[ "$num_topics" -lt 1 ]]; then num_topics=1; fi
     if [[ "$num_topics" -gt 3 ]]; then num_topics=3; fi
@@ -532,7 +532,7 @@ main() {
 
         # 5. Submit to GSC
         log "STEP 5: GSC submission"
-        local post_url="https://toolblip.com/blog/$(basename $generated_file .md | sed 's/^[0-9]*-//')"
+        local post_url="https://toolblip.com/blog/$(basename "$generated_file" .md)"
         submit_to_gsc "$post_url" "$topic"
 
         # 6. Check & fix
