@@ -23,11 +23,13 @@ export default function ShareButtons({ toolName, toolSlug }: ShareButtonsProps) 
     url: pageUrl,
   }).toString()}`;
   const buttonClass =
-    'inline-flex items-center gap-1.5 px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-900';
+    'inline-flex items-center gap-1.5 px-3 py-1.5 text-sm bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-gray-900';
 
   const copyLink = async () => {
     try {
-      await navigator.clipboard.writeText(pageUrl);
+      const url = window.location.href || pageUrl;
+      await navigator.clipboard.writeText(url);
+      setPageUrl(url);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
