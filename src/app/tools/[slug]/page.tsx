@@ -35,13 +35,19 @@ export async function generateMetadata({ params }: ToolDetailPageProps): Promise
     };
   }
 
+  const url = `https://toolblip.com/tools/${slug}`;
+
   return {
     title: `${tool.name} | Toolblip`,
     description: tool.description,
+    keywords: tool.tags,
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title: `${tool.name} | Toolblip`,
       description: tool.description,
-      url: `https://toolblip.com/tools/${slug}`,
+      url,
       siteName: 'Toolblip',
     },
     twitter: {
