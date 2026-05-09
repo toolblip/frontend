@@ -6,7 +6,7 @@ const LARAVEL_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.toolblip.com
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, email, password, password_confirmation } = body;
+    const { name, email, password, password_confirmation, accepted_terms } = body;
 
     if (!name || !email || !password || !password_confirmation) {
       return NextResponse.json(
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
-      body: JSON.stringify({ name, email, password, password_confirmation }),
+      body: JSON.stringify({ name, email, password, password_confirmation, accepted_terms }),
     });
 
     const data = await laravelRes.json();

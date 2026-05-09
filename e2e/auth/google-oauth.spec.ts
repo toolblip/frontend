@@ -6,12 +6,13 @@ test.describe('Google OAuth BDD regression', () => {
     await resetMockBackend(request);
   });
 
-  test('Given the login page, When the user chooses Google OAuth, Then the OAuth callback signs them in and redirects home', async ({ page }) => {
+  test('Given the login page, When the user chooses Google OAuth, Then the OAuth callback signs them in and redirects to the account dashboard', async ({ page }) => {
     await page.goto('/login');
 
     await page.getByRole('link', { name: 'Continue with Google' }).click();
 
-    await expect(page).toHaveURL(/\/$/);
+    await expect(page).toHaveURL(/\/account$/);
+    await expect(page.locator('#main-content').getByText('google-oauth@toolblip.test')).toBeVisible();
     await expectLoggedInCookie(page);
   });
 
@@ -21,7 +22,7 @@ test.describe('Google OAuth BDD regression', () => {
     await page.getByRole('link', { name: 'Continue with Google' }).click();
 
     await expect(page).toHaveURL(/\/account$/);
-    await expect(page.getByText('google-oauth@toolblip.test')).toBeVisible();
+    await expect(page.locator('#main-content').getByText('google-oauth@toolblip.test')).toBeVisible();
     await expectLoggedInCookie(page);
   });
 
@@ -29,6 +30,25 @@ test.describe('Google OAuth BDD regression', () => {
     await page.goto('/signup');
 
     await expect(page.getByRole('link', { name: 'Continue with Google' })).toBeVisible();
+  });
+
+  test('Given the signup page, When a first-time Google user completes OAuth, Then the account dashboard shows legal onboarding before subscription choices', async ({ page }) => {
+    await page.goto('/signup');
+
+    await page.getByRole('link', { name: 'Continue with Google' }).click();
+
+    await expect(page).toHaveURL(/\/account$/);
+    await expect(page.getByRole('dialog', { name: 'Complete your account setup' })).toBeVisible();
+    await expect(page.getByText('Accept the Terms and Conditions and Privacy Policy to continue.')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Terms and Conditions' })).toHaveAttribute('href', '/terms');
+    await expect(page.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute('href', '/privacy');
+    await expect(page.getByRole('button', { name: 'Continue to subscription options' })).toBeDisabled();
+
+    await page.getByLabel(/I agree to the Terms and Conditions and Privacy Policy/i).check();
+    await page.getByRole('button', { name: 'Continue to subscription options' }).click();
+
+    await expect(page.getByRole('dialog', { name: 'Complete your account setup' })).toBeHidden();
+    await expect(page.getByText('Free plan')).toBeVisible();
   });
 
   test('Given login and signup pages, Then the Google OAuth button looks like an official Google sign-in button', async ({ page }) => {

@@ -11,7 +11,17 @@ test.describe('Session BDD regression', () => {
 
     await page.goto('/account');
     await expect(page.getByText(VALID_USER.name)).toBeVisible();
-    await expect(page.getByText(VALID_USER.email)).toBeVisible();
+    await expect(page.locator('#main-content').getByText(VALID_USER.email)).toBeVisible();
+  });
+
+  test('Given a logged-in user on the homepage, Then the navbar shows profile identity instead of Sign In', async ({ page }) => {
+    await loginViaApi(page, VALID_USER);
+
+    await page.goto('/');
+
+    await expect(page.getByRole('link', { name: 'Sign In' })).toBeHidden();
+    await page.getByRole('button', { name: 'Account menu' }).click();
+    await expect(page.getByRole('paragraph').filter({ hasText: VALID_USER.email })).toBeVisible();
   });
 
   test('Given no auth cookie, When /api/auth/me is requested, Then the response is 401 with a null user', async ({ request }) => {

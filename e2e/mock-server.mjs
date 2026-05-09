@@ -36,7 +36,17 @@ function bearer(req) {
 
 function publicUser(user) {
   if (!user) return null;
-  return { id: user.id, name: user.name, email: user.email, role: user.role ?? 'user', email_verified_at: user.email_verified_at ?? null, avatar_url: user.avatar_url ?? null };
+  const termsAcceptedAt = user.terms_accepted_at ?? null;
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role ?? 'user',
+    email_verified_at: user.email_verified_at ?? null,
+    avatar_url: user.avatar_url ?? null,
+    terms_accepted_at: termsAcceptedAt,
+    requires_terms_acceptance: termsAcceptedAt === null,
+  };
 }
 
 function issueToken(email) {
@@ -57,6 +67,7 @@ function reset() {
     password: 'Password123!',
     role: 'user',
     email_verified_at: '2026-01-01T00:00:00.000Z',
+    terms_accepted_at: '2026-01-01T00:00:00.000Z',
   });
   users.set('taken@toolblip.test', {
     id: nextId++,
@@ -65,6 +76,7 @@ function reset() {
     password: 'Password123!',
     role: 'user',
     email_verified_at: '2026-01-01T00:00:00.000Z',
+    terms_accepted_at: '2026-01-01T00:00:00.000Z',
   });
 }
 
@@ -88,6 +100,9 @@ const server = http.createServer(async (req, res) => {
     if (!body.name || !email || !body.password || !body.password_confirmation) {
       return json(res, 422, { message: 'All fields are required.' });
     }
+    if (body.accepted_terms !== true) {
+      return json(res, 422, { message: 'Please accept the Terms and Conditions and Privacy Policy.', errors: { accepted_terms: ['The terms must be accepted.'] } });
+    }
     if (users.has(email)) {
       return json(res, 422, {
         message: 'The email has already been taken.',
@@ -101,6 +116,7 @@ const server = http.createServer(async (req, res) => {
       password: String(body.password),
       role: 'user',
       email_verified_at: null,
+      terms_accepted_at: new Date().toISOString(),
     };
     users.set(email, user);
     const token = issueToken(email);
@@ -139,12 +155,24 @@ const server = http.createServer(async (req, res) => {
       role: 'user',
       google_id: 'mock-google-sub',
       email_verified_at: '2026-01-01T00:00:00.000Z',
+      terms_accepted_at: null,
     };
     users.set(user.email, user);
     const token = issueToken(user.email);
-    return json(res, 200, { user: publicUser(user), token });
+    return json(res, 200, { user: publicUser(user), token, is_new_user: true, requires_terms_acceptance: true });
   }
 
+  if (req.method === 'POST' && url.pathname === '/api/auth/accept-terms') {
+    const email = tokens.get(bearer(req));
+    const user = email ? users.get(email) : null;
+    if (!user) return json(res, 401, { message: 'Unauthenticated.' });
+    const body = await readJson(req);
+    if (body.accepted_terms !== true) {
+      return json(res, 422, { message: 'Please accept the Terms and Conditions and Privacy Policy.', errors: { accepted_terms: ['The terms must be accepted.'] } });
+    }
+    user.terms_accepted_at = new Date().toISOString();
+    return json(res, 200, { message: 'Terms accepted.', user: publicUser(user) });
+  }
 
   if (req.method === 'POST' && url.pathname === '/api/auth/verify-email') {
     const body = await readJson(req);
