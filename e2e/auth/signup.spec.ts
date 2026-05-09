@@ -15,6 +15,35 @@ test.describe('Signup BDD regression', () => {
     await expectLoggedInCookie(page);
   });
 
+  test('Given the user has not accepted the legal terms, When the form is submitted, Then signup is blocked before any register request is made', async ({ page }) => {
+    const registerRequests: string[] = [];
+    page.on('request', (request) => {
+      if (request.method() === 'POST' && request.url().includes('/api/auth/register')) {
+        registerRequests.push(request.url());
+      }
+    });
+
+    await page.goto('/signup');
+    await page.getByLabel('Name').fill('Legal Consent User');
+    await page.getByLabel('Email').fill('legal-consent@toolblip.test');
+    await page.getByLabel('Password', { exact: true }).fill('Password123!');
+    await page.getByLabel('Confirm password').fill('Password123!');
+    await page.getByRole('button', { name: 'Create account' }).click();
+
+    await expect(page.locator('p[role="alert"]')).toContainText('Please accept the Terms and Conditions and Privacy Policy');
+    expect(registerRequests).toHaveLength(0);
+  });
+
+  test('Given the signup page is shown, Then the legal consent checkbox links to Terms and Conditions and Privacy Policy below the form illustration', async ({ page }) => {
+    await page.goto('/signup');
+
+    const consent = page.getByLabel(/I agree to the Terms and Conditions and Privacy Policy/i);
+    await expect(consent).toBeVisible();
+    await expect(consent).not.toBeChecked();
+    await expect(page.getByRole('link', { name: 'Terms and Conditions' })).toHaveAttribute('href', '/terms');
+    await expect(page.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute('href', '/privacy');
+  });
+
   test('Given a short password, When the user submits signup, Then a client-side error is shown and no register request is made', async ({ page }) => {
     const registerRequests: string[] = [];
     page.on('request', (request) => {
@@ -59,6 +88,7 @@ test.describe('Signup BDD regression', () => {
     await page.getByLabel('Email').fill(TAKEN_EMAIL);
     await page.getByLabel('Password', { exact: true }).fill('Password123!');
     await page.getByLabel('Confirm password').fill('Password123!');
+    await page.getByLabel(/I agree to the Terms and Conditions and Privacy Policy/i).check();
     await page.getByRole('button', { name: 'Create account' }).click();
 
     await expect(page).toHaveURL(/\/signup$/);

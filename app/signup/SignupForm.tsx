@@ -13,6 +13,7 @@ export default function SignupForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [acceptedLegal, setAcceptedLegal] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -21,6 +22,10 @@ export default function SignupForm() {
     setError("");
     if (password !== confirm) { setError("Passwords do not match."); return; }
     if (password.length < 8) { setError("Password must be at least 8 characters."); return; }
+    if (!acceptedLegal) {
+      setError("Please accept the Terms and Conditions and Privacy Policy to create your account.");
+      return;
+    }
     setLoading(true);
     try {
       const res = await fetch("/api/auth/register", {
@@ -53,6 +58,14 @@ export default function SignupForm() {
       <div className="tb-v2-container">
         <div className="tb-v2-auth-card">
           <h1 className="tb-v2-auth-title">Create account</h1>
+
+          <a href="/api/auth/google/start?next=/" className="tb-v2-auth-oauth">
+            Continue with Google
+          </a>
+
+          <div className="tb-v2-auth-divider" aria-hidden="true">
+            <span>or</span>
+          </div>
 
           <form onSubmit={handleSubmit} className="tb-v2-auth-form" noValidate>
             {error && (
@@ -128,6 +141,21 @@ export default function SignupForm() {
                 className="tb-v2-auth-input"
                 placeholder="Repeat password"
               />
+            </div>
+
+            <div className="tb-v2-auth-consent">
+              <label htmlFor="legal-consent" className="tb-v2-auth-consent-label">
+                <input
+                  id="legal-consent"
+                  type="checkbox"
+                  checked={acceptedLegal}
+                  onChange={(e) => setAcceptedLegal(e.target.checked)}
+                  className="tb-v2-auth-consent-checkbox"
+                />
+                <span>
+                  I agree to the <Link href="/terms">Terms and Conditions</Link> and <Link href="/privacy">Privacy Policy</Link>.
+                </span>
+              </label>
             </div>
 
             <button type="submit" disabled={loading} className="tb-v2-auth-submit">

@@ -17,10 +17,15 @@ export default function LoginForm() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const nextParam = params.get("next");
-    if (nextParam && nextParam.startsWith("/")) {
+    if (nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//")) {
       setNext(nextParam);
     }
+    if (params.get("oauth_error")) {
+      setError("Google sign in could not be completed. Please try again.");
+    }
   }, []);
+
+  const googleHref = `/api/auth/google/start?next=${encodeURIComponent(next)}`;
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -57,6 +62,14 @@ export default function LoginForm() {
       <div className="tb-v2-container">
         <div className="tb-v2-auth-card">
           <h1 className="tb-v2-auth-title">Sign in</h1>
+
+          <a href={googleHref} className="tb-v2-auth-oauth">
+            Continue with Google
+          </a>
+
+          <div className="tb-v2-auth-divider" aria-hidden="true">
+            <span>or</span>
+          </div>
 
           <form onSubmit={handleSubmit} className="tb-v2-auth-form" noValidate>
             {error && (
