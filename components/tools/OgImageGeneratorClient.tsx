@@ -94,7 +94,7 @@ export default function OgImageGeneratorClient() {
 
       ctx.fillStyle = preset.accent;
       ctx.font = '700 34px Inter, Arial, sans-serif';
-      ctx.fillText('ARTICLE BANNER', 88, 100);
+      ctx.fillText('BANNER GENERATOR', 88, 100);
 
       ctx.fillStyle = '#ffffff';
       ctx.font = '800 78px Inter, Arial, sans-serif';
@@ -189,7 +189,7 @@ export default function OgImageGeneratorClient() {
           {downloadUrl && (
             <a
               href={downloadUrl}
-              download="article-banner.png"
+              download="banner-generator.png"
               className="inline-flex w-full items-center justify-center rounded-xl bg-red-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700"
             >
               Download PNG
@@ -198,28 +198,14 @@ export default function OgImageGeneratorClient() {
         </div>
 
         <div className="space-y-3">
-          <div
+          <canvas
+            ref={canvasRef}
+            width={WIDTH}
+            height={HEIGHT}
             data-testid="article-banner-preview"
             aria-label="Banner preview"
-            className="overflow-hidden rounded-2xl border border-gray-200 shadow-sm dark:border-gray-800"
-          >
-            <div
-              className="aspect-[1200/630] p-[7%] text-white"
-              style={{ background: `linear-gradient(135deg, ${preset.from}, ${preset.to})` }}
-            >
-              <div className="text-xs font-bold uppercase tracking-[0.24em]" style={{ color: preset.accent }}>
-                Article Banner
-              </div>
-              <div className="mt-[8%] max-w-[86%] text-[clamp(1.4rem,4.6vw,3.9rem)] font-black leading-[1.05] tracking-[-0.04em]">
-                {title || 'Untitled Article'}
-              </div>
-              <div className="mt-4 max-w-[78%] text-[clamp(0.8rem,1.6vw,1.45rem)] leading-snug text-white/85">
-                {subtitle}
-              </div>
-              <div className="mt-[8%] text-sm font-semibold text-white/75">{footer || 'toolblip.com'}</div>
-            </div>
-          </div>
-          <canvas ref={canvasRef} className="hidden" aria-hidden="true" />
+            className="h-auto w-full rounded-2xl border border-gray-200 shadow-sm dark:border-gray-800"
+          />
         </div>
       </div>
     </div>
