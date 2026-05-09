@@ -35,12 +35,13 @@ const categories = Object.entries(categoryCounts)
 // ─── How it works ───────────────────────────────────────────────────────
 
 const WORKFLOW = 'Pick a tool → Paste your data → Get your result';
+const LOCAL_FIRST_NOTE = 'Everything runs locally in your tab — no servers, no uploads, no account gate.';
 
 const STEPS = [
   {
     n: '1',
     title: 'Pick a tool',
-    desc: 'Start with the tiny utility that matches the job in front of you.',
+    desc: 'Choose the focused utility that matches the job in front of you.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17 9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z" />
@@ -60,7 +61,7 @@ const STEPS = [
   {
     n: '3',
     title: 'Get your result',
-    desc: 'Copy the finished output instantly from your own tab.',
+    desc: 'Copy clean output immediately from your own browser tab.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
@@ -75,17 +76,17 @@ const BENEFITS = [
   {
     emoji: '🔒',
     title: 'Private',
-    desc: 'Data never leaves your browser — no uploads, no hidden storage.',
+    desc: 'Data never leaves your browser — no uploads, no background storage.',
   },
   {
     emoji: '⚡',
     title: 'Fast',
-    desc: 'Runs instantly in your tab, so cleanup and conversion tasks feel immediate.',
+    desc: 'Runs instantly in your tab, so cleanup and conversion jobs feel immediate.',
   },
   {
     emoji: '🎁',
     title: 'Free',
-    desc: 'No signup, no paywall, no “trial expired” surprise. Just open and use.',
+    desc: 'No signup, no paywall, no “trial expired” surprise — just open and use.',
   },
 ];
 
@@ -105,7 +106,7 @@ export default function HomePage() {
           <span className="text-red-600 dark:text-red-400"> that don’t touch your data</span>
         </h1>
         <p className="text-lg text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
-          {tools.length}+ focused utilities for text, encoding, development, and more — local-first, instant in your tab, and built with no signup or uploads.
+          {tools.length}+ focused utilities for text, encoding, development, and everyday cleanup — instant, private, and ready without signup.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <a
@@ -131,7 +132,7 @@ export default function HomePage() {
               How it works
             </p>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">
-              {WORKFLOW} — no servers, no uploads, nothing leaves your browser.
+              {WORKFLOW}. {LOCAL_FIRST_NOTE}
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1">
