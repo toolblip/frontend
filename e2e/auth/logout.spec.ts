@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { loginViaApi, resetMockBackend, VALID_USER } from '../fixtures/users';
+import { dismissPlanOnboarding, loginViaApi, resetMockBackend, VALID_USER } from '../fixtures/users';
 
 test.describe('Logout BDD regression', () => {
   test.beforeEach(async ({ request }) => {
@@ -9,6 +9,7 @@ test.describe('Logout BDD regression', () => {
   test('Given a logged-in user, When they sign out, Then the auth cookie is cleared and the account route is protected again', async ({ page }) => {
     await loginViaApi(page, VALID_USER);
     await page.goto('/account');
+    await dismissPlanOnboarding(page);
     await expect(page.locator('#main-content').getByText(VALID_USER.email)).toBeVisible();
 
     await page.getByRole('button', { name: 'Sign out' }).click();

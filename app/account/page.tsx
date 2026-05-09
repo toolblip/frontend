@@ -21,6 +21,26 @@ interface Subscription {
   subscription_status: string | null;
 }
 
+type OnboardingStatus = "completed" | "skipped";
+type OnboardingPlanTier = "free" | "starter" | "ultra" | "max";
+
+const ONBOARDING_PLANS: Array<{
+  tier: OnboardingPlanTier;
+  name: string;
+  price: string;
+  description: string;
+  badge?: string;
+}> = [
+  { tier: "free", name: "Free", price: "$0", description: "Start with all core tools and client-side processing." },
+  { tier: "starter", name: "Starter", price: "$4.99/mo", description: "Remove ads and unlock personal cloud storage." },
+  { tier: "ultra", name: "Ultra", price: "$19.99/mo", description: "Power-user limits, API access, and more storage.", badge: "Popular" },
+  { tier: "max", name: "Max", price: "$49.99/mo", description: "Team seats, priority support, and the highest limits." },
+];
+
+function onboardingStorageKey(userId: number | string) {
+  return `toolblip_onboarding_${userId}`;
+}
+
 export default function AccountPage() {
   const { user, token, login, logout, loading: authLoading } = useAuth();
   const router = useRouter();
@@ -43,6 +63,8 @@ export default function AccountPage() {
   const [acceptedOnboardingTerms, setAcceptedOnboardingTerms] = useState(false);
   const [acceptingTerms, setAcceptingTerms] = useState(false);
   const [termsError, setTermsError] = useState("");
+  const [showPlanOnboarding, setShowPlanOnboarding] = useState(false);
+  const [selectedOnboardingPlan, setSelectedOnboardingPlan] = useState<OnboardingPlanTier>("free");
 
   // Redirect to login if not authenticated (after auth has finished loading)
   useEffect(() => {
@@ -76,6 +98,35 @@ export default function AccountPage() {
     if (!user) return;
     setProfileName(user.name);
     setProfileEmail(user.email);
+  }, [user]);
+
+  useEffect(() => {
+    if (!user || user.requires_terms_acceptance) {
+      setShowPlanOnboarding(false);
+      return;
+    }
+
+    try {
+      const stored = window.localStorage.getItem(onboardingStorageKey(user.id));
+      if (!stored) {
+        setSelectedOnboardingPlan("free");
+        setShowPlanOnboarding(true);
+        return;
+      }
+
+      const parsed = JSON.parse(stored) as { status?: OnboardingStatus; selectedPlan?: OnboardingPlanTier };
+      if (parsed.status === "completed" || parsed.status === "skipped") {
+        setShowPlanOnboarding(false);
+        return;
+      }
+    } catch {
+      setSelectedOnboardingPlan("free");
+      setShowPlanOnboarding(true);
+      return;
+    }
+
+    setSelectedOnboardingPlan("free");
+    setShowPlanOnboarding(true);
   }, [user]);
 
   useEffect(() => {
@@ -257,6 +308,29 @@ export default function AccountPage() {
     }
   }
 
+  function persistPlanOnboarding(status: OnboardingStatus) {
+    if (!user || !selectedOnboardingPlan) return;
+
+    window.localStorage.setItem(
+      onboardingStorageKey(user.id),
+      JSON.stringify({
+        status,
+        selectedPlan: selectedOnboardingPlan,
+        updatedAt: new Date().toISOString(),
+      })
+    );
+    setShowPlanOnboarding(false);
+  }
+
+  function handleFinishPlanOnboarding() {
+    persistPlanOnboarding("completed");
+  }
+
+  function handleSkipPlanOnboarding() {
+    if (!selectedOnboardingPlan) setSelectedOnboardingPlan("free");
+    persistPlanOnboarding("skipped");
+  }
+
   if (authLoading || !user) {
     return (
       <div className="max-w-md mx-auto px-4 py-20 text-center">
@@ -322,6 +396,76 @@ export default function AccountPage() {
             >
               {acceptingTerms ? "Saving..." : "Continue to subscription options"}
             </button>
+          </div>
+        </div>
+      )}
+      {!showTermsOnboarding && showPlanOnboarding && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 py-6">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="plan-onboarding-title"
+            className="w-full max-w-2xl rounded-2xl border border-gray-200 bg-white p-6 shadow-2xl dark:border-gray-700 dark:bg-gray-900"
+          >
+            <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-red-600 dark:text-red-400">Welcome to Toolblip</p>
+            <h2 id="plan-onboarding-title" className="mb-3 text-2xl font-bold text-gray-900 dark:text-white">Choose your Toolblip plan</h2>
+            <p className="mb-5 text-sm text-gray-600 dark:text-gray-300">
+              Pick a plan to personalize your account. Free is selected by default, and you can switch plans anytime.
+            </p>
+            <div className="grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label="Toolblip plan options">
+              {ONBOARDING_PLANS.map((plan) => {
+                const selected = selectedOnboardingPlan === plan.tier;
+                return (
+                  <label
+                    key={plan.tier}
+                    htmlFor={`onboarding-plan-${plan.tier}`}
+                    className={`relative cursor-pointer rounded-xl border p-4 transition-colors ${
+                      selected
+                        ? "border-red-500 bg-red-50 dark:border-red-400 dark:bg-red-950/30"
+                        : "border-gray-200 bg-gray-50 hover:border-gray-300 dark:border-gray-700 dark:bg-gray-950 dark:hover:border-gray-600"
+                    }`}
+                  >
+                    <input
+                      id={`onboarding-plan-${plan.tier}`}
+                      type="radio"
+                      name="onboarding-plan"
+                      value={plan.tier}
+                      checked={selected}
+                      onChange={() => setSelectedOnboardingPlan(plan.tier)}
+                      className="mb-3 h-4 w-4 border-gray-300 text-red-600 focus:ring-red-500"
+                    />
+                    <span className="flex items-start justify-between gap-3">
+                      <span>
+                        <span className="block font-semibold text-gray-900 dark:text-white">{plan.name}</span>
+                        <span className="mt-1 block text-sm font-medium text-red-600 dark:text-red-400">{plan.price}</span>
+                      </span>
+                      {plan.badge && (
+                        <span className="rounded-full bg-red-600 px-2 py-0.5 text-xs font-semibold text-white">{plan.badge}</span>
+                      )}
+                    </span>
+                    <span className="mt-3 block text-sm text-gray-600 dark:text-gray-300">{plan.description}</span>
+                    {selected && <span className="mt-3 block text-xs font-semibold text-red-600 dark:text-red-400">Selected plan</span>}
+                  </label>
+                );
+              })}
+            </div>
+            <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                onClick={handleSkipPlanOnboarding}
+                className="rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800"
+              >
+                Skip for now
+              </button>
+              <button
+                type="button"
+                onClick={handleFinishPlanOnboarding}
+                disabled={!selectedOnboardingPlan}
+                className="rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Finish onboarding
+              </button>
+            </div>
           </div>
         </div>
       )}

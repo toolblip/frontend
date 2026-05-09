@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { loginByForm, resetMockBackend, VALID_USER } from '../fixtures/users';
+import { dismissPlanOnboarding, loginByForm, resetMockBackend, VALID_USER } from '../fixtures/users';
 
 test.describe('Account settings BDD regression', () => {
   test.beforeEach(async ({ request }) => {
@@ -11,6 +11,7 @@ test.describe('Account settings BDD regression', () => {
     await expect(page).toHaveURL(/\/account$/);
 
     await page.goto('/account');
+    await dismissPlanOnboarding(page);
     await expect(page.getByText('BDD User')).toBeVisible();
 
     await page.getByLabel('Name').fill('Updated BDD User');
@@ -33,6 +34,7 @@ test.describe('Account settings BDD regression', () => {
     await page.getByRole('button', { name: 'Create account' }).click();
 
     await page.goto('/account');
+    await dismissPlanOnboarding(page);
     await expect(page.getByText('Email verification needed')).toBeVisible();
     await page.getByRole('button', { name: 'Resend verification email' }).click();
 
@@ -44,6 +46,7 @@ test.describe('Account settings BDD regression', () => {
     await expect(page).toHaveURL(/\/account$/);
 
     await page.goto('/account');
+    await dismissPlanOnboarding(page);
     await page.getByLabel('Current password').fill('Password123!');
     await page.getByLabel('New password', { exact: true }).fill('NewPassword123!');
     await page.getByLabel('Confirm new password').fill('NewPassword123!');
