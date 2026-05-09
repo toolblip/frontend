@@ -13,7 +13,8 @@ from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
 SCOPE = "https://www.googleapis.com/auth/webmasters"
-SITE_URL = "https://toolblip.com/"
+SITE_URL = "sc-domain:toolblip.com"
+PUBLIC_SITE_URL = "https://toolblip.com/"
 
 def load_env():
     """Load GSC creds from .env."""
@@ -44,6 +45,9 @@ def get_gsc():
         sys.exit(1)
 
     creds_info = json.loads(creds_raw)
+    # .env values may be quoted JSON strings. Decode once more if needed.
+    if isinstance(creds_info, str):
+        creds_info = json.loads(creds_info)
     credentials = service_account.Credentials.from_service_account_info(
         creds_info, scopes=[SCOPE]
     )
@@ -60,7 +64,7 @@ def check_gsc_errors(gsc) -> dict:
         # Get URL inspection for toolblip.com root
         inspection = gsc.urlInspection().index().inspect(
             body={
-                "inspectionUrl": SITE_URL,
+                "inspectionUrl": PUBLIC_SITE_URL,
                 "languageCode": "en-US"
             }
         ).execute()
@@ -154,7 +158,7 @@ def submit_sitemap(gsc) -> dict:
     print("REFRESHING sitemap...")
     try:
         # Re-submit the sitemap
-        sitemap_url = SITE_URL + "sitemap.xml"
+        sitemap_url = PUBLIC_SITE_URL + "sitemap.xml"
         result = gsc.sitemaps().submit(
             siteUrl=SITE_URL,
             feedPath=sitemap_url
@@ -168,7 +172,7 @@ def research_keywords(gsc, seed_keywords: list) -> list:
     Use GSC search analytics to find related long-tail keywords.
     Pulls top queries driving impressions/clicks for the site.
     """
-    print("RESEARCHING keywords from GSC...")
+    print("RESEARCHING keywords from GSC...", file=sys.stderr)
     try:
         now = datetime.now(timezone.utc)
         start = (now - __import__('datetime').timedelta(days=90)).strftime("%Y-%m-%d")
