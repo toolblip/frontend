@@ -21,7 +21,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
             Pick a tool&nbsp;→ Paste your data&nbsp;→ Get your result
           </h2>
           <p style={{ fontSize: 13.5, color: 'var(--fg-2)', marginTop: 6 }}>
-            No servers. No uploads. No paste history. Nothing leaves your browser.
+            No servers, no uploads, nothing leaves your browser.
           </p>
         </div>
 
@@ -58,7 +58,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               color: 'var(--green, #16a34a)',
               bg: 'var(--green-tint, #dcfce7)',
               title: 'Paste your data',
-              desc: 'Paste or type directly in the page. No uploads, no account, no paste history.'
+              desc: 'Paste or type directly in the page. Everything stays local in your tab.'
             },
             {
               icon: (
@@ -175,7 +175,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
               <path d="M7 11V7a5 5 0 0 1 10 0v4" />
             </svg>
-            No servers &nbsp;&middot;&nbsp; No uploads &nbsp;&middot;&nbsp; No paste history &nbsp;&middot;&nbsp; Nothing leaves your browser.
+            No servers &nbsp;&middot;&nbsp; No uploads &nbsp;&middot;&nbsp; Nothing leaves your browser.
           </a>
         </div>
       </div>

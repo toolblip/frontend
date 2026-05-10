@@ -37,7 +37,7 @@ const categories = Object.entries(categoryCounts)
 const WORKFLOW = 'Pick a tool → Paste your data → Get your result';
 const LOCAL_FIRST_NOTE = 'No servers, no uploads, nothing leaves your browser.';
 const STEP_PROMISE = 'Local results in three quick steps';
-const TOOL_PROMISE = 'Open the page, use the tool, copy the answer — no account, upload step, or paste history in between.';
+const TOOL_PROMISE = 'Open the page, use the tool, copy the answer — no account or upload step in between.';
 
 const STEPS = [
   {
@@ -201,7 +201,7 @@ export default function HomePage() {
             Jump to a category
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            {CATEGORY_SUMMARY} grouped into quick filters, so you can jump straight to the right utility without scanning the whole grid.
+            {CATEGORY_SUMMARY} in quick filters, so you can jump straight to the right utility.
           </p>
         </div>
         <div className="flex flex-wrap justify-center gap-2">
@@ -231,7 +231,7 @@ export default function HomePage() {
             Useful utilities without the usual friction.
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 max-w-2xl mx-auto">
-            Toolblip keeps everyday text, developer, and encoding tasks local, immediate, and low-friction — no accounts, no paywalls, no paste history, no wondering where your data went.
+            Toolblip keeps everyday text, developer, and encoding tasks local, immediate, and low-friction.
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

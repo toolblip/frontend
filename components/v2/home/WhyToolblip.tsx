@@ -11,7 +11,7 @@ const benefits = [
     bgVar: 'var(--green-tint)',
     title: 'Private',
     tagline: 'Data never leaves your browser',
-    desc: 'Paste sensitive text, JSON, images, or snippets with confidence: processing happens locally in your tab.',
+    desc: 'Paste sensitive text, JSON, images, or snippets with confidence. Processing happens locally in your tab.',
     glowVar: 'rgba(22, 163, 74, 0.12)',
   },
   {
@@ -60,7 +60,7 @@ export default function WhyToolblip() {
             Useful tools without the usual friction
           </h2>
           <p style={{ fontSize: 14, color: 'var(--fg-2)', marginTop: 8 }}>
-            Private by architecture, fast in practice, free from the first click.
+            Private by architecture, instant in your tab, free from the first click.
           </p>
         </div>
 
