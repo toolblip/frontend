@@ -37,6 +37,7 @@ const categories = Object.entries(categoryCounts)
 const WORKFLOW = 'Pick a tool → Paste your data → Get your result';
 const LOCAL_FIRST_NOTE = 'No servers, no uploads, nothing leaves your browser.';
 const STEP_PROMISE = 'Local results in three quick steps';
+const TOOL_PROMISE = 'Open the page, use the tool, copy the answer — no account or upload step in between.';
 
 const STEPS = [
   {
@@ -152,6 +153,9 @@ export default function HomePage() {
             <p className="mt-2 inline-flex rounded-full bg-red-50 dark:bg-red-950/30 px-3 py-1 text-xs font-semibold text-red-700 dark:text-red-300">
               {LOCAL_FIRST_NOTE}
             </p>
+            <p className="mt-2 text-xs text-gray-400 dark:text-gray-500 leading-relaxed">
+              {TOOL_PROMISE}
+            </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1">
             {STEPS.map((s, index) => (
@@ -197,7 +201,7 @@ export default function HomePage() {
             Jump to a category
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            {CATEGORY_SUMMARY} grouped into quick filters, so the right utility is only one click away.
+            {CATEGORY_SUMMARY} grouped into quick filters, so you can jump straight to the right utility.
           </p>
         </div>
         <div className="flex flex-wrap justify-center gap-2">
