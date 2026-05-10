@@ -107,7 +107,7 @@ export default function HomePage() {
           <span className="text-red-600 dark:text-red-400"> that don’t touch your data</span>
         </h1>
         <p className="text-lg text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
-          {tools.length}+ focused utilities for text, encoding, development, and everyday cleanup — open a tool, paste data, and get the result without signup or uploads.
+          {tools.length}+ focused utilities for text, encoding, development, and everyday cleanup — open one, paste once, and copy a clean result without signup or uploads.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <a
@@ -143,7 +143,7 @@ export default function HomePage() {
               How it works
             </p>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">
-              {WORKFLOW}. {LOCAL_FIRST_NOTE}
+              {WORKFLOW}. Results happen in-browser: {LOCAL_FIRST_NOTE.toLowerCase()}
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1">
@@ -220,7 +220,7 @@ export default function HomePage() {
             Handy utilities without the usual friction.
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 max-w-2xl mx-auto">
-            Toolblip keeps everyday text, developer, and encoding tasks local, immediate, and refreshingly low-friction — exactly how quick tools should feel.
+            Toolblip keeps everyday text, developer, and encoding tasks local, immediate, and refreshingly low-friction — the kind of tool you can trust for quick, messy work.
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
