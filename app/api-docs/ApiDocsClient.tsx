@@ -469,7 +469,7 @@ export default function ApiDocsClient() {
           <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
             <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Base URL strategy</h2>
             <p className="mt-3 text-slate-600 dark:text-slate-300">
-              Store the API host in one environment variable so you can switch from the Railway production URL to api.toolblip.com once SSL is live without changing endpoint paths.
+              Store the API host in one environment variable so you can switch from the Railway production URL to <InlineCode>api.toolblip.com</InlineCode> once SSL is live without changing endpoint paths.
             </p>
             <div className="mt-5">
               <CodeBlock label="Environment setup" code={baseUrlSwap} />
