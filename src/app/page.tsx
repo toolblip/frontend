@@ -36,13 +36,13 @@ const categories = Object.entries(categoryCounts)
 
 const WORKFLOW = 'Pick a tool → Paste your data → Get your result';
 const LOCAL_FIRST_NOTE = 'No servers, no uploads, nothing leaves your browser.';
-const STEP_PROMISE = 'Three quick steps, fully in your browser';
+const STEP_PROMISE = 'Pick, paste, done — fully in your browser';
 
 const STEPS = [
   {
     n: '1',
     title: 'Pick a tool',
-    desc: 'Choose the focused utility for your text, code, URLs, images, or everyday cleanup task.',
+    desc: 'Choose the focused utility for your text, code, URLs, images, or cleanup task.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17 9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z" />
@@ -52,7 +52,7 @@ const STEPS = [
   {
     n: '2',
     title: 'Paste your data',
-    desc: 'Drop in text, JSON, URLs, or values. Processing happens locally in your tab.',
+    desc: 'Drop in text, JSON, URLs, or values. Everything runs locally in your tab.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" />
@@ -62,7 +62,7 @@ const STEPS = [
   {
     n: '3',
     title: 'Get your result',
-    desc: 'Copy the finished result instantly — no uploads, queues, accounts, or round-trips.',
+    desc: 'Copy the finished result instantly — no uploads, queues, or account hoops.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
@@ -77,7 +77,7 @@ const BENEFITS = [
   {
     emoji: '🔒',
     title: 'Private',
-    desc: 'Your data never leaves your browser — no uploads, server processing, or background storage.',
+    desc: 'Your data stays in your browser — no uploads, server processing, or background storage.',
   },
   {
     emoji: '⚡',
@@ -227,7 +227,7 @@ export default function HomePage() {
             Useful utilities without the usual friction.
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 max-w-2xl mx-auto">
-            Toolblip keeps everyday text, developer, and encoding tasks local, immediate, and refreshingly low-friction — no accounts, no paywalls, no upload anxiety.
+            Toolblip keeps everyday text, developer, and encoding tasks local, immediate, and low-friction — no accounts, no paywalls, no upload anxiety.
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
