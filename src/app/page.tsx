@@ -35,13 +35,13 @@ const categories = Object.entries(categoryCounts)
 // ─── How it works ───────────────────────────────────────────────────────
 
 const WORKFLOW = 'Pick a tool → Paste your data → Get your result';
-const LOCAL_FIRST_NOTE = 'Local-first by design: no servers, no uploads, nothing leaves your browser.';
+const LOCAL_FIRST_NOTE = 'Browser-only by design: no servers, no uploads, nothing leaves your browser.';
 
 const STEPS = [
   {
     n: '1',
     title: 'Pick a tool',
-    desc: 'Choose the focused utility that matches the job in front of you.',
+    desc: 'Jump straight into the focused utility that matches the job in front of you.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17 9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z" />
@@ -51,7 +51,7 @@ const STEPS = [
   {
     n: '2',
     title: 'Paste your data',
-    desc: 'Drop text, JSON, URLs, or values directly into the page — never an upload queue.',
+    desc: 'Drop text, JSON, URLs, or values into the page — never an upload queue.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" />
@@ -76,17 +76,17 @@ const BENEFITS = [
   {
     emoji: '🔒',
     title: 'Private',
-    desc: 'Data never leaves your browser — no uploads, no background storage.',
+    desc: 'Data never leaves your browser — no uploads, no server processing, no background storage.',
   },
   {
     emoji: '⚡',
     title: 'Fast',
-    desc: 'Runs instantly in your tab, so cleanup and conversion jobs feel effortless.',
+    desc: 'Runs instantly in your tab, so cleanup, conversion, and formatting jobs feel effortless.',
   },
   {
     emoji: '🎁',
     title: 'Free',
-    desc: 'No signup, no paywall, no “trial expired” surprise — just open and use.',
+    desc: 'No signup, no paywall, no “trial expired” surprise — just open the tool and use it.',
   },
 ];
 
@@ -145,6 +145,9 @@ export default function HomePage() {
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">
               {WORKFLOW}. {LOCAL_FIRST_NOTE}
             </p>
+            <p className="mt-2 inline-flex rounded-full bg-red-50 dark:bg-red-950/30 px-3 py-1 text-xs font-semibold text-red-700 dark:text-red-300">
+              Your data stays in your tab.
+            </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1">
             {STEPS.map((s, index) => (
@@ -190,7 +193,7 @@ export default function HomePage() {
             Jump to a category
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            {CATEGORY_SUMMARY} grouped so you can skip browsing and land on the right utility.
+            {CATEGORY_SUMMARY} grouped into one-tap filters, so you can land on the right utility faster.
           </p>
         </div>
         <div className="flex flex-wrap justify-center gap-2">
@@ -217,7 +220,7 @@ export default function HomePage() {
             Why Toolblip?
           </p>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
-            Handy utilities without the usual friction.
+            Useful utilities without the usual friction.
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 max-w-2xl mx-auto">
             Toolblip keeps everyday text, developer, and encoding tasks local, immediate, and refreshingly low-friction — perfect for quick, messy work.
