@@ -248,6 +248,7 @@ BASE_URL="${FUTURE_BASE_URL}"`;
 const quickFacts = [
   { label: 'Current base URL', value: BASE_URL, detail: 'Use this Railway production host today.' },
   { label: 'Future base URL', value: FUTURE_BASE_URL, detail: 'Switch here once api.toolblip.com SSL is ready.' },
+  { label: 'Path prefix', value: '/api', detail: 'Every documented endpoint below is relative to the active base URL.' },
   { label: 'Auth header', value: 'Authorization: Bearer YOUR_TOKEN', detail: 'Required only on protected auth endpoints.' },
   { label: 'Content type', value: 'application/json', detail: 'Send and receive JSON for POST requests.' },
 ];
