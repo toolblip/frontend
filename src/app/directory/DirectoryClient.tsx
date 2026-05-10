@@ -34,6 +34,11 @@ function toolMatchesCategory(tool: Tool, category: CategoryTab) {
   return mappedCategory === null || tool.category === mappedCategory;
 }
 
+const CATEGORY_COUNTS = CATEGORY_TABS.reduce<Record<CategoryTab, number>>((acc, category) => {
+  acc[category] = tools.filter((tool) => toolMatchesCategory(tool, category)).length;
+  return acc;
+}, {} as Record<CategoryTab, number>);
+
 export function DirectoryClient() {
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState<CategoryTab>('All');
@@ -121,7 +126,16 @@ export function DirectoryClient() {
                     : 'border-gray-200 bg-white text-gray-600 hover:border-red-300 hover:text-red-600 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:hover:border-red-700 dark:hover:text-red-400'
                 }`}
               >
-                {category}
+                <span>{category}</span>
+                <span
+                  className={`ml-2 rounded-full px-1.5 py-0.5 text-[11px] font-semibold ${
+                    isActive
+                      ? 'bg-white/20 text-white'
+                      : 'bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-500'
+                  }`}
+                >
+                  {CATEGORY_COUNTS[category]}
+                </span>
               </button>
             );
           })}
@@ -174,7 +188,7 @@ export function DirectoryClient() {
           </div>
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">No tools found</h2>
           <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-            Try a different search term or switch back to All categories.
+            Try a different search term or switch back to All categories to browse every tool.
           </p>
           <button
             type="button"
