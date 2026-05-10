@@ -36,7 +36,7 @@ const categories = Object.entries(categoryCounts)
 
 const WORKFLOW = 'Pick a tool → Paste your data → Get your result';
 const LOCAL_FIRST_NOTE = 'No servers, no uploads, nothing leaves your browser.';
-const STEP_PROMISE = 'Pick, paste, done — fully in your browser';
+const STEP_PROMISE = 'Three quick steps, zero upload anxiety';
 
 const STEPS = [
   {
@@ -52,7 +52,7 @@ const STEPS = [
   {
     n: '2',
     title: 'Paste your data',
-    desc: 'Drop in text, JSON, URLs, or values. Everything runs locally in your tab.',
+    desc: 'Drop in text, JSON, URLs, or values. Processing happens locally in your tab.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" />
@@ -62,7 +62,7 @@ const STEPS = [
   {
     n: '3',
     title: 'Get your result',
-    desc: 'Copy the finished result instantly — no uploads, queues, or account hoops.',
+    desc: 'Copy the finished result instantly — no upload queues, accounts, or waiting around.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
@@ -197,7 +197,7 @@ export default function HomePage() {
             Jump to a category
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            {CATEGORY_SUMMARY} grouped into one-tap filters, so you can jump straight to the right utility.
+            {CATEGORY_SUMMARY} grouped into one-tap filters, so the right utility is never buried.
           </p>
         </div>
         <div className="flex flex-wrap justify-center gap-2">
