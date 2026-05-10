@@ -61,7 +61,7 @@ export default function ShareButtons({ toolName, toolSlug }: ShareButtonsProps) 
   };
 
   return (
-    <div className="tb-v2-share-row flex-wrap" aria-label="Share this tool">
+    <div className="tb-v2-share-row" aria-label="Share this tool">
       <button
         type="button"
         onClick={copyLink}

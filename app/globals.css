@@ -1586,7 +1586,7 @@ body.tb-v2 a {
 }
 
 /* Share buttons */
-.tb-v2-share-row { display: flex; align-items: center; gap: 8px; }
+.tb-v2-share-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .tb-v2-share-btn {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 7px 14px; border-radius: 999px;
@@ -1595,8 +1595,10 @@ body.tb-v2 a {
   color: var(--fg-1); cursor: pointer;
   transition: background .1s, border-color .1s, color .1s;
   font-family: inherit;
+  text-decoration: none;
 }
 .tb-v2-share-btn:hover { background: var(--surface-2); border-color: var(--line-2); color: var(--fg-0); }
+.tb-v2-share-btn:focus-visible { outline: 2px solid var(--red); outline-offset: 2px; }
 
 /* Tool card */
 .tb-v2-tool-card {
