@@ -35,13 +35,13 @@ const categories = Object.entries(categoryCounts)
 // ─── How it works ───────────────────────────────────────────────────────
 
 const WORKFLOW = 'Pick a tool → Paste your data → Get your result';
-const LOCAL_FIRST_NOTE = 'Everything runs in your tab: no servers, no uploads, nothing leaves your browser.';
+const LOCAL_FIRST_NOTE = 'No servers, no uploads, nothing leaves your browser.';
 
 const STEPS = [
   {
     n: '1',
     title: 'Pick a tool',
-    desc: 'Start with the exact utility you need for text, code, URLs, images, or quick cleanup.',
+    desc: 'Choose a focused utility for text, code, URLs, images, or quick cleanup.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17 9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z" />
@@ -51,7 +51,7 @@ const STEPS = [
   {
     n: '2',
     title: 'Paste your data',
-    desc: 'Drop in text, JSON, URLs, or values — it stays local instead of entering an upload queue.',
+    desc: 'Drop in text, JSON, URLs, or values — it stays local in your browser.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" />
@@ -61,7 +61,7 @@ const STEPS = [
   {
     n: '3',
     title: 'Get your result',
-    desc: 'Copy clean output immediately, with the processing handled right inside your tab.',
+    desc: 'Copy clean output immediately, with processing handled right inside your tab.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
@@ -76,17 +76,17 @@ const BENEFITS = [
   {
     emoji: '🔒',
     title: 'Private',
-    desc: 'Your data never leaves the browser — no uploads, server processing, or background storage.',
+    desc: 'Your data never leaves your browser — no uploads, server processing, or background storage.',
   },
   {
     emoji: '⚡',
     title: 'Fast',
-    desc: 'Tools run instantly in your tab, keeping cleanup, conversion, and formatting jobs frictionless.',
+    desc: 'Runs instantly in your tab, so cleanup, conversion, and formatting stay frictionless.',
   },
   {
     emoji: '🎁',
     title: 'Free',
-    desc: 'No signup, no paywall, no “trial expired” surprise — just open a tool and get moving.',
+    desc: 'No signup, no paywall, no “trial expired” surprise — just open a tool and use it.',
   },
 ];
 
@@ -138,15 +138,15 @@ export default function HomePage() {
       {/* ── How it works ── */}
       <section className="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white/85 dark:bg-gray-900/75 shadow-sm px-5 py-5 sm:px-7">
         <div className="flex flex-col lg:flex-row lg:items-center gap-5">
-          <div className="lg:w-52 text-center lg:text-left">
+          <div className="lg:w-60 text-center lg:text-left">
             <p className="text-sm font-semibold uppercase tracking-widest text-red-600 dark:text-red-400">
               How it works
             </p>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">
-              {WORKFLOW}. {LOCAL_FIRST_NOTE}
+              {WORKFLOW}.
             </p>
             <p className="mt-2 inline-flex rounded-full bg-red-50 dark:bg-red-950/30 px-3 py-1 text-xs font-semibold text-red-700 dark:text-red-300">
-              Your data stays in your tab.
+              {LOCAL_FIRST_NOTE}
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1">
@@ -193,7 +193,7 @@ export default function HomePage() {
             Jump to a category
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            {CATEGORY_SUMMARY} grouped into one-tap filters, so you can land on the right utility faster.
+            {CATEGORY_SUMMARY} grouped into one-tap filters, so you can jump straight to the right utility.
           </p>
         </div>
         <div className="flex flex-wrap justify-center gap-2">
@@ -223,7 +223,7 @@ export default function HomePage() {
             Useful utilities without the usual friction.
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 max-w-2xl mx-auto">
-            Toolblip keeps everyday text, developer, and encoding tasks local, immediate, and refreshingly low-friction — perfect for quick, messy work.
+            Toolblip keeps everyday text, developer, and encoding tasks local, immediate, and refreshingly low-friction.
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
