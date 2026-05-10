@@ -36,13 +36,13 @@ const categories = Object.entries(categoryCounts)
 
 const WORKFLOW = 'Pick a tool → Paste your data → Get your result';
 const LOCAL_FIRST_NOTE = 'No servers, no uploads, nothing leaves your browser.';
-const STEP_PROMISE = 'Three clicks from messy input to clean output';
+const STEP_PROMISE = 'From messy input to clean output in seconds';
 
 const STEPS = [
   {
     n: '1',
     title: 'Pick a tool',
-    desc: 'Start with the exact utility you need — text, code, URLs, images, or quick cleanup.',
+    desc: 'Choose the focused utility for your text, code, URLs, images, or quick cleanup task.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17 9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z" />
@@ -52,7 +52,7 @@ const STEPS = [
   {
     n: '2',
     title: 'Paste your data',
-    desc: 'Drop in text, JSON, URLs, or values. Processing happens locally in your tab.',
+    desc: 'Drop in text, JSON, URLs, or values. The work happens locally in your tab.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" />
@@ -62,7 +62,7 @@ const STEPS = [
   {
     n: '3',
     title: 'Get your result',
-    desc: 'Copy the finished result instantly and move on — no waiting on a server round-trip.',
+    desc: 'Copy the finished result instantly and move on — no uploads, queues, or round-trips.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
@@ -108,7 +108,7 @@ export default function HomePage() {
           <span className="text-red-600 dark:text-red-400"> that don’t touch your data</span>
         </h1>
         <p className="text-lg text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
-          {tools.length}+ focused utilities for text, encoding, development, and everyday cleanup — open one, paste once, and get clean output without signup, uploads, or server-side processing.
+          {tools.length}+ focused utilities for text, encoding, development, and everyday cleanup — pick a tool, paste your data, and get clean output while everything stays in your browser.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <a
