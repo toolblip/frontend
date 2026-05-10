@@ -7,7 +7,7 @@ export default function Error() {
     <main className="flex min-h-dvh items-center justify-center bg-[var(--bg)] px-4 py-16 text-[var(--fg-0)]">
       <section
         aria-labelledby="error-title"
-        className="w-full max-w-lg rounded-3xl border border-[var(--line)] bg-[var(--surface-2)] p-8 text-center shadow-[0_24px_80px_rgba(15,23,42,0.06)] dark:shadow-none sm:p-10"
+        className="w-full max-w-md rounded-3xl border border-[var(--line)] bg-[var(--surface-2)] p-8 text-center shadow-[0_24px_80px_rgba(15,23,42,0.06)] dark:shadow-none sm:p-10"
         role="alert"
       >
         <h1
