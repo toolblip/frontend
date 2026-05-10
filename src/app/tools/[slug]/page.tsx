@@ -87,7 +87,7 @@ export default async function ToolDetailPage({ params }: ToolDetailPageProps) {
             {tool.emoji}
           </span>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
+            <h1 id="tool-title" className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
               {tool.name}
             </h1>
             <span className="mt-3 inline-flex rounded-full border border-green-100 bg-green-50 px-3 py-1 text-xs font-semibold text-green-700 dark:border-green-900 dark:bg-green-950 dark:text-green-300">
@@ -103,7 +103,7 @@ export default async function ToolDetailPage({ params }: ToolDetailPageProps) {
         </div>
       </header>
 
-      <section className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-gray-900 sm:p-6">
+      <section aria-labelledby="tool-title" className="rounded-3xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-gray-900 sm:p-6">
         <ToolUI tool={tool} />
       </section>
 
