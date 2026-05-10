@@ -52,7 +52,7 @@ const endpoints: Endpoint[] = [
       { name: 'page', type: 'number', required: false, description: 'Pagination page number.' },
       { name: 'per_page', type: 'number', required: false, description: 'Number of tools to return per page.' },
     ],
-    curl: `curl "${BASE_URL}/api/tools?search=json&per_page=10" \\\n  -H "Accept: application/json"`,
+    curl: `curl "${BASE_URL}/api/tools" \\\n  -H "Accept: application/json"`,
     response: `{
   "tools": {
     "tools": [
