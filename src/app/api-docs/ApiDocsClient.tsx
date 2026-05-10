@@ -52,7 +52,7 @@ const endpoints: Endpoint[] = [
       { name: 'page', type: 'number', required: false, description: 'Pagination page number.' },
       { name: 'per_page', type: 'number', required: false, description: 'Number of tools to return per page.' },
     ],
-    curl: `curl "${BASE_URL}/api/tools?search=json&per_page=10" \\\n  -H "Accept: application/json"`,
+    curl: `curl "${BASE_URL}/api/tools" \\\n  -H "Accept: application/json"`,
     response: `{
   "tools": {
     "tools": [
@@ -469,7 +469,7 @@ export default function ApiDocsClient() {
           <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
             <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Base URL strategy</h2>
             <p className="mt-3 text-slate-600 dark:text-slate-300">
-              Store the API host in one environment variable so the Railway URL can be replaced cleanly by the custom API domain when SSL is live.
+              Store the API host in one environment variable so the Railway URL can be replaced cleanly by <InlineCode>api.toolblip.com</InlineCode> once SSL is ready.
             </p>
             <div className="mt-5">
               <CodeBlock label="Environment setup" code={baseUrlSwap} />
