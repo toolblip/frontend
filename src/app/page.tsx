@@ -35,13 +35,13 @@ const categories = Object.entries(categoryCounts)
 // ─── How it works ───────────────────────────────────────────────────────
 
 const WORKFLOW = 'Pick a tool → Paste your data → Get your result';
-const LOCAL_FIRST_NOTE = 'Browser-only by design: no servers, no uploads, nothing leaves your browser.';
+const LOCAL_FIRST_NOTE = 'Everything runs in your tab: no servers, no uploads, nothing leaves your browser.';
 
 const STEPS = [
   {
     n: '1',
     title: 'Pick a tool',
-    desc: 'Choose a focused utility for text, code, URLs, images, or everyday cleanup.',
+    desc: 'Start with the exact utility you need for text, code, URLs, images, or quick cleanup.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17 9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z" />
@@ -51,7 +51,7 @@ const STEPS = [
   {
     n: '2',
     title: 'Paste your data',
-    desc: 'Drop text, JSON, URLs, or values into the page — never into an upload queue.',
+    desc: 'Drop in text, JSON, URLs, or values — it stays local instead of entering an upload queue.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" />
@@ -61,7 +61,7 @@ const STEPS = [
   {
     n: '3',
     title: 'Get your result',
-    desc: 'Copy clean output immediately, with the work handled right inside your tab.',
+    desc: 'Copy clean output immediately, with the processing handled right inside your tab.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
@@ -76,17 +76,17 @@ const BENEFITS = [
   {
     emoji: '🔒',
     title: 'Private',
-    desc: 'Data never leaves your browser — no uploads, server processing, or background storage.',
+    desc: 'Your data never leaves the browser — no uploads, server processing, or background storage.',
   },
   {
     emoji: '⚡',
     title: 'Fast',
-    desc: 'Runs instantly in your tab, so cleanup, conversion, and formatting jobs stay frictionless.',
+    desc: 'Tools run instantly in your tab, keeping cleanup, conversion, and formatting jobs frictionless.',
   },
   {
     emoji: '🎁',
     title: 'Free',
-    desc: 'No signup, no paywall, no “trial expired” surprise — open the tool and get moving.',
+    desc: 'No signup, no paywall, no “trial expired” surprise — just open a tool and get moving.',
   },
 ];
 
