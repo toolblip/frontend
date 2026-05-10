@@ -28,6 +28,7 @@ type Endpoint = {
   status: string;
   responseShape: string;
   headers: HeaderSpec[];
+  pathParams?: Field[];
   query?: Field[];
   body?: Field[];
   curl: string;
@@ -81,6 +82,9 @@ const endpoints: Endpoint[] = [
     status: '200 OK',
     responseShape: '{ tool }',
     headers: [{ name: 'Accept', value: 'application/json', when: 'Recommended for all requests' }],
+    pathParams: [
+      { name: 'slug', type: 'string', required: true, description: 'Tool slug, for example json-formatter.' },
+    ],
     curl: `curl "${BASE_URL}/api/tools/json-formatter" \\\n  -H "Accept: application/json"`,
     response: `{
   "tool": {
@@ -339,6 +343,25 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
           ))}
         </div>
       </div>
+
+      {endpoint.pathParams ? (
+        <div className="mt-6">
+          <h4 className="text-sm font-bold uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">Path parameters</h4>
+          <div className="mt-3 overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800">
+            <div className="hidden grid-cols-[1.1fr_0.8fr_0.7fr_2fr] bg-slate-50 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:bg-slate-950 dark:text-slate-400 md:grid">
+              <span>Parameter</span><span>Type</span><span>Required</span><span>Description</span>
+            </div>
+            {endpoint.pathParams.map((field) => (
+              <div key={field.name} className="grid gap-2 border-t border-slate-200 px-4 py-3 text-sm first:border-t-0 dark:border-slate-800 md:grid-cols-[1.1fr_0.8fr_0.7fr_2fr] md:gap-3 md:first:border-t">
+                <code className="text-slate-900 dark:text-slate-100">{field.name}</code>
+                <span className="text-slate-600 dark:text-slate-400">{field.type}</span>
+                <span className={field.required ? 'font-semibold text-rose-600 dark:text-rose-400' : 'text-slate-500'}>{field.required ? 'Required' : 'Optional'}</span>
+                <span className="text-slate-600 dark:text-slate-300">{field.description}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : null}
 
       {endpoint.query ? (
         <div className="mt-6">
