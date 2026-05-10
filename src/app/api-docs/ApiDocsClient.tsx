@@ -416,6 +416,7 @@ export default function ApiDocsClient() {
               </div>
               <p className="mt-4 text-sm text-slate-600 dark:text-slate-300">
                 Use the Railway URL today. The endpoint paths and response shapes stay the same when the custom API domain is ready.
+                Examples below use placeholder credentials and tokens; replace them with your own values before running requests.
               </p>
             </div>
           </div>
