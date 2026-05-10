@@ -249,6 +249,7 @@ const quickFacts = [
   { label: 'Current base URL', value: BASE_URL, detail: 'Use this Railway production host today.' },
   { label: 'Future base URL', value: FUTURE_BASE_URL, detail: 'Switch here once api.toolblip.com SSL is ready.' },
   { label: 'Path prefix', value: '/api', detail: 'Every documented endpoint below is relative to the active base URL.' },
+  { label: 'Auth scheme', value: 'Bearer token', detail: 'Send tokens in the Authorization header, never in URLs.' },
   { label: 'Auth header', value: 'Authorization: Bearer YOUR_TOKEN', detail: 'Required only on protected auth endpoints.' },
   { label: 'Content type', value: 'application/json', detail: 'Send and receive JSON for POST requests.' },
 ];
@@ -446,7 +447,7 @@ export default function ApiDocsClient() {
                 </div>
               </div>
               <p className="mt-4 text-sm text-slate-600 dark:text-slate-300">
-                Use the Railway URL today for every example below. The endpoint paths and response shapes stay the same when the custom API domain is ready.
+                Use the Railway URL today for every example below, or switch to api.toolblip.com once SSL is ready. The endpoint paths and response shapes stay the same.
                 Examples use placeholder credentials and tokens; replace them with your own values before running requests.
               </p>
             </div>
