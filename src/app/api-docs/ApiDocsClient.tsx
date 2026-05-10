@@ -241,6 +241,13 @@ BASE_URL="${BASE_URL}"
 # Planned custom domain after SSL is ready
 BASE_URL="${FUTURE_BASE_URL}"`;
 
+const quickFacts = [
+  { label: 'Current base URL', value: BASE_URL, detail: 'Use this Railway production host today.' },
+  { label: 'Future base URL', value: FUTURE_BASE_URL, detail: 'Switch here once api.toolblip.com SSL is ready.' },
+  { label: 'Auth header', value: 'Authorization: Bearer YOUR_TOKEN', detail: 'Required only on protected auth endpoints.' },
+  { label: 'Content type', value: 'application/json', detail: 'Send and receive JSON for POST requests.' },
+];
+
 function CopyButton({ value }: { value: string }) {
   const [copied, setCopied] = useState(false);
 
@@ -464,6 +471,16 @@ export default function ApiDocsClient() {
               <CodeBlock label="Public request" code={starterRequest} />
               <CodeBlock label="Authenticated request" code={authenticatedRequest} />
             </div>
+          </section>
+
+          <section className="grid gap-4 md:grid-cols-2">
+            {quickFacts.map((fact) => (
+              <div key={fact.label} className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">{fact.label}</p>
+                <code className="mt-3 block break-all rounded-xl bg-slate-50 p-3 text-sm text-slate-900 dark:bg-slate-950 dark:text-slate-100">{fact.value}</code>
+                <p className="mt-3 text-sm text-slate-600 dark:text-slate-300">{fact.detail}</p>
+              </div>
+            ))}
           </section>
 
           <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
