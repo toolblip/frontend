@@ -36,6 +36,7 @@ const categories = Object.entries(categoryCounts)
 
 const WORKFLOW = 'Pick a tool → Paste your data → Get your result';
 const LOCAL_FIRST_NOTE = 'No servers, no uploads, nothing leaves your browser.';
+const STEP_PROMISE = 'Browser-only from start to finish';
 
 const STEPS = [
   {
@@ -142,6 +143,9 @@ export default function HomePage() {
             <p className="text-sm font-semibold uppercase tracking-widest text-red-600 dark:text-red-400">
               How it works
             </p>
+            <h2 className="mt-1 text-xl font-bold text-gray-900 dark:text-white">
+              {STEP_PROMISE}
+            </h2>
             <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">
               {WORKFLOW}.
             </p>
@@ -223,7 +227,7 @@ export default function HomePage() {
             Useful utilities without the usual friction.
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 max-w-2xl mx-auto">
-            Toolblip keeps everyday text, developer, and encoding tasks local, immediate, and refreshingly low-friction.
+            Toolblip keeps everyday text, developer, and encoding tasks local, immediate, and refreshingly low-friction — no accounts or upload anxiety.
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
