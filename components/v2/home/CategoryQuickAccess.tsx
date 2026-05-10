@@ -42,11 +42,14 @@ export default function CategoryQuickAccess({ categories }: CategoryQuickAccessP
         <div style={{ textAlign: 'center', marginBottom: 14 }}>
           <div className="tb-v2-kicker">Browse by category</div>
           <h2 style={{ fontSize: 17, fontWeight: 700, margin: '4px 0 0', letterSpacing: '-0.3px' }}>
-            Find the right tool, fast
+            Jump straight to the right tool
           </h2>
         </div>
       </div>
       <div className="tb-v2-container">
+        <p style={{ textAlign: 'center', color: 'var(--fg-2)', fontSize: 13, margin: '-4px 0 12px' }}>
+          One-click shortcuts into every category — no need to scan the full directory first.
+        </p>
         <div
           style={{
             display: 'flex',
