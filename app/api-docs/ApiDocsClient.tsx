@@ -403,10 +403,20 @@ export default function ApiDocsClient() {
               </div>
             </div>
             <div className="rounded-3xl border border-slate-200 bg-slate-50 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Base URL</p>
-              <code className="mt-3 block break-all rounded-xl bg-white p-3 text-sm text-slate-900 dark:bg-slate-950 dark:text-slate-100">{BASE_URL}</code>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">Base URLs</p>
+              <div className="mt-3 space-y-3">
+                <div>
+                  <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Current production</p>
+                  <code className="block break-all rounded-xl bg-white p-3 text-sm text-slate-900 dark:bg-slate-950 dark:text-slate-100">{BASE_URL}</code>
+                </div>
+                <div>
+                  <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">Custom domain after SSL is ready</p>
+                  <code className="block break-all rounded-xl bg-white p-3 text-sm text-slate-900 dark:bg-slate-950 dark:text-slate-100">{FUTURE_BASE_URL}</code>
+                </div>
+              </div>
               <p className="mt-4 text-sm text-slate-600 dark:text-slate-300">
-                Use Railway production today. Once SSL is ready, switch requests to <code className="font-mono">{FUTURE_BASE_URL}</code>.
+                Use the Railway URL today. The endpoint paths and response shapes stay the same when the custom API domain is ready.
+                Examples below use placeholder credentials and tokens; replace them with your own values before running requests.
               </p>
             </div>
           </div>
@@ -448,7 +458,7 @@ export default function ApiDocsClient() {
           <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
             <h2 className="text-2xl font-bold text-slate-950 dark:text-white">Before you start</h2>
             <p className="mt-3 text-slate-600 dark:text-slate-300">
-              All endpoints are JSON over HTTPS and currently live under the <InlineCode>/api</InlineCode> path. Prefix every path below with <InlineCode>{BASE_URL}</InlineCode> today, and switch to <InlineCode>{FUTURE_BASE_URL}</InlineCode> after SSL is ready.
+              All endpoints are JSON over HTTPS and currently live under the <InlineCode>/api</InlineCode> path. Prefix every path below with <InlineCode>{BASE_URL}</InlineCode> today; when SSL is ready, the same requests can use <InlineCode>{FUTURE_BASE_URL}</InlineCode>.
             </p>
             <div className="mt-5 grid gap-4 xl:grid-cols-2">
               <CodeBlock label="Public request" code={starterRequest} />
