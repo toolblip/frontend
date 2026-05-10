@@ -1571,7 +1571,8 @@ export const tools: Tool[] = [
   { name: 'Notebook to HTML', slug: 'notebook-to-html', description: 'Render Jupyter .ipynb notebook files as HTML preview. Paste notebook JSON and see rendered markdown cells, syntax-highlighted code, and outputs instantly in your browser.', emoji: '📓', category: 'Developer' },
   { name: 'IPynb Formatter', slug: 'ipynb-formatter', description: 'Format and pretty-print Jupyter notebook (.ipynb) JSON with proper indentation and cell sorting. Clean up messy notebook files for better readability and version control.', emoji: '📋', category: 'Developer' },
   { name: 'Jupyter Cleaner', slug: 'jupyter-cleaner', description: 'Remove all outputs, execution counts, and metadata from Jupyter .ipynb files. Keep only source code and markdown cells for cleaner diffs and easier version control.', emoji: '🧹', category: 'Developer' },
-  { name: 'Oxford Comma Fixer', slug: 'oxford-comma', description: 'Automatically apply the Oxford comma rule to any list of items. Paste comma-separated or newline-separated items to get properly formatted output with the serial/Oxford comma.', emoji: '📝', category: 'Text' }
+  { name: 'Oxford Comma Fixer', slug: 'oxford-comma', description: 'Automatically apply the Oxford comma rule to any list of items. Paste comma-separated or newline-separated items to get properly formatted output with the serial/Oxford comma.', emoji: '📝', category: 'Text' },
+  { name: 'JSON Graph Visualizer', slug: 'json-graph-visualizer', description: 'Visualize nested JSON relationships as nodes and edges, highlight missing references, and export relationship maps for debugging.', emoji: '🕸️', category: 'Developer' }
 ]
 
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'AI Tools', 'Document Generator', 'Image Tools'] as const;

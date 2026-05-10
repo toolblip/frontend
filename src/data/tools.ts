@@ -224,6 +224,14 @@ export const tools: Tool[] = [
     category: 'Math',
     tags: ['math', 'calculator', 'expression', 'evaluate'],
   },
+  {
+    slug: 'json-graph-visualizer',
+    name: 'JSON Graph Visualizer',
+    emoji: '🕸️',
+    description: 'Visualize nested JSON relationships as nodes and edges, highlight missing references, and export relationship maps for debugging.',
+    category: 'Developer',
+    tags: ['json', 'graph', 'visualizer', 'relationships', 'developer'],
+  },
 ];
 
 export function getToolBySlug(slug: string): Tool | undefined {
