@@ -4,8 +4,8 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { tools, type Tool } from '@/data/tools';
 
-const CATEGORY_TABS = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS'] as const;
-type CategoryTab = (typeof CATEGORY_TABS)[number];
+const CATEGORIES = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'Design', 'Security', 'QR Codes'] as const;
+type CategoryTab = (typeof CATEGORIES)[number];
 
 const CATEGORY_MATCHES: Record<CategoryTab, string[] | null> = {
   All: null,
@@ -16,6 +16,9 @@ const CATEGORY_MATCHES: Record<CategoryTab, string[] | null> = {
   Conversion: ['Conversion'],
   Math: ['Math'],
   CSS: ['CSS'],
+  Design: ['Design'],
+  Security: ['Security'],
+  'QR Codes': ['QR Codes'],
 };
 
 function matchesCategory(tool: Tool, tab: CategoryTab) {
@@ -43,11 +46,11 @@ export function DirectoryClient() {
   }, [activeTab, query]);
 
   const categoryCounts = useMemo(() => {
-    return CATEGORY_TABS.reduce<Record<CategoryTab, number>>((counts, tab) => {
-      counts[tab] = tools.filter((t) => matchesCategory(t, tab) && matchesSearch(t, query)).length;
+    return CATEGORIES.reduce<Record<CategoryTab, number>>((counts, tab) => {
+      counts[tab] = tools.filter((t) => matchesCategory(t, tab)).length;
       return counts;
     }, {} as Record<CategoryTab, number>);
-  }, [query]);
+  }, []);
 
   const hasFilters = activeTab !== 'All' || query.trim().length > 0;
 
@@ -111,7 +114,7 @@ export function DirectoryClient() {
 
         {/* ── Category tabs ── */}
         <div className="mt-4 flex gap-2 overflow-x-auto pb-1 sm:justify-center" role="tablist" aria-label="Filter by category">
-          {CATEGORY_TABS.map((tab) => {
+          {CATEGORIES.map((tab) => {
             const isActive = activeTab === tab;
             return (
               <button
