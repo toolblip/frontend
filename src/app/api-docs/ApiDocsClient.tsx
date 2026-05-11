@@ -210,8 +210,7 @@ function CopyButton({ value }: { value: string }) {
     } catch {
       const ta = document.createElement('textarea');
       ta.value = value;
-      ta.style.position = 'fixed';
-      ta.style.left = '-9999px';
+      ta.style.cssText = 'position:fixed;left:-9999px;top:-9999px';
       document.body.appendChild(ta);
       ta.select();
       document.execCommand('copy');
@@ -225,7 +224,7 @@ function CopyButton({ value }: { value: string }) {
     <button
       type="button"
       onClick={copy}
-      className="rounded-lg border border-slate-700/60 px-2.5 py-1 text-xs font-semibold text-slate-300 transition hover:border-slate-500 hover:text-white"
+      className="rounded-lg border border-slate-700/60 px-2.5 py-1 text-xs font-semibold text-slate-300 transition hover:border-slate-500 hover:text-white active:scale-95"
     >
       {copied ? '✓ Copied' : 'Copy'}
     </button>
@@ -339,24 +338,34 @@ export default function ApiDocsClient() {
   const tools = endpoints.filter((e) => e.group === 'Tools');
   const auth = endpoints.filter((e) => e.group === 'Authentication');
 
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+    tools: true,
+    authentication: true,
+  });
+
+  function toggleSection(key: string) {
+    setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
+  }
+
   return (
     <main className="min-h-screen bg-white text-slate-900 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 dark:text-white">
       {/* Hero */}
       <section className="border-b border-slate-100 bg-gradient-to-b from-white to-slate-50 dark:border-slate-800 dark:from-slate-950 dark:to-slate-900/50">
         <div className="mx-auto max-w-7xl px-6 py-14 lg:px-8">
           <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition hover:text-[#58D65D]">
-            ← Back to Toolblip
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+            Back to Toolblip
           </Link>
           <div className="mt-8 grid gap-10 lg:grid-cols-[1fr_340px] lg:items-start">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#58D65D]">REST API Reference</p>
               <h1 className="mt-3 text-5xl font-black tracking-tight text-slate-950 dark:text-white sm:text-6xl">Toolblip API Docs</h1>
               <p className="mt-5 max-w-2xl text-lg leading-relaxed text-slate-600 dark:text-slate-300">
-                Integrate the Toolblip API into your app or script. Authenticate with Bearer tokens, list tools, and manage user accounts with copy-ready curl examples and JSON responses.
+                Integrate the Toolblip API into your app or script. Authenticate with Bearer tokens, query tools, and manage user accounts — with copy-ready curl examples and real JSON responses.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <a href="#endpoints" className="rounded-full bg-[#58D65D] px-5 py-2.5 text-sm font-bold text-slate-950 transition hover:bg-emerald-400">
-                  View all endpoints
+                <a href="#endpoints" className="rounded-full bg-[#58D65D] px-5 py-2.5 text-sm font-bold text-slate-950 transition hover:bg-emerald-400 hover:shadow-lg hover:shadow-emerald-500/20">
+                  Browse endpoints
                 </a>
                 <a href="#auth" className="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-bold text-slate-700 transition hover:border-slate-400 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
                   Auth quick start
@@ -366,19 +375,22 @@ export default function ApiDocsClient() {
 
             {/* Base URL card */}
             <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-              <p className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Base URLs</p>
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Base URL</p>
               <div className="mt-4 space-y-3">
                 <div>
-                  <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-400">Current production</p>
-                  <code className="block break-all rounded-xl bg-slate-50 p-3 text-sm text-slate-900 dark:bg-slate-950 dark:text-emerald-400">{BASE_URL}</code>
+                  <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-slate-400">Production</p>
+                  <code className="block break-all rounded-xl bg-slate-50 p-3 text-sm font-mono text-slate-900 dark:bg-slate-950 dark:text-emerald-400">{BASE_URL}</code>
                 </div>
                 <div>
-                  <p className="mb-1 text-[11px] font-semibold uppercase tracking-wide text-slate-400">Custom domain (SSL pending)</p>
-                  <code className="block break-all rounded-xl bg-slate-50 p-3 text-sm text-slate-900 dark:bg-slate-950 dark:text-emerald-400">{FUTURE_BASE_URL}</code>
+                  <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                    Custom domain{' '}
+                    <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-700 dark:bg-amber-900/60 dark:text-amber-300">SSL pending</span>
+                  </p>
+                  <code className="block break-all rounded-xl bg-slate-50 p-3 text-sm font-mono text-slate-900 dark:bg-slate-950 dark:text-emerald-400">{FUTURE_BASE_URL}</code>
                 </div>
               </div>
               <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
-                Use the Railway URL for all requests today. Switch to api.toolblip.com when SSL is ready — paths and responses stay the same.
+                Use the Railway URL for all requests today. Switch to api.toolblip.com once SSL is ready — paths and responses are identical.
               </p>
             </div>
           </div>
@@ -413,7 +425,11 @@ export default function ApiDocsClient() {
           <section id="auth" className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <h2 className="text-2xl font-black text-slate-950 dark:text-white">Authentication</h2>
             <p className="mt-3 leading-relaxed text-slate-600 dark:text-slate-300">
-              Pass your token as <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm dark:bg-slate-800">Authorization: Bearer YOUR_TOKEN</code> on protected endpoints. Tokens are returned by <a href="#register" className="font-semibold text-[#58D65D] hover:underline">register</a> and <a href="#login" className="font-semibold text-[#58D65D] hover:underline">login</a>. Keep tokens private — never put them in URLs.
+              Pass your token as{' '}
+              <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm dark:bg-slate-800">Authorization: Bearer YOUR_TOKEN</code>{' '}
+              on protected endpoints. Tokens are returned by{' '}
+              <a href="#register" className="font-semibold text-[#58D65D] hover:underline">register</a> and{' '}
+              <a href="#login" className="font-semibold text-[#58D65D] hover:underline">login</a>. Keep tokens private — never put them in URLs.
             </p>
             <div className="mt-5">
               <CodeBlock label="Auth workflow (bash)" code={authSection} />
@@ -438,14 +454,23 @@ export default function ApiDocsClient() {
                 </thead>
                 <tbody>
                   {endpoints.map((ep) => (
-                    <tr key={ep.id} className="border-t border-slate-100 dark:border-slate-800">
+                    <tr key={ep.id} className="border-t border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
                       <td className="px-5 py-3.5">
                         <span className={`rounded px-2 py-1 text-xs font-black uppercase ${methodColors[ep.method]}`}>{ep.method}</span>
                       </td>
                       <td className="px-5 py-3.5">
                         <a href={`#${ep.id}`} className="font-mono text-slate-900 hover:text-[#58D65D] dark:text-slate-100 dark:hover:text-emerald-400">{ep.path}</a>
                       </td>
-                      <td className="px-5 py-3.5 text-slate-600 dark:text-slate-400">{ep.auth ? 'Bearer token' : '—'}</td>
+                      <td className="px-5 py-3.5">
+                        {ep.auth ? (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-semibold text-amber-700 dark:bg-amber-900/60 dark:text-amber-300">
+                            <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" /></svg>
+                            Bearer token
+                          </span>
+                        ) : (
+                          <span className="text-slate-400 dark:text-slate-500">—</span>
+                        )}
+                      </td>
                       <td className="px-5 py-3.5">
                         <code className="text-xs text-slate-500 dark:text-slate-400">{ep.responseShape}</code>
                       </td>
@@ -459,21 +484,45 @@ export default function ApiDocsClient() {
 
           {/* Endpoint sections */}
           <section id="endpoints">
-            <div className="mb-5">
+            {/* Tools */}
+            <button
+              onClick={() => toggleSection('tools')}
+              className="mb-5 flex w-full items-center gap-3 text-left"
+            >
               <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Endpoints</p>
-              <h2 className="mt-1 text-3xl font-black text-slate-950 dark:text-white">Tools</h2>
-            </div>
-            <div className="space-y-5">
+              <h2 className="text-3xl font-black text-slate-950 dark:text-white">Tools</h2>
+              <svg
+                className={`ml-auto h-5 w-5 text-slate-400 transition-transform duration-200 ${openSections.tools ? 'rotate-180' : ''}`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div className={`space-y-5 transition-all duration-200 ${openSections.tools ? 'opacity-100' : 'hidden opacity-0'}`}>
               {tools.map((ep) => <EndpointCard key={ep.id} endpoint={ep} />)}
             </div>
-          </section>
 
-          <section>
-            <div className="mb-5">
+            {/* Authentication */}
+            <button
+              onClick={() => toggleSection('authentication')}
+              className="mb-5 mt-8 flex w-full items-center gap-3 text-left"
+            >
               <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Endpoints</p>
-              <h2 className="mt-1 text-3xl font-black text-slate-950 dark:text-white">Authentication</h2>
-            </div>
-            <div className="space-y-5">
+              <h2 className="text-3xl font-black text-slate-950 dark:text-white">Authentication</h2>
+              <svg
+                className={`ml-auto h-5 w-5 text-slate-400 transition-transform duration-200 ${openSections.authentication ? 'rotate-180' : ''}`}
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <div className={`space-y-5 transition-all duration-200 ${openSections.authentication ? 'opacity-100' : 'hidden opacity-0'}`}>
               {auth.map((ep) => <EndpointCard key={ep.id} endpoint={ep} />)}
             </div>
           </section>
@@ -515,7 +564,9 @@ export default function ApiDocsClient() {
           <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <h2 className="text-2xl font-black text-slate-950 dark:text-white">Model reference</h2>
             <p className="mt-3 leading-relaxed text-slate-600 dark:text-slate-300">
-              Toolblip wraps all resources in top-level objects. A single tool is <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm dark:bg-slate-800">{"{ tool: {...} }"}</code>. The directory is <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm dark:bg-slate-800">{"{ tools: { tools: [...] } }"}</code>.
+              Toolblip wraps all resources in top-level objects. A single tool is{' '}
+              <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm dark:bg-slate-800">&#123; tool: &#123;...&#125; &#125;</code>. The directory is{' '}
+              <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm dark:bg-slate-800">&#123; tools: &#123; tools: [...] &#125; &#125;</code>.
             </p>
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
               <CodeBlock label="Tool object" code={`{
