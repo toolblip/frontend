@@ -198,8 +198,7 @@ function SharePopover({ toolName, toolIcon = "🧰", channels, copied, onShare, 
             {toolIcon}
           </span>
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-red-600 dark:text-red-400">Share tool</p>
-            <h2 className="mt-1 text-base font-bold text-gray-950 dark:text-white">{toolName}</h2>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-red-600 dark:text-red-400">Share</p>
           </div>
         </div>
       </div>
