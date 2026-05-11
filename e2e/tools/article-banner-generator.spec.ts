@@ -50,23 +50,44 @@ test.describe('Banner Generator tool', () => {
   });
 
   test('opens X, Facebook, LinkedIn, and copy actions on the banner generator engagement bar', async ({ page }) => {
+    await page.addStyleTag({
+      content: `
+        a[href*="facebook.com"],
+        a[href*="x.com/intent"],
+        a[href*="linkedin.com"] {
+          display: none !important;
+        }
+      `,
+    });
+
     await page.goto('/tools/og-image-generator');
 
     await page.getByRole('button', { name: /^Share Banner Generator$/ }).click();
 
     await expect(page.getByRole('dialog', { name: 'Share Banner Generator' })).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Share on X' })).toHaveAttribute('href', /x\.com\/intent\/tweet/);
-    await expect(page.getByRole('link', { name: 'Share on Facebook' })).toHaveAttribute('href', /facebook\.com\/sharer\/sharer\.php/);
-    await expect(page.getByRole('link', { name: 'Share on LinkedIn' })).toHaveAttribute('href', /linkedin\.com\/sharing\/share-offsite/);
+    await expect(page.getByRole('button', { name: 'Share on X' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Share on Facebook' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Share on LinkedIn' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Copy link' })).toBeVisible();
   });
 
-  test('records one share for each copy and social share action', async ({ page, context }) => {
+  test('records one share for each copy and social share action', async ({ page }) => {
     await page.addInitScript(() => {
       Object.defineProperty(navigator, 'clipboard', {
         configurable: true,
         value: {
           writeText: async () => undefined,
+        },
+      });
+
+      Object.defineProperty(window, 'open', {
+        configurable: true,
+        value: (url?: string | URL) => {
+          (window as typeof window & { __openedShareUrls?: string[] }).__openedShareUrls = [
+            ...((window as typeof window & { __openedShareUrls?: string[] }).__openedShareUrls ?? []),
+            String(url ?? ''),
+          ];
+          return null;
         },
       });
     });
@@ -95,23 +116,21 @@ test.describe('Banner Generator tool', () => {
     await page.getByRole('button', { name: 'Copy link' }).click();
     await expect(page.getByTestId('tool-share-count')).toContainText('1');
 
-    const facebookPopup = context.waitForEvent('page');
-    await page.getByRole('link', { name: 'Share on Facebook' }).click();
-    const facebookPage = await facebookPopup;
-    await facebookPage.close();
+    await page.getByRole('button', { name: 'Share on Facebook' }).click();
     await expect(page.getByTestId('tool-share-count')).toContainText('2');
 
-    const xPopup = context.waitForEvent('page');
-    await page.getByRole('link', { name: 'Share on X' }).click();
-    const xPage = await xPopup;
-    await xPage.close();
+    await page.getByRole('button', { name: 'Share on X' }).click();
     await expect(page.getByTestId('tool-share-count')).toContainText('3');
 
-    const linkedinPopup = context.waitForEvent('page');
-    await page.getByRole('link', { name: 'Share on LinkedIn' }).click();
-    const linkedinPage = await linkedinPopup;
-    await linkedinPage.close();
+    await page.getByRole('button', { name: 'Share on LinkedIn' }).click();
     await expect(page.getByTestId('tool-share-count')).toContainText('4');
+
+    const openedShareUrls = await page.evaluate(() => (window as typeof window & { __openedShareUrls?: string[] }).__openedShareUrls ?? []);
+    expect(openedShareUrls).toEqual([
+      expect.stringContaining('facebook.com/sharer/sharer.php'),
+      expect.stringContaining('x.com/intent/tweet'),
+      expect.stringContaining('linkedin.com/sharing/share-offsite'),
+    ]);
 
     expect(recordedChannels).toEqual(['copy', 'facebook', 'x', 'linkedin']);
   });

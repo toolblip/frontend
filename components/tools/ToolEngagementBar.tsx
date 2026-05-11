@@ -23,7 +23,7 @@ type IconProps = { className?: string };
 type ShareChannel = {
   label: string;
   channel: string;
-  href: string;
+  url: string;
   icon: ReactNode;
 };
 
@@ -159,6 +159,11 @@ function CountPill({
 }
 
 function SharePopover({ toolName, channels, copied, onShare, onCopy, onClose }: { toolName: string; channels: ShareChannel[]; copied: boolean; onShare: (channel: string) => void; onCopy: () => void; onClose: () => void }) {
+  function openShareWindow(link: ShareChannel) {
+    window.open(link.url, "_blank", "noopener,noreferrer");
+    onShare(link.channel);
+  }
+
   return (
     <div
       role="dialog"
@@ -173,17 +178,15 @@ function SharePopover({ toolName, channels, copied, onShare, onCopy, onClose }: 
       </div>
       <div className="grid gap-2">
         {channels.map((link) => (
-          <a
+          <button
             key={link.label}
-            href={link.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={() => onShare(link.channel)}
-            className="inline-flex items-center gap-3 rounded-xl border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-800 dark:text-gray-200 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+            type="button"
+            onClick={() => openShareWindow(link)}
+            className="inline-flex items-center gap-3 rounded-xl border border-gray-200 px-3 py-2 text-left text-sm font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-800 dark:text-gray-200 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
           >
             {link.icon}
             {link.label}
-          </a>
+          </button>
         ))}
         <button
           type="button"
@@ -224,19 +227,19 @@ export default function ToolEngagementBar({ toolName, toolSlug }: ToolEngagement
       {
         label: "Share on Facebook",
         channel: "facebook",
-        href: `https://www.facebook.com/sharer/sharer.php?${new URLSearchParams({ u: pageUrl }).toString()}`,
+        url: `https://www.facebook.com/sharer/sharer.php?${new URLSearchParams({ u: pageUrl }).toString()}`,
         icon: <TextIcon>f</TextIcon>,
       },
       {
         label: "Share on X",
         channel: "x",
-        href: `https://x.com/intent/tweet?${new URLSearchParams({ text, url: pageUrl }).toString()}`,
+        url: `https://x.com/intent/tweet?${new URLSearchParams({ text, url: pageUrl }).toString()}`,
         icon: <TextIcon>𝕏</TextIcon>,
       },
       {
         label: "Share on LinkedIn",
         channel: "linkedin",
-        href: `https://www.linkedin.com/sharing/share-offsite/?${new URLSearchParams({ url: pageUrl }).toString()}`,
+        url: `https://www.linkedin.com/sharing/share-offsite/?${new URLSearchParams({ url: pageUrl }).toString()}`,
         icon: <TextIcon>in</TextIcon>,
       },
     ];
