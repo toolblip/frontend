@@ -67,6 +67,7 @@ function engagementPayload(slug, req) {
     shares: stats.shares,
     favorites: stats.favorites,
     viewer_favorited: Boolean(email && userFavorites.get(email)?.has(slug)),
+    viewer_favorited_at: email && userFavorites.get(email)?.has(slug) ? new Date().toISOString() : null,
   };
 }
 
@@ -326,6 +327,22 @@ const server = http.createServer(async (req, res) => {
     userFavorites.set(email, favorites);
     stats.favorites = Array.from(userFavorites.values()).filter((set) => set.has(slug)).length;
     return json(res, 200, { data: engagementPayload(slug, req) });
+  }
+
+  if (req.method === 'GET' && url.pathname === '/api/auth/favorite-tools') {
+    const email = tokens.get(bearer(req));
+    if (!email) return json(res, 401, { message: 'Unauthenticated.' });
+    const favorites = Array.from(userFavorites.get(email) ?? []);
+    return json(res, 200, {
+      data: favorites.map((slug) => ({
+        slug,
+        name: slug === 'json-formatter' ? 'JSON Formatter' : slug,
+        description: 'Format JSON online.',
+        category: 'Developer Tools',
+        icon: '🧰',
+        favorited_at: new Date().toISOString(),
+      })),
+    });
   }
 
   return json(res, 404, { message: 'Not found.' });
