@@ -115,11 +115,42 @@ function TextIcon({ children, className = "h-5 w-5" }: IconProps & { children: R
   );
 }
 
-function CountPill({ label, value, testId, className = "" }: { label: string; value: number; testId: string; className?: string }) {
+function CountPill({
+  label,
+  value,
+  testId,
+  className = "",
+  onClick,
+  disabled = false,
+}: {
+  label: string;
+  value: number;
+  testId: string;
+  className?: string;
+  onClick?: () => void;
+  disabled?: boolean;
+}) {
+  const sharedClassName = `inline-flex min-w-10 items-center justify-center border border-gray-200 bg-gray-50 px-3 py-2 text-sm font-bold text-gray-700 shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200 ${className}`;
+
+  if (onClick) {
+    return (
+      <button
+        type="button"
+        data-testid={testId}
+        className={`${sharedClassName} transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-60 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400`}
+        aria-label={`${label} ${formatCount(value)}`}
+        onClick={onClick}
+        disabled={disabled}
+      >
+        {formatCount(value)}
+      </button>
+    );
+  }
+
   return (
     <span
       data-testid={testId}
-      className={`inline-flex min-w-10 items-center justify-center border border-gray-200 bg-gray-50 px-3 py-2 text-sm font-bold text-gray-700 shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200 ${className}`}
+      className={sharedClassName}
       aria-label={`${label} ${formatCount(value)}`}
     >
       {formatCount(value)}
@@ -169,7 +200,7 @@ function SharePopover({ toolName, channels, copied, onShare, onCopy, onClose }: 
 }
 
 export default function ToolEngagementBar({ toolName, toolSlug }: ToolEngagementBarProps) {
-  const { user, login } = useAuth();
+  const { user, login, loading: authLoading } = useAuth();
   const [stats, setStats] = useState<EngagementStats>(() => fallbackStats(toolSlug));
   const [shareOpen, setShareOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
@@ -273,6 +304,10 @@ export default function ToolEngagementBar({ toolName, toolSlug }: ToolEngagement
   async function toggleFavorite() {
     setShareOpen(false);
 
+    if (authLoading) {
+      return;
+    }
+
     if (!user) {
       setLoginOpen(true);
       return;
@@ -334,8 +369,14 @@ export default function ToolEngagementBar({ toolName, toolSlug }: ToolEngagement
     }
   }
 
-  const favoriteText = stats.viewer_favorited ? formatFavoriteDate(stats.viewer_favorited_at) : "Favorite";
-  const favoriteLabel = stats.viewer_favorited ? `${favoriteText} ${toolName}` : `Favorite ${toolName}`;
+  const favoriteText = authLoading ? "Checking..." : stats.viewer_favorited ? formatFavoriteDate(stats.viewer_favorited_at) : "Favorite";
+  const favoriteLabel = authLoading ? `Checking sign-in status for ${toolName}` : stats.viewer_favorited ? `${favoriteText} ${toolName}` : `Favorite ${toolName}`;
+  const favoriteDisabled = favoriteLoading || authLoading;
+
+  function toggleSharePopover() {
+    setLoginOpen(false);
+    setShareOpen((open) => !open);
+  }
 
   return (
     <div data-testid="tool-engagement-bar" className="relative flex w-full flex-wrap items-center gap-3" aria-label={`${toolName} engagement stats`}>
@@ -343,10 +384,7 @@ export default function ToolEngagementBar({ toolName, toolSlug }: ToolEngagement
         <button
           data-testid="tool-share-button"
           type="button"
-          onClick={() => {
-            setLoginOpen(false);
-            setShareOpen((open) => !open);
-          }}
+          onClick={toggleSharePopover}
           className="inline-flex items-center gap-2 rounded-l-full border border-r-0 border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-100 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
           aria-label={`Share ${toolName}`}
           aria-haspopup="dialog"
@@ -355,7 +393,7 @@ export default function ToolEngagementBar({ toolName, toolSlug }: ToolEngagement
           <ShareIcon className="h-5 w-5" />
           Share
         </button>
-        <CountPill label="Shares" value={stats.shares} testId="tool-share-count" className="rounded-r-full" />
+        <CountPill label="Shares" value={stats.shares} testId="tool-share-count" className="rounded-r-full" onClick={toggleSharePopover} />
 
         {shareOpen && <SharePopover toolName={toolName} channels={shareLinks} copied={copied} onShare={(channel) => void recordShare(channel)} onCopy={copyLink} onClose={() => setShareOpen(false)} />}
       </div>
@@ -375,7 +413,7 @@ export default function ToolEngagementBar({ toolName, toolSlug }: ToolEngagement
           data-testid="tool-favorite-button"
           type="button"
           onClick={toggleFavorite}
-          disabled={favoriteLoading}
+          disabled={favoriteDisabled}
           className={`inline-flex items-center gap-2 rounded-l-full border border-r-0 px-4 py-2 text-sm font-bold shadow-sm transition disabled:opacity-60 ${
             stats.viewer_favorited
               ? "border-red-600 bg-red-600 text-white hover:bg-red-700"
@@ -386,7 +424,14 @@ export default function ToolEngagementBar({ toolName, toolSlug }: ToolEngagement
           {stats.viewer_favorited ? <HeartIcon className="h-6 w-6" /> : <HeartOutlineIcon className="h-6 w-6" />}
           {favoriteText}
         </button>
-        <CountPill label="Favorites" value={stats.favorites} testId="tool-favorite-count" className={`rounded-r-full ${stats.viewer_favorited ? "border-red-600 bg-red-50 text-red-700 dark:bg-red-950/40 dark:text-red-200" : ""}`} />
+        <CountPill
+          label="Favorites"
+          value={stats.favorites}
+          testId="tool-favorite-count"
+          className={`rounded-r-full ${stats.viewer_favorited ? "border-red-600 bg-red-50 text-red-700 dark:bg-red-950/40 dark:text-red-200" : ""}`}
+          onClick={() => void toggleFavorite()}
+          disabled={favoriteDisabled}
+        />
       </div>
 
       {loginOpen && (
