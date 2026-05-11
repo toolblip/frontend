@@ -8,6 +8,8 @@ const PORT = Number.parseInt(process.argv[2] ?? process.env.MOCK_PORT ?? '3099',
 
 const users = new Map();
 const tokens = new Map();
+const toolStats = new Map();
+const userFavorites = new Map();
 let nextId = 1;
 let nextToken = 1;
 
@@ -55,9 +57,30 @@ function issueToken(email) {
   return token;
 }
 
+
+function engagementPayload(slug, req) {
+  const stats = toolStats.get(slug) ?? { slug, views: 0, shares: 0, favorites: 0 };
+  const email = tokens.get(bearer(req));
+  return {
+    slug,
+    views: stats.views,
+    shares: stats.shares,
+    favorites: stats.favorites,
+    viewer_favorited: Boolean(email && userFavorites.get(email)?.has(slug)),
+  };
+}
+
+function ensureStats(slug) {
+  if (!toolStats.has(slug)) toolStats.set(slug, { slug, views: 0, shares: 0, favorites: 0 });
+  return toolStats.get(slug);
+}
+
 function reset() {
   users.clear();
   tokens.clear();
+  toolStats.clear();
+  userFavorites.clear();
+  toolStats.set('json-formatter', { slug: 'json-formatter', views: 0, shares: 0, favorites: 0 });
   nextId = 1;
   nextToken = 1;
   users.set('bdd@toolblip.test', {
@@ -264,6 +287,45 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === 'POST' && url.pathname === '/api/auth/forgot-password') {
     return json(res, 200, { message: 'If that email exists, a reset link has been sent.' });
+  }
+
+
+  const engagementMatch = url.pathname.match(/^\/api\/tools\/([^/]+)\/engagement$/);
+  if (req.method === 'GET' && engagementMatch) {
+    const slug = decodeURIComponent(engagementMatch[1]);
+    ensureStats(slug);
+    return json(res, 200, { data: engagementPayload(slug, req) });
+  }
+
+  const viewMatch = url.pathname.match(/^\/api\/tools\/([^/]+)\/view$/);
+  if (req.method === 'POST' && viewMatch) {
+    const slug = decodeURIComponent(viewMatch[1]);
+    const stats = ensureStats(slug);
+    stats.views += 1;
+    return json(res, 200, { data: engagementPayload(slug, req) });
+  }
+
+  const shareMatch = url.pathname.match(/^\/api\/tools\/([^/]+)\/share$/);
+  if (req.method === 'POST' && shareMatch) {
+    const slug = decodeURIComponent(shareMatch[1]);
+    await readJson(req);
+    const stats = ensureStats(slug);
+    stats.shares += 1;
+    return json(res, 200, { data: engagementPayload(slug, req) });
+  }
+
+  const favoriteMatch = url.pathname.match(/^\/api\/tools\/([^/]+)\/favorite$/);
+  if ((req.method === 'POST' || req.method === 'DELETE') && favoriteMatch) {
+    const email = tokens.get(bearer(req));
+    if (!email) return json(res, 401, { message: 'Unauthenticated.' });
+    const slug = decodeURIComponent(favoriteMatch[1]);
+    const stats = ensureStats(slug);
+    const favorites = userFavorites.get(email) ?? new Set();
+    if (req.method === 'POST') favorites.add(slug);
+    if (req.method === 'DELETE') favorites.delete(slug);
+    userFavorites.set(email, favorites);
+    stats.favorites = Array.from(userFavorites.values()).filter((set) => set.has(slug)).length;
+    return json(res, 200, { data: engagementPayload(slug, req) });
   }
 
   return json(res, 404, { message: 'Not found.' });
