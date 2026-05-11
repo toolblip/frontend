@@ -73,10 +73,30 @@ test.describe('Banner Generator tool', () => {
     await expect(shareDialog).not.toContainText('🖼️');
     await expect(shareDialog).toContainText('Share');
     await expect(shareDialog).toContainText('Open a ready-to-post share window');
-    await expect(page.getByRole('button', { name: 'Share on X' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Share on Facebook' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Share on LinkedIn' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Copy link' })).toBeVisible();
+
+    const shareHeader = shareDialog.getByTestId('share-dialog-header');
+    await expect(shareHeader).toBeVisible();
+    await expect(shareHeader.locator('svg')).toHaveCount(0);
+    await expect(shareDialog.getByTestId('share-dialog-title')).toHaveText('Share');
+    await expect(shareDialog.getByTestId('share-dialog-title')).toHaveClass(/text-xs/);
+
+    const shareOnX = page.getByRole('button', { name: 'Share on X' });
+    const shareOnFacebook = page.getByRole('button', { name: 'Share on Facebook' });
+    const shareOnLinkedIn = page.getByRole('button', { name: 'Share on LinkedIn' });
+    const copyLink = page.getByRole('button', { name: 'Copy link' });
+    await expect(shareOnX).toBeVisible();
+    await expect(shareOnFacebook).toBeVisible();
+    await expect(shareOnLinkedIn).toBeVisible();
+    await expect(copyLink).toBeVisible();
+
+    const xBox = await shareOnX.boundingBox();
+    const facebookBox = await shareOnFacebook.boundingBox();
+    const linkedInBox = await shareOnLinkedIn.boundingBox();
+    const copyBox = await copyLink.boundingBox();
+
+    expect(xBox?.y).toBeLessThan(facebookBox?.y ?? Infinity);
+    expect(facebookBox?.y).toBeLessThan(linkedInBox?.y ?? Infinity);
+    expect(linkedInBox?.y).toBeLessThan(copyBox?.y ?? Infinity);
   });
 
   test('records one share for each copy and social share action', async ({ page }) => {

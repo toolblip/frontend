@@ -187,19 +187,19 @@ function SharePopover({ toolName, channels, copied, onShare, onCopy, onClose }: 
       aria-label={`Share ${toolName}`}
       className="absolute left-0 top-14 z-20 w-[min(92vw,24rem)] overflow-hidden rounded-[1.7rem] border border-gray-200/80 bg-white shadow-2xl shadow-gray-900/12 ring-1 ring-black/5 dark:border-gray-800 dark:bg-gray-950 dark:shadow-black/40"
     >
-      <div className="relative border-b border-gray-100 bg-gradient-to-br from-gray-50 via-white to-red-50/60 p-5 dark:border-gray-800 dark:from-gray-900 dark:via-gray-950 dark:to-red-950/20">
-        <div className="absolute right-4 top-4">
+      <div
+        data-testid="share-dialog-header"
+        className="relative border-b border-gray-100 bg-gradient-to-br from-gray-50 via-white to-red-50/60 px-4 py-3 dark:border-gray-800 dark:from-gray-900 dark:via-gray-950 dark:to-red-950/20"
+      >
+        <div className="absolute right-3 top-3">
           <button type="button" onClick={onClose} className="inline-flex h-8 w-8 items-center justify-center rounded-full text-xl leading-none text-gray-400 transition hover:bg-white hover:text-gray-900 dark:hover:bg-gray-900 dark:hover:text-white" aria-label="Close share dialog">
             ×
           </button>
         </div>
-        <div className="flex items-center gap-3 pr-8">
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-gray-700 shadow-sm ring-1 ring-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:ring-gray-800" aria-hidden="true">
-            <ShareIcon className="h-6 w-6" />
-          </span>
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-red-600 dark:text-red-400">Share</p>
-          </div>
+        <div className="pr-8">
+          <p data-testid="share-dialog-title" className="text-xs font-semibold uppercase tracking-[0.22em] text-red-600 dark:text-red-400">
+            Share
+          </p>
         </div>
       </div>
       <div className="grid gap-2 p-3">
@@ -261,16 +261,16 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
     const text = `Check out ${toolName} on Toolblip`;
     return [
       {
-        label: "Share on Facebook",
-        channel: "facebook",
-        url: `https://www.facebook.com/sharer/sharer.php?${new URLSearchParams({ u: pageUrl }).toString()}`,
-        icon: <BrandBadge className="bg-[#1877F2] text-white">f</BrandBadge>,
-      },
-      {
         label: "Share on X",
         channel: "x",
         url: `https://x.com/intent/tweet?${new URLSearchParams({ text, url: pageUrl }).toString()}`,
         icon: <BrandBadge className="bg-black text-white dark:bg-white dark:text-black">𝕏</BrandBadge>,
+      },
+      {
+        label: "Share on Facebook",
+        channel: "facebook",
+        url: `https://www.facebook.com/sharer/sharer.php?${new URLSearchParams({ u: pageUrl }).toString()}`,
+        icon: <BrandBadge className="bg-[#1877F2] text-white">f</BrandBadge>,
       },
       {
         label: "Share on LinkedIn",
