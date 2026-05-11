@@ -285,7 +285,6 @@ export default function ToolEngagementBar({ toolName, toolSlug }: ToolEngagement
   async function copyLink() {
     const url = window.location.href || pageUrl;
     setPageUrl(url);
-    await recordShare("copy");
 
     try {
       if (navigator.clipboard?.writeText) {
@@ -293,12 +292,15 @@ export default function ToolEngagementBar({ toolName, toolSlug }: ToolEngagement
       } else if (!copyTextFallback(url)) {
         throw new Error("Clipboard fallback failed");
       }
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
     } catch {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      if (!copyTextFallback(url)) {
+        return;
+      }
     }
+
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+    void recordShare("copy");
   }
 
   async function toggleFavorite() {
