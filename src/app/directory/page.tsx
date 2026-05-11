@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { DirectoryClient } from './DirectoryClient';
+import { Suspense } from 'react';
+import DirectoryClient from './DirectoryClient';
 
 export const metadata: Metadata = {
   title: 'Tool Directory | Toolblip',
@@ -21,5 +22,9 @@ export const metadata: Metadata = {
 };
 
 export default function DirectoryPage() {
-  return <DirectoryClient />;
+  return (
+    <Suspense>
+      <DirectoryClient />
+    </Suspense>
+  );
 }
