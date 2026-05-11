@@ -182,11 +182,8 @@ export function DirectoryClient() {
       ) : (
         /* ── Empty state ── */
         <div className="rounded-2xl border border-dashed border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 py-16 text-center">
-          <div
-            className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-2xl dark:bg-gray-800"
-            aria-hidden="true"
-          >
-            🔎
+          <div aria-hidden="true" className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-2xl dark:bg-gray-800">
+            🔍
           </div>
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">No tools found</h2>
           <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
