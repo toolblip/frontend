@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import type { Tool } from '@/data/tools';
 import ShareButtons from '@/src/components/ShareButtons';
 
@@ -953,6 +954,18 @@ import PixelDensityCalculatorClient from '@/components/tools/PixelDensityCalcula
 // ─── Individual tool UIs ────────────────────────────────────────────────────
 
 function ComingSoonUI({ tool }: { tool: Tool }) {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const preview = () => {
+    const sample = input.trim();
+    setOutput(
+      sample
+        ? `Preview received for ${tool.name}:\n\n${sample}`
+        : `${tool.name} is coming soon. Paste sample input above to preview where the processed result will appear.`
+    );
+  };
+
   return (
     <div className="space-y-6">
       <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 text-center">
@@ -961,19 +974,31 @@ function ComingSoonUI({ tool }: { tool: Tool }) {
         <p className="text-gray-500 dark:text-gray-400 text-sm max-w-sm mx-auto">{tool.description}</p>
       </div>
       <div className="space-y-3">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor={`${tool.slug}-placeholder-input`}>
+          Placeholder input
+        </label>
         <textarea
-          disabled
-          placeholder="This tool is coming soon..."
-          className="w-full h-40 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-400 dark:text-gray-500 rounded-xl p-4 resize-y placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none cursor-not-allowed opacity-60"
+          id={`${tool.slug}-placeholder-input`}
+          value={input}
+          onChange={event => {
+            setInput(event.target.value);
+            setOutput('');
+          }}
+          placeholder={`Paste sample input for ${tool.name}…`}
+          className="w-full h-40 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl p-4 resize-y placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500"
         />
         <button
-          disabled
-          className="w-full bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400 rounded-xl py-3 font-medium cursor-not-allowed opacity-60"
+          type="button"
+          onClick={preview}
+          className="w-full bg-red-600 hover:bg-red-700 text-white rounded-xl py-3 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
         >
-          Coming Soon
+          Process preview
         </button>
+        <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-4 min-h-28 whitespace-pre-wrap text-sm text-gray-700 dark:text-gray-200">
+          {output || <span className="text-gray-400 dark:text-gray-500">Placeholder output will appear here…</span>}
+        </div>
         <p className="text-center text-sm text-gray-400 dark:text-gray-500">
-          This tool&apos;s interactive UI is under development.
+          This tool&apos;s full interactive UI is under development.
         </p>
       </div>
     </div>
