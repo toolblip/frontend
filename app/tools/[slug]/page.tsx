@@ -2,7 +2,7 @@ import { notFound, redirect } from 'next/navigation';
 import type { Metadata } from 'next';
 import { tools } from '@/data/tools';
 import { ToolUI } from './ToolUI';
-import ShareButtons from '@/src/components/ShareButtons';
+import ToolEngagementBar from '@/components/tools/ToolEngagementBar';
 import FaqSection from '@/components/v2/FaqSection';
 import { getFaqs } from '@/lib/faq';
 
@@ -75,7 +75,7 @@ export default async function ToolDetailPage({ params }: PageProps) {
           </div>
         </div>
         <p className="text-gray-500 dark:text-gray-400 leading-relaxed mb-4">{tool.description}</p>
-        <ShareButtons toolName={tool.name} toolSlug={tool.slug} />
+        <ToolEngagementBar toolName={tool.name} toolSlug={tool.slug} />
       </div>
 
       {/* Tool UI */}
