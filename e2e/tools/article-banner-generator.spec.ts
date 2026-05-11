@@ -49,6 +49,60 @@ test.describe('Banner Generator tool', () => {
     );
   });
 
+  test('opens full share actions on the banner generator engagement bar', async ({ page }) => {
+    await page.goto('/tools/og-image-generator');
+
+    await page.getByRole('button', { name: /^Share Banner Generator$/ }).click();
+
+    await expect(page.getByRole('dialog', { name: 'Share Banner Generator' })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Share on Facebook' })).toHaveAttribute('href', /facebook\.com\/sharer\/sharer\.php/);
+    await expect(page.getByRole('link', { name: 'Share on Twitter' })).toHaveAttribute('href', /twitter\.com\/intent\/tweet/);
+    await expect(page.getByRole('link', { name: 'Share on LinkedIn' })).toHaveAttribute('href', /linkedin\.com\/sharing\/share-offsite/);
+    await expect(page.getByRole('button', { name: 'Copy link' })).toBeVisible();
+  });
+
+  test('copies the banner generator link immediately even if share tracking is slow', async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, 'clipboard', {
+        configurable: true,
+        value: {
+          writeText: async (value: string) => {
+            (window as typeof window & { __clipboardWrites?: string[] }).__clipboardWrites = [
+              ...((window as typeof window & { __clipboardWrites?: string[] }).__clipboardWrites ?? []),
+              value,
+            ];
+          },
+        },
+      });
+    });
+
+    let releaseShareTracking: (() => void) | undefined;
+    await page.route('**/api/tools/og-image-generator/share', async (route) => {
+      await new Promise<void>((resolve) => {
+        releaseShareTracking = resolve;
+      });
+      await route.fulfill({
+        contentType: 'application/json',
+        body: JSON.stringify({
+          data: { slug: 'og-image-generator', views: 1, shares: 1, favorites: 0, viewer_favorited: false },
+        }),
+      });
+    });
+
+    await page.goto('/tools/og-image-generator');
+    await page.getByRole('button', { name: /^Share Banner Generator$/ }).click();
+    await page.getByRole('button', { name: 'Copy link' }).click();
+
+    await expect
+      .poll(() => page.evaluate(() => (window as typeof window & { __clipboardWrites?: string[] }).__clipboardWrites ?? []), {
+        timeout: 500,
+      })
+      .toContain('http://127.0.0.1:3200/tools/og-image-generator');
+
+    await expect(page.getByRole('button', { name: 'Copy link' })).toContainText('Copied!');
+    releaseShareTracking?.();
+  });
+
   test('renders a true 1200x630 preview and exports the same canvas as PNG', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 1000 });
     await page.goto('/tools/og-image-generator');
