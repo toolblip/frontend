@@ -202,35 +202,35 @@ function SharePopover({ toolName, channels, copied, onShare, onCopy, onClose }: 
           </p>
         </div>
       </div>
-      <div className="grid gap-2 p-3">
+      <div className="grid grid-cols-2 gap-2 p-3">
         {channels.map((link) => (
           <button
             key={link.label}
             type="button"
             onClick={() => openShareWindow(link)}
             aria-label={link.label}
-            className="group flex w-full items-center gap-3 rounded-2xl border border-transparent bg-gray-50 px-3 py-3 text-left transition hover:-translate-y-0.5 hover:border-gray-200 hover:bg-white hover:shadow-lg hover:shadow-gray-900/10 focus:outline-none focus:ring-2 focus:ring-red-400 dark:bg-gray-900/70 dark:hover:border-gray-700 dark:hover:bg-gray-900"
+            className="group flex min-h-[5.25rem] w-full items-center gap-3 rounded-2xl border border-gray-200/80 bg-white/95 px-3 py-3 text-left transition hover:-translate-y-0.5 hover:border-gray-300 hover:bg-white hover:shadow-lg hover:shadow-gray-900/10 focus:outline-none focus:ring-2 focus:ring-red-400 dark:border-gray-700 dark:bg-slate-900/80 dark:hover:border-gray-600 dark:hover:bg-slate-900"
           >
             {link.icon}
             <span className="min-w-0 flex-1">
               <span className="block text-sm font-bold text-gray-900 dark:text-white">{link.label.replace("Share on ", "")}</span>
-              <span className="block text-xs text-gray-500 dark:text-gray-400">Open a ready-to-post share window</span>
+              <span className="block text-xs leading-snug text-gray-500 dark:text-gray-400">Open a ready-to-post share window</span>
             </span>
-            <ArrowIcon className="h-4 w-4 text-gray-400 transition group-hover:translate-x-0.5 group-hover:text-gray-700 dark:group-hover:text-gray-200" />
+            <ArrowIcon className="h-4 w-4 shrink-0 text-gray-400 transition group-hover:translate-x-0.5 group-hover:text-gray-700 dark:group-hover:text-gray-200" />
           </button>
         ))}
         <button
           type="button"
           onClick={onCopy}
-          className="group flex w-full items-center gap-3 rounded-2xl border border-transparent bg-gray-50 px-3 py-3 text-left transition hover:-translate-y-0.5 hover:border-gray-200 hover:bg-white hover:shadow-lg hover:shadow-gray-900/10 focus:outline-none focus:ring-2 focus:ring-red-400 dark:bg-gray-900/70 dark:hover:border-gray-700 dark:hover:bg-gray-900"
+          className="group flex min-h-[5.25rem] w-full items-center gap-3 rounded-2xl border border-gray-200/80 bg-white/95 px-3 py-3 text-left transition hover:-translate-y-0.5 hover:border-gray-300 hover:bg-white hover:shadow-lg hover:shadow-gray-900/10 focus:outline-none focus:ring-2 focus:ring-red-400 dark:border-gray-700 dark:bg-slate-900/80 dark:hover:border-gray-600 dark:hover:bg-slate-900"
           aria-label="Copy link"
         >
-          <BrandBadge className={copied ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300" : "bg-white text-gray-700 dark:bg-gray-800 dark:text-gray-200"}>{copied ? <CheckIcon /> : "⛓"}</BrandBadge>
+          <BrandBadge className={copied ? "bg-emerald-100 text-emerald-700 ring-white/15 dark:bg-emerald-950 dark:text-emerald-300" : "bg-gray-100 text-gray-700 ring-white/15 dark:bg-gray-800 dark:text-gray-200"}>{copied ? <CheckIcon /> : "⛓"}</BrandBadge>
           <span className="min-w-0 flex-1">
             <span className="block text-sm font-bold text-gray-900 dark:text-white">{copied ? "Copied!" : "Copy link"}</span>
-            <span className="block text-xs text-gray-500 dark:text-gray-400">Paste the Toolblip URL anywhere</span>
+            <span className="block text-xs leading-snug text-gray-500 dark:text-gray-400">Paste the Toolblip URL anywhere</span>
           </span>
-          <ArrowIcon className="h-4 w-4 text-gray-400 transition group-hover:translate-x-0.5 group-hover:text-gray-700 dark:group-hover:text-gray-200" />
+          <ArrowIcon className="h-4 w-4 shrink-0 text-gray-400 transition group-hover:translate-x-0.5 group-hover:text-gray-700 dark:group-hover:text-gray-200" />
         </button>
       </div>
     </div>

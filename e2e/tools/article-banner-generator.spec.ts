@@ -54,6 +54,7 @@ test.describe('Banner Generator tool', () => {
   });
 
   test('opens X, Facebook, LinkedIn, and copy actions on the banner generator engagement bar', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'dark' });
     await page.addStyleTag({
       content: `
         a[href*="facebook.com"],
@@ -94,9 +95,10 @@ test.describe('Banner Generator tool', () => {
     const linkedInBox = await shareOnLinkedIn.boundingBox();
     const copyBox = await copyLink.boundingBox();
 
-    expect(xBox?.y).toBeLessThan(facebookBox?.y ?? Infinity);
-    expect(facebookBox?.y).toBeLessThan(linkedInBox?.y ?? Infinity);
-    expect(linkedInBox?.y).toBeLessThan(copyBox?.y ?? Infinity);
+    expect(xBox?.x).toBeLessThan(facebookBox?.x ?? Infinity);
+    expect(linkedInBox?.x).toBeLessThan(copyBox?.x ?? Infinity);
+    expect(xBox?.y).toBeLessThan(linkedInBox?.y ?? Infinity);
+    expect(facebookBox?.y).toBeLessThan(copyBox?.y ?? Infinity);
   });
 
   test('records one share for each copy and social share action', async ({ page }) => {
