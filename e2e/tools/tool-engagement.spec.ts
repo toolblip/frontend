@@ -43,6 +43,7 @@ test('tool pages render templated share left, views, and favorite hard right wit
   const shareDialog = page.getByRole('dialog', { name: /Share JSON Formatter/i });
   await expect(shareDialog).toBeVisible();
   await expect(shareDialog.getByRole('link', { name: /Share on Facebook/i })).toBeVisible();
+  await expect(shareDialog.getByRole('link', { name: /Share on Twitter/i })).toBeVisible();
   await expect(shareDialog.getByRole('link', { name: /Share on LinkedIn/i })).toBeVisible();
   await expect(shareDialog.getByRole('button', { name: /Copy link/i })).toBeVisible();
 
@@ -52,7 +53,9 @@ test('tool pages render templated share left, views, and favorite hard right wit
   await expect(shareCount).toHaveText('1');
 
   await favoriteButton.click();
+  await expect(shareDialog).toBeHidden();
   await expect(page.getByRole('dialog', { name: /Sign in to favorite JSON Formatter/i })).toBeVisible();
+  await expect(page.getByRole('dialog', { name: /Share JSON Formatter/i })).toHaveCount(0);
   await expect(page.getByRole('link', { name: /Create account/i })).toHaveAttribute('href', /\/signup\?next=%2Ftools%2Fjson-formatter/);
 
   await page.getByLabel('Email').fill('bdd@toolblip.test');

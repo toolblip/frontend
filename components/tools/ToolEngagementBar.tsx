@@ -271,6 +271,8 @@ export default function ToolEngagementBar({ toolName, toolSlug }: ToolEngagement
   }
 
   async function toggleFavorite() {
+    setShareOpen(false);
+
     if (!user) {
       setLoginOpen(true);
       return;
@@ -341,7 +343,10 @@ export default function ToolEngagementBar({ toolName, toolSlug }: ToolEngagement
         <button
           data-testid="tool-share-button"
           type="button"
-          onClick={() => setShareOpen((open) => !open)}
+          onClick={() => {
+            setLoginOpen(false);
+            setShareOpen((open) => !open);
+          }}
           className="inline-flex items-center gap-2 rounded-l-full border border-r-0 border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-100 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
           aria-label={`Share ${toolName}`}
           aria-haspopup="dialog"
