@@ -228,9 +228,9 @@ export default function ToolEngagementBar({ toolName, toolSlug }: ToolEngagement
         icon: <TextIcon>f</TextIcon>,
       },
       {
-        label: "Share on Twitter",
-        channel: "twitter",
-        href: `https://twitter.com/intent/tweet?${new URLSearchParams({ text, url: pageUrl }).toString()}`,
+        label: "Share on X",
+        channel: "x",
+        href: `https://x.com/intent/tweet?${new URLSearchParams({ text, url: pageUrl }).toString()}`,
         icon: <TextIcon>𝕏</TextIcon>,
       },
       {
@@ -271,10 +271,13 @@ export default function ToolEngagementBar({ toolName, toolSlug }: ToolEngagement
   }, [user?.id]);
 
   async function recordShare(channel: string) {
+    setStats((current) => ({ ...current, shares: current.shares + 1 }));
+
     const res = await fetch(`/api/tools/${toolSlug}/share`, {
       method: "POST",
       headers: { "Content-Type": "application/json", Accept: "application/json" },
       credentials: "include",
+      keepalive: true,
       body: JSON.stringify({ channel }),
     });
     if (!res.ok) return;
