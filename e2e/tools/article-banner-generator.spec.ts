@@ -1,6 +1,10 @@
 import { expect, test } from '@playwright/test';
 
 test.describe('Banner Generator tool', () => {
+  test.beforeEach(async ({ request }) => {
+    await request.post('http://127.0.0.1:3199/__reset');
+  });
+
   test('appears in the homepage featured tools list', async ({ page }) => {
     await page.goto('/');
 
@@ -64,7 +68,11 @@ test.describe('Banner Generator tool', () => {
 
     await page.getByRole('button', { name: /^Share Banner Generator$/ }).click();
 
-    await expect(page.getByRole('dialog', { name: 'Share Banner Generator' })).toBeVisible();
+    const shareDialog = page.getByRole('dialog', { name: 'Share Banner Generator' });
+    await expect(shareDialog).toBeVisible();
+    await expect(shareDialog).toContainText('🖼️');
+    await expect(shareDialog).toContainText('Share tool');
+    await expect(shareDialog).toContainText('Open a ready-to-post share window');
     await expect(page.getByRole('button', { name: 'Share on X' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Share on Facebook' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Share on LinkedIn' })).toBeVisible();
@@ -133,6 +141,30 @@ test.describe('Banner Generator tool', () => {
     ]);
 
     expect(recordedChannels).toEqual(['copy', 'facebook', 'x', 'linkedin']);
+  });
+
+  test('persists share counts after reload and counts every page landing as a view', async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(window, 'open', {
+        configurable: true,
+        value: () => null,
+      });
+    });
+
+    await page.goto('/tools/og-image-generator');
+    await expect(page.getByTestId('tool-view-count')).toContainText('1');
+    await expect(page.getByTestId('tool-share-count')).toHaveText('0');
+
+    await page.getByRole('button', { name: /^Share Banner Generator$/ }).click();
+    await Promise.all([
+      page.waitForResponse((response) => response.url().includes('/api/tools/og-image-generator/share') && response.request().method() === 'POST'),
+      page.getByRole('button', { name: 'Share on Facebook' }).click(),
+    ]);
+    await expect(page.getByTestId('tool-share-count')).toHaveText('1');
+
+    await page.reload();
+    await expect(page.getByTestId('tool-share-count')).toHaveText('1');
+    await expect(page.getByTestId('tool-view-count')).toContainText('2');
   });
 
   test('copies the banner generator link immediately even if share tracking is slow', async ({ page }) => {

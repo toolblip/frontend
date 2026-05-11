@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { useAuth } from "@/app/providers/auth-provider";
 
 type EngagementStats = {
@@ -16,6 +16,7 @@ type EngagementStats = {
 type ToolEngagementBarProps = {
   toolName: string;
   toolSlug: string;
+  toolIcon?: string;
 };
 
 type IconProps = { className?: string };
@@ -107,11 +108,27 @@ function EyeIcon({ className = "h-5 w-5" }: IconProps) {
   );
 }
 
-function TextIcon({ children, className = "h-5 w-5" }: IconProps & { children: ReactNode }) {
+function BrandBadge({ children, className = "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200" }: { children: ReactNode; className?: string }) {
   return (
-    <span className={`${className} inline-flex items-center justify-center rounded-full bg-gray-100 text-xs font-bold text-gray-700 dark:bg-gray-800 dark:text-gray-200`} aria-hidden="true">
+    <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl text-sm font-black shadow-sm ring-1 ring-black/5 ${className}`} aria-hidden="true">
       {children}
     </span>
+  );
+}
+
+function ArrowIcon({ className = "h-4 w-4" }: IconProps) {
+  return (
+    <svg className={className} width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function CheckIcon({ className = "h-4 w-4" }: IconProps) {
+  return (
+    <svg className={className} width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <path d="m3.5 8.2 2.7 2.7 6.3-6.8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
 
@@ -158,7 +175,7 @@ function CountPill({
   );
 }
 
-function SharePopover({ toolName, channels, copied, onShare, onCopy, onClose }: { toolName: string; channels: ShareChannel[]; copied: boolean; onShare: (channel: string) => void; onCopy: () => void; onClose: () => void }) {
+function SharePopover({ toolName, toolIcon = "🧰", channels, copied, onShare, onCopy, onClose }: { toolName: string; toolIcon?: string; channels: ShareChannel[]; copied: boolean; onShare: (channel: string) => void; onCopy: () => void; onClose: () => void }) {
   function openShareWindow(link: ShareChannel) {
     window.open(link.url, "_blank", "noopener,noreferrer");
     onShare(link.channel);
@@ -168,43 +185,63 @@ function SharePopover({ toolName, channels, copied, onShare, onCopy, onClose }: 
     <div
       role="dialog"
       aria-label={`Share ${toolName}`}
-      className="absolute left-0 top-14 z-20 w-80 rounded-2xl border border-gray-200 bg-white p-4 shadow-xl dark:border-gray-800 dark:bg-gray-950"
+      className="absolute left-0 top-14 z-20 w-[min(92vw,24rem)] overflow-hidden rounded-[1.7rem] border border-gray-200/80 bg-white shadow-2xl shadow-gray-900/12 ring-1 ring-black/5 dark:border-gray-800 dark:bg-gray-950 dark:shadow-black/40"
     >
-      <div className="mb-3 flex items-center justify-between gap-2">
-        <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Share this tool</h2>
-        <button type="button" onClick={onClose} className="text-xl leading-none text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white" aria-label="Close share dialog">
-          ×
-        </button>
+      <div className="relative border-b border-gray-100 bg-gradient-to-br from-gray-50 via-white to-red-50/60 p-5 dark:border-gray-800 dark:from-gray-900 dark:via-gray-950 dark:to-red-950/20">
+        <div className="absolute right-4 top-4">
+          <button type="button" onClick={onClose} className="inline-flex h-8 w-8 items-center justify-center rounded-full text-xl leading-none text-gray-400 transition hover:bg-white hover:text-gray-900 dark:hover:bg-gray-900 dark:hover:text-white" aria-label="Close share dialog">
+            ×
+          </button>
+        </div>
+        <div className="flex items-center gap-3 pr-8">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-3xl shadow-sm ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-gray-800" aria-hidden="true">
+            {toolIcon}
+          </span>
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-red-600 dark:text-red-400">Share tool</p>
+            <h2 className="mt-1 text-base font-bold text-gray-950 dark:text-white">{toolName}</h2>
+          </div>
+        </div>
       </div>
-      <div className="grid gap-2">
+      <div className="grid gap-2 p-3">
         {channels.map((link) => (
           <button
             key={link.label}
             type="button"
             onClick={() => openShareWindow(link)}
-            className="inline-flex items-center gap-3 rounded-xl border border-gray-200 px-3 py-2 text-left text-sm font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-800 dark:text-gray-200 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+            aria-label={link.label}
+            className="group flex w-full items-center gap-3 rounded-2xl border border-transparent bg-gray-50 px-3 py-3 text-left transition hover:-translate-y-0.5 hover:border-gray-200 hover:bg-white hover:shadow-lg hover:shadow-gray-900/10 focus:outline-none focus:ring-2 focus:ring-red-400 dark:bg-gray-900/70 dark:hover:border-gray-700 dark:hover:bg-gray-900"
           >
             {link.icon}
-            {link.label}
+            <span className="min-w-0 flex-1">
+              <span className="block text-sm font-bold text-gray-900 dark:text-white">{link.label.replace("Share on ", "")}</span>
+              <span className="block text-xs text-gray-500 dark:text-gray-400">Open a ready-to-post share window</span>
+            </span>
+            <ArrowIcon className="h-4 w-4 text-gray-400 transition group-hover:translate-x-0.5 group-hover:text-gray-700 dark:group-hover:text-gray-200" />
           </button>
         ))}
         <button
           type="button"
           onClick={onCopy}
-          className="inline-flex items-center gap-3 rounded-xl border border-gray-200 px-3 py-2 text-left text-sm font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-800 dark:text-gray-200 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+          className="group flex w-full items-center gap-3 rounded-2xl border border-transparent bg-gray-50 px-3 py-3 text-left transition hover:-translate-y-0.5 hover:border-gray-200 hover:bg-white hover:shadow-lg hover:shadow-gray-900/10 focus:outline-none focus:ring-2 focus:ring-red-400 dark:bg-gray-900/70 dark:hover:border-gray-700 dark:hover:bg-gray-900"
           aria-label="Copy link"
         >
-          <TextIcon>⛓</TextIcon>
-          {copied ? "Copied!" : "Copy link"}
+          <BrandBadge className={copied ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300" : "bg-white text-gray-700 dark:bg-gray-800 dark:text-gray-200"}>{copied ? <CheckIcon /> : "⛓"}</BrandBadge>
+          <span className="min-w-0 flex-1">
+            <span className="block text-sm font-bold text-gray-900 dark:text-white">{copied ? "Copied!" : "Copy link"}</span>
+            <span className="block text-xs text-gray-500 dark:text-gray-400">Paste the Toolblip URL anywhere</span>
+          </span>
+          <ArrowIcon className="h-4 w-4 text-gray-400 transition group-hover:translate-x-0.5 group-hover:text-gray-700 dark:group-hover:text-gray-200" />
         </button>
       </div>
     </div>
   );
 }
 
-export default function ToolEngagementBar({ toolName, toolSlug }: ToolEngagementBarProps) {
+export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰" }: ToolEngagementBarProps) {
   const { user, login, loading: authLoading } = useAuth();
   const [stats, setStats] = useState<EngagementStats>(() => fallbackStats(toolSlug));
+  const viewRecordedRef = useRef(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const [email, setEmail] = useState("");
@@ -228,19 +265,19 @@ export default function ToolEngagementBar({ toolName, toolSlug }: ToolEngagement
         label: "Share on Facebook",
         channel: "facebook",
         url: `https://www.facebook.com/sharer/sharer.php?${new URLSearchParams({ u: pageUrl }).toString()}`,
-        icon: <TextIcon>f</TextIcon>,
+        icon: <BrandBadge className="bg-[#1877F2] text-white">f</BrandBadge>,
       },
       {
         label: "Share on X",
         channel: "x",
         url: `https://x.com/intent/tweet?${new URLSearchParams({ text, url: pageUrl }).toString()}`,
-        icon: <TextIcon>𝕏</TextIcon>,
+        icon: <BrandBadge className="bg-black text-white dark:bg-white dark:text-black">𝕏</BrandBadge>,
       },
       {
         label: "Share on LinkedIn",
         channel: "linkedin",
         url: `https://www.linkedin.com/sharing/share-offsite/?${new URLSearchParams({ url: pageUrl }).toString()}`,
-        icon: <TextIcon>in</TextIcon>,
+        icon: <BrandBadge className="bg-[#0A66C2] text-white">in</BrandBadge>,
       },
     ];
   }, [pageUrl, toolName]);
@@ -253,9 +290,8 @@ export default function ToolEngagementBar({ toolName, toolSlug }: ToolEngagement
   }
 
   async function recordViewOnce() {
-    const key = `toolblip:viewed:${toolSlug}`;
-    if (window.sessionStorage.getItem(key)) return;
-    window.sessionStorage.setItem(key, "1");
+    if (viewRecordedRef.current) return;
+    viewRecordedRef.current = true;
     const res = await fetch(`/api/tools/${toolSlug}/view`, { method: "POST", credentials: "include" });
     if (!res.ok) return;
     const data = await res.json();
@@ -403,7 +439,7 @@ export default function ToolEngagementBar({ toolName, toolSlug }: ToolEngagement
         </button>
         <CountPill label="Shares" value={stats.shares} testId="tool-share-count" className="rounded-r-full" onClick={toggleSharePopover} />
 
-        {shareOpen && <SharePopover toolName={toolName} channels={shareLinks} copied={copied} onShare={(channel) => void recordShare(channel)} onCopy={copyLink} onClose={() => setShareOpen(false)} />}
+        {shareOpen && <SharePopover toolName={toolName} toolIcon={toolIcon} channels={shareLinks} copied={copied} onShare={(channel) => void recordShare(channel)} onCopy={copyLink} onClose={() => setShareOpen(false)} />}
       </div>
 
       <span
