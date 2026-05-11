@@ -25,22 +25,30 @@ test('tool pages render templated share left, views, and favorite hard right wit
   await expect(viewCount).toContainText('1');
 
   const shareBox = await shareButton.boundingBox();
+  const shareCountBox = await shareCount.boundingBox();
   const favoriteBox = await favoriteButton.boundingBox();
+  const favoriteCountBox = await favoriteCount.boundingBox();
   const engagementBox = await engagement.boundingBox();
   expect(shareBox).toBeTruthy();
+  expect(shareCountBox).toBeTruthy();
   expect(favoriteBox).toBeTruthy();
+  expect(favoriteCountBox).toBeTruthy();
   expect(engagementBox).toBeTruthy();
   expect(shareBox!.x).toBeLessThan(favoriteBox!.x);
-  expect(favoriteBox!.x + favoriteBox!.width).toBeGreaterThan(engagementBox!.x + engagementBox!.width - 48);
+  expect(shareCountBox!.x - (shareBox!.x + shareBox!.width)).toBeLessThanOrEqual(1);
+  expect(favoriteCountBox!.x - (favoriteBox!.x + favoriteBox!.width)).toBeLessThanOrEqual(1);
+  expect(favoriteCountBox!.x + favoriteCountBox!.width).toBeGreaterThan(engagementBox!.x + engagementBox!.width - 48);
 
   await shareButton.click();
-  await expect(page.getByRole('dialog', { name: /Share JSON Formatter/i })).toBeVisible();
-  await expect(page.getByRole('link', { name: /Share on Facebook/i })).toBeVisible();
-  await expect(page.getByRole('link', { name: /Share on Twitter/i })).toBeVisible();
-  await expect(page.getByRole('link', { name: /Share on LinkedIn/i })).toBeVisible();
-  await expect(page.getByRole('button', { name: /Copy link/i })).toBeVisible();
+  const shareDialog = page.getByRole('dialog', { name: /Share JSON Formatter/i });
+  await expect(shareDialog).toBeVisible();
+  await expect(shareDialog.getByRole('link', { name: /Share on Facebook/i })).toBeVisible();
+  await expect(shareDialog.getByRole('link', { name: /Share on LinkedIn/i })).toBeVisible();
+  await expect(shareDialog.getByRole('button', { name: /Copy link/i })).toBeVisible();
 
-  await page.getByRole('button', { name: /Copy link/i }).click();
+  await shareDialog.getByRole('button', { name: /Copy link/i }).click();
+  await expect(shareDialog).toBeVisible();
+  await expect(shareDialog.getByText(/Copied!/i)).toBeVisible();
   await expect(shareCount).toHaveText('1');
 
   await favoriteButton.click();
