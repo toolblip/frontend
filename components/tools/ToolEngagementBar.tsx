@@ -204,7 +204,7 @@ function SharePopover({ toolName, channels, copied, onShare, onCopy, onClose }: 
       </div>
       <div className="grid grid-cols-2 gap-2 p-3">
         {channels.map((link) => {
-          const visibleLabel = link.label === "Share on Facebook" ? "Face\u200Bbook" : link.label.replace("Share on ", "");
+          const visibleLabel = link.label === "Share on Facebook" ? "FB" : link.label.replace("Share on ", "");
 
           return (
             <button
