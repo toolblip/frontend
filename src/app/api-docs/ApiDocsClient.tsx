@@ -328,6 +328,8 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
       <div className="mt-5 flex flex-wrap items-center gap-3 rounded-2xl bg-slate-50 p-3 font-mono text-sm dark:bg-slate-950/60">
         <span className={`rounded-lg border px-2.5 py-1 text-xs font-black ${methodClass[endpoint.method]}`}>{endpoint.method}</span>
         <span className="break-all text-slate-900 dark:text-slate-100">{endpoint.path}</span>
+        <span className="hidden h-5 w-px bg-slate-300 dark:bg-slate-700 sm:block" aria-hidden="true" />
+        <span className="break-all text-xs text-slate-500 dark:text-slate-400">{BASE_URL}{endpoint.path}</span>
       </div>
 
       <div className="mt-6">
