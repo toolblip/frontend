@@ -31,10 +31,6 @@ function matchesSearch(tool: Tool, query: string) {
   return terms.every((term) => searchable.includes(term));
 }
 
-function shorten(description: string) {
-  return description.split('. ')[0].replace(/\.$/, '');
-}
-
 export function DirectoryClient() {
   const [query, setQuery] = useState('');
   const [activeTab, setActiveTab] = useState<CategoryTab>('All');
@@ -166,7 +162,7 @@ export function DirectoryClient() {
                 </div>
                 <div className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{tool.category}</div>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed line-clamp-2">
-                  {shorten(tool.description)}
+                  {tool.description}
                 </p>
               </div>
             </Link>
