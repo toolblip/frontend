@@ -4,9 +4,11 @@ import { useState } from 'react';
 import Link from 'next/link';
 
 const BASE_URL = 'https://toolblip-api-production.up.railway.app';
-const FUTURE_BASE_URL = 'https://api.toolblip.com';
+const CUSTOM_DOMAIN = 'https://api.toolblip.com';
 
 type Method = 'GET' | 'POST';
+
+type Param = { name: string; type: string; required: boolean; description: string };
 
 type Endpoint = {
   id: string;
@@ -18,9 +20,9 @@ type Endpoint = {
   auth: boolean;
   status: string;
   responseShape: string;
-  pathParams?: { name: string; type: string; required: boolean; description: string }[];
-  query?: { name: string; type: string; required: boolean; description: string }[];
-  body?: { name: string; type: string; required: boolean; description: string }[];
+  pathParams?: Param[];
+  query?: Param[];
+  body?: Param[];
   curl: string;
   response: string;
 };
@@ -197,9 +199,11 @@ const endpoints: Endpoint[] = [
 ];
 
 const methodColors: Record<Method, string> = {
-  GET: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800',
-  POST: 'bg-blue-100 text-blue-700 dark:bg-blue-900/60 dark:text-blue-300 border border-blue-200 dark:border-blue-800',
+  GET: 'bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400 border border-emerald-500/20',
+  POST: 'bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400 border border-blue-500/20',
 };
+
+// ─── Copy button ────────────────────────────────────────────────────────────────
 
 function CopyButton({ value }: { value: string }) {
   const [copied, setCopied] = useState(false);
@@ -224,18 +228,30 @@ function CopyButton({ value }: { value: string }) {
     <button
       type="button"
       onClick={copy}
-      className="rounded-lg border border-slate-700/60 px-2.5 py-1 text-xs font-semibold text-slate-300 transition hover:border-slate-500 hover:text-white active:scale-95"
+      className="flex items-center gap-1.5 rounded-lg border border-slate-700/60 px-3 py-1.5 text-xs font-semibold text-slate-400 transition hover:border-slate-500 hover:text-white active:scale-95"
     >
-      {copied ? '✓ Copied' : 'Copy'}
+      {copied ? (
+        <>
+          <svg className="h-3.5 w-3.5 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+          Copied
+        </>
+      ) : (
+        <>
+          <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" /></svg>
+          Copy
+        </>
+      )}
     </button>
   );
 }
 
+// ─── Code block ────────────────────────────────────────────────────────────────
+
 function CodeBlock({ code, label }: { code: string; label: string }) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-slate-800 bg-[#0d1117]">
+    <div className="overflow-hidden rounded-2xl border border-slate-800 bg-[#0d1117]/90">
       <div className="flex items-center justify-between border-b border-slate-800 px-4 py-2.5">
-        <span className="text-xs font-medium text-slate-400">{label}</span>
+        <span className="text-xs font-medium text-slate-500">{label}</span>
         <CopyButton value={code} />
       </div>
       <pre className="overflow-x-auto p-4 text-sm leading-6 text-slate-200"><code>{code}</code></pre>
@@ -243,10 +259,12 @@ function CodeBlock({ code, label }: { code: string; label: string }) {
   );
 }
 
-function ParamsTable({ params, title }: { params: { name: string; type: string; required: boolean; description: string }[]; title: string }) {
+// ─── Params table ─────────────────────────────────────────────────────────────
+
+function ParamsTable({ params, title }: { params: Param[]; title: string }) {
   return (
     <div className="mt-4">
-      <p className="mb-2 text-xs font-bold uppercase tracking-widest text-slate-500">{title}</p>
+      <p className="mb-2 text-[11px] font-bold uppercase tracking-widest text-slate-500">{title}</p>
       <div className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800">
         <table className="w-full text-sm">
           <thead>
@@ -263,7 +281,7 @@ function ParamsTable({ params, title }: { params: { name: string; type: string; 
                   <code className="text-sm font-semibold text-slate-900 dark:text-slate-100">{p.name}</code>
                   {p.required && <span className="ml-1.5 text-xs font-bold text-rose-500">*</span>}
                 </td>
-                <td className="px-4 py-2.5 text-slate-500 dark:text-slate-400">{p.type}</td>
+                <td className="px-4 py-2.5 font-mono text-xs text-slate-500 dark:text-slate-400">{p.type}</td>
                 <td className="px-4 py-2.5 text-slate-600 dark:text-slate-300">{p.description}</td>
               </tr>
             ))}
@@ -274,49 +292,60 @@ function ParamsTable({ params, title }: { params: { name: string; type: string; 
   );
 }
 
+// ─── Endpoint card ────────────────────────────────────────────────────────────
+
 function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
+  const [open, setOpen] = useState(false);
+
   return (
-    <article id={endpoint.id} className="scroll-mt-24 rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
-      {/* Header */}
-      <div className="flex flex-wrap items-start justify-between gap-4 p-6">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-widest text-[#58D65D]">{endpoint.group}</p>
-          <h3 className="mt-1.5 text-2xl font-black text-slate-950 dark:text-white">{endpoint.title}</h3>
-          <p className="mt-2 max-w-xl text-slate-600 dark:text-slate-300">{endpoint.description}</p>
-        </div>
-        <div className="flex flex-wrap gap-2">
-          <span className={`rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide ${endpoint.auth ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/60 dark:text-amber-300 border border-amber-200 dark:border-amber-800' : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700'}`}>
-            {endpoint.auth ? '🔒 Auth required' : 'Public'}
+    <article id={endpoint.id} className="scroll-mt-24 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
+      {/* Summary row — always visible, toggles details */}
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center gap-3 px-5 py-4 text-left transition hover:bg-slate-50 dark:hover:bg-slate-800/30"
+      >
+        <span className={`shrink-0 rounded-lg px-2.5 py-1 text-xs font-black uppercase ${methodColors[endpoint.method]}`}>{endpoint.method}</span>
+        <code className="font-mono text-sm text-slate-800 dark:text-slate-100">{endpoint.path}</code>
+        <span className="hidden flex-1 truncate text-sm text-slate-500 dark:text-slate-400 sm:block">{endpoint.title}</span>
+        {endpoint.auth && (
+          <span className="shrink-0 rounded-full bg-amber-100 px-2.5 py-0.5 text-[11px] font-bold text-amber-700 dark:bg-amber-500/20 dark:text-amber-400">
+            🔒 Auth
           </span>
-          <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600 dark:bg-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-            {endpoint.status}
-          </span>
+        )}
+        <svg
+          className={`shrink-0 h-4 w-4 text-slate-400 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+          fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {/* Expandable details */}
+      <div className={`border-t border-slate-100 px-5 pb-5 pt-4 dark:border-slate-800 ${open ? 'block' : 'hidden'}`}>
+        <p className="text-slate-600 dark:text-slate-300">{endpoint.description}</p>
+
+        <div className="mt-4 flex flex-wrap items-center gap-2 rounded-xl bg-slate-50 px-4 py-3 dark:bg-slate-950/70">
+          <span className="text-xs font-semibold text-slate-400">Full URL:</span>
+          <code className="font-mono text-xs text-slate-600 dark:text-slate-300">{BASE_URL}{endpoint.path}</code>
         </div>
-      </div>
 
-      {/* Method + Path */}
-      <div className="mx-6 mb-6 flex flex-wrap items-center gap-3 rounded-2xl bg-slate-50 px-4 py-3 dark:bg-slate-950/70">
-        <span className={`rounded-lg px-2.5 py-1 text-xs font-black uppercase ${methodColors[endpoint.method]}`}>{endpoint.method}</span>
-        <code className="font-mono text-sm text-slate-900 dark:text-slate-100">{endpoint.path}</code>
-        <span className="hidden h-4 w-px bg-slate-300 dark:bg-slate-700 sm:block" />
-        <code className="hidden text-xs text-slate-400 sm:block">{BASE_URL}{endpoint.path}</code>
-      </div>
+        {endpoint.pathParams && <ParamsTable params={endpoint.pathParams} title="Path parameters" />}
+        {endpoint.query && <ParamsTable params={endpoint.query} title="Query parameters" />}
+        {endpoint.body && <ParamsTable params={endpoint.body} title="Request body" />}
 
-      {/* Params */}
-      {endpoint.pathParams && <ParamsTable params={endpoint.pathParams} title="Path parameters" />}
-      {endpoint.query && <ParamsTable params={endpoint.query} title="Query parameters" />}
-      {endpoint.body && <ParamsTable params={endpoint.body} title="Request body" />}
-
-      {/* Examples */}
-      <div className="mt-5 grid gap-3 px-6 pb-6 sm:grid-cols-2">
-        <CodeBlock label="curl" code={endpoint.curl} />
-        <CodeBlock label="JSON response" code={endpoint.response} />
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <CodeBlock label="curl" code={endpoint.curl} />
+          <CodeBlock label="JSON response" code={endpoint.response} />
+        </div>
       </div>
     </article>
   );
 }
 
-const authSection = `# 1. Register or login to get a token
+// ─── Main component ───────────────────────────────────────────────────────────
+
+const authWorkflow = `# 1. Register or login to get a token
 RESPONSE=$(curl -s -X POST "${BASE_URL}/api/auth/login" \\
   -H "Content-Type: application/json" \\
   -H "Accept: application/json" \\
@@ -338,26 +367,25 @@ export default function ApiDocsClient() {
   const tools = endpoints.filter((e) => e.group === 'Tools');
   const auth = endpoints.filter((e) => e.group === 'Authentication');
 
-  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
-    tools: true,
-    authentication: true,
-  });
+  const [sections, setSections] = useState({ tools: true, authentication: true });
 
-  function toggleSection(key: string) {
-    setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
+  function toggle(key: keyof typeof sections) {
+    setSections((p) => ({ ...p, [key]: !p[key] }));
   }
 
   return (
-    <main className="min-h-screen bg-white text-slate-900 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 dark:text-white">
-      {/* Hero */}
-      <section className="border-b border-slate-100 bg-gradient-to-b from-white to-slate-50 dark:border-slate-800 dark:from-slate-950 dark:to-slate-900/50">
+    <main className="min-h-screen bg-white dark:bg-slate-950 dark:text-white">
+      {/* ── Hero ─────────────────────────────────────────────────────────── */}
+      <section className="border-b border-slate-100 bg-gradient-to-b from-white to-slate-50 dark:border-slate-800 dark:from-slate-950 dark:to-slate-900/30">
         <div className="mx-auto max-w-7xl px-6 py-14 lg:px-8">
-          <Link href="/" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 transition hover:text-[#58D65D]">
+          <Link href="/" className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-400 transition hover:text-[#58D65D]">
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
             Back to Toolblip
           </Link>
-          <div className="mt-8 grid gap-10 lg:grid-cols-[1fr_340px] lg:items-start">
-            <div>
+
+          <div className="mt-8 flex flex-col gap-10 lg:flex-row lg:items-start">
+            {/* Left: headline */}
+            <div className="flex-1">
               <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#58D65D]">REST API Reference</p>
               <h1 className="mt-3 text-5xl font-black tracking-tight text-slate-950 dark:text-white sm:text-6xl">Toolblip API Docs</h1>
               <p className="mt-5 max-w-2xl text-lg leading-relaxed text-slate-600 dark:text-slate-300">
@@ -373,108 +401,119 @@ export default function ApiDocsClient() {
               </div>
             </div>
 
-            {/* Base URL card */}
-            <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-              <p className="text-xs font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Base URL</p>
+            {/* Right: base URL card */}
+            <div className="w-full rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:w-80">
+              <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Base URL</p>
               <div className="mt-4 space-y-3">
                 <div>
-                  <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-slate-400">Production</p>
-                  <code className="block break-all rounded-xl bg-slate-50 p-3 text-sm font-mono text-slate-900 dark:bg-slate-950 dark:text-emerald-400">{BASE_URL}</code>
+                  <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-slate-400">Production</p>
+                  <code className="block break-all rounded-xl bg-slate-50 p-3 text-sm font-mono text-emerald-700 dark:bg-slate-950 dark:text-emerald-400">{BASE_URL}</code>
                 </div>
                 <div>
-                  <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wide text-slate-400">
+                  <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-wide text-slate-400">
                     Custom domain{' '}
-                    <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-700 dark:bg-amber-900/60 dark:text-amber-300">SSL pending</span>
+                    <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-700 dark:bg-amber-500/20 dark:text-amber-400">SSL pending</span>
                   </p>
-                  <code className="block break-all rounded-xl bg-slate-50 p-3 text-sm font-mono text-slate-900 dark:bg-slate-950 dark:text-emerald-400">{FUTURE_BASE_URL}</code>
+                  <code className="block break-all rounded-xl bg-slate-50 p-3 text-sm font-mono text-emerald-700 dark:bg-slate-950 dark:text-emerald-400">{CUSTOM_DOMAIN}</code>
                 </div>
               </div>
-              <p className="mt-4 text-sm text-slate-500 dark:text-slate-400">
-                Use the Railway URL for all requests today. Switch to api.toolblip.com once SSL is ready — paths and responses are identical.
+              <p className="mt-4 text-xs text-slate-500 dark:text-slate-400">
+                Use the Railway URL for all requests today. Switch to the custom domain once SSL is ready — paths and responses are identical.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      <div className="mx-auto grid max-w-7xl gap-8 px-6 py-10 lg:grid-cols-[240px_1fr] lg:px-8">
-        {/* Sidebar nav */}
+      <div className="mx-auto grid max-w-7xl gap-8 px-6 py-10 lg:grid-cols-[220px_1fr] lg:px-8">
+        {/* ── Sidebar ──────────────────────────────────────────────────────── */}
         <aside className="hidden lg:block">
-          <div className="sticky top-24 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+          <div className="sticky top-24 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400">On this page</p>
-            <nav className="mt-4 space-y-1">
-              <a href="#auth" className="block rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white">
-                Authentication
+            <nav className="mt-3 space-y-0.5">
+              <a href="#auth" className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white">
+                🔑 Authentication
               </a>
-              {endpoints.map((ep) => (
-                <a key={ep.id} href={`#${ep.id}`} className="block rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white">
-                  <span className={`mr-2 inline-block rounded px-1.5 py-0.5 text-[10px] font-black uppercase ${methodColors[ep.method]}`}>{ep.method}</span>
-                  {ep.title}
-                </a>
-              ))}
-              <a href="#errors" className="block rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white">
-                Errors
+              <a href="#errors" className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white">
+                ⚠️ Errors
+              </a>
+              <a href="#models" className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white">
+                📦 Models
               </a>
             </nav>
+            <div className="mt-4 border-t border-slate-100 pt-4 dark:border-slate-800">
+              <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Endpoints</p>
+              <nav className="mt-3 space-y-0.5">
+                {endpoints.map((ep) => (
+                  <a key={ep.id} href={`#${ep.id}`} className="flex items-center gap-2 rounded-xl px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white">
+                    <span className={`shrink-0 rounded px-1.5 py-0.5 text-[10px] font-black uppercase ${methodColors[ep.method]}`}>{ep.method}</span>
+                    <span className="truncate text-xs">{ep.title}</span>
+                  </a>
+                ))}
+              </nav>
+            </div>
           </div>
         </aside>
 
-        {/* Content */}
+        {/* ── Content ──────────────────────────────────────────────────────── */}
         <div className="space-y-8">
-          {/* Auth quick start */}
-          <section id="auth" className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            <h2 className="text-2xl font-black text-slate-950 dark:text-white">Authentication</h2>
+
+          {/* ── Authentication ──────────────────────────────────────────── */}
+          <section id="auth" className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">🔑</span>
+              <h2 className="text-2xl font-black text-slate-950 dark:text-white">Authentication</h2>
+            </div>
             <p className="mt-3 leading-relaxed text-slate-600 dark:text-slate-300">
               Pass your token as{' '}
               <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm dark:bg-slate-800">Authorization: Bearer YOUR_TOKEN</code>{' '}
               on protected endpoints. Tokens are returned by{' '}
               <a href="#register" className="font-semibold text-[#58D65D] hover:underline">register</a> and{' '}
-              <a href="#login" className="font-semibold text-[#58D65D] hover:underline">login</a>. Keep tokens private — never put them in URLs.
+              <a href="#login" className="font-semibold text-[#58D65D] hover:underline">login</a>. Keep tokens private — never put them in public URLs.
             </p>
             <div className="mt-5">
-              <CodeBlock label="Auth workflow (bash)" code={authSection} />
+              <CodeBlock label="Auth workflow (bash)" code={authWorkflow} />
             </div>
           </section>
 
-          {/* Endpoint overview table */}
-          <section className="rounded-3xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            <div className="border-b border-slate-100 p-6 dark:border-slate-800">
-              <h2 className="text-xl font-black text-slate-950 dark:text-white">Endpoint overview</h2>
+          {/* ── Endpoint overview ───────────────────────────────────────── */}
+          <section className="rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
+            <div className="border-b border-slate-100 px-6 py-4 dark:border-slate-800">
+              <h2 className="text-lg font-black text-slate-950 dark:text-white">Endpoint overview</h2>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="bg-slate-50 dark:bg-slate-900/60">
-                    <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Method</th>
-                    <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Path</th>
-                    <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Auth</th>
-                    <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Response</th>
-                    <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Description</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Method</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Path</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Auth</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Response</th>
+                    <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">Description</th>
                   </tr>
                 </thead>
                 <tbody>
                   {endpoints.map((ep) => (
                     <tr key={ep.id} className="border-t border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
-                      <td className="px-5 py-3.5">
+                      <td className="px-4 py-3.5">
                         <span className={`rounded px-2 py-1 text-xs font-black uppercase ${methodColors[ep.method]}`}>{ep.method}</span>
                       </td>
-                      <td className="px-5 py-3.5">
-                        <a href={`#${ep.id}`} className="font-mono text-slate-900 hover:text-[#58D65D] dark:text-slate-100 dark:hover:text-emerald-400">{ep.path}</a>
+                      <td className="px-4 py-3.5">
+                        <a href={`#${ep.id}`} className="font-mono text-slate-800 hover:text-[#58D65D] dark:text-slate-100 dark:hover:text-emerald-400">{ep.path}</a>
                       </td>
-                      <td className="px-5 py-3.5">
+                      <td className="px-4 py-3.5">
                         {ep.auth ? (
-                          <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-semibold text-amber-700 dark:bg-amber-900/60 dark:text-amber-300">
-                            <svg className="h-3 w-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" /></svg>
-                            Bearer token
+                          <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-semibold text-amber-700 dark:bg-amber-500/20 dark:text-amber-400">
+                            🔒 Bearer
                           </span>
                         ) : (
                           <span className="text-slate-400 dark:text-slate-500">—</span>
                         )}
                       </td>
-                      <td className="px-5 py-3.5">
-                        <code className="text-xs text-slate-500 dark:text-slate-400">{ep.responseShape}</code>
+                      <td className="px-4 py-3.5">
+                        <code className="text-xs text-slate-400 dark:text-slate-500">{ep.responseShape}</code>
                       </td>
-                      <td className="px-5 py-3.5 text-slate-600 dark:text-slate-300">{ep.title}</td>
+                      <td className="px-4 py-3.5 text-slate-600 dark:text-slate-300">{ep.title}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -482,54 +521,44 @@ export default function ApiDocsClient() {
             </div>
           </section>
 
-          {/* Endpoint sections */}
-          <section id="endpoints">
-            {/* Tools */}
-            <button
-              onClick={() => toggleSection('tools')}
-              className="mb-5 flex w-full items-center gap-3 text-left"
-            >
-              <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Endpoints</p>
-              <h2 className="text-3xl font-black text-slate-950 dark:text-white">Tools</h2>
-              <svg
-                className={`ml-auto h-5 w-5 text-slate-400 transition-transform duration-200 ${openSections.tools ? 'rotate-180' : ''}`}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            <div className={`space-y-5 transition-all duration-200 ${openSections.tools ? 'opacity-100' : 'hidden opacity-0'}`}>
-              {tools.map((ep) => <EndpointCard key={ep.id} endpoint={ep} />)}
+          {/* ── Endpoints ────────────────────────────────────────────────── */}
+          <section id="endpoints" className="space-y-6">
+
+            {/* Tools group */}
+            <div>
+              <button onClick={() => toggle('tools')} className="mb-4 flex w-full items-center gap-3 text-left">
+                <h2 className="text-2xl font-black text-slate-950 dark:text-white">Tools</h2>
+                <span className="text-sm font-medium text-slate-400">{tools.length} endpoints</span>
+                <svg className={`ml-auto h-5 w-5 text-slate-400 transition-transform duration-200 ${sections.tools ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div className={`space-y-3 transition-all ${sections.tools ? 'opacity-100' : 'hidden opacity-0'}`}>
+                {tools.map((ep) => <EndpointCard key={ep.id} endpoint={ep} />)}
+              </div>
             </div>
 
-            {/* Authentication */}
-            <button
-              onClick={() => toggleSection('authentication')}
-              className="mb-5 mt-8 flex w-full items-center gap-3 text-left"
-            >
-              <p className="text-xs font-bold uppercase tracking-widest text-slate-400">Endpoints</p>
-              <h2 className="text-3xl font-black text-slate-950 dark:text-white">Authentication</h2>
-              <svg
-                className={`ml-auto h-5 w-5 text-slate-400 transition-transform duration-200 ${openSections.authentication ? 'rotate-180' : ''}`}
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            <div className={`space-y-5 transition-all duration-200 ${openSections.authentication ? 'opacity-100' : 'hidden opacity-0'}`}>
-              {auth.map((ep) => <EndpointCard key={ep.id} endpoint={ep} />)}
+            {/* Auth group */}
+            <div>
+              <button onClick={() => toggle('authentication')} className="mb-4 flex w-full items-center gap-3 text-left">
+                <h2 className="text-2xl font-black text-slate-950 dark:text-white">Authentication</h2>
+                <span className="text-sm font-medium text-slate-400">{auth.length} endpoints</span>
+                <svg className={`ml-auto h-5 w-5 text-slate-400 transition-transform duration-200 ${sections.authentication ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <div className={`space-y-3 transition-all ${sections.authentication ? 'opacity-100' : 'hidden opacity-0'}`}>
+                {auth.map((ep) => <EndpointCard key={ep.id} endpoint={ep} />)}
+              </div>
             </div>
           </section>
 
-          {/* Errors */}
-          <section id="errors" className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            <h2 className="text-2xl font-black text-slate-950 dark:text-white">Errors</h2>
+          {/* ── Errors ───────────────────────────────────────────────────── */}
+          <section id="errors" className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">⚠️</span>
+              <h2 className="text-2xl font-black text-slate-950 dark:text-white">Errors</h2>
+            </div>
             <p className="mt-3 leading-relaxed text-slate-600 dark:text-slate-300">
               All errors return JSON with a <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm dark:bg-slate-800">message</code> field. Validation errors include an <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm dark:bg-slate-800">errors</code> object keyed by field name.
             </p>
@@ -560,9 +589,12 @@ export default function ApiDocsClient() {
             </div>
           </section>
 
-          {/* Model reference */}
-          <section className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            <h2 className="text-2xl font-black text-slate-950 dark:text-white">Model reference</h2>
+          {/* ── Model reference ──────────────────────────────────────────── */}
+          <section id="models" className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">📦</span>
+              <h2 className="text-2xl font-black text-slate-950 dark:text-white">Model reference</h2>
+            </div>
             <p className="mt-3 leading-relaxed text-slate-600 dark:text-slate-300">
               Toolblip wraps all resources in top-level objects. A single tool is{' '}
               <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm dark:bg-slate-800">&#123; tool: &#123;...&#125; &#125;</code>. The directory is{' '}
@@ -587,6 +619,7 @@ export default function ApiDocsClient() {
 }`} />
             </div>
           </section>
+
         </div>
       </div>
     </main>
