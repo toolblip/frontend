@@ -49,12 +49,23 @@ test('tool pages render templated share left, inert views, and favorite hard rig
   const shareDialog = page.getByRole('dialog', { name: /Share JSON Formatter/i });
   await expect(shareDialog).toBeVisible();
   await expect(shareDialog).not.toContainText(/JSON Formatter/i);
-  await expect(shareDialog.getByRole('button', { name: /Share on Facebook/i })).toBeVisible();
-  await expect(shareDialog.getByRole('button', { name: /Share on X/i })).toBeVisible();
-  await expect(shareDialog.getByRole('button', { name: /Share on LinkedIn/i })).toBeVisible();
-  await expect(shareDialog.getByRole('button', { name: /Copy link/i })).toBeVisible();
+  const shareOnFacebook = shareDialog.getByRole('button', { name: /Share on Facebook/i });
+  const shareOnX = shareDialog.getByRole('button', { name: /Share on X/i });
+  const shareOnLinkedIn = shareDialog.getByRole('button', { name: /Share on LinkedIn/i });
+  const copyLink = shareDialog.getByRole('button', { name: /Copy link/i });
+  const shareLink = shareDialog.getByLabel(/Share link/i);
 
-  await shareDialog.getByRole('button', { name: /Copy link/i }).click();
+  await expect(shareOnFacebook).toBeVisible();
+  await expect(shareOnX).toBeVisible();
+  await expect(shareOnLinkedIn).toBeVisible();
+  await expect(copyLink).toBeVisible();
+  await expect(shareOnFacebook).not.toContainText('Share on Facebook');
+  await expect(shareOnX).not.toContainText('Share on X');
+  await expect(shareOnLinkedIn).not.toContainText('Share on LinkedIn');
+  await expect(shareLink).toBeDisabled();
+  await expect(shareLink).toHaveValue(/\/tools\/json-formatter$/);
+
+  await copyLink.click();
   await expect(shareDialog).toBeVisible();
   await expect(shareDialog.getByText(/Copied!/i)).toBeVisible();
   await expect(shareCount).toHaveText('1');
