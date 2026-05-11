@@ -52,6 +52,12 @@ export default function Error({
         </p>
 
         <div className="flex flex-wrap items-center justify-center gap-3">
+          <button
+            onClick={reset}
+            className="tb-v2-btn"
+          >
+            Try again
+          </button>
           <Link href="/" className="tb-v2-btn tb-v2-btn-primary">
             Go home
           </Link>
