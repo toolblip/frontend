@@ -3,11 +3,11 @@ import type { Metadata } from 'next';
 import { tools } from '@/data/tools';
 
 export const metadata: Metadata = {
-  title: 'Toolblip — Free Browser-Based Online Tools',
+  title: 'Toolblip - Free Browser-Based Online Tools',
   description:
     'Free, fast, and private online tools. No signup, no uploads, nothing leaves your browser.',
   openGraph: {
-    title: 'Toolblip — Free Browser-Based Online Tools',
+    title: 'Toolblip - Free Browser-Based Online Tools',
     description:
       'Free, fast, and private online tools. No signup, no uploads, nothing leaves your browser.',
     url: 'https://toolblip.com',
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary',
-    title: 'Toolblip — Free Browser-Based Online Tools',
+    title: 'Toolblip - Free Browser-Based Online Tools',
     description:
       'Free, fast, and private online tools. No signup, no uploads, nothing leaves your browser.',
   },
@@ -42,7 +42,7 @@ const STEPS = [
   {
     n: '1',
     title: 'Pick a tool',
-    desc: 'Choose a focused utility for text, code, URLs, images, or cleanup work — no signup detour.',
+    desc: 'Choose a focused utility for text, code, URLs, images, or cleanup work - no signup detour.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17 9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z" />
@@ -62,7 +62,7 @@ const STEPS = [
   {
     n: '3',
     title: 'Get your result',
-    desc: 'Copy the finished output instantly — no upload queue, waitlist, or account wall.',
+    desc: 'Copy the finished output instantly - no upload queue, waitlist, or account wall.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
@@ -75,19 +75,37 @@ const STEPS = [
 
 const BENEFITS = [
   {
-    emoji: '🔒',
+    icon: (
+      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M12 16v-4.5m0 0c-3.314 0-6-2.686-6-6s2.686-6 6-6 6 2.686 6 6-2.686 6-6 6Zm0 0c3.314 0 6 2.686 6 6s-2.686 6-6 6-6-2.686-6-6 2.686-6 6-6" />
+      </svg>
+    ),
     title: 'Private',
-    desc: 'Data never leaves your browser — no uploads, server processing, paste history, or background storage.',
+    accent: 'text-red-600 dark:text-red-400',
+    bar: 'bg-red-500 dark:bg-red-500',
+    desc: 'Data never leaves your browser — no uploads, server processing, or paste history.',
   },
   {
-    emoji: '⚡',
+    icon: (
+      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5 10.5 7.5M21 21l-5.25-5.25m-7.5 12a8.96 8.96 0 0 1-5.25-2.25m14.5 0c.067.527.108 1.062.108 1.59M3.75 13.5l7.5 7.5m0 0 7.5-7.5m-7.5 7.5V6.75m0 6.75 -7.5 7.5" />
+      </svg>
+    ),
     title: 'Fast',
-    desc: 'Runs instantly in your tab, so cleanup, conversion, and formatting feel immediate.',
+    accent: 'text-amber-500 dark:text-amber-400',
+    bar: 'bg-amber-400 dark:bg-amber-400',
+    desc: 'Runs instantly in your tab — no queue, no upload wait, no account gate.',
   },
   {
-    emoji: '🎁',
+    icon: (
+      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
+      </svg>
+    ),
     title: 'Free',
-    desc: 'No signup, no paywall, no “trial expired” surprise — just open a tool and use it.',
+    accent: 'text-emerald-500 dark:text-emerald-400',
+    bar: 'bg-emerald-500 dark:bg-emerald-400',
+    desc: 'No signup, no paywall, no “trial expired” — just open a tool and go.',
   },
 ];
 
@@ -105,10 +123,10 @@ export default function HomePage() {
       <section className="text-center space-y-4">
         <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 dark:text-white tracking-tight">
           Quick browser tools
-          <span className="text-red-600 dark:text-red-400"> that don’t touch your data</span>
+          <span className="text-red-600 dark:text-red-400"> that don't touch your data</span>
         </h1>
         <p className="text-lg text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
-          {tools.length}+ focused utilities for text, encoding, development, and everyday cleanup — pick a tool, paste your data, and get clean output while everything stays in your browser.
+          {tools.length}+ focused utilities for text, encoding, development, and everyday cleanup - pick a tool, paste your data, and get clean output while everything stays in your browser.
         </p>
         <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
           <a
@@ -198,7 +216,7 @@ export default function HomePage() {
 Quick access
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-{CATEGORY_SUMMARY} — jump straight to the tool set you need.
+{CATEGORY_SUMMARY} - jump straight to the tool set you need.
           </p>
         </div>
         <div className="flex flex-wrap justify-center gap-2">
@@ -229,21 +247,21 @@ Quick access
             Useful utilities without the usual friction.
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 max-w-2xl mx-auto">
-Everyday text, developer, and encoding tasks — private, immediate, and low-friction.
+Everyday text, developer, and encoding tasks - private, immediate, and low-friction.
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {BENEFITS.map((b) => (
             <div
               key={b.title}
-              className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 sm:p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:border-red-200 dark:hover:border-red-900 transition-all"
+              className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-5 sm:p-6 shadow-sm hover:shadow-md hover:-translate-y-0.5 hover:border-red-200 dark:hover:border-red-900 transition-all"
             >
-              <div className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-xl mb-3">
-                {b.emoji}
+              <div className={`w-11 h-11 rounded-full bg-gray-100 dark:bg-gray-800 ${b.accent} flex items-center justify-center mb-4`}>
+                {b.icon}
               </div>
               <h3 className="font-semibold text-gray-900 dark:text-white text-base">{b.title}</h3>
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">{b.desc}</p>
-              <div className="mt-3 h-1 w-10 rounded-full bg-red-100 dark:bg-red-900/60" aria-hidden="true" />
+              <div className={`mt-4 h-1 w-8 rounded-full ${b.bar}`} aria-hidden="true" />
             </div>
           ))}
         </div>
