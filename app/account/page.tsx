@@ -21,6 +21,15 @@ interface Subscription {
   subscription_status: string | null;
 }
 
+interface FavoriteTool {
+  slug: string;
+  name: string;
+  description: string;
+  category: string;
+  icon?: string | null;
+  favorited_at?: string | null;
+}
+
 type OnboardingStatus = "completed" | "skipped";
 type OnboardingPlanTier = "free" | "starter" | "ultra" | "max";
 
@@ -65,6 +74,8 @@ export default function AccountPage() {
   const [termsError, setTermsError] = useState("");
   const [showPlanOnboarding, setShowPlanOnboarding] = useState(false);
   const [selectedOnboardingPlan, setSelectedOnboardingPlan] = useState<OnboardingPlanTier>("free");
+  const [favoriteTools, setFavoriteTools] = useState<FavoriteTool[]>([]);
+  const [favoriteToolsLoading, setFavoriteToolsLoading] = useState(false);
 
   // Redirect to login if not authenticated (after auth has finished loading)
   useEffect(() => {
@@ -138,6 +149,26 @@ export default function AccountPage() {
       checkSubscription();
     }
   }, [token]);
+
+  useEffect(() => {
+    loadFavoriteTools();
+  }, [token]);
+
+  async function loadFavoriteTools() {
+    if (!token) return;
+    setFavoriteToolsLoading(true);
+    try {
+      const res = await fetch("/api/tools/favorites", { credentials: "include", headers: { Accept: "application/json" } });
+      if (res.ok) {
+        const data = await res.json();
+        setFavoriteTools(Array.isArray(data.data) ? data.data : []);
+      }
+    } catch {
+      // ignore favorite loading errors
+    } finally {
+      setFavoriteToolsLoading(false);
+    }
+  }
 
   async function checkSubscription() {
     if (!token) return;
@@ -575,6 +606,33 @@ export default function AccountPage() {
             {passwordSaving ? "Changing..." : "Change password"}
           </button>
         </form>
+      </div>
+
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 mb-6">
+        <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">
+          Favorite tools
+        </h2>
+        {favoriteToolsLoading ? (
+          <p className="text-sm text-gray-500 dark:text-gray-400">Loading favorites...</p>
+        ) : favoriteTools.length > 0 ? (
+          <div className="space-y-3">
+            {favoriteTools.map((tool) => (
+              <Link
+                key={tool.slug}
+                href={`/tools/${tool.slug}`}
+                className="flex items-start gap-3 rounded-xl border border-gray-200 p-3 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-800 dark:hover:border-red-900 dark:hover:bg-red-950/30"
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-lg dark:bg-gray-800">{tool.icon || "🧰"}</span>
+                <span>
+                  <span className="block font-semibold text-gray-900 dark:text-white">{tool.name}</span>
+                  <span className="line-clamp-2 text-sm text-gray-500 dark:text-gray-400">{tool.description}</span>
+                </span>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-gray-500 dark:text-gray-400">Favorite tools from any tool page to keep them here.</p>
+        )}
       </div>
 
       {/* Subscription Card */}

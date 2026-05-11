@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type FormEvent, type ReactNode } from "react";
 import { useAuth } from "@/app/providers/auth-provider";
 
 type EngagementStats = {
@@ -10,11 +10,21 @@ type EngagementStats = {
   shares: number;
   favorites: number;
   viewer_favorited: boolean;
+  viewer_favorited_at?: string | null;
 };
 
 type ToolEngagementBarProps = {
   toolName: string;
   toolSlug: string;
+};
+
+type IconProps = { className?: string };
+
+type ShareChannel = {
+  label: string;
+  channel: string;
+  href: string;
+  icon: ReactNode;
 };
 
 const fallbackStats = (slug: string): EngagementStats => ({
@@ -23,6 +33,7 @@ const fallbackStats = (slug: string): EngagementStats => ({
   shares: 0,
   favorites: 0,
   viewer_favorited: false,
+  viewer_favorited_at: null,
 });
 
 function copyTextFallback(text: string) {
@@ -47,6 +58,116 @@ function formatCount(value: number) {
   return new Intl.NumberFormat("en", { notation: value >= 10000 ? "compact" : "standard" }).format(value);
 }
 
+function formatFavoriteDate(value?: string | null) {
+  if (!value) return "Favorited";
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "Favorited";
+
+  const today = new Date();
+  const isToday = date.toDateString() === today.toDateString();
+  if (isToday) return "Favorited today";
+
+  return `Favorited on ${new Intl.DateTimeFormat("en", { month: "short", day: "numeric", year: "numeric" }).format(date)}`;
+}
+
+function ShareIcon({ className = "h-5 w-5" }: IconProps) {
+  return (
+    <svg className={className} width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M8.6 13.6 15.4 17M15.4 7 8.6 10.4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="6" cy="12" r="3" stroke="currentColor" strokeWidth="2" />
+      <circle cx="18" cy="5.5" r="3" stroke="currentColor" strokeWidth="2" />
+      <circle cx="18" cy="18.5" r="3" stroke="currentColor" strokeWidth="2" />
+    </svg>
+  );
+}
+
+function HeartIcon({ className = "h-6 w-6" }: IconProps) {
+  return (
+    <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 21s-7.2-4.4-9.5-9.1C.7 8.2 2.7 4 6.8 4c2 0 3.7 1.1 5.2 3 1.5-1.9 3.2-3 5.2-3 4.1 0 6.1 4.2 4.3 7.9C19.2 16.6 12 21 12 21Z" />
+    </svg>
+  );
+}
+
+function HeartOutlineIcon({ className = "h-6 w-6" }: IconProps) {
+  return (
+    <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 20.2s-7-4.2-9.1-8.6C1.4 8.5 3 5 6.6 5c2 0 3.8 1.3 5.4 3.5C13.6 6.3 15.4 5 17.4 5c3.6 0 5.2 3.5 3.7 6.6C19 16 12 20.2 12 20.2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function EyeIcon({ className = "h-5 w-5" }: IconProps) {
+  return (
+    <svg className={className} width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2" />
+    </svg>
+  );
+}
+
+function TextIcon({ children, className = "h-5 w-5" }: IconProps & { children: ReactNode }) {
+  return (
+    <span className={`${className} inline-flex items-center justify-center rounded-full bg-gray-100 text-xs font-bold text-gray-700 dark:bg-gray-800 dark:text-gray-200`} aria-hidden="true">
+      {children}
+    </span>
+  );
+}
+
+function CountPill({ label, value, testId }: { label: string; value: number; testId: string }) {
+  return (
+    <span
+      data-testid={testId}
+      className="inline-flex min-w-10 items-center justify-center rounded-full border border-gray-200 bg-white px-2.5 py-1 text-xs font-semibold text-gray-700 shadow-sm dark:border-gray-800 dark:bg-gray-950 dark:text-gray-200"
+      aria-label={`${label} ${formatCount(value)}`}
+    >
+      {formatCount(value)}
+    </span>
+  );
+}
+
+function SharePopover({ toolName, channels, copied, onShare, onCopy, onClose }: { toolName: string; channels: ShareChannel[]; copied: boolean; onShare: (channel: string) => void; onCopy: () => void; onClose: () => void }) {
+  return (
+    <div
+      role="dialog"
+      aria-label={`Share ${toolName}`}
+      className="absolute left-0 top-14 z-20 w-80 rounded-2xl border border-gray-200 bg-white p-4 shadow-xl dark:border-gray-800 dark:bg-gray-950"
+    >
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Share this tool</h2>
+        <button type="button" onClick={onClose} className="text-xl leading-none text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white" aria-label="Close share dialog">
+          ×
+        </button>
+      </div>
+      <div className="grid gap-2">
+        {channels.map((link) => (
+          <a
+            key={link.label}
+            href={link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => onShare(link.channel)}
+            className="inline-flex items-center gap-3 rounded-xl border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-800 dark:text-gray-200 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+          >
+            {link.icon}
+            {link.label}
+          </a>
+        ))}
+        <button
+          type="button"
+          onClick={onCopy}
+          className="inline-flex items-center gap-3 rounded-xl border border-gray-200 px-3 py-2 text-left text-sm font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-800 dark:text-gray-200 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+          aria-label="Copy link"
+        >
+          <TextIcon>⛓</TextIcon>
+          {copied ? "Copied!" : "Copy link"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function ToolEngagementBar({ toolName, toolSlug }: ToolEngagementBarProps) {
   const { user, login } = useAuth();
   const [stats, setStats] = useState<EngagementStats>(() => fallbackStats(toolSlug));
@@ -64,20 +185,28 @@ export default function ToolEngagementBar({ toolName, toolSlug }: ToolEngagement
     setPageUrl(window.location.href);
   }, []);
 
-  const shareLinks = useMemo(() => {
-    const encodedText = `Check out ${toolName} on Toolblip`;
+  const registerHref = `/signup?next=${encodeURIComponent(`/tools/${toolSlug}`)}`;
+
+  const shareLinks = useMemo<ShareChannel[]>(() => {
+    const text = `Check out ${toolName} on Toolblip`;
     return [
       {
+        label: "Share on Facebook",
+        channel: "facebook",
+        href: `https://www.facebook.com/sharer/sharer.php?${new URLSearchParams({ u: pageUrl }).toString()}`,
+        icon: <TextIcon>f</TextIcon>,
+      },
+      {
         label: "Share on Twitter",
-        href: `https://twitter.com/intent/tweet?${new URLSearchParams({ text: encodedText, url: pageUrl }).toString()}`,
+        channel: "twitter",
+        href: `https://twitter.com/intent/tweet?${new URLSearchParams({ text, url: pageUrl }).toString()}`,
+        icon: <TextIcon>𝕏</TextIcon>,
       },
       {
         label: "Share on LinkedIn",
+        channel: "linkedin",
         href: `https://www.linkedin.com/sharing/share-offsite/?${new URLSearchParams({ url: pageUrl }).toString()}`,
-      },
-      {
-        label: "Share on Facebook",
-        href: `https://www.facebook.com/sharer/sharer.php?${new URLSearchParams({ u: pageUrl }).toString()}`,
+        icon: <TextIcon>in</TextIcon>,
       },
     ];
   }, [pageUrl, toolName]);
@@ -125,7 +254,6 @@ export default function ToolEngagementBar({ toolName, toolSlug }: ToolEngagement
   async function copyLink() {
     const url = window.location.href || pageUrl;
     setPageUrl(url);
-
     await recordShare("copy");
 
     try {
@@ -163,7 +291,7 @@ export default function ToolEngagementBar({ toolName, toolSlug }: ToolEngagement
     }
   }
 
-  async function handleLoginSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleLoginSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoginError("");
     setLoginLoading(true);
@@ -204,81 +332,57 @@ export default function ToolEngagementBar({ toolName, toolSlug }: ToolEngagement
     }
   }
 
-  const favoriteLabel = stats.viewer_favorited ? `Favorited ${toolName}` : `Favorite ${toolName}`;
+  const favoriteText = stats.viewer_favorited ? formatFavoriteDate(stats.viewer_favorited_at) : "Favorite";
+  const favoriteLabel = stats.viewer_favorited ? `${favoriteText} ${toolName}` : `Favorite ${toolName}`;
 
   return (
-    <div className="relative flex flex-wrap items-center gap-2" aria-label={`${toolName} engagement stats`}>
-      <button
-        type="button"
-        onClick={() => setShareOpen((open) => !open)}
-        className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm transition hover:border-red-200 hover:text-red-600 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-200 dark:hover:border-red-900 dark:hover:text-red-400"
-        aria-label={`Share ${toolName}`}
-        aria-haspopup="dialog"
-        aria-expanded={shareOpen}
-      >
-        <span aria-hidden="true">↗</span>
-        Share
-        <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-300">Shares {formatCount(stats.shares)}</span>
-      </button>
+    <div data-testid="tool-engagement-bar" className="relative flex w-full flex-wrap items-center gap-3" aria-label={`${toolName} engagement stats`}>
+      <div className="relative flex items-center gap-2">
+        <button
+          data-testid="tool-share-button"
+          type="button"
+          onClick={() => setShareOpen((open) => !open)}
+          className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-100 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+          aria-label={`Share ${toolName}`}
+          aria-haspopup="dialog"
+          aria-expanded={shareOpen}
+        >
+          <ShareIcon className="h-5 w-5" />
+          Share
+        </button>
+        <CountPill label="Shares" value={stats.shares} testId="tool-share-count" />
 
-      <button
-        type="button"
-        onClick={toggleFavorite}
-        disabled={favoriteLoading}
-        className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm transition hover:border-red-200 hover:text-red-600 disabled:opacity-60 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-200 dark:hover:border-red-900 dark:hover:text-red-400"
-        aria-label={favoriteLabel}
-      >
-        <span aria-hidden="true">{stats.viewer_favorited ? "♥" : "♡"}</span>
-        {stats.viewer_favorited ? "Favorited" : "Favorite"}
-        <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-300">Favorites {formatCount(stats.favorites)}</span>
-      </button>
+        {shareOpen && <SharePopover toolName={toolName} channels={shareLinks} copied={copied} onShare={(channel) => void recordShare(channel)} onCopy={copyLink} onClose={() => setShareOpen(false)} />}
+      </div>
 
-      <span className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm dark:border-gray-800 dark:bg-gray-950 dark:text-gray-200">
-        <span aria-hidden="true">👁</span>
-        Views {formatCount(stats.views)}
+      <span
+        data-testid="tool-view-count"
+        className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-2 text-sm font-semibold text-gray-700 shadow-sm dark:border-gray-800 dark:bg-gray-950 dark:text-gray-200"
+        aria-label={`Views ${formatCount(stats.views)}`}
+      >
+        <EyeIcon className="h-5 w-5" />
+        <span>Views</span>
+        <span>{formatCount(stats.views)}</span>
       </span>
 
-      {shareOpen && (
-        <div
-          role="dialog"
-          aria-label={`Share ${toolName}`}
-          className="absolute left-0 top-12 z-20 w-72 rounded-2xl border border-gray-200 bg-white p-4 shadow-xl dark:border-gray-800 dark:bg-gray-950"
+      <div className="ml-auto flex items-center gap-2">
+        <button
+          data-testid="tool-favorite-button"
+          type="button"
+          onClick={toggleFavorite}
+          disabled={favoriteLoading}
+          className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-bold shadow-sm transition disabled:opacity-60 ${
+            stats.viewer_favorited
+              ? "border border-red-600 bg-red-600 text-white hover:bg-red-700"
+              : "border border-gray-200 bg-white text-gray-800 hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-100 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+          }`}
+          aria-label={favoriteLabel}
         >
-          <div className="mb-3 flex items-center justify-between gap-2">
-            <h2 className="text-sm font-semibold text-gray-900 dark:text-white">Share this tool</h2>
-            <button
-              type="button"
-              onClick={() => setShareOpen(false)}
-              className="text-sm text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-              aria-label="Close share dialog"
-            >
-              ×
-            </button>
-          </div>
-          <div className="grid gap-2">
-            {shareLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => void recordShare(link.label.toLowerCase().replace(/\s+/g, "-"))}
-                className="rounded-xl border border-gray-200 px-3 py-2 text-sm text-gray-700 transition hover:border-red-200 hover:text-red-600 dark:border-gray-800 dark:text-gray-200 dark:hover:border-red-900 dark:hover:text-red-400"
-              >
-                {link.label}
-              </a>
-            ))}
-            <button
-              type="button"
-              onClick={copyLink}
-              className="rounded-xl border border-gray-200 px-3 py-2 text-left text-sm text-gray-700 transition hover:border-red-200 hover:text-red-600 dark:border-gray-800 dark:text-gray-200 dark:hover:border-red-900 dark:hover:text-red-400"
-              aria-label="Copy link"
-            >
-              {copied ? "Copied!" : "Copy link"}
-            </button>
-          </div>
-        </div>
-      )}
+          {stats.viewer_favorited ? <HeartIcon className="h-6 w-6" /> : <HeartOutlineIcon className="h-6 w-6" />}
+          {favoriteText}
+        </button>
+        <CountPill label="Favorites" value={stats.favorites} testId="tool-favorite-count" />
+      </div>
 
       {loginOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
@@ -286,61 +390,37 @@ export default function ToolEngagementBar({ toolName, toolSlug }: ToolEngagement
             role="dialog"
             aria-modal="true"
             aria-label={`Sign in to favorite ${toolName}`}
-            className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-2xl dark:border-gray-800 dark:bg-gray-950"
+            className="w-full max-w-sm rounded-2xl border border-gray-200 bg-white p-5 shadow-2xl dark:border-gray-800 dark:bg-gray-950"
           >
             <div className="mb-4 flex items-start justify-between gap-4">
               <div>
-                <h2 className="text-xl font-bold text-gray-900 dark:text-white">Sign in to favorite</h2>
-                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Log in and we’ll automatically add {toolName} to your favorites.</p>
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white">Sign in to favorite</h2>
+                <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Log in and we’ll add {toolName} to your favorites.</p>
               </div>
-              <button
-                type="button"
-                onClick={() => setLoginOpen(false)}
-                className="text-xl text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
-                aria-label="Close login dialog"
-              >
+              <button type="button" onClick={() => setLoginOpen(false)} className="text-xl leading-none text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white" aria-label="Close login dialog">
                 ×
               </button>
             </div>
 
-            <form onSubmit={handleLoginSubmit} className="space-y-4" noValidate>
+            <form onSubmit={handleLoginSubmit} className="space-y-3" noValidate>
               {loginError && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-950 dark:text-red-200">{loginError}</p>}
               <div>
                 <label htmlFor="favorite-login-email" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200">Email</label>
-                <input
-                  id="favorite-login-email"
-                  type="email"
-                  autoComplete="email"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-gray-900 outline-none focus:border-red-400 dark:border-gray-800 dark:bg-gray-900 dark:text-white"
-                  required
-                />
+                <input id="favorite-login-email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-gray-900 outline-none focus:border-red-400 dark:border-gray-800 dark:bg-gray-900 dark:text-white" required />
               </div>
               <div>
                 <label htmlFor="favorite-login-password" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200">Password</label>
-                <input
-                  id="favorite-login-password"
-                  type="password"
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(event) => setPassword(event.target.value)}
-                  className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-gray-900 outline-none focus:border-red-400 dark:border-gray-800 dark:bg-gray-900 dark:text-white"
-                  required
-                />
+                <input id="favorite-login-password" type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-gray-900 outline-none focus:border-red-400 dark:border-gray-800 dark:bg-gray-900 dark:text-white" required />
               </div>
-              <button
-                type="submit"
-                disabled={loginLoading}
-                className="w-full rounded-xl bg-red-600 px-4 py-2 font-semibold text-white transition hover:bg-red-700 disabled:opacity-60"
-              >
+              <button type="submit" disabled={loginLoading} className="w-full rounded-xl bg-red-600 px-4 py-2 font-semibold text-white transition hover:bg-red-700 disabled:opacity-60">
                 {loginLoading ? "Signing in..." : "Sign in"}
               </button>
             </form>
 
-            <p className="mt-4 text-center text-sm text-gray-500 dark:text-gray-400">
-              Don&apos;t have an account? <Link href="/signup" className="font-semibold text-red-600 hover:text-red-700 dark:text-red-400">Sign up</Link>
-            </p>
+            <div className="mt-4 flex items-center justify-between gap-3 text-sm text-gray-500 dark:text-gray-400">
+              <Link href={`/login?next=${encodeURIComponent(`/tools/${toolSlug}`)}`} className="font-semibold text-gray-700 hover:text-red-600 dark:text-gray-200 dark:hover:text-red-400">Full login</Link>
+              <Link href={registerHref} className="font-semibold text-red-600 hover:text-red-700 dark:text-red-400">Create account</Link>
+            </div>
           </div>
         </div>
       )}
