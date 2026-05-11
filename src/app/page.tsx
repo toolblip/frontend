@@ -36,14 +36,14 @@ const categories = Object.entries(categoryCounts)
 
 const WORKFLOW = 'Pick a tool → Paste your data → Get your result';
 const LOCAL_FIRST_NOTE = 'No servers, no uploads, nothing leaves your browser.';
-const STEP_PROMISE = 'Local results in three quick steps';
-const TOOL_PROMISE = 'Open the page, use the tool, copy the answer — no account or upload step in between.';
+const STEP_PROMISE = 'Three steps, all in your browser';
+const TOOL_PROMISE = 'Open the page, paste only what you need, then copy the answer — no account, upload queue, or server hop.';
 
 const STEPS = [
   {
     n: '1',
     title: 'Pick a tool',
-    desc: 'Start with the focused utility for your text, code, URLs, images, or cleanup task.',
+    desc: 'Choose the focused utility for your text, code, URLs, images, or cleanup task.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17 9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z" />
@@ -53,7 +53,7 @@ const STEPS = [
   {
     n: '2',
     title: 'Paste your data',
-    desc: 'Drop in text, JSON, URLs, or values. The work happens locally in your tab.',
+    desc: 'Drop in text, JSON, URLs, or values. Processing stays local in your tab.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" />
@@ -63,7 +63,7 @@ const STEPS = [
   {
     n: '3',
     title: 'Get your result',
-    desc: 'Copy the finished result instantly — no server round-trip, upload queue, or account wall.',
+    desc: 'Copy the finished result instantly — no upload, waitlist, or account wall.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
@@ -78,7 +78,7 @@ const BENEFITS = [
   {
     emoji: '🔒',
     title: 'Private',
-    desc: 'Your data stays in your browser — no uploads, server processing, or background storage.',
+    desc: 'Your data stays in your browser — no uploads, server processing, paste history, or background storage.',
   },
   {
     emoji: '⚡',
@@ -201,7 +201,7 @@ export default function HomePage() {
             Jump to a category
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            {CATEGORY_SUMMARY} in quick filters, so you can jump straight to the right utility.
+            {CATEGORY_SUMMARY} grouped into quick filters for faster tool discovery.
           </p>
         </div>
         <div className="flex flex-wrap justify-center gap-2">
