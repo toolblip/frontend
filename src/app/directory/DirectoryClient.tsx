@@ -26,12 +26,11 @@ function matchesCategory(tool: Tool, tab: CategoryTab) {
 function matchesSearch(tool: Tool, query: string) {
   const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   if (terms.length === 0) return true;
-
   const searchable = `${tool.name} ${tool.description}`.toLowerCase();
   return terms.every((term) => searchable.includes(term));
 }
 
-function shorten(description: string) {
+function firstSentence(description: string) {
   return description.split('. ')[0].replace(/\.$/, '');
 }
 
@@ -40,12 +39,12 @@ export function DirectoryClient() {
   const [activeTab, setActiveTab] = useState<CategoryTab>('All');
 
   const filteredTools = useMemo(() => {
-    return tools.filter((tool) => matchesCategory(tool, activeTab) && matchesSearch(tool, query));
+    return tools.filter((t) => matchesCategory(t, activeTab) && matchesSearch(t, query));
   }, [activeTab, query]);
 
   const categoryCounts = useMemo(() => {
     return CATEGORY_TABS.reduce<Record<CategoryTab, number>>((counts, tab) => {
-      counts[tab] = tools.filter((tool) => matchesCategory(tool, tab) && matchesSearch(tool, query)).length;
+      counts[tab] = tools.filter((t) => matchesCategory(t, tab) && matchesSearch(t, query)).length;
       return counts;
     }, {} as Record<CategoryTab, number>);
   }, [query]);
@@ -59,6 +58,8 @@ export function DirectoryClient() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10 sm:py-14">
+
+      {/* ── Header ── */}
       <header className="text-center mb-8">
         <p className="text-sm font-semibold uppercase tracking-widest text-red-500 dark:text-red-400 mb-3">
           All tools
@@ -72,10 +73,11 @@ export function DirectoryClient() {
         </p>
       </header>
 
-      <section className="mb-7" aria-label="Directory filters">
+      {/* ── Search ── */}
+      <section className="mb-6" aria-label="Search and filter tools">
         <div className="relative max-w-2xl mx-auto">
           <svg
-            className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400"
+            className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 pointer-events-none"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -88,27 +90,27 @@ export function DirectoryClient() {
           <input
             type="search"
             value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={(e) => setQuery(e.target.value)}
             placeholder="Search tools by name or description…"
             aria-label="Search tools by name or description"
-            aria-controls="directory-results"
             className="w-full h-12 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 pl-12 pr-12 text-sm text-gray-900 dark:text-white shadow-sm outline-none transition focus:border-red-400 dark:focus:border-red-600 focus:ring-4 focus:ring-red-100 dark:focus:ring-red-950/50"
           />
-          {query ? (
+          {query && (
             <button
               type="button"
               onClick={() => setQuery('')}
               aria-label="Clear search"
-              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-2 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1.5 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
             >
-              <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
+              <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-          ) : null}
+          )}
         </div>
 
-        <div className="mt-5 flex gap-2 overflow-x-auto pb-2 sm:justify-center" role="tablist" aria-label="Filter tools by category">
+        {/* ── Category tabs ── */}
+        <div className="mt-4 flex gap-2 overflow-x-auto pb-1 sm:justify-center" role="tablist" aria-label="Filter by category">
           {CATEGORY_TABS.map((tab) => {
             const isActive = activeTab === tab;
             return (
@@ -117,7 +119,6 @@ export function DirectoryClient() {
                 type="button"
                 role="tab"
                 aria-selected={isActive}
-                aria-controls="directory-results"
                 onClick={() => setActiveTab(tab)}
                 className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition ${
                   isActive
@@ -126,19 +127,21 @@ export function DirectoryClient() {
                 }`}
               >
                 {tab}
-                <span className="ml-2 text-xs opacity-70">{categoryCounts[tab]}</span>
+                <span className="ml-1.5 text-xs opacity-60">{categoryCounts[tab]}</span>
               </button>
             );
           })}
         </div>
       </section>
 
-      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+      {/* ── Count + clear ── */}
+      <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-gray-500 dark:text-gray-400" aria-live="polite">
-          Showing <span className="font-semibold text-gray-900 dark:text-white">{filteredTools.length}</span>{' '}
-          {filteredTools.length === 1 ? 'tool' : 'tools'}
+          Showing{' '}
+          <span className="font-semibold text-gray-900 dark:text-white">{filteredTools.length}</span>
+          {' '}tool{filteredTools.length !== 1 ? 's' : ''}
         </p>
-        {hasFilters ? (
+        {hasFilters && (
           <button
             type="button"
             onClick={clearFilters}
@@ -146,11 +149,15 @@ export function DirectoryClient() {
           >
             Clear filters
           </button>
-        ) : null}
+        )}
       </div>
 
+      {/* ── Grid ── */}
       {filteredTools.length > 0 ? (
-        <section id="directory-results" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" aria-label="Filtered tools">
+        <section
+          aria-label="Tool cards"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+        >
           {filteredTools.map((tool) => (
             <Link
               key={tool.slug}
@@ -166,33 +173,33 @@ export function DirectoryClient() {
                 </div>
                 <div className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{tool.category}</div>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed line-clamp-2">
-                  {shorten(tool.description)}
+                  {firstSentence(tool.description)}
                 </p>
               </div>
             </Link>
           ))}
         </section>
       ) : (
-        <section
-          id="directory-results"
-          aria-label="No matching tools"
-          className="rounded-2xl border border-dashed border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 p-10 text-center"
-        >
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-2xl dark:bg-gray-800" aria-hidden="true">
+        /* ── Empty state ── */
+        <div className="rounded-2xl border border-dashed border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 py-16 text-center">
+          <div
+            className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-2xl dark:bg-gray-800"
+            aria-hidden="true"
+          >
             🔎
           </div>
           <h2 className="text-lg font-semibold text-gray-900 dark:text-white">No tools found</h2>
           <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-            Try a different search term or switch back to all categories.
+            Try a different search term or switch to another category.
           </p>
           <button
             type="button"
             onClick={clearFilters}
-            className="mt-5 rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700"
+            className="mt-5 rounded-full bg-red-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-red-700"
           >
             Clear filters
           </button>
-        </section>
+        </div>
       )}
     </div>
   );
