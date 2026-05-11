@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type ReactNode } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 
 const BASE_URL = 'https://toolblip-api-production.up.railway.app';
@@ -32,15 +32,15 @@ const endpoints: Endpoint[] = [
     method: 'GET',
     path: '/api/tools',
     title: 'List all tools',
-    description: 'Returns the full public directory. Tools are nested at tools.tools to match the app client contract.',
+    description: 'Returns the full public tool directory. Tools are nested at tools.tools to match the app client contract.',
     auth: false,
     status: '200 OK',
     responseShape: '{ tools: { tools: [...] } }',
     query: [
-      { name: 'category', type: 'string', required: false, description: 'Filter by category slug or name.' },
-      { name: 'search', type: 'string', required: false, description: 'Search tool names and descriptions.' },
+      { name: 'category', type: 'string', required: false, description: 'Filter tools by category name or slug.' },
+      { name: 'search', type: 'string', required: false, description: 'Search across tool names and descriptions.' },
       { name: 'page', type: 'number', required: false, description: 'Pagination page number.' },
-      { name: 'per_page', type: 'number', required: false, description: 'Items per page.' },
+      { name: 'per_page', type: 'number', required: false, description: 'Items per page (default: 15).' },
     ],
     curl: `curl "${BASE_URL}/api/tools" \\
   -H "Accept: application/json"`,
@@ -67,7 +67,7 @@ const endpoints: Endpoint[] = [
     method: 'GET',
     path: '/api/tools/{slug}',
     title: 'Get a single tool',
-    description: 'Fetch metadata for one tool by its slug. Use the slug returned by GET /api/tools.',
+    description: 'Fetch metadata for one tool by its unique slug. Use the slug returned by GET /api/tools.',
     auth: false,
     status: '200 OK',
     responseShape: '{ tool }',
@@ -103,7 +103,7 @@ const endpoints: Endpoint[] = [
       { name: 'name', type: 'string', required: true, description: 'Display name for the account.' },
       { name: 'email', type: 'string', required: true, description: 'Unique email address.' },
       { name: 'password', type: 'string', required: true, description: 'Account password.' },
-      { name: 'password_confirmation', type: 'string', required: true, description: 'Must match password.' },
+      { name: 'password_confirmation', type: 'string', required: true, description: 'Must match password exactly.' },
     ],
     curl: `curl -X POST "${BASE_URL}/api/auth/register" \\
   -H "Content-Type: application/json" \\
@@ -161,7 +161,7 @@ const endpoints: Endpoint[] = [
     method: 'POST',
     path: '/api/auth/logout',
     title: 'Logout',
-    description: 'Revoke the current token. It stops working immediately.',
+    description: 'Revoke the current token. It stops working immediately and cannot be reused.',
     auth: true,
     status: '200 OK',
     responseShape: '{ message }',
