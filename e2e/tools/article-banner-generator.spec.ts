@@ -73,7 +73,8 @@ test.describe('Banner Generator tool', () => {
     await expect(shareDialog).toBeVisible();
     await expect(shareDialog).not.toContainText('🖼️');
     await expect(shareDialog).toContainText('Share');
-    await expect(shareDialog).toContainText('Open a ready-to-post share window');
+    await expect(shareDialog).not.toContainText('Open a ready-to-post share window');
+    await expect(shareDialog).not.toContainText('Paste the Toolblip URL anywhere');
 
     const shareHeader = shareDialog.getByTestId('share-dialog-header');
     await expect(shareHeader).toBeVisible();
