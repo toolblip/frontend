@@ -75,7 +75,7 @@ export default async function ToolDetailPage({ params }: PageProps) {
           </div>
         </div>
         <p className="text-gray-500 dark:text-gray-400 leading-relaxed mb-4">{tool.description}</p>
-        <ToolEngagementBar toolName={tool.name} toolSlug={tool.slug} />
+        <ToolEngagementBar toolName={tool.name} toolSlug={tool.slug} toolIcon={tool.emoji} />
       </div>
 
       {/* Tool UI */}
