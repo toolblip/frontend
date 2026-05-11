@@ -38,6 +38,9 @@ export default function ShareButtons({ toolName, toolSlug }: ShareButtonsProps) 
     text: `Check out ${toolName} on @toolblip`,
     url: pageUrl,
   }).toString()}`;
+  const facebookUrl = `https://www.facebook.com/sharer/sharer.php?${new URLSearchParams({
+    u: pageUrl,
+  }).toString()}`;
   const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?${new URLSearchParams({
     url: pageUrl,
   }).toString()}`;
@@ -97,6 +100,19 @@ export default function ShareButtons({ toolName, toolSlug }: ShareButtonsProps) 
           <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
         </svg>
         Twitter/X
+      </a>
+
+      <a
+        href={facebookUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="tb-v2-share-btn"
+        aria-label={`Share ${toolName} on Facebook`}
+      >
+        <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M13.5 22v-8.2h2.8l.4-3.2h-3.2V8.6c0-.9.2-1.5 1.6-1.5H17V4.3c-.5-.1-1.7-.2-3-.2-2.9 0-4.9 1.8-4.9 5v1.5H6.1v3.2H9v8.2z" />
+        </svg>
+        Facebook
       </a>
 
       <a
