@@ -37,13 +37,13 @@ const categories = Object.entries(categoryCounts)
 const WORKFLOW = 'Pick a tool → Paste your data → Get your result';
 const LOCAL_FIRST_NOTE = 'No servers, no uploads, nothing leaves your browser.';
 const STEP_PROMISE = 'Three quick steps, zero cloud round-trips';
-const TOOL_PROMISE = 'Open a focused tool, paste only what you need, then copy the answer — no account, upload queue, or server hop.';
+const TOOL_PROMISE = 'Open a focused tool, paste only what you need, then copy the answer — no account, upload queue, server hop, or data trail.';
 
 const STEPS = [
   {
     n: '1',
     title: 'Pick a tool',
-    desc: 'Choose a focused utility for text, code, URLs, images, or cleanup work.',
+    desc: 'Choose a focused utility for text, code, URLs, images, or cleanup work — no signup detour.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17 9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z" />
@@ -53,7 +53,7 @@ const STEPS = [
   {
     n: '2',
     title: 'Paste your data',
-    desc: 'Drop in text, JSON, URLs, or values. Processing stays local in your tab.',
+    desc: 'Drop in text, JSON, URLs, or values. Processing stays local in your tab, not on a server.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2" />
@@ -63,7 +63,7 @@ const STEPS = [
   {
     n: '3',
     title: 'Get your result',
-    desc: 'Copy the finished output instantly — no upload, waitlist, or account wall.',
+    desc: 'Copy the finished output instantly — no upload queue, waitlist, or account wall.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
@@ -213,6 +213,7 @@ export default function HomePage() {
               aria-label={`Browse ${cat.count} ${cat.name} tools`}
             >
               <span>{cat.name}</span>
+              <span className="sr-only"> tools</span>
               <span className="text-[11px] font-semibold px-1.5 py-0.5 rounded-full bg-white/80 dark:bg-gray-950/60 text-gray-400 dark:text-gray-500">
                 {cat.count}
               </span>
