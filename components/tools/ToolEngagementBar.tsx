@@ -175,7 +175,7 @@ function CountPill({
   );
 }
 
-function SharePopover({ toolName, channels, copied, onShare, onCopy, onClose }: { toolName: string; channels: ShareChannel[]; copied: boolean; onShare: (channel: string) => void; onCopy: () => void; onClose: () => void }) {
+function SharePopover({ toolName, channels, copied, onShare, onCopy, onClose, pageUrl }: { toolName: string; channels: ShareChannel[]; copied: boolean; onShare: (channel: string) => void; onCopy: () => void; onClose: () => void; pageUrl: string }) {
   function openShareWindow(link: ShareChannel) {
     window.open(link.url, "_blank", "noopener,noreferrer");
     onShare(link.channel);
@@ -202,38 +202,53 @@ function SharePopover({ toolName, channels, copied, onShare, onCopy, onClose }: 
           </p>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-2 p-3">
-        {channels.map((link) => {
-          const visibleLabel = link.label === "Share on Facebook" ? "Face\u200Bbook" : link.label.replace("Share on ", "");
+      <div className="space-y-3 p-3">
+        <div className="grid grid-cols-3 gap-2">
+          {channels.map((link) => {
+            const visibleLabel = link.label === "Share on Facebook" ? "FB" : link.label.replace("Share on ", "");
 
-          return (
+            return (
+              <button
+                key={link.label}
+                type="button"
+                onClick={() => openShareWindow(link)}
+                aria-label={link.label}
+                className="group flex min-h-[5.25rem] w-full flex-col items-center justify-center gap-2 rounded-2xl border border-gray-200/80 bg-white/95 px-3 py-3 text-left transition hover:-translate-y-0.5 hover:border-gray-300 hover:bg-white hover:shadow-lg hover:shadow-gray-900/10 focus:outline-none focus:ring-2 focus:ring-red-400 dark:border-gray-700 dark:bg-slate-900/80 dark:hover:border-gray-600 dark:hover:bg-slate-900"
+              >
+                {link.icon}
+                <span className="sr-only">{visibleLabel}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div data-testid="share-copy-section" className="rounded-2xl border border-gray-200/80 bg-white/95 p-3 shadow-sm dark:border-gray-700 dark:bg-slate-900/80">
+          <div className="flex items-stretch gap-2">
+            <label className="sr-only" htmlFor="share-link-input">
+              Share link
+            </label>
+            <input
+              id="share-link-input"
+              data-testid="share-link-input"
+              type="text"
+              value={pageUrl}
+              disabled
+              readOnly
+              aria-disabled="true"
+              aria-label="Share link"
+              className="min-w-0 flex-1 rounded-2xl border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700 shadow-inner outline-none dark:border-gray-700 dark:bg-gray-950 dark:text-gray-200"
+            />
             <button
-              key={link.label}
               type="button"
-              onClick={() => openShareWindow(link)}
-              aria-label={link.label}
-              className="group flex min-h-[5.25rem] w-full items-center gap-3 rounded-2xl border border-gray-200/80 bg-white/95 px-3 py-3 text-left transition hover:-translate-y-0.5 hover:border-gray-300 hover:bg-white hover:shadow-lg hover:shadow-gray-900/10 focus:outline-none focus:ring-2 focus:ring-red-400 dark:border-gray-700 dark:bg-slate-900/80 dark:hover:border-gray-600 dark:hover:bg-slate-900"
+              onClick={onCopy}
+              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 disabled:opacity-60"
+              aria-label="Copy link"
             >
-              {link.icon}
-              <span className="min-w-0 flex-1">
-                <span className="block text-sm font-bold text-gray-900 dark:text-white">{visibleLabel}</span>
-              </span>
-              <ArrowIcon className="h-4 w-4 shrink-0 text-gray-400 transition group-hover:translate-x-0.5 group-hover:text-gray-700 dark:group-hover:text-gray-200" />
+              <BrandBadge className={copied ? "bg-emerald-100 text-emerald-700 ring-white/15 dark:bg-emerald-950 dark:text-emerald-300" : "bg-white/15 text-white ring-white/15"}>{copied ? <CheckIcon /> : "⛓"}</BrandBadge>
+              {copied ? "Copied!" : "Copy"}
             </button>
-          );
-        })}
-        <button
-          type="button"
-          onClick={onCopy}
-          className="group flex min-h-[4.75rem] w-full items-center gap-3 rounded-2xl border border-gray-200/80 bg-white/95 px-3 py-3 text-left transition hover:-translate-y-0.5 hover:border-gray-300 hover:bg-white hover:shadow-lg hover:shadow-gray-900/10 focus:outline-none focus:ring-2 focus:ring-red-400 dark:border-gray-700 dark:bg-slate-900/80 dark:hover:border-gray-600 dark:hover:bg-slate-900"
-          aria-label="Copy link"
-        >
-          <BrandBadge className={copied ? "bg-emerald-100 text-emerald-700 ring-white/15 dark:bg-emerald-950 dark:text-emerald-300" : "bg-gray-100 text-gray-700 ring-white/15 dark:bg-gray-800 dark:text-gray-200"}>{copied ? <CheckIcon /> : "⛓"}</BrandBadge>
-          <span className="min-w-0 flex-1">
-            <span className="block text-sm font-bold text-gray-900 dark:text-white">{copied ? "Copied!" : "Copy link"}</span>
-          </span>
-          <ArrowIcon className="h-4 w-4 shrink-0 text-gray-400 transition group-hover:translate-x-0.5 group-hover:text-gray-700 dark:group-hover:text-gray-200" />
-        </button>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -425,12 +440,12 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
 
   return (
     <div data-testid="tool-engagement-bar" className="relative flex w-full flex-wrap items-center gap-3" aria-label={`${toolName} engagement stats`}>
-      <div className="relative flex items-stretch gap-0">
+      <div className="relative inline-flex items-stretch overflow-hidden rounded-full border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
         <button
           data-testid="tool-share-button"
           type="button"
           onClick={toggleSharePopover}
-          className="inline-flex items-center gap-2 rounded-l-full border border-r-0 border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-100 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+          className="inline-flex items-center gap-2 border-0 bg-transparent px-4 py-2 text-sm font-semibold text-gray-800 transition hover:bg-red-50 hover:text-red-600 dark:text-gray-100 dark:hover:bg-red-950/40 dark:hover:text-red-400"
           aria-label={`Share ${toolName}`}
           aria-haspopup="dialog"
           aria-expanded={shareOpen}
@@ -438,9 +453,15 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
           <ShareIcon className="h-5 w-5" />
           Share
         </button>
-        <CountPill label="Shares" value={stats.shares} testId="tool-share-count" className="rounded-r-full" onClick={toggleSharePopover} />
+        <CountPill
+          label="Shares"
+          value={stats.shares}
+          testId="tool-share-count"
+          className="rounded-none border-0 border-l border-gray-200 bg-gray-50 shadow-none dark:border-gray-800 dark:bg-gray-900"
+          onClick={toggleSharePopover}
+        />
 
-        {shareOpen && <SharePopover toolName={toolName} channels={shareLinks} copied={copied} onShare={(channel) => void recordShare(channel)} onCopy={copyLink} onClose={() => setShareOpen(false)} />}
+        {shareOpen && <SharePopover toolName={toolName} channels={shareLinks} copied={copied} pageUrl={pageUrl} onShare={(channel) => void recordShare(channel)} onCopy={copyLink} onClose={() => setShareOpen(false)} />}
       </div>
 
       <span

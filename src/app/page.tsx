@@ -36,8 +36,7 @@ const categories = Object.entries(categoryCounts)
 
 const WORKFLOW = 'Pick a tool → Paste your data → Get your result';
 const LOCAL_FIRST_NOTE = 'No servers, no uploads, nothing leaves your browser.';
-const STEP_PROMISE = 'Three quick steps, zero cloud round-trips';
-const TOOL_PROMISE = 'Open a focused tool, paste only what you need, then copy the answer — no account, upload queue, server hop, or data trail.';
+const STEP_PROMISE = 'Start in seconds, stay private by default';
 
 const STEPS = [
   {
@@ -153,9 +152,7 @@ export default function HomePage() {
             <p className="mt-2 inline-flex rounded-full bg-red-50 dark:bg-red-950/30 px-3 py-1 text-xs font-semibold text-red-700 dark:text-red-300">
               {LOCAL_FIRST_NOTE}
             </p>
-            <p className="mt-2 text-xs text-gray-400 dark:text-gray-500 leading-relaxed">
-              {TOOL_PROMISE}
-            </p>
+
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 flex-1">
             {STEPS.map((s, index) => (
@@ -198,10 +195,10 @@ export default function HomePage() {
       <section id="categories" aria-label="Browse tools by category" className="rounded-3xl border border-gray-200 dark:border-gray-800 bg-gray-50/70 dark:bg-gray-900/40 px-5 py-5 sm:px-6 space-y-3 scroll-mt-6">
         <div className="text-center space-y-1">
           <p className="text-sm font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">
-            Jump to a category
+Quick access
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            {CATEGORY_SUMMARY} grouped into quick filters for faster tool discovery.
+{CATEGORY_SUMMARY} — jump straight to the tool set you need.
           </p>
         </div>
         <div className="flex flex-wrap justify-center gap-2">
@@ -232,7 +229,7 @@ export default function HomePage() {
             Useful utilities without the usual friction.
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 max-w-2xl mx-auto">
-            Toolblip keeps everyday text, developer, and encoding tasks private, immediate, and low-friction.
+Everyday text, developer, and encoding tasks — private, immediate, and low-friction.
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

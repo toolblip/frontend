@@ -86,20 +86,31 @@ test.describe('Banner Generator tool', () => {
     const shareOnFacebook = page.getByRole('button', { name: 'Share on Facebook' });
     const shareOnLinkedIn = page.getByRole('button', { name: 'Share on LinkedIn' });
     const copyLink = page.getByRole('button', { name: 'Copy link' });
+    const shareLink = shareDialog.getByLabel('Share link');
+
     await expect(shareOnX).toBeVisible();
     await expect(shareOnFacebook).toBeVisible();
     await expect(shareOnLinkedIn).toBeVisible();
     await expect(copyLink).toBeVisible();
+    await expect(shareOnX).not.toContainText('Share on X');
+    await expect(shareOnFacebook).not.toContainText('Share on Facebook');
+    await expect(shareOnLinkedIn).not.toContainText('Share on LinkedIn');
+
+    await expect(shareLink).toBeDisabled();
+    await expect(shareLink).toHaveValue(/https?:\/\/(127\.0\.0\.1:3200|toolblip\.com)\/tools\/og-image-generator/);
 
     const xBox = await shareOnX.boundingBox();
     const facebookBox = await shareOnFacebook.boundingBox();
     const linkedInBox = await shareOnLinkedIn.boundingBox();
     const copyBox = await copyLink.boundingBox();
+    const inputBox = await shareLink.boundingBox();
 
     expect(xBox?.x).toBeLessThan(facebookBox?.x ?? Infinity);
-    expect(linkedInBox?.x).toBeLessThan(copyBox?.x ?? Infinity);
-    expect(xBox?.y).toBeLessThan(linkedInBox?.y ?? Infinity);
-    expect(facebookBox?.y).toBeLessThan(copyBox?.y ?? Infinity);
+    expect(facebookBox?.x).toBeLessThan(linkedInBox?.x ?? Infinity);
+    expect(xBox?.y).toBeLessThan((inputBox?.y ?? Infinity));
+    expect(facebookBox?.y).toBeLessThan((inputBox?.y ?? Infinity));
+    expect(linkedInBox?.y).toBeLessThan((inputBox?.y ?? Infinity));
+    expect(copyBox?.y).toBeGreaterThan((inputBox?.y ?? 0) - 1);
   });
 
   test('records one share for each copy and social share action', async ({ page }) => {
