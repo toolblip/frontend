@@ -425,12 +425,12 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
 
   return (
     <div data-testid="tool-engagement-bar" className="relative flex w-full flex-wrap items-center gap-3" aria-label={`${toolName} engagement stats`}>
-      <div className="relative flex items-stretch gap-0">
+      <div className="relative inline-flex items-stretch overflow-hidden rounded-full border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
         <button
           data-testid="tool-share-button"
           type="button"
           onClick={toggleSharePopover}
-          className="inline-flex items-center gap-2 rounded-l-full border border-r-0 border-gray-200 bg-white px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-100 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+          className="inline-flex items-center gap-2 border-0 bg-transparent px-4 py-2 text-sm font-semibold text-gray-800 transition hover:bg-red-50 hover:text-red-600 dark:text-gray-100 dark:hover:bg-red-950/40 dark:hover:text-red-400"
           aria-label={`Share ${toolName}`}
           aria-haspopup="dialog"
           aria-expanded={shareOpen}
@@ -438,7 +438,13 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
           <ShareIcon className="h-5 w-5" />
           Share
         </button>
-        <CountPill label="Shares" value={stats.shares} testId="tool-share-count" className="rounded-r-full" onClick={toggleSharePopover} />
+        <CountPill
+          label="Shares"
+          value={stats.shares}
+          testId="tool-share-count"
+          className="rounded-none border-0 border-l border-gray-200 bg-gray-50 shadow-none dark:border-gray-800 dark:bg-gray-900"
+          onClick={toggleSharePopover}
+        />
 
         {shareOpen && <SharePopover toolName={toolName} channels={shareLinks} copied={copied} onShare={(channel) => void recordShare(channel)} onCopy={copyLink} onClose={() => setShareOpen(false)} />}
       </div>
