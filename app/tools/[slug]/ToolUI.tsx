@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import type { Tool } from '@/data/tools';
-import ShareButtons from '@/src/components/ShareButtons';
+
 
 // ─── Imported tool UIs ──────────────────────────────────────────────────────
 import YamlToJsonClient from '@/components/tools/YamlToJsonClient';
@@ -4222,9 +4222,6 @@ export default function ToolClient({ tool }: { tool: Tool }) {
           </div>
         </div>
         <p className="text-gray-500 dark:text-gray-400 leading-relaxed">{tool.description}</p>
-        <div className="mt-4">
-          <ShareButtons toolName={tool.name} toolSlug={tool.slug} />
-        </div>
       </div>
 
       {/* Tool UI */}

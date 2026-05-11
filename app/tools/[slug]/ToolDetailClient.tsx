@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import type { Tool } from '@/data/tools';
-import ShareButtons from '@/components/ShareButtons';
+
 import { marked } from 'marked';
 import Base64EncoderDecoderClient from '@/components/tools/Base64EncoderDecoderClient';
 import CircleCropClient from '@/components/tools/CircleCropClient';
@@ -7307,9 +7307,6 @@ export default function ToolDetailClient({ tool }: { tool: Tool }) {
         {tool.description && (
           <p className="mt-3 text-gray-600 dark:text-gray-300 leading-relaxed">{tool.description}</p>
         )}
-        <div className="mt-4">
-          <ShareButtons toolName={tool.name} toolSlug={tool.slug} />
-        </div>
       </header>
 
       {/* Tool UI */}
