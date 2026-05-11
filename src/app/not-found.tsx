@@ -5,6 +5,7 @@ export default function NotFound() {
     <main className="flex min-h-dvh items-center justify-center bg-[var(--bg)] px-4 py-16 text-[var(--fg-0)]">
       <section
         aria-labelledby="not-found-title"
+        aria-describedby="not-found-description"
         className="w-full max-w-md rounded-3xl border border-[var(--line)] bg-[var(--surface-2)] p-8 text-center shadow-[0_24px_80px_rgba(15,23,42,0.06)] dark:shadow-none sm:p-10"
       >
         <p
@@ -26,7 +27,10 @@ export default function NotFound() {
           Page not found
         </h1>
 
-        <p className="mx-auto mb-8 max-w-sm text-balance text-base leading-7 text-[var(--fg-1)]">
+        <p
+          id="not-found-description"
+          className="mx-auto mb-8 max-w-sm text-balance text-base leading-7 text-[var(--fg-1)]"
+        >
           The page you&apos;re looking for doesn&apos;t exist.
         </p>
 
