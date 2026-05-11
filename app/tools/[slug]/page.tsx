@@ -1,3 +1,4 @@
+import ShareButtons from '@/components/ShareButtons';
 import { notFound, redirect } from 'next/navigation';
 import type { Metadata } from 'next';
 import { tools } from '@/data/tools';
@@ -76,6 +77,7 @@ export default async function ToolDetailPage({ params }: PageProps) {
         </div>
         <p className="text-gray-500 dark:text-gray-400 leading-relaxed mb-4">{tool.description}</p>
         <ToolEngagementBar toolName={tool.name} toolSlug={tool.slug} toolIcon={tool.emoji} />
+        <ShareButtons toolName={tool.name} toolSlug={tool.slug} />
       </div>
 
       {/* Tool UI */}
