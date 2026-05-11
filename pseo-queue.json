@@ -1,7 +1,5 @@
 {
   "pending": [
-    "best free online developer tools for daily coding",
-    "format and validate JSON online without uploading data",
     "decode JWT tokens safely in your browser",
     "test regular expressions online with sample text",
     "generate cron expressions without mistakes",
@@ -12,6 +10,14 @@
   ],
   "in_progress": [],
   "done": [
+    {
+      "topic": "format and validate JSON online without uploading data",
+      "completed_at": "2026-05-11T23:05:00Z"
+    },
+    {
+      "topic": "best free online developer tools for daily coding",
+      "completed_at": "2026-05-09T00:00:00Z"
+    },
     {
       "topic": "error tracking vs log monitoring",
       "completed_at": "2026-05-06T19:45:09Z"
