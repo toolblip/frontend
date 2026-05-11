@@ -14,14 +14,14 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
         background: 'var(--surface-2)',
       }}
     >
-      <div className="tb-v2-container" style={{ padding: '28px 28px 22px' }}>
+      <div className="tb-v2-container" style={{ padding: '24px 28px 20px' }}>
         <div style={{ textAlign: 'center', marginBottom: 22 }}>
           <div className="tb-v2-kicker">How it works</div>
           <h2 style={{ fontSize: 20, fontWeight: 800, margin: '4px 0 0', letterSpacing: '-0.4px' }}>
             Pick a tool&nbsp;→ Paste your data&nbsp;→ Get your result
           </h2>
           <p style={{ fontSize: 13.5, color: 'var(--fg-2)', marginTop: 6 }}>
-            No servers, no uploads, nothing leaves your browser.
+            No servers, no uploads, no account wall — nothing leaves your browser.
           </p>
         </div>
 
@@ -46,7 +46,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               color: 'var(--blue)',
               bg: 'var(--blue-tint)',
               title: 'Pick a tool',
-              desc: `${toolCount} tools across ${categoryCount} categories — pick the one for the job.`,
+              desc: `${toolCount} focused tools across ${categoryCount} categories — pick the one for the job.`,
             },
             {
               icon: (
@@ -175,7 +175,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
               <path d="M7 11V7a5 5 0 0 1 10 0v4" />
             </svg>
-            No servers &nbsp;&middot;&nbsp; No uploads &nbsp;&middot;&nbsp; Nothing leaves your browser.
+            Browser-only &nbsp;&middot;&nbsp; No uploads &nbsp;&middot;&nbsp; Nothing leaves your browser.
           </a>
         </div>
       </div>

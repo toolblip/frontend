@@ -36,14 +36,14 @@ const categories = Object.entries(categoryCounts)
 
 const WORKFLOW = 'Pick a tool → Paste your data → Get your result';
 const LOCAL_FIRST_NOTE = 'No servers, no uploads, nothing leaves your browser.';
-const STEP_PROMISE = 'Three steps, all in your browser';
-const TOOL_PROMISE = 'Open the page, paste only what you need, then copy the answer — no account, upload queue, or server hop.';
+const STEP_PROMISE = 'Three quick steps, zero cloud round-trips';
+const TOOL_PROMISE = 'Open a focused tool, paste only what you need, then copy the answer — no account, upload queue, or server hop.';
 
 const STEPS = [
   {
     n: '1',
     title: 'Pick a tool',
-    desc: 'Choose the focused utility for your text, code, URLs, images, or cleanup task.',
+    desc: 'Choose a focused utility for text, code, URLs, images, or cleanup work.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17 9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2Z" />
@@ -63,7 +63,7 @@ const STEPS = [
   {
     n: '3',
     title: 'Get your result',
-    desc: 'Copy the finished result instantly — no upload, waitlist, or account wall.',
+    desc: 'Copy the finished output instantly — no upload, waitlist, or account wall.',
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
         <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
@@ -78,7 +78,7 @@ const BENEFITS = [
   {
     emoji: '🔒',
     title: 'Private',
-    desc: 'Your data stays in your browser — no uploads, server processing, paste history, or background storage.',
+    desc: 'Data never leaves your browser — no uploads, server processing, paste history, or background storage.',
   },
   {
     emoji: '⚡',
@@ -231,7 +231,7 @@ export default function HomePage() {
             Useful utilities without the usual friction.
           </h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2 max-w-2xl mx-auto">
-            Toolblip keeps everyday text, developer, and encoding tasks local, immediate, and low-friction.
+            Toolblip keeps everyday text, developer, and encoding tasks private, immediate, and low-friction.
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

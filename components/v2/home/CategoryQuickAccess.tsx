@@ -48,7 +48,7 @@ export default function CategoryQuickAccess({ categories }: CategoryQuickAccessP
       </div>
       <div className="tb-v2-container">
         <p style={{ textAlign: 'center', color: 'var(--fg-2)', fontSize: 13, margin: '-4px 0 12px' }}>
-          One-click shortcuts into every category — jump straight to the tool you need.
+          One-click shortcuts into every category — each pill opens the matching tool list.
         </p>
         <div
           style={{
@@ -66,6 +66,7 @@ export default function CategoryQuickAccess({ categories }: CategoryQuickAccessP
                 key={name}
                 href={`/tools?category=${encodeURIComponent(name)}`}
                 className="category-pill"
+                aria-label={`Browse ${counts[name] ?? 0} ${name} tools`}
                 style={
                   { '--pill-border': meta.borderColor } as React.CSSProperties
                 }

@@ -11,7 +11,7 @@ const benefits = [
     bgVar: 'var(--green-tint)',
     title: 'Private',
     tagline: 'Data never leaves your browser',
-    desc: 'Paste sensitive text, JSON, images, or snippets with confidence. Processing happens locally in your tab.',
+    desc: 'Paste sensitive text, JSON, images, or snippets with confidence. Processing happens locally in your tab — not on our servers.',
     glowVar: 'rgba(22, 163, 74, 0.12)',
   },
   {
@@ -24,7 +24,7 @@ const benefits = [
     bgVar: 'var(--amber-tint, #fef3c7)',
     title: 'Fast',
     tagline: 'Runs instantly in your tab',
-    desc: 'No API round trips or upload queues. Most results appear the moment you paste or click.',
+    desc: 'No API round trips or upload queues. Results appear the moment you paste, type, or click.',
     glowVar: 'rgba(217, 119, 6, 0.12)',
   },
   {
@@ -37,7 +37,7 @@ const benefits = [
     bgVar: 'var(--blue-tint)',
     title: 'Free',
     tagline: 'No signup, no paywall',
-    desc: 'Open the tool and use it. No account, no trial modal, no surprise limits blocking the result.',
+    desc: 'Open the tool and use it. No account, no trial modal, no surprise limits blocking your result.',
     glowVar: 'rgba(37, 99, 235, 0.12)',
   },
 ];
