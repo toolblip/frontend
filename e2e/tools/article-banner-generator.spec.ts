@@ -70,7 +70,7 @@ test.describe('Banner Generator tool', () => {
 
     const shareDialog = page.getByRole('dialog', { name: 'Share Banner Generator' });
     await expect(shareDialog).toBeVisible();
-    await expect(shareDialog).toContainText('🖼️');
+    await expect(shareDialog).not.toContainText('🖼️');
     await expect(shareDialog).toContainText('Share');
     await expect(shareDialog).toContainText('Open a ready-to-post share window');
     await expect(page.getByRole('button', { name: 'Share on X' })).toBeVisible();

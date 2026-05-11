@@ -175,7 +175,7 @@ function CountPill({
   );
 }
 
-function SharePopover({ toolName, toolIcon = "🧰", channels, copied, onShare, onCopy, onClose }: { toolName: string; toolIcon?: string; channels: ShareChannel[]; copied: boolean; onShare: (channel: string) => void; onCopy: () => void; onClose: () => void }) {
+function SharePopover({ toolName, channels, copied, onShare, onCopy, onClose }: { toolName: string; channels: ShareChannel[]; copied: boolean; onShare: (channel: string) => void; onCopy: () => void; onClose: () => void }) {
   function openShareWindow(link: ShareChannel) {
     window.open(link.url, "_blank", "noopener,noreferrer");
     onShare(link.channel);
@@ -194,8 +194,8 @@ function SharePopover({ toolName, toolIcon = "🧰", channels, copied, onShare, 
           </button>
         </div>
         <div className="flex items-center gap-3 pr-8">
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-3xl shadow-sm ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-gray-800" aria-hidden="true">
-            {toolIcon}
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-gray-700 shadow-sm ring-1 ring-gray-200 dark:bg-gray-900 dark:text-gray-200 dark:ring-gray-800" aria-hidden="true">
+            <ShareIcon className="h-6 w-6" />
           </span>
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-red-600 dark:text-red-400">Share</p>
@@ -438,7 +438,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
         </button>
         <CountPill label="Shares" value={stats.shares} testId="tool-share-count" className="rounded-r-full" onClick={toggleSharePopover} />
 
-        {shareOpen && <SharePopover toolName={toolName} toolIcon={toolIcon} channels={shareLinks} copied={copied} onShare={(channel) => void recordShare(channel)} onCopy={copyLink} onClose={() => setShareOpen(false)} />}
+        {shareOpen && <SharePopover toolName={toolName} channels={shareLinks} copied={copied} onShare={(channel) => void recordShare(channel)} onCopy={copyLink} onClose={() => setShareOpen(false)} />}
       </div>
 
       <span
