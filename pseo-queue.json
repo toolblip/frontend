@@ -1,6 +1,5 @@
 {
   "pending": [
-    "decode JWT tokens safely in your browser",
     "test regular expressions online with sample text",
     "generate cron expressions without mistakes",
     "convert base64 text and files locally in the browser",
@@ -17,6 +16,11 @@
     {
       "topic": "best free online developer tools for daily coding",
       "completed_at": "2026-05-09T00:00:00Z"
+    },
+    {
+      "topic": "decode JWT tokens safely in your browser",
+      "completed_at": "2026-05-12T23:00:00Z",
+      "url": "https://toolblip.com/blog/2026-05-12-how-to-decode-jwt-tokens-safely-in-your-browser"
     },
     {
       "topic": "error tracking vs log monitoring",
