@@ -35,6 +35,9 @@
 - pending: 6 topics
 - done: 7 topics (added JWT decoder)
 
+## Sitemap Note
+**Critical: the sitemap.ts does NOT include blog post URLs.** It only lists static routes and tool pages. New blog posts are NOT being added to sitemap.xml automatically. This is why the new JWT article won't appear in sitemap.xml even after Cloudflare Pages rebuilds. This needs to be fixed by updating `src/app/sitemap.ts` to include blog posts from `src/content/blog/`. The GSC URL Inspection API (blocked tonight) and sitemap are both broken paths for new URL discovery. The article will rely on Google's crawler finding it through existing internal links on the /blog page.
+
 ## Blocker
 - Claude Code auth unavailable (no ANTHROPIC_API_KEY in environment, `claude auth status` shows `loggedIn: false`). Article written directly per pipeline skill fallback rules.
 
