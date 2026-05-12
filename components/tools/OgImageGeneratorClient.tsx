@@ -19,6 +19,7 @@ interface Preset {
 interface Direction {
   value: DirectionValue;
   label: string;
+  icon: string;
 }
 
 const PRESETS: Preset[] = [
@@ -37,15 +38,15 @@ const PRESETS: Preset[] = [
 ];
 
 const DIRECTIONS: Direction[] = [
-  { value: '0', label: '← Left' },
-  { value: '45', label: '↙ Diagonal ↘' },
-  { value: '90', label: '↑ Top' },
-  { value: '135', label: '↗ Diagonal ↗' },
-  { value: '140', label: '→ Right (default)' },
-  { value: '180', label: '↓ Bottom' },
-  { value: '225', label: '↙ Diagonal ↙' },
-  { value: '270', label: '← Left' },
-  { value: '315', label: '↗ Diagonal ↗' },
+  { value: '0', label: '← Left', icon: '←' },
+  { value: '45', label: '↘ Diagonal', icon: '↘' },
+  { value: '90', label: '↑ Top', icon: '↑' },
+  { value: '135', label: '↗ Diagonal', icon: '↗' },
+  { value: '140', label: '→ Right', icon: '→' },
+  { value: '180', label: '↓ Bottom', icon: '↓' },
+  { value: '225', label: '↙ Diagonal', icon: '↙' },
+  { value: '270', label: '← Left', icon: '←' },
+  { value: '315', label: '↗ Diagonal', icon: '↗' },
 ];
 
 const PATTERN_OVERLAYS = [
@@ -305,7 +306,7 @@ export default function OgImageGeneratorClient() {
         {/* No extra paragraph here — description lives on the tool page above */}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[280px_1fr]">
+      <div className="grid gap-4 lg:grid-cols-[320px_1fr]">
         {/* Left config panel */}
         <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
 
@@ -423,7 +424,8 @@ export default function OgImageGeneratorClient() {
             </button>
 
             {openSections.has('BACKGROUND') && (
-              <div>
+              <div className="space-y-4">
+                {/* Mode toggle */}
                 <div className="grid grid-cols-2 rounded-xl border border-gray-200 bg-gray-50 p-1 dark:border-gray-700 dark:bg-gray-900" role="group" aria-label="Background mode">
                   {(['solid', 'gradient'] as const).map((mode) => (
                     <button
@@ -442,54 +444,81 @@ export default function OgImageGeneratorClient() {
                   ))}
                 </div>
 
-                <div className="space-y-2" role="group" aria-label="Background presets">
-                  <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Presets</div>
-                  <div className="grid grid-cols-4 gap-2">
-                    {PRESETS.map((item) => (
+                {/* Presets */}
+                <div className="grid grid-cols-4 gap-2" role="group" aria-label="Background presets">
+                  {PRESETS.map((item) => (
+                    <button
+                      key={item.name}
+                      type="button"
+                      onClick={() => choosePreset(item)}
+                      className={`h-12 w-full rounded-xl border-2 transition ${
+                        presetName === item.name
+                          ? 'border-violet-500 ring-2 ring-violet-200'
+                          : 'border-gray-200 hover:border-gray-300 dark:border-gray-700'
+                      }`}
+                      style={{ background: `linear-gradient(135deg, ${item.from}, ${item.to})` }}
+                      aria-label={item.name}
+                      aria-pressed={presetName === item.name}
+                    />
+                  ))}
+                </div>
+
+                {/* Direction buttons */}
+                <div className="space-y-2">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Direction</span>
+                  <div className="grid grid-cols-4 gap-2" role="group" aria-label="Gradient direction">
+                    {DIRECTIONS.map((d) => (
                       <button
-                        key={item.name}
+                        key={d.value}
                         type="button"
-                        onClick={() => choosePreset(item)}
-                        className={`h-11 rounded-lg border transition ${presetName === item.name ? 'border-violet-500 ring-2 ring-violet-300' : 'border-gray-200 hover:border-gray-300 dark:border-gray-700'}`}
-                        aria-label={item.name}
-                        aria-pressed={presetName === item.name}
-                        style={{ background: `linear-gradient(135deg, ${item.from}, ${item.to})` }}
-                      />
+                        onClick={() => setDirection(d.value)}
+                        disabled={backgroundMode === 'solid'}
+                        aria-label={d.label}
+                        aria-pressed={direction === d.value}
+                        className={`flex items-center justify-center rounded-xl border-2 py-2 text-xs font-semibold transition ${
+                          direction === d.value && backgroundMode === 'gradient'
+                            ? 'border-violet-500 bg-violet-50 text-violet-700 dark:bg-violet-950 dark:text-violet-200'
+                            : 'border-gray-200 text-gray-500 hover:border-gray-300 dark:border-gray-700 disabled:opacity-30'
+                        }`}
+                      >
+                        {d.icon}
+                      </button>
                     ))}
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                {/* From / To colors stacked */}
+                <div className="grid grid-cols-2 gap-3">
                   <label className="block space-y-2">
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-300">From</span>
-                    <div className="flex gap-2">
+                    <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 dark:border-gray-700 dark:bg-gray-900">
                       <input
                         aria-label="From color picker"
                         type="color"
                         value={normalizeHex(fromColor, preset.from)}
                         onChange={(event) => updateFromColor(event.target.value)}
-                        className="h-12 w-14 rounded-lg border border-gray-200 bg-white p-1 shadow-sm dark:border-gray-700 dark:bg-gray-900"
+                        className="h-7 w-7 cursor-pointer rounded border-0 p-0"
                       />
                       <input
                         aria-label="From color hex"
                         value={fromColor}
                         onChange={(event) => updateFromColor(event.target.value)}
                         onBlur={() => setFromColor((value) => normalizeHex(value, preset.from))}
-                        className="min-w-0 flex-1 rounded-lg border border-gray-200 bg-white px-3 text-sm font-medium text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                        className="min-w-0 flex-1 bg-transparent text-sm font-medium text-gray-900 outline-none dark:text-white"
                       />
                     </div>
                   </label>
 
                   <label className="block space-y-2">
                     <span className="text-sm font-medium text-gray-700 dark:text-gray-300">To</span>
-                    <div className="flex gap-2">
+                    <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 dark:border-gray-700 dark:bg-gray-900">
                       <input
                         aria-label="To color picker"
                         type="color"
                         value={normalizeHex(toColor, preset.to)}
                         onChange={(event) => updateToColor(event.target.value)}
                         disabled={backgroundMode === 'solid'}
-                        className="h-12 w-14 rounded-lg border border-gray-200 bg-white p-1 shadow-sm disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900"
+                        className="h-7 w-7 cursor-pointer rounded border-0 p-0 disabled:opacity-40"
                       />
                       <input
                         aria-label="To color hex"
@@ -497,26 +526,11 @@ export default function OgImageGeneratorClient() {
                         onChange={(event) => updateToColor(event.target.value)}
                         onBlur={() => setToColor((value) => normalizeHex(value, preset.to))}
                         disabled={backgroundMode === 'solid'}
-                        className="min-w-0 flex-1 rounded-lg border border-gray-200 bg-white px-3 text-sm font-medium text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                        className="min-w-0 flex-1 bg-transparent text-sm font-medium text-gray-900 outline-none dark:text-white disabled:opacity-40"
                       />
                     </div>
                   </label>
                 </div>
-
-                <label className="block space-y-2">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Gradient direction</span>
-                  <select
-                    aria-label="Gradient direction"
-                    value={direction}
-                    onChange={(e) => setDirection(e.target.value as DirectionValue)}
-                    disabled={backgroundMode === 'solid'}
-                    className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-                  >
-                    {DIRECTIONS.map((d) => (
-                      <option key={d.value} value={d.value}>{d.label}</option>
-                    ))}
-                  </select>
-                </label>
               </div>
             )}
           </div>
