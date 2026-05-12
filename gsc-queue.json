@@ -1,10 +1,13 @@
 {
-  "pending": [],
+  "pending": [
+    "https://toolblip.com/blog/2026-05-13-how-to-test-regular-expressions-online-with-sample-text"
+  ],
   "submitted": [
     {
       "url": "https://toolblip.com/blog/2026-05-12-how-to-decode-jwt-tokens-safely-in-your-browser",
-      "submitted_at": "2026-05-12T23:10:00Z",
-      "note": "URL Inspection Indexing API blocked (siteOwner but read-only scopes); sitemap refresh submitted instead"
+      "submitted_at": "2026-05-12T23:30:00Z",
+      "method": "sitemap",
+      "note": "URL Inspection Indexing API blocked (siteOwner but read-only scopes); used sitemap refresh as workaround"
     }
   ],
   "failed": []

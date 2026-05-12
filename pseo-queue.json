@@ -1,6 +1,5 @@
 {
   "pending": [
-    "test regular expressions online with sample text",
     "generate cron expressions without mistakes",
     "convert base64 text and files locally in the browser",
     "compare text diffs online for code reviews",
@@ -21,6 +20,11 @@
       "topic": "decode JWT tokens safely in your browser",
       "completed_at": "2026-05-12T23:00:00Z",
       "url": "https://toolblip.com/blog/2026-05-12-how-to-decode-jwt-tokens-safely-in-your-browser"
+    },
+    {
+      "topic": "test regular expressions online with sample text",
+      "completed_at": "2026-05-13T17:00:00Z",
+      "url": "https://toolblip.com/blog/2026-05-13-how-to-test-regular-expressions-online-with-sample-text"
     },
     {
       "topic": "error tracking vs log monitoring",
