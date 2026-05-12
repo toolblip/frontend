@@ -204,6 +204,16 @@ export default function OgImageGeneratorClient() {
   const [alignment, setAlignment] = useState<TextAlign>('left');
   const [patternOverlay, setPatternOverlay] = useState<PatternOverlay>('dots');
   const [downloadUrl, setDownloadUrl] = useState('');
+  const [openSections, setOpenSections] = useState<Set<string>>(new Set(['CONTENT', 'BACKGROUND', 'TYPOGRAPHY', 'PATTERN OVERLAY']));
+
+  const toggleSection = (section: string) => {
+    setOpenSections((prev) => {
+      const next = new Set(prev);
+      if (next.has(section)) next.delete(section);
+      else next.add(section);
+      return next;
+    });
+  };
 
   const preset = useMemo(
     () => PRESETS.find((item) => item.name === presetName) ?? PRESETS[0],
@@ -387,11 +397,21 @@ export default function OgImageGeneratorClient() {
           </div>
 
           <div className="space-y-5 border-b border-gray-100 p-5 dark:border-gray-800">
-            <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
+            <button
+              type="button"
+              onClick={() => toggleSection('BACKGROUND')}
+              className="flex w-full items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 cursor-pointer"
+              aria-expanded={openSections.has('BACKGROUND')}
+            >
               <span className="text-base text-violet-500" aria-hidden="true">🎨</span>
               <span>BACKGROUND</span>
-            </div>
+              <svg className={`ml-auto h-4 w-4 transition-transform ${openSections.has('BACKGROUND') ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
 
+            {openSections.has('BACKGROUND') && (
+              <>
             <div className="grid grid-cols-2 rounded-xl border border-gray-200 bg-gray-50 p-1 dark:border-gray-700 dark:bg-gray-900" role="group" aria-label="Background mode">
               {(['solid', 'gradient'] as const).map((mode) => (
                 <button
@@ -470,31 +490,26 @@ export default function OgImageGeneratorClient() {
                 </div>
               </label>
             </div>
+            </>
+          )}
+        </div>
 
-            <label className="block space-y-2">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Direction</span>
-              <select
-                aria-label="Gradient direction"
-                value={direction}
-                onChange={(event) => setDirection(event.target.value as DirectionValue)}
-                disabled={backgroundMode === 'solid'}
-                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-              >
-                {DIRECTIONS.map((item) => (
-                  <option key={item.value} value={item.value}>
-                    {item.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
+        <div className="space-y-5 p-5">
+          <button
+            type="button"
+            onClick={() => toggleSection('TYPOGRAPHY')}
+            className="flex w-full items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 cursor-pointer"
+            aria-expanded={openSections.has('TYPOGRAPHY')}
+          >
+            <span className="text-base text-violet-500" aria-hidden="true">Aa</span>
+            <span>TYPOGRAPHY</span>
+            <svg className={`ml-auto h-4 w-4 transition-transform ${openSections.has('TYPOGRAPHY') ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
 
-          <div className="space-y-5 p-5">
-            <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
-              <span className="text-base text-violet-500" aria-hidden="true">Aa</span>
-              <span>TYPOGRAPHY</span>
-            </div>
-
+          {openSections.has('TYPOGRAPHY') && (
+            <>
             <label className="block space-y-2">
               <SliderLabel value={titleFontSize}>Title size</SliderLabel>
               <input
@@ -543,13 +558,24 @@ export default function OgImageGeneratorClient() {
                 </button>
               ))}
             </div>
+            </>
+          )}
 
-            <div className="space-y-4 border-t border-gray-100 pt-5 dark:border-gray-800">
-              <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
-                <span className="text-base text-violet-500" aria-hidden="true">▦</span>
-                <span>PATTERN OVERLAY</span>
-              </div>
+          <div className="space-y-4 border-t border-gray-100 pt-5 dark:border-gray-800">
+            <button
+              type="button"
+              onClick={() => toggleSection('PATTERN OVERLAY')}
+              className="flex w-full items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 cursor-pointer"
+              aria-expanded={openSections.has('PATTERN OVERLAY')}
+            >
+              <span className="text-base text-violet-500" aria-hidden="true">▦</span>
+              <span>PATTERN OVERLAY</span>
+              <svg className={`ml-auto h-4 w-4 transition-transform ${openSections.has('PATTERN OVERLAY') ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
 
+            {openSections.has('PATTERN OVERLAY') && (
               <label className="block space-y-2">
                 <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Pattern</span>
                 <select
@@ -565,9 +591,10 @@ export default function OgImageGeneratorClient() {
                   ))}
                 </select>
               </label>
-            </div>
+            )}
+          </div>
 
-            {downloadUrl && (
+          {downloadUrl && (
               <a
                 href={downloadUrl}
                 download="banner-generator.png"
@@ -580,14 +607,28 @@ export default function OgImageGeneratorClient() {
         </div>
 
         <div className="space-y-3">
-          <canvas
-            ref={canvasRef}
-            width={WIDTH}
-            height={HEIGHT}
-            data-testid="article-banner-preview"
-            aria-label="Banner preview"
-            className="h-auto w-full rounded-2xl border border-gray-200 shadow-sm dark:border-gray-800"
-          />
+          <div className="relative">
+            {downloadUrl && (
+              <a
+                href={downloadUrl}
+                download="banner-generator.png"
+                className="absolute top-3 right-3 z-10 inline-flex items-center gap-1.5 rounded-xl bg-red-600 px-3 py-2 text-xs font-semibold text-white shadow-lg transition hover:bg-red-700"
+              >
+                <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M12 12.75v6.75m0-6.75L12 18m0 0l3.75 3.75M12 18l-3.75-3.75" />
+                </svg>
+                Download
+              </a>
+            )}
+            <canvas
+              ref={canvasRef}
+              width={WIDTH}
+              height={HEIGHT}
+              data-testid="article-banner-preview"
+              aria-label="Banner preview"
+              className="h-auto w-full rounded-2xl border border-gray-200 shadow-sm dark:border-gray-800"
+            />
+          </div>
         </div>
       </div>
     </div>
