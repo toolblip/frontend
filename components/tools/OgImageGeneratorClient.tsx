@@ -302,9 +302,7 @@ export default function OgImageGeneratorClient() {
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="mb-8">
         <div className="text-base font-semibold text-gray-900 dark:text-white">Customize your banner</div>
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          Create 1200×630 blog cover and Open Graph images with editable copy, polished gradients, typography controls, and one-click PNG download.
-        </p>
+        {/* No extra paragraph here — description lives on the tool page above */}
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[280px_1fr]">
