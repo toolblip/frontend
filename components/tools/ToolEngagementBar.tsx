@@ -480,10 +480,10 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
           data-testid="tool-share-count"
           type="button"
           onClick={toggleSharePopover}
-          className={`inline-flex min-w-10 items-center justify-center border-0 rounded-r-full border-l border-gray-200 bg-gray-50 px-3 py-2 text-sm font-bold text-gray-700 shadow-sm transition dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 ${
+          className={`inline-flex min-w-10 items-center justify-center border-0 rounded-r-full border-l border-gray-200 px-3 py-2 text-sm font-bold shadow-sm transition dark:border-gray-700 dark:text-gray-200 ${
             shareOpen || shareHovered
-              ? "hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
-              : "hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+              ? "bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-400"
+              : "bg-gray-50 text-gray-700 hover:bg-red-50 hover:text-red-600 dark:bg-gray-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
           } cursor-pointer`}
           aria-label={`Shares ${formatCount(stats.shares)}`}
         >
