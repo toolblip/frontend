@@ -77,6 +77,7 @@ import OxfordCommaClient from '@/components/tools/OxfordCommaClient';
 import SassToCssClient from '@/components/tools/SassToCssClient';
 import UrlEncodeClient from '@/components/tools/UrlEncodeClient';
 import WordCounterClient from '@/components/tools/WordCounterClient';
+import ShareButtons from '@/components/ShareButtons';
 
 // ─── Shared UI primitives ────────────────────────────────────────────────
 
@@ -7307,6 +7308,9 @@ export default function ToolDetailClient({ tool }: { tool: Tool }) {
         {tool.description && (
           <p className="mt-3 text-gray-600 dark:text-gray-300 leading-relaxed">{tool.description}</p>
         )}
+        <div className="mt-4">
+          <ShareButtons toolName={tool.name} toolSlug={tool.slug} />
+        </div>
       </header>
 
       {/* Tool UI */}
