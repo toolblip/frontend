@@ -269,6 +269,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
   const [favoriteLoading, setFavoriteLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [pageUrl, setPageUrl] = useState(`https://toolblip.com/tools/${toolSlug}`);
+  const [shareHovered, setShareHovered] = useState(false);
 
   useEffect(() => {
     setPageUrl(window.location.href);
@@ -454,12 +455,20 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
 
   return (
     <div data-testid="tool-engagement-bar" className="relative flex w-full flex-wrap items-center gap-3" aria-label={`${toolName} engagement stats`}>
-      <div className="relative inline-flex items-stretch rounded-full border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
+      <div
+        className="relative inline-flex items-stretch rounded-full border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950"
+        onMouseEnter={() => setShareHovered(true)}
+        onMouseLeave={() => setShareHovered(false)}
+      >
         <button
           data-testid="tool-share-button"
           type="button"
           onClick={toggleSharePopover}
-          className="inline-flex items-center gap-2 border-0 rounded-r-full bg-transparent px-4 py-2 text-sm font-semibold text-gray-800 transition hover:bg-red-50 hover:text-red-600 cursor-pointer dark:text-gray-100 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+          className={`inline-flex items-center gap-2 border-0 rounded-l-full px-4 py-2 text-sm font-semibold transition ${
+            shareOpen || shareHovered
+              ? "rounded-r-full bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-400"
+              : "bg-transparent text-gray-800 hover:rounded-r-full hover:bg-red-50 hover:text-red-600 dark:text-gray-100 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+          } cursor-pointer`}
           aria-label={`Share ${toolName}`}
           aria-haspopup="dialog"
           aria-expanded={shareOpen}
@@ -467,13 +476,19 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
           <ShareIcon className="h-5 w-5" />
           Share
         </button>
-        <CountPill
-          label="Shares"
-          value={stats.shares}
-          testId="tool-share-count"
-          className="rounded-l-full rounded-r-none border-0 border-l border-gray-200 bg-gray-50 shadow-none dark:border-gray-800 dark:bg-gray-900"
+        <button
+          data-testid="tool-share-count"
+          type="button"
           onClick={toggleSharePopover}
-        />
+          className={`inline-flex min-w-10 items-center justify-center border-0 rounded-r-full border-l border-gray-200 bg-gray-50 px-3 py-2 text-sm font-bold text-gray-700 shadow-sm transition dark:border-gray-700 dark:bg-gray-900 dark:text-gray-200 ${
+            shareOpen || shareHovered
+              ? "hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+              : "hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+          } cursor-pointer`}
+          aria-label={`Shares ${formatCount(stats.shares)}`}
+        >
+          {formatCount(stats.shares)}
+        </button>
 
         {shareOpen && <SharePopover toolName={toolName} channels={shareLinks} copied={copied} pageUrl={pageUrl} onShare={(channel) => void recordShare(channel)} onCopy={copyLink} onClose={() => setShareOpen(false)} />}
       </div>
