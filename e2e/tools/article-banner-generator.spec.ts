@@ -249,6 +249,10 @@ test.describe('Banner Generator tool', () => {
 
     await expect(page.getByRole('heading', { level: 1, name: /Banner Generator/i })).toBeVisible();
 
+    // Open BACKGROUND section to access preset buttons
+    await page.getByText('BACKGROUND', { exact: true }).click();
+    await page.waitForTimeout(100);
+
     await page.getByLabel('Banner title').fill('Ship Faster With Browser Tools');
     await page.getByLabel('Banner subtitle').fill('Generate clean blog covers and OG images without design software.');
     await page.getByRole('button', { name: /Indigo Violet/i }).click();
@@ -284,6 +288,9 @@ test.describe('Banner Generator tool', () => {
     await expect(page.getByText('TYPOGRAPHY', { exact: true })).toBeVisible();
     await expect(page.getByText('PATTERN OVERLAY', { exact: true })).toBeVisible();
 
+    // Open BACKGROUND section first
+    await page.getByText('BACKGROUND', { exact: true }).click();
+
     await expect(page.getByRole('button', { name: 'Solid' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Gradient' })).toBeVisible();
     await expect(page.getByRole('group', { name: 'Background presets' }).getByRole('button')).toHaveCount(12);
@@ -306,9 +313,17 @@ test.describe('Banner Generator tool', () => {
       '140° Angle',
     ]);
 
+    // Open TYPOGRAPHY section
+    await page.getByText('TYPOGRAPHY', { exact: true }).click();
+    await page.waitForTimeout(200);
+
     await expect(page.getByLabel('Title font size', { exact: true })).toHaveValue('44');
     await expect(page.getByLabel('Subtitle font size', { exact: true })).toHaveValue('20');
     await expect(page.getByRole('group', { name: 'Text alignment' }).getByRole('button')).toHaveCount(3);
+
+    // Open PATTERN OVERLAY section
+    await page.getByText('PATTERN OVERLAY', { exact: true }).click();
+    await page.waitForTimeout(200);
 
     const patternOverlay = page.getByLabel('Pattern overlay');
     await expect(patternOverlay).toBeVisible();
