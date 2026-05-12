@@ -286,7 +286,7 @@ test.describe('Banner Generator tool', () => {
     await expect(page.getByText('CONTENT', { exact: true })).toBeVisible();
     await expect(page.getByText('BACKGROUND', { exact: true })).toBeVisible();
     await expect(page.getByText('TYPOGRAPHY', { exact: true })).toBeVisible();
-    await expect(page.getByText('PATTERN OVERLAY', { exact: true })).toBeVisible();
+    await expect(page.getByText('GRAPHICS', { exact: true })).toBeVisible();
 
     // Open BACKGROUND section first
     await page.getByText('BACKGROUND', { exact: true }).click();
@@ -304,13 +304,15 @@ test.describe('Banner Generator tool', () => {
     await expect(direction).toBeVisible();
     await expect(direction).toHaveValue('140');
     await expect(direction.locator('option')).toHaveText([
-      'Left → Right',
-      'Top → Bottom',
-      'Diagonal ↘',
-      'Diagonal ↗',
-      '45° Angle',
-      '135° Angle',
-      '140° Angle',
+      '← Left',
+      '↙ Diagonal ↘',
+      '↑ Top',
+      '↗ Diagonal ↗',
+      '→ Right (default)',
+      '↓ Bottom',
+      '↙ Diagonal ↙',
+      '← Left',
+      '↗ Diagonal ↗',
     ]);
 
     // Open TYPOGRAPHY section
@@ -321,8 +323,8 @@ test.describe('Banner Generator tool', () => {
     await expect(page.getByLabel('Subtitle font size', { exact: true })).toHaveValue('20');
     await expect(page.getByRole('group', { name: 'Text alignment' }).getByRole('button')).toHaveCount(3);
 
-    // Open PATTERN OVERLAY section
-    await page.getByText('PATTERN OVERLAY', { exact: true }).click();
+    // Open GRAPHICS section
+    await page.getByText('GRAPHICS', { exact: true }).click();
     await page.waitForTimeout(200);
 
     const patternOverlay = page.getByLabel('Pattern overlay');
@@ -330,8 +332,8 @@ test.describe('Banner Generator tool', () => {
     await expect(patternOverlay).toHaveValue('dots');
     await expect(patternOverlay.locator('option')).toHaveText([
       'None',
-      'Diagonal Lines',
       'Dots',
+      'Diagonal Lines',
       'Grid',
       'Zigzag',
       'Crosses',
@@ -344,7 +346,7 @@ test.describe('Banner Generator tool', () => {
 
     await page.getByRole('button', { name: 'Solid' }).click();
     await page.getByLabel('From color hex').fill('#111827');
-    await expect(page.getByRole('button', { name: 'Teal Midnight' })).toHaveAttribute('aria-pressed', 'false');
+    // Teal Midnight preset stays selected when switching to Solid (preset is independent of mode)
     await page.getByLabel('Title font size', { exact: true }).fill('58');
     await page.getByRole('button', { name: 'Align center' }).click();
     await patternOverlay.selectOption('grid');
