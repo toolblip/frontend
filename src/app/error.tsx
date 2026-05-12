@@ -19,10 +19,10 @@ export default function Error({
       >
         <div
           aria-hidden="true"
-          className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--green)]/10"
+          className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--red)]/10"
         >
           <svg
-            className="h-8 w-8 text-[var(--green)]"
+            className="h-8 w-8 text-[var(--red)]"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -52,15 +52,15 @@ export default function Error({
         </p>
 
         <div className="flex flex-wrap items-center justify-center gap-3">
+          <Link href="/" className="tb-v2-btn tb-v2-btn-primary">
+            Go home
+          </Link>
           <button
             onClick={reset}
             className="tb-v2-btn"
           >
             Try again
           </button>
-          <Link href="/" className="tb-v2-btn tb-v2-btn-primary">
-            Go home
-          </Link>
         </div>
       </section>
     </main>
