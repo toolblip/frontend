@@ -383,7 +383,7 @@ export default function OgImageGeneratorClient() {
         </p>
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-[420px_1fr]">
+      <div className="grid gap-4 lg:grid-cols-[280px_1fr]">
         <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
           <div className="space-y-5 border-b border-gray-100 p-5 dark:border-gray-800">
             <button
