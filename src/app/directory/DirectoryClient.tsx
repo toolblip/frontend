@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { tools, type Tool } from '@/data/tools';
 
-const CATEGORIES = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'Design', 'Security', 'QR Codes'] as const;
+const CATEGORIES = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS'] as const;
 type CategoryTab = (typeof CATEGORIES)[number];
 
 const CATEGORY_MATCHES: Record<CategoryTab, string[] | null> = {
@@ -16,9 +16,6 @@ const CATEGORY_MATCHES: Record<CategoryTab, string[] | null> = {
   Conversion: ['Conversion'],
   Math: ['Math'],
   CSS: ['CSS'],
-  Design: ['Design'],
-  Security: ['Security'],
-  'QR Codes': ['QR Codes'],
 };
 
 function matchesCategory(tool: Tool, tab: CategoryTab) {
