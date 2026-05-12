@@ -73,6 +73,7 @@ export default function OgImageGeneratorClient() {
   const [subtitle, setSubtitle] = useState('An in-depth guide to scaling your dev workflow with modern browser tools.');
   const [presetName, setPresetName] = useState<PresetName | null>('Teal Midnight');
   const [footer, setFooter] = useState('toolblip.com');
+  const [footerLogo, setFooterLogo] = useState<string | null>(null);
   const [backgroundMode, setBackgroundMode] = useState<BackgroundMode>('gradient');
   const [fromColor, setFromColor] = useState('#4CC8C8');
   const [toColor, setToColor] = useState('#202033');
@@ -267,10 +268,24 @@ export default function OgImageGeneratorClient() {
       ctx.font = '600 28px Inter, Arial, sans-serif';
       ctx.fillStyle = 'rgba(255,255,255,0.78)';
       const footerY = HEIGHT - 40;
-      let footerX = paddingX;
-      if (alignment === 'center') footerX = WIDTH / 2;
-      else if (alignment === 'right') footerX = WIDTH - paddingX;
-      ctx.fillText(footer || 'toolblip.com', footerX, footerY);
+      const footerText = footer || 'toolblip.com';
+
+      if (footerLogo) {
+        const logoImg = new Image();
+        logoImg.src = footerLogo;
+        const logoW = 48;
+        const logoH = (logoImg.height / logoImg.width) * logoW || 24;
+        let footerX = paddingX;
+        if (alignment === 'center') footerX = WIDTH / 2 - logoW - 8;
+        else if (alignment === 'right') footerX = WIDTH - paddingX - logoW - 8 - ctx.measureText(footerText).width;
+        ctx.drawImage(logoImg, footerX, footerY - 20, logoW, Math.min(logoH, 24));
+        ctx.fillText(footerText, footerX + logoW + 8, footerY);
+      } else {
+        let footerX = paddingX;
+        if (alignment === 'center') footerX = WIDTH / 2;
+        else if (alignment === 'right') footerX = WIDTH - paddingX;
+        ctx.fillText(footerText, footerX, footerY);
+      }
 
       if (isFreeUser) {
         ctx.save();
@@ -287,7 +302,7 @@ export default function OgImageGeneratorClient() {
 
     drawBanner();
     return () => { cancelled = true; };
-  }, [title, subtitle, footer, backgroundMode, fromColor, toColor, direction, titleFontSize, subtitleFontSize, alignment, patternOverlay, preset, WIDTH, HEIGHT, isFreeUser]);
+  }, [title, subtitle, footer, footerLogo, backgroundMode, fromColor, toColor, direction, titleFontSize, subtitleFontSize, alignment, patternOverlay, preset, WIDTH, HEIGHT, isFreeUser]);
 
   const updateFromColor = (value: string) => setFromColor(value.startsWith('#') ? value : `#${value}`);
   const updateToColor = (value: string) => setToColor(value.startsWith('#') ? value : `#${value}`);
@@ -303,7 +318,6 @@ export default function OgImageGeneratorClient() {
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="mb-8">
         <div className="text-base font-semibold text-gray-900 dark:text-white">Customize your banner</div>
-        {/* No extra paragraph here — description lives on the tool page above */}
       </div>
 
       <div className="grid gap-4 lg:grid-cols-[320px_1fr]">
@@ -656,7 +670,7 @@ export default function OgImageGeneratorClient() {
             </button>
 
             {openSections.has('FOOTER') && (
-              <div>
+              <div className="space-y-4">
                 <label className="block space-y-2">
                   <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Footer text</span>
                   <input
@@ -666,6 +680,42 @@ export default function OgImageGeneratorClient() {
                     className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
                   />
                 </label>
+
+                <div className="space-y-2">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Logo (optional)</span>
+                  <div className="flex items-center gap-3">
+                    <label className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 shadow-sm hover:border-violet-400 cursor-pointer transition dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
+                      <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                      </svg>
+                      Upload logo
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="sr-only"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (!file) return;
+                          const reader = new FileReader();
+                          reader.onload = (ev) => setFooterLogo(ev.target?.result as string);
+                          reader.readAsDataURL(file);
+                        }}
+                      />
+                    </label>
+                    {footerLogo && (
+                      <div className="flex items-center gap-2">
+                        <img src={footerLogo} alt="Footer logo preview" className="h-8 w-auto rounded" />
+                        <button
+                          type="button"
+                          onClick={() => setFooterLogo(null)}
+                          className="text-xs text-red-500 hover:text-red-700 font-medium"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             )}
           </div>

@@ -74,12 +74,14 @@ export default async function ToolDetailPage({ params }: PageProps) {
             </span>
           </div>
         </div>
-        <p className="text-gray-500 dark:text-gray-400 leading-relaxed mb-4">{tool.description}</p>
+        {tool.slug !== 'og-image-generator' && (
+          <p className="text-gray-500 dark:text-gray-400 leading-relaxed mb-4">{tool.description}</p>
+        )}
         <ToolEngagementBar toolName={tool.name} toolSlug={tool.slug} toolIcon={tool.emoji} />
       </div>
 
       {/* Tool UI */}
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
+      <div className="p-0">
         <ToolUI tool={tool} />
       </div>
 
