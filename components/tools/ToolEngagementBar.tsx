@@ -471,7 +471,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
           label="Shares"
           value={stats.shares}
           testId="tool-share-count"
-          className="rounded-none border-0 border-l border-gray-200 bg-gray-50 shadow-none dark:border-gray-800 dark:bg-gray-900"
+          className="rounded-l-full rounded-r-none border-0 border-l border-gray-200 bg-gray-50 shadow-none dark:border-gray-800 dark:bg-gray-900"
           onClick={toggleSharePopover}
         />
 
