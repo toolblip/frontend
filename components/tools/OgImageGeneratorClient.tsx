@@ -205,6 +205,17 @@ export default function OgImageGeneratorClient() {
   const [patternOverlay, setPatternOverlay] = useState<PatternOverlay>('dots');
   const [downloadUrl, setDownloadUrl] = useState('');
   const [openSections, setOpenSections] = useState<Set<string>>(new Set(['CONTENT', 'BACKGROUND', 'TYPOGRAPHY', 'PATTERN OVERLAY']));
+  const [resolution, setResolution] = useState<'1200x630' | '1200x400' | '800x400'>('1200x630');
+
+  const RESOLUTIONS: Record<string, { label: string; width: number; height: number }> = {
+    '1200x630': { label: '1200×630 (Open Graph)', width: 1200, height: 630 },
+    '1200x400': { label: '1200×400 (Wide Banner)', width: 1200, height: 400 },
+    '800x400': { label: '800×400 (Small Banner)', width: 800, height: 400 },
+  };
+
+  const currentRes = RESOLUTIONS[resolution];
+  const WIDTH = currentRes.width;
+  const HEIGHT = currentRes.height;
 
   const toggleSection = (section: string) => {
     setOpenSections((prev) => {
@@ -358,11 +369,21 @@ export default function OgImageGeneratorClient() {
       <div className="grid gap-5 lg:grid-cols-[420px_1fr]">
         <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
           <div className="space-y-5 border-b border-gray-100 p-5 dark:border-gray-800">
-            <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
+            <button
+              type="button"
+              onClick={() => toggleSection('CONTENT')}
+              className="flex w-full items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 cursor-pointer"
+              aria-expanded={openSections.has('CONTENT')}
+            >
               <span className="text-lg text-violet-500" aria-hidden="true">T</span>
               <span>CONTENT</span>
-            </div>
+              <svg className={`ml-auto h-4 w-4 transition-transform ${openSections.has('CONTENT') ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
 
+            {openSections.has('CONTENT') && (
+              <>
             <label className="block space-y-2">
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Title</span>
               <textarea
@@ -394,6 +415,29 @@ export default function OgImageGeneratorClient() {
                 className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
               />
             </label>
+
+            <label className="block space-y-2">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Resolution</span>
+              <div className="grid grid-cols-3 gap-2" role="group" aria-label="Resolution">
+                {Object.entries(RESOLUTIONS).map(([key, val]) => (
+                  <button
+                    key={key}
+                    type="button"
+                    aria-pressed={resolution === key}
+                    onClick={() => setResolution(key as typeof resolution)}
+                    className={`rounded-xl border px-3 py-2 text-xs font-semibold transition ${
+                      resolution === key
+                        ? 'border-violet-500 bg-violet-50 text-violet-700 dark:bg-violet-950 dark:text-violet-200'
+                        : 'border-gray-200 text-gray-600 hover:border-gray-300 dark:border-gray-700 dark:text-gray-300'
+                    }`}
+                  >
+                    {val.label.split(' ')[0]}
+                  </button>
+                ))}
+              </div>
+            </label>
+              </>
+            )}
           </div>
 
           <div className="space-y-5 border-b border-gray-100 p-5 dark:border-gray-800">
