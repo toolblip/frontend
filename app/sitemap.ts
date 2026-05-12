@@ -1,24 +1,60 @@
-import { MetadataRoute } from 'next'
-import { tools } from '@/src/data/tools'
+import { MetadataRoute } from 'next';
+import { tools } from '@/src/data/tools';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://toolblip.com'
+  const baseUrl = 'https://toolblip.com';
 
-  const staticPages = [
-    { url: baseUrl, lastmod: new Date().toISOString(), priority: 1 },
-    { url: `${baseUrl}/tools`, lastmod: new Date().toISOString(), priority: 0.8 },
-    { url: `${baseUrl}/directory`, lastmod: new Date().toISOString(), priority: 0.7 },
-    { url: `${baseUrl}/about`, lastmod: new Date().toISOString(), priority: 0.6 },
-    { url: `${baseUrl}/login`, lastmod: new Date().toISOString(), priority: 0.4 },
-    { url: `${baseUrl}/signup`, lastmod: new Date().toISOString(), priority: 0.4 },
-    { url: `${baseUrl}/blog`, lastmod: new Date().toISOString(), priority: 0.7 },
-  ]
+  const staticRoutes: MetadataRoute.Sitemap = [
+    {
+      url: baseUrl,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 1,
+    },
+    {
+      url: `${baseUrl}/tools`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/directory`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/about`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/login`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.4,
+    },
+    {
+      url: `${baseUrl}/signup`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.4,
+    },
+    {
+      url: `${baseUrl}/blog`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+  ];
 
-  const toolPages = tools.map((tool) => ({
+  const toolRoutes: MetadataRoute.Sitemap = tools.map((tool) => ({
     url: `${baseUrl}/tools/${tool.slug}`,
-    lastmod: new Date().toISOString(),
-    priority: 0.6,
-  }))
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }));
 
-  return [...staticPages, ...toolPages]
+  return [...staticRoutes, ...toolRoutes];
 }
