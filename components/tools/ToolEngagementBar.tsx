@@ -154,7 +154,7 @@ function CountPill({
       <button
         type="button"
         data-testid={testId}
-        className={`${sharedClassName} transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-60 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400`}
+        className={`${sharedClassName} transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 cursor-pointer disabled:cursor-not-allowed disabled:opacity-60 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400`}
         aria-label={`${label} ${formatCount(value)}`}
         onClick={onClick}
         disabled={disabled}
@@ -192,7 +192,7 @@ function SharePopover({ toolName, channels, copied, onShare, onCopy, onClose, pa
         className="relative border-b border-gray-100 bg-gradient-to-br from-gray-50 via-white to-red-50/60 px-4 py-3 dark:border-gray-800 dark:from-gray-900 dark:via-gray-950 dark:to-red-950/20"
       >
         <div className="absolute right-3 top-3">
-          <button type="button" onClick={onClose} className="inline-flex h-8 w-8 items-center justify-center rounded-full text-xl leading-none text-gray-400 transition hover:bg-white hover:text-gray-900 dark:hover:bg-gray-900 dark:hover:text-white" aria-label="Close share dialog">
+          <button type="button" onClick={onClose} className="inline-flex h-8 w-8 items-center justify-center rounded-full text-xl leading-none text-gray-400 transition hover:bg-white hover:text-gray-900 cursor-pointer dark:hover:bg-gray-900 dark:hover:text-white" aria-label="Close share dialog">
             ×
           </button>
         </div>
@@ -445,7 +445,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
           data-testid="tool-share-button"
           type="button"
           onClick={toggleSharePopover}
-          className="inline-flex items-center gap-2 border-0 bg-transparent px-4 py-2 text-sm font-semibold text-gray-800 transition hover:bg-red-50 hover:text-red-600 dark:text-gray-100 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+          className="inline-flex items-center gap-2 border-0 bg-transparent px-4 py-2 text-sm font-semibold text-gray-800 transition hover:bg-red-50 hover:text-red-600 cursor-pointer dark:text-gray-100 dark:hover:bg-red-950/40 dark:hover:text-red-400"
           aria-label={`Share ${toolName}`}
           aria-haspopup="dialog"
           aria-expanded={shareOpen}
