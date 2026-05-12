@@ -213,7 +213,7 @@ function SharePopover({ toolName, channels, copied, onShare, onCopy, onClose, pa
                 type="button"
                 onClick={() => openShareWindow(link)}
                 aria-label={link.label}
-                className="group flex min-h-[5.25rem] w-full flex-col items-center justify-center gap-2 rounded-2xl border border-gray-200/80 bg-white/95 px-3 py-3 text-left transition hover:-translate-y-0.5 hover:border-gray-300 hover:bg-white hover:shadow-lg hover:shadow-gray-900/10 focus:outline-none focus:ring-2 focus:ring-red-400 dark:border-gray-700 dark:bg-slate-900/80 dark:hover:border-gray-600 dark:hover:bg-slate-900"
+                className="group flex min-h-[5.25rem] w-full flex-col items-center justify-center gap-2 rounded-2xl border border-gray-200/80 bg-white/95 px-3 py-3 text-left transition hover:-translate-y-0.5 hover:border-gray-300 hover:bg-white hover:shadow-lg hover:shadow-gray-900/10 focus:outline-none focus:ring-2 focus:ring-red-400 cursor-pointer dark:border-gray-700 dark:bg-slate-900/80 dark:hover:border-gray-600 dark:hover:bg-slate-900"
               >
                 {link.icon}
                 <span className="sr-only">{visibleLabel}</span>
@@ -241,7 +241,7 @@ function SharePopover({ toolName, channels, copied, onShare, onCopy, onClose, pa
             <button
               type="button"
               onClick={onCopy}
-              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 disabled:opacity-60"
+              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-400 cursor-pointer disabled:opacity-60"
               aria-label="Copy link"
             >
               <BrandBadge className={copied ? "bg-emerald-100 text-emerald-700 ring-white/15 dark:bg-emerald-950 dark:text-emerald-300" : "bg-white/15 text-white ring-white/15"}>{copied ? <CheckIcon /> : "⛓"}</BrandBadge>
@@ -440,7 +440,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
 
   return (
     <div data-testid="tool-engagement-bar" className="relative flex w-full flex-wrap items-center gap-3" aria-label={`${toolName} engagement stats`}>
-      <div className="relative inline-flex items-stretch overflow-hidden rounded-full border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
+      <div className="relative inline-flex items-stretch rounded-full border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
         <button
           data-testid="tool-share-button"
           type="button"
@@ -480,7 +480,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
           type="button"
           onClick={toggleFavorite}
           disabled={favoriteDisabled}
-          className={`inline-flex items-center gap-2 rounded-l-full border border-r-0 px-4 py-2 text-sm font-bold shadow-sm transition disabled:opacity-60 ${
+          className={`inline-flex items-center gap-2 rounded-l-full border border-r-0 px-4 py-2 text-sm font-bold shadow-sm transition cursor-pointer disabled:opacity-60 ${
             stats.viewer_favorited
               ? "border-red-600 bg-red-600 text-white hover:bg-red-700"
               : "border-gray-200 bg-white text-gray-800 hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-100 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
