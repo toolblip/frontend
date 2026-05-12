@@ -188,10 +188,8 @@ function SharePopover({ toolName, channels, copied, onShare, onCopy, onClose, pa
       className="absolute left-0 top-14 z-20 w-[min(92vw,22rem)] overflow-hidden rounded-2xl border border-gray-200/80 bg-white shadow-2xl shadow-gray-900/12 ring-1 ring-black/5 dark:border-gray-800 dark:bg-gray-950 dark:shadow-black/40"
     >
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-100 bg-gradient-to-br from-gray-50 to-white px-4 py-3 dark:border-gray-800 dark:from-gray-900 dark:to-gray-950">
-        <p className="text-xs font-semibold uppercase tracking-wider text-red-600 dark:text-red-400">
-          Share
-        </p>
+      <div className="flex items-center justify-between border-b border-gray-100 bg-gradient-to-br from-gray-50 to-white px-4 py-3 dark:border-gray-800 dark:from-gray-900 dark:to-gray-950" data-testid="share-dialog-header">
+        <p className="text-xs font-semibold uppercase tracking-wider text-red-600 dark:text-red-400" data-testid="share-dialog-title">Share</p>
         <button 
           type="button" 
           onClick={onClose} 
@@ -223,7 +221,13 @@ function SharePopover({ toolName, channels, copied, onShare, onCopy, onClose, pa
       {/* Copy link */}
       <div className="border-t border-gray-100 px-3 pb-3 pt-2 dark:border-gray-800">
         <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-gray-50 px-3 py-2 dark:border-gray-700 dark:bg-gray-900">
-          <span className="min-w-0 flex-1 truncate text-sm text-gray-500 dark:text-gray-400">{pageUrl}</span>
+          <input
+            type="text"
+            disabled
+            value={pageUrl}
+            aria-label="Share link"
+            className="min-w-0 flex-1 truncate bg-transparent text-sm text-gray-500 outline-none dark:text-gray-400"
+          />
           <button
             type="button"
             onClick={onCopy}
@@ -239,7 +243,7 @@ function SharePopover({ toolName, channels, copied, onShare, onCopy, onClose, pa
                 <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                 </svg>
-                Copied
+                Copied!
               </span>
             ) : (
               <span className="flex items-center gap-1">

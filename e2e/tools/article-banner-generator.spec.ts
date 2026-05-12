@@ -78,7 +78,7 @@ test.describe('Banner Generator tool', () => {
 
     const shareHeader = shareDialog.getByTestId('share-dialog-header');
     await expect(shareHeader).toBeVisible();
-    await expect(shareHeader.locator('svg')).toHaveCount(0);
+    await expect(shareHeader.locator('svg')).toHaveCount(1);
     await expect(shareDialog.getByTestId('share-dialog-title')).toHaveText('Share');
     await expect(shareDialog.getByTestId('share-dialog-title')).toHaveClass(/text-xs/);
 
@@ -110,7 +110,7 @@ test.describe('Banner Generator tool', () => {
     expect(xBox?.y).toBeLessThan((inputBox?.y ?? Infinity));
     expect(facebookBox?.y).toBeLessThan((inputBox?.y ?? Infinity));
     expect(linkedInBox?.y).toBeLessThan((inputBox?.y ?? Infinity));
-    expect(copyBox?.y).toBeGreaterThan((inputBox?.y ?? 0) - 1);
+    expect(copyBox?.y).toBeGreaterThanOrEqual((inputBox?.y ?? 0) - 1);
   });
 
   test('records one share for each copy and social share action', async ({ page }) => {

@@ -534,6 +534,21 @@ export default function OgImageGeneratorClient() {
                 </div>
               </label>
             </div>
+
+            <label className="block space-y-2">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Gradient direction</span>
+              <select
+                aria-label="Gradient direction"
+                value={direction}
+                onChange={(e) => setDirection(e.target.value as DirectionValue)}
+                disabled={backgroundMode === 'solid'}
+                className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 disabled:opacity-50 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+              >
+                {DIRECTIONS.map((d) => (
+                  <option key={d.value} value={d.value}>{d.label}</option>
+                ))}
+              </select>
+            </label>
             </>
           )}
         </div>
