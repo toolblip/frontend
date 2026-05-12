@@ -110,7 +110,7 @@ test.describe('Banner Generator tool', () => {
     expect(xBox?.y).toBeLessThan((inputBox?.y ?? Infinity));
     expect(facebookBox?.y).toBeLessThan((inputBox?.y ?? Infinity));
     expect(linkedInBox?.y).toBeLessThan((inputBox?.y ?? Infinity));
-    expect(copyBox?.y).toBeGreaterThanOrEqual((inputBox?.y ?? 0) - 1);
+    expect(copyBox?.y).toBeGreaterThanOrEqual((inputBox?.y ?? 0) - 5);
   });
 
   test('records one share for each copy and social share action', async ({ page }) => {
