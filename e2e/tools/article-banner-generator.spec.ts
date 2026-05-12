@@ -300,20 +300,15 @@ test.describe('Banner Generator tool', () => {
     await expect(fromColor).toHaveValue('#4CC8C8');
     await expect(toColor).toHaveValue('#202033');
 
-    const direction = page.getByLabel('Gradient direction');
-    await expect(direction).toBeVisible();
-    await expect(direction).toHaveValue('140');
-    await expect(direction.locator('option')).toHaveText([
-      '← Left',
-      '↙ Diagonal ↘',
-      '↑ Top',
-      '↗ Diagonal ↗',
-      '→ Right (default)',
-      '↓ Bottom',
-      '↙ Diagonal ↙',
-      '← Left',
-      '↗ Diagonal ↗',
-    ]);
+    // Direction buttons — the default '140' should be pressed
+    const directionGroup = page.getByRole('group', { name: 'Gradient direction' });
+    await expect(directionGroup).toBeVisible();
+    const directionButtons = directionGroup.getByRole('button');
+    await expect(directionButtons).toHaveCount(9);
+    await expect(directionButtons).toHaveCount(9);
+    const pressedButtons = directionGroup.getByRole('button', { pressed: true });
+    await expect(pressedButtons).toHaveCount(1);
+    await expect(pressedButtons).toHaveAttribute('aria-label', '→ Right');
 
     // Open TYPOGRAPHY section
     await page.getByText('TYPOGRAPHY', { exact: true }).click();
