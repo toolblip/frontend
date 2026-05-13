@@ -157,14 +157,14 @@ export default function OgImageGeneratorClient() {
       ctx.fillStyle = backgroundMode === 'solid' ? fromColor : bgGrad;
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-      // 2. White card (all styles) — match articlebanner proportions
-      const cardW = WIDTH >= 800 && HEIGHT >= 420 ? 700 : Math.round(WIDTH * 0.875);
-      const cardH = WIDTH >= 800 && HEIGHT >= 420 ? 340 : Math.round(HEIGHT * 0.81);
+      // 2. White card (all styles) — scale with the selected resolution
+      const cardW = Math.round(WIDTH * 0.875);
+      const cardH = Math.round(HEIGHT * 0.81);
       const cardX = Math.round((WIDTH - cardW) / 2);
       const cardY = Math.round((HEIGHT - cardH) / 2);
-      const cardRadius = WIDTH >= 800 && HEIGHT >= 420 ? 10 : Math.min(WIDTH, HEIGHT) * 0.024;
-      const cardPadX = WIDTH >= 800 && HEIGHT >= 420 ? 48 : Math.round(WIDTH * 0.06);
-      const cardPadY = WIDTH >= 800 && HEIGHT >= 420 ? 40 : Math.round(HEIGHT * 0.095);
+      const cardRadius = Math.round(Math.max(10, Math.min(cardW, cardH) * 0.03));
+      const cardPadX = Math.round(cardW * 0.065);
+      const cardPadY = Math.round(cardH * 0.12);
 
       ctx.save();
       ctx.shadowColor = 'rgba(0,0,0,0.12)';
@@ -295,7 +295,21 @@ export default function OgImageGeneratorClient() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-      <div className="mb-8 text-base font-semibold text-gray-900 dark:text-white">Customize your banner</div>
+      <div className="mb-8 flex items-start justify-between gap-4">
+        <div className="text-base font-semibold text-gray-900 dark:text-white">Customize your banner</div>
+        {downloadUrl && (
+          <a
+            href={downloadUrl}
+            download="banner-generator.png"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v13.25m0 0l-4.5-4.5m4.5 4.5l4.5-4.5M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5" />
+            </svg>
+            Download PNG
+          </a>
+        )}
+      </div>
 
       <div className="grid gap-3 lg:grid-cols-[320px_1fr] items-start">
         {/* Left config panel */}
@@ -822,21 +836,7 @@ export default function OgImageGeneratorClient() {
         </div>
 
         {/* Right preview panel */}
-        <div className="relative">
-          <div className="mb-3 flex justify-end">
-            {downloadUrl && (
-              <a
-                href={downloadUrl}
-                download="banner-generator.png"
-                className="inline-flex items-center gap-1.5 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700"
-              >
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v13.25m0 0l-4.5-4.5m4.5 4.5l4.5-4.5M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5" />
-                </svg>
-                Download PNG
-              </a>
-            )}
-          </div>
+        <div className="relative pt-10 lg:pt-12">
           <canvas
             ref={undefined}
             width={WIDTH}
