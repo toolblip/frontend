@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-05-11T21:01:16.253Z",
+  "updatedAt": "2026-05-12T21:01:20.087Z",
   "entries": {
     "memory:memory/2026-04-29.md:4:7": {
       "key": "memory:memory/2026-04-29.md:4:7",
@@ -22437,12 +22437,12 @@
       "source": "memory",
       "snippet": "Cron: Homepage Improvement (16:37 UTC) — NO-OP: Task: add \"How it works\", category quick-access, and \"Why Toolblip\" sections to homepage.",
       "recallCount": 0,
-      "dailyCount": 2,
+      "dailyCount": 3,
       "groundedCount": 0,
-      "totalScore": 1.24,
+      "totalScore": 1.8599999999999999,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-05T21:00:44.340Z",
-      "lastRecalledAt": "2026-05-11T21:00:34.047Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
       "queryHashes": [
         "b3222f2b9fdf"
       ],
@@ -22450,7 +22450,8 @@
         "2026-05-06",
         "2026-05-05",
         "2026-05-12",
-        "2026-05-11"
+        "2026-05-11",
+        "2026-05-13"
       ],
       "conceptTags": [
         "no-op",
@@ -22471,12 +22472,12 @@
       "source": "memory",
       "snippet": "Cron: Homepage Improvement (16:37 UTC) — NO-OP: **Finding: Already implemented.** All sections present in `app/page.tsx`:",
       "recallCount": 0,
-      "dailyCount": 2,
+      "dailyCount": 3,
       "groundedCount": 0,
-      "totalScore": 1.24,
+      "totalScore": 1.8599999999999999,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-05T21:00:44.340Z",
-      "lastRecalledAt": "2026-05-11T21:00:34.047Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
       "queryHashes": [
         "b3222f2b9fdf"
       ],
@@ -22484,7 +22485,8 @@
         "2026-05-06",
         "2026-05-05",
         "2026-05-12",
-        "2026-05-11"
+        "2026-05-11",
+        "2026-05-13"
       ],
       "conceptTags": [
         "no-op",
@@ -22505,12 +22507,12 @@
       "source": "memory",
       "snippet": "Cron: Homepage Improvement (16:37 UTC) — NO-OP: `HowItWorksStrip` — 3 steps: Pick a tool → Paste your data → Get your result (privacy badge included); `CategoryQuickAccess` — clickable category pills linking to `/tools?category=X`; `WhyToolblip` — 3 benefit cards: Private, Fast,",
       "recallCount": 0,
-      "dailyCount": 2,
+      "dailyCount": 3,
       "groundedCount": 0,
-      "totalScore": 1.24,
+      "totalScore": 1.8599999999999999,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-05T21:00:44.340Z",
-      "lastRecalledAt": "2026-05-11T21:00:34.047Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
       "queryHashes": [
         "b3222f2b9fdf"
       ],
@@ -22518,7 +22520,8 @@
         "2026-05-06",
         "2026-05-05",
         "2026-05-12",
-        "2026-05-11"
+        "2026-05-11",
+        "2026-05-13"
       ],
       "conceptTags": [
         "no-op",
@@ -22539,12 +22542,12 @@
       "source": "memory",
       "snippet": "Cron: Homepage Improvement (16:37 UTC) — NO-OP: No changes needed. All components at `components/v2/home/`. Committed at `b4ed38e7`.",
       "recallCount": 0,
-      "dailyCount": 2,
+      "dailyCount": 3,
       "groundedCount": 0,
-      "totalScore": 1.24,
+      "totalScore": 1.8599999999999999,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-05T21:00:44.340Z",
-      "lastRecalledAt": "2026-05-11T21:00:34.047Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
       "queryHashes": [
         "b3222f2b9fdf"
       ],
@@ -22552,7 +22555,8 @@
         "2026-05-06",
         "2026-05-05",
         "2026-05-12",
-        "2026-05-11"
+        "2026-05-11",
+        "2026-05-13"
       ],
       "conceptTags": [
         "no-op",
@@ -22573,12 +22577,12 @@
       "source": "memory",
       "snippet": "Cron: Directory Page Check (16:35 UTC): Task: check if `/directory` page needed rebuilding.",
       "recallCount": 0,
-      "dailyCount": 2,
+      "dailyCount": 3,
       "groundedCount": 0,
-      "totalScore": 1.24,
+      "totalScore": 1.8599999999999999,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-05T21:00:44.340Z",
-      "lastRecalledAt": "2026-05-11T21:00:34.047Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
       "queryHashes": [
         "b3222f2b9fdf"
       ],
@@ -22586,7 +22590,8 @@
         "2026-05-06",
         "2026-05-05",
         "2026-05-12",
-        "2026-05-11"
+        "2026-05-11",
+        "2026-05-13"
       ],
       "conceptTags": [
         "cron",
@@ -22607,12 +22612,12 @@
       "source": "memory",
       "snippet": "Cron: Directory Page Check (16:35 UTC): **Finding: Already fully implemented.** All requested features present:",
       "recallCount": 0,
-      "dailyCount": 2,
+      "dailyCount": 3,
       "groundedCount": 0,
-      "totalScore": 1.24,
+      "totalScore": 1.8599999999999999,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-05T21:00:44.340Z",
-      "lastRecalledAt": "2026-05-11T21:00:34.047Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
       "queryHashes": [
         "b3222f2b9fdf"
       ],
@@ -22620,7 +22625,8 @@
         "2026-05-06",
         "2026-05-05",
         "2026-05-12",
-        "2026-05-11"
+        "2026-05-11",
+        "2026-05-13"
       ],
       "conceptTags": [
         "cron",
@@ -22957,12 +22963,12 @@
       "source": "memory",
       "snippet": "Session: cron[d9bed623] — Improve directory page: Task: verify/fix /directory page (search, category tabs, card grid, count, empty state); **Result**: Already done — commit `28e6719c feat: rebuild directory page with search and filters` already exists; `DirectoryClient.tsx` has:",
       "recallCount": 0,
-      "dailyCount": 2,
+      "dailyCount": 3,
       "groundedCount": 0,
-      "totalScore": 1.24,
+      "totalScore": 1.8599999999999999,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-07T21:02:24.225Z",
-      "lastRecalledAt": "2026-05-11T21:00:34.047Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
       "queryHashes": [
         "e86b6551e251"
       ],
@@ -22970,7 +22976,8 @@
         "2026-05-08",
         "2026-05-07",
         "2026-05-12",
-        "2026-05-11"
+        "2026-05-11",
+        "2026-05-13"
       ],
       "conceptTags": [
         "verify/fix",
@@ -22991,12 +22998,12 @@
       "source": "memory",
       "snippet": "Session: cron[d9bed623] — Improve directory page: Note: some tabs (Image, Conversion, Math, CSS) have no matching tools — harmless, shows empty grid",
       "recallCount": 0,
-      "dailyCount": 2,
+      "dailyCount": 3,
       "groundedCount": 0,
-      "totalScore": 1.24,
+      "totalScore": 1.8599999999999999,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-07T21:02:24.225Z",
-      "lastRecalledAt": "2026-05-11T21:00:34.047Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
       "queryHashes": [
         "e86b6551e251"
       ],
@@ -23004,7 +23011,8 @@
         "2026-05-08",
         "2026-05-07",
         "2026-05-12",
-        "2026-05-11"
+        "2026-05-11",
+        "2026-05-13"
       ],
       "conceptTags": [
         "cron",
@@ -23025,12 +23033,12 @@
       "source": "memory",
       "snippet": "Notes: [CRON] task reminder: neon postgresql for toolblip still pending user action",
       "recallCount": 0,
-      "dailyCount": 2,
+      "dailyCount": 3,
       "groundedCount": 0,
-      "totalScore": 1.24,
+      "totalScore": 1.8599999999999999,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-07T21:02:24.225Z",
-      "lastRecalledAt": "2026-05-11T21:00:34.047Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
       "queryHashes": [
         "e86b6551e251"
       ],
@@ -23038,7 +23046,8 @@
         "2026-05-08",
         "2026-05-07",
         "2026-05-12",
-        "2026-05-11"
+        "2026-05-11",
+        "2026-05-13"
       ],
       "conceptTags": [
         "cron",
@@ -23059,12 +23068,12 @@
       "source": "memory",
       "snippet": "Session: Social sharing for tools: Task 8/10: Add social sharing to tool detail pages; `ShareButtons.tsx` already existed in `src/components/` — component was already built with Copy Link, Twitter/X, and LinkedIn buttons; Tool detail page (`src/app/tools/[slug]/page.tsx`) already",
       "recallCount": 0,
-      "dailyCount": 2,
+      "dailyCount": 3,
       "groundedCount": 0,
-      "totalScore": 1.24,
+      "totalScore": 1.8599999999999999,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-07T21:02:24.225Z",
-      "lastRecalledAt": "2026-05-11T21:00:34.047Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
       "queryHashes": [
         "edcbe8c19953"
       ],
@@ -23072,7 +23081,8 @@
         "2026-05-08",
         "2026-05-07",
         "2026-05-12",
-        "2026-05-11"
+        "2026-05-11",
+        "2026-05-13"
       ],
       "conceptTags": [
         "8/10",
@@ -23093,12 +23103,12 @@
       "source": "memory",
       "snippet": "API Docs Check (2026-05-06 22:40 UTC): `/api-docs` page: ✅ fully implemented, committed, live at toolblip.com/api-docs; Base URL: https://toolblip-api-production.up.railway.app (SSL: api.toolblip.com pending); Auth: Bearer token in Authorization header; All 6 endpoints documented",
       "recallCount": 0,
-      "dailyCount": 2,
+      "dailyCount": 3,
       "groundedCount": 0,
-      "totalScore": 1.24,
+      "totalScore": 1.8599999999999999,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-07T21:02:24.225Z",
-      "lastRecalledAt": "2026-05-11T21:00:34.047Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
       "queryHashes": [
         "0429bc3c0eff"
       ],
@@ -23106,7 +23116,8 @@
         "2026-05-08",
         "2026-05-07",
         "2026-05-12",
-        "2026-05-11"
+        "2026-05-11",
+        "2026-05-13"
       ],
       "conceptTags": [
         "api-docs",
@@ -23127,12 +23138,12 @@
       "source": "memory",
       "snippet": "API Docs Check (2026-05-06 22:40 UTC): Railway API app: ⚠️ returning \"Application not found\" (404) — may need redeployment or credentials refresh",
       "recallCount": 0,
-      "dailyCount": 2,
+      "dailyCount": 3,
       "groundedCount": 0,
-      "totalScore": 1.24,
+      "totalScore": 1.8599999999999999,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-07T21:02:24.225Z",
-      "lastRecalledAt": "2026-05-11T21:00:34.047Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
       "queryHashes": [
         "0429bc3c0eff"
       ],
@@ -23140,7 +23151,8 @@
         "2026-05-08",
         "2026-05-07",
         "2026-05-12",
-        "2026-05-11"
+        "2026-05-11",
+        "2026-05-13"
       ],
       "conceptTags": [
         "api",
@@ -27734,18 +27746,19 @@
       "source": "memory",
       "snippet": "2026-05-09 02:46 UTC — Polished error pages: Updated `src/app/not-found.tsx` and `src/app/error.tsx` with minimal, dark-mode-aware Toolblip styling using `var(--surface-2)`/`var(--line)` and existing `tb-v2-btn` classes.; Verified with `npm run build` (success; existing Next/Turb",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-11T21:00:34.047Z",
-      "lastRecalledAt": "2026-05-11T21:00:34.047Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
       "queryHashes": [
         "f9349cbeaf46"
       ],
       "recallDays": [
         "2026-05-12",
-        "2026-05-11"
+        "2026-05-11",
+        "2026-05-13"
       ],
       "conceptTags": [
         "src/app/not-found.tsx",
@@ -27766,18 +27779,19 @@
       "source": "memory",
       "snippet": "2026-05-09 15:04 UTC — Tool detail page verified and pushed: Verified `src/app/tools/[slug]/page.tsx` plus `ToolDetailClient.tsx`/`ToolUI.tsx` already implement tool detail pages with real UIs for Word Counter, Character Counter, Case Converter, Base64, URL Encode/Decode, and JSO",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-11T21:00:34.047Z",
-      "lastRecalledAt": "2026-05-11T21:00:34.047Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
       "queryHashes": [
         "f9349cbeaf46"
       ],
       "recallDays": [
         "2026-05-12",
-        "2026-05-11"
+        "2026-05-11",
+        "2026-05-13"
       ],
       "conceptTags": [
         "src/app/tools",
@@ -27798,18 +27812,19 @@
       "source": "memory",
       "snippet": "2026-05-09 15:04 UTC — Directory browse page confirmed: Confirmed `/directory` is already rebuilt via `src/app/directory/page.tsx` + `DirectoryClient.tsx` with live search, category tabs, tool count, homepage-style cards, and empty state using `src/data/tools.ts`.; Existing commi",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-11T21:00:34.047Z",
-      "lastRecalledAt": "2026-05-11T21:00:34.047Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
       "queryHashes": [
         "f9349cbeaf46"
       ],
       "recallDays": [
         "2026-05-12",
-        "2026-05-11"
+        "2026-05-11",
+        "2026-05-13"
       ],
       "conceptTags": [
         "src/app/directory/page.tsx",
@@ -27830,18 +27845,19 @@
       "source": "memory",
       "snippet": "2026-05-09 15:06 UTC — Homepage sections refined: Confirmed homepage already includes How it works, category quick-access, and Why Toolblip sections above the tools grid.; Tightened the How it works copy via shared `WORKFLOW` text and compacted benefit card layout in `src/app/pag",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-11T21:00:34.047Z",
-      "lastRecalledAt": "2026-05-11T21:00:34.047Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
       "queryHashes": [
         "f9349cbeaf46"
       ],
       "recallDays": [
         "2026-05-12",
-        "2026-05-11"
+        "2026-05-11",
+        "2026-05-13"
       ],
       "conceptTags": [
         "quick-access",
@@ -27862,18 +27878,19 @@
       "source": "memory",
       "snippet": "2026-05-09 15:06 UTC — Homepage sections refined: Left pre-existing dirty file `e2e/tools/article-banner-generator.spec.ts` untouched.",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-11T21:00:34.047Z",
-      "lastRecalledAt": "2026-05-11T21:00:34.047Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
       "queryHashes": [
         "f9349cbeaf46"
       ],
       "recallDays": [
         "2026-05-12",
-        "2026-05-11"
+        "2026-05-11",
+        "2026-05-13"
       ],
       "conceptTags": [
         "pre-existing",
@@ -27894,18 +27911,19 @@
       "source": "memory",
       "snippet": "2026-05-09 15:08 UTC — Social sharing buttons added to tool pages: Confirmed `src/components/ShareButtons.tsx` is wired into `src/app/tools/[slug]/ToolDetailClient.tsx` for tool detail pages.; Refined share button styling to small rounded icon+text controls and added clipboard fa",
       "recallCount": 0,
-      "dailyCount": 1,
+      "dailyCount": 2,
       "groundedCount": 0,
-      "totalScore": 0.62,
+      "totalScore": 1.24,
       "maxScore": 0.62,
       "firstRecalledAt": "2026-05-11T21:00:34.047Z",
-      "lastRecalledAt": "2026-05-11T21:00:34.047Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
       "queryHashes": [
         "f9349cbeaf46"
       ],
       "recallDays": [
         "2026-05-12",
-        "2026-05-11"
+        "2026-05-11",
+        "2026-05-13"
       ],
       "conceptTags": [
         "src/components/sharebuttons.tsx",
@@ -30506,6 +30524,419 @@
         "how",
         "detect",
         "secrets"
+      ]
+    },
+    "memory:memory/2026-05-12.md:5:8": {
+      "key": "memory:memory/2026-05-12.md:5:8",
+      "path": "memory/2026-05-12.md",
+      "startLine": 5,
+      "endLine": 8,
+      "source": "memory",
+      "snippet": "Session: Homepage improvement (cron task): Task: Add how-it-works, category pills, and benefits section to homepage; Found `src/app/page.tsx` already had all three sections implemented:; \"How it works\" strip with 3 steps + privacy pills; Category quick-access row with `/tools?cat",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-12T21:00:34.724Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
+      "queryHashes": [
+        "a727ea7b8da3"
+      ],
+      "recallDays": [
+        "2026-05-13",
+        "2026-05-12"
+      ],
+      "conceptTags": [
+        "how-it-works",
+        "src/app/page.tsx",
+        "quick-access",
+        "homepage",
+        "improvement",
+        "cron",
+        "task",
+        "add"
+      ]
+    },
+    "memory:memory/2026-05-12.md:9:11": {
+      "key": "memory:memory/2026-05-12.md:9:11",
+      "path": "memory/2026-05-12.md",
+      "startLine": 9,
+      "endLine": 11,
+      "source": "memory",
+      "snippet": "Session: Homepage improvement (cron task): \"Why Toolblip?\" benefits cards (Private, Fast, Free); Git working tree clean — nothing to commit; Branch `main` up to date with `origin/main`",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-12T21:00:34.724Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
+      "queryHashes": [
+        "a727ea7b8da3"
+      ],
+      "recallDays": [
+        "2026-05-13",
+        "2026-05-12"
+      ],
+      "conceptTags": [
+        "origin/main",
+        "homepage",
+        "improvement",
+        "cron",
+        "task",
+        "why",
+        "toolblip",
+        "benefits"
+      ]
+    },
+    "memory:memory/2026-05-12.md:15:18": {
+      "key": "memory:memory/2026-05-12.md:15:18",
+      "path": "memory/2026-05-12.md",
+      "startLine": 15,
+      "endLine": 18,
+      "source": "memory",
+      "snippet": "Social Sharing Buttons (07:51): Created `src/components/ShareButtons.tsx` — reusable component with:; Copy link button (copies current URL to clipboard); Twitter/X share link; LinkedIn share link",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-12T21:00:34.724Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
+      "queryHashes": [
+        "a727ea7b8da3"
+      ],
+      "recallDays": [
+        "2026-05-13",
+        "2026-05-12"
+      ],
+      "conceptTags": [
+        "src/components/sharebuttons.tsx",
+        "twitter/x",
+        "social",
+        "sharing",
+        "buttons",
+        "created",
+        "src",
+        "components"
+      ]
+    },
+    "memory:memory/2026-05-12.md:19:22": {
+      "key": "memory:memory/2026-05-12.md:19:22",
+      "path": "memory/2026-05-12.md",
+      "startLine": 19,
+      "endLine": 22,
+      "source": "memory",
+      "snippet": "Social Sharing Buttons (07:51): Clean styling matching site design (small, icon+text buttons); Added ShareButtons to tool detail page (`app/tools/[slug]/ToolDetailClient.tsx`); Committed & pushed: `4069ae5a feat: add social sharing buttons to tool pages`; Build passes cleanly",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-12T21:00:34.724Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
+      "queryHashes": [
+        "a727ea7b8da3"
+      ],
+      "recallDays": [
+        "2026-05-13",
+        "2026-05-12"
+      ],
+      "conceptTags": [
+        "app/tools",
+        "tooldetailclient.tsx",
+        "social",
+        "sharing",
+        "buttons",
+        "clean",
+        "styling",
+        "matching"
+      ]
+    },
+    "memory:memory/2026-05-11.md:5:5": {
+      "key": "memory:memory/2026-05-11.md:5:5",
+      "path": "memory/2026-05-11.md",
+      "startLine": 5,
+      "endLine": 5,
+      "source": "memory",
+      "snippet": "Sitemap & Robots Already Present: Checked cron task for sitemap.xml + robots.txt — both files already existed at `app/sitemap.ts` and `app/robots.ts` with correct implementations matching the task requirements.",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-12T21:00:34.724Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
+      "queryHashes": [
+        "28fb5afbbb34"
+      ],
+      "recallDays": [
+        "2026-05-13",
+        "2026-05-12"
+      ],
+      "conceptTags": [
+        "sitemap.xml",
+        "robots.txt",
+        "app/sitemap.ts",
+        "app/robots.ts",
+        "sitemap",
+        "robots",
+        "already",
+        "present"
+      ]
+    },
+    "memory:memory/2026-05-11.md:7:7": {
+      "key": "memory:memory/2026-05-11.md:7:7",
+      "path": "memory/2026-05-11.md",
+      "startLine": 7,
+      "endLine": 7,
+      "source": "memory",
+      "snippet": "Sitemap & Robots Already Present: No changes needed.",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-12T21:00:34.724Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
+      "queryHashes": [
+        "28fb5afbbb34"
+      ],
+      "recallDays": [
+        "2026-05-13",
+        "2026-05-12"
+      ],
+      "conceptTags": [
+        "sitemap",
+        "robots",
+        "already",
+        "present",
+        "changes",
+        "needed"
+      ]
+    },
+    "memory:memory/2026-05-11.md:11:11": {
+      "key": "memory:memory/2026-05-11.md:11:11",
+      "path": "memory/2026-05-11.md",
+      "startLine": 11,
+      "endLine": 11,
+      "source": "memory",
+      "snippet": "Related: Previous sessions: `~/.openclaw/memory/RECENT.md`",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.62,
+      "maxScore": 0.62,
+      "firstRecalledAt": "2026-05-12T21:00:34.724Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
+      "queryHashes": [
+        "28fb5afbbb34"
+      ],
+      "recallDays": [
+        "2026-05-13",
+        "2026-05-12"
+      ],
+      "conceptTags": [
+        "openclaw/memory/recent.md",
+        "related",
+        "previous",
+        "openclaw",
+        "recent.md"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-12.txt:2:2": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-12.txt:2:2",
+      "path": "memory/.dreams/session-corpus/2026-05-12.txt",
+      "startLine": 2,
+      "endLine": 2,
+      "source": "memory",
+      "snippet": "User: Karpathy",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-12T21:00:34.724Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
+      "queryHashes": [
+        "7842911a6fdb"
+      ],
+      "recallDays": [
+        "2026-05-13",
+        "2026-05-12"
+      ],
+      "conceptTags": [
+        "karpathy"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-12.txt:3:3": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-12.txt:3:3",
+      "path": "memory/.dreams/session-corpus/2026-05-12.txt",
+      "startLine": 3,
+      "endLine": 3,
+      "source": "memory",
+      "snippet": "User: Karpathy",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-12T21:00:34.724Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
+      "queryHashes": [
+        "7842911a6fdb"
+      ],
+      "recallDays": [
+        "2026-05-13",
+        "2026-05-12"
+      ],
+      "conceptTags": [
+        "karpathy"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-12.txt:4:4": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-12.txt:4:4",
+      "path": "memory/.dreams/session-corpus/2026-05-12.txt",
+      "startLine": 4,
+      "endLine": 4,
+      "source": "memory",
+      "snippet": "User: Karpathy",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-12T21:00:34.724Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
+      "queryHashes": [
+        "7842911a6fdb"
+      ],
+      "recallDays": [
+        "2026-05-13",
+        "2026-05-12"
+      ],
+      "conceptTags": [
+        "karpathy"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-12.txt:5:5": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-12.txt:5:5",
+      "path": "memory/.dreams/session-corpus/2026-05-12.txt",
+      "startLine": 5,
+      "endLine": 5,
+      "source": "memory",
+      "snippet": "Assistant: The former Tesla AI chief who left to focus on education. His YouTube channel has the best deep learning explanations out there — [maketecheasier.com] definitely worth it if you're getting into AI",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-12T21:00:34.724Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
+      "queryHashes": [
+        "7842911a6fdb"
+      ],
+      "recallDays": [
+        "2026-05-13",
+        "2026-05-12"
+      ],
+      "conceptTags": [
+        "maketecheasier.com",
+        "former",
+        "tesla",
+        "chief",
+        "who",
+        "left",
+        "focus",
+        "education"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-12.txt:6:6": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-12.txt:6:6",
+      "path": "memory/.dreams/session-corpus/2026-05-12.txt",
+      "startLine": 6,
+      "endLine": 6,
+      "source": "memory",
+      "snippet": "User: Remove all the cron jobs",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-12T21:00:34.724Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
+      "queryHashes": [
+        "7842911a6fdb"
+      ],
+      "recallDays": [
+        "2026-05-13",
+        "2026-05-12"
+      ],
+      "conceptTags": [
+        "remove",
+        "all",
+        "cron",
+        "jobs"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-12.txt:7:7": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-12.txt:7:7",
+      "path": "memory/.dreams/session-corpus/2026-05-12.txt",
+      "startLine": 7,
+      "endLine": 7,
+      "source": "memory",
+      "snippet": "Assistant: Got 8 jobs. Removing all of them now.",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-12T21:00:34.724Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
+      "queryHashes": [
+        "7842911a6fdb"
+      ],
+      "recallDays": [
+        "2026-05-13",
+        "2026-05-12"
+      ],
+      "conceptTags": [
+        "got",
+        "jobs",
+        "removing",
+        "all",
+        "them",
+        "now"
+      ]
+    },
+    "memory:memory/.dreams/session-corpus/2026-05-12.txt:8:8": {
+      "key": "memory:memory/.dreams/session-corpus/2026-05-12.txt:8:8",
+      "path": "memory/.dreams/session-corpus/2026-05-12.txt",
+      "startLine": 8,
+      "endLine": 8,
+      "source": "memory",
+      "snippet": "Assistant: Done. All 8 cron jobs removed.",
+      "recallCount": 0,
+      "dailyCount": 1,
+      "groundedCount": 0,
+      "totalScore": 0.58,
+      "maxScore": 0.58,
+      "firstRecalledAt": "2026-05-12T21:00:34.724Z",
+      "lastRecalledAt": "2026-05-12T21:00:34.724Z",
+      "queryHashes": [
+        "7842911a6fdb"
+      ],
+      "recallDays": [
+        "2026-05-13",
+        "2026-05-12"
+      ],
+      "conceptTags": [
+        "done",
+        "all",
+        "cron",
+        "jobs",
+        "removed"
       ]
     }
   }
