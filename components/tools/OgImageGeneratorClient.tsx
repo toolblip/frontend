@@ -836,7 +836,7 @@ export default function OgImageGeneratorClient() {
         </div>
 
         {/* Right preview panel */}
-        <div className="relative pt-10 lg:pt-12">
+        <div className="relative">
           <canvas
             ref={undefined}
             width={WIDTH}
