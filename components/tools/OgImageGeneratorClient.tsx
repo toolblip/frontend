@@ -80,10 +80,10 @@ function SliderLabel({ value, children }: { value: number; children: React.React
 }
 
 export default function OgImageGeneratorClient() {
-  const [title, setTitle] = useState('Building Better Software With Modern Tools');
-  const [subtitle, setSubtitle] = useState('An in-depth guide to scaling your dev workflow with modern browser tools.');
+  const [title, setTitle] = useState('Building Better Software\nWith Modern Tools');
+  const [subtitle, setSubtitle] = useState('An in-depth guide to scaling your development workflow');
   const [presetName, setPresetName] = useState<PresetName | null>('Teal Midnight');
-  const [footer, setFooter] = useState('toolblip.com');
+  const [footer, setFooter] = useState('');
   const [footerLogo, setFooterLogo] = useState<string | null>(null);
   const [bannerStyle, setBannerStyle] = useState<BannerStyle>('dotted-frame');
   const [backgroundMode, setBackgroundMode] = useState<BackgroundMode>('gradient');
@@ -92,11 +92,11 @@ export default function OgImageGeneratorClient() {
   const [direction, setDirection] = useState<DirectionValue>('140');
   const [titleFontSize, setTitleFontSize] = useState(44);
   const [subtitleFontSize, setSubtitleFontSize] = useState(20);
-  const [alignment, setAlignment] = useState<TextAlign>('left');
-  const [patternOverlay, setPatternOverlay] = useState<PatternOverlay>('dots');
+  const [alignment, setAlignment] = useState<TextAlign>('center');
+  const [patternOverlay, setPatternOverlay] = useState<PatternOverlay>('none');
   const [downloadUrl, setDownloadUrl] = useState('');
   const [openSections, setOpenSections] = useState<Set<string>>(new Set(['CONTENT']));
-  const [resolution, setResolution] = useState<'1200x630' | '1200x400' | '800x400' | 'custom'>('1200x630');
+  const [resolution, setResolution] = useState<'1200x630' | '1200x400' | '800x420' | '800x400' | 'custom'>('800x420');
   const [customWidth, setCustomWidth] = useState(1200);
   const [customHeight, setCustomHeight] = useState(630);
   const { user } = useAuth();
@@ -105,6 +105,7 @@ export default function OgImageGeneratorClient() {
   const RESOLUTIONS: Record<string, { label: string; width: number; height: number }> = {
     '1200x630': { label: '1200×630 (Open Graph)', width: 1200, height: 630 },
     '1200x400': { label: '1200×400 (Wide Banner)', width: 1200, height: 400 },
+    '800x420': { label: '800×420 (Article Banner)', width: 800, height: 420 },
     '800x400': { label: '800×400 (Small Banner)', width: 800, height: 400 },
     'custom': { label: 'Custom', width: customWidth, height: customHeight },
   };
@@ -167,107 +168,56 @@ export default function OgImageGeneratorClient() {
       ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-      // 2. Dots pattern on background
-      if (patternOverlay === 'dots' || patternOverlay === 'none') {
-        ctx.globalAlpha = 0.12;
+      // 2. Scattered dots pattern on background (deterministic, same every redraw) — only when selected
+      if (patternOverlay === 'dots') {
+        ctx.globalAlpha = 0.14;
         ctx.fillStyle = '#ffffff';
-        const dotStep = 28;
-        const dotRadius = Math.max(2, Math.min(WIDTH, HEIGHT) * 0.004);
+        const dotStep = 32;
+        const baseRadius = Math.max(1.5, Math.min(WIDTH, HEIGHT) * 0.003);
+        // Deterministic pseudo-random from coordinates so dots never jitter between redraws
+        const seededJitter = (x: number, y: number, seed: number) => {
+          const n = Math.sin(x * 12.9898 + y * 78.233 + seed) * 43758.5453;
+          return n - Math.floor(n);
+        };
         for (let x = dotStep / 2; x < WIDTH; x += dotStep) {
           for (let y = dotStep / 2; y < HEIGHT; y += dotStep) {
+            const jitterX = (seededJitter(x, y, 1) - 0.5) * dotStep * 0.5;
+            const jitterY = (seededJitter(x, y, 2) - 0.5) * dotStep * 0.5;
+            const radius = baseRadius * (0.7 + seededJitter(x, y, 3) * 0.6);
             ctx.beginPath();
-            ctx.arc(x, y, dotRadius, 0, Math.PI * 2);
+            ctx.arc(x + jitterX, y + jitterY, radius, 0, Math.PI * 2);
             ctx.fill();
           }
         }
         ctx.globalAlpha = 1;
       }
 
-      // 3. White card (all styles)
-      const cardMargin = Math.min(WIDTH, HEIGHT) * 0.065;
-      const cardRadius = Math.min(WIDTH, HEIGHT) * 0.025;
-      const cardX = cardMargin;
-      const cardY = cardMargin;
-      const cardW = WIDTH - cardMargin * 2;
-      const cardH = HEIGHT - cardMargin * 2;
+      // 3. White card (all styles) — match articlebanner proportions
+      const cardW = WIDTH >= 800 && HEIGHT >= 420 ? 700 : Math.round(WIDTH * 0.875);
+      const cardH = WIDTH >= 800 && HEIGHT >= 420 ? 340 : Math.round(HEIGHT * 0.81);
+      const cardX = Math.round((WIDTH - cardW) / 2);
+      const cardY = Math.round((HEIGHT - cardH) / 2);
+      const cardRadius = WIDTH >= 800 && HEIGHT >= 420 ? 10 : Math.min(WIDTH, HEIGHT) * 0.024;
+      const cardPadX = WIDTH >= 800 && HEIGHT >= 420 ? 48 : Math.round(WIDTH * 0.06);
+      const cardPadY = WIDTH >= 800 && HEIGHT >= 420 ? 40 : Math.round(HEIGHT * 0.095);
 
       ctx.save();
+      ctx.shadowColor = 'rgba(0,0,0,0.12)';
+      ctx.shadowBlur = 24;
+      ctx.shadowOffsetX = 0;
+      ctx.shadowOffsetY = 4;
       ctx.beginPath();
       ctx.roundRect(cardX, cardY, cardW, cardH, cardRadius);
       ctx.fillStyle = '#ffffff';
       ctx.fill();
-
-      // Shadow for shadow-card style
-      if (bannerStyle === 'shadow-card') {
-        ctx.shadowColor = 'rgba(0,0,0,0.15)';
-        ctx.shadowBlur = 24;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 8;
-        ctx.fillStyle = '#ffffff';
-        ctx.fill();
-        ctx.shadowColor = 'transparent';
-        ctx.shadowBlur = 0;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
-      }
       ctx.restore();
 
-      // 4. Border decorations (outside the white card, on gradient)
-      const borderPadding = cardMargin * 0.55;
-      const borderLineWidth = Math.max(2, Math.min(WIDTH, HEIGHT) * 0.0045);
-
-      if (bannerStyle === 'dotted-frame') {
-        ctx.strokeStyle = 'rgba(255,255,255,0.5)';
-        ctx.lineWidth = borderLineWidth;
-        ctx.setLineDash([borderLineWidth * 2, borderLineWidth * 2.5]);
-        ctx.lineCap = 'round';
-        ctx.strokeRect(borderPadding, borderPadding, WIDTH - borderPadding * 2, HEIGHT - borderPadding * 2);
-        ctx.setLineDash([]);
-      } else if (bannerStyle === 'solid-frame') {
-        ctx.strokeStyle = 'rgba(255,255,255,0.5)';
-        ctx.lineWidth = borderLineWidth;
-        ctx.strokeRect(borderPadding, borderPadding, WIDTH - borderPadding * 2, HEIGHT - borderPadding * 2);
-      } else if (bannerStyle === 'double-frame') {
-        ctx.strokeStyle = 'rgba(255,255,255,0.45)';
-        ctx.lineWidth = borderLineWidth;
-        const gap = borderLineWidth * 2;
-        ctx.strokeRect(borderPadding, borderPadding, WIDTH - borderPadding * 2, HEIGHT - borderPadding * 2);
-        ctx.strokeRect(borderPadding + gap, borderPadding + gap, WIDTH - borderPadding * 2 - gap * 2, HEIGHT - borderPadding * 2 - gap * 2);
-      } else if (bannerStyle === 'dash-frame') {
-        ctx.strokeStyle = 'rgba(255,255,255,0.5)';
-        ctx.lineWidth = borderLineWidth;
-        ctx.setLineDash([borderLineWidth * 4, borderLineWidth * 3]);
-        ctx.lineCap = 'butt';
-        ctx.strokeRect(borderPadding, borderPadding, WIDTH - borderPadding * 2, HEIGHT - borderPadding * 2);
-        ctx.setLineDash([]);
-      } else if (bannerStyle === 'corner-accent') {
-        const cornerSize = Math.min(WIDTH, HEIGHT) * 0.04;
-        ctx.strokeStyle = 'rgba(255,255,255,0.6)';
-        ctx.lineWidth = borderLineWidth;
-        // Top-left
-        ctx.beginPath(); ctx.moveTo(borderPadding, borderPadding + cornerSize); ctx.lineTo(borderPadding, borderPadding); ctx.lineTo(borderPadding + cornerSize, borderPadding); ctx.stroke();
-        // Top-right
-        ctx.beginPath(); ctx.moveTo(WIDTH - borderPadding - cornerSize, borderPadding); ctx.lineTo(WIDTH - borderPadding, borderPadding); ctx.lineTo(WIDTH - borderPadding, borderPadding + cornerSize); ctx.stroke();
-        // Bottom-left
-        ctx.beginPath(); ctx.moveTo(borderPadding, HEIGHT - borderPadding - cornerSize); ctx.lineTo(borderPadding, HEIGHT - borderPadding); ctx.lineTo(borderPadding + cornerSize, HEIGHT - borderPadding); ctx.stroke();
-        // Bottom-right
-        ctx.beginPath(); ctx.moveTo(WIDTH - borderPadding - cornerSize, HEIGHT - borderPadding); ctx.lineTo(WIDTH - borderPadding, HEIGHT - borderPadding); ctx.lineTo(WIDTH - borderPadding, HEIGHT - borderPadding - cornerSize); ctx.stroke();
-      }
-      // shadow-card has no border decoration
-
-      if (patternOverlay !== 'none') {
+      // 5. Additional pattern overlays (on top of base dots)
+      if (patternOverlay !== 'none' && patternOverlay !== 'dots') {
         ctx.globalAlpha = 0.08;
         ctx.fillStyle = '#ffffff';
         const step = 30;
-        if (patternOverlay === 'dots') {
-          for (let x = 0; x < WIDTH; x += step) {
-            for (let y = 0; y < HEIGHT; y += step) {
-              ctx.beginPath();
-              ctx.arc(x, y, 2, 0, Math.PI * 2);
-              ctx.fill();
-            }
-          }
-        } else if (patternOverlay === 'diagonal-lines') {
+        if (patternOverlay === 'diagonal-lines') {
           for (let i = -HEIGHT; i < WIDTH + HEIGHT; i += step) {
             ctx.beginPath();
             ctx.moveTo(i, 0);
@@ -327,81 +277,78 @@ export default function OgImageGeneratorClient() {
       }
 
       // Text rendering inside white card
-      const textPaddingX = cardMargin + WIDTH * 0.05;
-      const textPaddingY = cardMargin + HEIGHT * 0.03;
-      const maxTextWidth = WIDTH - textPaddingX * 2;
+      const textPadX = cardX + cardPadX;
+      const textPadY = cardY + cardPadY;
+      const maxTextWidth = WIDTH - textPadX * 2;
 
-      // All styles have white card = dark text
-      const textColor = '#1a1a2e';
-      const subColor = 'rgba(26,26,46,0.55)';
-      const footerColor = 'rgba(26,26,46,0.35)';
+      // Match reference colors exactly
+      const textColor = '#111827';
+      const subColor = '#6b7280';
+      const footerColor = 'rgba(17,24,39,0.35)';
 
       ctx.textBaseline = 'middle';
 
-      let textX = textPaddingX;
+      let textX = textPadX;
       if (alignment === 'center') {
         ctx.textAlign = 'center';
         textX = WIDTH / 2;
       } else if (alignment === 'right') {
         ctx.textAlign = 'right';
-        textX = WIDTH - textPaddingX;
+        textX = WIDTH - textPadX;
       } else {
         ctx.textAlign = 'left';
       }
 
-      // Vertically center text within the white card
-      const titleLineHeight = titleFontSize * 1.15;
-      const subLineHeight = subtitleFontSize * 1.3;
-      const gapBetween = titleFontSize * 0.5;
-      const blockHeight = titleLineHeight + gapBetween + subLineHeight;
-      const cardTop = cardMargin;
-      const cardBottom = HEIGHT - cardMargin;
-      const titleY = cardTop + (cardBottom - cardTop - blockHeight) / 2 + titleLineHeight / 2;
+      // Vertically center text within the white card (reference style)
+      const titleLines = title.split('\n').filter(Boolean);
+      const titleLineHeight = titleFontSize * 1.2;
+      const titleGap = 6;
+      const subtitleGap = titleFontSize * 0.27;
+      const subLineHeight = subtitleFontSize * 1.5;
+      const titleBlockHeight = titleLines.length * titleLineHeight + Math.max(0, titleLines.length - 1) * titleGap;
+      const blockHeight = titleBlockHeight + subtitleGap + subLineHeight;
+      const cardTop = cardY;
+      const cardBottom = cardY + cardH;
+      const titleStartY = cardTop + (cardBottom - cardTop - blockHeight) / 2 + titleLineHeight / 2;
 
-      // Title
+      // Title — match reference: 800 weight, -0.02em letter-spacing
       ctx.fillStyle = textColor;
-      ctx.font = `700 ${titleFontSize}px Inter, Arial, sans-serif`;
-      ctx.fillText(title, textX, titleY, maxTextWidth);
+      ctx.font = `800 ${titleFontSize}px Inter, Arial, sans-serif`;
+      titleLines.forEach((line, index) => {
+        const y = titleStartY + index * (titleLineHeight + titleGap);
+        ctx.fillText(line, textX, y, maxTextWidth);
+      });
 
-      // Subtitle
+      // Subtitle — match reference: 400 weight, #6b7280
       ctx.font = `400 ${subtitleFontSize}px Inter, Arial, sans-serif`;
       ctx.fillStyle = subColor;
-      const subY = titleY + titleLineHeight / 2 + gapBetween + subLineHeight / 2;
+      const subY = titleStartY + titleBlockHeight / 2 + subtitleGap + subLineHeight / 2;
       ctx.fillText(subtitle, textX, subY, maxTextWidth);
 
-      // Footer
-      ctx.textAlign = 'left';
-      ctx.textBaseline = 'alphabetic';
-      ctx.font = '500 22px Inter, Arial, sans-serif';
-      ctx.fillStyle = footerColor;
-      const footerY = cardBottom - 20;
-      const footerText = footer || 'toolblip.com';
+      // Footer (only if user sets one, no default)
+      if (footer && footer.trim()) {
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'alphabetic';
+        ctx.font = '500 22px Inter, Arial, sans-serif';
+        ctx.fillStyle = footerColor;
+        const footerY = cardBottom - 20;
 
-      if (footerLogo) {
-        const logoImg = new Image();
-        logoImg.src = footerLogo;
-        const logoW = 44;
-        const logoH = (logoImg.height / logoImg.width) * logoW || 24;
-        let footerX = textPaddingX;
-        if (alignment === 'center') footerX = WIDTH / 2 - logoW - 8;
-        else if (alignment === 'right') footerX = WIDTH - textPaddingX - logoW - 8 - ctx.measureText(footerText).width;
-        ctx.drawImage(logoImg, footerX, footerY - 18, logoW, Math.min(logoH, 22));
-        ctx.fillText(footerText, footerX + logoW + 8, footerY);
-      } else {
-        let footerX = textPaddingX;
-        if (alignment === 'center') footerX = WIDTH / 2;
-        else if (alignment === 'right') footerX = WIDTH - textPaddingX;
-        ctx.fillText(footerText, footerX, footerY);
-      }
-
-      if (isFreeUser) {
-        ctx.save();
-        ctx.globalAlpha = 0.3;
-        ctx.font = '400 16px Inter, Arial, sans-serif';
-        ctx.fillStyle = 'rgba(26,26,46,0.25)';
-        ctx.textAlign = 'right';
-        ctx.fillText('Generated by toolblip.com', WIDTH - cardMargin - 16, HEIGHT - cardMargin - 14);
-        ctx.restore();
+        if (footerLogo) {
+          const logoImg = new Image();
+          logoImg.src = footerLogo;
+          const logoW = 44;
+          const logoH = (logoImg.height / logoImg.width) * logoW || 24;
+          let footerX = textPadX;
+          if (alignment === 'center') footerX = WIDTH / 2 - logoW - 8;
+          else if (alignment === 'right') footerX = WIDTH - textPadX - logoW - 8 - ctx.measureText(footer).width;
+          ctx.drawImage(logoImg, footerX, footerY - 18, logoW, Math.min(logoH, 22));
+          ctx.fillText(footer, footerX + logoW + 8, footerY);
+        } else {
+          let footerX = textPadX;
+          if (alignment === 'center') footerX = WIDTH / 2;
+          else if (alignment === 'right') footerX = WIDTH - textPadX;
+          ctx.fillText(footer, footerX, footerY);
+        }
       }
 
       setDownloadUrl(canvas.toDataURL('image/png'));
@@ -409,7 +356,7 @@ export default function OgImageGeneratorClient() {
 
     drawBanner();
     return () => { cancelled = true; };
-  }, [title, subtitle, footer, footerLogo, bannerStyle, backgroundMode, fromColor, toColor, direction, titleFontSize, subtitleFontSize, alignment, patternOverlay, preset, WIDTH, HEIGHT, isFreeUser]);
+  }, [title, subtitle, footer, footerLogo, bannerStyle, backgroundMode, fromColor, toColor, direction, titleFontSize, subtitleFontSize, alignment, patternOverlay, preset, WIDTH, HEIGHT]);
 
   const updateFromColor = (value: string) => setFromColor(value.startsWith('#') ? value : `#${value}`);
   const updateToColor = (value: string) => setToColor(value.startsWith('#') ? value : `#${value}`);
@@ -425,18 +372,6 @@ export default function OgImageGeneratorClient() {
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="mb-8 flex items-center justify-between">
         <div className="text-base font-semibold text-gray-900 dark:text-white">Customize your banner</div>
-        {downloadUrl && (
-          <a
-            href={downloadUrl}
-            download="banner-generator.png"
-            className="inline-flex items-center gap-1.5 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700"
-          >
-            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v13.25m0 0l-4.5-4.5m4.5 4.5l4.5-4.5M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5" />
-            </svg>
-            Download
-          </a>
-        )}
       </div>
 
       <div className="grid gap-3 lg:grid-cols-[320px_1fr]">
@@ -485,7 +420,7 @@ export default function OgImageGeneratorClient() {
                 <label className="block space-y-2">
                   <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Resolution</span>
                   <div className="grid grid-cols-2 gap-2" role="group" aria-label="Resolution">
-                    {['1200x630', '1200x400', '800x400'].map((key) => (
+                    {['1200x630', '1200x400', '800x420', '800x400'].map((key) => (
                       <button
                         key={key}
                         type="button"
@@ -842,22 +777,24 @@ export default function OgImageGeneratorClient() {
             )}
           </div>
 
-          {/* Download button at bottom of config */}
-          {downloadUrl && (
-            <div className="p-5">
-              <a
-                href={downloadUrl}
-                download="banner-generator.png"
-                className="inline-flex w-full items-center justify-center rounded-xl bg-red-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700"
-              >
-                Download PNG
-              </a>
-            </div>
-          )}
         </div>
 
         {/* Right preview panel */}
         <div className="relative">
+          {downloadUrl && (
+            <div className="mb-4 flex justify-end">
+              <a
+                href={downloadUrl}
+                download="banner-generator.png"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700"
+              >
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v13.25m0 0l-4.5-4.5m4.5 4.5l4.5-4.5M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5" />
+                </svg>
+                Download PNG
+              </a>
+            </div>
+          )}
           <div className="relative">
             <canvas
               ref={undefined}
