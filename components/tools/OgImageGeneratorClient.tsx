@@ -636,7 +636,14 @@ export default function OgImageGeneratorClient() {
               className="flex w-full items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 cursor-pointer"
               aria-expanded={openSections.has('BACKGROUND')}
             >
-              <span className="text-base text-violet-500" aria-hidden="true">◌</span>
+              <span className="flex h-7 w-7 items-center justify-center rounded-full border border-violet-200 bg-violet-50 text-violet-500 dark:border-violet-900 dark:bg-violet-950/30" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 3a9 9 0 1 0 9 9" />
+                  <path d="M7 10.5a5 5 0 0 1 10 0" />
+                  <path d="M12 12v6" />
+                  <path d="M9 15h6" />
+                </svg>
+              </span>
               <span>BACKGROUND</span>
               <svg className={`ml-auto h-4 w-4 transition-transform ${openSections.has('BACKGROUND') ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
@@ -644,8 +651,8 @@ export default function OgImageGeneratorClient() {
             </button>
 
             {openSections.has('BACKGROUND') && (
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 rounded-2xl border border-gray-200 bg-gray-50 p-1 dark:border-gray-700 dark:bg-gray-900" role="tablist" aria-label="Background mode">
+              <div className="space-y-5">
+                <div className="grid grid-cols-2 rounded-2xl border border-gray-200 bg-white p-1 shadow-sm dark:border-gray-700 dark:bg-gray-900" role="tablist" aria-label="Background mode">
                   {([
                     ['solid', 'Solid'],
                     ['gradient', 'Gradient'],
@@ -656,7 +663,7 @@ export default function OgImageGeneratorClient() {
                       role="tab"
                       aria-selected={backgroundMode === value}
                       onClick={() => setBackgroundMode(value)}
-                      className={`rounded-xl px-4 py-3 text-sm font-semibold transition ${
+                      className={`rounded-[14px] px-4 py-4 text-lg font-medium transition ${
                         backgroundMode === value
                           ? 'bg-white text-gray-900 shadow-sm dark:bg-gray-950 dark:text-white'
                           : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
@@ -667,15 +674,15 @@ export default function OgImageGeneratorClient() {
                   ))}
                 </div>
 
-                <div className="space-y-2">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Presets</span>
-                  <div className="grid grid-cols-4 gap-2" role="group" aria-label="Color presets">
+                <div className="space-y-3">
+                  <span className="text-[15px] font-medium text-gray-700 dark:text-gray-300">Presets</span>
+                  <div className="grid grid-cols-4 gap-3 sm:grid-cols-8" role="group" aria-label="Color presets">
                     {PRESETS.map((item) => (
                       <button
                         key={item.name}
                         type="button"
                         onClick={() => choosePreset(item)}
-                        className={`h-10 w-full rounded-xl border-2 transition ${
+                        className={`h-12 w-full rounded-[12px] border transition sm:h-12 ${
                           presetName === item.name
                             ? 'border-violet-500 ring-2 ring-violet-200'
                             : 'border-gray-200 hover:border-gray-300 dark:border-gray-700'
@@ -693,13 +700,13 @@ export default function OgImageGeneratorClient() {
                     <div className="grid grid-cols-2 gap-3">
                       <label className="block space-y-2">
                         <span className="text-sm font-medium text-gray-700 dark:text-gray-300">From</span>
-                        <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 dark:border-gray-700 dark:bg-gray-900">
+                        <div className="flex items-center gap-2 rounded-2xl border border-gray-200 bg-white px-3 py-2 shadow-sm dark:border-gray-700 dark:bg-gray-900">
                           <input
                             aria-label="From color picker"
                             type="color"
                             value={normalizeHex(fromColor, preset.from)}
                             onChange={(event) => updateFromColor(event.target.value)}
-                            className="h-7 w-7 cursor-pointer rounded border-0 p-0"
+                            className="h-8 w-8 cursor-pointer rounded-lg border border-gray-200 p-0"
                           />
                           <input
                             aria-label="From color hex"
@@ -713,13 +720,13 @@ export default function OgImageGeneratorClient() {
 
                       <label className="block space-y-2">
                         <span className="text-sm font-medium text-gray-700 dark:text-gray-300">To</span>
-                        <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 dark:border-gray-700 dark:bg-gray-900">
+                        <div className="flex items-center gap-2 rounded-2xl border border-gray-200 bg-white px-3 py-2 shadow-sm dark:border-gray-700 dark:bg-gray-900">
                           <input
                             aria-label="To color picker"
                             type="color"
                             value={normalizeHex(toColor, preset.to)}
                             onChange={(event) => updateToColor(event.target.value)}
-                            className="h-7 w-7 cursor-pointer rounded border-0 p-0"
+                            className="h-8 w-8 cursor-pointer rounded-lg border border-gray-200 p-0"
                           />
                           <input
                             aria-label="To color hex"
@@ -738,7 +745,7 @@ export default function OgImageGeneratorClient() {
                         aria-label="Gradient direction"
                         value={direction}
                         onChange={(event) => setDirection(event.target.value as DirectionValue)}
-                        className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                        className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
                       >
                         {DIRECTIONS.map((item) => (
                           <option key={item.value} value={item.value}>
@@ -750,21 +757,21 @@ export default function OgImageGeneratorClient() {
                   </>
                 ) : (
                   <label className="block space-y-2">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Color</span>
-                    <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 dark:border-gray-700 dark:bg-gray-900">
+                    <span className="text-[15px] font-medium text-gray-700 dark:text-gray-300">Custom Color</span>
+                    <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-2 shadow-sm dark:border-gray-700 dark:bg-gray-900">
                       <input
                         aria-label="Solid background color picker"
                         type="color"
                         value={normalizeHex(fromColor, preset.from)}
                         onChange={(event) => updateFromColor(event.target.value)}
-                        className="h-7 w-7 cursor-pointer rounded border-0 p-0"
+                        className="h-14 w-14 shrink-0 cursor-pointer rounded-xl border border-gray-200 p-0"
                       />
                       <input
                         aria-label="Solid background color hex"
                         value={fromColor}
                         onChange={(event) => updateFromColor(event.target.value)}
                         onBlur={() => setFromColor((value) => normalizeHex(value, preset.from))}
-                        className="min-w-0 flex-1 bg-transparent text-sm font-medium text-gray-900 outline-none dark:text-white"
+                        className="min-w-0 flex-1 rounded-xl border border-transparent bg-transparent px-2 py-3 text-base font-medium text-gray-900 outline-none placeholder:text-gray-400 dark:text-white"
                       />
                     </div>
                   </label>
