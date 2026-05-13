@@ -40,15 +40,15 @@ const PRESETS: Preset[] = [
 ];
 
 const DIRECTIONS: Direction[] = [
-  { value: '0', label: '← Left', icon: '←' },
-  { value: '45', label: '↘ Diagonal', icon: '↘' },
-  { value: '90', label: '↑ Top', icon: '↑' },
-  { value: '135', label: '↗ Diagonal', icon: '↗' },
-  { value: '140', label: '→ Right', icon: '→' },
-  { value: '180', label: '↓ Bottom', icon: '↓' },
-  { value: '225', label: '↙ Diagonal', icon: '↙' },
-  { value: '270', label: '← Left', icon: '←' },
-  { value: '315', label: '↗ Diagonal', icon: '↗' },
+  { value: '0', label: 'Left → Right', icon: '←' },
+  { value: '90', label: 'Top → Bottom', icon: '↑' },
+  { value: '45', label: 'Diagonal ↘', icon: '↘' },
+  { value: '135', label: 'Diagonal ↗', icon: '↗' },
+  { value: '140', label: '140° Angle', icon: '→' },
+  { value: '180', label: 'Bottom → Top', icon: '↓' },
+  { value: '225', label: 'Diagonal ↙', icon: '↙' },
+  { value: '270', label: 'Right → Left', icon: '←' },
+  { value: '315', label: 'Diagonal ↗', icon: '↗' },
 ];
 
 const PATTERN_OVERLAYS = [
@@ -95,7 +95,7 @@ export default function OgImageGeneratorClient() {
   const [alignment, setAlignment] = useState<TextAlign>('center');
   const [patternOverlay, setPatternOverlay] = useState<PatternOverlay>('none');
   const [downloadUrl, setDownloadUrl] = useState('');
-  const [openSections, setOpenSections] = useState<Set<string>>(new Set(['CONTENT']));
+  const [openSections, setOpenSections] = useState<Set<string>>(new Set(['CONTENT', 'BACKGROUND']));
   const [resolution, setResolution] = useState<'1200x630' | '1200x400' | '800x420' | '800x400' | 'custom'>('800x420');
   const [customWidth, setCustomWidth] = useState(1200);
   const [customHeight, setCustomHeight] = useState(630);
@@ -165,7 +165,7 @@ export default function OgImageGeneratorClient() {
       const bgGrad = ctx.createLinearGradient(x1, y1, x2, y2);
       bgGrad.addColorStop(0, fromColor);
       bgGrad.addColorStop(1, toColor);
-      ctx.fillStyle = bgGrad;
+      ctx.fillStyle = backgroundMode === 'solid' ? fromColor : bgGrad;
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
       // 2. Scattered dots pattern on background (deterministic, same every redraw) — only when selected
@@ -389,6 +389,7 @@ export default function OgImageGeneratorClient() {
     setPresetName(item.name);
     setFromColor(item.from);
     setToColor(item.to);
+    setBackgroundMode('gradient');
   };
 
   return (
@@ -623,6 +624,151 @@ export default function OgImageGeneratorClient() {
                     </div>
                   </label>
                 </div>
+              </div>
+            )}
+          </div>
+
+          {/* BACKGROUND */}
+          <div className="space-y-5 border-b border-gray-100 p-5 dark:border-gray-800">
+            <button
+              type="button"
+              onClick={() => toggleSection('BACKGROUND')}
+              className="flex w-full items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 cursor-pointer"
+              aria-expanded={openSections.has('BACKGROUND')}
+            >
+              <span className="text-base text-violet-500" aria-hidden="true">◌</span>
+              <span>BACKGROUND</span>
+              <svg className={`ml-auto h-4 w-4 transition-transform ${openSections.has('BACKGROUND') ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {openSections.has('BACKGROUND') && (
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 rounded-2xl border border-gray-200 bg-gray-50 p-1 dark:border-gray-700 dark:bg-gray-900" role="tablist" aria-label="Background mode">
+                  {([
+                    ['solid', 'Solid'],
+                    ['gradient', 'Gradient'],
+                  ] as const).map(([value, label]) => (
+                    <button
+                      key={value}
+                      type="button"
+                      role="tab"
+                      aria-selected={backgroundMode === value}
+                      onClick={() => setBackgroundMode(value)}
+                      className={`rounded-xl px-4 py-3 text-sm font-semibold transition ${
+                        backgroundMode === value
+                          ? 'bg-white text-gray-900 shadow-sm dark:bg-gray-950 dark:text-white'
+                          : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="space-y-2">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Presets</span>
+                  <div className="grid grid-cols-4 gap-2" role="group" aria-label="Color presets">
+                    {PRESETS.map((item) => (
+                      <button
+                        key={item.name}
+                        type="button"
+                        onClick={() => choosePreset(item)}
+                        className={`h-10 w-full rounded-xl border-2 transition ${
+                          presetName === item.name
+                            ? 'border-violet-500 ring-2 ring-violet-200'
+                            : 'border-gray-200 hover:border-gray-300 dark:border-gray-700'
+                        }`}
+                        style={{ background: `linear-gradient(135deg, ${item.from}, ${item.to})` }}
+                        aria-label={item.name}
+                        aria-pressed={presetName === item.name}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                {backgroundMode === 'gradient' ? (
+                  <>
+                    <div className="grid grid-cols-2 gap-3">
+                      <label className="block space-y-2">
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">From</span>
+                        <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 dark:border-gray-700 dark:bg-gray-900">
+                          <input
+                            aria-label="From color picker"
+                            type="color"
+                            value={normalizeHex(fromColor, preset.from)}
+                            onChange={(event) => updateFromColor(event.target.value)}
+                            className="h-7 w-7 cursor-pointer rounded border-0 p-0"
+                          />
+                          <input
+                            aria-label="From color hex"
+                            value={fromColor}
+                            onChange={(event) => updateFromColor(event.target.value)}
+                            onBlur={() => setFromColor((value) => normalizeHex(value, preset.from))}
+                            className="min-w-0 flex-1 bg-transparent text-sm font-medium text-gray-900 outline-none dark:text-white"
+                          />
+                        </div>
+                      </label>
+
+                      <label className="block space-y-2">
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">To</span>
+                        <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 dark:border-gray-700 dark:bg-gray-900">
+                          <input
+                            aria-label="To color picker"
+                            type="color"
+                            value={normalizeHex(toColor, preset.to)}
+                            onChange={(event) => updateToColor(event.target.value)}
+                            className="h-7 w-7 cursor-pointer rounded border-0 p-0"
+                          />
+                          <input
+                            aria-label="To color hex"
+                            value={toColor}
+                            onChange={(event) => updateToColor(event.target.value)}
+                            onBlur={() => setToColor((value) => normalizeHex(value, preset.to))}
+                            className="min-w-0 flex-1 bg-transparent text-sm font-medium text-gray-900 outline-none dark:text-white"
+                          />
+                        </div>
+                      </label>
+                    </div>
+
+                    <label className="block space-y-2">
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Direction</span>
+                      <select
+                        aria-label="Gradient direction"
+                        value={direction}
+                        onChange={(event) => setDirection(event.target.value as DirectionValue)}
+                        className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                      >
+                        {DIRECTIONS.map((item) => (
+                          <option key={item.value} value={item.value}>
+                            {item.label}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                  </>
+                ) : (
+                  <label className="block space-y-2">
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Color</span>
+                    <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 dark:border-gray-700 dark:bg-gray-900">
+                      <input
+                        aria-label="Solid background color picker"
+                        type="color"
+                        value={normalizeHex(fromColor, preset.from)}
+                        onChange={(event) => updateFromColor(event.target.value)}
+                        className="h-7 w-7 cursor-pointer rounded border-0 p-0"
+                      />
+                      <input
+                        aria-label="Solid background color hex"
+                        value={fromColor}
+                        onChange={(event) => updateFromColor(event.target.value)}
+                        onBlur={() => setFromColor((value) => normalizeHex(value, preset.from))}
+                        className="min-w-0 flex-1 bg-transparent text-sm font-medium text-gray-900 outline-none dark:text-white"
+                      />
+                    </div>
+                  </label>
+                )}
               </div>
             )}
           </div>
