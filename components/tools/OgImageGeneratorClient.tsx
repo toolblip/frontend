@@ -366,7 +366,7 @@ export default function OgImageGeneratorClient() {
         )}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-[320px_1fr]">
+      <div className="grid gap-3 lg:grid-cols-[320px_1fr]">
         {/* Left config panel */}
         <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
 

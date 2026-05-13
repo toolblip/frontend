@@ -460,7 +460,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
   return (
     <div data-testid="tool-engagement-bar" className="relative flex w-full flex-wrap items-center gap-3" aria-label={`${toolName} engagement stats`}>
       <div
-        className="relative inline-flex items-stretch rounded-full border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950"
+        className="relative inline-flex items-stretch overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950"
         onMouseEnter={() => setShareHovered(true)}
         onMouseLeave={() => setShareHovered(false)}
       >
@@ -468,26 +468,26 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
           data-testid="tool-share-button"
           type="button"
           onClick={toggleSharePopover}
-          className={`inline-flex items-center gap-2 border-0 rounded-l-full px-4 py-2 text-sm font-semibold transition ${
+          className={`inline-flex items-center gap-1.5 border-0 rounded-l-xl px-3 py-1.5 text-sm font-medium transition ${
             shareOpen || shareHovered
-              ? "rounded-r-full bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-400"
-              : "bg-transparent text-gray-800 hover:rounded-r-full hover:bg-red-50 hover:text-red-600 dark:text-gray-100 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+              ? "bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-400"
+              : "bg-transparent text-gray-600 hover:bg-red-50 hover:text-red-600 dark:text-gray-300 dark:hover:bg-red-950/40 dark:hover:text-red-400"
           } cursor-pointer`}
           aria-label={`Share ${toolName}`}
           aria-haspopup="dialog"
           aria-expanded={shareOpen}
         >
-          <ShareIcon className="h-5 w-5" />
+          <ShareIcon className="h-4 w-4" />
           Share
         </button>
         <button
           data-testid="tool-share-count"
           type="button"
           onClick={toggleSharePopover}
-          className={`inline-flex min-w-10 items-center justify-center border-0 rounded-r-full border-l border-gray-200 px-3 py-2 text-sm font-bold shadow-sm transition dark:border-gray-700 dark:text-gray-200 ${
+          className={`inline-flex min-w-8 items-center justify-center border-0 border-l border-gray-100 px-2.5 py-1.5 text-sm font-bold transition dark:border-gray-700 ${
             shareOpen || shareHovered
               ? "bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-400"
-              : "bg-gray-50 text-gray-700 hover:bg-red-50 hover:text-red-600 dark:bg-gray-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+              : "bg-gray-50 text-gray-700 hover:bg-red-50 hover:text-red-600 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-red-950/40 dark:hover:text-red-400"
           } cursor-pointer`}
           aria-label={`Shares ${formatCount(stats.shares)}`}
         >
@@ -499,38 +499,40 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
 
       <span
         data-testid="tool-view-count"
-        className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-2 text-sm font-semibold text-gray-700 shadow-sm dark:border-gray-800 dark:bg-gray-950 dark:text-gray-200"
+        className="inline-flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-600 shadow-sm dark:border-gray-800 dark:bg-gray-950 dark:text-gray-300"
         aria-label={`Views ${formatCount(stats.views)}`}
       >
-        <EyeIcon className="h-5 w-5" />
-        <span>Views</span>
-        <span>{formatCount(stats.views)}</span>
+        <EyeIcon className="h-4 w-4" />
+        <span className="font-bold text-gray-800 dark:text-gray-100">{formatCount(stats.views)}</span>
       </span>
 
-      <div className="ml-auto flex items-stretch gap-0">
+      <div className="ml-auto flex items-stretch overflow-hidden rounded-xl">
         <button
           data-testid="tool-favorite-button"
           type="button"
           onClick={toggleFavorite}
           disabled={favoriteDisabled}
-          className={`inline-flex items-center gap-2 rounded-l-full border border-r-0 px-4 py-2 text-sm font-bold shadow-sm transition cursor-pointer disabled:opacity-60 ${
+          className={`inline-flex items-center gap-1.5 rounded-l-xl border border-r-0 px-3 py-1.5 text-sm font-medium shadow-sm transition cursor-pointer disabled:opacity-60 ${
             stats.viewer_favorited
-              ? "border-red-600 bg-red-600 text-white hover:bg-red-700"
-              : "border-gray-200 bg-white text-gray-800 hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-100 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+              ? "border-red-500 bg-red-500 text-white hover:bg-red-600"
+              : "border-gray-200 bg-white text-gray-600 hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-800 dark:bg-gray-950 dark:text-gray-300 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
           }`}
           aria-label={favoriteLabel}
         >
-          {stats.viewer_favorited ? <HeartIcon className="h-6 w-6" /> : <HeartOutlineIcon className="h-6 w-6" />}
+          {stats.viewer_favorited ? <HeartIcon className="h-4 w-4" /> : <HeartOutlineIcon className="h-4 w-4" />}
           {favoriteText}
         </button>
-        <CountPill
-          label="Favorites"
-          value={stats.favorites}
-          testId="tool-favorite-count"
-          className={`rounded-r-full ${stats.viewer_favorited ? "border-red-600 bg-red-50 text-red-700 dark:bg-red-950/40 dark:text-red-200" : ""}`}
-          onClick={() => void toggleFavorite()}
-          disabled={favoriteDisabled}
-        />
+        <span
+          data-testid="tool-favorite-count"
+          className={`inline-flex min-w-8 items-center justify-center rounded-r-xl border px-2.5 py-1.5 text-sm font-bold shadow-sm transition dark:border-gray-700 ${
+            stats.viewer_favorited
+              ? "border-red-500 bg-red-50 text-red-600 dark:bg-red-950/40 dark:text-red-300"
+              : "border-gray-200 bg-gray-50 text-gray-700 hover:bg-red-50 hover:text-red-600 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+          }`}
+          aria-label={`Favorites ${formatCount(stats.favorites)}`}
+        >
+          {formatCount(stats.favorites)}
+        </span>
       </div>
 
       {loginOpen && (
