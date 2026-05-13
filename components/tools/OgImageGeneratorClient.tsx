@@ -327,7 +327,6 @@ export default function OgImageGeneratorClient() {
       }
 
       // Text rendering inside white card
-      const cardMargin = Math.min(WIDTH, HEIGHT) * 0.065;
       const textPaddingX = cardMargin + WIDTH * 0.05;
       const textPaddingY = cardMargin + HEIGHT * 0.03;
       const maxTextWidth = WIDTH - textPaddingX * 2;
@@ -383,15 +382,15 @@ export default function OgImageGeneratorClient() {
         logoImg.src = footerLogo;
         const logoW = 44;
         const logoH = (logoImg.height / logoImg.width) * logoW || 24;
-        let footerX = paddingX;
+        let footerX = textPaddingX;
         if (alignment === 'center') footerX = WIDTH / 2 - logoW - 8;
-        else if (alignment === 'right') footerX = WIDTH - paddingX - logoW - 8 - ctx.measureText(footerText).width;
+        else if (alignment === 'right') footerX = WIDTH - textPaddingX - logoW - 8 - ctx.measureText(footerText).width;
         ctx.drawImage(logoImg, footerX, footerY - 18, logoW, Math.min(logoH, 22));
         ctx.fillText(footerText, footerX + logoW + 8, footerY);
       } else {
-        let footerX = paddingX;
+        let footerX = textPaddingX;
         if (alignment === 'center') footerX = WIDTH / 2;
-        else if (alignment === 'right') footerX = WIDTH - paddingX;
+        else if (alignment === 'right') footerX = WIDTH - textPaddingX;
         ctx.fillText(footerText, footerX, footerY);
       }
 
@@ -603,30 +602,28 @@ export default function OgImageGeneratorClient() {
                   </div>
                 </div>
 
-                {/* Direction buttons — only for gradient-classic */}
-                {bannerStyle === 'gradient-classic' && (
-                  <div className="space-y-2">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Direction</span>
-                    <div className="grid grid-cols-4 gap-2" role="group" aria-label="Gradient direction">
-                      {DIRECTIONS.map((d) => (
-                        <button
-                          key={d.value}
-                          type="button"
-                          onClick={() => setDirection(d.value)}
-                          aria-label={d.label}
-                          aria-pressed={direction === d.value}
-                          className={`flex items-center justify-center rounded-xl border-2 py-2 text-xs font-semibold transition ${
-                            direction === d.value
-                              ? 'border-violet-500 bg-violet-50 text-violet-700 dark:bg-violet-950 dark:text-violet-200'
-                              : 'border-gray-200 text-gray-500 hover:border-gray-300 dark:border-gray-700'
-                          }`}
-                        >
-                          {d.icon}
-                        </button>
-                      ))}
-                    </div>
+                {/* Direction buttons */}
+                <div className="space-y-2">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Direction</span>
+                  <div className="grid grid-cols-4 gap-2" role="group" aria-label="Gradient direction">
+                    {DIRECTIONS.map((d) => (
+                      <button
+                        key={d.value}
+                        type="button"
+                        onClick={() => setDirection(d.value)}
+                        aria-label={d.label}
+                        aria-pressed={direction === d.value}
+                        className={`flex items-center justify-center rounded-xl border-2 py-2 text-xs font-semibold transition ${
+                          direction === d.value
+                            ? 'border-violet-500 bg-violet-50 text-violet-700 dark:bg-violet-950 dark:text-violet-200'
+                            : 'border-gray-200 text-gray-500 hover:border-gray-300 dark:border-gray-700'
+                        }`}
+                      >
+                        {d.icon}
+                      </button>
+                    ))}
                   </div>
-                )}
+                </div>
 
                 {/* From / To colors stacked */}
                 <div className="grid grid-cols-2 gap-3">
@@ -658,16 +655,14 @@ export default function OgImageGeneratorClient() {
                         type="color"
                         value={normalizeHex(toColor, preset.to)}
                         onChange={(event) => updateToColor(event.target.value)}
-                        disabled={bannerStyle === 'dotted-frame' || bannerStyle === 'minimal-line'}
-                        className="h-7 w-7 cursor-pointer rounded border-0 p-0 disabled:opacity-40"
+                        className="h-7 w-7 cursor-pointer rounded border-0 p-0"
                       />
                       <input
                         aria-label="To color hex"
                         value={toColor}
                         onChange={(event) => updateToColor(event.target.value)}
                         onBlur={() => setToColor((value) => normalizeHex(value, preset.to))}
-                        disabled={bannerStyle === 'dotted-frame' || bannerStyle === 'minimal-line'}
-                        className="min-w-0 flex-1 bg-transparent text-sm font-medium text-gray-900 outline-none dark:text-white disabled:opacity-40"
+                        className="min-w-0 flex-1 bg-transparent text-sm font-medium text-gray-900 outline-none dark:text-white"
                       />
                     </div>
                   </label>
