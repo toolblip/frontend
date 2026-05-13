@@ -9,7 +9,6 @@ type BannerStyle = 'dotted-frame' | 'solid-frame' | 'double-frame' | 'dash-frame
 
 type DirectionValue = '0' | '45' | '90' | '135' | '140' | '180' | '225' | '270' | '315';
 type TextAlign = 'left' | 'center' | 'right';
-type PatternOverlay = 'none' | 'dots' | 'diagonal-lines' | 'grid' | 'zigzag' | 'crosses' | 'triangles';
 type PresetName = 'Teal Midnight' | 'Indigo Violet' | 'Sky Cyan' | 'Amber Fire' | 'Mint Teal' | 'Rose Pink' | 'Deep Ocean' | 'Sunset Punch' | 'Purple Blue' | 'Green Glow' | 'Slate Night' | 'Pink Purple';
 
 interface Preset {
@@ -51,15 +50,6 @@ const DIRECTIONS: Direction[] = [
   { value: '315', label: 'Diagonal ↗', icon: '↗' },
 ];
 
-const PATTERN_OVERLAYS = [
-  { value: 'none', label: 'None' },
-  { value: 'dots', label: 'Dots' },
-  { value: 'diagonal-lines', label: 'Diagonal Lines' },
-  { value: 'grid', label: 'Grid' },
-  { value: 'zigzag', label: 'Zigzag' },
-  { value: 'crosses', label: 'Crosses' },
-  { value: 'triangles', label: 'Triangles' },
-];
 
 const BANNER_STYLES = [
   { value: 'dotted-frame', label: 'Dotted Border' },
@@ -93,7 +83,6 @@ export default function OgImageGeneratorClient() {
   const [titleFontSize, setTitleFontSize] = useState(40);
   const [subtitleFontSize, setSubtitleFontSize] = useState(18);
   const [alignment, setAlignment] = useState<TextAlign>('center');
-  const [patternOverlay, setPatternOverlay] = useState<PatternOverlay>('none');
   const [downloadUrl, setDownloadUrl] = useState('');
   const [openSections, setOpenSections] = useState<Set<string>>(new Set(['CONTENT', 'BACKGROUND']));
   const [resolution, setResolution] = useState<'1200x630' | '1200x400' | '800x420' | '800x400' | 'custom'>('800x420');
@@ -147,7 +136,7 @@ export default function OgImageGeneratorClient() {
       const isHorizontal = ['0', '45', '135', '140', '180', '225', '270', '315'].includes(direction);
 
       // ===== BANNER STYLE RENDERING =====
-      // All styles: gradient background → decoration → white card → text
+      // All styles: gradient background → white card → text
 
       // 1. Gradient background (all styles)
       const angle = parseInt(direction, 10);
@@ -168,31 +157,7 @@ export default function OgImageGeneratorClient() {
       ctx.fillStyle = backgroundMode === 'solid' ? fromColor : bgGrad;
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
-      // 2. Scattered dots pattern on background (deterministic, same every redraw) — only when selected
-      if (patternOverlay === 'dots') {
-        ctx.globalAlpha = 0.14;
-        ctx.fillStyle = '#ffffff';
-        const dotStep = 32;
-        const baseRadius = Math.max(1.5, Math.min(WIDTH, HEIGHT) * 0.003);
-        // Deterministic pseudo-random from coordinates so dots never jitter between redraws
-        const seededJitter = (x: number, y: number, seed: number) => {
-          const n = Math.sin(x * 12.9898 + y * 78.233 + seed) * 43758.5453;
-          return n - Math.floor(n);
-        };
-        for (let x = dotStep / 2; x < WIDTH; x += dotStep) {
-          for (let y = dotStep / 2; y < HEIGHT; y += dotStep) {
-            const jitterX = (seededJitter(x, y, 1) - 0.5) * dotStep * 0.5;
-            const jitterY = (seededJitter(x, y, 2) - 0.5) * dotStep * 0.5;
-            const radius = baseRadius * (0.7 + seededJitter(x, y, 3) * 0.6);
-            ctx.beginPath();
-            ctx.arc(x + jitterX, y + jitterY, radius, 0, Math.PI * 2);
-            ctx.fill();
-          }
-        }
-        ctx.globalAlpha = 1;
-      }
-
-      // 3. White card (all styles) — match articlebanner proportions
+      // 2. White card (all styles) — match articlebanner proportions
       const cardW = WIDTH >= 800 && HEIGHT >= 420 ? 700 : Math.round(WIDTH * 0.875);
       const cardH = WIDTH >= 800 && HEIGHT >= 420 ? 340 : Math.round(HEIGHT * 0.81);
       const cardX = Math.round((WIDTH - cardW) / 2);
@@ -211,70 +176,6 @@ export default function OgImageGeneratorClient() {
       ctx.fillStyle = '#ffffff';
       ctx.fill();
       ctx.restore();
-
-      // 5. Additional pattern overlays (on top of base dots)
-      if (patternOverlay !== 'none' && patternOverlay !== 'dots') {
-        ctx.globalAlpha = 0.08;
-        ctx.fillStyle = '#ffffff';
-        const step = 30;
-        if (patternOverlay === 'diagonal-lines') {
-          for (let i = -HEIGHT; i < WIDTH + HEIGHT; i += step) {
-            ctx.beginPath();
-            ctx.moveTo(i, 0);
-            ctx.lineTo(i + HEIGHT, HEIGHT);
-            ctx.stroke();
-          }
-        } else if (patternOverlay === 'grid') {
-          for (let x = 0; x <= WIDTH; x += step) {
-            ctx.beginPath();
-            ctx.moveTo(x, 0);
-            ctx.lineTo(x, HEIGHT);
-            ctx.stroke();
-          }
-          for (let y = 0; y <= HEIGHT; y += step) {
-            ctx.beginPath();
-            ctx.moveTo(0, y);
-            ctx.lineTo(WIDTH, y);
-            ctx.stroke();
-          }
-        } else if (patternOverlay === 'zigzag') {
-          ctx.beginPath();
-          for (let y = 0; y < HEIGHT + step; y += step) {
-            for (let x = 0; x < WIDTH + step * 4; x += step * 4) {
-              ctx.moveTo(x, y);
-              ctx.lineTo(x + step * 2, y + step / 2);
-              ctx.lineTo(x + step * 4, y);
-            }
-          }
-          ctx.stroke();
-        } else if (patternOverlay === 'crosses') {
-          for (let x = step / 2; x < WIDTH; x += step) {
-            for (let y = step / 2; y < HEIGHT; y += step) {
-              ctx.beginPath();
-              ctx.moveTo(x - 5, y);
-              ctx.lineTo(x + 5, y);
-              ctx.moveTo(x, y - 5);
-              ctx.lineTo(x, y + 5);
-              ctx.stroke();
-            }
-          }
-        } else if (patternOverlay === 'triangles') {
-          for (let row = 0; row * step < HEIGHT + step; row++) {
-            const offset = row % 2 === 0 ? 0 : step / 2;
-            for (let col = -1; col * step < WIDTH + step; col++) {
-              const cx2 = col * step + step / 2 + offset;
-              const cy2 = row * step;
-              ctx.beginPath();
-              ctx.moveTo(cx2, cy2 + step);
-              ctx.lineTo(cx2 + step / 2, cy2);
-              ctx.lineTo(cx2 + step, cy2 + step);
-              ctx.closePath();
-              ctx.fill();
-            }
-          }
-        }
-        ctx.globalAlpha = 1;
-      }
 
       // Text rendering inside white card
       const textPadX = cardX + cardPadX;
@@ -379,7 +280,7 @@ export default function OgImageGeneratorClient() {
 
     drawBanner();
     return () => { cancelled = true; };
-  }, [title, subtitle, footer, footerLogo, bannerStyle, backgroundMode, fromColor, toColor, direction, titleFontSize, subtitleFontSize, alignment, patternOverlay, preset, WIDTH, HEIGHT]);
+  }, [title, subtitle, footer, footerLogo, bannerStyle, backgroundMode, fromColor, toColor, direction, titleFontSize, subtitleFontSize, alignment, preset, WIDTH, HEIGHT]);
 
   const updateFromColor = (value: string) => setFromColor(value.startsWith('#') ? value : `#${value}`);
   const updateToColor = (value: string) => setToColor(value.startsWith('#') ? value : `#${value}`);
@@ -469,6 +370,9 @@ export default function OgImageGeneratorClient() {
                     >
                       Custom
                     </button>
+                  </div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                    Current canvas: {effectiveWidth} × {effectiveHeight}
                   </div>
                   {resolution === 'custom' && (
                     <div className="flex items-center gap-2 mt-2">
@@ -776,42 +680,6 @@ export default function OgImageGeneratorClient() {
                     </div>
                   </label>
                 )}
-              </div>
-            )}
-          </div>
-
-          {/* GRAPHICS */}
-          <div className="space-y-5 border-b border-gray-100 p-5 dark:border-gray-800">
-            <button
-              type="button"
-              onClick={() => toggleSection('GRAPHICS')}
-              className="flex w-full items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 cursor-pointer"
-              aria-expanded={openSections.has('GRAPHICS')}
-            >
-              <span className="text-base text-violet-500" aria-hidden="true">▦</span>
-              <span>GRAPHICS</span>
-              <svg className={`ml-auto h-4 w-4 transition-transform ${openSections.has('GRAPHICS') ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-
-            {openSections.has('GRAPHICS') && (
-              <div>
-                <label className="block space-y-2">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Pattern</span>
-                  <select
-                    aria-label="Pattern overlay"
-                    value={patternOverlay}
-                    onChange={(event) => setPatternOverlay(event.target.value as PatternOverlay)}
-                    className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-                  >
-                    {PATTERN_OVERLAYS.map((item) => (
-                      <option key={item.value} value={item.value}>
-                        {item.label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
               </div>
             )}
           </div>
