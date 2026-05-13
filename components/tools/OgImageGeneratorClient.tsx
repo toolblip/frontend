@@ -370,11 +370,23 @@ export default function OgImageGeneratorClient() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-8 flex items-center justify-between gap-4">
         <div className="text-base font-semibold text-gray-900 dark:text-white">Customize your banner</div>
+        {downloadUrl && (
+          <a
+            href={downloadUrl}
+            download="banner-generator.png"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v13.25m0 0l-4.5-4.5m4.5 4.5l4.5-4.5M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5" />
+            </svg>
+            Download PNG
+          </a>
+        )}
       </div>
 
-      <div className="grid gap-3 lg:grid-cols-[320px_1fr]">
+      <div className="grid gap-3 lg:grid-cols-[320px_1fr] items-start">
         {/* Left config panel */}
         <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
 
@@ -781,30 +793,14 @@ export default function OgImageGeneratorClient() {
 
         {/* Right preview panel */}
         <div className="relative">
-          {downloadUrl && (
-            <div className="mb-4 flex justify-end">
-              <a
-                href={downloadUrl}
-                download="banner-generator.png"
-                className="inline-flex items-center gap-1.5 rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700"
-              >
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v13.25m0 0l-4.5-4.5m4.5 4.5l4.5-4.5M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5" />
-                </svg>
-                Download PNG
-              </a>
-            </div>
-          )}
-          <div className="relative">
-            <canvas
-              ref={undefined}
-              width={WIDTH}
-              height={HEIGHT}
-              data-testid="article-banner-preview"
-              aria-label="Banner preview"
-              className="h-auto w-full rounded-2xl border border-gray-200 shadow-sm dark:border-gray-800"
-            />
-          </div>
+          <canvas
+            ref={undefined}
+            width={WIDTH}
+            height={HEIGHT}
+            data-testid="article-banner-preview"
+            aria-label="Banner preview"
+            className="h-auto w-full rounded-2xl border border-gray-200 shadow-sm dark:border-gray-800"
+          />
         </div>
       </div>
     </div>
