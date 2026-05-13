@@ -5,6 +5,8 @@ import { useState, useRef, useEffect, useMemo } from 'react';
 import { useAuth } from '@/app/providers/auth-provider';
 
 type BackgroundMode = 'solid' | 'gradient' | 'dotted-frame';
+type BannerStyle = 'dotted-frame' | 'gradient-classic' | 'dark-spotlight' | 'split-diagonal' | 'neon-glow' | 'minimal-line';
+
 type DirectionValue = '0' | '45' | '90' | '135' | '140' | '180' | '225' | '270' | '315';
 type TextAlign = 'left' | 'center' | 'right';
 type PatternOverlay = 'none' | 'dots' | 'diagonal-lines' | 'grid' | 'zigzag' | 'crosses' | 'triangles';
@@ -59,6 +61,15 @@ const PATTERN_OVERLAYS = [
   { value: 'triangles', label: 'Triangles' },
 ];
 
+const BANNER_STYLES = [
+  { value: 'dotted-frame', label: 'Dotted Frame' },
+  { value: 'gradient-classic', label: 'Gradient Classic' },
+  { value: 'dark-spotlight', label: 'Dark Spotlight' },
+  { value: 'split-diagonal', label: 'Split Diagonal' },
+  { value: 'neon-glow', label: 'Neon Glow' },
+  { value: 'minimal-line', label: 'Minimal Line' },
+];
+
 function SliderLabel({ value, children }: { value: number; children: React.ReactNode }) {
   return (
     <div className="flex items-center justify-between">
@@ -74,6 +85,7 @@ export default function OgImageGeneratorClient() {
   const [presetName, setPresetName] = useState<PresetName | null>('Teal Midnight');
   const [footer, setFooter] = useState('toolblip.com');
   const [footerLogo, setFooterLogo] = useState<string | null>(null);
+  const [bannerStyle, setBannerStyle] = useState<BannerStyle>('dotted-frame');
   const [backgroundMode, setBackgroundMode] = useState<BackgroundMode>('gradient');
   const [fromColor, setFromColor] = useState('#4CC8C8');
   const [toColor, setToColor] = useState('#202033');
@@ -133,14 +145,10 @@ export default function OgImageGeneratorClient() {
 
       const isHorizontal = ['0', '45', '135', '140', '180', '225', '270', '315'].includes(direction);
 
-      if (backgroundMode === 'solid') {
-        ctx.fillStyle = fromColor;
-        ctx.fillRect(0, 0, WIDTH, HEIGHT);
-      } else if (backgroundMode === 'dotted-frame') {
+      // ===== BANNER STYLE RENDERING =====
+      if (bannerStyle === 'dotted-frame') {
         ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, WIDTH, HEIGHT);
-
-        // Draw dotted border frame
         const framePadding = Math.min(WIDTH, HEIGHT) * 0.035;
         const frameLineWidth = Math.max(3, Math.min(WIDTH, HEIGHT) * 0.006);
         ctx.strokeStyle = fromColor;
@@ -149,34 +157,144 @@ export default function OgImageGeneratorClient() {
         ctx.lineCap = 'round';
         ctx.strokeRect(framePadding, framePadding, WIDTH - framePadding * 2, HEIGHT - framePadding * 2);
         ctx.setLineDash([]);
-      } else {
+      } else if (bannerStyle === 'gradient-classic') {
         const angle = parseInt(direction, 10);
-        const isRadial = false;
-        if (isRadial) {
-          const cx = WIDTH / 2;
-          const cy = HEIGHT / 2;
-          const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.sqrt(cx * cx + cy * cy));
-          grad.addColorStop(0, fromColor);
-          grad.addColorStop(1, toColor);
-          ctx.fillStyle = grad;
-        } else {
-          const angleRad = (angle * Math.PI) / 180;
-          const cos = Math.cos(angleRad);
-          const sin = Math.sin(angleRad);
-          const x1 = isHorizontal
-            ? cos < 0 ? WIDTH : 0
-            : (WIDTH - (WIDTH * Math.abs(cos))) / 2 + (cos > 0 ? WIDTH * Math.abs(cos) : 0);
-          const y1 = isHorizontal
-            ? sin < 0 ? HEIGHT : 0
-            : (HEIGHT - (HEIGHT * Math.abs(sin))) / 2 - (sin < 0 ? HEIGHT * Math.abs(sin) : 0);
-          const x2 = WIDTH - x1;
-          const y2 = HEIGHT - y1;
-          const grad = ctx.createLinearGradient(x1, y1, x2, y2);
-          grad.addColorStop(0, fromColor);
-          grad.addColorStop(1, toColor);
-          ctx.fillStyle = grad;
-          ctx.fillRect(0, 0, WIDTH, HEIGHT);
+        const angleRad = (angle * Math.PI) / 180;
+        const cos = Math.cos(angleRad);
+        const sin = Math.sin(angleRad);
+        const x1 = isHorizontal
+          ? cos < 0 ? WIDTH : 0
+          : (WIDTH - (WIDTH * Math.abs(cos))) / 2 + (cos > 0 ? WIDTH * Math.abs(cos) : 0);
+        const y1 = isHorizontal
+          ? sin < 0 ? HEIGHT : 0
+          : (HEIGHT - (HEIGHT * Math.abs(sin))) / 2 - (sin < 0 ? HEIGHT * Math.abs(sin) : 0);
+        const x2 = WIDTH - x1;
+        const y2 = HEIGHT - y1;
+        const grad = ctx.createLinearGradient(x1, y1, x2, y2);
+        grad.addColorStop(0, fromColor);
+        grad.addColorStop(1, toColor);
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, WIDTH, HEIGHT);
+      } else if (bannerStyle === 'dark-spotlight') {
+        // Gradient edges with dark center
+        const grad = ctx.createRadialGradient(WIDTH / 2, HEIGHT / 2, WIDTH * 0.15, WIDTH / 2, HEIGHT / 2, Math.max(WIDTH, HEIGHT) * 0.8);
+        grad.addColorStop(0, '#1a1a2e');
+        grad.addColorStop(0.6, fromColor);
+        grad.addColorStop(1, toColor);
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, WIDTH, HEIGHT);
+      } else if (bannerStyle === 'split-diagonal') {
+        ctx.fillStyle = fromColor;
+        ctx.fillRect(0, 0, WIDTH, HEIGHT);
+        ctx.fillStyle = toColor;
+        ctx.beginPath();
+        ctx.moveTo(WIDTH * 0.55, 0);
+        ctx.lineTo(WIDTH, 0);
+        ctx.lineTo(WIDTH, HEIGHT);
+        ctx.lineTo(WIDTH * 0.35, HEIGHT);
+        ctx.closePath();
+        ctx.fill();
+        // Thin accent line
+        ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(WIDTH * 0.45, 0);
+        ctx.lineTo(WIDTH * 0.25, HEIGHT);
+        ctx.stroke();
+      } else if (bannerStyle === 'neon-glow') {
+        ctx.fillStyle = '#0a0a1a';
+        ctx.fillRect(0, 0, WIDTH, HEIGHT);
+        // Subtle grid
+        ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+        ctx.lineWidth = 1;
+        const gridStep = 40;
+        for (let x = 0; x <= WIDTH; x += gridStep) {
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, HEIGHT); ctx.stroke();
         }
+        for (let y = 0; y <= HEIGHT; y += gridStep) {
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(WIDTH, y); ctx.stroke();
+        }
+      } else if (bannerStyle === 'minimal-line') {
+        ctx.fillStyle = '#fafafa';
+        ctx.fillRect(0, 0, WIDTH, HEIGHT);
+        // Top accent bar
+        ctx.fillStyle = fromColor;
+        ctx.fillRect(0, 0, WIDTH, Math.max(4, HEIGHT * 0.012));
+        // Bottom subtle line
+        ctx.fillStyle = toColor;
+        ctx.fillRect(0, HEIGHT - Math.max(2, HEIGHT * 0.006), WIDTH, Math.max(2, HEIGHT * 0.006));
+      }
+
+      // Pattern overlay (applies to most styles)
+      if (patternOverlay !== 'none' && bannerStyle !== 'minimal-line' && bannerStyle !== 'neon-glow') {
+        ctx.globalAlpha = bannerStyle === 'dotted-frame' ? 0.06 : 0.08;
+        ctx.fillStyle = '#ffffff';
+        const step = 30;
+        if (patternOverlay === 'dots') {
+          for (let x = 0; x < WIDTH; x += step) {
+            for (let y = 0; y < HEIGHT; y += step) {
+              ctx.beginPath();
+              ctx.arc(x, y, 2, 0, Math.PI * 2);
+              ctx.fill();
+            }
+          }
+        } else if (patternOverlay === 'diagonal-lines') {
+          for (let i = -HEIGHT; i < WIDTH + HEIGHT; i += step) {
+            ctx.beginPath();
+            ctx.moveTo(i, 0);
+            ctx.lineTo(i + HEIGHT, HEIGHT);
+            ctx.stroke();
+          }
+        } else if (patternOverlay === 'grid') {
+          for (let x = 0; x <= WIDTH; x += step) {
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, HEIGHT);
+            ctx.stroke();
+          }
+          for (let y = 0; y <= HEIGHT; y += step) {
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(WIDTH, y);
+            ctx.stroke();
+          }
+        } else if (patternOverlay === 'zigzag') {
+          ctx.beginPath();
+          for (let y = 0; y < HEIGHT + step; y += step) {
+            for (let x = 0; x < WIDTH + step * 4; x += step * 4) {
+              ctx.moveTo(x, y);
+              ctx.lineTo(x + step * 2, y + step / 2);
+              ctx.lineTo(x + step * 4, y);
+            }
+          }
+          ctx.stroke();
+        } else if (patternOverlay === 'crosses') {
+          for (let x = step / 2; x < WIDTH; x += step) {
+            for (let y = step / 2; y < HEIGHT; y += step) {
+              ctx.beginPath();
+              ctx.moveTo(x - 5, y);
+              ctx.lineTo(x + 5, y);
+              ctx.moveTo(x, y - 5);
+              ctx.lineTo(x, y + 5);
+              ctx.stroke();
+            }
+          }
+        } else if (patternOverlay === 'triangles') {
+          for (let row = 0; row * step < HEIGHT + step; row++) {
+            const offset = row % 2 === 0 ? 0 : step / 2;
+            for (let col = -1; col * step < WIDTH + step; col++) {
+              const cx2 = col * step + step / 2 + offset;
+              const cy2 = row * step;
+              ctx.beginPath();
+              ctx.moveTo(cx2, cy2 + step);
+              ctx.lineTo(cx2 + step / 2, cy2);
+              ctx.lineTo(cx2 + step, cy2 + step);
+              ctx.closePath();
+              ctx.fill();
+            }
+          }
+        }
+        ctx.globalAlpha = 1;
       }
 
       if (patternOverlay !== 'none') {
@@ -253,9 +371,12 @@ export default function OgImageGeneratorClient() {
       const paddingX = WIDTH * 0.08;
       const maxTextWidth = WIDTH - paddingX * 2;
 
-      const isDarkBg = backgroundMode !== 'dotted-frame';
-      const textColor = isDarkBg ? '#ffffff' : '#1a1a2e';
-      const subColor = isDarkBg ? 'rgba(255,255,255,0.72)' : 'rgba(26,26,46,0.55)';
+      // Determine text colors based on banner style
+      const lightStyles = new Set(['dotted-frame', 'minimal-line']);
+      const isLightBg = lightStyles.has(bannerStyle);
+      const textColor = isLightBg ? '#1a1a2e' : '#ffffff';
+      const subColor = isLightBg ? 'rgba(26,26,46,0.55)' : 'rgba(255,255,255,0.72)';
+      const footerColor = isLightBg ? 'rgba(26,26,46,0.4)' : 'rgba(255,255,255,0.55)';
 
       ctx.textBaseline = 'middle';
 
@@ -277,9 +398,14 @@ export default function OgImageGeneratorClient() {
       const blockHeight = titleLineHeight + gapBetween + subLineHeight;
       const titleY = (HEIGHT - blockHeight) / 2 + titleLineHeight / 2;
 
-      // Title with subtle shadow for depth
+      // Title with effects
       ctx.save();
-      if (isDarkBg) {
+      if (bannerStyle === 'neon-glow') {
+        ctx.shadowColor = fromColor;
+        ctx.shadowBlur = 20;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+      } else if (!isLightBg) {
         ctx.shadowColor = 'rgba(0,0,0,0.25)';
         ctx.shadowBlur = 8;
         ctx.shadowOffsetX = 0;
@@ -300,7 +426,7 @@ export default function OgImageGeneratorClient() {
       ctx.textAlign = 'left';
       ctx.textBaseline = 'alphabetic';
       ctx.font = '500 24px Inter, Arial, sans-serif';
-      ctx.fillStyle = isDarkBg ? 'rgba(255,255,255,0.55)' : 'rgba(26,26,46,0.4)';
+      ctx.fillStyle = footerColor;
       const footerY = HEIGHT - 36;
       const footerText = footer || 'toolblip.com';
 
@@ -325,7 +451,7 @@ export default function OgImageGeneratorClient() {
         ctx.save();
         ctx.globalAlpha = 0.35;
         ctx.font = '400 18px Inter, Arial, sans-serif';
-        ctx.fillStyle = isDarkBg ? '#ffffff' : 'rgba(26,26,46,0.3)';
+        ctx.fillStyle = isLightBg ? 'rgba(26,26,46,0.3)' : '#ffffff';
         ctx.textAlign = 'right';
         ctx.fillText('Generated by toolblip.com', WIDTH - paddingX, HEIGHT - 28);
         ctx.restore();
@@ -336,7 +462,7 @@ export default function OgImageGeneratorClient() {
 
     drawBanner();
     return () => { cancelled = true; };
-  }, [title, subtitle, footer, footerLogo, backgroundMode, fromColor, toColor, direction, titleFontSize, subtitleFontSize, alignment, patternOverlay, preset, WIDTH, HEIGHT, isFreeUser]);
+  }, [title, subtitle, footer, footerLogo, bannerStyle, backgroundMode, fromColor, toColor, direction, titleFontSize, subtitleFontSize, alignment, patternOverlay, preset, WIDTH, HEIGHT, isFreeUser]);
 
   const updateFromColor = (value: string) => setFromColor(value.startsWith('#') ? value : `#${value}`);
   const updateToColor = (value: string) => setToColor(value.startsWith('#') ? value : `#${value}`);
@@ -468,84 +594,91 @@ export default function OgImageGeneratorClient() {
             )}
           </div>
 
-          {/* BACKGROUND */}
+          {/* BANNER STYLE */}
           <div className="space-y-5 border-b border-gray-100 p-5 dark:border-gray-800">
             <button
               type="button"
-              onClick={() => toggleSection('BACKGROUND')}
+              onClick={() => toggleSection('BANNER_STYLE')}
               className="flex w-full items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 cursor-pointer"
-              aria-expanded={openSections.has('BACKGROUND')}
+              aria-expanded={openSections.has('BANNER_STYLE')}
             >
               <span className="text-base text-violet-500" aria-hidden="true">🎨</span>
-              <span>BACKGROUND</span>
-              <svg className={`ml-auto h-4 w-4 transition-transform ${openSections.has('BACKGROUND') ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <span>BANNER STYLE</span>
+              <svg className={`ml-auto h-4 w-4 transition-transform ${openSections.has('BANNER_STYLE') ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
               </svg>
             </button>
 
-            {openSections.has('BACKGROUND') && (
+            {openSections.has('BANNER_STYLE') && (
               <div className="space-y-4">
-                {/* Mode toggle */}
-                <div className="grid grid-cols-3 rounded-xl border border-gray-200 bg-gray-50 p-1 dark:border-gray-700 dark:bg-gray-900" role="group" aria-label="Background mode">
-                  {(['solid', 'gradient', 'dotted-frame'] as const).map((mode) => (
-                    <button
-                      key={mode}
-                      type="button"
-                      onClick={() => setBackgroundMode(mode)}
-                      className={`rounded-lg px-3 py-2 text-sm font-semibold transition ${
-                        backgroundMode === mode
-                          ? 'bg-white text-gray-950 shadow-sm dark:bg-gray-800 dark:text-white'
-                          : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
-                      }`}
-                      aria-pressed={backgroundMode === mode}
-                    >
-                      {mode === 'solid' ? 'Solid' : mode === 'gradient' ? 'Gradient' : 'Frame'}
-                    </button>
-                  ))}
-                </div>
-
-                {/* Presets */}
-                <div className="grid grid-cols-4 gap-2" role="group" aria-label="Background presets">
-                  {PRESETS.map((item) => (
-                    <button
-                      key={item.name}
-                      type="button"
-                      onClick={() => choosePreset(item)}
-                      className={`h-12 w-full rounded-xl border-2 transition ${
-                        presetName === item.name
-                          ? 'border-violet-500 ring-2 ring-violet-200'
-                          : 'border-gray-200 hover:border-gray-300 dark:border-gray-700'
-                      }`}
-                      style={{ background: `linear-gradient(135deg, ${item.from}, ${item.to})` }}
-                      aria-label={item.name}
-                      aria-pressed={presetName === item.name}
-                    />
-                  ))}
-                </div>
-
-                {/* Direction buttons */}
+                {/* Banner style selector */}
                 <div className="space-y-2">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Direction</span>
-                  <div className="grid grid-cols-4 gap-2" role="group" aria-label="Gradient direction">
-                    {DIRECTIONS.map((d) => (
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Style</span>
+                  <div className="grid grid-cols-3 gap-2" role="group" aria-label="Banner style">
+                    {BANNER_STYLES.map((style) => (
                       <button
-                        key={d.value}
+                        key={style.value}
                         type="button"
-                        onClick={() => setDirection(d.value)}
-                        disabled={backgroundMode === 'solid' || backgroundMode === 'dotted-frame'}
-                        aria-label={d.label}
-                        aria-pressed={direction === d.value}
-                        className={`flex items-center justify-center rounded-xl border-2 py-2 text-xs font-semibold transition ${
-                          direction === d.value && backgroundMode === 'gradient'
+                        onClick={() => setBannerStyle(style.value as BannerStyle)}
+                        className={`rounded-xl border px-2 py-2.5 text-xs font-semibold transition ${
+                          bannerStyle === style.value
                             ? 'border-violet-500 bg-violet-50 text-violet-700 dark:bg-violet-950 dark:text-violet-200'
-                            : 'border-gray-200 text-gray-500 hover:border-gray-300 dark:border-gray-700 disabled:opacity-30'
+                            : 'border-gray-200 text-gray-600 hover:border-gray-300 dark:border-gray-700 dark:text-gray-300'
                         }`}
+                        aria-pressed={bannerStyle === style.value}
                       >
-                        {d.icon}
+                        {style.label}
                       </button>
                     ))}
                   </div>
                 </div>
+
+                {/* Presets */}
+                <div className="space-y-2">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Color preset</span>
+                  <div className="grid grid-cols-4 gap-2" role="group" aria-label="Color presets">
+                    {PRESETS.map((item) => (
+                      <button
+                        key={item.name}
+                        type="button"
+                        onClick={() => choosePreset(item)}
+                        className={`h-10 w-full rounded-xl border-2 transition ${
+                          presetName === item.name
+                            ? 'border-violet-500 ring-2 ring-violet-200'
+                            : 'border-gray-200 hover:border-gray-300 dark:border-gray-700'
+                        }`}
+                        style={{ background: `linear-gradient(135deg, ${item.from}, ${item.to})` }}
+                        aria-label={item.name}
+                        aria-pressed={presetName === item.name}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Direction buttons — only for gradient-classic */}
+                {bannerStyle === 'gradient-classic' && (
+                  <div className="space-y-2">
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Direction</span>
+                    <div className="grid grid-cols-4 gap-2" role="group" aria-label="Gradient direction">
+                      {DIRECTIONS.map((d) => (
+                        <button
+                          key={d.value}
+                          type="button"
+                          onClick={() => setDirection(d.value)}
+                          aria-label={d.label}
+                          aria-pressed={direction === d.value}
+                          className={`flex items-center justify-center rounded-xl border-2 py-2 text-xs font-semibold transition ${
+                            direction === d.value
+                              ? 'border-violet-500 bg-violet-50 text-violet-700 dark:bg-violet-950 dark:text-violet-200'
+                              : 'border-gray-200 text-gray-500 hover:border-gray-300 dark:border-gray-700'
+                          }`}
+                        >
+                          {d.icon}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* From / To colors stacked */}
                 <div className="grid grid-cols-2 gap-3">
@@ -577,7 +710,7 @@ export default function OgImageGeneratorClient() {
                         type="color"
                         value={normalizeHex(toColor, preset.to)}
                         onChange={(event) => updateToColor(event.target.value)}
-                        disabled={backgroundMode === 'solid' || backgroundMode === 'dotted-frame'}
+                        disabled={bannerStyle === 'dotted-frame' || bannerStyle === 'minimal-line'}
                         className="h-7 w-7 cursor-pointer rounded border-0 p-0 disabled:opacity-40"
                       />
                       <input
@@ -585,7 +718,7 @@ export default function OgImageGeneratorClient() {
                         value={toColor}
                         onChange={(event) => updateToColor(event.target.value)}
                         onBlur={() => setToColor((value) => normalizeHex(value, preset.to))}
-                        disabled={backgroundMode === 'solid' || backgroundMode === 'dotted-frame'}
+                        disabled={bannerStyle === 'dotted-frame' || bannerStyle === 'minimal-line'}
                         className="min-w-0 flex-1 bg-transparent text-sm font-medium text-gray-900 outline-none dark:text-white disabled:opacity-40"
                       />
                     </div>
