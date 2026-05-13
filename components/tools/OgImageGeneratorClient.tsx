@@ -799,7 +799,7 @@ export default function OgImageGeneratorClient() {
             height={HEIGHT}
             data-testid="article-banner-preview"
             aria-label="Banner preview"
-            className="h-auto w-full rounded-2xl border border-gray-200 shadow-sm dark:border-gray-800"
+            className="h-auto w-full rounded-2xl"
           />
         </div>
       </div>
