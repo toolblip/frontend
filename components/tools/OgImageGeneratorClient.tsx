@@ -80,8 +80,8 @@ export default function OgImageGeneratorClient() {
   const [fromColor, setFromColor] = useState('#4CC8C8');
   const [toColor, setToColor] = useState('#202033');
   const [direction, setDirection] = useState<DirectionValue>('140');
-  const [titleFontSize, setTitleFontSize] = useState(40);
-  const [subtitleFontSize, setSubtitleFontSize] = useState(18);
+  const [titleFontSize, setTitleFontSize] = useState(44);
+  const [subtitleFontSize, setSubtitleFontSize] = useState(20);
   const [alignment, setAlignment] = useState<TextAlign>('center');
   const [downloadUrl, setDownloadUrl] = useState('');
   const [openSections, setOpenSections] = useState<Set<string>>(new Set(['CONTENT', 'BACKGROUND']));
@@ -158,13 +158,14 @@ export default function OgImageGeneratorClient() {
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
       // 2. White card (all styles) — scale with the selected resolution
-      const cardW = Math.round(WIDTH * 0.875);
-      const cardH = Math.round(HEIGHT * 0.81);
+      const tallBanner = HEIGHT >= 600;
+      const cardW = Math.round(WIDTH * (tallBanner ? 0.9 : 0.875));
+      const cardH = Math.round(HEIGHT * (tallBanner ? 0.72 : 0.81));
       const cardX = Math.round((WIDTH - cardW) / 2);
       const cardY = Math.round((HEIGHT - cardH) / 2);
       const cardRadius = Math.round(Math.max(10, Math.min(cardW, cardH) * 0.03));
       const cardPadX = Math.round(cardW * 0.065);
-      const cardPadY = Math.round(cardH * 0.12);
+      const cardPadY = Math.round(cardH * (tallBanner ? 0.1 : 0.12));
 
       ctx.save();
       ctx.shadowColor = 'rgba(0,0,0,0.12)';
@@ -220,7 +221,7 @@ export default function OgImageGeneratorClient() {
       }
 
       const extraSpace = Math.max(0, innerHeight - blockHeight);
-      const textStartY = innerTop + extraSpace * 0.22;
+      const textStartY = innerTop + extraSpace * 0.5;
 
       let textX = textPadX;
       if (alignment === 'center') {
