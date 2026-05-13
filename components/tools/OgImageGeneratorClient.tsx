@@ -5,7 +5,7 @@ import { useState, useRef, useEffect, useMemo } from 'react';
 import { useAuth } from '@/app/providers/auth-provider';
 
 type BackgroundMode = 'solid' | 'gradient' | 'dotted-frame';
-type BannerStyle = 'dotted-frame' | 'gradient-classic' | 'dark-spotlight' | 'split-diagonal' | 'neon-glow' | 'minimal-line';
+type BannerStyle = 'dotted-frame' | 'solid-frame' | 'double-frame' | 'dash-frame' | 'corner-accent' | 'shadow-card';
 
 type DirectionValue = '0' | '45' | '90' | '135' | '140' | '180' | '225' | '270' | '315';
 type TextAlign = 'left' | 'center' | 'right';
@@ -62,12 +62,12 @@ const PATTERN_OVERLAYS = [
 ];
 
 const BANNER_STYLES = [
-  { value: 'dotted-frame', label: 'Dotted Frame' },
-  { value: 'gradient-classic', label: 'Gradient Classic' },
-  { value: 'dark-spotlight', label: 'Dark Spotlight' },
-  { value: 'split-diagonal', label: 'Split Diagonal' },
-  { value: 'neon-glow', label: 'Neon Glow' },
-  { value: 'minimal-line', label: 'Minimal Line' },
+  { value: 'dotted-frame', label: 'Dotted Border' },
+  { value: 'solid-frame', label: 'Solid Border' },
+  { value: 'double-frame', label: 'Double Border' },
+  { value: 'dash-frame', label: 'Dash Border' },
+  { value: 'corner-accent', label: 'Corner Accent' },
+  { value: 'shadow-card', label: 'Shadow Card' },
 ];
 
 function SliderLabel({ value, children }: { value: number; children: React.ReactNode }) {
@@ -146,156 +146,114 @@ export default function OgImageGeneratorClient() {
       const isHorizontal = ['0', '45', '135', '140', '180', '225', '270', '315'].includes(direction);
 
       // ===== BANNER STYLE RENDERING =====
-      if (bannerStyle === 'dotted-frame') {
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, WIDTH, HEIGHT);
-        const framePadding = Math.min(WIDTH, HEIGHT) * 0.035;
-        const frameLineWidth = Math.max(3, Math.min(WIDTH, HEIGHT) * 0.006);
-        ctx.strokeStyle = fromColor;
-        ctx.lineWidth = frameLineWidth;
-        ctx.setLineDash([frameLineWidth * 2.5, frameLineWidth * 2.5]);
-        ctx.lineCap = 'round';
-        ctx.strokeRect(framePadding, framePadding, WIDTH - framePadding * 2, HEIGHT - framePadding * 2);
-        ctx.setLineDash([]);
-      } else if (bannerStyle === 'gradient-classic') {
-        const angle = parseInt(direction, 10);
-        const angleRad = (angle * Math.PI) / 180;
-        const cos = Math.cos(angleRad);
-        const sin = Math.sin(angleRad);
-        const x1 = isHorizontal
-          ? cos < 0 ? WIDTH : 0
-          : (WIDTH - (WIDTH * Math.abs(cos))) / 2 + (cos > 0 ? WIDTH * Math.abs(cos) : 0);
-        const y1 = isHorizontal
-          ? sin < 0 ? HEIGHT : 0
-          : (HEIGHT - (HEIGHT * Math.abs(sin))) / 2 - (sin < 0 ? HEIGHT * Math.abs(sin) : 0);
-        const x2 = WIDTH - x1;
-        const y2 = HEIGHT - y1;
-        const grad = ctx.createLinearGradient(x1, y1, x2, y2);
-        grad.addColorStop(0, fromColor);
-        grad.addColorStop(1, toColor);
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, WIDTH, HEIGHT);
-      } else if (bannerStyle === 'dark-spotlight') {
-        // Gradient edges with dark center
-        const grad = ctx.createRadialGradient(WIDTH / 2, HEIGHT / 2, WIDTH * 0.15, WIDTH / 2, HEIGHT / 2, Math.max(WIDTH, HEIGHT) * 0.8);
-        grad.addColorStop(0, '#1a1a2e');
-        grad.addColorStop(0.6, fromColor);
-        grad.addColorStop(1, toColor);
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, WIDTH, HEIGHT);
-      } else if (bannerStyle === 'split-diagonal') {
-        ctx.fillStyle = fromColor;
-        ctx.fillRect(0, 0, WIDTH, HEIGHT);
-        ctx.fillStyle = toColor;
-        ctx.beginPath();
-        ctx.moveTo(WIDTH * 0.55, 0);
-        ctx.lineTo(WIDTH, 0);
-        ctx.lineTo(WIDTH, HEIGHT);
-        ctx.lineTo(WIDTH * 0.35, HEIGHT);
-        ctx.closePath();
-        ctx.fill();
-        // Thin accent line
-        ctx.strokeStyle = 'rgba(255,255,255,0.4)';
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(WIDTH * 0.45, 0);
-        ctx.lineTo(WIDTH * 0.25, HEIGHT);
-        ctx.stroke();
-      } else if (bannerStyle === 'neon-glow') {
-        ctx.fillStyle = '#0a0a1a';
-        ctx.fillRect(0, 0, WIDTH, HEIGHT);
-        // Subtle grid
-        ctx.strokeStyle = 'rgba(255,255,255,0.03)';
-        ctx.lineWidth = 1;
-        const gridStep = 40;
-        for (let x = 0; x <= WIDTH; x += gridStep) {
-          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, HEIGHT); ctx.stroke();
-        }
-        for (let y = 0; y <= HEIGHT; y += gridStep) {
-          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(WIDTH, y); ctx.stroke();
-        }
-      } else if (bannerStyle === 'minimal-line') {
-        ctx.fillStyle = '#fafafa';
-        ctx.fillRect(0, 0, WIDTH, HEIGHT);
-        // Top accent bar
-        ctx.fillStyle = fromColor;
-        ctx.fillRect(0, 0, WIDTH, Math.max(4, HEIGHT * 0.012));
-        // Bottom subtle line
-        ctx.fillStyle = toColor;
-        ctx.fillRect(0, HEIGHT - Math.max(2, HEIGHT * 0.006), WIDTH, Math.max(2, HEIGHT * 0.006));
-      }
+      // All styles: gradient background → decoration → white card → text
 
-      // Pattern overlay (applies to most styles)
-      if (patternOverlay !== 'none' && bannerStyle !== 'minimal-line' && bannerStyle !== 'neon-glow') {
-        ctx.globalAlpha = bannerStyle === 'dotted-frame' ? 0.06 : 0.08;
+      // 1. Gradient background (all styles)
+      const angle = parseInt(direction, 10);
+      const angleRad = (angle * Math.PI) / 180;
+      const cos = Math.cos(angleRad);
+      const sin = Math.sin(angleRad);
+      const x1 = isHorizontal
+        ? cos < 0 ? WIDTH : 0
+        : (WIDTH - (WIDTH * Math.abs(cos))) / 2 + (cos > 0 ? WIDTH * Math.abs(cos) : 0);
+      const y1 = isHorizontal
+        ? sin < 0 ? HEIGHT : 0
+        : (HEIGHT - (HEIGHT * Math.abs(sin))) / 2 - (sin < 0 ? HEIGHT * Math.abs(sin) : 0);
+      const x2 = WIDTH - x1;
+      const y2 = HEIGHT - y1;
+      const bgGrad = ctx.createLinearGradient(x1, y1, x2, y2);
+      bgGrad.addColorStop(0, fromColor);
+      bgGrad.addColorStop(1, toColor);
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+      // 2. Dots pattern on background
+      if (patternOverlay === 'dots' || patternOverlay === 'none') {
+        ctx.globalAlpha = 0.12;
         ctx.fillStyle = '#ffffff';
-        const step = 30;
-        if (patternOverlay === 'dots') {
-          for (let x = 0; x < WIDTH; x += step) {
-            for (let y = 0; y < HEIGHT; y += step) {
-              ctx.beginPath();
-              ctx.arc(x, y, 2, 0, Math.PI * 2);
-              ctx.fill();
-            }
-          }
-        } else if (patternOverlay === 'diagonal-lines') {
-          for (let i = -HEIGHT; i < WIDTH + HEIGHT; i += step) {
+        const dotStep = 28;
+        const dotRadius = Math.max(2, Math.min(WIDTH, HEIGHT) * 0.004);
+        for (let x = dotStep / 2; x < WIDTH; x += dotStep) {
+          for (let y = dotStep / 2; y < HEIGHT; y += dotStep) {
             ctx.beginPath();
-            ctx.moveTo(i, 0);
-            ctx.lineTo(i + HEIGHT, HEIGHT);
-            ctx.stroke();
-          }
-        } else if (patternOverlay === 'grid') {
-          for (let x = 0; x <= WIDTH; x += step) {
-            ctx.beginPath();
-            ctx.moveTo(x, 0);
-            ctx.lineTo(x, HEIGHT);
-            ctx.stroke();
-          }
-          for (let y = 0; y <= HEIGHT; y += step) {
-            ctx.beginPath();
-            ctx.moveTo(0, y);
-            ctx.lineTo(WIDTH, y);
-            ctx.stroke();
-          }
-        } else if (patternOverlay === 'zigzag') {
-          ctx.beginPath();
-          for (let y = 0; y < HEIGHT + step; y += step) {
-            for (let x = 0; x < WIDTH + step * 4; x += step * 4) {
-              ctx.moveTo(x, y);
-              ctx.lineTo(x + step * 2, y + step / 2);
-              ctx.lineTo(x + step * 4, y);
-            }
-          }
-          ctx.stroke();
-        } else if (patternOverlay === 'crosses') {
-          for (let x = step / 2; x < WIDTH; x += step) {
-            for (let y = step / 2; y < HEIGHT; y += step) {
-              ctx.beginPath();
-              ctx.moveTo(x - 5, y);
-              ctx.lineTo(x + 5, y);
-              ctx.moveTo(x, y - 5);
-              ctx.lineTo(x, y + 5);
-              ctx.stroke();
-            }
-          }
-        } else if (patternOverlay === 'triangles') {
-          for (let row = 0; row * step < HEIGHT + step; row++) {
-            const offset = row % 2 === 0 ? 0 : step / 2;
-            for (let col = -1; col * step < WIDTH + step; col++) {
-              const cx2 = col * step + step / 2 + offset;
-              const cy2 = row * step;
-              ctx.beginPath();
-              ctx.moveTo(cx2, cy2 + step);
-              ctx.lineTo(cx2 + step / 2, cy2);
-              ctx.lineTo(cx2 + step, cy2 + step);
-              ctx.closePath();
-              ctx.fill();
-            }
+            ctx.arc(x, y, dotRadius, 0, Math.PI * 2);
+            ctx.fill();
           }
         }
         ctx.globalAlpha = 1;
       }
+
+      // 3. White card (all styles)
+      const cardMargin = Math.min(WIDTH, HEIGHT) * 0.065;
+      const cardRadius = Math.min(WIDTH, HEIGHT) * 0.025;
+      const cardX = cardMargin;
+      const cardY = cardMargin;
+      const cardW = WIDTH - cardMargin * 2;
+      const cardH = HEIGHT - cardMargin * 2;
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.roundRect(cardX, cardY, cardW, cardH, cardRadius);
+      ctx.fillStyle = '#ffffff';
+      ctx.fill();
+
+      // Shadow for shadow-card style
+      if (bannerStyle === 'shadow-card') {
+        ctx.shadowColor = 'rgba(0,0,0,0.15)';
+        ctx.shadowBlur = 24;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 8;
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+        ctx.shadowColor = 'transparent';
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+      }
+      ctx.restore();
+
+      // 4. Border decorations (outside the white card, on gradient)
+      const borderPadding = cardMargin * 0.55;
+      const borderLineWidth = Math.max(2, Math.min(WIDTH, HEIGHT) * 0.0045);
+
+      if (bannerStyle === 'dotted-frame') {
+        ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+        ctx.lineWidth = borderLineWidth;
+        ctx.setLineDash([borderLineWidth * 2, borderLineWidth * 2.5]);
+        ctx.lineCap = 'round';
+        ctx.strokeRect(borderPadding, borderPadding, WIDTH - borderPadding * 2, HEIGHT - borderPadding * 2);
+        ctx.setLineDash([]);
+      } else if (bannerStyle === 'solid-frame') {
+        ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+        ctx.lineWidth = borderLineWidth;
+        ctx.strokeRect(borderPadding, borderPadding, WIDTH - borderPadding * 2, HEIGHT - borderPadding * 2);
+      } else if (bannerStyle === 'double-frame') {
+        ctx.strokeStyle = 'rgba(255,255,255,0.45)';
+        ctx.lineWidth = borderLineWidth;
+        const gap = borderLineWidth * 2;
+        ctx.strokeRect(borderPadding, borderPadding, WIDTH - borderPadding * 2, HEIGHT - borderPadding * 2);
+        ctx.strokeRect(borderPadding + gap, borderPadding + gap, WIDTH - borderPadding * 2 - gap * 2, HEIGHT - borderPadding * 2 - gap * 2);
+      } else if (bannerStyle === 'dash-frame') {
+        ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+        ctx.lineWidth = borderLineWidth;
+        ctx.setLineDash([borderLineWidth * 4, borderLineWidth * 3]);
+        ctx.lineCap = 'butt';
+        ctx.strokeRect(borderPadding, borderPadding, WIDTH - borderPadding * 2, HEIGHT - borderPadding * 2);
+        ctx.setLineDash([]);
+      } else if (bannerStyle === 'corner-accent') {
+        const cornerSize = Math.min(WIDTH, HEIGHT) * 0.04;
+        ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+        ctx.lineWidth = borderLineWidth;
+        // Top-left
+        ctx.beginPath(); ctx.moveTo(borderPadding, borderPadding + cornerSize); ctx.lineTo(borderPadding, borderPadding); ctx.lineTo(borderPadding + cornerSize, borderPadding); ctx.stroke();
+        // Top-right
+        ctx.beginPath(); ctx.moveTo(WIDTH - borderPadding - cornerSize, borderPadding); ctx.lineTo(WIDTH - borderPadding, borderPadding); ctx.lineTo(WIDTH - borderPadding, borderPadding + cornerSize); ctx.stroke();
+        // Bottom-left
+        ctx.beginPath(); ctx.moveTo(borderPadding, HEIGHT - borderPadding - cornerSize); ctx.lineTo(borderPadding, HEIGHT - borderPadding); ctx.lineTo(borderPadding + cornerSize, HEIGHT - borderPadding); ctx.stroke();
+        // Bottom-right
+        ctx.beginPath(); ctx.moveTo(WIDTH - borderPadding - cornerSize, HEIGHT - borderPadding); ctx.lineTo(WIDTH - borderPadding, HEIGHT - borderPadding); ctx.lineTo(WIDTH - borderPadding, HEIGHT - borderPadding - cornerSize); ctx.stroke();
+      }
+      // shadow-card has no border decoration
 
       if (patternOverlay !== 'none') {
         ctx.globalAlpha = 0.08;
@@ -368,53 +326,43 @@ export default function OgImageGeneratorClient() {
         ctx.globalAlpha = 1;
       }
 
-      const paddingX = WIDTH * 0.08;
-      const maxTextWidth = WIDTH - paddingX * 2;
+      // Text rendering inside white card
+      const cardMargin = Math.min(WIDTH, HEIGHT) * 0.065;
+      const textPaddingX = cardMargin + WIDTH * 0.05;
+      const textPaddingY = cardMargin + HEIGHT * 0.03;
+      const maxTextWidth = WIDTH - textPaddingX * 2;
 
-      // Determine text colors based on banner style
-      const lightStyles = new Set(['dotted-frame', 'minimal-line']);
-      const isLightBg = lightStyles.has(bannerStyle);
-      const textColor = isLightBg ? '#1a1a2e' : '#ffffff';
-      const subColor = isLightBg ? 'rgba(26,26,46,0.55)' : 'rgba(255,255,255,0.72)';
-      const footerColor = isLightBg ? 'rgba(26,26,46,0.4)' : 'rgba(255,255,255,0.55)';
+      // All styles have white card = dark text
+      const textColor = '#1a1a2e';
+      const subColor = 'rgba(26,26,46,0.55)';
+      const footerColor = 'rgba(26,26,46,0.35)';
 
       ctx.textBaseline = 'middle';
 
-      let textX = paddingX;
+      let textX = textPaddingX;
       if (alignment === 'center') {
         ctx.textAlign = 'center';
         textX = WIDTH / 2;
       } else if (alignment === 'right') {
         ctx.textAlign = 'right';
-        textX = WIDTH - paddingX;
+        textX = WIDTH - textPaddingX;
       } else {
         ctx.textAlign = 'left';
       }
 
-      // Calculate text block height for vertical centering
+      // Vertically center text within the white card
       const titleLineHeight = titleFontSize * 1.15;
       const subLineHeight = subtitleFontSize * 1.3;
-      const gapBetween = titleFontSize * 0.45;
+      const gapBetween = titleFontSize * 0.5;
       const blockHeight = titleLineHeight + gapBetween + subLineHeight;
-      const titleY = (HEIGHT - blockHeight) / 2 + titleLineHeight / 2;
+      const cardTop = cardMargin;
+      const cardBottom = HEIGHT - cardMargin;
+      const titleY = cardTop + (cardBottom - cardTop - blockHeight) / 2 + titleLineHeight / 2;
 
-      // Title with effects
-      ctx.save();
-      if (bannerStyle === 'neon-glow') {
-        ctx.shadowColor = fromColor;
-        ctx.shadowBlur = 20;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
-      } else if (!isLightBg) {
-        ctx.shadowColor = 'rgba(0,0,0,0.25)';
-        ctx.shadowBlur = 8;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 3;
-      }
+      // Title
       ctx.fillStyle = textColor;
       ctx.font = `700 ${titleFontSize}px Inter, Arial, sans-serif`;
       ctx.fillText(title, textX, titleY, maxTextWidth);
-      ctx.restore();
 
       // Subtitle
       ctx.font = `400 ${subtitleFontSize}px Inter, Arial, sans-serif`;
@@ -425,9 +373,9 @@ export default function OgImageGeneratorClient() {
       // Footer
       ctx.textAlign = 'left';
       ctx.textBaseline = 'alphabetic';
-      ctx.font = '500 24px Inter, Arial, sans-serif';
+      ctx.font = '500 22px Inter, Arial, sans-serif';
       ctx.fillStyle = footerColor;
-      const footerY = HEIGHT - 36;
+      const footerY = cardBottom - 20;
       const footerText = footer || 'toolblip.com';
 
       if (footerLogo) {
@@ -449,11 +397,11 @@ export default function OgImageGeneratorClient() {
 
       if (isFreeUser) {
         ctx.save();
-        ctx.globalAlpha = 0.35;
-        ctx.font = '400 18px Inter, Arial, sans-serif';
-        ctx.fillStyle = isLightBg ? 'rgba(26,26,46,0.3)' : '#ffffff';
+        ctx.globalAlpha = 0.3;
+        ctx.font = '400 16px Inter, Arial, sans-serif';
+        ctx.fillStyle = 'rgba(26,26,46,0.25)';
         ctx.textAlign = 'right';
-        ctx.fillText('Generated by toolblip.com', WIDTH - paddingX, HEIGHT - 28);
+        ctx.fillText('Generated by toolblip.com', WIDTH - cardMargin - 16, HEIGHT - cardMargin - 14);
         ctx.restore();
       }
 
