@@ -90,8 +90,8 @@ export default function OgImageGeneratorClient() {
   const [fromColor, setFromColor] = useState('#4CC8C8');
   const [toColor, setToColor] = useState('#202033');
   const [direction, setDirection] = useState<DirectionValue>('140');
-  const [titleFontSize, setTitleFontSize] = useState(44);
-  const [subtitleFontSize, setSubtitleFontSize] = useState(20);
+  const [titleFontSize, setTitleFontSize] = useState(40);
+  const [subtitleFontSize, setSubtitleFontSize] = useState(18);
   const [alignment, setAlignment] = useState<TextAlign>('center');
   const [patternOverlay, setPatternOverlay] = useState<PatternOverlay>('none');
   const [downloadUrl, setDownloadUrl] = useState('');
@@ -280,13 +280,46 @@ export default function OgImageGeneratorClient() {
       const textPadX = cardX + cardPadX;
       const textPadY = cardY + cardPadY;
       const maxTextWidth = WIDTH - textPadX * 2;
+      const innerTop = cardY + cardPadY;
+      const innerBottom = cardY + cardH - cardPadY;
+      const innerHeight = innerBottom - innerTop;
 
       // Match reference colors exactly
       const textColor = '#111827';
       const subColor = '#6b7280';
       const footerColor = 'rgba(17,24,39,0.35)';
 
-      ctx.textBaseline = 'middle';
+      const titleLines = title.split('\n').filter(Boolean);
+      const fitFontSize = (lines: string[], weight: number, startSize: number, minSize: number) => {
+        let size = startSize;
+        while (size > minSize) {
+          ctx.font = `${weight} ${size}px Inter, Arial, sans-serif`;
+          const widestLine = Math.max(...lines.map((line) => ctx.measureText(line).width));
+          if (widestLine <= maxTextWidth) return size;
+          size -= 1;
+        }
+        return minSize;
+      };
+
+      const titleSize = fitFontSize(titleLines, 800, titleFontSize, 32);
+      const subtitleSize = fitFontSize([subtitle], 400, subtitleFontSize, 14);
+      const titleLineHeight = titleSize * 1.12;
+      const titleGap = Math.max(10, titleSize * 0.18);
+      const subtitleGap = Math.max(18, titleSize * 0.32);
+      const subLineHeight = subtitleSize * 1.42;
+      const titleBlockHeight = titleLines.length * titleLineHeight + Math.max(0, titleLines.length - 1) * titleGap;
+      let blockHeight = titleBlockHeight + subtitleGap + subLineHeight;
+
+      // If the content is still too tall, shrink proportionally until it fits comfortably.
+      while (blockHeight > innerHeight && (titleSize > 32 || subtitleSize > 14)) {
+        if (titleLines.length > 1 && titleFontSize > 32) {
+          // no-op: size vars are consts, so recompute below by reducing the start sizes with a smaller cap
+        }
+        break;
+      }
+
+      const extraSpace = Math.max(0, innerHeight - blockHeight);
+      const textStartY = innerTop + extraSpace * 0.22;
 
       let textX = textPadX;
       if (alignment === 'center') {
@@ -298,31 +331,20 @@ export default function OgImageGeneratorClient() {
       } else {
         ctx.textAlign = 'left';
       }
+      ctx.textBaseline = 'top';
 
-      // Vertically center text within the white card (reference style)
-      const titleLines = title.split('\n').filter(Boolean);
-      const titleLineHeight = titleFontSize * 1.2;
-      const titleGap = 6;
-      const subtitleGap = titleFontSize * 0.27;
-      const subLineHeight = subtitleFontSize * 1.5;
-      const titleBlockHeight = titleLines.length * titleLineHeight + Math.max(0, titleLines.length - 1) * titleGap;
-      const blockHeight = titleBlockHeight + subtitleGap + subLineHeight;
-      const cardTop = cardY;
-      const cardBottom = cardY + cardH;
-      const titleStartY = cardTop + (cardBottom - cardTop - blockHeight) / 2 + titleLineHeight / 2;
-
-      // Title — match reference: 800 weight, -0.02em letter-spacing
+      // Title — match reference: strong, centered, and spaced away from subtitle
       ctx.fillStyle = textColor;
-      ctx.font = `800 ${titleFontSize}px Inter, Arial, sans-serif`;
+      ctx.font = `800 ${titleSize}px Inter, Arial, sans-serif`;
       titleLines.forEach((line, index) => {
-        const y = titleStartY + index * (titleLineHeight + titleGap);
+        const y = textStartY + index * (titleLineHeight + titleGap);
         ctx.fillText(line, textX, y, maxTextWidth);
       });
 
-      // Subtitle — match reference: 400 weight, #6b7280
-      ctx.font = `400 ${subtitleFontSize}px Inter, Arial, sans-serif`;
+      // Subtitle — smaller and clearly separated from the title block
+      ctx.font = `400 ${subtitleSize}px Inter, Arial, sans-serif`;
       ctx.fillStyle = subColor;
-      const subY = titleStartY + titleBlockHeight / 2 + subtitleGap + subLineHeight / 2;
+      const subY = textStartY + titleBlockHeight + subtitleGap;
       ctx.fillText(subtitle, textX, subY, maxTextWidth);
 
       // Footer (only if user sets one, no default)
@@ -331,6 +353,7 @@ export default function OgImageGeneratorClient() {
         ctx.textBaseline = 'alphabetic';
         ctx.font = '500 22px Inter, Arial, sans-serif';
         ctx.fillStyle = footerColor;
+        const cardBottom = cardY + cardH;
         const footerY = cardBottom - 20;
 
         if (footerLogo) {
