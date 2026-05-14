@@ -160,12 +160,12 @@ export default function OgImageGeneratorClient() {
       // 2. White card (all styles) — scale with the selected resolution
       const tallBanner = HEIGHT >= 600;
       const cardW = Math.round(WIDTH * (tallBanner ? 0.9 : 0.875));
-      const cardH = Math.round(HEIGHT * (tallBanner ? 0.72 : 0.81));
+      const cardH = Math.round(HEIGHT * (tallBanner ? 0.68 : 0.81));
       const cardX = Math.round((WIDTH - cardW) / 2);
       const cardY = Math.round((HEIGHT - cardH) / 2);
       const cardRadius = Math.round(Math.max(10, Math.min(cardW, cardH) * 0.03));
       const cardPadX = Math.round(cardW * 0.065);
-      const cardPadY = Math.round(cardH * (tallBanner ? 0.1 : 0.12));
+      const cardPadY = Math.round(cardH * (tallBanner ? 0.09 : 0.12));
 
       ctx.save();
       ctx.shadowColor = 'rgba(0,0,0,0.12)';

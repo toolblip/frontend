@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: 'Toolblip - Free Browser-Based Online Tools',
   description:
     'Free, fast, and private online tools. No signup, no uploads, nothing leaves your browser.',
+  alternates: {
+    canonical: 'https://toolblip.com',
+  },
   openGraph: {
     title: 'Toolblip - Free Browser-Based Online Tools',
     description:

@@ -6,6 +6,13 @@ const AUTH_ROUTES = ["/login", "/register"];
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const token = req.cookies.get("auth_token")?.value;
+  const hostname = req.nextUrl.hostname;
+
+  if (hostname === "www.toolblip.com") {
+    const url = req.nextUrl.clone();
+    url.hostname = "toolblip.com";
+    return NextResponse.redirect(url, 301);
+  }
 
   // Let Next.js API auth routes through — handled by route handlers
   if (pathname.startsWith("/api/auth")) {
