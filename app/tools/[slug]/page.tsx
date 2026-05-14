@@ -10,14 +10,59 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-/** Slugs that exist in old blog posts / wild URLs but not in data/tools.ts */
+/**
+ * Legacy slugs, query-variant slugs, and common misspellings that should
+ * normalize to the canonical tool pages.
+ */
 const REDIRECTS: Record<string, string> = {
-  'lorem-ipsum':         'lorem-ipsum-generator',
-  'letter-counter':      'word-counter',
-  'mime-type-checker':   'mime-types-reference',
-  'random-string':       'password-generator',
-  'uuid-v4':             'uuid-generator',
-  'wifi-qr':             'wifi-qr-code-generator',
+  'lorem-ipsum': 'lorem-ipsum-generator',
+  'letter-counter': 'word-counter',
+  'mime-type-checker': 'mime-types-reference',
+  'random-string': 'password-generator',
+  'uuid-v4': 'uuid-generator',
+  'wifi-qr': 'wifi-qr-code-generator',
+
+  // High-impression SEO aliases from GSC / search variants
+  'keywords-generator-online': 'keyword-generator',
+  'keywords-generator': 'keyword-generator',
+  'keyword-maker': 'keyword-generator',
+  'keyword-creator': 'keyword-generator',
+  'keyword-tool-generator': 'keyword-generator',
+  'keyword-suggestion-generator': 'keyword-generator',
+  'keyword-generator-free': 'keyword-generator',
+  'keyword-generator-online-free': 'keyword-generator',
+  'online-keywords-generator': 'keyword-generator',
+  'keyword-check-position': 'keyword-position-checker',
+  'check-keyword-position': 'keyword-position-checker',
+  'keyword-position-tool': 'keyword-position-checker',
+  'keyword-position-checker-online': 'keyword-position-checker',
+  'keyword-position-analyzer': 'keyword-position-checker',
+  'keyword-position-search': 'keyword-position-checker',
+  'keyword-placement-checker': 'keyword-position-checker',
+  'keyword-website-checker': 'keyword-position-checker',
+  'keywords-position-checker': 'keyword-position-checker',
+  'check-keywords-position': 'keyword-position-checker',
+  'serp-rank-checker-online': 'serp-rank-tracker',
+  'free-serp-tracking-online': 'serp-rank-tracker',
+  'serprank': 'serp-rank-tracker',
+  'serp-simulator': 'google-serp-simulator',
+  'serpsimulator': 'google-serp-simulator',
+  'serp-test': 'google-serp-simulator',
+  'serp-testing-tool': 'google-serp-simulator',
+  'google-serp-tool': 'google-serp-simulator',
+  'google-serp-test': 'google-serp-simulator',
+  'google-serps-preview': 'google-serp-simulator',
+  'robots-txt-check': 'robots-txt-checker',
+  'robots-txt-check-online': 'robots-txt-checker',
+  'test-robots-txt-online': 'robots-txt-tester',
+  'xml-sitemap-validator': 'sitemap-xml-validator',
+  'readability-checker-free': 'readability-score',
+  'flesch-kincaid-readability-calculator': 'readability-score',
+  'free-online-poll-tools': 'poll-generator',
+  'create-online-poll': 'poll-generator',
+  'check-favicon': 'favicon-checker-express',
+  'favicon-test': 'favicon-checker-express',
+  'metadata-viewer': 'metadata',
 };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
