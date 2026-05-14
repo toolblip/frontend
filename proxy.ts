@@ -8,9 +8,9 @@ export function proxy(req: NextRequest) {
   const token = req.cookies.get("auth_token")?.value;
   const hostname = req.nextUrl.hostname;
 
-  if (hostname === "www.toolblip.com") {
+  if (hostname.startsWith("www.")) {
     const url = req.nextUrl.clone();
-    url.hostname = "toolblip.com";
+    url.hostname = hostname.slice(4);
     return NextResponse.redirect(url, 301);
   }
 
