@@ -85,11 +85,12 @@ export default function OgImageGeneratorClient() {
   const [alignment, setAlignment] = useState<TextAlign>('center');
   const [downloadUrl, setDownloadUrl] = useState('');
   const [openSections, setOpenSections] = useState<Set<string>>(new Set(['CONTENT', 'BACKGROUND']));
-  const [resolution, setResolution] = useState<'1200x630' | '1200x400' | '800x420' | '800x400' | 'custom'>('800x420');
+  const [resolution, setResolution] = useState<'1200x630' | '1200x400' | '800x420' | '800x400' | 'custom'>('1200x630');
   const [customWidth, setCustomWidth] = useState(1200);
   const [customHeight, setCustomHeight] = useState(630);
   const { user } = useAuth();
   const isFreeUser = !user || user.plan === 'free';
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const RESOLUTIONS: Record<string, { label: string; width: number; height: number }> = {
     '1200x630': { label: '1200×630 (Open Graph)', width: 1200, height: 630 },
@@ -127,7 +128,7 @@ export default function OgImageGeneratorClient() {
         await document.fonts.ready;
       }
 
-      const canvas = document.querySelector('canvas[data-testid="article-banner-preview"]') as HTMLCanvasElement | null;
+      const canvas = canvasRef.current;
       if (!canvas || cancelled) return;
 
       const ctx = canvas.getContext('2d');
@@ -159,13 +160,14 @@ export default function OgImageGeneratorClient() {
 
       // 2. White card (all styles) — scale with the selected resolution
       const tallBanner = HEIGHT >= 600;
-      const cardW = Math.round(WIDTH * (tallBanner ? 0.9 : 0.875));
-      const cardH = Math.round(HEIGHT * (tallBanner ? 0.68 : 0.81));
+      const compactBanner = HEIGHT <= 440;
+      const cardW = Math.round(WIDTH * (tallBanner ? 0.9 : compactBanner ? 0.89 : 0.875));
+      const cardH = Math.round(HEIGHT * (tallBanner ? 0.68 : compactBanner ? 0.77 : 0.81));
       const cardX = Math.round((WIDTH - cardW) / 2);
       const cardY = Math.round((HEIGHT - cardH) / 2);
       const cardRadius = Math.round(Math.max(10, Math.min(cardW, cardH) * 0.03));
       const cardPadX = Math.round(cardW * 0.065);
-      const cardPadY = Math.round(cardH * (tallBanner ? 0.09 : 0.12));
+      const cardPadY = Math.round(cardH * (tallBanner ? 0.09 : compactBanner ? 0.1 : 0.12));
 
       ctx.save();
       ctx.shadowColor = 'rgba(0,0,0,0.12)';
@@ -180,7 +182,6 @@ export default function OgImageGeneratorClient() {
 
       // Text rendering inside white card
       const textPadX = cardX + cardPadX;
-      const textPadY = cardY + cardPadY;
       const maxTextWidth = WIDTH - textPadX * 2;
       const innerTop = cardY + cardPadY;
       const innerBottom = cardY + cardH - cardPadY;
@@ -203,25 +204,44 @@ export default function OgImageGeneratorClient() {
         return minSize;
       };
 
-      const titleSize = fitFontSize(titleLines, 800, titleFontSize, 32);
-      const subtitleSize = fitFontSize([subtitle], 400, subtitleFontSize, 14);
-      const titleLineHeight = titleSize * 1.12;
-      const titleGap = Math.max(10, titleSize * 0.18);
-      const subtitleGap = Math.max(18, titleSize * 0.32);
-      const subLineHeight = subtitleSize * 1.42;
-      const titleBlockHeight = titleLines.length * titleLineHeight + Math.max(0, titleLines.length - 1) * titleGap;
-      let blockHeight = titleBlockHeight + subtitleGap + subLineHeight;
+      const minTitleSize = titleLines.length > 1 ? 28 : 30;
+      const minSubtitleSize = 13;
+      let titleSize = fitFontSize(titleLines, 800, titleFontSize, minTitleSize);
+      let subtitleSize = fitFontSize([subtitle], 400, subtitleFontSize, minSubtitleSize);
+      let titleLineHeight = titleSize * 1.12;
+      let titleGap = Math.max(8, titleSize * 0.16);
+      let subtitleGap = Math.max(14, titleSize * 0.28);
+      let subLineHeight = subtitleSize * 1.38;
+      const recalcBlockHeight = () => {
+        const titleBlockHeight = titleLines.length * titleLineHeight + Math.max(0, titleLines.length - 1) * titleGap;
+        return titleBlockHeight + subtitleGap + subLineHeight;
+      };
+      let blockHeight = recalcBlockHeight();
 
-      // If the content is still too tall, shrink proportionally until it fits comfortably.
-      while (blockHeight > innerHeight && (titleSize > 32 || subtitleSize > 14)) {
-        if (titleLines.length > 1 && titleFontSize > 32) {
-          // no-op: size vars are consts, so recompute below by reducing the start sizes with a smaller cap
+      // If the content is still too tall, shrink both title and subtitle together until it fits.
+      let attempts = 0;
+      while (blockHeight > innerHeight && attempts < 12) {
+        const shrink = Math.min(0.98, Math.max(0.82, innerHeight / blockHeight));
+        const nextTitleSize = Math.max(minTitleSize, Math.floor(titleSize * shrink));
+        const nextSubtitleSize = Math.max(minSubtitleSize, Math.floor(subtitleSize * shrink));
+
+        if (nextTitleSize === titleSize && nextSubtitleSize === subtitleSize) {
+          break;
         }
-        break;
+
+        titleSize = nextTitleSize;
+        subtitleSize = nextSubtitleSize;
+        titleLineHeight = titleSize * 1.12;
+        titleGap = Math.max(8, titleSize * 0.16);
+        subtitleGap = Math.max(14, titleSize * 0.28);
+        subLineHeight = subtitleSize * 1.38;
+        blockHeight = recalcBlockHeight();
+        attempts += 1;
       }
 
       const extraSpace = Math.max(0, innerHeight - blockHeight);
       const textStartY = innerTop + extraSpace * 0.5;
+      const titleBlockHeight = blockHeight - subtitleGap - subLineHeight;
 
       let textX = textPadX;
       if (alignment === 'center') {
@@ -839,7 +859,7 @@ export default function OgImageGeneratorClient() {
         {/* Right preview panel */}
         <div className="relative">
           <canvas
-            ref={undefined}
+            ref={canvasRef}
             width={WIDTH}
             height={HEIGHT}
             data-testid="article-banner-preview"
