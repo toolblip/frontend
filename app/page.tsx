@@ -10,8 +10,13 @@ import CategoryQuickAccess from '@/components/v2/home/CategoryQuickAccess';
 import WhyToolblip from '@/components/v2/home/WhyToolblip';
 import CategoryGrid from '@/components/v2/home/CategoryGrid';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = {
   title: 'Toolblip - Free Online Developer Tools',
+  alternates: {
+    canonical: 'https://toolblip.com',
+  },
   description:
     'Free browser-based tools: word counter, JSON formatter, Base64, URL encoder, UUID generator, and more. 100% client-side - no uploads, no account needed.',
   openGraph: {
