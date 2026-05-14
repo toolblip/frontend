@@ -7,10 +7,25 @@ export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const token = req.cookies.get("auth_token")?.value;
   const hostname = req.nextUrl.hostname;
+  const protocol = req.nextUrl.protocol;
 
-  if (hostname.startsWith("www.")) {
+  const isLocalHost =
+    hostname === "localhost" ||
+    hostname === "127.0.0.1" ||
+    hostname === "::1" ||
+    hostname.endsWith(".localhost");
+
+  if (hostname.startsWith("www.") || (protocol === "http:" && !isLocalHost)) {
     const url = req.nextUrl.clone();
-    url.hostname = hostname.slice(4);
+
+    if (hostname.startsWith("www.")) {
+      url.hostname = hostname.slice(4);
+    }
+
+    if (protocol === "http:") {
+      url.protocol = "https:";
+    }
+
     return NextResponse.redirect(url, 301);
   }
 
