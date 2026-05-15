@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { tools } from '@/data/tools';
+import { getBlogPosts } from '@/lib/blog';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://toolblip.com';
@@ -52,5 +53,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     }));
 
-  return [...staticPages, ...toolPages];
+  const blogPages: MetadataRoute.Sitemap = getBlogPosts().map((post) => ({
+    url: `${baseUrl}/blog/${post.slug}`,
+    lastModified: post.date ? new Date(post.date) : new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.6,
+  }));
+
+  return [...staticPages, ...blogPages, ...toolPages];
 }
