@@ -180,6 +180,98 @@ export default function OgImageGeneratorClient() {
       ctx.fill();
       ctx.restore();
 
+      const drawFrame = () => {
+        const inset = Math.max(6, Math.round(Math.min(cardW, cardH) * 0.015));
+        const frameX = cardX + inset / 2;
+        const frameY = cardY + inset / 2;
+        const frameW = cardW - inset;
+        const frameH = cardH - inset;
+        const frameRadius = Math.max(8, cardRadius - inset / 2);
+
+        ctx.save();
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = 'rgba(107, 114, 128, 0.9)';
+
+        switch (bannerStyle) {
+          case 'dotted-frame':
+            ctx.lineWidth = 4;
+            ctx.setLineDash([1, 8]);
+            ctx.beginPath();
+            ctx.roundRect(frameX, frameY, frameW, frameH, frameRadius);
+            ctx.stroke();
+            break;
+          case 'dash-frame':
+            ctx.lineWidth = 4;
+            ctx.setLineDash([12, 8]);
+            ctx.beginPath();
+            ctx.roundRect(frameX, frameY, frameW, frameH, frameRadius);
+            ctx.stroke();
+            break;
+          case 'solid-frame':
+            ctx.lineWidth = 4;
+            ctx.setLineDash([]);
+            ctx.beginPath();
+            ctx.roundRect(frameX, frameY, frameW, frameH, frameRadius);
+            ctx.stroke();
+            break;
+          case 'double-frame': {
+            ctx.lineWidth = 3;
+            ctx.setLineDash([]);
+            ctx.beginPath();
+            ctx.roundRect(frameX, frameY, frameW, frameH, frameRadius);
+            ctx.stroke();
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.roundRect(frameX + 8, frameY + 8, frameW - 16, frameH - 16, Math.max(6, frameRadius - 8));
+            ctx.stroke();
+            break;
+          }
+          case 'corner-accent': {
+            ctx.lineWidth = 5;
+            ctx.setLineDash([]);
+            const corner = Math.max(22, Math.round(Math.min(cardW, cardH) * 0.055));
+            const x1 = cardX + inset;
+            const y1 = cardY + inset;
+            const x2 = cardX + cardW - inset;
+            const y2 = cardY + cardH - inset;
+            ctx.beginPath();
+            // top-left
+            ctx.moveTo(x1, y1 + corner);
+            ctx.lineTo(x1, y1);
+            ctx.lineTo(x1 + corner, y1);
+            // top-right
+            ctx.moveTo(x2 - corner, y1);
+            ctx.lineTo(x2, y1);
+            ctx.lineTo(x2, y1 + corner);
+            // bottom-right
+            ctx.moveTo(x2, y2 - corner);
+            ctx.lineTo(x2, y2);
+            ctx.lineTo(x2 - corner, y2);
+            // bottom-left
+            ctx.moveTo(x1 + corner, y2);
+            ctx.lineTo(x1, y2);
+            ctx.lineTo(x1, y2 - corner);
+            ctx.stroke();
+            break;
+          }
+          case 'shadow-card':
+            ctx.shadowColor = 'rgba(0,0,0,0.18)';
+            ctx.shadowBlur = 18;
+            ctx.shadowOffsetY = 6;
+            ctx.lineWidth = 2;
+            ctx.setLineDash([]);
+            ctx.beginPath();
+            ctx.roundRect(frameX, frameY, frameW, frameH, frameRadius);
+            ctx.stroke();
+            break;
+        }
+
+        ctx.restore();
+      };
+
+      drawFrame();
+
       // Text rendering inside white card
       const textPadX = cardX + cardPadX;
       const maxTextWidth = WIDTH - textPadX * 2;
