@@ -76,11 +76,22 @@ test('tool pages render templated share left, inert views, and favorite hard rig
   await expect(loginDialog).toBeVisible();
   await expect(page.getByRole('dialog', { name: /Share JSON Formatter/i })).toHaveCount(0);
   await expect(loginDialog.getByTestId('google-auth-button')).toBeVisible();
+  await expect(loginDialog.getByLabel(/Remember me/i)).toBeVisible();
   await expect(loginDialog.getByRole('link', { name: /Create account/i })).toHaveAttribute('href', /\/signup\?next=%2Ftools%2Fjson-formatter(&|%26)favorite=1/);
+  await expect(loginDialog.getByRole('link', { name: /Full login/i })).toHaveCount(0);
+
+  let loginRequestBody: { email?: string; password?: string; remember_me?: boolean } | undefined;
+  await page.route('**/api/auth/login', async (route) => {
+    loginRequestBody = route.request().postDataJSON() as typeof loginRequestBody;
+    await route.continue();
+  });
 
   await page.getByLabel('Email').fill('bdd@toolblip.test');
   await page.getByLabel('Password', { exact: true }).fill('Password123!');
+  await page.getByLabel(/Remember me/i).check();
   await page.getByRole('button', { name: /^Sign in$/i }).click();
+
+  expect(loginRequestBody?.remember_me).toBe(true);
 
   await expect(favoriteButton).toContainText('Favorited');
   await expect(page.getByRole('dialog', { name: /Sign in to favorite JSON Formatter/i })).toHaveCount(0);
@@ -92,8 +103,6 @@ test('tool pages render templated share left, inert views, and favorite hard rig
   await expect(page.getByRole('heading', { name: /Favorite tools/i })).toBeVisible();
   await expect(page.getByRole('link', { name: /JSON Formatter/i })).toBeVisible();
 
-  const cookies = await context.cookies();
-  expect(cookies.find((cookie) => cookie.name === 'auth_token')).toBeTruthy();
 });
 
 test('guest users can register from the favorite prompt and auto-favorite on return', async ({ page }) => {

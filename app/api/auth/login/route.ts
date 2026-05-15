@@ -6,7 +6,7 @@ const LARAVEL_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.toolblip.com
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { email, password } = body;
+    const { email, password, remember_me: rememberMe } = body;
 
     if (!email || !password) {
       return NextResponse.json(
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
+      maxAge: rememberMe ? 60 * 60 * 24 * 30 : 60 * 60 * 24 * 7,
     });
 
     return NextResponse.json({ user: data.user, token: data.token }, { status: 200 });
