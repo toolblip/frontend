@@ -5,6 +5,7 @@ import { useState, useRef, useEffect, useMemo } from 'react';
 import { useAuth } from '@/app/providers/auth-provider';
 
 type BackgroundMode = 'solid' | 'gradient' | 'dotted-frame';
+type PatternOverlay = 'none' | 'diagonal-lines' | 'dots' | 'grid' | 'zigzag' | 'crosses' | 'triangles';
 type BannerStyle = 'dotted-frame' | 'solid-frame' | 'double-frame' | 'dash-frame' | 'corner-accent' | 'shadow-card';
 
 type DirectionValue = '0' | '45' | '90' | '135' | '140' | '180' | '225' | '270' | '315';
@@ -60,6 +61,16 @@ const BANNER_STYLES = [
   { value: 'shadow-card', label: 'Shadow Card' },
 ];
 
+const PATTERN_OVERLAYS: Array<{ value: PatternOverlay; label: string }> = [
+  { value: 'none', label: 'None' },
+  { value: 'diagonal-lines', label: 'Diagonal Lines' },
+  { value: 'dots', label: 'Dots' },
+  { value: 'grid', label: 'Grid' },
+  { value: 'zigzag', label: 'Zigzag' },
+  { value: 'crosses', label: 'Crosses' },
+  { value: 'triangles', label: 'Triangles' },
+];
+
 function SliderLabel({ value, children }: { value: number; children: React.ReactNode }) {
   return (
     <div className="flex items-center justify-between">
@@ -76,6 +87,7 @@ export default function OgImageGeneratorClient() {
   const [footer, setFooter] = useState('');
   const [footerLogo, setFooterLogo] = useState<string | null>(null);
   const [bannerStyle, setBannerStyle] = useState<BannerStyle>('dotted-frame');
+  const [patternOverlay, setPatternOverlay] = useState<PatternOverlay>('dots');
   const [backgroundMode, setBackgroundMode] = useState<BackgroundMode>('gradient');
   const [fromColor, setFromColor] = useState('#4CC8C8');
   const [toColor, setToColor] = useState('#202033');
@@ -84,7 +96,7 @@ export default function OgImageGeneratorClient() {
   const [subtitleFontSize, setSubtitleFontSize] = useState(20);
   const [alignment, setAlignment] = useState<TextAlign>('center');
   const [downloadUrl, setDownloadUrl] = useState('');
-  const [openSections, setOpenSections] = useState<Set<string>>(new Set(['CONTENT', 'BACKGROUND']));
+  const [openSections, setOpenSections] = useState<Set<string>>(new Set(['CONTENT', 'BACKGROUND', 'PATTERN_OVERLAY']));
   const [resolution, setResolution] = useState<'1200x630' | '1200x400' | '800x420' | '800x400' | 'custom'>('1200x630');
   const [customWidth, setCustomWidth] = useState(1200);
   const [customHeight, setCustomHeight] = useState(630);
@@ -157,6 +169,111 @@ export default function OgImageGeneratorClient() {
       bgGrad.addColorStop(1, toColor);
       ctx.fillStyle = backgroundMode === 'solid' ? fromColor : bgGrad;
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+      const drawPatternOverlay = () => {
+        if (patternOverlay === 'none') return;
+
+        const patternColor = backgroundMode === 'solid' ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.14)';
+        const accentColor = 'rgba(17,24,39,0.08)';
+        const useAccent = backgroundMode === 'solid' && fromColor.toLowerCase() === '#ffffff';
+        const strokeColor = useAccent ? accentColor : patternColor;
+        const spacing = Math.max(18, Math.round(Math.min(WIDTH, HEIGHT) / 22));
+        const size = Math.max(2, Math.round(Math.min(WIDTH, HEIGHT) / 220));
+
+        ctx.save();
+        ctx.globalAlpha = 1;
+        ctx.lineWidth = size;
+        ctx.strokeStyle = strokeColor;
+        ctx.fillStyle = strokeColor;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        switch (patternOverlay) {
+          case 'diagonal-lines': {
+            for (let x = -HEIGHT; x < WIDTH + HEIGHT; x += spacing) {
+              ctx.beginPath();
+              ctx.moveTo(x, 0);
+              ctx.lineTo(x + HEIGHT, HEIGHT);
+              ctx.stroke();
+            }
+            break;
+          }
+          case 'dots': {
+            const dot = Math.max(1.5, size * 0.75);
+            for (let y = spacing / 2; y < HEIGHT; y += spacing) {
+              for (let x = spacing / 2; x < WIDTH; x += spacing) {
+                ctx.beginPath();
+                ctx.arc(x, y, dot, 0, Math.PI * 2);
+                ctx.fill();
+              }
+            }
+            break;
+          }
+          case 'grid': {
+            ctx.lineWidth = Math.max(1, size);
+            for (let x = 0; x <= WIDTH; x += spacing) {
+              ctx.beginPath();
+              ctx.moveTo(x, 0);
+              ctx.lineTo(x, HEIGHT);
+              ctx.stroke();
+            }
+            for (let y = 0; y <= HEIGHT; y += spacing) {
+              ctx.beginPath();
+              ctx.moveTo(0, y);
+              ctx.lineTo(WIDTH, y);
+              ctx.stroke();
+            }
+            break;
+          }
+          case 'zigzag': {
+            const step = spacing;
+            const amp = Math.max(6, Math.round(step / 2.2));
+            for (let y = -amp; y < HEIGHT + amp; y += step * 1.8) {
+              ctx.beginPath();
+              for (let x = -step; x <= WIDTH + step; x += step) {
+                const idx = Math.round((x + step) / step);
+                const py = y + (idx % 2 === 0 ? -amp : amp);
+                if (x === -step) ctx.moveTo(x, py);
+                else ctx.lineTo(x, py);
+              }
+              ctx.stroke();
+            }
+            break;
+          }
+          case 'crosses': {
+            const cross = Math.max(5, Math.round(spacing / 3.5));
+            for (let y = spacing / 2; y < HEIGHT; y += spacing) {
+              for (let x = spacing / 2; x < WIDTH; x += spacing) {
+                ctx.beginPath();
+                ctx.moveTo(x - cross, y - cross);
+                ctx.lineTo(x + cross, y + cross);
+                ctx.moveTo(x + cross, y - cross);
+                ctx.lineTo(x - cross, y + cross);
+                ctx.stroke();
+              }
+            }
+            break;
+          }
+          case 'triangles': {
+            const tri = Math.max(6, Math.round(spacing / 2.6));
+            for (let y = spacing / 2; y < HEIGHT; y += spacing) {
+              for (let x = spacing / 2; x < WIDTH; x += spacing) {
+                ctx.beginPath();
+                ctx.moveTo(x, y - tri);
+                ctx.lineTo(x + tri, y + tri);
+                ctx.lineTo(x - tri, y + tri);
+                ctx.closePath();
+                ctx.stroke();
+              }
+            }
+            break;
+          }
+        }
+
+        ctx.restore();
+      };
+
+      drawPatternOverlay();
 
       // 2. White card (all styles) — scale with the selected resolution
       const tallBanner = HEIGHT >= 600;
@@ -393,7 +510,7 @@ export default function OgImageGeneratorClient() {
 
     drawBanner();
     return () => { cancelled = true; };
-  }, [title, subtitle, footer, footerLogo, bannerStyle, backgroundMode, fromColor, toColor, direction, titleFontSize, subtitleFontSize, alignment, preset, WIDTH, HEIGHT]);
+  }, [title, subtitle, footer, footerLogo, bannerStyle, patternOverlay, backgroundMode, fromColor, toColor, direction, titleFontSize, subtitleFontSize, alignment, preset, WIDTH, HEIGHT]);
 
   const updateFromColor = (value: string) => setFromColor(value.startsWith('#') ? value : `#${value}`);
   const updateToColor = (value: string) => setToColor(value.startsWith('#') ? value : `#${value}`);
@@ -793,6 +910,51 @@ export default function OgImageGeneratorClient() {
                     </div>
                   </label>
                 )}
+              </div>
+            )}
+          </div>
+
+          {/* PATTERN OVERLAY */}
+          <div className="space-y-5 border-b border-gray-100 p-5 dark:border-gray-800">
+            <button
+              type="button"
+              onClick={() => toggleSection('PATTERN_OVERLAY')}
+              className="flex w-full items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 cursor-pointer"
+              aria-expanded={openSections.has('PATTERN_OVERLAY')}
+            >
+              <span className="flex h-7 w-7 items-center justify-center rounded-full border border-violet-200 bg-violet-50 text-violet-500 dark:border-violet-900 dark:bg-violet-950/30" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 4h16v16H4z" />
+                  <path d="M9 4v16" />
+                  <path d="M4 9h16" />
+                </svg>
+              </span>
+              <span>PATTERN OVERLAY</span>
+              <svg className={`ml-auto h-4 w-4 transition-transform ${openSections.has('PATTERN_OVERLAY') ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {openSections.has('PATTERN_OVERLAY') && (
+              <div className="space-y-2">
+                <label className="block space-y-2">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Overlay</span>
+                  <select
+                    aria-label="Pattern overlay"
+                    value={patternOverlay}
+                    onChange={(event) => setPatternOverlay(event.target.value as PatternOverlay)}
+                    className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                  >
+                    {PATTERN_OVERLAYS.map((item) => (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <p className="text-xs leading-5 text-gray-500 dark:text-gray-400">
+                  Adds a subtle repeating pattern on top of the background and behind the banner card.
+                </p>
               </div>
             )}
           </div>
