@@ -8,6 +8,10 @@
       "submitted_at": "2026-05-12T23:30:00Z",
       "method": "sitemap",
       "note": "URL Inspection Indexing API blocked (siteOwner but read-only scopes); used sitemap refresh as workaround"
+    },
+    {
+      "url": "https://toolblip.com/blog/2026-05-15-cron-expression-generator-online",
+      "submitted_at": "2026-05-15T17:06:33Z"
     }
   ],
   "failed": []

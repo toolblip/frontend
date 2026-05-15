@@ -1,6 +1,5 @@
 {
   "pending": [
-    "generate cron expressions without mistakes",
     "convert base64 text and files locally in the browser",
     "compare text diffs online for code reviews",
     "generate secure passwords in the browser",
@@ -8,6 +7,10 @@
   ],
   "in_progress": [],
   "done": [
+    {
+      "topic": "generate cron expressions without mistakes",
+      "completed_at": "2026-05-15T17:06:37Z"
+    },
     {
       "topic": "format and validate JSON online without uploading data",
       "completed_at": "2026-05-11T23:05:00Z"

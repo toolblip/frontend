@@ -329,7 +329,7 @@ check_and_fix_url() {
     local url="$1"
 
     local diagnosis
-    diagnosis=$(python3 "$HOME/Work/toolblip/scripts/seo-content-generator.py" diagnose "$url" "" "" "" 2>&1 || echo "")
+    diagnosis=$(python3 "$HOME/Work/toolblip/scripts/seo-content-generator.py" diagnose "$url" 2>&1 || echo "")
 
     local fix_needed
     fix_needed=$(echo "$diagnosis" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('fix_needed','false'))" 2>/dev/null || echo "false")

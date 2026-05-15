@@ -47,7 +47,7 @@ A regex tester lets you paste a pattern and a sample string, then highlights eve
 
 Cron expressions are terse and cryptic. `0 9 * * 3` means every Wednesday at 9:00 AM. `*/15 * * * *` means every 15 minutes. But `0 0 1 * *` and `0 0 * * 0` look similar until you realize one fires on the first of every month and the other fires every Sunday at midnight.
 
-A cron parser takes an expression and shows you the next ten run times in human-readable format. This is genuinely useful when debugging scheduled jobs or reviewing a teammate's configuration. Toolblip's [Cron Parser](/tools/cron-parser) handles standard 5-field cron and shows a readable schedule before you deploy.
+A cron parser takes an expression and shows you the next ten run times in human-readable format. This is genuinely useful when debugging scheduled jobs or reviewing a teammate's configuration. Toolblip's [Cron Parser](/tools/cron-parser) handles standard 5-field cron and shows a readable schedule before you deploy. If you need the field-by-field version, read the [cron expression generator guide](/blog/2026-05-15-cron-expression-generator-online).
 
 ## 5. Hash Generator — For Checksums and Signed Requests
 
