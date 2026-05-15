@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import GoogleAuthButton from "@/components/auth/GoogleAuthButton";
 import { useAuth } from "@/app/providers/auth-provider";
 
 type EngagementStats = {
@@ -283,6 +284,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
   const registerHref = `/signup?next=${encodeURIComponent(`/tools/${toolSlug}`)}&favorite=1`;
   const favoriteReturnHref = `/tools/${toolSlug}?favorite=1`;
   const loginHref = `/login?next=${encodeURIComponent(favoriteReturnHref)}`;
+  const googleHref = `/api/auth/google/start?next=${encodeURIComponent(favoriteReturnHref)}`;
 
   function clearFavoriteQuery() {
     if (typeof window === "undefined") return;
@@ -611,20 +613,28 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
               </button>
             </div>
 
-            <form onSubmit={handleLoginSubmit} className="space-y-3" noValidate>
-              {loginError && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-950 dark:text-red-200">{loginError}</p>}
-              <div>
-                <label htmlFor="favorite-login-email" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200">Email</label>
-                <input id="favorite-login-email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-gray-900 outline-none focus:border-red-400 dark:border-gray-800 dark:bg-gray-900 dark:text-white" required />
+            <div className="space-y-4">
+              <GoogleAuthButton href={googleHref} />
+
+              <div className="tb-v2-auth-divider !my-0" aria-hidden="true">
+                <span>or</span>
               </div>
-              <div>
-                <label htmlFor="favorite-login-password" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200">Password</label>
-                <input id="favorite-login-password" type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-gray-900 outline-none focus:border-red-400 dark:border-gray-800 dark:bg-gray-900 dark:text-white" required />
-              </div>
-              <button type="submit" disabled={loginLoading} className="w-full rounded-xl bg-red-600 px-4 py-2 font-semibold text-white transition hover:bg-red-700 disabled:opacity-60">
-                {loginLoading ? "Signing in..." : "Sign in"}
-              </button>
-            </form>
+
+              <form onSubmit={handleLoginSubmit} className="space-y-3" noValidate>
+                {loginError && <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-950 dark:text-red-200">{loginError}</p>}
+                <div>
+                  <label htmlFor="favorite-login-email" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200">Email</label>
+                  <input id="favorite-login-email" type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-gray-900 outline-none focus:border-red-400 dark:border-gray-800 dark:bg-gray-900 dark:text-white" required />
+                </div>
+                <div>
+                  <label htmlFor="favorite-login-password" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200">Password</label>
+                  <input id="favorite-login-password" type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-gray-900 outline-none focus:border-red-400 dark:border-gray-800 dark:bg-gray-900 dark:text-white" required />
+                </div>
+                <button type="submit" disabled={loginLoading} className="w-full rounded-xl bg-red-600 px-4 py-2 font-semibold text-white transition hover:bg-red-700 disabled:opacity-60">
+                  {loginLoading ? "Signing in..." : "Sign in"}
+                </button>
+              </form>
+            </div>
 
             <div className="mt-4 flex items-center justify-between gap-3 text-sm text-gray-500 dark:text-gray-400">
               <Link href={loginHref} className="font-semibold text-gray-700 hover:text-red-600 dark:text-gray-200 dark:hover:text-red-400">Full login</Link>

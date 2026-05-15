@@ -72,9 +72,11 @@ test('tool pages render templated share left, inert views, and favorite hard rig
 
   await favoriteButton.click();
   await expect(shareDialog).toBeHidden();
-  await expect(page.getByRole('dialog', { name: /Sign in to favorite JSON Formatter/i })).toBeVisible();
+  const loginDialog = page.getByRole('dialog', { name: /Sign in to favorite JSON Formatter/i });
+  await expect(loginDialog).toBeVisible();
   await expect(page.getByRole('dialog', { name: /Share JSON Formatter/i })).toHaveCount(0);
-  await expect(page.getByRole('link', { name: /Create account/i })).toHaveAttribute('href', /\/signup\?next=%2Ftools%2Fjson-formatter(&|%26)favorite=1/);
+  await expect(loginDialog.getByTestId('google-auth-button')).toBeVisible();
+  await expect(loginDialog.getByRole('link', { name: /Create account/i })).toHaveAttribute('href', /\/signup\?next=%2Ftools%2Fjson-formatter(&|%26)favorite=1/);
 
   await page.getByLabel('Email').fill('bdd@toolblip.test');
   await page.getByLabel('Password', { exact: true }).fill('Password123!');
