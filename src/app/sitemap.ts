@@ -6,7 +6,6 @@ const siteUrl = 'https://toolblip.com';
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes = [
     '',
-    '/tools',
     '/directory',
     '/about',
     '/login',
@@ -21,9 +20,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${siteUrl}${route}`,
       lastModified: now,
     })),
-    ...tools.map((tool) => ({
-      url: `${siteUrl}/tools/${tool.slug}`,
-      lastModified: now,
-    })),
+    ...tools
+      .filter((tool) => tool.slug !== 'serp-simulator')
+      .map((tool) => ({
+        url: `${siteUrl}/tools/${tool.slug}`,
+        lastModified: now,
+      })),
   ];
 }

@@ -12,12 +12,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: `${baseUrl}/tools`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.8,
-    },
-    {
       url: `${baseUrl}/directory`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
@@ -49,12 +43,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  const toolPages: MetadataRoute.Sitemap = tools.map((tool) => ({
-    url: `${baseUrl}/tools/${tool.slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'monthly' as const,
-    priority: 0.6,
-  }));
+  const toolPages: MetadataRoute.Sitemap = tools
+    .filter((tool) => tool.slug !== 'serp-simulator')
+    .map((tool) => ({
+      url: `${baseUrl}/tools/${tool.slug}`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    }));
 
   return [...staticPages, ...toolPages];
 }
