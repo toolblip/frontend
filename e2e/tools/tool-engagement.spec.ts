@@ -49,9 +49,9 @@ test('tool pages render templated share left, inert views, and favorite hard rig
   const shareDialog = page.getByRole('dialog', { name: /Share JSON Formatter/i });
   await expect(shareDialog).toBeVisible();
   await expect(shareDialog).not.toContainText(/JSON Formatter/i);
-  const shareOnFacebook = shareDialog.getByRole('button', { name: /Share on Facebook/i });
-  const shareOnX = shareDialog.getByRole('button', { name: /Share on X/i });
-  const shareOnLinkedIn = shareDialog.getByRole('button', { name: /Share on LinkedIn/i });
+  const shareOnFacebook = shareDialog.getByRole('link', { name: /Share on Facebook/i });
+  const shareOnX = shareDialog.getByRole('link', { name: /Share on X/i });
+  const shareOnLinkedIn = shareDialog.getByRole('link', { name: /Share on LinkedIn/i });
   const copyLink = shareDialog.getByRole('button', { name: /Copy link/i });
   const shareLink = shareDialog.getByLabel(/Share link/i);
 
