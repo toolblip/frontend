@@ -460,7 +460,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
   return (
     <div data-testid="tool-engagement-bar" className="relative flex w-full flex-wrap items-center gap-3" aria-label={`${toolName} engagement stats`}>
       <div
-        className="relative inline-flex items-stretch overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950"
+        className="relative inline-flex items-stretch rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950"
         onMouseEnter={() => setShareHovered(true)}
         onMouseLeave={() => setShareHovered(false)}
       >

@@ -21,8 +21,8 @@ test('tool pages render templated share left, inert views, and favorite hard rig
   await expect(favoriteButton).toContainText('Favorite');
   await expect(favoriteButton).not.toContainText('Favorites 0');
   await expect(favoriteCount).toHaveText('0');
-  await expect(viewCount).toContainText('Views');
-  await expect(viewCount).toContainText('1');
+  await expect(viewCount).toHaveText('1');
+  await expect(viewCount).toHaveAttribute('aria-label', /Views \d+/);
   await expect(page.getByRole('button', { name: /Views/i })).toHaveCount(0);
   await expect(viewCount).toHaveJSProperty('tagName', 'SPAN');
 
