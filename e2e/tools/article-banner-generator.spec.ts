@@ -307,6 +307,11 @@ test.describe('Banner Generator tool', () => {
     await expect(page.getByText('TYPOGRAPHY', { exact: true })).toBeVisible();
     await expect(page.getByText('BANNER STYLE', { exact: true })).toBeVisible();
 
+    // BACKGROUND is open by default and now contains the pattern controls
+    await expect(page.getByRole('tab', { name: 'Solid' })).toBeVisible();
+    await expect(page.getByRole('tab', { name: 'Gradient' })).toBeVisible();
+    await expect(page.getByLabel('Pattern overlay')).toBeVisible();
+
     // Open BANNER STYLE so its foreground controls are visible
     await page.getByText('BANNER STYLE', { exact: true }).click();
     await page.waitForTimeout(200);
@@ -344,7 +349,7 @@ test.describe('Banner Generator tool', () => {
     const before = await download.getAttribute('href');
 
     await page.getByRole('tab', { name: 'Solid' }).click();
-    await page.getByLabel('From color hex').fill('#111827');
+    await page.getByLabel('Solid background color hex').fill('#111827');
     // Teal Midnight preset stays selected when switching to Solid (preset is independent of mode)
     await page.getByLabel('Title font size', { exact: true }).fill('58');
     await page.getByRole('button', { name: 'Align center' }).click();

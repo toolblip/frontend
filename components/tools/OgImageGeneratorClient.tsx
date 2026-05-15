@@ -127,7 +127,7 @@ export default function OgImageGeneratorClient() {
   const [subtitleFontSize, setSubtitleFontSize] = useState(20);
   const [alignment, setAlignment] = useState<TextAlign>('center');
   const [downloadUrl, setDownloadUrl] = useState('');
-  const [openSections, setOpenSections] = useState<Set<string>>(new Set(['CONTENT', 'BACKGROUND', 'PATTERN_OVERLAY']));
+  const [openSections, setOpenSections] = useState<Set<string>>(new Set(['CONTENT', 'BACKGROUND']));
   const [resolution, setResolution] = useState<'1200x630' | '1200x400' | '800x420' | '800x400' | 'custom'>('1200x630');
   const [customWidth, setCustomWidth] = useState(1200);
   const [customHeight, setCustomHeight] = useState(630);
@@ -866,7 +866,7 @@ export default function OgImageGeneratorClient() {
                       role="tab"
                       aria-selected={backgroundMode === value}
                       onClick={() => setBackgroundMode(value)}
-                      className={`rounded-[14px] px-4 py-4 text-lg font-medium transition ${
+                      className={`rounded-[14px] px-4 py-3 text-sm font-semibold transition ${
                         backgroundMode === value
                           ? 'bg-white text-gray-900 shadow-sm dark:bg-gray-950 dark:text-white'
                           : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
@@ -979,56 +979,35 @@ export default function OgImageGeneratorClient() {
                     </div>
                   </label>
                 )}
+
+                <div className="space-y-2">
+                  <span className="text-[15px] font-medium text-gray-700 dark:text-gray-300">Pattern overlay</span>
+                  <div className="space-y-2">
+                    <label className="block space-y-2">
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Overlay</span>
+                      <select
+                        aria-label="Pattern overlay"
+                        value={patternOverlay}
+                        onChange={(event) => setPatternOverlay(event.target.value as PatternOverlay)}
+                        className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                      >
+                        {PATTERN_OVERLAYS.map((item) => (
+                          <option key={item.value} value={item.value}>
+                            {item.label}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    <p className="text-xs leading-5 text-gray-500 dark:text-gray-400">
+                      Adds a subtle repeating pattern on top of the background and behind the banner card.
+                    </p>
+                  </div>
+                </div>
+
               </div>
             )}
           </div>
 
-          {/* PATTERN OVERLAY */}
-          <div className="space-y-5 border-b border-gray-100 p-5 dark:border-gray-800">
-            <button
-              type="button"
-              onClick={() => toggleSection('PATTERN_OVERLAY')}
-              className="flex w-full items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 cursor-pointer"
-              aria-expanded={openSections.has('PATTERN_OVERLAY')}
-            >
-              <span className="flex h-7 w-7 items-center justify-center rounded-full border border-violet-200 bg-violet-50 text-violet-500 dark:border-violet-900 dark:bg-violet-950/30" aria-hidden="true">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 4h16v16H4z" />
-                  <path d="M9 4v16" />
-                  <path d="M4 9h16" />
-                </svg>
-              </span>
-              <span>PATTERN OVERLAY</span>
-              <svg className={`ml-auto h-4 w-4 transition-transform ${openSections.has('PATTERN_OVERLAY') ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-
-            {openSections.has('PATTERN_OVERLAY') && (
-              <div className="space-y-2">
-                <label className="block space-y-2">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Overlay</span>
-                  <select
-                    aria-label="Pattern overlay"
-                    value={patternOverlay}
-                    onChange={(event) => setPatternOverlay(event.target.value as PatternOverlay)}
-                    className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
-                  >
-                    {PATTERN_OVERLAYS.map((item) => (
-                      <option key={item.value} value={item.value}>
-                        {item.label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <p className="text-xs leading-5 text-gray-500 dark:text-gray-400">
-                  Adds a subtle repeating pattern on top of the background and behind the banner card.
-                </p>
-              </div>
-            )}
-          </div>
-
-          {/* TYPOGRAPHY */}
           <div className="space-y-5 border-b border-gray-100 p-5 dark:border-gray-800">
             <button
               type="button"
