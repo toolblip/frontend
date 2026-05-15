@@ -267,6 +267,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
   const [loginOpen, setLoginOpen] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [loginError, setLoginError] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
   const [favoriteLoading, setFavoriteLoading] = useState(false);
@@ -469,7 +470,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, remember_me: rememberMe }),
         credentials: "include",
       });
       const data = await res.json();
@@ -630,14 +631,22 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
                   <label htmlFor="favorite-login-password" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-200">Password</label>
                   <input id="favorite-login-password" type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-gray-900 outline-none focus:border-red-400 dark:border-gray-800 dark:bg-gray-900 dark:text-white" required />
                 </div>
+                <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(event) => setRememberMe(event.target.checked)}
+                    className="h-4 w-4 rounded border-gray-300 text-red-600 focus:ring-red-500 dark:border-gray-700"
+                  />
+                  <span>Remember me</span>
+                </label>
                 <button type="submit" disabled={loginLoading} className="w-full rounded-xl bg-red-600 px-4 py-2 font-semibold text-white transition hover:bg-red-700 disabled:opacity-60">
                   {loginLoading ? "Signing in..." : "Sign in"}
                 </button>
               </form>
             </div>
 
-            <div className="mt-4 flex items-center justify-between gap-3 text-sm text-gray-500 dark:text-gray-400">
-              <Link href={loginHref} className="font-semibold text-gray-700 hover:text-red-600 dark:text-gray-200 dark:hover:text-red-400">Full login</Link>
+            <div className="mt-4 flex items-center justify-end gap-3 text-sm text-gray-500 dark:text-gray-400">
               <Link href={registerHref} className="font-semibold text-red-600 hover:text-red-700 dark:text-red-400">Create account</Link>
             </div>
           </div>
