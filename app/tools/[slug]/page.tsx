@@ -46,6 +46,7 @@ const REDIRECTS: Record<string, string> = {
   'free-serp-tracking-online': 'serp-rank-tracker',
   'serprank': 'serp-rank-tracker',
   'serp-simulator': 'google-serp-simulator',
+  'og-image-generator': 'banner-generator',
   'serpsimulator': 'google-serp-simulator',
   'serp-test': 'google-serp-simulator',
   'serp-testing-tool': 'google-serp-simulator',
@@ -119,7 +120,7 @@ export default async function ToolDetailPage({ params }: PageProps) {
             </span>
           </div>
         </div>
-        {tool.slug !== 'og-image-generator' && (
+        {tool.slug !== 'banner-generator' && (
           <p className="text-gray-500 dark:text-gray-400 leading-relaxed mb-4">{tool.description}</p>
         )}
         <ToolEngagementBar toolName={tool.name} toolSlug={tool.slug} toolIcon={tool.emoji} />

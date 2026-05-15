@@ -23,7 +23,7 @@ const FEATURED_GRID_SLUGS = [
   'remove-duplicate-lines',
   'case-converter',
   'grammar-checker',
-  'og-image-generator',
+  'banner-generator',
 ];
 
 export default function CategoryGrid() {

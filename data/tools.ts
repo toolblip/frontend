@@ -1287,7 +1287,7 @@ export const tools: Tool[] = [
   { name: 'Regex Pattern Builder', slug: 'regex-pattern-builder', description: 'Build regex patterns visually from common use cases like emails, phones, URLs, and dates.', emoji: '🔍', category: 'Developer' },
   { name: 'Cron Schedule Explainer', slug: 'cron-schedule-explainer', description: 'Explain what a cron schedule means in plain English and show the next run times.', emoji: '⏱️', category: 'Developer' },
   { name: 'Response Header Analyzer', slug: 'response-header-analyzer', description: 'Analyze HTTP response headers for security, caching, CORS, and content-type configuration.', emoji: '📦', category: 'Developer' },
-  { name: 'Banner Generator', slug: 'og-image-generator', description: 'Create polished 1200×630 blog covers, banners, and Open Graph images with editable copy, gradient presets, and one-click PNG download.', emoji: '🖼️', category: 'Image' },
+  { name: 'Banner Generator', slug: 'banner-generator', description: 'Create polished 1200×630 blog covers, banners, and Open Graph images with editable copy, gradient presets, and one-click PNG download.', emoji: '🖼️', category: 'Image' },
   { name: 'HEX to RGBA Converter', slug: 'hex-to-rgba', description: 'Convert HEX color codes to RGBA format with adjustable alpha transparency and live preview.', emoji: '🎨', category: 'Color' },
   { name: 'Color Contrast Matrix', slug: 'color-contrast-matrix', description: 'Generate a contrast matrix for multiple colors to check WCAG AA and AAA compliance.', emoji: '♿', category: 'Color' },
   { name: 'Binary to Decimal', slug: 'binary-to-decimal', description: 'Convert binary numbers to decimal and vice versa with step-by-step calculation display.', emoji: '🔢', category: 'Conversion' },

@@ -3541,7 +3541,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'number-base-toolblip': return <BaseToolblipClient />;
     case 'number-to-words-express': return <NumberToWordsClient />;
     case 'number-to-words-tool': return <NumberToWordsClient />;
-    case 'og-image-generator': return <OgImageGeneratorClient />;
+    case 'banner-generator': return <OgImageGeneratorClient />;
     case 'ogg-to-wav': return <AacToWavClient />;
     case 'palindrome-checker-express': return <PalindromeCheckerClient />;
     case 'paragraph-generator': return <RandomParagraphGeneratorClient />;

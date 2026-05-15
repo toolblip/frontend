@@ -217,6 +217,14 @@ export const tools: Tool[] = [
     tags: ['image', 'convert', 'png', 'jpeg', 'webp', 'format'],
   },
   {
+    slug: 'banner-generator',
+    name: 'Banner Generator',
+    emoji: '🖼️',
+    description: 'Create polished 1200×630 blog covers, banners, and Open Graph images with editable copy, gradient presets, and one-click PNG download.',
+    category: 'Image',
+    tags: ['banner', 'og-image', 'cover', 'image', 'generator'],
+  },
+  {
     slug: 'math-evaluator',
     name: 'Math Expression Evaluator',
     emoji: '🔢',

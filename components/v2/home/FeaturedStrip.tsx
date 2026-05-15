@@ -10,7 +10,7 @@ const FEATURED_SLUGS = [
   'base64',
   'word-counter',
   'regex-tester',
-  'og-image-generator',
+  'banner-generator',
   'image-resizer',
   'uuid-generator',
   'url-encode',

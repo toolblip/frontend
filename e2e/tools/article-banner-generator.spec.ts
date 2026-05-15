@@ -13,7 +13,7 @@ test.describe('Banner Generator tool', () => {
 
   test('uses the available page width for tool UIs', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 1000 });
-    await page.goto('/tools/og-image-generator');
+    await page.goto('/tools/banner-generator');
 
     const toolShell = page.getByTestId('tool-detail-shell');
     const shellBox = await toolShell.boundingBox();
@@ -22,7 +22,7 @@ test.describe('Banner Generator tool', () => {
   });
 
   test('renders FAQs and FAQPage structured data on tool detail pages', async ({ page }) => {
-    await page.goto('/tools/og-image-generator');
+    await page.goto('/tools/banner-generator');
 
     await expect(page.getByRole('heading', { name: /Frequently asked questions about the Banner Generator/i })).toBeVisible();
     await expect(page.getByText('What is the Banner Generator?')).toBeVisible();
@@ -65,7 +65,7 @@ test.describe('Banner Generator tool', () => {
       `,
     });
 
-    await page.goto('/tools/og-image-generator');
+    await page.goto('/tools/banner-generator');
 
     await page.getByRole('button', { name: /^Share Banner Generator$/ }).click();
 
@@ -97,7 +97,7 @@ test.describe('Banner Generator tool', () => {
     await expect(shareOnLinkedIn).not.toContainText('Share on LinkedIn');
 
     await expect(shareLink).toBeDisabled();
-    await expect(shareLink).toHaveValue(/https?:\/\/(127\.0\.0\.1:3200|toolblip\.com)\/tools\/og-image-generator/);
+    await expect(shareLink).toHaveValue(/https?:\/\/(127\.0\.0\.1:3200|toolblip\.com)\/tools\/banner-generator/);
 
     const xBox = await shareOnX.boundingBox();
     const facebookBox = await shareOnFacebook.boundingBox();
@@ -135,14 +135,14 @@ test.describe('Banner Generator tool', () => {
     });
 
     const recordedChannels: string[] = [];
-    await page.route('**/api/tools/og-image-generator/share', async (route) => {
+    await page.route('**/api/tools/banner-generator/share', async (route) => {
       const body = route.request().postDataJSON() as { channel?: string };
       if (body.channel) recordedChannels.push(body.channel);
       await route.fulfill({
         contentType: 'application/json',
         body: JSON.stringify({
           data: {
-            slug: 'og-image-generator',
+            slug: 'banner-generator',
             views: 1,
             shares: recordedChannels.length,
             favorites: 0,
@@ -152,7 +152,7 @@ test.describe('Banner Generator tool', () => {
       });
     });
 
-    await page.goto('/tools/og-image-generator');
+    await page.goto('/tools/banner-generator');
     await page.getByRole('button', { name: /^Share Banner Generator$/ }).click();
 
     await page.getByRole('button', { name: 'Copy link' }).click();
@@ -185,13 +185,13 @@ test.describe('Banner Generator tool', () => {
       });
     });
 
-    await page.goto('/tools/og-image-generator');
+    await page.goto('/tools/banner-generator');
     await expect(page.getByTestId('tool-view-count')).toContainText('1');
     await expect(page.getByTestId('tool-share-count')).toHaveText('0');
 
     await page.getByRole('button', { name: /^Share Banner Generator$/ }).click();
     await Promise.all([
-      page.waitForResponse((response) => response.url().includes('/api/tools/og-image-generator/share') && response.request().method() === 'POST'),
+      page.waitForResponse((response) => response.url().includes('/api/tools/banner-generator/share') && response.request().method() === 'POST'),
       page.getByRole('button', { name: 'Share on Facebook' }).click(),
     ]);
     await expect(page.getByTestId('tool-share-count')).toHaveText('1');
@@ -217,19 +217,19 @@ test.describe('Banner Generator tool', () => {
     });
 
     let releaseShareTracking: (() => void) | undefined;
-    await page.route('**/api/tools/og-image-generator/share', async (route) => {
+    await page.route('**/api/tools/banner-generator/share', async (route) => {
       await new Promise<void>((resolve) => {
         releaseShareTracking = resolve;
       });
       await route.fulfill({
         contentType: 'application/json',
         body: JSON.stringify({
-          data: { slug: 'og-image-generator', views: 1, shares: 1, favorites: 0, viewer_favorited: false },
+          data: { slug: 'banner-generator', views: 1, shares: 1, favorites: 0, viewer_favorited: false },
         }),
       });
     });
 
-    await page.goto('/tools/og-image-generator');
+    await page.goto('/tools/banner-generator');
     await page.getByRole('button', { name: /^Share Banner Generator$/ }).click();
     await page.getByRole('button', { name: 'Copy link' }).click();
 
@@ -237,7 +237,7 @@ test.describe('Banner Generator tool', () => {
       .poll(() => page.evaluate(() => (window as typeof window & { __clipboardWrites?: string[] }).__clipboardWrites ?? []), {
         timeout: 500,
       })
-      .toContain('http://127.0.0.1:3200/tools/og-image-generator');
+      .toContain('http://127.0.0.1:3200/tools/banner-generator');
 
     await expect(page.getByRole('button', { name: 'Copy link' })).toContainText('Copied!');
     releaseShareTracking?.();
@@ -245,7 +245,7 @@ test.describe('Banner Generator tool', () => {
 
   test('renders a true 1200x630 preview and exports the same canvas as PNG', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 1000 });
-    await page.goto('/tools/og-image-generator');
+    await page.goto('/tools/banner-generator');
 
     await expect(page.getByRole('heading', { level: 1, name: /Banner Generator/i })).toBeVisible();
 
@@ -281,7 +281,7 @@ test.describe('Banner Generator tool', () => {
 
   test('exposes screenshot-style banner configuration controls and updates the export', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 1100 });
-    await page.goto('/tools/og-image-generator');
+    await page.goto('/tools/banner-generator');
 
     await expect(page.getByText('CONTENT', { exact: true })).toBeVisible();
     await expect(page.getByText('BACKGROUND', { exact: true })).toBeVisible();
