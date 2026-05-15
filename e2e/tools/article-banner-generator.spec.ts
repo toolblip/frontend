@@ -236,6 +236,30 @@ test.describe('Banner Generator tool', () => {
     releaseShareTracking?.();
   });
 
+  test('keeps foreground and background presets independent', async ({ page }) => {
+    await page.goto('/tools/banner-generator');
+
+    await page.getByRole('button', { name: /^BANNER STYLE$/i }).click();
+
+    const foregroundPresets = page.getByRole('group', { name: 'Foreground presets' });
+    const backgroundPresets = page.getByRole('group', { name: 'Background presets' });
+
+    await expect(foregroundPresets.getByRole('button', { name: 'Teal Midnight' })).toHaveAttribute('aria-pressed', 'true');
+    await expect(backgroundPresets.getByRole('button', { name: 'Teal Midnight' })).toHaveAttribute('aria-pressed', 'true');
+
+    await foregroundPresets.getByRole('button', { name: 'Indigo Violet' }).click();
+
+    await expect(foregroundPresets.getByRole('button', { name: 'Indigo Violet' })).toHaveAttribute('aria-pressed', 'true');
+    await expect(backgroundPresets.getByRole('button', { name: 'Teal Midnight' })).toHaveAttribute('aria-pressed', 'true');
+    await expect(backgroundPresets.getByRole('button', { name: 'Indigo Violet' })).toHaveAttribute('aria-pressed', 'false');
+
+    await backgroundPresets.getByRole('button', { name: 'Amber Fire' }).click();
+
+    await expect(backgroundPresets.getByRole('button', { name: 'Amber Fire' })).toHaveAttribute('aria-pressed', 'true');
+    await expect(foregroundPresets.getByRole('button', { name: 'Indigo Violet' })).toHaveAttribute('aria-pressed', 'true');
+    await expect(foregroundPresets.getByRole('button', { name: 'Amber Fire' })).toHaveAttribute('aria-pressed', 'false');
+  });
+
   test('renders a true 1200x630 preview and exports the same canvas as PNG', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 1000 });
     await page.goto('/tools/banner-generator');
@@ -283,21 +307,22 @@ test.describe('Banner Generator tool', () => {
     await expect(page.getByText('TYPOGRAPHY', { exact: true })).toBeVisible();
     await expect(page.getByText('BANNER STYLE', { exact: true })).toBeVisible();
 
-    await expect(page.getByRole('tab', { name: 'Solid' })).toBeVisible();
-    await expect(page.getByRole('tab', { name: 'Gradient' })).toBeVisible();
-    await expect(page.getByRole('group', { name: 'Color presets' }).getByRole('button')).toHaveCount(12);
-
-    const fromColor = page.getByLabel('From color hex');
-    const toColor = page.getByLabel('To color hex');
-    await expect(fromColor).toHaveValue('#4CC8C8');
-    await expect(toColor).toHaveValue('#202033');
-
-    // Open BANNER STYLE section for the direction controls
+    // Open BANNER STYLE so its foreground controls are visible
     await page.getByText('BANNER STYLE', { exact: true }).click();
     await page.waitForTimeout(200);
 
+    await expect(page.getByRole('tab', { name: 'Solid' })).toBeVisible();
+    await expect(page.getByRole('tab', { name: 'Gradient' })).toBeVisible();
+    await expect(page.getByRole('group', { name: 'Foreground presets' }).getByRole('button')).toHaveCount(12);
+    await expect(page.getByRole('group', { name: 'Background presets' }).getByRole('button')).toHaveCount(12);
+
+    const fromColor = page.getByLabel('Foreground from color hex');
+    const toColor = page.getByLabel('Foreground to color hex');
+    await expect(fromColor).toHaveValue('#4CC8C8');
+    await expect(toColor).toHaveValue('#202033');
+
     // Direction buttons — the default '140' should be pressed
-    const directionGroup = page.getByRole('group', { name: 'Gradient direction' });
+    const directionGroup = page.getByRole('group', { name: 'Foreground direction' });
     await expect(directionGroup).toBeVisible();
     const directionButtons = directionGroup.getByRole('button');
     await expect(directionButtons).toHaveCount(9);

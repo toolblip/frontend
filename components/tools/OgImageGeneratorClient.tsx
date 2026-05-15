@@ -5,6 +5,7 @@ import { useState, useRef, useEffect, useMemo } from 'react';
 import { useAuth } from '@/app/providers/auth-provider';
 
 type BackgroundMode = 'solid' | 'gradient' | 'dotted-frame';
+type PatternOverlay = 'none' | 'diagonal-lines' | 'dots' | 'grid' | 'zigzag' | 'crosses' | 'triangles';
 type BannerStyle = 'dotted-frame' | 'solid-frame' | 'double-frame' | 'dash-frame' | 'corner-accent' | 'shadow-card';
 
 type DirectionValue = '0' | '45' | '90' | '135' | '140' | '180' | '225' | '270' | '315';
@@ -60,6 +61,43 @@ const BANNER_STYLES = [
   { value: 'shadow-card', label: 'Shadow Card' },
 ];
 
+const PATTERN_OVERLAYS: Array<{ value: PatternOverlay; label: string }> = [
+  { value: 'none', label: 'None' },
+  { value: 'diagonal-lines', label: 'Diagonal Lines' },
+  { value: 'dots', label: 'Dots' },
+  { value: 'grid', label: 'Grid' },
+  { value: 'zigzag', label: 'Zigzag' },
+  { value: 'crosses', label: 'Crosses' },
+  { value: 'triangles', label: 'Triangles' },
+];
+
+function createDirectionalGradient(
+  ctx: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  direction: DirectionValue,
+  from: string,
+  to: string,
+) {
+  const horizontal = ['0', '45', '135', '140', '180', '225', '270', '315'].includes(direction);
+  const angle = parseInt(direction, 10);
+  const angleRad = (angle * Math.PI) / 180;
+  const cos = Math.cos(angleRad);
+  const sin = Math.sin(angleRad);
+  const x1 = horizontal
+    ? cos < 0 ? width : 0
+    : (width - (width * Math.abs(cos))) / 2 + (cos > 0 ? width * Math.abs(cos) : 0);
+  const y1 = horizontal
+    ? sin < 0 ? height : 0
+    : (height - (height * Math.abs(sin))) / 2 - (sin < 0 ? height * Math.abs(sin) : 0);
+  const x2 = width - x1;
+  const y2 = height - y1;
+  const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+  gradient.addColorStop(0, from);
+  gradient.addColorStop(1, to);
+  return gradient;
+}
+
 function SliderLabel({ value, children }: { value: number; children: React.ReactNode }) {
   return (
     <div className="flex items-center justify-between">
@@ -72,19 +110,24 @@ function SliderLabel({ value, children }: { value: number; children: React.React
 export default function OgImageGeneratorClient() {
   const [title, setTitle] = useState('Building Better Software\nWith Modern Tools');
   const [subtitle, setSubtitle] = useState('An in-depth guide to scaling your development workflow');
-  const [presetName, setPresetName] = useState<PresetName | null>('Teal Midnight');
+  const [foregroundPresetName, setForegroundPresetName] = useState<PresetName | null>('Teal Midnight');
+  const [backgroundPresetName, setBackgroundPresetName] = useState<PresetName | null>('Teal Midnight');
   const [footer, setFooter] = useState('');
   const [footerLogo, setFooterLogo] = useState<string | null>(null);
   const [bannerStyle, setBannerStyle] = useState<BannerStyle>('dotted-frame');
+  const [patternOverlay, setPatternOverlay] = useState<PatternOverlay>('dots');
   const [backgroundMode, setBackgroundMode] = useState<BackgroundMode>('gradient');
-  const [fromColor, setFromColor] = useState('#4CC8C8');
-  const [toColor, setToColor] = useState('#202033');
-  const [direction, setDirection] = useState<DirectionValue>('140');
+  const [foregroundFromColor, setForegroundFromColor] = useState('#4CC8C8');
+  const [foregroundToColor, setForegroundToColor] = useState('#202033');
+  const [foregroundDirection, setForegroundDirection] = useState<DirectionValue>('140');
+  const [backgroundFromColor, setBackgroundFromColor] = useState('#4CC8C8');
+  const [backgroundToColor, setBackgroundToColor] = useState('#202033');
+  const [backgroundDirection, setBackgroundDirection] = useState<DirectionValue>('140');
   const [titleFontSize, setTitleFontSize] = useState(44);
   const [subtitleFontSize, setSubtitleFontSize] = useState(20);
   const [alignment, setAlignment] = useState<TextAlign>('center');
   const [downloadUrl, setDownloadUrl] = useState('');
-  const [openSections, setOpenSections] = useState<Set<string>>(new Set(['CONTENT', 'BACKGROUND']));
+  const [openSections, setOpenSections] = useState<Set<string>>(new Set(['CONTENT', 'BACKGROUND', 'PATTERN_OVERLAY']));
   const [resolution, setResolution] = useState<'1200x630' | '1200x400' | '800x420' | '800x400' | 'custom'>('1200x630');
   const [customWidth, setCustomWidth] = useState(1200);
   const [customHeight, setCustomHeight] = useState(630);
@@ -115,9 +158,13 @@ export default function OgImageGeneratorClient() {
     });
   };
 
-  const preset = useMemo(
-    () => PRESETS.find((item) => item.name === presetName) ?? PRESETS[0],
-    [presetName],
+  const foregroundPreset = useMemo(
+    () => PRESETS.find((item) => item.name === foregroundPresetName) ?? PRESETS[0],
+    [foregroundPresetName],
+  );
+  const backgroundPreset = useMemo(
+    () => PRESETS.find((item) => item.name === backgroundPresetName) ?? PRESETS[0],
+    [backgroundPresetName],
   );
 
   useEffect(() => {
@@ -134,29 +181,125 @@ export default function OgImageGeneratorClient() {
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      const isHorizontal = ['0', '45', '135', '140', '180', '225', '270', '315'].includes(direction);
-
       // ===== BANNER STYLE RENDERING =====
       // All styles: gradient background → white card → text
 
-      // 1. Gradient background (all styles)
-      const angle = parseInt(direction, 10);
-      const angleRad = (angle * Math.PI) / 180;
-      const cos = Math.cos(angleRad);
-      const sin = Math.sin(angleRad);
-      const x1 = isHorizontal
-        ? cos < 0 ? WIDTH : 0
-        : (WIDTH - (WIDTH * Math.abs(cos))) / 2 + (cos > 0 ? WIDTH * Math.abs(cos) : 0);
-      const y1 = isHorizontal
-        ? sin < 0 ? HEIGHT : 0
-        : (HEIGHT - (HEIGHT * Math.abs(sin))) / 2 - (sin < 0 ? HEIGHT * Math.abs(sin) : 0);
-      const x2 = WIDTH - x1;
-      const y2 = HEIGHT - y1;
-      const bgGrad = ctx.createLinearGradient(x1, y1, x2, y2);
-      bgGrad.addColorStop(0, fromColor);
-      bgGrad.addColorStop(1, toColor);
-      ctx.fillStyle = backgroundMode === 'solid' ? fromColor : bgGrad;
+      // 1. Background (all styles)
+      const bgGrad = createDirectionalGradient(
+        ctx,
+        WIDTH,
+        HEIGHT,
+        backgroundDirection,
+        backgroundFromColor,
+        backgroundToColor,
+      );
+      ctx.fillStyle = backgroundMode === 'solid' ? backgroundFromColor : bgGrad;
       ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+      const drawPatternOverlay = () => {
+        if (patternOverlay === 'none') return;
+
+        const patternColor = backgroundMode === 'solid' ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.14)';
+        const accentColor = 'rgba(17,24,39,0.08)';
+        const useAccent = backgroundMode === 'solid' && backgroundFromColor.toLowerCase() === '#ffffff';
+        const strokeColor = useAccent ? accentColor : patternColor;
+        const spacing = Math.max(18, Math.round(Math.min(WIDTH, HEIGHT) / 22));
+        const size = Math.max(2, Math.round(Math.min(WIDTH, HEIGHT) / 220));
+
+        ctx.save();
+        ctx.globalAlpha = 1;
+        ctx.lineWidth = size;
+        ctx.strokeStyle = strokeColor;
+        ctx.fillStyle = strokeColor;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        switch (patternOverlay) {
+          case 'diagonal-lines': {
+            for (let x = -HEIGHT; x < WIDTH + HEIGHT; x += spacing) {
+              ctx.beginPath();
+              ctx.moveTo(x, 0);
+              ctx.lineTo(x + HEIGHT, HEIGHT);
+              ctx.stroke();
+            }
+            break;
+          }
+          case 'dots': {
+            const dot = Math.max(1.5, size * 0.75);
+            for (let y = spacing / 2; y < HEIGHT; y += spacing) {
+              for (let x = spacing / 2; x < WIDTH; x += spacing) {
+                ctx.beginPath();
+                ctx.arc(x, y, dot, 0, Math.PI * 2);
+                ctx.fill();
+              }
+            }
+            break;
+          }
+          case 'grid': {
+            ctx.lineWidth = Math.max(1, size);
+            for (let x = 0; x <= WIDTH; x += spacing) {
+              ctx.beginPath();
+              ctx.moveTo(x, 0);
+              ctx.lineTo(x, HEIGHT);
+              ctx.stroke();
+            }
+            for (let y = 0; y <= HEIGHT; y += spacing) {
+              ctx.beginPath();
+              ctx.moveTo(0, y);
+              ctx.lineTo(WIDTH, y);
+              ctx.stroke();
+            }
+            break;
+          }
+          case 'zigzag': {
+            const step = spacing;
+            const amp = Math.max(6, Math.round(step / 2.2));
+            for (let y = -amp; y < HEIGHT + amp; y += step * 1.8) {
+              ctx.beginPath();
+              for (let x = -step; x <= WIDTH + step; x += step) {
+                const idx = Math.round((x + step) / step);
+                const py = y + (idx % 2 === 0 ? -amp : amp);
+                if (x === -step) ctx.moveTo(x, py);
+                else ctx.lineTo(x, py);
+              }
+              ctx.stroke();
+            }
+            break;
+          }
+          case 'crosses': {
+            const cross = Math.max(5, Math.round(spacing / 3.5));
+            for (let y = spacing / 2; y < HEIGHT; y += spacing) {
+              for (let x = spacing / 2; x < WIDTH; x += spacing) {
+                ctx.beginPath();
+                ctx.moveTo(x - cross, y - cross);
+                ctx.lineTo(x + cross, y + cross);
+                ctx.moveTo(x + cross, y - cross);
+                ctx.lineTo(x - cross, y + cross);
+                ctx.stroke();
+              }
+            }
+            break;
+          }
+          case 'triangles': {
+            const tri = Math.max(6, Math.round(spacing / 2.6));
+            for (let y = spacing / 2; y < HEIGHT; y += spacing) {
+              for (let x = spacing / 2; x < WIDTH; x += spacing) {
+                ctx.beginPath();
+                ctx.moveTo(x, y - tri);
+                ctx.lineTo(x + tri, y + tri);
+                ctx.lineTo(x - tri, y + tri);
+                ctx.closePath();
+                ctx.stroke();
+              }
+            }
+            break;
+          }
+        }
+
+        ctx.restore();
+      };
+
+      drawPatternOverlay();
 
       // 2. White card (all styles) — scale with the selected resolution
       const tallBanner = HEIGHT >= 600;
@@ -170,15 +313,121 @@ export default function OgImageGeneratorClient() {
       const cardPadY = Math.round(cardH * (tallBanner ? 0.09 : compactBanner ? 0.1 : 0.12));
 
       ctx.save();
-      ctx.shadowColor = 'rgba(0,0,0,0.12)';
-      ctx.shadowBlur = 24;
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 4;
       ctx.beginPath();
       ctx.roundRect(cardX, cardY, cardW, cardH, cardRadius);
+      ctx.clip();
       ctx.fillStyle = '#ffffff';
-      ctx.fill();
+      ctx.fillRect(cardX, cardY, cardW, cardH);
+      ctx.globalAlpha = 0.16;
+      ctx.fillStyle = createDirectionalGradient(
+        ctx,
+        cardW,
+        cardH,
+        foregroundDirection,
+        foregroundFromColor,
+        foregroundToColor,
+      );
+      ctx.fillRect(cardX, cardY, cardW, cardH);
       ctx.restore();
+
+      const drawFrame = () => {
+        const inset = Math.max(6, Math.round(Math.min(cardW, cardH) * 0.015));
+        const frameX = cardX + inset / 2;
+        const frameY = cardY + inset / 2;
+        const frameW = cardW - inset;
+        const frameH = cardH - inset;
+        const frameRadius = Math.max(8, cardRadius - inset / 2);
+
+        ctx.save();
+        ctx.lineJoin = 'round';
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = createDirectionalGradient(
+          ctx,
+          cardW,
+          cardH,
+          foregroundDirection,
+          foregroundFromColor,
+          foregroundToColor,
+        );
+
+        switch (bannerStyle) {
+          case 'dotted-frame':
+            ctx.lineWidth = 4;
+            ctx.setLineDash([1, 8]);
+            ctx.beginPath();
+            ctx.roundRect(frameX, frameY, frameW, frameH, frameRadius);
+            ctx.stroke();
+            break;
+          case 'dash-frame':
+            ctx.lineWidth = 4;
+            ctx.setLineDash([12, 8]);
+            ctx.beginPath();
+            ctx.roundRect(frameX, frameY, frameW, frameH, frameRadius);
+            ctx.stroke();
+            break;
+          case 'solid-frame':
+            ctx.lineWidth = 4;
+            ctx.setLineDash([]);
+            ctx.beginPath();
+            ctx.roundRect(frameX, frameY, frameW, frameH, frameRadius);
+            ctx.stroke();
+            break;
+          case 'double-frame': {
+            ctx.lineWidth = 3;
+            ctx.setLineDash([]);
+            ctx.beginPath();
+            ctx.roundRect(frameX, frameY, frameW, frameH, frameRadius);
+            ctx.stroke();
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.roundRect(frameX + 8, frameY + 8, frameW - 16, frameH - 16, Math.max(6, frameRadius - 8));
+            ctx.stroke();
+            break;
+          }
+          case 'corner-accent': {
+            ctx.lineWidth = 5;
+            ctx.setLineDash([]);
+            const corner = Math.max(22, Math.round(Math.min(cardW, cardH) * 0.055));
+            const x1 = cardX + inset;
+            const y1 = cardY + inset;
+            const x2 = cardX + cardW - inset;
+            const y2 = cardY + cardH - inset;
+            ctx.beginPath();
+            // top-left
+            ctx.moveTo(x1, y1 + corner);
+            ctx.lineTo(x1, y1);
+            ctx.lineTo(x1 + corner, y1);
+            // top-right
+            ctx.moveTo(x2 - corner, y1);
+            ctx.lineTo(x2, y1);
+            ctx.lineTo(x2, y1 + corner);
+            // bottom-right
+            ctx.moveTo(x2, y2 - corner);
+            ctx.lineTo(x2, y2);
+            ctx.lineTo(x2 - corner, y2);
+            // bottom-left
+            ctx.moveTo(x1 + corner, y2);
+            ctx.lineTo(x1, y2);
+            ctx.lineTo(x1, y2 - corner);
+            ctx.stroke();
+            break;
+          }
+          case 'shadow-card':
+            ctx.shadowColor = 'rgba(0,0,0,0.18)';
+            ctx.shadowBlur = 18;
+            ctx.shadowOffsetY = 6;
+            ctx.lineWidth = 2;
+            ctx.setLineDash([]);
+            ctx.beginPath();
+            ctx.roundRect(frameX, frameY, frameW, frameH, frameRadius);
+            ctx.stroke();
+            break;
+        }
+
+        ctx.restore();
+      };
+
+      drawFrame();
 
       // Text rendering inside white card
       const textPadX = cardX + cardPadX;
@@ -301,16 +550,45 @@ export default function OgImageGeneratorClient() {
 
     drawBanner();
     return () => { cancelled = true; };
-  }, [title, subtitle, footer, footerLogo, bannerStyle, backgroundMode, fromColor, toColor, direction, titleFontSize, subtitleFontSize, alignment, preset, WIDTH, HEIGHT]);
+  }, [
+    title,
+    subtitle,
+    footer,
+    footerLogo,
+    bannerStyle,
+    patternOverlay,
+    backgroundMode,
+    foregroundFromColor,
+    foregroundToColor,
+    foregroundDirection,
+    backgroundFromColor,
+    backgroundToColor,
+    backgroundDirection,
+    titleFontSize,
+    subtitleFontSize,
+    alignment,
+    foregroundPreset,
+    backgroundPreset,
+    WIDTH,
+    HEIGHT,
+  ]);
 
-  const updateFromColor = (value: string) => setFromColor(value.startsWith('#') ? value : `#${value}`);
-  const updateToColor = (value: string) => setToColor(value.startsWith('#') ? value : `#${value}`);
+  const updateForegroundFromColor = (value: string) => setForegroundFromColor(value.startsWith('#') ? value : `#${value}`);
+  const updateForegroundToColor = (value: string) => setForegroundToColor(value.startsWith('#') ? value : `#${value}`);
+  const updateBackgroundFromColor = (value: string) => setBackgroundFromColor(value.startsWith('#') ? value : `#${value}`);
+  const updateBackgroundToColor = (value: string) => setBackgroundToColor(value.startsWith('#') ? value : `#${value}`);
   const normalizeHex = (value: string, fallback: string) => /^#[0-9A-Fa-f]{6}$/.test(value) ? value : fallback;
 
-  const choosePreset = (item: Preset) => {
-    setPresetName(item.name);
-    setFromColor(item.from);
-    setToColor(item.to);
+  const chooseForegroundPreset = (item: Preset) => {
+    setForegroundPresetName(item.name);
+    setForegroundFromColor(item.from);
+    setForegroundToColor(item.to);
+  };
+
+  const chooseBackgroundPreset = (item: Preset) => {
+    setBackgroundPresetName(item.name);
+    setBackgroundFromColor(item.from);
+    setBackgroundToColor(item.to);
     setBackgroundMode('gradient');
   };
 
@@ -464,21 +742,21 @@ export default function OgImageGeneratorClient() {
 
                 {/* Presets */}
                 <div className="space-y-2">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Color preset</span>
-                  <div className="grid grid-cols-4 gap-2" role="group" aria-label="Color presets">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Foreground preset</span>
+                  <div className="grid grid-cols-4 gap-2" role="group" aria-label="Foreground presets">
                     {PRESETS.map((item) => (
                       <button
                         key={item.name}
                         type="button"
-                        onClick={() => choosePreset(item)}
+                        onClick={() => chooseForegroundPreset(item)}
                         className={`h-10 w-full rounded-xl border-2 transition ${
-                          presetName === item.name
+                          foregroundPresetName === item.name
                             ? 'border-violet-500 ring-2 ring-violet-200'
                             : 'border-gray-200 hover:border-gray-300 dark:border-gray-700'
                         }`}
                         style={{ background: `linear-gradient(135deg, ${item.from}, ${item.to})` }}
                         aria-label={item.name}
-                        aria-pressed={presetName === item.name}
+                        aria-pressed={foregroundPresetName === item.name}
                       />
                     ))}
                   </div>
@@ -486,17 +764,17 @@ export default function OgImageGeneratorClient() {
 
                 {/* Direction buttons */}
                 <div className="space-y-2">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Direction</span>
-                  <div className="grid grid-cols-4 gap-2" role="group" aria-label="Gradient direction">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Foreground direction</span>
+                  <div className="grid grid-cols-4 gap-2" role="group" aria-label="Foreground direction">
                     {DIRECTIONS.map((d) => (
                       <button
                         key={d.value}
                         type="button"
-                        onClick={() => setDirection(d.value)}
+                        onClick={() => setForegroundDirection(d.value)}
                         aria-label={d.label}
-                        aria-pressed={direction === d.value}
+                        aria-pressed={foregroundDirection === d.value}
                         className={`flex items-center justify-center rounded-xl border-2 py-2 text-xs font-semibold transition ${
-                          direction === d.value
+                          foregroundDirection === d.value
                             ? 'border-violet-500 bg-violet-50 text-violet-700 dark:bg-violet-950 dark:text-violet-200'
                             : 'border-gray-200 text-gray-500 hover:border-gray-300 dark:border-gray-700'
                         }`}
@@ -510,40 +788,40 @@ export default function OgImageGeneratorClient() {
                 {/* From / To colors stacked */}
                 <div className="grid grid-cols-2 gap-3">
                   <label className="block space-y-2">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">From</span>
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Foreground from</span>
                     <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 dark:border-gray-700 dark:bg-gray-900">
                       <input
-                        aria-label="From color picker"
+                        aria-label="Foreground from color picker"
                         type="color"
-                        value={normalizeHex(fromColor, preset.from)}
-                        onChange={(event) => updateFromColor(event.target.value)}
+                        value={normalizeHex(foregroundFromColor, foregroundPreset.from)}
+                        onChange={(event) => updateForegroundFromColor(event.target.value)}
                         className="h-7 w-7 cursor-pointer rounded border-0 p-0"
                       />
                       <input
-                        aria-label="From color hex"
-                        value={fromColor}
-                        onChange={(event) => updateFromColor(event.target.value)}
-                        onBlur={() => setFromColor((value) => normalizeHex(value, preset.from))}
+                        aria-label="Foreground from color hex"
+                        value={foregroundFromColor}
+                        onChange={(event) => updateForegroundFromColor(event.target.value)}
+                        onBlur={() => setForegroundFromColor((value) => normalizeHex(value, foregroundPreset.from))}
                         className="min-w-0 flex-1 bg-transparent text-sm font-medium text-gray-900 outline-none dark:text-white"
                       />
                     </div>
                   </label>
 
                   <label className="block space-y-2">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">To</span>
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Foreground to</span>
                     <div className="flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 dark:border-gray-700 dark:bg-gray-900">
                       <input
-                        aria-label="To color picker"
+                        aria-label="Foreground to color picker"
                         type="color"
-                        value={normalizeHex(toColor, preset.to)}
-                        onChange={(event) => updateToColor(event.target.value)}
+                        value={normalizeHex(foregroundToColor, foregroundPreset.to)}
+                        onChange={(event) => updateForegroundToColor(event.target.value)}
                         className="h-7 w-7 cursor-pointer rounded border-0 p-0"
                       />
                       <input
-                        aria-label="To color hex"
-                        value={toColor}
-                        onChange={(event) => updateToColor(event.target.value)}
-                        onBlur={() => setToColor((value) => normalizeHex(value, preset.to))}
+                        aria-label="Foreground to color hex"
+                        value={foregroundToColor}
+                        onChange={(event) => updateForegroundToColor(event.target.value)}
+                        onBlur={() => setForegroundToColor((value) => normalizeHex(value, foregroundPreset.to))}
                         className="min-w-0 flex-1 bg-transparent text-sm font-medium text-gray-900 outline-none dark:text-white"
                       />
                     </div>
@@ -600,21 +878,21 @@ export default function OgImageGeneratorClient() {
                 </div>
 
                 <div className="space-y-3">
-                  <span className="text-[15px] font-medium text-gray-700 dark:text-gray-300">Presets</span>
-                  <div className="grid grid-cols-4 gap-3 sm:grid-cols-8" role="group" aria-label="Color presets">
+                  <span className="text-[15px] font-medium text-gray-700 dark:text-gray-300">Background preset</span>
+                  <div className="grid grid-cols-4 gap-3 sm:grid-cols-8" role="group" aria-label="Background presets">
                     {PRESETS.map((item) => (
                       <button
                         key={item.name}
                         type="button"
-                        onClick={() => choosePreset(item)}
+                        onClick={() => chooseBackgroundPreset(item)}
                         className={`h-12 w-full rounded-[12px] border transition sm:h-12 ${
-                          presetName === item.name
+                          backgroundPresetName === item.name
                             ? 'border-violet-500 ring-2 ring-violet-200'
                             : 'border-gray-200 hover:border-gray-300 dark:border-gray-700'
                         }`}
                         style={{ background: `linear-gradient(135deg, ${item.from}, ${item.to})` }}
                         aria-label={item.name}
-                        aria-pressed={presetName === item.name}
+                        aria-pressed={backgroundPresetName === item.name}
                       />
                     ))}
                   </div>
@@ -624,40 +902,40 @@ export default function OgImageGeneratorClient() {
                   <>
                     <div className="grid grid-cols-2 gap-3">
                       <label className="block space-y-2">
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">From</span>
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Background from</span>
                         <div className="flex items-center gap-2 rounded-2xl border border-gray-200 bg-white px-3 py-2 shadow-sm dark:border-gray-700 dark:bg-gray-900">
                           <input
-                            aria-label="From color picker"
+                            aria-label="Background from color picker"
                             type="color"
-                            value={normalizeHex(fromColor, preset.from)}
-                            onChange={(event) => updateFromColor(event.target.value)}
+                            value={normalizeHex(backgroundFromColor, backgroundPreset.from)}
+                            onChange={(event) => updateBackgroundFromColor(event.target.value)}
                             className="h-8 w-8 cursor-pointer rounded-lg border border-gray-200 p-0"
                           />
                           <input
-                            aria-label="From color hex"
-                            value={fromColor}
-                            onChange={(event) => updateFromColor(event.target.value)}
-                            onBlur={() => setFromColor((value) => normalizeHex(value, preset.from))}
+                            aria-label="Background from color hex"
+                            value={backgroundFromColor}
+                            onChange={(event) => updateBackgroundFromColor(event.target.value)}
+                            onBlur={() => setBackgroundFromColor((value) => normalizeHex(value, backgroundPreset.from))}
                             className="min-w-0 flex-1 bg-transparent text-sm font-medium text-gray-900 outline-none dark:text-white"
                           />
                         </div>
                       </label>
 
                       <label className="block space-y-2">
-                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">To</span>
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Background to</span>
                         <div className="flex items-center gap-2 rounded-2xl border border-gray-200 bg-white px-3 py-2 shadow-sm dark:border-gray-700 dark:bg-gray-900">
                           <input
-                            aria-label="To color picker"
+                            aria-label="Background to color picker"
                             type="color"
-                            value={normalizeHex(toColor, preset.to)}
-                            onChange={(event) => updateToColor(event.target.value)}
+                            value={normalizeHex(backgroundToColor, backgroundPreset.to)}
+                            onChange={(event) => updateBackgroundToColor(event.target.value)}
                             className="h-8 w-8 cursor-pointer rounded-lg border border-gray-200 p-0"
                           />
                           <input
-                            aria-label="To color hex"
-                            value={toColor}
-                            onChange={(event) => updateToColor(event.target.value)}
-                            onBlur={() => setToColor((value) => normalizeHex(value, preset.to))}
+                            aria-label="Background to color hex"
+                            value={backgroundToColor}
+                            onChange={(event) => updateBackgroundToColor(event.target.value)}
+                            onBlur={() => setBackgroundToColor((value) => normalizeHex(value, backgroundPreset.to))}
                             className="min-w-0 flex-1 bg-transparent text-sm font-medium text-gray-900 outline-none dark:text-white"
                           />
                         </div>
@@ -665,11 +943,11 @@ export default function OgImageGeneratorClient() {
                     </div>
 
                     <label className="block space-y-2">
-                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Direction</span>
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Background direction</span>
                       <select
-                        aria-label="Gradient direction"
-                        value={direction}
-                        onChange={(event) => setDirection(event.target.value as DirectionValue)}
+                        aria-label="Background direction"
+                        value={backgroundDirection}
+                        onChange={(event) => setBackgroundDirection(event.target.value as DirectionValue)}
                         className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
                       >
                         {DIRECTIONS.map((item) => (
@@ -682,25 +960,70 @@ export default function OgImageGeneratorClient() {
                   </>
                 ) : (
                   <label className="block space-y-2">
-                    <span className="text-[15px] font-medium text-gray-700 dark:text-gray-300">Custom Color</span>
+                    <span className="text-[15px] font-medium text-gray-700 dark:text-gray-300">Custom Background Color</span>
                     <div className="flex items-center gap-3 rounded-2xl border border-gray-200 bg-white p-2 shadow-sm dark:border-gray-700 dark:bg-gray-900">
                       <input
                         aria-label="Solid background color picker"
                         type="color"
-                        value={normalizeHex(fromColor, preset.from)}
-                        onChange={(event) => updateFromColor(event.target.value)}
+                        value={normalizeHex(backgroundFromColor, backgroundPreset.from)}
+                        onChange={(event) => updateBackgroundFromColor(event.target.value)}
                         className="h-14 w-14 shrink-0 cursor-pointer rounded-xl border border-gray-200 p-0"
                       />
                       <input
                         aria-label="Solid background color hex"
-                        value={fromColor}
-                        onChange={(event) => updateFromColor(event.target.value)}
-                        onBlur={() => setFromColor((value) => normalizeHex(value, preset.from))}
+                        value={backgroundFromColor}
+                        onChange={(event) => updateBackgroundFromColor(event.target.value)}
+                        onBlur={() => setBackgroundFromColor((value) => normalizeHex(value, backgroundPreset.from))}
                         className="min-w-0 flex-1 rounded-xl border border-transparent bg-transparent px-2 py-3 text-base font-medium text-gray-900 outline-none placeholder:text-gray-400 dark:text-white"
                       />
                     </div>
                   </label>
                 )}
+              </div>
+            )}
+          </div>
+
+          {/* PATTERN OVERLAY */}
+          <div className="space-y-5 border-b border-gray-100 p-5 dark:border-gray-800">
+            <button
+              type="button"
+              onClick={() => toggleSection('PATTERN_OVERLAY')}
+              className="flex w-full items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400 cursor-pointer"
+              aria-expanded={openSections.has('PATTERN_OVERLAY')}
+            >
+              <span className="flex h-7 w-7 items-center justify-center rounded-full border border-violet-200 bg-violet-50 text-violet-500 dark:border-violet-900 dark:bg-violet-950/30" aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 4h16v16H4z" />
+                  <path d="M9 4v16" />
+                  <path d="M4 9h16" />
+                </svg>
+              </span>
+              <span>PATTERN OVERLAY</span>
+              <svg className={`ml-auto h-4 w-4 transition-transform ${openSections.has('PATTERN_OVERLAY') ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            {openSections.has('PATTERN_OVERLAY') && (
+              <div className="space-y-2">
+                <label className="block space-y-2">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Overlay</span>
+                  <select
+                    aria-label="Pattern overlay"
+                    value={patternOverlay}
+                    onChange={(event) => setPatternOverlay(event.target.value as PatternOverlay)}
+                    className="w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+                  >
+                    {PATTERN_OVERLAYS.map((item) => (
+                      <option key={item.value} value={item.value}>
+                        {item.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <p className="text-xs leading-5 text-gray-500 dark:text-gray-400">
+                  Adds a subtle repeating pattern on top of the background and behind the banner card.
+                </p>
               </div>
             )}
           </div>
