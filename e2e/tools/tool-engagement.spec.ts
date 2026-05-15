@@ -74,10 +74,10 @@ test('tool pages render templated share left, inert views, and favorite hard rig
   await expect(shareDialog).toBeHidden();
   await expect(page.getByRole('dialog', { name: /Sign in to favorite JSON Formatter/i })).toBeVisible();
   await expect(page.getByRole('dialog', { name: /Share JSON Formatter/i })).toHaveCount(0);
-  await expect(page.getByRole('link', { name: /Create account/i })).toHaveAttribute('href', /\/signup\?next=%2Ftools%2Fjson-formatter/);
+  await expect(page.getByRole('link', { name: /Create account/i })).toHaveAttribute('href', /\/signup\?next=%2Ftools%2Fjson-formatter(&|%26)favorite=1/);
 
   await page.getByLabel('Email').fill('bdd@toolblip.test');
-  await page.getByLabel('Password').fill('Password123!');
+  await page.getByLabel('Password', { exact: true }).fill('Password123!');
   await page.getByRole('button', { name: /^Sign in$/i }).click();
 
   await expect(favoriteButton).toContainText('Favorited');
@@ -92,6 +92,64 @@ test('tool pages render templated share left, inert views, and favorite hard rig
 
   const cookies = await context.cookies();
   expect(cookies.find((cookie) => cookie.name === 'auth_token')).toBeTruthy();
+});
+
+test('guest users can register from the favorite prompt and auto-favorite on return', async ({ page }) => {
+  await page.goto('/tools/json-formatter');
+
+  const favoriteButton = page.getByTestId('tool-favorite-button');
+  await favoriteButton.click();
+
+  const loginDialog = page.getByRole('dialog', { name: /Sign in to favorite JSON Formatter/i });
+  await expect(loginDialog).toBeVisible();
+  await expect(loginDialog.getByRole('link', { name: /Create account/i })).toHaveAttribute(
+    'href',
+    /\/signup\?next=%2Ftools%2Fjson-formatter&favorite=1/
+  );
+
+  await loginDialog.getByRole('link', { name: /Create account/i }).click();
+  await expect(page).toHaveURL(/\/signup\?next=%2Ftools%2Fjson-formatter&favorite=1/);
+
+  await page.getByLabel('Name').fill('Favorite Tester');
+  await page.getByLabel('Email').fill('favorite-tester@example.com');
+  await page.getByLabel('Password', { exact: true }).fill('Password123!');
+  await page.getByLabel('Confirm password').fill('Password123!');
+  await page.getByLabel(/Terms and Conditions/i).check();
+  await page.getByRole('button', { name: /^Create account$/i }).click();
+
+  await expect(page).toHaveURL(/\/tools\/json-formatter(\?favorite=1)?/);
+  await expect(page.getByTestId('tool-favorite-button')).toContainText(/Favorited/i);
+  await expect(page.getByTestId('tool-favorite-count')).toHaveText('1');
+});
+
+test('favorited tools ask for confirmation before unfavoriting', async ({ page }) => {
+  const loginRes = await page.request.post('/api/auth/login', {
+    data: { email: 'bdd@toolblip.test', password: 'Password123!' },
+  });
+  expect(loginRes.ok()).toBeTruthy();
+
+  await page.goto('/tools/json-formatter');
+
+  const favoriteButton = page.getByTestId('tool-favorite-button');
+  await favoriteButton.click();
+  await expect(favoriteButton).toContainText(/Favorited/i);
+
+  await favoriteButton.click();
+
+  const confirmDialog = page.getByRole('dialog', { name: /Unfavorite JSON Formatter/i });
+  await expect(confirmDialog).toBeVisible();
+  await expect(confirmDialog).toContainText('Are you really want to unfavorite this favorite?');
+
+  await confirmDialog.getByRole('button', { name: /^No$/i }).click();
+  await expect(confirmDialog).toHaveCount(0);
+  await expect(favoriteButton).toContainText(/Favorited/i);
+
+  await favoriteButton.click();
+  await expect(confirmDialog).toBeVisible();
+  await confirmDialog.getByRole('button', { name: /^Yes$/i }).click();
+  await expect(confirmDialog).toHaveCount(0);
+  await expect(favoriteButton).toContainText(/^Favorite$/i);
+  await expect(page.getByTestId('tool-favorite-count')).toHaveText('0');
 });
 
 test('logged-in users can favorite after auth restore without seeing the login form', async ({ page }) => {

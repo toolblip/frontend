@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/providers/auth-provider";
 
 type EngagementStats = {
@@ -271,12 +272,70 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
   const [copied, setCopied] = useState(false);
   const [pageUrl, setPageUrl] = useState(`https://toolblip.com/tools/${toolSlug}`);
   const [shareHovered, setShareHovered] = useState(false);
+  const [favoriteIntent, setFavoriteIntent] = useState(false);
+  const [unfavoriteOpen, setUnfavoriteOpen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setPageUrl(window.location.href);
   }, []);
 
-  const registerHref = `/signup?next=${encodeURIComponent(`/tools/${toolSlug}`)}`;
+  const registerHref = `/signup?next=${encodeURIComponent(`/tools/${toolSlug}`)}&favorite=1`;
+  const favoriteReturnHref = `/tools/${toolSlug}?favorite=1`;
+  const loginHref = `/login?next=${encodeURIComponent(favoriteReturnHref)}`;
+
+  function clearFavoriteQuery() {
+    if (typeof window === "undefined") return;
+    const url = new URL(window.location.href);
+    if (url.searchParams.get("favorite") === "1" || url.searchParams.get("favorite") === "true") {
+      url.searchParams.delete("favorite");
+      router.replace(`${url.pathname}${url.search}${url.hash}`);
+    }
+  }
+
+  async function favoriteTool() {
+    setFavoriteLoading(true);
+    try {
+      const res = await fetch(`/api/tools/${toolSlug}/favorite`, {
+        method: "POST",
+        credentials: "include",
+        headers: { Accept: "application/json" },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setStats(data.data ?? fallbackStats(toolSlug));
+        setFavoriteIntent(false);
+        clearFavoriteQuery();
+      } else if (res.status === 401) {
+        setLoginOpen(true);
+      }
+    } finally {
+      setFavoriteLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("favorite") === "1" || params.get("favorite") === "true") {
+      setFavoriteIntent(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!favoriteIntent || authLoading || !user) {
+      return;
+    }
+
+    if (stats.viewer_favorited) {
+      setFavoriteIntent(false);
+      clearFavoriteQuery();
+      return;
+    }
+
+    void favoriteTool();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [favoriteIntent, authLoading, user, stats.viewer_favorited]);
 
   const shareLinks = useMemo<ShareChannel[]>(() => {
     const text = `Check out ${toolName} on Toolblip`;
@@ -313,6 +372,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
       },
     ];
   }, [pageUrl, toolName]);
+
 
   async function refreshStats() {
     const res = await fetch(`/api/tools/${toolSlug}/engagement`, { credentials: "include", cache: "no-store" });
@@ -385,23 +445,17 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
     }
 
     if (!user) {
+      setFavoriteIntent(true);
       setLoginOpen(true);
       return;
     }
 
-    setFavoriteLoading(true);
-    try {
-      const res = await fetch(`/api/tools/${toolSlug}/favorite`, {
-        method: stats.viewer_favorited ? "DELETE" : "POST",
-        credentials: "include",
-        headers: { Accept: "application/json" },
-      });
-      const data = await res.json();
-      if (res.ok) setStats(data.data ?? fallbackStats(toolSlug));
-      else if (res.status === 401) setLoginOpen(true);
-    } finally {
-      setFavoriteLoading(false);
+    if (stats.viewer_favorited) {
+      setUnfavoriteOpen(true);
+      return;
     }
+
+    await favoriteTool();
   }
 
   async function handleLoginSubmit(event: FormEvent<HTMLFormElement>) {
@@ -424,24 +478,31 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
       }
 
       login(data.user, data.token);
-      const favoriteRes = await fetch(`/api/tools/${toolSlug}/favorite`, {
-        method: "POST",
-        credentials: "include",
-        headers: { Accept: "application/json" },
-      });
-      const favoriteData = await favoriteRes.json();
-      if (favoriteRes.ok) {
-        setStats(favoriteData.data ?? fallbackStats(toolSlug));
-        setLoginOpen(false);
-        setEmail("");
-        setPassword("");
-      } else {
-        setLoginError(favoriteData.message ?? "Signed in, but could not favorite this tool.");
-      }
+      setLoginOpen(false);
+      setEmail("");
+      setPassword("");
     } catch {
       setLoginError("Something went wrong. Please try again.");
     } finally {
       setLoginLoading(false);
+    }
+  }
+
+  async function confirmUnfavorite() {
+    setFavoriteLoading(true);
+    try {
+      const res = await fetch(`/api/tools/${toolSlug}/favorite`, {
+        method: "DELETE",
+        credentials: "include",
+        headers: { Accept: "application/json" },
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setStats(data.data ?? fallbackStats(toolSlug));
+        setUnfavoriteOpen(false);
+      }
+    } finally {
+      setFavoriteLoading(false);
     }
   }
 
@@ -566,8 +627,40 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
             </form>
 
             <div className="mt-4 flex items-center justify-between gap-3 text-sm text-gray-500 dark:text-gray-400">
-              <Link href={`/login?next=${encodeURIComponent(`/tools/${toolSlug}`)}`} className="font-semibold text-gray-700 hover:text-red-600 dark:text-gray-200 dark:hover:text-red-400">Full login</Link>
+              <Link href={loginHref} className="font-semibold text-gray-700 hover:text-red-600 dark:text-gray-200 dark:hover:text-red-400">Full login</Link>
               <Link href={registerHref} className="font-semibold text-red-600 hover:text-red-700 dark:text-red-400">Create account</Link>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {unfavoriteOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Unfavorite ${toolName}`}
+            className="w-full max-w-sm rounded-2xl border border-gray-200 bg-white p-5 shadow-2xl dark:border-gray-800 dark:bg-gray-950"
+          >
+            <h2 className="text-lg font-bold text-gray-900 dark:text-white">Unfavorite this favorite?</h2>
+            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Are you really want to unfavorite this favorite?</p>
+
+            <div className="mt-5 flex items-center justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setUnfavoriteOpen(false)}
+                className="rounded-xl border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-900"
+              >
+                No
+              </button>
+              <button
+                type="button"
+                onClick={() => void confirmUnfavorite()}
+                className="rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-700 disabled:opacity-60"
+                disabled={favoriteLoading}
+              >
+                Yes
+              </button>
             </div>
           </div>
         </div>

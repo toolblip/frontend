@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import PasswordStrength from "@/components/ui/PasswordStrength";
 import { useAuth } from "@/app/providers/auth-provider";
@@ -17,6 +17,17 @@ export default function SignupForm() {
   const [acceptedLegal, setAcceptedLegal] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [next, setNext] = useState("/account");
+  const [favoriteOnReturn, setFavoriteOnReturn] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const nextParam = params.get("next");
+    if (nextParam && nextParam.startsWith("/") && !nextParam.startsWith("//")) {
+      setNext(nextParam);
+    }
+    setFavoriteOnReturn(params.get("favorite") === "1" || params.get("favorite") === "true");
+  }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -39,7 +50,11 @@ export default function SignupForm() {
 
       if (res.ok && data.token) {
         login(data.user, data.token);
-        router.push("/account");
+        const target = new URL(next, window.location.origin);
+        if (favoriteOnReturn) {
+          target.searchParams.set("favorite", "1");
+        }
+        router.push(`${target.pathname}${target.search}${target.hash}`);
       } else {
         const msg =
           data.message ??
@@ -53,6 +68,7 @@ export default function SignupForm() {
     }
   }
 
+  const googleNext = favoriteOnReturn ? `${next}${next.includes("?") ? "&" : "?"}favorite=1` : next;
 
   return (
     <div className="tb-v2-auth">
@@ -60,7 +76,7 @@ export default function SignupForm() {
         <div className="tb-v2-auth-card">
           <h1 className="tb-v2-auth-title">Create account</h1>
 
-          <GoogleAuthButton href="/api/auth/google/start?next=/account" />
+          <GoogleAuthButton href={`/api/auth/google/start?next=${encodeURIComponent(googleNext)}`} />
 
           <div className="tb-v2-auth-divider" aria-hidden="true">
             <span>or</span>
