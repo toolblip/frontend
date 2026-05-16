@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Script from 'next/script';
 
-export default function Analytics() {
+export default function Analytics({ measurementId }: { measurementId?: string }) {
   const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
@@ -23,7 +23,7 @@ export default function Analytics() {
     return () => window.removeEventListener('toolblip:analytics:enable', onEnable);
   }, []);
 
-  if (!enabled || !process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID) return null;
+  if (!enabled || !measurementId) return null;
 
   return (
     <>

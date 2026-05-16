@@ -95,7 +95,7 @@ export default function RootLayout({
               <TopLoader />
             </Suspense>
             <Shell>{children}</Shell>
-            <Analytics />
+            <Analytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
             <CookieBanner />
           </AuthProvider>
         </ThemeProvider>
