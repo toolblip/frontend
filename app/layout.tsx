@@ -68,6 +68,12 @@ export default function RootLayout({
     >
       <head>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        {process.env.NEXT_PUBLIC_BING_VERIFICATION_CODE ? (
+          <meta
+            name="msvalidate.01"
+            content={process.env.NEXT_PUBLIC_BING_VERIFICATION_CODE}
+          />
+        ) : null}
         <Script
           id="theme-init"
           dangerouslySetInnerHTML={{
