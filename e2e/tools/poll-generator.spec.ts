@@ -28,4 +28,29 @@ test.describe('Poll Generator', () => {
     await expect(output).toHaveValue(/Survey poll/);
     await expect(output).toHaveValue(/Strongly agree/);
   });
+
+  test('adds polished captions and hashtags for social formats', async ({ page }) => {
+    await page.goto('/tools/poll-generator');
+
+    const accept = page.getByRole('button', { name: /accept analytics cookies/i });
+    if (await accept.isVisible().catch(() => false)) {
+      await accept.click();
+    }
+
+    await page.getByPlaceholder('Enter your text...').fill('Best browser tool');
+    await page.getByRole('button', { name: 'Process' }).click();
+
+    const output = page.locator('#poll-output');
+    await expect(output).toHaveValue(/Suggested post:/);
+    await expect(output).toHaveValue(/Hashtags:/);
+
+    await page.getByRole('tab', { name: 'Instagram story' }).click();
+    await page.getByRole('button', { name: 'Process' }).click();
+    await expect(output).toHaveValue(/Story caption:/);
+    await expect(output).toHaveValue(/Hashtags:/);
+
+    await page.getByRole('tab', { name: 'Survey' }).click();
+    await page.getByRole('button', { name: 'Process' }).click();
+    await expect(output).toHaveValue(/Survey intro:/);
+  });
 });

@@ -87,6 +87,34 @@ function fallbackOptions(format: PollFormat) {
   return ['Love it', 'Like it', 'Needs work', 'Not for me'];
 }
 
+function toHashtag(text: string) {
+  const parts = cleanTopic(text)
+    .split(' ')
+    .map((part) => part.replace(/[^a-zA-Z0-9]/g, ''))
+    .filter(Boolean)
+    .slice(0, 3);
+
+  if (parts.length === 0) return '#Poll';
+
+  return `#${parts
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
+    .join('')}`;
+}
+
+function buildHashtags(topic: string, format: PollFormat) {
+  const tags = [topic ? toHashtag(topic) : '#Poll'];
+
+  if (format === 'twitter') {
+    tags.push('#Poll');
+  } else if (format === 'instagram') {
+    tags.push('#StoryPoll');
+  } else {
+    tags.push('#Feedback');
+  }
+
+  return Array.from(new Set(tags)).slice(0, 2);
+}
+
 function buildOutput(rawInput: string, format: PollFormat) {
   const parsed = parsePrompt(rawInput);
   const topic = parsed.question || cleanTopic(rawInput);
@@ -94,6 +122,7 @@ function buildOutput(rawInput: string, format: PollFormat) {
   const questionText = parsed.question ? parsed.question : fallbackQuestion(topic, format);
   const parsedOptions = parsed.options.filter(Boolean).slice(0, format === 'survey' ? 5 : 4);
   const options = parsedOptions.length > 0 ? parsedOptions : fallbackOptions(format);
+  const hashtags = buildHashtags(topic, format);
 
   const lines: string[] = [];
   lines.push(`${FORMAT_LABELS[format]} poll`);
@@ -101,20 +130,33 @@ function buildOutput(rawInput: string, format: PollFormat) {
   lines.push('');
 
   if (format === 'twitter') {
+    lines.push('Suggested post:');
+    lines.push(question ? `Vote on ${question}.` : 'Vote below and share your take.');
+    lines.push('');
     lines.push('Post-ready options:');
     options.slice(0, 4).forEach((option, index) => {
-      lines.push(`${index + 1}. ${option}`);
+      lines.push(`${String.fromCharCode(65 + index)}. ${option}`);
     });
+    lines.push('');
+    lines.push(`Hashtags: ${hashtags.join(' ')}`);
     lines.push('');
     lines.push('Tip: keep the question short and the options mutually exclusive.');
   } else if (format === 'instagram') {
+    lines.push('Story caption:');
+    lines.push(question ? `Tap to vote on ${question}.` : 'Tap to vote and share your pick.');
+    lines.push('');
     lines.push('Story poll sticker:');
     lines.push(`1. ${options[0] ?? 'Yes'}`);
     lines.push(`2. ${options[1] ?? 'No'}`);
     lines.push('');
+    lines.push(`Hashtags: ${hashtags.join(' ')}`);
+    lines.push('');
     lines.push('Tip: Instagram polls work best with two quick choices.');
   } else {
     const surveyOptions = options.length >= 5 ? options.slice(0, 5) : fallbackOptions('survey');
+    lines.push('Survey intro:');
+    lines.push(question ? `Use this to collect feedback on ${question}.` : 'Use this to collect focused feedback.');
+    lines.push('');
     lines.push('Survey scale:');
     surveyOptions.forEach((option, index) => {
       lines.push(`${index + 1}. ${option}`);
