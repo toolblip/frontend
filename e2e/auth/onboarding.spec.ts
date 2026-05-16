@@ -52,6 +52,7 @@ test.describe('Account onboarding BDD regression', () => {
     await expect(dialog.getByRole('link', { name: 'Favorite tools' })).toHaveAttribute('href', '#favorite-tools');
     await expect(dialog.getByRole('link', { name: 'Profile settings' })).toHaveAttribute('href', '#profile-settings');
     await expect(dialog.getByRole('link', { name: 'Billing' })).toHaveAttribute('href', '#billing');
+    await expect(dialog.getByRole('link', { name: 'View plans' })).toHaveAttribute('href', '/pricing');
   });
 
   test('Given dashboard onboarding appears, When the user skips it, Then it closes and records a skipped default plan', async ({ page }) => {

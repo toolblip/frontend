@@ -453,7 +453,7 @@ export default function AccountPage() {
             </div>
             <div className="mb-5 rounded-xl border border-gray-200 bg-white p-4 text-sm text-gray-700 shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
               <p className="font-medium text-gray-900 dark:text-white">Start here:</p>
-              <div className="mt-3 grid gap-2 sm:grid-cols-3">
+              <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
                 <a href="#favorite-tools" className="rounded-lg border border-gray-200 px-3 py-2 text-center font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-800 dark:hover:bg-red-950/30">
                   Favorite tools
                 </a>
@@ -462,6 +462,9 @@ export default function AccountPage() {
                 </a>
                 <a href="#billing" className="rounded-lg border border-gray-200 px-3 py-2 text-center font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-800 dark:hover:bg-red-950/30">
                   Billing
+                </a>
+                <a href="/pricing" className="rounded-lg border border-gray-200 px-3 py-2 text-center font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-800 dark:hover:bg-red-950/30">
+                  View plans
                 </a>
               </div>
             </div>
