@@ -1,12 +1,17 @@
 {
   "pending": [
-    "convert base64 text and files locally in the browser",
     "compare text diffs online for code reviews",
     "generate secure passwords in the browser",
     "hash text with SHA-256 online without sending data"
   ],
   "in_progress": [],
   "done": [
+    {
+      "topic": "convert base64 text and files locally in the browser",
+      "completed_at": "2026-05-16T17:06:14Z",
+      "url": "https://toolblip.com/blog/2026-05-16-base64-decode-online-without-uploading",
+      "note": "manual fallback because Claude Code auth was unavailable in cron"
+    },
     {
       "topic": "generate cron expressions without mistakes",
       "completed_at": "2026-05-15T17:06:37Z"
