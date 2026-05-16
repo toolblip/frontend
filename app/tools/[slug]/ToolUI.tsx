@@ -840,7 +840,7 @@ import PhotoResizeToolClient from '@/components/tools/PhotoResizeToolClient';
 import PhysicsConstantsReferenceClient from '@/components/tools/PhysicsConstantsReferenceClient';
 import PlagiarismCheckerClient from '@/components/tools/PlagiarismCheckerClient';
 import PodcastWriterClient from '@/components/tools/PodcastWriterClient';
-import PollGeneratorClient from '@/components/tools/PollGeneratorClient';
+import PollGeneratorClient from '@/components/tools/PollGeneratorClientV2';
 import PostIdeasGeneratorClient from '@/components/tools/PostIdeasGeneratorClient';
 import PostRewriterClient from '@/components/tools/PostRewriterClient';
 import PressureConverterClient from '@/components/tools/PressureConverterClient';
