@@ -439,10 +439,18 @@ export default function AccountPage() {
             className="w-full max-w-2xl rounded-2xl border border-gray-200 bg-white p-6 shadow-2xl dark:border-gray-700 dark:bg-gray-900"
           >
             <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-red-600 dark:text-red-400">Welcome to Toolblip</p>
-            <h2 id="plan-onboarding-title" className="mb-3 text-2xl font-bold text-gray-900 dark:text-white">Choose your Toolblip plan</h2>
+            <h2 id="plan-onboarding-title" className="mb-3 text-2xl font-bold text-gray-900 dark:text-white">Welcome to your Toolblip dashboard</h2>
             <p className="mb-5 text-sm text-gray-600 dark:text-gray-300">
-              Pick a plan to personalize your account. Free is selected by default, and you can switch plans anytime.
+              This quick onboarding helps you choose a plan and get oriented with the account area. Free is selected by default, and you can switch plans anytime.
             </p>
+            <div className="mb-5 rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700 dark:border-gray-700 dark:bg-gray-950 dark:text-gray-300">
+              <p className="font-medium text-gray-900 dark:text-white">Get started in one minute:</p>
+              <ul className="mt-2 list-disc space-y-1 pl-5">
+                <li>Pick a plan that fits how you use Toolblip</li>
+                <li>Save your favorite tools for quick access</li>
+                <li>Update your profile and billing later from this page</li>
+              </ul>
+            </div>
             <div className="grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label="Toolblip plan options">
               {ONBOARDING_PLANS.map((plan) => {
                 const selected = selectedOnboardingPlan === plan.tier;
