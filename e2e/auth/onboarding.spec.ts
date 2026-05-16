@@ -43,6 +43,17 @@ test.describe('Account onboarding BDD regression', () => {
     expect(stored).toMatchObject({ status: 'completed', selectedPlan: 'ultra' });
   });
 
+  test('Given dashboard onboarding appears, Then it includes start-here shortcuts to the main account sections', async ({ page }) => {
+    await loginByForm(page, VALID_USER);
+
+    const dialog = page.getByRole('dialog', { name: 'Welcome to your Toolblip dashboard' });
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByText(/Start here/i)).toBeVisible();
+    await expect(dialog.getByRole('link', { name: 'Favorite tools' })).toHaveAttribute('href', '#favorite-tools');
+    await expect(dialog.getByRole('link', { name: 'Profile settings' })).toHaveAttribute('href', '#profile-settings');
+    await expect(dialog.getByRole('link', { name: 'Billing' })).toHaveAttribute('href', '#billing');
+  });
+
   test('Given dashboard onboarding appears, When the user skips it, Then it closes and records a skipped default plan', async ({ page }) => {
     await loginByForm(page, VALID_USER);
 

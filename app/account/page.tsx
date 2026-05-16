@@ -451,6 +451,20 @@ export default function AccountPage() {
                 <li>Update your profile and billing later from this page</li>
               </ul>
             </div>
+            <div className="mb-5 rounded-xl border border-gray-200 bg-white p-4 text-sm text-gray-700 shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
+              <p className="font-medium text-gray-900 dark:text-white">Start here:</p>
+              <div className="mt-3 grid gap-2 sm:grid-cols-3">
+                <a href="#favorite-tools" className="rounded-lg border border-gray-200 px-3 py-2 text-center font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-800 dark:hover:bg-red-950/30">
+                  Favorite tools
+                </a>
+                <a href="#profile-settings" className="rounded-lg border border-gray-200 px-3 py-2 text-center font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-800 dark:hover:bg-red-950/30">
+                  Profile settings
+                </a>
+                <a href="#billing" className="rounded-lg border border-gray-200 px-3 py-2 text-center font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-800 dark:hover:bg-red-950/30">
+                  Billing
+                </a>
+              </div>
+            </div>
             <div className="grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label="Toolblip plan options">
               {ONBOARDING_PLANS.map((plan) => {
                 const selected = selectedOnboardingPlan === plan.tier;
@@ -556,7 +570,7 @@ export default function AccountPage() {
         </div>
       )}
 
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 mb-6">
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 mb-6" id="profile-settings">
         <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">
           Profile settings
         </h2>
@@ -616,7 +630,7 @@ export default function AccountPage() {
         </form>
       </div>
 
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 mb-6">
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 mb-6" id="favorite-tools">
         <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">
           Favorite tools
         </h2>
@@ -644,7 +658,7 @@ export default function AccountPage() {
       </div>
 
       {/* Subscription Card */}
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 mb-6">
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 mb-6" id="billing">
         <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">
           Subscription
         </h2>
