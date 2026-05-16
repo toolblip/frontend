@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import Script from 'next/script';
+import CookieBanner from '@/components/CookieBanner';
+import Analytics from '@/components/Analytics';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -29,6 +31,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        {process.env.NEXT_PUBLIC_BING_VERIFICATION_CODE ? (
+          <meta name="msvalidate.01" content={process.env.NEXT_PUBLIC_BING_VERIFICATION_CODE} />
+        ) : null}
         <Script
           id="theme-init"
           dangerouslySetInnerHTML={{
@@ -46,6 +51,8 @@ export default function RootLayout({
         <main id="main-content" className="flex-1">
           {children}
         </main>
+        <Analytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+        <CookieBanner />
       </body>
     </html>
   );
