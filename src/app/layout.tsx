@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Suspense } from 'react';
 import Script from 'next/script';
 import CookieBanner from '@/components/CookieBanner';
-import Analytics from '@/components/Analytics';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -51,7 +50,11 @@ export default function RootLayout({
         <main id="main-content" className="flex-1">
           {children}
         </main>
-        <Analytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+        <Script id="ga-consent-loader" strategy="afterInteractive">
+          {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
+            ? `(function(){try{var m='${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}';function l(){if(window.__tbGaLoaded)return;window.__tbGaLoaded=true;var s=document.createElement('script');s.src='https://www.googletagmanager.com/gtag/js?id='+m;s.async=true;document.head.appendChild(s);window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments);};gtag('js',new Date());gtag('config',m);}if(localStorage.getItem('toolblip_cookie_consent')==='accepted'){l();}window.addEventListener('toolblip:analytics:enable',l);}catch(e){}})();`
+            : ''}
+        </Script>
         <CookieBanner />
       </body>
     </html>
