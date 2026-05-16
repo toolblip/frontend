@@ -50,9 +50,14 @@ export default function RootLayout({
         <main id="main-content" className="flex-1">
           {children}
         </main>
+        <Script id="ga-consent-default" strategy="afterInteractive">
+          {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
+            ? `(function(){window.dataLayer=window.dataLayer||[];window.gtag=window.gtag||function(){dataLayer.push(arguments);};window.gtag('consent','default',{analytics_storage:'denied',ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied'});})();`
+            : ''}
+        </Script>
         <Script id="ga-consent-loader" strategy="afterInteractive">
           {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
-            ? `(function(){try{var m='${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}';function l(){if(window.__tbGaLoaded)return;window.__tbGaLoaded=true;var s=document.createElement('script');s.src='https://www.googletagmanager.com/gtag/js?id='+m;s.async=true;document.head.appendChild(s);window.dataLayer=window.dataLayer||[];window.gtag=function(){dataLayer.push(arguments);};gtag('js',new Date());gtag('config',m);}if(localStorage.getItem('toolblip_cookie_consent')==='accepted'){l();}window.addEventListener('toolblip:analytics:enable',l);}catch(e){}})();`
+            ? `(function(){try{var m='${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}';function l(){if(window.__tbGaLoaded)return;window.__tbGaLoaded=true;var s=document.createElement('script');s.src='https://www.googletagmanager.com/gtag/js?id='+m;s.async=true;document.head.appendChild(s);window.dataLayer=window.dataLayer||[];window.gtag=window.gtag||function(){dataLayer.push(arguments);};window.gtag('js',new Date());window.gtag('config',m,{send_page_view:false});}function u(){window.gtag('consent','update',{analytics_storage:'granted'});window.gtag('event','page_view',{page_location:window.location.href,page_path:window.location.pathname+window.location.search});}if(localStorage.getItem('toolblip_cookie_consent')==='accepted'){l();u();}window.addEventListener('toolblip:analytics:enable',function(){l();u();});}catch(e){}})();`
             : ''}
         </Script>
         <CookieBanner />

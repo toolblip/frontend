@@ -70,7 +70,7 @@ export default function PrivacyPage() {
             <ul>
               <li><strong>Functional cookies:</strong> used for sessions, preferences, and basic product operation.</li>
               <li><strong>Cloudflare Web Analytics:</strong> cookieless analytics for aggregate traffic and performance insights.</li>
-              <li><strong>Optional analytics:</strong> Google Analytics only loads after consent through the cookie banner.</li>
+              <li><strong>Optional analytics:</strong> Google Analytics uses consent mode. The Google tag may load before you opt in, but analytics storage stays denied until you accept the cookie banner.</li>
             </ul>
           </div>
 
