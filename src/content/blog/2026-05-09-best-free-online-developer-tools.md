@@ -125,7 +125,7 @@ Without a snippet manager, you end up with a `scratch.md` file that grows for tw
 
 No install is the core appeal. You open a tab, do the task, close the tab. There is no Homebrew formula to update, no npm package to audit, no IDE extension that breaks after the next editor release.
 
-That payoff is strongest for tasks you do once a month. Generating a QR code for a wifi network. Converting a CSV to JSON for a one-off import. Diffing two blocks of text to spot what changed in a config file. Installing a tool for a job you do twelve times a year does not pay back.
+That payoff is strongest for tasks you do once a month. Generating a QR code for a wifi network. Converting a CSV to JSON for a one-off import. Diffing two blocks of text to spot what changed in a config file. If that last job comes up during review, use a quick [online text diff workflow](https://toolblip.com/blog/2026-05-17-compare-text-diffs-online-code-reviews) and move the final decision back into the pull request. Installing a tool for a job you do twelve times a year does not pay back.
 
 The other case is on borrowed machines. You are pairing on a colleague's laptop, you are at a client site, you are on a fresh dev container. Browser tools work everywhere a browser works, which is everywhere.
 
