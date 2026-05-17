@@ -1,13 +1,15 @@
 {
   "pending": [
-    {
-      "url": "https://toolblip.com/blog/2026-05-17-compare-text-diffs-online-code-reviews",
-      "topic": "compare text diffs online for code reviews",
-      "enqueued_at": "2026-05-17T17:06:16Z"
-    },
     "https://toolblip.com/blog/2026-05-13-how-to-test-regular-expressions-online-with-sample-text"
   ],
   "submitted": [
+    {
+      "url": "https://toolblip.com/blog/2026-05-17-compare-text-diffs-online-code-reviews",
+      "topic": "compare text diffs online for code reviews",
+      "submitted_at": "2026-05-17T17:07:21Z",
+      "method": "sitemap",
+      "note": "sitemap refreshed after conservative manual fallback post"
+    },
     {
       "url": "https://toolblip.com/blog/2026-05-12-how-to-decode-jwt-tokens-safely-in-your-browser",
       "submitted_at": "2026-05-12T23:30:00Z",
