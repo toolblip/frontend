@@ -21,11 +21,27 @@ test.describe('Banner Generator tool', () => {
     expect(shellBox?.width).toBeGreaterThan(1080);
   });
 
-  test('renders FAQs and FAQPage structured data on tool detail pages', async ({ page }) => {
+  test('renders FAQs and centers the FAQ section on tool detail pages', async ({ page }) => {
     await page.goto('/tools/banner-generator');
 
-    await expect(page.getByRole('heading', { name: /Frequently asked questions about the Banner Generator/i })).toBeVisible();
+    const faqHeading = page.getByRole('heading', { name: /Frequently asked questions about the Banner Generator/i });
+    const faqSection = page.locator('.tb-v2-faq');
+
+    await expect(faqHeading).toBeVisible();
     await expect(page.getByText('What is the Banner Generator?')).toBeVisible();
+    await expect(faqHeading).toHaveCSS('text-align', 'center');
+
+    const faqBox = await faqSection.boundingBox();
+    const faqStyles = await faqSection.evaluate((el) => {
+      const styles = getComputedStyle(el);
+      return {
+        marginLeft: styles.marginLeft,
+        marginRight: styles.marginRight,
+      };
+    });
+
+    expect(faqBox?.width).toBeGreaterThan(500);
+    expect(Math.abs(Number.parseFloat(faqStyles.marginLeft) - Number.parseFloat(faqStyles.marginRight))).toBeLessThan(1);
 
     const faqSchema = await page.locator('script[type="application/ld+json"]').evaluateAll((scripts) =>
       scripts.map((script) => {

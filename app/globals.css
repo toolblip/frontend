@@ -2410,15 +2410,17 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 
 /* FAQ section */
 .tb-v2-faq {
-  margin-top: 48px;
+  margin: 48px auto 0;
   max-width: 760px;
+  width: 100%;
 }
 .tb-v2-faq-title {
   font-family: var(--f-display);
   font-size: 22px; font-weight: 700;
   letter-spacing: -0.015em;
   color: var(--fg-0);
-  margin: 0 0 20px;
+  margin: 0 0 24px;
+  text-align: center;
 }
 .tb-v2-faq-list {
   display: flex; flex-direction: column;

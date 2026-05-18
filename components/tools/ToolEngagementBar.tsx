@@ -61,18 +61,6 @@ function formatCount(value: number) {
   return new Intl.NumberFormat("en", { notation: value >= 10000 ? "compact" : "standard" }).format(value);
 }
 
-function formatFavoriteDate(value?: string | null) {
-  if (!value) return "Favorited";
-
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "Favorited";
-
-  const today = new Date();
-  const isToday = date.toDateString() === today.toDateString();
-  if (isToday) return "Favorited today";
-
-  return `Favorited on ${new Intl.DateTimeFormat("en", { month: "short", day: "numeric", year: "numeric" }).format(date)}`;
-}
 
 function ShareIcon({ className = "h-5 w-5" }: IconProps) {
   return (
@@ -509,8 +497,8 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
     }
   }
 
-  const favoriteText = authLoading ? "Checking..." : stats.viewer_favorited ? formatFavoriteDate(stats.viewer_favorited_at) : "Favorite";
-  const favoriteLabel = authLoading ? `Checking sign-in status for ${toolName}` : stats.viewer_favorited ? `${favoriteText} ${toolName}` : `Favorite ${toolName}`;
+  const favoriteText = authLoading ? "Checking..." : stats.viewer_favorited ? "Favorited" : "Favorite";
+  const favoriteLabel = authLoading ? `Checking sign-in status for ${toolName}` : stats.viewer_favorited ? `Favorited ${toolName}` : `Favorite ${toolName}`;
   const favoriteDisabled = favoriteLoading || authLoading;
 
   function toggleSharePopover() {
