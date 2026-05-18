@@ -48,7 +48,8 @@ test.describe('Account onboarding BDD regression', () => {
 
     const dialog = page.getByRole('dialog', { name: 'Welcome to your Toolblip dashboard' });
     await expect(dialog).toBeVisible();
-    await expect(dialog.getByText(/Start here/i)).toBeVisible();
+    await expect(dialog.getByText(/Manage billing and profile settings/i)).toBeVisible();
+    await expect(dialog.getByText(/Your first steps:/i)).toBeVisible();
     await expect(dialog.getByRole('link', { name: 'Favorite tools' })).toHaveAttribute('href', '#favorite-tools');
     await expect(dialog.getByRole('link', { name: 'Profile settings' })).toHaveAttribute('href', '#profile-settings');
     await expect(dialog.getByRole('link', { name: 'Billing' })).toHaveAttribute('href', '#billing');

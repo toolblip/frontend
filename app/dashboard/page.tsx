@@ -441,18 +441,18 @@ export default function AccountPage() {
             <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-red-600 dark:text-red-400">Welcome to Toolblip</p>
             <h2 id="plan-onboarding-title" className="mb-3 text-2xl font-bold text-gray-900 dark:text-white">Welcome to your Toolblip dashboard</h2>
             <p className="mb-5 text-sm text-gray-600 dark:text-gray-300">
-              This quick onboarding helps you choose a plan and get oriented with the dashboard area. Free is selected by default, and you can switch plans anytime.
+              Choose a plan, save your favorite tools, and manage billing and profile settings from one place. Free is selected by default, and you can switch plans anytime.
             </p>
             <div className="mb-5 rounded-xl border border-gray-200 bg-gray-50 p-4 text-sm text-gray-700 dark:border-gray-700 dark:bg-gray-950 dark:text-gray-300">
-              <p className="font-medium text-gray-900 dark:text-white">Get started in one minute:</p>
+              <p className="font-medium text-gray-900 dark:text-white">Your first steps:</p>
               <ul className="mt-2 list-disc space-y-1 pl-5">
                 <li>Pick a plan that fits how you use Toolblip</li>
                 <li>Save your favorite tools for quick access</li>
-                <li>Update your profile and billing later from this page</li>
+                <li>Update your profile and billing anytime from this dashboard</li>
               </ul>
             </div>
             <div className="mb-5 rounded-xl border border-gray-200 bg-white p-4 text-sm text-gray-700 shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
-              <p className="font-medium text-gray-900 dark:text-white">Start here:</p>
+              <p className="font-medium text-gray-900 dark:text-white">Jump to:</p>
               <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
                 <a href="#favorite-tools" className="rounded-lg border border-gray-200 px-3 py-2 text-center font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-800 dark:hover:bg-red-950/30">
                   Favorite tools
