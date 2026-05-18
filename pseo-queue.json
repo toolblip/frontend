@@ -1,10 +1,15 @@
 {
   "pending": [
-    "generate secure passwords in the browser",
     "hash text with SHA-256 online without sending data"
   ],
   "in_progress": [],
   "done": [
+    {
+      "topic": "generate secure passwords in the browser",
+      "completed_at": "2026-05-18T17:05:00Z",
+      "url": "https://toolblip.com/blog/2026-05-18-generate-secure-passwords-in-the-browser",
+      "note": "manual fallback because Claude Code auth was unavailable in cron; conservative one-post run"
+    },
     {
       "topic": "compare text diffs online for code reviews",
       "completed_at": "2026-05-17T17:06:16Z",

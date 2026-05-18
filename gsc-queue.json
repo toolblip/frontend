@@ -1,5 +1,10 @@
 {
   "pending": [
+    {
+      "url": "https://toolblip.com/blog/2026-05-18-generate-secure-passwords-in-the-browser",
+      "topic": "generate secure passwords in the browser",
+      "enqueued_at": "2026-05-18T17:05:00Z"
+    },
     "https://toolblip.com/blog/2026-05-13-how-to-test-regular-expressions-online-with-sample-text"
   ],
   "submitted": [
