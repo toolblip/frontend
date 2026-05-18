@@ -43,7 +43,7 @@ const ONBOARDING_PLANS: Array<{
   { tier: "free", name: "Free", price: "$0", description: "Start with all core tools and client-side processing." },
   { tier: "starter", name: "Starter", price: "$4.99/mo", description: "Remove ads and unlock personal cloud storage." },
   { tier: "ultra", name: "Ultra", price: "$19.99/mo", description: "Power-user limits, API access, and more storage.", badge: "Popular" },
-  { tier: "max", name: "Max", price: "$49.99/mo", description: "Team seats, priority support, and the highest limits." },
+  { tier: "max", name: "Business", price: "$49.99/mo", description: "Team seats, priority support, and the highest limits." },
 ];
 
 function onboardingStorageKey(userId: number | string) {
