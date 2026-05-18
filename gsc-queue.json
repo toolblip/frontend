@@ -1,13 +1,14 @@
 {
   "pending": [
-    {
-      "url": "https://toolblip.com/blog/2026-05-18-generate-secure-passwords-in-the-browser",
-      "topic": "generate secure passwords in the browser",
-      "enqueued_at": "2026-05-18T17:05:00Z"
-    },
     "https://toolblip.com/blog/2026-05-13-how-to-test-regular-expressions-online-with-sample-text"
   ],
   "submitted": [
+    {
+      "url": "https://toolblip.com/blog/2026-05-18-generate-secure-passwords-in-the-browser",
+      "submitted_at": "2026-05-18T17:12:00Z",
+      "status": "submitted",
+      "coverage_state": "URL is unknown to Google"
+    },
     {
       "url": "https://toolblip.com/blog/2026-05-17-compare-text-diffs-online-code-reviews",
       "topic": "compare text diffs online for code reviews",
