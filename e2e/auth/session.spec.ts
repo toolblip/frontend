@@ -9,7 +9,7 @@ test.describe('Session BDD regression', () => {
   test('Given a logged-in user, When the account page reloads, Then AuthProvider restores the flat user from /api/auth/me', async ({ page }) => {
     await loginViaApi(page, VALID_USER);
 
-    await page.goto('/account');
+    await page.goto('/dashboard');
     await expect(page.getByText(VALID_USER.name)).toBeVisible();
     await expect(page.locator('#main-content').getByText(VALID_USER.email)).toBeVisible();
   });

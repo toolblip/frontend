@@ -11,7 +11,7 @@ test.describe('Account onboarding BDD regression', () => {
 
     await signupByForm(page, user);
 
-    await expect(page).toHaveURL(/\/account$/);
+    await expect(page).toHaveURL(/\/dashboard$/);
     const dialog = page.getByRole('dialog', { name: 'Welcome to your Toolblip dashboard' });
     await expect(dialog).toBeVisible();
     await expect(page.getByRole('radio', { name: /Free/i })).toBeChecked();
@@ -28,7 +28,7 @@ test.describe('Account onboarding BDD regression', () => {
   test('Given a first-time login reaches account dashboard, Then the user can choose another plan before finishing onboarding', async ({ page }) => {
     await loginByForm(page, VALID_USER);
 
-    await expect(page).toHaveURL(/\/account$/);
+    await expect(page).toHaveURL(/\/dashboard$/);
     const dialog = page.getByRole('dialog', { name: 'Welcome to your Toolblip dashboard' });
     await expect(dialog).toBeVisible();
     await page.getByRole('radio', { name: /Ultra/i }).check();

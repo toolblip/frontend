@@ -13,6 +13,7 @@ import {
 import { CAT_META } from '@/lib/v2/categoryMeta';
 import { tools } from '@/data/tools';
 import NavbarAuth from '@/components/NavbarAuth';
+import { useAuth } from '@/app/providers/auth-provider';
 
 type Props = { onOpenSearch: () => void };
 
@@ -397,6 +398,7 @@ const menus = [
 ];
 
 export default function Nav({ onOpenSearch }: Props) {
+  const { user } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
@@ -490,7 +492,11 @@ export default function Nav({ onOpenSearch }: Props) {
             <IconSearch style={{ width: 14, height: 14, color: 'var(--fg-3)' }} />
             <span className="tb-v2-nav-search-label">⌘K or /</span>
           </button>
-          <Link href="/pricing" className="tb-v2-nav-pro">Get Pro</Link>
+          {user ? (
+            <Link href="/dashboard" className="tb-v2-nav-pro">Dashboard</Link>
+          ) : (
+            <Link href="/pricing" className="tb-v2-nav-pro">Get Pro</Link>
+          )}
           <ThemeMenu />
           <div className="tb-v2-nav-signin">
             <NavbarAuth />
@@ -574,7 +580,11 @@ export default function Nav({ onOpenSearch }: Props) {
           })}
           <div className="tb-v2-nav-mobile-divider" />
           <Link href="/directory" onClick={() => setMobileOpen(false)}>All Tools</Link>
-          <Link href="/pricing" onClick={() => setMobileOpen(false)}>Get Pro</Link>
+          {user ? (
+            <Link href="/dashboard" onClick={() => setMobileOpen(false)}>Dashboard</Link>
+          ) : (
+            <Link href="/pricing" onClick={() => setMobileOpen(false)}>Get Pro</Link>
+          )}
           <Link href="/login" onClick={() => setMobileOpen(false)}>Sign in</Link>
         </div>
       )}

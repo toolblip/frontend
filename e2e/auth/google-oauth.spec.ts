@@ -11,17 +11,17 @@ test.describe('Google OAuth BDD regression', () => {
 
     await page.getByRole('link', { name: 'Continue with Google' }).click();
 
-    await expect(page).toHaveURL(/\/account$/);
+    await expect(page).toHaveURL(/\/dashboard$/);
     await expect(page.locator('#main-content').getByText('google-oauth@toolblip.test')).toBeVisible();
     await expectLoggedInCookie(page);
   });
 
   test('Given a protected next URL, When Google OAuth completes, Then the user lands on the requested path', async ({ page }) => {
-    await page.goto('/login?next=/account');
+    await page.goto('/login?next=/dashboard');
 
     await page.getByRole('link', { name: 'Continue with Google' }).click();
 
-    await expect(page).toHaveURL(/\/account$/);
+    await expect(page).toHaveURL(/\/dashboard$/);
     await expect(page.locator('#main-content').getByText('google-oauth@toolblip.test')).toBeVisible();
     await expectLoggedInCookie(page);
   });
@@ -37,8 +37,8 @@ test.describe('Google OAuth BDD regression', () => {
 
     await page.getByRole('link', { name: 'Continue with Google' }).click();
 
-    await expect(page).toHaveURL(/\/account$/);
-    await expect(page.getByRole('dialog', { name: 'Complete your account setup' })).toBeVisible();
+    await expect(page).toHaveURL(/\/dashboard$/);
+    await expect(page.getByRole('dialog', { name: 'Complete your dashboard setup' })).toBeVisible();
     await expect(page.getByText('Accept the Terms and Conditions and Privacy Policy to continue.')).toBeVisible();
     await expect(page.getByRole('link', { name: 'Terms and Conditions' })).toHaveAttribute('href', '/terms');
     await expect(page.getByRole('link', { name: 'Privacy Policy' })).toHaveAttribute('href', '/privacy');
@@ -47,7 +47,7 @@ test.describe('Google OAuth BDD regression', () => {
     await page.getByLabel(/I agree to the Terms and Conditions and Privacy Policy/i).check();
     await page.getByRole('button', { name: 'Continue to subscription options' }).click();
 
-    await expect(page.getByRole('dialog', { name: 'Complete your account setup' })).toBeHidden();
+    await expect(page.getByRole('dialog', { name: 'Complete your dashboard setup' })).toBeHidden();
     await expect(page.getByText('Free plan')).toBeVisible();
   });
 

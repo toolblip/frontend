@@ -17,7 +17,7 @@ export default function SignupForm() {
   const [acceptedLegal, setAcceptedLegal] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [next, setNext] = useState("/account");
+  const [next, setNext] = useState("/dashboard");
   const [favoriteOnReturn, setFavoriteOnReturn] = useState(false);
 
   useEffect(() => {
