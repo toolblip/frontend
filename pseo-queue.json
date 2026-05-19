@@ -1,9 +1,13 @@
 {
-  "pending": [
-    "hash text with SHA-256 online without sending data"
-  ],
+  "pending": [],
   "in_progress": [],
   "done": [
+    {
+      "topic": "hash text with SHA-256 online without sending data",
+      "completed_at": "2026-05-19T17:04:23Z",
+      "url": "https://toolblip.com/blog/2026-05-19-hash-text-with-sha-256-online-without-sending-data",
+      "note": "manual fallback because Claude Code auth was unavailable in cron; conservative one-post run"
+    },
     {
       "topic": "generate secure passwords in the browser",
       "completed_at": "2026-05-18T17:05:00Z",
