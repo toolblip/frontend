@@ -3,7 +3,7 @@ title: "Hash text with SHA-256 online without sending data"
 description: >-
   Hash text with SHA-256 online without sending data to a server. Learn when a browser hash tool is safe, how to check network behavior, and when to use a local command instead.
 slug: 2026-05-19-hash-text-with-sha-256-online-without-sending-data
-date: 2026-05-19T00:00:00.000Z
+date: "2026-05-19T00:00:00.000Z"
 category: Developer Tools
 tags:
   - sha-256

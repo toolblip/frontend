@@ -29,6 +29,7 @@ Next Run: 2026-05-20 23:00 Dhaka
 - No title/meta refreshes were made because there was no fresh GSC evidence requiring edits.
 - No broad stale-content refresh was performed.
 - Internal links were limited to useful related pages: SHA-256 tool, Hash Generator, and the password generator privacy article.
+- Live verification initially exposed `article:published_time` rendering as `[object Object]` because unquoted YAML dates are parsed as Date objects. The new post date was quoted before the final deploy.
 
 ## Blocker
 
