@@ -6,9 +6,9 @@ Mode: conservative, Google-safe pacing
 ## Pipeline result
 
 Articles Generated: 1
-Articles Committed: pending verification
-Articles Submitted to GSC: pending sitemap refresh
-GSC Errors: pending verification
+Articles Committed: 1
+Articles Submitted to GSC: 1/1 via sitemap refresh
+GSC Errors: none; URL inspection says URL is unknown to Google, expected immediately after publish
 
 ## What happened
 
@@ -33,3 +33,17 @@ GSC Errors: pending verification
 ## Next run
 
 2026-05-21 23:00 Dhaka
+
+## Verification
+
+- Local `npm run build` passed.
+- Git commit pushed to `main`: `b34d2e6c` plus sitemap status follow-up.
+- Railway frontend deploy `0288bee2-786f-4aa1-96a1-45a81d67557b` reached `SUCCESS`.
+- Live URL returned HTTP 200 and contained the expected title.
+- Live sitemap contains the new slug.
+- Live HTML does not contain `[object Object]`; published time renders as `2026-05-20T00:00:00.000Z`.
+- GSC sitemap refresh returned `status: ok`.
+
+## Blocker
+
+Claude Code auth is unavailable in this cron context: `Not logged in · Please run /login`. Manual fallback kept the run to one article.

@@ -1,14 +1,17 @@
 {
   "pending": [
-    {
-      "url": "https://toolblip.com/blog/2026-05-20-minify-css-for-frontend-debugging",
-      "topic": "minify and beautify CSS for quick frontend debugging",
-      "enqueued_at": "2026-05-20T17:08:00Z",
-      "method": "sitemap"
-    },
     "https://toolblip.com/blog/2026-05-13-how-to-test-regular-expressions-online-with-sample-text"
   ],
   "submitted": [
+    {
+      "url": "https://toolblip.com/blog/2026-05-20-minify-css-for-frontend-debugging",
+      "topic": "minify and beautify CSS for quick frontend debugging",
+      "submitted_at": "2026-05-20T17:18:00Z",
+      "method": "sitemap",
+      "status": "submitted",
+      "coverage_state": "URL is unknown to Google",
+      "note": "sitemap refreshed after conservative manual fallback post; URL unknown immediately after publish is expected"
+    },
     {
       "url": "https://toolblip.com/blog/2026-05-19-hash-text-with-sha-256-online-without-sending-data",
       "topic": "hash text with SHA-256 online without sending data",
