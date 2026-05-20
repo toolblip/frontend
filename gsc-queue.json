@@ -1,5 +1,11 @@
 {
   "pending": [
+    {
+      "url": "https://toolblip.com/blog/2026-05-20-minify-css-for-frontend-debugging",
+      "topic": "minify and beautify CSS for quick frontend debugging",
+      "enqueued_at": "2026-05-20T17:08:00Z",
+      "method": "sitemap"
+    },
     "https://toolblip.com/blog/2026-05-13-how-to-test-regular-expressions-online-with-sample-text"
   ],
   "submitted": [

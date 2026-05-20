@@ -1,7 +1,24 @@
 {
-  "pending": [],
+  "pending": [
+    "URL encode and decode strings for API testing",
+    "convert Unix timestamps to readable dates online",
+    "validate YAML online before deploying config files",
+    "generate UUIDs online for test data and API fixtures",
+    "escape and unescape HTML entities for frontend debugging",
+    "format SQL queries online for readability",
+    "generate QR codes online without signing up",
+    "validate XML online for API integrations",
+    "sort and deduplicate lists online for developers",
+    "create lorem ipsum placeholder text for UI mockups"
+  ],
   "in_progress": [],
   "done": [
+    {
+      "topic": "minify and beautify CSS for quick frontend debugging",
+      "completed_at": "2026-05-20T17:08:00Z",
+      "url": "https://toolblip.com/blog/2026-05-20-minify-css-for-frontend-debugging",
+      "note": "manual fallback because Claude Code auth was unavailable in cron; conservative one-post run"
+    },
     {
       "topic": "hash text with SHA-256 online without sending data",
       "completed_at": "2026-05-19T17:04:23Z",
