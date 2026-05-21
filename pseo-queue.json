@@ -1,6 +1,5 @@
 {
   "pending": [
-    "URL encode and decode strings for API testing",
     "convert Unix timestamps to readable dates online",
     "validate YAML online before deploying config files",
     "generate UUIDs online for test data and API fixtures",
@@ -13,6 +12,12 @@
   ],
   "in_progress": [],
   "done": [
+    {
+      "topic": "URL encode and decode strings for API testing",
+      "completed_at": "2026-05-21T17:06:10Z",
+      "url": "https://toolblip.com/blog/2026-05-21-url-encode-decode-strings-api-testing",
+      "note": "manual fallback because Claude Code auth was unavailable in cron; conservative one-post run"
+    },
     {
       "topic": "minify and beautify CSS for quick frontend debugging",
       "completed_at": "2026-05-20T17:08:00Z",

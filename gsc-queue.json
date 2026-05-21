@@ -4,6 +4,14 @@
   ],
   "submitted": [
     {
+      "url": "https://toolblip.com/blog/2026-05-21-url-encode-decode-strings-api-testing",
+      "topic": "URL encode and decode strings for API testing",
+      "submitted_at": "2026-05-21T17:06:10Z",
+      "method": "sitemap",
+      "status": "pending verification",
+      "note": "manual fallback post; sitemap refresh/diagnose to run after build"
+    },
+    {
       "url": "https://toolblip.com/blog/2026-05-20-minify-css-for-frontend-debugging",
       "topic": "minify and beautify CSS for quick frontend debugging",
       "submitted_at": "2026-05-20T17:18:00Z",
