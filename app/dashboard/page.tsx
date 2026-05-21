@@ -442,7 +442,7 @@ export default function AccountPage() {
               <div>
                 <h2 id="plan-onboarding-title" className="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">Welcome to your Toolblip dashboard</h2>
                 <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 sm:text-base">
-                  Start here to understand what the dashboard does, pick a plan, save your favorite tools, and manage billing and profile settings from one place. Free is selected by default, and you can switch plans anytime.
+                  Pick a plan, save your favorite tools, and manage billing from one clean place. Free is selected by default, and you can switch plans anytime.
                 </p>
               </div>
             </div>
@@ -457,7 +457,7 @@ export default function AccountPage() {
 
           <div className="mt-6 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
             <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900">
-              <p className="font-semibold text-gray-900 dark:text-white">Your first steps</p>
+              <p className="font-semibold text-gray-900 dark:text-white">Quick start</p>
               <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-gray-600 dark:text-gray-300">
                 <li>Pick a plan that fits how you use Toolblip</li>
                 <li>Save your favorite tools for quick access</li>
@@ -531,7 +531,7 @@ export default function AccountPage() {
             <p className="text-sm font-semibold uppercase tracking-wide text-red-600 dark:text-red-400">Dashboard</p>
             <h1 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">Manage your account in one place</h1>
             <p className="mt-3 text-base leading-7 text-gray-600 dark:text-gray-300">
-              Update your profile, favorite tools, and billing without hunting through the site.
+              Keep profile, favorites, and billing together without digging through the site.
             </p>
             {checkingSession && (
               <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-300">
@@ -541,7 +541,7 @@ export default function AccountPage() {
             )}
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-3">
             <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-950/60">
               <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Plan</p>
               <p className="mt-2 text-lg font-semibold text-gray-900 dark:text-white">{subscription === null ? "Loading..." : subscription.is_pro ? `${tierName ?? "Pro"}` : "Free"}</p>
