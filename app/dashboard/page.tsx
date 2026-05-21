@@ -432,21 +432,26 @@ export default function AccountPage() {
         </div>
       )}
       {!showTermsOnboarding && showPlanOnboarding && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 py-6">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 py-6 backdrop-blur-sm">
           <div
             role="dialog"
             aria-modal="true"
             aria-labelledby="plan-onboarding-title"
-            className="w-full max-w-4xl rounded-3xl border border-red-200 bg-gradient-to-br from-red-50 via-white to-gray-50 p-6 shadow-2xl dark:border-red-900/50 dark:from-red-950/30 dark:via-gray-900 dark:to-gray-950"
+            className="w-full max-w-5xl rounded-3xl border border-red-200 bg-gradient-to-br from-red-50 via-white to-gray-50 p-6 shadow-2xl dark:border-red-900/50 dark:from-red-950/30 dark:via-gray-900 dark:to-gray-950"
           >
             <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-              <div className="max-w-2xl space-y-3">
+              <div className="max-w-2xl space-y-4">
                 <p className="text-sm font-semibold uppercase tracking-wide text-red-600 dark:text-red-400">Welcome to Toolblip</p>
                 <div>
                   <h2 id="plan-onboarding-title" className="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">Welcome to your Toolblip dashboard</h2>
                   <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 sm:text-base">
-                    Pick a plan, save your favorite tools, and manage billing from one clean place. Free is selected by default, and you can switch plans anytime.
+                    Set up your dashboard quickly. Pick a plan, save your favorite tools, and change billing or profile details anytime.
                   </p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  <span className="rounded-full border border-red-200 bg-white px-3 py-1 text-xs font-medium text-red-700 shadow-sm dark:border-red-900/60 dark:bg-gray-900 dark:text-red-300">Free is ready now</span>
+                  <span className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-gray-700 shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">Switch later anytime</span>
+                  <span className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-gray-700 shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">Skip if you need to</span>
                 </div>
               </div>
               <button
@@ -461,9 +466,9 @@ export default function AccountPage() {
             <div className="mt-6 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
               <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900">
                 <p className="font-semibold text-gray-900 dark:text-white">Quick start</p>
-                <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-gray-600 dark:text-gray-300">
-                  <li>Pick a plan that fits how you use Toolblip</li>
-                  <li>Save your favorite tools for quick access</li>
+                <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm leading-6 text-gray-600 dark:text-gray-300">
+                  <li>Choose the plan that fits how you use Toolblip</li>
+                  <li>Save the tools you come back to most</li>
                   <li>Update your profile and billing anytime from this dashboard</li>
                 </ul>
                 <div className="mt-4 flex flex-wrap gap-2">
@@ -476,7 +481,7 @@ export default function AccountPage() {
 
               <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900">
                 <p className="font-semibold text-gray-900 dark:text-white">Choose a plan</p>
-                <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Free is selected by default. You can compare plans now and decide later.</p>
+                <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Free is selected by default. Compare the options now, or finish onboarding and change it later.</p>
                 <div className="mt-4 grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label="Toolblip plan options">
                   {ONBOARDING_PLANS.map((plan) => {
                     const selected = selectedOnboardingPlan === plan.tier;
