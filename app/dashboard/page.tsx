@@ -432,98 +432,102 @@ export default function AccountPage() {
         </div>
       )}
       {!showTermsOnboarding && showPlanOnboarding && (
-        <section
-          aria-labelledby="plan-onboarding-title"
-          className="mb-8 rounded-3xl border border-red-200 bg-gradient-to-br from-red-50 via-white to-gray-50 p-6 shadow-sm dark:border-red-900/50 dark:from-red-950/30 dark:via-gray-900 dark:to-gray-950"
-        >
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-            <div className="max-w-2xl space-y-3">
-              <p className="text-sm font-semibold uppercase tracking-wide text-red-600 dark:text-red-400">Welcome to Toolblip</p>
-              <div>
-                <h2 id="plan-onboarding-title" className="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">Welcome to your Toolblip dashboard</h2>
-                <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 sm:text-base">
-                  Pick a plan, save your favorite tools, and manage billing from one clean place. Free is selected by default, and you can switch plans anytime.
-                </p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 py-6">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="plan-onboarding-title"
+            className="w-full max-w-4xl rounded-3xl border border-red-200 bg-gradient-to-br from-red-50 via-white to-gray-50 p-6 shadow-2xl dark:border-red-900/50 dark:from-red-950/30 dark:via-gray-900 dark:to-gray-950"
+          >
+            <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+              <div className="max-w-2xl space-y-3">
+                <p className="text-sm font-semibold uppercase tracking-wide text-red-600 dark:text-red-400">Welcome to Toolblip</p>
+                <div>
+                  <h2 id="plan-onboarding-title" className="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">Welcome to your Toolblip dashboard</h2>
+                  <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 sm:text-base">
+                    Pick a plan, save your favorite tools, and manage billing from one clean place. Free is selected by default, and you can switch plans anytime.
+                  </p>
+                </div>
               </div>
-            </div>
-            <button
-              type="button"
-              onClick={handleSkipPlanOnboarding}
-              className="self-start rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800"
-            >
-              Skip for now
-            </button>
-          </div>
-
-          <div className="mt-6 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900">
-              <p className="font-semibold text-gray-900 dark:text-white">Quick start</p>
-              <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-gray-600 dark:text-gray-300">
-                <li>Pick a plan that fits how you use Toolblip</li>
-                <li>Save your favorite tools for quick access</li>
-                <li>Update your profile and billing anytime from this dashboard</li>
-              </ul>
-              <div className="mt-4 flex flex-wrap gap-2">
-                <a href="#favorite-tools" className="rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-800 dark:hover:bg-red-950/30">Favorite tools</a>
-                <a href="#profile-settings" className="rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-800 dark:hover:bg-red-950/30">Profile settings</a>
-                <a href="#billing" className="rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-800 dark:hover:bg-red-950/30">Billing</a>
-                <a href="/pricing" className="rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-800 dark:hover:bg-red-950/30">View plans</a>
-              </div>
+              <button
+                type="button"
+                onClick={handleSkipPlanOnboarding}
+                className="self-start rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800"
+              >
+                Skip for now
+              </button>
             </div>
 
-            <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900">
-              <p className="font-semibold text-gray-900 dark:text-white">Choose a plan</p>
-              <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Free is selected by default. You can compare plans now and decide later.</p>
-              <div className="mt-4 grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label="Toolblip plan options">
-                {ONBOARDING_PLANS.map((plan) => {
-                  const selected = selectedOnboardingPlan === plan.tier;
-                  return (
-                    <label
-                      key={plan.tier}
-                      htmlFor={`onboarding-plan-${plan.tier}`}
-                      className={`relative cursor-pointer rounded-xl border p-4 transition-colors ${
-                        selected
-                          ? "border-red-500 bg-red-50 dark:border-red-400 dark:bg-red-950/30"
-                          : "border-gray-200 bg-gray-50 hover:border-gray-300 dark:border-gray-700 dark:bg-gray-950 dark:hover:border-gray-600"
-                      }`}
-                    >
-                      <input
-                        id={`onboarding-plan-${plan.tier}`}
-                        type="radio"
-                        name="onboarding-plan"
-                        value={plan.tier}
-                        checked={selected}
-                        onChange={() => setSelectedOnboardingPlan(plan.tier)}
-                        className="mb-3 h-4 w-4 border-gray-300 text-red-600 focus:ring-red-500"
-                      />
-                      <span className="flex items-start justify-between gap-3">
-                        <span>
-                          <span className="block font-semibold text-gray-900 dark:text-white">{plan.name}</span>
-                          <span className="mt-1 block text-sm font-medium text-red-600 dark:text-red-400">{plan.price}</span>
+            <div className="mt-6 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
+              <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+                <p className="font-semibold text-gray-900 dark:text-white">Quick start</p>
+                <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-gray-600 dark:text-gray-300">
+                  <li>Pick a plan that fits how you use Toolblip</li>
+                  <li>Save your favorite tools for quick access</li>
+                  <li>Update your profile and billing anytime from this dashboard</li>
+                </ul>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <a href="#favorite-tools" className="rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-800 dark:hover:bg-red-950/30">Favorite tools</a>
+                  <a href="#profile-settings" className="rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-800 dark:hover:bg-red-950/30">Profile settings</a>
+                  <a href="#billing" className="rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-800 dark:hover:bg-red-950/30">Billing</a>
+                  <a href="/pricing" className="rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-800 dark:hover:bg-red-950/30">View plans</a>
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+                <p className="font-semibold text-gray-900 dark:text-white">Choose a plan</p>
+                <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Free is selected by default. You can compare plans now and decide later.</p>
+                <div className="mt-4 grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label="Toolblip plan options">
+                  {ONBOARDING_PLANS.map((plan) => {
+                    const selected = selectedOnboardingPlan === plan.tier;
+                    return (
+                      <label
+                        key={plan.tier}
+                        htmlFor={`onboarding-plan-${plan.tier}`}
+                        className={`relative cursor-pointer rounded-xl border p-4 transition-colors ${
+                          selected
+                            ? "border-red-500 bg-red-50 dark:border-red-400 dark:bg-red-950/30"
+                            : "border-gray-200 bg-gray-50 hover:border-gray-300 dark:border-gray-700 dark:bg-gray-950 dark:hover:border-gray-600"
+                        }`}
+                      >
+                        <input
+                          id={`onboarding-plan-${plan.tier}`}
+                          type="radio"
+                          name="onboarding-plan"
+                          value={plan.tier}
+                          checked={selected}
+                          onChange={() => setSelectedOnboardingPlan(plan.tier)}
+                          className="mb-3 h-4 w-4 border-gray-300 text-red-600 focus:ring-red-500"
+                        />
+                        <span className="flex items-start justify-between gap-3">
+                          <span>
+                            <span className="block font-semibold text-gray-900 dark:text-white">{plan.name}</span>
+                            <span className="mt-1 block text-sm font-medium text-red-600 dark:text-red-400">{plan.price}</span>
+                          </span>
+                          {plan.badge && (
+                            <span className="rounded-full bg-red-600 px-2 py-0.5 text-xs font-semibold text-white">{plan.badge}</span>
+                          )}
                         </span>
-                        {plan.badge && (
-                          <span className="rounded-full bg-red-600 px-2 py-0.5 text-xs font-semibold text-white">{plan.badge}</span>
-                        )}
-                      </span>
-                      <span className="mt-3 block text-sm text-gray-600 dark:text-gray-300">{plan.description}</span>
-                      {selected && <span className="mt-3 block text-xs font-semibold text-red-600 dark:text-red-400">Selected plan</span>}
-                    </label>
-                  );
-                })}
-              </div>
-              <div className="mt-6 flex justify-end">
-                <button
-                  type="button"
-                  onClick={handleFinishPlanOnboarding}
-                  disabled={!selectedOnboardingPlan}
-                  className="rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  Finish onboarding
-                </button>
+                        <span className="mt-3 block text-sm text-gray-600 dark:text-gray-300">{plan.description}</span>
+                        {selected && <span className="mt-3 block text-xs font-semibold text-red-600 dark:text-red-400">Selected plan</span>}
+                      </label>
+                    );
+                  })}
+                </div>
+                <div className="mt-6 flex justify-end">
+                  <button
+                    type="button"
+                    onClick={handleFinishPlanOnboarding}
+                    disabled={!selectedOnboardingPlan}
+                    className="rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    Finish onboarding
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </section>
+        </div>
       )}
       <section className="mb-8 overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900/80">
         <div className="grid gap-6 px-6 py-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] lg:px-8 lg:py-8">
