@@ -381,10 +381,11 @@ export default function AccountPage() {
   const tierName = subscription?.tier
     ? subscription.tier.charAt(0).toUpperCase() + subscription.tier.slice(1)
     : null;
+  const favoriteCount = favoriteTools.length;
   const showTermsOnboarding = Boolean(user.requires_terms_acceptance);
 
   return (
-    <div className="max-w-lg mx-auto px-4 sm:px-6 py-10 sm:py-16">
+    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-16">
       {showTermsOnboarding && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
           <div
@@ -524,245 +525,272 @@ export default function AccountPage() {
           </div>
         </section>
       )}
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Dashboard</h1>
-      <p className="text-gray-500 dark:text-gray-400 mb-8">Manage your subscription and profile.</p>
-
-      {checkingSession && (
-        <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-400 text-sm">
-          Subscription updated! Verifying your new plan...
-        </div>
-      )}
-
-      {/* Profile Card */}
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 mb-6">
-        <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">
-          Profile
-        </h2>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center text-white font-semibold text-lg uppercase">
-              {user.name.charAt(0)}
-            </div>
-            <div>
-              <p className="font-medium text-gray-900 dark:text-white">{user.name}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
-            </div>
-          </div>
-          <button
-            onClick={handleLogout}
-            className="text-sm text-gray-400 hover:text-red-600 transition-colors"
-          >
-            Sign out
-          </button>
-        </div>
-      </div>
-
-      {user.email_verified_at ? null : (
-        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-4 mb-6">
-          <p className="text-sm text-amber-800 dark:text-amber-300 font-medium">Email verification needed</p>
-          <p className="text-sm text-amber-700 dark:text-amber-400 mt-1">Verify your email before using paid and account-sensitive features.</p>
-          <button
-            type="button"
-            onClick={handleResendVerification}
-            className="mt-3 px-3 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-sm font-medium transition-colors"
-          >
-            Resend verification email
-          </button>
-          {verificationMessage && <p role="status" className="text-sm text-amber-700 dark:text-amber-300 mt-2">{verificationMessage}</p>}
-        </div>
-      )}
-
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 mb-6" id="profile-settings">
-        <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">
-          Profile settings
-        </h2>
-        <form onSubmit={handleProfileSubmit} className="space-y-4">
-          {profileMessage && <p role="status" className="text-sm text-green-600 dark:text-green-400">{profileMessage}</p>}
-          {profileError && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{profileError}</p>}
-          <div>
-            <label htmlFor="profile-name" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
-            <input
-              id="profile-name"
-              type="text"
-              value={profileName}
-              onChange={(e) => setProfileName(e.target.value)}
-              className="w-full px-3 py-2 bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-lg text-sm"
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="profile-email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
-            <input
-              id="profile-email"
-              type="email"
-              value={profileEmail}
-              onChange={(e) => setProfileEmail(e.target.value)}
-              className="w-full px-3 py-2 bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-lg text-sm"
-              required
-            />
-          </div>
-          <button type="submit" disabled={profileSaving} className="px-4 py-2 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-lg text-sm font-medium disabled:opacity-50">
-            {profileSaving ? "Saving..." : "Save profile"}
-          </button>
-        </form>
-      </div>
-
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 mb-6">
-        <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">
-          Change password
-        </h2>
-        <form onSubmit={handlePasswordSubmit} className="space-y-4">
-          {passwordMessage && <p role="status" className="text-sm text-green-600 dark:text-green-400">{passwordMessage}</p>}
-          {passwordError && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{passwordError}</p>}
-          <div>
-            <label htmlFor="current-password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Current password</label>
-            <input id="current-password" type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} className="w-full px-3 py-2 bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-lg text-sm" required />
-          </div>
-          <div>
-            <label htmlFor="new-password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">New password</label>
-            <input id="new-password" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className="w-full px-3 py-2 bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-lg text-sm" minLength={8} required />
-          </div>
-          <div>
-            <label htmlFor="confirm-new-password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirm new password</label>
-            <input id="confirm-new-password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="w-full px-3 py-2 bg-white dark:bg-gray-950 border border-gray-300 dark:border-gray-700 rounded-lg text-sm" minLength={8} required />
-          </div>
-          <button type="submit" disabled={passwordSaving} className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium disabled:opacity-50">
-            {passwordSaving ? "Changing..." : "Change password"}
-          </button>
-        </form>
-      </div>
-
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 mb-6" id="favorite-tools">
-        <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">
-          Favorite tools
-        </h2>
-        {favoriteToolsLoading ? (
-          <p className="text-sm text-gray-500 dark:text-gray-400">Loading favorites...</p>
-        ) : favoriteTools.length > 0 ? (
-          <div className="space-y-3">
-            {favoriteTools.map((tool) => (
-              <Link
-                key={tool.slug}
-                href={`/tools/${tool.slug}`}
-                className="flex items-start gap-3 rounded-xl border border-gray-200 p-3 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-800 dark:hover:border-red-900 dark:hover:bg-red-950/30"
-              >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-lg dark:bg-gray-800">{tool.icon || "🧰"}</span>
-                <span>
-                  <span className="block font-semibold text-gray-900 dark:text-white">{tool.name}</span>
-                  <span className="line-clamp-2 text-sm text-gray-500 dark:text-gray-400">{tool.description}</span>
-                </span>
-              </Link>
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm text-gray-500 dark:text-gray-400">Favorite tools from any tool page to keep them here.</p>
-        )}
-      </div>
-
-      {/* Subscription Card */}
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 mb-6" id="billing">
-        <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-4">
-          Subscription
-        </h2>
-
-        {subscription === null ? (
-          <div className="flex items-center gap-3">
-            <div className="w-3 h-3 rounded-full bg-gray-400 animate-pulse" />
-            <span className="text-gray-500">Checking subscription...</span>
-          </div>
-        ) : subscription.is_pro ? (
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-3 rounded-full bg-red-500" />
-              <span className="font-medium text-red-700 dark:text-red-400">
-                {tierName} plan active
-              </span>
-            </div>
-
-            {planEndDate && (
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                {subscription.subscription_status === "active"
-                  ? `Renews on ${planEndDate}`
-                  : `Active until ${planEndDate}`}
-              </p>
-            )}
-
-            {(subscription.devices ?? 0) > 0 || (subscription.storage_gb ?? 0) > 0 || (subscription.max_file_size_mb ?? 0) > 0 ? (
-              <div className="flex flex-wrap gap-2">
-                {(subscription.devices ?? 0) > 0 && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-full text-xs text-gray-700 dark:text-gray-300">
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    {subscription.devices} device{subscription.devices !== 1 ? "s" : ""}
-                  </span>
-                )}
-                {(subscription.storage_gb ?? 0) > 0 && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-full text-xs text-gray-700 dark:text-gray-300">
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2 1 3 3 3h10c2 0 3-1 3-3V7c0-2-1-3-3-3H7C5 4 4 5 4 7z" />
-                    </svg>
-                    {subscription.storage_gb}GB storage
-                  </span>
-                )}
-                {(subscription.max_file_size_mb ?? 0) > 0 && (() => {
-                    const mb = subscription.max_file_size_mb as number;
-                    return (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-full text-xs text-gray-700 dark:text-gray-300">
-                        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                        </svg>
-                        Max {mb >= 1000 ? `${mb / 1000}GB` : `${mb}MB`} file
-                      </span>
-                    );
-                  })()}
-                {(subscription.team_seats ?? 0) > 0 && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-full text-xs text-gray-700 dark:text-gray-300">
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                    </svg>
-                    {subscription.team_seats} team seat{subscription.team_seats !== 1 ? "s" : ""}
-                  </span>
-                )}
-              </div>
-            ) : null}
-
-            {portalError && (
-              <p className="text-red-600 dark:text-red-400 text-sm">{portalError}</p>
-            )}
-            <button
-              onClick={openCustomerPortal}
-              disabled={loadingPortal}
-              className="mt-2 px-4 py-2 bg-gray-900 dark:bg-gray-100 hover:bg-gray-800 dark:hover:bg-gray-200 text-white dark:text-gray-900 rounded-lg text-sm font-medium transition-colors disabled:opacity-50"
-            >
-              {loadingPortal ? "Opening..." : "Manage Billing"}
-            </button>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-3 rounded-full bg-gray-400" />
-              <span className="font-medium text-gray-700 dark:text-gray-300">
-                Free plan
-              </span>
-            </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              Upgrade to remove ads, unlock more devices, storage, and team seats.
+      <section className="mb-8 overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900/80">
+        <div className="grid gap-6 px-6 py-6 lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] lg:px-8 lg:py-8">
+          <div className="max-w-2xl">
+            <p className="text-sm font-semibold uppercase tracking-wide text-red-600 dark:text-red-400">Dashboard</p>
+            <h1 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">Manage your account in one place</h1>
+            <p className="mt-3 text-base leading-7 text-gray-600 dark:text-gray-300">
+              Update your profile, favorite tools, and billing without hunting through the site.
             </p>
-            <Link
-              href="/pricing"
-              className="inline-block px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors"
-            >
-              View Plans
-            </Link>
+            {checkingSession && (
+              <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-300">
+                <span className="h-2 w-2 rounded-full bg-red-500" />
+                Subscription updated. Verifying your new plan...
+              </div>
+            )}
           </div>
-        )}
+
+          <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+            <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-950/60">
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Plan</p>
+              <p className="mt-2 text-lg font-semibold text-gray-900 dark:text-white">{subscription === null ? "Loading..." : subscription.is_pro ? `${tierName ?? "Pro"}` : "Free"}</p>
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{subscription === null ? "Checking subscription" : subscription.is_pro ? "Billing is active" : "No upgrade selected"}</p>
+            </div>
+            <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-950/60">
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Favorites</p>
+              <p className="mt-2 text-lg font-semibold text-gray-900 dark:text-white">{favoriteToolsLoading ? "Loading..." : `${favoriteCount}`}</p>
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">Saved tools for quick access</p>
+            </div>
+            <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-950/60">
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Email</p>
+              <p className="mt-2 text-lg font-semibold text-gray-900 dark:text-white">{user.email_verified_at ? "Verified" : "Pending"}</p>
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{user.email_verified_at ? "All set" : "Needs attention"}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
+        <div className="space-y-6">
+          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-600 text-lg font-semibold uppercase text-white shadow-sm">
+                  {user.name.charAt(0)}
+                </div>
+                <div>
+                  <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Profile</h2>
+                  <p className="mt-1 text-lg font-semibold text-gray-900 dark:text-white">{user.name}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">{user.email}</p>
+                </div>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="self-start rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 transition hover:border-red-200 hover:bg-red-50 hover:text-red-700 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-800 dark:hover:bg-red-950/30 dark:hover:text-red-300"
+              >
+                Sign out
+              </button>
+            </div>
+          </div>
+
+          {user.email_verified_at ? null : (
+            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 shadow-sm dark:border-amber-800 dark:bg-amber-900/20">
+              <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">Email verification needed</p>
+              <p className="mt-1 text-sm text-amber-700 dark:text-amber-400">Verify your email before using paid and account-sensitive features.</p>
+              <button
+                type="button"
+                onClick={handleResendVerification}
+                className="mt-4 rounded-full bg-amber-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-amber-700"
+              >
+                Resend verification email
+              </button>
+              {verificationMessage && <p role="status" className="mt-3 text-sm text-amber-700 dark:text-amber-300">{verificationMessage}</p>}
+            </div>
+          )}
+
+          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900" id="profile-settings">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Profile settings</h2>
+            <form onSubmit={handleProfileSubmit} className="mt-5 space-y-4">
+              {profileMessage && <p role="status" className="text-sm text-green-600 dark:text-green-400">{profileMessage}</p>}
+              {profileError && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{profileError}</p>}
+              <div>
+                <label htmlFor="profile-name" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Name</label>
+                <input
+                  id="profile-name"
+                  type="text"
+                  value={profileName}
+                  onChange={(e) => setProfileName(e.target.value)}
+                  className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 shadow-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-500/20 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
+                  required
+                />
+              </div>
+              <div>
+                <label htmlFor="profile-email" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+                <input
+                  id="profile-email"
+                  type="email"
+                  value={profileEmail}
+                  onChange={(e) => setProfileEmail(e.target.value)}
+                  className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 shadow-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-500/20 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
+                  required
+                />
+              </div>
+              <button type="submit" disabled={profileSaving} className="rounded-full bg-gray-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200">
+                {profileSaving ? "Saving..." : "Save profile"}
+              </button>
+            </form>
+          </div>
+
+          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Change password</h2>
+            <form onSubmit={handlePasswordSubmit} className="mt-5 space-y-4">
+              {passwordMessage && <p role="status" className="text-sm text-green-600 dark:text-green-400">{passwordMessage}</p>}
+              {passwordError && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{passwordError}</p>}
+              <div>
+                <label htmlFor="current-password" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Current password</label>
+                <input id="current-password" type="password" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)} className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 shadow-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-500/20 dark:border-gray-700 dark:bg-gray-950 dark:text-white" required />
+              </div>
+              <div>
+                <label htmlFor="new-password" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">New password</label>
+                <input id="new-password" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 shadow-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-500/20 dark:border-gray-700 dark:bg-gray-950 dark:text-white" minLength={8} required />
+              </div>
+              <div>
+                <label htmlFor="confirm-new-password" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm new password</label>
+                <input id="confirm-new-password" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 shadow-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-500/20 dark:border-gray-700 dark:bg-gray-950 dark:text-white" minLength={8} required />
+              </div>
+              <button type="submit" disabled={passwordSaving} className="rounded-full bg-red-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50">
+                {passwordSaving ? "Changing..." : "Change password"}
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900" id="favorite-tools">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Favorite tools</h2>
+                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">Your quickest route back to the tools you use most.</p>
+              </div>
+              <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">{favoriteToolsLoading ? "Loading" : `${favoriteCount} saved`}</span>
+            </div>
+            <div className="mt-5">
+              {favoriteToolsLoading ? (
+                <p className="text-sm text-gray-500 dark:text-gray-400">Loading favorites...</p>
+              ) : favoriteTools.length > 0 ? (
+                <div className="space-y-3">
+                  {favoriteTools.map((tool) => (
+                    <Link
+                      key={tool.slug}
+                      href={`/tools/${tool.slug}`}
+                      className="flex items-start gap-3 rounded-2xl border border-gray-200 p-4 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-800 dark:hover:border-red-900 dark:hover:bg-red-950/30"
+                    >
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-lg dark:bg-gray-800">{tool.icon || "🧰"}</span>
+                      <span>
+                        <span className="block font-semibold text-gray-900 dark:text-white">{tool.name}</span>
+                        <span className="line-clamp-2 text-sm text-gray-500 dark:text-gray-400">{tool.description}</span>
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 p-5 text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-950/40 dark:text-gray-400">
+                  Favorite tools from any tool page to keep them here.
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900" id="billing">
+            <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Subscription</h2>
+
+            {subscription === null ? (
+              <div className="mt-5 flex items-center gap-3">
+                <div className="h-3 w-3 rounded-full bg-gray-400 animate-pulse" />
+                <span className="text-gray-500">Checking subscription...</span>
+              </div>
+            ) : subscription.is_pro ? (
+              <div className="mt-5 space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="h-3 w-3 rounded-full bg-red-500" />
+                  <span className="font-medium text-red-700 dark:text-red-400">{tierName} plan active</span>
+                </div>
+
+                {planEndDate && (
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    {subscription.subscription_status === "active"
+                      ? `Renews on ${planEndDate}`
+                      : `Active until ${planEndDate}`}
+                  </p>
+                )}
+
+                {(subscription.devices ?? 0) > 0 || (subscription.storage_gb ?? 0) > 0 || (subscription.max_file_size_mb ?? 0) > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {(subscription.devices ?? 0) > 0 && (
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                        <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {subscription.devices} device{subscription.devices !== 1 ? "s" : ""}
+                      </span>
+                    )}
+                    {(subscription.storage_gb ?? 0) > 0 && (
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                        <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2 1 3 3 3h10c2 0 3-1 3-3V7c0-2-1-3-3-3H7C5 4 4 5 4 7z" />
+                        </svg>
+                        {subscription.storage_gb}GB storage
+                      </span>
+                    )}
+                    {(subscription.max_file_size_mb ?? 0) > 0 && (() => {
+                        const mb = subscription.max_file_size_mb as number;
+                        return (
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                            <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            Max {mb >= 1000 ? `${mb / 1000}GB` : `${mb}MB`} file
+                          </span>
+                        );
+                      })()}
+                    {(subscription.team_seats ?? 0) > 0 && (
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                        <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        </svg>
+                        {subscription.team_seats} team seat{subscription.team_seats !== 1 ? "s" : ""}
+                      </span>
+                    )}
+                  </div>
+                ) : null}
+
+                {portalError && (
+                  <p className="text-sm text-red-600 dark:text-red-400">{portalError}</p>
+                )}
+                <button
+                  onClick={openCustomerPortal}
+                  disabled={loadingPortal}
+                  className="mt-2 rounded-full bg-gray-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200"
+                >
+                  {loadingPortal ? "Opening..." : "Manage Billing"}
+                </button>
+              </div>
+            ) : (
+              <div className="mt-5 space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="h-3 w-3 rounded-full bg-gray-400" />
+                  <span className="font-medium text-gray-700 dark:text-gray-300">Free plan</span>
+                </div>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Upgrade to remove ads, unlock more devices, storage, and team seats.
+                </p>
+                <Link
+                  href="/pricing"
+                  className="inline-flex rounded-full bg-red-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-red-700"
+                >
+                  View Plans
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
-      <div className="text-center">
+      <div className="mt-8 text-center">
         <Link
           href="/"
-          className="text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+          className="text-sm text-gray-500 transition-colors hover:text-gray-700 dark:hover:text-gray-300"
         >
           ← Back to home
         </Link>
