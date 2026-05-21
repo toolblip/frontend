@@ -24,7 +24,7 @@ test.describe('Banner Generator tool', () => {
   test('renders FAQs and centers the FAQ section on tool detail pages', async ({ page }) => {
     await page.goto('/tools/banner-generator');
 
-    const faqHeading = page.getByRole('heading', { name: /Frequently asked questions about the Banner Generator/i });
+    const faqHeading = page.getByRole('heading', { name: /Quick answers for Banner Generator/i });
     const faqSection = page.locator('.tb-v2-faq');
 
     await expect(faqHeading).toBeVisible();

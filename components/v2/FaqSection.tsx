@@ -18,7 +18,7 @@ export default function FaqSection({ toolName, faqs }: Props) {
   return (
     <section className="tb-v2-faq" aria-labelledby="tb-v2-faq-title">
       <h2 id="tb-v2-faq-title" className="tb-v2-faq-title">
-        Frequently asked questions about the {toolName}
+        Quick answers for {toolName}
       </h2>
       <div className="tb-v2-faq-list">
         {faqs.map((f, i) => (
