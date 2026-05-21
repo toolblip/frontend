@@ -39,12 +39,14 @@ export default function SearchPalette({ open, onClose }: Props) {
       const name = t.name.toLowerCase();
       const desc = t.description.toLowerCase();
       const cat = t.category.toLowerCase();
+      const tags = (t.tags ?? []).join(' ').toLowerCase();
       let score = 0;
       if (name.startsWith(query)) score += 100;
       else if (name.includes(query)) score += 50;
       if (t.slug.includes(query)) score += 40;
       if (cat.includes(query)) score += 20;
       if (desc.includes(query)) score += 10;
+      if (tags.includes(query)) score += 15;
       if (score > 0) {
         scored.push({ t, score });
         seen.add(t.name);

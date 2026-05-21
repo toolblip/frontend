@@ -8,6 +8,8 @@ export interface Tool {
 }
 
 const TOOL_SLUG_ALIASES: Record<string, string> = {
+  'sass': 'sass-to-css',
+  'scss': 'sass-to-css',
   'scss-to-css': 'sass-to-css',
   'scss-to-css-converter': 'sass-to-css',
   'scss-converter': 'sass-to-css',
@@ -85,7 +87,7 @@ export const tools: Tool[] = [
   { name: 'Number Base Converter', slug: 'number-base-converter', description: 'Free online number base converter. Convert between binary, decimal, hexadecimal, and octal instantly. Useful for color values and bitwise operations.', emoji: '🔢', category: 'Conversion' },
   { name: 'Percentage Calculator', slug: 'percentage-calculator', description: 'Free online percentage calculator. Calculate percentages, percentage change, discounts, tips, and markups instantly with step-by-step formulas.', emoji: '%️⃣', category: 'Math' },
   { name: 'CSS Border Radius Generator', slug: 'css-border-radius-generator', description: 'Visually generate CSS border-radius values with per-corner controls, live preview, and one-click copy.', emoji: '⬜', category: 'CSS' },
-  { name: 'Sass to CSS', slug: 'sass-to-css', description: 'Compile SCSS or indented Sass into clean CSS instantly in your browser. Supports variables, mixins, nesting, and more.', emoji: '🎨', category: 'CSS', tags: ['sass', 'scss', 'sass to css', 'scss to css', 'sass compiler', 'scss compiler', 'sass converter', 'scss converter'] },
+  { name: 'Sass to CSS', slug: 'sass-to-css', description: 'Compile SCSS or indented Sass into clean CSS instantly in your browser. Supports variables, mixins, nesting, and more.', emoji: '🎨', category: 'CSS', tags: ['sass', 'scss', 'sass to css', 'scss to css', 'sass compiler', 'scss compiler', 'sass converter', 'scss converter', 'convert sass to css', 'convert scss to css', 'sass to css online', 'scss to css online'] },
   { name: 'CSS Gradient Generator', slug: 'css-gradient-generator', description: 'Free online CSS gradient generator. Create linear, radial, and conic gradients with live preview, color stops, angle control, and preset library. Copy CSS instantly.', emoji: '🌈', category: 'CSS' },
   { name: 'XML Formatter', slug: 'xml-formatter', description: 'Format, validate, and prettify XML with syntax highlighting and error detection.', emoji: '📋', category: 'Developer' },
   { name: 'SQL Prettifier', slug: 'sql-prettifier', description: 'Format and indent SQL queries with keyword highlighting and customizable style.', emoji: '🗄️', category: 'Developer' },
@@ -189,7 +191,7 @@ export const tools: Tool[] = [
   { name: 'Regex Pattern Generator', slug: 'regex-pattern-generator', description: 'Generate regex patterns from natural language descriptions for common use cases like emails and URLs.', emoji: '🔍', category: 'Developer' },
   { name: 'JSON to Go Struct', slug: 'json-to-go-struct', description: 'Convert JSON data into Go struct definitions with field types and JSON tags automatically.', emoji: '🐹', category: 'Developer' },
   { name: 'SVG Minifier', slug: 'svg-minifier', description: 'Minify SVG files by removing unnecessary attributes, comments, and whitespace while preserving visuals.', emoji: '✂️', category: 'Developer' },
-  { name: 'CSS to SCSS', slug: 'css-to-scss', description: 'Convert plain CSS into SCSS with automatic selector nesting and variable handling.', emoji: '🎨', category: 'Developer', tags: ['css to scss', 'css to sass', 'scss converter', 'css converter', 'sass converter'] },
+  { name: 'CSS to SCSS', slug: 'css-to-scss', description: 'Convert plain CSS into SCSS with automatic selector nesting and variable handling.', emoji: '🎨', category: 'Developer', tags: ['css to scss', 'css to sass', 'scss converter', 'css converter', 'sass converter', 'css to scss converter', 'css to sass converter', 'css to scss online', 'css to sass online', 'css to scss compiler', 'css to sass compiler'] },
   { name: 'Image Blur Hash Generator', slug: 'image-blur-hash-generator', description: 'Generate BlurHash placeholders for images - compact base64 strings for lazy loading and previews.', emoji: '🖼️', category: 'Image' },
   { name: 'XML Sitemap Parser', slug: 'xml-sitemap-parser', description: 'Parse and analyze XML sitemaps to extract URLs, priorities, changefreq, and lastmod data.', emoji: '🗺️', category: 'SEO' },
   { name: 'Robots.txt Analyzer', slug: 'robots-txt-analyzer', description: 'Analyze robots.txt files to check crawler directives, blocked paths, and sitemap references.', emoji: '🤖', category: 'SEO' },

@@ -7,6 +7,34 @@ export interface Tool {
   tags?: string[];
 }
 
+const TOOL_SLUG_ALIASES: Record<string, string> = {
+  'sass': 'sass-to-css',
+  'scss': 'sass-to-css',
+  'scss-to-css': 'sass-to-css',
+  'scss-to-css-converter': 'sass-to-css',
+  'scss-converter': 'sass-to-css',
+  'scss-compiler': 'sass-to-css',
+  'sass-converter': 'sass-to-css',
+  'sass-compiler': 'sass-to-css',
+  'sass-to-css-converter': 'sass-to-css',
+  'sass-to-css-online': 'sass-to-css',
+  'scss-to-css-online': 'sass-to-css',
+  'sass-to-css-online-tool': 'sass-to-css',
+  'sass-to-css-compiler': 'sass-to-css',
+  'scss-to-css-compiler': 'sass-to-css',
+  'convert-sass-to-css': 'sass-to-css',
+  'convert-scss-to-css': 'sass-to-css',
+  'sass-online': 'sass-to-css',
+  'scss-online': 'sass-to-css',
+  'css-to-sass': 'css-to-scss',
+  'css-to-sass-converter': 'css-to-scss',
+  'css-to-sass-online': 'css-to-scss',
+  'css-to-scss-converter': 'css-to-scss',
+  'css-to-scss-online': 'css-to-scss',
+  'css-to-scss-compiler': 'css-to-scss',
+};
+
+
 export const tools: Tool[] = [
   {
     slug: 'word-counter',
@@ -201,6 +229,22 @@ export const tools: Tool[] = [
     tags: ['css', 'box-shadow', 'generator', 'design'],
   },
   {
+    slug: 'sass-to-css',
+    name: 'Sass to CSS',
+    emoji: '🎨',
+    description: 'Compile SCSS or indented Sass into clean CSS instantly in your browser. Supports variables, mixins, nesting, and more.',
+    category: 'CSS',
+    tags: ['sass', 'scss', 'sass to css', 'scss to css', 'sass compiler', 'scss compiler', 'sass converter', 'scss converter', 'convert sass to css', 'convert scss to css', 'sass to css online', 'scss to css online'],
+  },
+  {
+    slug: 'css-to-scss',
+    name: 'CSS to SCSS',
+    emoji: '🎨',
+    description: 'Convert plain CSS into SCSS with automatic selector nesting and variable handling.',
+    category: 'Developer',
+    tags: ['css to scss', 'css to sass', 'scss converter', 'css converter', 'sass converter', 'css to scss converter', 'css to sass converter', 'css to scss online', 'css to sass online', 'css to scss compiler', 'css to sass compiler'],
+  },
+  {
     slug: 'unit-converter',
     name: 'Unit Converter',
     emoji: '⚖️',
@@ -242,6 +286,10 @@ export const tools: Tool[] = [
   },
 ];
 
+export function getCanonicalToolSlug(slug: string): string {
+  return TOOL_SLUG_ALIASES[slug] ?? slug;
+}
+
 export function getToolBySlug(slug: string): Tool | undefined {
-  return tools.find(t => t.slug === slug);
+  return tools.find((t) => t.slug === getCanonicalToolSlug(slug));
 }

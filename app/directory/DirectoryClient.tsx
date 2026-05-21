@@ -27,7 +27,8 @@ function matchesSearch(tool: Tool, query: string) {
   const terms = query.trim().toLowerCase().split(/\s+/).filter(Boolean);
   if (terms.length === 0) return true;
 
-  const searchable = `${tool.name} ${tool.description}`.toLowerCase();
+  const tags = (tool.tags ?? []).join(' ').toLowerCase();
+  const searchable = `${tool.name} ${tool.description} ${tags}`.toLowerCase();
   return terms.every((term) => searchable.includes(term));
 }
 
