@@ -6,9 +6,9 @@ Mode: conservative one-topic cron run from isolated main worktree
 ## Summary
 
 Articles Generated: 1
-Articles Committed: 0 pending build/verification at archive write time
-Articles Submitted to GSC: 0/1 pending sitemap refresh at archive write time
-GSC Errors: none from preflight sitemap check; new URL expected to be unknown immediately after publish
+Articles Committed: 1
+Articles Submitted to GSC: 1/1 via sitemap refresh
+GSC Errors: none from sitemap check; URL Inspection reports the new URL is unknown to Google, which is expected immediately after publish
 
 ## Topic processed
 

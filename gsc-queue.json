@@ -8,8 +8,9 @@
       "topic": "URL encode and decode strings for API testing",
       "submitted_at": "2026-05-21T17:06:10Z",
       "method": "sitemap",
-      "status": "pending verification",
-      "note": "manual fallback post; sitemap refresh/diagnose to run after build"
+      "status": "submitted",
+      "note": "sitemap refreshed after conservative manual fallback post; URL unknown immediately after publish is expected",
+      "coverage_state": "URL is unknown to Google"
     },
     {
       "url": "https://toolblip.com/blog/2026-05-20-minify-css-for-frontend-debugging",
