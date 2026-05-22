@@ -204,7 +204,7 @@ export default function PricingClient() {
           <p className="tb-v2-page-sub">All tools are free to use. Upgrade for an uninterrupted experience.</p>
         </div>
 
-        <PricingBillingToggle billing={billing} onBillingChange={setBilling} label="Billing period" centered />
+        <PricingBillingToggle billing={billing} onBillingChange={setBilling} centered />
 
         {error && (
           <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/30 dark:text-red-300">
@@ -267,8 +267,8 @@ export default function PricingClient() {
                       <button
                         onClick={() => handleUpgrade(sourcePlan)}
                         disabled={loading === sourcePlan.tier}
-                        className="tb-v2-btn tb-v2-btn-primary tb-v2-pricing-btn"
-                        style={{ background: isHighlighted ? 'var(--fg-0)' : undefined, borderColor: isHighlighted ? 'var(--fg-0)' : undefined }}
+                        className={`tb-v2-btn tb-v2-pricing-btn ${isHighlighted ? 'inverse' : 'tb-v2-btn-primary'}`}
+                        style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
                       >
                         {loading === sourcePlan.tier ? 'Redirecting...' : `Get ${plan.name}`}
                       </button>

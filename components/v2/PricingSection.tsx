@@ -123,7 +123,7 @@ export function PricingPlanCard({
     'tb-v2-pricing-card',
     tone === 'light' ? 'light' : '',
     highlighted && !selected ? 'hot' : '',
-    selected ? 'border-red-500 bg-red-950/35 shadow-[0_0_0_4px_rgba(217,48,48,.06)] dark:border-red-400 dark:bg-red-950/30' : '',
+    selected ? 'selected' : '',
     htmlFor ? 'cursor-pointer' : '',
   ].filter(Boolean).join(' ');
 

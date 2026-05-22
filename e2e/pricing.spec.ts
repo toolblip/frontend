@@ -17,14 +17,18 @@ test.describe('Pricing layout', () => {
 
     const pricing = page.locator('main');
     await expect(pricing.getByTestId('pricing-billing-toggle')).toBeVisible();
-    await expect(pricing.getByText('Billing period')).toBeVisible();
+    await expect(pricing.getByText('Billing period')).toBeHidden();
     await expect(pricing.getByRole('button', { name: 'Monthly' })).toBeVisible();
     await expect(pricing.getByRole('button', { name: /Yearly/ })).toBeVisible();
 
-    const toggleRow = pricing.locator('.tb-v2-pricing-period-row');
+    const toggleRow = pricing.getByTestId('pricing-billing-toggle');
     const toggleRect = await toggleRow.boundingBox();
     expect(toggleRect).toBeTruthy();
     expect(Math.abs((toggleRect!.x + toggleRect!.width / 2) - 600)).toBeLessThan(120);
+
+    const proButton = pricing.getByRole('button', { name: 'Get Pro' });
+    await expect(proButton).toBeVisible();
+    await expect(await proButton.evaluate((node) => (node as HTMLElement).className)).toContain('inverse');
 
     const cardLayout = await pricing.locator('[data-testid="pricing-plan-card"]').evaluateAll((nodes) =>
       nodes.map((node) => {
