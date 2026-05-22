@@ -6,8 +6,11 @@ import type { Metadata } from 'next';
 import FeaturedImage from '@/components/blog/FeaturedImage';
 
 export const metadata: Metadata = {
-  title: 'Blog | Toolblip',
+  title: 'Blog',
   description: 'Guides, tutorials, and updates from the Toolblip team. Learn about developer tools, MCP, and how to get the most out of Toolblip.',
+  alternates: {
+    canonical: 'https://toolblip.com/blog',
+  },
   openGraph: {
     title: 'Blog | Toolblip',
     description: 'Guides, tutorials, and updates from the Toolblip team. Learn about developer tools, MCP, and how to get the most out of Toolblip.',
@@ -84,6 +87,31 @@ export default function BlogPage() {
           <div className="tb-v2-kicker">Blog</div>
           <h1 className="tb-v2-page-title">Blog</h1>
           <p className="tb-v2-page-sub">Guides, tutorials, and updates from the Toolblip team.</p>
+        </div>
+
+        <div className="tb-v2-dir-grid" style={{ marginBottom: '24px' }}>
+          <Link href="/blog/2026-05-22-compound-seo-7-moves-tool-site-growth" className="tb-v2-dir-card">
+            <div className="tb-v2-dir-card-top">
+              <div style={{ flex: 1 }}>
+                <div className="tb-v2-kicker" style={{ marginBottom: 6 }}>Featured SEO guide</div>
+                <div className="tb-v2-dir-card-title">Compound SEO: 7 Moves That Help a Tool Site Grow</div>
+              </div>
+            </div>
+            <div className="tb-v2-dir-card-desc">
+              A practical list for tool sites: one canonical page per intent, cleaner URLs, stronger internal links, and content that matches real search queries.
+            </div>
+          </Link>
+          <Link href="/blog/2026-04-16-seo-friendly-urls-guide" className="tb-v2-dir-card">
+            <div className="tb-v2-dir-card-top">
+              <div style={{ flex: 1 }}>
+                <div className="tb-v2-kicker" style={{ marginBottom: 6 }}>Canonical URLs</div>
+                <div className="tb-v2-dir-card-title">URL Structure and SEO</div>
+              </div>
+            </div>
+            <div className="tb-v2-dir-card-desc">
+              Keep URL shapes clean, consistent, and easy for search engines to understand.
+            </div>
+          </Link>
         </div>
 
         {posts.length === 0 ? (

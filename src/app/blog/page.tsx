@@ -87,6 +87,92 @@ export default async function BlogPage() {
             {posts.length} {posts.length === 1 ? 'article' : 'articles'}
           </span>
         </div>
+
+        <div className="mb-8 grid gap-4 md:grid-cols-[1.2fr_0.8fr]">
+          <Link
+            href="/blog/2026-05-22-compound-seo-7-moves-tool-site-growth"
+            className="block group border border-[var(--line)] rounded-2xl p-6 transition-all duration-200 hover:border-[var(--line-2)] hover:shadow-sm"
+            style={{ background: 'var(--surface)' }}
+          >
+            <p
+              className="mb-2"
+              style={{
+                fontFamily: 'var(--f-mono)',
+                fontSize: '12px',
+                color: 'var(--green)',
+                letterSpacing: '0.08em',
+                textTransform: 'uppercase',
+              }}
+            >
+              Featured SEO guide
+            </p>
+            <h2
+              className="font-semibold text-[var(--fg-0)] group-hover:text-[var(--red)] transition-colors"
+              style={{
+                fontFamily: 'var(--f-display)',
+                fontSize: '22px',
+                letterSpacing: '-0.02em',
+              }}
+            >
+              Compound SEO: 7 Moves That Help a Tool Site Grow
+            </h2>
+            <p className="mt-3" style={{ fontSize: '15px', color: 'var(--fg-1)', lineHeight: 1.6 }}>
+              A practical list for tool sites: one canonical page per intent, cleaner URLs, stronger internal links, and content that matches real search queries.
+            </p>
+          </Link>
+
+          <div className="grid gap-4">
+            <Link
+              href="/blog/2026-04-16-seo-friendly-urls-guide"
+              className="block group border border-[var(--line)] rounded-2xl p-5 transition-all duration-200 hover:border-[var(--line-2)] hover:shadow-sm"
+              style={{ background: 'var(--surface)' }}
+            >
+              <p
+                className="mb-1"
+                style={{
+                  fontFamily: 'var(--f-mono)',
+                  fontSize: '12px',
+                  color: 'var(--fg-3)',
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                Canonical URLs
+              </p>
+              <h3
+                className="font-semibold text-[var(--fg-0)] group-hover:text-[var(--red)] transition-colors"
+                style={{ fontFamily: 'var(--f-display)', fontSize: '18px', letterSpacing: '-0.01em' }}
+              >
+                URL Structure and SEO
+              </h3>
+            </Link>
+            <Link
+              href="/tools/xml-sitemap-generator"
+              className="block group border border-[var(--line)] rounded-2xl p-5 transition-all duration-200 hover:border-[var(--line-2)] hover:shadow-sm"
+              style={{ background: 'var(--surface)' }}
+            >
+              <p
+                className="mb-1"
+                style={{
+                  fontFamily: 'var(--f-mono)',
+                  fontSize: '12px',
+                  color: 'var(--fg-3)',
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                }}
+              >
+                Discovery
+              </p>
+              <h3
+                className="font-semibold text-[var(--fg-0)] group-hover:text-[var(--red)] transition-colors"
+                style={{ fontFamily: 'var(--f-display)', fontSize: '18px', letterSpacing: '-0.01em' }}
+              >
+                XML Sitemap Generator
+              </h3>
+            </Link>
+          </div>
+        </div>
+
         {posts.length === 0 ? (
           <p style={{ color: 'var(--fg-2)' }}>No posts yet. Check back soon!</p>
         ) : (
