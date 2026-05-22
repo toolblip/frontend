@@ -90,6 +90,7 @@ test.describe('Account onboarding BDD regression', () => {
         localStorage.setItem(
           key,
           JSON.stringify({
+            version: 2,
             status: 'draft',
             step: 'pricing',
             teamName,
