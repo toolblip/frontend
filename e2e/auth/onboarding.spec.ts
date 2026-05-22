@@ -23,8 +23,21 @@ test.describe('Account onboarding BDD regression', () => {
       const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
       return entry ? JSON.parse(String(entry[1])) : null;
     });
-    expect(draft).toMatchObject({ status: 'draft', step: 'pricing', teamName: `${user.name} Team` });
+    expect(draft).toMatchObject({ status: 'draft', step: 'pricing', teamName: `${user.name} Team`, billingCycle: 'monthly' });
+    await expect(onboarding.getByText('Billing period')).toBeVisible();
+    await expect(onboarding.getByRole('button', { name: 'Monthly' })).toBeVisible();
+    await expect(onboarding.getByRole('button', { name: 'Yearly' })).toBeVisible();
     await expect(onboarding.locator('#onboarding-plan-ultra')).toBeChecked();
+    await expect(onboarding.getByText('$19.99/mo')).toBeVisible();
+
+    await onboarding.getByRole('button', { name: 'Yearly' }).click();
+    await expect(onboarding.getByText('$191.99/yr')).toBeVisible();
+    const yearlyDraft = await page.evaluate(() => {
+      const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
+      return entry ? JSON.parse(String(entry[1])) : null;
+    });
+    expect(yearlyDraft).toMatchObject({ billingCycle: 'yearly' });
+
     const planLabels = await onboarding.locator('label[for^="onboarding-plan-"]').allTextContents();
     expect(planLabels.at(-1)).toContain('Free');
     await onboarding.getByRole('button', { name: 'Finish' }).click();
@@ -34,7 +47,7 @@ test.describe('Account onboarding BDD regression', () => {
       const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
       return entry ? JSON.parse(String(entry[1])) : null;
     });
-    expect(stored).toMatchObject({ status: 'completed', selectedPlan: 'ultra', teamName: `${user.name} Team` });
+    expect(stored).toMatchObject({ status: 'completed', selectedPlan: 'ultra', teamName: `${user.name} Team`, billingCycle: 'yearly' });
   });
 
   test('Given a first-time login reaches the dashboard, Then the user can choose Max before finishing onboarding', async ({ page }) => {
