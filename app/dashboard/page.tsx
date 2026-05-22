@@ -40,6 +40,11 @@ type OnboardingStep = "welcome" | "pricing";
 type OnboardingPlanTier = "free" | "starter" | "ultra" | "max";
 
 const ONBOARDING_STORAGE_VERSION = 2;
+const DEFAULT_ONBOARDING_PLAN: OnboardingPlanTier = "ultra";
+
+function normalizeOnboardingPlan(plan?: string | null): OnboardingPlanTier {
+  return plan === "starter" ? DEFAULT_ONBOARDING_PLAN : (plan as OnboardingPlanTier | undefined) ?? DEFAULT_ONBOARDING_PLAN;
+}
 
 const ONBOARDING_PLANS: Array<{
   tier: OnboardingPlanTier;
@@ -121,7 +126,7 @@ export default function AccountPage() {
   const [showPlanOnboarding, setShowPlanOnboarding] = useState(false);
   const [onboardingStep, setOnboardingStep] = useState<OnboardingStep>("welcome");
   const [teamName, setTeamName] = useState("");
-  const [selectedOnboardingPlan, setSelectedOnboardingPlan] = useState<OnboardingPlanTier>("ultra");
+  const [selectedOnboardingPlan, setSelectedOnboardingPlan] = useState<OnboardingPlanTier>(DEFAULT_ONBOARDING_PLAN);
   const [onboardingBilling, setOnboardingBilling] = useState<BillingCycle>("monthly");
   const [savingPlanOnboarding, setSavingPlanOnboarding] = useState(false);
   const [planOnboardingError, setPlanOnboardingError] = useState("");
@@ -174,7 +179,7 @@ export default function AccountPage() {
       const stored = window.localStorage.getItem(onboardingStorageKey(user.id));
       if (!stored) {
         setTeamName(suggestedTeamName);
-        setSelectedOnboardingPlan("ultra");
+        setSelectedOnboardingPlan(DEFAULT_ONBOARDING_PLAN);
         setOnboardingStep("welcome");
         setShowPlanOnboarding(true);
         return;
@@ -193,12 +198,7 @@ export default function AccountPage() {
         return;
       }
 
-      const restoredSelectedPlan =
-        parsed.version === ONBOARDING_STORAGE_VERSION && parsed.selectedPlan
-          ? parsed.selectedPlan
-          : parsed.selectedPlan && parsed.selectedPlan !== "starter"
-            ? parsed.selectedPlan
-            : "ultra";
+      const restoredSelectedPlan = normalizeOnboardingPlan(parsed.selectedPlan);
       const restoredBilling = parsed.billingCycle ?? "monthly";
       const restoredStep = parsed.step ?? "welcome";
       const restoredPayload = {
@@ -220,7 +220,7 @@ export default function AccountPage() {
       return;
     } catch {
       setTeamName(suggestedTeamName);
-      setSelectedOnboardingPlan("ultra");
+      setSelectedOnboardingPlan(DEFAULT_ONBOARDING_PLAN);
       setOnboardingBilling("monthly");
       setOnboardingStep("welcome");
       setShowPlanOnboarding(true);
