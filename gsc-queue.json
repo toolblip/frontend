@@ -1,13 +1,17 @@
 {
   "pending": [
-    "https://toolblip.com/blog/2026-05-13-how-to-test-regular-expressions-online-with-sample-text",
+    "https://toolblip.com/blog/2026-05-13-how-to-test-regular-expressions-online-with-sample-text"
+  ],
+  "submitted": [
     {
       "url": "https://toolblip.com/blog/2026-05-22-convert-unix-timestamps-readable-dates-online",
       "topic": "convert Unix timestamps to readable dates online",
-      "enqueued_at": "2026-05-22T17:08:00Z"
-    }
-  ],
-  "submitted": [
+      "submitted_at": "2026-05-22T17:12:00Z",
+      "method": "sitemap",
+      "status": "submitted",
+      "coverage_state": "URL is unknown to Google",
+      "note": "sitemap refreshed after conservative manual fallback post; URL unknown immediately after publish is expected"
+    },
     {
       "url": "https://toolblip.com/blog/2026-05-21-url-encode-decode-strings-api-testing",
       "topic": "URL encode and decode strings for API testing",

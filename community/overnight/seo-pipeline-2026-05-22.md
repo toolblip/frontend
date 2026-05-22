@@ -20,10 +20,19 @@ Mode: conservative Google-safe nightly run
    - Notes: 824 words, no em dashes, quoted ISO frontmatter date, developer-first debugging angle.
 
 Articles Generated: 1
-Articles Committed: pending
-Articles Submitted to GSC: pending
-GSC Errors: none in preflight
+Articles Committed: 1
+Articles Submitted to GSC: 1/1 via sitemap refresh
+GSC Errors: none. New URL inspection says `URL is unknown to Google`, expected immediately after publish.
 Next Run: 2026-05-23 23:00 Dhaka
 
 ## Blocker
 Claude Code is still unavailable in the cron environment. Manual fallback was used to avoid a silent no-content run.
+
+## Final verification
+- `npm run build` passed in the isolated main worktree.
+- Commit pushed to `main`: `8f28fc39`.
+- Railway deploy `fac07d77-bbed-43d5-96a6-4b37156fa285` reached `SUCCESS`.
+- Live URL returned HTTP 200 and contained the expected title.
+- Live sitemap contains the new slug.
+- Live HTML does not contain `[object Object]`; `article:published_time` is `2026-05-22T00:00:00.000Z`.
+- GSC sitemap refresh returned `status: ok`.
