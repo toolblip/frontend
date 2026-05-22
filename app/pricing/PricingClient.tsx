@@ -204,7 +204,7 @@ export default function PricingClient() {
           <p className="tb-v2-page-sub">All tools are free to use. Upgrade for an uninterrupted experience.</p>
         </div>
 
-        <PricingBillingToggle billing={billing} onBillingChange={setBilling} label="Billing period" />
+        <PricingBillingToggle billing={billing} onBillingChange={setBilling} label="Billing period" centered />
 
         {error && (
           <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/30 dark:text-red-300">
@@ -318,6 +318,7 @@ export default function PricingClient() {
                   <PricingPlanCard
                     plan={plan}
                     billing={billing}
+                    tone="light"
                     footer={
                       isFree ? (
                         <Link

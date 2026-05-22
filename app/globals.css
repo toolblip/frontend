@@ -2522,11 +2522,20 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 .tb-v2-pricing-toggle-btn.on { background: var(--surface); color: var(--fg-0); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
 .tb-v2-pricing-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; align-items: start; margin-top: 40px; }
 .tb-v2-pricing-period-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 24px; text-align: left; }
+.tb-v2-pricing-period-row.centered { justify-content: center; }
 .tb-v2-pricing-period-label { font-size: 14px; font-weight: 600; color: var(--fg-2); }
 .tb-v2-pricing-card.free-row { grid-column: 1 / -1; }
 .tb-v2-pricing-card { border-radius: var(--radius-lg); border: 1.5px solid var(--line); background: var(--surface); padding: 24px; display: flex; flex-direction: column; position: relative; transition: border-color .15s, box-shadow .15s; }
 .tb-v2-pricing-card:hover { border-color: var(--line-2); }
 .tb-v2-pricing-card.hot { border-color: var(--red); background: var(--red-tint); box-shadow: 0 0 0 4px rgba(217,48,48,.06); }
+.tb-v2-pricing-card.light { background: #fffefc; border-color: #e5e7eb; box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06); }
+.tb-v2-pricing-card.light:hover { border-color: #d1d5db; }
+.tb-v2-pricing-card.light .tb-v2-pricing-card-name { color: #111827; }
+.tb-v2-pricing-card.light .tb-v2-pricing-card-price-amt { color: #111827; }
+.tb-v2-pricing-card.light .tb-v2-pricing-card-price-period { color: #6b7280; }
+.tb-v2-pricing-card.light .tb-v2-pricing-card-sub { color: #6b7280; }
+.tb-v2-pricing-card.light .tb-v2-pricing-card-desc { color: #4b5563; }
+.tb-v2-pricing-card.light .tb-v2-pricing-features li { color: #374151; }
 .tb-v2-pricing-card-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--red); color: #fff; font-size: 11px; font-weight: 700; padding: 3px 12px; border-radius: 20px; white-space: nowrap; letter-spacing: 0.02em; }
 .tb-v2-pricing-card-name { font-size: 14px; font-weight: 600; color: var(--fg-0); }
 .tb-v2-pricing-card-price { display: flex; align-items: baseline; gap: 4px; margin-top: 10px; }

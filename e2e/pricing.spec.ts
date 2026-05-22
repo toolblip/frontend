@@ -21,11 +21,17 @@ test.describe('Pricing layout', () => {
     await expect(pricing.getByRole('button', { name: 'Monthly' })).toBeVisible();
     await expect(pricing.getByRole('button', { name: /Yearly/ })).toBeVisible();
 
+    const toggleRow = pricing.locator('.tb-v2-pricing-period-row');
+    const toggleRect = await toggleRow.boundingBox();
+    expect(toggleRect).toBeTruthy();
+    expect(Math.abs((toggleRect!.x + toggleRect!.width / 2) - 600)).toBeLessThan(120);
+
     const cardLayout = await pricing.locator('[data-testid="pricing-plan-card"]').evaluateAll((nodes) =>
       nodes.map((node) => {
         const rect = node.getBoundingClientRect();
         return {
           text: (node.textContent || '').replace(/\s+/g, ' ').trim(),
+          className: node.className,
           x: rect.x,
           y: rect.y,
           width: rect.width,
@@ -44,6 +50,7 @@ test.describe('Pricing layout', () => {
     expect(proCard).toBeTruthy();
     expect(maxCard).toBeTruthy();
     expect(freeCard).toBeTruthy();
+    expect(String(freeCard!.className)).toContain('light');
 
     expect(Math.max(starterCard!.y, proCard!.y, maxCard!.y) - Math.min(starterCard!.y, proCard!.y, maxCard!.y)).toBeLessThan(8);
     expect(starterCard!.x).toBeLessThan(proCard!.x);

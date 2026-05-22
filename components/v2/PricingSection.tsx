@@ -52,10 +52,12 @@ export function PricingBillingToggle({
   billing,
   onBillingChange,
   label,
+  centered = false,
 }: {
   billing: BillingCycle;
   onBillingChange: (billing: BillingCycle) => void;
   label?: string;
+  centered?: boolean;
 }) {
   const toggle = (
     <div className="tb-v2-pricing-toggle" data-testid="pricing-billing-toggle">
@@ -78,14 +80,14 @@ export function PricingBillingToggle({
 
   if (label) {
     return (
-      <div className="tb-v2-pricing-period-row">
+      <div className={centered ? 'tb-v2-pricing-period-row centered' : 'tb-v2-pricing-period-row'}>
         <span className="tb-v2-pricing-period-label">{label}</span>
         {toggle}
       </div>
     );
   }
 
-  return <div className="flex justify-center">{toggle}</div>;
+  return <div className={centered ? 'flex justify-center' : 'flex justify-center'}>{toggle}</div>;
 }
 
 export function PricingPlanCard({
@@ -93,6 +95,7 @@ export function PricingPlanCard({
   billing,
   highlighted = false,
   selected = false,
+  tone = 'default',
   topSlot,
   children,
   footer,
@@ -102,6 +105,7 @@ export function PricingPlanCard({
   billing: BillingCycle;
   highlighted?: boolean;
   selected?: boolean;
+  tone?: 'default' | 'light';
   topSlot?: ReactNode;
   children?: ReactNode;
   footer?: ReactNode;
@@ -117,6 +121,7 @@ export function PricingPlanCard({
   const Wrapper = htmlFor ? 'label' : 'div';
   const wrapperClasses = [
     'tb-v2-pricing-card',
+    tone === 'light' ? 'light' : '',
     highlighted && !selected ? 'hot' : '',
     selected ? 'border-red-500 bg-red-950/35 shadow-[0_0_0_4px_rgba(217,48,48,.06)] dark:border-red-400 dark:bg-red-950/30' : '',
     htmlFor ? 'cursor-pointer' : '',
