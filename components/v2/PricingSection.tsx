@@ -105,7 +105,7 @@ export function PricingPlanCard({
   billing: BillingCycle;
   highlighted?: boolean;
   selected?: boolean;
-  tone?: 'default' | 'light';
+  tone?: 'default' | 'light' | 'plain';
   topSlot?: ReactNode;
   children?: ReactNode;
   footer?: ReactNode;
@@ -122,6 +122,7 @@ export function PricingPlanCard({
   const wrapperClasses = [
     'tb-v2-pricing-card',
     tone === 'light' ? 'light' : '',
+    tone === 'plain' ? 'plain' : '',
     highlighted && !selected ? 'hot' : '',
     selected ? 'selected' : '',
     htmlFor ? 'cursor-pointer' : '',

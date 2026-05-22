@@ -13,10 +13,10 @@ import {
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.toolblip.com';
 
 const FALLBACK_PLANS: Plan[] = [
-  { tier: 'free', name: 'Free', description: 'For anyone getting started', price_monthly: 0, price_yearly: 0, stripe_monthly_id: null, stripe_yearly_id: null, devices: 1, storage_gb: 0, max_file_size_mb: 5, team_seats: 1, api_access: false, priority_support: false, sort_order: 0 },
-  { tier: 'starter', name: 'Starter', description: 'For personal use', price_monthly: 499, price_yearly: 4799, stripe_monthly_id: 'price_1TOflqHd4AsPgGTOxspjxODX', stripe_yearly_id: 'price_1TOflqHd4AsPgGTOOrxqG1kM', devices: 1, storage_gb: 1, max_file_size_mb: 50, team_seats: 1, api_access: false, priority_support: false, sort_order: 1 },
-  { tier: 'ultra', name: 'Pro', description: 'For power users', price_monthly: 1999, price_yearly: 19199, stripe_monthly_id: 'price_1TOflrHd4AsPgGTOnt9jYhjz', stripe_yearly_id: 'price_1TOflsHd4AsPgGTO5ra4mhwt', devices: 3, storage_gb: 10, max_file_size_mb: 500, team_seats: 3, api_access: true, priority_support: false, sort_order: 2 },
-  { tier: 'max', name: 'Max', description: 'For teams', price_monthly: 4999, price_yearly: 47999, stripe_monthly_id: 'price_1TOflsHd4AsPgGTOG7jeNqLk', stripe_yearly_id: 'price_1TOfltHd4AsPgGTOnUHvrbT7', devices: 10, storage_gb: 50, max_file_size_mb: 5000, team_seats: 10, api_access: true, priority_support: true, sort_order: 3 },
+  { tier: 'free', name: 'Free', description: 'For anyone getting started', price_monthly: 0, price_yearly: 0, stripe_monthly_id: null, stripe_yearly_id: null, storage_gb: 0, max_file_size_mb: 5, team_seats: 1, api_access: false, priority_support: false, sort_order: 0 },
+  { tier: 'starter', name: 'Starter', description: 'For personal use', price_monthly: 499, price_yearly: 4799, stripe_monthly_id: 'price_1TOflqHd4AsPgGTOxspjxODX', stripe_yearly_id: 'price_1TOflqHd4AsPgGTOOrxqG1kM', storage_gb: 1, max_file_size_mb: 50, team_seats: 1, api_access: false, priority_support: false, sort_order: 1 },
+  { tier: 'ultra', name: 'Pro', description: 'For power users', price_monthly: 1999, price_yearly: 19199, stripe_monthly_id: 'price_1TOflrHd4AsPgGTOnt9jYhjz', stripe_yearly_id: 'price_1TOflsHd4AsPgGTO5ra4mhwt', storage_gb: 10, max_file_size_mb: 500, team_seats: 3, api_access: true, priority_support: false, sort_order: 2 },
+  { tier: 'max', name: 'Max', description: 'For teams', price_monthly: 4999, price_yearly: 47999, stripe_monthly_id: 'price_1TOflsHd4AsPgGTOG7jeNqLk', stripe_yearly_id: 'price_1TOfltHd4AsPgGTOnUHvrbT7', storage_gb: 50, max_file_size_mb: 5000, team_seats: 10, api_access: true, priority_support: true, sort_order: 3 },
 ];
 
 interface Plan {
@@ -27,7 +27,6 @@ interface Plan {
   price_yearly: number;
   stripe_monthly_id: string | null;
   stripe_yearly_id: string | null;
-  devices: number;
   storage_gb: number;
   max_file_size_mb: number;
   team_seats: number;
@@ -231,10 +230,6 @@ export default function PricingClient() {
 
               const sourcePlan = orderedPlans.find((item) => item.tier === plan.tier)!;
 
-              if (sourcePlan.devices > 0)
-                features.push(
-                  `${sourcePlan.devices} device${sourcePlan.devices > 1 ? 's' : ''}`
-                );
               if (sourcePlan.storage_gb > 0)
                 features.push(`${formatStorage(sourcePlan.storage_gb)} cloud storage`);
               if (sourcePlan.max_file_size_mb > 0)
@@ -258,8 +253,8 @@ export default function PricingClient() {
                     isFree ? (
                       <Link
                         href="/signup"
-                        className="tb-v2-btn tb-v2-btn-primary tb-v2-pricing-btn"
-                        style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
+                        className="tb-v2-btn tb-v2-btn-primary tb-v2-pricing-btn compact"
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', textDecoration: 'none' }}
                       >
                         Get Started
                       </Link>
@@ -296,10 +291,6 @@ export default function PricingClient() {
               const isFree = true;
               const features = ['All tools available', 'Client-side processing'];
 
-              if (sourcePlan.devices > 0)
-                features.push(
-                  `${sourcePlan.devices} device${sourcePlan.devices > 1 ? 's' : ''}`
-                );
               if (sourcePlan.storage_gb > 0)
                 features.push(`${formatStorage(sourcePlan.storage_gb)} cloud storage`);
               if (sourcePlan.max_file_size_mb > 0)
@@ -318,18 +309,20 @@ export default function PricingClient() {
                   <PricingPlanCard
                     plan={plan}
                     billing={billing}
-                    tone="light"
-                    footer={
-                      isFree ? (
+                  tone="plain"
+                  footer={
+                    isFree ? (
+                      <div className="flex justify-end">
                         <Link
                           href="/signup"
-                          className="tb-v2-btn tb-v2-btn-primary tb-v2-pricing-btn"
-                          style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
+                          className="tb-v2-btn tb-v2-btn-primary tb-v2-pricing-btn compact"
+                          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}
                         >
                           Get Started
                         </Link>
-                      ) : null
-                    }
+                      </div>
+                    ) : null
+                  }
                   >
                     <ul className="tb-v2-pricing-features">
                       {features.map((feature) => (

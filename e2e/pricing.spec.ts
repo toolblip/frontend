@@ -54,12 +54,19 @@ test.describe('Pricing layout', () => {
     expect(proCard).toBeTruthy();
     expect(maxCard).toBeTruthy();
     expect(freeCard).toBeTruthy();
-    expect(String(freeCard!.className)).toContain('light');
+    expect(String(freeCard!.className)).toContain('plain');
 
     expect(Math.max(starterCard!.y, proCard!.y, maxCard!.y) - Math.min(starterCard!.y, proCard!.y, maxCard!.y)).toBeLessThan(8);
     expect(starterCard!.x).toBeLessThan(proCard!.x);
     expect(proCard!.x).toBeLessThan(maxCard!.x);
     expect(freeCard!.y).toBeGreaterThan(maxCard!.y + 20);
     expect(freeCard!.x).toBeLessThan(starterCard!.x + 4);
+
+    const freeButton = pricing.getByRole('link', { name: 'Get Started' });
+    const freeButtonRect = await freeButton.boundingBox();
+    expect(freeButtonRect).toBeTruthy();
+    expect(freeButtonRect!.width).toBeLessThan(freeCard!.width * 0.5);
+    expect((freeCard!.x + freeCard!.width) - (freeButtonRect!.x + freeButtonRect!.width)).toBeLessThan(16);
+    await expect(pricing.getByText(/device/i)).toHaveCount(0);
   });
 });

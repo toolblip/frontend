@@ -499,6 +499,7 @@ body.tb-v2 a {
 .tb-v2-btn-lg { height: calc(48px * var(--density-scale)); padding: 0 calc(24px * var(--density-scale)); font-size: 15px; }
 .tb-v2-btn-sm { height: calc(30px * var(--density-scale)); padding: 0 calc(12px * var(--density-scale)); font-size: 12.5px; }
 .tb-v2-pricing-btn { height: 40px; padding: 0 18px; font-size: 13px; font-weight: 600; width: 100%; justify-content: center; }
+.tb-v2-pricing-btn.compact { width: auto; min-width: 138px; padding: 0 14px; }
 .tb-v2-pricing-btn.inverse { background: var(--surface); border-color: var(--surface); color: var(--red); box-shadow: none; }
 .tb-v2-pricing-btn.inverse:hover { background: var(--surface-2); border-color: var(--surface-2); color: var(--red-hover); }
 
@@ -2532,6 +2533,8 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 .tb-v2-pricing-card.hot { border-color: var(--red); background: var(--red-tint); box-shadow: 0 0 0 4px rgba(217,48,48,.06); }
 .tb-v2-pricing-card.light { background: var(--surface-2); border-color: var(--line); box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06); }
 .tb-v2-pricing-card.light:hover { border-color: var(--line-2); }
+.tb-v2-pricing-card.plain { background: transparent; border-color: transparent; box-shadow: none; padding: 10px 0 0; }
+.tb-v2-pricing-card.plain:hover { border-color: transparent; }
 .tb-v2-pricing-card.selected { border-color: var(--red); background: color-mix(in srgb, var(--red-tint) 65%, var(--surface) 35%); box-shadow: 0 0 0 4px color-mix(in srgb, var(--red) 6%, transparent); }
 .tb-v2-pricing-card.selected .tb-v2-pricing-card-name,
 .tb-v2-pricing-card.selected .tb-v2-pricing-card-price-amt,

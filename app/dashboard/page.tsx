@@ -901,16 +901,8 @@ export default function AccountPage() {
                   </p>
                 )}
 
-                {(subscription.devices ?? 0) > 0 || (subscription.storage_gb ?? 0) > 0 || (subscription.max_file_size_mb ?? 0) > 0 ? (
+                {(subscription.storage_gb ?? 0) > 0 || (subscription.max_file_size_mb ?? 0) > 0 ? (
                   <div className="flex flex-wrap gap-2">
-                    {(subscription.devices ?? 0) > 0 && (
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
-                        <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        {subscription.devices} device{subscription.devices !== 1 ? "s" : ""}
-                      </span>
-                    )}
                     {(subscription.storage_gb ?? 0) > 0 && (
                       <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
                         <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -959,7 +951,7 @@ export default function AccountPage() {
                   <span className="font-medium text-gray-700 dark:text-gray-300">Free plan</span>
                 </div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Upgrade to remove ads, unlock more devices, storage, and team seats.
+                  Upgrade to remove ads and unlock higher limits.
                 </p>
                 <Link
                   href="/pricing"
