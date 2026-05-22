@@ -193,8 +193,11 @@ export default function PricingClient() {
           <div className="tb-v2-kicker">Pricing</div>
           <h1 className="tb-v2-page-title" style={{ fontSize: '36px' }}>Simple, transparent pricing</h1>
           <p className="tb-v2-page-sub">All tools are free to use. Upgrade for an uninterrupted experience.</p>
+        </div>
 
-          <div className="tb-v2-pricing-toggle" style={{ marginTop: '24px' }}>
+        <div className="tb-v2-pricing-period-row">
+          <div className="tb-v2-pricing-period-label">Billing period</div>
+          <div className="tb-v2-pricing-toggle">
             <button
               onClick={() => setBilling('monthly')}
               className={`tb-v2-pricing-toggle-btn${billing === 'monthly' ? ' on' : ''}`}
@@ -206,7 +209,6 @@ export default function PricingClient() {
               className={`tb-v2-pricing-toggle-btn${billing === 'yearly' ? ' on' : ''}`}
             >
               Yearly
-              <span className="tb-v2-pricing-toggle-badge">2 months free</span>
             </button>
           </div>
         </div>
@@ -254,7 +256,7 @@ export default function PricingClient() {
             return (
               <div
                 key={plan.tier}
-                className={`tb-v2-pricing-card${isHighlighted ? ' hot' : ''}`}
+                className={`tb-v2-pricing-card${isHighlighted ? ' hot' : ''}${isFree ? ' free-row' : ''}`}
               >
                 {isHighlighted && (
                   <span className="tb-v2-pricing-card-badge">Most Popular</span>

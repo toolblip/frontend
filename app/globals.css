@@ -2520,8 +2520,10 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 .tb-v2-pricing-toggle { display: inline-flex; align-items: center; gap: 4px; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 4px; }
 .tb-v2-pricing-toggle-btn { height: 32px; padding: 0 16px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; transition: background .15s, color .15s, box-shadow .15s; color: var(--fg-2); cursor: pointer; border: none; background: transparent; }
 .tb-v2-pricing-toggle-btn.on { background: var(--surface); color: var(--fg-0); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
-.tb-v2-pricing-toggle-badge { font-size: 11px; font-weight: 600; color: var(--red); margin-left: 6px; }
 .tb-v2-pricing-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; align-items: start; margin-top: 40px; }
+.tb-v2-pricing-period-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 24px; text-align: left; }
+.tb-v2-pricing-period-label { font-size: 14px; font-weight: 600; color: var(--fg-2); }
+.tb-v2-pricing-card.free-row { grid-column: 1 / -1; }
 .tb-v2-pricing-card { border-radius: var(--radius-lg); border: 1.5px solid var(--line); background: var(--surface); padding: 24px; display: flex; flex-direction: column; position: relative; transition: border-color .15s, box-shadow .15s; }
 .tb-v2-pricing-card:hover { border-color: var(--line-2); }
 .tb-v2-pricing-card.hot { border-color: var(--red); background: var(--red-tint); box-shadow: 0 0 0 4px rgba(217,48,48,.06); }
