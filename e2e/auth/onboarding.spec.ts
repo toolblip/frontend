@@ -59,8 +59,30 @@ test.describe('Account onboarding BDD regression', () => {
     await expect(onboarding.getByRole('button', { name: 'Skip for now' })).toHaveCount(0);
     await expect(onboarding.getByText(/Quick start/i)).toHaveCount(0);
     await onboarding.getByRole('button', { name: 'Next' }).click();
-    const planLabels = await onboarding.locator('label[for^="onboarding-plan-"]').allTextContents();
-    expect(planLabels.at(-1)).toContain('Free');
+
+    const planCards = onboarding.locator('label[for^="onboarding-plan-"]');
+    await expect(planCards).toHaveCount(4);
     await expect(onboarding.locator('#onboarding-plan-ultra')).toBeChecked();
+
+    const cardLayout = await planCards.evaluateAll((nodes) =>
+      nodes.map((node) => {
+        const rect = node.getBoundingClientRect();
+        return {
+          text: (node.textContent || '').replace(/\s+/g, ' ').trim(),
+          x: rect.x,
+          y: rect.y,
+          width: rect.width,
+          height: rect.height,
+        };
+      })
+    );
+
+    const paidCards = cardLayout.slice(0, 3);
+    const freeCard = cardLayout[3];
+    expect(Math.max(...paidCards.map((card) => card.y)) - Math.min(...paidCards.map((card) => card.y))).toBeLessThan(8);
+    expect(paidCards[0].x).toBeLessThan(paidCards[1].x);
+    expect(paidCards[1].x).toBeLessThan(paidCards[2].x);
+    expect(freeCard.y).toBeGreaterThan(Math.max(...paidCards.map((card) => card.y)) + 20);
+    expect(freeCard.text).toContain('Free');
   });
 });

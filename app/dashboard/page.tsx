@@ -526,15 +526,53 @@ export default function AccountPage() {
               </div>
             ) : (
               <div className="mt-6">
-                <p className="text-sm text-gray-600 dark:text-gray-300">Pro is selected by default. Free stays at the bottom of the list.</p>
-                <div className="mt-4 grid gap-4 lg:grid-cols-2" role="radiogroup" aria-label="Toolblip plan options">
-                  {ONBOARDING_PLANS.map((plan) => {
+                <p className="text-sm text-gray-600 dark:text-gray-300">Pro is selected by default. Free stays on its own row at the bottom.</p>
+                <div className="mt-4 space-y-4" role="radiogroup" aria-label="Toolblip plan options">
+                  <div className="grid gap-4 lg:grid-cols-3">
+                    {ONBOARDING_PLANS.filter((plan) => plan.tier !== "free").map((plan) => {
+                      const selected = selectedOnboardingPlan === plan.tier;
+                      return (
+                        <label
+                          key={plan.tier}
+                          htmlFor={`onboarding-plan-${plan.tier}`}
+                          className={`relative cursor-pointer rounded-xl border p-4 transition-colors ${
+                            selected
+                              ? "border-red-500 bg-red-50 dark:border-red-400 dark:bg-red-950/30"
+                              : "border-gray-200 bg-gray-50 hover:border-gray-300 dark:border-gray-700 dark:bg-gray-950 dark:hover:border-gray-600"
+                          }`}
+                        >
+                          <input
+                            id={`onboarding-plan-${plan.tier}`}
+                            type="radio"
+                            name="onboarding-plan"
+                            value={plan.tier}
+                            checked={selected}
+                            onChange={() => setSelectedOnboardingPlan(plan.tier)}
+                            className="mb-3 h-4 w-4 border-gray-300 text-red-600 focus:ring-red-500"
+                          />
+                          <span className="flex items-start justify-between gap-3">
+                            <span>
+                              <span className="block font-semibold text-gray-900 dark:text-white">{plan.name}</span>
+                              <span className="mt-1 block text-sm font-medium text-red-600 dark:text-red-400">{plan.price}</span>
+                            </span>
+                            {plan.badge && (
+                              <span className="rounded-full bg-red-600 px-2 py-0.5 text-xs font-semibold text-white">{plan.badge}</span>
+                            )}
+                          </span>
+                          <span className="mt-3 block text-sm text-gray-600 dark:text-gray-300">{plan.description}</span>
+                          {selected && <span className="mt-3 block text-xs font-semibold text-red-600 dark:text-red-400">Selected plan</span>}
+                        </label>
+                      );
+                    })}
+                  </div>
+
+                  {ONBOARDING_PLANS.filter((plan) => plan.tier === "free").map((plan) => {
                     const selected = selectedOnboardingPlan === plan.tier;
                     return (
                       <label
                         key={plan.tier}
                         htmlFor={`onboarding-plan-${plan.tier}`}
-                        className={`relative cursor-pointer rounded-xl border p-4 transition-colors ${
+                        className={`relative block cursor-pointer rounded-xl border p-4 transition-colors ${
                           selected
                             ? "border-red-500 bg-red-50 dark:border-red-400 dark:bg-red-950/30"
                             : "border-gray-200 bg-gray-50 hover:border-gray-300 dark:border-gray-700 dark:bg-gray-950 dark:hover:border-gray-600"
@@ -554,9 +592,6 @@ export default function AccountPage() {
                             <span className="block font-semibold text-gray-900 dark:text-white">{plan.name}</span>
                             <span className="mt-1 block text-sm font-medium text-red-600 dark:text-red-400">{plan.price}</span>
                           </span>
-                          {plan.badge && (
-                            <span className="rounded-full bg-red-600 px-2 py-0.5 text-xs font-semibold text-white">{plan.badge}</span>
-                          )}
                         </span>
                         <span className="mt-3 block text-sm text-gray-600 dark:text-gray-300">{plan.description}</span>
                         {selected && <span className="mt-3 block text-xs font-semibold text-red-600 dark:text-red-400">Selected plan</span>}
