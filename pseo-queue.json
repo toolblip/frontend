@@ -1,6 +1,5 @@
 {
   "pending": [
-    "convert Unix timestamps to readable dates online",
     "validate YAML online before deploying config files",
     "generate UUIDs online for test data and API fixtures",
     "escape and unescape HTML entities for frontend debugging",
@@ -12,6 +11,12 @@
   ],
   "in_progress": [],
   "done": [
+    {
+      "topic": "convert Unix timestamps to readable dates online",
+      "completed_at": "2026-05-22T17:08:00Z",
+      "url": "https://toolblip.com/blog/2026-05-22-convert-unix-timestamps-readable-dates-online",
+      "note": "manual fallback because Claude Code auth was unavailable in cron; conservative one-post run; skipped duplicate Base64 queue item already published on 2026-05-16"
+    },
     {
       "topic": "URL encode and decode strings for API testing",
       "completed_at": "2026-05-21T17:06:10Z",
