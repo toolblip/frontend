@@ -146,6 +146,14 @@ export default function HomePage() {
               </div>
             </Link>
           </div>
+          <div className="pt-4 text-center">
+            <Link
+              href="/seo"
+              className="inline-flex items-center justify-center rounded-full border border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/60 px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:border-red-200 dark:hover:border-red-800 hover:text-red-700 dark:hover:text-red-300 transition-colors"
+            >
+              Open the SEO hub
+            </Link>
+          </div>
         </div>
       </section>
 

@@ -59,6 +59,11 @@ export default async function BlogPostPage({ params }: PageProps) {
             label: 'XML Sitemap Generator',
             note: 'Surface canonical pages in one place.',
           },
+          {
+            href: '/seo',
+            label: 'SEO hub',
+            note: 'A compact checklist for tool site discovery.',
+          },
         ].filter((item) => item.href !== `/blog/${slug}`)
       : [];
 

@@ -86,6 +86,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             title: 'XML Sitemap Generator',
             note: 'Surface canonical pages in one place.',
           },
+          {
+            href: '/seo',
+            title: 'SEO hub',
+            note: 'A compact checklist for tool site discovery.',
+          },
         ].filter((item) => item.href !== `/blog/${slug}`)
       : [];
 

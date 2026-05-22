@@ -173,6 +173,15 @@ export default async function BlogPage() {
           </div>
         </div>
 
+        <div className="mb-8 text-center">
+          <Link
+            href="/seo"
+            className="inline-flex items-center justify-center rounded-full border border-[var(--line)] px-4 py-2 text-sm font-semibold text-[var(--fg-1)] hover:text-[var(--red)] hover:border-[var(--line-2)] transition-colors"
+          >
+            Open the SEO hub
+          </Link>
+        </div>
+
         {posts.length === 0 ? (
           <p style={{ color: 'var(--fg-2)' }}>No posts yet. Check back soon!</p>
         ) : (
