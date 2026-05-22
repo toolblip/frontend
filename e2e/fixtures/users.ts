@@ -54,10 +54,15 @@ export async function loginViaApi(page: Page, user: TestUser = VALID_USER) {
 }
 
 export async function dismissDashboardOnboarding(page: Page) {
-  const dialog = page.getByRole('dialog', { name: 'Welcome to your Toolblip dashboard' });
+  const dialog = page.getByRole('dialog');
   const appeared = await dialog.waitFor({ state: 'visible', timeout: 5000 }).then(() => true).catch(() => false);
   if (appeared) {
-    await page.getByRole('button', { name: 'Skip for now' }).click();
+    await expect(dialog).toBeVisible();
+    const teamNameInput = dialog.getByLabel('Team name');
+    await expect(teamNameInput).toHaveValue(/.+/);
+    await dialog.getByRole('button', { name: 'Next' }).click();
+    await expect(dialog.locator('#onboarding-plan-ultra')).toBeChecked();
+    await dialog.getByRole('button', { name: 'Finish' }).click();
     await expect(dialog).toBeHidden();
   }
 }

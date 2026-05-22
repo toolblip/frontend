@@ -30,7 +30,8 @@ interface FavoriteTool {
   favorited_at?: string | null;
 }
 
-type OnboardingStatus = "completed" | "skipped";
+type OnboardingStatus = "completed" | "draft" | "skipped";
+type OnboardingStep = "welcome" | "pricing";
 type OnboardingPlanTier = "free" | "starter" | "ultra" | "max";
 
 const ONBOARDING_PLANS: Array<{
@@ -40,11 +41,23 @@ const ONBOARDING_PLANS: Array<{
   description: string;
   badge?: string;
 }> = [
-  { tier: "free", name: "Free", price: "$0", description: "Start with all core tools and client-side processing." },
   { tier: "starter", name: "Starter", price: "$4.99/mo", description: "Remove ads and unlock personal cloud storage." },
-  { tier: "ultra", name: "Ultra", price: "$19.99/mo", description: "Power-user limits, API access, and more storage.", badge: "Popular" },
-  { tier: "max", name: "Business", price: "$49.99/mo", description: "Team seats, priority support, and the highest limits." },
+  { tier: "ultra", name: "Pro", price: "$19.99/mo", description: "Power-user limits, API access, and more storage.", badge: "Popular" },
+  { tier: "max", name: "Max", price: "$49.99/mo", description: "Team seats, priority support, and the highest limits." },
+  { tier: "free", name: "Free", price: "$0", description: "Start with all core tools and client-side processing." },
 ];
+
+const ONBOARDING_PLAN_LABELS: Record<OnboardingPlanTier, string> = {
+  free: "Free",
+  starter: "Starter",
+  ultra: "Pro",
+  max: "Max",
+};
+
+function displayOnboardingPlanName(tier: string | null | undefined) {
+  if (!tier) return null;
+  return ONBOARDING_PLAN_LABELS[tier as OnboardingPlanTier] ?? tier.charAt(0).toUpperCase() + tier.slice(1);
+}
 
 function onboardingStorageKey(userId: number | string) {
   return `toolblip_onboarding_${userId}`;
@@ -73,7 +86,9 @@ export default function AccountPage() {
   const [acceptingTerms, setAcceptingTerms] = useState(false);
   const [termsError, setTermsError] = useState("");
   const [showPlanOnboarding, setShowPlanOnboarding] = useState(false);
-  const [selectedOnboardingPlan, setSelectedOnboardingPlan] = useState<OnboardingPlanTier>("free");
+  const [onboardingStep, setOnboardingStep] = useState<OnboardingStep>("welcome");
+  const [teamName, setTeamName] = useState("");
+  const [selectedOnboardingPlan, setSelectedOnboardingPlan] = useState<OnboardingPlanTier>("ultra");
   const [favoriteTools, setFavoriteTools] = useState<FavoriteTool[]>([]);
   const [favoriteToolsLoading, setFavoriteToolsLoading] = useState(false);
 
@@ -117,27 +132,41 @@ export default function AccountPage() {
       return;
     }
 
+    const suggestedTeamName = user.name ? `${user.name} Team` : "Toolblip Team";
+
     try {
       const stored = window.localStorage.getItem(onboardingStorageKey(user.id));
       if (!stored) {
-        setSelectedOnboardingPlan("free");
+        setTeamName(suggestedTeamName);
+        setSelectedOnboardingPlan("ultra");
+        setOnboardingStep("welcome");
         setShowPlanOnboarding(true);
         return;
       }
 
-      const parsed = JSON.parse(stored) as { status?: OnboardingStatus; selectedPlan?: OnboardingPlanTier };
+      const parsed = JSON.parse(stored) as {
+        status?: OnboardingStatus;
+        selectedPlan?: OnboardingPlanTier;
+        step?: OnboardingStep;
+        teamName?: string;
+      };
       if (parsed.status === "completed" || parsed.status === "skipped") {
         setShowPlanOnboarding(false);
         return;
       }
+
+      setTeamName(parsed.teamName?.trim() ? parsed.teamName : suggestedTeamName);
+      setSelectedOnboardingPlan(parsed.selectedPlan ?? "ultra");
+      setOnboardingStep(parsed.step ?? "welcome");
+      setShowPlanOnboarding(true);
+      return;
     } catch {
-      setSelectedOnboardingPlan("free");
+      setTeamName(suggestedTeamName);
+      setSelectedOnboardingPlan("ultra");
+      setOnboardingStep("welcome");
       setShowPlanOnboarding(true);
       return;
     }
-
-    setSelectedOnboardingPlan("free");
-    setShowPlanOnboarding(true);
   }, [user]);
 
   useEffect(() => {
@@ -346,6 +375,8 @@ export default function AccountPage() {
       onboardingStorageKey(user.id),
       JSON.stringify({
         status,
+        step: onboardingStep,
+        teamName,
         selectedPlan: selectedOnboardingPlan,
         updatedAt: new Date().toISOString(),
       })
@@ -353,13 +384,23 @@ export default function AccountPage() {
     setShowPlanOnboarding(false);
   }
 
-  function handleFinishPlanOnboarding() {
-    persistPlanOnboarding("completed");
+  function handleNextPlanOnboarding() {
+    if (!user || !teamName.trim()) return;
+    window.localStorage.setItem(
+      onboardingStorageKey(user.id),
+      JSON.stringify({
+        status: "draft",
+        step: "pricing",
+        teamName: teamName.trim(),
+        selectedPlan: selectedOnboardingPlan,
+        updatedAt: new Date().toISOString(),
+      })
+    );
+    setOnboardingStep("pricing");
   }
 
-  function handleSkipPlanOnboarding() {
-    if (!selectedOnboardingPlan) setSelectedOnboardingPlan("free");
-    persistPlanOnboarding("skipped");
+  function handleFinishPlanOnboarding() {
+    persistPlanOnboarding("completed");
   }
 
   if (authLoading || !user) {
@@ -378,9 +419,7 @@ export default function AccountPage() {
       })
     : null;
 
-  const tierName = subscription?.tier
-    ? subscription.tier.charAt(0).toUpperCase() + subscription.tier.slice(1)
-    : null;
+  const tierName = displayOnboardingPlanName(subscription?.tier);
   const favoriteCount = favoriteTools.length;
   const showTermsOnboarding = Boolean(user.requires_terms_acceptance);
 
@@ -443,45 +482,52 @@ export default function AccountPage() {
               <div className="max-w-2xl space-y-4">
                 <p className="text-sm font-semibold uppercase tracking-wide text-red-600 dark:text-red-400">Welcome to Toolblip</p>
                 <div>
-                  <h2 id="plan-onboarding-title" className="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">Welcome to your Toolblip dashboard</h2>
+                  <h2 id="plan-onboarding-title" className="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">
+                    {onboardingStep === "welcome" ? "Welcome to your dashboard" : "Choose your plan"}
+                  </h2>
                   <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 sm:text-base">
-                    Set up your dashboard quickly. Pick a plan, save your favorite tools, and change billing or profile details anytime.
+                    {onboardingStep === "welcome"
+                      ? "Start by naming your team, then move to pricing."
+                      : "Compare the plans and pick the one that fits how you use Toolblip."}
                   </p>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  <span className="rounded-full border border-red-200 bg-white px-3 py-1 text-xs font-medium text-red-700 shadow-sm dark:border-red-900/60 dark:bg-gray-900 dark:text-red-300">Free is ready now</span>
-                  <span className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-gray-700 shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">Skip anytime</span>
+                <div className="inline-flex items-center rounded-full border border-red-200 bg-white px-3 py-1 text-xs font-medium text-red-700 shadow-sm dark:border-red-900/60 dark:bg-gray-900 dark:text-red-300">
+                  {onboardingStep === "welcome" ? "Step 1 of 2" : "Step 2 of 2"}
                 </div>
               </div>
-              <button
-                type="button"
-                onClick={handleSkipPlanOnboarding}
-                className="self-start rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-gray-800"
-              >
-                Skip for now
-              </button>
             </div>
 
-            <div className="mt-6 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
-              <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900">
-                <p className="font-semibold text-gray-900 dark:text-white">Quick start</p>
-                <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm leading-6 text-gray-600 dark:text-gray-300">
-                  <li>Choose the plan that fits how you use Toolblip</li>
-                  <li>Save the tools you come back to most</li>
-                  <li>Update your profile and billing anytime from this dashboard</li>
-                </ul>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <a href="#favorite-tools" className="rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-800 dark:hover:bg-red-950/30">Favorite tools</a>
-                  <a href="#profile-settings" className="rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-800 dark:hover:bg-red-950/30">Profile settings</a>
-                  <a href="#billing" className="rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-800 dark:hover:bg-red-950/30">Billing</a>
-                  <a href="/pricing" className="rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-800 dark:hover:bg-red-950/30">View plans</a>
+            {onboardingStep === "welcome" ? (
+              <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
+                <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+                  <label htmlFor="team-name" className="block text-sm font-semibold text-gray-900 dark:text-white">
+                    Team name
+                  </label>
+                  <input
+                    id="team-name"
+                    type="text"
+                    value={teamName}
+                    onChange={(event) => setTeamName(event.target.value)}
+                    className="mt-3 w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-500/20 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
+                    placeholder="Toolblip Team"
+                    required
+                  />
+                  <p className="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">
+                    This will prefill your workspace name. You can change it later in your account settings.
+                  </p>
+                </div>
+
+                <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5 shadow-sm dark:border-gray-700 dark:bg-gray-950/60">
+                  <p className="font-semibold text-gray-900 dark:text-white">What happens next</p>
+                  <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300">
+                    After Next, you will see the pricing plans. Pro is selected by default, and Free sits at the bottom.
+                  </p>
                 </div>
               </div>
-
-              <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900">
-                <p className="font-semibold text-gray-900 dark:text-white">Choose a plan</p>
-                <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Free is selected by default. Compare the options now, or finish onboarding and change it later.</p>
-                <div className="mt-4 grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label="Toolblip plan options">
+            ) : (
+              <div className="mt-6">
+                <p className="text-sm text-gray-600 dark:text-gray-300">Pro is selected by default. Free stays at the bottom of the list.</p>
+                <div className="mt-4 grid gap-4 lg:grid-cols-2" role="radiogroup" aria-label="Toolblip plan options">
                   {ONBOARDING_PLANS.map((plan) => {
                     const selected = selectedOnboardingPlan === plan.tier;
                     return (
@@ -518,17 +564,29 @@ export default function AccountPage() {
                     );
                   })}
                 </div>
-                <div className="mt-6 flex justify-end">
-                  <button
-                    type="button"
-                    onClick={handleFinishPlanOnboarding}
-                    disabled={!selectedOnboardingPlan}
-                    className="rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    Finish onboarding
-                  </button>
-                </div>
               </div>
+            )}
+
+            <div className="mt-6 flex justify-end">
+              {onboardingStep === "welcome" ? (
+                <button
+                  type="button"
+                  onClick={handleNextPlanOnboarding}
+                  disabled={!teamName.trim()}
+                  className="rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Next
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleFinishPlanOnboarding}
+                  disabled={!selectedOnboardingPlan}
+                  className="rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  Finish
+                </button>
+              )}
             </div>
           </div>
         </div>

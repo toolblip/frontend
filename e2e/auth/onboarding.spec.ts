@@ -6,67 +6,61 @@ test.describe('Account onboarding BDD regression', () => {
     await resetMockBackend(request);
   });
 
-  test('Given a new signup reaches the dashboard, Then onboarding appears as a modal with Free selected by default and can be finished', async ({ page }) => {
+  test('Given a new signup reaches the dashboard, Then onboarding starts with a prefilled team name and Pro selected by default', async ({ page }) => {
     const user = makeUser('onboarding-signup');
 
     await signupByForm(page, user);
 
     await expect(page).toHaveURL(/\/dashboard$/);
-    const onboarding = page.getByRole('dialog', { name: 'Welcome to your Toolblip dashboard' });
+    const onboarding = page.getByRole('dialog');
     await expect(onboarding).toBeVisible();
-    await expect(onboarding.getByRole('radio', { name: /Free/i })).toBeChecked();
-    await onboarding.getByRole('button', { name: 'Finish onboarding' }).click();
+    await expect(onboarding.getByLabel('Team name')).toHaveValue(`${user.name} Team`);
+    await expect(onboarding.getByRole('button', { name: 'Skip for now' })).toHaveCount(0);
+    await expect(onboarding.getByText(/Quick start/i)).toHaveCount(0);
+
+    await onboarding.getByRole('button', { name: 'Next' }).click();
+    await expect(onboarding.locator('#onboarding-plan-ultra')).toBeChecked();
+    const planLabels = await onboarding.locator('label[for^="onboarding-plan-"]').allTextContents();
+    expect(planLabels.at(-1)).toContain('Free');
+    await onboarding.getByRole('button', { name: 'Finish' }).click();
     await expect(onboarding).toHaveCount(0);
 
     const stored = await page.evaluate(() => {
       const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
       return entry ? JSON.parse(String(entry[1])) : null;
     });
-    expect(stored).toMatchObject({ status: 'completed', selectedPlan: 'free' });
+    expect(stored).toMatchObject({ status: 'completed', selectedPlan: 'ultra', teamName: `${user.name} Team` });
   });
 
-  test('Given a first-time login reaches the dashboard, Then the user can choose another plan before finishing onboarding', async ({ page }) => {
+  test('Given a first-time login reaches the dashboard, Then the user can choose Max before finishing onboarding', async ({ page }) => {
     await loginByForm(page, VALID_USER);
 
     await expect(page).toHaveURL(/\/dashboard$/);
-    const onboarding = page.getByRole('dialog', { name: 'Welcome to your Toolblip dashboard' });
+    const onboarding = page.getByRole('dialog');
     await expect(onboarding).toBeVisible();
-    await onboarding.getByRole('radio', { name: /Ultra/i }).check();
-    await expect(onboarding.getByRole('radio', { name: /Ultra/i })).toBeChecked();
-    await onboarding.getByRole('button', { name: 'Finish onboarding' }).click();
+    await onboarding.getByRole('button', { name: 'Next' }).click();
+    await onboarding.getByRole('radio', { name: /Max/i }).check();
+    await expect(onboarding.getByRole('radio', { name: /Max/i })).toBeChecked();
+    await onboarding.getByRole('button', { name: 'Finish' }).click();
     await expect(onboarding).toHaveCount(0);
 
     const stored = await page.evaluate(() => {
       const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
       return entry ? JSON.parse(String(entry[1])) : null;
     });
-    expect(stored).toMatchObject({ status: 'completed', selectedPlan: 'ultra' });
+    expect(stored).toMatchObject({ status: 'completed', selectedPlan: 'max' });
   });
 
-  test('Given dashboard onboarding appears, Then it includes start-here shortcuts to the main dashboard sections', async ({ page }) => {
+  test('Given dashboard onboarding appears, Then the welcome step leads into pricing without quick start or skip actions', async ({ page }) => {
     await loginByForm(page, VALID_USER);
 
-    const onboarding = page.getByRole('dialog', { name: 'Welcome to your Toolblip dashboard' });
-    await expect(onboarding.getByText(/Pick a plan, save your favorite tools/i)).toBeVisible();
-    await expect(onboarding.getByText(/Quick start/i)).toBeVisible();
-    await expect(onboarding.getByRole('link', { name: 'Favorite tools' })).toHaveAttribute('href', '#favorite-tools');
-    await expect(onboarding.getByRole('link', { name: 'Profile settings' })).toHaveAttribute('href', '#profile-settings');
-    await expect(onboarding.getByRole('link', { name: 'Billing' })).toHaveAttribute('href', '#billing');
-    await expect(onboarding.getByRole('link', { name: 'View plans' })).toHaveAttribute('href', '/pricing');
-  });
-
-  test('Given dashboard onboarding appears, When the user skips it, Then it closes and records a skipped default plan', async ({ page }) => {
-    await loginByForm(page, VALID_USER);
-
-    const onboarding = page.getByRole('dialog', { name: 'Welcome to your Toolblip dashboard' });
-    await expect(onboarding).toBeVisible();
-    await onboarding.getByRole('button', { name: 'Skip for now' }).click();
-    await expect(onboarding).toHaveCount(0);
-
-    const stored = await page.evaluate(() => {
-      const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
-      return entry ? JSON.parse(String(entry[1])) : null;
-    });
-    expect(stored).toMatchObject({ status: 'skipped', selectedPlan: 'free' });
+    const onboarding = page.getByRole('dialog');
+    await expect(onboarding.getByText(/Start by naming your team/i)).toBeVisible();
+    await expect(onboarding.getByRole('button', { name: 'Skip for now' })).toHaveCount(0);
+    await expect(onboarding.getByText(/Quick start/i)).toHaveCount(0);
+    await onboarding.getByRole('button', { name: 'Next' }).click();
+    const planLabels = await onboarding.locator('label[for^="onboarding-plan-"]').allTextContents();
+    expect(planLabels.at(-1)).toContain('Free');
+    await expect(onboarding.locator('#onboarding-plan-ultra')).toBeChecked();
   });
 });
