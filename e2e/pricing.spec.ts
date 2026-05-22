@@ -17,6 +17,7 @@ test.describe('Pricing layout', () => {
 
     const pricing = page.locator('main');
     await expect(pricing.getByTestId('pricing-billing-toggle')).toBeVisible();
+    await expect(pricing.getByText('Billing period')).toBeVisible();
     await expect(pricing.getByRole('button', { name: 'Monthly' })).toBeVisible();
     await expect(pricing.getByRole('button', { name: /Yearly/ })).toBeVisible();
 

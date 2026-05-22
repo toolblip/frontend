@@ -611,6 +611,7 @@ export default function AccountPage() {
                     setOnboardingBilling(nextBilling);
                     writePlanOnboarding("draft", "pricing", selectedOnboardingPlan, nextBilling);
                   }}
+                  label="Billing period"
                 />
 
                 <div className="grid gap-4 lg:grid-cols-3">
