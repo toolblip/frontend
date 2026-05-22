@@ -89,6 +89,8 @@ export default function AccountPage() {
   const [onboardingStep, setOnboardingStep] = useState<OnboardingStep>("welcome");
   const [teamName, setTeamName] = useState("");
   const [selectedOnboardingPlan, setSelectedOnboardingPlan] = useState<OnboardingPlanTier>("ultra");
+  const [savingPlanOnboarding, setSavingPlanOnboarding] = useState(false);
+  const [planOnboardingError, setPlanOnboardingError] = useState("");
   const [favoriteTools, setFavoriteTools] = useState<FavoriteTool[]>([]);
   const [favoriteToolsLoading, setFavoriteToolsLoading] = useState(false);
 
@@ -368,35 +370,46 @@ export default function AccountPage() {
     }
   }
 
-  function persistPlanOnboarding(status: OnboardingStatus) {
-    if (!user || !selectedOnboardingPlan) return;
+  function writePlanOnboarding(status: OnboardingStatus, step: OnboardingStep) {
+    if (!user || !selectedOnboardingPlan) return false;
 
     window.localStorage.setItem(
       onboardingStorageKey(user.id),
       JSON.stringify({
         status,
-        step: onboardingStep,
-        teamName,
-        selectedPlan: selectedOnboardingPlan,
-        updatedAt: new Date().toISOString(),
-      })
-    );
-    setShowPlanOnboarding(false);
-  }
-
-  function handleNextPlanOnboarding() {
-    if (!user || !teamName.trim()) return;
-    window.localStorage.setItem(
-      onboardingStorageKey(user.id),
-      JSON.stringify({
-        status: "draft",
-        step: "pricing",
+        step,
         teamName: teamName.trim(),
         selectedPlan: selectedOnboardingPlan,
         updatedAt: new Date().toISOString(),
       })
     );
-    setOnboardingStep("pricing");
+
+    return true;
+  }
+
+  function persistPlanOnboarding(status: OnboardingStatus) {
+    if (!writePlanOnboarding(status, onboardingStep)) return;
+    setShowPlanOnboarding(false);
+  }
+
+  async function handleNextPlanOnboarding() {
+    if (!user || !teamName.trim() || savingPlanOnboarding) return;
+
+    setPlanOnboardingError("");
+    setSavingPlanOnboarding(true);
+
+    try {
+      const saved = writePlanOnboarding("draft", "pricing");
+      if (!saved) {
+        throw new Error("Could not save onboarding progress.");
+      }
+
+      setOnboardingStep("pricing");
+    } catch (error) {
+      setPlanOnboardingError(error instanceof Error ? error.message : "Could not save onboarding progress.");
+    } finally {
+      setSavingPlanOnboarding(false);
+    }
   }
 
   function handleFinishPlanOnboarding() {
@@ -494,6 +507,7 @@ export default function AccountPage() {
                 <div className="inline-flex items-center rounded-full border border-red-200 bg-white px-3 py-1 text-xs font-medium text-red-700 shadow-sm dark:border-red-900/60 dark:bg-gray-900 dark:text-red-300">
                   {onboardingStep === "welcome" ? "Step 1 of 2" : "Step 2 of 2"}
                 </div>
+                {planOnboardingError && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{planOnboardingError}</p>}
               </div>
             </div>
 
@@ -607,10 +621,10 @@ export default function AccountPage() {
                 <button
                   type="button"
                   onClick={handleNextPlanOnboarding}
-                  disabled={!teamName.trim()}
+                  disabled={!teamName.trim() || savingPlanOnboarding}
                   className="rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  Next
+                  {savingPlanOnboarding ? "Saving..." : "Next"}
                 </button>
               ) : (
                 <button

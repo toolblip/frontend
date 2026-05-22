@@ -19,6 +19,11 @@ test.describe('Account onboarding BDD regression', () => {
     await expect(onboarding.getByText(/Quick start/i)).toHaveCount(0);
 
     await onboarding.getByRole('button', { name: 'Next' }).click();
+    const draft = await page.evaluate(() => {
+      const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
+      return entry ? JSON.parse(String(entry[1])) : null;
+    });
+    expect(draft).toMatchObject({ status: 'draft', step: 'pricing', teamName: `${user.name} Team` });
     await expect(onboarding.locator('#onboarding-plan-ultra')).toBeChecked();
     const planLabels = await onboarding.locator('label[for^="onboarding-plan-"]').allTextContents();
     expect(planLabels.at(-1)).toContain('Free');
