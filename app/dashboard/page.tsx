@@ -5,6 +5,11 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/app/providers/auth-provider";
 import { useRouter } from "next/navigation";
+import {
+  PricingBillingToggle,
+  PricingPlanCard,
+  type BillingCycle,
+} from "@/components/v2/PricingSection";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.toolblip.com";
 
@@ -33,7 +38,6 @@ interface FavoriteTool {
 type OnboardingStatus = "completed" | "draft" | "skipped";
 type OnboardingStep = "welcome" | "pricing";
 type OnboardingPlanTier = "free" | "starter" | "ultra" | "max";
-type BillingCycle = "monthly" | "yearly";
 
 const ONBOARDING_STORAGE_VERSION = 2;
 
@@ -75,11 +79,6 @@ const ONBOARDING_PLANS: Array<{
     priceYearly: 0,
   },
 ];
-
-function formatOnboardingPrice(cents: number) {
-  const amount = cents / 100;
-  return amount % 1 === 0 ? amount.toFixed(0) : amount.toFixed(2);
-}
 
 const ONBOARDING_PLAN_LABELS: Record<OnboardingPlanTier, string> = {
   free: "Free",
@@ -605,59 +604,33 @@ export default function AccountPage() {
                 </div>
               </div>
             ) : (
-              <div className="mt-6">
-                <div className="flex justify-center rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-950/60">
-                  <div className="inline-flex rounded-full border border-gray-200 bg-gray-50 p-1 dark:border-gray-700 dark:bg-gray-900">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const nextBilling: BillingCycle = "monthly";
-                        setOnboardingBilling(nextBilling);
-                        writePlanOnboarding("draft", "pricing", selectedOnboardingPlan, nextBilling);
-                      }}
-                      className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
-                        onboardingBilling === "monthly"
-                          ? "bg-red-600 text-white shadow-sm"
-                          : "text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
-                      }`}
-                    >
-                      Monthly
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const nextBilling: BillingCycle = "yearly";
-                        setOnboardingBilling(nextBilling);
-                        writePlanOnboarding("draft", "pricing", selectedOnboardingPlan, nextBilling);
-                      }}
-                      className={`rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
-                        onboardingBilling === "yearly"
-                          ? "bg-red-600 text-white shadow-sm"
-                          : "text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
-                      }`}
-                    >
-                      Yearly
-                    </button>
-                  </div>
-                </div>
+              <div className="mt-6 space-y-4" role="radiogroup" aria-label="Toolblip plan options">
+                <PricingBillingToggle
+                  billing={onboardingBilling}
+                  onBillingChange={(nextBilling) => {
+                    setOnboardingBilling(nextBilling);
+                    writePlanOnboarding("draft", "pricing", selectedOnboardingPlan, nextBilling);
+                  }}
+                />
 
-                <div className="mt-4 space-y-4" role="radiogroup" aria-label="Toolblip plan options">
-                  <div className="grid gap-4 lg:grid-cols-3">
-                    {ONBOARDING_PLANS.filter((plan) => plan.tier !== "free").map((plan) => {
-                      const selected = selectedOnboardingPlan === plan.tier;
-                      const priceCents = onboardingBilling === "yearly" ? plan.priceYearly : plan.priceMonthly;
-                      const price = formatOnboardingPrice(priceCents);
-                      const billingSuffix = plan.tier === "free" ? "" : onboardingBilling === "yearly" ? "/yr" : "/mo";
-                      return (
-                        <label
-                          key={plan.tier}
-                          htmlFor={`onboarding-plan-${plan.tier}`}
-                          className={`relative cursor-pointer rounded-xl border p-4 transition-colors ${
-                            selected
-                              ? "border-red-500 bg-red-50 dark:border-red-400 dark:bg-red-950/30"
-                              : "border-gray-200 bg-gray-50 hover:border-gray-300 dark:border-gray-700 dark:bg-gray-950 dark:hover:border-gray-600"
-                          }`}
-                        >
+                <div className="grid gap-4 lg:grid-cols-3">
+                  {ONBOARDING_PLANS.filter((plan) => plan.tier !== "free").map((plan) => {
+                    const selected = selectedOnboardingPlan === plan.tier;
+                    return (
+                      <PricingPlanCard
+                        key={plan.tier}
+                        plan={{
+                          tier: plan.tier,
+                          name: plan.name,
+                          description: plan.description,
+                          priceMonthly: plan.priceMonthly,
+                          priceYearly: plan.priceYearly,
+                          badge: plan.badge ?? null,
+                        }}
+                        billing={onboardingBilling}
+                        selected={selected}
+                        htmlFor={`onboarding-plan-${plan.tier}`}
+                        topSlot={
                           <input
                             id={`onboarding-plan-${plan.tier}`}
                             type="radio"
@@ -670,64 +643,43 @@ export default function AccountPage() {
                             }}
                             className="mb-3 h-4 w-4 border-gray-300 text-red-600 focus:ring-red-500"
                           />
-                          <span className="flex items-start justify-between gap-3">
-                            <span>
-                              <span className="block font-semibold text-gray-900 dark:text-white">{plan.name}</span>
-                              <span className="mt-1 block text-sm font-medium text-red-600 dark:text-red-400">
-                                ${price}{billingSuffix}
-                              </span>
-                            </span>
-                            {plan.badge && (
-                              <span className="rounded-full bg-red-600 px-2 py-0.5 text-xs font-semibold text-white">{plan.badge}</span>
-                            )}
-                          </span>
-                          <span className="mt-3 block text-sm text-gray-600 dark:text-gray-300">{plan.description}</span>
-                          {onboardingBilling === "yearly" && plan.priceYearly > 0 && (
-                            <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                              ${(plan.priceYearly / 1200).toFixed(2)}/mo billed annually
-                            </p>
-                          )}
-                          {selected && <span className="mt-3 block text-xs font-semibold text-red-600 dark:text-red-400">Selected plan</span>}
-                        </label>
-                      );
-                    })}
-                  </div>
+                        }
+                      />
+                    );
+                  })}
 
                   {ONBOARDING_PLANS.filter((plan) => plan.tier === "free").map((plan) => {
                     const selected = selectedOnboardingPlan === plan.tier;
-                    const priceCents = onboardingBilling === "yearly" ? plan.priceYearly : plan.priceMonthly;
-                    const price = formatOnboardingPrice(priceCents);
                     return (
-                      <label
-                        key={plan.tier}
-                        htmlFor={`onboarding-plan-${plan.tier}`}
-                        className={`relative block cursor-pointer rounded-xl border p-4 transition-colors ${
-                          selected
-                            ? "border-red-500 bg-red-50 dark:border-red-400 dark:bg-red-950/30"
-                            : "border-gray-200 bg-gray-50 hover:border-gray-300 dark:border-gray-700 dark:bg-gray-950 dark:hover:border-gray-600"
-                        }`}
-                      >
-                        <input
-                          id={`onboarding-plan-${plan.tier}`}
-                          type="radio"
-                          name="onboarding-plan"
-                          value={plan.tier}
-                          checked={selected}
-                          onChange={() => {
-                            setSelectedOnboardingPlan(plan.tier);
-                            writePlanOnboarding("draft", "pricing", plan.tier, onboardingBilling);
+                      <div key={plan.tier} className="lg:col-span-3">
+                        <PricingPlanCard
+                          plan={{
+                            tier: plan.tier,
+                            name: plan.name,
+                            description: plan.description,
+                            priceMonthly: plan.priceMonthly,
+                            priceYearly: plan.priceYearly,
+                            badge: null,
                           }}
-                          className="mb-3 h-4 w-4 border-gray-300 text-red-600 focus:ring-red-500"
+                          billing={onboardingBilling}
+                          selected={selected}
+                          htmlFor={`onboarding-plan-${plan.tier}`}
+                        topSlot={
+                            <input
+                              id={`onboarding-plan-${plan.tier}`}
+                              type="radio"
+                              name="onboarding-plan"
+                              value={plan.tier}
+                              checked={selected}
+                              onChange={() => {
+                                setSelectedOnboardingPlan(plan.tier);
+                                writePlanOnboarding("draft", "pricing", plan.tier, onboardingBilling);
+                              }}
+                              className="mb-3 h-4 w-4 border-gray-300 text-red-600 focus:ring-red-500"
+                            />
+                          }
                         />
-                        <span className="flex items-start justify-between gap-3">
-                          <span>
-                            <span className="block font-semibold text-gray-900 dark:text-white">{plan.name}</span>
-                            <span className="mt-1 block text-sm font-medium text-red-600 dark:text-red-400">${price}</span>
-                          </span>
-                        </span>
-                        <span className="mt-3 block text-sm text-gray-600 dark:text-gray-300">{plan.description}</span>
-                        {selected && <span className="mt-3 block text-xs font-semibold text-red-600 dark:text-red-400">Selected plan</span>}
-                      </label>
+                      </div>
                     );
                   })}
                 </div>

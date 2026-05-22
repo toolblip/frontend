@@ -2,6 +2,13 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import {
+  PricingBillingToggle,
+  PricingPlanCard,
+  sortPricingPlans,
+  type BillingCycle,
+  type PricingPlanLike,
+} from '@/components/v2/PricingSection';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.toolblip.com';
 
@@ -29,7 +36,6 @@ interface Plan {
   sort_order: number;
 }
 
-type BillingCycle = 'monthly' | 'yearly';
 
 const DISPLAY_PLAN_NAMES: Record<string, string> = {
   free: 'Free',
@@ -154,12 +160,15 @@ export default function PricingClient() {
     );
   }
 
-  const orderedPlans = [...plans].sort((a, b) => {
-    const aFree = a.tier === 'free' ? 1 : 0;
-    const bFree = b.tier === 'free' ? 1 : 0;
-    if (aFree !== bFree) return aFree - bFree;
-    return a.sort_order - b.sort_order;
-  });
+  const orderedPlans = sortPricingPlans(plans);
+  const pricingPlans: PricingPlanLike[] = orderedPlans.map((plan) => ({
+    tier: plan.tier,
+    name: displayPlanName(plan),
+    description: plan.description,
+    priceMonthly: plan.price_monthly,
+    priceYearly: plan.price_yearly,
+    badge: null,
+  }));
   const highlightPlan = orderedPlans.find((p) => p.tier === HIGHLIGHT_TIER);
   const stickyPriceCents = highlightPlan
     ? billing === 'yearly'
@@ -195,125 +204,146 @@ export default function PricingClient() {
           <p className="tb-v2-page-sub">All tools are free to use. Upgrade for an uninterrupted experience.</p>
         </div>
 
-        <div className="tb-v2-pricing-period-row">
-          <div className="tb-v2-pricing-period-label">Billing period</div>
-          <div className="tb-v2-pricing-toggle">
-            <button
-              onClick={() => setBilling('monthly')}
-              className={`tb-v2-pricing-toggle-btn${billing === 'monthly' ? ' on' : ''}`}
-            >
-              Monthly
-            </button>
-            <button
-              onClick={() => setBilling('yearly')}
-              className={`tb-v2-pricing-toggle-btn${billing === 'yearly' ? ' on' : ''}`}
-            >
-              Yearly
-            </button>
-          </div>
-        </div>
+        <PricingBillingToggle billing={billing} onBillingChange={setBilling} />
 
         {error && (
-          <div className="tb-v2-pricing-error">{error}</div>
+          <div className="mt-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/30 dark:text-red-300">
+            {error}
+          </div>
         )}
 
-        <div className="tb-v2-pricing-grid">
-          {orderedPlans.map((plan) => {
-            const isLoading = loading === plan.tier;
-            const priceCents =
-              billing === 'yearly' ? plan.price_yearly : plan.price_monthly;
-            const price = priceCents / 100;
-            const isHighlighted = plan.tier === HIGHLIGHT_TIER;
-            const isFree = plan.tier === 'free';
+        <div className="mt-6 grid gap-4 lg:grid-cols-3">
+          {pricingPlans
+            .filter((plan) => plan.tier !== 'free')
+            .map((plan) => {
+              const isHighlighted = plan.tier === HIGHLIGHT_TIER;
+              const isFree = plan.tier === 'free';
 
-            const features: string[] = [];
+              const features: string[] = [];
 
-            if (!isFree) {
-              features.push('Everything in Free');
-              features.push('No ads');
-            } else {
-              features.push('All tools available');
-              features.push('Client-side processing');
-            }
+              if (!isFree) {
+                features.push('Everything in Free');
+                features.push('No ads');
+              } else {
+                features.push('All tools available');
+                features.push('Client-side processing');
+              }
 
-            if (plan.devices > 0)
-              features.push(
-                `${plan.devices} device${plan.devices > 1 ? 's' : ''}`
+              const sourcePlan = orderedPlans.find((item) => item.tier === plan.tier)!;
+
+              if (sourcePlan.devices > 0)
+                features.push(
+                  `${sourcePlan.devices} device${sourcePlan.devices > 1 ? 's' : ''}`
+                );
+              if (sourcePlan.storage_gb > 0)
+                features.push(`${formatStorage(sourcePlan.storage_gb)} cloud storage`);
+              if (sourcePlan.max_file_size_mb > 0)
+                features.push(
+                  `Up to ${formatFileSize(sourcePlan.max_file_size_mb)} file processing`
+                );
+              if (sourcePlan.team_seats > 0)
+                features.push(
+                  `${sourcePlan.team_seats} team seat${sourcePlan.team_seats > 1 ? 's' : ''}`
+                );
+              if (sourcePlan.api_access) features.push('API access');
+              if (sourcePlan.priority_support) features.push('Priority support');
+
+              return (
+                <PricingPlanCard
+                  key={plan.tier}
+                  plan={plan}
+                  billing={billing}
+                  highlighted={isHighlighted}
+                  footer={
+                    isFree ? (
+                      <Link
+                        href="/signup"
+                        className="tb-v2-btn tb-v2-btn-primary tb-v2-pricing-btn"
+                        style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
+                      >
+                        Get Started
+                      </Link>
+                    ) : (
+                      <button
+                        onClick={() => handleUpgrade(sourcePlan)}
+                        disabled={loading === sourcePlan.tier}
+                        className="tb-v2-btn tb-v2-btn-primary tb-v2-pricing-btn"
+                        style={{ background: isHighlighted ? 'var(--fg-0)' : undefined, borderColor: isHighlighted ? 'var(--fg-0)' : undefined }}
+                      >
+                        {loading === sourcePlan.tier ? 'Redirecting...' : `Get ${plan.name}`}
+                      </button>
+                    )
+                  }
+                >
+                  <ul className="tb-v2-pricing-features">
+                    {features.map((feature) => (
+                      <li key={feature}>
+                        <svg className="tb-v2-pricing-check" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </PricingPlanCard>
               );
-            if (plan.storage_gb > 0)
-              features.push(`${formatStorage(plan.storage_gb)} cloud storage`);
-            if (plan.max_file_size_mb > 0)
-              features.push(
-                `Up to ${formatFileSize(plan.max_file_size_mb)} file processing`
-              );
-            if (plan.team_seats > 0)
-              features.push(
-                `${plan.team_seats} team seat${plan.team_seats > 1 ? 's' : ''}`
-              );
-            if (plan.api_access) features.push('API access');
-            if (plan.priority_support) features.push('Priority support');
+            })}
 
-            return (
-              <div
-                key={plan.tier}
-                className={`tb-v2-pricing-card${isHighlighted ? ' hot' : ''}${isFree ? ' free-row' : ''}`}
-              >
-                {isHighlighted && (
-                  <span className="tb-v2-pricing-card-badge">Most Popular</span>
-                )}
+          {pricingPlans
+            .filter((plan) => plan.tier === 'free')
+            .map((plan) => {
+              const sourcePlan = orderedPlans.find((item) => item.tier === plan.tier)!;
+              const isFree = true;
+              const features = ['All tools available', 'Client-side processing'];
 
-                <div className="tb-v2-pricing-card-name">{displayPlanName(plan)}</div>
-                <div className="tb-v2-pricing-card-price">
-                  <span className="tb-v2-pricing-card-price-amt">
-                    ${price % 1 === 0 ? price : price.toFixed(2)}
-                  </span>
-                  <span className="tb-v2-pricing-card-price-period">
-                    {price === 0
-                      ? ''
-                      : billing === 'yearly'
-                        ? '/yr'
-                        : '/mo'}
-                  </span>
+              if (sourcePlan.devices > 0)
+                features.push(
+                  `${sourcePlan.devices} device${sourcePlan.devices > 1 ? 's' : ''}`
+                );
+              if (sourcePlan.storage_gb > 0)
+                features.push(`${formatStorage(sourcePlan.storage_gb)} cloud storage`);
+              if (sourcePlan.max_file_size_mb > 0)
+                features.push(
+                  `Up to ${formatFileSize(sourcePlan.max_file_size_mb)} file processing`
+                );
+              if (sourcePlan.team_seats > 0)
+                features.push(
+                  `${sourcePlan.team_seats} team seat${sourcePlan.team_seats > 1 ? 's' : ''}`
+                );
+              if (sourcePlan.api_access) features.push('API access');
+              if (sourcePlan.priority_support) features.push('Priority support');
+
+              return (
+                <div key={plan.tier} className="lg:col-span-3">
+                  <PricingPlanCard
+                    plan={plan}
+                    billing={billing}
+                    footer={
+                      isFree ? (
+                        <Link
+                          href="/signup"
+                          className="tb-v2-btn tb-v2-btn-primary tb-v2-pricing-btn"
+                          style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
+                        >
+                          Get Started
+                        </Link>
+                      ) : null
+                    }
+                  >
+                    <ul className="tb-v2-pricing-features">
+                      {features.map((feature) => (
+                        <li key={feature}>
+                          <svg className="tb-v2-pricing-check" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                  </PricingPlanCard>
                 </div>
-                {billing === 'yearly' && price > 0 && (
-                  <p className="tb-v2-pricing-card-sub">
-                    ${(price / 12).toFixed(2)}/mo billed annually
-                  </p>
-                )}
-                <p className="tb-v2-pricing-card-desc">{plan.description}</p>
-
-                <ul className="tb-v2-pricing-features">
-                  {features.map((feature) => (
-                    <li key={feature}>
-                      <svg className="tb-v2-pricing-check" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-
-                {isFree ? (
-                  <Link
-                    href="/signup"
-                    className="tb-v2-btn tb-v2-btn-primary tb-v2-pricing-btn"
-                    style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
-                  >
-                    Get Started
-                  </Link>
-                ) : (
-                  <button
-                    onClick={() => handleUpgrade(plan)}
-                    disabled={isLoading}
-                    className="tb-v2-btn tb-v2-btn-primary tb-v2-pricing-btn"
-                    style={{ background: isHighlighted ? 'var(--fg-0)' : undefined, borderColor: isHighlighted ? 'var(--fg-0)' : undefined }}
-                  >
-                    {isLoading ? 'Redirecting...' : `Get ${displayPlanName(plan)}`}
-                  </button>
-                )}
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
 
         <div className="tb-v2-pricing-footer">

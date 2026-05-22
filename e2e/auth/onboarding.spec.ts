@@ -40,7 +40,9 @@ test.describe('Account onboarding BDD regression', () => {
     });
     expect(yearlyDraft).toMatchObject({ billingCycle: 'yearly' });
 
-    const planLabels = await onboarding.locator('label[for^="onboarding-plan-"]').allTextContents();
+    const planCards = onboarding.locator('[data-testid="pricing-plan-card"]');
+    await expect(planCards).toHaveCount(4);
+    const planLabels = await planCards.allTextContents();
     expect(planLabels.at(-1)).toContain('Free');
     await onboarding.getByRole('button', { name: 'Finish' }).click();
     await expect(onboarding).toHaveCount(0);
@@ -124,7 +126,7 @@ test.describe('Account onboarding BDD regression', () => {
     await expect(onboarding.getByText(/Quick start/i)).toHaveCount(0);
     await onboarding.getByRole('button', { name: 'Next' }).click();
 
-    const planCards = onboarding.locator('label[for^="onboarding-plan-"]');
+    const planCards = onboarding.locator('[data-testid="pricing-plan-card"]');
     await expect(planCards).toHaveCount(4);
     await expect(onboarding.locator('#onboarding-plan-ultra')).toBeChecked();
 

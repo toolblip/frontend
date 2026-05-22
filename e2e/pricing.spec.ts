@@ -16,12 +16,11 @@ test.describe('Pricing layout', () => {
     }
 
     const pricing = page.locator('main');
-    const billingLabel = pricing.getByText('Billing period');
-    await expect(billingLabel).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Monthly' })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Yearly/ })).toBeVisible();
+    await expect(pricing.getByTestId('pricing-billing-toggle')).toBeVisible();
+    await expect(pricing.getByRole('button', { name: 'Monthly' })).toBeVisible();
+    await expect(pricing.getByRole('button', { name: /Yearly/ })).toBeVisible();
 
-    const cardLayout = await pricing.locator('.tb-v2-pricing-grid > div').evaluateAll((nodes) =>
+    const cardLayout = await pricing.locator('[data-testid="pricing-plan-card"]').evaluateAll((nodes) =>
       nodes.map((node) => {
         const rect = node.getBoundingClientRect();
         return {
