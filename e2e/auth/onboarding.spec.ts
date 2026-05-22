@@ -23,8 +23,10 @@ test.describe('Account onboarding BDD regression', () => {
       const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
       return entry ? JSON.parse(String(entry[1])) : null;
     });
-    expect(draft).toMatchObject({ status: 'draft', step: 'pricing', teamName: `${user.name} Team`, billingCycle: 'monthly' });
-    await expect(onboarding.getByText('Billing period')).toBeVisible();
+    expect(draft).toMatchObject({ status: 'draft', step: 'pricing', teamName: `${user.name} Team`, billingCycle: 'monthly', version: 2 });
+    await expect(onboarding.getByText('Billing period')).toHaveCount(0);
+    await expect(onboarding.getByText('Monthly pricing')).toHaveCount(0);
+    await expect(onboarding.getByText('Yearly pricing')).toHaveCount(0);
     await expect(onboarding.getByRole('button', { name: 'Monthly' })).toBeVisible();
     await expect(onboarding.getByRole('button', { name: 'Yearly' })).toBeVisible();
     await expect(onboarding.locator('#onboarding-plan-ultra')).toBeChecked();
@@ -67,6 +69,50 @@ test.describe('Account onboarding BDD regression', () => {
       return entry ? JSON.parse(String(entry[1])) : null;
     });
     expect(stored).toMatchObject({ status: 'completed', selectedPlan: 'max' });
+  });
+
+  test('Given a stale onboarding draft, Then Pro becomes the default choice after migration', async ({ page }) => {
+    const user = makeUser('onboarding-migration');
+
+    await signupByForm(page, user);
+
+    await expect(page).toHaveURL(/\/dashboard$/);
+    const onboarding = page.getByRole('dialog');
+    await expect(onboarding).toBeVisible();
+    await onboarding.getByRole('button', { name: 'Next' }).click();
+
+    const onboardingKey = await page.evaluate(() => Object.keys(localStorage).find((key) => key.startsWith('toolblip_onboarding_')));
+    expect(onboardingKey).toBeTruthy();
+
+    await page.evaluate(
+      ({ key, teamName }) => {
+        if (!key) return;
+        localStorage.setItem(
+          key,
+          JSON.stringify({
+            status: 'draft',
+            step: 'pricing',
+            teamName,
+            selectedPlan: 'starter',
+            billingCycle: 'monthly',
+            updatedAt: '2024-01-01T00:00:00.000Z',
+          })
+        );
+      },
+      { key: onboardingKey, teamName: `${user.name} Team` }
+    );
+
+    await page.reload();
+
+    const migratedOnboarding = page.getByRole('dialog');
+    await expect(migratedOnboarding).toBeVisible();
+    await expect(migratedOnboarding.locator('#onboarding-plan-ultra')).toBeChecked();
+
+    const migratedStored = await page.evaluate(() => {
+      const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
+      return entry ? JSON.parse(String(entry[1])) : null;
+    });
+    expect(migratedStored).toMatchObject({ status: 'draft', selectedPlan: 'ultra', version: 2 });
   });
 
   test('Given dashboard onboarding appears, Then the welcome step leads into pricing without quick start or skip actions', async ({ page }) => {

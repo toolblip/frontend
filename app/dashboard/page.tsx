@@ -35,6 +35,8 @@ type OnboardingStep = "welcome" | "pricing";
 type OnboardingPlanTier = "free" | "starter" | "ultra" | "max";
 type BillingCycle = "monthly" | "yearly";
 
+const ONBOARDING_STORAGE_VERSION = 2;
+
 const ONBOARDING_PLANS: Array<{
   tier: OnboardingPlanTier;
   name: string;
@@ -180,6 +182,7 @@ export default function AccountPage() {
       }
 
       const parsed = JSON.parse(stored) as {
+        version?: number;
         status?: OnboardingStatus;
         selectedPlan?: OnboardingPlanTier;
         step?: OnboardingStep;
@@ -191,11 +194,30 @@ export default function AccountPage() {
         return;
       }
 
-      setTeamName(parsed.teamName?.trim() ? parsed.teamName : suggestedTeamName);
-      setSelectedOnboardingPlan(parsed.selectedPlan ?? "ultra");
-      setOnboardingBilling(parsed.billingCycle ?? "monthly");
-      setOnboardingStep(parsed.step ?? "welcome");
+      const restoredSelectedPlan =
+        parsed.version === ONBOARDING_STORAGE_VERSION && parsed.selectedPlan
+          ? parsed.selectedPlan
+          : parsed.selectedPlan && parsed.selectedPlan !== "starter"
+            ? parsed.selectedPlan
+            : "ultra";
+      const restoredBilling = parsed.billingCycle ?? "monthly";
+      const restoredStep = parsed.step ?? "welcome";
+      const restoredPayload = {
+        version: ONBOARDING_STORAGE_VERSION,
+        status: parsed.status ?? "draft",
+        step: restoredStep,
+        teamName: parsed.teamName?.trim() ? parsed.teamName : suggestedTeamName,
+        selectedPlan: restoredSelectedPlan,
+        billingCycle: restoredBilling,
+        updatedAt: new Date().toISOString(),
+      };
+
+      setTeamName(restoredPayload.teamName);
+      setSelectedOnboardingPlan(restoredSelectedPlan);
+      setOnboardingBilling(restoredBilling);
+      setOnboardingStep(restoredStep);
       setShowPlanOnboarding(true);
+      window.localStorage.setItem(onboardingStorageKey(user.id), JSON.stringify(restoredPayload));
       return;
     } catch {
       setTeamName(suggestedTeamName);
@@ -418,6 +440,7 @@ export default function AccountPage() {
     window.localStorage.setItem(
       onboardingStorageKey(user.id),
       JSON.stringify({
+        version: ONBOARDING_STORAGE_VERSION,
         status,
         step,
         teamName: teamNameValue,
@@ -577,19 +600,13 @@ export default function AccountPage() {
                 <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5 shadow-sm dark:border-gray-700 dark:bg-gray-950/60">
                   <p className="font-semibold text-gray-900 dark:text-white">What happens next</p>
                   <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300">
-                    After Next, you will see the pricing plans. Pro is selected by default, and Free sits at the bottom.
+                    After Next, you will see the pricing plans.
                   </p>
                 </div>
               </div>
             ) : (
               <div className="mt-6">
-                <div className="flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-950/60 sm:flex-row sm:items-center sm:justify-between">
-                  <div>
-                    <p className="text-sm font-semibold text-gray-900 dark:text-white">Billing period</p>
-                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
-                      {onboardingBilling === "monthly" ? "Monthly pricing" : "Yearly pricing"}
-                    </p>
-                  </div>
+                <div className="flex justify-center rounded-2xl border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-950/60">
                   <div className="inline-flex rounded-full border border-gray-200 bg-gray-50 p-1 dark:border-gray-700 dark:bg-gray-900">
                     <button
                       type="button"
@@ -624,7 +641,6 @@ export default function AccountPage() {
                   </div>
                 </div>
 
-                <p className="mt-4 text-sm text-gray-600 dark:text-gray-300">Pro is selected by default. Free stays on its own row at the bottom.</p>
                 <div className="mt-4 space-y-4" role="radiogroup" aria-label="Toolblip plan options">
                   <div className="grid gap-4 lg:grid-cols-3">
                     {ONBOARDING_PLANS.filter((plan) => plan.tier !== "free").map((plan) => {
