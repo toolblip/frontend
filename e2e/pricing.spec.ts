@@ -49,7 +49,7 @@ test.describe('Pricing layout', () => {
     const starterCard = cardLayout.find((card) => card.text.includes('Starter'));
     const proCard = cardLayout.find((card) => card.text.includes('Pro'));
     const maxCard = cardLayout.find((card) => card.text.includes('Max'));
-    const freeCard = cardLayout.find((card) => card.text.includes('For anyone getting started'));
+    const freeCard = cardLayout.find((card) => String(card.className).includes('free-row'));
 
     expect(starterCard).toBeTruthy();
     expect(proCard).toBeTruthy();
@@ -84,8 +84,14 @@ test.describe('Pricing layout', () => {
     const freeButton = pricing.getByRole('link', { name: 'Get Free Plan' });
     const freeButtonRect = await freeButton.boundingBox();
     expect(freeButtonRect).toBeTruthy();
-    expect(freeButtonRect!.width).toBeLessThan(freeCard!.width * 0.5);
-    expect(freeButtonRect!.x - freeCard!.x).toBeLessThan(48);
+    expect(freeButtonRect!.width).toBeLessThan(freeCard!.width * 0.35);
+    expect(freeButtonRect!.x + freeButtonRect!.width).toBeGreaterThan(freeCard!.x + freeCard!.width * 0.72);
+    expect(freeButtonRect!.y).toBeLessThan(freeCard!.y + 90);
+
+    const freeFeatureRects = await pricing.locator('[data-tier="free"] li').evaluateAll((nodes) =>
+      nodes.map((node) => node.getBoundingClientRect().y)
+    );
+    expect(Math.min(...freeFeatureRects)).toBeGreaterThan(freeButtonRect!.y + 20);
     await expect(pricing.getByText(/device/i)).toHaveCount(0);
   });
 });

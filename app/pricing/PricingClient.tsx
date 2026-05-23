@@ -308,16 +308,14 @@ export default function PricingClient() {
                     billing={billing}
                     tone="light"
                     className="free-row"
-                    footer={
-                      <div className="flex justify-start">
-                        <Link
-                          href="/signup"
-                          className="tb-v2-btn tb-v2-btn-ghost tb-v2-pricing-btn compact"
-                          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}
-                        >
-                          Get Free Plan
-                        </Link>
-                      </div>
+                    compactHeader
+                    headerRightSlot={
+                      <Link
+                        href="/signup"
+                        className="tb-v2-pricing-inline-link"
+                      >
+                        Get Free Plan
+                      </Link>
                     }
                   >
                     <ul className="tb-v2-pricing-features">

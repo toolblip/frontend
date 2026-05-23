@@ -2528,10 +2528,47 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 .tb-v2-pricing-period-row.centered { justify-content: center; }
 .tb-v2-pricing-period-label { font-size: 14px; font-weight: 600; color: var(--fg-2); }
 .tb-v2-pricing-card.free-row { grid-column: 1 / -1; min-height: 0; }
-.tb-v2-pricing-card.free-row .tb-v2-pricing-features { flex: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 24px; margin-bottom: 12px; }
-.tb-v2-pricing-card.free-row .tb-v2-pricing-features li { padding: 0; }
-.tb-v2-pricing-card.free-row .tb-v2-pricing-card-desc { max-width: 360px; }
-.tb-v2-pricing-card.free-row .tb-v2-pricing-card-price { margin-top: 8px; }
+.tb-v2-pricing-card.free-row .tb-v2-pricing-features {
+  flex: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  margin: 18px 0 0;
+}
+.tb-v2-pricing-card.free-row .tb-v2-pricing-features li {
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+.tb-v2-pricing-card.free-row .tb-v2-pricing-features li span {
+  display: none;
+}
+.tb-v2-pricing-card.free-row .tb-v2-pricing-features li::before {
+  content: '•';
+  color: var(--fg-2);
+  font-size: 18px;
+  line-height: 1;
+  margin-top: -1px;
+}
+.tb-v2-pricing-card.free-row .tb-v2-pricing-inline-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0 2px;
+  color: var(--green);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+.tb-v2-pricing-card.free-row .tb-v2-pricing-inline-link:hover {
+  color: color-mix(in srgb, var(--green) 82%, black 18%);
+}
 .tb-v2-pricing-card { border-radius: var(--radius-lg); border: 1.5px solid var(--line); background: var(--surface); padding: 24px; display: flex; flex-direction: column; position: relative; transition: border-color .15s, box-shadow .15s; }
 .tb-v2-pricing-card:hover { border-color: var(--line-2); }
 .tb-v2-pricing-card.hot { border-color: var(--red); background: var(--red-tint); box-shadow: 0 0 0 4px rgba(217,48,48,.06); }
