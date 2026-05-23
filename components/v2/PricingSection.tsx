@@ -97,6 +97,8 @@ export function PricingPlanCard({
   selected = false,
   tone = 'default',
   topSlot,
+  headerRightSlot,
+  compactHeader = false,
   children,
   footer,
   htmlFor,
@@ -108,6 +110,8 @@ export function PricingPlanCard({
   selected?: boolean;
   tone?: 'default' | 'light' | 'plain';
   topSlot?: ReactNode;
+  headerRightSlot?: ReactNode;
+  compactHeader?: boolean;
   children?: ReactNode;
   footer?: ReactNode;
   htmlFor?: string;
@@ -148,20 +152,31 @@ export function PricingPlanCard({
 
       {topSlot ? <div className="mb-4">{topSlot}</div> : null}
 
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0 flex-1">
-          <div className="tb-v2-pricing-card-name">{plan.name}</div>
-          <div className="tb-v2-pricing-card-price">
-            <span className="tb-v2-pricing-card-price-amt">${price}</span>
-            {pricePeriod ? <span className="tb-v2-pricing-card-price-period">{pricePeriod}</span> : null}
+      {compactHeader ? (
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0 flex-1">
+            <div className="tb-v2-pricing-card-name">{plan.name}</div>
           </div>
-          {yearlyEquivalent ? <div className="tb-v2-pricing-card-sub">{yearlyEquivalent}</div> : null}
+          {headerRightSlot ? <div className="shrink-0">{headerRightSlot}</div> : null}
         </div>
-      </div>
+      ) : (
+        <>
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <div className="tb-v2-pricing-card-name">{plan.name}</div>
+              <div className="tb-v2-pricing-card-price">
+                <span className="tb-v2-pricing-card-price-amt">${price}</span>
+                {pricePeriod ? <span className="tb-v2-pricing-card-price-period">{pricePeriod}</span> : null}
+              </div>
+              {yearlyEquivalent ? <div className="tb-v2-pricing-card-sub">{yearlyEquivalent}</div> : null}
+            </div>
+          </div>
 
-      <div className="tb-v2-pricing-card-desc">{plan.description}</div>
+          <div className="tb-v2-pricing-card-desc">{plan.description}</div>
+        </>
+      )}
 
-      {children ? <div className="mt-4">{children}</div> : null}
+      {children ? <div className={compactHeader ? 'mt-6' : 'mt-4'}>{children}</div> : null}
 
       {footer ? <div className="mt-auto pt-5">{footer}</div> : null}
 
