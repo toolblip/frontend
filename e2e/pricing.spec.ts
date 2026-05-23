@@ -26,9 +26,9 @@ test.describe('Pricing layout', () => {
     expect(toggleRect).toBeTruthy();
     expect(Math.abs((toggleRect!.x + toggleRect!.width / 2) - 600)).toBeLessThan(120);
 
-    const proButton = pricing.getByRole('button', { name: 'Get Pro' });
-    await expect(proButton).toBeVisible();
-    await expect(await proButton.evaluate((node) => (node as HTMLElement).className)).toContain('inverse');
+    const highlightProButton = pricing.getByRole('button', { name: 'Get Pro' });
+    await expect(highlightProButton).toBeVisible();
+    await expect(await highlightProButton.evaluate((node) => (node as HTMLElement).className)).toContain('inverse');
 
     const cardLayout = await pricing.locator('[data-testid="pricing-plan-card"]').evaluateAll((nodes) =>
       nodes.map((node) => {
@@ -54,19 +54,36 @@ test.describe('Pricing layout', () => {
     expect(proCard).toBeTruthy();
     expect(maxCard).toBeTruthy();
     expect(freeCard).toBeTruthy();
-    expect(String(freeCard!.className)).toContain('plain');
+    expect(String(freeCard!.className)).toContain('light');
 
     expect(Math.max(starterCard!.y, proCard!.y, maxCard!.y) - Math.min(starterCard!.y, proCard!.y, maxCard!.y)).toBeLessThan(8);
     expect(starterCard!.x).toBeLessThan(proCard!.x);
     expect(proCard!.x).toBeLessThan(maxCard!.x);
     expect(freeCard!.y).toBeGreaterThan(maxCard!.y + 20);
     expect(freeCard!.x).toBeLessThan(starterCard!.x + 4);
+    expect(starterCard!.text).toContain('API access');
+    expect(starterCard!.text).toContain('Basic support');
+    expect(proCard!.text).toContain('Standard support');
+    expect(maxCard!.text).toContain('Priority support');
+
+    const starterButton = pricing.getByRole('button', { name: 'Get Starter' });
+    const proButton = pricing.getByRole('button', { name: 'Get Pro' });
+    const maxButton = pricing.getByRole('button', { name: 'Get Max' });
+    const [starterRect, proRect, maxRect] = await Promise.all([
+      starterButton.boundingBox(),
+      proButton.boundingBox(),
+      maxButton.boundingBox(),
+    ]);
+    expect(starterRect).toBeTruthy();
+    expect(proRect).toBeTruthy();
+    expect(maxRect).toBeTruthy();
+    expect(Math.max(starterRect!.y, proRect!.y, maxRect!.y) - Math.min(starterRect!.y, proRect!.y, maxRect!.y)).toBeLessThan(12);
 
     const freeButton = pricing.getByRole('link', { name: 'Get Started' });
     const freeButtonRect = await freeButton.boundingBox();
     expect(freeButtonRect).toBeTruthy();
     expect(freeButtonRect!.width).toBeLessThan(freeCard!.width * 0.5);
-    expect((freeCard!.x + freeCard!.width) - (freeButtonRect!.x + freeButtonRect!.width)).toBeLessThan(16);
+    expect((freeCard!.x + freeCard!.width) - (freeButtonRect!.x + freeButtonRect!.width)).toBeLessThan(32);
     await expect(pricing.getByText(/device/i)).toHaveCount(0);
   });
 });

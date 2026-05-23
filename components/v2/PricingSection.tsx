@@ -121,6 +121,8 @@ export function PricingPlanCard({
   const Wrapper = htmlFor ? 'label' : 'div';
   const wrapperClasses = [
     'tb-v2-pricing-card',
+    'h-full',
+    'lg:min-h-[440px]',
     tone === 'light' ? 'light' : '',
     tone === 'plain' ? 'plain' : '',
     highlighted && !selected ? 'hot' : '',
@@ -158,7 +160,7 @@ export function PricingPlanCard({
 
       {children ? <div className="mt-4">{children}</div> : null}
 
-      {footer ? <div className="mt-5">{footer}</div> : null}
+      {footer ? <div className="mt-auto pt-5">{footer}</div> : null}
 
       {selected ? (
         <div className="mt-4 text-xs font-semibold text-red-600 dark:text-red-400">Selected plan</div>
