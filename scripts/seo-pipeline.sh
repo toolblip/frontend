@@ -74,6 +74,15 @@ log() {
     echo "[$(date '+%H:%M:%S')] $1" | tee -a "$LOGFILE" >&2
 }
 
+claude_is_logged_in() {
+    claude auth status 2>/dev/null | python3 -c 'import json, sys
+try:
+    data = json.load(sys.stdin)
+    print("1" if data.get("loggedIn") else "0")
+except Exception:
+    print("0")' | grep -qx '1'
+}
+
 # ─── Queue Management ──────────────────────────────────────────────────────────
 # Move N topics from pending → in_progress in pseo-queue.json
 pick_topics() {
@@ -147,8 +156,16 @@ except:
 
     # Claude keyword selection
     local kw_result
-    kw_result=$(claude -p "$(cat "$prompt_file")" --model sonnet --max-turns 3 2>/dev/null || echo "BEST: $topic
-RELATED: $gsc_kw")
+    if claude_is_logged_in; then
+        kw_result=$(claude -p "$(cat "$prompt_file")" --model sonnet --max-turns 3 2>/dev/null || echo "")
+    else
+        kw_result=""
+    fi
+
+    if [[ -z "$kw_result" ]]; then
+        kw_result="BEST: $topic
+RELATED: $gsc_kw"
+    fi
 
     rm -f "$prompt_file"
 
@@ -279,7 +296,11 @@ $(cat "$article_file")"
 
     # Run humanizer
     local humanized
-    humanized=$(claude -p "$full_prompt" --model sonnet --max-turns 5 2>/dev/null || echo "")
+    if claude_is_logged_in; then
+        humanized=$(claude -p "$full_prompt" --model sonnet --max-turns 5 2>/dev/null || echo "")
+    else
+        humanized=""
+    fi
 
     local tmp_humanized="/tmp/humanized-${$}.txt"
     echo "$humanized" > "$tmp_humanized"
@@ -392,7 +413,11 @@ PROMPTEOF
     sed -i "s|TO_REPLACE_URL|$url|g" "$prompt_file"
 
     local rewrite
-    rewrite=$(claude -p "$(cat "$prompt_file")" --model sonnet --max-turns 5 2>/dev/null || echo "")
+    if claude_is_logged_in; then
+        rewrite=$(claude -p "$(cat "$prompt_file")" --model sonnet --max-turns 5 2>/dev/null || echo "")
+    else
+        rewrite=""
+    fi
 
     rm -f "$prompt_file"
 
