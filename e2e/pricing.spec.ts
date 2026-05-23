@@ -91,6 +91,7 @@ test.describe('Pricing layout', () => {
     const freeFeatureRects = await pricing.locator('[data-tier="free"] li').evaluateAll((nodes) =>
       nodes.map((node) => node.getBoundingClientRect().y)
     );
+    expect(freeFeatureRects).toHaveLength(2);
     expect(Math.min(...freeFeatureRects)).toBeGreaterThan(freeButtonRect!.y + 20);
     await expect(pricing.getByText(/device/i)).toHaveCount(0);
   });

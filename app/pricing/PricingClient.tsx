@@ -71,10 +71,11 @@ function buildPlanFeatures(plan: Plan): PlanFeature[] {
   if (plan.tier === 'free') {
     features.push({ label: 'All tools available' });
     features.push({ label: 'Client-side processing' });
-  } else {
-    features.push({ label: 'Everything in Free' });
-    features.push({ label: 'No ads' });
+    return features;
   }
+
+  features.push({ label: 'Everything in Free' });
+  features.push({ label: 'No ads' });
 
   if (plan.storage_gb > 0) {
     features.push({ label: `${formatStorage(plan.storage_gb)} cloud storage` });
