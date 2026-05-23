@@ -105,7 +105,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const url = `https://toolblip.com/tools/${canonicalSlug}`;
 
   return {
-    title: `${tool.name} - Free Online Tool`,
+    title: `${tool.name} | Toolblip`,
     description: tool.description,
     keywords: tool.tags,
     alternates: {
