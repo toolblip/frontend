@@ -12,6 +12,11 @@ test.describe('Session BDD regression', () => {
     await page.goto('/dashboard');
     await expect(page.getByText(VALID_USER.name)).toBeVisible();
     await expect(page.locator('#main-content').getByText(VALID_USER.email)).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Free plan' })).toBeVisible();
+    await expect(page.getByText('All tools available')).toBeVisible();
+    await expect(page.getByText('1 member')).toBeVisible();
+    await expect(page.getByText('1 workspace')).toBeVisible();
+    await expect(page.getByRole('link', { name: 'View plans' })).toBeVisible();
   });
 
   test('Given a logged-in user on the homepage, Then the navbar shows a compact account trigger and keeps email inside the menu', async ({ page }) => {
