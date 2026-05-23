@@ -5,11 +5,11 @@ date: 2026-04-29
 category: Developer Tools
 ---
 
-Accessibility isn't a one-time audit — it's a daily discipline. One of the fastest ways your UI breaks accessibility is also one of the easiest to miss: **color contrast**.
+Accessibility isn't a one-time audit  -  it's a daily discipline. One of the fastest ways your UI breaks accessibility is also one of the easiest to miss: **color contrast**.
 
 Text that's slightly too light against its background. A muted gray button label on a white surface. A placeholder that almost disappears. These things fail WCAG without being obviously wrong.
 
-This post gives you a practical **WCAG color contrast checklist** you can run against any design or code. Plus the fastest way to test any color pair in your browser — no screenshot upload, no sign-up, no plugins.
+This post gives you a practical **WCAG color contrast checklist** you can run against any design or code. Plus the fastest way to test any color pair in your browser  -  no screenshot upload, no sign-up, no plugins.
 
 ## The WCAG Contrast Checklist (Run This Before Every PR)
 
@@ -43,7 +43,7 @@ Before reaching for a tool, run through this mental checklist on every UI you to
 
 ### 4. Active vs Inactive States
 
-Your button looks great in its default state — but what about `:disabled`? Does the muted version still pass?
+Your button looks great in its default state  -  but what about `:disabled`? Does the muted version still pass?
 
 | State | What to Check |
 |---|---|
@@ -65,17 +65,17 @@ If you have text over images, gradients, or complex backgrounds:
 
 The checklist above tells you what to check. Now here's how to check it in under 30 seconds:
 
-**Toolblip's [Contrast Checker](/tools/contrast-checker)** — enter any foreground and background color, get an instant WCAG pass/fail for AA and AAA across normal text, large text, and UI components.
+**Toolblip's [Contrast Checker](/tools/contrast-checker)**  -  enter any foreground and background color, get an instant WCAG pass/fail for AA and AAA across normal text, large text, and UI components.
 
 ```text
 Foreground: #6B7280 (cool gray)
 Background: #FFFFFF (white)
 
 Result:
-✗ Normal text (4.5:1 required) — 3.01:1 — FAILS AA
-✗ Large text (3:1 required) — 3.01:1 — PASSES AA
-✗ UI components (3:1 required) — 3.01:1 — PASSES AA
-✗ AAA normal text (7:1 required) — 3.01:1 — FAILS AAA
+✗ Normal text (4.5:1 required)  -  3.01:1  -  FAILS AA
+✗ Large text (3:1 required)  -  3.01:1  -  PASSES AA
+✗ UI components (3:1 required)  -  3.01:1  -  PASSES AA
+✗ AAA normal text (7:1 required)  -  3.01:1  -  FAILS AAA
 ```
 
 In this case, `#6B7280` on white looks "close enough" but actually **fails AA for normal body text**. You'd need `#4B5563` (5.89:1) or darker to pass.
@@ -87,14 +87,14 @@ Here are the most common patterns that fail in production UIs:
 ### 1. Placeholder Text
 
 ```css
-/* FAILS — gray placeholder on white */
+/* FAILS  -  gray placeholder on white */
 input::placeholder {
-  color: #AAAAAA; /* Ratio: 2.71:1 — below AA */
+  color: #AAAAAA; /* Ratio: 2.71:1  -  below AA */
 }
 
 /* PASSES */
 input::placeholder {
-  color: #767676; /* Ratio: 4.54:1 — passes AA */
+  color: #767676; /* Ratio: 4.54:1  -  passes AA */
 }
 ```
 
@@ -103,34 +103,34 @@ Placeholder text counts as text under WCAG. If it's too low-contrast to read, it
 ### 2. Muted Button Labels
 
 ```css
-/* FAILS — light gray button text */
+/* FAILS  -  light gray button text */
 button {
   background: #3B82F6;
-  color: #D1D5DB; /* Ratio: 2.71:1 — fails AA */
+  color: #D1D5DB; /* Ratio: 2.71:1  -  fails AA */
 }
 
 /* PASSES */
 button {
   background: #3B82F6;
-  color: #FFFFFF; /* Ratio: 4.99:1 — passes AA */
+  color: #FFFFFF; /* Ratio: 4.99:1  -  passes AA */
 }
 ```
 
 ### 3. Secondary Text in Cards
 
 ```css
-/* FAILS — muted meta info */
+/* FAILS  -  muted meta info */
 .meta {
   color: #9CA3AF;
   background: #F9FAFB;
-  /* Ratio: 2.26:1 — severe failure */
+  /* Ratio: 2.26:1  -  severe failure */
 }
 
 /* PASSES */
 .meta {
   color: #6B7280;
   background: #F9FAFB;
-  /* Ratio: 3.05:1 — passes AA */
+  /* Ratio: 3.05:1  -  passes AA */
 }
 ```
 
@@ -139,12 +139,12 @@ button {
 Focus rings are a WCAG 2.4.7 requirement (Focus Visible). If your custom focus ring is too thin or too low-contrast, it fails:
 
 ```css
-/* FAILS — thin, low-contrast focus ring */
+/* FAILS  -  thin, low-contrast focus ring */
 :focus-visible {
   outline: 1px solid #CCCCCC; /* Barely visible */
 }
 
-/* PASSES — clear contrast */
+/* PASSES  -  clear contrast */
 :focus-visible {
   outline: 2px solid #3B82F6;
   outline-offset: 2px;
@@ -181,7 +181,7 @@ Pro tip: if you have dark mode and light mode, test both palettes separately.
 
 ### Step 4: Test Real Content
 
-Contrast requirements apply to **real text**, not just design mockups. Test with actual content at the sizes you'll use — not "representative" text.
+Contrast requirements apply to **real text**, not just design mockups. Test with actual content at the sizes you'll use  -  not "representative" text.
 
 ### Step 5: Check for Color-Alone Indicators
 
@@ -193,11 +193,11 @@ Does your UI ever indicate status, errors, or categories through color *only*? A
 
 Passing contrast ratios doesn't mean your UI is fully accessible to color-blind users. A red/green scheme might have perfect contrast ratios but be completely indistinguishable.
 
-**Test your palette** with Toolblip's [Color Blindness Simulator](/tools/color-blindness-simulator) — see how your UI looks through deuteranopia, protanopia, and tritanopia filters.
+**Test your palette** with Toolblip's [Color Blindness Simulator](/tools/color-blindness-simulator)  -  see how your UI looks through deuteranopia, protanopia, and tritanopia filters.
 
 ## The Privacy Advantage of Browser-Based Contrast Checking
 
-Most contrast checking tools require you to upload a screenshot or install a browser extension. That means your UI — potentially pre-launch, confidential, or client work — goes to a third-party server.
+Most contrast checking tools require you to upload a screenshot or install a browser extension. That means your UI  -  potentially pre-launch, confidential, or client work  -  goes to a third-party server.
 
 Toolblip's [Contrast Checker](/tools/contrast-checker) runs entirely in your browser. You enter color values directly. No image upload. No server. No tracking. Your design stays yours.
 
@@ -211,11 +211,11 @@ This matters especially for:
 
 Contrast is one piece of a full accessibility toolkit:
 
-- [Contrast Checker](/tools/contrast-checker) — WCAG AA/AAA ratio testing
-- [Color Blindness Simulator](/tools/color-blindness-simulator) — test your palette across vision types
-- [Color Picker](/tools/color-picker) — find accessible color pairs with live preview
-- [HEX to RGB](/tools/hex-to-rgb) — convert colors for CSS use
-- [Color Palette Generator](/tools/color-palette-generator) — generate palettes that are accessible by design
+- [Contrast Checker](/tools/contrast-checker)  -  WCAG AA/AAA ratio testing
+- [Color Blindness Simulator](/tools/color-blindness-simulator)  -  test your palette across vision types
+- [Color Picker](/tools/color-picker)  -  find accessible color pairs with live preview
+- [HEX to RGB](/tools/hex-to-rgb)  -  convert colors for CSS use
+- [Color Palette Generator](/tools/color-palette-generator)  -  generate palettes that are accessible by design
 
 ## Quick Reference: Common Accessible Color Pairs
 
@@ -238,12 +238,12 @@ If you're building a design system, start from accessible pairs and adjust from 
 
 If you only do three things:
 
-1. **Before shipping any new UI** — run every text/background combination through the [Contrast Checker](/tools/contrast-checker)
-2. **Before every design review** — check that your color palette still passes AA at all required sizes
-3. **Every time you use gray for "muted" text** — verify the ratio. Gray is the #1 contrast failure in production UIs
+1. **Before shipping any new UI**  -  run every text/background combination through the [Contrast Checker](/tools/contrast-checker)
+2. **Before every design review**  -  check that your color palette still passes AA at all required sizes
+3. **Every time you use gray for "muted" text**  -  verify the ratio. Gray is the #1 contrast failure in production UIs
 
 That's it. The checklist isn't long. The tool isn't complicated. It's just a habit.
 
 ---
 
-Stop guessing whether your grays pass. Run them through the [Contrast Checker](/tools/contrast-checker) right now — takes 10 seconds, and you'll catch failures you'd have shipped otherwise.
+Stop guessing whether your grays pass. Run them through the [Contrast Checker](/tools/contrast-checker) right now  -  takes 10 seconds, and you'll catch failures you'd have shipped otherwise.

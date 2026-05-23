@@ -115,15 +115,15 @@ function parseCron(expr: string): CronResult {
   }
   const [minP, hrP, domP, monP, dowP] = parts;
   const minutes = parseCronField(minP, 0, 59);
-  if (!minutes) return { valid: false, error: 'Invalid minute field — expected 0–59' };
+  if (!minutes) return { valid: false, error: 'Invalid minute field  -  expected 0–59' };
   const hours = parseCronField(hrP, 0, 23);
-  if (!hours) return { valid: false, error: 'Invalid hour field — expected 0–23' };
+  if (!hours) return { valid: false, error: 'Invalid hour field  -  expected 0–23' };
   const daysOfMonth = parseCronField(domP, 1, 31);
-  if (!daysOfMonth) return { valid: false, error: 'Invalid day-of-month field — expected 1–31' };
+  if (!daysOfMonth) return { valid: false, error: 'Invalid day-of-month field  -  expected 1–31' };
   const months = parseCronField(monP, 1, 12, MONTH_NAME_MAP);
-  if (!months) return { valid: false, error: 'Invalid month field — expected 1–12 or JAN–DEC' };
+  if (!months) return { valid: false, error: 'Invalid month field  -  expected 1–12 or JAN–DEC' };
   const rawDow = parseCronField(dowP, 0, 7, DOW_NAME_MAP);
-  if (!rawDow) return { valid: false, error: 'Invalid weekday field — expected 0–7 or SUN–SAT' };
+  if (!rawDow) return { valid: false, error: 'Invalid weekday field  -  expected 0–7 or SUN–SAT' };
   const daysOfWeek = [...new Set(rawDow.map((d) => (d === 7 ? 0 : d)))].sort((a, b) => a - b);
   const parsed: ParsedCron = { minutes, hours, daysOfMonth, months, daysOfWeek, parts };
   return { valid: true, parsed, description: describeSchedule(parsed) };
@@ -322,7 +322,7 @@ export default function CronParserClient() {
       <div>
         <div className="tb-v2-tool-input-head">
           <span className="tb-v2-tool-label">Cron expression</span>
-          <span className="tb-v2-hash-stats">—</span>
+          <span className="tb-v2-hash-stats"> - </span>
         </div>
         <input type="text" placeholder="* * * * *" className="tb-v2-cron-input" aria-label="Cron expression" />
         <div className="tb-v2-cron-fields" aria-hidden="true">
@@ -398,7 +398,7 @@ export default function CronParserClient() {
                     <li key={i} className="tb-v2-cron-row">
                       <span className="tb-v2-cron-num">{i + 1}</span>
                       <code className="tb-v2-cron-when">{formatDate(d)}</code>
-                      <span className="tb-v2-cron-rel">{now != null ? relativeTime(d, now) : '—'}</span>
+                      <span className="tb-v2-cron-rel">{now != null ? relativeTime(d, now) : ' - '}</span>
                     </li>
                   ))}
                 </ul>

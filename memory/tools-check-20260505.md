@@ -1,4 +1,4 @@
-# Toolblip Tools Audit — 2025-05-05
+# Toolblip Tools Audit - 2025-05-05
 
 ## Baseline
 - Total tools in data/tools.ts: 1563
@@ -7,12 +7,12 @@
 
 ## Status: 159 slugs missing
 
-### Batch 1: Route only (131 slugs) — IN PROGRESS
+### Batch 1: Route only (131 slugs) - IN PROGRESS
 - Just need switch case additions to ToolUI.tsx
 - Components already exist with fuzzy matches
 - Example: `keyword-generator-v2` → `KeywordGenerator`
 
-### Batch 2: New component + route (28 slugs) — PENDING
+### Batch 2: New component + route (28 slugs) - PENDING
 - `jwt-tester`, `ua-parser-express`, `word-freq-express`, `meta-tags-tool`
 - `unit-conversion-tool`, `text-sort-tool`, `regex-explainer`, `pressure-converter`
 - `keyword-difficulty-tool`, `make-background-transparent`, `nda-generator`

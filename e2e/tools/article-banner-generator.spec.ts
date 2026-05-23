@@ -342,7 +342,7 @@ test.describe('Banner Generator tool', () => {
     await expect(fromColor).toHaveValue('#4CC8C8');
     await expect(toColor).toHaveValue('#202033');
 
-    // Direction buttons — the default '140' should be pressed
+    // Direction buttons - the default '140' should be pressed
     const directionGroup = page.getByRole('group', { name: 'Foreground direction' });
     await expect(directionGroup).toBeVisible();
     const directionButtons = directionGroup.getByRole('button');

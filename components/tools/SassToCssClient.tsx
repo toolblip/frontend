@@ -1,53 +1,56 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function SassToCssClient() {
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState('$primary: #333;\nbody { color: $primary; }');
   const [output, setOutput] = useState('');
   const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
 
-  const convert = (sass: string) => {
+  const looksIndentedSass = (value: string) => {
+    const trimmed = value.trim();
+    return trimmed.length > 0 && !/[{};]/.test(trimmed) && /\n\s+\S/.test(trimmed);
+  };
+
+  const convert = async (sass: string) => {
     if (!sass.trim()) {
       setOutput('');
       setError('');
       return;
     }
+
+    setError('');
+
     try {
-      let css = sass;
-      // Basic SCSS/SASS to CSS conversion
-      // Remove comments
-      css = css.replace(/\/\*[\s\S]*?\*\//g, '');
-      // Handle variables - just remove them for plain CSS output
-      css = css.replace(/\$[\w-]+:\s*[^;]+;/g, '');
-      // Handle mixins - remove @mixin and corresponding } blocks
-      css = css.replace(/@mixin\s+[\w-]+\s*\([^)]*\)\s*{/g, '');
-      // Handle @include - remove them
-      css = css.replace(/@include\s+[\w-]+(?:\s*\([^)]*\))?;/g, '');
-      // Handle & parent selector references - simplify
-      css = css.replace(/&/g, '');
-      // Handle nested rules by removing extra indentation
-      const lines = css.split('\n');
-      const dedented = lines.map(line => {
-        const match = line.match(/^(\s*)/);
-        const indent = match ? match[1].length : 0;
-        // Remove one level of indentation for each nesting depth
-        const reduced = Math.max(0, indent - 2);
-        return ' '.repeat(reduced) + line.trim();
-      });
-      css = dedented.join('\n').trim();
-      // Remove empty braces
-      css = css.replace(/{\s*}/g, '');
-      // Clean up extra whitespace
-      css = css.replace(/\s+/g, ' ').trim();
-      setOutput(css);
-      setError('');
+      const { compileString } = await import('sass');
+      const syntax = looksIndentedSass(sass) ? 'indented' : 'scss';
+      const result = compileString(sass, { syntax });
+      setOutput(result.css);
     } catch (e) {
-      setError('Conversion error: Invalid SCSS/SASS syntax');
-      setOutput('');
+      const primaryError = e as Error;
+
+      try {
+        if (!looksIndentedSass(sass)) {
+          throw primaryError;
+        }
+
+        const { compileString } = await import('sass');
+        const result = compileString(sass, { syntax: 'indented' });
+        setOutput(result.css);
+        setError('');
+        return;
+      } catch {
+        setError(primaryError.message || 'Conversion error: Invalid SCSS/SASS syntax');
+        setOutput('');
+      }
     }
   };
+
+  useEffect(() => {
+    void convert(input);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const copy = () => {
     if (!output) return;
@@ -65,7 +68,7 @@ export default function SassToCssClient() {
         value={input}
         onChange={(e) => {
           setInput(e.target.value);
-          convert(e.target.value);
+          void convert(e.target.value);
         }}
         placeholder="Paste your SCSS or SASS here..."
         className="tb-v2-tool-textarea"
@@ -81,7 +84,7 @@ export default function SassToCssClient() {
           <div style={{ color: '#ef4444', fontSize: '0.875rem' }}>{error}</div>
         ) : (
           <pre className="tb-v2-hash-val" style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
-            {output || '—'}
+            {output || '-'}
           </pre>
         )}
         {output && (

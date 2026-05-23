@@ -82,9 +82,9 @@ export default function DonatePage() {
           Other Ways to Help
         </h2>
         <ul className="list-disc list-inside space-y-2">
-          <li><strong>Share Toolblip</strong> — Tell your friends and colleagues.</li>
-          <li><strong>Link to us</strong> — Link from your blog, docs, or project README.</li>
-          <li><strong>Feedback</strong> — Suggest new tools or report issues.</li>
+          <li><strong>Share Toolblip</strong>  -  Tell your friends and colleagues.</li>
+          <li><strong>Link to us</strong>  -  Link from your blog, docs, or project README.</li>
+          <li><strong>Feedback</strong>  -  Suggest new tools or report issues.</li>
         </ul>
       </div>
 

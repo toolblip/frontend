@@ -44,11 +44,11 @@ export default function PalindromeCheckerClient() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
               <div style={{ background: 'var(--tb-bg-secondary)', borderRadius: 8, padding: '8px 12px' }}>
                 <div style={{ fontSize: 11, color: 'var(--tb-text-secondary)', textTransform: 'uppercase' }}>Cleaned</div>
-                <div style={{ fontFamily: 'var(--f-mono)', fontSize: 13 }}>{result.cleaned || '—'}</div>
+                <div style={{ fontFamily: 'var(--f-mono)', fontSize: 13 }}>{result.cleaned || ' - '}</div>
               </div>
               <div style={{ background: 'var(--tb-bg-secondary)', borderRadius: 8, padding: '8px 12px' }}>
                 <div style={{ fontSize: 11, color: 'var(--tb-text-secondary)', textTransform: 'uppercase' }}>Reversed</div>
-                <div style={{ fontFamily: 'var(--f-mono)', fontSize: 13 }}>{result.reversed || '—'}</div>
+                <div style={{ fontFamily: 'var(--f-mono)', fontSize: 13 }}>{result.reversed || ' - '}</div>
               </div>
             </div>
           </div>

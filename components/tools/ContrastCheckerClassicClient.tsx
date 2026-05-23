@@ -19,7 +19,7 @@ export default function ContrastCheckerClassicClient() {
     <div className="tb-v2-card">
       <div className="tb-v2-card-header">
         <h2 className="tb-v2-card-title">Contrast Checker Classic</h2>
-        <p className="tb-v2-card-desc">The classic contrast checker — simple and reliable</p>
+        <p className="tb-v2-card-desc">The classic contrast checker  -  simple and reliable</p>
       </div>
       <div className="tb-v2-card-body">
         <div className="tb-v2-form-group">

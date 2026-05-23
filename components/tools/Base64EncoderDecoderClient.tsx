@@ -27,7 +27,7 @@ export default function Base64EncoderDecoderClient() {
     try {
       setOutput(mode === 'encode' ? base64Encode(input) : base64Decode(input));
     } catch (e) {
-      setError(mode === 'encode' ? 'Failed to encode.' : 'Invalid Base64 string — cannot decode.');
+      setError(mode === 'encode' ? 'Failed to encode.' : 'Invalid Base64 string  -  cannot decode.');
       setOutput('');
     }
   }, [input, mode]);

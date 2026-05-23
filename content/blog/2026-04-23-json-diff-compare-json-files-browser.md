@@ -5,7 +5,7 @@ date: 2026-04-23
 category: Developer Tools
 ---
 
-Comparing two JSON files is one of those things every developer does constantly — and most of us are doing it wrong. We're either manually scanning two outputs side-by-side (error-prone), using diff tools that treat JSON as plain text (useless for structural data), or uploading sensitive API responses to third-party websites (dangerous).
+Comparing two JSON files is one of those things every developer does constantly  -  and most of us are doing it wrong. We're either manually scanning two outputs side-by-side (error-prone), using diff tools that treat JSON as plain text (useless for structural data), or uploading sensitive API responses to third-party websites (dangerous).
 
 There's a better way. Let's talk about what makes JSON diff actually useful, and how to do it entirely in your browser.
 
@@ -30,10 +30,10 @@ These are semantically identical. A text diff would show every line as changed. 
 
 Beyond formatting, text diffs can't help you with:
 
-- **Key presence** — a key exists in one object but not the other
-- **Type changes** — `"age": 31` vs `"age": "31"` (number vs string)
-- **Structural moves** — a key moved from one location to another
-- **Array reorderings** — elements are the same but in a different order
+- **Key presence**  -  a key exists in one object but not the other
+- **Type changes**  -  `"age": 31` vs `"age": "31"` (number vs string)
+- **Structural moves**  -  a key moved from one location to another
+- **Array reorderings**  -  elements are the same but in a different order
 
 ## The Real-World Problem
 
@@ -84,7 +84,7 @@ For primitive values (strings, numbers, booleans, null):
 Arrays are trickier. Common strategies:
 - **Index-based**: Compare `a[0]` with `b[0]`, `a[1]` with `b[1]`, etc.
 - **Set-based**: Treat arrays as unordered collections and find maximum matching
-- **Ordered set**: Hybrid — find matches, then report reorderings
+- **Ordered set**: Hybrid  -  find matches, then report reorderings
 
 The right strategy depends on your data. API responses with IDs typically use set-based matching. Numeric sequences need index-based.
 
@@ -92,11 +92,11 @@ The right strategy depends on your data. API responses with IDs typically use se
 
 ### Comparing API Responses Across Environments
 
-The most common use. You have two JSON payloads — staging vs production, before vs after a deployment, two different API versions. Paste both, get a clear report of every difference.
+The most common use. You have two JSON payloads  -  staging vs production, before vs after a deployment, two different API versions. Paste both, get a clear report of every difference.
 
 ### Debugging Webhook Payloads
 
-GitHub, Stripe, Slack — every service sends webhooks differently, and they change. When a webhook stops working, being able to diff the payload you expect against what you're actually receiving is invaluable.
+GitHub, Stripe, Slack  -  every service sends webhooks differently, and they change. When a webhook stops working, being able to diff the payload you expect against what you're actually receiving is invaluable.
 
 ### Database Migration Comparison
 
@@ -106,7 +106,7 @@ Compare JSON exports from two database states. Find documents that changed, keys
 
 Application configs, feature flags, feature toggles. Compare your base config against what's actually deployed.
 
-## Doing It in the Browser — No Upload Required
+## Doing It in the Browser  -  No Upload Required
 
 Here's the thing about comparing JSON: **your data is sensitive**. You're comparing API responses, user data, configuration with secrets. Sending that to an online tool means you're trusting a third party with your data.
 
@@ -149,7 +149,7 @@ Instead of "value changed", report the full path: `users[0].role`. That way you 
 Color-code additions (green), removals (red), changes (yellow). Visually scan the structure, then dive into specifics.
 
 ### Copy Patch
-Generate a JSON Patch (RFC 6902) document — a machine-readable description of how to transform A into B. Useful for:
+Generate a JSON Patch (RFC 6902) document  -  a machine-readable description of how to transform A into B. Useful for:
 - Writing tests that assert on deltas rather than full payloads
 - Applying changes programmatically
 - Logging diffs in a structured format
@@ -198,16 +198,16 @@ Here's what different kinds of changes look like in output:
 
 If you're working with JSON, these related tools round out your workflow:
 
-- **[JSON Formatter](/tools/json-formatter)** — Paste messy JSON, get clean, readable output with syntax highlighting
-- **[JSON to TypeScript](/tools/json-to-typescript)** — Generate TypeScript interfaces from JSON data structures
-- **[JSON to YAML](/tools/json-to-yaml)** — Convert JSON to YAML for config files
-- **[Base64 Encoder](/tools/base64)** — Encode or decode base64 data (common in JSON payloads)
-- **[Fake Data Generator](/tools/fake-data-generator)** — Generate realistic test data that matches your JSON structure
+- **[JSON Formatter](/tools/json-formatter)**  -  Paste messy JSON, get clean, readable output with syntax highlighting
+- **[JSON to TypeScript](/tools/json-to-typescript)**  -  Generate TypeScript interfaces from JSON data structures
+- **[JSON to YAML](/tools/json-to-yaml)**  -  Convert JSON to YAML for config files
+- **[Base64 Encoder](/tools/base64)**  -  Encode or decode base64 data (common in JSON payloads)
+- **[Fake Data Generator](/tools/fake-data-generator)**  -  Generate realistic test data that matches your JSON structure
 
 ## The Bottom Line
 
 If you're comparing JSON by reading two screens side-by-side, stop. You're wasting time and you'll miss subtle bugs.
 
-A JSON-aware diff tool shows you exactly what changed — at the key level, with paths, types, and values clearly reported. Browser-based tools keep your data local, so you're not uploading production payloads to random websites.
+A JSON-aware diff tool shows you exactly what changed  -  at the key level, with paths, types, and values clearly reported. Browser-based tools keep your data local, so you're not uploading production payloads to random websites.
 
 Next time you're debugging an API mismatch, a config drift, or a webhook problem, reach for a proper JSON diff tool. Your future self will thank you.

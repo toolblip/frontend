@@ -32,7 +32,7 @@ export default function JavascriptObfuscatorClient() {
       <button onClick={obfuscate} className="tb-v2-btn-primary" style={{ marginTop: 12 }}>Obfuscate</button>
       <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">Obfuscated Output</span></div>
       <div className="tb-v2-tool-output-body">
-        <pre style={{ margin: 0, whiteSpace: 'pre-wrap', fontFamily: 'var(--f-mono)', fontSize: 13 }}>{output || '—'}</pre>
+        <pre style={{ margin: 0, whiteSpace: 'pre-wrap', fontFamily: 'var(--f-mono)', fontSize: 13 }}>{output || ' - '}</pre>
       </div>
     </div>
   );

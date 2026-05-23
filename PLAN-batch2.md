@@ -3,7 +3,7 @@
 ## Rules
 - 'use client' directive
 - tb-v2-* design system classes (from CsvToTsvClient.tsx)
-- No new npm packages — client-side only
+- No new npm packages - client-side only
 - Components → /Users/ray/Work/toolblip/components/tools/{PascalCase}Client.tsx
 - After all: update ToolUI.tsx (imports + case statements, alphabetical)
 - Run: npx tsc --noEmit | grep error | head -30

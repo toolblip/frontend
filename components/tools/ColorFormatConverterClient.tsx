@@ -82,7 +82,7 @@ export default function ColorFormatConverterClient() {
             {[
               { label: 'HEX', value: input.toUpperCase() },
               { label: 'RGB', value: `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})` },
-              { label: 'HSL', value: hsl ? `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)` : '—' },
+              { label: 'HSL', value: hsl ? `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)` : ' - ' },
               { label: 'HEX (8-digit)', value: (input.replace('#', '') + 'ff').toUpperCase() },
             ].map(({ label, value }) => (
               <div key={label} className="flex items-center justify-between p-3 bg-gray-50 rounded border">

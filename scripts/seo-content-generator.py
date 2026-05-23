@@ -319,7 +319,7 @@ def main():
         print(json.dumps(result, indent=2, ensure_ascii=False))
 
     elif action == "fix":
-        # fix <page_url> — diagnose and fix a specific page
+        # fix <page_url> - diagnose and fix a specific page
         if len(sys.argv) < 3:
             print("Usage: seo-content-generator.py fix <page_url>")
             sys.exit(1)

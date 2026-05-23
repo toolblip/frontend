@@ -60,12 +60,12 @@ This is the verification step most developers skip. It takes thirty seconds and 
 
 The standard claims in most JWT implementations:
 
-- `iss` — who issued this token
-- `sub` — the subject (usually the user ID)
-- `aud` — who this token is intended for
-- `exp` — expiration timestamp
-- `iat` — when the token was issued
-- `nbf` — not before timestamp
+- `iss`  -  who issued this token
+- `sub`  -  the subject (usually the user ID)
+- `aud`  -  who this token is intended for
+- `exp`  -  expiration timestamp
+- `iat`  -  when the token was issued
+- `nbf`  -  not before timestamp
 
 Beyond the standard claims, applications often embed custom data in the payload: role names, permissions, tenant IDs, or feature flags. If you are debugging an authorization issue, the custom claims are where you start. Look for any claim that sounds like it gates access.
 

@@ -40,7 +40,7 @@ for (const slug of slugs) {
   }
   
   const output = await page.evaluate(() => {
-    const pres = Array.from(document.querySelectorAll('pre')).map(p => p.textContent.trim()).filter(t => t && t !== '—');
+    const pres = Array.from(document.querySelectorAll('pre')).map(p => p.textContent.trim()).filter(t => t && t !== '-');
     return pres;
   });
   console.log('Output pre:', output.slice(0, 3));

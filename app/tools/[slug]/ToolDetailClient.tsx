@@ -3740,9 +3740,62 @@ function CssToScssTool() {
   const [output, setOutput] = useState('');
 
   const convert = () => {
-    if (!input) { setOutput(''); return; }
-    let scss = input;
-    setOutput(scss);
+    const css = input.trim();
+    if (!css) {
+      setOutput('');
+      return;
+    }
+
+    const lines = css.split('\n');
+    let scss = '';
+    let indentLevel = 0;
+    const indent = '  ';
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const trimmedLine = line.trim();
+
+      if (!trimmedLine || trimmedLine.startsWith('/*') || trimmedLine.startsWith('//')) {
+        if (trimmedLine.startsWith('/*') && !trimmedLine.includes('*/')) {
+          scss += line + '\n';
+          while (i < lines.length - 1 && !lines[i].includes('*/')) {
+            i++;
+            scss += lines[i] + '\n';
+          }
+        } else {
+          scss += line + '\n';
+        }
+        continue;
+      }
+
+      if (trimmedLine === '}') {
+        indentLevel = Math.max(0, indentLevel - 1);
+        scss += indent.repeat(indentLevel) + trimmedLine + '\n';
+        continue;
+      }
+
+      const openBraces = (trimmedLine.match(/\{/g) || []).length;
+      const closeBraces = (trimmedLine.match(/\}/g) || []).length;
+
+      if (trimmedLine.includes('{')) {
+        const selector = trimmedLine.replace(/\{.*$/, '').trim();
+        if (selector) {
+          scss += indent.repeat(indentLevel) + selector + ' {' + '\n';
+          indentLevel++;
+        }
+      } else if (trimmedLine.includes(':')) {
+        const colonIndex = trimmedLine.indexOf(':');
+        const property = trimmedLine.slice(0, colonIndex).trim();
+        const value = trimmedLine.slice(colonIndex + 1).replace(/;$/, '').trim();
+        scss += indent.repeat(indentLevel) + property + ': ' + value + ';' + '\n';
+      } else {
+        scss += indent.repeat(indentLevel) + trimmedLine + '\n';
+      }
+
+      indentLevel = Math.max(0, indentLevel + openBraces - closeBraces);
+    }
+
+    setOutput(scss.trim());
   };
 
   return (

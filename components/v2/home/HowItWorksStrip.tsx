@@ -21,7 +21,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
             Pick a tool&nbsp;→ Paste your data&nbsp;→ Get your result
           </h2>
           <p style={{ fontSize: 13.5, color: 'var(--fg-2)', marginTop: 6 }}>
-            No servers, no uploads, no data trail — nothing leaves your browser.
+            No servers, no uploads, no data trail  -  nothing leaves your browser.
           </p>
         </div>
 
@@ -46,7 +46,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               color: 'var(--blue)',
               bg: 'var(--blue-tint)',
               title: 'Pick a tool',
-              desc: `${toolCount} focused tools across ${categoryCount} categories — pick the one for the job.`,
+              desc: `${toolCount} focused tools across ${categoryCount} categories  -  pick the one for the job.`,
             },
             {
               icon: (
@@ -69,7 +69,7 @@ export default function HowItWorksStrip({ toolCount, categoryCount }: Props) {
               color: 'var(--purple)',
               bg: 'var(--purple-tint)',
               title: 'Get your result',
-              desc: 'Copy the result instantly — no upload queue, waitlist, or account wall.'
+              desc: 'Copy the result instantly  -  no upload queue, waitlist, or account wall.'
             },
           ].map((item, i) => (
             <div

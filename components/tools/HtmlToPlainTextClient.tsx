@@ -46,7 +46,7 @@ export default function HtmlToPlainTextClient() {
       </div>
       <div className="tb-v2-tool-output-body">
         <div style={{ whiteSpace: 'pre-wrap', fontSize: 14, minHeight: 80 }}>
-          {plainText || '—'}
+          {plainText || ' - '}
         </div>
       </div>
     </div>

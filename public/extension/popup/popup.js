@@ -98,7 +98,7 @@ let currentHashAlgo = 'SHA-256';
 async function generateHash() {
   const input = document.getElementById('hash-input').value;
   const result = document.getElementById('hash-value');
-  if (!input) { result.textContent = '—'; document.getElementById('hash-result').className = 'result-box'; return; }
+  if (!input) { result.textContent = ' - '; document.getElementById('hash-result').className = 'result-box'; return; }
   try {
     let alg = currentHashAlgo;
     let hash;

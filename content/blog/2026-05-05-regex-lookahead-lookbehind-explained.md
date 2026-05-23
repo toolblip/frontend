@@ -1,13 +1,13 @@
 ---
 title: "Regex Lookahead and Lookbehind Explained: Match Without Consuming"
-description: "Learn how to use regex lookahead and lookbehind to match patterns without consuming characters. Positive vs negative, ahead vs behind — with live examples."
+description: "Learn how to use regex lookahead and lookbehind to match patterns without consuming characters. Positive vs negative, ahead vs behind  -  with live examples."
 date: 2026-05-05
 category: Developer Tools
 ---
 
-If you've ever written a regex to match something **only when it's followed by** (or **not followed by**) another pattern, you probably hit a wall. Standard capturing groups consume characters — they move the cursor, and you can't use the same text for two things at once.
+If you've ever written a regex to match something **only when it's followed by** (or **not followed by**) another pattern, you probably hit a wall. Standard capturing groups consume characters  -  they move the cursor, and you can't use the same text for two things at once.
 
-That's where lookahead and lookbehind come in. They let you define a condition — something the match must (or must not) be adjacent to — **without actually consuming the characters**.
+That's where lookahead and lookbehind come in. They let you define a condition  -  something the match must (or must not) be adjacent to  -  **without actually consuming the characters**.
 
 This guide covers all four types with real examples, common mistakes, and a free browser tool so you can test everything live.
 
@@ -34,7 +34,7 @@ text.match(regex);
 // → ["$49.99"]
 ```
 
-The `$49.99` matches because it's immediately followed by ` USD`. The other prices are ignored — not because they lack a `$`, but because they're not followed by ` USD`.
+The `$49.99` matches because it's immediately followed by ` USD`. The other prices are ignored  -  not because they lack a `$`, but because they're not followed by ` USD`.
 
 In the [Toolblip Regex Tester](/tools/regex-tester), you'd enter:
 
@@ -56,7 +56,7 @@ text.match(regex);
 // → ["$49.99", "$29.99"]
 ```
 
-`$39.99 USD` and `$19.99 GBP` are excluded because they **are** followed by a space and three uppercase letters. `$49.99` and `$29.99` are included because the character after the number is a comma or end of string — not a currency code.
+`$39.99 USD` and `$19.99 GBP` are excluded because they **are** followed by a space and three uppercase letters. `$49.99` and `$29.99` are included because the character after the number is a comma or end of string  -  not a currency code.
 
 ## Positive Lookbehind: `(?<=...)`
 
@@ -72,7 +72,7 @@ text.match(regex);
 // → ["49.99", "12.00"]
 ```
 
-This reads as: "match one or more digits or dots, but only when preceded by a `$`." The `$` itself is not part of the match — it's only a condition.
+This reads as: "match one or more digits or dots, but only when preceded by a `$`." The `$` itself is not part of the match  -  it's only a condition.
 
 > **Important:** JavaScript lookbehind support requires ES2018+. If you're on Node.js < 10, it won't work. All modern browsers support it.
 
@@ -90,7 +90,7 @@ text.match(regex);
 // → ["5", "49", "10"]
 ```
 
-Wait — `$49.99` still matched `49` because the `4` is preceded by `$`... wait, no. The lookbehind checks the character **immediately before** the match position. At `4` in `$49.99`, the character before it is `$` — so it shouldn't match. But `9` in `49` has `4` before it, which is a digit — so it matches.
+Wait  -  `$49.99` still matched `49` because the `4` is preceded by `$`... wait, no. The lookbehind checks the character **immediately before** the match position. At `4` in `$49.99`, the character before it is `$`  -  so it shouldn't match. But `9` in `49` has `4` before it, which is a digit  -  so it matches.
 
 This reveals a subtlety: **lookbehind checks the character immediately before the match start**, not the whole preceding context. For `$49.99`, the pattern would match `49` (where `4` is preceded by `$`).
 
@@ -119,7 +119,7 @@ The `\b` word boundary helps isolate the number more reliably.
 
 ## Lookahead and Lookbehind Together
 
-You can stack both — a match that is **preceded by X** and **followed by Y**:
+You can stack both  -  a match that is **preceded by X** and **followed by Y**:
 
 ```js
 const text = "Username: @john, @jane_doe, @admin, @sara";
@@ -127,14 +127,14 @@ const text = "Username: @john, @jane_doe, @admin, @sara";
 const regex = /(?<=@)[a-z][a-z0-9]*(?![a-z0-9_])/g;
 
 text.match(regex);
-// → ["john", "jane"] — "jane_doe" has underscore, "admin" has 5 letters (matches), "sara" matches
+// → ["john", "jane"]  -  "jane_doe" has underscore, "admin" has 5 letters (matches), "sara" matches
 ```
 
 Breaking it down:
-- `(?<=@)` — must be preceded by `@`
-- `[a-z]` — first character must be a letter
-- `[a-z0-9]*` — rest can be letters or numbers
-- `(?![a-z0-9_])` — **not** followed by a letter, number, or underscore
+- `(?<=@)`  -  must be preceded by `@`
+- `[a-z]`  -  first character must be a letter
+- `[a-z0-9]*`  -  rest can be letters or numbers
+- `(?![a-z0-9_])`  -  **not** followed by a letter, number, or underscore
 
 ## Common Mistakes
 
@@ -145,20 +145,20 @@ Lookahead checks **what comes after** the current position. Lookbehind checks **
 ```js
 // "Match 'cat' only when followed by 'dog'"
 const text = "cat dog catch";
-/cat(?= dog)/.test(text);  // ✅ true — "cat" in "cat dog"
-/cat(?= dog)/.test("catfish"); // ❌ false — "cat" not followed by " dog"
+/cat(?= dog)/.test(text);  // ✅ true  -  "cat" in "cat dog"
+/cat(?= dog)/.test("catfish"); // ❌ false  -  "cat" not followed by " dog"
 
-/(?<=@)\w+/.test("@john");  // ✅ — matches "john" preceded by @
+/(?<=@)\w+/.test("@john");  // ✅  -  matches "john" preceded by @
 ```
 
 ### 2. Overlapping Conditions
 
-Lookahead and lookbehind are **zero-width** — they don't move the cursor. But if your lookahead consumes a character and your lookbehind starts from the same position, you can get unexpected behavior:
+Lookahead and lookbehind are **zero-width**  -  they don't move the cursor. But if your lookahead consumes a character and your lookbehind starts from the same position, you can get unexpected behavior:
 
 ```js
 // Wrong: trying to match a digit preceded by $ and followed by .
 const text = "$5.99";
-/(?<=\$)(\d)(?=\.)/.test(text); // matches "5" — but what if there were two digits?
+/(?<=\$)(\d)(?=\.)/.test(text); // matches "5"  -  but what if there were two digits?
 ```
 
 ### 3. Variable-Length Lookbehind in Older Engines
@@ -166,9 +166,9 @@ const text = "$5.99";
 In older JavaScript environments (pre-ES2018), lookbehind **only worked with fixed-length patterns**. Modern engines support variable-length lookbehind, but some regex flavors (like Python's `re` module) still have restrictions.
 
 ```python
-# Python re — lookbehind must be fixed length
+# Python re  -  lookbehind must be fixed length
 import re
-re.search(r'(?<=\$)\d+', "$49.99")  # ✅ works — fixed length
+re.search(r'(?<=\$)\d+', "$49.99")  # ✅ works  -  fixed length
 re.search(r'(?<=\$)\d+\.?\d*', "$49.99")  # ❌ error in basic Python re
 # Use regex module for variable-length lookbehind in Python
 ```
@@ -181,7 +181,7 @@ const text = "@admin hello @user";
 /(?<=^)@\w+/.test(text); // ✅ matches @admin at start
 ```
 
-But if `@user` appears mid-string, its preceding character is a space — so lookbehind fails. Use a word boundary or alternation instead:
+But if `@user` appears mid-string, its preceding character is a space  -  so lookbehind fails. Use a word boundary or alternation instead:
 
 ```js
 /(?:^|(?<=\s))@\w+/g; // start of string OR preceded by whitespace
@@ -215,7 +215,7 @@ const hasDigit = /(?=.*\d)/.test(password);     // ✅ positive lookahead scans 
 const hasSpecial = /(?=.*[!@#$%^&*])/.test(password); // ✅
 ```
 
-That last one — `(?=.*\d)` — is a **positive lookahead that scans the whole string** from the current position. The `.*` means "any characters, then a digit." This is how you check for a pattern **anywhere** in the string without consuming it.
+That last one  -  `(?=.*\d)`  -  is a **positive lookahead that scans the whole string** from the current position. The `.*` means "any characters, then a digit." This is how you check for a pattern **anywhere** in the string without consuming it.
 
 ### Filter Log Lines by Context
 
@@ -245,7 +245,7 @@ const dbErrors = logs.filter(line => /(?=.*ERROR)(?=.*db)/.test(line));
 
 No signup. No data uploaded. Everything runs locally in your browser.
 
-👉 **[Try the Regex Tester](/tools/regex-tester)** — paste a pattern, write test strings, and see matches highlighted in real time.
+👉 **[Try the Regex Tester](/tools/regex-tester)**  -  paste a pattern, write test strings, and see matches highlighted in real time.
 
 Pair it with the **[Regex Cheatsheet](/tools/regex-cheatsheet)** for quick pattern reminders.
 
@@ -256,7 +256,7 @@ Pair it with the **[Regex Cheatsheet](/tools/regex-cheatsheet)** for quick patte
 - Use **lookbehind** to anchor on a preceding character without including it in the match
 - Use **negative lookbehind** to exclude matches based on what precedes them
 
-Lookahead and lookbehind are among the most powerful features in modern regex — and among the least understood. Once the "zero-width" concept clicks, you'll find yourself reaching for them constantly.
+Lookahead and lookbehind are among the most powerful features in modern regex  -  and among the least understood. Once the "zero-width" concept clicks, you'll find yourself reaching for them constantly.
 
 ---
 

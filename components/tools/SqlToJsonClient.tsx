@@ -215,7 +215,7 @@ export default function SqlToJsonClient() {
             <strong>Could not parse:</strong> {error}
           </p>
         ) : (
-          <pre className="tb-v2-tool-pre">{result || '—'}</pre>
+          <pre className="tb-v2-tool-pre">{result || ' - '}</pre>
         )}
       </div>
     </div>

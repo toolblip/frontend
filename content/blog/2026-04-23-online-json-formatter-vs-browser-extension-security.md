@@ -79,12 +79,12 @@ The safest habit is simple: use tools that clearly state that processing happens
 
 Before using any formatter with real payloads, check for these signals:
 
-1. **Local processing statement** — the tool says formatting happens in your browser.
-2. **No login required** — fewer accounts means fewer stored documents and fewer tracking surfaces.
-3. **No “save/share” behavior by default** — formatted data should not be persisted unless you intentionally export it.
-4. **HTTPS** — the tool should load over a secure connection.
-5. **Simple network behavior** — opening developer tools should not show your pasted body being sent to an API.
-6. **Clear privacy posture** — the site should not be vague about whether it uploads input.
+1. **Local processing statement**  -  the tool says formatting happens in your browser.
+2. **No login required**  -  fewer accounts means fewer stored documents and fewer tracking surfaces.
+3. **No “save/share” behavior by default**  -  formatted data should not be persisted unless you intentionally export it.
+4. **HTTPS**  -  the tool should load over a secure connection.
+5. **Simple network behavior**  -  opening developer tools should not show your pasted body being sent to an API.
+6. **Clear privacy posture**  -  the site should not be vague about whether it uploads input.
 
 If a formatter needs a server to indent JSON, choose another formatter.
 

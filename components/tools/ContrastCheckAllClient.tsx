@@ -38,7 +38,7 @@ export default function ContrastCheckAllClient() {
         </button>
         {results.map((r, i) => (
           <div key={i} className="tb-v2-result-box" style={{ backgroundColor: r.bg, color: r.fg }}>
-            <strong>{r.fg} / {r.bg}</strong> — {r.ratio} {r.pass ? '✓ PASS' : '✗ FAIL'}
+            <strong>{r.fg} / {r.bg}</strong>  -  {r.ratio} {r.pass ? '✓ PASS' : '✗ FAIL'}
           </div>
         ))}
       </div>

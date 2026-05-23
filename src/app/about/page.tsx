@@ -40,7 +40,7 @@ export default function AboutPage() {
       <div className="space-y-6" style={{ fontSize: '17px', color: 'var(--fg-1)', lineHeight: 1.75 }}>
         <p>
           Toolblip is a free collection of browser-based developer and productivity tools.
-          Every tool runs <strong>100% client-side</strong> — your data never leaves your browser.
+          Every tool runs <strong>100% client-side</strong>  -  your data never leaves your browser.
         </p>
         <p>
           No accounts, no signups, no paywalls. Just open a tool and use it.
@@ -62,10 +62,10 @@ export default function AboutPage() {
           Why Toolblip?
         </h2>
         <ul className="list-disc list-inside space-y-2">
-          <li><strong>Private</strong> — Nothing is uploaded, stored, or sent anywhere.</li>
-          <li><strong>Fast</strong> — All processing happens instantly in your tab.</li>
-          <li><strong>Free</strong> — No signup, no limits, no paywall.</li>
-          <li><strong>Open</strong> — Clean, minimal interface. No distractions.</li>
+          <li><strong>Private</strong>  -  Nothing is uploaded, stored, or sent anywhere.</li>
+          <li><strong>Fast</strong>  -  All processing happens instantly in your tab.</li>
+          <li><strong>Free</strong>  -  No signup, no limits, no paywall.</li>
+          <li><strong>Open</strong>  -  Clean, minimal interface. No distractions.</li>
         </ul>
 
         <div className="mt-10 p-6 rounded-2xl border border-[var(--line)] text-center"

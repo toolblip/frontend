@@ -301,7 +301,7 @@ export default function OgImageGeneratorClient() {
 
       drawPatternOverlay();
 
-      // 2. White card (all styles) — scale with the selected resolution
+      // 2. White card (all styles)  -  scale with the selected resolution
       const tallBanner = HEIGHT >= 600;
       const compactBanner = HEIGHT <= 440;
       const cardW = Math.round(WIDTH * (tallBanner ? 0.9 : compactBanner ? 0.89 : 0.875));
@@ -504,7 +504,7 @@ export default function OgImageGeneratorClient() {
       }
       ctx.textBaseline = 'top';
 
-      // Title — match reference: strong, centered, and spaced away from subtitle
+      // Title  -  match reference: strong, centered, and spaced away from subtitle
       ctx.fillStyle = textColor;
       ctx.font = `800 ${titleSize}px Inter, Arial, sans-serif`;
       titleLines.forEach((line, index) => {
@@ -512,7 +512,7 @@ export default function OgImageGeneratorClient() {
         ctx.fillText(line, textX, y, maxTextWidth);
       });
 
-      // Subtitle — smaller and clearly separated from the title block
+      // Subtitle  -  smaller and clearly separated from the title block
       ctx.font = `400 ${subtitleSize}px Inter, Arial, sans-serif`;
       ctx.fillStyle = subColor;
       const subY = textStartY + titleBlockHeight + subtitleGap;

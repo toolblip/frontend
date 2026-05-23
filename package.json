@@ -1,6 +1,6 @@
 {
   "name": "toolblip",
-  "description": "Free browser-based developer tools — JSON formatter, Base64, UUID generator, and more. Next.js on Railway.",
+  "description": "Free browser-based developer tools: JSON formatter, Base64, UUID generator, and more. Next.js on Railway.",
   "version": "0.0.2",
   "scripts": {
     "dev": "next dev",
@@ -10,7 +10,9 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:debug": "playwright test --debug",
-    "test:e2e:install": "playwright install --with-deps chromium"
+    "test:e2e:install": "playwright install --with-deps chromium",
+    "seo:bing:health": "python3 scripts/bing-nightly-health.py",
+    "seo:bing:submit": "python3 scripts/bing-nightly-submit.py"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",

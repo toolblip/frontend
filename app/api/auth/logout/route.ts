@@ -20,7 +20,7 @@ export async function POST() {
       });
     }
   } catch {
-    // best-effort — still delete cookie client-side
+    // best-effort  -  still delete cookie client-side
   } finally {
     const cookieStore = await cookies();
     cookieStore.delete("auth_token");

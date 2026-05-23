@@ -74,9 +74,9 @@ export default function AdvertisePage() {
           Sponsorship Options
         </h2>
         <ul className="list-disc list-inside space-y-2">
-          <li><strong>Tool Sponsorship</strong> — Brand a specific tool page.</li>
-          <li><strong>Site-wide Banner</strong> — Non-intrusive banner across all pages.</li>
-          <li><strong>Blog Post</strong> — Sponsored content on our blog.</li>
+          <li><strong>Tool Sponsorship</strong>  -  Brand a specific tool page.</li>
+          <li><strong>Site-wide Banner</strong>  -  Non-intrusive banner across all pages.</li>
+          <li><strong>Blog Post</strong>  -  Sponsored content on our blog.</li>
         </ul>
 
         <div

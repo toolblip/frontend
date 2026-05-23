@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# seo-pipeline.sh — Toolblip SEO content pipeline
+# seo-pipeline.sh - Toolblip SEO content pipeline
 # Runs: queue → keyword research → generate → self-improve → submit → fix → link → repeat
 #
 # Lock prevents concurrent runs. Runs in overnight window only (11PM–6AM Dhaka).
@@ -124,7 +124,7 @@ mark_gsc_submitted() {
 }
 
 # ─── Step 1: Keyword Research (per topic) ──────────────────────────────────────
-# Must run BEFORE writing each article — keyword determines article structure
+# Must run BEFORE writing each article - keyword determines article structure
 research_keywords_for_topic() {
     local topic="$1"
     local kw_output="/tmp/kw-${$}.json"
@@ -551,7 +551,7 @@ main() {
         generated_file=$(generate_one_post "$topic")
 
         if [[ -z "$generated_file" || ! -f "$generated_file" ]]; then
-            log "  Skipping remaining steps — no file generated"
+            log "  Skipping remaining steps - no file generated"
             qtmp=$(mktemp)
             python3 - "$QUEUE_FILE" "$topic" > "$qtmp" <<'PYQ'
 import json, sys
@@ -592,7 +592,7 @@ PYQ
         git commit -m "chore: add internal links to $(basename $generated_file)" >> "$LOGFILE" 2>&1 || true
         git push origin main >> "$LOGFILE" 2>&1 || true
 
-        # 8. Self-improve (after EVERY post — this is the key loop)
+        # 8. Self-improve (after EVERY post - this is the key loop)
         local best_kw
         best_kw=$(python3 "$HOME/Work/toolblip/scripts/get-last-keyword.py" "$GENERATED_FILE" "$topic")
         self_improve_after_post "$post_url" "$best_kw" "$topic"

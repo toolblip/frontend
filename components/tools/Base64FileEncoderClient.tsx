@@ -149,7 +149,7 @@ export default function Base64FileEncoderClient() {
           <p className="tb-v2-error" role="alert">{error}</p>
         ) : (
           <pre className="tb-v2-tool-pre" style={{ wordBreak: 'break-all', maxHeight: '300px', overflowY: 'auto' }}>
-            {output || '—'}
+            {output || ' - '}
           </pre>
         )}
       </div>

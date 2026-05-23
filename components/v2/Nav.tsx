@@ -165,7 +165,7 @@ function getMenuContent(key: string): MenuContent | null {
           label: 'Product',
           items: [
             { icon: 'zap',     label: 'Toolblip Pro',       desc: 'Higher limits, history, team vault', href: '/pricing' },
-            { icon: 'command', label: 'Desktop app',         desc: 'Mac, Windows, Linux — offline',      href: '/' },
+            { icon: 'command', label: 'Desktop app',         desc: 'Mac, Windows, Linux  -  offline',      href: '/' },
             { icon: 'file',    label: 'Browser extension',   desc: 'Right-click any text or link',       href: '/' },
             { icon: 'shield',  label: 'Self-hosted',         desc: 'Run Toolblip behind your firewall',  href: '/' },
             { icon: 'gift',    label: "What's new",          desc: 'Changelog · shipped this week',      href: '/blog' },

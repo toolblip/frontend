@@ -29,7 +29,7 @@ export function proxy(req: NextRequest) {
     return NextResponse.redirect(url, 301);
   }
 
-  // Let Next.js API auth routes through — handled by route handlers
+  // Let Next.js API auth routes through - handled by route handlers
   if (pathname.startsWith("/api/auth")) {
     return NextResponse.next();
   }

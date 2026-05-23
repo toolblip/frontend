@@ -35,7 +35,7 @@ export default function SvgCleanerClient() {
       <button onClick={minify} className="tb-v2-btn-primary" style={{ marginTop: 12 }}>Minify SVG</button>
       <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">Minified SVG</span></div>
       <div className="tb-v2-tool-output-body">
-        <pre style={{ margin: 0, whiteSpace: 'pre-wrap', fontFamily: 'var(--f-mono)', fontSize: 13 }}>{output || '—'}</pre>
+        <pre style={{ margin: 0, whiteSpace: 'pre-wrap', fontFamily: 'var(--f-mono)', fontSize: 13 }}>{output || ' - '}</pre>
       </div>
     </div>
   );

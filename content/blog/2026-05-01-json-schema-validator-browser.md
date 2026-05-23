@@ -1,15 +1,15 @@
 ---
-title: Validate JSON Schema in Your Browser — No Signup, No Upload
+title: Validate JSON Schema in Your Browser  -  No Signup, No Upload
 description: Stop pasting API payloads into third-party validators. Learn how to validate JSON against a schema entirely in your browser, privately, with instant error reporting.
 date: 2026-05-01
 category: Developer Tools
 ---
 
-Every developer knows this feeling. You've built an integration, written the schema, handed it off to a client or a frontend team — and then the bugs start rolling in. *"The field `created_at` isn't being saved."* *"Why is `status` showing as a string instead of a number?"* Hours of back-and-forth, when a 30-second schema validation check would have caught everything.
+Every developer knows this feeling. You've built an integration, written the schema, handed it off to a client or a frontend team  -  and then the bugs start rolling in. *"The field `created_at` isn't being saved."* *"Why is `status` showing as a string instead of a number?"* Hours of back-and-forth, when a 30-second schema validation check would have caught everything.
 
 The problem isn't that JSON Schema is hard. It's that most developers don't have a quick, private way to validate against it without setting up a local environment, installing dependencies, or pasting their data into a third-party site that logs everything.
 
-That's what this post is about — validating JSON against a schema directly in your browser, in under a minute, with zero data leaving your machine.
+That's what this post is about  -  validating JSON against a schema directly in your browser, in under a minute, with zero data leaving your machine.
 
 ## What Is JSON Schema (And Why Should You Care)?
 
@@ -58,17 +58,17 @@ node -e "
 "
 ```
 
-That's fine — if you're in a Node.js project, have npm installed, and your data is already on your machine. But when you're debugging an API response from a staging environment, or quickly checking a webhook payload from a third-party integration, spinning up a local environment feels like overkill.
+That's fine  -  if you're in a Node.js project, have npm installed, and your data is already on your machine. But when you're debugging an API response from a staging environment, or quickly checking a webhook payload from a third-party integration, spinning up a local environment feels like overkill.
 
 ### The Browser Way
 
-With a browser-based JSON Schema validator, you paste your schema on the left, your JSON on the right, and you get instant feedback — no install, no `npm`, no terminal.
+With a browser-based JSON Schema validator, you paste your schema on the left, your JSON on the right, and you get instant feedback  -  no install, no `npm`, no terminal.
 
 **Key advantages:**
-- **Zero setup** — Open the page and go
-- **Privacy-first** — All validation runs in your browser; your data never leaves
-- **Shareable** — Bookmark the tool, link to it from your docs
-- **Fast iteration** — Tweak the schema, re-validate, repeat
+- **Zero setup**  -  Open the page and go
+- **Privacy-first**  -  All validation runs in your browser; your data never leaves
+- **Shareable**  -  Bookmark the tool, link to it from your docs
+- **Fast iteration**  -  Tweak the schema, re-validate, repeat
 
 ## How to Validate JSON Schema in Your Browser
 
@@ -78,9 +78,9 @@ Here's the step-by-step:
 
 **2. Paste your JSON Schema in the left panel.** Start with the `$schema` declaration and build out your `type`, `properties`, and `required` fields.
 
-**3. Paste your JSON data in the right panel.** This is the payload you want to validate — an API response, a config file, a webhook body.
+**3. Paste your JSON data in the right panel.** This is the payload you want to validate  -  an API response, a config file, a webhook body.
 
-**4. Click Validate (or just start typing — it validates live).**
+**4. Click Validate (or just start typing  -  it validates live).**
 
 If your data is valid, you'll see a green success state. If something's wrong, the validator lists every error with the path to the failing field and a human-readable explanation.
 
@@ -122,7 +122,7 @@ You're integrating with a third-party API. The docs say the response looks like 
 
 ### Checking Webhook Payloads
 
-GitHub, Stripe, Slack — every service sends webhooks in a specific format. Before writing your handler code, paste the expected schema and a sample payload to catch schema drift early. Especially useful when a service updates its payload format without warning.
+GitHub, Stripe, Slack  -  every service sends webhooks in a specific format. Before writing your handler code, paste the expected schema and a sample payload to catch schema drift early. Especially useful when a service updates its payload format without warning.
 
 ### Config File Validation
 
@@ -150,7 +150,7 @@ Beyond the basics, these keywords solve most real-world validation needs:
 
 ## Browser Validation vs. Code-Based Validation
 
-Browser validation is not a replacement for code-based validation — it's a complement. Here's when to use each:
+Browser validation is not a replacement for code-based validation  -  it's a complement. Here's when to use each:
 
 **Use browser validation when:**
 - Exploring or debugging an unfamiliar API format
@@ -167,6 +167,6 @@ For production use, pair browser-based schema exploration with a runtime validat
 
 ## Get Started
 
-Stop debugging JSON shape mismatches the hard way. Open the [JSON Schema Validator](/tools/json-schema-validator), paste your schema and data, and get instant validation feedback — entirely in your browser, entirely private.
+Stop debugging JSON shape mismatches the hard way. Open the [JSON Schema Validator](/tools/json-schema-validator), paste your schema and data, and get instant validation feedback  -  entirely in your browser, entirely private.
 
 If you want to learn more about JSON Schema itself, the [official JSON Schema documentation](https://json-schema.org/understanding-json-schema/) is well-written and interactive. It's worth spending an hour with if you work with APIs or data contracts regularly.

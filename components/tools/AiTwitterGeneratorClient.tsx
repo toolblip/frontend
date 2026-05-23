@@ -38,10 +38,10 @@ export default function AiTwitterGeneratorClient() {
         `5 surprising facts about ${topic} you didn't know.`,
       ],
       quote: [
-        `"${topic} is not a destination but a journey." — Unknown`,
-        `"Success in ${topic} comes from consistency." — Expert`,
+        `"${topic} is not a destination but a journey."  -  Unknown`,
+        `"Success in ${topic} comes from consistency."  -  Expert`,
         `"The best time to focus on ${topic} was 5 years ago. The second best is now."`,
-        `"Master ${topic} and you'll master your craft." — Proverb`,
+        `"Master ${topic} and you'll master your craft."  -  Proverb`,
       ],
     };
     return hooks[hookType];
@@ -51,7 +51,7 @@ export default function AiTwitterGeneratorClient() {
     follow: ['Follow for more tips!', 'Follow for daily insights!', 'Follow for exclusive content!'],
     like: ['Like if you agree!', 'Double tap if this resonates!', '❤️ if you found this helpful!'],
     share: ['Share with someone who needs this!', 'Retweet to spread the knowledge!', 'Tag a friend who should see this!'],
-    reply: ['Drop your thoughts below!', 'What do you think? Let me know!', 'Comments open — I would love to hear from you!'],
+    reply: ['Drop your thoughts below!', 'What do you think? Let me know!', 'Comments open  -  I would love to hear from you!'],
     none: [],
   };
 

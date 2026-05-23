@@ -107,7 +107,7 @@ export default function NumberBaseConverterClient() {
             <div key={base} className="tb-v2-nb-row">
               <span className="tb-v2-nb-label">{label}</span>
               <span className="tb-v2-nb-base">base {base}</span>
-              <code className="tb-v2-nb-val">{out || '—'}</code>
+              <code className="tb-v2-nb-val">{out || ' - '}</code>
               <button
                 type="button"
                 onClick={() => copy(base, out)}

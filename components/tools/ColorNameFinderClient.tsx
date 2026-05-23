@@ -88,7 +88,7 @@ export default function ColorNameFinderClient() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
           <div className="bg-gray-50 rounded p-3"><span className="text-gray-500">HEX</span><div className="font-mono font-medium">{color.toUpperCase()}</div></div>
           <div className="bg-gray-50 rounded p-3"><span className="text-gray-500">RGB</span><div className="font-mono font-medium">{rgb.r}, {rgb.g}, {rgb.b}</div></div>
-          <div className="bg-gray-50 rounded p-3"><span className="text-gray-500">HSL</span><div className="font-mono font-medium">—</div></div>
+          <div className="bg-gray-50 rounded p-3"><span className="text-gray-500">HSL</span><div className="font-mono font-medium"> - </div></div>
           <div className="bg-gray-50 rounded p-3"><span className="text-gray-500">Name</span><div className="font-medium">{match?.name}</div></div>
         </div>
       )}

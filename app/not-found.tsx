@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: '404 — Page Not Found | Toolblip',
+  title: '404 - Page Not Found',
   description: "The page you're looking for doesn't exist. Head back to Toolblip's free online tools.",
 };
 

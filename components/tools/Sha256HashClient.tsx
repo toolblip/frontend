@@ -73,7 +73,7 @@ export default function Sha256HashClient() {
       <div className="tb-v2-tool-output-body" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         <div className="tb-v2-hash-row">
           <span className="tb-v2-hash-algo">SHA-256</span>
-          <code className="tb-v2-hash-val">{fmt(hash) || '—'}</code>
+          <code className="tb-v2-hash-val">{fmt(hash) || ' - '}</code>
           <button
             type="button"
             onClick={copy}

@@ -59,7 +59,7 @@ export default function BashCommandGeneratorClient() {
       )}
       <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">Generated Command</span></div>
       <div className="tb-v2-tool-output-body">
-        <pre style={{ margin: 0, whiteSpace: 'pre-wrap', fontFamily: 'var(--f-mono)', fontSize: 13, background: 'var(--tb-bg-secondary)', padding: 12, borderRadius: 8 }}>{generate() || '—'}</pre>
+        <pre style={{ margin: 0, whiteSpace: 'pre-wrap', fontFamily: 'var(--f-mono)', fontSize: 13, background: 'var(--tb-bg-secondary)', padding: 12, borderRadius: 8 }}>{generate() || ' - '}</pre>
       </div>
     </div>
   );

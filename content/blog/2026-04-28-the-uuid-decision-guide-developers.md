@@ -1,6 +1,6 @@
 ---
 title: "The UUID Decision Guide: Which Version Should You Actually Use?"
-description: "Stop guessing which UUID version to pick. This guide covers v1, v4, v5, and v7 — with real trade-offs, code examples, and a decision framework for every use case."
+description: "Stop guessing which UUID version to pick. This guide covers v1, v4, v5, and v7  -  with real trade-offs, code examples, and a decision framework for every use case."
 date: '2026-04-28'
 category: Developer Tools
 tags:
@@ -16,9 +16,9 @@ descriptionSEO: "UUID v1 vs v4 vs v5 vs v7 explained for developers. When to use
 featuredImage: 'https://api.radtx.com/gradient/0ea5e9-8b5cf6/1200/630'
 ---
 
-Every developer hits the same wall eventually. You need a unique identifier for something — a user, an order, a session, a record — and someone on your team asks "should we use UUID v4 or... what's the other one?" And then you're reading RFC 4122 at 11pm.
+Every developer hits the same wall eventually. You need a unique identifier for something  -  a user, an order, a session, a record  -  and someone on your team asks "should we use UUID v4 or... what's the other one?" And then you're reading RFC 4122 at 11pm.
 
-This guide skips the theory you don't need and gives you a decision framework you can actually use. By the end, you'll know exactly which UUID version to reach for in any situation — and why.
+This guide skips the theory you don't need and gives you a decision framework you can actually use. By the end, you'll know exactly which UUID version to reach for in any situation  -  and why.
 
 ## What a UUID Actually Is
 
@@ -28,13 +28,13 @@ A UUID is a 128-bit identifier written as 32 hex digits separated by hyphens:
 f47ac10b-58cc-4372-a567-0e02e2d5f6b1
 ```
 
-That's 2¹²⁸ possible values. To give you a sense of scale: if you generated a billion UUIDs per second, it would take longer than the age of the universe to generate a collision. Statistically, you don't need to worry about uniqueness — the math handles that.
+That's 2¹²⁸ possible values. To give you a sense of scale: if you generated a billion UUIDs per second, it would take longer than the age of the universe to generate a collision. Statistically, you don't need to worry about uniqueness  -  the math handles that.
 
 What you *do* need to worry about is **which version** you're generating. Each version has a different generation algorithm, different properties, and different trade-offs.
 
 ---
 
-## UUID v1 — Time + Node
+## UUID v1  -  Time + Node
 
 UUID v1 is the original. It encodes three things:
 
@@ -43,7 +43,7 @@ UUID v1 is the original. It encodes three things:
 - **A 48-bit node identifier** (usually the MAC address of your machine)
 
 ```javascript
-// v1 structure (not actual code — this is how it's built)
+// v1 structure (not actual code  -  this is how it's built)
 // [timestamp_low: 32 bits][timestamp_mid: 16 bits][timestamp_hi: 12 bits][clock_seq: 14 bits][node: 48 bits]
 ```
 
@@ -62,12 +62,12 @@ const id = v1();
 - Distributed databases (Cassandra, ScyllaDB) that benefit from time-ordered keys
 
 **When to avoid v1:**
-- Any externally-facing system — you're leaking your machine's MAC address
-- New projects — v7 gives you the same time-ordering without the privacy cost
+- Any externally-facing system  -  you're leaking your machine's MAC address
+- New projects  -  v7 gives you the same time-ordering without the privacy cost
 
 ---
 
-## UUID v4 — Random (The Default)
+## UUID v4  -  Random (The Default)
 
 UUID v4 is what you get from `crypto.randomUUID()`, `uuid.uuid4()`, and `gen_random_uuid()` in PostgreSQL. 122 of the 128 bits are random. Six bits are fixed to mark the version and variant.
 
@@ -99,7 +99,7 @@ SELECT UUID();
 - Any situation where you just need a guaranteed-unique identifier
 
 **When to avoid v4:**
-- Database primary keys on rotating storage at high write volumes — random UUIDs cause index fragmentation
+- Database primary keys on rotating storage at high write volumes  -  random UUIDs cause index fragmentation
 - When you need deterministic output from the same input (use v5)
 - When time-ordering matters for sorting or audit (use v7)
 
@@ -108,16 +108,16 @@ SELECT UUID();
 Most modern environments use a cryptographically secure RNG, but older or poorly configured systems sometimes don't. In JavaScript, always use `crypto.randomUUID()` rather than rolling your own:
 
 ```javascript
-// ✅ Good — uses Web Crypto API
+// ✅ Good  -  uses Web Crypto API
 const id = crypto.randomUUID();
 
-// ⚠️ Bad — might use Math.random() depending on the library
+// ⚠️ Bad  -  might use Math.random() depending on the library
 const id = require('uuid').v4();
 ```
 
 ---
 
-## UUID v5 — Namespace + Name (Deterministic)
+## UUID v5  -  Namespace + Name (Deterministic)
 
 UUID v5 generates the same UUID from the same namespace and name, every time. It's built by hashing a namespace UUID and your input string with SHA-1.
 
@@ -139,7 +139,7 @@ NAMESPACE_URL = uuid.UUID('6ba7b811-9dad-11d1-80b4-00c04fd430c8')
 user_uuid = uuid.uuid5(NAMESPACE_URL, 'user-ray')
 ```
 
-**The defining property:** deterministic. Run it once or a million times — the output is identical.
+**The defining property:** deterministic. Run it once or a million times  -  the output is identical.
 
 **When to use v5:**
 - Generating stable IDs for external resources (webhooks, OAuth subjects, content-addressable storage)
@@ -161,7 +161,7 @@ Well-known namespaces from RFC 4122:
 
 ---
 
-## UUID v7 — Time-Ordered + Private (The Modern Choice)
+## UUID v7  -  Time-Ordered + Private (The Modern Choice)
 
 UUID v7 is the newest version and the one you should default to for new projects. It encodes a Unix timestamp as the first component, with the rest filled with random bits.
 
@@ -171,11 +171,11 @@ UUID v7 is the newest version and the one you should default to for new projects
 ```
 
 ```javascript
-// JavaScript — requires the `uuid` library (v11+)
+// JavaScript  -  requires the `uuid` library (v11+)
 import { v7 } from 'uuid';
 const id = v7();
 
-// Python — Python 3.12+
+// Python  -  Python 3.12+
 import uuid
 id = uuid.uuid7()
 
@@ -215,7 +215,7 @@ Here's how to pick the right version in practice:
 
 ### "I'm designing a database schema and care about write performance"
 
-→ **UUID v7.** Time-ordered UUIDs like v7 have sequential insert patterns — new rows go at the end of the B-tree index instead of randomly scattered. This matters at scale. PostgreSQL 17+, CockroachDB, and MongoDB support v7 natively.
+→ **UUID v7.** Time-ordered UUIDs like v7 have sequential insert patterns  -  new rows go at the end of the B-tree index instead of randomly scattered. This matters at scale. PostgreSQL 17+, CockroachDB, and MongoDB support v7 natively.
 
 ### "I need the same ID for the same input every time"
 
@@ -250,11 +250,11 @@ v4 and v1 both have "random-looking" strings, but v1 encodes your machine's MAC 
 
 ### Using v4 as a database primary key at scale without understanding the trade-off
 
-v4 as a primary key works fine up to a few million rows. Past that, index fragmentation on rotating storage becomes measurable. If you're building something that will grow large, consider v7 from day one — migrations are painful.
+v4 as a primary key works fine up to a few million rows. Past that, index fragmentation on rotating storage becomes measurable. If you're building something that will grow large, consider v7 from day one  -  migrations are painful.
 
 ### Using v5 for mutable entities
 
-v5 IDs are deterministic but not tied to the entity's state. If you generate a v5 UUID for "user Ray" and then update Ray's email, the UUID stays the same — which is correct behavior. But if you're generating a UUID as a *version* identifier for a changing entity, v5 won't help you track versions.
+v5 IDs are deterministic but not tied to the entity's state. If you generate a v5 UUID for "user Ray" and then update Ray's email, the UUID stays the same  -  which is correct behavior. But if you're generating a UUID as a *version* identifier for a changing entity, v5 won't help you track versions.
 
 ### Not validating UUID format in APIs
 
@@ -274,9 +274,9 @@ isValidUUID('not-a-uuid'); // false
 
 ## Generate UUIDs Instantly in Your Browser
 
-Stop installing libraries just to generate a few test UUIDs. Toolblip's UUID Generator runs entirely in your browser — no data sent to any server — and supports all four versions:
+Stop installing libraries just to generate a few test UUIDs. Toolblip's UUID Generator runs entirely in your browser  -  no data sent to any server  -  and supports all four versions:
 
-**→ [UUID Generator — v1, v4, v5, v7](/tools/uuid-generator)**
+**→ [UUID Generator  -  v1, v4, v5, v7](/tools/uuid-generator)**
 
 Select your version, set a batch size, and copy. You can also:
 
@@ -293,7 +293,7 @@ All generation uses the Web Crypto API for the random bits. No tracking, no acco
 - **v4** is your safe default. Use it unless you have a reason not to.
 - **v7** is the future-proof choice for database keys. It solves v4's index fragmentation problem while keeping v4's privacy properties.
 - **v5** is for when you need deterministic, stable IDs from unpredictable inputs.
-- **v1** is for legacy systems — not new projects.
+- **v1** is for legacy systems  -  not new projects.
 
 Pick the right one for the job. Your future self debugging a bloated PostgreSQL index will thank you.
 
@@ -301,10 +301,10 @@ Pick the right one for the job. Your future self debugging a bloated PostgreSQL 
 
 ## Related Tools
 
-- **[UUID Generator](/tools/uuid-generator)** — Generate v1, v4, v5, and v7 UUIDs in your browser
-- **[JSON Formatter](/tools/json-formatter)** — Validate and pretty-print API responses
-- **[Regex Tester](/tools/regex-tester)** — Test patterns against sample text with real-time match highlighting
-- **[Hash Generator](/tools/hash-generator)** — SHA-1, SHA-256, MD5 — useful when working with v5 namespaces
+- **[UUID Generator](/tools/uuid-generator)**  -  Generate v1, v4, v5, and v7 UUIDs in your browser
+- **[JSON Formatter](/tools/json-formatter)**  -  Validate and pretty-print API responses
+- **[Regex Tester](/tools/regex-tester)**  -  Test patterns against sample text with real-time match highlighting
+- **[Hash Generator](/tools/hash-generator)**  -  SHA-1, SHA-256, MD5  -  useful when working with v5 namespaces
 
 ---
 

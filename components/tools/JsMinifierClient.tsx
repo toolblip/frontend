@@ -7,7 +7,7 @@ import { useMemo, useState } from 'react';
 //   - collapses whitespace inside code (preserves whitespace inside
 //     strings, template literals, and regex literals)
 //   - removes whitespace around operators when safe
-// It does NOT rename identifiers and does NOT optimize syntax — for serious
+// It does NOT rename identifiers and does NOT optimize syntax  -  for serious
 // minification, use a dedicated tool like terser as part of your build.
 
 const REGEX_PRECEDERS = new Set('(,=:[!&|?{};+-*/%^~<>'.split(''));
@@ -194,7 +194,7 @@ export default function JsMinifierClient() {
         {error ? (
           <p className="tb-v2-error" role="alert">{error}</p>
         ) : (
-          <pre className="tb-v2-tool-pre">{result || '—'}</pre>
+          <pre className="tb-v2-tool-pre">{result || ' - '}</pre>
         )}
       </div>
     </div>

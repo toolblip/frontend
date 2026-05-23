@@ -100,7 +100,7 @@
   {
     "slug": "remove-duplicate-lines",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "RemoveDuplicateLinesClient"
   },
   {
@@ -138,7 +138,7 @@
   {
     "slug": "url-encode",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -230,7 +230,7 @@
   {
     "slug": "sha-256-hash",
     "status": "pass",
-    "output": "SHA-256—",
+    "output": "SHA-256-",
     "component": "Sha256HashClient"
   },
   {
@@ -243,7 +243,7 @@
   {
     "slug": "url-slug-generator",
     "status": "fail",
-    "output": "—",
+    "output": "-",
     "expected": "(o) => o.includes('my-blog')",
     "component": "UrlSlugGeneratorClient"
   },
@@ -337,7 +337,7 @@
   {
     "slug": "sass-to-css",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "SassToCssClient"
   },
   {
@@ -363,7 +363,7 @@
   {
     "slug": "js-minifier",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "JsMinifierClient"
   },
   {
@@ -473,7 +473,7 @@
   {
     "slug": "text-to-slug",
     "status": "fail",
-    "output": "—",
+    "output": "-",
     "expected": "(o) => o.includes('my-blog')",
     "component": "UrlSlugGeneratorClient"
   },
@@ -514,7 +514,7 @@
   {
     "slug": "html-to-markdown",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "HtmlToMarkdownClient"
   },
   {
@@ -639,13 +639,13 @@
   {
     "slug": "morse-code-translator",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "MorseCodeTranslatorClient"
   },
   {
     "slug": "rot13-cipher",
     "status": "pass",
-    "output": "—ROT13 replaces each letter with the 13th letter after it. Since the alphabet has 26 letters, encodi",
+    "output": "-ROT13 replaces each letter with the 13th letter after it. Since the alphabet has 26 letters, encodi",
     "component": "Rot13CipherClient"
   },
   {
@@ -678,7 +678,7 @@
   {
     "slug": "rot47-cipher",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Rot47CipherClient"
   },
   {
@@ -819,7 +819,7 @@
   {
     "slug": "html-to-plain-text",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "HtmlToPlainTextClient"
   },
   {
@@ -1056,7 +1056,7 @@
   {
     "slug": "roman-numeral-converter",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "RomanNumeralConverterClient"
   },
   {
@@ -1112,7 +1112,7 @@
   {
     "slug": "image-to-base64",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -1374,7 +1374,7 @@
   {
     "slug": "bcrypt-hash-generator",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "BcryptHashGeneratorClient"
   },
   {
@@ -1512,7 +1512,7 @@
   {
     "slug": "json-to-python",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "JsonToPythonClient"
   },
   {
@@ -1952,7 +1952,7 @@
   {
     "slug": "roman-numeral-converter-v2",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -1964,19 +1964,19 @@
   {
     "slug": "binary-to-text-v2",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "BinaryToTextV2Client"
   },
   {
     "slug": "morse-code-translator-v2",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
     "slug": "rot13-cipher-v2",
     "status": "pass",
-    "output": "—ROT13 replaces each letter with the 13th letter after it. Since the alphabet has 26 letters, encodi",
+    "output": "-ROT13 replaces each letter with the 13th letter after it. Since the alphabet has 26 letters, encodi",
     "component": "Default"
   },
   {
@@ -2028,7 +2028,7 @@
   {
     "slug": "json-to-xml-v2",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -2194,7 +2194,7 @@
   {
     "slug": "number-base-converter-v3",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -2233,13 +2233,13 @@
   {
     "slug": "js-beautifier",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "JsMinifierClient"
   },
   {
     "slug": "text-reverser",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "TextReverserClient"
   },
   {
@@ -2391,7 +2391,7 @@
   {
     "slug": "number-base-converter-v4",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -2729,7 +2729,7 @@
   {
     "slug": "number-base-converter-v5",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -2834,7 +2834,7 @@
   {
     "slug": "number-base-converter-final",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -3039,7 +3039,7 @@
   {
     "slug": "number-base-converter-pro",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -3187,7 +3187,7 @@
   {
     "slug": "base-number-converter",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "BaseNumberConverterClient"
   },
   {
@@ -3522,7 +3522,7 @@
   {
     "slug": "number-base-converter-tool",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -3720,7 +3720,7 @@
   {
     "slug": "number-base-converter-express",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -3908,7 +3908,7 @@
   {
     "slug": "roman-numeral-express",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -3927,13 +3927,13 @@
   {
     "slug": "morse-code-express",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
     "slug": "rot13-express",
     "status": "pass",
-    "output": "—ROT13 replaces each letter with the 13th letter after it. Since the alphabet has 26 letters, encodi",
+    "output": "-ROT13 replaces each letter with the 13th letter after it. Since the alphabet has 26 letters, encodi",
     "component": "Default"
   },
   {
@@ -4100,7 +4100,7 @@
   {
     "slug": "number-base-converter-std",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -4113,7 +4113,7 @@
   {
     "slug": "number-base-converter-new",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -4877,7 +4877,7 @@
   {
     "slug": "number-base-browser",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -4930,7 +4930,7 @@
   {
     "slug": "text-case-converter",
     "status": "pass",
-    "output": "UPPER—lower—Title—Sentence—camelCase—snake_case—kebab-case—CONSTANT—",
+    "output": "UPPER-lower-Title-Sentence-camelCase-snake_case-kebab-case-CONSTANT-",
     "component": "Default"
   },
   {
@@ -6626,7 +6626,7 @@
   {
     "slug": "number-base-simple",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -6679,7 +6679,7 @@
   {
     "slug": "html-minifier",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "HtmlMinifierClient"
   },
   {
@@ -6903,7 +6903,7 @@
   {
     "slug": "number-base-full",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -7011,7 +7011,7 @@
   {
     "slug": "base-toolblip",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "BaseToolblipClient"
   },
   {
@@ -7116,7 +7116,7 @@
   {
     "slug": "number-base-easy",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -7194,7 +7194,7 @@
   {
     "slug": "number-base-toolblip",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -7359,7 +7359,7 @@
   {
     "slug": "number-base-converter-bin-hex",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -7464,7 +7464,7 @@
   {
     "slug": "number-base-converter-xl",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -7758,7 +7758,7 @@
   {
     "slug": "number-base-converter-2025",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -8112,7 +8112,7 @@
   {
     "slug": "number-base-converter-dg",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -8217,7 +8217,7 @@
   {
     "slug": "number-base-converter-expander",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -8322,7 +8322,7 @@
   {
     "slug": "number-base-converter-x",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -8743,7 +8743,7 @@
   {
     "slug": "number-base-converter-advanced",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -8855,7 +8855,7 @@
   {
     "slug": "number-base-converter-complete",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -8894,7 +8894,7 @@
   {
     "slug": "number-base-converter-full",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -9105,7 +9105,7 @@
   {
     "slug": "number-base-converter-prime",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -9306,7 +9306,7 @@
   {
     "slug": "number-base-converter-enhanced",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -9417,7 +9417,7 @@
   {
     "slug": "number-base-converter-classic",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -9522,7 +9522,7 @@
   {
     "slug": "number-base-converter-ultimate",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -9590,7 +9590,7 @@
   {
     "slug": "base64-file-encoder",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Base64FileEncoderClient"
   },
   {
@@ -9724,7 +9724,7 @@
   {
     "slug": "number-base-fresh",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -9756,7 +9756,7 @@
   {
     "slug": "number-base-converter-browser",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -9802,7 +9802,7 @@
   {
     "slug": "number-base-converter-fresh",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -9908,7 +9908,7 @@
   {
     "slug": "number-base-converter-smart",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -9939,7 +9939,7 @@
   {
     "slug": "number-base-converter-ultra",
     "status": "pass",
-    "output": "—",
+    "output": "-",
     "component": "Default"
   },
   {
@@ -9970,7 +9970,7 @@
   {
     "slug": "title-case-converter",
     "status": "pass",
-    "output": "UPPER—lower—Title—Sentence—camelCase—snake_case—kebab-case—CONSTANT—",
+    "output": "UPPER-lower-Title-Sentence-camelCase-snake_case-kebab-case-CONSTANT-",
     "component": "Default"
   },
   {

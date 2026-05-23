@@ -26,7 +26,7 @@ export default function ColorOpacityGeneratorClient() {
   );
 
   const hex8 = color.replace('#', '') + Math.round(opacity * 255 / 100).toString(16).padStart(2, '0');
-  const rgba = rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${(opacity/100).toFixed(2)})` : '—';
+  const rgba = rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${(opacity/100).toFixed(2)})` : ' - ';
 
   return (
     <div className="space-y-6">
@@ -39,7 +39,7 @@ export default function ColorOpacityGeneratorClient() {
           </div>
         </div>
         <div>
-          <label className="block text-sm font-medium mb-2">Opacity — {opacity}%</label>
+          <label className="block text-sm font-medium mb-2">Opacity  -  {opacity}%</label>
           <input type="range" min="0" max="100" value={opacity} onChange={e => setOpacity(Number(e.target.value))} className="w-full" />
         </div>
       </div>

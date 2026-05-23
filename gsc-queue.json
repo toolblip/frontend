@@ -1,7 +1,5 @@
 {
-  "pending": [
-    "https://toolblip.com/blog/2026-05-13-how-to-test-regular-expressions-online-with-sample-text"
-  ],
+  "pending": [],
   "submitted": [
     {
       "url": "https://toolblip.com/blog/2026-05-12-how-to-decode-jwt-tokens-safely-in-your-browser",
@@ -12,6 +10,10 @@
     {
       "url": "https://toolblip.com/blog/2026-05-15-cron-expression-generator-online",
       "submitted_at": "2026-05-15T17:06:33Z"
+    },
+    {
+      "url": "https://toolblip.com/blog/2026-05-13-how-to-test-regular-expressions-online-with-sample-text",
+      "submitted_at": "2026-05-19T09:40:20Z"
     }
   ],
   "failed": []

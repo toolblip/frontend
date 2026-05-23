@@ -115,7 +115,7 @@ export default function BcryptHashGeneratorClient() {
       </div>
       <div className="tb-v2-tool-output-body">
         <pre className="tb-v2-tool-pre" style={{ wordBreak: 'break-all', fontSize: '0.85em' }}>
-          {hash || '—'}
+          {hash || ' - '}
         </pre>
       </div>
 

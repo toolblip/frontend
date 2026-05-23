@@ -15,7 +15,7 @@ export default function Hero({ toolCount }: { toolCount: number }) {
               <em>use every day.</em>
             </h1>
             <p className="tb-v2-hero-sub">
-              JSON formatter, Base64, QR generator, word counter — rebuilt clean.
+              JSON formatter, Base64, QR generator, word counter  -  rebuilt clean.
               No signup. No tracking. No server round-trips. Just paste and go.
             </p>
             <div className="tb-v2-hero-cta">

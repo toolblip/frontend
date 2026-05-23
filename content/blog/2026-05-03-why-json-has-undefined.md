@@ -1,11 +1,11 @@
 ---
 title: "Why Your JSON Has `undefined`: How to Debug Invalid JSON in Any Language"
-description: "JSON returning undefined or invalid JSON errors? Learn the most common causes — streaming output, character encoding, schema mismatches — and how to fix them fast."
+description: "JSON returning undefined or invalid JSON errors? Learn the most common causes  -  streaming output, character encoding, schema mismatches  -  and how to fix them fast."
 date: 2026-05-03
 category: Developer Tools
 ---
 
-If you've ever seen your API return `{ "user": undefined }` or get hit with an `Unexpected token u` error, you're not alone. JSON `undefined` errors are one of the most common调试 problems developers face — and they're rarely caused by actual JSON syntax issues.
+If you've ever seen your API return `{ "user": undefined }` or get hit with an `Unexpected token u` error, you're not alone. JSON `undefined` errors are one of the most common调试 problems developers face  -  and they're rarely caused by actual JSON syntax issues.
 
 This guide walks through the real reasons JSON goes wrong, with code examples you can drop into any project, plus browser tools to debug faster.
 
@@ -17,7 +17,7 @@ Here are the most common culprits:
 
 ### 1. JavaScript's `JSON.stringify()` on `undefined` Properties
 
-By default, `JSON.stringify()` skips `undefined` values entirely — but sometimes that behavior bites you.
+By default, `JSON.stringify()` skips `undefined` values entirely  -  but sometimes that behavior bites you.
 
 ```javascript
 // These get silently dropped
@@ -33,7 +33,7 @@ JSON.stringify({ created: new Date() })
 // → '{"created":"2026-05-03T12:00:00.000Z"}'
 ```
 
-If your output contains `null` where you expected a value, check your serialization chain — something is converting `undefined` to `null`.
+If your output contains `null` where you expected a value, check your serialization chain  -  something is converting `undefined` to `null`.
 
 ### 2. Streaming Output Without a Collector
 
@@ -107,7 +107,7 @@ const data = JSON.parse(content); // ✅ works
 ### 5. Trailing Commas (JSON Doesn't Allow Them)
 
 ```javascript
-// ❌ Invalid JSON — trailing commas not allowed
+// ❌ Invalid JSON  -  trailing commas not allowed
 const bad = {
   name: "Harun",
   role: "admin",  // trailing comma!
@@ -140,7 +140,7 @@ const safeStringify = (obj) => JSON.stringify(obj, (key, value) =>
 
 When JSON goes wrong, the first step is always the same: **pretty-print it and look at the raw output**.
 
-Paste your JSON into [Toolblip's JSON Formatter](/tools/json-formatter) — it highlights syntax errors instantly and tells you exactly which line and character is broken.
+Paste your JSON into [Toolblip's JSON Formatter](/tools/json-formatter)  -  it highlights syntax errors instantly and tells you exactly which line and character is broken.
 
 For schema validation (is your JSON valid *and* does it match your expected structure?), use the [JSON Schema Validator](/tools/json-schema-validator). It shows you precisely which fields are missing, have the wrong type, or violate constraints.
 
@@ -188,7 +188,7 @@ type User struct {
 }
 
 func main() {
-    // Zero values are serialized — no skipping by default
+    // Zero values are serialized  -  no skipping by default
     user := User{Name: "Harun"}
     out, _ := json.Marshal(user)
     fmt.Println(string(out))
@@ -236,25 +236,25 @@ struct Config {
 
 Next time you hit a JSON error, run through this:
 
-1. **Pretty-print the raw output** — use [JSON Formatter](/tools/json-formatter) to see the actual content
-2. **Check Content-Type header** — must be `application/json`
-3. **Look for BOM** — search for `\uFEFF` at the start
-4. **Validate against a schema** — use [JSON Schema Validator](/tools/json-schema-validator) to catch type mismatches
-5. **Check for `undefined`, `NaN`, `Infinity`** — these serialize differently across languages
-6. **Check for trailing commas** — especially if converting from JS objects
+1. **Pretty-print the raw output**  -  use [JSON Formatter](/tools/json-formatter) to see the actual content
+2. **Check Content-Type header**  -  must be `application/json`
+3. **Look for BOM**  -  search for `\uFEFF` at the start
+4. **Validate against a schema**  -  use [JSON Schema Validator](/tools/json-schema-validator) to catch type mismatches
+5. **Check for `undefined`, `NaN`, `Infinity`**  -  these serialize differently across languages
+6. **Check for trailing commas**  -  especially if converting from JS objects
 
 ## The Browser Tool Advantage
 
-One of the biggest advantages of browser-based JSON tools? **Nothing leaves your machine**. When you're debugging sensitive API responses — auth tokens, database payloads, user data — you don't want that flowing through a third-party formatter.
+One of the biggest advantages of browser-based JSON tools? **Nothing leaves your machine**. When you're debugging sensitive API responses  -  auth tokens, database payloads, user data  -  you don't want that flowing through a third-party formatter.
 
 Toolblip's [JSON Formatter](/tools/json-formatter) and [JSON Schema Validator](/tools/json-schema-validator) run entirely in your browser. Paste your JSON, get instant validation and formatting, and the data never touches a server.
 
 ## Related Tools
 
-- [JSON Formatter](/tools/json-formatter) — Pretty-print, minify, and validate JSON instantly
-- [JSON Schema Validator](/tools/json-schema-validator) — Check if your JSON matches a schema
-- [JSON Path Tester](/tools/json-path-tester) — Extract specific values from complex JSON with JSONPath queries
+- [JSON Formatter](/tools/json-formatter)  -  Pretty-print, minify, and validate JSON instantly
+- [JSON Schema Validator](/tools/json-schema-validator)  -  Check if your JSON matches a schema
+- [JSON Path Tester](/tools/json-path-tester)  -  Extract specific values from complex JSON with JSONPath queries
 
 ---
 
-Debugging JSON doesn't have to be a mystery. The error message almost always points you in the right direction — it just takes a bit of practice to read what it's telling you. Bookmark this guide, and next time you hit an `Unexpected token` error, you'll know exactly where to look.
+Debugging JSON doesn't have to be a mystery. The error message almost always points you in the right direction  -  it just takes a bit of practice to read what it's telling you. Bookmark this guide, and next time you hit an `Unexpected token` error, you'll know exactly where to look.

@@ -79,7 +79,7 @@ export default function BrokenLinkCheckerV2Client({}: {}) {
                     {r.status}
                   </span>
                   <span style={{ fontSize: '0.75rem', wordBreak: 'break-all' }}>
-                    {r.text || r.href} — {r.time}ms
+                    {r.text || r.href}  -  {r.time}ms
                   </span>
                 </div>
               ))}

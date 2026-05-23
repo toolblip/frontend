@@ -25,7 +25,7 @@ const entities = [
   { char: '\u201C', name: "Left double quote", hex: "&#8220;", decimal: "&ldquo;" },
   { char: '\u201D', name: "Right double quote", hex: "&#8221;", decimal: "&rdquo;" },
   { char: "–", name: "En dash", hex: "&#8211;", decimal: "&ndash;" },
-  { char: "—", name: "Em dash", hex: "&#8212;", decimal: "&mdash;" },
+  { char: " - ", name: "Em dash", hex: "&#8212;", decimal: "&mdash;" },
   { char: "×", name: "Multiplication", hex: "&#215;", decimal: "&times;" },
   { char: "÷", name: "Division", hex: "&#247;", decimal: "&divide;" },
 ];

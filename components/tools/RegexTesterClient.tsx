@@ -87,7 +87,7 @@ export default function RegexTesterClient() {
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Pattern</span>
         <span className="tb-v2-hash-stats">
-          {result.error ? '—' : `${result.matches.length} match${result.matches.length === 1 ? '' : 'es'}`}
+          {result.error ? ' - ' : `${result.matches.length} match${result.matches.length === 1 ? '' : 'es'}`}
         </span>
       </div>
       <div className="tb-v2-rgx-pattern">
@@ -101,7 +101,7 @@ export default function RegexTesterClient() {
           aria-label="Regular expression pattern"
         />
         <span className="tb-v2-rgx-slash">/</span>
-        <span className="tb-v2-rgx-flagstr">{flagStr || '—'}</span>
+        <span className="tb-v2-rgx-flagstr">{flagStr || ' - '}</span>
       </div>
 
       <div className="tb-v2-rgx-flags" role="group" aria-label="Regex flags">
@@ -145,7 +145,7 @@ export default function RegexTesterClient() {
           {result.segments.map((s, i) =>
             s.hit ? <mark key={i} className="tb-v2-rgx-mark">{s.text}</mark> : <Fragment key={i}>{s.text}</Fragment>,
           )}
-          {!sample && '—'}
+          {!sample && ' - '}
         </pre>
       </div>
 

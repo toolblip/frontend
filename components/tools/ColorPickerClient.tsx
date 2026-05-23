@@ -152,9 +152,9 @@ export default function ColorPickerClient() {
                 {wcag.level}
               </span>
               <span className="tb-v2-cp-wcag-hint">
-                {wcag.level === 'AAA' ? 'Excellent — ideal for all text sizes' :
-                 wcag.level === 'AA' ? 'Good — suitable for body text' :
-                 'Poor — not enough contrast for readable text'}
+                {wcag.level === 'AAA' ? 'Excellent  -  ideal for all text sizes' :
+                 wcag.level === 'AA' ? 'Good  -  suitable for body text' :
+                 'Poor  -  not enough contrast for readable text'}
               </span>
             </div>
           </div>

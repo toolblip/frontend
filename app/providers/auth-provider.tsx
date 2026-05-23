@@ -34,7 +34,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           }
         }
       } catch {
-        // session restore failed — user stays logged out
+        // session restore failed  -  user stays logged out
       } finally {
         setLoading(false);
       }

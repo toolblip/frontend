@@ -82,7 +82,7 @@ export default function BaseToolblipClient() {
         </button>
       </div>
       <div className="tb-v2-tool-output-body">
-        <pre className="tb-v2-tool-pre" style={{ wordBreak: 'break-all' }}>{result || '—'}</pre>
+        <pre className="tb-v2-tool-pre" style={{ wordBreak: 'break-all' }}>{result || ' - '}</pre>
       </div>
     </div>
   );

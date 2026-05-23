@@ -42,7 +42,7 @@ function generatePassword(opts: Options): string {
 type Strength = { score: 0 | 1 | 2 | 3 | 4; label: string; cls: string };
 
 function scoreStrength(pw: string, opts: Options): Strength {
-  if (!pw) return { score: 0, label: '—', cls: '' };
+  if (!pw) return { score: 0, label: ' - ', cls: '' };
   const poolSize = buildPool(opts).length || 1;
   const entropy = pw.length * Math.log2(poolSize);
   if (entropy < 36) return { score: 1, label: 'Weak', cls: 'weak' };
@@ -101,7 +101,7 @@ export default function PasswordGeneratorClient() {
       </div>
       <div className="tb-v2-pw-output">
         <code className="tb-v2-pw-value" aria-live="polite">
-          {password || '—'}
+          {password || ' - '}
         </code>
         <button
           type="button"
