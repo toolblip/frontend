@@ -165,9 +165,6 @@ export function PricingPlanCard({
 
       {footer ? <div className="mt-auto pt-5">{footer}</div> : null}
 
-      {selected ? (
-        <div className="mt-4 text-xs font-semibold text-red-600 dark:text-red-400">Selected plan</div>
-      ) : null}
     </Wrapper>
   );
 }
