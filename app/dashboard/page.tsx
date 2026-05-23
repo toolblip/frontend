@@ -59,7 +59,7 @@ const ONBOARDING_PLANS: Array<{
     name: "Starter",
     description: "Remove ads and unlock personal cloud storage.",
     priceMonthly: 499,
-    priceYearly: 4799,
+    priceYearly: 4999,
   },
   {
     tier: "ultra",
@@ -67,14 +67,14 @@ const ONBOARDING_PLANS: Array<{
     description: "Power-user limits, API access, and more storage.",
     badge: "Popular",
     priceMonthly: 1999,
-    priceYearly: 19199,
+    priceYearly: 19999,
   },
   {
     tier: "max",
     name: "Max",
     description: "Team seats, priority support, and the highest limits.",
     priceMonthly: 4999,
-    priceYearly: 47999,
+    priceYearly: 49999,
   },
   {
     tier: "free",
@@ -113,7 +113,7 @@ function FreePlanCard({
   onCtaClick?: () => void;
 }) {
   const ctaClasses =
-    'inline-flex cursor-pointer items-center justify-center text-emerald-400 underline decoration-emerald-500/40 underline-offset-4 transition hover:text-emerald-300';
+    'inline-flex cursor-pointer items-center justify-center text-[var(--red)] underline decoration-[color:color-mix(in_srgb,var(--red)_40%,transparent)] underline-offset-4 transition hover:text-[var(--red-hover)]';
 
   return (
     <div
@@ -124,7 +124,7 @@ function FreePlanCard({
         backgroundSize: '56px 56px',
       }}
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(34,197,94,0.14),transparent_46%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.03),transparent_34%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(217,48,48,0.14),transparent_46%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.03),transparent_34%)]" />
       <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
         <div className="min-w-0">
           <h3 className="text-lg font-semibold text-white">Free plan</h3>

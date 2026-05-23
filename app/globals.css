@@ -2563,14 +2563,14 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   justify-content: center;
   font-size: 14px;
   font-weight: 600;
-  color: var(--green);
+  color: var(--red);
   text-decoration: underline;
   text-decoration-thickness: 1.5px;
   text-underline-offset: 3px;
   white-space: nowrap;
 }
 .tb-v2-pricing-card.free-row .tb-v2-pricing-inline-link:hover {
-  color: color-mix(in srgb, var(--green) 82%, black 18%);
+  color: var(--red-hover);
 }
 .tb-v2-pricing-btn.selected {
   background: var(--red);
