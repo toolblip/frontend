@@ -100,6 +100,7 @@ export function PricingPlanCard({
   children,
   footer,
   htmlFor,
+  className,
 }: {
   plan: PricingPlanLike;
   billing: BillingCycle;
@@ -110,6 +111,7 @@ export function PricingPlanCard({
   children?: ReactNode;
   footer?: ReactNode;
   htmlFor?: string;
+  className?: string;
 }) {
   const priceCents = billing === 'yearly' ? plan.priceYearly : plan.priceMonthly;
   const price = formatPricingAmount(priceCents);
@@ -128,6 +130,7 @@ export function PricingPlanCard({
     highlighted && !selected ? 'hot' : '',
     selected ? 'selected' : '',
     htmlFor ? 'cursor-pointer' : '',
+    className ?? '',
   ].filter(Boolean).join(' ');
 
   return (
