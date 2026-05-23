@@ -85,7 +85,7 @@ export default function CaseConverterClient() {
             <div key={key} className="tb-v2-case-row">
               <span className="tb-v2-case-label">{label}</span>
               <span className="tb-v2-case-val" title={val}>
-                {val || '—'}
+                {val || ' - '}
               </span>
               <button
                 type="button"

@@ -27,8 +27,8 @@ export default function ColdEmailWriterClient() {
     setIsGenerating(true);
     const hooks: Record<string, string[]> = {
       formal: ['I hope this message finds you well.', 'I am reaching out regarding', 'I wanted to introduce you to'],
-      friendly: ['I came across your work and', 'I think you might find this interesting because', 'Quick question for you —'],
-      casual: ['Hope you don\'t mind me reaching out! I', 'Been following your work and', 'Wanted to throw an idea your way —'],
+      friendly: ['I came across your work and', 'I think you might find this interesting because', 'Quick question for you  - '],
+      casual: ['Hope you don\'t mind me reaching out! I', 'Been following your work and', 'Wanted to throw an idea your way  - '],
       persuasive: ['I know you\'re busy, but', 'What if I told you', 'Imagine if'],
     };
 
@@ -59,10 +59,10 @@ Wanna grab a quick coffee (virtual or real) and chat about it?
 Let me know what works for you!`,
         `${fields.goal} is something I think you might be interested in. ${fields.product && `We've built ${fields.product}`} specifically for people tackling challenges like yours.
 
-Would love to get your thoughts — even a 15-min call would be great!`,
+Would love to get your thoughts  -  even a 15-min call would be great!`,
       ],
       casual: [
-        `Been meaning to reach out about ${fields.goal} — ${fields.product && `we just launched ${fields.product} and`} thought you might vibe with it.
+        `Been meaning to reach out about ${fields.goal}  -  ${fields.product && `we just launched ${fields.product} and`} thought you might vibe with it.
 
 No pressure at all, but if you're ever curious, I'd love to show you what we've been building.
 
@@ -74,7 +74,7 @@ Got 15 mins for a quick chat sometime? I'd love to hear what you're working on t
       persuasive: [
         `What if you could ${fields.goal} without the usual headache?
 
-${fields.product && `That's exactly what ${fields.product} does — it's designed to`} eliminate the friction you're probably dealing with.
+${fields.product && `That's exactly what ${fields.product} does  -  it's designed to`} eliminate the friction you're probably dealing with.
 
 I've shown this to other ${fields.recipient || 'professionals'} and they've seen results within weeks.
 
@@ -90,7 +90,7 @@ ${fields.cta ? `P.S. ${fields.cta}` : ''}`,
 
     const subjectLine = fields.subject || (
       fields.tone === 'casual' ? `Quick thought on ${fields.goal.split(' ').slice(0, 3).join(' ')}` :
-      fields.tone === 'friendly' ? `${fields.goal.split(' ').slice(0, 4).join(' ')} — thoughts?` :
+      fields.tone === 'friendly' ? `${fields.goal.split(' ').slice(0, 4).join(' ')}  -  thoughts?` :
       `Regarding ${fields.goal.split(' ').slice(0, 5).join(' ')}`
     );
 
@@ -127,7 +127,7 @@ ${fields.cta ? `\n${fields.cta}` : ''}`;
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Subject Line (optional — auto-generates if empty)</label>
+          <label className="block text-sm font-medium mb-1">Subject Line (optional  -  auto-generates if empty)</label>
           <input
             type="text"
             value={fields.subject}

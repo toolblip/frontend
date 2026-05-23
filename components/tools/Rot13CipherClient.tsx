@@ -45,7 +45,7 @@ export default function Rot13CipherClient() {
       </div>
       <div className="tb-v2-tool-output-body">
         <div style={{ fontFamily: 'var(--f-mono)', fontSize: 16, color: 'var(--tb-accent)', wordBreak: 'break-all' }}>
-          {output || '—'}
+          {output || ' - '}
         </div>
         <div style={{ marginTop: 8, fontSize: 12, color: 'var(--tb-text-secondary)' }}>
           ROT13 replaces each letter with the 13th letter after it. Since the alphabet has 26 letters, encoding and decoding produce the same result.

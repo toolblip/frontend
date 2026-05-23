@@ -11,7 +11,7 @@ test.describe('Signup BDD regression', () => {
 
     await signupByForm(page, user);
 
-    await expect(page).toHaveURL(/\/account$/);
+    await expect(page).toHaveURL(/\/dashboard$/);
     await expect(page.locator('#main-content').getByText(user.email)).toBeVisible();
     await expectLoggedInCookie(page);
   });

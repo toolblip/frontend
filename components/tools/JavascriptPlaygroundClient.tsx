@@ -29,7 +29,7 @@ export default function JavascriptPlaygroundClient() {
       {error && <div style={{ color: '#ef4444', fontSize: 13, marginTop: 8, padding: 8, background: '#ef444422', borderRadius: 6 }}>Error: {error}</div>}
       <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">Output</span></div>
       <div className="tb-v2-tool-output-body">
-        <pre style={{ margin: 0, whiteSpace: 'pre-wrap', fontFamily: 'var(--f-mono)', fontSize: 13 }}>{output || '—'}</pre>
+        <pre style={{ margin: 0, whiteSpace: 'pre-wrap', fontFamily: 'var(--f-mono)', fontSize: 13 }}>{output || ' - '}</pre>
       </div>
     </div>
   );

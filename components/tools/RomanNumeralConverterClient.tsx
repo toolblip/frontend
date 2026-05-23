@@ -45,7 +45,7 @@ export default function RomanNumeralConverterClient() {
       <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">Roman Numeral</span></div>
       <div className="tb-v2-tool-output-body">
         <div style={{ fontFamily: 'var(--f-mono)', fontSize: 28, fontWeight: 700, color: 'var(--tb-accent)', letterSpacing: 2 }}>
-          {number ? toRoman(parseInt(number)) : '—'}
+          {number ? toRoman(parseInt(number)) : ' - '}
         </div>
       </div>
       <div className="tb-v2-tool-input-head" style={{ marginTop: 16 }}><span className="tb-v2-tool-label">Roman Numeral</span></div>
@@ -60,7 +60,7 @@ export default function RomanNumeralConverterClient() {
       <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">Number</span></div>
       <div className="tb-v2-tool-output-body">
         <div style={{ fontFamily: 'var(--f-mono)', fontSize: 28, fontWeight: 700, color: 'var(--tb-accent)' }}>
-          {roman ? fromRoman(roman) || 'Invalid' : '—'}
+          {roman ? fromRoman(roman) || 'Invalid' : ' - '}
         </div>
       </div>
     </div>

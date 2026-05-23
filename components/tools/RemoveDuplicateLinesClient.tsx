@@ -114,7 +114,7 @@ export default function RemoveDuplicateLinesClient() {
         </button>
       </div>
       <div className="tb-v2-tool-output-body">
-        <pre className="tb-v2-tool-pre">{result || '—'}</pre>
+        <pre className="tb-v2-tool-pre">{result || ' - '}</pre>
       </div>
     </div>
   );

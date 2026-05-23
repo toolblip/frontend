@@ -25,7 +25,7 @@ export default function ColorPickToolblipClient() {
 
       <div className="grid grid-cols-2 gap-3 text-sm">
         <div className="bg-gray-50 rounded-xl p-4"><span className="text-gray-500 block mb-1">HEX</span><span className="font-mono font-medium">{color.toUpperCase()}</span></div>
-        <div className="bg-gray-50 rounded-xl p-4"><span className="text-gray-500 block mb-1">RGB</span><span className="font-mono font-medium">{rgb?`${rgb.r}, ${rgb.g}, ${rgb.b}`:'—'}</span></div>
+        <div className="bg-gray-50 rounded-xl p-4"><span className="text-gray-500 block mb-1">RGB</span><span className="font-mono font-medium">{rgb?`${rgb.r}, ${rgb.g}, ${rgb.b}`:' - '}</span></div>
       </div>
 
       <div className="flex flex-wrap gap-2">

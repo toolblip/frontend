@@ -40,7 +40,7 @@ export default function AboutPage() {
               Privacy-first is not a marketing phrase here. Every tool on Toolblip processes data locally using
               JavaScript. Base64 encoding, JSON formatting, text conversion, image manipulation - all of it happens
               client-side. The only analytics collected are cookieless page-view stats via Cloudflare, and optional
-              Google Analytics loaded only after you give consent.
+              Google Analytics uses consent mode so the Google tag can be detected before you opt in while analytics storage remains denied until you accept.
             </p>
           </div>
 

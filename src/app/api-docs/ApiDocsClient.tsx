@@ -299,7 +299,7 @@ function EndpointCard({ endpoint }: { endpoint: Endpoint }) {
 
   return (
     <article id={endpoint.id} className="scroll-mt-24 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
-      {/* Summary row — always visible, toggles details */}
+      {/* Summary row  -  always visible, toggles details */}
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -389,7 +389,7 @@ export default function ApiDocsClient() {
               <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#58D65D]">REST API Reference</p>
               <h1 className="mt-3 text-5xl font-black tracking-tight text-slate-950 dark:text-white sm:text-6xl">Toolblip API Docs</h1>
               <p className="mt-5 max-w-2xl text-lg leading-relaxed text-slate-600 dark:text-slate-300">
-                Integrate the Toolblip API into your app or script. Authenticate with Bearer tokens, query tools, and manage user accounts — with copy-ready curl examples and real JSON responses.
+                Integrate the Toolblip API into your app or script. Authenticate with Bearer tokens, query tools, and manage user accounts  -  with copy-ready curl examples and real JSON responses.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <a href="#endpoints" className="rounded-full bg-[#58D65D] px-5 py-2.5 text-sm font-bold text-slate-950 transition hover:bg-emerald-400 hover:shadow-lg hover:shadow-emerald-500/20">
@@ -418,7 +418,7 @@ export default function ApiDocsClient() {
                 </div>
               </div>
               <p className="mt-4 text-xs text-slate-500 dark:text-slate-400">
-                Use the Railway URL for all requests today. Switch to the custom domain once SSL is ready — paths and responses are identical.
+                Use the Railway URL for all requests today. Switch to the custom domain once SSL is ready  -  paths and responses are identical.
               </p>
             </div>
           </div>
@@ -469,7 +469,7 @@ export default function ApiDocsClient() {
               <code className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-sm dark:bg-slate-800">Authorization: Bearer YOUR_TOKEN</code>{' '}
               on protected endpoints. Tokens are returned by{' '}
               <a href="#register" className="font-semibold text-[#58D65D] hover:underline">register</a> and{' '}
-              <a href="#login" className="font-semibold text-[#58D65D] hover:underline">login</a>. Keep tokens private — never put them in public URLs.
+              <a href="#login" className="font-semibold text-[#58D65D] hover:underline">login</a>. Keep tokens private  -  never put them in public URLs.
             </p>
             <div className="mt-5">
               <CodeBlock label="Auth workflow (bash)" code={authWorkflow} />
@@ -507,7 +507,7 @@ export default function ApiDocsClient() {
                             🔒 Bearer
                           </span>
                         ) : (
-                          <span className="text-slate-400 dark:text-slate-500">—</span>
+                          <span className="text-slate-400 dark:text-slate-500"> - </span>
                         )}
                       </td>
                       <td className="px-4 py-3.5">
@@ -575,12 +575,12 @@ export default function ApiDocsClient() {
               <div className="rounded-2xl border border-slate-200 p-5 dark:border-slate-800">
                 <p className="text-sm font-bold text-slate-700 dark:text-slate-200">Common status codes</p>
                 <ul className="mt-3 space-y-2 text-sm text-slate-600 dark:text-slate-400">
-                  <li><code className="font-mono font-semibold text-slate-900 dark:text-slate-100">200</code> — OK</li>
-                  <li><code className="font-mono font-semibold text-slate-900 dark:text-slate-100">201</code> — Created</li>
-                  <li><code className="font-mono font-semibold text-slate-900 dark:text-slate-100">401</code> — Unauthenticated</li>
-                  <li><code className="font-mono font-semibold text-slate-900 dark:text-slate-100">404</code> — Not found</li>
-                  <li><code className="font-mono font-semibold text-slate-900 dark:text-slate-100">422</code> — Validation failed</li>
-                  <li><code className="font-mono font-semibold text-slate-900 dark:text-slate-100">500</code> — Server error</li>
+                  <li><code className="font-mono font-semibold text-slate-900 dark:text-slate-100">200</code>  -  OK</li>
+                  <li><code className="font-mono font-semibold text-slate-900 dark:text-slate-100">201</code>  -  Created</li>
+                  <li><code className="font-mono font-semibold text-slate-900 dark:text-slate-100">401</code>  -  Unauthenticated</li>
+                  <li><code className="font-mono font-semibold text-slate-900 dark:text-slate-100">404</code>  -  Not found</li>
+                  <li><code className="font-mono font-semibold text-slate-900 dark:text-slate-100">422</code>  -  Validation failed</li>
+                  <li><code className="font-mono font-semibold text-slate-900 dark:text-slate-100">500</code>  -  Server error</li>
                 </ul>
               </div>
               <CodeBlock label="404 Not found" code={`{

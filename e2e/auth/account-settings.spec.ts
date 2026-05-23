@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { dismissPlanOnboarding, loginByForm, resetMockBackend, VALID_USER } from '../fixtures/users';
+import { dismissDashboardOnboarding, loginByForm, resetMockBackend, VALID_USER } from '../fixtures/users';
 
 test.describe('Account settings BDD regression', () => {
   test.beforeEach(async ({ request }) => {
@@ -8,10 +8,10 @@ test.describe('Account settings BDD regression', () => {
 
   test('Given a logged-in user, When they update profile details, Then the account page shows the new name and email verification prompt', async ({ page }) => {
     await loginByForm(page, VALID_USER);
-    await expect(page).toHaveURL(/\/account$/);
+    await expect(page).toHaveURL(/\/dashboard$/);
 
-    await page.goto('/account');
-    await dismissPlanOnboarding(page);
+    await page.goto('/dashboard');
+    await dismissDashboardOnboarding(page);
     await expect(page.getByText('BDD User')).toBeVisible();
 
     await page.getByLabel('Name').fill('Updated BDD User');
@@ -33,8 +33,8 @@ test.describe('Account settings BDD regression', () => {
     await page.getByLabel(/I agree to the Terms and Conditions and Privacy Policy/i).check();
     await page.getByRole('button', { name: 'Create account' }).click();
 
-    await page.goto('/account');
-    await dismissPlanOnboarding(page);
+    await expect(page).toHaveURL(/\/dashboard$/);
+    await dismissDashboardOnboarding(page);
     await expect(page.getByText('Email verification needed')).toBeVisible();
     await page.getByRole('button', { name: 'Resend verification email' }).click();
 
@@ -43,15 +43,15 @@ test.describe('Account settings BDD regression', () => {
 
   test('Given a logged-in user, When they change password, Then they are signed out and sent to login', async ({ page }) => {
     await loginByForm(page, VALID_USER);
-    await expect(page).toHaveURL(/\/account$/);
+    await expect(page).toHaveURL(/\/dashboard$/);
 
-    await page.goto('/account');
-    await dismissPlanOnboarding(page);
+    await page.goto('/dashboard');
+    await dismissDashboardOnboarding(page);
     await page.getByLabel('Current password').fill('Password123!');
     await page.getByLabel('New password', { exact: true }).fill('NewPassword123!');
     await page.getByLabel('Confirm new password').fill('NewPassword123!');
     await page.getByRole('button', { name: 'Change password' }).click();
 
-    await expect(page).toHaveURL(/\/login\?next=\/account$/);
+    await expect(page).toHaveURL(/\/login\?next=\/dashboard$/);
   });
 });

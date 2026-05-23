@@ -34,7 +34,7 @@ export default function EnglishGrammarCheckerClient() {
       if (pat.test(input)) {
         const matches = input.match(pat);
         if (matches) {
-          issues.push({ type, category: cat, message: `${matches.length} occurrence(s): "${matches[0]}" — ${msg}`, suggestion: sug });
+          issues.push({ type, category: cat, message: `${matches.length} occurrence(s): "${matches[0]}"  -  ${msg}`, suggestion: sug });
         }
       }
     }

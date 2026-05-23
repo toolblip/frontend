@@ -46,7 +46,7 @@ export default function ToolDetailClient({ tool }: { tool: Tool }) {
       </section>
 
       <p className="mt-6 text-center text-xs text-gray-400 dark:text-gray-500">
-        Runs in your browser — no upload required.
+        Runs in your browser  -  no upload required.
       </p>
     </main>
   );

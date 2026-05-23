@@ -87,7 +87,7 @@ export default function ColorContrastMatrixClient() {
                 {colors.map(bg => (
                   <td key={bg} className="p-1 border">
                     {fg === bg ? (
-                      <div className="w-12 h-12 flex items-center justify-center text-gray-400">—</div>
+                      <div className="w-12 h-12 flex items-center justify-center text-gray-400"> - </div>
                     ) : (
                       <div
                         className={`w-12 h-12 flex items-center justify-center rounded font-bold text-xs cursor-pointer ${getRatioClass(getContrastRatio(fg, bg))}`}

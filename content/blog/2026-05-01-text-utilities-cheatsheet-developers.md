@@ -1,6 +1,6 @@
 ---
 title: 'The Developer Text Utilities Cheatsheet: Word Count, Case Conversion, and More'
-description: 'From counting characters to sorting lines and checking readability — here are the text utilities every developer should have bookmarked, with quick-reference examples.'
+description: 'From counting characters to sorting lines and checking readability  -  here are the text utilities every developer should have bookmarked, with quick-reference examples.'
 publishDate: '2026-05-01'
 slug: text-utilities-cheatsheet-developers
 readingTime: 7 min
@@ -15,11 +15,11 @@ category: Developer Tools
 featuredImage: 'https://api.radtx.com/gradient/10b981-3b82f6/1200/630'
 ---
 
-Every developer works with text. Strings, payloads, code snippets, UI copy, log output — it is all text. And yet most developers end up writing one-off scripts to do things a good text utility could handle in milliseconds.
+Every developer works with text. Strings, payloads, code snippets, UI copy, log output  -  it is all text. And yet most developers end up writing one-off scripts to do things a good text utility could handle in milliseconds.
 
 This cheatsheet covers the five text utilities you will reach for repeatedly: word counter, character counter, case converter, text sorter, and readability scorer. Bookmark it. Share it with your team.
 
-## Word Counter — `/tools/word-counter`
+## Word Counter  -  `/tools/word-counter`
 
 Counting words sounds trivial until you are writing API documentation, a changelog, or a pull request description with a strict word limit.
 
@@ -39,7 +39,7 @@ const cleanWordCount = cleanText.trim().split(/\s+/).length;
 - Documentation with word count requirements
 - Abstract submissions with upper limits
 - Code comment length checks in code reviews
-- SEO meta description length (characters, not words — see below)
+- SEO meta description length (characters, not words  -  see below)
 
 **Quick reference:**
 
@@ -50,9 +50,9 @@ const cleanWordCount = cleanText.trim().split(/\s+/).length;
 | Sentences | `text.split(/[.!?]+/).filter(Boolean).length` |
 | Paragraphs | `text.split(/\n\n+/).filter(Boolean).length` |
 
-For a full breakdown — word count, sentence count, paragraph count, and reading time estimate — use [Toolblip's Word Counter](/tools/word-counter). No signup, no upload, everything runs in your browser.
+For a full breakdown  -  word count, sentence count, paragraph count, and reading time estimate  -  use [Toolblip's Word Counter](/tools/word-counter). No signup, no upload, everything runs in your browser.
 
-## Character Counter — `/tools/character-counter`
+## Character Counter  -  `/tools/character-counter`
 
 Character count matters in places developers often forget: Twitter (280), SMS (160), database column limits, URL length constraints, and UI components with fixed-width labels.
 
@@ -88,9 +88,9 @@ tweet.length;          // → 31 (code units)
 
 [Toolblip's Character Counter](/tools/character-counter) gives you total characters, characters without spaces, and a live Twitter-length preview.
 
-## Case Converter — `/tools/case-converter`
+## Case Converter  -  `/tools/case-converter`
 
-Changing text case is constant — converting API responses to camelCase, snake_case for database columns, kebab-case for CSS classes, CONSTANT_CASE for config files.
+Changing text case is constant  -  converting API responses to camelCase, snake_case for database columns, kebab-case for CSS classes, CONSTANT_CASE for config files.
 
 ```javascript
 const text = "hello_world";
@@ -153,7 +153,7 @@ keysToCamel({ user_name: "Alice", user_address: { zip_code: "10001" } });
 
 For instant conversions without writing helper functions, use [Toolblip's Case Converter](/tools/case-converter). Handles camelCase, PascalCase, snake_case, kebab-case, CONSTANT_CASE, and more in a single interface.
 
-## Text Sorter — `/tools/text-sorter`
+## Text Sorter  -  `/tools/text-sorter`
 
 Sorting lines of text comes up more often than you expect: organizing import statements, sorting a list of environment variable names, arranging feature flags, deduplicating and ordering a list.
 
@@ -193,7 +193,7 @@ function shuffle(arr) {
 }
 ```
 
-**Sorting lines vs. sorting arrays** — in JavaScript, `Array.sort()` sorts alphabetically by default, which can produce unexpected results with numbers:
+**Sorting lines vs. sorting arrays**  -  in JavaScript, `Array.sort()` sorts alphabetically by default, which can produce unexpected results with numbers:
 
 ```javascript
 // Default sort (string comparison)
@@ -205,9 +205,9 @@ function shuffle(arr) {
 // → [1, 2, 10]  ← correct
 ```
 
-[Toolblip's Text Sorter](/tools/text-sorter) handles alphabetical, reverse, case-insensitive, numeric, and random sort — plus remove duplicate lines in one click.
+[Toolblip's Text Sorter](/tools/text-sorter) handles alphabetical, reverse, case-insensitive, numeric, and random sort  -  plus remove duplicate lines in one click.
 
-## Readability Score — `/tools/readability-score`
+## Readability Score  -  `/tools/readability-score`
 
 Readability scores estimate how easy your text is to read based on sentence length, syllable count, and word complexity. If you write docs, error messages, API descriptions, or any user-facing copy, these scores help you catch when your writing gets too dense.
 
@@ -258,7 +258,7 @@ fleschReadingEase("The quick brown fox jumps over the lazy dog.");
 
 For user-facing developer content (docs, README, error messages), aim for 60–80. For internal technical docs, 50–70 is fine.
 
-[Toolblip's Readability Score](/tools/readability-score) gives you Flesch Reading Ease, Flesch-Kincaid Grade Level, and a syllable count breakdown — all in-browser.
+[Toolblip's Readability Score](/tools/readability-score) gives you Flesch Reading Ease, Flesch-Kincaid Grade Level, and a syllable count breakdown  -  all in-browser.
 
 ## Quick Reference Table
 
@@ -270,7 +270,7 @@ For user-facing developer content (docs, README, error messages), aim for 60–8
 | [Text Sorter](/tools/text-sorter) | Sort, reverse, randomize, deduplicate lines | In-browser, instant |
 | [Readability Score](/tools/readability-score) | Flesch scores, grade level, syllable count | In-browser, instant |
 
-All five tools run entirely in your browser. No data is sent to any server — which matters when you are working with proprietary copy, internal documentation, or anything you would rather not upload.
+All five tools run entirely in your browser. No data is sent to any server  -  which matters when you are working with proprietary copy, internal documentation, or anything you would rather not upload.
 
 ## Put It Together
 

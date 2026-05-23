@@ -1,11 +1,11 @@
 ---
 title: "Time-Ordered IDs Explained: UUID v7 vs SparkID vs ULID for Database Design"
-description: "Compare UUID v7, SparkID, and ULID — three time-ordered ID formats that fix the performance problems of random UUIDs in databases. Learn which one to use and why."
+description: "Compare UUID v7, SparkID, and ULID  -  three time-ordered ID formats that fix the performance problems of random UUIDs in databases. Learn which one to use and why."
 date: 2026-05-02
 category: Developer Tools
 ---
 
-If you've ever inserted millions of rows into a database and watched your index performance tank, you already know the problem with random UUIDs. They're great for distributed uniqueness but terrible for insert locality — your database is constantly splitting B-tree pages because incoming rows have IDs scattered across the keyspace.
+If you've ever inserted millions of rows into a database and watched your index performance tank, you already know the problem with random UUIDs. They're great for distributed uniqueness but terrible for insert locality  -  your database is constantly splitting B-tree pages because incoming rows have IDs scattered across the keyspace.
 
 The solution: **time-ordered identifiers**. They look random but sort by creation time, which keeps your database index hot, predictable, and fast.
 
@@ -18,7 +18,7 @@ Time-ordered IDs embed a timestamp in the first bytes. This means:
 - Newer IDs sort after older IDs in a standard lexicographic sort
 - Database inserts hit the "right side" of the B-tree, reducing page splits
 - You can extract the creation time without a database lookup
-- You still get globally unique IDs — no central coordinator needed
+- You still get globally unique IDs  -  no central coordinator needed
 
 The trade-off is that IDs reveal approximate creation time. If that's a concern for your use case, random UUIDs (v4) might still be the better choice.
 
@@ -33,10 +33,10 @@ The trade-off is that IDs reveal approximate creation time. If that's a concern 
 
 ### Key properties
 
-- **48-bit timestamp** — precision to the millisecond, covers years 1970–10889
-- **74 bits of randomness** — more than enough for collision resistance
-- **Standard format** — 36 characters with hyphens, widely supported
-- **Lexicographically sortable** — works natively with `ORDER BY id`
+- **48-bit timestamp**  -  precision to the millisecond, covers years 1970–10889
+- **74 bits of randomness**  -  more than enough for collision resistance
+- **Standard format**  -  36 characters with hyphens, widely supported
+- **Lexicographically sortable**  -  works natively with `ORDER BY id`
 
 ### The catch
 
@@ -46,7 +46,7 @@ Also, 36 characters is verbose for URLs and table primary keys.
 
 ### Generate UUID v7 in your browser
 
-[Toolblip's UUID v7 Generator](/tools/uuid-generator) lets you create RFC-compliant v7 UUIDs instantly — no signup, no uploads, no ads.
+[Toolblip's UUID v7 Generator](/tools/uuid-generator) lets you create RFC-compliant v7 UUIDs instantly  -  no signup, no uploads, no ads.
 
 ## SparkID: Compact and Sortable
 
@@ -58,15 +58,15 @@ Also, 36 characters is verbose for URLs and table primary keys.
 
 ### Key properties
 
-- **21 characters** — significantly shorter than UUIDs (36 chars) or ULIDs (26 chars)
-- **No hyphens** — double-click selection works cleanly
-- **63-bit payload** — 48 bits timestamp + 15 bits random
-- **URL-safe** — works as a path segment without encoding
-- **Cryptographically ordered** — timestamp in the high bits guarantees sort order
+- **21 characters**  -  significantly shorter than UUIDs (36 chars) or ULIDs (26 chars)
+- **No hyphens**  -  double-click selection works cleanly
+- **63-bit payload**  -  48 bits timestamp + 15 bits random
+- **URL-safe**  -  works as a path segment without encoding
+- **Cryptographically ordered**  -  timestamp in the high bits guarantees sort order
 
 ### The catch
 
-It's not an IETF standard — just an internal format from Spark that they've open-sourced. Browser-native support is nonexistent. You'll need a library to generate or parse them.
+It's not an IETF standard  -  just an internal format from Spark that they've open-sourced. Browser-native support is nonexistent. You'll need a library to generate or parse them.
 
 The 15-bit random component is also smaller than UUID v7's 74 bits. For extremely high-volume systems (billions of IDs per day), collision probability becomes non-trivial.
 
@@ -84,14 +84,14 @@ If you're building internal tooling, microservices with human-readable IDs, or a
 
 ### Key properties
 
-- **26 characters** — shorter than UUIDs, longer than SparkID
-- **Crockford Base32** — uses a human-readable alphabet (no `I`, `L`, `O`, `U` to avoid confusion)
-- **Lexicographically sortable** — timestamp-first encoding
-- **Multiple language libraries** — excellent ecosystem support
+- **26 characters**  -  shorter than UUIDs, longer than SparkID
+- **Crockford Base32**  -  uses a human-readable alphabet (no `I`, `L`, `O`, `U` to avoid confusion)
+- **Lexicographically sortable**  -  timestamp-first encoding
+- **Multiple language libraries**  -  excellent ecosystem support
 
 ### The catch
 
-The 80-bit random component is large, but ULIDs aren't cryptographic — they're pseudorandom. The timestamp precision is millisecond like UUID v7.
+The 80-bit random component is large, but ULIDs aren't cryptographic  -  they're pseudorandom. The timestamp precision is millisecond like UUID v7.
 
 The alphabet looks like a CAPTCHA to some developers, and it doesn't sort numerically (only lexicographically).
 
@@ -155,4 +155,4 @@ UUID v7 won the format war by becoming an actual standard. If you're starting fr
 
 That said, if you need something compact and your team is comfortable with non-standard formats, SparkID's 21-character string is genuinely pleasant to work with.
 
-Toolblip's [UUID Generator](/tools/uuid-generator) generates UUID v4 and v7 on the spot — no install, no upload, no waiting. Bookmark it for your next database design sprint.
+Toolblip's [UUID Generator](/tools/uuid-generator) generates UUID v4 and v7 on the spot  -  no install, no upload, no waiting. Bookmark it for your next database design sprint.

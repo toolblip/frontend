@@ -1,7 +1,5 @@
 {
-  "pending": [
-    "https://toolblip.com/blog/2026-05-13-how-to-test-regular-expressions-online-with-sample-text"
-  ],
+  "pending": [],
   "submitted": [
     {
       "url": "https://toolblip.com/blog/2026-05-22-convert-unix-timestamps-readable-dates-online",
@@ -63,6 +61,10 @@
     {
       "url": "https://toolblip.com/blog/2026-05-16-base64-decode-online-without-uploading",
       "submitted_at": "2026-05-16T17:09:58Z"
+    },
+    {
+      "url": "https://toolblip.com/blog/2026-05-13-how-to-test-regular-expressions-online-with-sample-text",
+      "submitted_at": "2026-05-19T09:40:20Z"
     }
   ],
   "failed": []

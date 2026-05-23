@@ -252,7 +252,7 @@ ${renderedCells.map(c => `<div class="nb-cell">${c.html}</div>`).join('\n')}
           )}
         </div>
       ) : (
-        <pre className="tb-v2-md-html-pane mt-3">{notebook ? renderedCells.map(c => c.html).join('\n') : '—'}</pre>
+        <pre className="tb-v2-md-html-pane mt-3">{notebook ? renderedCells.map(c => c.html).join('\n') : ' - '}</pre>
       )}
     </div>
   );

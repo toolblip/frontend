@@ -25,7 +25,7 @@ function parseUrl(input: string, decode: boolean): Parsed {
   try {
     url = new URL(candidate);
   } catch {
-    return { ...empty, error: 'Could not parse — check the URL.' };
+    return { ...empty, error: 'Could not parse  -  check the URL.' };
   }
 
   const params: { key: string; value: string }[] = [];
@@ -114,10 +114,10 @@ export default function UrlParamsClient() {
       ) : input.trim() && (
         <>
           <div className="tb-v2-url-meta">
-            <div><span className="tb-v2-url-key">Scheme</span><code>{parsed.scheme || '—'}</code></div>
-            <div><span className="tb-v2-url-key">Host</span><code>{parsed.host || '—'}</code></div>
-            <div><span className="tb-v2-url-key">Path</span><code>{parsed.pathname || '—'}</code></div>
-            <div><span className="tb-v2-url-key">Fragment</span><code>{parsed.hash || '—'}</code></div>
+            <div><span className="tb-v2-url-key">Scheme</span><code>{parsed.scheme || ' - '}</code></div>
+            <div><span className="tb-v2-url-key">Host</span><code>{parsed.host || ' - '}</code></div>
+            <div><span className="tb-v2-url-key">Path</span><code>{parsed.pathname || ' - '}</code></div>
+            <div><span className="tb-v2-url-key">Fragment</span><code>{parsed.hash || ' - '}</code></div>
           </div>
 
           <div className="tb-v2-tool-output-head">
@@ -135,7 +135,7 @@ export default function UrlParamsClient() {
           </div>
           <div className="tb-v2-tool-output-body">
             {parsed.params.length === 0 ? (
-              <pre className="tb-v2-tool-pre">— no query parameters —</pre>
+              <pre className="tb-v2-tool-pre"> -  no query parameters  - </pre>
             ) : (
               <ul className="tb-v2-url-params">
                 {parsed.params.map((p, i) => (

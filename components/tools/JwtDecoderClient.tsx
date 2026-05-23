@@ -182,7 +182,7 @@ export default function JwtDecoderClient() {
           <div className="tb-v2-tool-output-body">
             <pre className="tb-v2-tool-pre" style={{ wordBreak: 'break-all', whiteSpace: 'pre-wrap' }}>{result.signature}</pre>
             <p className="tb-v2-hash-stats" style={{ marginTop: 8 }}>
-              Signature is shown as-is. This tool only decodes — it does not verify the signature.
+              Signature is shown as-is. This tool only decodes  -  it does not verify the signature.
             </p>
           </div>
         </>

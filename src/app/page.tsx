@@ -86,7 +86,7 @@ const BENEFITS = [
     title: 'Private',
     accent: 'text-red-600 dark:text-red-400',
     bar: 'bg-red-500 dark:bg-red-500',
-    desc: 'Data never leaves your browser — no uploads, server processing, or paste history.',
+    desc: 'Data never leaves your browser  -  no uploads, server processing, or paste history.',
   },
   {
     icon: (
@@ -97,7 +97,7 @@ const BENEFITS = [
     title: 'Fast',
     accent: 'text-amber-500 dark:text-amber-400',
     bar: 'bg-amber-400 dark:bg-amber-400',
-    desc: 'Runs instantly in your tab — no queue, no upload wait, no account gate.',
+    desc: 'Runs instantly in your tab  -  no queue, no upload wait, no account gate.',
   },
   {
     icon: (
@@ -108,7 +108,7 @@ const BENEFITS = [
     title: 'Free',
     accent: 'text-emerald-500 dark:text-emerald-400',
     bar: 'bg-emerald-500 dark:bg-emerald-400',
-    desc: 'No signup, no paywall, no “trial expired” — just open a tool and go.',
+    desc: 'No signup, no paywall, no “trial expired”  -  just open a tool and go.',
   },
 ];
 
@@ -237,6 +237,87 @@ Quick access
               </span>
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* ── Search visibility ── */}
+      <section className="rounded-3xl border border-gray-200 dark:border-gray-800 bg-white/85 dark:bg-gray-900/75 shadow-sm px-5 py-5 sm:px-7 space-y-4">
+        <div className="text-center space-y-1">
+          <p className="text-sm font-semibold uppercase tracking-widest text-gray-400 dark:text-gray-500">
+            Search visibility
+          </p>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+            Practical SEO moves that fit a tool site.
+          </h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
+            Start with one canonical page per intent, then connect the pages that support it so search and users can move through the site naturally.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
+          <Link
+            href="/blog/2026-05-22-compound-seo-7-moves-tool-site-growth"
+            className="group rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950/50 p-4 hover:border-red-200 dark:hover:border-red-900/70 hover:shadow-sm transition-all"
+          >
+            <p className="text-xs font-semibold uppercase tracking-widest text-red-600 dark:text-red-400">
+              Featured guide
+            </p>
+            <h3 className="mt-2 font-semibold text-gray-900 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
+              Compound SEO: 7 Moves That Help a Tool Site Grow
+            </h3>
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+              A short playbook for cleaner URLs, stronger intent matching, and better internal linking.
+            </p>
+          </Link>
+          <Link
+            href="/blog/2026-04-16-seo-friendly-urls-guide"
+            className="group rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950/50 p-4 hover:border-red-200 dark:hover:border-red-900/70 hover:shadow-sm transition-all"
+          >
+            <p className="text-xs font-semibold uppercase tracking-widest text-red-600 dark:text-red-400">
+              Canonical URL
+            </p>
+            <h3 className="mt-2 font-semibold text-gray-900 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
+              URL Structure and SEO
+            </h3>
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+              Keep URL shapes clean, consistent, and easy for search engines to understand.
+            </p>
+          </Link>
+          <Link
+            href="/tools/robots-txt-generator"
+            className="group rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950/50 p-4 hover:border-red-200 dark:hover:border-red-900/70 hover:shadow-sm transition-all"
+          >
+            <p className="text-xs font-semibold uppercase tracking-widest text-red-600 dark:text-red-400">
+              Crawl control
+            </p>
+            <h3 className="mt-2 font-semibold text-gray-900 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
+              robots.txt Generator
+            </h3>
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+              Make crawl instructions clear so the right pages get indexed.
+            </p>
+          </Link>
+          <Link
+            href="/tools/xml-sitemap-generator"
+            className="group rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950/50 p-4 hover:border-red-200 dark:hover:border-red-900/70 hover:shadow-sm transition-all"
+          >
+            <p className="text-xs font-semibold uppercase tracking-widest text-red-600 dark:text-red-400">
+              Discovery
+            </p>
+            <h3 className="mt-2 font-semibold text-gray-900 dark:text-white group-hover:text-red-600 dark:group-hover:text-red-400 transition-colors">
+              XML Sitemap Generator
+            </h3>
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+              Surface canonical pages in one clean sitemap path.
+            </p>
+          </Link>
+        </div>
+        <div className="pt-4 text-center">
+          <Link
+            href="/seo"
+            className="inline-flex items-center justify-center rounded-full border border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/60 px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:border-red-200 dark:hover:border-red-800 hover:text-red-700 dark:hover:text-red-300 transition-colors"
+          >
+            Open the SEO hub
+          </Link>
         </div>
       </section>
 

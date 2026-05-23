@@ -41,7 +41,7 @@ export default function TextReverserClient() {
       </div>
       <div className="tb-v2-tool-output-body">
         <div style={{ fontFamily: 'var(--f-mono)', fontSize: 14, whiteSpace: 'pre-wrap', color: 'var(--tb-text-secondary)' }}>
-          {reversed || '—'}
+          {reversed || ' - '}
         </div>
       </div>
     </div>

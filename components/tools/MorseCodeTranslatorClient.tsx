@@ -55,7 +55,7 @@ export default function MorseCodeTranslatorClient() {
       </div>
       <div className="tb-v2-tool-output-body">
         <div style={{ fontFamily: 'var(--f-mono)', fontSize: 18, letterSpacing: 2, color: 'var(--tb-accent)', wordBreak: 'break-all' }}>
-          {result || '—'}
+          {result || ' - '}
         </div>
       </div>
     </div>

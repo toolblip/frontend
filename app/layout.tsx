@@ -37,7 +37,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: {
     default: "Toolblip - Free Online Developer Tools",
-    template: "%s | Toolblip",
+    template: "%s",
   },
   description:
     "Free browser-based tools: word counter, JSON formatter, Base64, URL encoder, UUID generator, and more. 100% client-side, no uploads, no account needed.",
@@ -68,6 +68,12 @@ export default function RootLayout({
     >
       <head>
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        {process.env.NEXT_PUBLIC_BING_VERIFICATION_CODE ? (
+          <meta
+            name="msvalidate.01"
+            content={process.env.NEXT_PUBLIC_BING_VERIFICATION_CODE}
+          />
+        ) : null}
         <Script
           id="theme-init"
           dangerouslySetInnerHTML={{
@@ -89,7 +95,7 @@ export default function RootLayout({
               <TopLoader />
             </Suspense>
             <Shell>{children}</Shell>
-            <Analytics />
+            <Analytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
             <CookieBanner />
           </AuthProvider>
         </ThemeProvider>

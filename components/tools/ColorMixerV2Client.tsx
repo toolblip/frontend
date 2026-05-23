@@ -53,7 +53,7 @@ export default function ColorMixerV2Client() {
           </div>
         </div>
         <div>
-          <label className="block text-sm font-medium mb-2">Ratio — {ratio}%</label>
+          <label className="block text-sm font-medium mb-2">Ratio  -  {ratio}%</label>
           <input type="range" min="0" max="100" value={ratio} onChange={e => setRatio(Number(e.target.value))} className="w-full" />
         </div>
       </div>
@@ -70,7 +70,7 @@ export default function ColorMixerV2Client() {
         <div className="font-medium mb-2">Mixed Result</div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div><span className="text-gray-500">HEX:</span> {result.toUpperCase()}</div>
-          <div><span className="text-gray-500">RGB:</span> {(() => { const c = hexToRgb(result); return c ? `rgb(${c.r},${c.g},${c.b})` : '—'; })()}</div>
+          <div><span className="text-gray-500">RGB:</span> {(() => { const c = hexToRgb(result); return c ? `rgb(${c.r},${c.g},${c.b})` : ' - '; })()}</div>
         </div>
       </div>
     </div>

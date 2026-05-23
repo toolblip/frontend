@@ -111,7 +111,7 @@ export default function HtmlToMarkdownClient() {
       </div>
       <div className="tb-v2-tool-output-body" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         <pre className="tb-v2-hash-val" style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
-          {output || '—'}
+          {output || ' - '}
         </pre>
         {output && (
           <button

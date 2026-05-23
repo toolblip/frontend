@@ -170,7 +170,7 @@ async function testTool(page, slug, component) {
       const pres = await page.$$('pre');
       for (const pre of pres) {
         const text = await pre.textContent() || '';
-        if (text.trim().length > 0 && text.trim() !== '—') {
+        if (text.trim().length > 0 && text.trim() !== '-') {
           output = text.trim();
           break;
         }

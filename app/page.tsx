@@ -87,6 +87,76 @@ export default function HomePage() {
       <WhyToolblip />
       <CategoryGrid />
 
+      <section className="tb-v2-band">
+        <div className="tb-v2-container">
+          <div className="tb-v2-band-head">
+            <div>
+              <div className="tb-v2-kicker">Search visibility</div>
+              <h2>Practical SEO moves for a tool site.</h2>
+            </div>
+            <div className="tb-v2-band-head-side">
+              Start with one canonical page per intent, then connect the pages
+              that support it so search and users can move through the site
+              naturally.
+            </div>
+          </div>
+          <div className="tb-v2-dir-grid">
+            <Link href="/blog/2026-05-22-compound-seo-7-moves-tool-site-growth" className="tb-v2-dir-card">
+              <div className="tb-v2-dir-card-top">
+                <div style={{ flex: 1 }}>
+                  <div className="tb-v2-kicker" style={{ marginBottom: 6 }}>Featured guide</div>
+                  <div className="tb-v2-dir-card-title">Compound SEO: 7 Moves That Help a Tool Site Grow</div>
+                </div>
+              </div>
+              <div className="tb-v2-dir-card-desc">
+                A short playbook for cleaner URLs, stronger intent matching, and better internal linking.
+              </div>
+            </Link>
+            <Link href="/blog/2026-04-16-seo-friendly-urls-guide" className="tb-v2-dir-card">
+              <div className="tb-v2-dir-card-top">
+                <div style={{ flex: 1 }}>
+                  <div className="tb-v2-kicker" style={{ marginBottom: 6 }}>Canonical URL</div>
+                  <div className="tb-v2-dir-card-title">URL Structure and SEO</div>
+                </div>
+              </div>
+              <div className="tb-v2-dir-card-desc">
+                Keep URL shapes clean, consistent, and easy for search engines to understand.
+              </div>
+            </Link>
+            <Link href="/tools/robots-txt-generator" className="tb-v2-dir-card">
+              <div className="tb-v2-dir-card-top">
+                <div style={{ flex: 1 }}>
+                  <div className="tb-v2-kicker" style={{ marginBottom: 6 }}>Crawl control</div>
+                  <div className="tb-v2-dir-card-title">robots.txt Generator</div>
+                </div>
+              </div>
+              <div className="tb-v2-dir-card-desc">
+                Make crawl instructions clear so the right pages get indexed.
+              </div>
+            </Link>
+            <Link href="/tools/xml-sitemap-generator" className="tb-v2-dir-card">
+              <div className="tb-v2-dir-card-top">
+                <div style={{ flex: 1 }}>
+                  <div className="tb-v2-kicker" style={{ marginBottom: 6 }}>Discovery</div>
+                  <div className="tb-v2-dir-card-title">XML Sitemap Generator</div>
+                </div>
+              </div>
+              <div className="tb-v2-dir-card-desc">
+                Surface canonical pages in one clean sitemap path.
+              </div>
+            </Link>
+          </div>
+          <div className="pt-4 text-center">
+            <Link
+              href="/seo"
+              className="inline-flex items-center justify-center rounded-full border border-gray-200 dark:border-gray-800 bg-white/70 dark:bg-gray-900/60 px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:border-red-200 dark:hover:border-red-800 hover:text-red-700 dark:hover:text-red-300 transition-colors"
+            >
+              Open the SEO hub
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {recentPosts.length > 0 && (
         <section className="tb-v2-band">
           <div className="tb-v2-container">

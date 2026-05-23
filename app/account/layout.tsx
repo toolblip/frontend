@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Account | Toolblip',
-  description: 'Manage your Toolblip account, subscription, API access, and profile settings.',
+  title: 'Dashboard | Toolblip',
+  description: 'Manage your Toolblip dashboard, subscription, API access, and profile settings.',
   openGraph: {
-    title: 'Account | Toolblip',
-    description: 'Manage your Toolblip account, subscription, API access, and profile settings.',
-    url: 'https://toolblip.com/account',
+    title: 'Dashboard | Toolblip',
+    description: 'Manage your Toolblip dashboard, subscription, API access, and profile settings.',
+    url: 'https://toolblip.com/dashboard',
     siteName: 'Toolblip',
     type: 'website',
     locale: 'en_US',
@@ -14,8 +14,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary',
-    title: 'Account | Toolblip',
-    description: 'Manage your Toolblip account, subscription, API access, and profile settings.',
+    title: 'Dashboard | Toolblip',
+    description: 'Manage your Toolblip dashboard, subscription, API access, and profile settings.',
   },
 };
 

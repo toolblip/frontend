@@ -95,11 +95,11 @@ test('tool pages render templated share left, inert views, and favorite hard rig
 
   await expect(favoriteButton).toContainText('Favorited');
   await expect(page.getByRole('dialog', { name: /Sign in to favorite JSON Formatter/i })).toHaveCount(0);
-  await expect(favoriteButton).toContainText(/Favorited (today|on)/i);
+  await expect(favoriteButton).toContainText(/^Favorited$/i);
   await expect(favoriteButton).toHaveClass(/bg-red-600/);
   await expect(favoriteCount).toHaveText('1');
 
-  await page.goto('/account');
+  await page.goto('/dashboard');
   await expect(page.getByRole('heading', { name: /Favorite tools/i })).toBeVisible();
   await expect(page.getByRole('link', { name: /JSON Formatter/i })).toBeVisible();
 

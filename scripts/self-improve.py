@@ -102,19 +102,19 @@ def update_strategy(topic, post_keyword, ctr, position, impressions):
     content_rule = ""
 
     if ctr >= 3:
-        winning_block = f"- {post_keyword}: CTR {ctr}% ({impressions} impressions, pos {position}) — HIGH_PERFORMER\n"
+        winning_block = f"- {post_keyword}: CTR {ctr}% ({impressions} impressions, pos {position}) - HIGH_PERFORMER\n"
     elif ctr < 1 and impressions > 20:
-        improvement_block = f"- {post_keyword}: CTR {ctr}% ({impressions} impressions, pos {position}) — NEEDS_IMPROVEMENT\n"
+        improvement_block = f"- {post_keyword}: CTR {ctr}% ({impressions} impressions, pos {position}) - NEEDS_IMPROVEMENT\n"
 
     if ctr > 0:
         if ctr < 1:
             content_rule = f"- Keyword '{post_keyword}' at position {position} with CTR {ctr}%: titles must match exact search intent\n"
         elif ctr > 3:
-            content_rule = f"- Keyword '{post_keyword}' at position {position} with CTR {ctr}%: this structure/title pattern works — use for similar topics\n"
+            content_rule = f"- Keyword '{post_keyword}' at position {position} with CTR {ctr}%: this structure/title pattern works - use for similar topics\n"
 
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
     strategy_content = f"""# Toolblip SEO Strategy
-Auto-generated: {timestamp} — updated after {topic}
+Auto-generated: {timestamp} - updated after {topic}
 
 ## Winning Patterns (replicate these)
 {winning}
@@ -183,7 +183,7 @@ def main():
 
     # Self-improve queue if high CTR
     if ctr >= 2:
-        print(f"High CTR ({ctr}%) — researching related sub-topics...")
+        print(f"High CTR ({ctr}%) - researching related sub-topics...")
         enqueue_related_topics(topic, post_keyword, ctr)
         print("Related topics enqueued")
 

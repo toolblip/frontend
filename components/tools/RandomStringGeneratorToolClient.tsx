@@ -39,7 +39,7 @@ export default function RandomStringGeneratorToolClient() {
       <button onClick={generate} className="tb-v2-btn-primary" style={{ marginTop: 12 }}>Generate</button>
       <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">Random String</span></div>
       <div className="tb-v2-tool-output-body">
-        <div style={{ fontFamily: 'var(--f-mono)', fontSize: 16, wordBreak: 'break-all', background: 'var(--tb-bg-secondary)', padding: 12, borderRadius: 8 }}>{output || '—'}</div>
+        <div style={{ fontFamily: 'var(--f-mono)', fontSize: 16, wordBreak: 'break-all', background: 'var(--tb-bg-secondary)', padding: 12, borderRadius: 8 }}>{output || ' - '}</div>
       </div>
     </div>
   );

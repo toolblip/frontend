@@ -50,8 +50,8 @@ function VerifyEmailContent() {
         {message}
       </p>
       <p className="tb-v2-auth-footer">
-        <Link href={status === "success" ? "/account" : "/login"}>
-          {status === "success" ? "Go to account" : "Back to login"}
+        <Link href={status === "success" ? "/dashboard" : "/login"}>
+          {status === "success" ? "Go to dashboard" : "Back to login"}
         </Link>
       </p>
     </div>

@@ -2,7 +2,7 @@
 title: 'cURL to Code: Convert Any cURL Command to Python, JavaScript, or Go'
 description: >-
   Paste a cURL command and get clean, working Python, JavaScript, or Go code.
-  This guide shows you the fastest way to convert cURL to code — plus how the
+  This guide shows you the fastest way to convert cURL to code  -  plus how the
   conversion works so you understand what is happening under the hood.
 publishDate: '2026-04-23'
 slug: curl-to-code-guide
@@ -20,7 +20,7 @@ category: Developer Tools
 featuredImage: 'https://api.radtx.com/gradient/06b6d4-8b5cf6/1200/630'
 ---
 
-You have been there. You figure out an API call in the terminal with cURL — headers, body, auth, all working perfectly. Then you need that same call in your Python script or JavaScript application. So you manually translate every flag: `-H` becomes a headers object, `-X POST` becomes `.post()`, the body becomes a JSON payload. It works, but it is tedious and error-prone.
+You have been there. You figure out an API call in the terminal with cURL  -  headers, body, auth, all working perfectly. Then you need that same call in your Python script or JavaScript application. So you manually translate every flag: `-H` becomes a headers object, `-X POST` becomes `.post()`, the body becomes a JSON payload. It works, but it is tedious and error-prone.
 
 There is a better way. This guide shows you how to convert cURL to code instantly, what is actually happening in the conversion, and which tools do it best.
 
@@ -37,10 +37,10 @@ curl -X POST https://api.example.com/users \
 
 You are expressing four things that any HTTP client library needs to replicate:
 
-1. **Method** — `POST`
-2. **URL** — `https://api.example.com/users`
-3. **Headers** — Authorization and Content-Type
-4. **Body** — the JSON payload
+1. **Method**  -  `POST`
+2. **URL**  -  `https://api.example.com/users`
+3. **Headers**  -  Authorization and Content-Type
+4. **Body**  -  the JSON payload
 
 The conversion from cURL to code is essentially a translation exercise. Each flag maps predictably to a library construct. The challenge is that different languages have different conventions, and certain cURL flags (like `-u` for basic auth, `-k` for insecure SSL, `-o` for output files) do not map to every library equally.
 
@@ -128,13 +128,13 @@ func main() {
 }
 ```
 
-The key advantage of using a browser-based converter over a CLI is that you see all three language outputs side by side and can pick the one that matches your project — no switching between tabs or re-running commands.
+The key advantage of using a browser-based converter over a CLI is that you see all three language outputs side by side and can pick the one that matches your project  -  no switching between tabs or re-running commands.
 
 ### 2. Your Browser DevTools Network Tab
 
 Before reaching for an external tool, open Chrome or Firefox DevTools (F12 → Network tab), right-click any request, and choose **"Copy as cURL"**. That gives you a clean cURL command that you can then feed into a converter.
 
-This is useful when you are reverse-engineering a request from a web app — you get the exact headers, body, and query parameters the browser sent without having to sniff traffic separately.
+This is useful when you are reverse-engineering a request from a web app  -  you get the exact headers, body, and query parameters the browser sent without having to sniff traffic separately.
 
 From there, the conversion to code is one copy-paste away.
 
@@ -164,7 +164,7 @@ npx curly "https://api.example.com/users" \
   --lang js
 ```
 
-These are fine for occasional use, but they require you to be at a terminal and rebuild the cURL command from scratch — which defeats the purpose if you already have a working cURL string you want to translate.
+These are fine for occasional use, but they require you to be at a terminal and rebuild the cURL command from scratch  -  which defeats the purpose if you already have a working cURL string you want to translate.
 
 ## Common cURL Flags and What They Map To
 
@@ -268,18 +268,18 @@ JavaScript's `fetch` requires the `FormData` API, which works in browsers but ne
 - [ ] Verify auth headers (Bearer tokens, Basic auth) are correctly included in the output
 - [ ] Check that query parameters are moved to `params`/`query` objects, not left in the URL string
 - [ ] For Go code, remember to handle `resp.Body.Close()` and error checking
-- [ ] For Python, `requests.post(url, json=data)` auto-sets `Content-Type: application/json` — no need to set the header manually
+- [ ] For Python, `requests.post(url, json=data)` auto-sets `Content-Type: application/json`  -  no need to set the header manually
 - [ ] Test the generated code with a real request before committing it to your codebase
 
 ## Try It Now
 
-Convert any cURL command to Python, JavaScript, or Go in your browser — no install, no signup, nothing leaves your machine.
+Convert any cURL command to Python, JavaScript, or Go in your browser  -  no install, no signup, nothing leaves your machine.
 
 **→ [cURL to Code Converter](/tools/curl-to-code)**
 
 Related tools for working with HTTP requests and API testing:
 
-- [JSON Formatter](/tools/json-formatter) — prettify and validate JSON responses
-- [JWT Decoder](/tools/jwt-decoder) — inspect tokens from API responses
-- [Base64 Encoder](/tools/base64) — encode credentials and payloads
-- [HTTP Status Codes](/tools/http-status-codes) — quick reference for response codes
+- [JSON Formatter](/tools/json-formatter)  -  prettify and validate JSON responses
+- [JWT Decoder](/tools/jwt-decoder)  -  inspect tokens from API responses
+- [Base64 Encoder](/tools/base64)  -  encode credentials and payloads
+- [HTTP Status Codes](/tools/http-status-codes)  -  quick reference for response codes

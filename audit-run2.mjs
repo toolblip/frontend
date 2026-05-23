@@ -78,7 +78,7 @@ async function testTool(page, slug, tc) {
       const allPres = await page.$$('pre');
       for (const pre of allPres) {
         const text = await pre.textContent() || '';
-        if (text.length > 0 && text !== '—') {
+        if (text.length > 0 && text !== '-') {
           output = text;
           break;
         }

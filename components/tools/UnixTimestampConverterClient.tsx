@@ -67,7 +67,7 @@ export default function UnixTimestampConverterClient() {
             <div style={{ fontFamily: 'var(--f-mono)', fontSize: 15 }}>
               <div style={{ color: 'var(--tb-text)', marginBottom: 6 }}>{convertToDate(timestamp) || 'Invalid timestamp'}</div>
               <div style={{ fontSize: 12, color: 'var(--tb-text-secondary)' }}>
-                Local: {timestamp ? new Date(parseInt(timestamp) * 1000).toString() : '—'}
+                Local: {timestamp ? new Date(parseInt(timestamp) * 1000).toString() : ' - '}
               </div>
             </div>
           ) : <div style={{ color: 'var(--tb-text-secondary)', fontSize: 14 }}>Enter a Unix timestamp</div>

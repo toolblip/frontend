@@ -7,7 +7,7 @@ type Algo = 'md5' | 'sha1' | 'sha256';
 async function hash(algo: Algo, input: string): Promise<string> {
   const data = new TextEncoder().encode(input);
   if (algo === 'md5') {
-    // MD5 not in Web Crypto — use manual hex encoding
+    // MD5 not in Web Crypto  -  use manual hex encoding
     return Array.from(new TextEncoder().encode(input)).map(b => b.toString(16).padStart(2, '0')).join('');
   }
   const buf = await crypto.subtle.digest(algo === 'sha1' ? 'SHA-1' : 'SHA-256', data);
@@ -38,7 +38,7 @@ export default function HashGeneratorClient() {
       <button onClick={compute} className="tb-v2-btn-primary" style={{ marginTop: 10 }}>Generate Hash</button>
       <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">{algo.toUpperCase()} Hash</span></div>
       <div className="tb-v2-tool-output-body">
-        <code style={{ fontFamily: 'var(--f-mono)', fontSize: 13, wordBreak: 'break-all' }}>{output || '—'}</code>
+        <code style={{ fontFamily: 'var(--f-mono)', fontSize: 13, wordBreak: 'break-all' }}>{output || ' - '}</code>
       </div>
     </div>
   );

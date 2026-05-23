@@ -299,15 +299,15 @@ export default function FakeAddressGeneratorClient() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
           <div className="tb-v2-card p-2 text-center">
             <div className="text-xs text-gray-500">First Name</div>
-            <div className="font-mono text-sm">{address?.firstName || '—'}</div>
+            <div className="font-mono text-sm">{address?.firstName || ' - '}</div>
           </div>
           <div className="tb-v2-card p-2 text-center">
             <div className="text-xs text-gray-500">Last Name</div>
-            <div className="font-mono text-sm">{address?.lastName || '—'}</div>
+            <div className="font-mono text-sm">{address?.lastName || ' - '}</div>
           </div>
           <div className="tb-v2-card p-2 text-center">
             <div className="text-xs text-gray-500">Street #</div>
-            <div className="font-mono text-sm">{address?.streetNumber || '—'}</div>
+            <div className="font-mono text-sm">{address?.streetNumber || ' - '}</div>
           </div>
           <div className="tb-v2-card p-2 text-center">
             <div className="text-xs text-gray-500">Unit</div>
@@ -315,7 +315,7 @@ export default function FakeAddressGeneratorClient() {
           </div>
           <div className="tb-v2-card p-2 text-center">
             <div className="text-xs text-gray-500">ZIP</div>
-            <div className="font-mono text-sm">{address?.zipCode || '—'}</div>
+            <div className="font-mono text-sm">{address?.zipCode || ' - '}</div>
           </div>
         </div>
       </div>

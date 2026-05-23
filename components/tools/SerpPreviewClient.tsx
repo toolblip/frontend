@@ -24,7 +24,7 @@ function urlPieces(raw: string): { breadcrumb: string; favicon: string } {
 }
 
 export default function SerpPreviewClient() {
-  const [title, setTitle] = useState('Toolblip — Free online developer tools');
+  const [title, setTitle] = useState('Toolblip  -  Free online developer tools');
   const [url, setUrl] = useState('https://toolblip.com/tools/serp-preview');
   const [description, setDescription] = useState(
     'Preview how your page will look in Google search results. Test titles and meta descriptions instantly with live character counts.',

@@ -54,8 +54,8 @@ Humanized: removed bold headers, em-dash constructions, "baseline" filler, AI-si
 
 ## Pipeline Blockers
 
-1. **GSC write operations blocked** — siteOwner permission with read-only OAuth scopes; both sitemap.submit() and urlInspection().index() return 403; no available workaround except waiting for Cloudflare Pages auto-rebuild
-2. **Claude Code unavailable** — ANTHROPIC_API_KEY not set; `claude auth status` shows not logged in; articles written directly per pipeline fallback rules
+1. **GSC write operations blocked** - siteOwner permission with read-only OAuth scopes; both sitemap.submit() and urlInspection().index() return 403; no available workaround except waiting for Cloudflare Pages auto-rebuild
+2. **Claude Code unavailable** - ANTHROPIC_API_KEY not set; `claude auth status` shows not logged in; articles written directly per pipeline fallback rules
 
 ## Next Run
 

@@ -9,7 +9,7 @@ readingTime: 10 min
 featuredImage: "https://api.radtx.com/gradient/f59e0b-ef4444/1200/630"
 ---
 
-Every few months someone commits a Slack bot token to a public GitHub repo, an API key appears in a Stack Overflow post, or a production config leaks in a support ticket screenshot. Automated scanners catch some of these — but not all. And the ones that slip through often do so because a regex was too loose, too strict, or tested against the wrong kind of input.
+Every few months someone commits a Slack bot token to a public GitHub repo, an API key appears in a Stack Overflow post, or a production config leaks in a support ticket screenshot. Automated scanners catch some of these  -  but not all. And the ones that slip through often do so because a regex was too loose, too strict, or tested against the wrong kind of input.
 
 This guide covers what makes secret detection regex actually work: realistic patterns for common credential formats, the false positive problem that makes blind scanning unreliable, and a repeatable process for building detection logic you can trust.
 
@@ -23,7 +23,7 @@ Most developers start with something like this:
 [A-Za-z0-9]{20,}
 ```
 
-The intent: find a long alphanumeric string that looks like an API key. The result: matches email addresses, UUIDs, base64 strings, version numbers, and commit hashes — none of which are secrets.
+The intent: find a long alphanumeric string that looks like an API key. The result: matches email addresses, UUIDs, base64 strings, version numbers, and commit hashes  -  none of which are secrets.
 
 A secret detection pattern needs to match the **format** of a credential, not just any long string. That means understanding what each credential type actually looks like.
 
@@ -50,7 +50,7 @@ console.log(pattern.test(test)); // true
 AKIA[0-9A-Z]{16}
 ```
 
-AWS key IDs always begin with `AKIA` followed by 16 uppercase letters or digits. Note that this detects the ID only — the secret key itself is a 40-character string without a reliable prefix for detection.
+AWS key IDs always begin with `AKIA` followed by 16 uppercase letters or digits. Note that this detects the ID only  -  the secret key itself is a 40-character string without a reliable prefix for detection.
 
 ```javascript
 const awsPattern = /AKIA[0-9A-Z]{16}/g;
@@ -82,7 +82,7 @@ JWTs are Base64-encoded but distinguishable by structure: three dot-separated Ba
 const jwtPattern = /eyJ[a-zA-Z0-9_-]+\.eyJ[a-zA-Z0-9_-]+\.[a-zA-Z0-9_-]+/g;
 ```
 
-This is useful for detecting accidentally-exposed tokens in logs, configuration files, or paste sites. Note: matching the structure does not mean you can decode and read the payload without the signature — but detecting the presence of a JWT is still valuable for security audits.
+This is useful for detecting accidentally-exposed tokens in logs, configuration files, or paste sites. Note: matching the structure does not mean you can decode and read the payload without the signature  -  but detecting the presence of a JWT is still valuable for security audits.
 
 ### Generic Bearer Tokens in Headers
 
@@ -150,25 +150,25 @@ Some credential formats are ambiguous on their own. A UUID looks like many other
 
 For these cases, context matters. A few heuristics:
 
-**Surrounding keywords** — Words like `password`, `secret`, `token`, `key`, `api`, `auth`, `bearer`, `credential` in the surrounding text raise the probability that a matched string is actually a secret.
+**Surrounding keywords**  -  Words like `password`, `secret`, `token`, `key`, `api`, `auth`, `bearer`, `credential` in the surrounding text raise the probability that a matched string is actually a secret.
 
 ```javascript
 // Look for secrets near keyword context
 const contextAwarePattern = /(?:api[_-]?key|secret|password|token|auth|bearer)\s*[:=]\s*['"]?([a-zA-Z0-9_-]{20,})/gi;
 ```
 
-**File path or variable name** — In code, secrets often appear in variables named `API_KEY`, `SECRET_TOKEN`, `AWS_SECRET`, or `PRIVATE_KEY`. Scanning variable assignments alongside the values can reduce false positives significantly.
+**File path or variable name**  -  In code, secrets often appear in variables named `API_KEY`, `SECRET_TOKEN`, `AWS_SECRET`, or `PRIVATE_KEY`. Scanning variable assignments alongside the values can reduce false positives significantly.
 
-**Entropy analysis** — High randomness (long alphanumeric strings with no repeated patterns) is more characteristic of cryptographic keys than of IDs or version numbers. This is a more advanced technique, but worth noting for targeted scanning tools.
+**Entropy analysis**  -  High randomness (long alphanumeric strings with no repeated patterns) is more characteristic of cryptographic keys than of IDs or version numbers. This is a more advanced technique, but worth noting for targeted scanning tools.
 
 ## Scanning Binary and Text Files
 
 Real secret leaks happen in more places than `.env` files:
 
-- **Log files** — Request logs, application logs, and debug output often contain authorization headers with bearer tokens
-- **Configuration dumps** — CI/CD pipeline configs, Terraform files, Kubernetes manifests
-- **Database backups** — SQL dumps with connection strings
-- **Chat transcripts** — Slack messages, support tickets, Stack Overflow posts with code samples
+- **Log files**  -  Request logs, application logs, and debug output often contain authorization headers with bearer tokens
+- **Configuration dumps**  -  CI/CD pipeline configs, Terraform files, Kubernetes manifests
+- **Database backups**  -  SQL dumps with connection strings
+- **Chat transcripts**  -  Slack messages, support tickets, Stack Overflow posts with code samples
 
 For scanning a text file in a browser, copy the content and use [Toolblip's Regex Tester](/tools/regex-tester) to run your patterns and see highlighted matches. For longer multi-file scanning, a CLI tool or CI integration is more practical.
 
@@ -223,7 +223,7 @@ Test these against your actual codebase before relying on them. Adjust length th
 
 ## Browser-Based Secret Scanning
 
-For quick ad-hoc scans — a pasted log file, a config snippet, a code fragment — browser-based tools are practical because nothing leaves your machine. [Toolblip's Regex Tester](/tools/regex-tester) runs entirely client-side, so sensitive content you paste for scanning never hits a server.
+For quick ad-hoc scans  -  a pasted log file, a config snippet, a code fragment  -  browser-based tools are practical because nothing leaves your machine. [Toolblip's Regex Tester](/tools/regex-tester) runs entirely client-side, so sensitive content you paste for scanning never hits a server.
 
 This is especially relevant for:
 
@@ -235,14 +235,14 @@ For teams processing large codebases, integrating secret detection into a CI pip
 
 ## Related Tools
 
-- [Regex Tester](/tools/regex-tester) — Test detection patterns against sample text
-- [Regex Explainer](/tools/regex-explainer) — Break down complex patterns into readable English
-- [JWT Decoder](/tools/jwt-decoder) — Inspect decoded JWT payloads without sending the token anywhere
-- [Hash Generator](/tools/hash-generator) — Generate or identify hash types for verification
-- [Base64 Encoder/Decoder](/tools/base64-encoder-decoder) — Decode embedded credentials in Base64 strings
+- [Regex Tester](/tools/regex-tester)  -  Test detection patterns against sample text
+- [Regex Explainer](/tools/regex-explainer)  -  Break down complex patterns into readable English
+- [JWT Decoder](/tools/jwt-decoder)  -  Inspect decoded JWT payloads without sending the token anywhere
+- [Hash Generator](/tools/hash-generator)  -  Generate or identify hash types for verification
+- [Base64 Encoder/Decoder](/tools/base64-encoder-decoder)  -  Decode embedded credentials in Base64 strings
 
 ## Further Reading
 
-- [JWT Security Checklist](/blog/jwt-security-checklist) — Validating and securing JWT-based authentication
-- [Identify Hash Types: MD5, SHA1, SHA256](/blog/identify-hash-md5-sha1-sha256) — Matching hash formats to detection patterns
-- [Why URL Encoding Breaks APIs](/blog/url-encoding-api-bugs) — Related encoding issues that often accompany secret leaks in URLs
+- [JWT Security Checklist](/blog/jwt-security-checklist)  -  Validating and securing JWT-based authentication
+- [Identify Hash Types: MD5, SHA1, SHA256](/blog/identify-hash-md5-sha1-sha256)  -  Matching hash formats to detection patterns
+- [Why URL Encoding Breaks APIs](/blog/url-encoding-api-bugs)  -  Related encoding issues that often accompany secret leaks in URLs

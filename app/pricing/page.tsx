@@ -4,7 +4,7 @@ import PricingClient from './PricingClient';
 export const metadata: Metadata = {
   title: 'Pricing',
   description:
-    'Upgrade to Toolblip for an ad-free experience. Free, Starter ($4.99/mo), Ultra ($19.99/mo), and Max ($49.99/mo) plans with no ads, cloud storage, and team features.',
+    'Upgrade to Toolblip for an ad-free experience. Free, Starter ($4.99/mo), Pro ($19.99/mo), and Max ($49.99/mo) plans with no ads, cloud storage, and team features.',
   openGraph: {
     title: 'Pricing | Toolblip',
     description: 'Upgrade to Toolblip for an ad-free experience. Plans starting at $4.99/month.',
@@ -76,7 +76,8 @@ const faqSchema: Record<string, unknown> = {
       name: 'Can I share my plan with team members?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Ultra plans include 3 team seats and Max plans include 10 team seats, allowing multiple users to collaborate under one account.',
+        text: 'Pro plans include 3 team seats and Max plans include 10 team seats, allowing multiple users to collaborate under one account.',
+
       },
     },
   ],

@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function CssToScssConverterClient() {
-  const [input, setInput] = useState('');
+  const [input, setInput] = useState('body { color: #333; }\n.card { padding: 8px; }\n.card .title { font-weight: 700; }');
   const [output, setOutput] = useState('');
   const [copied, setCopied] = useState(false);
 
@@ -13,67 +13,91 @@ export default function CssToScssConverterClient() {
       return;
     }
 
-    const css = input.trim();
-    const lines = css.split('\n');
-    let scss = '';
-    let indentLevel = 0;
     const indent = '  ';
 
-    for (let i = 0; i < lines.length; i++) {
-      let line = lines[i];
-      const trimmedLine = line.trim();
+    const formatDeclarations = (body: string, depth: number) =>
+      body
+        .split(';')
+        .map(part => part.trim())
+        .filter(Boolean)
+        .filter(part => part.includes(':'))
+        .map(part => {
+          const [property, ...rest] = part.split(':');
+          const value = rest.join(':').trim();
+          return `${indent.repeat(depth + 1)}${property.trim()}: ${value};`;
+        });
 
-      if (!trimmedLine || trimmedLine.startsWith('/*') || trimmedLine.startsWith('//')) {
-        if (trimmedLine.startsWith('/*') && !trimmedLine.includes('*/')) {
-          scss += line + '\n';
-          while (i < lines.length - 1 && !lines[i].includes('*/')) {
-            i++;
-            scss += lines[i] + '\n';
-          }
-        } else if (trimmedLine.startsWith('//')) {
-          scss += line + '\n';
-        } else {
-          scss += line + '\n';
+    const formatStandaloneRule = (selector: string, body: string, depth = 0) => {
+      const declarations = formatDeclarations(body, depth);
+      return `${indent.repeat(depth)}${selector.trim()} {${declarations.length ? `\n${declarations.join('\n')}\n` : '\n'}${indent.repeat(depth)}}`;
+    };
+
+    type Node = {
+      selector: string;
+      declarations: string[];
+      children: Map<string, Node>;
+    };
+
+    const root: Node = { selector: '', declarations: [], children: new Map() };
+    const standalone: string[] = [];
+    const rules = Array.from(input.matchAll(/([^{}]+)\{([^{}]*)\}/g));
+
+    for (const match of rules) {
+      const selector = match[1].trim();
+      const body = match[2].trim();
+
+      if (
+        !selector ||
+        selector.includes(',') ||
+        selector.includes('>') ||
+        selector.includes('+') ||
+        selector.includes('~') ||
+        selector.startsWith('@')
+      ) {
+        standalone.push(formatStandaloneRule(selector, body));
+        continue;
+      }
+
+      const parts = selector.split(/\s+/).filter(Boolean);
+      let node = root;
+      for (const part of parts) {
+        if (!node.children.has(part)) {
+          node.children.set(part, { selector: part, declarations: [], children: new Map() });
         }
-        continue;
+        node = node.children.get(part)!;
       }
-
-      if (trimmedLine === '}') {
-        indentLevel = Math.max(0, indentLevel - 1);
-        scss += indent.repeat(indentLevel) + trimmedLine + '\n';
-        continue;
-      }
-
-      const openBraces = (trimmedLine.match(/{/g) || []).length;
-      const closeBraces = (trimmedLine.match(/}/g) || []).length;
-
-      if (openBraces > 0 && trimmedLine.includes(':') && !trimmedLine.includes('{')) {
-        const colonIndex = trimmedLine.indexOf(':');
-        const property = trimmedLine.slice(0, colonIndex).trim();
-        const value = trimmedLine.slice(colonIndex + 1).replace(/;$/, '').trim();
-        scss += indent.repeat(indentLevel) + property + ': ' + value + ';' + '\n';
-        indentLevel += openBraces - closeBraces;
-        continue;
-      }
-
-      if (trimmedLine.includes('{')) {
-        const selector = trimmedLine.replace(/\{.*$/, '').trim();
-        if (selector) {
-          scss += indent.repeat(indentLevel) + selector + ' {' + '\n';
-          indentLevel++;
-        }
-      } else if (trimmedLine.includes(':') && !trimmedLine.includes('{')) {
-        const colonIndex = trimmedLine.indexOf(':');
-        const property = trimmedLine.slice(0, colonIndex).trim();
-        const value = trimmedLine.slice(colonIndex + 1).replace(/;$/, '').trim();
-        scss += indent.repeat(indentLevel) + property + ': ' + value + ';' + '\n';
-      } else {
-        scss += indent.repeat(indentLevel) + trimmedLine + '\n';
-      }
+      node.declarations.push(...formatDeclarations(body, parts.length - 1));
     }
 
-    setOutput(scss.trim());
+    const renderNode = (node: Node, depth: number): string => {
+      const lines = [`${indent.repeat(depth)}${node.selector} {`];
+      if (node.declarations.length) {
+        lines.push(...node.declarations);
+      }
+      for (const child of node.children.values()) {
+        if (node.declarations.length) {
+          lines.push('');
+        }
+        lines.push(renderNode(child, depth + 1));
+      }
+      lines.push(`${indent.repeat(depth)}}`);
+      return lines.join('\n');
+    };
+
+    const converted = [
+      ...standalone,
+      ...Array.from(root.children.values()).map(child => renderNode(child, 0)),
+    ]
+      .filter(Boolean)
+      .join('\n\n');
+
+    setOutput(converted || input.trim());
   };
+
+  useEffect(() => {
+    convert();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const copy = () => {
     if (!output) return;
@@ -96,7 +120,7 @@ export default function CssToScssConverterClient() {
       <textarea
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        placeholder=".container {&#10;  width: 100%;&#10;  margin: 0 auto;&#10;}&#10;&#10;.header {&#10;  background: #fff;&#10;  padding: 20px;&#10;}"
+        placeholder="body {\n  color: #333;\n}\n\n.card {\n  padding: 8px;\n}\n\n.card .title {\n  font-weight: 700;\n}"
         className="tb-v2-tool-textarea"
         style={{ fontFamily: 'var(--f-mono)' }}
         aria-label="CSS input"

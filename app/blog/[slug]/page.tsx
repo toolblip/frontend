@@ -45,10 +45,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const post = getPost(slug);
   if (!post) return {};
+  const url = `https://toolblip.com/blog/${slug}`;
+
   return {
     title: post.title,
     description: post.description,
-    openGraph: { title: post.title, description: post.description, url: `https://toolblip.com/blog/${slug}`, siteName: 'Toolblip', type: 'article', publishedTime: post.date, authors: [post.author], images: post.featuredImage ? [{ url: post.featuredImage }] : [] },
+    alternates: {
+      canonical: url,
+    },
+    openGraph: { title: post.title, description: post.description, url, siteName: 'Toolblip', type: 'article', publishedTime: post.date, authors: [post.author], images: post.featuredImage ? [{ url: post.featuredImage }] : [] },
     twitter: { card: 'summary_large_image', title: post.title, description: post.description },
   };
 }
@@ -63,6 +68,31 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   if (!post) notFound();
   const related = getRelatedPosts(slug, post.category);
   const postUrl = `https://toolblip.com/blog/${slug}`;
+  const seoLinks =
+    post.category === 'SEO'
+      ? [
+          {
+            href: '/blog/2026-05-22-compound-seo-7-moves-tool-site-growth',
+            title: 'Compound SEO: 7 Moves That Help a Tool Site Grow',
+            note: 'A compact list for tool site growth.',
+          },
+          {
+            href: '/blog/2026-04-16-seo-friendly-urls-guide',
+            title: 'URL Structure and SEO',
+            note: 'Keep URL shapes clean and consistent.',
+          },
+          {
+            href: '/tools/xml-sitemap-generator',
+            title: 'XML Sitemap Generator',
+            note: 'Surface canonical pages in one place.',
+          },
+          {
+            href: '/seo',
+            title: 'SEO hub',
+            note: 'A compact checklist for tool site discovery.',
+          },
+        ].filter((item) => item.href !== `/blog/${slug}`)
+      : [];
 
   return (
     <>
@@ -141,6 +171,21 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
                 {post.tags.map((tag) => (
                   <span key={tag} className="tb-v2-post-tag">#{tag}</span>
                 ))}
+              </div>
+            )}
+
+            {/* SEO links */}
+            {seoLinks.length > 0 && (
+              <div className="tb-v2-post-related">
+                <div className="tb-v2-post-related-title">Search visibility</div>
+                <div className="tb-v2-post-related-grid">
+                  {seoLinks.map((item) => (
+                    <Link key={item.href} href={item.href} className="tb-v2-post-related-card">
+                      <div className="tb-v2-post-related-card-title">{item.title}</div>
+                      <div className="tb-v2-post-related-card-meta">{item.note}</div>
+                    </Link>
+                  ))}
+                </div>
               </div>
             )}
 

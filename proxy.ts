@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const PROTECTED_PREFIXES = ["/account", "/submit-tool"];
+const PROTECTED_PREFIXES = ["/account", "/dashboard", "/submit-tool"];
 const AUTH_ROUTES = ["/login", "/register"];
 
 export function proxy(req: NextRequest) {
@@ -29,7 +29,7 @@ export function proxy(req: NextRequest) {
     return NextResponse.redirect(url, 301);
   }
 
-  // Let Next.js API auth routes through — handled by route handlers
+  // Let Next.js API auth routes through - handled by route handlers
   if (pathname.startsWith("/api/auth")) {
     return NextResponse.next();
   }
@@ -46,7 +46,7 @@ export function proxy(req: NextRequest) {
 
   if (isAuthRoute && token) {
     const nextParam = req.nextUrl.searchParams.get("next");
-    const redirectTo = nextParam && nextParam.startsWith("/") ? nextParam : "/";
+    const redirectTo = nextParam && nextParam.startsWith("/") ? nextParam : "/dashboard";
     return NextResponse.redirect(new URL(redirectTo, req.url));
   }
 

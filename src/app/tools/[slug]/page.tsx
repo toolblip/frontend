@@ -1,6 +1,6 @@
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import type { Metadata } from 'next';
-import { getToolBySlug, tools } from '../../../data/tools';
+import { getCanonicalToolSlug, getToolBySlug, getToolRouteSlugs } from '../../../data/tools';
 import ShareButtons from '../../../components/ShareButtons';
 import { ToolUI } from './ToolUI';
 
@@ -11,12 +11,13 @@ interface ToolDetailPageProps {
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return tools.map(tool => ({ slug: tool.slug }));
+  return getToolRouteSlugs().map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: ToolDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const tool = getToolBySlug(slug);
+  const canonicalSlug = getCanonicalToolSlug(slug);
+  const tool = getToolBySlug(canonicalSlug);
 
   if (!tool) {
     return {
@@ -36,7 +37,7 @@ export async function generateMetadata({ params }: ToolDetailPageProps): Promise
     };
   }
 
-  const url = `https://toolblip.com/tools/${slug}`;
+  const url = `https://toolblip.com/tools/${canonicalSlug}`;
 
   return {
     title: `${tool.name} | Toolblip`,
@@ -61,7 +62,12 @@ export async function generateMetadata({ params }: ToolDetailPageProps): Promise
 
 export default async function ToolDetailPage({ params }: ToolDetailPageProps) {
   const { slug } = await params;
-  const tool = getToolBySlug(slug);
+  const canonicalSlug = getCanonicalToolSlug(slug);
+  if (canonicalSlug !== slug) {
+    redirect(`/tools/${canonicalSlug}`);
+  }
+
+  const tool = getToolBySlug(canonicalSlug);
 
   if (!tool) {
     notFound();
@@ -108,7 +114,7 @@ export default async function ToolDetailPage({ params }: ToolDetailPageProps) {
       </section>
 
       <p className="mt-6 text-center text-xs text-gray-400 dark:text-gray-500">
-        Runs in your browser — no upload required.
+        Runs in your browser  -  no upload required.
       </p>
     </main>
   );

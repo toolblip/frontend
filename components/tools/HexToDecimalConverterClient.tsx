@@ -77,7 +77,7 @@ export default function HexToDecimalConverterClient() {
         <div className="tb-v2-form-group">
           <label className="tb-v2-label">Binary</label>
           <div className="tb-v2-input bg-gray-50 font-mono break-all p-3">
-            {binary || '—'}
+            {binary || ' - '}
           </div>
         </div>
       </div>

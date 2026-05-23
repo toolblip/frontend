@@ -11,7 +11,7 @@ const benefits = [
     bgVar: 'var(--green-tint)',
     title: 'Private',
     tagline: 'Data never leaves your browser',
-    desc: 'Paste sensitive text, JSON, images, or snippets with confidence. Processing happens locally in your tab — not on our servers.',
+    desc: 'Paste sensitive text, JSON, images, or snippets with confidence. Processing happens locally in your tab  -  not on our servers.',
     glowVar: 'rgba(22, 163, 74, 0.12)',
   },
   {

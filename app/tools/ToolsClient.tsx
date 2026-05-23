@@ -13,7 +13,8 @@ export default function ToolsClient() {
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
     return allTools.filter(tool => {
-      const matchesQuery = !q || tool.name.toLowerCase().includes(q) || tool.description.toLowerCase().includes(q) || tool.category.toLowerCase().includes(q) || tool.slug.toLowerCase().includes(q);
+      const tags = (tool.tags ?? []).join(' ').toLowerCase();
+      const matchesQuery = !q || tool.name.toLowerCase().includes(q) || tool.description.toLowerCase().includes(q) || tool.category.toLowerCase().includes(q) || tool.slug.toLowerCase().includes(q) || tags.includes(q);
       const matchesCategory = activeCategory === 'All' || tool.category === activeCategory;
       return matchesQuery && matchesCategory;
     });

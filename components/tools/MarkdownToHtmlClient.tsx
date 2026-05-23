@@ -82,7 +82,7 @@ export default function MarkdownToHtmlClient() {
             aria-label="Rendered preview"
           />
         ) : (
-          <pre className="tb-v2-md-html-pane">{html || '—'}</pre>
+          <pre className="tb-v2-md-html-pane">{html || ' - '}</pre>
         )}
       </div>
 

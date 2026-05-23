@@ -377,13 +377,13 @@ function ToolRenderer({ tool }: { tool: Tool }) {
     case 'roman-numeral-converter':
       return <RomanNumeralConverterClient />;
     case 'sass-to-css':
+      return <SassToCssClient />;
     case 'backlink-checker':
       return <BacklinkCheckerClient />;
     case 'ssl-certificate-checker':
       return <SslCertificateCheckerClient />;
     case 'security-headers-generator':
       return <SecurityHeadersGeneratorClient />;
-      return <SassToCssClient />;
     case 'screen-resolution-tester':
       return <ScreenResolutionTesterClient />;
     case 'serp-preview':

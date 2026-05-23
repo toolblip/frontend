@@ -110,7 +110,7 @@ export default function XmlToJsonClient() {
           <div style={{ color: '#ef4444', fontSize: '0.875rem' }}>{error}</div>
         ) : (
           <pre className="tb-v2-hash-val" style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
-            {output || '—'}
+            {output || ' - '}
           </pre>
         )}
         {output && (

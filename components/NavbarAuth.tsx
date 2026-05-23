@@ -50,11 +50,11 @@ export default function NavbarAuth() {
               {displayEmail && <p className="text-xs text-gray-500 truncate">{displayEmail}</p>}
             </div>
             <Link
-              href="/account"
+              href="/dashboard"
               className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
               onClick={() => setMenuOpen(false)}
             >
-              My profile
+              Dashboard
             </Link>
             <button
               type="button"

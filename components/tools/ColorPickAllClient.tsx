@@ -23,11 +23,11 @@ export default function ColorPickAllClient() {
 
   const formats = [
     { label:'HEX', value: color.toUpperCase() },
-    { label:'RGB', value: rgb ? `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})` : '—' },
-    { label:'HSL', value: rgb ? `hsl(${toHsl(rgb.r,rgb.g,rgb.b).h}, ${toHsl(rgb.r,rgb.g,rgb.b).s}%, ${toHsl(rgb.r,rgb.g,rgb.b).l}%)` : '—' },
-    { label:'RGB %', value: rgb ? `${Math.round(rgb.r/255*100)}%, ${Math.round(rgb.g/255*100)}%, ${Math.round(rgb.b/255*100)}%` : '—' },
+    { label:'RGB', value: rgb ? `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})` : ' - ' },
+    { label:'HSL', value: rgb ? `hsl(${toHsl(rgb.r,rgb.g,rgb.b).h}, ${toHsl(rgb.r,rgb.g,rgb.b).s}%, ${toHsl(rgb.r,rgb.g,rgb.b).l}%)` : ' - ' },
+    { label:'RGB %', value: rgb ? `${Math.round(rgb.r/255*100)}%, ${Math.round(rgb.g/255*100)}%, ${Math.round(rgb.b/255*100)}%` : ' - ' },
     { label:'HEX 6', value: color.replace('#','').toUpperCase() },
-    { label:'CSS rgb()', value: rgb ? `rgb(${rgb.r} ${rgb.g} ${rgb.b})` : '—' },
+    { label:'CSS rgb()', value: rgb ? `rgb(${rgb.r} ${rgb.g} ${rgb.b})` : ' - ' },
   ];
 
   return (

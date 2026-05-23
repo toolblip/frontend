@@ -9,7 +9,7 @@ const EXAMPLES = [
   '  Multiple   Spaces   Here  ',
   'Special!@#Characters$%^',
   'UPPERCASE Text Input',
-  'Café au lait — résumé',
+  'Café au lait  -  résumé',
 ];
 
 function slugify(input: string, sep: Sep, lowercase: boolean, trim: boolean, limit: number): string {
@@ -127,7 +127,7 @@ export default function UrlSlugGeneratorClient() {
         </button>
       </div>
       <div className="tb-v2-tool-output-body">
-        <pre className="tb-v2-tool-pre tb-v2-slug-out">{slug || '—'}</pre>
+        <pre className="tb-v2-tool-pre tb-v2-slug-out">{slug || ' - '}</pre>
         {slug && (
           <p className="tb-v2-hash-stats" style={{ marginTop: 8 }}>
             {slug.length} chars{limit > 0 ? ` / limit ${limit}` : ''}

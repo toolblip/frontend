@@ -67,7 +67,7 @@ export default function BinaryToTextV2Client() {
         <span className="tb-v2-tool-label">Result</span>
       </div>
       <div className="tb-v2-tool-output-body">
-        <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>{output || '—'}</pre>
+        <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>{output || ' - '}</pre>
       </div>
     </div>
   );

@@ -70,7 +70,7 @@ export default function HtmlEntityEncoderClient() {
       </div>
       <div className="tb-v2-tool-output-body">
         <pre style={{ fontFamily: 'var(--f-mono)', fontSize: 14, whiteSpace: 'pre-wrap', margin: 0 }}>
-          {output || '—'}
+          {output || ' - '}
         </pre>
       </div>
     </div>

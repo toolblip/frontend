@@ -1,41 +1,52 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Script from 'next/script';
 
-export default function Analytics() {
-  const [enabled, setEnabled] = useState(false);
-
+export default function Analytics({ measurementId }: { measurementId?: string }) {
   useEffect(() => {
-    // Check if analytics were already consented
+    const syncConsent = () => {
+      const gtag = (window as Window & { gtag?: (...args: any[]) => void }).gtag;
+      if (!gtag) return;
+      gtag('consent', 'update', { analytics_storage: 'granted' });
+      gtag('event', 'page_view', {
+        page_location: window.location.href,
+        page_path: window.location.pathname + window.location.search,
+      });
+    };
+
     const consent = localStorage.getItem('toolblip_cookie_consent');
     if (consent === 'accepted') {
-      setEnabled(true);
-      return;
+      syncConsent();
     }
 
-    // Listen for the accept event from CookieBanner
-    function onEnable() {
-      setEnabled(true);
-    }
-
-    window.addEventListener('toolblip:analytics:enable', onEnable);
-    return () => window.removeEventListener('toolblip:analytics:enable', onEnable);
+    window.addEventListener('toolblip:analytics:enable', syncConsent);
+    return () => window.removeEventListener('toolblip:analytics:enable', syncConsent);
   }, []);
 
-  if (!enabled || !process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID) return null;
+  if (!measurementId) return null;
 
   return (
     <>
-      <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
-        strategy="lazyOnload"
-      />
-      <Script id="ga4" strategy="lazyOnload">
+      <Script id="ga-bootstrap" strategy="afterInteractive">
         {`window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}');`}
+        window.gtag = window.gtag || function(){dataLayer.push(arguments);};
+        window.gtag('consent', 'default', {
+          analytics_storage: 'denied',
+          ad_storage: 'denied',
+          ad_user_data: 'denied',
+          ad_personalization: 'denied'
+        });`}
+      </Script>
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${measurementId}`}
+        strategy="afterInteractive"
+      />
+      <Script id="ga4" strategy="afterInteractive">
+        {`window.dataLayer = window.dataLayer || [];
+        window.gtag = window.gtag || function(){dataLayer.push(arguments);};
+        window.gtag('js', new Date());
+        window.gtag('config', '${measurementId}', { send_page_view: false });`}
       </Script>
     </>
   );

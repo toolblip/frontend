@@ -161,7 +161,7 @@ export default function XmlFormatterClient() {
             <strong>Parse error:</strong> {error}
           </p>
         ) : (
-          <pre className="tb-v2-tool-pre">{result || '—'}</pre>
+          <pre className="tb-v2-tool-pre">{result || ' - '}</pre>
         )}
       </div>
     </div>

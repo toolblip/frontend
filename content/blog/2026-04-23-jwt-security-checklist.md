@@ -5,7 +5,7 @@ date: 2026-04-23
 category: Developer Tools
 ---
 
-JSON Web Tokens are simple to decode, but easy to misuse in production. A JWT looks like a harmless string, travels through APIs cleanly, and can be verified without a database lookup. But one bad assumption — accepting the wrong algorithm, storing tokens in the wrong place, skipping expiration, trusting claims too early — can turn your authentication layer into a security hole.
+JSON Web Tokens are simple to decode, but easy to misuse in production. A JWT looks like a harmless string, travels through APIs cleanly, and can be verified without a database lookup. But one bad assumption  -  accepting the wrong algorithm, storing tokens in the wrong place, skipping expiration, trusting claims too early  -  can turn your authentication layer into a security hole.
 
 This checklist is for developers reviewing JWT-based authentication before shipping. It catches the practical mistakes that show up in SaaS APIs, mobile backends, admin tools, and microservices.
 
@@ -165,7 +165,7 @@ Embedding roles in JWTs is convenient:
 
 But what happens when that user is demoted, banned, or removed from an organization? If the token is valid for another hour, your system may keep treating them as an admin for another hour.
 
-You have a few options: use very short-lived access tokens, check high-risk permissions against the database, include a `tokenVersion` or `sessionVersion`, or use introspection for sensitive admin actions. Cached role claims can be fine for normal page access. For destructive actions — deleting users, changing billing, exporting customer data — prefer a fresh permission check.
+You have a few options: use very short-lived access tokens, check high-risk permissions against the database, include a `tokenVersion` or `sessionVersion`, or use introspection for sensitive admin actions. Cached role claims can be fine for normal page access. For destructive actions  -  deleting users, changing billing, exporting customer data  -  prefer a fresh permission check.
 
 ### 10. Store Browser Tokens Deliberately
 

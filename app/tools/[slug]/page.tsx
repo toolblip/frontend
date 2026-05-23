@@ -1,6 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 import type { Metadata } from 'next';
-import { tools } from '@/data/tools';
+import { getCanonicalToolSlug, getToolBySlug, getToolRouteSlugs } from '@/data/tools';
 import { ToolUI } from './ToolUI';
 import ToolEngagementBar from '@/components/tools/ToolEngagementBar';
 import FaqSection from '@/components/v2/FaqSection';
@@ -8,6 +8,10 @@ import { getFaqs } from '@/lib/faq';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateStaticParams() {
+  return getToolRouteSlugs().map((slug) => ({ slug }));
 }
 
 /**
@@ -64,20 +68,53 @@ const REDIRECTS: Record<string, string> = {
   'check-favicon': 'favicon-checker-express',
   'favicon-test': 'favicon-checker-express',
   'metadata-viewer': 'metadata',
+
+  // SASS / SCSS search variants
+  'sass': 'sass-to-css',
+  'scss': 'sass-to-css',
+  'scss-to-css': 'sass-to-css',
+  'scss-to-css-converter': 'sass-to-css',
+  'scss-converter': 'sass-to-css',
+  'scss-compiler': 'sass-to-css',
+  'sass-converter': 'sass-to-css',
+  'sass-compiler': 'sass-to-css',
+  'sass-to-css-converter': 'sass-to-css',
+  'convert-scss-to-css': 'sass-to-css',
+  'convert-sass-to-css': 'sass-to-css',
+  'scss-to-css-online': 'sass-to-css',
+  'sass-to-css-online': 'sass-to-css',
+  'sass-online': 'sass-to-css',
+  'scss-online': 'sass-to-css',
+  'sass-to-css-compiler': 'sass-to-css',
+  'scss-to-css-compiler': 'sass-to-css',
+  'css-to-sass': 'css-to-scss',
+  'css-to-sass-converter': 'css-to-scss',
+  'css-to-scss-converter': 'css-to-scss',
+  'css-to-scss-online': 'css-to-scss',
+  'css-to-scss-compiler': 'css-to-scss',
+  'css-to-sass-online': 'css-to-scss',
+  'sass-to-css-online-tool': 'sass-to-css',
 };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  if (REDIRECTS[slug]) return { title: 'Redirecting…' };
-  const tool = tools.find(t => t.slug === slug);
+  const canonicalSlug = getCanonicalToolSlug(slug);
+  if (REDIRECTS[slug] || canonicalSlug !== slug) return { title: 'Redirecting...' };
+  const tool = getToolBySlug(canonicalSlug);
   if (!tool) return { title: 'Tool Not Found' };
+  const url = `https://toolblip.com/tools/${canonicalSlug}`;
+
   return {
-    title: `${tool.name} — Free Online Tool`,
+    title: `${tool.name} - Free Online Tool`,
     description: tool.description,
+    keywords: tool.tags,
+    alternates: {
+      canonical: url,
+    },
     openGraph: {
       title: `${tool.name} | Toolblip`,
       description: tool.description,
-      url: `https://toolblip.com/tools/${slug}`,
+      url,
       siteName: 'Toolblip',
       images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: tool.name }],
     },
@@ -91,8 +128,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ToolDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  if (REDIRECTS[slug]) redirect(`/tools/${REDIRECTS[slug]}`);
-  const tool = tools.find(t => t.slug === slug);
+  const canonicalSlug = REDIRECTS[slug] ?? getCanonicalToolSlug(slug);
+  if (canonicalSlug !== slug) redirect(`/tools/${canonicalSlug}`);
+  const tool = getToolBySlug(canonicalSlug);
   if (!tool) notFound();
   const faqs = getFaqs(tool);
 

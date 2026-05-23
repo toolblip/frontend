@@ -18,7 +18,7 @@ test.describe('Email verification BDD regression', () => {
     await page.goto('/verify-email?email=verify-me@toolblip.test&token=mock-verification-token');
 
     await expect(page.getByRole('status')).toContainText('Email verified successfully');
-    await expect(page.getByRole('link', { name: 'Go to account' })).toHaveAttribute('href', '/account');
+    await expect(page.getByRole('link', { name: 'Go to dashboard' })).toHaveAttribute('href', '/dashboard');
   });
 
   test('Given an invalid verification link, When the verification page loads, Then an error is shown', async ({ page }) => {

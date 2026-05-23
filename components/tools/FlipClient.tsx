@@ -63,7 +63,7 @@ export default function FlipClient() {
         <div className="tb-v2-form-group">
           <label className="tb-v2-label">Result</label>
           <div className="tb-v2-input w-full font-mono bg-gray-50 p-3 min-h-[150px] whitespace-pre-wrap break-all">
-            {getFlippedText() || '—'}
+            {getFlippedText() || ' - '}
           </div>
         </div>
       </div>

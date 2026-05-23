@@ -11,7 +11,7 @@ export default function ColorPickToolClient() {
   };
 
   const rgb = hexToRgb(color);
-  const rgbStr = rgb ? `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})` : '—';
+  const rgbStr = rgb ? `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})` : ' - ';
 
   return (
     <div className="space-y-6">

@@ -114,7 +114,7 @@ export default function CssMinifierClient() {
         {error ? (
           <p className="tb-v2-error" role="alert">{error}</p>
         ) : (
-          <pre className="tb-v2-tool-pre">{result || '—'}</pre>
+          <pre className="tb-v2-tool-pre">{result || ' - '}</pre>
         )}
       </div>
     </div>

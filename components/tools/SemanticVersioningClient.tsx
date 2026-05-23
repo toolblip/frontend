@@ -24,11 +24,11 @@ export default function SemanticVersioningClient() {
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
             <tbody>
               {[
-                { label: 'Major', value: parts.major || '—' },
-                { label: 'Minor', value: parts.minor || '—' },
-                { label: 'Patch', value: parts.patch || '—' },
-                { label: 'Prerelease', value: parts.prerelease || '—' },
-                { label: 'Build', value: parts.build || '—' },
+                { label: 'Major', value: parts.major || ' - ' },
+                { label: 'Minor', value: parts.minor || ' - ' },
+                { label: 'Patch', value: parts.patch || ' - ' },
+                { label: 'Prerelease', value: parts.prerelease || ' - ' },
+                { label: 'Build', value: parts.build || ' - ' },
               ].map(row => (
                 <tr key={row.label} style={{ borderBottom: '1px solid var(--tb-border)' }}>
                   <td style={{ padding: '6px 0', color: 'var(--tb-text-secondary)', width: '40%' }}>{row.label}</td>

@@ -43,7 +43,7 @@ The article must:
 1. Address the search intent behind '{best_kw}' directly in the first paragraph
 2. Use '{best_kw}' naturally in: title (H1), at least 3 H2 headings, first paragraph, and conclusion
 3. Include all related keywords naturally throughout
-4. Be 1200-1800 words — substantive, not thin
+4. Be 1200-1800 words - substantive, not thin
 5. Have 5+ H2 sections with descriptive headings that include the keyword or variation
 6. Include at least 2 specific code examples or tool usage examples
 7. Include a featured image using: https://api.radtx.com/gradient/6b7280-374151/1200/630
@@ -73,7 +73,7 @@ featuredImage: https://api.radtx.com/gradient/6b7280-374151/1200/630
 Save to: {blog_dir}/{date_slug}-{slug}.md
 
 IMPORTANT rules:
-- No em dashes (—)
+- No em dashes (-)
 - No hashtags
 - No corporate speak, no "game changer", no "excited to announce"
 - Short paragraphs, 1-3 sentences each
