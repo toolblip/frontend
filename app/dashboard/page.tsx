@@ -139,11 +139,11 @@ function FreePlanCard({
         </div>
 
         {ctaHref ? (
-          <Link href={ctaHref} className={ctaClasses}>
+          <Link href={ctaHref} className={ctaClasses} style={{ color: 'var(--red)', textDecorationColor: 'color-mix(in srgb, var(--red) 40%, transparent)' }}>
             {ctaLabel}
           </Link>
         ) : (
-          <button type="button" onClick={onCtaClick} className={ctaClasses}>
+          <button type="button" onClick={onCtaClick} className={ctaClasses} style={{ color: 'var(--red)', textDecorationColor: 'color-mix(in srgb, var(--red) 40%, transparent)' }}>
             {ctaLabel}
           </button>
         )}

@@ -12,6 +12,19 @@ import {
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.toolblip.com';
 
+function displayYearlyPrice(tier: string, sourcePriceYearly: number) {
+  switch (tier) {
+    case 'starter':
+      return 4999;
+    case 'ultra':
+      return 19999;
+    case 'max':
+      return 49999;
+    default:
+      return sourcePriceYearly;
+  }
+}
+
 const FALLBACK_PLANS: Plan[] = [
   { tier: 'free', name: 'Free', description: 'For anyone getting started', price_monthly: 0, price_yearly: 0, stripe_monthly_id: null, stripe_yearly_id: null, storage_gb: 0, max_file_size_mb: 5, team_seats: 1, api_access: false, priority_support: false, sort_order: 0 },
   { tier: 'starter', name: 'Starter', description: 'For personal use', price_monthly: 499, price_yearly: 4999, stripe_monthly_id: 'price_1TOflqHd4AsPgGTOxspjxODX', stripe_yearly_id: 'price_1TOflqHd4AsPgGTOOrxqG1kM', storage_gb: 1, max_file_size_mb: 50, team_seats: 1, api_access: false, priority_support: false, sort_order: 1 },
@@ -207,13 +220,13 @@ export default function PricingClient() {
     name: displayPlanName(plan),
     description: plan.description,
     priceMonthly: plan.price_monthly,
-    priceYearly: plan.price_yearly,
+    priceYearly: displayYearlyPrice(plan.tier, plan.price_yearly),
     badge: plan.tier === HIGHLIGHT_TIER ? 'Popular' : null,
   }));
   const highlightPlan = orderedPlans.find((p) => p.tier === HIGHLIGHT_TIER);
   const stickyPriceCents = highlightPlan
     ? billing === 'yearly'
-      ? highlightPlan.price_yearly
+      ? displayYearlyPrice(highlightPlan.tier, highlightPlan.price_yearly)
       : highlightPlan.price_monthly
     : 0;
   const stickyPrice = stickyPriceCents / 100;
@@ -314,6 +327,10 @@ export default function PricingClient() {
                       <Link
                         href="/signup"
                         className="tb-v2-pricing-inline-link"
+                        style={{
+                          color: 'var(--red)',
+                          textDecorationColor: 'color-mix(in srgb, var(--red) 40%, transparent)',
+                        }}
                       >
                         Get Free Plan
                       </Link>

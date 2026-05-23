@@ -70,6 +70,11 @@ test.describe('Pricing layout', () => {
     expect(proCard!.text).toContain('Standard support');
     expect(maxCard!.text).toContain('Priority support');
 
+    await pricing.getByRole('button', { name: 'Yearly' }).click();
+    await expect(pricing.locator('[data-tier="starter"]')).toContainText('49.99');
+    await expect(pricing.locator('[data-tier="ultra"]')).toContainText('199.99');
+    await expect(pricing.locator('[data-tier="max"]')).toContainText('499.99');
+
     const starterButton = pricing.getByRole('button', { name: 'Get Starter' });
     const proButton = pricing.getByRole('button', { name: 'Get Pro' });
     const maxButton = pricing.getByRole('button', { name: 'Get Max' });
@@ -89,6 +94,7 @@ test.describe('Pricing layout', () => {
     expect(freeButtonRect!.width).toBeLessThan(freeCard!.width * 0.35);
     expect(freeButtonRect!.x + freeButtonRect!.width).toBeGreaterThan(freeCard!.x + freeCard!.width * 0.72);
     expect(freeButtonRect!.y).toBeLessThan(freeCard!.y + 90);
+    await expect(freeButton).toHaveCSS('color', 'rgb(217, 48, 48)');
 
     const freeFeatureRects = await pricing.locator('[data-tier="free"] li').evaluateAll((nodes) =>
       nodes.map((node) => node.getBoundingClientRect().y)
