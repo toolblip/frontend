@@ -35,6 +35,10 @@ interface Plan {
   sort_order: number;
 }
 
+interface PlanFeature {
+  label: string;
+  included?: boolean;
+}
 
 const DISPLAY_PLAN_NAMES: Record<string, string> = {
   free: 'Free',
@@ -59,6 +63,43 @@ function formatFileSize(mb: number): string {
   if (mb === 0) return '';
   if (mb >= 1000) return `${mb / 1000} GB`;
   return `${mb} MB`;
+}
+
+function buildPlanFeatures(plan: Plan): PlanFeature[] {
+  const features: PlanFeature[] = [];
+
+  if (plan.tier === 'free') {
+    features.push({ label: 'All tools available' });
+    features.push({ label: 'Client-side processing' });
+  } else {
+    features.push({ label: 'Everything in Free' });
+    features.push({ label: 'No ads' });
+  }
+
+  if (plan.storage_gb > 0) {
+    features.push({ label: `${formatStorage(plan.storage_gb)} cloud storage` });
+  }
+  if (plan.max_file_size_mb > 0) {
+    features.push({ label: `Up to ${formatFileSize(plan.max_file_size_mb)} file processing` });
+  }
+  if (plan.team_seats > 0) {
+    features.push({
+      label: `${plan.team_seats} team seat${plan.team_seats > 1 ? 's' : ''}`,
+    });
+  }
+
+  if (plan.tier === 'starter') {
+    features.push({ label: 'API access', included: false });
+    features.push({ label: 'Basic support' });
+  } else if (plan.tier === 'ultra') {
+    features.push({ label: 'API access' });
+    features.push({ label: 'Standard support' });
+  } else if (plan.tier === 'max') {
+    features.push({ label: 'API access' });
+    features.push({ label: 'Priority support' });
+  }
+
+  return features;
 }
 
 export default function PricingClient() {
@@ -216,32 +257,8 @@ export default function PricingClient() {
             .filter((plan) => plan.tier !== 'free')
             .map((plan) => {
               const isHighlighted = plan.tier === HIGHLIGHT_TIER;
-              const isFree = plan.tier === 'free';
-
-              const features: string[] = [];
-
-              if (!isFree) {
-                features.push('Everything in Free');
-                features.push('No ads');
-              } else {
-                features.push('All tools available');
-                features.push('Client-side processing');
-              }
-
               const sourcePlan = orderedPlans.find((item) => item.tier === plan.tier)!;
-
-              if (sourcePlan.storage_gb > 0)
-                features.push(`${formatStorage(sourcePlan.storage_gb)} cloud storage`);
-              if (sourcePlan.max_file_size_mb > 0)
-                features.push(
-                  `Up to ${formatFileSize(sourcePlan.max_file_size_mb)} file processing`
-                );
-              if (sourcePlan.team_seats > 0)
-                features.push(
-                  `${sourcePlan.team_seats} team seat${sourcePlan.team_seats > 1 ? 's' : ''}`
-                );
-              if (sourcePlan.api_access) features.push('API access');
-              if (sourcePlan.priority_support) features.push('Priority support');
+              const features = buildPlanFeatures(sourcePlan);
 
               return (
                 <PricingPlanCard
@@ -250,33 +267,26 @@ export default function PricingClient() {
                   billing={billing}
                   highlighted={isHighlighted}
                   footer={
-                    isFree ? (
-                      <Link
-                        href="/signup"
-                        className="tb-v2-btn tb-v2-btn-primary tb-v2-pricing-btn compact"
-                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', textDecoration: 'none' }}
-                      >
-                        Get Started
-                      </Link>
-                    ) : (
-                      <button
-                        onClick={() => handleUpgrade(sourcePlan)}
-                        disabled={loading === sourcePlan.tier}
-                        className={`tb-v2-btn tb-v2-pricing-btn ${isHighlighted ? 'inverse' : 'tb-v2-btn-primary'}`}
-                        style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
-                      >
-                        {loading === sourcePlan.tier ? 'Redirecting...' : `Get ${plan.name}`}
-                      </button>
-                    )
+                    <button
+                      onClick={() => handleUpgrade(sourcePlan)}
+                      disabled={loading === sourcePlan.tier}
+                      className={`tb-v2-btn tb-v2-pricing-btn ${isHighlighted ? 'inverse' : 'tb-v2-btn-primary'}`}
+                      style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
+                    >
+                      {loading === sourcePlan.tier ? 'Redirecting...' : `Get ${plan.name}`}
+                    </button>
                   }
                 >
                   <ul className="tb-v2-pricing-features">
                     {features.map((feature) => (
-                      <li key={feature}>
-                        <svg className="tb-v2-pricing-check" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                        {feature}
+                      <li
+                        key={feature.label}
+                        className={feature.included === false ? 'text-[color:var(--fg-3)] line-through' : ''}
+                      >
+                        <span className="mt-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center text-[11px] font-bold leading-none text-red-500">
+                          {feature.included === false ? '×' : '✓'}
+                        </span>
+                        {feature.label}
                       </li>
                     ))}
                   </ul>
@@ -288,30 +298,15 @@ export default function PricingClient() {
             .filter((plan) => plan.tier === 'free')
             .map((plan) => {
               const sourcePlan = orderedPlans.find((item) => item.tier === plan.tier)!;
-              const isFree = true;
-              const features = ['All tools available', 'Client-side processing'];
-
-              if (sourcePlan.storage_gb > 0)
-                features.push(`${formatStorage(sourcePlan.storage_gb)} cloud storage`);
-              if (sourcePlan.max_file_size_mb > 0)
-                features.push(
-                  `Up to ${formatFileSize(sourcePlan.max_file_size_mb)} file processing`
-                );
-              if (sourcePlan.team_seats > 0)
-                features.push(
-                  `${sourcePlan.team_seats} team seat${sourcePlan.team_seats > 1 ? 's' : ''}`
-                );
-              if (sourcePlan.api_access) features.push('API access');
-              if (sourcePlan.priority_support) features.push('Priority support');
+              const features = buildPlanFeatures(sourcePlan);
 
               return (
                 <div key={plan.tier} className="lg:col-span-3">
                   <PricingPlanCard
                     plan={plan}
                     billing={billing}
-                  tone="plain"
-                  footer={
-                    isFree ? (
+                    tone="light"
+                    footer={
                       <div className="flex justify-end">
                         <Link
                           href="/signup"
@@ -321,16 +316,18 @@ export default function PricingClient() {
                           Get Started
                         </Link>
                       </div>
-                    ) : null
-                  }
+                    }
                   >
                     <ul className="tb-v2-pricing-features">
                       {features.map((feature) => (
-                        <li key={feature}>
-                          <svg className="tb-v2-pricing-check" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
-                          {feature}
+                        <li
+                          key={feature.label}
+                          className={feature.included === false ? 'text-[color:var(--fg-3)] line-through' : ''}
+                        >
+                          <span className="mt-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center text-[11px] font-bold leading-none text-red-500">
+                            {feature.included === false ? '×' : '✓'}
+                          </span>
+                          {feature.label}
                         </li>
                       ))}
                     </ul>
