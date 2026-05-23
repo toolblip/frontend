@@ -28,7 +28,9 @@ test.describe('Pricing layout', () => {
 
     const highlightProButton = pricing.getByRole('button', { name: 'Get Pro' });
     await expect(highlightProButton).toBeVisible();
-    await expect(await highlightProButton.evaluate((node) => (node as HTMLElement).className)).toContain('inverse');
+    await expect(await highlightProButton.evaluate((node) => (node as HTMLElement).className)).toContain('selected');
+    await expect(await highlightProButton.evaluate((node) => getComputedStyle(node as HTMLElement).backgroundColor)).toBe('rgb(217, 48, 48)');
+    await expect(await highlightProButton.evaluate((node) => getComputedStyle(node as HTMLElement).boxShadow)).not.toBe('none');
     await expect(pricing.locator('[data-tier="ultra"]')).toHaveClass(/selected/);
 
     const cardLayout = await pricing.locator('[data-testid="pricing-plan-card"]').evaluateAll((nodes) =>
@@ -62,7 +64,7 @@ test.describe('Pricing layout', () => {
     expect(starterCard!.x).toBeLessThan(proCard!.x);
     expect(proCard!.x).toBeLessThan(maxCard!.x);
     expect(freeCard!.y).toBeGreaterThan(maxCard!.y + 20);
-    expect(freeCard!.x).toBeLessThan(starterCard!.x + 4);
+    expect(Math.abs((freeCard!.x + freeCard!.width / 2) - 600)).toBeLessThan(80);
     expect(starterCard!.text).toContain('API access');
     expect(starterCard!.text).toContain('Basic support');
     expect(proCard!.text).toContain('Standard support');

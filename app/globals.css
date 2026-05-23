@@ -2527,7 +2527,12 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 .tb-v2-pricing-period-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 24px; text-align: left; }
 .tb-v2-pricing-period-row.centered { justify-content: center; }
 .tb-v2-pricing-period-label { font-size: 14px; font-weight: 600; color: var(--fg-2); }
-.tb-v2-pricing-card.free-row { grid-column: 1 / -1; min-height: 0; }
+.tb-v2-pricing-card.free-row {
+  min-height: 0;
+  width: 100%;
+  max-width: 760px;
+  margin-inline: auto;
+}
 .tb-v2-pricing-card.free-row .tb-v2-pricing-features {
   flex: 0;
   display: flex;
@@ -2556,19 +2561,29 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 36px;
-  padding: 0 2px;
-  color: var(--green);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
+  color: var(--green);
   text-decoration: underline;
-  text-decoration-thickness: 1px;
+  text-decoration-thickness: 1.5px;
   text-underline-offset: 3px;
   white-space: nowrap;
 }
 .tb-v2-pricing-card.free-row .tb-v2-pricing-inline-link:hover {
   color: color-mix(in srgb, var(--green) 82%, black 18%);
 }
+.tb-v2-pricing-btn.selected {
+  background: var(--red);
+  border-color: var(--red);
+  color: #fff;
+  box-shadow: 0 10px 24px -6px color-mix(in srgb, var(--red) 48%, transparent), 0 0 0 1px color-mix(in srgb, var(--red) 22%, transparent);
+}
+.tb-v2-pricing-btn.selected:hover {
+  background: var(--red-hover);
+  border-color: var(--red-hover);
+  color: #fff;
+}
+
 .tb-v2-pricing-card { border-radius: var(--radius-lg); border: 1.5px solid var(--line); background: var(--surface); padding: 24px; display: flex; flex-direction: column; position: relative; transition: border-color .15s, box-shadow .15s; }
 .tb-v2-pricing-card:hover { border-color: var(--line-2); }
 .tb-v2-pricing-card.hot { border-color: var(--red); background: var(--red-tint); box-shadow: 0 0 0 4px rgba(217,48,48,.06); }

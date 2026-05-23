@@ -272,7 +272,7 @@ export default function PricingClient() {
                     <button
                       onClick={() => handleUpgrade(sourcePlan)}
                       disabled={loading === sourcePlan.tier}
-                      className={`tb-v2-btn tb-v2-pricing-btn ${isHighlighted ? 'inverse' : 'tb-v2-btn-primary'}`}
+                      className={`tb-v2-btn tb-v2-pricing-btn tb-v2-btn-primary ${isHighlighted ? 'selected' : ''}`}
                       style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
                     >
                       {loading === sourcePlan.tier ? 'Redirecting...' : `Get ${plan.name}`}
