@@ -266,6 +266,7 @@ export default function PricingClient() {
                   plan={plan}
                   billing={billing}
                   highlighted={isHighlighted}
+                  selected={isHighlighted}
                   footer={
                     <button
                       onClick={() => handleUpgrade(sourcePlan)}
@@ -306,14 +307,15 @@ export default function PricingClient() {
                     plan={plan}
                     billing={billing}
                     tone="light"
+                    className="free-row"
                     footer={
-                      <div className="flex justify-end">
+                      <div className="flex justify-start">
                         <Link
                           href="/signup"
-                          className="tb-v2-btn tb-v2-btn-primary tb-v2-pricing-btn compact"
+                          className="tb-v2-btn tb-v2-btn-ghost tb-v2-pricing-btn compact"
                           style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}
                         >
-                          Get Started
+                          Get Free Plan
                         </Link>
                       </div>
                     }

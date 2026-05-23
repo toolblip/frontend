@@ -2527,7 +2527,11 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 .tb-v2-pricing-period-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 24px; text-align: left; }
 .tb-v2-pricing-period-row.centered { justify-content: center; }
 .tb-v2-pricing-period-label { font-size: 14px; font-weight: 600; color: var(--fg-2); }
-.tb-v2-pricing-card.free-row { grid-column: 1 / -1; }
+.tb-v2-pricing-card.free-row { grid-column: 1 / -1; min-height: 0; }
+.tb-v2-pricing-card.free-row .tb-v2-pricing-features { flex: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 24px; margin-bottom: 12px; }
+.tb-v2-pricing-card.free-row .tb-v2-pricing-features li { padding: 0; }
+.tb-v2-pricing-card.free-row .tb-v2-pricing-card-desc { max-width: 360px; }
+.tb-v2-pricing-card.free-row .tb-v2-pricing-card-price { margin-top: 8px; }
 .tb-v2-pricing-card { border-radius: var(--radius-lg); border: 1.5px solid var(--line); background: var(--surface); padding: 24px; display: flex; flex-direction: column; position: relative; transition: border-color .15s, box-shadow .15s; }
 .tb-v2-pricing-card:hover { border-color: var(--line-2); }
 .tb-v2-pricing-card.hot { border-color: var(--red); background: var(--red-tint); box-shadow: 0 0 0 4px rgba(217,48,48,.06); }
@@ -2535,7 +2539,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 .tb-v2-pricing-card.light:hover { border-color: var(--line-2); }
 .tb-v2-pricing-card.plain { background: transparent; border-color: transparent; box-shadow: none; padding: 10px 0 0; }
 .tb-v2-pricing-card.plain:hover { border-color: transparent; }
-.tb-v2-pricing-card.selected { border-color: var(--red); background: color-mix(in srgb, var(--red-tint) 65%, var(--surface) 35%); box-shadow: 0 0 0 4px color-mix(in srgb, var(--red) 6%, transparent); }
+.tb-v2-pricing-card.selected { border-color: var(--red); background: color-mix(in srgb, var(--red-tint) 78%, var(--surface) 22%); box-shadow: 0 18px 42px rgba(217,48,48,.14), 0 0 0 4px color-mix(in srgb, var(--red) 10%, transparent); }
 .tb-v2-pricing-card.selected .tb-v2-pricing-card-name,
 .tb-v2-pricing-card.selected .tb-v2-pricing-card-price-amt,
 .tb-v2-pricing-card.selected .tb-v2-pricing-card-price-period,

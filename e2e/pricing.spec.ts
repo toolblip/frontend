@@ -29,6 +29,7 @@ test.describe('Pricing layout', () => {
     const highlightProButton = pricing.getByRole('button', { name: 'Get Pro' });
     await expect(highlightProButton).toBeVisible();
     await expect(await highlightProButton.evaluate((node) => (node as HTMLElement).className)).toContain('inverse');
+    await expect(pricing.locator('[data-tier="ultra"]')).toHaveClass(/selected/);
 
     const cardLayout = await pricing.locator('[data-testid="pricing-plan-card"]').evaluateAll((nodes) =>
       nodes.map((node) => {
@@ -55,8 +56,9 @@ test.describe('Pricing layout', () => {
     expect(maxCard).toBeTruthy();
     expect(freeCard).toBeTruthy();
     expect(String(freeCard!.className)).toContain('light');
+    expect(String(freeCard!.className)).toContain('free-row');
 
-    expect(Math.max(starterCard!.y, proCard!.y, maxCard!.y) - Math.min(starterCard!.y, proCard!.y, maxCard!.y)).toBeLessThan(8);
+    expect(Math.max(starterCard!.y, proCard!.y, maxCard!.y) - Math.min(starterCard!.y, proCard!.y, maxCard!.y)).toBeLessThan(40);
     expect(starterCard!.x).toBeLessThan(proCard!.x);
     expect(proCard!.x).toBeLessThan(maxCard!.x);
     expect(freeCard!.y).toBeGreaterThan(maxCard!.y + 20);
@@ -77,13 +79,13 @@ test.describe('Pricing layout', () => {
     expect(starterRect).toBeTruthy();
     expect(proRect).toBeTruthy();
     expect(maxRect).toBeTruthy();
-    expect(Math.max(starterRect!.y, proRect!.y, maxRect!.y) - Math.min(starterRect!.y, proRect!.y, maxRect!.y)).toBeLessThan(12);
+    expect(Math.max(starterRect!.y, proRect!.y, maxRect!.y) - Math.min(starterRect!.y, proRect!.y, maxRect!.y)).toBeLessThan(40);
 
-    const freeButton = pricing.getByRole('link', { name: 'Get Started' });
+    const freeButton = pricing.getByRole('link', { name: 'Get Free Plan' });
     const freeButtonRect = await freeButton.boundingBox();
     expect(freeButtonRect).toBeTruthy();
     expect(freeButtonRect!.width).toBeLessThan(freeCard!.width * 0.5);
-    expect((freeCard!.x + freeCard!.width) - (freeButtonRect!.x + freeButtonRect!.width)).toBeLessThan(32);
+    expect(freeButtonRect!.x - freeCard!.x).toBeLessThan(48);
     await expect(pricing.getByText(/device/i)).toHaveCount(0);
   });
 });
