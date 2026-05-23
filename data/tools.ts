@@ -1610,4 +1610,11 @@ export function getToolBySlug(slug: string): Tool | undefined {
   return tools.find((t) => t.slug === getCanonicalToolSlug(slug));
 }
 
+export function getToolRouteSlugs(): string[] {
+  return Array.from(new Set([
+    ...tools.map((tool) => tool.slug),
+    ...Object.keys(TOOL_SLUG_ALIASES),
+  ]));
+}
+
 export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'AI Tools', 'Document Generator', 'Image Tools'] as const;

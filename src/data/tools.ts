@@ -293,3 +293,10 @@ export function getCanonicalToolSlug(slug: string): string {
 export function getToolBySlug(slug: string): Tool | undefined {
   return tools.find((t) => t.slug === getCanonicalToolSlug(slug));
 }
+
+export function getToolRouteSlugs(): string[] {
+  return Array.from(new Set([
+    ...tools.map((tool) => tool.slug),
+    ...Object.keys(TOOL_SLUG_ALIASES),
+  ]));
+}

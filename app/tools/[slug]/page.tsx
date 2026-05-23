@@ -1,6 +1,6 @@
 import { notFound, redirect } from 'next/navigation';
 import type { Metadata } from 'next';
-import { getCanonicalToolSlug, getToolBySlug } from '@/data/tools';
+import { getCanonicalToolSlug, getToolBySlug, getToolRouteSlugs } from '@/data/tools';
 import { ToolUI } from './ToolUI';
 import ToolEngagementBar from '@/components/tools/ToolEngagementBar';
 import FaqSection from '@/components/v2/FaqSection';
@@ -8,6 +8,10 @@ import { getFaqs } from '@/lib/faq';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateStaticParams() {
+  return getToolRouteSlugs().map((slug) => ({ slug }));
 }
 
 /**
