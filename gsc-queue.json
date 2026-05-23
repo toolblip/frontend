@@ -2,6 +2,53 @@
   "pending": [],
   "submitted": [
     {
+      "url": "https://toolblip.com/blog/2026-05-22-convert-unix-timestamps-readable-dates-online",
+      "topic": "convert Unix timestamps to readable dates online",
+      "submitted_at": "2026-05-22T17:12:00Z",
+      "method": "sitemap",
+      "status": "submitted",
+      "coverage_state": "URL is unknown to Google",
+      "note": "sitemap refreshed after conservative manual fallback post; URL unknown immediately after publish is expected"
+    },
+    {
+      "url": "https://toolblip.com/blog/2026-05-21-url-encode-decode-strings-api-testing",
+      "topic": "URL encode and decode strings for API testing",
+      "submitted_at": "2026-05-21T17:06:10Z",
+      "method": "sitemap",
+      "status": "submitted",
+      "note": "sitemap refreshed after conservative manual fallback post; URL unknown immediately after publish is expected",
+      "coverage_state": "URL is unknown to Google"
+    },
+    {
+      "url": "https://toolblip.com/blog/2026-05-20-minify-css-for-frontend-debugging",
+      "topic": "minify and beautify CSS for quick frontend debugging",
+      "submitted_at": "2026-05-20T17:18:00Z",
+      "method": "sitemap",
+      "status": "submitted",
+      "coverage_state": "URL is unknown to Google",
+      "note": "sitemap refreshed after conservative manual fallback post; URL unknown immediately after publish is expected"
+    },
+    {
+      "url": "https://toolblip.com/blog/2026-05-19-hash-text-with-sha-256-online-without-sending-data",
+      "topic": "hash text with SHA-256 online without sending data",
+      "submitted_at": "2026-05-19T17:06:18Z",
+      "method": "sitemap",
+      "note": "sitemap refreshed after conservative manual fallback post"
+    },
+    {
+      "url": "https://toolblip.com/blog/2026-05-18-generate-secure-passwords-in-the-browser",
+      "submitted_at": "2026-05-18T17:12:00Z",
+      "status": "submitted",
+      "coverage_state": "URL is unknown to Google"
+    },
+    {
+      "url": "https://toolblip.com/blog/2026-05-17-compare-text-diffs-online-code-reviews",
+      "topic": "compare text diffs online for code reviews",
+      "submitted_at": "2026-05-17T17:07:21Z",
+      "method": "sitemap",
+      "note": "sitemap refreshed after conservative manual fallback post"
+    },
+    {
       "url": "https://toolblip.com/blog/2026-05-12-how-to-decode-jwt-tokens-safely-in-your-browser",
       "submitted_at": "2026-05-12T23:30:00Z",
       "method": "sitemap",
@@ -10,6 +57,10 @@
     {
       "url": "https://toolblip.com/blog/2026-05-15-cron-expression-generator-online",
       "submitted_at": "2026-05-15T17:06:33Z"
+    },
+    {
+      "url": "https://toolblip.com/blog/2026-05-16-base64-decode-online-without-uploading",
+      "submitted_at": "2026-05-16T17:09:58Z"
     },
     {
       "url": "https://toolblip.com/blog/2026-05-13-how-to-test-regular-expressions-online-with-sample-text",
