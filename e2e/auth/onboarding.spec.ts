@@ -24,14 +24,21 @@ test.describe('Account onboarding BDD regression', () => {
       return entry ? JSON.parse(String(entry[1])) : null;
     });
     expect(draft).toMatchObject({ status: 'draft', step: 'pricing', teamName: `${user.name} Team`, billingCycle: 'monthly', version: 2 });
-    await expect(onboarding.getByText('Billing period')).toBeVisible();
+    await expect(onboarding.getByRole('heading', { name: 'Simple, transparent pricing' })).toBeVisible();
+    await expect(onboarding.getByTestId('pricing-billing-toggle')).toBeVisible();
     await expect(onboarding.getByRole('button', { name: 'Monthly' })).toBeVisible();
     await expect(onboarding.getByRole('button', { name: 'Yearly' })).toBeVisible();
-    await expect(onboarding.locator('#onboarding-plan-ultra')).toBeChecked();
+    await expect(onboarding.getByRole('button', { name: 'Get Starter' })).toBeVisible();
+    await expect(onboarding.getByRole('button', { name: 'Get Pro' })).toBeVisible();
+    await expect(onboarding.getByRole('button', { name: 'Get Max' })).toBeVisible();
+    await expect(onboarding.getByRole('button', { name: 'Get Free Plan' })).toBeVisible();
+    await expect(onboarding.getByRole('button', { name: 'Get Pro' })).toHaveClass(/selected/);
     await expect(onboarding.getByText('$19.99/mo')).toBeVisible();
 
     await onboarding.getByRole('button', { name: 'Yearly' }).click();
-    await expect(onboarding.getByText('$191.99/yr')).toBeVisible();
+    await expect(onboarding.getByText('49.99')).toBeVisible();
+    await expect(onboarding.getByText('199.99')).toBeVisible();
+    await expect(onboarding.getByText('499.99')).toBeVisible();
     const yearlyDraft = await page.evaluate(() => {
       const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
       return entry ? JSON.parse(String(entry[1])) : null;
@@ -59,8 +66,8 @@ test.describe('Account onboarding BDD regression', () => {
     const onboarding = page.getByRole('dialog');
     await expect(onboarding).toBeVisible();
     await onboarding.getByRole('button', { name: 'Next' }).click();
-    await onboarding.getByRole('radio', { name: /Max/i }).check();
-    await expect(onboarding.getByRole('radio', { name: /Max/i })).toBeChecked();
+    await onboarding.getByRole('button', { name: 'Get Max' }).click();
+    await expect(onboarding.getByRole('button', { name: 'Get Max' })).toHaveClass(/selected/);
     await onboarding.getByRole('button', { name: 'Finish' }).click();
     await expect(onboarding).toHaveCount(0);
 
@@ -107,7 +114,7 @@ test.describe('Account onboarding BDD regression', () => {
 
     const migratedOnboarding = page.getByRole('dialog');
     await expect(migratedOnboarding).toBeVisible();
-    await expect(migratedOnboarding.locator('#onboarding-plan-ultra')).toBeChecked();
+    await expect(migratedOnboarding.getByRole('button', { name: 'Get Pro' })).toHaveClass(/selected/);
 
     const migratedStored = await page.evaluate(() => {
       const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
@@ -127,7 +134,7 @@ test.describe('Account onboarding BDD regression', () => {
 
     const planCards = onboarding.locator('[data-testid="pricing-plan-card"]');
     await expect(planCards).toHaveCount(4);
-    await expect(onboarding.locator('#onboarding-plan-ultra')).toBeChecked();
+    await expect(onboarding.getByRole('button', { name: 'Get Pro' })).toHaveClass(/selected/);
 
     const cardLayout = await planCards.evaluateAll((nodes) =>
       nodes.map((node) => {
