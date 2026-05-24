@@ -193,6 +193,26 @@ get_related_keywords() {
 }
 
 # ─── Step 2: Generate Content (one post per call) ─────────────────────────────
+fallback_generate_one_post() {
+    local topic="$1"
+    local best_kw="$2"
+    local related_kw="$3"
+
+    local date_slug
+    date_slug=$(date '+%Y-%m-%d')
+    local slug
+    slug=$(echo "${best_kw:-$topic}" | sed 's/[^a-z0-9-]/ /g' | sed 's/  */-/g' | tr '[:upper:]' '[:lower:]' | sed 's/^-//' | sed 's/-$//' | cut -c1-60)
+    [[ -z "$slug" ]] && slug="toolblip-seo-post"
+
+    local output_file="$BLOG_DIR/${date_slug}-${slug}.md"
+    if python3 "$HOME/Work/toolblip/scripts/seo-fallback-post.py" \
+        "$topic" "$best_kw" "$related_kw" "$output_file" >> "$LOGFILE" 2>&1; then
+        echo "$output_file"
+    else
+        return 1
+    fi
+}
+
 generate_one_post() {
     local topic="$1"
 
@@ -218,46 +238,76 @@ generate_one_post() {
         --model opus \
         --allowedTools Read,Write,Edit \
         --max-turns 10 \
-        > "$output" 2>&1
+        > "$output" 2>&1 || true
 
     # Parse Claude output with Python (avoids grep|sed|tr issues with paths containing /)
     local generated_file url title
     generated_file=$(python3 -c "
-import sys
-content = open('$output').read()
+from pathlib import Path
+content = Path('$output').read_text(errors='ignore') if Path('$output').exists() else ''
 for line in content.split('\n'):
     if line.startswith('FILE:'):
         print(line[5:].strip())
         break
 " 2>/dev/null)
     url=$(python3 -c "
-import sys
-content = open('$output').read()
+from pathlib import Path
+content = Path('$output').read_text(errors='ignore') if Path('$output').exists() else ''
 for line in content.split('\n'):
     if line.startswith('URL:'):
         print(line[4:].strip())
         break
 " 2>/dev/null)
     title=$(python3 -c "
-import sys
-content = open('$output').read()
+from pathlib import Path
+content = Path('$output').read_text(errors='ignore') if Path('$output').exists() else ''
 for line in content.split('\n'):
     if line.startswith('TITLE:'):
         print(line[6:].strip())
         break
 " 2>/dev/null)
 
+    if [[ -z "$generated_file" || ! -f "$generated_file" ]]; then
+        if grep -qiE 'Not logged in|Please run /login|not logged in' "$output" 2>/dev/null; then
+            log "  Claude unavailable; using deterministic fallback"
+            generated_file=$(fallback_generate_one_post "$topic" "$best_kw" "$related_kw")
+            url="https://toolblip.com/blog/$(basename "$generated_file" .md)"
+        else
+            log "  WARNING: Claude did not produce a file"
+            cat "$output" >> "$LOGFILE"
+        fi
+    fi
+
     if [[ -n "$generated_file" && -f "$generated_file" ]]; then
         local date_slug
-        date_slug=$(date '+%Y-%m-%d')
+        date_slug=$(basename "$generated_file" .md | cut -d'-' -f1-3)
         local slug
-        slug=$(echo "$best_kw" | sed 's/[^a-z0-9-]/ /g' | sed 's/  */-/g' | tr '[:upper:]' '[:lower:]' | sed 's/^-//' | sed 's/-$//' | cut -c1-60)
-        echo "{\"file\": \"$generated_file\", \"url\": \"$url\", \"slug\": \"${date_slug}-${slug}\", \"topic\": \"$topic\", \"keyword\": \"$best_kw\"}" >> "$GENERATED_FILE"
+        slug=$(basename "$generated_file" .md | sed "s/^${date_slug}-//")
+        [[ -z "$url" ]] && url="https://toolblip.com/blog/$(basename "$generated_file" .md)"
+        python3 - "$GENERATED_FILE" "$generated_file" "$url" "$date_slug-$slug" "$topic" "$best_kw" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+path = Path(sys.argv[1])
+entry = {
+    "file": sys.argv[2],
+    "url": sys.argv[3],
+    "slug": sys.argv[4],
+    "topic": sys.argv[5],
+    "keyword": sys.argv[6],
+}
+try:
+    existing = json.loads(path.read_text()) if path.exists() and path.read_text().strip() else []
+except Exception:
+    existing = []
+if not isinstance(existing, list):
+    existing = []
+existing.append(entry)
+path.write_text(json.dumps(existing, indent=2) + "\n")
+PY
         log "  Generated: $url"
         echo "$generated_file"
-    else
-        log "  WARNING: Claude did not produce a file"
-        cat "$output" >> "$LOGFILE"
     fi
 
     rm -f "$output"
