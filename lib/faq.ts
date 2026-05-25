@@ -263,6 +263,22 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Are the hashes encoded as hex?', a: 'Yes  -  lowercase hex by default. Toggle UPPERCASE to switch the digits A–F to upper case. If you need a different encoding (Base64, etc.), copy the hex and convert it with the Base64 tool.' },
     { q: 'Why do I always get the same hash for the same input?', a: 'That\'s the defining property of a hash function: deterministic output. If you need different outputs for the same input (for password storage), add a random salt before hashing  -  the bcrypt and Argon2 tools do this automatically.' },
   ],
+  'mp4-to-gif': [
+    { q: 'What does the MP4 to GIF tool do?', a: 'It converts MP4 videos into animated GIFs in your browser. Paste or upload a clip, pick the start and end range, and download the GIF when it is ready.' },
+    { q: 'How do I convert MP4 to GIF online?', a: 'Open the MP4 to GIF tool, choose your video, trim the portion you want, and generate the GIF. No desktop software or signup is required.' },
+    { q: 'Can I make a looping GIF from a short MP4 clip?', a: 'Yes. The MP4 to GIF tool is designed for short looping clips, reaction GIFs, and social snippets you can share anywhere.' },
+    { q: 'Is the MP4 to GIF converter free to use?', a: 'Yes. The MP4 to GIF tool is free, runs in your browser, and does not require an account.' },
+    { q: 'Is my video uploaded anywhere?', a: 'The conversion runs locally in your browser. Your MP4 stays on your machine unless the page explicitly tells you otherwise for a specific operation.' },
+    { q: 'What makes a good GIF from MP4?', a: 'Short clips with clear motion and a tight crop usually produce the best GIFs. Keep the segment brief to balance file size and quality.' },
+  ],
+  'poll-generator': [
+    { q: 'What does the Poll Generator do?', a: 'It helps you create simple polls with answer options you can share on social platforms, in chats, or in audience surveys. Paste your topic, add your choices, and copy the finished poll text.' },
+    { q: 'How do I create a poll online?', a: 'Open the Poll Generator, type your question, add answer choices, and copy the output for Twitter, Instagram, or a survey form. The tool formats the poll for quick sharing.' },
+    { q: 'Can I make a Twitter poll with this tool?', a: 'Yes. The Poll Generator is useful for creating Twitter-style poll options and concise captions that are easy to post.' },
+    { q: 'Is the Poll Generator free?', a: 'Yes. The Poll Generator is free to use and does not require an account.' },
+    { q: 'Can I use it for audience surveys?', a: 'Yes. It works well for quick audience surveys, product feedback prompts, and lightweight community questions.' },
+    { q: 'Does the Poll Generator save my questions?', a: 'No. The content is only used to generate the poll text in your browser, so your draft stays on your device.' },
+  ],
   'text-diff': [
     { q: 'How does the Text Diff tool compare my text?', a: 'It splits both inputs into lines and runs a longest-common-subsequence diff. Lines that match are shown unchanged, lines only in the original are marked as removed (−), and lines only in the changed text are marked as added (+).' },
     { q: 'Can it diff more than just plain text?', a: 'Yes  -  anything you can paste in. Code, JSON, logs, configuration files, or commit messages all work. The line-based view is what most code review tools use, so it should look familiar.' },
