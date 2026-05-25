@@ -4,7 +4,7 @@ import PricingClient from './PricingClient';
 export const metadata: Metadata = {
   title: 'Pricing',
   description:
-    'Upgrade to Toolblip for an ad-free experience. Free, Starter ($4.99/mo), Pro ($19.99/mo), and Max ($49.99/mo) plans with no ads, cloud storage, and team features.',
+    'Upgrade to Toolblip for an ad-free experience. Free, Starter ($4.99/mo), Pro ($19.99/mo), and Max ($49.99/mo) plans with no ads, cloud storage, and team features. Yearly billing gets 2 months free.',
   openGraph: {
     title: 'Pricing | Toolblip',
     description: 'Upgrade to Toolblip for an ad-free experience. Plans starting at $4.99/month.',
@@ -52,7 +52,7 @@ const faqSchema: Record<string, unknown> = {
       name: 'How does yearly billing work?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yearly plans are billed as a single payment for 12 months at a 20% discount - equivalent to 10 months of the monthly price.',
+        text: 'Yearly plans are billed as a single payment for 12 months at the price of 10 months of the monthly plan - effectively 2 months free.',
       },
     },
     {

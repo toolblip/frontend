@@ -696,7 +696,7 @@ export default function AccountPage() {
                 <div className="text-center">
                   <div className="tb-v2-kicker">Pricing</div>
                   <h3 className="tb-v2-page-title" style={{ fontSize: '36px' }}>Simple, transparent pricing</h3>
-                  <p className="tb-v2-page-sub">All tools are free to use. Upgrade for an uninterrupted experience.</p>
+                  <p className="tb-v2-page-sub">All tools are free to use. Yearly billing gets 2 months free.</p>
                 </div>
 
                 <PricingBillingToggle

@@ -28,6 +28,7 @@ test.describe('Account onboarding BDD regression', () => {
     await expect(onboarding.getByTestId('pricing-billing-toggle')).toBeVisible();
     await expect(onboarding.getByRole('button', { name: 'Monthly' })).toBeVisible();
     await expect(onboarding.getByRole('button', { name: 'Yearly' })).toBeVisible();
+    await expect(onboarding.getByRole('button', { name: 'Yearly' })).toContainText('two months free');
     await expect(onboarding.getByRole('button', { name: 'Get Starter' })).toBeVisible();
     await expect(onboarding.getByRole('button', { name: 'Get Pro' })).toBeVisible();
     await expect(onboarding.getByRole('button', { name: 'Get Max' })).toBeVisible();
