@@ -560,7 +560,7 @@ export default function AccountPage() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="onboarding-title"
-            className="w-full max-w-lg rounded-2xl border border-gray-200 bg-white p-6 shadow-2xl dark:border-gray-700 dark:bg-gray-900"
+            className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-gray-200 bg-white p-6 shadow-2xl dark:border-gray-700 dark:bg-gray-900"
           >
             <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-red-600 dark:text-red-400">Welcome to Toolblip</p>
             <h2 id="onboarding-title" className="mb-3 text-2xl font-bold text-gray-900 dark:text-white">Complete your dashboard setup</h2>
@@ -605,7 +605,7 @@ export default function AccountPage() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="plan-onboarding-title"
-            className="w-full max-w-5xl rounded-3xl border border-red-200 bg-gradient-to-br from-red-50 via-white to-gray-50 p-6 shadow-2xl dark:border-red-900/50 dark:from-red-950/30 dark:via-gray-900 dark:to-gray-950"
+            className="w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-3xl border border-red-200 bg-gradient-to-br from-red-50 via-white to-gray-50 p-6 shadow-2xl dark:border-red-900/50 dark:from-red-950/30 dark:via-gray-900 dark:to-gray-950"
           >
             <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
               <div className="max-w-2xl space-y-4">

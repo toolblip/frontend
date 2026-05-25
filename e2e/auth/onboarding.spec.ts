@@ -26,7 +26,7 @@ test.describe('Account onboarding BDD regression', () => {
     expect(draft).toMatchObject({ status: 'draft', step: 'pricing', teamName: `${user.name} Team`, billingCycle: 'monthly', version: 2 });
     await expect(onboarding.getByText('Billing period')).toBeVisible();
     await expect(onboarding.getByRole('button', { name: 'Monthly' })).toBeVisible();
-    await expect(onboarding.getByRole('button', { name: 'Yearly' })).toBeVisible();
+    await expect(onboarding.getByRole('button', { name: /Yearly/ })).toContainText('2 months free');
     await expect(onboarding.locator('#onboarding-plan-ultra')).toBeChecked();
     await expect(onboarding.getByText('$19.99/mo')).toBeVisible();
 
