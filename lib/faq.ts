@@ -151,6 +151,27 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does the Word Counter save what I type?', a: 'No. Everything is processed in your browser in real time. Nothing is uploaded, stored, or sent to any server, so it is safe to paste unpublished drafts or confidential content.' },
     { q: 'Can I count characters with and without spaces?', a: 'Yes. The Word Counter shows both character totals alongside the word count, plus sentence and paragraph counts, updating as you type.' },
   ],
+  'http-method-tester': [
+    { q: 'What is the HTTP Method Tester?', a: 'The HTTP Method Tester is a browser-based HTTP tester for sending GET, POST, PUT, DELETE, and other requests with custom headers and body content.' },
+    { q: 'Can I use it as an API tester?', a: 'Yes. You can use it as an API tester to try endpoints, inspect responses, and verify headers before you wire the request into code.' },
+    { q: 'Does the HTTP tester send my data anywhere?', a: 'The interface runs in your browser, and the request goes only to the URL you enter. Toolblip does not store the requests you test here.' },
+    { q: 'What should I use when I need to debug request headers?', a: 'Use this tool to send the request, then pair it with the HTTP Headers Viewer if you need a quick look at response headers and caching details.' },
+    { q: 'Is the HTTP Method Tester free?', a: 'Yes. It is a free online HTTP tester with no signup required.' },
+  ],
+  'collocations-checker': [
+    { q: 'What is a collocation checker?', a: 'A collocation checker helps you see whether two words sound natural together in English. It is useful when you want writing that feels more native and less translated.' },
+    { q: 'What does the Collocations Checker check?', a: 'It checks common word pairings and suggests more natural alternatives when the phrasing sounds awkward or uncommon.' },
+    { q: 'Can I use it for SEO copy?', a: 'Yes. It is useful for titles, descriptions, headings, and body copy when you want the wording to sound natural and clear.' },
+    { q: 'Is the Collocations Checker free?', a: 'Yes. It is free to use in your browser with no signup required.' },
+    { q: 'Does it store my text?', a: 'No. The text stays in your browser while you check the wording.' },
+  ],
+  'compress-mkv': [
+    { q: 'What is the MKV Compressor?', a: 'The MKV Compressor reduces MKV file size so videos are easier to share, upload, and store.' },
+    { q: 'How do I compress MKV files?', a: 'Upload the MKV file, choose your compression settings, and start the process. The tool is designed to make compress MKV workflows simple in the browser.' },
+    { q: 'Will compression reduce video quality?', a: 'Usually, yes. Lower file size often means lower quality, so choose settings based on whether you care more about size or visual detail.' },
+    { q: 'Can I use it to shrink MKV files for email or messaging apps?', a: 'Yes. That is one of the main use cases for the MKV compressor when file size matters more than keeping every original bit.' },
+    { q: 'Is the MKV Compressor free?', a: 'Yes. It is a free online MKV compressor with no signup required.' },
+  ],
   'character-counter': [
     { q: 'What is the Character Counter?', a: 'The Character Counter is a free online tool that counts characters and words and tracks your progress against four built-in limits: Tweet/X (280), LinkedIn (3,000), Meta Description (160), and Google Title (60). Perfect for writing content that has to fit.' },
     { q: 'Does the Character Counter count spaces?', a: 'Yes. It displays totals both with and without spaces, so you can match whatever limit a platform enforces.' },
