@@ -59,7 +59,7 @@ const ONBOARDING_PLANS: Array<{
     name: "Starter",
     description: "Remove ads and unlock personal cloud storage.",
     priceMonthly: 499,
-    priceYearly: 4799,
+    priceYearly: 4999,
   },
   {
     tier: "ultra",
@@ -67,14 +67,14 @@ const ONBOARDING_PLANS: Array<{
     description: "Power-user limits, API access, and more storage.",
     badge: "Popular",
     priceMonthly: 1999,
-    priceYearly: 19199,
+    priceYearly: 19999,
   },
   {
     tier: "max",
     name: "Max",
     description: "Team seats, priority support, and the highest limits.",
     priceMonthly: 4999,
-    priceYearly: 47999,
+    priceYearly: 49999,
   },
   {
     tier: "free",
@@ -103,6 +103,43 @@ function onboardingStorageKey(userId: number | string) {
 
 const FREE_PLAN_FEATURES = ['All tools available', '1 member', '1 workspace'];
 
+function buildOnboardingPlanFeatures(plan: {
+  tier: OnboardingPlanTier;
+}) {
+  const features: Array<{ label: string; included?: boolean }> = [];
+
+  if (plan.tier === 'free') {
+    features.push({ label: 'All tools available' });
+    features.push({ label: 'Client-side processing' });
+    return features;
+  }
+
+  features.push({ label: 'Everything in Free' });
+  features.push({ label: 'No ads' });
+
+  if (plan.tier === 'starter') {
+    features.push({ label: '1 GB cloud storage' });
+    features.push({ label: 'Up to 50 MB file processing' });
+    features.push({ label: '1 team seat' });
+    features.push({ label: 'API access', included: false });
+    features.push({ label: 'Basic support' });
+  } else if (plan.tier === 'ultra') {
+    features.push({ label: '10 GB cloud storage' });
+    features.push({ label: 'Up to 500 MB file processing' });
+    features.push({ label: '3 team seats' });
+    features.push({ label: 'API access' });
+    features.push({ label: 'Standard support' });
+  } else if (plan.tier === 'max') {
+    features.push({ label: '50 GB cloud storage' });
+    features.push({ label: 'Up to 5 GB file processing' });
+    features.push({ label: '10 team seats' });
+    features.push({ label: 'API access' });
+    features.push({ label: 'Priority support' });
+  }
+
+  return features;
+}
+
 function FreePlanCard({
   ctaLabel,
   ctaHref,
@@ -113,7 +150,7 @@ function FreePlanCard({
   onCtaClick?: () => void;
 }) {
   const ctaClasses =
-    'inline-flex cursor-pointer items-center justify-center text-emerald-400 underline decoration-emerald-500/40 underline-offset-4 transition hover:text-emerald-300';
+    'inline-flex cursor-pointer items-center justify-center text-[var(--red)] underline decoration-[color:color-mix(in_srgb,var(--red)_40%,transparent)] underline-offset-4 transition hover:text-[var(--red-hover)]';
 
   return (
     <div
@@ -124,7 +161,7 @@ function FreePlanCard({
         backgroundSize: '56px 56px',
       }}
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(34,197,94,0.14),transparent_46%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.03),transparent_34%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(217,48,48,0.14),transparent_46%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.03),transparent_34%)]" />
       <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
         <div className="min-w-0">
           <h3 className="text-lg font-semibold text-white">Free plan</h3>
@@ -139,11 +176,11 @@ function FreePlanCard({
         </div>
 
         {ctaHref ? (
-          <Link href={ctaHref} className={ctaClasses}>
+          <Link href={ctaHref} className={ctaClasses} style={{ color: 'var(--red)', textDecorationColor: 'color-mix(in srgb, var(--red) 40%, transparent)' }}>
             {ctaLabel}
           </Link>
         ) : (
-          <button type="button" onClick={onCtaClick} className={ctaClasses}>
+          <button type="button" onClick={onCtaClick} className={ctaClasses} style={{ color: 'var(--red)', textDecorationColor: 'color-mix(in srgb, var(--red) 40%, transparent)' }}>
             {ctaLabel}
           </button>
         )}
@@ -605,14 +642,14 @@ export default function AccountPage() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="plan-onboarding-title"
-            className="w-full max-w-5xl rounded-3xl border border-red-200 bg-gradient-to-br from-red-50 via-white to-gray-50 p-6 shadow-2xl dark:border-red-900/50 dark:from-red-950/30 dark:via-gray-900 dark:to-gray-950"
+            className="w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-3xl border border-red-200 bg-gradient-to-br from-red-50 via-white to-gray-50 p-6 shadow-2xl dark:border-red-900/50 dark:from-red-950/30 dark:via-gray-900 dark:to-gray-950"
           >
             <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
               <div className="max-w-2xl space-y-4">
                 <p className="text-sm font-semibold uppercase tracking-wide text-red-600 dark:text-red-400">Welcome to Toolblip</p>
                 <div>
                   <h2 id="plan-onboarding-title" className="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">
-                    {onboardingStep === "welcome" ? "Welcome to your dashboard" : "Choose your plan"}
+                    {onboardingStep === "welcome" ? "Welcome to your dashboard" : "Pricing"}
                   </h2>
                   <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 sm:text-base">
                     {onboardingStep === "welcome"
@@ -655,17 +692,23 @@ export default function AccountPage() {
                 </div>
               </div>
             ) : (
-              <div className="mt-6 space-y-4" role="radiogroup" aria-label="Toolblip plan options">
+              <div className="mt-6">
+                <div className="text-center">
+                  <div className="tb-v2-kicker">Pricing</div>
+                  <h3 className="tb-v2-page-title" style={{ fontSize: '36px' }}>Simple, transparent pricing</h3>
+                  <p className="tb-v2-page-sub">All tools are free to use. Yearly billing gets 2 months free.</p>
+                </div>
+
                 <PricingBillingToggle
                   billing={onboardingBilling}
                   onBillingChange={(nextBilling) => {
                     setOnboardingBilling(nextBilling);
                     writePlanOnboarding("draft", "pricing", selectedOnboardingPlan, nextBilling);
                   }}
-                  label="Billing period"
+                  centered
                 />
 
-                <div className="grid gap-4 lg:grid-cols-3">
+                <div className="mt-6 grid gap-4 lg:grid-cols-3">
                   {ONBOARDING_PLANS.filter((plan) => plan.tier !== "free").map((plan) => {
                     const selected = selectedOnboardingPlan === plan.tier;
                     return (
@@ -680,23 +723,38 @@ export default function AccountPage() {
                           badge: plan.badge ?? null,
                         }}
                         billing={onboardingBilling}
+                        highlighted={selected}
                         selected={selected}
-                        htmlFor={`onboarding-plan-${plan.tier}`}
-                        topSlot={
-                          <input
-                            id={`onboarding-plan-${plan.tier}`}
-                            type="radio"
-                            name="onboarding-plan"
-                            value={plan.tier}
-                            checked={selected}
-                            onChange={() => {
+                        footer={
+                          <button
+                            type="button"
+                            onClick={() => {
                               setSelectedOnboardingPlan(plan.tier);
                               writePlanOnboarding("draft", "pricing", plan.tier, onboardingBilling);
                             }}
-                            className="mb-3 h-4 w-4 border-gray-300 text-red-600 focus:ring-red-500"
-                          />
+                            className={`tb-v2-btn tb-v2-pricing-btn tb-v2-btn-primary ${selected ? 'selected' : ''}`}
+                            style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
+                          >
+                            Get {plan.name}
+                          </button>
                         }
-                      />
+                      >
+                        <ul className="tb-v2-pricing-features">
+                          {buildOnboardingPlanFeatures({
+                            tier: plan.tier,
+                          }).map((feature) => (
+                            <li
+                              key={feature.label}
+                              className={feature.included === false ? 'text-[color:var(--fg-3)] line-through' : ''}
+                            >
+                              <span className="mt-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center text-[11px] font-bold leading-none text-red-500">
+                                {feature.included === false ? '×' : '✓'}
+                              </span>
+                              {feature.label}
+                            </li>
+                          ))}
+                        </ul>
+                      </PricingPlanCard>
                     );
                   })}
 
@@ -714,26 +772,56 @@ export default function AccountPage() {
                             badge: null,
                           }}
                           billing={onboardingBilling}
+                          tone="light"
+                          className="free-row"
+                          compactHeader
                           selected={selected}
-                          htmlFor={`onboarding-plan-${plan.tier}`}
-                        topSlot={
-                            <input
-                              id={`onboarding-plan-${plan.tier}`}
-                              type="radio"
-                              name="onboarding-plan"
-                              value={plan.tier}
-                              checked={selected}
-                              onChange={() => {
+                          highlighted={selected}
+                          headerRightSlot={
+                            <button
+                              type="button"
+                              onClick={() => {
                                 setSelectedOnboardingPlan(plan.tier);
                                 writePlanOnboarding("draft", "pricing", plan.tier, onboardingBilling);
                               }}
-                              className="mb-3 h-4 w-4 border-gray-300 text-red-600 focus:ring-red-500"
-                            />
+                              className="tb-v2-pricing-inline-link"
+                              style={{
+                                color: 'var(--red)',
+                                textDecorationColor: 'color-mix(in srgb, var(--red) 40%, transparent)',
+                              }}
+                            >
+                              Get Free Plan
+                            </button>
                           }
-                        />
+                        >
+                          <ul className="tb-v2-pricing-features">
+                            {buildOnboardingPlanFeatures({
+                              tier: plan.tier,
+                            }).map((feature) => (
+                              <li
+                                key={feature.label}
+                                className={feature.included === false ? 'text-[color:var(--fg-3)] line-through' : ''}
+                              >
+                                <span className="mt-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center text-[11px] font-bold leading-none text-red-500">
+                                  {feature.included === false ? '×' : '✓'}
+                                </span>
+                                {feature.label}
+                              </li>
+                            ))}
+                          </ul>
+                        </PricingPlanCard>
                       </div>
                     );
                   })}
+                </div>
+
+                <div className="tb-v2-pricing-footer">
+                  <p>
+                    All prices in USD. Cancel anytime.{' '}
+                    <Link href="/terms" style={{ color: 'var(--fg-2)' }}>Terms of Service</Link>
+                    {' · '}
+                    <Link href="/privacy" style={{ color: 'var(--fg-2)' }}>Privacy Policy</Link>
+                  </p>
                 </div>
               </div>
             )}

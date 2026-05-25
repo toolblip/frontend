@@ -12,11 +12,24 @@ import {
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.toolblip.com';
 
+function displayYearlyPrice(tier: string, sourcePriceYearly: number) {
+  switch (tier) {
+    case 'starter':
+      return 4999;
+    case 'ultra':
+      return 19999;
+    case 'max':
+      return 49999;
+    default:
+      return sourcePriceYearly;
+  }
+}
+
 const FALLBACK_PLANS: Plan[] = [
   { tier: 'free', name: 'Free', description: 'For anyone getting started', price_monthly: 0, price_yearly: 0, stripe_monthly_id: null, stripe_yearly_id: null, storage_gb: 0, max_file_size_mb: 5, team_seats: 1, api_access: false, priority_support: false, sort_order: 0 },
-  { tier: 'starter', name: 'Starter', description: 'For personal use', price_monthly: 499, price_yearly: 4799, stripe_monthly_id: 'price_1TOflqHd4AsPgGTOxspjxODX', stripe_yearly_id: 'price_1TOflqHd4AsPgGTOOrxqG1kM', storage_gb: 1, max_file_size_mb: 50, team_seats: 1, api_access: false, priority_support: false, sort_order: 1 },
-  { tier: 'ultra', name: 'Pro', description: 'For power users', price_monthly: 1999, price_yearly: 19199, stripe_monthly_id: 'price_1TOflrHd4AsPgGTOnt9jYhjz', stripe_yearly_id: 'price_1TOflsHd4AsPgGTO5ra4mhwt', storage_gb: 10, max_file_size_mb: 500, team_seats: 3, api_access: true, priority_support: false, sort_order: 2 },
-  { tier: 'max', name: 'Max', description: 'For teams', price_monthly: 4999, price_yearly: 47999, stripe_monthly_id: 'price_1TOflsHd4AsPgGTOG7jeNqLk', stripe_yearly_id: 'price_1TOfltHd4AsPgGTOnUHvrbT7', storage_gb: 50, max_file_size_mb: 5000, team_seats: 10, api_access: true, priority_support: true, sort_order: 3 },
+  { tier: 'starter', name: 'Starter', description: 'For personal use', price_monthly: 499, price_yearly: 4999, stripe_monthly_id: 'price_1TOflqHd4AsPgGTOxspjxODX', stripe_yearly_id: 'price_1TOflqHd4AsPgGTOOrxqG1kM', storage_gb: 1, max_file_size_mb: 50, team_seats: 1, api_access: false, priority_support: false, sort_order: 1 },
+  { tier: 'ultra', name: 'Pro', description: 'For power users', price_monthly: 1999, price_yearly: 19999, stripe_monthly_id: 'price_1TOflrHd4AsPgGTOnt9jYhjz', stripe_yearly_id: 'price_1TOflsHd4AsPgGTO5ra4mhwt', storage_gb: 10, max_file_size_mb: 500, team_seats: 3, api_access: true, priority_support: false, sort_order: 2 },
+  { tier: 'max', name: 'Max', description: 'For teams', price_monthly: 4999, price_yearly: 49999, stripe_monthly_id: 'price_1TOflsHd4AsPgGTOG7jeNqLk', stripe_yearly_id: 'price_1TOfltHd4AsPgGTOnUHvrbT7', storage_gb: 50, max_file_size_mb: 5000, team_seats: 10, api_access: true, priority_support: true, sort_order: 3 },
 ];
 
 interface Plan {
@@ -207,13 +220,13 @@ export default function PricingClient() {
     name: displayPlanName(plan),
     description: plan.description,
     priceMonthly: plan.price_monthly,
-    priceYearly: plan.price_yearly,
+    priceYearly: displayYearlyPrice(plan.tier, plan.price_yearly),
     badge: plan.tier === HIGHLIGHT_TIER ? 'Popular' : null,
   }));
   const highlightPlan = orderedPlans.find((p) => p.tier === HIGHLIGHT_TIER);
   const stickyPriceCents = highlightPlan
     ? billing === 'yearly'
-      ? highlightPlan.price_yearly
+      ? displayYearlyPrice(highlightPlan.tier, highlightPlan.price_yearly)
       : highlightPlan.price_monthly
     : 0;
   const stickyPrice = stickyPriceCents / 100;
@@ -242,7 +255,7 @@ export default function PricingClient() {
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <div className="tb-v2-kicker">Pricing</div>
           <h1 className="tb-v2-page-title" style={{ fontSize: '36px' }}>Simple, transparent pricing</h1>
-          <p className="tb-v2-page-sub">All tools are free to use. Upgrade for an uninterrupted experience.</p>
+          <p className="tb-v2-page-sub">All tools are free to use. Yearly billing gets 2 months free.</p>
         </div>
 
         <PricingBillingToggle billing={billing} onBillingChange={setBilling} centered />
@@ -272,7 +285,7 @@ export default function PricingClient() {
                     <button
                       onClick={() => handleUpgrade(sourcePlan)}
                       disabled={loading === sourcePlan.tier}
-                      className={`tb-v2-btn tb-v2-pricing-btn ${isHighlighted ? 'inverse' : 'tb-v2-btn-primary'}`}
+                      className={`tb-v2-btn tb-v2-pricing-btn tb-v2-btn-primary ${isHighlighted ? 'selected' : ''}`}
                       style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
                     >
                       {loading === sourcePlan.tier ? 'Redirecting...' : `Get ${plan.name}`}
@@ -314,6 +327,10 @@ export default function PricingClient() {
                       <Link
                         href="/signup"
                         className="tb-v2-pricing-inline-link"
+                        style={{
+                          color: 'var(--red)',
+                          textDecorationColor: 'color-mix(in srgb, var(--red) 40%, transparent)',
+                        }}
                       >
                         Get Free Plan
                       </Link>
