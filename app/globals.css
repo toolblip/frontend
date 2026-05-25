@@ -2521,13 +2521,20 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 /* Pricing page */
 .tb-v2-pricing { padding: 48px 0 80px; }
 .tb-v2-pricing-toggle { display: inline-flex; align-items: center; gap: 4px; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--radius); padding: 4px; }
-.tb-v2-pricing-toggle-btn { height: 32px; padding: 0 16px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; transition: background .15s, color .15s, box-shadow .15s; color: var(--fg-2); cursor: pointer; border: none; background: transparent; }
+.tb-v2-pricing-toggle-btn { height: 32px; padding: 0 14px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; transition: background .15s, color .15s, box-shadow .15s; color: var(--fg-2); cursor: pointer; border: none; background: transparent; display: inline-flex; align-items: center; gap: 6px; }
 .tb-v2-pricing-toggle-btn.on { background: var(--surface); color: var(--fg-0); box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+.tb-v2-pricing-toggle-badge { display: inline-flex; align-items: center; justify-content: center; height: 20px; padding: 0 9px; border-radius: 999px; background: linear-gradient(135deg, color-mix(in srgb, var(--red) 18%, white) 0%, color-mix(in srgb, var(--red) 10%, transparent) 100%); color: var(--red); font-size: 11px; font-weight: 800; letter-spacing: 0.01em; line-height: 1; white-space: nowrap; border: 1px solid color-mix(in srgb, var(--red) 18%, transparent); box-shadow: 0 1px 0 rgba(255,255,255,.55) inset; }
+.tb-v2-pricing-toggle-badge.on { background: linear-gradient(135deg, rgba(217,48,48,.22) 0%, rgba(217,48,48,.12) 100%); color: var(--red); border-color: rgba(217,48,48,.22); box-shadow: 0 1px 0 rgba(255,255,255,.45) inset, 0 6px 12px rgba(217,48,48,.08); }
 .tb-v2-pricing-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; align-items: start; margin-top: 40px; }
 .tb-v2-pricing-period-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 24px; text-align: left; }
 .tb-v2-pricing-period-row.centered { justify-content: center; }
 .tb-v2-pricing-period-label { font-size: 14px; font-weight: 600; color: var(--fg-2); }
-.tb-v2-pricing-card.free-row { grid-column: 1 / -1; min-height: 0; }
+.tb-v2-pricing-card.free-row {
+  min-height: 0;
+  width: 100%;
+  max-width: 760px;
+  margin-inline: auto;
+}
 .tb-v2-pricing-card.free-row .tb-v2-pricing-features {
   flex: 0;
   display: flex;
@@ -2556,19 +2563,29 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 36px;
-  padding: 0 2px;
-  color: var(--green);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
+  color: var(--red);
   text-decoration: underline;
-  text-decoration-thickness: 1px;
+  text-decoration-thickness: 1.5px;
   text-underline-offset: 3px;
   white-space: nowrap;
 }
 .tb-v2-pricing-card.free-row .tb-v2-pricing-inline-link:hover {
-  color: color-mix(in srgb, var(--green) 82%, black 18%);
+  color: var(--red-hover);
 }
+.tb-v2-pricing-btn.selected {
+  background: var(--red);
+  border-color: var(--red);
+  color: #fff;
+  box-shadow: 0 10px 24px -6px color-mix(in srgb, var(--red) 48%, transparent), 0 0 0 1px color-mix(in srgb, var(--red) 22%, transparent);
+}
+.tb-v2-pricing-btn.selected:hover {
+  background: var(--red-hover);
+  border-color: var(--red-hover);
+  color: #fff;
+}
+
 .tb-v2-pricing-card { border-radius: var(--radius-lg); border: 1.5px solid var(--line); background: var(--surface); padding: 24px; display: flex; flex-direction: column; position: relative; transition: border-color .15s, box-shadow .15s; }
 .tb-v2-pricing-card:hover { border-color: var(--line-2); }
 .tb-v2-pricing-card.hot { border-color: var(--red); background: var(--red-tint); box-shadow: 0 0 0 4px rgba(217,48,48,.06); }
