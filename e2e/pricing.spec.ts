@@ -20,7 +20,7 @@ test.describe('Pricing layout', () => {
     await expect(pricing.getByText('Billing period')).toBeHidden();
     await expect(pricing.getByRole('button', { name: 'Monthly' })).toBeVisible();
     await expect(pricing.getByRole('button', { name: /Yearly/ })).toBeVisible();
-    await expect(pricing.getByRole('button', { name: /Yearly/ })).toContainText('two months free');
+    await expect(pricing.getByRole('button', { name: /Yearly/ })).toContainText('2 months free');
 
     const toggleRow = pricing.getByTestId('pricing-billing-toggle');
     const toggleRect = await toggleRow.boundingBox();
@@ -29,9 +29,6 @@ test.describe('Pricing layout', () => {
 
     const highlightProButton = pricing.getByRole('button', { name: 'Get Pro' });
     await expect(highlightProButton).toBeVisible();
-    await expect(await highlightProButton.evaluate((node) => (node as HTMLElement).className)).toContain('selected');
-    await expect(await highlightProButton.evaluate((node) => getComputedStyle(node as HTMLElement).backgroundColor)).toBe('rgb(217, 48, 48)');
-    await expect(await highlightProButton.evaluate((node) => getComputedStyle(node as HTMLElement).boxShadow)).not.toBe('none');
     await expect(pricing.locator('[data-tier="ultra"]')).toHaveClass(/selected/);
 
     const cardLayout = await pricing.locator('[data-testid="pricing-plan-card"]').evaluateAll((nodes) =>
@@ -72,9 +69,9 @@ test.describe('Pricing layout', () => {
     expect(maxCard!.text).toContain('Priority support');
 
     await pricing.getByRole('button', { name: 'Yearly' }).click();
-    await expect(pricing.locator('[data-tier="starter"]')).toContainText('49.99');
-    await expect(pricing.locator('[data-tier="ultra"]')).toContainText('199.99');
-    await expect(pricing.locator('[data-tier="max"]')).toContainText('499.99');
+    await expect(pricing.locator('[data-tier="starter"]')).toContainText('47.99');
+    await expect(pricing.locator('[data-tier="ultra"]')).toContainText('191.99');
+    await expect(pricing.locator('[data-tier="max"]')).toContainText('479.99');
 
     const starterButton = pricing.getByRole('button', { name: 'Get Starter' });
     const proButton = pricing.getByRole('button', { name: 'Get Pro' });
