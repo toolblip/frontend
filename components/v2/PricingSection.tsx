@@ -82,7 +82,8 @@ export function PricingBillingToggle({
       >
         <span>Yearly</span>
         <span aria-hidden="true" className={billingToggleBadgeClasses(billing === 'yearly')}>
-          two months free
+          <span className="tb-v2-pricing-toggle-badge-number">2</span>
+          <span className="tb-v2-pricing-toggle-badge-text"> months free</span>
         </span>
       </button>
     </div>
