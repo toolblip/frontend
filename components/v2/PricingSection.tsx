@@ -48,6 +48,13 @@ function billingToggleButtonClasses(active: boolean) {
   ].filter(Boolean).join(' ');
 }
 
+function billingToggleBadgeClasses(active: boolean) {
+  return [
+    'tb-v2-pricing-toggle-badge',
+    active ? 'on' : '',
+  ].filter(Boolean).join(' ');
+}
+
 export function PricingBillingToggle({
   billing,
   onBillingChange,
@@ -73,7 +80,10 @@ export function PricingBillingToggle({
         onClick={() => onBillingChange('yearly')}
         className={billingToggleButtonClasses(billing === 'yearly')}
       >
-        Yearly
+        <span>Yearly</span>
+        <span aria-hidden="true" className={billingToggleBadgeClasses(billing === 'yearly')}>
+          two months free
+        </span>
       </button>
     </div>
   );
