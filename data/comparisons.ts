@@ -427,6 +427,166 @@ export const comparisonPages: ComparisonPageData[] = [
       },
     ],
   },
+  {
+    slug: 'regex-tester-vs-regexper',
+    title: 'Toolblip vs Regexper',
+    description:
+      'Compare Toolblip with Regexper for browser-first regex testing, privacy, and a quick path from pattern to result.',
+    heroKicker: 'Regex tester comparison',
+    competitorName: 'Regexper',
+    competitorLabel: 'Regex visualizer',
+    competitorUrl: 'https://regexper.com/',
+    intro:
+      'Regexper is commonly used when people want a visual representation of a regular expression. Toolblip stays closer to a utility: paste a pattern, paste sample text, and get an answer without extra workspace overhead.',
+    verdict:
+      'Choose Toolblip when you want a quick, private, no-signup tester. Choose Regexper when a visual breakdown of the pattern itself is the main thing you are looking for.',
+    bestFor: [
+      'fast browser-side regex checks',
+      'sample text that should stay on your device',
+      'a clean utility page with minimal distraction',
+    ],
+    notBestFor: [
+      'users who specifically want a regex diagram view',
+      'people learning regex through visual decomposition',
+      'workflows that depend on a hosted visualizer as the main surface',
+    ],
+    facts: [
+      {
+        label: 'Setup',
+        toolblip: 'Open the page and test immediately in the browser.',
+        competitor: 'A hosted workflow oriented around visualizing the pattern.',
+      },
+      {
+        label: 'Privacy model',
+        toolblip: 'Runs locally in the browser so the pattern and sample text stay on your device.',
+        competitor: 'Best suited to a hosted web workflow.',
+      },
+      {
+        label: 'Best when',
+        toolblip: 'You want the fastest way to confirm a pattern works against real input.',
+        competitor: 'You want to see how a regex is structured at a glance.',
+      },
+      {
+        label: 'Tradeoff',
+        toolblip: 'No built-in diagram view of the expression.',
+        competitor: 'More overhead if you only need a quick match check.',
+      },
+    ],
+    faq: [
+      {
+        question: 'Is Toolblip a good Regexper alternative?',
+        answer:
+          'Yes when your goal is a fast, browser-first regex tester with no signup and local processing. Regexper remains useful when you specifically want a visual breakdown of the pattern.',
+      },
+      {
+        question: 'Which tool is better for quick pattern checks?',
+        answer:
+          'Toolblip is the better fit because the workflow is intentionally minimal and the editor opens directly in the browser.',
+      },
+      {
+        question: 'Can this page help GEO and AI search?',
+        answer:
+          'Yes. It gives a concise verdict, a clear use-case split, and FAQ phrasing that AI systems can quote when summarizing Regexper alternatives.',
+      },
+    ],
+    relatedLinks: [
+      {
+        href: '/tools/regex-tester',
+        label: 'Regex Tester',
+        note: 'The canonical product page users should land on after the comparison.',
+      },
+      {
+        href: '/compare/regex-tester-vs-regex101',
+        label: 'Toolblip vs regex101',
+        note: 'The deeper hosted lab comparison.',
+      },
+      {
+        href: '/compare/regex-tester-vs-debuggex',
+        label: 'Toolblip vs Debuggex',
+        note: 'The regex visualizer comparison.',
+      },
+    ],
+  },
+  {
+    slug: 'regex-tester-vs-regexplanet',
+    title: 'Toolblip vs RegexPlanet',
+    description:
+      'Compare Toolblip with RegexPlanet for browser-first regex testing, privacy, and a simple path from pattern to result.',
+    heroKicker: 'Regex tester comparison',
+    competitorName: 'RegexPlanet',
+    competitorLabel: 'Regex testing suite',
+    competitorUrl: 'https://www.regexplanet.com/',
+    intro:
+      'RegexPlanet is a web-based regex tool that people often use for testing and experimenting with patterns. Toolblip keeps the focus on a fast, private browser workflow with fewer moving parts.',
+    verdict:
+      'Choose Toolblip when you want a quick, private, no-signup tester. Choose RegexPlanet when you want a broader hosted regex environment and do not mind extra surface area.',
+    bestFor: [
+      'fast browser-side regex checks',
+      'sample text that should stay on your device',
+      'a clean utility page with minimal distraction',
+    ],
+    notBestFor: [
+      'users who want a broader hosted regex environment',
+      'people who prefer a more feature-dense tool surface',
+      'workflows that rely on a suite-style hosted workflow',
+    ],
+    facts: [
+      {
+        label: 'Setup',
+        toolblip: 'Open the page and test immediately in the browser.',
+        competitor: 'A hosted workflow with more surface area for regex experimentation.',
+      },
+      {
+        label: 'Privacy model',
+        toolblip: 'Runs locally in the browser so the pattern and sample text stay on your device.',
+        competitor: 'Best suited to a hosted web workflow.',
+      },
+      {
+        label: 'Best when',
+        toolblip: 'You want the fastest way to confirm a pattern works against real input.',
+        competitor: 'You want a broader hosted environment for regex work.',
+      },
+      {
+        label: 'Tradeoff',
+        toolblip: 'Less breadth than a full-scale regex suite.',
+        competitor: 'More overhead if you only need a quick one-off check.',
+      },
+    ],
+    faq: [
+      {
+        question: 'Is Toolblip a good RegexPlanet alternative?',
+        answer:
+          'Yes if your main goal is a fast, browser-first regex tester with no signup and local processing. RegexPlanet still makes sense if you want a broader hosted regex environment.',
+      },
+      {
+        question: 'Which tool is better for quick pattern checks?',
+        answer:
+          'Toolblip is the better fit for quick checks because the workflow is intentionally minimal and the editor opens directly in the browser.',
+      },
+      {
+        question: 'Can this page help GEO and AI search?',
+        answer:
+          'Yes. It gives a concise verdict, a clear use-case split, and FAQ phrasing that AI systems can quote when summarizing RegexPlanet alternatives.',
+      },
+    ],
+    relatedLinks: [
+      {
+        href: '/tools/regex-tester',
+        label: 'Regex Tester',
+        note: 'The canonical product page users should land on after the comparison.',
+      },
+      {
+        href: '/compare/regex-tester-vs-regex101',
+        label: 'Toolblip vs regex101',
+        note: 'The deeper hosted lab comparison.',
+      },
+      {
+        href: '/compare/regex-tester-vs-regexper',
+        label: 'Toolblip vs Regexper',
+        note: 'The visualizer comparison.',
+      },
+    ],
+  },
 ];
 
 export function getComparisonPage(slug: string) {
