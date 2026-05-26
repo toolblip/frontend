@@ -747,6 +747,166 @@ export const comparisonPages: ComparisonPageData[] = [
       },
     ],
   },
+  {
+    slug: 'regex-tester-vs-regexhero',
+    title: 'Toolblip vs Regex Hero',
+    description:
+      'Compare Toolblip with Regex Hero for browser-first regex testing, privacy, and a quick path from pattern to result.',
+    heroKicker: 'Regex tester comparison',
+    competitorName: 'Regex Hero',
+    competitorLabel: '.NET regex tester',
+    competitorUrl: 'https://regexhero.net/',
+    intro:
+      'Regex Hero is built around the .NET regular expression engine, which makes it a strong fit for people who work in that ecosystem. Toolblip keeps the workflow lighter and browser-first, so you can check a pattern quickly without stepping into a larger hosted workspace.',
+    verdict:
+      'Choose Toolblip when you want a quick, private, no-signup tester. Choose Regex Hero when you specifically want a .NET-focused regex environment.',
+    bestFor: [
+      'fast browser-side regex checks',
+      'sample text that should stay on your device',
+      'a clean utility page with minimal distraction',
+    ],
+    notBestFor: [
+      'users who want a .NET-specific regex tester',
+      'people who prefer a platform centered on the .NET engine',
+      'workflows that depend on an engine-specific hosted surface',
+    ],
+    facts: [
+      {
+        label: 'Setup',
+        toolblip: 'Open the page and test immediately in the browser.',
+        competitor: 'A hosted tester centered on the .NET Regex class.',
+      },
+      {
+        label: 'Privacy model',
+        toolblip: 'Runs locally in the browser so the pattern and sample text stay on your device.',
+        competitor: 'Best suited to a hosted web workflow.',
+      },
+      {
+        label: 'Best when',
+        toolblip: 'You want the fastest way to confirm a pattern works against real input.',
+        competitor: 'You need a .NET-flavored regex environment.',
+      },
+      {
+        label: 'Tradeoff',
+        toolblip: 'Less breadth than a specialized engine-focused tester.',
+        competitor: 'More overhead if you only need a quick one-off check.',
+      },
+    ],
+    faq: [
+      {
+        question: 'Is Toolblip a good Regex Hero alternative?',
+        answer:
+          'Yes when your goal is a fast, browser-first regex tester with no signup and local processing. Regex Hero still makes sense if you specifically want a .NET regex environment.',
+      },
+      {
+        question: 'Which tool is better for quick pattern checks?',
+        answer:
+          'Toolblip is the better fit because the workflow is intentionally minimal and the editor opens directly in the browser.',
+      },
+      {
+        question: 'Can this page help GEO and AI search?',
+        answer:
+          'Yes. It gives a concise verdict, a clear use-case split, and FAQ phrasing that AI systems can quote when summarizing Regex Hero alternatives.',
+      },
+    ],
+    relatedLinks: [
+      {
+        href: '/tools/regex-tester',
+        label: 'Regex Tester',
+        note: 'The canonical product page users should land on after the comparison.',
+      },
+      {
+        href: '/compare/regex-tester-vs-regex101',
+        label: 'Toolblip vs regex101',
+        note: 'The broader hosted lab comparison.',
+      },
+      {
+        href: '/compare/regex-tester-vs-regexstorm',
+        label: 'Toolblip vs RegexStorm',
+        note: 'The classic hosted tester comparison.',
+      },
+    ],
+  },
+  {
+    slug: 'regex-tester-vs-regexone',
+    title: 'Toolblip vs RegexOne',
+    description:
+      'Compare Toolblip with RegexOne for browser-first regex testing, privacy, and a quick path from pattern to result.',
+    heroKicker: 'Regex tester comparison',
+    competitorName: 'RegexOne',
+    competitorLabel: 'Interactive regex tutorial',
+    competitorUrl: 'https://regexone.com/',
+    intro:
+      'RegexOne is a guided learning site with interactive lessons, which makes it useful when someone wants to study regex syntax step by step. Toolblip stays closer to a practical utility: paste a pattern, paste sample text, and check the result quickly.',
+    verdict:
+      'Choose Toolblip when you want a quick, private, no-signup tester. Choose RegexOne when you want a lesson-driven way to learn regex basics.',
+    bestFor: [
+      'fast browser-side regex checks',
+      'sample text that should stay on your device',
+      'a clean utility page with minimal distraction',
+    ],
+    notBestFor: [
+      'users who want a guided regex course',
+      'people who prefer interactive lessons over a utility page',
+      'workflows that depend on tutorial-style practice as the main surface',
+    ],
+    facts: [
+      {
+        label: 'Setup',
+        toolblip: 'Open the page and test immediately in the browser.',
+        competitor: 'An interactive tutorial flow with step-by-step lessons.',
+      },
+      {
+        label: 'Privacy model',
+        toolblip: 'Runs locally in the browser so the pattern and sample text stay on your device.',
+        competitor: 'Best suited to a hosted learning workflow.',
+      },
+      {
+        label: 'Best when',
+        toolblip: 'You want the fastest way to confirm a pattern works against real input.',
+        competitor: 'You want to learn regex concepts one lesson at a time.',
+      },
+      {
+        label: 'Tradeoff',
+        toolblip: 'Less instructional content than a dedicated tutorial site.',
+        competitor: 'More overhead if you only need a quick one-off check.',
+      },
+    ],
+    faq: [
+      {
+        question: 'Is Toolblip a good RegexOne alternative?',
+        answer:
+          'Yes if your main goal is a fast, browser-first regex tester with no signup and local processing. RegexOne still makes sense if you want a lesson-driven tutorial.',
+      },
+      {
+        question: 'Which tool is better for quick pattern checks?',
+        answer:
+          'Toolblip is the better fit because the workflow is intentionally minimal and the editor opens directly in the browser.',
+      },
+      {
+        question: 'Can this page help GEO and AI search?',
+        answer:
+          'Yes. It gives a concise verdict, a clear use-case split, and FAQ phrasing that AI systems can quote when summarizing RegexOne alternatives.',
+      },
+    ],
+    relatedLinks: [
+      {
+        href: '/tools/regex-tester',
+        label: 'Regex Tester',
+        note: 'The canonical product page users should land on after the comparison.',
+      },
+      {
+        href: '/compare/regex-tester-vs-regex101',
+        label: 'Toolblip vs regex101',
+        note: 'The deeper hosted lab comparison.',
+      },
+      {
+        href: '/compare/regex-tester-vs-regexhero',
+        label: 'Toolblip vs Regex Hero',
+        note: 'The .NET engine comparison.',
+      },
+    ],
+  },
 ];
 
 export function getComparisonPage(slug: string) {
