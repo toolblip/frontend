@@ -5,6 +5,7 @@ import Link from 'next/link';
 import {
   PricingBillingToggle,
   PricingPlanCard,
+  buildPricingPlanFeatures,
   sortPricingPlans,
   type BillingCycle,
   type PricingPlanLike,
@@ -259,7 +260,7 @@ export default function PricingClient() {
             .map((plan) => {
               const isHighlighted = plan.tier === HIGHLIGHT_TIER;
               const sourcePlan = orderedPlans.find((item) => item.tier === plan.tier)!;
-              const features = buildPlanFeatures(sourcePlan);
+              const features = buildPricingPlanFeatures(sourcePlan);
 
               return (
                 <PricingPlanCard
@@ -300,7 +301,7 @@ export default function PricingClient() {
             .filter((plan) => plan.tier === 'free')
             .map((plan) => {
               const sourcePlan = orderedPlans.find((item) => item.tier === plan.tier)!;
-              const features = buildPlanFeatures(sourcePlan);
+              const features = buildPricingPlanFeatures(sourcePlan);
 
               return (
                 <div key={plan.tier} className="lg:col-span-3">

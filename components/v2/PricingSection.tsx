@@ -13,6 +13,20 @@ export interface PricingPlanLike {
   badge?: string | null;
 }
 
+export interface PricingPlanFeatureSource {
+  tier: string;
+  storage_gb: number;
+  max_file_size_mb: number;
+  team_seats: number;
+  api_access: boolean;
+  priority_support: boolean;
+}
+
+export interface PricingPlanFeature {
+  label: string;
+  included?: boolean;
+}
+
 export interface PricingPlanCardContext {
   billing: BillingCycle;
   isHighlighted: boolean;
@@ -39,6 +53,56 @@ export function sortPricingPlans<T extends { tier: string; sortOrder?: number; s
 export function formatPricingAmount(cents: number): string {
   const amount = cents / 100;
   return amount % 1 === 0 ? String(amount) : amount.toFixed(2);
+}
+
+function formatStorage(gb: number): string {
+  if (gb === 0) return '';
+  if (gb < 1) return `${gb * 1000} MB`;
+  return `${gb} GB`;
+}
+
+function formatFileSize(mb: number): string {
+  if (mb === 0) return '';
+  if (mb >= 1000) return `${mb / 1000} GB`;
+  return `${mb} MB`;
+}
+
+export function buildPricingPlanFeatures(plan: PricingPlanFeatureSource): PricingPlanFeature[] {
+  const features: PricingPlanFeature[] = [];
+
+  if (plan.tier === 'free') {
+    features.push({ label: 'All tools available' });
+    features.push({ label: 'Client-side processing' });
+    return features;
+  }
+
+  features.push({ label: 'Everything in Free' });
+  features.push({ label: 'No ads' });
+
+  if (plan.storage_gb > 0) {
+    features.push({ label: `${formatStorage(plan.storage_gb)} cloud storage` });
+  }
+  if (plan.max_file_size_mb > 0) {
+    features.push({ label: `Up to ${formatFileSize(plan.max_file_size_mb)} file processing` });
+  }
+  if (plan.team_seats > 0) {
+    features.push({
+      label: `${plan.team_seats} team seat${plan.team_seats > 1 ? 's' : ''}`,
+    });
+  }
+
+  if (plan.tier === 'starter') {
+    features.push({ label: 'API access', included: false });
+    features.push({ label: 'Basic support' });
+  } else if (plan.tier === 'ultra') {
+    features.push({ label: 'API access' });
+    features.push({ label: 'Standard support' });
+  } else if (plan.tier === 'max') {
+    features.push({ label: 'API access' });
+    features.push({ label: 'Priority support' });
+  }
+
+  return features;
 }
 
 function billingToggleButtonClasses(active: boolean) {

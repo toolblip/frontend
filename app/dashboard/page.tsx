@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import {
   PricingBillingToggle,
   PricingPlanCard,
+  buildPricingPlanFeatures,
   type BillingCycle,
 } from "@/components/v2/PricingSection";
 
@@ -53,35 +54,60 @@ const ONBOARDING_PLANS: Array<{
   badge?: string;
   priceMonthly: number;
   priceYearly: number;
+  storage_gb: number;
+  max_file_size_mb: number;
+  team_seats: number;
+  api_access: boolean;
+  priority_support: boolean;
 }> = [
   {
     tier: "starter",
     name: "Starter",
-    description: "Remove ads and unlock personal cloud storage.",
+    description: "For personal use",
     priceMonthly: 499,
     priceYearly: 4799,
+    storage_gb: 1,
+    max_file_size_mb: 50,
+    team_seats: 1,
+    api_access: false,
+    priority_support: false,
   },
   {
     tier: "ultra",
     name: "Pro",
-    description: "Power-user limits, API access, and more storage.",
+    description: "For power users",
     badge: "Popular",
     priceMonthly: 1999,
     priceYearly: 19199,
+    storage_gb: 10,
+    max_file_size_mb: 500,
+    team_seats: 3,
+    api_access: true,
+    priority_support: false,
   },
   {
     tier: "max",
     name: "Max",
-    description: "Team seats, priority support, and the highest limits.",
+    description: "For teams",
     priceMonthly: 4999,
     priceYearly: 47999,
+    storage_gb: 50,
+    max_file_size_mb: 5000,
+    team_seats: 10,
+    api_access: true,
+    priority_support: true,
   },
   {
     tier: "free",
     name: "Free",
-    description: "Start with all core tools and client-side processing.",
+    description: "For anyone getting started",
     priceMonthly: 0,
     priceYearly: 0,
+    storage_gb: 0,
+    max_file_size_mb: 5,
+    team_seats: 1,
+    api_access: false,
+    priority_support: false,
   },
 ];
 
@@ -668,6 +694,8 @@ export default function AccountPage() {
                 <div className="grid gap-4 lg:grid-cols-3">
                   {ONBOARDING_PLANS.filter((plan) => plan.tier !== "free").map((plan) => {
                     const selected = selectedOnboardingPlan === plan.tier;
+                    const sourcePlan = plan;
+                    const features = buildPricingPlanFeatures(sourcePlan);
                     return (
                       <PricingPlanCard
                         key={plan.tier}
@@ -696,12 +724,28 @@ export default function AccountPage() {
                             className="mb-3 h-4 w-4 border-gray-300 text-red-600 focus:ring-red-500"
                           />
                         }
-                      />
+                      >
+                        <ul className="tb-v2-pricing-features">
+                          {features.map((feature) => (
+                            <li
+                              key={feature.label}
+                              className={feature.included === false ? 'text-[color:var(--fg-3)] line-through' : ''}
+                            >
+                              <span className="mt-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center text-[11px] font-bold leading-none text-red-500">
+                                {feature.included === false ? '×' : '✓'}
+                              </span>
+                              {feature.label}
+                            </li>
+                          ))}
+                        </ul>
+                      </PricingPlanCard>
                     );
                   })}
 
                   {ONBOARDING_PLANS.filter((plan) => plan.tier === "free").map((plan) => {
                     const selected = selectedOnboardingPlan === plan.tier;
+                    const sourcePlan = plan;
+                    const features = buildPricingPlanFeatures(sourcePlan);
                     return (
                       <div key={plan.tier} className="lg:col-span-3">
                         <PricingPlanCard
@@ -716,7 +760,15 @@ export default function AccountPage() {
                           billing={onboardingBilling}
                           selected={selected}
                           htmlFor={`onboarding-plan-${plan.tier}`}
-                        topSlot={
+                          tone="light"
+                          className="free-row"
+                          compactHeader
+                          headerRightSlot={
+                            <Link href="/signup" className="tb-v2-pricing-inline-link">
+                              Get Free Plan
+                            </Link>
+                          }
+                          topSlot={
                             <input
                               id={`onboarding-plan-${plan.tier}`}
                               type="radio"
@@ -730,7 +782,21 @@ export default function AccountPage() {
                               className="mb-3 h-4 w-4 border-gray-300 text-red-600 focus:ring-red-500"
                             />
                           }
-                        />
+                        >
+                          <ul className="tb-v2-pricing-features">
+                            {features.map((feature) => (
+                              <li
+                                key={feature.label}
+                                className={feature.included === false ? 'text-[color:var(--fg-3)] line-through' : ''}
+                              >
+                                <span className="mt-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center text-[11px] font-bold leading-none text-red-500">
+                                  {feature.included === false ? '×' : '✓'}
+                                </span>
+                                {feature.label}
+                              </li>
+                            ))}
+                          </ul>
+                        </PricingPlanCard>
                       </div>
                     );
                   })}
