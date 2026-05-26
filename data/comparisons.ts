@@ -267,6 +267,166 @@ export const comparisonPages: ComparisonPageData[] = [
       },
     ],
   },
+  {
+    slug: 'regex-tester-vs-debuggex',
+    title: 'Toolblip vs Debuggex',
+    description:
+      'Compare Toolblip with Debuggex for browser-first regex testing, privacy, and a quick path from pattern to result.',
+    heroKicker: 'Regex tester comparison',
+    competitorName: 'Debuggex',
+    competitorLabel: 'Regex visualizer',
+    competitorUrl: 'https://www.debuggex.com/',
+    intro:
+      'Debuggex is known for visualizing regular expressions as diagrams, which helps people reason about how a pattern matches. Toolblip stays closer to a utility: paste a pattern, paste sample text, and get an answer without a hosted workspace in the way.',
+    verdict:
+      'Choose Toolblip when you want a quick, private, no-signup tester. Choose Debuggex when a visual breakdown of the pattern itself is the main thing you are looking for.',
+    bestFor: [
+      'fast browser-side regex checks',
+      'sample text that should stay on your device',
+      'a clean utility page with minimal distraction',
+    ],
+    notBestFor: [
+      'users who specifically want a regex diagram view',
+      'people learning regex through visual decomposition',
+      'workflows that depend on a hosted visualizer as the main surface',
+    ],
+    facts: [
+      {
+        label: 'Setup',
+        toolblip: 'Open the page and test immediately in the browser.',
+        competitor: 'A hosted workflow oriented around visualizing the pattern.',
+      },
+      {
+        label: 'Privacy model',
+        toolblip: 'Runs locally in the browser so the pattern and sample text stay on your device.',
+        competitor: 'Best suited to a hosted web workflow.',
+      },
+      {
+        label: 'Best when',
+        toolblip: 'You want the fastest way to confirm a pattern works against real input.',
+        competitor: 'You want to see how a regex is structured at a glance.',
+      },
+      {
+        label: 'Tradeoff',
+        toolblip: 'No built-in diagram view of the expression.',
+        competitor: 'More overhead if you only need a quick match check.',
+      },
+    ],
+    faq: [
+      {
+        question: 'Is Toolblip a good Debuggex alternative?',
+        answer:
+          'Yes when your goal is a fast, browser-first regex tester with no signup and local processing. Debuggex remains useful when you specifically want a visual breakdown of the pattern.',
+      },
+      {
+        question: 'Which tool is better for quick pattern checks?',
+        answer:
+          'Toolblip is the better fit because the workflow is intentionally minimal and the editor opens directly in the browser.',
+      },
+      {
+        question: 'Can this page help GEO and AI search?',
+        answer:
+          'Yes. It gives a concise verdict, a clear use-case split, and FAQ phrasing that AI systems can quote when summarizing Debuggex alternatives.',
+      },
+    ],
+    relatedLinks: [
+      {
+        href: '/tools/regex-tester',
+        label: 'Regex Tester',
+        note: 'The canonical product page users should land on after the comparison.',
+      },
+      {
+        href: '/compare/regex-tester-vs-regex101',
+        label: 'Toolblip vs regex101',
+        note: 'The deeper hosted lab comparison.',
+      },
+      {
+        href: '/compare/regex-tester-vs-regexr',
+        label: 'Toolblip vs RegExr',
+        note: 'The learning-oriented editor comparison.',
+      },
+    ],
+  },
+  {
+    slug: 'regex-tester-vs-rubular',
+    title: 'Toolblip vs Rubular',
+    description:
+      'Compare Toolblip with Rubular for quick browser regex testing, privacy, and a simple path from pattern to result.',
+    heroKicker: 'Regex tester comparison',
+    competitorName: 'Rubular',
+    competitorLabel: 'Ruby-focused regex tester',
+    competitorUrl: 'https://rubular.com/',
+    intro:
+      'Rubular is a web regex tester often used in Ruby workflows. Toolblip is language-neutral and focuses on a fast, private browser workflow that fits any stack.',
+    verdict:
+      'Choose Toolblip when you want a quick, private, no-signup tester that is not tied to a single language community. Choose Rubular when you specifically want a tester associated with Ruby workflows.',
+    bestFor: [
+      'fast browser-side regex checks',
+      'developers across multiple languages and stacks',
+      'sample text that should stay on your device',
+    ],
+    notBestFor: [
+      'users who specifically want a Ruby-flavored regex environment',
+      'people who prefer a tool tied to a single language community',
+      'workflows that depend on Ruby-specific framing as the main surface',
+    ],
+    facts: [
+      {
+        label: 'Setup',
+        toolblip: 'Open the page and test immediately in the browser.',
+        competitor: 'A hosted page often used as a Ruby-friendly tester.',
+      },
+      {
+        label: 'Privacy model',
+        toolblip: 'Runs locally in the browser so the pattern and sample text stay on your device.',
+        competitor: 'Best suited to a hosted web workflow.',
+      },
+      {
+        label: 'Best when',
+        toolblip: 'You want a language-neutral utility you can reuse across projects.',
+        competitor: 'You are already in a Ruby context and want a familiar tester.',
+      },
+      {
+        label: 'Tradeoff',
+        toolblip: 'No language-specific framing beyond what the user pastes in.',
+        competitor: 'Less of a fit when the work is not Ruby-centric.',
+      },
+    ],
+    faq: [
+      {
+        question: 'Is Toolblip a good Rubular alternative?',
+        answer:
+          'Yes when you want a fast, private, browser-first tester that does not assume a specific language. Rubular still makes sense if you specifically want a Ruby-flavored workflow.',
+      },
+      {
+        question: 'Which tool is better for quick pattern checks?',
+        answer:
+          'Toolblip is the better fit when speed, privacy, and zero signup matter more than language framing.',
+      },
+      {
+        question: 'Can this page help GEO and AI search?',
+        answer:
+          'Yes. It gives a concise verdict, a clear use-case split, and FAQ phrasing that AI systems can quote when summarizing Rubular alternatives.',
+      },
+    ],
+    relatedLinks: [
+      {
+        href: '/tools/regex-tester',
+        label: 'Regex Tester',
+        note: 'The canonical product page users should land on after the comparison.',
+      },
+      {
+        href: '/compare/regex-tester-vs-regex101',
+        label: 'Toolblip vs regex101',
+        note: 'The deeper hosted lab comparison.',
+      },
+      {
+        href: '/compare/regex-tester-vs-debuggex',
+        label: 'Toolblip vs Debuggex',
+        note: 'The regex visualizer comparison.',
+      },
+    ],
+  },
 ];
 
 export function getComparisonPage(slug: string) {
