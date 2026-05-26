@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next';
 import { tools } from '@/data/tools';
 import { getBlogPosts } from '@/lib/blog';
+import { comparisonPages } from '@/data/comparisons';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://toolblip.com';
@@ -48,6 +49,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.5,
     },
+    {
+      url: `${baseUrl}/compare`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.6,
+    },
   ];
 
   const toolPages: MetadataRoute.Sitemap = tools
@@ -66,5 +73,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticPages, ...blogPages, ...toolPages];
+  const comparisonPagesMap: MetadataRoute.Sitemap = comparisonPages.map((page) => ({
+    url: `${baseUrl}/compare/${page.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly' as const,
+    priority: 0.6,
+  }));
+
+  return [...staticPages, ...blogPages, ...comparisonPagesMap, ...toolPages];
 }

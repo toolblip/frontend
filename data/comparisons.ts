@@ -1,0 +1,274 @@
+export type ComparisonFact = {
+  label: string;
+  toolblip: string;
+  competitor: string;
+};
+
+export type ComparisonFaq = {
+  question: string;
+  answer: string;
+};
+
+export type ComparisonPageData = {
+  slug: string;
+  title: string;
+  description: string;
+  heroKicker: string;
+  competitorName: string;
+  competitorLabel: string;
+  competitorUrl: string;
+  intro: string;
+  verdict: string;
+  bestFor: string[];
+  notBestFor: string[];
+  facts: ComparisonFact[];
+  faq: ComparisonFaq[];
+  relatedLinks: Array<{ href: string; label: string; note: string }>;
+};
+
+export const comparisonPages: ComparisonPageData[] = [
+  {
+    slug: 'regex-tester-vs-regex101',
+    title: 'Toolblip vs regex101',
+    description:
+      'Compare Toolblip with regex101 for quick, private regex testing, browser-first workflows, and hands-on pattern debugging.',
+    heroKicker: 'Regex tester comparison',
+    competitorName: 'regex101',
+    competitorLabel: 'Hosted regex lab',
+    competitorUrl: 'https://regex101.com/',
+    intro:
+      'Toolblip is built for people who want to open a tab, test a pattern, and move on. regex101 is a deeper regex environment that many developers use for documentation, experimentation, and more advanced workflows.',
+    verdict:
+      'Choose Toolblip when speed, privacy, and zero signup friction matter most. Choose regex101 when you want a heavier-featured regex lab and do not mind a more involved workspace.',
+    bestFor: [
+      'quick validation in a browser tab',
+      'private sample text that should stay local',
+      'developers who want low-friction repeat checks',
+    ],
+    notBestFor: [
+      'teams that need a large hosted regex knowledge base',
+      'users who want a deeply documented shared workspace',
+      'people who expect a full regex learning suite in one place',
+    ],
+    facts: [
+      {
+        label: 'Setup',
+        toolblip: 'Open and test immediately in the browser.',
+        competitor: 'A more feature-rich hosted workflow.',
+      },
+      {
+        label: 'Privacy model',
+        toolblip: 'Runs locally in the browser so sample text stays on your device.',
+        competitor: 'Best suited to a hosted web workflow rather than an offline-first one.',
+      },
+      {
+        label: 'Best when',
+        toolblip: 'You want the fastest way to validate a pattern with minimal friction.',
+        competitor: 'You want a deeper regex lab for heavier experimentation and reference.',
+      },
+      {
+        label: 'Tradeoff',
+        toolblip: 'Less breadth than a full-scale regex knowledge platform.',
+        competitor: 'More overhead if you only need a quick one-off check.',
+      },
+    ],
+    faq: [
+      {
+        question: 'Is Toolblip a good regex101 alternative?',
+        answer:
+          'Yes if your main goal is a fast, browser-first regex tester with no signup and local processing. regex101 still makes sense if you want a deeper hosted environment.',
+      },
+      {
+        question: 'Which tool is better for quick pattern checks?',
+        answer:
+          'Toolblip is the better fit for quick checks because the workflow is intentionally minimal and the editor opens directly in the browser.',
+      },
+      {
+        question: 'Which page should rank for regex101 alternative queries?',
+        answer:
+          'This comparison page, supported by the regex tester landing page, the blog guide, and the SEO hub, is the best canonical target for that intent.',
+      },
+    ],
+    relatedLinks: [
+      {
+        href: '/tools/regex-tester',
+        label: 'Regex Tester',
+        note: 'The canonical product page users should land on after the comparison.',
+      },
+      {
+        href: '/blog/2026-04-28-regex-tester-online-free-privacy-guide',
+        label: 'Regex tester privacy guide',
+        note: 'Explains the browser-first positioning in more detail.',
+      },
+      {
+        href: '/compare/regex-tester-vs-regexr',
+        label: 'Toolblip vs RegExr',
+        note: 'A lighter, learning-oriented alternative comparison.',
+      },
+    ],
+  },
+  {
+    slug: 'regex-tester-vs-regexr',
+    title: 'Toolblip vs RegExr',
+    description:
+      'A comparison for users who want a simple browser regex tester and are evaluating a learning-friendly alternative.',
+    heroKicker: 'Regex tester comparison',
+    competitorName: 'RegExr',
+    competitorLabel: 'Interactive regex editor',
+    competitorUrl: 'https://regexr.com/',
+    intro:
+      'RegExr is popular with people who want an interactive regex editor and a learning-friendly workflow. Toolblip keeps the focus on instant testing, browser privacy, and a clean path from paste to result.',
+    verdict:
+      'Choose Toolblip when you want a simple, private, no-signup tester. Choose RegExr when the learning experience and editor-style workflow are the main priority.',
+    bestFor: [
+      'fast browser-side testing',
+      'local sample text that should stay private',
+      'a clean utility page with minimal distraction',
+    ],
+    notBestFor: [
+      'users who want a learning-first regex environment',
+      'people who prefer a more tutorial-style editor experience',
+      'teams looking for a large shared regex reference ecosystem',
+    ],
+    facts: [
+      {
+        label: 'Setup',
+        toolblip: 'Browser-first with no signup gate.',
+        competitor: 'Known for an editor-style workflow focused on learning and practice.',
+      },
+      {
+        label: 'Privacy model',
+        toolblip: 'The pattern and sample text stay in the browser.',
+        competitor: 'Best positioned as a hosted interactive editor.',
+      },
+      {
+        label: 'Best when',
+        toolblip: 'You want to check a regex quickly and get back to coding.',
+        competitor: 'You want to explore regex behavior in a more guided environment.',
+      },
+      {
+        label: 'Tradeoff',
+        toolblip: 'Less of a teaching sandbox, more of a utility.',
+        competitor: 'More editor-centric than pure utility-centric.',
+      },
+    ],
+    faq: [
+      {
+        question: 'Is Toolblip better than RegExr for privacy?',
+        answer:
+          'Toolblip is the safer bet when you want a browser-first workflow that keeps sample text local and avoids a signup step.',
+      },
+      {
+        question: 'Should this page target RegExr alternative queries?',
+        answer:
+          'Yes. The page is written to capture people comparing a quick utility to a learning-oriented editor.',
+      },
+      {
+        question: 'Can this page help GEO and AI search?',
+        answer:
+          'Yes. It gives a concise verdict, a clear use-case split, and FAQ phrasing that AI systems can quote directly.',
+      },
+    ],
+    relatedLinks: [
+      {
+        href: '/tools/regex-tester',
+        label: 'Regex Tester',
+        note: 'The core Toolblip utility page for this intent.',
+      },
+      {
+        href: '/compare/regex-tester-vs-regex101',
+        label: 'Toolblip vs regex101',
+        note: 'The deeper-hosted-tool comparison page.',
+      },
+      {
+        href: '/compare/regex-tester-vs-regexbuddy',
+        label: 'Toolblip vs RegexBuddy',
+        note: 'The desktop-app comparison page.',
+      },
+    ],
+  },
+  {
+    slug: 'regex-tester-vs-regexbuddy',
+    title: 'Toolblip vs RegexBuddy',
+    description:
+      'A browser-first alternative for people comparing Toolblip to a desktop regex workflow.',
+    heroKicker: 'Regex tester comparison',
+    competitorName: 'RegexBuddy',
+    competitorLabel: 'Desktop regex tool',
+    competitorUrl: 'https://www.regexbuddy.com/',
+    intro:
+      'RegexBuddy is known as a desktop regex tool, which makes it appealing when people want a dedicated installed workflow. Toolblip stays in the browser, loads fast, and keeps the regex check close to the task at hand.',
+    verdict:
+      'Choose Toolblip when you want instant browser access and no installation. Choose RegexBuddy when you prefer a dedicated desktop workflow and do not mind software installation.',
+    bestFor: [
+      'quick browser sessions',
+      'teams that want a shareable web page instead of an installed app',
+      'people who want a zero-install regex utility',
+    ],
+    notBestFor: [
+      'users who explicitly want a desktop application',
+      'workflows that expect a persistent local software suite',
+      'people who rely on an offline installed tool as their default',
+    ],
+    facts: [
+      {
+        label: 'Setup',
+        toolblip: 'No install, no setup, no account barrier.',
+        competitor: 'A desktop-first approach with an installed workflow.',
+      },
+      {
+        label: 'Best when',
+        toolblip: 'You need a quick regex answer right inside the browser.',
+        competitor: 'You prefer a classic desktop app workflow.',
+      },
+      {
+        label: 'Tradeoff',
+        toolblip: 'Less customization than a dedicated desktop suite.',
+        competitor: 'More friction if you only want a fast throwaway check.',
+      },
+      {
+        label: 'Audience fit',
+        toolblip: 'Developers who prefer lightweight browser tools.',
+        competitor: 'Power users who like installed utilities.',
+      },
+    ],
+    faq: [
+      {
+        question: 'Why compare a browser tool with a desktop app?',
+        answer:
+          'Because a lot of regex searches are really workflow searches. People want to know whether a browser tab or an installed app is the better fit.',
+      },
+      {
+        question: 'What makes Toolblip a strong alternative?',
+        answer:
+          'The value is simple: no install, no signup, and a local-first browser experience that is easy to revisit later.',
+      },
+      {
+        question: 'Is this page useful for AI search?',
+        answer:
+          'Yes. It frames the choice by use case, which is exactly how many AI assistants summarize tool recommendations.',
+      },
+    ],
+    relatedLinks: [
+      {
+        href: '/tools/regex-tester',
+        label: 'Regex Tester',
+        note: 'The canonical product page for the browser-based option.',
+      },
+      {
+        href: '/compare/regex-tester-vs-regex101',
+        label: 'Toolblip vs regex101',
+        note: 'The hosted power-user comparison.',
+      },
+      {
+        href: '/compare',
+        label: 'Comparison hub',
+        note: 'A single index page for all comparison content.',
+      },
+    ],
+  },
+];
+
+export function getComparisonPage(slug: string) {
+  return comparisonPages.find((page) => page.slug === slug);
+}

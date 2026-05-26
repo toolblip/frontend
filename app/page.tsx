@@ -101,6 +101,17 @@ export default function HomePage() {
             </div>
           </div>
           <div className="tb-v2-dir-grid">
+            <Link href="/compare" className="tb-v2-dir-card">
+              <div className="tb-v2-dir-card-top">
+                <div style={{ flex: 1 }}>
+                  <div className="tb-v2-kicker" style={{ marginBottom: 6 }}>Comparison hub</div>
+                  <div className="tb-v2-dir-card-title">Toolblip vs competitor pages</div>
+                </div>
+              </div>
+              <div className="tb-v2-dir-card-desc">
+                Canonical comparison pages for SEO and GEO, starting with regex tool alternatives.
+              </div>
+            </Link>
             <Link href="/blog/2026-05-22-compound-seo-7-moves-tool-site-growth" className="tb-v2-dir-card">
               <div className="tb-v2-dir-card-top">
                 <div style={{ flex: 1 }}>

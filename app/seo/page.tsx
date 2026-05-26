@@ -27,6 +27,11 @@ export const metadata: Metadata = {
 
 const featuredLinks = [
   {
+    href: '/compare',
+    label: 'Comparison hub',
+    note: 'Canonical Toolblip vs competitor pages for SEO and GEO.',
+  },
+  {
     href: '/blog/2026-05-22-compound-seo-7-moves-tool-site-growth',
     label: 'Compound SEO: 7 Moves That Help a Tool Site Grow',
     note: 'A practical list for tool site growth and cleaner discovery.',
