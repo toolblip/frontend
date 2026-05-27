@@ -1,6 +1,5 @@
 {
   "pending": [
-    "validate YAML online before deploying config files",
     "generate UUIDs online for test data and API fixtures",
     "escape and unescape HTML entities for frontend debugging",
     "format SQL queries online for readability",
@@ -11,6 +10,13 @@
   ],
   "in_progress": [],
   "done": [
+    {
+      "topic": "validate YAML online before deploying config files",
+      "completed_at": "2026-05-27T06:28:46Z",
+      "url": "https://toolblip.com/tools/yaml-validator",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live YAML Validator tool page; no thin support blog post published."
+    },
     {
       "topic": "convert Unix timestamps to readable dates online",
       "completed_at": "2026-05-22T17:08:00Z",
