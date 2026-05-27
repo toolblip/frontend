@@ -1,6 +1,5 @@
 {
   "pending": [
-    "generate UUIDs online for test data and API fixtures",
     "escape and unescape HTML entities for frontend debugging",
     "format SQL queries online for readability",
     "generate QR codes online without signing up",
@@ -10,6 +9,10 @@
   ],
   "in_progress": [],
   "done": [
+    {
+      "topic": "generate UUIDs online for test data and API fixtures",
+      "completed_at": "2026-05-27T17:06:57Z"
+    },
     {
       "topic": "validate YAML online before deploying config files",
       "completed_at": "2026-05-27T06:28:46Z",

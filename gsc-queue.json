@@ -65,6 +65,10 @@
     {
       "url": "https://toolblip.com/blog/2026-05-13-how-to-test-regular-expressions-online-with-sample-text",
       "submitted_at": "2026-05-19T09:40:20Z"
+    },
+    {
+      "url": "https://toolblip.com/blog/2026-05-27-uuid-generator-for-api-testing",
+      "submitted_at": "2026-05-27T17:06:47Z"
     }
   ],
   "failed": []
