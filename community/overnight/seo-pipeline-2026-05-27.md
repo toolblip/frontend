@@ -22,6 +22,7 @@ Next Run: 2026-05-28 23:00 Dhaka
 - URL inspection/submission helper returned `status: submitted`.
 - Coverage state is `URL is unknown to Google`, which is expected immediately after publishing a new URL.
 - Sitemap refresh returned `status: ok` for `https://toolblip.com/sitemap.xml`.
+- Final GSC diagnose returned `fix_needed: false` and no issues.
 
 ## Quality / spam-safety notes
 
@@ -33,6 +34,9 @@ Next Run: 2026-05-28 23:00 Dhaka
 ## Verification
 
 - Local `npm run build` passed after installing dependencies in the temporary worktree.
-- Article frontmatter uses a quoted ISO date string.
-- Local article audit found no `[object Object]`, em dashes, Claude meta notes, or humanizer edit notes.
-- Live URL and live sitemap verification are handled after push in the cron report.
+- Railway fresh deploy triggered for commit `1e0c090b`; deployment `8466f078-d305-4bb8-b95f-089657971aea` reached `SUCCESS`.
+- Live URL verified HTTP 200: `https://toolblip.com/blog/2026-05-27-uuid-generator-for-api-testing`.
+- Live sitemap contains the new slug.
+- Live HTML title contains `UUID Generator for API Testing: Fake IDs Fast`.
+- Live `article:published_time` is `2026-05-27T00:00:00.000Z` and does not contain `[object Object]`.
+- Local and live audits found no Claude edit notes, no humanizer edit notes, and no em dashes.
