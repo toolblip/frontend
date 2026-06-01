@@ -150,9 +150,10 @@ export default function PricingClient() {
   async function handleUpgrade(plan: Plan) {
     setError(null);
     const token = localStorage.getItem('toolblip_token');
+    const onboardingNext = `/dashboard?plan=${plan.tier}&billing=${billing}`;
 
     if (!token) {
-      window.location.href = `/login?next=/pricing`;
+      window.location.href = `/login?next=${encodeURIComponent(onboardingNext)}`;
       return;
     }
 
@@ -313,7 +314,7 @@ export default function PricingClient() {
                     compactHeader
                     headerRightSlot={
                       <Link
-                        href="/signup"
+                        href={`/signup?next=${encodeURIComponent('/dashboard?plan=free')}`}
                         className="tb-v2-pricing-inline-link"
                       >
                         Get Free Plan

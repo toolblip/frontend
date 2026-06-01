@@ -123,6 +123,22 @@ function displayOnboardingPlanName(tier: string | null | undefined) {
   return ONBOARDING_PLAN_LABELS[tier as OnboardingPlanTier] ?? tier.charAt(0).toUpperCase() + tier.slice(1);
 }
 
+function parseOnboardingPlanParam(plan: string | null): OnboardingPlanTier | null {
+  if (plan === "free" || plan === "starter" || plan === "ultra" || plan === "max") {
+    return plan;
+  }
+
+  return null;
+}
+
+function parseBillingCycleParam(billing: string | null): BillingCycle | null {
+  if (billing === "monthly" || billing === "yearly") {
+    return billing;
+  }
+
+  return null;
+}
+
 function onboardingStorageKey(userId: number | string) {
   return `toolblip_onboarding_${userId}`;
 }
@@ -251,14 +267,31 @@ export default function AccountPage() {
     }
 
     const suggestedTeamName = user.name ? `${user.name} Team` : "Toolblip Team";
+    const params = new URLSearchParams(window.location.search);
+    const requestedPlan = parseOnboardingPlanParam(params.get("plan"));
+    const requestedBilling = parseBillingCycleParam(params.get("billing"));
 
     try {
       const stored = window.localStorage.getItem(onboardingStorageKey(user.id));
       if (!stored) {
+        const initialSelectedPlan = requestedPlan ?? DEFAULT_ONBOARDING_PLAN;
+        const initialBilling = requestedBilling ?? "monthly";
+        const initialPayload = {
+          version: ONBOARDING_STORAGE_VERSION,
+          status: "draft" as OnboardingStatus,
+          step: "welcome" as OnboardingStep,
+          teamName: suggestedTeamName,
+          selectedPlan: initialSelectedPlan,
+          billingCycle: initialBilling,
+          updatedAt: new Date().toISOString(),
+        };
+
         setTeamName(suggestedTeamName);
-        setSelectedOnboardingPlan(DEFAULT_ONBOARDING_PLAN);
+        setSelectedOnboardingPlan(initialSelectedPlan);
+        setOnboardingBilling(initialBilling);
         setOnboardingStep("welcome");
         setShowPlanOnboarding(true);
+        window.localStorage.setItem(onboardingStorageKey(user.id), JSON.stringify(initialPayload));
         return;
       }
 
@@ -275,8 +308,8 @@ export default function AccountPage() {
         return;
       }
 
-      const restoredSelectedPlan = normalizeOnboardingPlan(parsed.selectedPlan);
-      const restoredBilling = parsed.billingCycle ?? "monthly";
+      const restoredSelectedPlan = requestedPlan ?? normalizeOnboardingPlan(parsed.selectedPlan);
+      const restoredBilling = requestedBilling ?? parsed.billingCycle ?? "monthly";
       const restoredStep = parsed.step ?? "welcome";
       const restoredPayload = {
         version: ONBOARDING_STORAGE_VERSION,
@@ -586,7 +619,7 @@ export default function AccountPage() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="onboarding-title"
-            className="w-full max-w-lg rounded-2xl border border-gray-200 bg-white p-6 shadow-2xl dark:border-gray-700 dark:bg-gray-900"
+            className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl border border-gray-200 bg-white p-6 shadow-2xl dark:border-gray-700 dark:bg-gray-900"
           >
             <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-red-600 dark:text-red-400">Welcome to Toolblip</p>
             <h2 id="onboarding-title" className="mb-3 text-2xl font-bold text-gray-900 dark:text-white">Complete your dashboard setup</h2>
@@ -631,7 +664,7 @@ export default function AccountPage() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="plan-onboarding-title"
-            className="w-full max-w-5xl rounded-3xl border border-red-200 bg-gradient-to-br from-red-50 via-white to-gray-50 p-6 shadow-2xl dark:border-red-900/50 dark:from-red-950/30 dark:via-gray-900 dark:to-gray-950"
+            className="w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-3xl border border-red-200 bg-gradient-to-br from-red-50 via-white to-gray-50 p-6 shadow-2xl dark:border-red-900/50 dark:from-red-950/30 dark:via-gray-900 dark:to-gray-950"
           >
             <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
               <div className="max-w-2xl space-y-4">

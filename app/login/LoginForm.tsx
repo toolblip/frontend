@@ -119,7 +119,7 @@ export default function LoginForm() {
           <p className="tb-v2-auth-footer">
             <Link href="/forgot-password">Forgot password?</Link>
             <br />
-            Don&apos;t have an account? <Link href="/signup">Sign up</Link>
+            Don&apos;t have an account? <Link href={`/signup?next=${encodeURIComponent(next)}`}>Sign up</Link>
           </p>
         </div>
       </div>

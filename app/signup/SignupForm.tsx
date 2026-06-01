@@ -179,7 +179,7 @@ export default function SignupForm() {
           </form>
 
           <p className="tb-v2-auth-footer">
-            Already have an account? <Link href="/login">Sign in</Link>
+            Already have an account? <Link href={`/login?next=${encodeURIComponent(next)}`}>Sign in</Link>
           </p>
         </div>
       </div>
