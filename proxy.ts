@@ -1,13 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const PROTECTED_PREFIXES = ["/account", "/dashboard", "/submit-tool"];
-const AUTH_ROUTES = ["/login", "/register"];
+const AUTH_ROUTES = ["/login", "/signup", "/register"];
+const NOINDEX_ROUTES = [
+  "/login",
+  "/signup",
+  "/forgot-password",
+  "/verify-email",
+  "/reset-password",
+];
+
+function setNoindexHeader(response: NextResponse, shouldNoindex: boolean) {
+  if (shouldNoindex) {
+    response.headers.set("x-robots-tag", "noindex, nofollow");
+  }
+  return response;
+}
 
 export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const token = req.cookies.get("auth_token")?.value;
   const hostname = req.nextUrl.hostname;
   const protocol = req.nextUrl.protocol;
+  const shouldNoindex =
+    NOINDEX_ROUTES.some((route) => pathname === route || pathname.startsWith(`${route}/`));
 
   const isLocalHost =
     hostname === "localhost" ||
@@ -26,7 +42,7 @@ export function proxy(req: NextRequest) {
       url.protocol = "https:";
     }
 
-    return NextResponse.redirect(url, 301);
+    return setNoindexHeader(NextResponse.redirect(url, 301), shouldNoindex);
   }
 
   // Let Next.js API auth routes through - handled by route handlers
@@ -41,16 +57,16 @@ export function proxy(req: NextRequest) {
     const url = req.nextUrl.clone();
     url.pathname = "/login";
     url.searchParams.set("next", pathname);
-    return NextResponse.redirect(url);
+    return setNoindexHeader(NextResponse.redirect(url), shouldNoindex);
   }
 
   if (isAuthRoute && token) {
     const nextParam = req.nextUrl.searchParams.get("next");
     const redirectTo = nextParam && nextParam.startsWith("/") ? nextParam : "/dashboard";
-    return NextResponse.redirect(new URL(redirectTo, req.url));
+    return setNoindexHeader(NextResponse.redirect(new URL(redirectTo, req.url)), shouldNoindex);
   }
 
-  return NextResponse.next();
+  return setNoindexHeader(NextResponse.next(), shouldNoindex);
 }
 
 export const config = {

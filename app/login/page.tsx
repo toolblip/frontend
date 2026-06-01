@@ -4,6 +4,10 @@ import LoginForm from './LoginForm';
 export const metadata: Metadata = {
   title: 'Sign In | Toolblip',
   description: 'Sign in to your Toolblip account to save API keys, manage your profile, and submit MCP servers.',
+  robots: {
+    index: false,
+    follow: false,
+  },
   openGraph: {
     title: 'Sign In | Toolblip',
     description: 'Sign in to your Toolblip account to save API keys, manage your profile, and submit MCP servers.',
