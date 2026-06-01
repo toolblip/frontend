@@ -149,6 +149,7 @@ test.describe('Account onboarding BDD regression', () => {
     await expect(onboarding.getByRole('button', { name: 'Finish' })).toHaveCount(0);
     await expect(onboarding.getByRole('button', { name: 'Start 14-day free trial' })).toHaveCount(3);
     await expect(onboarding.getByRole('button', { name: 'Continue with Free Plan' })).toHaveCount(1);
+    await expect(onboarding.getByText('No credit card required.')).toHaveCount(3);
 
     const cardLayout = await planCards.evaluateAll((nodes) =>
       nodes.map((node) => {

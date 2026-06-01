@@ -770,14 +770,17 @@ export default function AccountPage() {
                         highlighted={plan.tier === "ultra"}
                         selected={selected}
                         footer={
-                          <button
-                            type="button"
-                            onClick={() => completePlanOnboarding(plan.tier as OnboardingPlanTier, onboardingBilling)}
-                            className={`tb-v2-btn tb-v2-pricing-btn ${plan.tier === "ultra" ? 'inverse' : 'tb-v2-btn-primary'}`}
-                            style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
-                          >
-                            {PAID_TRIAL_CTA_LABEL}
-                          </button>
+                          <div className="flex flex-col items-center gap-2 text-center">
+                            <button
+                              type="button"
+                              onClick={() => completePlanOnboarding(plan.tier as OnboardingPlanTier, onboardingBilling)}
+                              className={`tb-v2-btn tb-v2-pricing-btn ${plan.tier === "ultra" ? 'inverse' : 'tb-v2-btn-primary'}`}
+                              style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
+                            >
+                              {PAID_TRIAL_CTA_LABEL}
+                            </button>
+                            <p className="text-xs font-medium text-[color:var(--fg-3)]">No credit card required.</p>
+                          </div>
                         }
                       >
                         <ul className="tb-v2-pricing-features">
