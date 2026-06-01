@@ -26,12 +26,18 @@ const TOOL_SLUG_ALIASES: Record<string, string> = {
   'convert-scss-to-css': 'sass-to-css',
   'sass-online': 'sass-to-css',
   'scss-online': 'sass-to-css',
+  'number-base-converter-new': 'number-base-converter-xl',
   'css-to-sass': 'css-to-scss',
   'css-to-sass-converter': 'css-to-scss',
   'css-to-sass-online': 'css-to-scss',
   'css-to-scss-converter': 'css-to-scss',
   'css-to-scss-online': 'css-to-scss',
   'css-to-scss-compiler': 'css-to-scss',
+  'http-tester': 'http-method-tester',
+  'http-request-tester': 'http-method-tester',
+  'mkv-compressor': 'compress-mkv',
+  'collocation-checker': 'collocations-checker',
+  'english-collocations-checker': 'collocations-checker',
 };
 
 export const tools: Tool[] = [
@@ -662,7 +668,6 @@ export const tools: Tool[] = [
   { name: 'Unit Converter', slug: 'unit-converter-std', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
   { name: 'Number Base Converter', slug: 'number-base-converter-std', description: 'Convert between binary, decimal, hexadecimal, octal, and base-32 instantly.', emoji: '🔢', category: 'Conversion' },
   { name: 'Unit Converter', slug: 'unit-converter-new', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },
-  { name: 'Number Base Converter', slug: 'number-base-converter-new', description: 'Convert between binary, decimal, hexadecimal, and octal number systems instantly.', emoji: '🔢', category: 'Conversion' },
   { name: 'Readability Score', slug: 'readability-checker-tool', description: 'Calculate Flesch-Kincaid, SMOG, ARI, and Coleman-Liau readability grades for any text.', emoji: '📊', category: 'Text' },
   { name: 'Text Sorter', slug: 'text-sorting-tool', description: 'Sort lines alphabetically, by length, numerically, reverse, or in random order.', emoji: '📋', category: 'Text' },
   { name: 'Regex Tester', slug: 'regex-tool', description: 'Test regex patterns with real-time match highlighting, capture groups, and replacements.', emoji: '🔍', category: 'Developer' },

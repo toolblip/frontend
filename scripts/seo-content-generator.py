@@ -286,7 +286,7 @@ def fix_page(gsc, page_url: str) -> dict:
     # Re-submit via URL inspection
     try:
         result = gsc.urlInspection().index().inspect(
-            body={"inspectionUrl": page_url, "languageCode": "en-US"}
+            body={"inspectionUrl": page_url, "siteUrl": SITE_URL, "languageCode": "en-US"}
         ).execute()
         return {"url": page_url, "status": "ok", "result": result.get("inspectionResult", {}).get("indexStatusResult", {}).get("coverageState", "UNKNOWN")}
     except Exception as e:
