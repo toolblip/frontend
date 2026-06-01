@@ -1,6 +1,5 @@
 {
   "pending": [
-    "escape and unescape HTML entities for frontend debugging",
     "format SQL queries online for readability",
     "generate QR codes online without signing up",
     "validate XML online for API integrations",
@@ -9,6 +8,10 @@
   ],
   "in_progress": [],
   "done": [
+    {
+      "topic": "escape and unescape HTML entities for frontend debugging",
+      "completed_at": "2026-06-01T17:07:40Z"
+    },
     {
       "topic": "generate UUIDs online for test data and API fixtures",
       "completed_at": "2026-05-27T17:06:57Z"
