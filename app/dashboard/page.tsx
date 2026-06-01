@@ -12,6 +12,7 @@ import {
   PricingBillingToggle,
   PricingPlanCard,
   buildPricingPlanFeatures,
+  sortPricingPlans,
   type BillingCycle,
 } from "@/components/v2/PricingSection";
 
@@ -43,6 +44,22 @@ type OnboardingStatus = "completed" | "draft" | "skipped";
 type OnboardingStep = "welcome" | "pricing";
 type OnboardingPlanTier = "free" | "starter" | "ultra" | "max";
 
+type Plan = {
+  tier: string;
+  name: string;
+  description: string | null;
+  price_monthly: number;
+  price_yearly: number;
+  stripe_monthly_id: string | null;
+  stripe_yearly_id: string | null;
+  storage_gb: number;
+  max_file_size_mb: number;
+  team_seats: number;
+  api_access: boolean;
+  priority_support: boolean;
+  sort_order: number;
+};
+
 const ONBOARDING_STORAGE_VERSION = 2;
 const DEFAULT_ONBOARDING_PLAN: OnboardingPlanTier = "ultra";
 
@@ -50,68 +67,11 @@ function normalizeOnboardingPlan(plan?: string | null): OnboardingPlanTier {
   return plan === "starter" ? DEFAULT_ONBOARDING_PLAN : (plan as OnboardingPlanTier | undefined) ?? DEFAULT_ONBOARDING_PLAN;
 }
 
-const ONBOARDING_PLANS: Array<{
-  tier: OnboardingPlanTier;
-  name: string;
-  description: string;
-  badge?: string;
-  priceMonthly: number;
-  priceYearly: number;
-  storage_gb: number;
-  max_file_size_mb: number;
-  team_seats: number;
-  api_access: boolean;
-  priority_support: boolean;
-}> = [
-  {
-    tier: "starter",
-    name: "Starter",
-    description: "For personal use",
-    priceMonthly: 499,
-    priceYearly: 4799,
-    storage_gb: 1,
-    max_file_size_mb: 50,
-    team_seats: 1,
-    api_access: false,
-    priority_support: false,
-  },
-  {
-    tier: "ultra",
-    name: "Pro",
-    description: "For power users",
-    badge: "Popular",
-    priceMonthly: 1999,
-    priceYearly: 19199,
-    storage_gb: 10,
-    max_file_size_mb: 500,
-    team_seats: 3,
-    api_access: true,
-    priority_support: false,
-  },
-  {
-    tier: "max",
-    name: "Max",
-    description: "For teams",
-    priceMonthly: 4999,
-    priceYearly: 47999,
-    storage_gb: 50,
-    max_file_size_mb: 5000,
-    team_seats: 10,
-    api_access: true,
-    priority_support: true,
-  },
-  {
-    tier: "free",
-    name: "Free",
-    description: "For anyone getting started",
-    priceMonthly: 0,
-    priceYearly: 0,
-    storage_gb: 0,
-    max_file_size_mb: 5,
-    team_seats: 1,
-    api_access: false,
-    priority_support: false,
-  },
+const FALLBACK_PLANS: Plan[] = [
+  { tier: "free", name: "Free", description: "For anyone getting started", price_monthly: 0, price_yearly: 0, stripe_monthly_id: null, stripe_yearly_id: null, storage_gb: 0, max_file_size_mb: 5, team_seats: 1, api_access: false, priority_support: false, sort_order: 0 },
+  { tier: "starter", name: "Starter", description: "For personal use", price_monthly: 499, price_yearly: 4799, stripe_monthly_id: "price_1TOflqHd4AsPgGTOxspjxODX", stripe_yearly_id: "price_1TOflqHd4AsPgGTOOrxqG1kM", storage_gb: 1, max_file_size_mb: 50, team_seats: 1, api_access: false, priority_support: false, sort_order: 1 },
+  { tier: "ultra", name: "Pro", description: "For power users", price_monthly: 1999, price_yearly: 19199, stripe_monthly_id: "price_1TOflrHd4AsPgGTOnt9jYhjz", stripe_yearly_id: "price_1TOflsHd4AsPgGTO5ra4mhwt", storage_gb: 10, max_file_size_mb: 500, team_seats: 3, api_access: true, priority_support: false, sort_order: 2 },
+  { tier: "max", name: "Max", description: "For teams", price_monthly: 4999, price_yearly: 47999, stripe_monthly_id: "price_1TOflsHd4AsPgGTOG7jeNqLk", stripe_yearly_id: "price_1TOfltHd4AsPgGTOnUHvrbT7", storage_gb: 50, max_file_size_mb: 5000, team_seats: 10, api_access: true, priority_support: true, sort_order: 3 },
 ];
 
 const ONBOARDING_PLAN_LABELS: Record<OnboardingPlanTier, string> = {
@@ -228,6 +188,35 @@ export default function AccountPage() {
   const [planOnboardingError, setPlanOnboardingError] = useState("");
   const [favoriteTools, setFavoriteTools] = useState<FavoriteTool[]>([]);
   const [favoriteToolsLoading, setFavoriteToolsLoading] = useState(false);
+  const [pricingPlans, setPricingPlans] = useState<Plan[]>(FALLBACK_PLANS);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadPricingPlans() {
+      try {
+        const response = await fetch(`${API_BASE}/api/plans`);
+        const data = response.ok ? await response.json() : null;
+        if (cancelled) return;
+        if (data?.plans && Array.isArray(data.plans) && data.plans.length > 0) {
+          setPricingPlans(data.plans);
+          return;
+        }
+      } catch {
+        // keep fallback plans
+      }
+
+      if (!cancelled) {
+        setPricingPlans(FALLBACK_PLANS);
+      }
+    }
+
+    loadPricingPlans();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   function redirectToLoginPreservingCurrentLocation() {
     const nextPath = `${window.location.pathname}${window.location.search}`;
@@ -630,6 +619,7 @@ export default function AccountPage() {
   const tierName = displayOnboardingPlanName(subscription?.tier);
   const favoriteCount = favoriteTools.length;
   const showTermsOnboarding = Boolean(user.requires_terms_acceptance);
+  const orderedPlans = sortPricingPlans(pricingPlans);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-16">
@@ -761,7 +751,7 @@ export default function AccountPage() {
                 </div>
 
                 <div className="grid gap-4 lg:grid-cols-3">
-                  {ONBOARDING_PLANS.filter((plan) => plan.tier !== "free").map((plan) => {
+                  {orderedPlans.filter((plan) => plan.tier !== "free").map((plan) => {
                     const selected = selectedOnboardingPlan === plan.tier;
                     const sourcePlan = plan;
                     const features = buildPricingPlanFeatures(sourcePlan);
@@ -772,9 +762,9 @@ export default function AccountPage() {
                           tier: plan.tier,
                           name: plan.name,
                           description: plan.description,
-                          priceMonthly: plan.priceMonthly,
-                          priceYearly: plan.priceYearly,
-                          badge: plan.badge ?? null,
+                          priceMonthly: plan.price_monthly,
+                          priceYearly: plan.price_yearly,
+                          badge: plan.tier === "ultra" ? "Popular" : null,
                         }}
                         billing={onboardingBilling}
                         highlighted={plan.tier === "ultra"}
@@ -782,7 +772,7 @@ export default function AccountPage() {
                         footer={
                           <button
                             type="button"
-                            onClick={() => completePlanOnboarding(plan.tier, onboardingBilling)}
+                            onClick={() => completePlanOnboarding(plan.tier as OnboardingPlanTier, onboardingBilling)}
                             className={`tb-v2-btn tb-v2-pricing-btn ${plan.tier === "ultra" ? 'inverse' : 'tb-v2-btn-primary'}`}
                             style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
                           >
@@ -807,7 +797,7 @@ export default function AccountPage() {
                     );
                   })}
 
-                  {ONBOARDING_PLANS.filter((plan) => plan.tier === "free").map((plan) => {
+                  {orderedPlans.filter((plan) => plan.tier === "free").map((plan) => {
                     const selected = selectedOnboardingPlan === plan.tier;
                     const sourcePlan = plan;
                     const features = buildPricingPlanFeatures(sourcePlan);
@@ -819,8 +809,8 @@ export default function AccountPage() {
                             tier: plan.tier,
                             name: plan.name,
                             description: plan.description,
-                            priceMonthly: plan.priceMonthly,
-                            priceYearly: plan.priceYearly,
+                            priceMonthly: plan.price_monthly,
+                            priceYearly: plan.price_yearly,
                             badge: null,
                           }}
                           billing={onboardingBilling}
