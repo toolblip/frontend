@@ -6,9 +6,7 @@ import Link from "next/link";
 import { useAuth } from "@/app/providers/auth-provider";
 import { useRouter } from "next/navigation";
 import {
-  FREE_PLAN_CTA_LABEL,
   FREE_TRIAL_NOTE,
-  PAID_TRIAL_CTA_LABEL,
   PricingBillingToggle,
   PricingPlanCard,
   buildPricingPlanFeatures,
@@ -743,7 +741,7 @@ export default function AccountPage() {
                     {FREE_TRIAL_NOTE}
                   </div>
                   <p className="text-sm text-gray-600 dark:text-gray-300">
-                    Start with any paid plan or keep using the free plan. You can change later from billing.
+                    Select one plan to continue. You can change billing later from your account.
                   </p>
                 </div>
 
@@ -782,21 +780,12 @@ export default function AccountPage() {
                             name="onboarding-plan"
                             value={plan.tier}
                             checked={selected}
-                            onChange={() => {
-                              setSelectedOnboardingPlan(plan.tier);
-                              writePlanOnboarding("draft", "pricing", plan.tier, onboardingBilling);
+                            onClick={() => {
+                              completePlanOnboarding(plan.tier, onboardingBilling);
                             }}
                             className="mb-3 h-4 w-4 border-gray-300 text-red-600 focus:ring-red-500"
+                            readOnly
                           />
-                        }
-                        footer={
-                          <button
-                            type="button"
-                            onClick={() => completePlanOnboarding(plan.tier, onboardingBilling)}
-                            className={`tb-v2-btn tb-v2-pricing-btn w-full ${selected ? 'inverse' : 'tb-v2-btn-primary'}`}
-                          >
-                            {PAID_TRIAL_CTA_LABEL}
-                          </button>
                         }
                       >
                         <ul className="tb-v2-pricing-features">
@@ -837,15 +826,6 @@ export default function AccountPage() {
                           tone="light"
                           className="free-row"
                           compactHeader
-                          headerRightSlot={
-                            <button
-                              type="button"
-                              onClick={() => completePlanOnboarding("free", onboardingBilling)}
-                              className="tb-v2-pricing-inline-link"
-                            >
-                              {FREE_PLAN_CTA_LABEL}
-                            </button>
-                          }
                           topSlot={
                             <input
                               id={`onboarding-plan-${plan.tier}`}
@@ -853,11 +833,11 @@ export default function AccountPage() {
                               name="onboarding-plan"
                               value={plan.tier}
                               checked={selected}
-                              onChange={() => {
-                                setSelectedOnboardingPlan(plan.tier);
-                                writePlanOnboarding("draft", "pricing", plan.tier, onboardingBilling);
+                              onClick={() => {
+                                completePlanOnboarding("free", onboardingBilling);
                               }}
                               className="mb-3 h-4 w-4 border-gray-300 text-red-600 focus:ring-red-500"
+                              readOnly
                             />
                           }
                         >
