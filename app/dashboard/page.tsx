@@ -6,7 +6,9 @@ import Link from "next/link";
 import { useAuth } from "@/app/providers/auth-provider";
 import { useRouter } from "next/navigation";
 import {
+  FREE_PLAN_CTA_LABEL,
   FREE_TRIAL_NOTE,
+  PAID_TRIAL_CTA_LABEL,
   PricingBillingToggle,
   PricingPlanCard,
   buildPricingPlanFeatures,
@@ -735,24 +737,28 @@ export default function AccountPage() {
                 </div>
               </div>
             ) : (
-              <div className="mt-6 space-y-5" role="radiogroup" aria-label="Toolblip plan options">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="inline-flex items-center rounded-full border border-red-200 bg-white px-3 py-1 text-xs font-medium text-red-700 shadow-sm dark:border-red-900/60 dark:bg-gray-900 dark:text-red-300">
-                    {FREE_TRIAL_NOTE}
+              <div className="mt-6 space-y-5">
+                <div className="space-y-4 rounded-[28px] border border-gray-200 bg-white/90 p-4 shadow-sm backdrop-blur dark:border-gray-700 dark:bg-gray-900/90 sm:p-5">
+                  <div className="text-center">
+                    <div className="text-sm font-semibold uppercase tracking-[0.2em] text-red-600 dark:text-red-400">Pricing</div>
+                    <h3 className="mt-2 text-2xl font-bold text-gray-900 dark:text-white sm:text-[2rem]">Simple, transparent pricing</h3>
+                    <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 sm:text-base">
+                      Start a 14-day free trial with no card required, or keep using the free plan.
+                    </p>
+                    <div className="mt-3 inline-flex rounded-full border border-red-200 bg-red-50 px-3 py-1 text-xs font-medium text-red-700 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-300">
+                      {FREE_TRIAL_NOTE}
+                    </div>
                   </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">
-                    Select one plan to continue. You can change billing later from your account.
-                  </p>
-                </div>
 
-                <PricingBillingToggle
-                  billing={onboardingBilling}
-                  onBillingChange={(nextBilling) => {
-                    setOnboardingBilling(nextBilling);
-                    writePlanOnboarding("draft", "pricing", selectedOnboardingPlan, nextBilling);
-                  }}
-                  label="Billing period"
-                />
+                  <PricingBillingToggle
+                    billing={onboardingBilling}
+                    onBillingChange={(nextBilling) => {
+                      setOnboardingBilling(nextBilling);
+                      writePlanOnboarding("draft", "pricing", selectedOnboardingPlan, nextBilling);
+                    }}
+                    centered
+                  />
+                </div>
 
                 <div className="grid gap-4 lg:grid-cols-3">
                   {ONBOARDING_PLANS.filter((plan) => plan.tier !== "free").map((plan) => {
@@ -771,21 +777,17 @@ export default function AccountPage() {
                           badge: plan.badge ?? null,
                         }}
                         billing={onboardingBilling}
+                        highlighted={plan.tier === "ultra"}
                         selected={selected}
-                        htmlFor={`onboarding-plan-${plan.tier}`}
-                        topSlot={
-                          <input
-                            id={`onboarding-plan-${plan.tier}`}
-                            type="radio"
-                            name="onboarding-plan"
-                            value={plan.tier}
-                            checked={selected}
-                            onClick={() => {
-                              completePlanOnboarding(plan.tier, onboardingBilling);
-                            }}
-                            className="mb-3 h-4 w-4 border-gray-300 text-red-600 focus:ring-red-500"
-                            readOnly
-                          />
+                        footer={
+                          <button
+                            type="button"
+                            onClick={() => completePlanOnboarding(plan.tier, onboardingBilling)}
+                            className={`tb-v2-btn tb-v2-pricing-btn ${plan.tier === "ultra" ? 'inverse' : 'tb-v2-btn-primary'}`}
+                            style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
+                          >
+                            {PAID_TRIAL_CTA_LABEL}
+                          </button>
                         }
                       >
                         <ul className="tb-v2-pricing-features">
@@ -809,6 +811,7 @@ export default function AccountPage() {
                     const selected = selectedOnboardingPlan === plan.tier;
                     const sourcePlan = plan;
                     const features = buildPricingPlanFeatures(sourcePlan);
+
                     return (
                       <div key={plan.tier} className="lg:col-span-3">
                         <PricingPlanCard
@@ -821,24 +824,18 @@ export default function AccountPage() {
                             badge: null,
                           }}
                           billing={onboardingBilling}
-                          selected={selected}
-                          htmlFor={`onboarding-plan-${plan.tier}`}
                           tone="light"
                           className="free-row"
                           compactHeader
-                          topSlot={
-                            <input
-                              id={`onboarding-plan-${plan.tier}`}
-                              type="radio"
-                              name="onboarding-plan"
-                              value={plan.tier}
-                              checked={selected}
-                              onClick={() => {
-                                completePlanOnboarding("free", onboardingBilling);
-                              }}
-                              className="mb-3 h-4 w-4 border-gray-300 text-red-600 focus:ring-red-500"
-                              readOnly
-                            />
+                          selected={selected}
+                          headerRightSlot={
+                            <button
+                              type="button"
+                              onClick={() => completePlanOnboarding("free", onboardingBilling)}
+                              className="tb-v2-pricing-inline-link"
+                            >
+                              {FREE_PLAN_CTA_LABEL}
+                            </button>
                           }
                         >
                           <ul className="tb-v2-pricing-features">
@@ -874,7 +871,7 @@ export default function AccountPage() {
                 </button>
               ) : (
                 <div className="rounded-2xl border border-dashed border-red-200 bg-red-50/60 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/20 dark:text-red-300">
-                  Choose a plan above to complete onboarding and start your trial or free plan.
+                  Pick any plan above to complete onboarding and start your trial or free plan.
                 </div>
               )}
             </div>
