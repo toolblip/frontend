@@ -683,11 +683,11 @@ export default function AccountPage() {
                   <h2 id="plan-onboarding-title" className="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">
                     {onboardingStep === "welcome" ? "Welcome to your dashboard" : "Choose your plan"}
                   </h2>
-                  <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 sm:text-base">
-                    {onboardingStep === "welcome"
-                      ? "Start by naming your team, then choose a plan to begin your 14-day free trial."
-                      : "Compare the plans and pick the one that fits how you use Toolblip. Your 14-day free trial starts with no card required."}
-                  </p>
+                  {onboardingStep === "welcome" && (
+                    <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 sm:text-base">
+                      Start by naming your team, then choose a plan to begin your 14-day free trial.
+                    </p>
+                  )}
                 </div>
                 <div className="inline-flex items-center rounded-full border border-red-200 bg-white px-3 py-1 text-xs font-medium text-red-700 shadow-sm dark:border-red-900/60 dark:bg-gray-900 dark:text-red-300">
                   {onboardingStep === "welcome" ? "Step 1 of 2" : "Step 2 of 2"}
