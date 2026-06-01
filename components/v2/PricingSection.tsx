@@ -38,6 +38,10 @@ export interface PricingPlanCardContext {
   yearlyEquivalent: string | null;
 }
 
+export const PAID_TRIAL_CTA_LABEL = 'Start 14-day free trial';
+export const FREE_PLAN_CTA_LABEL = 'Continue with Free Plan';
+export const FREE_TRIAL_NOTE = '14-day free trial · no card required';
+
 export function sortPricingPlans<T extends { tier: string; sortOrder?: number; sort_order?: number }>(plans: T[]): T[] {
   return [...plans].sort((a, b) => {
     const aFree = a.tier === 'free' ? 1 : 0;

@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
+  FREE_PLAN_CTA_LABEL,
+  FREE_TRIAL_NOTE,
+  PAID_TRIAL_CTA_LABEL,
   PricingBillingToggle,
   PricingPlanCard,
   buildPricingPlanFeatures,
@@ -147,48 +150,28 @@ export default function PricingClient() {
       .catch(() => {});
   }, []);
 
+  async function handleFreePlan() {
+    const token = localStorage.getItem('toolblip_token');
+    const onboardingNext = '/dashboard?plan=free';
+    window.location.href = token ? onboardingNext : `/signup?next=${encodeURIComponent(onboardingNext)}`;
+  }
+
   async function handleUpgrade(plan: Plan) {
     setError(null);
     const token = localStorage.getItem('toolblip_token');
     const onboardingNext = `/dashboard?plan=${plan.tier}&billing=${billing}`;
 
-    if (!token) {
-      window.location.href = `/login?next=${encodeURIComponent(onboardingNext)}`;
-      return;
-    }
-
-    const stripePriceId =
-      billing === 'yearly' ? plan.stripe_yearly_id : plan.stripe_monthly_id;
-
-    if (!stripePriceId) {
-      setError('This plan is not available yet.');
-      return;
-    }
-
     setLoading(plan.tier);
-
     try {
-      const res = await fetch(`${API_BASE}/api/subscription/checkout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ price_id: stripePriceId }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to create checkout session');
+      if (!token) {
+        window.location.href = `/login?next=${encodeURIComponent(onboardingNext)}`;
+        return;
       }
 
-      if (data.url) {
-        window.location.href = data.url;
-      }
+      window.location.href = onboardingNext;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
+    } finally {
       setLoading(null);
     }
   }
@@ -244,7 +227,10 @@ export default function PricingClient() {
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <div className="tb-v2-kicker">Pricing</div>
           <h1 className="tb-v2-page-title" style={{ fontSize: '36px' }}>Simple, transparent pricing</h1>
-          <p className="tb-v2-page-sub">All tools are free to use. Upgrade for an uninterrupted experience.</p>
+          <p className="tb-v2-page-sub">Start a 14-day free trial with no card required, or keep using the free plan.</p>
+          <div className="mt-3 inline-flex rounded-full border border-red-200 bg-red-50 px-3 py-1 text-xs font-medium text-red-700 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-300">
+            {FREE_TRIAL_NOTE}
+          </div>
         </div>
 
         <PricingBillingToggle billing={billing} onBillingChange={setBilling} centered />
@@ -277,7 +263,7 @@ export default function PricingClient() {
                       className={`tb-v2-btn tb-v2-pricing-btn ${isHighlighted ? 'inverse' : 'tb-v2-btn-primary'}`}
                       style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
                     >
-                      {loading === sourcePlan.tier ? 'Redirecting...' : `Get ${plan.name}`}
+                      {loading === sourcePlan.tier ? 'Redirecting...' : PAID_TRIAL_CTA_LABEL}
                     </button>
                   }
                 >
@@ -313,12 +299,13 @@ export default function PricingClient() {
                     className="free-row"
                     compactHeader
                     headerRightSlot={
-                      <Link
-                        href={`/signup?next=${encodeURIComponent('/dashboard?plan=free')}`}
+                      <button
+                        type="button"
+                        onClick={handleFreePlan}
                         className="tb-v2-pricing-inline-link"
                       >
-                        Get Free Plan
-                      </Link>
+                        {FREE_PLAN_CTA_LABEL}
+                      </button>
                     }
                   >
                     <ul className="tb-v2-pricing-features">
@@ -367,7 +354,7 @@ export default function PricingClient() {
             disabled={loading === highlightPlan.tier}
             className="tb-v2-btn tb-v2-btn-primary tb-v2-pricing-sticky-btn"
           >
-            {loading === highlightPlan.tier ? '…' : `Get ${displayPlanName(highlightPlan)}`}
+            {loading === highlightPlan.tier ? '…' : PAID_TRIAL_CTA_LABEL}
           </button>
         </div>
       )}

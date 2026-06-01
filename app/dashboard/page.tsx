@@ -6,6 +6,9 @@ import Link from "next/link";
 import { useAuth } from "@/app/providers/auth-provider";
 import { useRouter } from "next/navigation";
 import {
+  FREE_PLAN_CTA_LABEL,
+  FREE_TRIAL_NOTE,
+  PAID_TRIAL_CTA_LABEL,
   PricingBillingToggle,
   PricingPlanCard,
   buildPricingPlanFeatures,
@@ -226,6 +229,11 @@ export default function AccountPage() {
   const [favoriteTools, setFavoriteTools] = useState<FavoriteTool[]>([]);
   const [favoriteToolsLoading, setFavoriteToolsLoading] = useState(false);
 
+  function redirectToLoginPreservingCurrentLocation() {
+    const nextPath = `${window.location.pathname}${window.location.search}`;
+    router.replace(`/login?next=${encodeURIComponent(nextPath)}`);
+  }
+
   // Redirect to login if not authenticated (after auth has finished loading)
   useEffect(() => {
     async function restoreCookieSessionBeforeRedirect() {
@@ -248,7 +256,7 @@ export default function AccountPage() {
         await new Promise((resolve) => setTimeout(resolve, 250));
       }
 
-      router.replace("/login?next=/dashboard");
+      redirectToLoginPreservingCurrentLocation();
     }
 
     restoreCookieSessionBeforeRedirect();
@@ -304,8 +312,10 @@ export default function AccountPage() {
         billingCycle?: BillingCycle;
       };
       if (parsed.status === "completed" || parsed.status === "skipped") {
-        setShowPlanOnboarding(false);
-        return;
+        if (!requestedPlan && !requestedBilling) {
+          setShowPlanOnboarding(false);
+          return;
+        }
       }
 
       const restoredSelectedPlan = requestedPlan ?? normalizeOnboardingPlan(parsed.selectedPlan);
@@ -391,7 +401,7 @@ export default function AccountPage() {
   async function openCustomerPortal() {
     setPortalError(null);
     if (!token) {
-      router.replace("/login?next=/dashboard");
+      redirectToLoginPreservingCurrentLocation();
       return;
     }
     setLoadingPortal(true);
@@ -492,7 +502,7 @@ export default function AccountPage() {
       setNewPassword("");
       setConfirmPassword("");
       await logout();
-      router.replace("/login?next=/dashboard");
+      redirectToLoginPreservingCurrentLocation();
     } catch (error) {
       setPasswordError(error instanceof Error ? error.message : "Could not change password.");
     } finally {
@@ -562,9 +572,23 @@ export default function AccountPage() {
     return true;
   }
 
-  function persistPlanOnboarding(status: OnboardingStatus) {
-    if (!writePlanOnboarding(status, onboardingStep)) return;
+  function persistPlanOnboarding(
+    status: OnboardingStatus,
+    step: OnboardingStep = onboardingStep,
+    selectedPlan: OnboardingPlanTier = selectedOnboardingPlan,
+    billingCycle: BillingCycle = onboardingBilling,
+    teamNameValue: string = teamName.trim()
+  ) {
+    if (!writePlanOnboarding(status, step, selectedPlan, billingCycle, teamNameValue)) return false;
     setShowPlanOnboarding(false);
+    return true;
+  }
+
+  function completePlanOnboarding(selectedPlan: OnboardingPlanTier, billingCycle: BillingCycle = onboardingBilling) {
+    setSelectedOnboardingPlan(selectedPlan);
+    setOnboardingBilling(billingCycle);
+    setPlanOnboardingError("");
+    persistPlanOnboarding("completed", "pricing", selectedPlan, billingCycle);
   }
 
   async function handleNextPlanOnboarding() {
@@ -585,10 +609,6 @@ export default function AccountPage() {
     } finally {
       setSavingPlanOnboarding(false);
     }
-  }
-
-  function handleFinishPlanOnboarding() {
-    persistPlanOnboarding("completed");
   }
 
   if (authLoading || !user) {
@@ -675,8 +695,8 @@ export default function AccountPage() {
                   </h2>
                   <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 sm:text-base">
                     {onboardingStep === "welcome"
-                      ? "Start by naming your team, then move to pricing."
-                      : "Compare the plans and pick the one that fits how you use Toolblip."}
+                      ? "Start by naming your team, then choose a plan to begin your 14-day free trial."
+                      : "Compare the plans and pick the one that fits how you use Toolblip. Your 14-day free trial starts with no card required."}
                   </p>
                 </div>
                 <div className="inline-flex items-center rounded-full border border-red-200 bg-white px-3 py-1 text-xs font-medium text-red-700 shadow-sm dark:border-red-900/60 dark:bg-gray-900 dark:text-red-300">
@@ -707,10 +727,13 @@ export default function AccountPage() {
                 </div>
 
                 <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5 shadow-sm dark:border-gray-700 dark:bg-gray-950/60">
-                  <p className="font-semibold text-gray-900 dark:text-white">What happens next</p>
-                  <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300">
-                    After Next, you will see the pricing plans.
-                  </p>
+                  <p className="font-semibold text-gray-900 dark:text-white">Onboarding checklist</p>
+                  <ul className="mt-3 space-y-2 text-sm leading-6 text-gray-600 dark:text-gray-300">
+                    <li>• Name your team</li>
+                    <li>• Pick Starter, Pro, Max, or Free</li>
+                    <li>• {FREE_TRIAL_NOTE}</li>
+                    <li>• Keep the free plan if that fits you best</li>
+                  </ul>
                 </div>
               </div>
             ) : (
@@ -757,6 +780,15 @@ export default function AccountPage() {
                             className="mb-3 h-4 w-4 border-gray-300 text-red-600 focus:ring-red-500"
                           />
                         }
+                        footer={
+                          <button
+                            type="button"
+                            onClick={() => completePlanOnboarding(plan.tier, onboardingBilling)}
+                            className={`tb-v2-btn tb-v2-pricing-btn w-full ${selected ? 'inverse' : 'tb-v2-btn-primary'}`}
+                          >
+                            {PAID_TRIAL_CTA_LABEL}
+                          </button>
+                        }
                       >
                         <ul className="tb-v2-pricing-features">
                           {features.map((feature) => (
@@ -797,9 +829,13 @@ export default function AccountPage() {
                           className="free-row"
                           compactHeader
                           headerRightSlot={
-                            <Link href="/signup" className="tb-v2-pricing-inline-link">
-                              Get Free Plan
-                            </Link>
+                            <button
+                              type="button"
+                              onClick={() => completePlanOnboarding("free", onboardingBilling)}
+                              className="tb-v2-pricing-inline-link"
+                            >
+                              {FREE_PLAN_CTA_LABEL}
+                            </button>
                           }
                           topSlot={
                             <input
@@ -837,7 +873,7 @@ export default function AccountPage() {
               </div>
             )}
 
-            <div className="mt-6 flex justify-end">
+            <div className="mt-6">
               {onboardingStep === "welcome" ? (
                 <button
                   type="button"
@@ -848,14 +884,9 @@ export default function AccountPage() {
                   {savingPlanOnboarding ? "Saving..." : "Next"}
                 </button>
               ) : (
-                <button
-                  type="button"
-                  onClick={handleFinishPlanOnboarding}
-                  disabled={!selectedOnboardingPlan}
-                  className="rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  Finish
-                </button>
+                <div className="rounded-2xl border border-dashed border-red-200 bg-red-50/60 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/20 dark:text-red-300">
+                  Choose a plan above to complete onboarding and start your trial or free plan.
+                </div>
               )}
             </div>
           </div>
