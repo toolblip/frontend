@@ -737,7 +737,16 @@ export default function AccountPage() {
                 </div>
               </div>
             ) : (
-              <div className="mt-6 space-y-4" role="radiogroup" aria-label="Toolblip plan options">
+              <div className="mt-6 space-y-5" role="radiogroup" aria-label="Toolblip plan options">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <div className="inline-flex items-center rounded-full border border-red-200 bg-white px-3 py-1 text-xs font-medium text-red-700 shadow-sm dark:border-red-900/60 dark:bg-gray-900 dark:text-red-300">
+                    {FREE_TRIAL_NOTE}
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    Start with any paid plan or keep using the free plan. You can change later from billing.
+                  </p>
+                </div>
+
                 <PricingBillingToggle
                   billing={onboardingBilling}
                   onBillingChange={(nextBilling) => {

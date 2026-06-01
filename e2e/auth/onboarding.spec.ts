@@ -146,7 +146,8 @@ test.describe('Account onboarding BDD regression', () => {
 
     const planCards = onboarding.locator('[data-testid="pricing-plan-card"]');
     await expect(planCards).toHaveCount(4);
-    await expect(onboarding.getByText('Choose a plan above to complete onboarding and start your trial or free plan.')).toBeVisible();
+    await expect(onboarding.getByText('14-day free trial · no card required')).toBeVisible();
+    await expect(onboarding.getByText('Start with any paid plan or keep using the free plan. You can change later from billing.')).toBeVisible();
     await expect(onboarding.locator('[data-tier="ultra"]').getByRole('button', { name: 'Start 14-day free trial' })).toBeVisible();
     await expect(onboarding.locator('[data-tier="free"]').getByRole('button', { name: 'Continue with Free Plan' })).toBeVisible();
     await expect(onboarding.getByRole('button', { name: 'Finish' })).toHaveCount(0);
