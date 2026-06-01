@@ -634,7 +634,7 @@ export default function AccountPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-16">
       {showTermsOnboarding && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 px-4">
           <div
             role="dialog"
             aria-modal="true"
@@ -679,7 +679,7 @@ export default function AccountPage() {
         </div>
       )}
       {!showTermsOnboarding && showPlanOnboarding && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 py-6 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 px-4 py-6 backdrop-blur-sm">
           <div
             role="dialog"
             aria-modal="true"
