@@ -763,7 +763,6 @@ export default function AccountPage() {
 
                   <div className="mt-4">
                     <PricingBillingToggle
-                      label="Billing period"
                       billing={onboardingBilling}
                       onBillingChange={(nextBilling) => {
                         setOnboardingBilling(nextBilling);
