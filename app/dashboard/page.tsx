@@ -59,9 +59,9 @@ type Plan = {
   sort_order: number;
 };
 
-const ONBOARDING_STORAGE_VERSION = 3;
+const ONBOARDING_STORAGE_VERSION = 4;
 const DEFAULT_ONBOARDING_PLAN: OnboardingPlanTier = "ultra";
-const DEFAULT_ONBOARDING_BILLING: BillingCycle = "yearly";
+const DEFAULT_ONBOARDING_BILLING: BillingCycle = "monthly";
 
 function normalizeOnboardingPlan(plan?: string | null): OnboardingPlanTier {
   return plan === "starter" ? DEFAULT_ONBOARDING_PLAN : (plan as OnboardingPlanTier | undefined) ?? DEFAULT_ONBOARDING_PLAN;

@@ -20,7 +20,7 @@ test.describe('Pricing layout', () => {
     await expect(pricing.getByText('Billing period')).toBeHidden();
     await expect(pricing.getByRole('button', { name: 'Monthly' })).toBeVisible();
     await expect(pricing.getByRole('button', { name: /Yearly/ })).toBeVisible();
-    await expect(pricing.getByRole('button', { name: /Yearly/ })).toContainText('2 months free');
+    await expect(pricing.getByRole('button', { name: /Yearly/ })).toContainText('1 month free');
 
     const toggleRow = pricing.getByTestId('pricing-billing-toggle');
     const toggleRect = await toggleRow.boundingBox();
@@ -69,9 +69,9 @@ test.describe('Pricing layout', () => {
     expect(maxCard!.text).toContain('Priority support');
 
     await pricing.getByRole('button', { name: 'Yearly' }).click();
-    await expect(pricing.locator('[data-tier="starter"]')).toContainText('47.99');
-    await expect(pricing.locator('[data-tier="ultra"]')).toContainText('191.99');
-    await expect(pricing.locator('[data-tier="max"]')).toContainText('479.99');
+    await expect(pricing.locator('[data-tier="starter"]')).toContainText('4.80');
+    await expect(pricing.locator('[data-tier="ultra"]')).toContainText('19.20');
+    await expect(pricing.locator('[data-tier="max"]')).toContainText('48');
 
     const starterButton = pricing.locator('[data-tier="starter"]').getByRole('button', { name: 'Start 14-day free trial' });
     const proButton = pricing.locator('[data-tier="ultra"]').getByRole('button', { name: 'Start 14-day free trial' });
