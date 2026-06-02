@@ -11,7 +11,6 @@ import {
   PAID_TRIAL_CTA_LABEL,
   PricingBillingToggle,
   PricingPlanCard,
-  buildPricingPlanFeatures,
   sortPricingPlans,
   type BillingCycle,
 } from "@/components/v2/PricingSection";
@@ -80,6 +79,13 @@ const ONBOARDING_PLAN_LABELS: Record<OnboardingPlanTier, string> = {
   starter: "Starter",
   ultra: "Pro",
   max: "Max",
+};
+
+const ONBOARDING_PLAN_DESCRIPTIONS: Record<OnboardingPlanTier, string> = {
+  free: "Start with all core tools and client-side processing.",
+  starter: "Remove ads and unlock personal cloud storage.",
+  ultra: "Power-user limits, API access, and more storage.",
+  max: "Team seats, priority support, and the highest limits.",
 };
 
 function displayOnboardingPlanName(tier: string | null | undefined) {
@@ -675,20 +681,18 @@ export default function AccountPage() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="plan-onboarding-title"
-            className="w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-3xl border border-red-200 bg-gradient-to-br from-red-50 via-white to-gray-50 p-6 shadow-2xl dark:border-red-900/50 dark:from-red-950/30 dark:via-gray-900 dark:to-gray-950"
+            className="w-full max-w-6xl max-h-[90vh] overflow-y-auto rounded-[32px] border border-red-200 bg-gradient-to-br from-red-50 via-white to-gray-50 p-7 shadow-2xl dark:border-red-900/50 dark:from-red-950/30 dark:via-gray-900 dark:to-gray-950"
           >
             <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
               <div className="max-w-2xl space-y-4">
                 <p className="text-sm font-semibold uppercase tracking-wide text-red-600 dark:text-red-400">Welcome to Toolblip</p>
                 <div>
                   <h2 id="plan-onboarding-title" className="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">
-                    {onboardingStep === "welcome" ? "Welcome to your dashboard" : "Choose your plan"}
+                    Choose your plan
                   </h2>
-                  {onboardingStep === "welcome" && (
-                    <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 sm:text-base">
-                      Start by naming your team, then choose a plan to begin your 14-day free trial.
+                  <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 sm:text-base">
+                      Compare the plans and pick the one that fits how you use Toolblip.
                     </p>
-                  )}
                 </div>
                 <div className="inline-flex items-center rounded-full border border-red-200 bg-white px-3 py-1 text-xs font-medium text-red-700 shadow-sm dark:border-red-900/60 dark:bg-gray-900 dark:text-red-300">
                   {onboardingStep === "welcome" ? "Step 1 of 2" : "Step 2 of 2"}
@@ -728,42 +732,42 @@ export default function AccountPage() {
                 </div>
               </div>
             ) : (
-              <div className="mt-6 space-y-5">
-                <div className="space-y-4 rounded-[28px] border border-gray-200 bg-white/90 p-4 shadow-sm backdrop-blur dark:border-gray-700 dark:bg-gray-900/90 sm:p-5">
-                  <div className="text-center">
+              <div className="mt-6 space-y-6">
+                <div className="rounded-[32px] border border-gray-200 bg-white/90 p-6 shadow-sm backdrop-blur dark:border-gray-700 dark:bg-gray-900/90 sm:p-7">
+                  <div className="space-y-3">
                     <div className="text-sm font-semibold uppercase tracking-[0.2em] text-red-600 dark:text-red-400">Pricing</div>
-                    <h3 className="mt-2 text-2xl font-bold text-gray-900 dark:text-white sm:text-[2rem]">Simple, transparent pricing</h3>
-                    <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 sm:text-base">
-                      Start a 14-day free trial with no card required, or keep using the free plan.
+                    <h3 className="text-[2rem] font-bold leading-tight text-gray-900 dark:text-white sm:text-[2.2rem]">Simple, transparent pricing</h3>
+                    <p className="max-w-2xl text-sm text-gray-600 dark:text-gray-300 sm:text-base">
+                      Compare the plans and pick the one that fits how you use Toolblip.
                     </p>
-                    <div className="mt-3 inline-flex rounded-full border border-red-200 bg-red-50 px-3 py-1 text-xs font-medium text-red-700 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-300">
-                      {FREE_TRIAL_NOTE}
-                    </div>
                   </div>
 
-                  <PricingBillingToggle
-                    billing={onboardingBilling}
-                    onBillingChange={(nextBilling) => {
-                      setOnboardingBilling(nextBilling);
-                      writePlanOnboarding("draft", "pricing", selectedOnboardingPlan, nextBilling);
-                    }}
-                    centered
-                    accent="red"
-                  />
+                  <div className="mt-6">
+                    <PricingBillingToggle
+                      label="Billing period"
+                      billing={onboardingBilling}
+                      onBillingChange={(nextBilling) => {
+                        setOnboardingBilling(nextBilling);
+                        writePlanOnboarding("draft", "pricing", selectedOnboardingPlan, nextBilling);
+                      }}
+                      accent="red"
+                    />
+                  </div>
                 </div>
 
                 <div className="grid gap-4 lg:grid-cols-3">
                   {orderedPlans.filter((plan) => plan.tier !== "free").map((plan) => {
                     const selected = selectedOnboardingPlan === plan.tier;
-                    const sourcePlan = plan;
-                    const features = buildPricingPlanFeatures(sourcePlan);
+                    const planTier = plan.tier as OnboardingPlanTier;
+                    const displayName = ONBOARDING_PLAN_LABELS[planTier] ?? plan.name;
+                    const description = ONBOARDING_PLAN_DESCRIPTIONS[planTier] ?? plan.description;
                     return (
                       <PricingPlanCard
                         key={plan.tier}
                         plan={{
                           tier: plan.tier,
-                          name: plan.name,
-                          description: plan.description,
+                          name: displayName,
+                          description,
                           priceMonthly: plan.price_monthly,
                           priceYearly: plan.price_yearly,
                           badge: plan.tier === "ultra" ? "Featured" : null,
@@ -772,49 +776,32 @@ export default function AccountPage() {
                         highlighted={plan.tier === "ultra"}
                         selected={selected}
                         accent="red"
-                        footer={
-                          <div className="flex flex-col items-center gap-2 text-center">
-                            <button
-                              type="button"
-                              onClick={() => completePlanOnboarding(plan.tier as OnboardingPlanTier, onboardingBilling)}
-                              className={`tb-v2-btn tb-v2-pricing-btn ${plan.tier === "ultra" ? 'selected' : ''}`}
-                              style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
-                            >
-                              {PAID_TRIAL_CTA_LABEL}
-                            </button>
-                            <p className="text-xs font-medium text-[color:var(--fg-3)]">No credit card required.</p>
+                        onClick={() => {
+                          setSelectedOnboardingPlan(planTier);
+                          writePlanOnboarding("draft", "pricing", planTier, onboardingBilling);
+                        }}
+                        topSlot={
+                          <div className={`inline-flex h-5 w-5 items-center justify-center rounded-full border ${selected ? "border-blue-500" : "border-gray-300 dark:border-gray-600"}`}>
+                            <span className={`h-2.5 w-2.5 rounded-full ${selected ? "bg-blue-500" : "bg-transparent"}`} />
                           </div>
                         }
-                      >
-                        <ul className="tb-v2-pricing-features">
-                          {features.map((feature) => (
-                            <li
-                              key={feature.label}
-                              className={feature.included === false ? 'text-[color:var(--fg-3)] line-through' : ''}
-                            >
-                              <span className="mt-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center text-[11px] font-bold leading-none text-red-500">
-                                {feature.included === false ? '×' : '✓'}
-                              </span>
-                              {feature.label}
-                            </li>
-                          ))}
-                        </ul>
-                      </PricingPlanCard>
+                      />
                     );
                   })}
 
                   {orderedPlans.filter((plan) => plan.tier === "free").map((plan) => {
                     const selected = selectedOnboardingPlan === plan.tier;
-                    const sourcePlan = plan;
-                    const features = buildPricingPlanFeatures(sourcePlan);
+                    const planTier = plan.tier as OnboardingPlanTier;
+                    const displayName = ONBOARDING_PLAN_LABELS[planTier] ?? plan.name;
+                    const description = ONBOARDING_PLAN_DESCRIPTIONS[planTier] ?? plan.description;
 
                     return (
                       <div key={plan.tier} className="lg:col-span-3">
                         <PricingPlanCard
                           plan={{
                             tier: plan.tier,
-                            name: plan.name,
-                            description: plan.description,
+                            name: displayName,
+                            description,
                             priceMonthly: plan.price_monthly,
                             priceYearly: plan.price_yearly,
                             badge: null,
@@ -825,39 +812,36 @@ export default function AccountPage() {
                           compactHeader
                           selected={selected}
                           accent="red"
-                          headerRightSlot={
-                            <button
-                              type="button"
-                              onClick={() => completePlanOnboarding("free", onboardingBilling)}
-                              className="tb-v2-pricing-inline-link"
-                            >
-                              {FREE_PLAN_CTA_LABEL}
-                            </button>
+                          onClick={() => {
+                            setSelectedOnboardingPlan(planTier);
+                            writePlanOnboarding("draft", "pricing", planTier, onboardingBilling);
+                          }}
+                          topSlot={
+                            <div className={`inline-flex h-5 w-5 items-center justify-center rounded-full border ${selected ? "border-blue-500" : "border-gray-300 dark:border-gray-600"}`}>
+                              <span className={`h-2.5 w-2.5 rounded-full ${selected ? "bg-blue-500" : "bg-transparent"}`} />
+                            </div>
                           }
-                        >
-                          <ul className="tb-v2-pricing-features">
-                            {features.map((feature) => (
-                              <li
-                                key={feature.label}
-                                className={feature.included === false ? 'text-[color:var(--fg-3)] line-through' : ''}
-                              >
-                                <span className="mt-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center text-[11px] font-bold leading-none text-red-500">
-                                  {feature.included === false ? '×' : '✓'}
-                                </span>
-                                {feature.label}
-                              </li>
-                            ))}
-                          </ul>
-                        </PricingPlanCard>
+                        />
                       </div>
                     );
                   })}
                 </div>
+
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Pick any plan above to complete onboarding.</p>
+                  <button
+                    type="button"
+                    onClick={() => completePlanOnboarding(selectedOnboardingPlan, onboardingBilling)}
+                    className={`tb-v2-btn tb-v2-pricing-btn ${selectedOnboardingPlan === "free" ? "inverse" : "selected"}`}
+                  >
+                    {selectedOnboardingPlan === "free" ? FREE_PLAN_CTA_LABEL : PAID_TRIAL_CTA_LABEL}
+                  </button>
+                </div>
               </div>
             )}
 
-            <div className="mt-6">
-              {onboardingStep === "welcome" ? (
+            {onboardingStep === "welcome" && (
+              <div className="mt-6">
                 <button
                   type="button"
                   onClick={handleNextPlanOnboarding}
@@ -866,12 +850,8 @@ export default function AccountPage() {
                 >
                   {savingPlanOnboarding ? "Saving..." : "Next"}
                 </button>
-              ) : (
-                <div className="rounded-2xl border border-dashed border-red-200 bg-red-50/60 px-4 py-3 text-sm text-red-700 dark:border-red-900/50 dark:bg-red-950/20 dark:text-red-300">
-                  Pick any plan above to complete onboarding and start your trial or free plan.
-                </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       )}

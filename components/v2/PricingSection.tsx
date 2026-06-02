@@ -185,6 +185,7 @@ export function PricingPlanCard({
   children,
   footer,
   htmlFor,
+  onClick,
   className,
 }: {
   plan: PricingPlanLike;
@@ -199,6 +200,7 @@ export function PricingPlanCard({
   children?: ReactNode;
   footer?: ReactNode;
   htmlFor?: string;
+  onClick?: () => void;
   className?: string;
 }) {
   const priceCents = billing === 'yearly' ? plan.priceYearly : plan.priceMonthly;
@@ -208,7 +210,8 @@ export function PricingPlanCard({
     ? `$${(plan.priceYearly / 1200).toFixed(2)}/mo billed annually`
     : null;
 
-  const Wrapper = htmlFor ? 'label' : 'div';
+  const isInteractive = Boolean(htmlFor || onClick);
+  const Wrapper = htmlFor ? 'label' : onClick ? 'button' : 'div';
   const wrapperClasses = [
     'tb-v2-pricing-card',
     'h-full',
@@ -217,13 +220,14 @@ export function PricingPlanCard({
     tone === 'plain' ? 'plain' : '',
     highlighted && !selected ? 'hot' : '',
     selected ? 'selected' : '',
-    htmlFor ? 'cursor-pointer' : '',
+    isInteractive ? 'cursor-pointer' : '',
     className ?? '',
   ].filter(Boolean).join(' ');
 
   return (
     <Wrapper
       {...(htmlFor ? { htmlFor } : {})}
+      {...(onClick ? { onClick, type: 'button' as const } : {})}
       className={wrapperClasses}
       data-testid="pricing-plan-card"
       data-tier={plan.tier}
