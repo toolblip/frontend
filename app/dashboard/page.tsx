@@ -769,6 +769,7 @@ export default function AccountPage() {
                         setOnboardingBilling(nextBilling);
                         writePlanOnboarding("draft", "pricing", selectedOnboardingPlan, nextBilling);
                       }}
+                      centered
                       accent="red"
                     />
                   </div>
@@ -848,11 +849,11 @@ export default function AccountPage() {
                           compactHeader
                           selected={selected}
                           accent="red"
-                          footer={
+                          headerRightSlot={
                             <button
                               type="button"
                               onClick={() => completePlanOnboarding(planTier, onboardingBilling)}
-                              className="tb-v2-btn tb-v2-pricing-btn inverse"
+                              className="tb-v2-pricing-inline-link"
                             >
                               {FREE_PLAN_CTA_LABEL}
                             </button>

@@ -2571,7 +2571,9 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 .tb-v2-pricing-toggle-badge-text { font-size: 9.5px; font-weight: 800; line-height: 1; letter-spacing: 0.02em; text-transform: lowercase; }
 .tb-v2-pricing-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; align-items: start; margin-top: 40px; }
 .tb-v2-pricing-period-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 24px; text-align: left; }
-.tb-v2-pricing-period-row.centered { justify-content: center; }
+.tb-v2-pricing-period-column { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: 24px; text-align: center; }
+.tb-v2-pricing-period-column.centered { width: 100%; }
+.tb-v2-pricing-period-column.centered .tb-v2-pricing-toggle { justify-content: center; }
 .tb-v2-pricing-period-label { font-size: 14px; font-weight: 600; color: var(--fg-2); }
 .tb-v2-pricing-card.free-row {
   min-height: 0;

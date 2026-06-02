@@ -161,15 +161,24 @@ export function PricingBillingToggle({
   );
 
   if (label) {
+    if (centered) {
+      return (
+        <div className="tb-v2-pricing-period-column centered">
+          <span className="tb-v2-pricing-period-label">{label}</span>
+          {toggle}
+        </div>
+      );
+    }
+
     return (
-      <div className={centered ? 'tb-v2-pricing-period-row centered' : 'tb-v2-pricing-period-row'}>
+      <div className="tb-v2-pricing-period-row">
         <span className="tb-v2-pricing-period-label">{label}</span>
         {toggle}
       </div>
     );
   }
 
-  return <div className={centered ? 'flex justify-center' : 'flex justify-center'}>{toggle}</div>;
+  return <div className="flex justify-center">{toggle}</div>;
 }
 
 export function PricingPlanCard({
