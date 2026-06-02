@@ -213,10 +213,11 @@ export function PricingPlanCard({
   className?: string;
 }) {
   const priceCents = billing === 'yearly' ? plan.priceYearly : plan.priceMonthly;
-  const yearlyDisplayCents = billing === 'yearly' && priceCents > 0 ? Math.round(plan.priceYearly / 10) : null;
-  const price = formatPricingAmount(yearlyDisplayCents ?? priceCents);
+  const displayedMonthlyCents = billing === 'yearly' && plan.priceYearly > 0 ? Math.round(plan.priceYearly / 12) : null;
+  const price = formatPricingAmount(displayedMonthlyCents ?? priceCents);
   const pricePeriod = priceCents === 0 ? '' : '/mo';
-  const yearlyNote = billing === 'yearly' && priceCents > 0 ? '2 months free · billed yearly' : null;
+  const billedYearlyCents = billing === 'yearly' && plan.priceYearly > 0 ? plan.priceYearly : null;
+  const yearlySavingsCents = billing === 'yearly' && plan.priceMonthly > 0 ? Math.max(0, plan.priceMonthly * 12 - plan.priceYearly) : null;
 
   const isInteractive = Boolean(htmlFor || onClick);
   const Wrapper = htmlFor ? 'label' : onClick ? 'button' : 'div';
@@ -267,7 +268,16 @@ export function PricingPlanCard({
                 <span className="tb-v2-pricing-card-price-amt">${price}</span>
                 {pricePeriod ? <span className="tb-v2-pricing-card-price-period">{pricePeriod}</span> : null}
               </div>
-              {yearlyNote ? <div className="tb-v2-pricing-card-sub">{yearlyNote}</div> : null}
+              {billing === 'yearly' && billedYearlyCents ? (
+                <div className="tb-v2-pricing-card-sub">
+                  <div>Billed as ${formatPricingAmount(billedYearlyCents)}/year</div>
+                  {yearlySavingsCents && yearlySavingsCents > 0 ? (
+                    <div>
+                      Save ${formatPricingAmount(yearlySavingsCents)} with yearly pricing (2 months free)
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
             </div>
           </div>
 
