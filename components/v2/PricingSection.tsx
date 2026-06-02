@@ -215,7 +215,7 @@ export function PricingPlanCard({
   const wrapperClasses = [
     'tb-v2-pricing-card',
     'h-full',
-    'lg:min-h-[440px]',
+    'lg:min-h-[380px]',
     tone === 'light' ? 'light' : '',
     tone === 'plain' ? 'plain' : '',
     highlighted && !selected ? 'hot' : '',
