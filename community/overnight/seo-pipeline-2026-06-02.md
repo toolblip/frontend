@@ -39,7 +39,17 @@ The pipeline generated one article only. Post-pipeline review tightened it befor
 ## GSC / sitemap status
 
 - Pipeline ran sitemap refresh and added the URL to `gsc-queue.json` as submitted.
-- Final verification should treat `URL is unknown to Google` as expected for a brand-new URL, not a title/meta problem.
+- GSC diagnosis returned `URL is unknown to Google`, which is expected immediately after publishing a new URL.
+- Live sitemap now contains the new slug.
+
+## Deployment / verification
+
+- Local `npm run build` passed after final cleanup.
+- Pushed final content commit: `cde9822a43c1d8d403027c6a890e4be20485d917`.
+- Triggered Railway frontend deploy: `4d2aaf43-e453-4aa1-824e-30ce111ffec4`.
+- Railway reported `SUCCESS` at 2026-06-02T17:15:29Z.
+- Live URL returned 200 and contains the final title plus the SQL formatter link.
+- Live HTML check found no humanizer/Claude artifacts and no `[object Object]` metadata.
 
 ## Decisions needed
 

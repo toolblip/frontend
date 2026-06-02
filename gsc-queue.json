@@ -79,7 +79,8 @@
       "submitted_at": "2026-06-02T17:05:33Z",
       "method": "sitemap",
       "status": "submitted",
-      "note": "sitemap refreshed after conservative one-post run; fresh URL may be unknown to Google until crawl"
+      "coverage_state": "URL is unknown to Google",
+      "note": "sitemap refreshed after conservative one-post run; URL unknown immediately after publish is expected"
     }
   ],
   "failed": []
