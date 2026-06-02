@@ -3,6 +3,7 @@
 import type { ReactNode } from 'react';
 
 export type BillingCycle = 'monthly' | 'yearly';
+export type PricingAccent = 'red' | 'green';
 
 export interface PricingPlanLike {
   tier: string;
@@ -128,14 +129,16 @@ export function PricingBillingToggle({
   onBillingChange,
   label,
   centered = false,
+  accent = 'red',
 }: {
   billing: BillingCycle;
   onBillingChange: (billing: BillingCycle) => void;
   label?: string;
   centered?: boolean;
+  accent?: PricingAccent;
 }) {
   const toggle = (
-    <div className="tb-v2-pricing-toggle" data-testid="pricing-billing-toggle">
+    <div className="tb-v2-pricing-toggle" data-testid="pricing-billing-toggle" data-accent={accent}>
       <button
         type="button"
         onClick={() => onBillingChange('monthly')}
@@ -175,6 +178,7 @@ export function PricingPlanCard({
   highlighted = false,
   selected = false,
   tone = 'default',
+  accent = 'red',
   topSlot,
   headerRightSlot,
   compactHeader = false,
@@ -188,6 +192,7 @@ export function PricingPlanCard({
   highlighted?: boolean;
   selected?: boolean;
   tone?: 'default' | 'light' | 'plain';
+  accent?: PricingAccent;
   topSlot?: ReactNode;
   headerRightSlot?: ReactNode;
   compactHeader?: boolean;
@@ -222,9 +227,12 @@ export function PricingPlanCard({
       className={wrapperClasses}
       data-testid="pricing-plan-card"
       data-tier={plan.tier}
+      data-accent={accent}
     >
       {plan.badge ? (
-        <span className="absolute right-4 top-4 rounded-full bg-red-600 px-2.5 py-0.5 text-xs font-semibold text-white">
+        <span className={accent === 'green'
+          ? 'absolute right-4 top-4 rounded-full bg-emerald-500 px-2.5 py-0.5 text-xs font-semibold text-white'
+          : 'absolute right-4 top-4 rounded-full bg-red-600 px-2.5 py-0.5 text-xs font-semibold text-white'}>
           {plan.badge}
         </span>
       ) : null}

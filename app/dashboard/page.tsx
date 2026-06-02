@@ -62,6 +62,7 @@ type Plan = {
 
 const ONBOARDING_STORAGE_VERSION = 2;
 const DEFAULT_ONBOARDING_PLAN: OnboardingPlanTier = "ultra";
+const DEFAULT_ONBOARDING_BILLING: BillingCycle = "yearly";
 
 function normalizeOnboardingPlan(plan?: string | null): OnboardingPlanTier {
   return plan === "starter" ? DEFAULT_ONBOARDING_PLAN : (plan as OnboardingPlanTier | undefined) ?? DEFAULT_ONBOARDING_PLAN;
@@ -183,7 +184,7 @@ export default function AccountPage() {
   const [onboardingStep, setOnboardingStep] = useState<OnboardingStep>("welcome");
   const [teamName, setTeamName] = useState("");
   const [selectedOnboardingPlan, setSelectedOnboardingPlan] = useState<OnboardingPlanTier>(DEFAULT_ONBOARDING_PLAN);
-  const [onboardingBilling, setOnboardingBilling] = useState<BillingCycle>("monthly");
+  const [onboardingBilling, setOnboardingBilling] = useState<BillingCycle>(DEFAULT_ONBOARDING_BILLING);
   const [savingPlanOnboarding, setSavingPlanOnboarding] = useState(false);
   const [planOnboardingError, setPlanOnboardingError] = useState("");
   const [favoriteTools, setFavoriteTools] = useState<FavoriteTool[]>([]);
@@ -272,7 +273,7 @@ export default function AccountPage() {
       const stored = window.localStorage.getItem(onboardingStorageKey(user.id));
       if (!stored) {
         const initialSelectedPlan = requestedPlan ?? DEFAULT_ONBOARDING_PLAN;
-        const initialBilling = requestedBilling ?? "monthly";
+        const initialBilling = requestedBilling ?? DEFAULT_ONBOARDING_BILLING;
         const initialPayload = {
           version: ONBOARDING_STORAGE_VERSION,
           status: "draft" as OnboardingStatus,
@@ -330,7 +331,7 @@ export default function AccountPage() {
     } catch {
       setTeamName(suggestedTeamName);
       setSelectedOnboardingPlan(DEFAULT_ONBOARDING_PLAN);
-      setOnboardingBilling("monthly");
+      setOnboardingBilling(DEFAULT_ONBOARDING_BILLING);
       setOnboardingStep("welcome");
       setShowPlanOnboarding(true);
       return;
@@ -747,6 +748,7 @@ export default function AccountPage() {
                       writePlanOnboarding("draft", "pricing", selectedOnboardingPlan, nextBilling);
                     }}
                     centered
+                    accent="green"
                   />
                 </div>
 
@@ -769,12 +771,13 @@ export default function AccountPage() {
                         billing={onboardingBilling}
                         highlighted={plan.tier === "ultra"}
                         selected={selected}
+                        accent="green"
                         footer={
                           <div className="flex flex-col items-center gap-2 text-center">
                             <button
                               type="button"
                               onClick={() => completePlanOnboarding(plan.tier as OnboardingPlanTier, onboardingBilling)}
-                              className={`tb-v2-btn tb-v2-pricing-btn ${plan.tier === "ultra" ? 'inverse' : 'tb-v2-btn-primary'}`}
+                              className={`tb-v2-btn tb-v2-pricing-btn accent-green ${plan.tier === "ultra" ? 'selected' : ''}`}
                               style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
                             >
                               {PAID_TRIAL_CTA_LABEL}
@@ -821,6 +824,7 @@ export default function AccountPage() {
                           className="free-row"
                           compactHeader
                           selected={selected}
+                          accent="green"
                           headerRightSlot={
                             <button
                               type="button"
