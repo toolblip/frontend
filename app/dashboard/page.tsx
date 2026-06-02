@@ -764,7 +764,7 @@ export default function AccountPage() {
                           description: plan.description,
                           priceMonthly: plan.price_monthly,
                           priceYearly: plan.price_yearly,
-                          badge: plan.tier === "ultra" ? "Popular" : null,
+                          badge: plan.tier === "ultra" ? "Featured" : null,
                         }}
                         billing={onboardingBilling}
                         highlighted={plan.tier === "ultra"}

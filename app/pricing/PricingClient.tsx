@@ -193,7 +193,7 @@ export default function PricingClient() {
     description: plan.description,
     priceMonthly: plan.price_monthly,
     priceYearly: plan.price_yearly,
-    badge: plan.tier === HIGHLIGHT_TIER ? 'Popular' : null,
+    badge: plan.tier === HIGHLIGHT_TIER ? 'Featured' : null,
   }));
   const highlightPlan = orderedPlans.find((p) => p.tier === HIGHLIGHT_TIER);
   const stickyPriceCents = highlightPlan
