@@ -11,6 +11,7 @@ import {
   PAID_TRIAL_CTA_LABEL,
   PricingBillingToggle,
   PricingPlanCard,
+  buildPricingPlanFeatures,
   sortPricingPlans,
   type BillingCycle,
 } from "@/components/v2/PricingSection";
@@ -79,13 +80,6 @@ const ONBOARDING_PLAN_LABELS: Record<OnboardingPlanTier, string> = {
   starter: "Starter",
   ultra: "Pro",
   max: "Max",
-};
-
-const ONBOARDING_PLAN_DESCRIPTIONS: Record<OnboardingPlanTier, string> = {
-  free: "Start with all core tools and client-side processing.",
-  starter: "Remove ads and unlock personal cloud storage.",
-  ultra: "Power-user limits, API access, and more storage.",
-  max: "Team seats, priority support, and the highest limits.",
 };
 
 function displayOnboardingPlanName(tier: string | null | undefined) {
@@ -785,7 +779,8 @@ export default function AccountPage() {
                     const selected = selectedOnboardingPlan === plan.tier;
                     const planTier = plan.tier as OnboardingPlanTier;
                     const displayName = ONBOARDING_PLAN_LABELS[planTier] ?? plan.name;
-                    const description = ONBOARDING_PLAN_DESCRIPTIONS[planTier] ?? plan.description;
+                    const sourcePlan = orderedPlans.find((item) => item.tier === plan.tier)!;
+                    const features = buildPricingPlanFeatures(sourcePlan);
 
                     return (
                       <PricingPlanCard
@@ -811,7 +806,21 @@ export default function AccountPage() {
                             {PAID_TRIAL_CTA_LABEL}
                           </button>
                         }
-                      />
+                      >
+                        <ul className="tb-v2-pricing-features">
+                          {features.map((feature) => (
+                            <li
+                              key={feature.label}
+                              className={feature.included === false ? "text-[color:var(--fg-3)] line-through" : ""}
+                            >
+                              <span className="mt-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center text-[11px] font-bold leading-none text-red-500">
+                                {feature.included === false ? "×" : "✓"}
+                              </span>
+                              {feature.label}
+                            </li>
+                          ))}
+                        </ul>
+                      </PricingPlanCard>
                     );
                   })}
 
@@ -819,7 +828,8 @@ export default function AccountPage() {
                     const selected = selectedOnboardingPlan === plan.tier;
                     const planTier = plan.tier as OnboardingPlanTier;
                     const displayName = ONBOARDING_PLAN_LABELS[planTier] ?? plan.name;
-                    const description = ONBOARDING_PLAN_DESCRIPTIONS[planTier] ?? plan.description;
+                    const sourcePlan = orderedPlans.find((item) => item.tier === plan.tier)!;
+                    const features = buildPricingPlanFeatures(sourcePlan);
 
                     return (
                       <div key={plan.tier} className="lg:col-span-3">
@@ -847,7 +857,21 @@ export default function AccountPage() {
                               {FREE_PLAN_CTA_LABEL}
                             </button>
                           }
-                        />
+                        >
+                          <ul className="tb-v2-pricing-features">
+                            {features.map((feature) => (
+                              <li
+                                key={feature.label}
+                                className={feature.included === false ? "text-[color:var(--fg-3)] line-through" : ""}
+                              >
+                                <span className="mt-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center text-[11px] font-bold leading-none text-red-500">
+                                  {feature.included === false ? "×" : "✓"}
+                                </span>
+                                {feature.label}
+                              </li>
+                            ))}
+                          </ul>
+                        </PricingPlanCard>
                       </div>
                     );
                   })}
