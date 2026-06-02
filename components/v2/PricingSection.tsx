@@ -153,8 +153,8 @@ export function PricingBillingToggle({
       >
         <span>Yearly</span>
         <span aria-hidden="true" className={billingToggleBadgeClasses(billing === 'yearly')}>
-          <span className="tb-v2-pricing-toggle-badge-number">1</span>
-          <span className="tb-v2-pricing-toggle-badge-text"> month free</span>
+          <span className="tb-v2-pricing-toggle-badge-number">2</span>
+          <span className="tb-v2-pricing-toggle-badge-text"> months free</span>
         </span>
       </button>
     </div>
@@ -213,11 +213,11 @@ export function PricingPlanCard({
   className?: string;
 }) {
   const priceCents = billing === 'yearly' ? plan.priceYearly : plan.priceMonthly;
-  const displayedMonthlyCents = billing === 'yearly' && plan.priceYearly > 0 ? Math.round(plan.priceYearly / 12) : null;
+  const displayedMonthlyCents = billing === 'yearly' && plan.priceYearly > 0 ? plan.priceMonthly : null;
   const price = formatPricingAmount(displayedMonthlyCents ?? priceCents);
   const pricePeriod = priceCents === 0 ? '' : '/mo';
   const billedYearlyCents = billing === 'yearly' && plan.priceYearly > 0 ? plan.priceYearly : null;
-  const yearlySavingsCents = billing === 'yearly' && plan.priceMonthly > 0 ? plan.priceMonthly : null;
+  const yearlySavingsCents = billing === 'yearly' && plan.priceMonthly > 0 ? (plan.priceMonthly * 12) - plan.priceYearly : null;
 
   const isInteractive = Boolean(htmlFor || onClick);
   const Wrapper = htmlFor ? 'label' : onClick ? 'button' : 'div';
@@ -273,7 +273,7 @@ export function PricingPlanCard({
                   <div>Billed as ${formatPricingAmount(billedYearlyCents)}/year</div>
                   {yearlySavingsCents && yearlySavingsCents > 0 ? (
                     <div>
-                      Save ${formatPricingAmount(yearlySavingsCents)} with yearly pricing (1 month free)
+                      Save ${formatPricingAmount(yearlySavingsCents)} with yearly pricing (2 months free)
                     </div>
                   ) : null}
                 </div>
