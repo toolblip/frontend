@@ -782,6 +782,7 @@ export default function AccountPage() {
                     const planTier = plan.tier as OnboardingPlanTier;
                     const displayName = ONBOARDING_PLAN_LABELS[planTier] ?? plan.name;
                     const description = ONBOARDING_PLAN_DESCRIPTIONS[planTier] ?? plan.description;
+
                     return (
                       <PricingPlanCard
                         key={plan.tier}
@@ -797,14 +798,14 @@ export default function AccountPage() {
                         highlighted={plan.tier === "ultra"}
                         selected={selected}
                         accent="red"
-                        onClick={() => {
-                          setSelectedOnboardingPlan(planTier);
-                          writePlanOnboarding("draft", "pricing", planTier, onboardingBilling);
-                        }}
-                        topSlot={
-                          <div className={`inline-flex h-5 w-5 items-center justify-center rounded-full border ${selected ? "border-blue-500" : "border-gray-300 dark:border-gray-600"}`}>
-                            <span className={`h-2.5 w-2.5 rounded-full ${selected ? "bg-blue-500" : "bg-transparent"}`} />
-                          </div>
+                        footer={
+                          <button
+                            type="button"
+                            onClick={() => completePlanOnboarding(planTier, onboardingBilling)}
+                            className={`tb-v2-btn tb-v2-pricing-btn ${selected ? "selected" : "tb-v2-btn-primary"}`}
+                          >
+                            {PAID_TRIAL_CTA_LABEL}
+                          </button>
                         }
                       />
                     );
@@ -833,30 +834,19 @@ export default function AccountPage() {
                           compactHeader
                           selected={selected}
                           accent="red"
-                          onClick={() => {
-                            setSelectedOnboardingPlan(planTier);
-                            writePlanOnboarding("draft", "pricing", planTier, onboardingBilling);
-                          }}
-                          topSlot={
-                            <div className={`inline-flex h-5 w-5 items-center justify-center rounded-full border ${selected ? "border-blue-500" : "border-gray-300 dark:border-gray-600"}`}>
-                              <span className={`h-2.5 w-2.5 rounded-full ${selected ? "bg-blue-500" : "bg-transparent"}`} />
-                            </div>
+                          footer={
+                            <button
+                              type="button"
+                              onClick={() => completePlanOnboarding(planTier, onboardingBilling)}
+                              className="tb-v2-btn tb-v2-pricing-btn inverse"
+                            >
+                              {FREE_PLAN_CTA_LABEL}
+                            </button>
                           }
                         />
                       </div>
                     );
                   })}
-                </div>
-
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                  <p className="text-sm text-gray-600 dark:text-gray-300">Pick any plan above to complete onboarding.</p>
-                  <button
-                    type="button"
-                    onClick={() => completePlanOnboarding(selectedOnboardingPlan, onboardingBilling)}
-                    className={`tb-v2-btn tb-v2-pricing-btn ${selectedOnboardingPlan === "free" ? "inverse" : "selected"}`}
-                  >
-                    {selectedOnboardingPlan === "free" ? FREE_PLAN_CTA_LABEL : PAID_TRIAL_CTA_LABEL}
-                  </button>
                 </div>
               </div>
             )}

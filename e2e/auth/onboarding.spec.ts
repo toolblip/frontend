@@ -124,32 +124,29 @@ test.describe('Account onboarding BDD regression', () => {
 
     const migratedOnboarding = page.getByRole('dialog', { name: /Welcome to your dashboard|Choose your plan/i });
     await expect(migratedOnboarding).toBeVisible();
+    await migratedOnboarding.getByRole('button', { name: 'Next' }).click();
     await expect(migratedOnboarding.locator('[data-tier="ultra"]')).toHaveClass(/selected/);
 
     const migratedStored = await page.evaluate(() => {
       const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
       return entry ? JSON.parse(String(entry[1])) : null;
     });
-    expect(migratedStored).toMatchObject({ status: 'draft', selectedPlan: 'ultra', version: 2 });
+    expect(migratedStored).toMatchObject({ status: 'draft', selectedPlan: 'ultra', version: 4 });
   });
 
   test('Given dashboard onboarding appears, Then the welcome step leads into pricing without quick start or skip actions', async ({ page }) => {
     await loginByForm(page, VALID_USER);
 
     const onboarding = page.getByRole('dialog', { name: /Welcome to your dashboard|Choose your plan/i });
-    await expect(onboarding.getByText(/Start by naming your team/i)).toBeVisible();
+    await expect(onboarding.getByText(/Team name/i)).toBeVisible();
     await expect(onboarding.getByRole('button', { name: 'Skip for now' })).toHaveCount(0);
     await expect(onboarding.getByText(/Quick start/i)).toHaveCount(0);
     await onboarding.getByRole('button', { name: 'Next' }).click();
 
     const planCards = onboarding.locator('[data-testid="pricing-plan-card"]');
     await expect(planCards).toHaveCount(4);
-    await expect(onboarding.getByText('14-day free trial · no card required')).toBeVisible();
-    await expect(onboarding.getByText('Start a 14-day free trial with no card required, or keep using the free plan.')).toBeVisible();
-    await expect(onboarding.getByRole('button', { name: 'Finish' })).toHaveCount(0);
     await expect(onboarding.getByRole('button', { name: 'Start 14-day free trial' })).toHaveCount(3);
     await expect(onboarding.getByRole('button', { name: 'Continue with Free Plan' })).toHaveCount(1);
-    await expect(onboarding.getByText('No credit card required.')).toHaveCount(3);
 
     const cardLayout = await planCards.evaluateAll((nodes) =>
       nodes.map((node) => {

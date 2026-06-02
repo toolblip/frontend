@@ -153,8 +153,8 @@ export function PricingBillingToggle({
       >
         <span>Yearly</span>
         <span aria-hidden="true" className={billingToggleBadgeClasses(billing === 'yearly')}>
-          <span className="tb-v2-pricing-toggle-badge-number">1</span>
-          <span className="tb-v2-pricing-toggle-badge-text"> month free</span>
+          <span className="tb-v2-pricing-toggle-badge-number">2</span>
+          <span className="tb-v2-pricing-toggle-badge-text"> months free</span>
         </span>
       </button>
     </div>
@@ -207,7 +207,7 @@ export function PricingPlanCard({
   const yearlyDisplayCents = billing === 'yearly' && priceCents > 0 ? Math.round(plan.priceYearly / 10) : null;
   const price = formatPricingAmount(yearlyDisplayCents ?? priceCents);
   const pricePeriod = priceCents === 0 ? '' : '/mo';
-  const yearlyNote = billing === 'yearly' && priceCents > 0 ? '1 month free · billed yearly' : null;
+  const yearlyNote = billing === 'yearly' && priceCents > 0 ? '2 months free · billed yearly' : null;
 
   const isInteractive = Boolean(htmlFor || onClick);
   const Wrapper = htmlFor ? 'label' : onClick ? 'button' : 'div';
