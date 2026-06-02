@@ -702,19 +702,23 @@ export default function AccountPage() {
             role="dialog"
             aria-modal="true"
             aria-labelledby="plan-onboarding-title"
-            className="w-full max-w-6xl max-h-[90vh] overflow-y-auto rounded-[32px] border border-red-200 bg-gradient-to-br from-red-50 via-white to-gray-50 p-7 shadow-2xl dark:border-red-900/50 dark:from-red-950/30 dark:via-gray-900 dark:to-gray-950"
+            className="w-full max-w-6xl max-h-[90vh] overflow-y-auto rounded-[32px] border border-red-200 bg-gradient-to-br from-red-50 via-white to-gray-50 p-5 shadow-2xl dark:border-red-900/50 dark:from-red-950/30 dark:via-gray-900 dark:to-gray-950"
           >
             <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-              <div className="max-w-2xl space-y-4">
+              <div className="max-w-2xl space-y-2">
                 <p className="text-sm font-semibold uppercase tracking-wide text-red-600 dark:text-red-400">Welcome to Toolblip</p>
-                <div>
-                  <h2 id="plan-onboarding-title" className="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">
-                    Choose your plan
-                  </h2>
-                  <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 sm:text-base">
-                      Compare the plans and pick the one that fits how you use Toolblip.
-                    </p>
-                </div>
+                {onboardingStep === "welcome" ? (
+                  <>
+                    <div>
+                      <h2 id="plan-onboarding-title" className="text-xl font-bold text-gray-900 dark:text-white sm:text-2xl">
+                        Choose your plan
+                      </h2>
+                      <p className="mt-1 text-sm text-gray-600 dark:text-gray-300 sm:text-sm">
+                        Compare the plans and pick the one that fits how you use Toolblip.
+                      </p>
+                    </div>
+                  </>
+                ) : null}
                 <div className="inline-flex items-center rounded-full border border-red-200 bg-white px-3 py-1 text-xs font-medium text-red-700 shadow-sm dark:border-red-900/60 dark:bg-gray-900 dark:text-red-300">
                   {onboardingStep === "welcome" ? "Step 1 of 2" : "Step 2 of 2"}
                 </div>
@@ -723,7 +727,7 @@ export default function AccountPage() {
             </div>
 
             {onboardingStep === "welcome" ? (
-              <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
+              <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
                 <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900">
                   <label htmlFor="team-name" className="block text-sm font-semibold text-gray-900 dark:text-white">
                     Team name
@@ -753,17 +757,17 @@ export default function AccountPage() {
                 </div>
               </div>
             ) : (
-              <div className="mt-6 space-y-6">
-                <div className="rounded-[32px] border border-gray-200 bg-white/90 p-6 shadow-sm backdrop-blur dark:border-gray-700 dark:bg-gray-900/90 sm:p-7">
-                  <div className="space-y-3">
+              <div className="mt-4 space-y-4">
+                <div className="rounded-[32px] border border-gray-200 bg-white/90 p-5 shadow-sm backdrop-blur dark:border-gray-700 dark:bg-gray-900/90 sm:p-6">
+                  <div className="space-y-2">
                     <div className="text-sm font-semibold uppercase tracking-[0.2em] text-red-600 dark:text-red-400">Pricing</div>
-                    <h3 className="text-[2rem] font-bold leading-tight text-gray-900 dark:text-white sm:text-[2.2rem]">Simple, transparent pricing</h3>
+                    <h3 className="text-xl font-bold leading-tight text-gray-900 dark:text-white sm:text-2xl">Simple, transparent pricing</h3>
                     <p className="max-w-2xl text-sm text-gray-600 dark:text-gray-300 sm:text-base">
                       Compare the plans and pick the one that fits how you use Toolblip.
                     </p>
                   </div>
 
-                  <div className="mt-6">
+                  <div className="mt-4">
                     <PricingBillingToggle
                       label="Billing period"
                       billing={onboardingBilling}
@@ -776,7 +780,7 @@ export default function AccountPage() {
                   </div>
                 </div>
 
-                <div className="grid gap-4 lg:grid-cols-3">
+                <div className="grid gap-3 lg:grid-cols-3">
                   {orderedPlans.filter((plan) => plan.tier !== "free").map((plan) => {
                     const selected = selectedOnboardingPlan === plan.tier;
                     const planTier = plan.tier as OnboardingPlanTier;
@@ -789,7 +793,7 @@ export default function AccountPage() {
                         plan={{
                           tier: plan.tier,
                           name: displayName,
-                          description,
+                          description: null,
                           priceMonthly: plan.price_monthly,
                           priceYearly: plan.price_yearly,
                           badge: plan.tier === "ultra" ? "Featured" : null,
@@ -823,7 +827,7 @@ export default function AccountPage() {
                           plan={{
                             tier: plan.tier,
                             name: displayName,
-                            description,
+                            description: null,
                             priceMonthly: plan.price_monthly,
                             priceYearly: plan.price_yearly,
                             badge: null,

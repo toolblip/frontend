@@ -2677,11 +2677,11 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 .tb-v2-pricing-card-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--red); color: #fff; font-size: 11px; font-weight: 700; padding: 3px 12px; border-radius: 20px; white-space: nowrap; letter-spacing: 0.02em; }
 
 .tb-v2-pricing-card-name { font-size: 14px; font-weight: 600; color: var(--fg-0); }
-.tb-v2-pricing-card-price { display: flex; align-items: baseline; gap: 4px; margin-top: 10px; }
-.tb-v2-pricing-card-price-amt { font-size: 32px; font-weight: 700; color: var(--fg-0); font-family: var(--f-display); letter-spacing: -0.025em; }
+.tb-v2-pricing-card-price { display: flex; align-items: baseline; gap: 4px; margin-top: 8px; }
+.tb-v2-pricing-card-price-amt { font-size: 28px; font-weight: 700; color: var(--fg-0); font-family: var(--f-display); letter-spacing: -0.025em; }
 .tb-v2-pricing-card-price-period { font-size: 13px; color: var(--fg-2); }
-.tb-v2-pricing-card-sub { font-size: 11px; color: var(--fg-3); margin-top: 4px; }
-.tb-v2-pricing-card-desc { font-size: 13px; color: var(--fg-2); margin-top: 10px; line-height: 1.5; }
+.tb-v2-pricing-card-sub { font-size: 11px; color: var(--fg-3); margin-top: 2px; }
+.tb-v2-pricing-card-desc { font-size: 12px; color: var(--fg-2); margin-top: 8px; line-height: 1.45; }
 .tb-v2-pricing-features { list-style: none; padding: 0; margin: 16px 0 20px; flex: 1; }
 .tb-v2-pricing-features li { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--fg-1); line-height: 1.5; padding: 3px 0; }
 .tb-v2-pricing-check { width: 16px; height: 16px; stroke: var(--red); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; margin-top: 1px; }

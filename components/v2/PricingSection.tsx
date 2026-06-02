@@ -214,7 +214,7 @@ export function PricingPlanCard({
   const wrapperClasses = [
     'tb-v2-pricing-card',
     'h-full',
-    'lg:min-h-[180px]',
+    'lg:min-h-[120px]',
     tone === 'light' ? 'light' : '',
     tone === 'plain' ? 'plain' : '',
     highlighted && !selected ? 'hot' : '',
@@ -262,13 +262,13 @@ export function PricingPlanCard({
             </div>
           </div>
 
-          <div className="tb-v2-pricing-card-desc">{plan.description}</div>
+              {plan.description ? <div className="tb-v2-pricing-card-desc">{plan.description}</div> : null}
         </>
       )}
 
       {children ? <div className={compactHeader ? 'mt-6' : 'mt-4'}>{children}</div> : null}
 
-      {footer ? <div className="mt-auto pt-5">{footer}</div> : null}
+      {footer ? <div className="mt-auto pt-2">{footer}</div> : null}
 
     </Wrapper>
   );
