@@ -1,6 +1,5 @@
 {
   "pending": [
-    "format SQL queries online for readability",
     "generate QR codes online without signing up",
     "validate XML online for API integrations",
     "sort and deduplicate lists online for developers",
@@ -8,6 +7,12 @@
   ],
   "in_progress": [],
   "done": [
+    {
+      "topic": "format SQL queries online for readability",
+      "completed_at": "2026-06-02T17:05:45Z",
+      "url": "https://toolblip.com/blog/2026-06-02-format-sql-queries-online-for-readability",
+      "note": "conservative one-post run; final pass trimmed article, quoted ISO date, and linked the canonical SQL formatter tool page"
+    },
     {
       "topic": "escape and unescape HTML entities for frontend debugging",
       "completed_at": "2026-06-01T17:07:40Z"

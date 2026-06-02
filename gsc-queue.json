@@ -73,6 +73,13 @@
     {
       "url": "https://toolblip.com/blog/2026-06-01-unescape-html-entities-online",
       "submitted_at": "2026-06-01T17:07:29Z"
+    },
+    {
+      "url": "https://toolblip.com/blog/2026-06-02-format-sql-queries-online-for-readability",
+      "submitted_at": "2026-06-02T17:05:33Z",
+      "method": "sitemap",
+      "status": "submitted",
+      "note": "sitemap refreshed after conservative one-post run; fresh URL may be unknown to Google until crawl"
     }
   ],
   "failed": []
