@@ -70,9 +70,9 @@ function normalizeOnboardingPlan(plan?: string | null): OnboardingPlanTier {
 
 const FALLBACK_PLANS: Plan[] = [
   { tier: "free", name: "Free", description: "For anyone getting started", price_monthly: 0, price_yearly: 0, stripe_monthly_id: null, stripe_yearly_id: null, storage_gb: 0, max_file_size_mb: 5, team_seats: 1, api_access: false, priority_support: false, sort_order: 0 },
-  { tier: "starter", name: "Starter", description: "For personal use", price_monthly: 499, price_yearly: 4799, stripe_monthly_id: "price_1TOflqHd4AsPgGTOxspjxODX", stripe_yearly_id: "price_1TOflqHd4AsPgGTOOrxqG1kM", storage_gb: 1, max_file_size_mb: 50, team_seats: 1, api_access: false, priority_support: false, sort_order: 1 },
-  { tier: "ultra", name: "Pro", description: "For power users", price_monthly: 1999, price_yearly: 19199, stripe_monthly_id: "price_1TOflrHd4AsPgGTOnt9jYhjz", stripe_yearly_id: "price_1TOflsHd4AsPgGTO5ra4mhwt", storage_gb: 10, max_file_size_mb: 500, team_seats: 3, api_access: true, priority_support: false, sort_order: 2 },
-  { tier: "max", name: "Max", description: "For teams", price_monthly: 4999, price_yearly: 47999, stripe_monthly_id: "price_1TOflsHd4AsPgGTOG7jeNqLk", stripe_yearly_id: "price_1TOfltHd4AsPgGTOnUHvrbT7", storage_gb: 50, max_file_size_mb: 5000, team_seats: 10, api_access: true, priority_support: true, sort_order: 3 },
+  { tier: "starter", name: "Starter", description: "For personal use", price_monthly: 499, price_yearly: 5489, stripe_monthly_id: "price_1TOflqHd4AsPgGTOxspjxODX", stripe_yearly_id: "price_1TOflqHd4AsPgGTOOrxqG1kM", storage_gb: 1, max_file_size_mb: 50, team_seats: 1, api_access: false, priority_support: false, sort_order: 1 },
+  { tier: "ultra", name: "Pro", description: "For power users", price_monthly: 1999, price_yearly: 21989, stripe_monthly_id: "price_1TOflrHd4AsPgGTOnt9jYhjz", stripe_yearly_id: "price_1TOflsHd4AsPgGTO5ra4mhwt", storage_gb: 10, max_file_size_mb: 500, team_seats: 3, api_access: true, priority_support: false, sort_order: 2 },
+  { tier: "max", name: "Max", description: "For teams", price_monthly: 4999, price_yearly: 54989, stripe_monthly_id: "price_1TOflsHd4AsPgGTOG7jeNqLk", stripe_yearly_id: "price_1TOfltHd4AsPgGTOnUHvrbT7", storage_gb: 50, max_file_size_mb: 5000, team_seats: 10, api_access: true, priority_support: true, sort_order: 3 },
 ];
 
 const ONBOARDING_PLAN_LABELS: Record<OnboardingPlanTier, string> = {
