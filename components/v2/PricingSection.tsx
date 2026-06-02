@@ -204,11 +204,10 @@ export function PricingPlanCard({
   className?: string;
 }) {
   const priceCents = billing === 'yearly' ? plan.priceYearly : plan.priceMonthly;
-  const price = formatPricingAmount(priceCents);
-  const pricePeriod = priceCents === 0 ? '' : billing === 'yearly' ? '/yr' : '/mo';
-  const yearlyEquivalent = billing === 'yearly' && priceCents > 0
-    ? `$${(plan.priceYearly / 1200).toFixed(2)}/mo billed annually`
-    : null;
+  const yearlyDisplayCents = billing === 'yearly' && priceCents > 0 ? Math.round(plan.priceYearly / 10) : null;
+  const price = formatPricingAmount(yearlyDisplayCents ?? priceCents);
+  const pricePeriod = priceCents === 0 ? '' : '/mo';
+  const yearlyNote = billing === 'yearly' && priceCents > 0 ? '2 months free · billed yearly' : null;
 
   const isInteractive = Boolean(htmlFor || onClick);
   const Wrapper = htmlFor ? 'label' : onClick ? 'button' : 'div';
@@ -259,7 +258,7 @@ export function PricingPlanCard({
                 <span className="tb-v2-pricing-card-price-amt">${price}</span>
                 {pricePeriod ? <span className="tb-v2-pricing-card-price-period">{pricePeriod}</span> : null}
               </div>
-              {yearlyEquivalent ? <div className="tb-v2-pricing-card-sub">{yearlyEquivalent}</div> : null}
+              {yearlyNote ? <div className="tb-v2-pricing-card-sub">{yearlyNote}</div> : null}
             </div>
           </div>
 

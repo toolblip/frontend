@@ -59,9 +59,9 @@ type Plan = {
   sort_order: number;
 };
 
-const ONBOARDING_STORAGE_VERSION = 2;
+const ONBOARDING_STORAGE_VERSION = 3;
 const DEFAULT_ONBOARDING_PLAN: OnboardingPlanTier = "ultra";
-const DEFAULT_ONBOARDING_BILLING: BillingCycle = "monthly";
+const DEFAULT_ONBOARDING_BILLING: BillingCycle = "yearly";
 
 function normalizeOnboardingPlan(plan?: string | null): OnboardingPlanTier {
   return plan === "starter" ? DEFAULT_ONBOARDING_PLAN : (plan as OnboardingPlanTier | undefined) ?? DEFAULT_ONBOARDING_PLAN;
@@ -307,6 +307,27 @@ export default function AccountPage() {
         teamName?: string;
         billingCycle?: BillingCycle;
       };
+      if (parsed.version !== ONBOARDING_STORAGE_VERSION) {
+        const initialSelectedPlan = requestedPlan ?? DEFAULT_ONBOARDING_PLAN;
+        const initialBilling = requestedBilling ?? DEFAULT_ONBOARDING_BILLING;
+        const initialPayload = {
+          version: ONBOARDING_STORAGE_VERSION,
+          status: "draft" as OnboardingStatus,
+          step: "welcome" as OnboardingStep,
+          teamName: suggestedTeamName,
+          selectedPlan: initialSelectedPlan,
+          billingCycle: initialBilling,
+          updatedAt: new Date().toISOString(),
+        };
+
+        setTeamName(suggestedTeamName);
+        setSelectedOnboardingPlan(initialSelectedPlan);
+        setOnboardingBilling(initialBilling);
+        setOnboardingStep("welcome");
+        setShowPlanOnboarding(true);
+        window.localStorage.setItem(onboardingStorageKey(user.id), JSON.stringify(initialPayload));
+        return;
+      }
       if (parsed.status === "completed" || parsed.status === "skipped") {
         if (!requestedPlan && !requestedBilling) {
           setShowPlanOnboarding(false);
@@ -315,7 +336,7 @@ export default function AccountPage() {
       }
 
       const restoredSelectedPlan = requestedPlan ?? normalizeOnboardingPlan(parsed.selectedPlan);
-      const restoredBilling = requestedBilling ?? parsed.billingCycle ?? "monthly";
+      const restoredBilling = requestedBilling ?? parsed.billingCycle ?? DEFAULT_ONBOARDING_BILLING;
       const restoredStep = parsed.step ?? "welcome";
       const restoredPayload = {
         version: ONBOARDING_STORAGE_VERSION,

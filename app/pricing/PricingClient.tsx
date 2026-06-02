@@ -108,7 +108,7 @@ function buildPlanFeatures(plan: Plan): PlanFeature[] {
 }
 
 export default function PricingClient() {
-  const [billing, setBilling] = useState<BillingCycle>('monthly');
+  const [billing, setBilling] = useState<BillingCycle>('yearly');
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [plans, setPlans] = useState<Plan[]>([]);
