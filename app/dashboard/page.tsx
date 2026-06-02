@@ -62,7 +62,7 @@ type Plan = {
 
 const ONBOARDING_STORAGE_VERSION = 2;
 const DEFAULT_ONBOARDING_PLAN: OnboardingPlanTier = "ultra";
-const DEFAULT_ONBOARDING_BILLING: BillingCycle = "yearly";
+const DEFAULT_ONBOARDING_BILLING: BillingCycle = "monthly";
 
 function normalizeOnboardingPlan(plan?: string | null): OnboardingPlanTier {
   return plan === "starter" ? DEFAULT_ONBOARDING_PLAN : (plan as OnboardingPlanTier | undefined) ?? DEFAULT_ONBOARDING_PLAN;
@@ -748,7 +748,7 @@ export default function AccountPage() {
                       writePlanOnboarding("draft", "pricing", selectedOnboardingPlan, nextBilling);
                     }}
                     centered
-                    accent="green"
+                    accent="red"
                   />
                 </div>
 
@@ -771,13 +771,13 @@ export default function AccountPage() {
                         billing={onboardingBilling}
                         highlighted={plan.tier === "ultra"}
                         selected={selected}
-                        accent="green"
+                        accent="red"
                         footer={
                           <div className="flex flex-col items-center gap-2 text-center">
                             <button
                               type="button"
                               onClick={() => completePlanOnboarding(plan.tier as OnboardingPlanTier, onboardingBilling)}
-                              className={`tb-v2-btn tb-v2-pricing-btn accent-green ${plan.tier === "ultra" ? 'selected' : ''}`}
+                              className={`tb-v2-btn tb-v2-pricing-btn ${plan.tier === "ultra" ? 'selected' : ''}`}
                               style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
                             >
                               {PAID_TRIAL_CTA_LABEL}
@@ -824,7 +824,7 @@ export default function AccountPage() {
                           className="free-row"
                           compactHeader
                           selected={selected}
-                          accent="green"
+                          accent="red"
                           headerRightSlot={
                             <button
                               type="button"
