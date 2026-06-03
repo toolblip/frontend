@@ -47,8 +47,12 @@ The pipeline generated one article only. Post-pipeline review tightened it befor
 ## Deployment / verification
 
 - Local `npm run build` passed after final cleanup.
-- Final content/archive commit: 9214df2c513c40516338e2743ef4bef6b031dac6
-- Live URL and sitemap verification are completed after deployment in the cron report.
+- Final content/archive commit: e325d60aefb4f6e90b4f0bd5b6071eef0149b66b
+- Triggered Railway frontend deploy: `2ed3e9e0-f495-4fe6-80a2-822cf3b75df7`.
+- Railway reported `SUCCESS` at 2026-06-03T17:15:12Z.
+- Live URL returned 200 and contains the final title plus the QR generator link.
+- Live sitemap contains the new slug.
+- Live HTML check found no humanizer/Claude artifacts and no `[object Object]` metadata.
 
 ## Decisions needed
 
