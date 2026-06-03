@@ -807,6 +807,9 @@ export default function AccountPage() {
                           </button>
                         }
                       >
+                        <div className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
+                          Plan includes
+                        </div>
                         <ul className="tb-v2-pricing-features">
                           {features.map((feature) => (
                             <li

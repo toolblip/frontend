@@ -72,6 +72,7 @@ test.describe('Pricing layout', () => {
     await expect(pricing.locator('[data-tier="starter"]')).toContainText('4.99');
     await expect(pricing.locator('[data-tier="ultra"]')).toContainText('19.99');
     await expect(pricing.locator('[data-tier="max"]')).toContainText('49.99');
+    await expect(pricing.locator('[data-tier="ultra"]').getByText('Bill annually')).toBeVisible();
 
     const starterButton = pricing.locator('[data-tier="starter"]').getByRole('button', { name: 'Start 14-day free trial' });
     const proButton = pricing.locator('[data-tier="ultra"]').getByRole('button', { name: 'Start 14-day free trial' });

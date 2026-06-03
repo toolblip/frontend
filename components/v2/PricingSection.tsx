@@ -271,6 +271,7 @@ export function PricingPlanCard({
               {billing === 'yearly' && billedYearlyCents ? (
                 <div className="tb-v2-pricing-card-sub">
                   <div>Billed as ${formatPricingAmount(billedYearlyCents)}/year</div>
+                  <div>Bill annually</div>
                   {yearlySavingsCents && yearlySavingsCents > 0 ? (
                     <div>
                       Save ${formatPricingAmount(yearlySavingsCents)} with yearly pricing (2 months free)

@@ -12,7 +12,8 @@ test.describe('Account onboarding BDD regression', () => {
     await signupByForm(page, user);
 
     await expect(page).toHaveURL(/\/dashboard$/);
-    const onboarding = page.getByRole('dialog', { name: /Welcome to your dashboard|Choose your plan/i });
+    const onboarding = page.locator('main [role="dialog"]').first();
+
     await expect(onboarding).toBeVisible();
     await expect(onboarding.getByLabel('Team name')).toHaveValue(`${user.name} Team`);
     await expect(onboarding.getByRole('button', { name: 'Skip for now' })).toHaveCount(0);
@@ -21,6 +22,9 @@ test.describe('Account onboarding BDD regression', () => {
     await onboarding.getByRole('button', { name: 'Next' }).click();
     await expect(onboarding.getByRole('button', { name: 'Start 14-day free trial' })).toHaveCount(3);
     await expect(onboarding.getByRole('button', { name: 'Continue with Free Plan' })).toHaveCount(1);
+    await expect(onboarding.locator('[data-tier="starter"]').getByText('Plan includes')).toBeVisible();
+    await expect(onboarding.locator('[data-tier="starter"]').getByText('Basic support')).toBeVisible();
+    await expect(onboarding.locator('[data-tier="ultra"]').getByText('API access')).toBeVisible();
     await onboarding.locator('[data-tier="ultra"]').getByRole('button', { name: 'Start 14-day free trial' }).click();
     await expect(onboarding).toHaveCount(0);
 
@@ -43,7 +47,8 @@ test.describe('Account onboarding BDD regression', () => {
     await loginByForm(page, VALID_USER);
 
     await expect(page).toHaveURL(/\/dashboard$/);
-    const onboarding = page.getByRole('dialog', { name: /Welcome to your dashboard|Choose your plan/i });
+    const onboarding = page.locator('main [role="dialog"]').first();
+
     await expect(onboarding).toBeVisible();
     await onboarding.getByRole('button', { name: 'Next' }).click();
     const maxPlanButton = onboarding.locator('[data-tier="max"]').getByRole('button', { name: 'Start 14-day free trial' });
@@ -78,7 +83,8 @@ test.describe('Account onboarding BDD regression', () => {
     await page.getByRole('button', { name: 'Create account' }).click();
 
     await expect(page).toHaveURL(/\/dashboard\?plan=ultra&billing=monthly$/);
-    const onboarding = page.getByRole('dialog', { name: /Welcome to your dashboard|Choose your plan/i });
+    const onboarding = page.locator('main [role="dialog"]').first();
+
     await expect(onboarding).toBeVisible();
     await expect(onboarding.getByLabel('Team name')).toHaveValue(`${user.name} Team`);
     await onboarding.getByRole('button', { name: 'Next' }).click();
@@ -94,7 +100,8 @@ test.describe('Account onboarding BDD regression', () => {
     await signupByForm(page, user);
 
     await expect(page).toHaveURL(/\/dashboard$/);
-    const onboarding = page.getByRole('dialog', { name: /Welcome to your dashboard|Choose your plan/i });
+    const onboarding = page.locator('main [role="dialog"]').first();
+
     await expect(onboarding).toBeVisible();
     await onboarding.getByRole('button', { name: 'Next' }).click();
 
@@ -122,7 +129,7 @@ test.describe('Account onboarding BDD regression', () => {
 
     await page.reload();
 
-    const migratedOnboarding = page.getByRole('dialog', { name: /Welcome to your dashboard|Choose your plan/i });
+    const migratedOnboarding = page.locator('main [role="dialog"]').first();
     await expect(migratedOnboarding).toBeVisible();
     await migratedOnboarding.getByRole('button', { name: 'Next' }).click();
     await expect(migratedOnboarding.locator('[data-tier="ultra"]')).toHaveClass(/selected/);
@@ -137,7 +144,8 @@ test.describe('Account onboarding BDD regression', () => {
   test('Given dashboard onboarding appears, Then the welcome step leads into pricing without quick start or skip actions', async ({ page }) => {
     await loginByForm(page, VALID_USER);
 
-    const onboarding = page.getByRole('dialog', { name: /Welcome to your dashboard|Choose your plan/i });
+    const onboarding = page.locator('main [role="dialog"]').first();
+
     await expect(onboarding.getByText(/Team name/i)).toBeVisible();
     await expect(onboarding.getByRole('button', { name: 'Skip for now' })).toHaveCount(0);
     await expect(onboarding.getByText(/Quick start/i)).toHaveCount(0);
@@ -173,7 +181,8 @@ test.describe('Account onboarding BDD regression', () => {
   test('Given the cookie banner appears, Then onboarding plan CTAs stay clickable above it', async ({ page }) => {
     await loginByForm(page, VALID_USER);
 
-    const onboarding = page.getByRole('dialog', { name: /Welcome to your dashboard|Choose your plan/i });
+    const onboarding = page.locator('main [role="dialog"]').first();
+
     await onboarding.getByRole('button', { name: 'Next' }).click();
     await page.waitForTimeout(1000);
 

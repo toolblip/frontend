@@ -2704,6 +2704,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   .tb-v2-pricing-sticky-name { font-size: 12px; font-weight: 600; color: var(--fg-2); letter-spacing: 0.02em; text-transform: uppercase; }
   .tb-v2-pricing-sticky-price { font-size: 20px; font-weight: 700; color: var(--fg-0); font-family: var(--f-display); letter-spacing: -0.02em; line-height: 1.1; }
   .tb-v2-pricing-sticky-period { font-size: 12px; font-weight: 500; color: var(--fg-2); margin-left: 2px; }
+  .tb-v2-pricing-sticky-note { font-size: 12px; font-weight: 500; color: var(--fg-3); line-height: 1.2; margin-top: 2px; }
   .tb-v2-pricing-sticky-btn { flex-shrink: 0; }
 }
 

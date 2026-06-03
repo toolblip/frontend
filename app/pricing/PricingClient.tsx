@@ -202,6 +202,8 @@ export default function PricingClient() {
       : highlightPlan.price_monthly
     : 0;
   const stickyPrice = stickyPriceCents / 100;
+  const stickyMonthlyEquivalent = highlightPlan && billing === 'yearly' ? highlightPlan.price_monthly / 100 : null;
+  const stickyDisplayPrice = stickyMonthlyEquivalent ?? stickyPrice;
 
   return (
     <div className="tb-v2-pricing">
@@ -342,11 +344,14 @@ export default function PricingClient() {
           <div className="tb-v2-pricing-sticky-info">
             <span className="tb-v2-pricing-sticky-name">{displayPlanName(highlightPlan)}</span>
             <span className="tb-v2-pricing-sticky-price">
-              ${stickyPrice % 1 === 0 ? stickyPrice : stickyPrice.toFixed(2)}
+              ${stickyDisplayPrice % 1 === 0 ? stickyDisplayPrice : stickyDisplayPrice.toFixed(2)}
               <span className="tb-v2-pricing-sticky-period">
-                {billing === 'yearly' ? '/yr' : '/mo'}
+                /mo
               </span>
             </span>
+            {billing === 'yearly' ? (
+              <span className="tb-v2-pricing-sticky-note">Bill annually</span>
+            ) : null}
           </div>
           <button
             type="button"
