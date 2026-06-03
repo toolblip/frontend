@@ -27,7 +27,7 @@ test.describe('Pricing layout', () => {
     expect(toggleRect).toBeTruthy();
     expect(Math.abs((toggleRect!.x + toggleRect!.width / 2) - 600)).toBeLessThan(120);
 
-    const highlightProButton = pricing.getByRole('button', { name: 'Get Pro' });
+    const highlightProButton = pricing.locator('[data-tier="ultra"]').getByRole('button', { name: 'Start 14-day free trial' });
     await expect(highlightProButton).toBeVisible();
     await expect(pricing.locator('[data-tier="ultra"]')).toHaveClass(/selected/);
 
@@ -69,13 +69,14 @@ test.describe('Pricing layout', () => {
     expect(maxCard!.text).toContain('Priority support');
 
     await pricing.getByRole('button', { name: 'Yearly' }).click();
-    await expect(pricing.locator('[data-tier="starter"]')).toContainText('47.99');
-    await expect(pricing.locator('[data-tier="ultra"]')).toContainText('191.99');
-    await expect(pricing.locator('[data-tier="max"]')).toContainText('479.99');
+    await expect(pricing.locator('[data-tier="starter"]')).toContainText('4.99');
+    await expect(pricing.locator('[data-tier="ultra"]')).toContainText('19.99');
+    await expect(pricing.locator('[data-tier="max"]')).toContainText('49.99');
+    await expect(pricing.locator('[data-tier="ultra"]').getByText('Bill annually')).toBeVisible();
 
-    const starterButton = pricing.getByRole('button', { name: 'Get Starter' });
-    const proButton = pricing.getByRole('button', { name: 'Get Pro' });
-    const maxButton = pricing.getByRole('button', { name: 'Get Max' });
+    const starterButton = pricing.locator('[data-tier="starter"]').getByRole('button', { name: 'Start 14-day free trial' });
+    const proButton = pricing.locator('[data-tier="ultra"]').getByRole('button', { name: 'Start 14-day free trial' });
+    const maxButton = pricing.locator('[data-tier="max"]').getByRole('button', { name: 'Start 14-day free trial' });
     const [starterRect, proRect, maxRect] = await Promise.all([
       starterButton.boundingBox(),
       proButton.boundingBox(),
@@ -86,7 +87,7 @@ test.describe('Pricing layout', () => {
     expect(maxRect).toBeTruthy();
     expect(Math.max(starterRect!.y, proRect!.y, maxRect!.y) - Math.min(starterRect!.y, proRect!.y, maxRect!.y)).toBeLessThan(40);
 
-    const freeButton = pricing.getByRole('link', { name: 'Get Free Plan' });
+    const freeButton = pricing.getByRole('button', { name: 'Continue with Free Plan' });
     const freeButtonRect = await freeButton.boundingBox();
     expect(freeButtonRect).toBeTruthy();
     expect(freeButtonRect!.width).toBeLessThan(freeCard!.width * 0.35);

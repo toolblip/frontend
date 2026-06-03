@@ -12,56 +12,48 @@ test.describe('Account onboarding BDD regression', () => {
     await signupByForm(page, user);
 
     await expect(page).toHaveURL(/\/dashboard$/);
-    const onboarding = page.getByRole('dialog');
+    const onboarding = page.locator('main [role="dialog"]').first();
+
     await expect(onboarding).toBeVisible();
     await expect(onboarding.getByLabel('Team name')).toHaveValue(`${user.name} Team`);
     await expect(onboarding.getByRole('button', { name: 'Skip for now' })).toHaveCount(0);
     await expect(onboarding.getByText(/Quick start/i)).toHaveCount(0);
 
     await onboarding.getByRole('button', { name: 'Next' }).click();
-    const draft = await page.evaluate(() => {
-      const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
-      return entry ? JSON.parse(String(entry[1])) : null;
-    });
-    expect(draft).toMatchObject({ status: 'draft', step: 'pricing', teamName: `${user.name} Team`, billingCycle: 'monthly', version: 2 });
-    await expect(onboarding.getByText('Billing period')).toBeVisible();
-    await expect(onboarding.getByRole('button', { name: 'Monthly' })).toBeVisible();
-    await expect(onboarding.getByRole('button', { name: /Yearly/ })).toContainText('2 months free');
-    await expect(onboarding.locator('#onboarding-plan-ultra')).toBeChecked();
-    await expect(onboarding.getByText('$19.99/mo')).toBeVisible();
-
-    await onboarding.getByRole('button', { name: 'Yearly' }).click();
-    await expect(onboarding.getByText('$191.99/yr')).toBeVisible();
-    const yearlyDraft = await page.evaluate(() => {
-      const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
-      return entry ? JSON.parse(String(entry[1])) : null;
-    });
-    expect(yearlyDraft).toMatchObject({ billingCycle: 'yearly' });
-
-    const planCards = onboarding.locator('[data-testid="pricing-plan-card"]');
-    await expect(planCards).toHaveCount(4);
-    const planLabels = await planCards.allTextContents();
-    expect(planLabels.at(-1)).toContain('Free');
-    await onboarding.getByRole('button', { name: 'Finish' }).click();
+    await expect(onboarding.getByRole('button', { name: 'Start 14-day free trial' })).toHaveCount(3);
+    await expect(onboarding.getByRole('button', { name: 'Continue with Free Plan' })).toHaveCount(1);
+    await expect(onboarding.locator('[data-tier="starter"]').getByText('Plan includes')).toBeVisible();
+    await expect(onboarding.locator('[data-tier="starter"]').getByText('Basic support')).toBeVisible();
+    await expect(onboarding.locator('[data-tier="ultra"]').getByText('API access')).toBeVisible();
+    await onboarding.locator('[data-tier="ultra"]').getByRole('button', { name: 'Start 14-day free trial' }).click();
     await expect(onboarding).toHaveCount(0);
 
     const stored = await page.evaluate(() => {
       const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
       return entry ? JSON.parse(String(entry[1])) : null;
     });
-    expect(stored).toMatchObject({ status: 'completed', selectedPlan: 'ultra', teamName: `${user.name} Team`, billingCycle: 'yearly' });
+    expect(stored).toMatchObject({ status: 'completed', selectedPlan: 'ultra', teamName: `${user.name} Team`, billingCycle: 'monthly' });
   });
 
-  test('Given a first-time login reaches the dashboard, Then the user can choose Max before finishing onboarding', async ({ page }) => {
+  test('Given an unauthenticated dashboard referral, Then login preserves the plan and billing query', async ({ page }) => {
+    await page.goto('/dashboard?plan=ultra&billing=monthly');
+
+    await expect(page).toHaveURL(/\/login\?next=.*dashboard.*plan%3Dultra.*billing%3Dmonthly/);
+    const signUpLink = page.getByRole('link', { name: 'Sign up' });
+    await expect(signUpLink).toHaveAttribute('href', '/signup?next=%2Fdashboard%3Fplan%3Dultra%26billing%3Dmonthly');
+  });
+
+  test('Given a first-time login reaches the dashboard, Then the user can choose Max by selecting the plan card', async ({ page }) => {
     await loginByForm(page, VALID_USER);
 
     await expect(page).toHaveURL(/\/dashboard$/);
-    const onboarding = page.getByRole('dialog');
+    const onboarding = page.locator('main [role="dialog"]').first();
+
     await expect(onboarding).toBeVisible();
     await onboarding.getByRole('button', { name: 'Next' }).click();
-    await onboarding.getByRole('radio', { name: /Max/i }).check();
-    await expect(onboarding.getByRole('radio', { name: /Max/i })).toBeChecked();
-    await onboarding.getByRole('button', { name: 'Finish' }).click();
+    const maxPlanButton = onboarding.locator('[data-tier="max"]').getByRole('button', { name: 'Start 14-day free trial' });
+    await expect(maxPlanButton).toBeVisible();
+    await maxPlanButton.click();
     await expect(onboarding).toHaveCount(0);
 
     const stored = await page.evaluate(() => {
@@ -71,13 +63,45 @@ test.describe('Account onboarding BDD regression', () => {
     expect(stored).toMatchObject({ status: 'completed', selectedPlan: 'max' });
   });
 
+  test('Given a pricing referral, Then signup carries the selected plan into dashboard onboarding', async ({ page }) => {
+    const user = makeUser('onboarding-pricing');
+
+    await page.goto('/pricing');
+    await page.locator('[data-tier="ultra"]').getByRole('button', { name: 'Start 14-day free trial' }).click();
+    await expect(page).toHaveURL(/\/login\?next=.*dashboard.*plan%3Dultra.*billing%3Dmonthly/);
+
+    const signUpLink = page.getByRole('link', { name: 'Sign up' });
+    await expect(signUpLink).toHaveAttribute('href', '/signup?next=%2Fdashboard%3Fplan%3Dultra%26billing%3Dmonthly');
+    await signUpLink.click();
+    await expect(page).toHaveURL(/\/signup\?next=.*dashboard.*plan%3Dultra.*billing%3Dmonthly/);
+
+    await page.getByLabel('Name').fill(user.name);
+    await page.getByLabel('Email').fill(user.email);
+    await page.getByLabel('Password', { exact: true }).fill(user.password);
+    await page.getByLabel('Confirm password').fill(user.password);
+    await page.getByLabel(/I agree to the Terms and Conditions and Privacy Policy/i).click();
+    await page.getByRole('button', { name: 'Create account' }).click();
+
+    await expect(page).toHaveURL(/\/dashboard\?plan=ultra&billing=monthly$/);
+    const onboarding = page.locator('main [role="dialog"]').first();
+
+    await expect(onboarding).toBeVisible();
+    await expect(onboarding.getByLabel('Team name')).toHaveValue(`${user.name} Team`);
+    await onboarding.getByRole('button', { name: 'Next' }).click();
+    const ultraPlanButton = onboarding.locator('[data-tier="ultra"]').getByRole('button', { name: 'Start 14-day free trial' });
+    await expect(ultraPlanButton).toBeVisible();
+    await ultraPlanButton.click();
+    await expect(onboarding).toHaveCount(0);
+  });
+
   test('Given a stale onboarding draft, Then Pro becomes the default choice after migration', async ({ page }) => {
     const user = makeUser('onboarding-migration');
 
     await signupByForm(page, user);
 
     await expect(page).toHaveURL(/\/dashboard$/);
-    const onboarding = page.getByRole('dialog');
+    const onboarding = page.locator('main [role="dialog"]').first();
+
     await expect(onboarding).toBeVisible();
     await onboarding.getByRole('button', { name: 'Next' }).click();
 
@@ -105,29 +129,32 @@ test.describe('Account onboarding BDD regression', () => {
 
     await page.reload();
 
-    const migratedOnboarding = page.getByRole('dialog');
+    const migratedOnboarding = page.locator('main [role="dialog"]').first();
     await expect(migratedOnboarding).toBeVisible();
-    await expect(migratedOnboarding.locator('#onboarding-plan-ultra')).toBeChecked();
+    await migratedOnboarding.getByRole('button', { name: 'Next' }).click();
+    await expect(migratedOnboarding.locator('[data-tier="ultra"]')).toHaveClass(/selected/);
 
     const migratedStored = await page.evaluate(() => {
       const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
       return entry ? JSON.parse(String(entry[1])) : null;
     });
-    expect(migratedStored).toMatchObject({ status: 'draft', selectedPlan: 'ultra', version: 2 });
+    expect(migratedStored).toMatchObject({ status: 'draft', selectedPlan: 'ultra', version: 4 });
   });
 
   test('Given dashboard onboarding appears, Then the welcome step leads into pricing without quick start or skip actions', async ({ page }) => {
     await loginByForm(page, VALID_USER);
 
-    const onboarding = page.getByRole('dialog');
-    await expect(onboarding.getByText(/Start by naming your team/i)).toBeVisible();
+    const onboarding = page.locator('main [role="dialog"]').first();
+
+    await expect(onboarding.getByText(/Team name/i)).toBeVisible();
     await expect(onboarding.getByRole('button', { name: 'Skip for now' })).toHaveCount(0);
     await expect(onboarding.getByText(/Quick start/i)).toHaveCount(0);
     await onboarding.getByRole('button', { name: 'Next' }).click();
 
     const planCards = onboarding.locator('[data-testid="pricing-plan-card"]');
     await expect(planCards).toHaveCount(4);
-    await expect(onboarding.locator('#onboarding-plan-ultra')).toBeChecked();
+    await expect(onboarding.getByRole('button', { name: 'Start 14-day free trial' })).toHaveCount(3);
+    await expect(onboarding.getByRole('button', { name: 'Continue with Free Plan' })).toHaveCount(1);
 
     const cardLayout = await planCards.evaluateAll((nodes) =>
       nodes.map((node) => {
@@ -149,5 +176,21 @@ test.describe('Account onboarding BDD regression', () => {
     expect(paidCards[1].x).toBeLessThan(paidCards[2].x);
     expect(freeCard.y).toBeGreaterThan(Math.max(...paidCards.map((card) => card.y)) + 20);
     expect(freeCard.text).toContain('Free');
+  });
+
+  test('Given the cookie banner appears, Then onboarding plan CTAs stay clickable above it', async ({ page }) => {
+    await loginByForm(page, VALID_USER);
+
+    const onboarding = page.locator('main [role="dialog"]').first();
+
+    await onboarding.getByRole('button', { name: 'Next' }).click();
+    await page.waitForTimeout(1000);
+
+    const cookieBanner = page.getByRole('dialog', { name: 'Cookie consent' });
+    await expect(cookieBanner).toBeVisible();
+    const freePlanButton = onboarding.locator('[data-tier="free"]').getByRole('button', { name: 'Continue with Free Plan' });
+    await expect(freePlanButton).toBeVisible();
+    await freePlanButton.click();
+    await expect(onboarding).toHaveCount(0);
   });
 });

@@ -6,8 +6,13 @@ import Link from "next/link";
 import { useAuth } from "@/app/providers/auth-provider";
 import { useRouter } from "next/navigation";
 import {
+  FREE_PLAN_CTA_LABEL,
+  FREE_TRIAL_NOTE,
+  PAID_TRIAL_CTA_LABEL,
   PricingBillingToggle,
   PricingPlanCard,
+  buildPricingPlanFeatures,
+  sortPricingPlans,
   type BillingCycle,
 } from "@/components/v2/PricingSection";
 
@@ -39,50 +44,35 @@ type OnboardingStatus = "completed" | "draft" | "skipped";
 type OnboardingStep = "welcome" | "pricing";
 type OnboardingPlanTier = "free" | "starter" | "ultra" | "max";
 
-const ONBOARDING_STORAGE_VERSION = 2;
+type Plan = {
+  tier: string;
+  name: string;
+  description: string | null;
+  price_monthly: number;
+  price_yearly: number;
+  stripe_monthly_id: string | null;
+  stripe_yearly_id: string | null;
+  storage_gb: number;
+  max_file_size_mb: number;
+  team_seats: number;
+  api_access: boolean;
+  priority_support: boolean;
+  sort_order: number;
+};
+
+const ONBOARDING_STORAGE_VERSION = 4;
 const DEFAULT_ONBOARDING_PLAN: OnboardingPlanTier = "ultra";
+const DEFAULT_ONBOARDING_BILLING: BillingCycle = "monthly";
 
 function normalizeOnboardingPlan(plan?: string | null): OnboardingPlanTier {
   return plan === "starter" ? DEFAULT_ONBOARDING_PLAN : (plan as OnboardingPlanTier | undefined) ?? DEFAULT_ONBOARDING_PLAN;
 }
 
-const ONBOARDING_PLANS: Array<{
-  tier: OnboardingPlanTier;
-  name: string;
-  description: string;
-  badge?: string;
-  priceMonthly: number;
-  priceYearly: number;
-}> = [
-  {
-    tier: "starter",
-    name: "Starter",
-    description: "Remove ads and unlock personal cloud storage.",
-    priceMonthly: 499,
-    priceYearly: 4799,
-  },
-  {
-    tier: "ultra",
-    name: "Pro",
-    description: "Power-user limits, API access, and more storage.",
-    badge: "Popular",
-    priceMonthly: 1999,
-    priceYearly: 19199,
-  },
-  {
-    tier: "max",
-    name: "Max",
-    description: "Team seats, priority support, and the highest limits.",
-    priceMonthly: 4999,
-    priceYearly: 47999,
-  },
-  {
-    tier: "free",
-    name: "Free",
-    description: "Start with all core tools and client-side processing.",
-    priceMonthly: 0,
-    priceYearly: 0,
-  },
+const FALLBACK_PLANS: Plan[] = [
+  { tier: "free", name: "Free", description: "For anyone getting started", price_monthly: 0, price_yearly: 0, stripe_monthly_id: null, stripe_yearly_id: null, storage_gb: 0, max_file_size_mb: 5, team_seats: 1, api_access: false, priority_support: false, sort_order: 0 },
+  { tier: "starter", name: "Starter", description: "For personal use", price_monthly: 499, price_yearly: 4990, stripe_monthly_id: "price_1TOflqHd4AsPgGTOxspjxODX", stripe_yearly_id: "price_1TOflqHd4AsPgGTOOrxqG1kM", storage_gb: 1, max_file_size_mb: 50, team_seats: 1, api_access: false, priority_support: false, sort_order: 1 },
+  { tier: "ultra", name: "Pro", description: "For power users", price_monthly: 1999, price_yearly: 19990, stripe_monthly_id: "price_1TOflrHd4AsPgGTOnt9jYhjz", stripe_yearly_id: "price_1TOflsHd4AsPgGTO5ra4mhwt", storage_gb: 10, max_file_size_mb: 500, team_seats: 3, api_access: true, priority_support: false, sort_order: 2 },
+  { tier: "max", name: "Max", description: "For teams", price_monthly: 4999, price_yearly: 49990, stripe_monthly_id: "price_1TOflsHd4AsPgGTOG7jeNqLk", stripe_yearly_id: "price_1TOfltHd4AsPgGTOnUHvrbT7", storage_gb: 50, max_file_size_mb: 5000, team_seats: 10, api_access: true, priority_support: true, sort_order: 3 },
 ];
 
 const ONBOARDING_PLAN_LABELS: Record<OnboardingPlanTier, string> = {
@@ -95,6 +85,22 @@ const ONBOARDING_PLAN_LABELS: Record<OnboardingPlanTier, string> = {
 function displayOnboardingPlanName(tier: string | null | undefined) {
   if (!tier) return null;
   return ONBOARDING_PLAN_LABELS[tier as OnboardingPlanTier] ?? tier.charAt(0).toUpperCase() + tier.slice(1);
+}
+
+function parseOnboardingPlanParam(plan: string | null): OnboardingPlanTier | null {
+  if (plan === "free" || plan === "starter" || plan === "ultra" || plan === "max") {
+    return plan;
+  }
+
+  return null;
+}
+
+function parseBillingCycleParam(billing: string | null): BillingCycle | null {
+  if (billing === "monthly" || billing === "yearly") {
+    return billing;
+  }
+
+  return null;
 }
 
 function onboardingStorageKey(userId: number | string) {
@@ -178,11 +184,45 @@ export default function AccountPage() {
   const [onboardingStep, setOnboardingStep] = useState<OnboardingStep>("welcome");
   const [teamName, setTeamName] = useState("");
   const [selectedOnboardingPlan, setSelectedOnboardingPlan] = useState<OnboardingPlanTier>(DEFAULT_ONBOARDING_PLAN);
-  const [onboardingBilling, setOnboardingBilling] = useState<BillingCycle>("monthly");
+  const [onboardingBilling, setOnboardingBilling] = useState<BillingCycle>(DEFAULT_ONBOARDING_BILLING);
   const [savingPlanOnboarding, setSavingPlanOnboarding] = useState(false);
   const [planOnboardingError, setPlanOnboardingError] = useState("");
   const [favoriteTools, setFavoriteTools] = useState<FavoriteTool[]>([]);
   const [favoriteToolsLoading, setFavoriteToolsLoading] = useState(false);
+  const [pricingPlans, setPricingPlans] = useState<Plan[]>(FALLBACK_PLANS);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadPricingPlans() {
+      try {
+        const response = await fetch(`${API_BASE}/api/plans`);
+        const data = response.ok ? await response.json() : null;
+        if (cancelled) return;
+        if (data?.plans && Array.isArray(data.plans) && data.plans.length > 0) {
+          setPricingPlans(data.plans);
+          return;
+        }
+      } catch {
+        // keep fallback plans
+      }
+
+      if (!cancelled) {
+        setPricingPlans(FALLBACK_PLANS);
+      }
+    }
+
+    loadPricingPlans();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  function redirectToLoginPreservingCurrentLocation() {
+    const nextPath = `${window.location.pathname}${window.location.search}`;
+    router.replace(`/login?next=${encodeURIComponent(nextPath)}`);
+  }
 
   // Redirect to login if not authenticated (after auth has finished loading)
   useEffect(() => {
@@ -206,7 +246,7 @@ export default function AccountPage() {
         await new Promise((resolve) => setTimeout(resolve, 250));
       }
 
-      router.replace("/login?next=/dashboard");
+      redirectToLoginPreservingCurrentLocation();
     }
 
     restoreCookieSessionBeforeRedirect();
@@ -225,14 +265,31 @@ export default function AccountPage() {
     }
 
     const suggestedTeamName = user.name ? `${user.name} Team` : "Toolblip Team";
+    const params = new URLSearchParams(window.location.search);
+    const requestedPlan = parseOnboardingPlanParam(params.get("plan"));
+    const requestedBilling = parseBillingCycleParam(params.get("billing"));
 
     try {
       const stored = window.localStorage.getItem(onboardingStorageKey(user.id));
       if (!stored) {
+        const initialSelectedPlan = requestedPlan ?? DEFAULT_ONBOARDING_PLAN;
+        const initialBilling = requestedBilling ?? DEFAULT_ONBOARDING_BILLING;
+        const initialPayload = {
+          version: ONBOARDING_STORAGE_VERSION,
+          status: "draft" as OnboardingStatus,
+          step: "welcome" as OnboardingStep,
+          teamName: suggestedTeamName,
+          selectedPlan: initialSelectedPlan,
+          billingCycle: initialBilling,
+          updatedAt: new Date().toISOString(),
+        };
+
         setTeamName(suggestedTeamName);
-        setSelectedOnboardingPlan(DEFAULT_ONBOARDING_PLAN);
+        setSelectedOnboardingPlan(initialSelectedPlan);
+        setOnboardingBilling(initialBilling);
         setOnboardingStep("welcome");
         setShowPlanOnboarding(true);
+        window.localStorage.setItem(onboardingStorageKey(user.id), JSON.stringify(initialPayload));
         return;
       }
 
@@ -244,13 +301,36 @@ export default function AccountPage() {
         teamName?: string;
         billingCycle?: BillingCycle;
       };
-      if (parsed.status === "completed" || parsed.status === "skipped") {
-        setShowPlanOnboarding(false);
+      if (parsed.version !== ONBOARDING_STORAGE_VERSION) {
+        const initialSelectedPlan = requestedPlan ?? DEFAULT_ONBOARDING_PLAN;
+        const initialBilling = requestedBilling ?? DEFAULT_ONBOARDING_BILLING;
+        const initialPayload = {
+          version: ONBOARDING_STORAGE_VERSION,
+          status: "draft" as OnboardingStatus,
+          step: "welcome" as OnboardingStep,
+          teamName: suggestedTeamName,
+          selectedPlan: initialSelectedPlan,
+          billingCycle: initialBilling,
+          updatedAt: new Date().toISOString(),
+        };
+
+        setTeamName(suggestedTeamName);
+        setSelectedOnboardingPlan(initialSelectedPlan);
+        setOnboardingBilling(initialBilling);
+        setOnboardingStep("welcome");
+        setShowPlanOnboarding(true);
+        window.localStorage.setItem(onboardingStorageKey(user.id), JSON.stringify(initialPayload));
         return;
       }
+      if (parsed.status === "completed" || parsed.status === "skipped") {
+        if (!requestedPlan && !requestedBilling) {
+          setShowPlanOnboarding(false);
+          return;
+        }
+      }
 
-      const restoredSelectedPlan = normalizeOnboardingPlan(parsed.selectedPlan);
-      const restoredBilling = parsed.billingCycle ?? "monthly";
+      const restoredSelectedPlan = requestedPlan ?? normalizeOnboardingPlan(parsed.selectedPlan);
+      const restoredBilling = requestedBilling ?? parsed.billingCycle ?? DEFAULT_ONBOARDING_BILLING;
       const restoredStep = parsed.step ?? "welcome";
       const restoredPayload = {
         version: ONBOARDING_STORAGE_VERSION,
@@ -272,7 +352,7 @@ export default function AccountPage() {
     } catch {
       setTeamName(suggestedTeamName);
       setSelectedOnboardingPlan(DEFAULT_ONBOARDING_PLAN);
-      setOnboardingBilling("monthly");
+      setOnboardingBilling(DEFAULT_ONBOARDING_BILLING);
       setOnboardingStep("welcome");
       setShowPlanOnboarding(true);
       return;
@@ -332,7 +412,7 @@ export default function AccountPage() {
   async function openCustomerPortal() {
     setPortalError(null);
     if (!token) {
-      router.replace("/login?next=/dashboard");
+      redirectToLoginPreservingCurrentLocation();
       return;
     }
     setLoadingPortal(true);
@@ -433,7 +513,7 @@ export default function AccountPage() {
       setNewPassword("");
       setConfirmPassword("");
       await logout();
-      router.replace("/login?next=/dashboard");
+      redirectToLoginPreservingCurrentLocation();
     } catch (error) {
       setPasswordError(error instanceof Error ? error.message : "Could not change password.");
     } finally {
@@ -503,9 +583,23 @@ export default function AccountPage() {
     return true;
   }
 
-  function persistPlanOnboarding(status: OnboardingStatus) {
-    if (!writePlanOnboarding(status, onboardingStep)) return;
+  function persistPlanOnboarding(
+    status: OnboardingStatus,
+    step: OnboardingStep = onboardingStep,
+    selectedPlan: OnboardingPlanTier = selectedOnboardingPlan,
+    billingCycle: BillingCycle = onboardingBilling,
+    teamNameValue: string = teamName.trim()
+  ) {
+    if (!writePlanOnboarding(status, step, selectedPlan, billingCycle, teamNameValue)) return false;
     setShowPlanOnboarding(false);
+    return true;
+  }
+
+  function completePlanOnboarding(selectedPlan: OnboardingPlanTier, billingCycle: BillingCycle = onboardingBilling) {
+    setSelectedOnboardingPlan(selectedPlan);
+    setOnboardingBilling(billingCycle);
+    setPlanOnboardingError("");
+    persistPlanOnboarding("completed", "pricing", selectedPlan, billingCycle);
   }
 
   async function handleNextPlanOnboarding() {
@@ -528,10 +622,6 @@ export default function AccountPage() {
     }
   }
 
-  function handleFinishPlanOnboarding() {
-    persistPlanOnboarding("completed");
-  }
-
   if (authLoading || !user) {
     return (
       <div className="max-w-md mx-auto px-4 py-20 text-center">
@@ -551,11 +641,12 @@ export default function AccountPage() {
   const tierName = displayOnboardingPlanName(subscription?.tier);
   const favoriteCount = favoriteTools.length;
   const showTermsOnboarding = Boolean(user.requires_terms_acceptance);
+  const orderedPlans = sortPricingPlans(pricingPlans);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-16">
       {showTermsOnboarding && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 px-4">
           <div
             role="dialog"
             aria-modal="true"
@@ -600,26 +691,28 @@ export default function AccountPage() {
         </div>
       )}
       {!showTermsOnboarding && showPlanOnboarding && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4 py-6 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 px-4 py-6 backdrop-blur-sm">
           <div
             role="dialog"
             aria-modal="true"
             aria-labelledby="plan-onboarding-title"
-            className="w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-3xl border border-red-200 bg-gradient-to-br from-red-50 via-white to-gray-50 p-6 shadow-2xl dark:border-red-900/50 dark:from-red-950/30 dark:via-gray-900 dark:to-gray-950"
+            className="w-full max-w-6xl max-h-[90vh] overflow-y-auto rounded-[32px] border border-red-200 bg-gradient-to-br from-red-50 via-white to-gray-50 p-5 shadow-2xl dark:border-red-900/50 dark:from-red-950/30 dark:via-gray-900 dark:to-gray-950"
           >
             <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-              <div className="max-w-2xl space-y-4">
+              <div className="max-w-2xl space-y-2">
                 <p className="text-sm font-semibold uppercase tracking-wide text-red-600 dark:text-red-400">Welcome to Toolblip</p>
-                <div>
-                  <h2 id="plan-onboarding-title" className="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">
-                    {onboardingStep === "welcome" ? "Welcome to your dashboard" : "Choose your plan"}
-                  </h2>
-                  <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 sm:text-base">
-                    {onboardingStep === "welcome"
-                      ? "Start by naming your team, then move to pricing."
-                      : "Compare the plans and pick the one that fits how you use Toolblip."}
-                  </p>
-                </div>
+                {onboardingStep === "welcome" ? (
+                  <>
+                    <div>
+                      <h2 id="plan-onboarding-title" className="text-xl font-bold text-gray-900 dark:text-white sm:text-2xl">
+                        Choose your plan
+                      </h2>
+                      <p className="mt-1 text-sm text-gray-600 dark:text-gray-300 sm:text-sm">
+                        Compare the plans and pick the one that fits how you use Toolblip.
+                      </p>
+                    </div>
+                  </>
+                ) : null}
                 <div className="inline-flex items-center rounded-full border border-red-200 bg-white px-3 py-1 text-xs font-medium text-red-700 shadow-sm dark:border-red-900/60 dark:bg-gray-900 dark:text-red-300">
                   {onboardingStep === "welcome" ? "Step 1 of 2" : "Step 2 of 2"}
                 </div>
@@ -628,7 +721,7 @@ export default function AccountPage() {
             </div>
 
             {onboardingStep === "welcome" ? (
-              <div className="mt-6 grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
+              <div className="mt-4 grid gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
                 <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900">
                   <label htmlFor="team-name" className="block text-sm font-semibold text-gray-900 dark:text-white">
                     Team name
@@ -648,89 +741,140 @@ export default function AccountPage() {
                 </div>
 
                 <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5 shadow-sm dark:border-gray-700 dark:bg-gray-950/60">
-                  <p className="font-semibold text-gray-900 dark:text-white">What happens next</p>
-                  <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300">
-                    After Next, you will see the pricing plans.
-                  </p>
+                  <p className="font-semibold text-gray-900 dark:text-white">Onboarding checklist</p>
+                  <ul className="mt-3 space-y-2 text-sm leading-6 text-gray-600 dark:text-gray-300">
+                    <li>• Name your team</li>
+                    <li>• Pick Starter, Pro, Max, or Free</li>
+                    <li>• {FREE_TRIAL_NOTE}</li>
+                    <li>• Keep the free plan if that fits you best</li>
+                  </ul>
                 </div>
               </div>
             ) : (
-              <div className="mt-6 space-y-4" role="radiogroup" aria-label="Toolblip plan options">
-                <PricingBillingToggle
-                  billing={onboardingBilling}
-                  onBillingChange={(nextBilling) => {
-                    setOnboardingBilling(nextBilling);
-                    writePlanOnboarding("draft", "pricing", selectedOnboardingPlan, nextBilling);
-                  }}
-                  label="Billing period"
-                />
+              <div className="mt-4 space-y-4">
+                <div className="rounded-[32px] border border-gray-200 bg-white/90 p-5 shadow-sm backdrop-blur dark:border-gray-700 dark:bg-gray-900/90 sm:p-6">
+                  <div className="space-y-2">
+                    <div className="text-sm font-semibold uppercase tracking-[0.2em] text-red-600 dark:text-red-400">Pricing</div>
+                    <h3 className="text-xl font-bold leading-tight text-gray-900 dark:text-white sm:text-2xl">Simple, transparent pricing</h3>
+                    <p className="max-w-2xl text-sm text-gray-600 dark:text-gray-300 sm:text-base">
+                      Compare the plans and pick the one that fits how you use Toolblip.
+                    </p>
+                  </div>
 
-                <div className="grid gap-4 lg:grid-cols-3">
-                  {ONBOARDING_PLANS.filter((plan) => plan.tier !== "free").map((plan) => {
+                  <div className="mt-4">
+                    <PricingBillingToggle
+                      billing={onboardingBilling}
+                      onBillingChange={(nextBilling) => {
+                        setOnboardingBilling(nextBilling);
+                        writePlanOnboarding("draft", "pricing", selectedOnboardingPlan, nextBilling);
+                      }}
+                      centered
+                      accent="red"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid gap-3 lg:grid-cols-3">
+                  {orderedPlans.filter((plan) => plan.tier !== "free").map((plan) => {
                     const selected = selectedOnboardingPlan === plan.tier;
+                    const planTier = plan.tier as OnboardingPlanTier;
+                    const displayName = ONBOARDING_PLAN_LABELS[planTier] ?? plan.name;
+                    const sourcePlan = orderedPlans.find((item) => item.tier === plan.tier)!;
+                    const features = buildPricingPlanFeatures(sourcePlan);
+
                     return (
                       <PricingPlanCard
                         key={plan.tier}
                         plan={{
                           tier: plan.tier,
-                          name: plan.name,
-                          description: plan.description,
-                          priceMonthly: plan.priceMonthly,
-                          priceYearly: plan.priceYearly,
-                          badge: plan.badge ?? null,
+                          name: displayName,
+                          description: null,
+                          priceMonthly: plan.price_monthly,
+                          priceYearly: plan.price_yearly,
+                          badge: plan.tier === "ultra" ? "Featured" : null,
                         }}
                         billing={onboardingBilling}
+                        highlighted={plan.tier === "ultra"}
                         selected={selected}
-                        htmlFor={`onboarding-plan-${plan.tier}`}
-                        topSlot={
-                          <input
-                            id={`onboarding-plan-${plan.tier}`}
-                            type="radio"
-                            name="onboarding-plan"
-                            value={plan.tier}
-                            checked={selected}
-                            onChange={() => {
-                              setSelectedOnboardingPlan(plan.tier);
-                              writePlanOnboarding("draft", "pricing", plan.tier, onboardingBilling);
-                            }}
-                            className="mb-3 h-4 w-4 border-gray-300 text-red-600 focus:ring-red-500"
-                          />
+                        accent="red"
+                        footer={
+                          <button
+                            type="button"
+                            onClick={() => completePlanOnboarding(planTier, onboardingBilling)}
+                            className={`tb-v2-btn tb-v2-pricing-btn ${selected ? "selected" : "tb-v2-btn-primary"}`}
+                          >
+                            {PAID_TRIAL_CTA_LABEL}
+                          </button>
                         }
-                      />
+                      >
+                        <div className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
+                          Plan includes
+                        </div>
+                        <ul className="tb-v2-pricing-features">
+                          {features.map((feature) => (
+                            <li
+                              key={feature.label}
+                              className={feature.included === false ? "text-[color:var(--fg-3)] line-through" : ""}
+                            >
+                              <span className="mt-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center text-[11px] font-bold leading-none text-red-500">
+                                {feature.included === false ? "×" : "✓"}
+                              </span>
+                              {feature.label}
+                            </li>
+                          ))}
+                        </ul>
+                      </PricingPlanCard>
                     );
                   })}
 
-                  {ONBOARDING_PLANS.filter((plan) => plan.tier === "free").map((plan) => {
+                  {orderedPlans.filter((plan) => plan.tier === "free").map((plan) => {
                     const selected = selectedOnboardingPlan === plan.tier;
+                    const planTier = plan.tier as OnboardingPlanTier;
+                    const displayName = ONBOARDING_PLAN_LABELS[planTier] ?? plan.name;
+                    const sourcePlan = orderedPlans.find((item) => item.tier === plan.tier)!;
+                    const features = buildPricingPlanFeatures(sourcePlan);
+
                     return (
                       <div key={plan.tier} className="lg:col-span-3">
                         <PricingPlanCard
                           plan={{
                             tier: plan.tier,
-                            name: plan.name,
-                            description: plan.description,
-                            priceMonthly: plan.priceMonthly,
-                            priceYearly: plan.priceYearly,
+                            name: displayName,
+                            description: null,
+                            priceMonthly: plan.price_monthly,
+                            priceYearly: plan.price_yearly,
                             badge: null,
                           }}
                           billing={onboardingBilling}
+                          tone="light"
+                          className="free-row"
+                          compactHeader
                           selected={selected}
-                          htmlFor={`onboarding-plan-${plan.tier}`}
-                        topSlot={
-                            <input
-                              id={`onboarding-plan-${plan.tier}`}
-                              type="radio"
-                              name="onboarding-plan"
-                              value={plan.tier}
-                              checked={selected}
-                              onChange={() => {
-                                setSelectedOnboardingPlan(plan.tier);
-                                writePlanOnboarding("draft", "pricing", plan.tier, onboardingBilling);
-                              }}
-                              className="mb-3 h-4 w-4 border-gray-300 text-red-600 focus:ring-red-500"
-                            />
+                          accent="red"
+                          headerRightSlot={
+                            <button
+                              type="button"
+                              onClick={() => completePlanOnboarding(planTier, onboardingBilling)}
+                              className="tb-v2-pricing-inline-link"
+                            >
+                              {FREE_PLAN_CTA_LABEL}
+                            </button>
                           }
-                        />
+                        >
+                          <ul className="tb-v2-pricing-features">
+                            {features.map((feature) => (
+                              <li
+                                key={feature.label}
+                                className={feature.included === false ? "text-[color:var(--fg-3)] line-through" : ""}
+                              >
+                                <span className="mt-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center text-[11px] font-bold leading-none text-red-500">
+                                  {feature.included === false ? "×" : "✓"}
+                                </span>
+                                {feature.label}
+                              </li>
+                            ))}
+                          </ul>
+                        </PricingPlanCard>
                       </div>
                     );
                   })}
@@ -738,8 +882,8 @@ export default function AccountPage() {
               </div>
             )}
 
-            <div className="mt-6 flex justify-end">
-              {onboardingStep === "welcome" ? (
+            {onboardingStep === "welcome" && (
+              <div className="mt-6">
                 <button
                   type="button"
                   onClick={handleNextPlanOnboarding}
@@ -748,17 +892,8 @@ export default function AccountPage() {
                 >
                   {savingPlanOnboarding ? "Saving..." : "Next"}
                 </button>
-              ) : (
-                <button
-                  type="button"
-                  onClick={handleFinishPlanOnboarding}
-                  disabled={!selectedOnboardingPlan}
-                  className="rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  Finish
-                </button>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -3,6 +3,7 @@
 import type { ReactNode } from 'react';
 
 export type BillingCycle = 'monthly' | 'yearly';
+export type PricingAccent = 'red' | 'green';
 
 export interface PricingPlanLike {
   tier: string;
@@ -11,6 +12,20 @@ export interface PricingPlanLike {
   priceMonthly: number;
   priceYearly: number;
   badge?: string | null;
+}
+
+export interface PricingPlanFeatureSource {
+  tier: string;
+  storage_gb: number;
+  max_file_size_mb: number;
+  team_seats: number;
+  api_access: boolean;
+  priority_support: boolean;
+}
+
+export interface PricingPlanFeature {
+  label: string;
+  included?: boolean;
 }
 
 export interface PricingPlanCardContext {
@@ -23,6 +38,10 @@ export interface PricingPlanCardContext {
   pricePeriod: string;
   yearlyEquivalent: string | null;
 }
+
+export const PAID_TRIAL_CTA_LABEL = 'Start 14-day free trial';
+export const FREE_PLAN_CTA_LABEL = 'Continue with Free Plan';
+export const FREE_TRIAL_NOTE = '14-day free trial · no card required';
 
 export function sortPricingPlans<T extends { tier: string; sortOrder?: number; sort_order?: number }>(plans: T[]): T[] {
   return [...plans].sort((a, b) => {
@@ -39,6 +58,56 @@ export function sortPricingPlans<T extends { tier: string; sortOrder?: number; s
 export function formatPricingAmount(cents: number): string {
   const amount = cents / 100;
   return amount % 1 === 0 ? String(amount) : amount.toFixed(2);
+}
+
+function formatStorage(gb: number): string {
+  if (gb === 0) return '';
+  if (gb < 1) return `${gb * 1000} MB`;
+  return `${gb} GB`;
+}
+
+function formatFileSize(mb: number): string {
+  if (mb === 0) return '';
+  if (mb >= 1000) return `${mb / 1000} GB`;
+  return `${mb} MB`;
+}
+
+export function buildPricingPlanFeatures(plan: PricingPlanFeatureSource): PricingPlanFeature[] {
+  const features: PricingPlanFeature[] = [];
+
+  if (plan.tier === 'free') {
+    features.push({ label: 'All tools available' });
+    features.push({ label: 'Client-side processing' });
+    return features;
+  }
+
+  features.push({ label: 'Everything in Free' });
+  features.push({ label: 'No ads' });
+
+  if (plan.storage_gb > 0) {
+    features.push({ label: `${formatStorage(plan.storage_gb)} cloud storage` });
+  }
+  if (plan.max_file_size_mb > 0) {
+    features.push({ label: `Up to ${formatFileSize(plan.max_file_size_mb)} file processing` });
+  }
+  if (plan.team_seats > 0) {
+    features.push({
+      label: `${plan.team_seats} team seat${plan.team_seats > 1 ? 's' : ''}`,
+    });
+  }
+
+  if (plan.tier === 'starter') {
+    features.push({ label: 'API access', included: false });
+    features.push({ label: 'Basic support' });
+  } else if (plan.tier === 'ultra') {
+    features.push({ label: 'API access' });
+    features.push({ label: 'Standard support' });
+  } else if (plan.tier === 'max') {
+    features.push({ label: 'API access' });
+    features.push({ label: 'Priority support' });
+  }
+
+  return features;
 }
 
 function billingToggleButtonClasses(active: boolean) {
@@ -60,14 +129,16 @@ export function PricingBillingToggle({
   onBillingChange,
   label,
   centered = false,
+  accent = 'red',
 }: {
   billing: BillingCycle;
   onBillingChange: (billing: BillingCycle) => void;
   label?: string;
   centered?: boolean;
+  accent?: PricingAccent;
 }) {
   const toggle = (
-    <div className="tb-v2-pricing-toggle" data-testid="pricing-billing-toggle">
+    <div className="tb-v2-pricing-toggle" data-testid="pricing-billing-toggle" data-accent={accent}>
       <button
         type="button"
         onClick={() => onBillingChange('monthly')}
@@ -90,15 +161,24 @@ export function PricingBillingToggle({
   );
 
   if (label) {
+    if (centered) {
+      return (
+        <div className="tb-v2-pricing-period-column centered">
+          <span className="tb-v2-pricing-period-label">{label}</span>
+          {toggle}
+        </div>
+      );
+    }
+
     return (
-      <div className={centered ? 'tb-v2-pricing-period-row centered' : 'tb-v2-pricing-period-row'}>
+      <div className="tb-v2-pricing-period-row">
         <span className="tb-v2-pricing-period-label">{label}</span>
         {toggle}
       </div>
     );
   }
 
-  return <div className={centered ? 'flex justify-center' : 'flex justify-center'}>{toggle}</div>;
+  return <div className="flex justify-center">{toggle}</div>;
 }
 
 export function PricingPlanCard({
@@ -107,12 +187,14 @@ export function PricingPlanCard({
   highlighted = false,
   selected = false,
   tone = 'default',
+  accent = 'red',
   topSlot,
   headerRightSlot,
   compactHeader = false,
   children,
   footer,
   htmlFor,
+  onClick,
   className,
 }: {
   plan: PricingPlanLike;
@@ -120,43 +202,50 @@ export function PricingPlanCard({
   highlighted?: boolean;
   selected?: boolean;
   tone?: 'default' | 'light' | 'plain';
+  accent?: PricingAccent;
   topSlot?: ReactNode;
   headerRightSlot?: ReactNode;
   compactHeader?: boolean;
   children?: ReactNode;
   footer?: ReactNode;
   htmlFor?: string;
+  onClick?: () => void;
   className?: string;
 }) {
   const priceCents = billing === 'yearly' ? plan.priceYearly : plan.priceMonthly;
-  const price = formatPricingAmount(priceCents);
-  const pricePeriod = priceCents === 0 ? '' : billing === 'yearly' ? '/yr' : '/mo';
-  const yearlyEquivalent = billing === 'yearly' && priceCents > 0
-    ? `$${(plan.priceYearly / 1200).toFixed(2)}/mo billed annually`
-    : null;
+  const displayedMonthlyCents = billing === 'yearly' && plan.priceYearly > 0 ? plan.priceMonthly : null;
+  const price = formatPricingAmount(displayedMonthlyCents ?? priceCents);
+  const pricePeriod = priceCents === 0 ? '' : '/mo';
+  const billedYearlyCents = billing === 'yearly' && plan.priceYearly > 0 ? plan.priceYearly : null;
+  const yearlySavingsCents = billing === 'yearly' && plan.priceMonthly > 0 ? (plan.priceMonthly * 12) - plan.priceYearly : null;
 
-  const Wrapper = htmlFor ? 'label' : 'div';
+  const isInteractive = Boolean(htmlFor || onClick);
+  const Wrapper = htmlFor ? 'label' : onClick ? 'button' : 'div';
   const wrapperClasses = [
     'tb-v2-pricing-card',
     'h-full',
-    'lg:min-h-[440px]',
+    'lg:min-h-[120px]',
     tone === 'light' ? 'light' : '',
     tone === 'plain' ? 'plain' : '',
     highlighted && !selected ? 'hot' : '',
     selected ? 'selected' : '',
-    htmlFor ? 'cursor-pointer' : '',
+    isInteractive ? 'cursor-pointer' : '',
     className ?? '',
   ].filter(Boolean).join(' ');
 
   return (
     <Wrapper
       {...(htmlFor ? { htmlFor } : {})}
+      {...(onClick ? { onClick, type: 'button' as const } : {})}
       className={wrapperClasses}
       data-testid="pricing-plan-card"
       data-tier={plan.tier}
+      data-accent={accent}
     >
       {plan.badge ? (
-        <span className="absolute right-4 top-4 rounded-full bg-red-600 px-2.5 py-0.5 text-xs font-semibold text-white">
+        <span className={accent === 'green'
+          ? 'absolute right-4 top-4 rounded-full bg-emerald-500 px-2.5 py-0.5 text-xs font-semibold text-white'
+          : 'absolute right-4 top-4 rounded-full bg-red-600 px-2.5 py-0.5 text-xs font-semibold text-white'}>
           {plan.badge}
         </span>
       ) : null}
@@ -179,17 +268,27 @@ export function PricingPlanCard({
                 <span className="tb-v2-pricing-card-price-amt">${price}</span>
                 {pricePeriod ? <span className="tb-v2-pricing-card-price-period">{pricePeriod}</span> : null}
               </div>
-              {yearlyEquivalent ? <div className="tb-v2-pricing-card-sub">{yearlyEquivalent}</div> : null}
+              {billing === 'yearly' && billedYearlyCents ? (
+                <div className="tb-v2-pricing-card-sub">
+                  <div>Billed as ${formatPricingAmount(billedYearlyCents)}/year</div>
+                  <div>Bill annually</div>
+                  {yearlySavingsCents && yearlySavingsCents > 0 ? (
+                    <div>
+                      Save ${formatPricingAmount(yearlySavingsCents)} with yearly pricing (2 months free)
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
             </div>
           </div>
 
-          <div className="tb-v2-pricing-card-desc">{plan.description}</div>
+              {plan.description ? <div className="tb-v2-pricing-card-desc">{plan.description}</div> : null}
         </>
       )}
 
       {children ? <div className={compactHeader ? 'mt-6' : 'mt-4'}>{children}</div> : null}
 
-      {footer ? <div className="mt-auto pt-5">{footer}</div> : null}
+      {footer ? <div className="mt-auto pt-2">{footer}</div> : null}
 
     </Wrapper>
   );

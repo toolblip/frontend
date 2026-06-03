@@ -3,8 +3,12 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import {
+  FREE_PLAN_CTA_LABEL,
+  FREE_TRIAL_NOTE,
+  PAID_TRIAL_CTA_LABEL,
   PricingBillingToggle,
   PricingPlanCard,
+  buildPricingPlanFeatures,
   sortPricingPlans,
   type BillingCycle,
   type PricingPlanLike,
@@ -14,9 +18,9 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'https://api.toolblip.com';
 
 const FALLBACK_PLANS: Plan[] = [
   { tier: 'free', name: 'Free', description: 'For anyone getting started', price_monthly: 0, price_yearly: 0, stripe_monthly_id: null, stripe_yearly_id: null, storage_gb: 0, max_file_size_mb: 5, team_seats: 1, api_access: false, priority_support: false, sort_order: 0 },
-  { tier: 'starter', name: 'Starter', description: 'For personal use', price_monthly: 499, price_yearly: 4799, stripe_monthly_id: 'price_1TOflqHd4AsPgGTOxspjxODX', stripe_yearly_id: 'price_1TOflqHd4AsPgGTOOrxqG1kM', storage_gb: 1, max_file_size_mb: 50, team_seats: 1, api_access: false, priority_support: false, sort_order: 1 },
-  { tier: 'ultra', name: 'Pro', description: 'For power users', price_monthly: 1999, price_yearly: 19199, stripe_monthly_id: 'price_1TOflrHd4AsPgGTOnt9jYhjz', stripe_yearly_id: 'price_1TOflsHd4AsPgGTO5ra4mhwt', storage_gb: 10, max_file_size_mb: 500, team_seats: 3, api_access: true, priority_support: false, sort_order: 2 },
-  { tier: 'max', name: 'Max', description: 'For teams', price_monthly: 4999, price_yearly: 47999, stripe_monthly_id: 'price_1TOflsHd4AsPgGTOG7jeNqLk', stripe_yearly_id: 'price_1TOfltHd4AsPgGTOnUHvrbT7', storage_gb: 50, max_file_size_mb: 5000, team_seats: 10, api_access: true, priority_support: true, sort_order: 3 },
+  { tier: 'starter', name: 'Starter', description: 'For personal use', price_monthly: 499, price_yearly: 4990, stripe_monthly_id: 'price_1TOflqHd4AsPgGTOxspjxODX', stripe_yearly_id: 'price_1TOflqHd4AsPgGTOOrxqG1kM', storage_gb: 1, max_file_size_mb: 50, team_seats: 1, api_access: false, priority_support: false, sort_order: 1 },
+  { tier: 'ultra', name: 'Pro', description: 'For power users', price_monthly: 1999, price_yearly: 19990, stripe_monthly_id: 'price_1TOflrHd4AsPgGTOnt9jYhjz', stripe_yearly_id: 'price_1TOflsHd4AsPgGTO5ra4mhwt', storage_gb: 10, max_file_size_mb: 500, team_seats: 3, api_access: true, priority_support: false, sort_order: 2 },
+  { tier: 'max', name: 'Max', description: 'For teams', price_monthly: 4999, price_yearly: 49990, stripe_monthly_id: 'price_1TOflsHd4AsPgGTOG7jeNqLk', stripe_yearly_id: 'price_1TOfltHd4AsPgGTOnUHvrbT7', storage_gb: 50, max_file_size_mb: 5000, team_seats: 10, api_access: true, priority_support: true, sort_order: 3 },
 ];
 
 interface Plan {
@@ -146,47 +150,28 @@ export default function PricingClient() {
       .catch(() => {});
   }, []);
 
+  async function handleFreePlan() {
+    const token = localStorage.getItem('toolblip_token');
+    const onboardingNext = '/dashboard?plan=free';
+    window.location.href = token ? onboardingNext : `/signup?next=${encodeURIComponent(onboardingNext)}`;
+  }
+
   async function handleUpgrade(plan: Plan) {
     setError(null);
     const token = localStorage.getItem('toolblip_token');
-
-    if (!token) {
-      window.location.href = `/login?next=/pricing`;
-      return;
-    }
-
-    const stripePriceId =
-      billing === 'yearly' ? plan.stripe_yearly_id : plan.stripe_monthly_id;
-
-    if (!stripePriceId) {
-      setError('This plan is not available yet.');
-      return;
-    }
+    const onboardingNext = `/dashboard?plan=${plan.tier}&billing=${billing}`;
 
     setLoading(plan.tier);
-
     try {
-      const res = await fetch(`${API_BASE}/api/subscription/checkout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ price_id: stripePriceId }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to create checkout session');
+      if (!token) {
+        window.location.href = `/login?next=${encodeURIComponent(onboardingNext)}`;
+        return;
       }
 
-      if (data.url) {
-        window.location.href = data.url;
-      }
+      window.location.href = onboardingNext;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
+    } finally {
       setLoading(null);
     }
   }
@@ -208,7 +193,7 @@ export default function PricingClient() {
     description: plan.description,
     priceMonthly: plan.price_monthly,
     priceYearly: plan.price_yearly,
-    badge: plan.tier === HIGHLIGHT_TIER ? 'Popular' : null,
+    badge: plan.tier === HIGHLIGHT_TIER ? 'Featured' : null,
   }));
   const highlightPlan = orderedPlans.find((p) => p.tier === HIGHLIGHT_TIER);
   const stickyPriceCents = highlightPlan
@@ -217,6 +202,8 @@ export default function PricingClient() {
       : highlightPlan.price_monthly
     : 0;
   const stickyPrice = stickyPriceCents / 100;
+  const stickyMonthlyEquivalent = highlightPlan && billing === 'yearly' ? highlightPlan.price_monthly / 100 : null;
+  const stickyDisplayPrice = stickyMonthlyEquivalent ?? stickyPrice;
 
   return (
     <div className="tb-v2-pricing">
@@ -242,7 +229,10 @@ export default function PricingClient() {
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <div className="tb-v2-kicker">Pricing</div>
           <h1 className="tb-v2-page-title" style={{ fontSize: '36px' }}>Simple, transparent pricing</h1>
-          <p className="tb-v2-page-sub">All tools are free to use. Upgrade for an uninterrupted experience.</p>
+          <p className="tb-v2-page-sub">Start a 14-day free trial with no card required, or keep using the free plan.</p>
+          <div className="mt-3 inline-flex rounded-full border border-red-200 bg-red-50 px-3 py-1 text-xs font-medium text-red-700 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-300">
+            {FREE_TRIAL_NOTE}
+          </div>
         </div>
 
         <PricingBillingToggle billing={billing} onBillingChange={setBilling} centered />
@@ -259,7 +249,7 @@ export default function PricingClient() {
             .map((plan) => {
               const isHighlighted = plan.tier === HIGHLIGHT_TIER;
               const sourcePlan = orderedPlans.find((item) => item.tier === plan.tier)!;
-              const features = buildPlanFeatures(sourcePlan);
+              const features = buildPricingPlanFeatures(sourcePlan);
 
               return (
                 <PricingPlanCard
@@ -275,7 +265,7 @@ export default function PricingClient() {
                       className={`tb-v2-btn tb-v2-pricing-btn ${isHighlighted ? 'inverse' : 'tb-v2-btn-primary'}`}
                       style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
                     >
-                      {loading === sourcePlan.tier ? 'Redirecting...' : `Get ${plan.name}`}
+                      {loading === sourcePlan.tier ? 'Redirecting...' : PAID_TRIAL_CTA_LABEL}
                     </button>
                   }
                 >
@@ -300,7 +290,7 @@ export default function PricingClient() {
             .filter((plan) => plan.tier === 'free')
             .map((plan) => {
               const sourcePlan = orderedPlans.find((item) => item.tier === plan.tier)!;
-              const features = buildPlanFeatures(sourcePlan);
+              const features = buildPricingPlanFeatures(sourcePlan);
 
               return (
                 <div key={plan.tier} className="lg:col-span-3">
@@ -311,12 +301,13 @@ export default function PricingClient() {
                     className="free-row"
                     compactHeader
                     headerRightSlot={
-                      <Link
-                        href="/signup"
+                      <button
+                        type="button"
+                        onClick={handleFreePlan}
                         className="tb-v2-pricing-inline-link"
                       >
-                        Get Free Plan
-                      </Link>
+                        {FREE_PLAN_CTA_LABEL}
+                      </button>
                     }
                   >
                     <ul className="tb-v2-pricing-features">
@@ -353,11 +344,14 @@ export default function PricingClient() {
           <div className="tb-v2-pricing-sticky-info">
             <span className="tb-v2-pricing-sticky-name">{displayPlanName(highlightPlan)}</span>
             <span className="tb-v2-pricing-sticky-price">
-              ${stickyPrice % 1 === 0 ? stickyPrice : stickyPrice.toFixed(2)}
+              ${stickyDisplayPrice % 1 === 0 ? stickyDisplayPrice : stickyDisplayPrice.toFixed(2)}
               <span className="tb-v2-pricing-sticky-period">
-                {billing === 'yearly' ? '/yr' : '/mo'}
+                /mo
               </span>
             </span>
+            {billing === 'yearly' ? (
+              <span className="tb-v2-pricing-sticky-note">Bill annually</span>
+            ) : null}
           </div>
           <button
             type="button"
@@ -365,7 +359,7 @@ export default function PricingClient() {
             disabled={loading === highlightPlan.tier}
             className="tb-v2-btn tb-v2-btn-primary tb-v2-pricing-sticky-btn"
           >
-            {loading === highlightPlan.tier ? '…' : `Get ${displayPlanName(highlightPlan)}`}
+            {loading === highlightPlan.tier ? '…' : PAID_TRIAL_CTA_LABEL}
           </button>
         </div>
       )}
