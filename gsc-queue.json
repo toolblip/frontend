@@ -81,6 +81,10 @@
       "status": "submitted",
       "coverage_state": "URL is unknown to Google",
       "note": "sitemap refreshed after conservative one-post run; URL unknown immediately after publish is expected"
+    },
+    {
+      "url": "https://toolblip.com/blog/2026-06-03-free-qr-code-generator-no-signup",
+      "submitted_at": "2026-06-03T17:07:15Z"
     }
   ],
   "failed": []

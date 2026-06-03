@@ -1,72 +1,26 @@
 # Toolblip SEO Strategy
-Auto-generated: 2026-06-02 23:05 - updated after format SQL queries online for readability
+Auto-generated: 2026-06-03 23:07 Dhaka - updated after generate QR codes online without signing up
 
 ## Winning Patterns (replicate these)
-## Winning Patterns (replicate these)
-_Empty, no articles have enough GSC data yet_
+_Empty, no articles have enough GSC data yet._
 
 ## Improvement Needed
-_Empty, no articles have enough GSC data yet_
+_Empty, no articles have enough GSC data yet._
 
 ## Content Rules (accumulated learning)
-- Articles targeting privacy/security angle (client-side, no upload) should emphasize the DevTools verification step because readers find this concrete and actionable.
-- JSON validation articles benefit from specific code examples (JSON.parse, JSON.stringify) to demonstrate the technical reality.
-- Short paragraphs (1-3 sentences) keep developer-tool posts scannable.
-- Avoid "you are not being paranoid" framing because it comes across as patronizing.
-- "The solution is..." framing should be direct, not double negatives.
-- Cron/scheduler posts should show next-run previews, timezone caveats, platform dialect differences, and at least one concrete misfire example.
+- Articles targeting privacy and client-side execution should show a concrete DevTools Network-tab verification step.
 - Tool support posts should link to the canonical tool page directly, not only adjacent tools.
+- Keep developer-tool posts concise: short paragraphs, one narrow task, and one practical example.
+- Use quoted ISO frontmatter dates in Toolblip blog posts to avoid `[object Object]` metadata.
+- Avoid broad title/meta rewrites until GSC has enough impressions to justify the change.
+- Skip near-duplicate variants unless GSC shows a clearly distinct query cluster.
+- Cron and scheduler posts should show next-run previews, timezone caveats, platform dialect differences, and at least one concrete misfire example.
 
 ## Queue Notes
 - Topic "format and validate JSON online without uploading data" was chosen because existing "best free online developer tools" covers JSON formatting in one bullet point without addressing the privacy/security angle.
 - "best free online developer tools for daily coding" was previously queued but not generated because of duplicate content risk.
-- Topic "generate cron expressions without mistakes" shipped as a single conservative post on 2026-05-15. Do not spin near-duplicate cron variants unless GSC later shows a clearly distinct query cluster.
-- Topic "convert base64 text and files locally in the browser" shipped on 2026-05-16 as one privacy-focused Base64 decoding article. Do not publish additional Base64 variants until GSC shows a separate query cluster such as file decoding, JWT decoding, or Unicode-specific Base64 problems.
-
-
-## Improvement Needed
-## Improvement Needed
-_Empty, no articles have enough GSC data yet_
-
-## Content Rules (accumulated learning)
-- Articles targeting privacy/security angle (client-side, no upload) should emphasize the DevTools verification step because readers find this concrete and actionable.
-- JSON validation articles benefit from specific code examples (JSON.parse, JSON.stringify) to demonstrate the technical reality.
-- Short paragraphs (1-3 sentences) keep developer-tool posts scannable.
-- Avoid "you are not being paranoid" framing because it comes across as patronizing.
-- "The solution is..." framing should be direct, not double negatives.
-- Cron/scheduler posts should show next-run previews, timezone caveats, platform dialect differences, and at least one concrete misfire example.
-- Tool support posts should link to the canonical tool page directly, not only adjacent tools.
-
-## Queue Notes
-- Topic "format and validate JSON online without uploading data" was chosen because existing "best free online developer tools" covers JSON formatting in one bullet point without addressing the privacy/security angle.
-- "best free online developer tools for daily coding" was previously queued but not generated because of duplicate content risk.
-- Topic "generate cron expressions without mistakes" shipped as a single conservative post on 2026-05-15. Do not spin near-duplicate cron variants unless GSC later shows a clearly distinct query cluster.
-- Topic "convert base64 text and files locally in the browser" shipped on 2026-05-16 as one privacy-focused Base64 decoding article. Do not publish additional Base64 variants until GSC shows a separate query cluster such as file decoding, JWT decoding, or Unicode-specific Base64 problems.
+- Topic "generate cron expressions without mistakes" shipped on 2026-05-15. Do not spin near-duplicate cron variants unless GSC later shows a distinct query cluster.
+- Topic "convert base64 text and files locally in the browser" shipped on 2026-05-16 as one privacy-focused Base64 decoding article. Do not publish more Base64 variants until GSC shows a separate query cluster such as file decoding, JWT decoding, or Unicode-specific Base64 problems.
 - Topic "escape and unescape HTML entities for frontend debugging" shipped on 2026-06-01 as one HTML entity decoder support article. Do not publish additional HTML entity variants unless GSC shows a distinct query cluster.
-
-
-## Content Rules (accumulated learning)
-## Content Rules (accumulated learning)
-- Articles targeting privacy/security angle (client-side, no upload) should emphasize the DevTools verification step because readers find this concrete and actionable.
-- JSON validation articles benefit from specific code examples (JSON.parse, JSON.stringify) to demonstrate the technical reality.
-- Short paragraphs (1-3 sentences) keep developer-tool posts scannable.
-- Avoid "you are not being paranoid" framing because it comes across as patronizing.
-- "The solution is..." framing should be direct, not double negatives.
-- Cron/scheduler posts should show next-run previews, timezone caveats, platform dialect differences, and at least one concrete misfire example.
-- Tool support posts should link to the canonical tool page directly, not only adjacent tools.
-
-## Queue Notes
-- Topic "format and validate JSON online without uploading data" was chosen because existing "best free online developer tools" covers JSON formatting in one bullet point without addressing the privacy/security angle.
-- "best free online developer tools for daily coding" was previously queued but not generated because of duplicate content risk.
-- Topic "generate cron expressions without mistakes" shipped as a single conservative post on 2026-05-15. Do not spin near-duplicate cron variants unless GSC later shows a clearly distinct query cluster.
-- Topic "convert base64 text and files locally in the browser" shipped on 2026-05-16 as one privacy-focused Base64 decoding article. Do not publish additional Base64 variants until GSC shows a separate query cluster such as file decoding, JWT decoding, or Unicode-specific Base64 problems.
-- Topic "escape and unescape HTML entities for frontend debugging" shipped on 2026-06-01 as one HTML entity decoder support article. Do not publish additional HTML entity variants unless GSC shows a distinct query cluster.
-
-
-## Queue Notes
-## Queue Notes
-- Topic "format and validate JSON online without uploading data" was chosen because existing "best free online developer tools" covers JSON formatting in one bullet point without addressing the privacy/security angle.
-- "best free online developer tools for daily coding" was previously queued but not generated because of duplicate content risk.
-- Topic "generate cron expressions without mistakes" shipped as a single conservative post on 2026-05-15. Do not spin near-duplicate cron variants unless GSC later shows a clearly distinct query cluster.
-- Topic "convert base64 text and files locally in the browser" shipped on 2026-05-16 as one privacy-focused Base64 decoding article. Do not publish additional Base64 variants until GSC shows a separate query cluster such as file decoding, JWT decoding, or Unicode-specific Base64 problems.
-- Topic "escape and unescape HTML entities for frontend debugging" shipped on 2026-06-01 as one HTML entity decoder support article. Do not publish additional HTML entity variants unless GSC shows a distinct query cluster.
+- Topic "format SQL queries online for readability" shipped on 2026-06-02 as one SQL formatter support article. Do not publish additional SQL formatter variants until GSC shows a distinct query cluster.
+- Topic "generate QR codes online without signing up" shipped on 2026-06-03 as one QR generator support article tied to `/tools/qr-code-generator`. Do not publish additional QR variants unless GSC later shows a distinct query cluster such as Wi-Fi QR, vCard QR, or SVG QR export.
