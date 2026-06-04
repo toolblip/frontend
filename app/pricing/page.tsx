@@ -6,10 +6,10 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: 'Pricing',
   description:
-    'Upgrade to Toolblip for an ad-free experience. Free, Starter ($4.99/mo), Pro ($19.99/mo), and Max ($49.99/mo) plans with no ads, cloud storage, and team features.',
+    'Start a 14-day free trial, or keep using the free plan. No credit card required. Free, Starter ($4.99/mo), Pro ($19.99/mo), and Max ($49.99/mo) plans with no ads, cloud storage, and team features.',
   openGraph: {
     title: 'Pricing | Toolblip',
-    description: 'Upgrade to Toolblip for an ad-free experience. Plans starting at $4.99/month.',
+    description: 'Start a 14-day free trial, or keep using the free plan. No credit card required.',
     url: 'https://toolblip.com/pricing',
     siteName: 'Toolblip',
     images: [
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Pricing | Toolblip',
-    description: 'Upgrade to Toolblip for an ad-free experience. Plans starting at $4.99/month.',
+    description: 'Start a 14-day free trial, or keep using the free plan. No credit card required.',
     images: ['/og-pricing.png'],
   },
 };
@@ -46,7 +46,7 @@ const faqSchema: Record<string, unknown> = {
       name: 'Is there a free trial?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: "Toolblip Free lets you try all tools at no cost. Upgrade when you're ready for an ad-free experience with more storage and features.",
+        text: "Toolblip includes a 14-day free trial with no credit card required. You can also stay on the free plan and upgrade later when you're ready.",
       },
     },
     {
@@ -62,7 +62,7 @@ const faqSchema: Record<string, unknown> = {
       name: 'What payment methods do you accept?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'We accept all major credit and debit cards via Stripe. Subscriptions are billed monthly or annually.',
+        text: 'No credit card is required to start the free trial. If you upgrade later, we accept all major credit and debit cards via Stripe.',
       },
     },
     {
@@ -79,7 +79,6 @@ const faqSchema: Record<string, unknown> = {
       acceptedAnswer: {
         '@type': 'Answer',
         text: 'Pro plans include 3 team seats and Max plans include 10 team seats, allowing multiple users to collaborate under one account.',
-
       },
     },
   ],
