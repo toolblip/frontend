@@ -40,7 +40,7 @@ The pipeline initially let Claude/Humanizer write meta commentary into the artic
 - `npm ci` completed successfully in the isolated worktree.
 - `npm run build` completed successfully with Next.js 16.2.4 and generated `/blog/[slug]` static paths.
 - Artifact scan found no Humanizer/Claude meta text, em dashes, or `[object Object]` in the final markdown.
-- Word count: 867 words.
+- Word count: 859 words after removing the duplicate body H1 so the rendered page has one article title H1.
 - GSC submission status: submitted.
 - Sitemap refresh command returned status ok.
 

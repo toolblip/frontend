@@ -14,8 +14,6 @@ readingTime: 5 min
 featuredImage: https://api.radtx.com/gradient/6b7280-374151/1200/630
 ---
 
-# Validate XML against XSD online for API integrations
-
 When a partner API returns "schema validation failed", the fastest fix is usually not in your HTTP client. It is in the payload. You need to validate XML against XSD online, see the exact element that broke the contract, and fix it before you send the request again.
 
 Use the [Toolblip XML validator](https://toolblip.com/tools/xml-validator) when you need a quick browser check before retrying a REST, SOAP, or legacy B2B integration. Paste the XML, check the error line, fix the payload, then run the request again with less guessing.
