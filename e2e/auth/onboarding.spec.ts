@@ -16,7 +16,7 @@ test.describe('Account onboarding BDD regression', () => {
 
     await expect(onboarding).toBeVisible();
     await expect(onboarding.getByRole('heading', { name: 'Set up your workspace' })).toBeVisible();
-    await expect(onboarding.getByLabel('Team name')).toHaveValue(`${user.name.split(/\s+/)[0]} Team`);
+    await expect(onboarding.getByLabel('Team name')).toHaveValue(`${user.name.split(/\s+/)[0]}`);
     await expect(onboarding.getByText(/Compare the plans|Pick Starter, Pro, Max, or Free|Keep the free plan/i)).toHaveCount(0);
 
     await onboarding.getByRole('button', { name: 'Next' }).click();
@@ -32,7 +32,7 @@ test.describe('Account onboarding BDD regression', () => {
       const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
       return entry ? JSON.parse(String(entry[1])) : null;
     });
-    expect(stored).toMatchObject({ status: 'completed', selectedPlan: 'ultra', teamName: `${user.name.split(/\s+/)[0]} Team`, billingCycle: 'monthly' });
+    expect(stored).toMatchObject({ status: 'completed', selectedPlan: 'ultra', teamName: `${user.name.split(/\s+/)[0]}`, billingCycle: 'monthly' });
   });
 
   test('Given an unauthenticated dashboard referral, Then login preserves the plan and billing query', async ({ page }) => {
@@ -86,7 +86,7 @@ test.describe('Account onboarding BDD regression', () => {
     const onboarding = page.locator('main [role="dialog"]').first();
 
     await expect(onboarding).toBeVisible();
-    await expect(onboarding.getByLabel('Team name')).toHaveValue(`${user.name.split(/\s+/)[0]} Team`);
+    await expect(onboarding.getByLabel('Team name')).toHaveValue(`${user.name.split(/\s+/)[0]}`);
     await onboarding.getByRole('button', { name: 'Next' }).click();
     const ultraPlanButton = onboarding.locator('[data-tier="ultra"]').getByRole('button', { name: 'Start 14-day free trial' });
     await expect(ultraPlanButton).toBeVisible();
@@ -124,7 +124,7 @@ test.describe('Account onboarding BDD regression', () => {
           })
         );
       },
-      { key: onboardingKey, teamName: `${user.name.split(/\s+/)[0]} Team` }
+      { key: onboardingKey, teamName: `${user.name.split(/\s+/)[0]}` }
     );
 
     await page.reload();
