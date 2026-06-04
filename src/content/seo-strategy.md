@@ -1,5 +1,5 @@
 # Toolblip SEO Strategy
-Auto-generated: 2026-06-03 23:07 Dhaka - updated after generate QR codes online without signing up
+Auto-generated: 2026-06-04 23:07 - updated after validate XML online for API integrations
 
 ## Winning Patterns (replicate these)
 _Empty, no articles have enough GSC data yet._
@@ -24,3 +24,4 @@ _Empty, no articles have enough GSC data yet._
 - Topic "escape and unescape HTML entities for frontend debugging" shipped on 2026-06-01 as one HTML entity decoder support article. Do not publish additional HTML entity variants unless GSC shows a distinct query cluster.
 - Topic "format SQL queries online for readability" shipped on 2026-06-02 as one SQL formatter support article. Do not publish additional SQL formatter variants until GSC shows a distinct query cluster.
 - Topic "generate QR codes online without signing up" shipped on 2026-06-03 as one QR generator support article tied to `/tools/qr-code-generator`. Do not publish additional QR variants unless GSC later shows a distinct query cluster such as Wi-Fi QR, vCard QR, or SVG QR export.
+- Topic "validate XML online for API integrations" shipped on 2026-06-04 as one XML validator support article tied to `/tools/xml-validator`. Do not publish additional XML validation variants unless GSC shows a distinct query cluster such as XSD errors, SOAP validation, or sitemap XML validation.

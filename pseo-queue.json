@@ -1,11 +1,14 @@
 {
   "pending": [
-    "validate XML online for API integrations",
     "sort and deduplicate lists online for developers",
     "create lorem ipsum placeholder text for UI mockups"
   ],
   "in_progress": [],
   "done": [
+    {
+      "topic": "validate XML online for API integrations",
+      "completed_at": "2026-06-04T17:07:27Z"
+    },
     {
       "topic": "generate QR codes online without signing up",
       "completed_at": "2026-06-03T17:07:26Z"
