@@ -196,14 +196,6 @@ export default function PricingClient() {
     badge: plan.tier === HIGHLIGHT_TIER ? 'Featured' : null,
   }));
   const highlightPlan = orderedPlans.find((p) => p.tier === HIGHLIGHT_TIER);
-  const stickyPriceCents = highlightPlan
-    ? billing === 'yearly'
-      ? highlightPlan.price_yearly
-      : highlightPlan.price_monthly
-    : 0;
-  const stickyPrice = stickyPriceCents / 100;
-  const stickyMonthlyEquivalent = highlightPlan && billing === 'yearly' ? highlightPlan.price_monthly / 100 : null;
-  const stickyDisplayPrice = stickyMonthlyEquivalent ?? stickyPrice;
 
   return (
     <div className="tb-v2-pricing">
@@ -339,30 +331,6 @@ export default function PricingClient() {
         </div>
       </div>
 
-      {highlightPlan && !userIsPro && (
-        <div className="tb-v2-pricing-sticky-mobile" role="region" aria-label="Recommended plan">
-          <div className="tb-v2-pricing-sticky-info">
-            <span className="tb-v2-pricing-sticky-name">{displayPlanName(highlightPlan)}</span>
-            <span className="tb-v2-pricing-sticky-price">
-              ${stickyDisplayPrice % 1 === 0 ? stickyDisplayPrice : stickyDisplayPrice.toFixed(2)}
-              <span className="tb-v2-pricing-sticky-period">
-                /mo
-              </span>
-            </span>
-            {billing === 'yearly' ? (
-              <span className="tb-v2-pricing-sticky-note">Bill annually</span>
-            ) : null}
-          </div>
-          <button
-            type="button"
-            onClick={() => handleUpgrade(highlightPlan)}
-            disabled={loading === highlightPlan.tier}
-            className="tb-v2-btn tb-v2-btn-primary tb-v2-pricing-sticky-btn"
-          >
-            {loading === highlightPlan.tier ? '…' : PAID_TRIAL_CTA_LABEL}
-          </button>
-        </div>
-      )}
     </div>
   );
 }
