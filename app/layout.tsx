@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import Script from "next/script";
 import { Inter, Fraunces, Nunito, JetBrains_Mono } from "next/font/google";
-import CookieBanner from "@/components/CookieBanner";
 import Analytics from "@/components/Analytics";
 import ThemeProvider from "@/components/ThemeProvider";
 import TopLoader from "@/components/TopLoader";
@@ -96,7 +95,6 @@ export default function RootLayout({
             </Suspense>
             <Shell>{children}</Shell>
             <Analytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
-            <CookieBanner />
           </AuthProvider>
         </ThemeProvider>
       </body>
