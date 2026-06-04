@@ -149,9 +149,9 @@ export function PricingBillingToggle({
       <button
         type="button"
         onClick={() => onBillingChange('yearly')}
-        className={billingToggleButtonClasses(billing === 'yearly')}
+        className={[billingToggleButtonClasses(billing === 'yearly'), 'with-badge'].filter(Boolean).join(' ')}
       >
-        <span>Yearly</span>
+        <span className="tb-v2-pricing-toggle-btn-label">Yearly</span>
         <span aria-hidden="true" className={billingToggleBadgeClasses(billing === 'yearly')}>
           <span className="tb-v2-pricing-toggle-badge-number">2</span>
           <span className="tb-v2-pricing-toggle-badge-text"> months free</span>
