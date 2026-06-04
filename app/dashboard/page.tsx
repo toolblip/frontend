@@ -336,7 +336,7 @@ export default function AccountPage() {
 
       const restoredSelectedPlan = requestedPlan ?? normalizeOnboardingPlan(parsed.selectedPlan);
       const restoredBilling = requestedBilling ?? parsed.billingCycle ?? DEFAULT_ONBOARDING_BILLING;
-      const restoredStep = parsed.step ?? "welcome";
+      const restoredStep = parsed.step === "pricing" ? "welcome" : parsed.step ?? "welcome";
       const restoredPayload = {
         version: ONBOARDING_STORAGE_VERSION,
         status: parsed.status ?? "draft",
@@ -604,7 +604,7 @@ export default function AccountPage() {
     setSelectedOnboardingPlan(selectedPlan);
     setOnboardingBilling(billingCycle);
     setPlanOnboardingError("");
-    persistPlanOnboarding("completed", "pricing", selectedPlan, billingCycle);
+    persistPlanOnboarding("completed", "welcome", selectedPlan, billingCycle);
   }
 
   async function handleNextPlanOnboarding() {
@@ -614,12 +614,7 @@ export default function AccountPage() {
     setSavingPlanOnboarding(true);
 
     try {
-      const saved = writePlanOnboarding("draft", "pricing");
-      if (!saved) {
-        throw new Error("Could not save onboarding progress.");
-      }
-
-      setOnboardingStep("pricing");
+      completePlanOnboarding(selectedOnboardingPlan, onboardingBilling);
     } catch (error) {
       setPlanOnboardingError(error instanceof Error ? error.message : "Could not save onboarding progress.");
     } finally {
@@ -719,7 +714,7 @@ export default function AccountPage() {
                   </>
                 ) : null}
                 <div className="inline-flex items-center rounded-full border border-red-200 bg-white px-3 py-1 text-xs font-medium text-red-700 shadow-sm dark:border-red-900/60 dark:bg-gray-900 dark:text-red-300">
-                  {onboardingStep === "welcome" ? "Step 1 of 2" : "Step 2 of 2"}
+                  {onboardingStep === "welcome" ? "Step 1 of 1" : "Step 2 of 2"}
                 </div>
                 {planOnboardingError && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{planOnboardingError}</p>}
               </div>
@@ -892,7 +887,7 @@ export default function AccountPage() {
                   disabled={!teamName.trim() || savingPlanOnboarding}
                   className="rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {savingPlanOnboarding ? "Saving..." : "Next"}
+                  {savingPlanOnboarding ? "Saving..." : "Continue"}
                 </button>
               </div>
             )}
