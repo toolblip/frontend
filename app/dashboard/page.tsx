@@ -70,7 +70,7 @@ function normalizeOnboardingPlan(plan?: string | null): OnboardingPlanTier {
 
 function suggestWorkspaceName(name?: string | null) {
   const firstWord = name?.trim().split(/\s+/).find(Boolean);
-  return firstWord ? `${firstWord} Team` : "Toolblip Team";
+  return firstWord ?? "Toolblip";
 }
 
 const FALLBACK_PLANS: Plan[] = [
