@@ -221,7 +221,7 @@ export default function PricingClient() {
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <div className="tb-v2-kicker">Pricing</div>
           <h1 className="tb-v2-page-title" style={{ fontSize: '36px' }}>Simple, transparent pricing</h1>
-          <p className="tb-v2-page-sub">Start a 14-day free trial with no card required, or keep using the free plan.</p>
+          <p className="tb-v2-page-sub">Start a 14-day free trial, or keep using the free plan.</p>
           <div className="mt-3 inline-flex rounded-full border border-red-200 bg-red-50 px-3 py-1 text-xs font-medium text-red-700 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-300">
             {FREE_TRIAL_NOTE}
           </div>
