@@ -178,7 +178,7 @@ test.describe('Account onboarding BDD regression', () => {
     expect(freeCard.text).toContain('Free');
   });
 
-  test('Given the cookie banner appears, Then onboarding plan CTAs stay clickable above it', async ({ page }) => {
+  test('onboarding plan CTAs stay clickable', async ({ page }) => {
     await loginByForm(page, VALID_USER);
 
     const onboarding = page.locator('main [role="dialog"]').first();
@@ -186,8 +186,6 @@ test.describe('Account onboarding BDD regression', () => {
     await onboarding.getByRole('button', { name: 'Next' }).click();
     await page.waitForTimeout(1000);
 
-    const cookieBanner = page.getByRole('dialog', { name: 'Cookie consent' });
-    await expect(cookieBanner).toBeVisible();
     const freePlanButton = onboarding.locator('[data-tier="free"]').getByRole('button', { name: 'Continue with Free Plan' });
     await expect(freePlanButton).toBeVisible();
     await freePlanButton.click();

@@ -2696,17 +2696,6 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 .tb-v2-pricing-success-close:hover { color: var(--fg-1); }
 .tb-v2-pricing-active-sub { margin-bottom: 24px; padding: 12px 16px; background: var(--surface-2, var(--surface)); border: 1px solid var(--line); border-radius: var(--radius); font-size: 13px; color: var(--fg-1); text-align: center; }
 
-.tb-v2-pricing-sticky-mobile { display: none; }
-@media (max-width: 720px) {
-  .tb-v2-pricing { padding-bottom: 88px; }
-  .tb-v2-pricing-sticky-mobile { display: flex; position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; align-items: center; gap: 12px; padding: 12px 16px; background: var(--surface); border-top: 1px solid var(--line); box-shadow: 0 -4px 16px rgba(0,0,0,.06); }
-  .tb-v2-pricing-sticky-info { display: flex; flex-direction: column; flex: 1; min-width: 0; }
-  .tb-v2-pricing-sticky-name { font-size: 12px; font-weight: 600; color: var(--fg-2); letter-spacing: 0.02em; text-transform: uppercase; }
-  .tb-v2-pricing-sticky-price { font-size: 20px; font-weight: 700; color: var(--fg-0); font-family: var(--f-display); letter-spacing: -0.02em; line-height: 1.1; }
-  .tb-v2-pricing-sticky-period { font-size: 12px; font-weight: 500; color: var(--fg-2); margin-left: 2px; }
-  .tb-v2-pricing-sticky-note { font-size: 12px; font-weight: 500; color: var(--fg-3); line-height: 1.2; margin-top: 2px; }
-  .tb-v2-pricing-sticky-btn { flex-shrink: 0; }
-}
 
 /* Auth pages (login / signup) */
 .tb-v2-auth { padding: 52px 0 80px; }
