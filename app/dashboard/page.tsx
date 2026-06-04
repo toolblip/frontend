@@ -68,6 +68,11 @@ function normalizeOnboardingPlan(plan?: string | null): OnboardingPlanTier {
   return plan === "starter" ? DEFAULT_ONBOARDING_PLAN : (plan as OnboardingPlanTier | undefined) ?? DEFAULT_ONBOARDING_PLAN;
 }
 
+function suggestWorkspaceName(name?: string | null) {
+  const firstWord = name?.trim().split(/\s+/).find(Boolean);
+  return firstWord ? `${firstWord} Team` : "Toolblip Team";
+}
+
 const FALLBACK_PLANS: Plan[] = [
   { tier: "free", name: "Free", description: "For anyone getting started", price_monthly: 0, price_yearly: 0, stripe_monthly_id: null, stripe_yearly_id: null, storage_gb: 0, max_file_size_mb: 5, team_seats: 1, api_access: false, priority_support: false, sort_order: 0 },
   { tier: "starter", name: "Starter", description: "For personal use", price_monthly: 499, price_yearly: 4990, stripe_monthly_id: "price_1TOflqHd4AsPgGTOxspjxODX", stripe_yearly_id: "price_1TOflqHd4AsPgGTOOrxqG1kM", storage_gb: 1, max_file_size_mb: 50, team_seats: 1, api_access: false, priority_support: false, sort_order: 1 },
@@ -264,7 +269,7 @@ export default function AccountPage() {
       return;
     }
 
-    const suggestedTeamName = user.name ? `${user.name} Team` : "Toolblip Team";
+    const suggestedTeamName = suggestWorkspaceName(user.name);
     const params = new URLSearchParams(window.location.search);
     const requestedPlan = parseOnboardingPlanParam(params.get("plan"));
     const requestedBilling = parseBillingCycleParam(params.get("billing"));
@@ -705,10 +710,10 @@ export default function AccountPage() {
                   <>
                     <div>
                       <h2 id="plan-onboarding-title" className="text-xl font-bold text-gray-900 dark:text-white sm:text-2xl">
-                        Choose your plan
+                        Set up your workspace
                       </h2>
                       <p className="mt-1 text-sm text-gray-600 dark:text-gray-300 sm:text-sm">
-                        Compare the plans and pick the one that fits how you use Toolblip.
+                        Name your team to get started.
                       </p>
                     </div>
                   </>
@@ -741,12 +746,9 @@ export default function AccountPage() {
                 </div>
 
                 <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5 shadow-sm dark:border-gray-700 dark:bg-gray-950/60">
-                  <p className="font-semibold text-gray-900 dark:text-white">Onboarding checklist</p>
+                  <p className="font-semibold text-gray-900 dark:text-white">Setup checklist</p>
                   <ul className="mt-3 space-y-2 text-sm leading-6 text-gray-600 dark:text-gray-300">
                     <li>• Name your team</li>
-                    <li>• Pick Starter, Pro, Max, or Free</li>
-                    <li>• {FREE_TRIAL_NOTE}</li>
-                    <li>• Keep the free plan if that fits you best</li>
                   </ul>
                 </div>
               </div>
