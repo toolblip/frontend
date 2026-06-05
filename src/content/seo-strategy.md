@@ -1,5 +1,5 @@
 # Toolblip SEO Strategy
-Auto-generated: 2026-06-04 23:07 - updated after validate XML online for API integrations
+Auto-generated: 2026-06-05 23:06 - updated after sort and deduplicate lists online for developers
 
 ## Winning Patterns (replicate these)
 _Empty, no articles have enough GSC data yet._
@@ -25,3 +25,4 @@ _Empty, no articles have enough GSC data yet._
 - Topic "format SQL queries online for readability" shipped on 2026-06-02 as one SQL formatter support article. Do not publish additional SQL formatter variants until GSC shows a distinct query cluster.
 - Topic "generate QR codes online without signing up" shipped on 2026-06-03 as one QR generator support article tied to `/tools/qr-code-generator`. Do not publish additional QR variants unless GSC later shows a distinct query cluster such as Wi-Fi QR, vCard QR, or SVG QR export.
 - Topic "validate XML online for API integrations" shipped on 2026-06-04 as one XML validator support article tied to `/tools/xml-validator`. Do not publish additional XML validation variants unless GSC shows a distinct query cluster such as XSD errors, SOAP validation, or sitemap XML validation.
+- Topic "sort and deduplicate lists online for developers" shipped on 2026-06-05 as one support article tied to `/tools/remove-duplicate-lines`. Do not publish additional duplicate-line variants unless GSC shows a distinct query cluster such as file deduplication, preserving order, or case-insensitive list cleanup.
