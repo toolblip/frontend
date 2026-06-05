@@ -21,8 +21,8 @@ test.describe('Account onboarding BDD regression', () => {
 
     await onboarding.getByRole('button', { name: 'Next' }).click();
     await expect(onboarding.getByText(/Step 2 of 2/i)).toBeVisible();
-    await expect(onboarding.getByRole('heading', { name: 'Simple, transparent pricing' })).toBeVisible();
-    await expect(onboarding.getByText(/Compare the plans and pick the one that fits how you use Toolblip\./i)).toBeVisible();
+    await expect(onboarding.getByRole('heading', { name: 'Pick your plan' })).toBeVisible();
+    await expect(onboarding.getByText(/Select one plan to finish setup\./i)).toBeVisible();
     await expect(onboarding.getByRole('button', { name: 'Finish setup' })).toBeDisabled();
 
     await onboarding.locator('[data-tier="ultra"]').click();
@@ -57,7 +57,7 @@ test.describe('Account onboarding BDD regression', () => {
 
     await onboarding.getByRole('button', { name: 'Next' }).click();
     await expect(onboarding.getByText(/Step 2 of 2/i)).toBeVisible();
-    await expect(onboarding.getByRole('heading', { name: 'Simple, transparent pricing' })).toBeVisible();
+    await expect(onboarding.getByRole('heading', { name: 'Pick your plan' })).toBeVisible();
     await expect(onboarding.getByRole('button', { name: 'Finish setup' })).toBeDisabled();
 
     await onboarding.locator('[data-tier="free"]').click();
@@ -99,7 +99,7 @@ test.describe('Account onboarding BDD regression', () => {
     await expect(onboarding.getByRole('button', { name: 'Next' })).toBeVisible();
     await onboarding.getByRole('button', { name: 'Next' }).click();
     await expect(onboarding.getByText(/Step 2 of 2/i)).toBeVisible();
-    await expect(onboarding.getByRole('heading', { name: 'Simple, transparent pricing' })).toBeVisible();
+    await expect(onboarding.getByRole('heading', { name: 'Pick your plan' })).toBeVisible();
     await expect(onboarding.getByRole('button', { name: 'Finish setup' })).toBeEnabled();
     await onboarding.getByRole('button', { name: 'Finish setup' }).click();
     await expect(onboarding).toHaveCount(0);
@@ -151,7 +151,7 @@ test.describe('Account onboarding BDD regression', () => {
     const migratedOnboarding = page.locator('main [role="dialog"]').first();
     await expect(migratedOnboarding).toBeVisible();
     await expect(migratedOnboarding.getByText(/Step 2 of 2/i)).toBeVisible();
-    await expect(migratedOnboarding.getByRole('heading', { name: 'Simple, transparent pricing' })).toBeVisible();
+    await expect(migratedOnboarding.getByRole('heading', { name: 'Pick your plan' })).toBeVisible();
     await expect(migratedOnboarding.getByRole('button', { name: 'Finish setup' })).toBeEnabled();
     await migratedOnboarding.getByRole('button', { name: 'Finish setup' }).click();
     await expect(migratedOnboarding).toHaveCount(0);

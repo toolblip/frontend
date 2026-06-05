@@ -767,9 +767,9 @@ export default function AccountPage() {
                 <div className="rounded-[32px] border border-gray-200 bg-white/90 p-5 shadow-sm backdrop-blur dark:border-gray-700 dark:bg-gray-900/90 sm:p-6">
                   <div className="space-y-2">
                     <div className="text-sm font-semibold uppercase tracking-[0.2em] text-red-600 dark:text-red-400">Pricing</div>
-                    <h3 className="text-xl font-bold leading-tight text-gray-900 dark:text-white sm:text-2xl">Simple, transparent pricing</h3>
+                    <h3 className="text-xl font-bold leading-tight text-gray-900 dark:text-white sm:text-2xl">Pick your plan</h3>
                     <p className="max-w-2xl text-sm text-gray-600 dark:text-gray-300 sm:text-base">
-                      Compare the plans and pick the one that fits how you use Toolblip.
+                      Select one plan to finish setup.
                     </p>
                   </div>
 
@@ -809,6 +809,11 @@ export default function AccountPage() {
                         highlighted={plan.tier === "ultra"}
                         selected={selected}
                         accent="red"
+                        topSlot={
+                          <div className="inline-flex rounded-full border border-red-200 bg-red-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-200">
+                            {selected ? "Selected" : "Select plan"}
+                          </div>
+                        }
                         onClick={() => {
                           setSelectedOnboardingPlan(planTier);
                           setPlanOnboardingError("");
@@ -859,6 +864,11 @@ export default function AccountPage() {
                           compactHeader
                           selected={selected}
                           accent="red"
+                          topSlot={
+                            <div className="inline-flex rounded-full border border-red-200 bg-red-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-red-700 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-200">
+                              {selected ? "Selected" : "Select plan"}
+                            </div>
+                          }
                           onClick={() => {
                             setSelectedOnboardingPlan(planTier);
                             setPlanOnboardingError("");
