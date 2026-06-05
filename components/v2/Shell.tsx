@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Nav from './Nav';
-import Footer from './Footer';
 import SearchPalette from './SearchPalette';
 
 export default function Shell({ children }: { children: React.ReactNode }) {
@@ -14,7 +13,6 @@ export default function Shell({ children }: { children: React.ReactNode }) {
       <main id="main-content" className="flex-1" style={{ flex: 1 }}>
         {children}
       </main>
-      <Footer />
       <SearchPalette open={paletteOpen} onClose={() => setPaletteOpen(false)} />
     </div>
   );
