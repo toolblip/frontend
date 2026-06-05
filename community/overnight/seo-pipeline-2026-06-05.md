@@ -1,6 +1,6 @@
 # Toolblip SEO Pipeline Archive - 2026-06-05
 
-Run time: 2026-06-05 23:03-23:10 Dhaka
+Run time: 2026-06-05 23:03-23:18 Dhaka
 Mode: conservative Google-safe nightly run
 
 ## Summary
@@ -13,7 +13,8 @@ Stale Refreshes: 0; broad date-only stale refresh skipped because there was no p
 
 ## Diagnostics and pacing
 
-- Started from the queue and limited the script to one topic.
+- Started from GSC/sitemap diagnostics and the queue state.
+- Limited the script to one topic.
 - Chosen topic: sort and deduplicate lists online for developers
 - Selected keyword: remove duplicate lines online
 - Published only one post. No second post was attempted.
@@ -27,17 +28,26 @@ Stale Refreshes: 0; broad date-only stale refresh skipped because there was no p
 
 - Removed Humanizer/Claude meta text from the article body.
 - Removed a trailing topic echo from the article body.
-- Quoted the ISO frontmatter date was already correct.
+- Quoted ISO frontmatter date was verified correct.
 - Replaced the truncated generated tag with natural tags.
 - Added a direct contextual internal link to https://toolblip.com/tools/remove-duplicate-lines.
 - Cleaned duplicated headings in src/content/seo-strategy.md.
+- Skipped the pipeline's broad stale-content date refresh in the temporary worktree because no page-specific GSC evidence justified mass micro-edits.
 
 ## Verification
 
 - npm run build: passed
+- Railway deploy: SUCCESS, deployment 2d251eca-bf8b-4c70-a7e3-5fa04fa26bc7
+- Live URL: HTTP 200
+- Live title: Remove duplicate lines online for cleaner dev lists
+- Live canonical URL: https://toolblip.com/blog/2026-06-05-remove-duplicate-lines-online
+- Live sitemap: contains the new URL
+- Live H1 count: 1
+- Live metadata: article:published_time is 2026-06-05T00:00:00.000Z, no [object Object]
+- Source/live artifact scan: no Claude/Humanizer meta text, no em dashes, no duplicate Markdown H1
 - GSC sitemap refresh: passed during the pipeline
 - GSC URL submission: submitted
-- Source artifact scan: no meta text, no em dashes, no duplicate Markdown H1
+- GSC diagnosis after live deploy: URL is unknown to Google, fix_needed false
 
 ## Next run
 
