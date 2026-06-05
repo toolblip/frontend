@@ -6,9 +6,6 @@ import Link from "next/link";
 import { useAuth } from "@/app/providers/auth-provider";
 import { useRouter } from "next/navigation";
 import {
-  FREE_PLAN_CTA_LABEL,
-  FREE_TRIAL_NOTE,
-  PAID_TRIAL_CTA_LABEL,
   PricingBillingToggle,
   PricingPlanCard,
   buildPricingPlanFeatures,
@@ -43,6 +40,7 @@ interface FavoriteTool {
 type OnboardingStatus = "completed" | "draft" | "skipped";
 type OnboardingStep = "welcome" | "pricing";
 type OnboardingPlanTier = "free" | "starter" | "ultra" | "max";
+type OnboardingPlanSelection = OnboardingPlanTier | null;
 
 type Plan = {
   tier: string;
@@ -64,8 +62,12 @@ const ONBOARDING_STORAGE_VERSION = 4;
 const DEFAULT_ONBOARDING_PLAN: OnboardingPlanTier = "ultra";
 const DEFAULT_ONBOARDING_BILLING: BillingCycle = "monthly";
 
-function normalizeOnboardingPlan(plan?: string | null): OnboardingPlanTier {
-  return plan === "starter" ? DEFAULT_ONBOARDING_PLAN : (plan as OnboardingPlanTier | undefined) ?? DEFAULT_ONBOARDING_PLAN;
+function normalizeOnboardingPlan(plan?: string | null): OnboardingPlanSelection {
+  if (plan === "free" || plan === "starter" || plan === "ultra" || plan === "max") {
+    return plan;
+  }
+
+  return null;
 }
 
 function suggestWorkspaceName(name?: string | null) {
@@ -188,7 +190,7 @@ export default function AccountPage() {
   const [showPlanOnboarding, setShowPlanOnboarding] = useState(false);
   const [onboardingStep, setOnboardingStep] = useState<OnboardingStep>("welcome");
   const [teamName, setTeamName] = useState("");
-  const [selectedOnboardingPlan, setSelectedOnboardingPlan] = useState<OnboardingPlanTier>(DEFAULT_ONBOARDING_PLAN);
+  const [selectedOnboardingPlan, setSelectedOnboardingPlan] = useState<OnboardingPlanSelection>(null);
   const [onboardingBilling, setOnboardingBilling] = useState<BillingCycle>(DEFAULT_ONBOARDING_BILLING);
   const [savingPlanOnboarding, setSavingPlanOnboarding] = useState(false);
   const [planOnboardingError, setPlanOnboardingError] = useState("");
@@ -277,7 +279,7 @@ export default function AccountPage() {
     try {
       const stored = window.localStorage.getItem(onboardingStorageKey(user.id));
       if (!stored) {
-        const initialSelectedPlan = requestedPlan ?? DEFAULT_ONBOARDING_PLAN;
+        const initialSelectedPlan = requestedPlan ?? null;
         const initialBilling = requestedBilling ?? DEFAULT_ONBOARDING_BILLING;
         const initialPayload = {
           version: ONBOARDING_STORAGE_VERSION,
@@ -357,7 +359,7 @@ export default function AccountPage() {
       return;
     } catch {
       setTeamName(suggestedTeamName);
-      setSelectedOnboardingPlan(DEFAULT_ONBOARDING_PLAN);
+      setSelectedOnboardingPlan(null);
       setOnboardingBilling(DEFAULT_ONBOARDING_BILLING);
       setOnboardingStep("welcome");
       setShowPlanOnboarding(true);
@@ -567,11 +569,11 @@ export default function AccountPage() {
   function writePlanOnboarding(
     status: OnboardingStatus,
     step: OnboardingStep,
-    selectedPlan: OnboardingPlanTier = selectedOnboardingPlan,
+    selectedPlan: OnboardingPlanSelection = selectedOnboardingPlan,
     billingCycle: BillingCycle = onboardingBilling,
     teamNameValue: string = teamName.trim()
   ) {
-    if (!user || !selectedPlan) return false;
+    if (!user) return false;
 
     window.localStorage.setItem(
       onboardingStorageKey(user.id),
@@ -592,20 +594,26 @@ export default function AccountPage() {
   function persistPlanOnboarding(
     status: OnboardingStatus,
     step: OnboardingStep = onboardingStep,
-    selectedPlan: OnboardingPlanTier = selectedOnboardingPlan,
+    selectedPlan: OnboardingPlanSelection = selectedOnboardingPlan,
     billingCycle: BillingCycle = onboardingBilling,
     teamNameValue: string = teamName.trim()
   ) {
-    if (!writePlanOnboarding(status, step, selectedPlan, billingCycle, teamNameValue)) return false;
+    if (!selectedPlan || !writePlanOnboarding(status, step, selectedPlan, billingCycle, teamNameValue)) return false;
     setShowPlanOnboarding(false);
     return true;
   }
 
-  function completePlanOnboarding(selectedPlan: OnboardingPlanTier, billingCycle: BillingCycle = onboardingBilling) {
+  function completePlanOnboarding(selectedPlan: OnboardingPlanSelection, billingCycle: BillingCycle = onboardingBilling) {
+    if (!selectedPlan) {
+      setPlanOnboardingError("Choose a plan to continue.");
+      return false;
+    }
+
     setSelectedOnboardingPlan(selectedPlan);
     setOnboardingBilling(billingCycle);
     setPlanOnboardingError("");
     persistPlanOnboarding("completed", "pricing", selectedPlan, billingCycle);
+    return true;
   }
 
   async function handleNextPlanOnboarding() {
@@ -801,15 +809,11 @@ export default function AccountPage() {
                         highlighted={plan.tier === "ultra"}
                         selected={selected}
                         accent="red"
-                        footer={
-                          <button
-                            type="button"
-                            onClick={() => completePlanOnboarding(planTier, onboardingBilling)}
-                            className={`tb-v2-btn tb-v2-pricing-btn ${selected ? "selected" : "tb-v2-btn-primary"}`}
-                          >
-                            {PAID_TRIAL_CTA_LABEL}
-                          </button>
-                        }
+                        onClick={() => {
+                          setSelectedOnboardingPlan(planTier);
+                          setPlanOnboardingError("");
+                          writePlanOnboarding("draft", "pricing", planTier, onboardingBilling);
+                        }}
                       >
                         <div className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
                           Plan includes
@@ -855,15 +859,11 @@ export default function AccountPage() {
                           compactHeader
                           selected={selected}
                           accent="red"
-                          headerRightSlot={
-                            <button
-                              type="button"
-                              onClick={() => completePlanOnboarding(planTier, onboardingBilling)}
-                              className="tb-v2-pricing-inline-link"
-                            >
-                              {FREE_PLAN_CTA_LABEL}
-                            </button>
-                          }
+                          onClick={() => {
+                            setSelectedOnboardingPlan(planTier);
+                            setPlanOnboardingError("");
+                            writePlanOnboarding("draft", "pricing", planTier, onboardingBilling);
+                          }}
                         >
                           <ul className="tb-v2-pricing-features">
                             {features.map((feature) => (
@@ -882,6 +882,20 @@ export default function AccountPage() {
                       </div>
                     );
                   })}
+                </div>
+
+                <div className="flex flex-col gap-3 rounded-2xl border border-red-200 bg-red-50/70 px-4 py-4 dark:border-red-900/40 dark:bg-red-950/20 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-sm text-gray-700 dark:text-gray-200">
+                    Choose one pricing plan to finish setup.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => completePlanOnboarding(selectedOnboardingPlan, onboardingBilling)}
+                    disabled={!selectedOnboardingPlan || savingPlanOnboarding}
+                    className="rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {savingPlanOnboarding ? "Saving..." : "Finish setup"}
+                  </button>
                 </div>
               </div>
             )}
