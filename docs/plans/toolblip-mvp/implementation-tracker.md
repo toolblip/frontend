@@ -53,7 +53,7 @@ Use these markers to keep the board lean and easy to scan:
 ## Current lean board
 
 - todo: all work-order items not started yet
-- working: Stage 1 / Feature 1 / Task Group A — dashboard shell and navigation
+- working: Stage 1 / Feature 2 / Task Group A — pricing flow review
 - blocked: none
 - needs attention: none
 - done: none
@@ -69,10 +69,14 @@ Keep the 10 most important blockers here so the morning report can stay short.
 
 Keep a short, chronological record of what the supervisor and worker validated.
 
+- 2026-06-06 15:28 Dhaka — completed the dashboard link surface inventory and moved on to the pricing flow review. Confirmed dashboard entry points exist from the authenticated navbar dropdown, the v2 desktop/mobile nav, the login/signup next-paths, the pricing free/paid plan CTAs, the account redirect, and verify-email success.
+- 2026-06-06 15:20 Dhaka — moved one Stage 1 / Feature 1 / Group A task forward: dashboard minimum state check is done. Confirmed the dashboard has auth-preserving login redirect, terms/onboarding handling, plan-selection/no-plan fallback, profile settings, email verification prompt, favorites panel, subscription/billing panel, and back-to-home escape route.
+- 2026-06-06 15:18 Dhaka — moved one Stage 1 / Feature 1 / Group A task forward: dashboard route/layout discovery is done. Confirmed `/dashboard`, `/account` redirect, dashboard metadata layout, client dashboard page, top nav dashboard links, account-menu link, login/signup default return paths, and pricing `?plan=` onboarding entry.
 - 2026-06-06 15:11 Dhaka — confirmed dashboard onboarding routes straight to checkout for paid plans.
 - 2026-06-06 15:11 Dhaka — confirmed onboarding without a selected plan reopens at pricing.
 - 2026-06-06 15:11 Dhaka — added live context refresh rule for Supervisor T and cron jobs.
 - 2026-06-06 15:11 Dhaka — created `docs/plans/toolblip-mvp/runtime/supervisor-t.json` as the live heartbeat/state file.
+- 2026-06-06 15:19 Dhaka — worker message contract clarified: start = "currently working on this task", done = "Once task is done it works.", blocked = "This task is now moved to blockers for this reason: <reason>".
 
 ## Discovery notes
 - Dashboard onboarding already exists and can surface the plan-selection flow.

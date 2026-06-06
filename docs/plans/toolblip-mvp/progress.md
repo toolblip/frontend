@@ -24,3 +24,6 @@
 - Supervisor T, 15-minute health checks, and 6-hour graceful restarts are scheduled.
 - Morning impediment reports now go out at 10:30 Dhaka.
 - A short working log is kept in the implementation tracker so supervisor and worker state stays visible.
+- Worker status messages use the explicit start/done/blocker phrases so Harun can track task flow by reading the topic.
+- Dashboard link surface inventory is complete and pricing flow review is the next discovery item.
+

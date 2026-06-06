@@ -23,9 +23,10 @@
 - List the pages that should link into the dashboard.
 
 **Task markers:**
-- `working`: dashboard route and layout discovery
-- `todo`: dashboard minimum state check
-- `todo`: dashboard link surface inventory
+- `done`: dashboard route and layout discovery — `/dashboard` is the live dashboard route, `/account` redirects to it, `app/dashboard/layout.tsx` owns dashboard metadata, and `app/dashboard/page.tsx` owns the client shell/onboarding surface.
+- `done`: dashboard minimum state check — the launch-minimum dashboard state is present: auth-preserving login redirect, legal/plan onboarding overlays, free/no-plan fallback back to pricing, profile settings, email verification prompt, favorites count/list/empty state, subscription summary, billing portal entry for paid users, and a back-to-home escape route.
+- `done`: dashboard link surface inventory — the dashboard is linked from the authenticated navbar dropdown, the v2 desktop and mobile nav, the login and signup next-paths, pricing plan and free-plan flows, account redirect, and verify-email success.
+
 
 ### Task Group B: build and verify
 - Add or update the dashboard shell.
