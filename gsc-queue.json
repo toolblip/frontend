@@ -1,11 +1,5 @@
 {
-  "pending": [
-    {
-      "url": "https://toolblip.com/blog/2026-06-06-validate-yaml-config-file-online",
-      "topic": "validate YAML online before deploying config files",
-      "enqueued_at": "2026-06-06T17:15:04Z"
-    }
-  ],
+  "pending": [],
   "submitted": [
     {
       "url": "https://toolblip.com/blog/2026-05-22-convert-unix-timestamps-readable-dates-online",
@@ -99,6 +93,10 @@
     {
       "url": "https://toolblip.com/blog/2026-06-05-remove-duplicate-lines-online",
       "submitted_at": "2026-06-05T17:06:44Z"
+    },
+    {
+      "url": "https://toolblip.com/blog/2026-06-06-validate-yaml-config-file-online",
+      "submitted_at": "2026-06-06T17:25:16Z"
     }
   ],
   "failed": []

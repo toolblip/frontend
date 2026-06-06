@@ -7,8 +7,8 @@ Mode: conservative, Google-safe pacing
 
 Articles Generated: 1
 Articles Committed: 1
-Articles Submitted to GSC: pending
-GSC Errors: none in pre-submit checks
+Articles Submitted to GSC: 1/1
+GSC Errors: none; URL Inspection says fresh URL is unknown to Google, expected immediately after publish
 Next Run: 2026-06-07 23:00 Dhaka
 
 ## Diagnostics checked
@@ -35,6 +35,6 @@ Next Run: 2026-06-07 23:00 Dhaka
 ## Verification
 
 - Local build: `npm run build` passed after artifact checks
-- Live URL: pending
-- Sitemap: pending
-- GSC submission: pending
+- Live URL: 200 and title present
+- Sitemap: contains new slug
+- GSC submission: submitted; coverage state `URL is unknown to Google`
