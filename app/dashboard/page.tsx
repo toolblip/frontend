@@ -64,8 +64,16 @@ const ONBOARDING_STORAGE_VERSION = 4;
 const DEFAULT_ONBOARDING_PLAN: OnboardingPlanTier = "ultra";
 const DEFAULT_ONBOARDING_BILLING: BillingCycle = "monthly";
 
-function normalizeOnboardingPlan(plan?: string | null): OnboardingPlanTier {
-  return plan === "starter" ? DEFAULT_ONBOARDING_PLAN : (plan as OnboardingPlanTier | undefined) ?? DEFAULT_ONBOARDING_PLAN;
+function normalizeOnboardingPlan(plan?: string | null): OnboardingPlanTier | null {
+  if (plan === "starter") {
+    return DEFAULT_ONBOARDING_PLAN;
+  }
+
+  if (plan === "free" || plan === "ultra" || plan === "max") {
+    return plan;
+  }
+
+  return null;
 }
 
 function suggestWorkspaceName(name?: string | null) {
@@ -188,7 +196,7 @@ export default function AccountPage() {
   const [showPlanOnboarding, setShowPlanOnboarding] = useState(false);
   const [onboardingStep, setOnboardingStep] = useState<OnboardingStep>("welcome");
   const [teamName, setTeamName] = useState("");
-  const [selectedOnboardingPlan, setSelectedOnboardingPlan] = useState<OnboardingPlanTier>(DEFAULT_ONBOARDING_PLAN);
+  const [selectedOnboardingPlan, setSelectedOnboardingPlan] = useState<OnboardingPlanTier | null>(DEFAULT_ONBOARDING_PLAN);
   const [onboardingBilling, setOnboardingBilling] = useState<BillingCycle>(DEFAULT_ONBOARDING_BILLING);
   const [savingPlanOnboarding, setSavingPlanOnboarding] = useState(false);
   const [planOnboardingError, setPlanOnboardingError] = useState("");
@@ -588,7 +596,7 @@ export default function AccountPage() {
   function writePlanOnboarding(
     status: OnboardingStatus,
     step: OnboardingStep,
-    selectedPlan: OnboardingPlanTier = selectedOnboardingPlan,
+    selectedPlan: OnboardingPlanTier | null = selectedOnboardingPlan,
     billingCycle: BillingCycle = onboardingBilling,
     teamNameValue: string = teamName.trim()
   ) {
@@ -613,7 +621,7 @@ export default function AccountPage() {
   function persistPlanOnboarding(
     status: OnboardingStatus,
     step: OnboardingStep = onboardingStep,
-    selectedPlan: OnboardingPlanTier = selectedOnboardingPlan,
+    selectedPlan: OnboardingPlanTier | null = selectedOnboardingPlan,
     billingCycle: BillingCycle = onboardingBilling,
     teamNameValue: string = teamName.trim()
   ) {
@@ -622,7 +630,7 @@ export default function AccountPage() {
     return true;
   }
 
-  function completePlanOnboarding(selectedPlan: OnboardingPlanTier, billingCycle: BillingCycle = onboardingBilling) {
+  function completePlanOnboarding(selectedPlan: OnboardingPlanTier | null, billingCycle: BillingCycle = onboardingBilling) {
     setSelectedOnboardingPlan(selectedPlan);
     setOnboardingBilling(billingCycle);
     setPlanOnboardingError("");

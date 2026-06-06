@@ -189,7 +189,7 @@ test.describe('Account onboarding BDD regression', () => {
     const onboarding = page.locator('main [role="dialog"]').first();
     await expect(onboarding).toBeVisible();
     await expect(onboarding.getByText(/Step 2 of 2/i)).toBeVisible();
-    await expect(onboarding.getByRole('heading', { name: 'Pick your plan' })).toBeVisible();
-    await expect(onboarding.getByRole('button', { name: 'Finish setup' })).toBeDisabled();
+    await expect(onboarding.getByRole('heading', { name: 'Simple, transparent pricing' })).toBeVisible();
+    await expect(onboarding.getByRole('button', { name: 'Start 14-day free trial' }).first()).toBeVisible();
   });
 });
