@@ -52,7 +52,7 @@ Use these markers to keep the board lean and easy to scan:
 ## Current lean board
 
 - todo: all work-order items not started yet
-- working: none
+- working: Stage 1 / Feature 1 / Task Group A — dashboard shell and navigation
 - blocked: none
 - done: none
 - lean: none yet
