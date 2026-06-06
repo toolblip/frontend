@@ -71,9 +71,38 @@ function normalizeOnboardingPlan(plan?: string | null): OnboardingPlanSelection 
   return null;
 }
 
+function getFirstName(name?: string | null) {
+  return name?.trim().split(/\s+/).find(Boolean) ?? null;
+}
+
 function suggestWorkspaceName(name?: string | null) {
-  const firstWord = name?.trim().split(/\s+/).find(Boolean);
-  return firstWord ? `${firstWord}'s team` : "Toolblip team";
+  const firstName = getFirstName(name);
+  return firstName ? `${firstName}'s team` : "Toolblip team";
+}
+
+function normalizeWorkspaceName(teamName?: string | null, userName?: string | null) {
+  const suggestedName = suggestWorkspaceName(userName);
+  const trimmedTeamName = teamName?.trim();
+  const firstName = getFirstName(userName)?.toLowerCase();
+
+  if (!trimmedTeamName) {
+    return suggestedName;
+  }
+
+  if (!firstName) {
+    return trimmedTeamName;
+  }
+
+  const normalizedTeamName = trimmedTeamName.toLowerCase();
+  if (
+    normalizedTeamName === firstName ||
+    normalizedTeamName === `${firstName} team` ||
+    normalizedTeamName === "toolblip team"
+  ) {
+    return suggestedName;
+  }
+
+  return trimmedTeamName;
 }
 
 const FALLBACK_PLANS: Plan[] = [
@@ -309,7 +338,7 @@ export default function AccountPage() {
         teamName?: string;
         billingCycle?: BillingCycle;
       };
-      const restoredTeamName = parsed.teamName?.trim() ? parsed.teamName : suggestedTeamName;
+      const restoredTeamName = normalizeWorkspaceName(parsed.teamName, user.name);
       const restoredBilling = requestedBilling ?? parsed.billingCycle ?? DEFAULT_ONBOARDING_BILLING;
       const storedSelectedPlan = normalizeOnboardingPlan(parsed.selectedPlan);
 
@@ -771,10 +800,13 @@ export default function AccountPage() {
                   <>
                     <div>
                       <h2 id="plan-onboarding-title" className="text-xl font-bold text-gray-900 dark:text-white sm:text-2xl">
-                        Set up your workspace
+                        Hi {getFirstName(user?.name) ?? "there"}, welcome to your dashboard.
                       </h2>
                       <p className="mt-1 text-sm text-gray-600 dark:text-gray-300 sm:text-sm">
-                        Name your team to get started.
+                        Here is how things should be done.
+                      </p>
+                      <p className="mt-1 text-sm text-gray-600 dark:text-gray-300 sm:text-sm">
+                        First set up the team name.
                       </p>
                     </div>
                   </>
@@ -798,7 +830,7 @@ export default function AccountPage() {
                     value={teamName}
                     onChange={(event) => setTeamName(event.target.value)}
                     className="mt-3 w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-500/20 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
-                    placeholder="Toolblip Team"
+                    placeholder={suggestWorkspaceName(user?.name)}
                     required
                   />
                   <p className="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">
@@ -809,7 +841,7 @@ export default function AccountPage() {
                 <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5 shadow-sm dark:border-gray-700 dark:bg-gray-950/60">
                   <p className="font-semibold text-gray-900 dark:text-white">Setup checklist</p>
                   <ul className="mt-3 space-y-2 text-sm leading-6 text-gray-600 dark:text-gray-300">
-                    <li>• Name your team</li>
+                    <li>• Set up the team name</li>
                   </ul>
                 </div>
               </div>

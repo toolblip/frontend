@@ -15,7 +15,9 @@ test.describe('Account onboarding BDD regression', () => {
     const onboarding = page.locator('main [role="dialog"]').first();
 
     await expect(onboarding).toBeVisible();
-    await expect(onboarding.getByRole('heading', { name: 'Set up your workspace' })).toBeVisible();
+    await expect(onboarding.getByRole('heading', { name: /Hi .* welcome to your dashboard\./i })).toBeVisible();
+    await expect(onboarding.getByText(/Here is how things should be done\./i)).toBeVisible();
+    await expect(onboarding.getByText(/First set up the team name\./i)).toBeVisible();
     await expect(onboarding.getByLabel('Team name')).toHaveValue(`${user.name.split(/\s+/)[0]}'s team`);
     await expect(onboarding.getByText(/Step 1 of 2/i)).toBeVisible();
 
@@ -55,7 +57,9 @@ test.describe('Account onboarding BDD regression', () => {
 
     await expect(onboarding).toBeVisible();
     await expect(onboarding.getByText(/Step 1 of 2/i)).toBeVisible();
-    await expect(onboarding.getByRole('heading', { name: 'Set up your workspace' })).toBeVisible();
+    await expect(onboarding.getByRole('heading', { name: /Hi .* welcome to your dashboard\./i })).toBeVisible();
+    await expect(onboarding.getByText(/Here is how things should be done\./i)).toBeVisible();
+    await expect(onboarding.getByText(/First set up the team name\./i)).toBeVisible();
 
     await onboarding.getByRole('button', { name: 'Next' }).click();
     await expect(onboarding.getByText(/Step 2 of 2/i)).toBeVisible();
@@ -147,7 +151,7 @@ test.describe('Account onboarding BDD regression', () => {
           })
         );
       },
-      { key: onboardingKey, teamName: `${user.name.split(/\s+/)[0]}'s team` }
+      { key: onboardingKey, teamName: user.name.split(/\s+/)[0] }
     );
 
     await page.reload();
