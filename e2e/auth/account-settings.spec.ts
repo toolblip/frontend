@@ -52,6 +52,6 @@ test.describe('Account settings BDD regression', () => {
     await page.getByLabel('Confirm new password').fill('NewPassword123!');
     await page.getByRole('button', { name: 'Change password' }).click();
 
-    await expect(page).toHaveURL(/\/login\?next=\/dashboard$/);
+    await expect(page).toHaveURL(/\/login\?next=%2Fdashboard$/);
   });
 });

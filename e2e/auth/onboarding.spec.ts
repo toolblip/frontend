@@ -16,7 +16,7 @@ test.describe('Account onboarding BDD regression', () => {
 
     await expect(onboarding).toBeVisible();
     await expect(onboarding.getByRole('heading', { name: 'Set up your workspace' })).toBeVisible();
-    await expect(onboarding.getByLabel('Team name')).toHaveValue(`${user.name.split(/\s+/)[0]}`);
+    await expect(onboarding.getByLabel('Team name')).toHaveValue(`${user.name.split(/\s+/)[0]}'s team`);
     await expect(onboarding.getByText(/Step 1 of 2/i)).toBeVisible();
 
     await onboarding.getByRole('button', { name: 'Next' }).click();
@@ -31,7 +31,7 @@ test.describe('Account onboarding BDD regression', () => {
       const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
       return entry ? JSON.parse(String(entry[1])) : null;
     });
-    expect(stored).toMatchObject({ status: 'completed', teamName: `${user.name.split(/\s+/)[0]}`, selectedPlan: 'ultra', billingCycle: 'monthly' });
+    expect(stored).toMatchObject({ status: 'completed', teamName: `${user.name.split(/\s+/)[0]}'s team`, selectedPlan: 'ultra', billingCycle: 'monthly' });
   });
 
   test('Given an unauthenticated dashboard referral, Then login preserves the plan and billing query', async ({ page }) => {
@@ -90,7 +90,7 @@ test.describe('Account onboarding BDD regression', () => {
     const onboarding = page.locator('main [role="dialog"]').first();
 
     await expect(onboarding).toBeVisible();
-    await expect(onboarding.getByLabel('Team name')).toHaveValue(`${user.name.split(/\s+/)[0]}`);
+    await expect(onboarding.getByLabel('Team name')).toHaveValue(`${user.name.split(/\s+/)[0]}'s team`);
     await expect(onboarding.getByRole('button', { name: 'Next' })).toBeVisible();
     await onboarding.getByRole('button', { name: 'Next' }).click();
     await expect(onboarding.getByText(/Step 2 of 2/i)).toBeVisible();
@@ -136,7 +136,7 @@ test.describe('Account onboarding BDD regression', () => {
           })
         );
       },
-      { key: onboardingKey, teamName: `${user.name.split(/\s+/)[0]}` }
+      { key: onboardingKey, teamName: `${user.name.split(/\s+/)[0]}'s team` }
     );
 
     await page.reload();
@@ -153,6 +153,43 @@ test.describe('Account onboarding BDD regression', () => {
       const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
       return entry ? JSON.parse(String(entry[1])) : null;
     });
-    expect(migratedStored).toMatchObject({ status: 'completed', version: 4, teamName: `${user.name.split(/\s+/)[0]}`, selectedPlan: 'free', step: 'pricing' });
+    expect(migratedStored).toMatchObject({ status: 'completed', version: 4, teamName: `${user.name.split(/\s+/)[0]}'s team`, selectedPlan: 'free', step: 'pricing' });
+  });
+
+  test('Given a completed onboarding record without a selected plan, Then the dashboard reopens at pricing', async ({ page }) => {
+    const user = makeUser('onboarding-missing-plan');
+
+    await signupByForm(page, user);
+
+    await expect(page).toHaveURL(/\/dashboard$/);
+    const onboardingKey = await page.evaluate(() => Object.keys(localStorage).find((key) => key.startsWith('toolblip_onboarding_')));
+    expect(onboardingKey).toBeTruthy();
+
+    await page.evaluate(
+      ({ key, teamName }) => {
+        if (!key) return;
+        localStorage.setItem(
+          key,
+          JSON.stringify({
+            version: 4,
+            status: 'completed',
+            step: 'welcome',
+            teamName,
+            selectedPlan: null,
+            billingCycle: 'monthly',
+            updatedAt: '2024-01-01T00:00:00.000Z',
+          })
+        );
+      },
+      { key: onboardingKey, teamName: `${user.name.split(/\s+/)[0]}'s team` }
+    );
+
+    await page.reload();
+
+    const onboarding = page.locator('main [role="dialog"]').first();
+    await expect(onboarding).toBeVisible();
+    await expect(onboarding.getByText(/Step 2 of 2/i)).toBeVisible();
+    await expect(onboarding.getByRole('heading', { name: 'Simple, transparent pricing' })).toBeVisible();
+    await expect(onboarding.getByRole('button', { name: 'Start 14-day free trial' }).first()).toBeVisible();
   });
 });

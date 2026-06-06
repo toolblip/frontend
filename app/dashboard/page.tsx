@@ -64,13 +64,21 @@ const ONBOARDING_STORAGE_VERSION = 4;
 const DEFAULT_ONBOARDING_PLAN: OnboardingPlanTier = "ultra";
 const DEFAULT_ONBOARDING_BILLING: BillingCycle = "monthly";
 
-function normalizeOnboardingPlan(plan?: string | null): OnboardingPlanTier {
-  return plan === "starter" ? DEFAULT_ONBOARDING_PLAN : (plan as OnboardingPlanTier | undefined) ?? DEFAULT_ONBOARDING_PLAN;
+function normalizeOnboardingPlan(plan?: string | null): OnboardingPlanTier | null {
+  if (plan === "starter") {
+    return DEFAULT_ONBOARDING_PLAN;
+  }
+
+  if (plan === "free" || plan === "ultra" || plan === "max") {
+    return plan;
+  }
+
+  return null;
 }
 
 function suggestWorkspaceName(name?: string | null) {
   const firstWord = name?.trim().split(/\s+/).find(Boolean);
-  return firstWord ?? "Toolblip";
+  return firstWord ? `${firstWord}'s team` : "Toolblip team";
 }
 
 const FALLBACK_PLANS: Plan[] = [
@@ -188,7 +196,7 @@ export default function AccountPage() {
   const [showPlanOnboarding, setShowPlanOnboarding] = useState(false);
   const [onboardingStep, setOnboardingStep] = useState<OnboardingStep>("welcome");
   const [teamName, setTeamName] = useState("");
-  const [selectedOnboardingPlan, setSelectedOnboardingPlan] = useState<OnboardingPlanTier>(DEFAULT_ONBOARDING_PLAN);
+  const [selectedOnboardingPlan, setSelectedOnboardingPlan] = useState<OnboardingPlanTier | null>(DEFAULT_ONBOARDING_PLAN);
   const [onboardingBilling, setOnboardingBilling] = useState<BillingCycle>(DEFAULT_ONBOARDING_BILLING);
   const [savingPlanOnboarding, setSavingPlanOnboarding] = useState(false);
   const [planOnboardingError, setPlanOnboardingError] = useState("");
@@ -225,7 +233,14 @@ export default function AccountPage() {
   }, []);
 
   function redirectToLoginPreservingCurrentLocation() {
-    const nextPath = `${window.location.pathname}${window.location.search}`;
+    const params = new URLSearchParams(window.location.search);
+    const currentPath = window.location.pathname;
+    const currentNext = params.get("next");
+    const nextPath =
+      (currentPath === "/login" || currentPath === "/signup") && currentNext && currentNext.startsWith("/") && !currentNext.startsWith("//")
+        ? currentNext
+        : `${currentPath}${window.location.search}`;
+
     router.replace(`/login?next=${encodeURIComponent(nextPath)}`);
   }
 
@@ -306,43 +321,64 @@ export default function AccountPage() {
         teamName?: string;
         billingCycle?: BillingCycle;
       };
+      const restoredTeamName = parsed.teamName?.trim() ? parsed.teamName : suggestedTeamName;
+      const restoredBilling = requestedBilling ?? parsed.billingCycle ?? DEFAULT_ONBOARDING_BILLING;
+      const storedSelectedPlan = normalizeOnboardingPlan(parsed.selectedPlan);
+
       if (parsed.version !== ONBOARDING_STORAGE_VERSION) {
-        const initialSelectedPlan = requestedPlan ?? normalizeOnboardingPlan(parsed.selectedPlan);
-        const initialBilling = requestedBilling ?? parsed.billingCycle ?? DEFAULT_ONBOARDING_BILLING;
-        const initialStep = parsed.step === "pricing" ? "pricing" : "welcome";
+        const initialSelectedPlan = requestedPlan ?? storedSelectedPlan;
+        const initialStep = parsed.step === "pricing" || (!initialSelectedPlan && parsed.status === "completed") ? "pricing" : "welcome";
         const initialPayload = {
           version: ONBOARDING_STORAGE_VERSION,
           status: "draft" as OnboardingStatus,
           step: initialStep,
-          teamName: parsed.teamName?.trim() ? parsed.teamName : suggestedTeamName,
+          teamName: restoredTeamName,
           selectedPlan: initialSelectedPlan,
-          billingCycle: initialBilling,
+          billingCycle: restoredBilling,
           updatedAt: new Date().toISOString(),
         };
 
         setTeamName(initialPayload.teamName);
         setSelectedOnboardingPlan(initialSelectedPlan);
-        setOnboardingBilling(initialBilling);
+        setOnboardingBilling(initialPayload.billingCycle);
         setOnboardingStep(initialStep);
         setShowPlanOnboarding(true);
         window.localStorage.setItem(onboardingStorageKey(user.id), JSON.stringify(initialPayload));
         return;
       }
-      if (parsed.status === "completed" || parsed.status === "skipped") {
-        if (!requestedPlan && !requestedBilling) {
+
+      if ((parsed.status === "completed" || parsed.status === "skipped") && !requestedPlan && !requestedBilling) {
+        if (storedSelectedPlan) {
           setShowPlanOnboarding(false);
           return;
         }
+
+        const pricingPayload = {
+          version: ONBOARDING_STORAGE_VERSION,
+          status: "draft" as OnboardingStatus,
+          step: "pricing" as OnboardingStep,
+          teamName: restoredTeamName,
+          selectedPlan: null,
+          billingCycle: restoredBilling,
+          updatedAt: new Date().toISOString(),
+        };
+
+        setTeamName(pricingPayload.teamName);
+        setSelectedOnboardingPlan(null);
+        setOnboardingBilling(pricingPayload.billingCycle);
+        setOnboardingStep("pricing");
+        setShowPlanOnboarding(true);
+        window.localStorage.setItem(onboardingStorageKey(user.id), JSON.stringify(pricingPayload));
+        return;
       }
 
-      const restoredSelectedPlan = requestedPlan ?? normalizeOnboardingPlan(parsed.selectedPlan);
-      const restoredBilling = requestedBilling ?? parsed.billingCycle ?? DEFAULT_ONBOARDING_BILLING;
-      const restoredStep = parsed.step ?? "welcome";
+      const restoredSelectedPlan = requestedPlan ?? storedSelectedPlan;
+      const restoredStep = parsed.step ?? (restoredSelectedPlan ? "pricing" : "welcome");
       const restoredPayload = {
         version: ONBOARDING_STORAGE_VERSION,
         status: parsed.status ?? "draft",
         step: restoredStep,
-        teamName: parsed.teamName?.trim() ? parsed.teamName : suggestedTeamName,
+        teamName: restoredTeamName,
         selectedPlan: restoredSelectedPlan,
         billingCycle: restoredBilling,
         updatedAt: new Date().toISOString(),
@@ -529,7 +565,7 @@ export default function AccountPage() {
 
   async function handleLogout() {
     await logout();
-    router.replace("/");
+    redirectToLoginPreservingCurrentLocation();
   }
 
   async function handleAcceptTerms() {
@@ -567,7 +603,7 @@ export default function AccountPage() {
   function writePlanOnboarding(
     status: OnboardingStatus,
     step: OnboardingStep,
-    selectedPlan: OnboardingPlanTier = selectedOnboardingPlan,
+    selectedPlan: OnboardingPlanTier | null = selectedOnboardingPlan,
     billingCycle: BillingCycle = onboardingBilling,
     teamNameValue: string = teamName.trim()
   ) {
@@ -592,7 +628,7 @@ export default function AccountPage() {
   function persistPlanOnboarding(
     status: OnboardingStatus,
     step: OnboardingStep = onboardingStep,
-    selectedPlan: OnboardingPlanTier = selectedOnboardingPlan,
+    selectedPlan: OnboardingPlanTier | null = selectedOnboardingPlan,
     billingCycle: BillingCycle = onboardingBilling,
     teamNameValue: string = teamName.trim()
   ) {
@@ -601,7 +637,7 @@ export default function AccountPage() {
     return true;
   }
 
-  function completePlanOnboarding(selectedPlan: OnboardingPlanTier, billingCycle: BillingCycle = onboardingBilling) {
+  function completePlanOnboarding(selectedPlan: OnboardingPlanTier | null, billingCycle: BillingCycle = onboardingBilling) {
     setSelectedOnboardingPlan(selectedPlan);
     setOnboardingBilling(billingCycle);
     setPlanOnboardingError("");

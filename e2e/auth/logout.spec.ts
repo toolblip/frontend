@@ -14,7 +14,7 @@ test.describe('Logout BDD regression', () => {
 
     await page.getByRole('button', { name: 'Sign out' }).click();
 
-    await expect(page).toHaveURL(/\/login\?next=\/dashboard$/);
+    await expect(page).toHaveURL(/\/login\?next=%2Fdashboard$/);
     const cookies = await page.context().cookies();
     expect(cookies.find((cookie) => cookie.name === 'auth_token')).toBeUndefined();
 

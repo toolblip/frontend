@@ -35,8 +35,8 @@ export async function loginByForm(page: Page, user: TestUser = VALID_USER) {
   await page.getByRole('button', { name: 'Sign in' }).click();
 }
 
-export async function signupByForm(page: Page, user: TestUser) {
-  await page.goto('/signup');
+export async function signupByForm(page: Page, user: TestUser, next = '/dashboard') {
+  await page.goto(`/signup?next=${encodeURIComponent(next)}`);
   await page.getByLabel('Name').fill(user.name);
   await page.getByLabel('Email').fill(user.email);
   await page.getByLabel('Password', { exact: true }).fill(user.password);
@@ -61,8 +61,8 @@ export async function dismissDashboardOnboarding(page: Page) {
     const teamNameInput = dialog.getByLabel('Team name');
     await expect(teamNameInput).toHaveValue(/.+/);
     await dialog.getByRole('button', { name: 'Next' }).click();
-    await expect(dialog.locator('#onboarding-plan-ultra')).toBeChecked();
-    await dialog.getByRole('button', { name: 'Finish' }).click();
+    await expect(dialog.locator('[data-tier="ultra"]').getByRole('button', { name: 'Start 14-day free trial' })).toBeVisible();
+    await dialog.locator('[data-tier="ultra"]').getByRole('button', { name: 'Start 14-day free trial' }).click();
     await expect(dialog).toBeHidden();
   }
 }
