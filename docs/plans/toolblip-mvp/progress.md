@@ -24,3 +24,5 @@
 - Supervisor T, 15-minute health checks, and 6-hour graceful restarts are scheduled.
 - Morning impediment reports now go out at 10:30 Dhaka.
 - A short working log is kept in the implementation tracker so supervisor and worker state stays visible.
+- Toolblip Supervisor T must keep using the live local planning files as the source of truth.
+- The exact worker name is `Toolblip Supervisor T`.

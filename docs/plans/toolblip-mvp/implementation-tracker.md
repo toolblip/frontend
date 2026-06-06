@@ -73,6 +73,8 @@ Keep a short, chronological record of what the supervisor and worker validated.
 - 2026-06-06 15:11 Dhaka — confirmed onboarding without a selected plan reopens at pricing.
 - 2026-06-06 15:11 Dhaka — added live context refresh rule for Supervisor T and cron jobs.
 - 2026-06-06 15:11 Dhaka — created `docs/plans/toolblip-mvp/runtime/supervisor-t.json` as the live heartbeat/state file.
+- 2026-06-06 15:19 Dhaka — Toolblip Supervisor T must use the live Toolblip planning files as source of truth; no external data or stale checkpoint should override them.
+- 2026-06-06 15:19 Dhaka — when referring to the worker, use the exact supervisor name `Toolblip Supervisor T`.
 
 ## Discovery notes
 - Dashboard onboarding already exists and can surface the plan-selection flow.
