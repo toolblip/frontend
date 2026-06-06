@@ -53,7 +53,7 @@ Use these markers to keep the board lean and easy to scan:
 ## Current lean board
 
 - todo: all work-order items not started yet
-- working: Stage 1 / Feature 2 / Task Group A — pricing flow review
+- working: Stage 1 / Feature 3 / Task Group A — identify unsupported tools
 - blocked: none
 - needs attention: none
 - done: none
@@ -69,6 +69,7 @@ Keep the 10 most important blockers here so the morning report can stay short.
 
 Keep a short, chronological record of what the supervisor and worker validated.
 
+- 2026-06-06 15:34 Dhaka — completed the pricing flow review and moved on to unsupported tools discovery. Verified the onboarding BDD regression passes 6/6 and confirmed pricing cards, free-plan redirect, paid-plan redirect, and dashboard onboarding handoff all preserve the selected plan and billing state.
 - 2026-06-06 15:28 Dhaka — completed the dashboard link surface inventory and moved on to the pricing flow review. Confirmed dashboard entry points exist from the authenticated navbar dropdown, the v2 desktop/mobile nav, the login/signup next-paths, the pricing free/paid plan CTAs, the account redirect, and verify-email success.
 - 2026-06-06 15:20 Dhaka — moved one Stage 1 / Feature 1 / Group A task forward: dashboard minimum state check is done. Confirmed the dashboard has auth-preserving login redirect, terms/onboarding handling, plan-selection/no-plan fallback, profile settings, email verification prompt, favorites panel, subscription/billing panel, and back-to-home escape route.
 - 2026-06-06 15:18 Dhaka — moved one Stage 1 / Feature 1 / Group A task forward: dashboard route/layout discovery is done. Confirmed `/dashboard`, `/account` redirect, dashboard metadata layout, client dashboard page, top nav dashboard links, account-menu link, login/signup default return paths, and pricing `?plan=` onboarding entry.

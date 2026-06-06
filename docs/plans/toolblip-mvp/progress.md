@@ -8,7 +8,7 @@
 - Needs attention: 0
 - Lean items: 0
 - Current stage: Stage 1 - Launch foundation
-- Current feature: Dashboard shell and navigation
+- Current feature: Pricing plan selection and checkout entry
 - Current question: none
 - Task markers: todo / working / blocked / done / lean
 - Task markers: todo / working / blocked / needs attention / done / lean
@@ -25,5 +25,6 @@
 - Morning impediment reports now go out at 10:30 Dhaka.
 - A short working log is kept in the implementation tracker so supervisor and worker state stays visible.
 - Worker status messages use the explicit start/done/blocker phrases so Harun can track task flow by reading the topic.
-- Dashboard link surface inventory is complete and pricing flow review is the next discovery item.
+- Dashboard link surface inventory is complete and pricing flow review is complete.
+- Pricing flow review is complete and the next discovery item is unsupported tools.
 
