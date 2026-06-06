@@ -19,7 +19,7 @@
 - Break each stage into features
 - Break each feature into small tasks with two execution groups
 - Track progress persistently
-- Give every task a clear state marker: todo, working, blocked, done, or lean
+- Give every task a clear state marker: todo, working, blocked, needs attention, done, or lean
 - Keep lean items visible so cut scope stays easy to review instead of being forgotten
 
 **Out of scope:**
@@ -35,6 +35,7 @@
 - Progress can be updated and reviewed at any time
 - The plan is usable as a living document for continuous work
 - Task states are visible and easy to move between markers
+- Stuck tasks can be moved to needs attention without losing the thread of work
 
 ## Stages
 1. Launch foundation

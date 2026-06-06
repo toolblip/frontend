@@ -47,6 +47,7 @@ Use these markers to keep the board lean and easy to scan:
 - `working` — actively being worked on now
 - `blocked` — waiting on a dependency or decision
 - `done` — finished and verified
+- `needs attention` — stuck, needs Harun to review, or cannot move without a decision
 - `lean` — intentionally trimmed or deferred because it is not worth the MVP cost
 
 ## Current lean board
@@ -54,6 +55,7 @@ Use these markers to keep the board lean and easy to scan:
 - todo: all work-order items not started yet
 - working: Stage 1 / Feature 1 / Task Group A — dashboard shell and navigation
 - blocked: none
+- needs attention: none
 - done: none
 - lean: none yet
 
@@ -104,3 +106,5 @@ Use this section when a task is intentionally pushed down or removed from the MV
 - Dependent implementation and verification work comes after the independent checks.
 - User confirmation is required when a task or feature is ready to be marked done.
 - Move items between todo, working, blocked, done, and lean instead of duplicating them.
+- If a task is stuck, move it to needs attention and explain the blocker in the top impediments list.
+- Supervisor T now runs every 15 minutes, health-checks every 15 minutes, and a graceful restart every 6 hours.
