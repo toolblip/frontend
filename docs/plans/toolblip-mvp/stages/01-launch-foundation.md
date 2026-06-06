@@ -29,9 +29,13 @@
 
 
 ### Task Group B: build and verify
+**Status:** needs human review
 - Add or update the dashboard shell.
 - Make sure the primary navigation is visible and stable.
 - Verify the dashboard loads without a selected plan.
+
+**Task markers:**
+- `needs human review`: dashboard shell + navigation verification — confirmed the existing dashboard shell (`app/dashboard/layout.tsx` metadata + `app/dashboard/page.tsx` client surface), the app-wide primary navigation (`components/v2/Shell.tsx` → `components/v2/Nav.tsx`), and the no-selected-plan path (free-plan fallback with `View plans` → `/pricing`) are MVP-ready and stable; no shell or nav code change was needed. Added `e2e/auth/dashboard-shell.spec.ts` with two BDD specs that lock in (1) primary nav surfaces on `/dashboard` (brand, Tools/MCP/AI / ML/More triggers, Open search, Dashboard CTA, Account menu) and (2) the no-plan fallback (Free plan card, `View plans` → `/pricing`, `No upgrade selected`). Verified with `npx playwright test e2e/auth/dashboard-shell.spec.ts` (2 passed), `npx playwright test e2e/auth/session.spec.ts` (3 passed), and `npx playwright test e2e/auth/onboarding.spec.ts` (6 passed). PR #88 raised against `fix/pricing-badge-dark-mode` (branch `feat/dashboard-shell-nav-verification`).
 
 ## Feature 2: Pricing plan selection and checkout entry
 **Outcome:** Users can choose a plan and move into the paid flow without dead ends.
