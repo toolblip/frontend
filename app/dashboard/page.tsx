@@ -73,7 +73,7 @@ function normalizeOnboardingPlan(plan?: string | null): OnboardingPlanSelection 
 
 function suggestWorkspaceName(name?: string | null) {
   const firstWord = name?.trim().split(/\s+/).find(Boolean);
-  return firstWord ?? "Toolblip";
+  return firstWord ? `${firstWord}'s team` : "Toolblip team";
 }
 
 const FALLBACK_PLANS: Plan[] = [
@@ -309,43 +309,64 @@ export default function AccountPage() {
         teamName?: string;
         billingCycle?: BillingCycle;
       };
+      const restoredTeamName = parsed.teamName?.trim() ? parsed.teamName : suggestedTeamName;
+      const restoredBilling = requestedBilling ?? parsed.billingCycle ?? DEFAULT_ONBOARDING_BILLING;
+      const storedSelectedPlan = normalizeOnboardingPlan(parsed.selectedPlan);
+
       if (parsed.version !== ONBOARDING_STORAGE_VERSION) {
-        const initialSelectedPlan = requestedPlan ?? normalizeOnboardingPlan(parsed.selectedPlan);
-        const initialBilling = requestedBilling ?? parsed.billingCycle ?? DEFAULT_ONBOARDING_BILLING;
-        const initialStep = parsed.step === "pricing" ? "pricing" : "welcome";
+        const initialSelectedPlan = requestedPlan ?? storedSelectedPlan;
+        const initialStep = parsed.step === "pricing" || (!initialSelectedPlan && parsed.status === "completed") ? "pricing" : "welcome";
         const initialPayload = {
           version: ONBOARDING_STORAGE_VERSION,
           status: "draft" as OnboardingStatus,
           step: initialStep,
-          teamName: parsed.teamName?.trim() ? parsed.teamName : suggestedTeamName,
+          teamName: restoredTeamName,
           selectedPlan: initialSelectedPlan,
-          billingCycle: initialBilling,
+          billingCycle: restoredBilling,
           updatedAt: new Date().toISOString(),
         };
 
         setTeamName(initialPayload.teamName);
         setSelectedOnboardingPlan(initialSelectedPlan);
-        setOnboardingBilling(initialBilling);
+        setOnboardingBilling(initialPayload.billingCycle);
         setOnboardingStep(initialStep);
         setShowPlanOnboarding(true);
         window.localStorage.setItem(onboardingStorageKey(user.id), JSON.stringify(initialPayload));
         return;
       }
-      if (parsed.status === "completed" || parsed.status === "skipped") {
-        if (!requestedPlan && !requestedBilling) {
+
+      if ((parsed.status === "completed" || parsed.status === "skipped") && !requestedPlan && !requestedBilling) {
+        if (storedSelectedPlan) {
           setShowPlanOnboarding(false);
           return;
         }
+
+        const pricingPayload = {
+          version: ONBOARDING_STORAGE_VERSION,
+          status: "draft" as OnboardingStatus,
+          step: "pricing" as OnboardingStep,
+          teamName: restoredTeamName,
+          selectedPlan: null,
+          billingCycle: restoredBilling,
+          updatedAt: new Date().toISOString(),
+        };
+
+        setTeamName(pricingPayload.teamName);
+        setSelectedOnboardingPlan(null);
+        setOnboardingBilling(pricingPayload.billingCycle);
+        setOnboardingStep("pricing");
+        setShowPlanOnboarding(true);
+        window.localStorage.setItem(onboardingStorageKey(user.id), JSON.stringify(pricingPayload));
+        return;
       }
 
-      const restoredSelectedPlan = requestedPlan ?? normalizeOnboardingPlan(parsed.selectedPlan);
-      const restoredBilling = requestedBilling ?? parsed.billingCycle ?? DEFAULT_ONBOARDING_BILLING;
-      const restoredStep = parsed.step ?? "welcome";
+      const restoredSelectedPlan = requestedPlan ?? storedSelectedPlan;
+      const restoredStep = parsed.step ?? (restoredSelectedPlan ? "pricing" : "welcome");
       const restoredPayload = {
         version: ONBOARDING_STORAGE_VERSION,
         status: parsed.status ?? "draft",
         step: restoredStep,
-        teamName: parsed.teamName?.trim() ? parsed.teamName : suggestedTeamName,
+        teamName: restoredTeamName,
         selectedPlan: restoredSelectedPlan,
         billingCycle: restoredBilling,
         updatedAt: new Date().toISOString(),
