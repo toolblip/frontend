@@ -46,6 +46,11 @@
 - Map the selected-plan path and the no-plan fallback path.
 - Confirm the checkout entry point and post-selection redirect.
 
+**Task markers:**
+- `done`: review current pricing card content and plan states — pricing cards already exist with plan states and account status messaging; the free-plan CTA routes to `/signup?next=/dashboard?plan=free`, and paid plans route to `/login?next=/dashboard?plan=...&billing=...` or straight dashboard when authenticated.
+- `done`: map the selected-plan path and no-plan fallback path — selected plan and billing are carried into dashboard onboarding via query params, and a completed onboarding record without a plan reopens at pricing step 2.
+- `done`: confirm the checkout entry point and post-selection redirect — the onboarding flow and pricing referral both preserve plan and billing from pricing through login/signup into dashboard onboarding; the onboarding BDD regression passes 6/6.
+
 ### Task Group B: build and verify
 - Wire the pricing selection action to the dashboard flow.
 - Ensure plan selection updates the next screen shown after checkout.
