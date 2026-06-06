@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/app/providers/auth-provider";
 import { useRouter } from "next/navigation";
+import { createCheckoutSession } from "@/lib/api";
 import {
   PricingBillingToggle,
   PricingPlanCard,
@@ -603,17 +604,46 @@ export default function AccountPage() {
     return true;
   }
 
-  function completePlanOnboarding(selectedPlan: OnboardingPlanSelection, billingCycle: BillingCycle = onboardingBilling) {
+  async function completePlanOnboarding(selectedPlan: OnboardingPlanSelection, billingCycle: BillingCycle = onboardingBilling) {
     if (!selectedPlan) {
       setPlanOnboardingError("Choose a plan to continue.");
       return false;
     }
 
+    const planConfig = pricingPlans.find((plan) => plan.tier === selectedPlan);
+    const priceId = billingCycle === "yearly" ? planConfig?.stripe_yearly_id : planConfig?.stripe_monthly_id;
+
     setSelectedOnboardingPlan(selectedPlan);
     setOnboardingBilling(billingCycle);
     setPlanOnboardingError("");
-    persistPlanOnboarding("completed", "pricing", selectedPlan, billingCycle);
-    return true;
+
+    if (selectedPlan === "free") {
+      persistPlanOnboarding("completed", "pricing", selectedPlan, billingCycle);
+      return true;
+    }
+
+    if (!planConfig || !priceId) {
+      setPlanOnboardingError("Could not start checkout for the selected plan.");
+      return false;
+    }
+
+    if (!token) {
+      setPlanOnboardingError("Please sign in again to continue to checkout.");
+      return false;
+    }
+
+    setSavingPlanOnboarding(true);
+    try {
+      persistPlanOnboarding("completed", "pricing", selectedPlan, billingCycle);
+      const { url } = await createCheckoutSession(priceId, token);
+      window.location.href = url;
+      return true;
+    } catch (error) {
+      setPlanOnboardingError(error instanceof Error ? error.message : "Could not start checkout.");
+      return false;
+    } finally {
+      setSavingPlanOnboarding(false);
+    }
   }
 
   async function handleNextPlanOnboarding() {
@@ -629,7 +659,7 @@ export default function AccountPage() {
         return;
       }
 
-      completePlanOnboarding(selectedOnboardingPlan, onboardingBilling);
+      await completePlanOnboarding(selectedOnboardingPlan, onboardingBilling);
     } catch (error) {
       setPlanOnboardingError(error instanceof Error ? error.message : "Could not save onboarding progress.");
     } finally {

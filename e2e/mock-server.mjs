@@ -10,6 +10,7 @@ const users = new Map();
 const tokens = new Map();
 const toolStats = new Map();
 const userFavorites = new Map();
+const subscriptions = new Map();
 let nextId = 1;
 let nextToken = 1;
 
@@ -81,6 +82,7 @@ function reset() {
   tokens.clear();
   toolStats.clear();
   userFavorites.clear();
+  subscriptions.clear();
   toolStats.set('json-formatter', { slug: 'json-formatter', views: 0, shares: 0, favorites: 0 });
   nextId = 1;
   nextToken = 1;
@@ -269,9 +271,56 @@ const server = http.createServer(async (req, res) => {
     return json(res, 200, { message: 'Logged out.' });
   }
 
+  if (req.method === 'POST' && url.pathname === '/api/subscription/checkout') {
+    const email = tokens.get(bearer(req));
+    if (!email) return json(res, 401, { message: 'Unauthenticated.' });
+
+    const body = await readJson(req);
+    const priceId = String(body.price_id ?? '');
+    const planByPriceId = {
+      'price_1TOflqHd4AsPgGTOxspjxODX': { tier: 'starter', storage_gb: 1, max_file_size_mb: 50, team_seats: 1, api_access: false, priority_support: false },
+      'price_1TOflqHd4AsPgGTOOrxqG1kM': { tier: 'starter', storage_gb: 1, max_file_size_mb: 50, team_seats: 1, api_access: false, priority_support: false },
+      'price_1TOflrHd4AsPgGTOnt9jYhjz': { tier: 'ultra', storage_gb: 10, max_file_size_mb: 500, team_seats: 3, api_access: true, priority_support: false },
+      'price_1TOflsHd4AsPgGTO5ra4mhwt': { tier: 'ultra', storage_gb: 10, max_file_size_mb: 500, team_seats: 3, api_access: true, priority_support: false },
+      'price_1TOflsHd4AsPgGTOG7jeNqLk': { tier: 'max', storage_gb: 50, max_file_size_mb: 5000, team_seats: 10, api_access: true, priority_support: true },
+      'price_1TOfltHd4AsPgGTOnUHvrbT7': { tier: 'max', storage_gb: 50, max_file_size_mb: 5000, team_seats: 10, api_access: true, priority_support: true },
+    };
+    const plan = planByPriceId[priceId];
+
+    if (!plan) {
+      return json(res, 400, { error: 'Invalid price ID' });
+    }
+
+    console.log('[mock-server] checkout', { email, priceId, plan: plan.tier });
+    subscriptions.set(email, { ...plan, price_id: priceId, activated_at: new Date().toISOString() });
+
+    return json(res, 200, {
+      url: 'http://127.0.0.1:3200/account?checkout=success',
+      session_id: `mock-checkout-${nextToken++}`,
+    });
+  }
+
   if (req.method === 'GET' && url.pathname === '/api/subscription') {
     const email = tokens.get(bearer(req));
     if (!email) return json(res, 401, { message: 'Unauthenticated.' });
+
+    const active = subscriptions.get(email);
+    console.log('[mock-server] subscription', { email, active: Boolean(active), tier: active?.tier ?? null });
+    if (active) {
+      return json(res, 200, {
+        is_pro: true,
+        tier: active.tier,
+        devices: null,
+        storage_gb: active.storage_gb,
+        team_seats: active.team_seats,
+        max_file_size_mb: active.max_file_size_mb,
+        api_access: active.api_access,
+        priority_support: active.priority_support,
+        plan_ends_at: null,
+        subscription_status: 'active',
+      });
+    }
+
     return json(res, 200, {
       is_pro: false,
       tier: null,

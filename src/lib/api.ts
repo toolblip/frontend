@@ -67,12 +67,24 @@ export async function getSubscription(token: string) {
   return apiRequest<Subscription>('/api/subscription', { token });
 }
 
-export async function createCheckoutSession(plan: 'monthly' | 'yearly', token: string) {
-  return apiRequest<{ url: string }>('/api/subscription/checkout', {
+export async function createCheckoutSession(priceId: string, token: string) {
+  const response = await fetch('/api/subscription/checkout', {
     method: 'POST',
-    body: { plan },
-    token,
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+    credentials: 'include',
+    body: JSON.stringify({ price_id: priceId }),
   });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(data.error || data.message || `API error: ${response.status}`);
+  }
+
+  return data as { url: string; session_id?: string };
 }
 
 export async function openCustomerPortal(token: string) {

@@ -28,7 +28,9 @@ test.describe('Account onboarding BDD regression', () => {
     await onboarding.locator('[data-tier="ultra"]').click();
     await expect(onboarding.getByRole('button', { name: 'Finish setup' })).toBeEnabled();
     await onboarding.getByRole('button', { name: 'Finish setup' }).click();
-    await expect(onboarding).toHaveCount(0);
+    await expect(page).toHaveURL(/\/dashboard(?:\?.*)?$/);
+    await expect(page.getByText('Billing is active')).toBeVisible();
+    await expect(page.getByText('Pro plan active', { exact: true })).toBeVisible();
 
     const stored = await page.evaluate(() => {
       const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
@@ -102,7 +104,9 @@ test.describe('Account onboarding BDD regression', () => {
     await expect(onboarding.getByRole('heading', { name: 'Pick your plan' })).toBeVisible();
     await expect(onboarding.getByRole('button', { name: 'Finish setup' })).toBeEnabled();
     await onboarding.getByRole('button', { name: 'Finish setup' }).click();
-    await expect(onboarding).toHaveCount(0);
+    await expect(page).toHaveURL(/\/dashboard(?:\?.*)?$/);
+    await expect(page.getByText('Billing is active')).toBeVisible();
+    await expect(page.getByText('Pro plan active', { exact: true })).toBeVisible();
 
     const stored = await page.evaluate(() => {
       const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
