@@ -23,3 +23,4 @@
 - Stage 1 / Feature 1 / Task Group A is now working.
 - Supervisor T, 15-minute health checks, and 6-hour graceful restarts are scheduled.
 - Morning impediment reports now go out at 10:30 Dhaka.
+- A short working log is kept in the implementation tracker so supervisor and worker state stays visible.

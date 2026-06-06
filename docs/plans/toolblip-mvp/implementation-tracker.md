@@ -65,6 +65,15 @@ Keep the 10 most important blockers here so the morning report can stay short.
 
 - none yet
 
+## Working log
+
+Keep a short, chronological record of what the supervisor and worker validated.
+
+- 2026-06-06 15:11 Dhaka — confirmed dashboard onboarding routes straight to checkout for paid plans.
+- 2026-06-06 15:11 Dhaka — confirmed onboarding without a selected plan reopens at pricing.
+- 2026-06-06 15:11 Dhaka — added live context refresh rule for Supervisor T and cron jobs.
+- 2026-06-06 15:11 Dhaka — created `docs/plans/toolblip-mvp/runtime/supervisor-t.json` as the live heartbeat/state file.
+
 ## Discovery notes
 - Dashboard onboarding already exists and can surface the plan-selection flow.
 - Pricing pages already have metadata and checkout entry points.
