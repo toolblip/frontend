@@ -233,7 +233,14 @@ export default function AccountPage() {
   }, []);
 
   function redirectToLoginPreservingCurrentLocation() {
-    const nextPath = `${window.location.pathname}${window.location.search}`;
+    const params = new URLSearchParams(window.location.search);
+    const currentPath = window.location.pathname;
+    const currentNext = params.get("next");
+    const nextPath =
+      (currentPath === "/login" || currentPath === "/signup") && currentNext && currentNext.startsWith("/") && !currentNext.startsWith("//")
+        ? currentNext
+        : `${currentPath}${window.location.search}`;
+
     router.replace(`/login?next=${encodeURIComponent(nextPath)}`);
   }
 
@@ -558,7 +565,7 @@ export default function AccountPage() {
 
   async function handleLogout() {
     await logout();
-    router.replace("/");
+    redirectToLoginPreservingCurrentLocation();
   }
 
   async function handleAcceptTerms() {
