@@ -17,9 +17,15 @@
 - The dashboard already supports a fallback state when a plan is missing.
 
 ### Task Group A: scope and surfaces
+**Status:** working
 - Identify the existing dashboard route(s) and layout components.
 - Confirm the minimum dashboard state needed for launch.
 - List the pages that should link into the dashboard.
+
+**Task markers:**
+- `working`: dashboard route and layout discovery
+- `todo`: dashboard minimum state check
+- `todo`: dashboard link surface inventory
 
 ### Task Group B: build and verify
 - Add or update the dashboard shell.
