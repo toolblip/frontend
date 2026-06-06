@@ -108,3 +108,4 @@ Use this section when a task is intentionally pushed down or removed from the MV
 - Move items between todo, working, blocked, done, and lean instead of duplicating them.
 - If a task is stuck, move it to needs attention and explain the blocker in the top impediments list.
 - Supervisor T now runs every 15 minutes, health-checks every 15 minutes, and a graceful restart every 6 hours.
+- Each Supervisor T run should re-read the live planning files and use the current board state, not cached assumptions.

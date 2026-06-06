@@ -64,6 +64,8 @@
 
 ## Persistence rule
 - After each answer, update the plan files immediately so the discussion can resume safely if the thread gets corrupted or interrupted.
+- Cron and worker runs should re-read the live planning files on each run and avoid stale cached state.
+- When possible, keep cron and worker runs aligned with the same workdir and environment assumptions as the interactive agent.
 
 ## Lean rule
 - If a task is too heavy for MVP, mark it lean and keep it visible rather than burying it.
