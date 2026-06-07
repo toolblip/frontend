@@ -1,9 +1,11 @@
 {
-  "pending": [
-    "create lorem ipsum placeholder text for UI mockups"
-  ],
+  "pending": [],
   "in_progress": [],
   "done": [
+    {
+      "topic": "create lorem ipsum placeholder text for UI mockups",
+      "completed_at": "2026-06-07T17:10:47Z"
+    },
     {
       "topic": "sort and deduplicate lists online for developers",
       "completed_at": "2026-06-05T17:06:55Z"

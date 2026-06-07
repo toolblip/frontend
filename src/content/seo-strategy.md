@@ -1,5 +1,5 @@
 # Toolblip SEO Strategy
-Auto-generated: 2026-06-05 23:06 - updated after sort and deduplicate lists online for developers
+Auto-generated: 2026-06-07 23:12 Dhaka - updated after create lorem ipsum placeholder text for UI mockups
 
 ## Winning Patterns (replicate these)
 _Empty, no articles have enough GSC data yet._
@@ -15,6 +15,7 @@ _Empty, no articles have enough GSC data yet._
 - Avoid broad title/meta rewrites until GSC has enough impressions to justify the change.
 - Skip near-duplicate variants unless GSC shows a clearly distinct query cluster.
 - Cron and scheduler posts should show next-run previews, timezone caveats, platform dialect differences, and at least one concrete misfire example.
+- UI mockup support posts should stay practical: length guidance, fixture examples, and staging checks beat generic design-process advice.
 
 ## Queue Notes
 - Topic "format and validate JSON online without uploading data" was chosen because existing "best free online developer tools" covers JSON formatting in one bullet point without addressing the privacy/security angle.
@@ -26,3 +27,5 @@ _Empty, no articles have enough GSC data yet._
 - Topic "generate QR codes online without signing up" shipped on 2026-06-03 as one QR generator support article tied to `/tools/qr-code-generator`. Do not publish additional QR variants unless GSC later shows a distinct query cluster such as Wi-Fi QR, vCard QR, or SVG QR export.
 - Topic "validate XML online for API integrations" shipped on 2026-06-04 as one XML validator support article tied to `/tools/xml-validator`. Do not publish additional XML validation variants unless GSC shows a distinct query cluster such as XSD errors, SOAP validation, or sitemap XML validation.
 - Topic "sort and deduplicate lists online for developers" shipped on 2026-06-05 as one support article tied to `/tools/remove-duplicate-lines`. Do not publish additional duplicate-line variants unless GSC shows a distinct query cluster such as file deduplication, preserving order, or case-insensitive list cleanup.
+- Topic "validate YAML online before deploying config files" shipped on 2026-06-06 as one support article tied to YAML config validation. Do not publish additional YAML validation variants unless GSC shows a distinct query cluster.
+- Topic "create lorem ipsum placeholder text for UI mockups" shipped on 2026-06-07 as one support article tied to `/tools/lorem-ipsum-generator`. Do not publish additional lorem ipsum variants unless GSC shows a distinct query cluster such as accessibility testing with real copy or fixture text for Storybook.
