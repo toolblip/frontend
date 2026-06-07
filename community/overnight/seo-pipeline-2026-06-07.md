@@ -27,14 +27,19 @@ Next Run: 2026-06-08 23:00 Dhaka
 - Canonical tool linked: https://toolblip.com/tools/lorem-ipsum-generator
 - Notes: one narrow support article for the existing Lorem Ipsum Generator tool. No second post was attempted.
 
-## Verification completed locally
+## Verification completed
 
 - `npm run build` passed.
+- Railway deploy `c26cd014-38e7-4379-915d-fec8571e40a9` reached `SUCCESS`.
+- Live URL returned HTTP 200 and contained the expected title.
+- Live sitemap contains the new slug.
+- Live HTML has exactly one H1 and no Humanizer/Claude artifacts or `[object Object]` marker.
 - Article frontmatter uses a quoted ISO date.
 - Artifact scan passed after finalization cleanup: no Humanizer/Claude notes, no body H1, no em dashes, no `[object Object]` marker.
 - `src/content/seo-strategy.md` was consolidated after the pipeline duplicated headings.
 - `pseo-queue.json` marked only the published topic complete.
 - `gsc-queue.json` recorded the new URL as submitted.
+- GSC sitemap refresh returned `status: ok`; URL diagnosis returned `URL is unknown to Google` with `fix_needed: false`, expected for a fresh post.
 
 ## Decisions needed
 
