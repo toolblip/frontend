@@ -1,9 +1,7 @@
-import fs from 'fs';
-import path from 'path';
 import Link from 'next/link';
-import matter from 'gray-matter';
 import type { Metadata } from 'next';
 import FeaturedImage from '@/components/blog/FeaturedImage';
+import { getBlogPosts, type BlogPost } from '@/lib/blog';
 
 export const metadata: Metadata = {
   title: 'Blog',
@@ -27,44 +25,6 @@ export const metadata: Metadata = {
   },
 };
 
-interface Post {
-  slug: string;
-  title: string;
-  description: string;
-  date: string;
-  category: string;
-  tags: string[];
-  author: string;
-  readingTime: string;
-  featuredImage?: string;
-  emoji?: string;
-}
-
-function getPosts(): Post[] {
-  const blogDir = path.join(process.cwd(), 'src', 'content', 'blog');
-  if (!fs.existsSync(blogDir)) return [];
-  return fs
-    .readdirSync(blogDir)
-    .filter((f) => f.endsWith('.md'))
-    .map((file) => {
-      const raw = fs.readFileSync(path.join(blogDir, file), 'utf-8');
-      const { data } = matter(raw);
-      return {
-        slug: (data.slug as string) || file.replace('.md', ''),
-        title: data.title as string,
-        description: data.description as string,
-        date: (data.date as string) || (data.publishDate as string) || '',
-        category: (data.category as string) || 'Developer Tools',
-        tags: (data.tags as string[]) ?? [],
-        author: (data.author as string) || 'Toolblip Team',
-        readingTime: (data.readingTime as string) || '5 min read',
-        featuredImage: data.featuredImage as string | undefined,
-        emoji: (data.emoji as string) || undefined,
-      };
-    })
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-}
-
 const CATEGORY_GRADIENTS: Record<string, [string, string]> = {
   'Developer Tools': ['#0ea5e9', '#8b5cf6'], Authentication: ['#f59e0b', '#ef4444'],
   Design: ['#10b981', '#06b6d4'], SEO: ['#f97316', '#facc15'],
@@ -79,7 +39,8 @@ function getGradient(category: string): [string, string] {
 }
 
 export default function BlogPage() {
-  const posts = getPosts();
+  const posts: BlogPost[] = getBlogPosts();
+
   return (
     <div className="tb-v2-blog">
       <div className="tb-v2-container">
