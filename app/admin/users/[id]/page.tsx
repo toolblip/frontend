@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import AdminGuard from "@/components/admin/AdminGuard";
+import AdminPlanActions from "@/components/admin/AdminPlanActions";
 import {
   formatAdminDate,
   planLabel,
@@ -82,6 +83,8 @@ function UserRecord() {
             <Field label="Plan ends" value={formatAdminDate(user.plan_ends_at)} testId="record-plan-ends" />
             <Field label="Created" value={formatAdminDate(user.created_at)} testId="record-created" />
           </div>
+
+          <AdminPlanActions user={user} onUpdated={setUser} />
         </div>
       ) : null}
     </div>

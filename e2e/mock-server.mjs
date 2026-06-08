@@ -396,6 +396,61 @@ const server = http.createServer(async (req, res) => {
     return json(res, 200, { data: adminUserView(found) });
   }
 
+  const adminPlanMatch = url.pathname.match(/^\/api\/admin\/users\/([^/]+)\/plan$/);
+  if (req.method === 'POST' && adminPlanMatch) {
+    const gate = requireAdmin(req);
+    if (gate.error) return json(res, gate.error, { message: gate.error === 401 ? 'Unauthenticated.' : 'Forbidden.' });
+    const id = Number.parseInt(decodeURIComponent(adminPlanMatch[1]), 10);
+    const target = Array.from(users.values()).find((u) => u.id === id);
+    if (!target) return json(res, 404, { message: 'User not found.' });
+
+    const body = await readJson(req);
+    const action = String(body.action ?? '');
+    const previousPlan = target.tier ?? 'free';
+    const previousStatus = target.subscription_status ?? null;
+    let effectiveDate = null;
+
+    if (action === 'cancel') {
+      target.subscription_status = 'canceled';
+      if (!target.plan_ends_at) target.plan_ends_at = '2026-12-31T12:00:00.000Z';
+      effectiveDate = target.plan_ends_at;
+    } else if (action === 'set') {
+      const tier = String(body.tier ?? '');
+      if (!['free', 'starter', 'ultra', 'max'].includes(tier)) {
+        return json(res, 422, { message: 'Invalid plan.' });
+      }
+      target.tier = tier;
+      if (tier === 'free') {
+        target.subscription_status = null;
+        target.plan_ends_at = null;
+      } else {
+        target.subscription_status = 'active';
+        target.plan_ends_at = '2026-12-31T12:00:00.000Z';
+      }
+    } else {
+      return json(res, 422, { message: 'Invalid action.' });
+    }
+
+    return json(res, 200, {
+      data: adminUserView(target),
+      audit: {
+        admin_id: gate.user.id,
+        admin_email: gate.user.email,
+        target_user_id: target.id,
+        target_user_email: target.email,
+        action,
+        previous_plan: previousPlan,
+        new_plan: target.tier ?? 'free',
+        previous_status: previousStatus,
+        new_status: target.subscription_status ?? null,
+        effective_date: effectiveDate,
+        reason: body.reason ?? null,
+        reference_id: `mock-billing-${target.id}`,
+        timestamp: new Date().toISOString(),
+      },
+    });
+  }
+
   return json(res, 404, { message: 'Not found.' });
 });
 
