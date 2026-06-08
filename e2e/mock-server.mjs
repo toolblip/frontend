@@ -102,6 +102,41 @@ function reset() {
     email_verified_at: '2026-01-01T00:00:00.000Z',
     terms_accepted_at: '2026-01-01T00:00:00.000Z',
   });
+  users.set('admin@toolblip.test', {
+    id: nextId++,
+    name: 'Admin User',
+    email: 'admin@toolblip.test',
+    password: 'Password123!',
+    role: 'admin',
+    email_verified_at: '2026-01-01T00:00:00.000Z',
+    terms_accepted_at: '2026-01-01T00:00:00.000Z',
+    created_at: '2026-01-02T00:00:00.000Z',
+    tier: 'ultra',
+    subscription_status: 'active',
+    plan_ends_at: '2026-12-31T12:00:00.000Z',
+  });
+}
+
+function adminUserView(user) {
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role ?? 'user',
+    email_verified_at: user.email_verified_at ?? null,
+    tier: user.tier ?? null,
+    subscription_status: user.subscription_status ?? null,
+    plan_ends_at: user.plan_ends_at ?? null,
+    created_at: user.created_at ?? '2026-01-01T00:00:00.000Z',
+  };
+}
+
+function requireAdmin(req) {
+  const email = tokens.get(bearer(req));
+  const user = email ? users.get(email) : null;
+  if (!user) return { error: 401 };
+  if ((user.role ?? 'user') !== 'admin') return { error: 403 };
+  return { user };
 }
 
 reset();
@@ -343,6 +378,22 @@ const server = http.createServer(async (req, res) => {
         favorited_at: new Date().toISOString(),
       })),
     });
+  }
+
+  if (req.method === 'GET' && url.pathname === '/api/admin/users') {
+    const gate = requireAdmin(req);
+    if (gate.error) return json(res, gate.error, { message: gate.error === 401 ? 'Unauthenticated.' : 'Forbidden.' });
+    return json(res, 200, { data: Array.from(users.values()).map(adminUserView) });
+  }
+
+  const adminUserMatch = url.pathname.match(/^\/api\/admin\/users\/([^/]+)$/);
+  if (req.method === 'GET' && adminUserMatch) {
+    const gate = requireAdmin(req);
+    if (gate.error) return json(res, gate.error, { message: gate.error === 401 ? 'Unauthenticated.' : 'Forbidden.' });
+    const id = Number.parseInt(decodeURIComponent(adminUserMatch[1]), 10);
+    const found = Array.from(users.values()).find((u) => u.id === id);
+    if (!found) return json(res, 404, { message: 'User not found.' });
+    return json(res, 200, { data: adminUserView(found) });
   }
 
   return json(res, 404, { message: 'Not found.' });
