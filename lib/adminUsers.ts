@@ -8,6 +8,7 @@ export interface AdminUser {
   subscription_status: string | null;
   plan_ends_at: string | null;
   created_at: string | null;
+  favorites_count?: number;
 }
 
 export const PLAN_TIERS = ["free", "starter", "ultra", "max"] as const;
