@@ -1,8 +1,12 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import ToolContextControls from '@/components/tools/ToolContextControls';
+import { useToolContext } from '@/components/tools/useToolContext';
 
 type Mode = 'format' | 'minify';
+
+type JsonFormatterContext = { mode: Mode; indent: number };
 
 function process(input: string, mode: Mode, indent: number): { result: string; error: string } {
   if (!input.trim()) return { result: '', error: '' };
@@ -23,6 +27,18 @@ export default function JsonFormatterClient() {
   const [indent, setIndent] = useState(2);
   const [copied, setCopied] = useState(false);
 
+  // Paid-gated saved defaults — only the formatting settings are stored, never input.
+  const toolContext = useToolContext<JsonFormatterContext>('json-formatter');
+  const appliedSavedRef = useRef(false);
+
+  useEffect(() => {
+    if (appliedSavedRef.current || !toolContext.saved) return;
+    const { mode: savedMode, indent: savedIndent } = toolContext.saved;
+    if (savedMode === 'format' || savedMode === 'minify') setMode(savedMode);
+    if (savedIndent === 2 || savedIndent === 4) setIndent(savedIndent);
+    appliedSavedRef.current = true;
+  }, [toolContext.saved]);
+
   const { result, error } = useMemo(() => process(input, mode, indent), [input, mode, indent]);
 
   const copy = () => {
@@ -34,6 +50,13 @@ export default function JsonFormatterClient() {
 
   return (
     <div>
+      <ToolContextControls
+        isPaid={toolContext.isPaid}
+        hasSaved={toolContext.hasSaved}
+        description="formatting mode and indent"
+        onSave={() => toolContext.save({ mode, indent })}
+        onClear={toolContext.clear}
+      />
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">JSON</span>
         <div className="tb-v2-mode-tabs" role="tablist" aria-label="JSON mode">
