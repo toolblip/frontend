@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import AdminGuard from "@/components/admin/AdminGuard";
 import AdminPlanActions from "@/components/admin/AdminPlanActions";
+import AdminSupportActions from "@/components/admin/AdminSupportActions";
 import {
   formatAdminDate,
   planLabel,
@@ -85,6 +86,7 @@ function UserRecord() {
           </div>
 
           <AdminPlanActions user={user} onUpdated={setUser} />
+          <AdminSupportActions user={user} onUpdated={setUser} />
         </div>
       ) : null}
     </div>

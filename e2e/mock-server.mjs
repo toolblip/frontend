@@ -115,6 +115,16 @@ function reset() {
     subscription_status: 'active',
     plan_ends_at: '2026-12-31T12:00:00.000Z',
   });
+  users.set('pending@toolblip.test', {
+    id: nextId++,
+    name: 'Pending User',
+    email: 'pending@toolblip.test',
+    password: 'Password123!',
+    role: 'user',
+    email_verified_at: null,
+    terms_accepted_at: '2026-01-01T00:00:00.000Z',
+    created_at: '2026-01-03T00:00:00.000Z',
+  });
 }
 
 function adminUserView(user) {
@@ -128,6 +138,7 @@ function adminUserView(user) {
     subscription_status: user.subscription_status ?? null,
     plan_ends_at: user.plan_ends_at ?? null,
     created_at: user.created_at ?? '2026-01-01T00:00:00.000Z',
+    favorites_count: userFavorites.get(user.email)?.size ?? 0,
   };
 }
 
@@ -446,6 +457,50 @@ const server = http.createServer(async (req, res) => {
         effective_date: effectiveDate,
         reason: body.reason ?? null,
         reference_id: `mock-billing-${target.id}`,
+        timestamp: new Date().toISOString(),
+      },
+    });
+  }
+
+  const adminSupportMatch = url.pathname.match(/^\/api\/admin\/users\/([^/]+)\/support$/);
+  if (req.method === 'POST' && adminSupportMatch) {
+    const gate = requireAdmin(req);
+    if (gate.error) return json(res, gate.error, { message: gate.error === 401 ? 'Unauthenticated.' : 'Forbidden.' });
+    const id = Number.parseInt(decodeURIComponent(adminSupportMatch[1]), 10);
+    const target = Array.from(users.values()).find((u) => u.id === id);
+    if (!target) return json(res, 404, { message: 'User not found.' });
+
+    const body = await readJson(req);
+    const action = String(body.action ?? '');
+    if (!target.support_notes) target.support_notes = [];
+    let note = null;
+    let message = null;
+
+    if (action === 'note') {
+      const text = String(body.note ?? '').trim();
+      if (!text) return json(res, 422, { message: 'Note is required.' });
+      note = { id: target.support_notes.length + 1, note: text, admin_email: gate.user.email, created_at: new Date().toISOString() };
+      target.support_notes.push(note);
+    } else if (action === 'resend_verification') {
+      target.email_verification_token = 'mock-verification-token';
+      message = 'Verification email sent.';
+    } else {
+      return json(res, 422, { message: 'Invalid action.' });
+    }
+
+    return json(res, 200, {
+      data: adminUserView(target),
+      message,
+      note,
+      notes: target.support_notes,
+      audit: {
+        admin_id: gate.user.id,
+        admin_email: gate.user.email,
+        target_user_id: target.id,
+        target_user_email: target.email,
+        action,
+        note: note?.note ?? null,
+        message,
         timestamp: new Date().toISOString(),
       },
     });
