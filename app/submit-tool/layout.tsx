@@ -3,6 +3,9 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Submit a Tool | Toolblip',
   description: 'Submit a useful browser-based tool to the Toolblip community directory for review.',
+  alternates: {
+    canonical: 'https://toolblip.com/submit-tool',
+  },
   openGraph: {
     title: 'Submit a Tool | Toolblip',
     description: 'Submit a useful browser-based tool to the Toolblip community directory for review.',
