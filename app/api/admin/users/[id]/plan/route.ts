@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { parseLaravelJsonResponse } from "@/lib/adminApi";
 
 const LARAVEL_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.toolblip.com";
 
@@ -30,7 +31,7 @@ export async function POST(req: Request, context: RouteContext) {
       body,
     });
 
-    const data = await laravelRes.json();
+    const data = await parseLaravelJsonResponse(laravelRes, "Unable to update plan.");
     return NextResponse.json(data, { status: laravelRes.status });
   } catch {
     return NextResponse.json({ message: "Unable to update plan." }, { status: 500 });

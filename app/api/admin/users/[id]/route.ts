@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { parseLaravelJsonResponse } from "@/lib/adminApi";
 
 const LARAVEL_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.toolblip.com";
 
@@ -22,7 +23,7 @@ export async function GET(_req: Request, context: RouteContext) {
       cache: "no-store",
     });
 
-    const data = await laravelRes.json();
+    const data = await parseLaravelJsonResponse(laravelRes, "Unable to load user.");
     return NextResponse.json(data, { status: laravelRes.status });
   } catch {
     return NextResponse.json({ message: "Unable to load user." }, { status: 500 });
