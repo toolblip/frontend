@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useAuth } from '@/app/providers/auth-provider';
 import {
   FREE_PLAN_CTA_LABEL,
   FREE_TRIAL_NOTE,
@@ -108,6 +109,7 @@ function buildPlanFeatures(plan: Plan): PlanFeature[] {
 }
 
 export default function PricingClient() {
+  const { user } = useAuth();
   const [billing, setBilling] = useState<BillingCycle>('monthly');
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -150,25 +152,36 @@ export default function PricingClient() {
       .catch(() => {});
   }, []);
 
+  // Auth lives in an httpOnly cookie session (see auth-provider / /api/auth/me),
+  // not in localStorage. Resolve the session at click time so an already
+  // signed-in user is routed straight into the dashboard checkout flow instead
+  // of being bounced back through login/signup.
+  async function isAuthenticated(): Promise<boolean> {
+    if (user) return true;
+    try {
+      const res = await fetch('/api/auth/me', { credentials: 'include' });
+      if (!res.ok) return false;
+      const data = await res.json();
+      return Boolean(data?.user);
+    } catch {
+      return false;
+    }
+  }
+
   async function handleFreePlan() {
-    const token = localStorage.getItem('toolblip_token');
     const onboardingNext = '/dashboard?plan=free';
-    window.location.href = token ? onboardingNext : `/signup?next=${encodeURIComponent(onboardingNext)}`;
+    const loggedIn = await isAuthenticated();
+    window.location.href = loggedIn ? onboardingNext : `/signup?next=${encodeURIComponent(onboardingNext)}`;
   }
 
   async function handleUpgrade(plan: Plan) {
     setError(null);
-    const token = localStorage.getItem('toolblip_token');
     const onboardingNext = `/dashboard?plan=${plan.tier}&billing=${billing}`;
 
     setLoading(plan.tier);
     try {
-      if (!token) {
-        window.location.href = `/login?next=${encodeURIComponent(onboardingNext)}`;
-        return;
-      }
-
-      window.location.href = onboardingNext;
+      const loggedIn = await isAuthenticated();
+      window.location.href = loggedIn ? onboardingNext : `/login?next=${encodeURIComponent(onboardingNext)}`;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {

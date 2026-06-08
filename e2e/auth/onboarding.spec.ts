@@ -105,6 +105,33 @@ test.describe('Account onboarding BDD regression', () => {
     expect(stored).toMatchObject({ status: 'completed', selectedPlan: 'ultra', billingCycle: 'monthly' });
   });
 
+  test('Given an authenticated user on pricing, Then selecting a plan routes straight into dashboard checkout without a login detour', async ({ page }) => {
+    await loginByForm(page, VALID_USER);
+    await expect(page).toHaveURL(/\/dashboard/);
+
+    await page.goto('/pricing');
+    await page.locator('[data-tier="ultra"]').getByRole('button', { name: 'Start 14-day free trial' }).click();
+
+    await expect(page).toHaveURL(/\/dashboard\?plan=ultra&billing=monthly$/);
+
+    const onboarding = page.locator('main [role="dialog"]').first();
+    await expect(onboarding).toBeVisible();
+
+    await onboarding.getByRole('button', { name: 'Next' }).click();
+    await expect(onboarding.getByText(/Step 2 of 2/i)).toBeVisible();
+    await expect(onboarding.getByRole('heading', { name: 'Simple, transparent pricing' })).toBeVisible();
+    await expect(onboarding.locator('[data-tier="ultra"]')).toHaveClass(/selected/);
+
+    await onboarding.locator('[data-tier="ultra"]').getByRole('button', { name: 'Start 14-day free trial' }).click();
+    await expect(onboarding).toHaveCount(0);
+
+    const stored = await page.evaluate(() => {
+      const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
+      return entry ? JSON.parse(String(entry[1])) : null;
+    });
+    expect(stored).toMatchObject({ status: 'completed', selectedPlan: 'ultra', billingCycle: 'monthly' });
+  });
+
   test('Given a stale onboarding draft, Then it migrates to the pricing second step', async ({ page }) => {
     const user = makeUser('onboarding-migration');
 
