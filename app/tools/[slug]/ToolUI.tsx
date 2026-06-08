@@ -954,52 +954,34 @@ import PixelDensityCalculatorClient from '@/components/tools/PixelDensityCalcula
 // ─── Individual tool UIs ────────────────────────────────────────────────────
 
 function ComingSoonUI({ tool }: { tool: Tool }) {
-  const [input, setInput] = useState('');
-  const [output, setOutput] = useState('');
-
-  const preview = () => {
-    const sample = input.trim();
-    setOutput(
-      sample
-        ? `Preview received for ${tool.name}:\n\n${sample}`
-        : `${tool.name} is coming soon. Paste sample input above to preview where the processed result will appear.`
-    );
-  };
-
+  // Fallback for tools that aren't available in the browser yet (no client-side
+  // implementation, or work that needs server-side fetches / third-party APIs /
+  // credentials / heavy processing we can't run safely in the browser). Show a
+  // clear coming-soon notice instead of a fake processor that echoes input.
   return (
     <div className="space-y-6">
-      <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-8 text-center">
-        <div className="text-5xl mb-4">{tool.emoji}</div>
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{tool.name}</h2>
-        <p className="text-gray-500 dark:text-gray-400 text-sm max-w-sm mx-auto">{tool.description}</p>
-      </div>
-      <div className="space-y-3">
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300" htmlFor={`${tool.slug}-placeholder-input`}>
-          Placeholder input
-        </label>
-        <textarea
-          id={`${tool.slug}-placeholder-input`}
-          value={input}
-          onChange={event => {
-            setInput(event.target.value);
-            setOutput('');
-          }}
-          placeholder={`Paste sample input for ${tool.name}…`}
-          className="w-full h-40 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl p-4 resize-y placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-500"
-        />
-        <button
-          type="button"
-          onClick={preview}
-          className="w-full bg-red-600 hover:bg-red-700 text-white rounded-xl py-3 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
-        >
-          Process preview
-        </button>
-        <div className="rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-4 min-h-28 whitespace-pre-wrap text-sm text-gray-700 dark:text-gray-200">
-          {output || <span className="text-gray-400 dark:text-gray-500">Placeholder output will appear here…</span>}
-        </div>
-        <p className="text-center text-sm text-gray-400 dark:text-gray-500">
-          This tool&apos;s full interactive UI is under development.
+      <div
+        data-testid="tool-coming-soon"
+        role="status"
+        className="rounded-2xl border border-amber-200 bg-amber-50 p-8 text-center dark:border-amber-900/50 dark:bg-amber-950/30"
+      >
+        <div className="mb-4 text-5xl" aria-hidden="true">{tool.emoji}</div>
+        <span className="inline-block rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-amber-800 dark:bg-amber-900/50 dark:text-amber-200">
+          Coming soon
+        </span>
+        <h2 className="mt-4 text-xl font-semibold text-gray-900 dark:text-white">
+          {tool.name} isn&apos;t available yet
+        </h2>
+        <p className="mx-auto mt-2 max-w-md text-sm text-gray-600 dark:text-gray-300">
+          We&apos;re still building this tool. It needs support we can&apos;t run in your browser yet,
+          so it isn&apos;t ready to use. Check back soon&mdash;we add new tools regularly.
         </p>
+        <a
+          href="/tools"
+          className="mt-6 inline-flex items-center justify-center rounded-xl bg-red-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
+        >
+          Browse available tools
+        </a>
       </div>
     </div>
   );
