@@ -684,7 +684,7 @@ export default function AccountPage() {
 
     setSavingPlanOnboarding(true);
     try {
-      persistPlanOnboarding("completed", "pricing", selectedPlan, billingCycle);
+      writePlanOnboarding("draft", "pricing", selectedPlan, billingCycle);
       const { url } = await createCheckoutSession(priceId, token);
       window.location.href = url;
       return true;

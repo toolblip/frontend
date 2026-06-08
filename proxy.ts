@@ -56,7 +56,8 @@ export function proxy(req: NextRequest) {
   if (isProtected && !token) {
     const url = req.nextUrl.clone();
     url.pathname = "/login";
-    url.searchParams.set("next", pathname);
+    url.search = req.nextUrl.search;
+    url.searchParams.set("next", `${pathname}${req.nextUrl.search}`);
     return setNoindexHeader(NextResponse.redirect(url), shouldNoindex);
   }
 

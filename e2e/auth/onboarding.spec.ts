@@ -38,7 +38,7 @@ test.describe('Account onboarding BDD regression', () => {
       const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
       return entry ? JSON.parse(String(entry[1])) : null;
     });
-    expect(stored).toMatchObject({ status: 'completed', teamName: `${user.name.split(/\s+/)[0]}'s team`, selectedPlan: 'ultra', billingCycle: 'monthly' });
+    expect(stored).toMatchObject({ status: 'draft', teamName: `${user.name.split(/\s+/)[0]}'s team`, selectedPlan: 'ultra', billingCycle: 'monthly' });
   });
 
   test('Given an unauthenticated dashboard referral, Then login preserves the plan and billing query', async ({ page }) => {
@@ -116,7 +116,7 @@ test.describe('Account onboarding BDD regression', () => {
       const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
       return entry ? JSON.parse(String(entry[1])) : null;
     });
-    expect(stored).toMatchObject({ status: 'completed', selectedPlan: 'ultra', billingCycle: 'monthly' });
+    expect(stored).toMatchObject({ status: 'draft', selectedPlan: 'ultra', billingCycle: 'monthly' });
   });
 
   test('Given a stale onboarding draft, Then it migrates to the pricing second step', async ({ page }) => {
@@ -162,13 +162,13 @@ test.describe('Account onboarding BDD regression', () => {
     await expect(migratedOnboarding.getByRole('heading', { name: 'Pick your plan' })).toBeVisible();
     await expect(migratedOnboarding.getByRole('button', { name: 'Finish setup' })).toBeEnabled();
     await migratedOnboarding.getByRole('button', { name: 'Finish setup' }).click();
-    await expect(migratedOnboarding).toHaveCount(0);
+    await expect(migratedOnboarding).toBeVisible();
 
     const migratedStored = await page.evaluate(() => {
       const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
       return entry ? JSON.parse(String(entry[1])) : null;
     });
-    expect(migratedStored).toMatchObject({ status: 'completed', version: 4, teamName: `${user.name.split(/\s+/)[0]}'s team`, selectedPlan: 'starter', step: 'pricing' });
+    expect(migratedStored).toMatchObject({ status: 'draft', version: 4, teamName: `${user.name.split(/\s+/)[0]}'s team`, selectedPlan: 'starter', step: 'pricing' });
   });
 
   test('Given a completed onboarding record without a selected plan, Then the dashboard reopens at pricing', async ({ page }) => {

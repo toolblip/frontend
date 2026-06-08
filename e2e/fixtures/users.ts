@@ -61,8 +61,10 @@ export async function dismissDashboardOnboarding(page: Page) {
     const teamNameInput = dialog.getByLabel('Team name');
     await expect(teamNameInput).toHaveValue(/.+/);
     await dialog.getByRole('button', { name: 'Next' }).click();
-    await expect(dialog.locator('[data-tier="ultra"]').getByRole('button', { name: 'Start 14-day free trial' })).toBeVisible();
-    await dialog.locator('[data-tier="ultra"]').getByRole('button', { name: 'Start 14-day free trial' }).click();
+    await expect(dialog.getByRole('heading', { name: 'Pick your plan' })).toBeVisible();
+    await dialog.locator('[data-tier="ultra"]').click();
+    await expect(dialog.getByRole('button', { name: 'Finish setup' })).toBeEnabled();
+    await dialog.getByRole('button', { name: 'Finish setup' }).click();
     await expect(dialog).toBeHidden();
   }
 }
