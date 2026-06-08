@@ -17,7 +17,7 @@
 - The dashboard already supports a fallback state when a plan is missing.
 
 ### Task Group A: scope and surfaces
-**Status:** working
+**Status:** done
 - Identify the existing dashboard route(s) and layout components.
 - Confirm the minimum dashboard state needed for launch.
 - List the pages that should link into the dashboard.
@@ -29,13 +29,13 @@
 
 
 ### Task Group B: build and verify
-**Status:** needs human review
+**Status:** done
 - Add or update the dashboard shell.
 - Make sure the primary navigation is visible and stable.
 - Verify the dashboard loads without a selected plan.
 
 **Task markers:**
-- `needs human review`: dashboard shell + navigation verification — confirmed the existing dashboard shell (`app/dashboard/layout.tsx` metadata + `app/dashboard/page.tsx` client surface), the app-wide primary navigation (`components/v2/Shell.tsx` → `components/v2/Nav.tsx`), and the no-selected-plan path (free-plan fallback with `View plans` → `/pricing`) are MVP-ready and stable; no shell or nav code change was needed. Added `e2e/auth/dashboard-shell.spec.ts` with two BDD specs that lock in (1) primary nav surfaces on `/dashboard` (brand, Tools/MCP/AI / ML/More triggers, Open search, Dashboard CTA, Account menu) and (2) the no-plan fallback (Free plan card, `View plans` → `/pricing`, `No upgrade selected`). Verified with `npx playwright test e2e/auth/dashboard-shell.spec.ts` (2 passed), `npx playwright test e2e/auth/session.spec.ts` (3 passed), and `npx playwright test e2e/auth/onboarding.spec.ts` (6 passed). PR #88 raised against `fix/pricing-badge-dark-mode` (branch `feat/dashboard-shell-nav-verification`).
+- `done`: dashboard shell + navigation verification — confirmed the existing dashboard shell (`app/dashboard/layout.tsx` metadata + `app/dashboard/page.tsx` client surface), the app-wide primary navigation (`components/v2/Shell.tsx` → `components/v2/Nav.tsx`), and the no-selected-plan path (free-plan fallback with `View plans` → `/pricing`) are MVP-ready and stable; no shell or nav code change was needed. Added `e2e/auth/dashboard-shell.spec.ts` with two BDD specs that lock in (1) primary nav surfaces on `/dashboard` (brand, Tools/MCP/AI / ML/More triggers, Open search, Dashboard CTA, Account menu) and (2) the no-plan fallback (Free plan card, `View plans` → `/pricing`, `No upgrade selected`). Verified with `npx playwright test e2e/auth/dashboard-shell.spec.ts` (2 passed), `npx playwright test e2e/auth/session.spec.ts` (3 passed), and `npx playwright test e2e/auth/onboarding.spec.ts` (6 passed). PR #88 merged on 2026-06-06T19:55:40Z: `https://github.com/toolblip/frontend/pull/88`.
 
 ## Feature 2: Pricing plan selection and checkout entry
 **Outcome:** Users can choose a plan and move into the paid flow without dead ends.
@@ -46,6 +46,7 @@
 - Checkout selection already routes through the dashboard onboarding flow.
 
 ### Task Group A: pricing flow review
+**Status:** done
 - Review current pricing card content and plan states.
 - Map the selected-plan path and the no-plan fallback path.
 - Confirm the checkout entry point and post-selection redirect.
@@ -56,9 +57,13 @@
 - `done`: confirm the checkout entry point and post-selection redirect — the onboarding flow and pricing referral both preserve plan and billing from pricing through login/signup into dashboard onboarding; the onboarding BDD regression passes 6/6.
 
 ### Task Group B: build and verify
+**Status:** needs attention
 - Wire the pricing selection action to the dashboard flow.
 - Ensure plan selection updates the next screen shown after checkout.
 - Verify the redirect behavior in browser.
+
+**Task markers:**
+- `todo`: pricing plan selection and checkout entry implementation — launcher repaired, so the next implementation step can start from the canonical repo-local Claude Code launcher.
 
 ## Feature 3: Browser-only fallback messaging
 **Outcome:** Any tool that needs more than browser support shows a clear coming soon state.
@@ -68,9 +73,15 @@
 - The fallback copy is explicit enough to signal the gap without blocking the browser-only path.
 
 ### Task Group A: identify unsupported tools
+**Status:** done
 - List which tools are browser-only today and which need backend support.
 - Define the coming soon rules for unsupported tools.
 - Confirm where the fallback message should appear.
+
+**Task markers:**
+- `done`: browser-tool coverage audit — `data/tools.ts` currently lists 1,563 unique tool slugs; `app/tools/[slug]/ToolUI.tsx` has route cases for 1,792 unique slugs / aliases. Only one catalog slug (`json-graph-visualizer`) has no explicit switch case, so it reaches the default coming-soon fallback.
+- `done`: backend / external-support boundary — most catalog tools are already wired to client-side tool UIs or client-side placeholder shells. Tools that should remain guarded by coming-soon or explicit backend/external dependency language include URL/network/remote inspection tools (HTTP headers, SSL, DNS, ping, broken-link, redirect, URL/word-count-from-URL, webhook/websocket), SERP/search-console/rank tools, AI generation/transcription/summarization tools, and heavy media/PDF/document conversion tools that cannot honestly run fully in the browser yet.
+- `done`: fallback placement rule — unsupported entries already fall back in `ToolUI` to `ComingSoonUI`, which appears on the tool detail page body beneath the normal header/engagement bar. MVP rule: keep the catalog/detail route indexable, but show the coming-soon shell instead of a fake processor whenever the tool needs server-side fetches, third-party APIs, protected credentials, large-file processing, OCR/transcription/AI, or non-browser conversion support.
 
 ### Task Group B: build and verify
 - Add the coming soon state to unsupported tool entry points.
@@ -85,9 +96,15 @@
 - Remaining SEO work is likely about tightening coverage on any launch-specific routes.
 
 ### Task Group A: SEO audit
+**Status:** done
 - Check titles, descriptions, and canonical behavior on launch pages.
 - Identify the key public routes that need metadata.
 - Confirm any missing metadata pieces.
+
+**Task markers:**
+- `done`: launch route metadata audit — confirmed the homepage (`/`) has title, description, canonical, Open Graph, and Twitter metadata; `/pricing` has title, description, Open Graph, Twitter metadata, and FAQ schema; `/dashboard` has layout-level title/description/Open Graph/Twitter metadata; `/tools/[slug]` uses dynamic tool metadata and canonical behavior; `/seo`, `/compare`, and blog routes have explicit canonical coverage.
+- `done`: public launch route inventory — key MVP launch routes are `/`, `/pricing`, `/dashboard`, `/tools`, `/tools/[slug]`, `/directory`, `/seo`, `/compare`, `/login`, and `/signup`. Redirect/supporting routes include `/account`, `/verify-email`, password reset pages, and `/submit-tool`.
+- `done`: missing metadata pieces — bare-minimum follow-up should add explicit canonical metadata to `/pricing`, `/dashboard`, `/tools`, `/directory`, `/login`, and `/signup`; decide whether authenticated/account-only routes should be noindex instead of indexable; and add basic metadata for `/submit-tool` if it stays in the launch surface.
 
 ### Task Group B: build and verify
 - Add the minimum metadata needed for launch pages.
