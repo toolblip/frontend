@@ -1074,6 +1074,14 @@ export default function AccountPage() {
               <div>
                 <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Favorite tools</h2>
                 <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">Your quickest route back to the tools you use most.</p>
+                <Link
+                  href="/tools"
+                  data-testid="favorites-browse-link"
+                  className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-red-600 transition-colors hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
+                >
+                  Browse tools
+                  <span aria-hidden="true">→</span>
+                </Link>
               </div>
               <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">{favoriteToolsLoading ? "Loading" : `${favoriteCount} saved`}</span>
             </div>
@@ -1098,7 +1106,14 @@ export default function AccountPage() {
                 </div>
               ) : (
                 <div className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 p-5 text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-950/40 dark:text-gray-400">
-                  Favorite tools from any tool page to keep them here.
+                  <p>Favorite tools from any tool page to keep them here.</p>
+                  <Link
+                    href="/tools"
+                    data-testid="favorites-empty-browse"
+                    className="mt-4 inline-flex items-center justify-center rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
+                  >
+                    Browse tools
+                  </Link>
                 </div>
               )}
             </div>
