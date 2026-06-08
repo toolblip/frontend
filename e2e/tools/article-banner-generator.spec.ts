@@ -20,7 +20,7 @@ test.describe('Banner Generator tool', () => {
   test('renders FAQs and FAQPage structured data on tool detail pages', async ({ page }) => {
     await page.goto('/tools/og-image-generator');
 
-    await expect(page.getByRole('heading', { name: /Frequently asked questions about the Banner Generator/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Quick answers for Banner Generator/i })).toBeVisible();
     await expect(page.getByText('What is the Banner Generator?')).toBeVisible();
 
     const faqSchema = await page.locator('script[type="application/ld+json"]').evaluateAll((scripts) =>
