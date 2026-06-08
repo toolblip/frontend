@@ -1162,13 +1162,22 @@ export default function AccountPage() {
                 {portalError && (
                   <p className="text-sm text-red-600 dark:text-red-400">{portalError}</p>
                 )}
-                <button
-                  onClick={openCustomerPortal}
-                  disabled={loadingPortal}
-                  className="mt-2 rounded-full bg-gray-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200"
-                >
-                  {loadingPortal ? "Opening..." : "Manage Billing"}
-                </button>
+                <div className="mt-2 flex flex-wrap items-center gap-3">
+                  <button
+                    onClick={openCustomerPortal}
+                    disabled={loadingPortal}
+                    className="rounded-full bg-gray-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200"
+                  >
+                    {loadingPortal ? "Opening..." : "Manage Billing"}
+                  </button>
+                  <Link
+                    href="/pricing"
+                    data-testid="dashboard-change-plan"
+                    className="rounded-full border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+                  >
+                    Upgrade or change plan
+                  </Link>
+                </div>
 
                 <div className="mt-5">
                   <FreePlanCard ctaLabel="Downgrade to Free" onCtaClick={openCustomerPortal} />
