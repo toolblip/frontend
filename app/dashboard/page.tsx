@@ -682,6 +682,9 @@ export default function AccountPage() {
     : null;
 
   const tierName = displayOnboardingPlanName(subscription?.tier);
+  // A paid plan that is no longer "active" is scheduled to cancel: the user keeps
+  // access until plan_ends_at rather than being downgraded immediately.
+  const planScheduledToCancel = Boolean(subscription?.is_pro) && subscription?.subscription_status !== "active";
   const favoriteCount = favoriteTools.length;
   const showTermsOnboarding = Boolean(user.requires_terms_acceptance);
   const orderedPlans = sortPricingPlans(pricingPlans);
@@ -1119,12 +1122,22 @@ export default function AccountPage() {
                   <span className="font-medium text-red-700 dark:text-red-400">{tierName} plan active</span>
                 </div>
 
-                {planEndDate && (
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {subscription.subscription_status === "active"
-                      ? `Renews on ${planEndDate}`
-                      : `Active until ${planEndDate}`}
-                  </p>
+                {planScheduledToCancel ? (
+                  <div
+                    data-testid="cancellation-scheduled"
+                    className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-200"
+                  >
+                    <p className="font-medium">Cancellation scheduled</p>
+                    <p className="mt-1">
+                      {planEndDate
+                        ? `You'll keep ${tierName ?? "your"} plan access until ${planEndDate}.`
+                        : `You'll keep ${tierName ?? "your"} plan access until the end of your billing period.`}
+                    </p>
+                  </div>
+                ) : (
+                  planEndDate && (
+                    <p className="text-sm text-gray-500 dark:text-gray-400">Renews on {planEndDate}</p>
+                  )
                 )}
 
                 {(subscription.storage_gb ?? 0) > 0 || (subscription.max_file_size_mb ?? 0) > 0 ? (
@@ -1173,6 +1186,23 @@ export default function AccountPage() {
                 <div className="mt-5">
                   <FreePlanCard ctaLabel="Downgrade to Free" onCtaClick={openCustomerPortal} />
                 </div>
+
+                {!planScheduledToCancel && (
+                  <div className="mt-4 border-t border-gray-100 pt-4 dark:border-gray-800">
+                    <button
+                      type="button"
+                      onClick={openCustomerPortal}
+                      disabled={loadingPortal}
+                      data-testid="cancel-plan"
+                      className="text-sm font-medium text-gray-500 underline underline-offset-4 transition hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50 dark:text-gray-400 dark:hover:text-red-400"
+                    >
+                      Cancel plan
+                    </button>
+                    <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                      Cancellation isn&apos;t immediate — you keep access until the end of your billing period.
+                    </p>
+                  </div>
+                )}
               </div>
             ) : (
               <div className="mt-5">
