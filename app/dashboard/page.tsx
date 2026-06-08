@@ -175,6 +175,7 @@ export default function AccountPage() {
   const { user, token, login, logout, loading: authLoading } = useAuth();
   const router = useRouter();
   const [subscription, setSubscription] = useState<Subscription | null>(null);
+  const [subscriptionError, setSubscriptionError] = useState(false);
   const [loadingPortal, setLoadingPortal] = useState(false);
   const [portalError, setPortalError] = useState<string | null>(null);
   const [checkingSession, setCheckingSession] = useState(false);
@@ -433,6 +434,7 @@ export default function AccountPage() {
 
   async function checkSubscription() {
     if (!token) return;
+    setSubscriptionError(false);
     try {
       const res = await fetch(`/api/subscription`, {
         headers: {
@@ -443,9 +445,12 @@ export default function AccountPage() {
       if (res.ok) {
         const data = await res.json();
         setSubscription(data);
+      } else {
+        // Don't treat a failed load as a silent success — surface an error state.
+        setSubscriptionError(true);
       }
     } catch {
-      // ignore network errors
+      setSubscriptionError(true);
     } finally {
       setCheckingSession(false);
     }
@@ -956,8 +961,8 @@ export default function AccountPage() {
           <div className="grid gap-3 sm:grid-cols-3">
             <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-950/60">
               <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Plan</p>
-              <p className="mt-2 text-lg font-semibold text-gray-900 dark:text-white">{subscription === null ? "Loading..." : subscription.is_pro ? `${tierName ?? "Pro"}` : "Free"}</p>
-              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{subscription === null ? "Checking subscription" : subscription.is_pro ? "Billing is active" : "No upgrade selected"}</p>
+              <p className="mt-2 text-lg font-semibold text-gray-900 dark:text-white">{subscription === null ? (subscriptionError ? "Unavailable" : "Loading...") : subscription.is_pro ? `${tierName ?? "Pro"}` : "Free"}</p>
+              <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{subscription === null ? (subscriptionError ? "Couldn't load plan" : "Checking subscription") : subscription.is_pro ? "Billing is active" : "No upgrade selected"}</p>
             </div>
             <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-950/60">
               <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Favorites</p>
@@ -1107,7 +1112,20 @@ export default function AccountPage() {
           <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900" id="billing">
             <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Subscription</h2>
 
-            {subscription === null ? (
+            {subscription === null && subscriptionError ? (
+              <div data-testid="subscription-error" className="mt-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm dark:border-amber-900/50 dark:bg-amber-950/30">
+                <p className="font-medium text-amber-800 dark:text-amber-200">Billing status unavailable</p>
+                <p className="mt-1 text-amber-700 dark:text-amber-300">We couldn&apos;t load your plan right now.</p>
+                <button
+                  type="button"
+                  onClick={checkSubscription}
+                  data-testid="subscription-retry"
+                  className="mt-3 rounded-full border border-amber-300 px-4 py-1.5 text-xs font-medium text-amber-800 transition hover:bg-amber-100 dark:border-amber-800 dark:text-amber-200 dark:hover:bg-amber-900/40"
+                >
+                  Retry
+                </button>
+              </div>
+            ) : subscription === null ? (
               <div className="mt-5 flex items-center gap-3">
                 <div className="h-3 w-3 rounded-full bg-gray-400 animate-pulse" />
                 <span className="text-gray-500">Checking subscription...</span>
