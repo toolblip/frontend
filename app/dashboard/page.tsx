@@ -205,6 +205,7 @@ export default function AccountPage() {
   const [favoriteTools, setFavoriteTools] = useState<FavoriteTool[]>([]);
   const [favoriteToolsLoading, setFavoriteToolsLoading] = useState(false);
   const [recentTools, setRecentTools] = useState<RecentTool[]>([]);
+  const [copiedFavoriteSlug, setCopiedFavoriteSlug] = useState<string | null>(null);
   const [pricingPlans, setPricingPlans] = useState<Plan[]>(FALLBACK_PLANS);
 
   // Recent tools live in localStorage (recorded on tool pages). Read after mount
@@ -438,6 +439,34 @@ export default function AccountPage() {
     } finally {
       setFavoriteToolsLoading(false);
     }
+  }
+
+  // Link-based share: copy the public canonical tool URL for a saved favorite.
+  // No shared favorites-list object — just the same /tools/[slug] public link.
+  async function shareFavorite(slug: string) {
+    const base = process.env.NEXT_PUBLIC_APP_URL || "https://toolblip.com";
+    const url = `${base}/tools/${slug}`;
+
+    try {
+      await navigator.clipboard.writeText(url);
+    } catch {
+      const textarea = document.createElement("textarea");
+      textarea.value = url;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.left = "-9999px";
+      document.body.appendChild(textarea);
+      textarea.select();
+      try {
+        document.execCommand("copy");
+      } catch {
+        // best-effort only
+      }
+      document.body.removeChild(textarea);
+    }
+
+    setCopiedFavoriteSlug(slug);
+    window.setTimeout(() => setCopiedFavoriteSlug((current) => (current === slug ? null : current)), 1500);
   }
 
   async function checkSubscription() {
@@ -1107,17 +1136,27 @@ export default function AccountPage() {
               ) : favoriteTools.length > 0 ? (
                 <div className="space-y-3">
                   {favoriteTools.map((tool) => (
-                    <Link
+                    <div
                       key={tool.slug}
-                      href={`/tools/${tool.slug}`}
                       className="flex items-start gap-3 rounded-2xl border border-gray-200 p-4 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-800 dark:hover:border-red-900 dark:hover:bg-red-950/30"
                     >
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-lg dark:bg-gray-800">{tool.icon || "🧰"}</span>
-                      <span>
-                        <span className="block font-semibold text-gray-900 dark:text-white">{tool.name}</span>
-                        <span className="line-clamp-2 text-sm text-gray-500 dark:text-gray-400">{tool.description}</span>
-                      </span>
-                    </Link>
+                      <Link href={`/tools/${tool.slug}`} className="flex min-w-0 flex-1 items-start gap-3">
+                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-lg dark:bg-gray-800">{tool.icon || "🧰"}</span>
+                        <span className="min-w-0">
+                          <span className="block font-semibold text-gray-900 dark:text-white">{tool.name}</span>
+                          <span className="line-clamp-2 text-sm text-gray-500 dark:text-gray-400">{tool.description}</span>
+                        </span>
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => shareFavorite(tool.slug)}
+                        data-testid={`favorite-share-${tool.slug}`}
+                        aria-label={`Copy link to ${tool.name}`}
+                        className="shrink-0 self-center rounded-full border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+                      >
+                        {copiedFavoriteSlug === tool.slug ? "Copied" : "Copy link"}
+                      </button>
+                    </div>
                   ))}
                 </div>
               ) : (
