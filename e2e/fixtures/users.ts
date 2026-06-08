@@ -12,6 +12,12 @@ export const VALID_USER: TestUser = {
   password: 'Password123!',
 };
 
+export const ADMIN_USER: TestUser = {
+  name: 'Admin User',
+  email: 'admin@toolblip.test',
+  password: 'Password123!',
+};
+
 export const TAKEN_EMAIL = 'taken@toolblip.test';
 
 export function makeUser(prefix = 'tester'): TestUser {
