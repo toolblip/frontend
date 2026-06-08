@@ -68,6 +68,18 @@ const REDIRECTS: Record<string, string> = {
   'check-favicon': 'favicon-checker-express',
   'favicon-test': 'favicon-checker-express',
   'metadata-viewer': 'metadata',
+  'mp4-gif': 'mp4-to-gif',
+  'mp4-to-gif-converter': 'mp4-to-gif',
+  'mp4-gif-converter': 'mp4-to-gif',
+  'convert-mp4-to-gif': 'mp4-to-gif',
+  'convert-mp4-to-gif-online': 'mp4-to-gif',
+  'mp4-to-gif-online': 'mp4-to-gif',
+  'poll-maker': 'poll-generator',
+  'make-a-poll': 'poll-generator',
+  'create-a-poll': 'poll-generator',
+  'poll-generator-online': 'poll-generator',
+  'twitter-poll-generator': 'poll-generator',
+  'instagram-poll-generator': 'poll-generator',
 
   // SASS / SCSS search variants
   'sass': 'sass-to-css',
