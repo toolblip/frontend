@@ -42,6 +42,7 @@ export default function AdminPlanActions({
   const [result, setResult] = useState<AdminPlanAudit | null>(null);
 
   const isCancelled = user.subscription_status === "canceled";
+  const canCancel = Boolean(user.tier && user.tier !== "free" && user.subscription_status === "active");
 
   function openSet() {
     setError(null);
@@ -49,6 +50,7 @@ export default function AdminPlanActions({
   }
 
   function openCancel() {
+    if (!canCancel) return;
     setError(null);
     setPending({ type: "cancel" });
   }
@@ -124,14 +126,12 @@ export default function AdminPlanActions({
           type="button"
           data-testid="cancel-plan-action"
           onClick={openCancel}
-          disabled={isCancelled}
+          disabled={!canCancel || isCancelled}
           className="rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
         >
-          {isCancelled ? "Cancellation scheduled" : "Cancel plan"}
+          {isCancelled ? "Cancellation scheduled" : canCancel ? "Cancel plan" : "No active subscription"}
         </button>
       </div>
-
-      {error && <p data-testid="plan-action-error" className="mt-3 text-sm text-red-600 dark:text-red-400">{error}</p>}
 
       {result && (
         <div
@@ -194,6 +194,12 @@ export default function AdminPlanActions({
                 className="w-full rounded-xl border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
               />
             </label>
+
+            {error && (
+              <p data-testid="plan-action-error" className="mt-4 text-sm text-red-600 dark:text-red-400">
+                {error}
+              </p>
+            )}
 
             <div className="mt-5 flex justify-end gap-3">
               <button
