@@ -3,6 +3,11 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Dashboard | Toolblip',
   description: 'Manage your Toolblip dashboard, subscription, API access, and profile settings.',
+  // Account-only, auth-gated surface with no public content — keep it out of the index.
+  robots: {
+    index: false,
+    follow: false,
+  },
   openGraph: {
     title: 'Dashboard | Toolblip',
     description: 'Manage your Toolblip dashboard, subscription, API access, and profile settings.',

@@ -4,6 +4,9 @@ import SignupForm from './SignupForm';
 export const metadata: Metadata = {
   title: 'Create Account | Toolblip',
   description: 'Create a free Toolblip account to save API keys, manage your profile, and submit MCP servers to the community directory.',
+  alternates: {
+    canonical: 'https://toolblip.com/signup',
+  },
   openGraph: {
     title: 'Create Account | Toolblip',
     description: 'Create a free Toolblip account to save API keys, manage your profile, and submit MCP servers to the community directory.',
