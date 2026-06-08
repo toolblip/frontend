@@ -15,6 +15,7 @@ import {
   sortPricingPlans,
   type BillingCycle,
 } from "@/components/v2/PricingSection";
+import { getRecentTools, type RecentTool } from "@/lib/toolHistory";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.toolblip.com";
 
@@ -203,7 +204,14 @@ export default function AccountPage() {
   const [planOnboardingError, setPlanOnboardingError] = useState("");
   const [favoriteTools, setFavoriteTools] = useState<FavoriteTool[]>([]);
   const [favoriteToolsLoading, setFavoriteToolsLoading] = useState(false);
+  const [recentTools, setRecentTools] = useState<RecentTool[]>([]);
   const [pricingPlans, setPricingPlans] = useState<Plan[]>(FALLBACK_PLANS);
+
+  // Recent tools live in localStorage (recorded on tool pages). Read after mount
+  // to avoid a server/client hydration mismatch.
+  useEffect(() => {
+    setRecentTools(getRecentTools());
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -688,6 +696,9 @@ export default function AccountPage() {
 
   const tierName = displayOnboardingPlanName(subscription?.tier);
   const favoriteCount = favoriteTools.length;
+  // Favorites take precedence, so a favorited tool isn't also shown under recents.
+  const favoriteSlugs = new Set(favoriteTools.map((tool) => tool.slug));
+  const visibleRecentTools = recentTools.filter((tool) => !favoriteSlugs.has(tool.slug));
   const showTermsOnboarding = Boolean(user.requires_terms_acceptance);
   const orderedPlans = sortPricingPlans(pricingPlans);
 
@@ -1104,6 +1115,36 @@ export default function AccountPage() {
               ) : (
                 <div className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 p-5 text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-950/40 dark:text-gray-400">
                   Favorite tools from any tool page to keep them here.
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900" id="recent-tools">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Recent tools</h2>
+                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">Tools you opened recently, newest first.</p>
+              </div>
+              <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">{`${visibleRecentTools.length} recent`}</span>
+            </div>
+            <div className="mt-5">
+              {visibleRecentTools.length > 0 ? (
+                <div className="space-y-3">
+                  {visibleRecentTools.map((tool) => (
+                    <Link
+                      key={tool.slug}
+                      href={`/tools/${tool.slug}`}
+                      className="flex items-center gap-3 rounded-2xl border border-gray-200 p-4 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-800 dark:hover:border-red-900 dark:hover:bg-red-950/30"
+                    >
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-lg dark:bg-gray-800">{tool.icon || "🧰"}</span>
+                      <span className="block font-semibold text-gray-900 dark:text-white">{tool.name}</span>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 p-5 text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-950/40 dark:text-gray-400">
+                  Tools you open will show up here.
                 </div>
               )}
             </div>

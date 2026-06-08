@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } 
 import { useRouter } from "next/navigation";
 import GoogleAuthButton from "@/components/auth/GoogleAuthButton";
 import { useAuth } from "@/app/providers/auth-provider";
+import { recordRecentTool } from "@/lib/toolHistory";
 
 type EngagementStats = {
   slug: string;
@@ -384,6 +385,8 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
   useEffect(() => {
     refreshStats();
     recordViewOnce();
+    // Best-effort client-side history for the dashboard "Recent tools" panel.
+    recordRecentTool({ slug: toolSlug, name: toolName, icon: toolIcon });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolSlug]);
 
