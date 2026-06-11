@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } 
 import { useRouter } from "next/navigation";
 import GoogleAuthButton from "@/components/auth/GoogleAuthButton";
 import { useAuth } from "@/app/providers/auth-provider";
+import { recordUsageEvent } from "@/lib/usage";
 
 type EngagementStats = {
   slug: string;
@@ -375,6 +376,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
   async function recordViewOnce() {
     if (viewRecordedRef.current) return;
     viewRecordedRef.current = true;
+    recordUsageEvent(toolSlug);
     const res = await fetch(`/api/tools/${toolSlug}/view`, { method: "POST", credentials: "include" });
     if (!res.ok) return;
     const data = await res.json();

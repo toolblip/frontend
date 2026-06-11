@@ -6,6 +6,14 @@ import Link from "next/link";
 import { useAuth } from "@/app/providers/auth-provider";
 import { useRouter } from "next/navigation";
 import { createCheckoutSession } from "@/lib/api";
+import { getToolBySlug } from "@/data/tools";
+import {
+  FREE_DAILY_LIMIT,
+  readTodayUsageBreakdown,
+  readUsageHistory,
+  type ToolUsageHistoryEvent,
+  type ToolUsageSnapshot,
+} from "@/lib/usage";
 import {
   PricingBillingToggle,
   PricingPlanCard,
@@ -103,6 +111,21 @@ function normalizeWorkspaceName(teamName?: string | null, userName?: string | nu
   }
 
   return trimmedTeamName;
+}
+
+function usageLimitLabel(isPro: boolean | null | undefined, limit: number | null | undefined) {
+  if (isPro) return "Unlimited (Pro)";
+  if (typeof limit !== "number") return "Unknown";
+  return `${limit} tools/day`;
+}
+
+function formatUsageTime(value: string) {
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return "Unknown";
+  return new Intl.DateTimeFormat("en", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(parsed);
 }
 
 const FALLBACK_PLANS: Plan[] = [
@@ -226,6 +249,9 @@ export default function AccountPage() {
   const [planOnboardingError, setPlanOnboardingError] = useState("");
   const [favoriteTools, setFavoriteTools] = useState<FavoriteTool[]>([]);
   const [favoriteToolsLoading, setFavoriteToolsLoading] = useState(false);
+  const [usageByTool, setUsageByTool] = useState<ToolUsageSnapshot[]>([]);
+  const [usageHistory, setUsageHistory] = useState<ToolUsageHistoryEvent[]>([]);
+  const [usageLoading, setUsageLoading] = useState(false);
   const [pricingPlans, setPricingPlans] = useState<Plan[]>(FALLBACK_PLANS);
 
   useEffect(() => {
@@ -429,8 +455,20 @@ export default function AccountPage() {
   }, [token]);
 
   useEffect(() => {
+    loadUsageAnalytics();
     loadFavoriteTools();
   }, [token]);
+
+  function loadUsageAnalytics() {
+    setUsageLoading(true);
+
+    try {
+      setUsageByTool(readTodayUsageBreakdown());
+      setUsageHistory(readUsageHistory(12));
+    } finally {
+      setUsageLoading(false);
+    }
+  }
 
   async function loadFavoriteTools() {
     if (!token) return;
@@ -724,6 +762,16 @@ export default function AccountPage() {
       </div>
     );
   }
+
+  const usageTotalToday = usageByTool.reduce((sum, item) => sum + item.count, 0);
+  const usageLimit = subscription ? (subscription.is_pro ? null : FREE_DAILY_LIMIT) : null;
+  const usageLimitText = usageLimitLabel(subscription?.is_pro, usageLimit);
+  const topUsageItems = usageByTool.slice(0, 3);
+
+  const resolveToolName = (slug: string) => {
+    const tool = getToolBySlug(slug);
+    return tool?.name ?? slug;
+  };
 
   const planEndDate = subscription?.plan_ends_at
     ? new Date(subscription.plan_ends_at).toLocaleDateString("en-US", {
@@ -1140,6 +1188,65 @@ export default function AccountPage() {
         </div>
 
         <div className="space-y-6">
+          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900" id="usage-analytics">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Usage analytics</h2>
+                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                  Track your tool usage, daily limits, and recent activity.
+                </p>
+              </div>
+              <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">{usageLoading ? "Loading" : `${usageTotalToday} / ${usageLimitText}`}</span>
+            </div>
+
+            <div className="mt-5 space-y-5">
+              <div>
+                <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Top used tools</h3>
+                {usageLoading ? (
+                  <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">Loading usage snapshot...</p>
+                ) : topUsageItems.length > 0 ? (
+                  <div className="mt-3 space-y-2 rounded-xl border border-gray-100 bg-gray-50 p-3 dark:border-gray-800 dark:bg-gray-950">
+                    {topUsageItems.map((entry) => (
+                      <div
+                        key={`${entry.slug}-top`}
+                        className="flex items-center justify-between text-sm text-gray-700 dark:text-gray-300"
+                      >
+                        <span className="truncate">{resolveToolName(entry.slug)}</span>
+                        <span className="ml-2 rounded-md bg-white px-2 py-0.5 text-gray-900 dark:bg-gray-900 dark:text-white">
+                          {entry.count}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">No usage yet today.</p>
+                )}
+              </div>
+
+              <div>
+                <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Recent usage history</h3>
+                {usageLoading ? (
+                  <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">Loading recent history...</p>
+                ) : usageHistory.length > 0 ? (
+                  <div className="mt-3 space-y-2 rounded-xl border border-gray-100 bg-gray-50 p-3 dark:border-gray-800 dark:bg-gray-950">
+                    {usageHistory.map((event) => (
+                      <Link
+                        key={`${event.slug}-${event.at}`}
+                        href={`/tools/${event.slug}`}
+                        className="flex items-center justify-between gap-3 rounded-lg border border-transparent p-2 text-sm hover:border-red-200 hover:bg-red-50 dark:hover:border-red-900 dark:hover:bg-red-950/30"
+                      >
+                        <span className="truncate text-gray-700 dark:text-gray-300">{resolveToolName(event.slug)}</span>
+                        <span className="text-xs text-gray-500 dark:text-gray-400">{formatUsageTime(event.at)} • {event.count}</span>
+                      </Link>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">No usage history yet.</p>
+                )}
+              </div>
+            </div>
+          </div>
+
           <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900" id="favorite-tools">
             <div className="flex items-start justify-between gap-4">
               <div>
