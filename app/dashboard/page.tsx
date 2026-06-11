@@ -46,6 +46,14 @@ interface FavoriteTool {
   favorited_at?: string | null;
 }
 
+interface ApiKeyRecord {
+  id: number;
+  name: string;
+  key: string | null;
+  last_used_at: string | null;
+  created_at: string;
+}
+
 type OnboardingStatus = "completed" | "draft" | "skipped";
 type OnboardingStep = "welcome" | "pricing";
 type OnboardingPlanTier = "free" | "starter" | "ultra" | "max";
@@ -252,6 +260,14 @@ export default function AccountPage() {
   const [usageByTool, setUsageByTool] = useState<ToolUsageSnapshot[]>([]);
   const [usageHistory, setUsageHistory] = useState<ToolUsageHistoryEvent[]>([]);
   const [usageLoading, setUsageLoading] = useState(false);
+  const [apiKeys, setApiKeys] = useState<ApiKeyRecord[]>([]);
+  const [apiKeysLoading, setApiKeysLoading] = useState(false);
+  const [apiKeyError, setApiKeyError] = useState("");
+  const [apiKeyName, setApiKeyName] = useState("");
+  const [creatingApiKey, setCreatingApiKey] = useState(false);
+  const [revokingApiKeyId, setRevokingApiKeyId] = useState<number | null>(null);
+  const [createdApiKeyValue, setCreatedApiKeyValue] = useState("");
+  const [createdApiKeyCopied, setCreatedApiKeyCopied] = useState(false);
   const [pricingPlans, setPricingPlans] = useState<Plan[]>(FALLBACK_PLANS);
 
   useEffect(() => {
@@ -459,6 +475,19 @@ export default function AccountPage() {
     loadFavoriteTools();
   }, [token]);
 
+  useEffect(() => {
+    if (!token) return;
+
+    if (!subscription?.is_pro && !subscription?.api_access) {
+      setApiKeys([]);
+      setCreatedApiKeyValue("");
+      setApiKeyError("");
+      return;
+    }
+
+    loadApiKeys();
+  }, [token, subscription?.is_pro, subscription?.api_access]);
+
   function loadUsageAnalytics() {
     setUsageLoading(true);
 
@@ -483,6 +512,114 @@ export default function AccountPage() {
       // ignore favorite loading errors
     } finally {
       setFavoriteToolsLoading(false);
+    }
+  }
+
+  async function loadApiKeys() {
+    setApiKeysLoading(true);
+    setApiKeyError("");
+
+    try {
+      const res = await fetch("/api/keys", {
+        credentials: "include",
+        headers: { Accept: "application/json" },
+      });
+      const data = await res.json();
+
+      if (res.ok && Array.isArray(data?.data)) {
+        setApiKeys(data.data as ApiKeyRecord[]);
+        return;
+      }
+
+      if (!res.ok) {
+        setApiKeyError(data?.message || "Could not load API keys.");
+        return;
+      }
+
+      setApiKeys([]);
+    } catch {
+      setApiKeyError("Could not load API keys.");
+    } finally {
+      setApiKeysLoading(false);
+    }
+  }
+
+  async function handleCreateApiKey(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const normalizedName = apiKeyName.trim();
+    if (!normalizedName || creatingApiKey) return;
+
+    setCreatingApiKey(true);
+    setApiKeyError("");
+
+    try {
+      const res = await fetch("/api/keys", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ name: normalizedName }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        setApiKeyError(data?.message || "Could not create API key.");
+        return;
+      }
+
+      const created: ApiKeyRecord = {
+        id: data.id,
+        name: data.name,
+        key: data.key,
+        created_at: data.created_at,
+        last_used_at: null,
+      };
+
+      setApiKeys((current) => [created, ...current]);
+      setCreatedApiKeyValue(data.key);
+      setApiKeyName("");
+    } catch {
+      setApiKeyError("Could not create API key.");
+    } finally {
+      setCreatingApiKey(false);
+    }
+  }
+
+  async function handleRevokeApiKey(keyId: number) {
+    if (revokingApiKeyId !== null) return;
+    setRevokingApiKeyId(keyId);
+
+    try {
+      const res = await fetch(`/api/keys/${keyId}`, {
+        method: "DELETE",
+        credentials: "include",
+        headers: { Accept: "application/json" },
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setApiKeyError(data?.message || "Could not revoke API key.");
+        return;
+      }
+
+      setApiKeys((current) => current.filter((key) => key.id !== keyId));
+    } catch {
+      setApiKeyError("Could not revoke API key.");
+    } finally {
+      setRevokingApiKeyId(null);
+    }
+  }
+
+  async function copyToClipboard(value: string, onCopied: () => void) {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(value);
+        onCopied();
+      }
+    } catch {
+      // ignore copy failures
     }
   }
 
@@ -766,6 +903,7 @@ export default function AccountPage() {
   const usageTotalToday = usageByTool.reduce((sum, item) => sum + item.count, 0);
   const usageLimit = subscription ? (subscription.is_pro ? null : FREE_DAILY_LIMIT) : null;
   const usageLimitText = usageLimitLabel(subscription?.is_pro, usageLimit);
+  const canManageApiKeys = Boolean(subscription?.is_pro || subscription?.api_access);
   const topUsageItems = usageByTool.slice(0, 3);
 
   const resolveToolName = (slug: string) => {
@@ -1280,6 +1418,116 @@ export default function AccountPage() {
                 </div>
               )}
             </div>
+          </div>
+
+          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900" id="api-keys">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">API keys</h2>
+                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                  Generate and manage API keys to integrate Toolblip externally.
+                </p>
+              </div>
+              <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                {canManageApiKeys ? `${apiKeys.length} key${apiKeys.length === 1 ? "" : "s"}` : "Pro only"}
+              </span>
+            </div>
+
+            {subscription === null ? (
+              <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">Checking subscription permissions...</p>
+            ) : !canManageApiKeys ? (
+              <div className="mt-4 rounded-xl border border-dashed border-amber-300 bg-amber-50 p-4 text-sm text-amber-800 dark:border-amber-800 dark:bg-amber-900/20 dark:text-amber-300">
+                API key support is available with a paid subscription.
+                <div className="mt-2">
+                  <Link href="/pricing" className="font-medium text-amber-800 underline hover:text-amber-900 dark:text-amber-200 dark:hover:text-amber-100">
+                    View plans
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              <div className="mt-5 space-y-4">
+                {apiKeyError && <p role="alert" className="text-sm text-red-600 dark:text-red-400">{apiKeyError}</p>}
+
+                <form onSubmit={handleCreateApiKey} className="space-y-3">
+                  <label htmlFor="api-key-name" className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    New key name
+                  </label>
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                    <input
+                      id="api-key-name"
+                      type="text"
+                      value={apiKeyName}
+                      onChange={(event) => setApiKeyName(event.target.value)}
+                      disabled={creatingApiKey}
+                      maxLength={64}
+                      placeholder="eg. CI pipeline"
+                      className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-900 shadow-sm outline-none transition focus:border-red-500 focus:ring-2 focus:ring-red-500/20 disabled:opacity-60 dark:border-gray-700 dark:bg-gray-950 dark:text-white"
+                    />
+                    <button
+                      type="submit"
+                      disabled={creatingApiKey || !apiKeyName.trim()}
+                      className="rounded-full bg-gray-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200"
+                    >
+                      {creatingApiKey ? "Creating..." : "Create key"}
+                    </button>
+                  </div>
+                </form>
+
+                {createdApiKeyValue ? (
+                  <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950/30 dark:text-emerald-200">
+                    <p className="font-medium">Your new API key (copy now):</p>
+                    <div className="mt-2 flex items-center gap-2">
+                      <span className="break-all rounded-lg bg-white px-2 py-1 text-xs text-gray-900 dark:bg-gray-950">{createdApiKeyValue}</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          void copyToClipboard(createdApiKeyValue, () => {
+                            setCreatedApiKeyCopied(true);
+                            window.setTimeout(() => setCreatedApiKeyCopied(false), 1200);
+                          });
+                        }}
+                        className="rounded-md bg-emerald-600 px-3 py-2 text-xs font-medium text-white hover:bg-emerald-700"
+                      >
+                        {createdApiKeyCopied ? "Copied" : "Copy"}
+                      </button>
+                    </div>
+                    <p className="mt-2 text-xs text-emerald-700 dark:text-emerald-300">Save this value now—this is the only time it will be fully shown.</p>
+                  </div>
+                ) : null}
+
+                {apiKeysLoading ? (
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Loading keys...</p>
+                ) : apiKeys.length > 0 ? (
+                  <div className="space-y-3">
+                    {apiKeys.map((key) => (
+                      <div key={key.id} className="rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-800 dark:bg-gray-950">
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <p className="text-sm font-semibold text-gray-900 dark:text-white">{key.name}</p>
+                            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">{key.key ?? "•••"}</p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => handleRevokeApiKey(key.id)}
+                            disabled={revokingApiKeyId === key.id}
+                            className="rounded-full border border-red-200 px-3 py-1 text-xs font-semibold text-red-700 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-red-800 dark:text-red-300 dark:hover:bg-red-950/40"
+                          >
+                            {revokingApiKeyId === key.id ? "Revoking..." : "Revoke"}
+                          </button>
+                        </div>
+                        <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                          Created {formatUsageTime(key.created_at)} • Last used {key.last_used_at ? formatUsageTime(key.last_used_at) : "never"}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="rounded-xl border border-dashed border-gray-300 bg-gray-50 p-4 text-sm text-gray-500 dark:border-gray-700 dark:bg-gray-950/40 dark:text-gray-400">
+                    No API keys yet. Create one to get started.
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900" id="billing">
