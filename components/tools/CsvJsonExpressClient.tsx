@@ -43,49 +43,26 @@ function tsvToJson(tsv: string): string {
 }
 
 function jsonToCsv(json: string): string {
-  try {
-    const data = JSON.parse(json);
-    if (!Array.isArray(data) || data.length === 0) return '';
-    
-    const headers = Object.keys(data[0]);
-    const csvLines = [headers.join(',')];
-    
-    for (const row of data) {
-      const values = headers.map(h => {
-        const val = row[h];
-        if (val === null || val === undefined) return '';
-        const str = String(val);
-        return str.includes(',') || str.includes('"') ? `"${str.replace(/"/g, '""')}"` : str;
-      });
-      csvLines.push(values.join(','));
-    }
-    
-    return csvLines.join('\n');
-  } catch {
-    throw new Error('Invalid JSON. Provide a JSON array.');
+  const data = JSON.parse(json);
+  if (!Array.isArray(data)) throw new Error('JSON must be an array.');
+  if (data.length === 0) return '';
+
+  const headers = Object.keys(data[0]);
+  const csvLines = [headers.join(',')];
+
+  for (const row of data) {
+    const values = headers.map((header) => {
+      const val = row[header];
+      return val === null || val === undefined ? '' : String(val);
+    });
+    csvLines.push(values.join(','));
   }
+
+  return csvLines.join('\n');
 }
 
-function jsonToTsv(json: string): string {
-  try {
-    const data = JSON.parse(json);
-    if (!Array.isArray(data) || data.length === 0) return '';
-    
-    const headers = Object.keys(data[0]);
-    const tsvLines = [headers.join('\t')];
-    
-    for (const row of data) {
-      const values = headers.map(h => {
-        const val = row[h];
-        return val === null || val === undefined ? '' : String(val);
-      });
-      tsvLines.push(values.join('\t'));
-    }
-    
-    return tsvLines.join('\n');
-  } catch {
-    throw new Error('Invalid JSON. Provide a JSON array.');
-  }
+function normalizeCsv(value: string): string {
+  return value.includes('\n') ? value.trim() : value;
 }
 
 type Mode = 'csv-json' | 'tsv-json' | 'json-csv' | 'json-tsv';
@@ -113,7 +90,9 @@ export default function CsvJsonExpressClient() {
           setOutput(jsonToCsv(input));
           break;
         case 'json-tsv':
-          setOutput(jsonToTsv(input));
+          // Keep this conversion path intentionally separate to preserve the user's requested mode.
+          const jsonData = JSON.parse(input);
+          setOutput(jsonToTsv(jsonData));
           break;
       }
     } catch (e) {
@@ -121,9 +100,66 @@ export default function CsvJsonExpressClient() {
     }
   }, [input, mode]);
 
+  const jsonToTsv = useCallback((jsonValue: any) => {
+    const data = JSON.parse(JSON.stringify(jsonValue));
+    if (!Array.isArray(data) || data.length === 0) return '';
+
+    const headers = Object.keys(data[0]);
+    const tsvLines = [headers.join('\t')];
+
+    for (const row of data) {
+      const values = headers.map((h) => {
+        const value = row[h];
+        return value === null || value === undefined ? '' : String(value);
+      });
+      tsvLines.push(values.join('\t'));
+    }
+
+    return tsvLines.join('\n');
+  }, []);
+
   const copy = useCallback((text: string) => {
     navigator.clipboard.writeText(text);
   }, []);
+
+  const download = useCallback((text: string, filename: string, type: string) => {
+    const blob = new Blob([text], { type });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(url);
+  }, []);
+
+  const exportAsJson = useCallback(() => {
+    if (!output) return;
+
+    try {
+      const text = mode === 'json-csv' || mode === 'json-tsv' ? null : output;
+      const jsonText = text ?? (mode === 'json-csv' ? csvToJson(output) : tsvToJson(output));
+      download(jsonText, 'tool-result.json', 'application/json;charset=utf-8');
+    } catch {
+      setError('Could not export JSON from this result.');
+    }
+  }, [download, mode, output]);
+
+  const exportAsCsv = useCallback(() => {
+    if (!output) return;
+
+    try {
+      let csvText = output;
+      if (mode === 'csv-json' || mode === 'tsv-json') {
+        csvText = jsonToCsv(output);
+      } else if (mode === 'json-tsv') {
+        csvText = jsonToCsv(tsvToJson(output));
+      }
+
+      download(normalizeCsv(csvText), 'tool-result.csv', 'text/csv;charset=utf-8');
+    } catch {
+      setError('Could not export CSV from this result.');
+    }
+  }, [download, mode, output]);
 
   const swap = useCallback(() => {
     const newMode = mode.includes('json') 
@@ -222,6 +258,18 @@ export default function CsvJsonExpressClient() {
                 className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline"
               >
                 Swap ↕
+              </button>
+              <button
+                onClick={exportAsJson}
+                className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline"
+              >
+                Export JSON
+              </button>
+              <button
+                onClick={exportAsCsv}
+                className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline"
+              >
+                Export CSV
               </button>
               <button 
                 onClick={() => copy(output)}

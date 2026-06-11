@@ -44,6 +44,35 @@ export default function JsonToCsvClient() {
     navigator.clipboard.writeText(text).catch(() => {});
   }, []);
 
+  const download = useCallback((text: string, filename: string, type: string) => {
+    const blob = new Blob([text], { type });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(url);
+  }, []);
+
+  const exportAsJson = useCallback(() => {
+    if (!output) return;
+
+    let jsonText = input;
+    try {
+      const parsed = JSON.parse(input);
+      jsonText = JSON.stringify(parsed, null, 2);
+    } catch {
+      // fallback to raw input if the JSON parser unexpectedly fails
+    }
+
+    download(jsonText, 'tool-result.json', 'application/json;charset=utf-8');
+  }, [download, input, output]);
+
+  const exportAsCsv = useCallback(() => {
+    if (!output) return;
+    download(output, 'tool-result.csv', 'text/csv;charset=utf-8');
+  }, [download, output]);
+
   const swap = useCallback(() => {
     setInput(output);
     setOutput('');
@@ -86,9 +115,23 @@ export default function JsonToCsvClient() {
         <div className="space-y-2">
           <div className="flex justify-between items-center">
             <label className="text-sm font-medium text-gray-700 dark:text-gray-300">CSV Output</label>
-            <button onClick={() => copy(output)} className="text-xs text-red-600 dark:text-red-400 hover:underline">
-              Copy
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={exportAsJson}
+                className="text-xs text-red-600 dark:text-red-400 hover:underline"
+              >
+                Export JSON
+              </button>
+              <button
+                onClick={exportAsCsv}
+                className="text-xs text-red-600 dark:text-red-400 hover:underline"
+              >
+                Export CSV
+              </button>
+              <button onClick={() => copy(output)} className="text-xs text-red-600 dark:text-red-400 hover:underline">
+                Copy
+              </button>
+            </div>
           </div>
           <pre className="w-full h-40 px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white font-mono text-sm overflow-auto">
             {output}
