@@ -12,6 +12,22 @@ export async function GET(request: NextRequest) {
     );
   }
 
+  // Restrict to same-origin requests from Toolblip (prevents open proxy abuse)
+  const origin = request.headers.get("origin") || "";
+  const referer = request.headers.get("referer") || "";
+  const host = request.headers.get("host") || "";
+  const isFromToolblip =
+    origin.includes("toolblip.com") ||
+    referer.includes("toolblip.com") ||
+    host === "localhost:3000" ||
+    host === "127.0.0.1:3000";
+  if (!isFromToolblip) {
+    return NextResponse.json(
+      { error: "This endpoint is restricted to toolblip.com" },
+      { status: 403 }
+    );
+  }
+
   try {
     // Basic validation — ensure it's a valid absolute URL
     let targetUrl: URL;
