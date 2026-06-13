@@ -57,13 +57,13 @@
 - `done`: confirm the checkout entry point and post-selection redirect — the onboarding flow and pricing referral both preserve plan and billing from pricing through login/signup into dashboard onboarding; the onboarding BDD regression passes 6/6.
 
 ### Task Group B: build and verify
-**Status:** needs attention
+**Status:** done
 - Wire the pricing selection action to the dashboard flow.
 - Ensure plan selection updates the next screen shown after checkout.
 - Verify the redirect behavior in browser.
 
 **Task markers:**
-- `todo`: pricing plan selection and checkout entry implementation — launcher repaired, so the next implementation step can start from the canonical repo-local Claude Code launcher.
+- `done`: pricing plan selection and checkout entry implementation — PR #89 merged on 2026-06-08T04:56:42Z: `https://github.com/toolblip/frontend/pull/89`. Implemented via commit `06e738c7`: authenticated pricing selections now use the cookie-backed auth session (`useAuth` plus `/api/auth/me`) instead of the stale `toolblip_token` localStorage check, so signed-in users route directly to `/dashboard?plan=<tier>&billing=<cycle>` while anonymous users keep the login/signup `next` fallback. Added an onboarding regression for authenticated `/pricing` → dashboard checkout without a login detour. Verification passed: `npx playwright test e2e/auth/onboarding.spec.ts e2e/pricing.spec.ts` returned 8/8 passed, `npx tsc --noEmit` exited 0, and GitHub `auth-e2e` completed successfully.
 
 ## Feature 3: Browser-only fallback messaging
 **Outcome:** Any tool that needs more than browser support shows a clear coming soon state.
@@ -84,9 +84,13 @@
 - `done`: fallback placement rule — unsupported entries already fall back in `ToolUI` to `ComingSoonUI`, which appears on the tool detail page body beneath the normal header/engagement bar. MVP rule: keep the catalog/detail route indexable, but show the coming-soon shell instead of a fake processor whenever the tool needs server-side fetches, third-party APIs, protected credentials, large-file processing, OCR/transcription/AI, or non-browser conversion support.
 
 ### Task Group B: build and verify
+**Status:** done
 - Add the coming soon state to unsupported tool entry points.
 - Keep supported browser tools usable.
 - Verify the fallback copy is visible and clear.
+
+**Task markers:**
+- `done`: browser-only fallback messaging for unsupported tools — PR #90 merged on 2026-06-08T07:24:06Z: `https://github.com/toolblip/frontend/pull/90`. Claude Code replaced the fake placeholder processor fallback with an honest visible coming-soon notice and added `e2e/tools/coming-soon-fallback.spec.ts` to verify unsupported `json-graph-visualizer` shows clear fallback copy without fake processing while supported `word-counter` still renders its real UI. Verification passed: `npx playwright test e2e/tools` returned 18/18 passed, `npx tsc --noEmit` exited 0, and GitHub `auth-e2e` completed successfully.
 
 ## Feature 4: Bare-minimum SEO for launch pages
 **Outcome:** Launch pages have the minimal metadata needed to be indexable and understandable.
@@ -107,6 +111,10 @@
 - `done`: missing metadata pieces — bare-minimum follow-up should add explicit canonical metadata to `/pricing`, `/dashboard`, `/tools`, `/directory`, `/login`, and `/signup`; decide whether authenticated/account-only routes should be noindex instead of indexable; and add basic metadata for `/submit-tool` if it stays in the launch surface.
 
 ### Task Group B: build and verify
+**Status:** done
 - Add the minimum metadata needed for launch pages.
 - Verify visible previews and route metadata.
 - Confirm no launch page is left without basic SEO coverage.
+
+**Task markers:**
+- `done`: bare-minimum SEO for launch pages — PR #91 merged on 2026-06-08T07:24:17Z: `https://github.com/toolblip/frontend/pull/91`. Claude Code added canonical URLs for `/pricing`, `/directory`, `/login`, `/signup`, and `/submit-tool`, set `/dashboard` to `robots: { index: false, follow: false }`, left `/tools` unchanged because it redirects to `/directory`, and added `e2e/seo-launch-metadata.spec.ts`. Verification passed: `npx playwright test e2e/seo-launch-metadata.spec.ts` returned 6/6 passed, `npx tsc --noEmit` exited 0, and GitHub `auth-e2e` completed successfully.

@@ -54,13 +54,13 @@
 ---
 
 ## Current status
-- Master plan: in progress
-- Stages: defined
-- Features: drafted
-- Tasks: drafted as task groups
-- Task markers: not yet assigned per task
+- Master plan: complete for the tracked frontend MVP Task Group A/B work
+- Stages: complete for frontend tasks
+- Features: complete for frontend tasks
+- Tasks: complete as tracked task groups
+- Task markers: assigned and current
 - Current question: none
-- Implementation tracker: created
+- Implementation tracker: current through backend admin API PR #17, now needs human review
 
 ## Persistence rule
 - After each answer, update the plan files immediately so the discussion can resume safely if the thread gets corrupted or interrupted.

@@ -1,5 +1,5 @@
 {
-  "last_refresh_at": "2026-06-11T17:57:45+06:00",
+  "last_refresh_at": "2026-06-13T11:17:00+06:00",
   "workdir": "/Users/ray/Work/toolblip",
   "status": "idle",
   "current_item": "",
@@ -7,9 +7,16 @@
   "assignee": "tb",
   "restart_pending": false,
   "notes": [
-    "2026-06-11 17:29 Dhaka \u2014 Completed TB-S06-F03-T001 and synced supervisor snapshot to done state.",
+    "2026-06-11 17:29 Dhaka — Completed TB-S06-F03-T001 and synced supervisor snapshot to done state.",
     "Active blocked queue reported in kanban after completion: 18 items remain.",
     "tb worker is now idle and ready for the next blocked item in sequence.",
-    "2026-06-11 17:57 TB-S07-F02-T001 completed with API-key management update in dashboard + API proxy routes, then worker returned to idle."
+    "2026-06-11 17:57 TB-S07-F02-T001 completed with API-key management update in dashboard + API proxy routes, then worker returned to idle.",
+    "2026-06-11 23:11 Dhaka — Graceful restart refresh: planning files and tb board re-read; no ready/running/review/blocked items found, so worker remains idle with restart_pending=false.",
+    "2026-06-12 05:12 Dhaka — Graceful restart refresh: planning files and tb board re-read; no current feature/stage file applies, all listed tb board items are done, so worker remains idle with restart_pending=false.",
+    "2026-06-12 11:12 Dhaka — Graceful restart refresh: planning files and tb board re-read; no current feature/stage file applies, and tb board has no ready/running/review/blocked items. Worker remains idle with restart_pending=false.",
+    "2026-06-12 17:13 Dhaka — Graceful restart refresh: planning files and tb board re-read; no current feature/stage file applies, and tb board has no ready/running/review/blocked items. Worker remains idle with restart_pending=false.",
+    "2026-06-12 23:15 Dhaka — Graceful restart refresh: planning files and tb board re-read; no current feature/stage file applies, and tb board has no ready/running/review/blocked items. Worker remains idle with restart_pending=false.",
+    "2026-06-13 05:16 Dhaka — Graceful restart refresh: planning files and tb board re-read; no current feature/stage file applies because the Toolblip MVP work order is complete, and the tb board has no ready/running/review/blocked items. Worker remains idle with restart_pending=false.",
+    "2026-06-13 11:17 Dhaka — Graceful restart refresh: planning files and tb board re-read; current feature is none because the Toolblip MVP work order is complete, no post-MVP stage file is present under docs/plans/toolblip-mvp/stages, and the tb board has no ready/running/review/blocked items. Worker remains idle with restart_pending=false."
   ]
 }
