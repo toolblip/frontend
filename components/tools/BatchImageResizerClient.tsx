@@ -28,9 +28,44 @@ export default function BatchImageResizerClient() {
   const [processing, setProcessing] = useState(false);
   const [results, setResults] = useState<string[]>([]);
   const fileRef = useRef<HTMLInputElement>(null);
+  const aspectRef = useRef<number>(1280 / 720);
 
   const targetWidth = customWidth ? parseInt(customWidth) : selectedPreset.width;
   const targetHeight = customHeight ? parseInt(customHeight) : selectedPreset.height;
+
+  const handleWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const w = e.target.value;
+    setCustomWidth(w);
+    if (lockAspect && w) {
+      const wNum = parseInt(w);
+      if (wNum > 0 && !isNaN(wNum)) {
+        setCustomHeight(String(Math.round(wNum / aspectRef.current)));
+      }
+    }
+  };
+
+  const handleHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const h = e.target.value;
+    setCustomHeight(h);
+    if (lockAspect && h) {
+      const hNum = parseInt(h);
+      if (hNum > 0 && !isNaN(hNum)) {
+        setCustomWidth(String(Math.round(hNum * aspectRef.current)));
+      }
+    }
+  };
+
+  const handleLockToggle = () => {
+    const newLock = !lockAspect;
+    setLockAspect(newLock);
+    if (newLock) {
+      const w = targetWidth;
+      const h = targetHeight;
+      if (w > 0 && h > 0) {
+        aspectRef.current = w / h;
+      }
+    }
+  };
 
   const processImages = useCallback(async () => {
     if (!files.length) return;
@@ -125,7 +160,7 @@ export default function BatchImageResizerClient() {
           <input
             type="number"
             value={customWidth || targetWidth}
-            onChange={(e) => setCustomWidth(e.target.value)}
+            onChange={handleWidthChange}
             className="tb-v2-tool-input"
             aria-label="Width"
           />
@@ -133,7 +168,7 @@ export default function BatchImageResizerClient() {
         <div style={{ display: 'flex', alignItems: 'center', paddingTop: '1.25rem' }}>
           <button
             type="button"
-            onClick={() => setLockAspect(!lockAspect)}
+            onClick={handleLockToggle}
             className="tb-v2-btn"
             style={{ padding: '0.4rem 0.5rem', fontSize: '1rem' }}
             aria-label={lockAspect ? 'Unlock aspect ratio' : 'Lock aspect ratio'}
@@ -146,7 +181,7 @@ export default function BatchImageResizerClient() {
           <input
             type="number"
             value={customHeight || targetHeight}
-            onChange={(e) => setCustomHeight(e.target.value)}
+            onChange={handleHeightChange}
             className="tb-v2-tool-input"
             aria-label="Height"
           />

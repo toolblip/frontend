@@ -132,7 +132,7 @@ export default function BcryptHashGeneratorClient() {
           </p>
         )}
         <p className="tb-v2-hint" style={{ marginTop: '0.5rem' }}>
-          ⚠️ This is a demonstration. For production, use a proper bcrypt library.
+          Uses bcryptjs — generates standard $2b$ bcrypt hashes compatible with any bcrypt implementation.
         </p>
       </div>
     </div>
