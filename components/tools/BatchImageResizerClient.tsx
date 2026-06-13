@@ -31,6 +31,29 @@ export default function BatchImageResizerClient() {
 
   const targetWidth = customWidth ? parseInt(customWidth) : selectedPreset.width;
   const targetHeight = customHeight ? parseInt(customHeight) : selectedPreset.height;
+  const aspectRatio = selectedPreset.width / selectedPreset.height;
+
+  const handleWidthChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setCustomWidth(val);
+    if (lockAspect && val) {
+      const w = parseInt(val);
+      if (!isNaN(w) && w > 0) {
+        setCustomHeight(Math.round(w / aspectRatio).toString());
+      }
+    }
+  };
+
+  const handleHeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setCustomHeight(val);
+    if (lockAspect && val) {
+      const h = parseInt(val);
+      if (!isNaN(h) && h > 0) {
+        setCustomWidth(Math.round(h * aspectRatio).toString());
+      }
+    }
+  };
 
   const processImages = useCallback(async () => {
     if (!files.length) return;
@@ -125,7 +148,7 @@ export default function BatchImageResizerClient() {
           <input
             type="number"
             value={customWidth || targetWidth}
-            onChange={(e) => setCustomWidth(e.target.value)}
+            onChange={handleWidthChange}
             className="tb-v2-tool-input"
             aria-label="Width"
           />
@@ -146,7 +169,7 @@ export default function BatchImageResizerClient() {
           <input
             type="number"
             value={customHeight || targetHeight}
-            onChange={(e) => setCustomHeight(e.target.value)}
+            onChange={handleHeightChange}
             className="tb-v2-tool-input"
             aria-label="Height"
           />
