@@ -1,30 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import bcrypt from 'bcryptjs';
 
 const COST_FACTORS = [4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
-
-// bcrypt implementation using a pure JS library approach
-async function hashBcrypt(password: string, rounds: number): Promise<string> {
-  // Use the Web Crypto API for hashing, combined with a simple salt
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password);
-  const saltRounds = rounds;
-  const salt = Array.from({ length: 22 }, () =>
-    String.fromCharCode(65 + Math.floor(Math.random() * 26))
-  ).join('');
-
-  // Simple bcrypt-like hash (demo only - use actual bcrypt library in production)
-  const cryptoApi = await import('crypto');
-  const hashInput = `${salt}${password}`;
-  const key = await cryptoApi.subtle.digest('SHA-256', encoder.encode(hashInput));
-  const hashHex = Array.from(new Uint8Array(key))
-    .map((b) => b.toString(16).padStart(2, '0'))
-    .join('');
-
-  // Format as bcrypt-like: $2b$ rounds$salt hash (demo format)
-  return `$2b$${String(rounds).padStart(2, '0')}$.${salt.slice(0, 22)}.${hashHex.slice(0, 31)}`;
-}
 
 export default function BcryptHashGeneratorClient() {
   const [password, setPassword] = useState('');
@@ -39,7 +18,8 @@ export default function BcryptHashGeneratorClient() {
     if (!password) return;
     setGenerating(true);
     try {
-      const h = await hashBcrypt(password, rounds);
+      const salt = bcrypt.genSaltSync(rounds);
+      const h = bcrypt.hashSync(password, salt);
       setHash(h);
     } catch {
       setHash('Error generating hash');
@@ -56,9 +36,8 @@ export default function BcryptHashGeneratorClient() {
 
   const verify = () => {
     if (!verifyPassword || !hash) return;
-    // For demo purposes, just check if the hash contains the password chars
-    // Real bcrypt verification would use bcrypt.compare()
-    setVerifyResult(hash.includes(verifyPassword) ? 'match' : 'no-match');
+    const match = bcrypt.compareSync(verifyPassword, hash);
+    setVerifyResult(match ? 'match' : 'no-match');
   };
 
   return (
