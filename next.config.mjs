@@ -17,6 +17,12 @@ const nextConfig = {
   async headers() {
     return [
       {
+        source: '/dashboard',
+        headers: [
+          { key: 'Cache-Control', value: 'no-cache, no-store, must-revalidate' },
+        ],
+      },
+      {
         source: '/(.*)',
         headers: [
           { key: 'X-DNS-Prefetch-Control', value: 'on' },
