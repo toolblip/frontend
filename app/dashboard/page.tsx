@@ -482,6 +482,20 @@ export default function AccountPage() {
       if (res.ok) {
         const data = await res.json();
         setSubscription(data);
+      } else if (res.status === 404) {
+        // No subscription record found = user is on Free plan.
+        setSubscription({
+          is_pro: false,
+          tier: "free",
+          devices: null,
+          storage_gb: 0,
+          team_seats: 1,
+          max_file_size_mb: 5,
+          api_access: false,
+          priority_support: false,
+          plan_ends_at: null,
+          subscription_status: "active",
+        });
       } else {
         // Don't treat a failed load as a silent success — surface an error state.
         setSubscriptionError(true);
