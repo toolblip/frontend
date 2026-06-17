@@ -893,7 +893,7 @@ export default function AccountPage() {
                           description: null,
                           priceMonthly: plan.price_monthly,
                           priceYearly: plan.price_yearly,
-                          badge: plan.tier === "ultra" ? "Featured" : null,
+                          badge: plan.tier === "ultra" ? "Most Popular" : null,
                         }}
                         billing={onboardingBilling}
                         highlighted={plan.tier === "ultra"}
