@@ -5,11 +5,16 @@
     "CSS box shadow generator online for card and panel UI",
     "convert image formats online without Photoshop",
     "MIME type lookup for HTTP Content-Type headers",
-    "convert camelCase to snake_case online for Python and JavaScript",
-    "bcrypt hash generator online for secure password hashing in Node.js"
+    "convert camelCase to snake_case online for Python and JavaScript"
   ],
   "in_progress": [],
   "done": [
+    {
+      "topic": "bcrypt hash generator online for secure password hashing in Node.js",
+      "completed_at": "2026-06-17T17:05:00Z",
+      "url": "https://toolblip.com/blog/2026-06-17-bcrypt-hash-generator-online-for-password-hashing",
+      "note": "manual fallback because Claude Code auth was unavailable; conservative one-post run"
+    },
     {
       "topic": "convert hex color to RGB and HSL online for CSS design",
       "completed_at": "2026-06-17T04:51:40Z"

@@ -1,5 +1,11 @@
 {
-  "pending": [],
+  "pending": [
+    {
+      "url": "https://toolblip.com/blog/2026-06-17-bcrypt-hash-generator-online-for-password-hashing",
+      "topic": "bcrypt hash generator online for secure password hashing in Node.js",
+      "enqueued_at": "2026-06-17T17:05:00Z"
+    }
+  ],
   "submitted": [
     {
       "url": "https://toolblip.com/blog/2026-05-22-convert-unix-timestamps-readable-dates-online",
