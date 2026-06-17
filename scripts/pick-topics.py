@@ -9,7 +9,7 @@ import os
 import sys
 from pathlib import Path
 
-ROOT = Path('/Users/ray/Work/toolblip')
+ROOT = Path(__file__).resolve().parent.parent
 QUEUE_FILE = Path(os.environ.get('TOOLBLIP_PSEO_QUEUE_FILE', ROOT / 'pseo-queue.json'))
 SEEDS_FILE = Path(os.environ.get('TOOLBLIP_SEO_SEEDS_FILE', ROOT / 'scripts' / 'seo-topic-seeds.json'))
 

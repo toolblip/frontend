@@ -25,7 +25,7 @@ proc = subprocess.Popen(
     stdout=subprocess.PIPE,
     stderr=subprocess.STDOUT,
     text=True,
-    cwd='/Users/ray/Work/toolblip',
+    cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
     env=env,
 )
 try:

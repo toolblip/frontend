@@ -4,7 +4,8 @@ import sys
 import json
 from datetime import datetime, timezone
 
-QUEUE_FILE = '/Users/ray/Work/toolblip/pseo-queue.json'
+import os, pathlib
+QUEUE_FILE = str(pathlib.Path(__file__).resolve().parent.parent / 'pseo-queue.json')
 
 if len(sys.argv) < 2:
     print("Usage: complete-topic.py <topic>")

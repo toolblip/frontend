@@ -1,6 +1,5 @@
 {
   "pending": [
-    "convert hex color to RGB and HSL online for CSS design",
     "online word count checker for blog posts and technical writing",
     "generate CSS gradient backgrounds online without writing code",
     "CSS box shadow generator online for card and panel UI",
@@ -11,6 +10,10 @@
   ],
   "in_progress": [],
   "done": [
+    {
+      "topic": "convert hex color to RGB and HSL online for CSS design",
+      "completed_at": "2026-06-17T04:51:40Z"
+    },
     {
       "topic": "create lorem ipsum placeholder text for UI mockups",
       "completed_at": "2026-06-07T17:10:47Z"

@@ -11,9 +11,10 @@ from datetime import datetime, timezone, timedelta
 
 warnings.filterwarnings('ignore')
 
-TOOLBLIP_DIR = '/Users/ray/Work/toolblip'
+import pathlib
+TOOLBLIP_DIR = str(pathlib.Path(__file__).resolve().parent.parent)
 GENERATED_FILE = '/tmp/generated-posts.json'
-STRATEGY_FILE = '/Users/ray/Work/toolblip/src/content/seo-strategy.md'
+STRATEGY_FILE = os.path.join(TOOLBLIP_DIR, 'src/content/seo-strategy.md')
 STATE_DIR = '/tmp/toolblip-seo-state'
 
 def load_env():

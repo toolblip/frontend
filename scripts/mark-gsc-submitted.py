@@ -4,7 +4,8 @@ import sys
 import json
 from datetime import datetime, timezone
 
-GSC_QUEUE_FILE = '/Users/ray/Work/toolblip/gsc-queue.json'
+import os, pathlib
+GSC_QUEUE_FILE = str(pathlib.Path(__file__).resolve().parent.parent / 'gsc-queue.json')
 
 if len(sys.argv) < 2:
     print("Usage: mark-gsc-submitted.py <url>")

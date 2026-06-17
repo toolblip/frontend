@@ -14,13 +14,16 @@ export USER="${USER:-$(id -un 2>/dev/null || echo ray)}"
 export LOGNAME="${LOGNAME:-$USER}"
 export HOME=/Users/ray
 
+# Repo root derived from script location — works from any worktree.
+WORK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
 LOCKFILE="/tmp/toolblip-seo-pipeline.lock"
 LOGFILE="/tmp/toolblip-seo-pipeline.log"
-BLOG_DIR="$HOME/Work/toolblip/src/content/blog"
+BLOG_DIR="$WORK_DIR/src/content/blog"
 SITE_URL="https://toolblip.com"
-QUEUE_FILE="$HOME/Work/toolblip/pseo-queue.json"
-GSC_QUEUE_FILE="$HOME/Work/toolblip/gsc-queue.json"
-STRATEGY_FILE="$HOME/Work/toolblip/src/content/seo-strategy.md"
+QUEUE_FILE="$WORK_DIR/pseo-queue.json"
+GSC_QUEUE_FILE="$WORK_DIR/gsc-queue.json"
+STRATEGY_FILE="$WORK_DIR/src/content/seo-strategy.md"
 GENERATED_FILE="/tmp/generated-posts.json"
 STATE_DIR="/tmp/toolblip-seo-state"
 INSIGHTS_FILE="/tmp/seo-insights.json"
@@ -49,9 +52,10 @@ check_window() {
 }
 
 check_git_branch() {
-    cd "$HOME/Work/toolblip"
+    local repo_root
+    repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
     local branch
-    branch=$(git branch --show-current 2>/dev/null || echo "")
+    branch=$(git -C "$repo_root" branch --show-current 2>/dev/null || echo "")
     if [[ "$branch" != "main" ]]; then
         log "ERROR: SEO pipeline must run from main, current branch is '$branch'."
         exit 1
@@ -99,13 +103,13 @@ pick_topics() {
 # Mark a topic as done (move from in_progress → done)
 complete_topic() {
     local topic="$1"
-    python3 "$HOME/Work/toolblip/scripts/complete-topic.py" "$topic"
+    python3 "$WORK_DIR/scripts/complete-topic.py" "$topic"
 }
 
 # Add a new topic to the pending queue (used by self-improve)
 enqueue_topic() {
     local topic="$1"
-    python3 "$HOME/Work/toolblip/scripts/enqueue-topic.py" "$topic"
+    python3 "$WORK_DIR/scripts/enqueue-topic.py" "$topic"
 }
 
 # Read the current SEO strategy (returns empty if none exists)
@@ -121,12 +125,12 @@ read_strategy() {
 enqueue_gsc_url() {
     local url="$1"
     local topic="$2"
-    python3 "$HOME/Work/toolblip/scripts/enqueue-gsc.py" "$url" "$topic"
+    python3 "$WORK_DIR/scripts/enqueue-gsc.py" "$url" "$topic"
 }
 
 mark_gsc_submitted() {
     local url="$1"
-    python3 "$HOME/Work/toolblip/scripts/mark-gsc-submitted.py" "$url"
+    python3 "$WORK_DIR/scripts/mark-gsc-submitted.py" "$url"
 }
 
 # ─── Step 1: Keyword Research (per topic) ──────────────────────────────────────
@@ -136,7 +140,7 @@ research_keywords_for_topic() {
     local kw_output="/tmp/kw-${$}.json"
     local prompt_file="/tmp/kw-prompt-${$}.txt"
 
-    cd "$HOME/Work/toolblip"
+    cd "$WORK_DIR"
 
     python3 scripts/seo-content-generator.py keywords "$topic" > "$kw_output" 2>&1
 
@@ -158,7 +162,7 @@ except:
     fi
 
     # Generate prompt via Python
-    python3 "$HOME/Work/toolblip/scripts/research-prompt.py"         "$topic" "$gsc_kw" "$STRATEGY_FILE"         "$prompt_file" > /dev/null 2>&1 || true
+    python3 "$WORK_DIR/scripts/research-prompt.py"         "$topic" "$gsc_kw" "$STRATEGY_FILE"         "$prompt_file" > /dev/null 2>&1 || true
 
     # Claude keyword selection
     local kw_result
@@ -209,7 +213,7 @@ generate_one_post() {
 
     local prompt_file
     prompt_file=$(mktemp)
-    python3 "$HOME/Work/toolblip/scripts/generate-prompt.py" \
+    python3 "$WORK_DIR/scripts/generate-prompt.py" \
         "$topic" "$best_kw" "$related_kw" \
         "$STRATEGY_FILE" "$BLOG_DIR" \
         "$prompt_file" > /dev/null 2>&1 || true
@@ -217,13 +221,13 @@ generate_one_post() {
     local output="/tmp/claude-${$}.txt"
     rm -f "$output"
 
-    cd "$HOME/Work/toolblip"
+    cd "$WORK_DIR"
     # Use Python helper to pass the prompt via stdin and avoid shell quoting conflicts
-    python3 "$HOME/Work/toolblip/scripts/run-claude.py" \
+    python3 "$WORK_DIR/scripts/run-claude.py" \
         "$prompt_file" \
         --model opus \
         --allowedTools Read,Write,Edit \
-        --max-turns 10 \
+        --max-turns 15 \
         > "$output" 2>&1
 
     # Parse Claude output with Python (avoids grep|sed|tr issues with paths containing /)
@@ -253,11 +257,26 @@ for line in content.split('\n'):
         break
 " 2>/dev/null)
 
+    # Fallback: if Claude hit max-turns without printing FILE:, recover the path
+    # from the "Save to:" line we embedded in the prompt.
+    if [[ -z "$generated_file" ]]; then
+        generated_file=$(python3 -c "
+import re, sys
+txt = open('$prompt_file').read()
+m = re.search(r'^Save to:\s*(.+\.md)', txt, re.M)
+if m:
+    print(m.group(1).strip())
+" 2>/dev/null)
+    fi
+
     if [[ -n "$generated_file" && -f "$generated_file" ]]; then
         local date_slug
         date_slug=$(date '+%Y-%m-%d')
         local slug
         slug=$(echo "$best_kw" | sed 's/[^a-z0-9-]/ /g' | sed 's/  */-/g' | tr '[:upper:]' '[:lower:]' | sed 's/^-//' | sed 's/-$//' | cut -c1-60)
+        if [[ -z "$url" ]]; then
+            url="https://toolblip.com/blog/$(basename "$generated_file" .md)"
+        fi
         echo "{\"file\": \"$generated_file\", \"url\": \"$url\", \"slug\": \"${date_slug}-${slug}\", \"topic\": \"$topic\", \"keyword\": \"$best_kw\"}" >> "$GENERATED_FILE"
         log "  Generated: $url"
         echo "$generated_file"
@@ -282,7 +301,7 @@ humanize_post() {
 
     # Write prompt to temp file (avoids quoting issues)
     local prompt_file="/tmp/humanizer-prompt-${$}.txt"
-    python3 "$HOME/Work/toolblip/scripts/humanizer-prompt.py" "$file" > "$prompt_file"
+    python3 "$WORK_DIR/scripts/humanizer-prompt.py" "$file" > "$prompt_file"
 
     # Read article content
     local content
@@ -312,7 +331,7 @@ $(cat "$article_file")"
     echo "$humanized" > "$tmp_humanized"
 
     if [[ -n "$humanized" && ${#humanized} -gt 100 ]]; then
-        python3 "$HOME/Work/toolblip/scripts/humanize-replace.py" "$file" "$tmp_humanized" >> "$LOGFILE" 2>&1
+        python3 "$WORK_DIR/scripts/humanize-replace.py" "$file" "$tmp_humanized" >> "$LOGFILE" 2>&1
         log "  Humanized: $(basename $file)"
     fi
     rm -f "$prompt_file" "$article_file" "$tmp_humanized"
@@ -323,7 +342,7 @@ commit_post() {
     local file="$1"
     local topic="$2"
 
-    cd "$HOME/Work/toolblip"
+    cd "$WORK_DIR"
     git add "$file"
     git commit -m "seo: add $topic article $(date '+%Y-%m-%d')" >> "$LOGFILE" 2>&1 || true
     git push origin main >> "$LOGFILE" 2>&1 || true
@@ -334,7 +353,7 @@ submit_to_gsc() {
     local url="$1"
     local topic="$2"
 
-    cd "$HOME/Work/toolblip"
+    cd "$WORK_DIR"
     local submit_output
     submit_output=$(python3 scripts/seo-content-generator.py submit "$url" 2>&1 || true)
     echo "$submit_output" >> "$LOGFILE"
@@ -356,7 +375,7 @@ check_and_fix_url() {
     local url="$1"
 
     local diagnosis
-    diagnosis=$(python3 "$HOME/Work/toolblip/scripts/seo-content-generator.py" diagnose "$url" 2>&1 || echo "")
+    diagnosis=$(python3 "$WORK_DIR/scripts/seo-content-generator.py" diagnose "$url" 2>&1 || echo "")
 
     local fix_needed
     fix_needed=$(echo "$diagnosis" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('fix_needed','false'))" 2>/dev/null || echo "false")
@@ -366,7 +385,7 @@ check_and_fix_url() {
         issues=$(echo "$diagnosis" | python3 -c "import sys,json; d=json.load(sys.stdin); print(', '.join(d.get('issues',[])))" 2>/dev/null || echo "")
         log "  Fixing: $issues"
 
-        python3 "$HOME/Work/toolblip/scripts/seo-content-generator.py" fix "$url" >> "$LOGFILE" 2>&1 || true
+        python3 "$WORK_DIR/scripts/seo-content-generator.py" fix "$url" >> "$LOGFILE" 2>&1 || true
 
         if echo "$issues" | grep -qi "LOW_CTR\|TITLE\|DESCRIPTION"; then
             rewrite_title_meta_if_needed "$url"
@@ -428,7 +447,7 @@ PROMPTEOF
     rm -f "$prompt_file"
 
     if [[ -n "$rewrite" && ${#rewrite} -gt 20 ]]; then
-        python3 "$HOME/Work/toolblip/scripts/update-frontmatter.py" "$blog_file" "$rewrite" >> "$LOGFILE" 2>&1 || true
+        python3 "$WORK_DIR/scripts/update-frontmatter.py" "$blog_file" "$rewrite" >> "$LOGFILE" 2>&1 || true
         git add "$blog_file" 2>/dev/null || true
         git commit -m "fix(seo): rewrite title/meta for $(basename $blog_file)" >> "$LOGFILE" 2>&1 || true
         git push origin main >> "$LOGFILE" 2>&1 || true
@@ -439,7 +458,7 @@ PROMPTEOF
 # ─── Step 7: Internal Linking ──────────────────────────────────────────────────
 add_internal_links() {
     local new_file="$1"
-    python3 "$HOME/Work/toolblip/scripts/add-internal-links.py" "$new_file" "$BLOG_DIR" >> "$LOGFILE" 2>&1
+    python3 "$WORK_DIR/scripts/add-internal-links.py" "$new_file" "$BLOG_DIR" >> "$LOGFILE" 2>&1
     git add "$new_file" 2>/dev/null || true
 }
 
@@ -452,7 +471,7 @@ self_improve_after_post() {
 
     log "STEP 8: Self-Improve (post: $post_url)"
 
-    python3 "$HOME/Work/toolblip/scripts/self-improve.py"         "$post_url" "$post_keyword" "$topic" "$GENERATED_FILE"         >> "$LOGFILE" 2>&1
+    python3 "$WORK_DIR/scripts/self-improve.py"         "$post_url" "$post_keyword" "$topic" "$GENERATED_FILE"         >> "$LOGFILE" 2>&1
 
     log "  Self-improvement complete"
 }
@@ -461,7 +480,7 @@ self_improve_after_post() {
 
 # ─── Step 9: Refresh Sitemap ───────────────────────────────────────────────────
 refresh_sitemap() {
-    cd "$HOME/Work/toolblip"
+    cd "$WORK_DIR"
     python3 scripts/seo-content-generator.py sitemap >> "$LOGFILE" 2>&1
     log "  Sitemap refreshed"
 }
@@ -475,7 +494,7 @@ refresh_stale_content() {
 
     local stale_tmp
     stale_tmp=$(mktemp)
-    python3 "$HOME/Work/toolblip/scripts/find-stale.py" "$BLOG_DIR" "$cutoff" > "$stale_tmp" 2>/dev/null || true
+    python3 "$WORK_DIR/scripts/find-stale.py" "$BLOG_DIR" "$cutoff" > "$stale_tmp" 2>/dev/null || true
 
     if [[ ! -s "$stale_tmp" ]]; then
         log "  No stale content found"
@@ -492,7 +511,7 @@ refresh_stale_content() {
 
         log "  Refreshing stale article: $title"
 
-        python3 "$HOME/Work/toolblip/scripts/update-date.py" "$(date '+%Y-%m-%d')" "$f" >> "$LOGFILE" 2>&1 || true
+        python3 "$WORK_DIR/scripts/update-date.py" "$(date '+%Y-%m-%d')" "$f" >> "$LOGFILE" 2>&1 || true
         python3 scripts/seo-content-generator.py submit "https://toolblip.com/blog/$slug" >> "$LOGFILE" 2>&1 || true
         git add "$f" 2>/dev/null || true
         git commit -m "chore: refresh stale article $slug" >> "$LOGFILE" 2>&1 || true
@@ -600,7 +619,7 @@ PYQ
 
         # 8. Self-improve (after EVERY post - this is the key loop)
         local best_kw
-        best_kw=$(python3 "$HOME/Work/toolblip/scripts/get-last-keyword.py" "$GENERATED_FILE" "$topic")
+        best_kw=$(python3 "$WORK_DIR/scripts/get-last-keyword.py" "$GENERATED_FILE" "$topic")
         self_improve_after_post "$post_url" "$best_kw" "$topic"
 
         # 9. Refresh sitemap after each post
