@@ -14,6 +14,11 @@ with open(prompt_file) as f:
     prompt = f.read()
 
 cmd = ['claude', '-p', '--input-format', 'text'] + claude_args
+env = os.environ.copy()
+# Ensure claude finds macOS Keychain auth regardless of what HOME the caller had.
+env['HOME'] = '/Users/ray'
+env.setdefault('USER', 'ray')
+env.setdefault('LOGNAME', env['USER'])
 proc = subprocess.Popen(
     cmd,
     stdin=subprocess.PIPE,
@@ -21,7 +26,7 @@ proc = subprocess.Popen(
     stderr=subprocess.STDOUT,
     text=True,
     cwd='/Users/ray/Work/toolblip',
-    env=os.environ.copy(),
+    env=env,
 )
 try:
     out, _ = proc.communicate(input=prompt, timeout=300)

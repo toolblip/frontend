@@ -1,5 +1,14 @@
 {
-  "pending": [],
+  "pending": [
+    "convert hex color to RGB and HSL online for CSS design",
+    "online word count checker for blog posts and technical writing",
+    "generate CSS gradient backgrounds online without writing code",
+    "CSS box shadow generator online for card and panel UI",
+    "convert image formats online without Photoshop",
+    "MIME type lookup for HTTP Content-Type headers",
+    "convert camelCase to snake_case online for Python and JavaScript",
+    "bcrypt hash generator online for secure password hashing in Node.js"
+  ],
   "in_progress": [],
   "done": [
     {

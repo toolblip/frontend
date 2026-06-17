@@ -8,6 +8,12 @@
 
 set -euo pipefail
 
+# Normalize env for cron/daemon contexts where HOME/USER/LOGNAME may be stripped or wrong.
+# Claude Code uses macOS Keychain for auth when HOME=/Users/ray — no .credentials.json needed.
+export USER="${USER:-$(id -un 2>/dev/null || echo ray)}"
+export LOGNAME="${LOGNAME:-$USER}"
+export HOME=/Users/ray
+
 LOCKFILE="/tmp/toolblip-seo-pipeline.lock"
 LOGFILE="/tmp/toolblip-seo-pipeline.log"
 BLOG_DIR="$HOME/Work/toolblip/src/content/blog"
