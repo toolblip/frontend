@@ -1,12 +1,15 @@
 {
-  "pending": [
+  "pending": [],
+  "submitted": [
     {
       "url": "https://toolblip.com/blog/2026-06-17-bcrypt-hash-generator-online-for-password-hashing",
       "topic": "bcrypt hash generator online for secure password hashing in Node.js",
-      "enqueued_at": "2026-06-17T17:05:00Z"
-    }
-  ],
-  "submitted": [
+      "submitted_at": "2026-06-17T17:15:00Z",
+      "method": "gsc-api",
+      "status": "submitted",
+      "coverage_state": "URL is unknown to Google",
+      "note": "manual fallback because Claude Code auth was unavailable; GSC submitted via sitemap + inspection"
+    },
     {
       "url": "https://toolblip.com/blog/2026-05-22-convert-unix-timestamps-readable-dates-online",
       "topic": "convert Unix timestamps to readable dates online",
