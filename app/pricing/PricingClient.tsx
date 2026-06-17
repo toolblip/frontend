@@ -176,12 +176,32 @@ export default function PricingClient() {
 
   async function handleUpgrade(plan: Plan) {
     setError(null);
-    const onboardingNext = `/dashboard?plan=${plan.tier}&billing=${billing}`;
-
     setLoading(plan.tier);
     try {
       const loggedIn = await isAuthenticated();
-      window.location.href = loggedIn ? onboardingNext : `/login?next=${encodeURIComponent(onboardingNext)}`;
+
+      if (!loggedIn) {
+        // Not authenticated — redirect to login, return to pricing after
+        const pricingReturn = `/dashboard?plan=${plan.tier}&billing=${billing}`;
+        window.location.href = `/login?next=${encodeURIComponent(pricingReturn)}`;
+        return;
+      }
+
+      // Authenticated — create Stripe Checkout session directly
+      const priceId = billing === 'yearly' ? plan.stripe_yearly_id : plan.stripe_monthly_id;
+      if (!priceId) throw new Error('No Stripe price ID configured for this plan');
+
+      const res = await fetch('/api/subscription/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ price_id: priceId }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to create checkout session');
+
+      window.location.href = data.url;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {

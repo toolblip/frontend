@@ -332,6 +332,13 @@ const server = http.createServer(async (req, res) => {
     });
   }
 
+  if (req.method === 'POST' && url.pathname === '/api/subscription/checkout') {
+    const body = await readJson(req);
+    const email = tokens.get(bearer(req));
+    if (!email) return json(res, 401, { message: 'Unauthenticated.' });
+    return json(res, 200, { url: 'https://checkout.stripe.com/mock', session_id: 'cs_mock' });
+  }
+
   if (req.method === 'POST' && url.pathname === '/api/auth/forgot-password') {
     return json(res, 200, { message: 'If that email exists, a reset link has been sent.' });
   }

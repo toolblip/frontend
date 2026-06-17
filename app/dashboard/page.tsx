@@ -207,6 +207,7 @@ export default function AccountPage() {
   const [recentTools, setRecentTools] = useState<RecentTool[]>([]);
   const [copiedFavoriteSlug, setCopiedFavoriteSlug] = useState<string | null>(null);
   const [pricingPlans, setPricingPlans] = useState<Plan[]>(FALLBACK_PLANS);
+  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
 
   // Recent tools live in localStorage (recorded on tool pages). Read after mount
   // to avoid a server/client hydration mismatch.
@@ -656,6 +657,39 @@ export default function AccountPage() {
     }
   }
 
+  async function handlePaidPlanCheckout(planTier: string, billing: BillingCycle) {
+    setPlanOnboardingError("");
+    setCheckoutLoading(planTier);
+
+    try {
+      const plan = pricingPlans.find((p) => p.tier === planTier);
+      if (!plan) throw new Error("Plan not found");
+
+      const priceId = billing === "yearly" ? plan.stripe_yearly_id : plan.stripe_monthly_id;
+      if (!priceId) throw new Error("No Stripe price ID configured for this plan");
+
+      const res = await fetch("/api/subscription/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ price_id: priceId }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to create checkout session");
+
+      // Save onboarding progress before redirecting
+      completePlanOnboarding(planTier as OnboardingPlanTier, billing);
+
+      // Redirect to Stripe Checkout
+      window.location.href = data.url;
+    } catch (error) {
+      setPlanOnboardingError(error instanceof Error ? error.message : "Something went wrong");
+    } finally {
+      setCheckoutLoading(null);
+    }
+  }
+
   function writePlanOnboarding(
     status: OnboardingStatus,
     step: OnboardingStep,
@@ -902,10 +936,11 @@ export default function AccountPage() {
                         footer={
                           <button
                             type="button"
-                            onClick={() => completePlanOnboarding(planTier, onboardingBilling)}
+                            onClick={() => handlePaidPlanCheckout(planTier, onboardingBilling)}
+                            disabled={checkoutLoading !== null}
                             className={`tb-v2-btn tb-v2-pricing-btn ${selected ? "selected" : "tb-v2-btn-primary"}`}
                           >
-                            {PAID_TRIAL_CTA_LABEL}
+                            {checkoutLoading === planTier ? "Redirecting..." : PAID_TRIAL_CTA_LABEL}
                           </button>
                         }
                       >

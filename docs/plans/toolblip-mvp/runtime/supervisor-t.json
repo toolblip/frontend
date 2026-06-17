@@ -1,0 +1,34 @@
+{
+  "worker": "Toolblip Kanban worker",
+  "profile": "tb",
+  "board": "tb",
+  "last_restart_cycle_at": "2026-06-17T05:54:08Z",
+  "restart_pending": true,
+  "current_task": {
+    "id": "t_9273dc8f",
+    "title": "Wire up free trial checkout for Starter/Pro/Max plans",
+    "status": "running",
+    "assignee": "tb",
+    "priority": 1,
+    "workspace_path": "/Users/ray/.hermes/kanban/boards/tb/workspaces/t_9273dc8f"
+  },
+  "current_task_status": "running",
+  "next_viable_task": null,
+  "board_summary": {
+    "ready": 0,
+    "running": 1,
+    "blocked": 1,
+    "review": 0,
+    "done": 1
+  },
+  "planning_files_status": {
+    "docs/plans/toolblip-mvp/master-plan.md": "missing",
+    "docs/plans/toolblip-mvp/progress.md": "missing",
+    "docs/plans/toolblip-mvp/questions.md": "missing",
+    "docs/plans/toolblip-mvp/implementation-tracker.md": "missing",
+    "current_stage_file": "missing",
+    "fallback_plan_read": "docs/auth-sync-plan.md"
+  },
+  "worker_liveness": "tb kanban daemon is running",
+  "last_action": "Re-read live planning paths, fallback auth-sync plan, process list, and tb board. Current task t_9273dc8f is still running with fresh heartbeats, so the restart cycle did not preempt it. Set restart_pending=true and will reseed only after the task reaches done, needs human review, or blocked. No ready next task exists right now. Existing blocked task t_840170ce remains blocked after repeated worker crashes with pid-not-alive errors."
+}

@@ -59,7 +59,7 @@ test.describe('Dashboard plan selection and plan change', () => {
     await expect(page).toHaveURL(/\/pricing$/);
   });
 
-  test('selecting a plan on pricing hands off to dashboard checkout with the billing cycle', async ({ page }) => {
+  test('selecting a plan on pricing creates a Stripe checkout session directly', async ({ page }) => {
     await loginByForm(page, VALID_USER);
     await expect(page).toHaveURL(/\/dashboard/);
 
@@ -67,7 +67,7 @@ test.describe('Dashboard plan selection and plan change', () => {
     await page.getByRole('button', { name: /Yearly/ }).click();
     await page.locator('[data-tier="max"]').getByRole('button', { name: 'Start 14-day free trial' }).click();
 
-    // Free/Starter/Pro/Max selection + billing cycle carry into the dashboard flow.
-    await expect(page).toHaveURL(/\/dashboard\?plan=max&billing=yearly$/);
+    // Authenticated users go directly to Stripe Checkout
+    await expect(page).toHaveURL('https://checkout.stripe.com/mock');
   });
 });

@@ -50,7 +50,7 @@ test.describe('Dashboard billing status states', () => {
 
     const billing = page.locator('#billing');
     await expect(billing.getByText('Pro plan active')).toBeVisible();
-    await expect(billing.getByText('Active until December 31, 2026')).toBeVisible();
+    await expect(billing.getByText('You\'ll keep Pro plan access until December 31, 2026.')).toBeVisible();
     await expect(billing.getByText('Renews on December 31, 2026')).toHaveCount(0);
   });
 

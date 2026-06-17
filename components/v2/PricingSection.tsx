@@ -137,26 +137,32 @@ export function PricingBillingToggle({
   centered?: boolean;
   accent?: PricingAccent;
 }) {
+  const yearlyActive = billing === 'yearly';
   const toggle = (
-    <div className="tb-v2-pricing-toggle" data-testid="pricing-billing-toggle" data-accent={accent}>
+    <div
+      className="tb-v2-pricing-toggle"
+      data-testid="pricing-billing-toggle"
+      data-accent={accent}
+      data-yearly-active={yearlyActive ? 'true' : 'false'}
+    >
       <button
         type="button"
         onClick={() => onBillingChange('monthly')}
-        className={billingToggleButtonClasses(billing === 'monthly')}
+        className={billingToggleButtonClasses(!yearlyActive)}
       >
         Monthly
       </button>
       <button
         type="button"
         onClick={() => onBillingChange('yearly')}
-        className={[billingToggleButtonClasses(billing === 'yearly'), 'with-badge'].filter(Boolean).join(' ')}
+        className={billingToggleButtonClasses(yearlyActive)}
       >
         <span className="tb-v2-pricing-toggle-btn-label">Yearly</span>
-        <span aria-hidden="true" className={billingToggleBadgeClasses(billing === 'yearly')}>
-          <span className="tb-v2-pricing-toggle-badge-number">2</span>
-          <span className="tb-v2-pricing-toggle-badge-text"> months free</span>
-        </span>
       </button>
+      <span aria-hidden="true" className={billingToggleBadgeClasses(yearlyActive)}>
+        <span className="tb-v2-pricing-toggle-badge-number">2</span>
+        <span className="tb-v2-pricing-toggle-badge-text"> months free</span>
+      </span>
     </div>
   );
 
