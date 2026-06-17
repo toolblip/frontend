@@ -24,14 +24,15 @@ test.describe('Account onboarding BDD regression', () => {
     await expect(onboarding.getByRole('heading', { name: 'Simple, transparent pricing' })).toBeVisible();
     await expect(onboarding.getByText(/Compare the plans and pick the one that fits how you use Toolblip\./i)).toBeVisible();
 
-    await onboarding.locator('[data-tier="ultra"]').getByRole('button', { name: 'Start 14-day free trial' }).click();
+    // Select the Free plan — paid plans now trigger Stripe checkout and redirect away
+    await onboarding.getByRole('button', { name: 'Continue with Free Plan' }).click();
     await expect(onboarding).toHaveCount(0);
 
     const stored = await page.evaluate(() => {
       const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
       return entry ? JSON.parse(String(entry[1])) : null;
     });
-    expect(stored).toMatchObject({ status: 'completed', teamName: `${user.name.split(/\s+/)[0]}'s team`, selectedPlan: 'ultra', billingCycle: 'monthly' });
+    expect(stored).toMatchObject({ status: 'completed', teamName: `${user.name.split(/\s+/)[0]}'s team`, selectedPlan: 'free', billingCycle: 'monthly' });
   });
 
   test('Given an unauthenticated dashboard referral, Then login preserves the plan and billing query', async ({ page }) => {
@@ -95,41 +96,26 @@ test.describe('Account onboarding BDD regression', () => {
     await onboarding.getByRole('button', { name: 'Next' }).click();
     await expect(onboarding.getByText(/Step 2 of 2/i)).toBeVisible();
     await expect(onboarding.getByRole('heading', { name: 'Simple, transparent pricing' })).toBeVisible();
-    await onboarding.locator('[data-tier="ultra"]').getByRole('button', { name: 'Start 14-day free trial' }).click();
+    // Select the Free plan — paid plans redirect to Stripe
+    await onboarding.getByRole('button', { name: 'Continue with Free Plan' }).click();
     await expect(onboarding).toHaveCount(0);
 
     const stored = await page.evaluate(() => {
       const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
       return entry ? JSON.parse(String(entry[1])) : null;
     });
-    expect(stored).toMatchObject({ status: 'completed', selectedPlan: 'ultra', billingCycle: 'monthly' });
+    expect(stored).toMatchObject({ status: 'completed', selectedPlan: 'free', billingCycle: 'monthly' });
   });
 
-  test('Given an authenticated user on pricing, Then selecting a plan routes straight into dashboard checkout without a login detour', async ({ page }) => {
+  test('Given an authenticated user on pricing, Then selecting a plan creates a Stripe checkout session directly', async ({ page }) => {
     await loginByForm(page, VALID_USER);
     await expect(page).toHaveURL(/\/dashboard/);
 
     await page.goto('/pricing');
     await page.locator('[data-tier="ultra"]').getByRole('button', { name: 'Start 14-day free trial' }).click();
 
-    await expect(page).toHaveURL(/\/dashboard\?plan=ultra&billing=monthly$/);
-
-    const onboarding = page.locator('main [role="dialog"]').first();
-    await expect(onboarding).toBeVisible();
-
-    await onboarding.getByRole('button', { name: 'Next' }).click();
-    await expect(onboarding.getByText(/Step 2 of 2/i)).toBeVisible();
-    await expect(onboarding.getByRole('heading', { name: 'Simple, transparent pricing' })).toBeVisible();
-    await expect(onboarding.locator('[data-tier="ultra"]')).toHaveClass(/selected/);
-
-    await onboarding.locator('[data-tier="ultra"]').getByRole('button', { name: 'Start 14-day free trial' }).click();
-    await expect(onboarding).toHaveCount(0);
-
-    const stored = await page.evaluate(() => {
-      const entry = Object.entries(localStorage).find(([key]) => key.startsWith('toolblip_onboarding_'));
-      return entry ? JSON.parse(String(entry[1])) : null;
-    });
-    expect(stored).toMatchObject({ status: 'completed', selectedPlan: 'ultra', billingCycle: 'monthly' });
+    // Authenticated users are now sent directly to Stripe Checkout
+    await expect(page).toHaveURL('https://checkout.stripe.com/mock');
   });
 
   test('Given a stale onboarding draft, Then it migrates to the pricing second step', async ({ page }) => {

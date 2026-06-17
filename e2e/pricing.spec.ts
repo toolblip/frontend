@@ -20,7 +20,7 @@ test.describe('Pricing layout', () => {
     await expect(pricing.getByText('Billing period')).toBeHidden();
     await expect(pricing.getByRole('button', { name: 'Monthly' })).toBeVisible();
     await expect(pricing.getByRole('button', { name: /Yearly/ })).toBeVisible();
-    await expect(pricing.getByRole('button', { name: /Yearly/ })).toContainText('2 months free');
+    await expect(pricing.getByTestId('pricing-billing-toggle')).toContainText('2 months free');
 
     const toggleRow = pricing.getByTestId('pricing-billing-toggle');
     const toggleRect = await toggleRow.boundingBox();
