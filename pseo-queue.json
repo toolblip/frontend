@@ -1,11 +1,6 @@
 {
   "pending": [
-    "online word count checker for blog posts and technical writing",
-    "generate CSS gradient backgrounds online without writing code",
-    "CSS box shadow generator online for card and panel UI",
-    "convert image formats online without Photoshop",
-    "MIME type lookup for HTTP Content-Type headers",
-    "convert camelCase to snake_case online for Python and JavaScript"
+    "CSS box shadow generator online for card and panel UI"
   ],
   "in_progress": [],
   "done": [
@@ -14,6 +9,41 @@
       "completed_at": "2026-06-17T17:05:00Z",
       "url": "https://toolblip.com/blog/2026-06-17-bcrypt-hash-generator-online-for-password-hashing",
       "note": "manual fallback because Claude Code auth was unavailable; conservative one-post run"
+    },
+    {
+      "topic": "online word count checker for blog posts and technical writing",
+      "completed_at": "2026-06-18T17:00:00Z",
+      "url": "https://toolblip.com/tools/word-counter",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live Word Counter tool page; no thin support blog post published."
+    },
+    {
+      "topic": "generate CSS gradient backgrounds online without writing code",
+      "completed_at": "2026-06-18T17:00:00Z",
+      "url": "https://toolblip.com/tools/css-gradient-generator",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live CSS Gradient Generator tool page; no thin support blog post published."
+    },
+    {
+      "topic": "convert image formats online without Photoshop",
+      "completed_at": "2026-06-18T17:00:00Z",
+      "url": "https://toolblip.com/tools/image-format-converter",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live Image Format Converter tool page; no thin support blog post published."
+    },
+    {
+      "topic": "MIME type lookup for HTTP Content-Type headers",
+      "completed_at": "2026-06-18T17:00:00Z",
+      "url": "https://toolblip.com/tools/mime-types-reference",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live MIME Types Reference tool page; no thin support blog post published."
+    },
+    {
+      "topic": "convert camelCase to snake_case online for Python and JavaScript",
+      "completed_at": "2026-06-18T17:00:00Z",
+      "url": "https://toolblip.com/tools/case-converter",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live Case Converter tool page; no thin support blog post published."
     },
     {
       "topic": "convert hex color to RGB and HSL online for CSS design",
