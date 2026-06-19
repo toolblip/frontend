@@ -1,5 +1,11 @@
 {
-  "pending": [],
+  "pending": [
+    {
+      "url": "https://toolblip.com/blog/2026-06-19-css-box-shadow-generator-for-card-and-panel-ui",
+      "topic": "CSS box shadow generator online for card and panel UI",
+      "enqueued_at": "2026-06-19T17:00:00Z"
+    }
+  ],
   "submitted": [
     {
       "url": "https://toolblip.com/blog/2026-06-17-bcrypt-hash-generator-online-for-password-hashing",

@@ -1,9 +1,13 @@
 {
-  "pending": [
-    "CSS box shadow generator online for card and panel UI"
-  ],
+  "pending": [],
   "in_progress": [],
   "done": [
+    {
+      "topic": "CSS box shadow generator online for card and panel UI",
+      "completed_at": "2026-06-19T17:00:00Z",
+      "url": "https://toolblip.com/blog/2026-06-19-css-box-shadow-generator-for-card-and-panel-ui",
+      "note": "manual fallback because Claude Code auth was unavailable; conservative one-post run"
+    },
     {
       "topic": "bcrypt hash generator online for secure password hashing in Node.js",
       "completed_at": "2026-06-17T17:05:00Z",
