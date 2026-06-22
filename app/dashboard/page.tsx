@@ -8,7 +8,8 @@ import { useRouter } from "next/navigation";
 import {
   FREE_PLAN_CTA_LABEL,
   FREE_TRIAL_NOTE,
-  PAID_TRIAL_CTA_LABEL,
+  START_FREE_TRIAL_LABEL,
+  SUBSCRIBE_NOW_LABEL,
   PricingBillingToggle,
   PricingPlanCard,
   buildPricingPlanFeatures,
@@ -210,6 +211,7 @@ export default function AccountPage() {
   const [copiedFavoriteSlug, setCopiedFavoriteSlug] = useState<string | null>(null);
   const [pricingPlans, setPricingPlans] = useState<Plan[]>(FALLBACK_PLANS);
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
+  const [trialCheckoutLoading, setTrialCheckoutLoading] = useState<string | null>(null);
   const [switchMode, setSwitchMode] = useState(false);
   const [switchPlanTier, setSwitchPlanTier] = useState<string | null>(null);
   const [switchBilling, setSwitchBilling] = useState<BillingCycle>("monthly");
@@ -755,6 +757,39 @@ export default function AccountPage() {
     }
   }
 
+  async function handleStartTrial(planTier: string, billing: BillingCycle) {
+    setPlanOnboardingError("");
+    setTrialCheckoutLoading(planTier);
+
+    try {
+      const plan = pricingPlans.find((p) => p.tier === planTier);
+      if (!plan) throw new Error("Plan not found");
+
+      const priceId = billing === "yearly" ? plan.stripe_yearly_id : plan.stripe_monthly_id;
+      if (!priceId) throw new Error("No Stripe price ID configured for this plan");
+
+      const res = await fetch("/api/subscription/trial", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ price_id: priceId }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to start free trial");
+
+      // Save onboarding progress before redirecting
+      completePlanOnboarding(planTier as OnboardingPlanTier, billing);
+
+      // Redirect to dashboard — trial is active
+      window.location.href = "/dashboard";
+    } catch (error) {
+      setPlanOnboardingError(error instanceof Error ? error.message : "Something went wrong");
+    } finally {
+      setTrialCheckoutLoading(null);
+    }
+  }
+
   function writePlanOnboarding(
     status: OnboardingStatus,
     step: OnboardingStep,
@@ -999,14 +1034,25 @@ export default function AccountPage() {
                         selected={selected}
                         accent="red"
                         footer={
-                          <button
-                            type="button"
-                            onClick={() => handlePaidPlanCheckout(planTier, onboardingBilling)}
-                            disabled={checkoutLoading !== null}
-                            className={`tb-v2-btn tb-v2-pricing-btn ${selected ? "selected" : "tb-v2-btn-primary"}`}
-                          >
-                            {checkoutLoading === planTier ? "Redirecting..." : PAID_TRIAL_CTA_LABEL}
-                          </button>
+                          <div className="flex flex-col gap-2">
+                            <button
+                              type="button"
+                              onClick={() => handleStartTrial(planTier, onboardingBilling)}
+                              disabled={trialCheckoutLoading !== null || checkoutLoading !== null}
+                              className={`tb-v2-btn tb-v2-pricing-btn ${selected ? "selected" : "tb-v2-btn-primary"}`}
+                            >
+                              {trialCheckoutLoading === planTier ? "Starting..." : START_FREE_TRIAL_LABEL}
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handlePaidPlanCheckout(planTier, onboardingBilling)}
+                              disabled={checkoutLoading !== null || trialCheckoutLoading !== null}
+                              className="text-center text-xs text-[color:var(--fg-3)] underline-offset-2 hover:text-[color:var(--fg-1)] hover:underline"
+                              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '2px 0' }}
+                            >
+                              {checkoutLoading === planTier ? "Redirecting..." : `Skip trial \u2014 ${SUBSCRIBE_NOW_LABEL}`}
+                            </button>
+                          </div>
                         }
                       >
                         <div className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">

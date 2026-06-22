@@ -6,7 +6,8 @@ import { useAuth } from '@/app/providers/auth-provider';
 import {
   FREE_PLAN_CTA_LABEL,
   FREE_TRIAL_NOTE,
-  PAID_TRIAL_CTA_LABEL,
+  START_FREE_TRIAL_LABEL,
+  SUBSCRIBE_NOW_LABEL,
   PricingBillingToggle,
   PricingPlanCard,
   buildPricingPlanFeatures,
@@ -112,6 +113,7 @@ export default function PricingClient() {
   const { user } = useAuth();
   const [billing, setBilling] = useState<BillingCycle>('monthly');
   const [loading, setLoading] = useState<string | null>(null);
+  const [trialLoading, setTrialLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [plans, setPlans] = useState<Plan[]>([]);
   const [plansLoading, setPlansLoading] = useState(true);
@@ -209,6 +211,40 @@ export default function PricingClient() {
     }
   }
 
+  async function handleStartTrial(plan: Plan) {
+    setError(null);
+    setTrialLoading(plan.tier);
+    try {
+      const loggedIn = await isAuthenticated();
+
+      if (!loggedIn) {
+        const pricingReturn = `/dashboard?plan=${plan.tier}&billing=${billing}`;
+        window.location.href = `/login?next=${encodeURIComponent(pricingReturn)}`;
+        return;
+      }
+
+      const priceId = billing === 'yearly' ? plan.stripe_yearly_id : plan.stripe_monthly_id;
+      if (!priceId) throw new Error('No Stripe price ID configured for this plan');
+
+      const res = await fetch('/api/subscription/trial', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ price_id: priceId }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to start free trial');
+
+      // Trial started — redirect to dashboard
+      window.location.href = '/dashboard?trial=started';
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Something went wrong');
+    } finally {
+      setTrialLoading(null);
+    }
+  }
+
   if (plansLoading) {
     return (
       <div className="tb-v2-pricing">
@@ -284,14 +320,24 @@ export default function PricingClient() {
                   highlighted={isHighlighted}
                   selected={isHighlighted}
                   footer={
-                    <button
-                      onClick={() => handleUpgrade(sourcePlan)}
-                      disabled={loading === sourcePlan.tier}
-                      className={`tb-v2-btn tb-v2-pricing-btn ${isHighlighted ? 'inverse' : 'tb-v2-btn-primary'}`}
-                      style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}
-                    >
-                      {loading === sourcePlan.tier ? 'Redirecting...' : PAID_TRIAL_CTA_LABEL}
-                    </button>
+                    <div className="flex flex-col gap-2">
+                      <button
+                        onClick={() => handleStartTrial(sourcePlan)}
+                        disabled={trialLoading === sourcePlan.tier || loading === sourcePlan.tier}
+                        className={`tb-v2-btn tb-v2-pricing-btn ${isHighlighted ? 'inverse' : 'tb-v2-btn-primary'}`}
+                        style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', textDecoration: 'none' }}
+                      >
+                        {trialLoading === sourcePlan.tier ? 'Starting...' : START_FREE_TRIAL_LABEL}
+                      </button>
+                      <button
+                        onClick={() => handleUpgrade(sourcePlan)}
+                        disabled={loading === sourcePlan.tier || trialLoading === sourcePlan.tier}
+                        className="text-center text-xs text-[color:var(--fg-3)] underline-offset-2 hover:text-[color:var(--fg-1)] hover:underline"
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '2px 0' }}
+                      >
+                        {loading === sourcePlan.tier ? 'Redirecting...' : `Skip trial \u2014 ${SUBSCRIBE_NOW_LABEL}`}
+                      </button>
+                    </div>
                   }
                 >
                   <ul className="tb-v2-pricing-features">
