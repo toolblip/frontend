@@ -179,6 +179,8 @@ export default function AccountPage() {
   const [subscriptionError, setSubscriptionError] = useState(false);
   const [loadingPortal, setLoadingPortal] = useState(false);
   const [portalError, setPortalError] = useState<string | null>(null);
+  const [cancellingSubscription, setCancellingSubscription] = useState(false);
+  const [cancelSubscriptionError, setCancelSubscriptionError] = useState<string | null>(null);
   const [checkingSession, setCheckingSession] = useState(false);
   const [profileName, setProfileName] = useState("");
   const [profileEmail, setProfileEmail] = useState("");
@@ -208,6 +210,12 @@ export default function AccountPage() {
   const [copiedFavoriteSlug, setCopiedFavoriteSlug] = useState<string | null>(null);
   const [pricingPlans, setPricingPlans] = useState<Plan[]>(FALLBACK_PLANS);
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
+  const [switchMode, setSwitchMode] = useState(false);
+  const [switchPlanTier, setSwitchPlanTier] = useState<string | null>(null);
+  const [switchBilling, setSwitchBilling] = useState<BillingCycle>("monthly");
+  const [switchingPlan, setSwitchingPlan] = useState(false);
+  const [switchError, setSwitchError] = useState<string | null>(null);
+  const [switchSuccess, setSwitchSuccess] = useState<string | null>(null);
 
   // Recent tools live in localStorage (recorded on tool pages). Read after mount
   // to avoid a server/client hydration mismatch.
@@ -516,7 +524,7 @@ export default function AccountPage() {
     }
     setLoadingPortal(true);
     try {
-      const res = await fetch(`${API_BASE}/api/subscription/portal`, {
+      const res = await fetch("/api/subscription/portal", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -530,6 +538,63 @@ export default function AccountPage() {
     } catch (err) {
       setPortalError(err instanceof Error ? err.message : "Something went wrong");
       setLoadingPortal(false);
+    }
+  }
+
+  async function handleCancelSubscription() {
+    setCancelSubscriptionError(null);
+    if (!token) {
+      redirectToLoginPreservingCurrentLocation();
+      return;
+    }
+    setCancellingSubscription(true);
+    try {
+      const res = await fetch("/api/subscription/cancel", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to cancel subscription");
+      // Refresh subscription state to reflect cancellation
+      await checkSubscription();
+    } catch (err) {
+      setCancelSubscriptionError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setCancellingSubscription(false);
+    }
+  }
+
+  async function handleSwitchPlan(planTier: string, billing: BillingCycle) {
+    setSwitchError(null);
+    setSwitchSuccess(null);
+    if (!token) {
+      redirectToLoginPreservingCurrentLocation();
+      return;
+    }
+    setSwitchingPlan(true);
+    try {
+      const res = await fetch("/api/subscription/switch", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ plan_tier: planTier, billing }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to switch plan");
+      setSwitchSuccess(data.message || "Plan changed successfully.");
+      setSwitchMode(false);
+      await checkSubscription();
+    } catch (err) {
+      setSwitchError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setSwitchingPlan(false);
     }
   }
 
@@ -1360,20 +1425,129 @@ export default function AccountPage() {
 
                 {!planScheduledToCancel && (
                   <div className="mt-4 border-t border-gray-100 pt-4 dark:border-gray-800">
+                    {cancelSubscriptionError && (
+                      <p role="alert" className="mb-3 text-sm text-red-600 dark:text-red-400">{cancelSubscriptionError}</p>
+                    )}
                     <button
                       type="button"
-                      onClick={openCustomerPortal}
-                      disabled={loadingPortal}
+                      onClick={handleCancelSubscription}
+                      disabled={cancellingSubscription}
                       data-testid="cancel-plan"
                       className="text-sm font-medium text-gray-500 underline underline-offset-4 transition hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50 dark:text-gray-400 dark:hover:text-red-400"
                     >
-                      Cancel plan
+                      {cancellingSubscription ? "Cancelling..." : "Cancel plan"}
                     </button>
                     <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">
                       Cancellation isn&apos;t immediate — you keep access until the end of your billing period.
                     </p>
                   </div>
                 )}
+
+                {/* Plan switching UI */}
+                <div className="mt-5 border-t border-gray-100 pt-4 dark:border-gray-800">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSwitchMode(!switchMode);
+                      setSwitchError(null);
+                      setSwitchSuccess(null);
+                    }}
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-gray-900 transition hover:text-red-600 dark:text-white dark:hover:text-red-400"
+                  >
+                    <svg
+                      className={`h-4 w-4 transition-transform ${switchMode ? "rotate-90" : ""}`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                    {switchMode ? "Hide plan options" : "Change plan"}
+                  </button>
+
+                  {switchSuccess && (
+                    <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/30 dark:text-emerald-200">
+                      {switchSuccess}
+                    </div>
+                  )}
+
+                  {switchError && (
+                    <p role="alert" className="mt-4 text-sm text-red-600 dark:text-red-400">{switchError}</p>
+                  )}
+
+                  {switchMode && (
+                    <div className="mt-4 space-y-4">
+                      <div className="flex items-center gap-2">
+                        <PricingBillingToggle
+                          billing={switchBilling}
+                          onBillingChange={setSwitchBilling}
+                          accent="red"
+                        />
+                      </div>
+                      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                        {orderedPlans.filter((p) => p.tier !== "free").map((plan) => {
+                          const isCurrentPlan = subscription?.tier === plan.tier;
+                          const priceId = switchBilling === "yearly" ? plan.stripe_yearly_id : plan.stripe_monthly_id;
+
+                          return (
+                            <PricingPlanCard
+                              key={plan.tier}
+                              plan={{
+                                tier: plan.tier,
+                                name: plan.tier === "ultra" ? "Pro" : plan.name,
+                                description: null,
+                                priceMonthly: plan.price_monthly,
+                                priceYearly: plan.price_yearly,
+                                badge: plan.tier === "ultra" ? "Most Popular" : null,
+                              }}
+                              billing={switchBilling}
+                              highlighted={plan.tier === "ultra"}
+                              selected={switchPlanTier === plan.tier}
+                              accent="red"
+                              onClick={() => setSwitchPlanTier(switchPlanTier === plan.tier ? null : plan.tier)}
+                              footer={
+                                isCurrentPlan ? (
+                                  <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+                                    Current plan
+                                  </span>
+                                ) : switchPlanTier === plan.tier ? (
+                                  <button
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleSwitchPlan(plan.tier, switchBilling);
+                                    }}
+                                    disabled={switchingPlan || !priceId}
+                                    className={`tb-v2-btn tb-v2-pricing-btn selected tb-v2-btn-primary ${switchingPlan ? "opacity-50" : ""}`}
+                                  >
+                                    {switchingPlan ? "Switching..." : priceId ? `Switch to ${switchBilling === "yearly" ? "Yearly" : "Monthly"}` : "Not available"}
+                                  </button>
+                                ) : null
+                              }
+                            >
+                              <div className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
+                                {isCurrentPlan ? "Your plan" : "Switch to this plan"}
+                              </div>
+                              <ul className="tb-v2-pricing-features">
+                                {buildPricingPlanFeatures(plan).map((feature) => (
+                                  <li
+                                    key={feature.label}
+                                    className={feature.included === false ? "text-[color:var(--fg-3)] line-through" : ""}
+                                  >
+                                    <span className="mt-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center text-[11px] font-bold leading-none text-red-500">
+                                      {feature.included === false ? "\u00d7" : "\u2713"}
+                                    </span>
+                                    {feature.label}
+                                  </li>
+                                ))}
+                              </ul>
+                            </PricingPlanCard>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             ) : (
               <div className="mt-5">
