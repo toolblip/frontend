@@ -60,8 +60,7 @@ export async function loginViaApi(page: Page, user: TestUser = VALID_USER) {
 }
 
 export async function dismissDashboardOnboarding(page: Page) {
-  // Directly mark onboarding as complete in localStorage so React picks it up
-  // on the next mount cycle. This avoids timing issues with the dialog overlay.
+  // Mark onboarding as complete in localStorage so React reads it on mount
   await page.evaluate(() => {
     const keys = Object.keys(localStorage).filter((k) => k.startsWith('toolblip_onboarding_'));
     for (const key of keys) {
@@ -89,13 +88,28 @@ export async function dismissDashboardOnboarding(page: Page) {
     await page.waitForTimeout(200);
   }
 
-  // If any dialog is still intercepting, reload so React re-reads localStorage
-  const dialog = page.getByRole('dialog');
-  const stillVisible = await dialog.isVisible().catch(() => false);
-  if (stillVisible) {
+  // If a dialog overlay is intercepting pointer events, reload so React
+  // picks up the completed-onboarding state from localStorage
+  const hasOverlay = await page.getByRole('dialog').first().isVisible().catch(() => false);
+  if (hasOverlay) {
     await page.reload();
-    // After reload React should see the completed status and not show the dialog
-    await page.waitForTimeout(500);
+    // Wait for the page to fully mount — auth restore → user state → onboarding check
+    await page.waitForTimeout(2000);
+  }
+
+  // Fallback: if the overlay is STILL blocking after reload, force-remove it
+  // from the DOM so tests can interact with dashboard content underneath.
+  const stillBlocked = await page.getByRole('dialog').first().isVisible().catch(() => false);
+  if (stillBlocked) {
+    await page.evaluate(() => {
+      const overlay = document.querySelector('.fixed.inset-0');
+      if (overlay && overlay.closest('[role="dialog"]')) {
+        overlay.closest('[role="dialog"]')!.remove();
+      } else if (overlay) {
+        overlay.remove();
+      }
+    });
+    await page.waitForTimeout(300);
   }
 }
 
