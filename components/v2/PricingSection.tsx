@@ -40,6 +40,8 @@ export interface PricingPlanCardContext {
 }
 
 export const PAID_TRIAL_CTA_LABEL = 'Start 14-day free trial';
+export const START_FREE_TRIAL_LABEL = 'Start Free Trial';
+export const SUBSCRIBE_NOW_LABEL = 'Subscribe now';
 export const FREE_PLAN_CTA_LABEL = 'Continue with Free Plan';
 export const FREE_TRIAL_NOTE = 'No credit card required';
 

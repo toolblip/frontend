@@ -16,6 +16,9 @@ dist/
 .env.*
 !.env.example
 
+# Local secrets (single source of truth for Toolblip secrets)
+secrets/
+
 # Logs / local health checks
 *.log
 npm-debug.log*
