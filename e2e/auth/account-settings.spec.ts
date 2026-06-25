@@ -6,13 +6,12 @@ test.describe('Account settings BDD regression', () => {
     await resetMockBackend(request);
   });
 
-  test('Given a logged-in user, When they update profile details, Then the account page shows the new name and email verification prompt', async ({ page }) => {
+  test('Given a logged-in user, When they update profile details, Then the profile page shows the new name and email verification prompt', async ({ page }) => {
     await loginByForm(page, VALID_USER);
     await expect(page).toHaveURL(/\/dashboard$/);
 
-    await page.goto('/dashboard');
-    await dismissDashboardOnboarding(page);
-    await expect(page.getByText('BDD User')).toBeVisible();
+    await page.goto('/dashboard/profile');
+    await expect(page.getByText('BDD User').first()).toBeVisible();
 
     await page.getByLabel('Name').fill('Updated BDD User');
     await page.getByLabel('Email').fill('updated-bdd@toolblip.test');
@@ -34,7 +33,7 @@ test.describe('Account settings BDD regression', () => {
     await page.getByRole('button', { name: 'Create account' }).click();
 
     await expect(page).toHaveURL(/\/dashboard$/);
-    await dismissDashboardOnboarding(page);
+    await page.goto('/dashboard/profile');
     await expect(page.getByText('Email verification needed')).toBeVisible();
     await page.getByRole('button', { name: 'Resend verification email' }).click();
 
@@ -45,13 +44,12 @@ test.describe('Account settings BDD regression', () => {
     await loginByForm(page, VALID_USER);
     await expect(page).toHaveURL(/\/dashboard$/);
 
-    await page.goto('/dashboard');
-    await dismissDashboardOnboarding(page);
+    await page.goto('/dashboard/security');
     await page.getByLabel('Current password').fill('Password123!');
     await page.getByLabel('New password', { exact: true }).fill('NewPassword123!');
     await page.getByLabel('Confirm new password').fill('NewPassword123!');
     await page.getByRole('button', { name: 'Change password' }).click();
 
-    await expect(page).toHaveURL(/\/login\?next=%2Fdashboard$/);
+    await expect(page).toHaveURL(/\/login\?next=%2Fdashboard%2Fsecurity$/);
   });
 });

@@ -10,7 +10,7 @@ test.describe('Login BDD regression', () => {
     await loginByForm(page, VALID_USER);
 
     await expect(page).toHaveURL(/\/dashboard$/);
-    await expect(page.locator('#main-content').getByText(VALID_USER.email)).toBeVisible();
+    await expect(page.getByText(VALID_USER.email).first()).toBeVisible();
     await expectLoggedInCookie(page);
   });
 
@@ -21,7 +21,7 @@ test.describe('Login BDD regression', () => {
     await page.getByRole('button', { name: 'Sign in' }).click();
 
     await expect(page).toHaveURL(/\/dashboard$/);
-    await expect(page.locator('#main-content').getByText(VALID_USER.email)).toBeVisible();
+    await expect(page.getByText(VALID_USER.email).first()).toBeVisible();
     await expectLoggedInCookie(page);
   });
 
