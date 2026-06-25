@@ -10,8 +10,8 @@ test.describe('Session BDD regression', () => {
     await loginViaApi(page, VALID_USER);
 
     await page.goto('/dashboard');
-    await expect(page.getByText(VALID_USER.name)).toBeVisible();
-    await expect(page.locator('#main-content').getByText(VALID_USER.email)).toBeVisible();
+    await expect(page.getByText(VALID_USER.name).first()).toBeVisible();
+    await expect(page.locator('#main-content').getByText(VALID_USER.email).first()).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Free plan' })).toBeVisible();
     await expect(page.getByText('All tools available')).toBeVisible();
     await expect(page.getByText('1 member')).toBeVisible();

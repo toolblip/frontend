@@ -12,7 +12,7 @@ test.describe('Google OAuth BDD regression', () => {
     await page.getByRole('link', { name: 'Continue with Google' }).click();
 
     await expect(page).toHaveURL(/\/dashboard$/);
-    await expect(page.locator('#main-content').getByText('google-oauth@toolblip.test')).toBeVisible();
+    await expect(page.locator('#main-content').getByText('google-oauth@toolblip.test').first()).toBeVisible();
     await expectLoggedInCookie(page);
   });
 
@@ -22,7 +22,7 @@ test.describe('Google OAuth BDD regression', () => {
     await page.getByRole('link', { name: 'Continue with Google' }).click();
 
     await expect(page).toHaveURL(/\/dashboard$/);
-    await expect(page.locator('#main-content').getByText('google-oauth@toolblip.test')).toBeVisible();
+    await expect(page.locator('#main-content').getByText('google-oauth@toolblip.test').first()).toBeVisible();
     await expectLoggedInCookie(page);
   });
 

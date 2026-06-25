@@ -10,7 +10,7 @@ test.describe('Logout BDD regression', () => {
     await loginByForm(page, VALID_USER);
     await expect(page).toHaveURL(/\/dashboard/);
     await dismissDashboardOnboarding(page);
-    await expect(page.locator('#main-content').getByText(VALID_USER.email)).toBeVisible();
+    await expect(page.getByText(VALID_USER.email).first()).toBeVisible();
 
     await page.getByRole('button', { name: 'Sign out' }).click();
 

@@ -1,29 +1,44 @@
-import type { Metadata } from 'next';
+import type { Metadata } from "next";
+import { DashboardShell } from "@/components/dashboard/SidebarLayout";
 
 export const metadata: Metadata = {
-  title: 'Dashboard | Toolblip',
-  description: 'Manage your Toolblip dashboard, subscription, API access, and profile settings.',
+  title: "Dashboard | Toolblip",
+  description:
+    "Manage your Toolblip dashboard, subscription, API access, and profile settings.",
   // Account-only, auth-gated surface with no public content — keep it out of the index.
   robots: {
     index: false,
     follow: false,
   },
   openGraph: {
-    title: 'Dashboard | Toolblip',
-    description: 'Manage your Toolblip dashboard, subscription, API access, and profile settings.',
-    url: 'https://toolblip.com/dashboard',
-    siteName: 'Toolblip',
-    type: 'website',
-    locale: 'en_US',
-    images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: 'Toolblip' }],
+    title: "Dashboard | Toolblip",
+    description:
+      "Manage your Toolblip dashboard, subscription, API access, and profile settings.",
+    url: "https://toolblip.com/dashboard",
+    siteName: "Toolblip",
+    type: "website",
+    locale: "en_US",
+    images: [
+      {
+        url: "https://toolblip.com/og-preview.png",
+        width: 1200,
+        height: 630,
+        alt: "Toolblip",
+      },
+    ],
   },
   twitter: {
-    card: 'summary',
-    title: 'Dashboard | Toolblip',
-    description: 'Manage your Toolblip dashboard, subscription, API access, and profile settings.',
+    card: "summary",
+    title: "Dashboard | Toolblip",
+    description:
+      "Manage your Toolblip dashboard, subscription, API access, and profile settings.",
   },
 };
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return <DashboardShell>{children}</DashboardShell>;
 }
