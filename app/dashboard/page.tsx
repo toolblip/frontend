@@ -122,6 +122,10 @@ function onboardingStorageKey(userId: number | string) {
   return `toolblip_onboarding_${userId}`;
 }
 
+function trialBannerDismissedKey(userId: number | string) {
+  return `toolblip_trial_banner_dismissed_${userId}`;
+}
+
 const FREE_PLAN_FEATURES = ['All tools available', '1 member', '1 workspace'];
 
 function FreePlanCard({
@@ -218,12 +222,49 @@ export default function AccountPage() {
   const [switchingPlan, setSwitchingPlan] = useState(false);
   const [switchError, setSwitchError] = useState<string | null>(null);
   const [switchSuccess, setSwitchSuccess] = useState<string | null>(null);
+  // User can dismiss the trial banner for the rest of the current trial. Stored
+  // per user so a new trial (or another account on the same browser) shows it
+  // again. Auto-clears when the subscription leaves trialing status.
+  const [trialBannerDismissed, setTrialBannerDismissed] = useState(false);
 
   // Recent tools live in localStorage (recorded on tool pages). Read after mount
   // to avoid a server/client hydration mismatch.
   useEffect(() => {
     setRecentTools(getRecentTools());
   }, []);
+
+  // Hydrate the trial banner dismissal from localStorage once the user is known.
+  // Per-user so a new trial (or another account on the same browser) shows the
+  // banner again.
+  useEffect(() => {
+    if (!user) {
+      setTrialBannerDismissed(false);
+      return;
+    }
+    try {
+      const stored = window.localStorage.getItem(trialBannerDismissedKey(user.id));
+      setTrialBannerDismissed(stored === "1");
+    } catch {
+      setTrialBannerDismissed(false);
+    }
+  }, [user]);
+
+  // Auto-clear the dismissal when the subscription leaves trialing status, so
+  // a future trial (or another account on the same browser) shows the banner
+  // again. Only acts once we have a real subscription object — otherwise we'd
+  // wipe the dismissal during the brief window between page load and the
+  // /api/subscription fetch returning.
+  useEffect(() => {
+    if (!user || !subscription) return;
+    if (subscription.subscription_status !== "trialing") {
+      setTrialBannerDismissed(false);
+      try {
+        window.localStorage.removeItem(trialBannerDismissedKey(user.id));
+      } catch {
+        // localStorage may be unavailable in private mode; nothing else we can do.
+      }
+    }
+  }, [user, subscription]);
 
   useEffect(() => {
     let cancelled = false;
@@ -515,6 +556,16 @@ export default function AccountPage() {
       setSubscriptionError(true);
     } finally {
       setCheckingSession(false);
+    }
+  }
+
+  function dismissTrialBanner() {
+    if (!user) return;
+    setTrialBannerDismissed(true);
+    try {
+      window.localStorage.setItem(trialBannerDismissedKey(user.id), "1");
+    } catch {
+      // localStorage may be unavailable in private mode; in-memory state still hides it.
     }
   }
 
@@ -882,8 +933,76 @@ export default function AccountPage() {
   const showTermsOnboarding = Boolean(user.requires_terms_acceptance);
   const orderedPlans = sortPricingPlans(pricingPlans);
 
+  // Trial banner: shown when Stripe reports subscription_status=trialing and the
+  // user hasn't dismissed it for this trial. plan_ends_at is the trial end date
+  // (Stripe sets current_period_end to the trial end on a trialing subscription).
+  const isTrialing = subscription?.subscription_status === "trialing";
+  const trialEndsAt = isTrialing && subscription?.plan_ends_at ? new Date(subscription.plan_ends_at) : null;
+  // Use Math.ceil so a partial remaining day still shows as "1 day left" — the
+  // usual UX convention (Stripe dashboard does the same). "Ends today" is keyed
+  // off the calendar date so the wording stays meaningful regardless of clock.
+  const trialDaysRemaining = trialEndsAt
+    ? Math.max(0, Math.ceil((trialEndsAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
+    : null;
+  const trialEndsToday = trialEndsAt
+    ? (() => {
+        const now = new Date();
+        return (
+          trialEndsAt.getFullYear() === now.getFullYear() &&
+          trialEndsAt.getMonth() === now.getMonth() &&
+          trialEndsAt.getDate() === now.getDate()
+        );
+      })()
+    : false;
+  const showTrialBanner = isTrialing && !trialBannerDismissed && trialDaysRemaining !== null;
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-16">
+      {showTrialBanner && trialDaysRemaining !== null && (
+        <div
+          role="status"
+          aria-live="polite"
+          data-testid="trial-banner"
+          className="mb-6 flex flex-col gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-900 sm:flex-row sm:items-center sm:justify-between dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-100"
+        >
+          <div>
+            <p className="font-semibold">
+              {trialEndsToday
+                ? "Your free trial ends today."
+                : trialDaysRemaining === 1
+                ? "1 day left in your free trial."
+                : `${trialDaysRemaining} days left in your free trial.`}
+            </p>
+            <p className="mt-1 text-xs text-amber-800 dark:text-amber-200">
+              Add a payment method to keep your {tierName ?? "plan"} after the trial ends
+              {trialEndsAt
+                ? ` on ${trialEndsAt.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}`
+                : ""}
+              .
+            </p>
+          </div>
+          <div className="flex shrink-0 items-center gap-2">
+            <button
+              type="button"
+              data-testid="trial-banner-cta"
+              onClick={openCustomerPortal}
+              disabled={loadingPortal}
+              className="rounded-lg bg-amber-600 px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {loadingPortal ? "Opening..." : "Add payment method"}
+            </button>
+            <button
+              type="button"
+              data-testid="trial-banner-dismiss"
+              onClick={dismissTrialBanner}
+              aria-label="Dismiss trial banner"
+              className="rounded-lg px-2 py-2 text-amber-800 transition-colors hover:bg-amber-100 dark:text-amber-200 dark:hover:bg-amber-900/40"
+            >
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+        </div>
+      )}
       {showTermsOnboarding && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 px-4">
           <div
