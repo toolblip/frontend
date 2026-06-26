@@ -43,11 +43,16 @@ export function DashboardHeader({
             Manage your account
           </h1>
           <p className="mt-3 text-base leading-7 text-gray-600 dark:text-gray-300">
+<<<<<<< HEAD
             Profile, favorites, and billing - all in one place.
+=======
+            Profile, favorites, and billing — all in one place.
+>>>>>>> origin/main
           </p>
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
+<<<<<<< HEAD
           <Link
             href="/dashboard/subscription"
             className="block rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition hover:border-gray-300 hover:shadow-md dark:border-gray-700 dark:bg-gray-900 dark:hover:border-gray-600"
@@ -123,6 +128,33 @@ export function DashboardHeader({
           </Link>
           <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-950/60">
             <p className="text-xs font-medium text-gray-500 dark:text-gray-400">Favorites</p>
+=======
+          <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-950/60">
+            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+              {checkingSession ? "Verifying..." : "Plan"}
+            </p>
+            <p className="mt-2 text-lg font-semibold text-gray-900 dark:text-white">
+              {subscription === null
+                ? subscriptionError
+                  ? "Unavailable"
+                  : "Loading..."
+                : `${tierName ?? "Free"}`}
+            </p>
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              {checkingSession
+                ? "Verifying your plan..."
+                : subscription === null
+                  ? subscriptionError
+                    ? "Couldn't load plan"
+                    : "Checking subscription"
+                  : subscription.is_pro
+                    ? subscriptionStatusLabel(subscription)
+                    : "Free"}
+            </p>
+          </div>
+          <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-950/60">
+            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Favorites</p>
+>>>>>>> origin/main
             <p className="mt-2 text-lg font-semibold text-gray-900 dark:text-white">
               {favoriteToolsLoading ? "Loading..." : `${favoriteCount}`}
             </p>
