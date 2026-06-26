@@ -50,7 +50,7 @@ export function TrialBanner({
           data-testid="trial-banner-cta"
           onClick={openCustomerPortal}
           disabled={loadingPortal}
-          className="rounded-lg bg-amber-600 px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-60"
+          className="cursor-pointer rounded-lg bg-amber-600 px-3 py-2 text-sm font-semibold text-white transition-colors hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loadingPortal ? "Opening..." : "Add payment method"}
         </button>
@@ -59,7 +59,7 @@ export function TrialBanner({
           data-testid="trial-banner-dismiss"
           onClick={dismissTrialBanner}
           aria-label="Dismiss trial banner"
-          className="rounded-lg px-2 py-2 text-amber-800 transition-colors hover:bg-amber-100 dark:text-amber-200 dark:hover:bg-amber-900/40"
+          className="cursor-pointer rounded-lg px-2 py-2 text-amber-800 transition-colors hover:bg-amber-100 dark:text-amber-200 dark:hover:bg-amber-900/40"
         >
           <span aria-hidden="true">×</span>
         </button>

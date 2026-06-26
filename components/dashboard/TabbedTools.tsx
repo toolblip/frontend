@@ -35,7 +35,7 @@ export function TabbedTools({
         <button
           type="button"
           onClick={() => setActiveTab("favorites")}
-          className={`px-4 py-3 text-sm font-medium transition-colors ${
+          className={`cursor-pointer px-4 py-3 text-sm font-medium transition-colors ${
             activeTab === "favorites"
               ? "border-b-2 border-red-600 text-red-600"
               : "border-b-2 border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
@@ -46,7 +46,7 @@ export function TabbedTools({
         <button
           type="button"
           onClick={() => setActiveTab("recents")}
-          className={`px-4 py-3 text-sm font-medium transition-colors ${
+          className={`cursor-pointer px-4 py-3 text-sm font-medium transition-colors ${
             activeTab === "recents"
               ? "border-b-2 border-red-600 text-red-600"
               : "border-b-2 border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"

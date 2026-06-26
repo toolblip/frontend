@@ -138,7 +138,7 @@ export default function ProfilePage() {
   const showTermsOnboarding = Boolean(user.requires_terms_acceptance);
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-16">
+    <div className="mx-auto max-w-3xl px-4 pb-10 sm:px-6 sm:pb-16">
       {showTermsOnboarding && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 px-4">
           <div
@@ -181,7 +181,7 @@ export default function ProfilePage() {
               type="button"
               onClick={handleAcceptTerms}
               disabled={!acceptedOnboardingTerms || acceptingTerms}
-              className="w-full rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="cursor-pointer w-full rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {acceptingTerms ? "Saving..." : "Continue"}
             </button>
@@ -223,7 +223,7 @@ export default function ProfilePage() {
           <button
             type="button"
             onClick={handleResendVerification}
-            className="mt-4 rounded-full bg-amber-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-amber-700"
+            className="cursor-pointer rounded-full bg-amber-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-amber-700"
           >
             Resend verification email
           </button>
@@ -280,7 +280,7 @@ export default function ProfilePage() {
           <button
             type="submit"
             disabled={profileSaving}
-            className="rounded-full bg-gray-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200"
+            className="cursor-pointer rounded-full bg-gray-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200"
           >
             {profileSaving ? "Saving..." : "Save profile"}
           </button>
