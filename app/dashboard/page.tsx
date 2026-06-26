@@ -14,8 +14,7 @@ import type { FavoriteTool, Plan, OnboardingPlanTier, OnboardingStep, Onboarding
 import { useSubscription } from "@/lib/hooks/useSubscription";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { TrialBanner } from "@/components/dashboard/TrialBanner";
-import { FavoriteTools } from "@/components/dashboard/FavoriteTools";
-import { RecentTools } from "@/components/dashboard/RecentTools";
+import { TabbedTools } from "@/components/dashboard/TabbedTools";
 import { TermsOnboarding } from "@/components/dashboard/TermsOnboarding";
 import { PlanOnboarding } from "@/components/dashboard/PlanOnboarding";
 
@@ -365,11 +364,6 @@ export default function AccountPage() {
     }
   }
 
-  async function handleLogout() {
-    await logout();
-    redirectToLoginPreservingCurrentLocation();
-  }
-
   async function handleAcceptTerms() {
     setTermsError("");
     if (!acceptedOnboardingTerms) {
@@ -513,10 +507,9 @@ export default function AccountPage() {
   }
 
   const favoriteCount = favoriteTools.length;
-  const favoriteSlugs = new Set(favoriteTools.map((tool) => tool.slug));
-  const visibleRecentTools = recentTools.filter((tool) => !favoriteSlugs.has(tool.slug));
   const showTermsOnboarding = Boolean(user.requires_terms_acceptance);
   const orderedPlans = sortPricingPlans(pricingPlans);
+  const recentToolsCount = recentTools.length;
 
   const showTrialBanner = isTrialing && !trialBannerDismissed && trialDaysRemaining !== null;
 
@@ -572,74 +565,18 @@ export default function AccountPage() {
         checkingSession={checkingSession}
         favoriteCount={favoriteCount}
         favoriteToolsLoading={favoriteToolsLoading}
-        user={user}
         tierName={tierName}
       />
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)]">
-        {/* Left column: profile and password forms */}
-        <div className="space-y-6">
-          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-600 text-lg font-semibold uppercase text-white shadow-sm">
-                  {user.name.charAt(0)}
-                </div>
-                <div>
-                  <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                    Profile
-                  </h2>
-                  <p className="mt-1 text-lg font-semibold text-gray-900 dark:text-white">
-                    {user.name}
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {user.email}
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={handleLogout}
-                className="self-start rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 transition hover:border-red-200 hover:bg-red-50 hover:text-red-700 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-800 dark:hover:bg-red-950/30 dark:hover:text-red-300"
-              >
-                Sign out
-              </button>
-            </div>
-          </div>
-
-          {user.email_verified_at ? null : (
-            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 shadow-sm dark:border-amber-800 dark:bg-amber-900/20">
-              <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">
-                Email verification needed
-              </p>
-              <p className="mt-1 text-sm text-amber-700 dark:text-amber-400">
-                Verify your email before using paid and account-sensitive features.
-              </p>
-              <button
-                type="button"
-                className="mt-4 rounded-full bg-amber-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-amber-700"
-              >
-                Resend verification email
-              </button>
-            </div>
-          )}
-        </div>
-
-        {/* Right column: favorites and recent tools */}
-        <div className="space-y-6">
-          <FavoriteTools
-            favoriteTools={favoriteTools}
-            favoriteToolsLoading={favoriteToolsLoading}
-            favoriteCount={favoriteCount}
-            copiedFavoriteSlug={copiedFavoriteSlug}
-            shareFavorite={shareFavorite}
-          />
-
-          <RecentTools
-            visibleRecentTools={visibleRecentTools}
-            recentToolsCount={visibleRecentTools.length}
-          />
-        </div>
-      </div>
+      <TabbedTools
+        favoriteTools={favoriteTools}
+        favoriteToolsLoading={favoriteToolsLoading}
+        favoriteCount={favoriteCount}
+        copiedFavoriteSlug={copiedFavoriteSlug}
+        shareFavorite={shareFavorite}
+        recentTools={recentTools}
+        recentToolsCount={recentToolsCount}
+      />
 
       <div className="mt-8 text-center">
         <Link

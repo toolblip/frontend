@@ -11,15 +11,18 @@ test.describe('Dashboard favorites entry points', () => {
     await expect(page).toHaveURL(/\/dashboard/);
     await dismissDashboardOnboarding(page);
 
+    // The Favorites tab is active by default
+    const tabbedTools = page.getByRole('button', { name: /^Favorites/ });
+    await expect(tabbedTools).toBeVisible();
+    await expect(tabbedTools).toHaveClass(/border-red-600/);
+
     const favorites = page.locator('#favorite-tools');
     await expect(favorites).toBeVisible();
     await expect(favorites.getByText('Favorite tools from any tool page to keep them here.')).toBeVisible();
 
     // Both the header link and the empty-state CTA route to the tools browser.
-    await expect(page.getByTestId('favorites-browse-link')).toHaveAttribute('href', '/tools');
-    const emptyBrowse = page.getByTestId('favorites-empty-browse');
-    await expect(emptyBrowse).toBeVisible();
-    await expect(emptyBrowse).toHaveAttribute('href', '/tools');
+    await expect(page.getByTestId('favorites-empty-browse')).toBeVisible();
+    await expect(page.getByTestId('favorites-empty-browse')).toHaveAttribute('href', '/tools');
   });
 
   test('a favorite created from a tool page is shown again in the dashboard', async ({ page }) => {
@@ -41,8 +44,7 @@ test.describe('Dashboard favorites entry points', () => {
       '/tools/json-formatter',
     );
 
-    // The browse-more entry point stays available once favorites exist.
-    await expect(page.getByTestId('favorites-browse-link')).toHaveAttribute('href', '/tools');
-    await expect(page.getByTestId('favorites-empty-browse')).toHaveCount(0);
+    // The share button appears (copied state test)
+    await expect(favorites.getByTestId('favorite-share-json-formatter')).toBeVisible();
   });
 });

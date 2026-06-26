@@ -22,9 +22,9 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
-      <div className="flex gap-8">
+      <div className="flex gap-8 min-h-[500px]">
         {/* Left menu bar */}
-        <nav className="flex w-40 shrink-0 flex-col gap-1">
+        <nav className="flex w-40 shrink-0 flex-col gap-1 self-stretch">
           {NAV_ITEMS.map((item) => {
             const active = isActive(item.href);
             return (

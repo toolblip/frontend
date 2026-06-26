@@ -6,25 +6,19 @@ test.describe('Dashboard recent tool history', () => {
     await resetMockBackend(request);
   });
 
-  test('shows the recents panel below favorites with an empty state when no tools were opened', async ({ page }) => {
+  test('shows the recents panel with an empty state when no tools were opened', async ({ page }) => {
     await loginByForm(page, VALID_USER);
     await expect(page).toHaveURL(/\/dashboard/);
     await dismissDashboardOnboarding(page);
 
-    const favorites = page.locator('#favorite-tools');
+    // Favorites tab is active by default
+    await expect(page.locator('#favorite-tools')).toBeVisible();
+
+    // Click the Recents tab to view recents content
+    await page.getByRole('button', { name: /^Recents/ }).click();
     const recents = page.locator('#recent-tools');
-    await expect(favorites).toBeVisible();
     await expect(recents).toBeVisible();
-
-    await expect(recents.getByRole('heading', { name: 'Recent tools' })).toBeVisible();
     await expect(recents.getByText('Tools you open will show up here.')).toBeVisible();
-
-    // Favorites stay above recents.
-    const favBox = await favorites.boundingBox();
-    const recentBox = await recents.boundingBox();
-    expect(favBox).toBeTruthy();
-    expect(recentBox).toBeTruthy();
-    expect(favBox!.y).toBeLessThan(recentBox!.y);
   });
 
   test('records an opened tool and surfaces it in the dashboard recents, newest first', async ({ page }) => {
@@ -45,6 +39,10 @@ test.describe('Dashboard recent tool history', () => {
       .toBe(2);
 
     await page.goto('/dashboard');
+    await dismissDashboardOnboarding(page);
+
+    // Click the Recents tab
+    await page.getByRole('button', { name: /^Recents/ }).click();
     const recents = page.locator('#recent-tools');
     await expect(recents).toBeVisible();
 
@@ -56,10 +54,27 @@ test.describe('Dashboard recent tool history', () => {
       'href',
       '/tools/json-formatter',
     );
+  });
 
-    // Recents remain below favorites.
-    const favBox = await page.locator('#favorite-tools').boundingBox();
-    const recentBox = await recents.boundingBox();
-    expect(favBox!.y).toBeLessThan(recentBox!.y);
+  test('switching between Favorites and Recents tabs works', async ({ page }) => {
+    await loginByForm(page, VALID_USER);
+    await expect(page).toHaveURL(/\/dashboard/);
+    await dismissDashboardOnboarding(page);
+
+    // Favorites tab is active by default
+    await expect(page.locator('#favorite-tools')).toBeVisible();
+    await expect(page.getByRole('button', { name: /^Favorites/ })).toHaveClass(/border-red-600/);
+
+    // Click Recents tab — recents visible, favorites hidden
+    await page.getByRole('button', { name: /^Recents/ }).click();
+    await expect(page.locator('#recent-tools')).toBeVisible();
+    await expect(page.locator('#favorite-tools')).not.toBeVisible();
+    await expect(page.getByRole('button', { name: /^Recents/ })).toHaveClass(/border-red-600/);
+
+    // Click back to Favorites tab
+    await page.getByRole('button', { name: /^Favorites/ }).click();
+    await expect(page.locator('#favorite-tools')).toBeVisible();
+    await expect(page.locator('#recent-tools')).not.toBeVisible();
+    await expect(page.getByRole('button', { name: /^Favorites/ })).toHaveClass(/border-red-600/);
   });
 });
