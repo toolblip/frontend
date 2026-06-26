@@ -10,12 +10,12 @@ import {
   type BillingCycle,
 } from "@/components/v2/PricingSection";
 import { getRecentTools, type RecentTool } from "@/lib/toolHistory";
-import type { Subscription, FavoriteTool, Plan, OnboardingPlanTier, OnboardingStep, OnboardingStatus } from "@/components/dashboard/types";
+import type { FavoriteTool, Plan, OnboardingPlanTier, OnboardingStep, OnboardingStatus } from "@/components/dashboard/types";
+import { useSubscription } from "@/lib/hooks/useSubscription";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { TrialBanner } from "@/components/dashboard/TrialBanner";
 import { FavoriteTools } from "@/components/dashboard/FavoriteTools";
 import { RecentTools } from "@/components/dashboard/RecentTools";
-import { BillingSection } from "@/components/dashboard/BillingSection";
 import { TermsOnboarding } from "@/components/dashboard/TermsOnboarding";
 import { PlanOnboarding } from "@/components/dashboard/PlanOnboarding";
 
@@ -76,13 +76,20 @@ function trialBannerDismissedKey(userId: number | string) {
 export default function AccountPage() {
   const { user, token, login, logout, loading: authLoading } = useAuth();
   const router = useRouter();
-  const [subscription, setSubscription] = useState<Subscription | null>(null);
-  const [subscriptionError, setSubscriptionError] = useState(false);
-  const [loadingPortal, setLoadingPortal] = useState(false);
-  const [portalError, setPortalError] = useState<string | null>(null);
-  const [cancellingSubscription, setCancellingSubscription] = useState(false);
-  const [cancelSubscriptionError, setCancelSubscriptionError] = useState<string | null>(null);
-  const [checkingSession, setCheckingSession] = useState(false);
+
+  const {
+    subscription,
+    subscriptionError,
+    loadingPortal,
+    openCustomerPortal,
+    checkingSession,
+    tierName,
+    isTrialing,
+    trialEndsAt,
+    trialDaysRemaining,
+    trialEndsToday,
+  } = useSubscription();
+
   const [acceptedOnboardingTerms, setAcceptedOnboardingTerms] = useState(false);
   const [acceptingTerms, setAcceptingTerms] = useState(false);
   const [termsError, setTermsError] = useState("");
@@ -100,12 +107,6 @@ export default function AccountPage() {
   const [pricingPlans, setPricingPlans] = useState<Plan[]>(FALLBACK_PLANS);
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
   const [trialCheckoutLoading, setTrialCheckoutLoading] = useState<string | null>(null);
-  const [switchMode, setSwitchMode] = useState(false);
-  const [switchPlanTier, setSwitchPlanTier] = useState<string | null>(null);
-  const [switchBilling, setSwitchBilling] = useState<BillingCycle>("monthly");
-  const [switchingPlan, setSwitchingPlan] = useState(false);
-  const [switchError, setSwitchError] = useState<string | null>(null);
-  const [switchSuccess, setSwitchSuccess] = useState<string | null>(null);
   const [trialBannerDismissed, setTrialBannerDismissed] = useState(false);
 
   // Recent tools live in localStorage
@@ -315,16 +316,6 @@ export default function AccountPage() {
   }, [user]);
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.has("session_id")) {
-      setCheckingSession(true);
-      checkSubscription();
-    } else {
-      checkSubscription();
-    }
-  }, [token]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
     loadFavoriteTools();
   }, [token]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -364,39 +355,6 @@ export default function AccountPage() {
     window.setTimeout(() => setCopiedFavoriteSlug((current) => (current === slug ? null : current)), 1500);
   }
 
-  async function checkSubscription() {
-    if (!token) return;
-    setSubscriptionError(false);
-    try {
-      const res = await fetch(`/api/subscription`, {
-        headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setSubscription(data);
-      } else if (res.status === 404) {
-        setSubscription({
-          is_pro: false,
-          tier: "free",
-          devices: null,
-          storage_gb: 0,
-          team_seats: 1,
-          max_file_size_mb: 5,
-          api_access: false,
-          priority_support: false,
-          plan_ends_at: null,
-          subscription_status: "active",
-        });
-      } else {
-        setSubscriptionError(true);
-      }
-    } catch {
-      setSubscriptionError(true);
-    } finally {
-      setCheckingSession(false);
-    }
-  }
-
   function dismissTrialBanner() {
     if (!user) return;
     setTrialBannerDismissed(true);
@@ -404,87 +362,6 @@ export default function AccountPage() {
       window.localStorage.setItem(trialBannerDismissedKey(user.id), "1");
     } catch {
       // localStorage may be unavailable
-    }
-  }
-
-  async function openCustomerPortal() {
-    setPortalError(null);
-    if (!token) {
-      redirectToLoginPreservingCurrentLocation();
-      return;
-    }
-    setLoadingPortal(true);
-    try {
-      const res = await fetch("/api/subscription/portal", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to open billing portal");
-      if (data.url) window.location.href = data.url;
-    } catch (err) {
-      setPortalError(err instanceof Error ? err.message : "Something went wrong");
-      setLoadingPortal(false);
-    }
-  }
-
-  async function handleCancelSubscription() {
-    setCancelSubscriptionError(null);
-    if (!token) {
-      redirectToLoginPreservingCurrentLocation();
-      return;
-    }
-    setCancellingSubscription(true);
-    try {
-      const res = await fetch("/api/subscription/cancel", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to cancel subscription");
-      await checkSubscription();
-    } catch (err) {
-      setCancelSubscriptionError(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
-      setCancellingSubscription(false);
-    }
-  }
-
-  async function handleSwitchPlan(planTier: string, billing: BillingCycle) {
-    setSwitchError(null);
-    setSwitchSuccess(null);
-    if (!token) {
-      redirectToLoginPreservingCurrentLocation();
-      return;
-    }
-    setSwitchingPlan(true);
-    try {
-      const res = await fetch("/api/subscription/switch", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ plan_tier: planTier, billing }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed to switch plan");
-      setSwitchSuccess(data.message || "Plan changed successfully.");
-      setSwitchMode(false);
-      await checkSubscription();
-    } catch (err) {
-      setSwitchError(err instanceof Error ? err.message : "Something went wrong");
-    } finally {
-      setSwitchingPlan(false);
     }
   }
 
@@ -510,7 +387,6 @@ export default function AccountPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || (data.errors ? Object.values(data.errors).flat().join(", ") : "Could not accept terms."));
       if (data.user && token) login(data.user, token);
-      await checkSubscription();
     } catch (error) {
       setTermsError(error instanceof Error ? error.message : "Could not accept terms.");
     } finally {
@@ -636,29 +512,12 @@ export default function AccountPage() {
     );
   }
 
-  const planEndDate = subscription?.plan_ends_at
-    ? new Date(subscription.plan_ends_at).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
-    : null;
-
-  const tierName = displayOnboardingPlanName(subscription?.tier);
-  const planScheduledToCancel = Boolean(subscription?.is_pro) && subscription?.subscription_status !== "active";
   const favoriteCount = favoriteTools.length;
   const favoriteSlugs = new Set(favoriteTools.map((tool) => tool.slug));
   const visibleRecentTools = recentTools.filter((tool) => !favoriteSlugs.has(tool.slug));
   const showTermsOnboarding = Boolean(user.requires_terms_acceptance);
   const orderedPlans = sortPricingPlans(pricingPlans);
 
-  const isTrialing = subscription?.subscription_status === "trialing";
-  const trialEndsAt = isTrialing && subscription?.plan_ends_at ? new Date(subscription.plan_ends_at) : null;
-  const trialDaysRemaining = trialEndsAt
-    ? Math.max(0, Math.ceil((trialEndsAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24)))
-    : null;
-  const trialEndsToday = trialEndsAt
-    ? (() => {
-        const now = new Date();
-        return trialEndsAt.getFullYear() === now.getFullYear() && trialEndsAt.getMonth() === now.getMonth() && trialEndsAt.getDate() === now.getDate();
-      })()
-    : false;
   const showTrialBanner = isTrialing && !trialBannerDismissed && trialDaysRemaining !== null;
 
   return (
@@ -765,7 +624,7 @@ export default function AccountPage() {
           )}
         </div>
 
-        {/* Right column: favorites, recent tools, billing */}
+        {/* Right column: favorites and recent tools */}
         <div className="space-y-6">
           <FavoriteTools
             favoriteTools={favoriteTools}
@@ -778,32 +637,6 @@ export default function AccountPage() {
           <RecentTools
             visibleRecentTools={visibleRecentTools}
             recentToolsCount={visibleRecentTools.length}
-          />
-
-          <BillingSection
-            subscription={subscription}
-            subscriptionError={subscriptionError}
-            checkSubscription={checkSubscription}
-            planEndDate={planEndDate}
-            planScheduledToCancel={planScheduledToCancel}
-            tierName={tierName}
-            loadingPortal={loadingPortal}
-            portalError={portalError}
-            openCustomerPortal={openCustomerPortal}
-            cancellingSubscription={cancellingSubscription}
-            cancelSubscriptionError={cancelSubscriptionError}
-            handleCancelSubscription={handleCancelSubscription}
-            switchMode={switchMode}
-            setSwitchMode={setSwitchMode}
-            switchPlanTier={switchPlanTier}
-            setSwitchPlanTier={setSwitchPlanTier}
-            switchBilling={switchBilling}
-            setSwitchBilling={setSwitchBilling}
-            switchingPlan={switchingPlan}
-            switchError={switchError}
-            switchSuccess={switchSuccess}
-            handleSwitchPlan={handleSwitchPlan}
-            pricingPlans={pricingPlans}
           />
         </div>
       </div>
