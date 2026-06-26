@@ -225,7 +225,7 @@ export function PlanOnboarding({
                           >
                             {checkoutLoading === planTier
                               ? "Redirecting..."
-                              : "Skip trial — Subscribe now"}
+                              : "Skip trial - Subscribe now"}
                           </button>
                         </div>
                       }

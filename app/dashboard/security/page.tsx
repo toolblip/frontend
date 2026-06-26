@@ -108,7 +108,7 @@ export default function SecurityPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-16">
+    <div className="mx-auto max-w-3xl px-4 pb-10 sm:px-6 sm:pb-16">
       <h1 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-3xl">
         Security
       </h1>
@@ -185,7 +185,7 @@ export default function SecurityPage() {
           <button
             type="submit"
             disabled={passwordSaving}
-            className="rounded-full bg-red-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="cursor-pointer rounded-full bg-red-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {passwordSaving ? "Changing..." : "Change password"}
           </button>

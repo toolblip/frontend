@@ -88,7 +88,7 @@ export function BillingSection({
             type="button"
             onClick={checkSubscription}
             data-testid="subscription-retry"
-            className="mt-3 rounded-full border border-amber-300 px-4 py-1.5 text-xs font-medium text-amber-800 transition hover:bg-amber-100 dark:border-amber-800 dark:text-amber-200 dark:hover:bg-amber-900/40"
+            className="cursor-pointer mt-3 rounded-full border border-amber-300 px-4 py-1.5 text-xs font-medium text-amber-800 transition hover:bg-amber-100 dark:border-amber-800 dark:text-amber-200 dark:hover:bg-amber-900/40"
           >
             Retry
           </button>
@@ -199,14 +199,14 @@ export function BillingSection({
             <button
               onClick={openCustomerPortal}
               disabled={loadingPortal}
-              className="rounded-full bg-gray-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200"
+              className="cursor-pointer rounded-full bg-gray-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200"
             >
               {loadingPortal ? "Opening..." : "Manage Billing"}
             </button>
             <Link
               href="/pricing"
               data-testid="dashboard-change-plan"
-              className="rounded-full border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+              className="cursor-pointer rounded-full border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
             >
               Upgrade or change plan
             </Link>
@@ -228,12 +228,12 @@ export function BillingSection({
                 onClick={handleCancelSubscription}
                 disabled={cancellingSubscription}
                 data-testid="cancel-plan"
-                className="text-sm font-medium text-gray-500 underline underline-offset-4 transition hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50 dark:text-gray-400 dark:hover:text-red-400"
+                className="cursor-pointer text-sm font-medium text-gray-500 underline underline-offset-4 transition hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50 dark:text-gray-400 dark:hover:text-red-400"
               >
                 {cancellingSubscription ? "Cancelling..." : "Cancel plan"}
               </button>
               <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">
-                Cancellation isn&apos;t immediate — you keep access until the end of
+                Cancellation isn&apos;t immediate - you keep access until the end of
                 your billing period.
               </p>
             </div>
@@ -246,7 +246,7 @@ export function BillingSection({
               onClick={() => {
                 setSwitchMode(!switchMode);
               }}
-              className="inline-flex items-center gap-2 text-sm font-semibold text-gray-900 transition hover:text-red-600 dark:text-white dark:hover:text-red-400"
+              className="cursor-pointer inline-flex items-center gap-2 text-sm font-semibold text-gray-900 transition hover:text-red-600 dark:text-white dark:hover:text-red-400"
             >
               <svg
                 className={`h-4 w-4 transition-transform ${switchMode ? "rotate-90" : ""}`}

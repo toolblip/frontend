@@ -2,6 +2,22 @@
 
 This folder is home. Treat it that way.
 
+## Coding Workflow
+
+All code changes in this project must go through a dedicated coding agent:
+
+1. **Claude Code** (via `./claude.sh` in tmux) — primary. All editing, building, testing.
+2. **Codex CLI** — backup if Claude Code is rate-limited, blocked, or unavailable.
+
+Do NOT use Hermes `write_file`/`patch`/`terminal` for source code editing. Route all coding through Claude Code via `./claude.sh`. The only exceptions are trivial one-line config files, package.json scripts, and deployment files (railway.json, nixpacks.toml).
+
+## PR Review Workflow
+
+When reviewing pull requests or doing code review:
+
+1. **Codex CLI** — primary reviewer
+2. **Claude Code** — backup/second review pass if Codex is blocked or unavailable
+
 ## First Run
 
 If `BOOTSTRAP.md` exists, that's your birth certificate. Follow it, figure out who you are, then delete it. You won't need it again.

@@ -514,7 +514,7 @@ export default function AccountPage() {
   const showTrialBanner = isTrialing && !trialBannerDismissed && trialDaysRemaining !== null;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-16">
+    <div className="mx-auto max-w-7xl px-4 pb-10 sm:px-6 sm:pb-16">
       {showTrialBanner && trialDaysRemaining !== null && (
         <TrialBanner
           trialEndsToday={trialEndsToday}
@@ -581,7 +581,7 @@ export default function AccountPage() {
       <div className="mt-8 text-center">
         <Link
           href="/"
-          className="text-sm text-gray-500 transition-colors hover:text-gray-700 dark:hover:text-gray-300"
+          className="cursor-pointer text-sm text-gray-500 transition-colors hover:text-gray-700 dark:hover:text-gray-300"
         >
           ← Back to home
         </Link>

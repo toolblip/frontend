@@ -31,7 +31,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                className={`cursor-pointer rounded-md px-3 py-2 text-sm font-medium transition-colors ${
                   active
                     ? "bg-gray-100 text-black"
                     : "text-gray-500 hover:bg-gray-50 hover:text-black"
