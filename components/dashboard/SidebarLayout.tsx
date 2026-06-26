@@ -22,28 +22,30 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
-      {/* Inline tab navigation */}
-      <nav className="mb-8 flex gap-6 border-b border-gray-200">
-        {NAV_ITEMS.map((item) => {
-          const active = isActive(item.href);
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`pb-2 text-sm font-medium transition-colors ${
-                active
-                  ? "border-b-2 border-black text-black"
-                  : "text-gray-500 hover:text-black"
-              }`}
-            >
-              {item.label}
-            </Link>
-          );
-        })}
-      </nav>
+      <div className="flex gap-8">
+        {/* Left menu bar */}
+        <nav className="flex w-40 shrink-0 flex-col gap-1">
+          {NAV_ITEMS.map((item) => {
+            const active = isActive(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`rounded-md px-3 py-2 text-sm font-medium transition-colors ${
+                  active
+                    ? "bg-gray-100 text-black"
+                    : "text-gray-500 hover:bg-gray-50 hover:text-black"
+                }`}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
+        </nav>
 
-      {/* Page content */}
-      <main>{children}</main>
+        {/* Page content */}
+        <main className="min-w-0 flex-1">{children}</main>
+      </div>
     </div>
   );
 }
