@@ -182,7 +182,7 @@ export function useSubscription() {
     const params = new URLSearchParams(window.location.search);
     if (params.has("session_id")) {
       setCheckingSession(true);
-      checkSubscription();
+      checkSubscription().finally(() => setCheckingSession(false));
     } else {
       checkSubscription();
     }
