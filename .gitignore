@@ -39,6 +39,9 @@ memory/
 # TypeScript
 *.tsbuildinfo
 
+# Auto-generated build artifacts
+content/blog-manifest.ts
+
 # OS
 .DS_Store
 

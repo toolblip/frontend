@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "prebuild": "node scripts/generate-blog-manifest.mjs",
     "start": "next start",
     "lint": "next lint",
     "test:e2e": "playwright test",
