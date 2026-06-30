@@ -47,34 +47,66 @@ const STATUS_COLORS: Record<string, string> = {
 const cardClasses =
   "overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900/80";
 
+const PAGE_SIZE = 10;
+
 export function InvoicesSection() {
   const [invoices, setInvoices] = React.useState<Invoice[]>([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState(false);
+  const [hasMore, setHasMore] = React.useState(false);
+  const [nextStartingAfter, setNextStartingAfter] = React.useState<string | null>(null);
+  const [prevCursors, setPrevCursors] = React.useState<string[]>([]);
+  const [page, setPage] = React.useState(1);
+
+  const load = React.useCallback(async (startingAfter?: string) => {
+    setLoading(true);
+    setError(false);
+    try {
+      const params = new URLSearchParams({ per_page: String(PAGE_SIZE) });
+      if (startingAfter) params.set("starting_after", startingAfter);
+
+      const res = await fetch(`/api/subscription/invoices?${params}`, { credentials: "include" });
+      if (!res.ok) throw new Error("Failed to load invoices");
+      const data = await res.json();
+      setInvoices(data.invoices ?? []);
+      setHasMore(data.has_more ?? false);
+      setNextStartingAfter(data.next_starting_after ?? null);
+    } catch {
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   React.useEffect(() => {
-    let cancelled = false;
-    async function load() {
-      try {
-        const res = await fetch("/api/subscription/invoices", { credentials: "include" });
-        if (!res.ok) throw new Error("Failed to load invoices");
-        const data = await res.json();
-        if (cancelled) return;
-        setInvoices(data.invoices ?? []);
-      } catch {
-        if (!cancelled) setError(true);
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
     load();
-    return () => { cancelled = true; };
-  }, []);
+  }, [load]);
+
+  function goNext() {
+    if (!hasMore || !nextStartingAfter) return;
+    setPrevCursors((prev) => [...prev, nextStartingAfter]);
+    setPage((p) => p + 1);
+    load(nextStartingAfter);
+  }
+
+  function goPrev() {
+    if (page <= 1) return;
+    const newCursors = [...prevCursors];
+    const prev = newCursors.pop();
+    setPrevCursors(newCursors);
+    setPage((p) => p - 1);
+    load(prev);
+  }
 
   return (
     <section className={cardClasses}>
       <div className="px-6 py-6 lg:px-8 lg:py-8">
-        <p className="text-sm font-semibold text-red-600 dark:text-red-400">Invoices</p>
+        <div className="flex items-center justify-between">
+          <p className="text-sm font-semibold text-red-600 dark:text-red-400">Invoices</p>
+          {invoices.length > 0 && (
+            <span className="text-xs text-gray-400 dark:text-gray-500">Page {page}</span>
+          )}
+        </div>
 
         {loading ? (
           <p className="mt-3 text-sm text-gray-500">Loading invoices...</p>
@@ -99,13 +131,8 @@ export function InvoicesSection() {
               </thead>
               <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
                 {invoices.map((inv) => (
-                  <tr
-                    key={inv.id}
-                    className="transition hover:bg-gray-50 dark:hover:bg-gray-900/50"
-                  >
-                    <td className="px-4 py-3 text-gray-700 dark:text-gray-300">
-                      {formatDate(inv.created)}
-                    </td>
+                  <tr key={inv.id} className="transition hover:bg-gray-50 dark:hover:bg-gray-900/50">
+                    <td className="px-4 py-3 text-gray-700 dark:text-gray-300">{formatDate(inv.created)}</td>
                     <td className="px-4 py-3 text-gray-900 dark:text-white">
                       {formatCurrency(inv.amount_paid > 0 ? inv.amount_paid : inv.amount_due, inv.currency)}
                     </td>
@@ -116,10 +143,7 @@ export function InvoicesSection() {
                     </td>
                     <td className="px-4 py-3 text-right">
                       {inv.invoice_pdf ? (
-                        <a
-                          href={inv.invoice_pdf}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <a href={inv.invoice_pdf} target="_blank" rel="noopener noreferrer"
                           className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 px-3 py-1 text-xs font-medium text-gray-600 transition hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900 dark:border-gray-700 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:bg-gray-800 dark:hover:text-white"
                         >
                           <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -135,6 +159,27 @@ export function InvoicesSection() {
                 ))}
               </tbody>
             </table>
+
+            {/* Pagination controls */}
+            <div className="flex items-center justify-between border-t border-gray-200 px-4 py-3 dark:border-gray-700">
+              <button
+                type="button"
+                onClick={goPrev}
+                disabled={page <= 1}
+                className="cursor-pointer rounded-full border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 transition hover:border-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-gray-700 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:bg-gray-800"
+              >
+                ← Previous
+              </button>
+              <span className="text-xs text-gray-400 dark:text-gray-500">Page {page}</span>
+              <button
+                type="button"
+                onClick={goNext}
+                disabled={!hasMore}
+                className="cursor-pointer rounded-full border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 transition hover:border-gray-300 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 dark:border-gray-700 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:bg-gray-800"
+              >
+                Next →
+              </button>
+            </div>
           </div>
         )}
       </div>

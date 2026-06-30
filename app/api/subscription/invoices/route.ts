@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
 const LARAVEL_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.toolblip.com";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("auth_token")?.value;
@@ -15,7 +15,11 @@ export async function GET() {
       );
     }
 
-    const laravelRes = await fetch(`${LARAVEL_URL}/api/subscription/invoices`, {
+    const params = request.nextUrl.searchParams;
+    const qs = params.toString();
+    const url = `${LARAVEL_URL}/api/subscription/invoices${qs ? `?${qs}` : ""}`;
+
+    const laravelRes = await fetch(url, {
       headers: {
         Accept: "application/json",
         Authorization: `Bearer ${token}`,
