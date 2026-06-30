@@ -163,8 +163,8 @@ export function BillingSection({
               )}
             </div>
 
-            {/* Subtitle + link row — matches DashboardHeader */}
-            <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+            {/* Subtitle row — matches DashboardHeader layout */}
+            <div className="mt-3 flex flex-wrap items-center gap-3">
               <p className="text-base leading-7 text-gray-600 dark:text-gray-300">
                 {(subscription.storage_gb ?? 0) > 0 ? `${subscription.storage_gb}GB storage` : ""}
                 {(subscription.storage_gb ?? 0) > 0 && (subscription.team_seats ?? 0) > 0 ? " · " : ""}
@@ -172,13 +172,6 @@ export function BillingSection({
                 {(subscription.storage_gb ?? 0) > 0 || (subscription.team_seats ?? 0) > 0 ? " · " : ""}
                 Max {(subscription.max_file_size_mb ?? 0) >= 1000 ? `${(subscription.max_file_size_mb ?? 0) / 1000}GB` : `${subscription.max_file_size_mb ?? 0}MB`} file
               </p>
-              <button
-                onClick={openCustomerPortal}
-                disabled={loadingPortal}
-                className="cursor-pointer text-sm font-medium text-gray-500 transition hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
-              >
-                {loadingPortal ? "Opening..." : "Manage Billing →"}
-              </button>
             </div>
 
             {/* Renew / cancellation banner */}
