@@ -357,30 +357,32 @@ export function BillingSection({
               planEndDate && <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">Renews on {planEndDate}</p>
             )}
 
-            {/* Action buttons */}
+            {/* Action buttons — upgrade/cancel left, manage billing right */}
             {portalError && <p className="mt-4 text-sm text-red-600 dark:text-red-400">{portalError}</p>}
-            <div className="mt-5 flex flex-wrap items-center gap-3">
-              <button
-                type="button"
-                onClick={() => setShowPlanModal(true)}
-                className={
-                  "cursor-pointer rounded-full px-5 py-2.5 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 " +
-                  (isUpgradable
-                    ? "bg-red-600 text-white hover:bg-red-700"
-                    : "border border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50 dark:border-gray-700 dark:bg-transparent dark:text-gray-300 dark:hover:border-gray-600 dark:hover:bg-gray-800")
-                }
-              >
-                {isUpgradable ? "Upgrade Plan" : "Switch Plan"}
-              </button>
-              {!planScheduledToCancel && (
-                <button type="button" onClick={() => setShowCancelConfirm(true)}
-                  disabled={cancellingSubscription}
-                  data-testid="cancel-plan"
-                  className="cursor-pointer text-sm font-medium text-gray-500 underline underline-offset-4 transition hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50 dark:text-gray-400 dark:hover:text-red-400"
+            <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowPlanModal(true)}
+                  className={
+                    "cursor-pointer rounded-full px-5 py-2.5 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 " +
+                    (isUpgradable
+                      ? "bg-red-600 text-white hover:bg-red-700"
+                      : "border border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50 dark:border-gray-700 dark:bg-transparent dark:text-gray-300 dark:hover:border-gray-600 dark:hover:bg-gray-800")
+                  }
                 >
-                  {cancellingSubscription ? "Cancelling..." : "Cancel plan"}
+                  {isUpgradable ? "Upgrade Plan" : "Switch Plan"}
                 </button>
-              )}
+                {!planScheduledToCancel && (
+                  <button type="button" onClick={() => setShowCancelConfirm(true)}
+                    disabled={cancellingSubscription}
+                    data-testid="cancel-plan"
+                    className="cursor-pointer text-sm font-medium text-gray-500 underline underline-offset-4 transition hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50 dark:text-gray-400 dark:hover:text-red-400"
+                  >
+                    {cancellingSubscription ? "Cancelling..." : "Cancel plan"}
+                  </button>
+                )}
+              </div>
               <button onClick={openCustomerPortal} disabled={loadingPortal}
                 className="cursor-pointer rounded-full bg-gray-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200"
               >
