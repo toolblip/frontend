@@ -28,30 +28,32 @@ test.describe('Dashboard billing status states', () => {
   test('free: shows Free with an upgrade path', async ({ page }) => {
     await loginByForm(page, VALID_USER);
     await dismissDashboardOnboarding(page);
+    await page.goto('/dashboard/subscription');
 
-    const billing = page.locator('#billing');
-    await expect(billing.getByRole('link', { name: 'View plans' })).toHaveAttribute('href', '/pricing');
+    const billing = page.getByText('Free plan');
+    await expect(billing).toBeVisible();
+    await expect(page.getByText('View plans')).toBeVisible();
   });
 
   test('paid-active: shows the active plan and renewal date', async ({ page }) => {
     await stubSubscription(page, PAID_ACTIVE);
     await loginByForm(page, VALID_USER);
     await dismissDashboardOnboarding(page);
+    await page.goto('/dashboard/subscription');
 
-    const billing = page.locator('#billing');
-    await expect(billing.getByText('Pro plan active')).toBeVisible();
-    await expect(billing.getByText('Renews on December 31, 2026')).toBeVisible();
+    await expect(page.getByText('Pro plan active')).toBeVisible();
+    await expect(page.getByText('Renews on December 31, 2026')).toBeVisible();
   });
 
   test('scheduled-cancel: shows active-until rather than renewal', async ({ page }) => {
     await stubSubscription(page, { ...PAID_ACTIVE, subscription_status: 'canceled' });
     await loginByForm(page, VALID_USER);
     await dismissDashboardOnboarding(page);
+    await page.goto('/dashboard/subscription');
 
-    const billing = page.locator('#billing');
-    await expect(billing.getByText('Pro plan active')).toBeVisible();
-    await expect(billing.getByText('You\'ll keep Pro plan access until December 31, 2026.')).toBeVisible();
-    await expect(billing.getByText('Renews on December 31, 2026')).toHaveCount(0);
+    await expect(page.getByText('Pro plan active')).toBeVisible();
+    await expect(page.getByText("You'll keep Pro plan access until December 31, 2026.")).toBeVisible();
+    await expect(page.getByText('Renews on December 31, 2026')).toHaveCount(0);
   });
 
   test('api-error: shows an explicit unavailable state with retry, not a silent loading spinner', async ({ page }) => {
@@ -61,17 +63,16 @@ test.describe('Dashboard billing status states', () => {
 
     await loginByForm(page, VALID_USER);
     await dismissDashboardOnboarding(page);
+    await page.goto('/dashboard/subscription');
 
-    const billing = page.locator('#billing');
-    await expect(billing.getByTestId('subscription-error')).toBeVisible();
-    await expect(billing.getByText('Billing status unavailable')).toBeVisible();
-    await expect(billing.getByText('Checking subscription...')).toHaveCount(0);
+    await expect(page.getByText('Billing status unavailable')).toBeVisible();
+    await expect(page.getByText('Checking subscription...')).toHaveCount(0);
 
     // Retry recovers once the backend responds.
     await page.unroute('**/api/subscription');
     await stubSubscription(page, PAID_ACTIVE);
-    await billing.getByTestId('subscription-retry').click();
-    await expect(billing.getByText('Pro plan active')).toBeVisible();
-    await expect(billing.getByTestId('subscription-error')).toHaveCount(0);
+    await page.getByTestId('subscription-retry').click();
+    await expect(page.getByText('Pro plan active')).toBeVisible({ timeout: 5000 });
+    await expect(page.getByText('Billing status unavailable')).toHaveCount(0);
   });
 });

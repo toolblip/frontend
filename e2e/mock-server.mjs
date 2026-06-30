@@ -332,6 +332,49 @@ const server = http.createServer(async (req, res) => {
     });
   }
 
+  if (req.method === 'POST' && url.pathname === '/api/subscription/switch') {
+    const body = await readJson(req);
+    const email = tokens.get(bearer(req));
+    if (!email) return json(res, 401, { message: 'Unauthenticated.' });
+    const user = email ? users.get(email) : null;
+    if (!user) return json(res, 404, { message: 'User not found.' });
+    const targetTier = String(body.plan_tier ?? '');
+    const billing = String(body.billing ?? '');
+    if (!['starter', 'ultra', 'max'].includes(targetTier) || !['monthly', 'yearly'].includes(billing)) {
+      return json(res, 422, { message: 'Invalid plan_tier or billing' });
+    }
+    const previousTier = user.tier ?? 'free';
+    const sortOrder = { free: 0, starter: 1, ultra: 2, max: 3 };
+    const isUpgrade = (sortOrder[targetTier] ?? 0) > (sortOrder[previousTier] ?? 0);
+    user.tier = targetTier;
+    user.subscription_status = 'active';
+    user.plan_ends_at = '2026-12-31T12:00:00.000Z';
+    return json(res, 200, {
+      success: true,
+      message: isUpgrade
+        ? `Upgraded to ${targetTier} with proration. Your new plan is active now.`
+        : `Downgrade to ${targetTier} scheduled. The change will take effect at the end of your billing period.`,
+      tier: targetTier,
+      is_upgrade: isUpgrade,
+    });
+  }
+
+  if (req.method === 'POST' && url.pathname === '/api/subscription/trial') {
+    const body = await readJson(req);
+    const email = tokens.get(bearer(req));
+    if (!email) return json(res, 401, { message: 'Unauthenticated.' });
+    const user = users.get(email);
+    if (!user) return json(res, 404, { message: 'User not found.' });
+    const priceId = String(body.price_id ?? '');
+    if (!priceId) return json(res, 422, { message: 'price_id is required.' });
+    const priceToTier = { price_1TOflqHd4AsPgGTOxspjxODX: 'starter', price_1TOflrHd4AsPgGTOnt9jYhjz: 'ultra', price_1TOflsHd4AsPgGTO5ra4mhwt: 'ultra', price_1TOflsHd4AsPgGTOG7jeNqLk: 'max', price_1TOfltHd4AsPgGTOnUHvrbT7: 'max', price_1TOflqHd4AsPgGTOOrxqG1kM: 'starter' };
+    const tier = priceToTier[priceId] ?? 'ultra';
+    user.tier = tier;
+    user.subscription_status = 'trialing';
+    user.plan_ends_at = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString();
+    return json(res, 200, { success: true, message: 'Your 14-day free trial has started!', tier, trial_end: Math.floor(Date.now() / 1000) + 14 * 24 * 3600 });
+  }
+
   if (req.method === 'POST' && url.pathname === '/api/subscription/checkout') {
     const body = await readJson(req);
     const email = tokens.get(bearer(req));

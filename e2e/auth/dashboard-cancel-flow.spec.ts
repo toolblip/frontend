@@ -31,20 +31,24 @@ test.describe('Dashboard cancellation flow', () => {
     await loginByForm(page, VALID_USER);
     await expect(page).toHaveURL(/\/dashboard/);
     await dismissDashboardOnboarding(page);
+    await page.goto('/dashboard/subscription');
 
-    const billing = page.locator('#billing');
-    await expect(billing.getByText('Pro plan active')).toBeVisible();
-    await expect(billing.getByText(/Renews on/)).toBeVisible();
+    await expect(page.getByText('Pro plan active')).toBeVisible();
+    await expect(page.getByText(/Renews on/)).toBeVisible();
 
-    // Cancellation is explicit and clearly not an immediate downgrade. It shares
-    // the billing-portal handler with Manage Billing / Downgrade to Free.
-    const cancel = billing.getByTestId('cancel-plan');
+    // Cancellation is triggered via a modal — the text appears after clicking Cancel plan
+    const cancel = page.getByTestId('cancel-plan');
     await expect(cancel).toBeVisible();
     await expect(cancel).toBeEnabled();
+
+    // Click Cancel plan to open the modal
+    await cancel.click();
+
+    // Modal shows the keep-access-until-period-end message
     await expect(
-      billing.getByText(/Cancellation isn't immediate — you keep access until the end of your billing period/),
+      page.getByText(/Cancellation isn't immediate — you keep access until the end of your billing period/),
     ).toBeVisible();
-    await expect(billing.getByRole('button', { name: 'Manage Billing' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Manage Billing' })).toBeVisible();
   });
 
   test('a scheduled cancellation shows access-until state, not an immediate downgrade', async ({ page }) => {
@@ -53,19 +57,19 @@ test.describe('Dashboard cancellation flow', () => {
     await loginByForm(page, VALID_USER);
     await expect(page).toHaveURL(/\/dashboard/);
     await dismissDashboardOnboarding(page);
+    await page.goto('/dashboard/subscription');
 
-    const billing = page.locator('#billing');
-    const scheduled = billing.getByTestId('cancellation-scheduled');
+    const scheduled = page.getByTestId('cancellation-scheduled');
     await expect(scheduled).toBeVisible();
     await expect(scheduled).toContainText('Cancellation scheduled');
     await expect(scheduled).toContainText('access until December 31, 2026');
 
     // Still a paid plan until period end — not downgraded to Free, no renewal copy.
-    await expect(billing.getByText('Pro plan active')).toBeVisible();
-    await expect(billing.getByText(/Renews on/)).toHaveCount(0);
-    await expect(billing.getByRole('link', { name: 'View plans' })).toHaveCount(0);
+    await expect(page.getByText('Pro plan active')).toBeVisible();
+    await expect(page.getByText(/Renews on/)).toHaveCount(0);
+    await expect(page.getByText('View plans')).toHaveCount(0);
     // No second cancel prompt once cancellation is already scheduled.
-    await expect(billing.getByTestId('cancel-plan')).toHaveCount(0);
-    await expect(billing.getByRole('button', { name: 'Manage Billing' })).toBeVisible();
+    await expect(page.getByTestId('cancel-plan')).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Manage Billing' })).toBeVisible();
   });
 });

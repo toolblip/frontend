@@ -27,7 +27,7 @@ test.describe('Pricing layout', () => {
     expect(toggleRect).toBeTruthy();
     expect(Math.abs((toggleRect!.x + toggleRect!.width / 2) - 600)).toBeLessThan(120);
 
-    const highlightProButton = pricing.locator('[data-tier="ultra"]').getByRole('button', { name: 'Start 14-day free trial' });
+    const highlightProButton = pricing.locator('[data-tier="ultra"]').getByRole('button', { name: 'Start Free Trial' });
     await expect(highlightProButton).toBeVisible();
     await expect(pricing.locator('[data-tier="ultra"]')).toHaveClass(/selected/);
 
@@ -74,9 +74,9 @@ test.describe('Pricing layout', () => {
     await expect(pricing.locator('[data-tier="max"]')).toContainText('49.99');
     await expect(pricing.locator('[data-tier="ultra"]').getByText('Bill annually')).toBeVisible();
 
-    const starterButton = pricing.locator('[data-tier="starter"]').getByRole('button', { name: 'Start 14-day free trial' });
-    const proButton = pricing.locator('[data-tier="ultra"]').getByRole('button', { name: 'Start 14-day free trial' });
-    const maxButton = pricing.locator('[data-tier="max"]').getByRole('button', { name: 'Start 14-day free trial' });
+    const starterButton = pricing.locator('[data-tier="starter"]').getByRole('button', { name: 'Start Free Trial' });
+    const proButton = pricing.locator('[data-tier="ultra"]').getByRole('button', { name: 'Start Free Trial' });
+    const maxButton = pricing.locator('[data-tier="max"]').getByRole('button', { name: 'Start Free Trial' });
     const [starterRect, proRect, maxRect] = await Promise.all([
       starterButton.boundingBox(),
       proButton.boundingBox(),

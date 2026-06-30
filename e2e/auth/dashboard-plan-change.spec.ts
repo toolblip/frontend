@@ -19,17 +19,20 @@ test.describe('Dashboard plan selection and plan change', () => {
     await resetMockBackend(request);
   });
 
-  test('a free user sees the Free plan and an upgrade path into pricing', async ({ page }) => {
+  test('a free user sees the Free plan and an upgrade path', async ({ page }) => {
     await loginByForm(page, VALID_USER);
     await expect(page).toHaveURL(/\/dashboard/);
     await dismissDashboardOnboarding(page);
 
-    const billing = page.locator('#billing');
-    await expect(billing.getByRole('heading', { name: 'Subscription' })).toBeVisible();
-    await expect(billing.getByRole('link', { name: 'View plans' })).toHaveAttribute('href', '/pricing');
+    // Navigate to subscription page where billing section lives
+    await page.goto('/dashboard/subscription');
+
+    // Free plan card should show with upgrade CTA
+    await expect(page.getByText('Free plan')).toBeVisible();
+    await expect(page.getByText('View plans')).toBeVisible();
   });
 
-  test('a paid user sees the active plan and an upgrade/change-plan handoff to pricing', async ({ page }) => {
+  test('a paid user sees active plan and inline plan switcher', async ({ page }) => {
     await page.route('**/api/subscription', async (route) => {
       await route.fulfill({
         status: 200,
@@ -38,36 +41,64 @@ test.describe('Dashboard plan selection and plan change', () => {
       });
     });
 
+    // Mock the switch endpoint
+    await page.route('**/api/subscription/switch', async (route) => {
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          success: true,
+          message: 'Upgraded to Pro with proration. Your new plan is active now.',
+          tier: 'max',
+          is_upgrade: true,
+        }),
+      });
+    });
+
     await loginByForm(page, VALID_USER);
     await expect(page).toHaveURL(/\/dashboard/);
     await dismissDashboardOnboarding(page);
 
-    const billing = page.locator('#billing');
-    // Current plan state stays visible.
-    await expect(billing.getByText('Pro plan active')).toBeVisible();
-    await expect(billing.getByText(/Renews on/)).toBeVisible();
+    // Navigate to subscription page
+    await page.goto('/dashboard/subscription');
 
-    // Plan-change actions: billing portal + a pricing/checkout change-plan entry.
-    await expect(billing.getByRole('button', { name: 'Manage Billing' })).toBeVisible();
-    const changePlan = billing.getByTestId('dashboard-change-plan');
-    await expect(changePlan).toBeVisible();
-    await expect(changePlan).toHaveAttribute('href', '/pricing');
-    await expect(billing.getByRole('button', { name: 'Downgrade to Free' })).toBeVisible();
+    // Current plan state
+    await expect(page.getByText('Pro plan active')).toBeVisible();
+    await expect(page.getByText(/Renews on/)).toBeVisible();
 
-    // The change-plan action hands off to the existing pricing flow.
-    await changePlan.click();
-    await expect(page).toHaveURL(/\/pricing$/);
+    // Manage Billing button visible
+    await expect(page.getByRole('button', { name: 'Manage Billing' })).toBeVisible();
+
+    // "Change Plan" is a toggle button (not a link to /pricing)
+    const changePlanBtn = page.getByRole('button', { name: 'Change Plan' });
+    await expect(changePlanBtn).toBeVisible();
+
+    // Click to open inline plan switcher
+    await changePlanBtn.click();
+
+    // Plan cards should appear — non-current plan has "Switch to" button
+    const switchBtn = page.getByRole('button', { name: /Switch to/ });
+    await expect(switchBtn.first()).toBeVisible({ timeout: 5000 });
+
+    // "Current plan" badge visible on current plan card
+    await expect(page.getByText('Current plan')).toBeVisible();
+
+    // Click "Switch to..." on a plan card
+    await switchBtn.first().click();
+
+    // Switch success message appears
+    await expect(page.getByText(/Your new plan is active/)).toBeVisible({ timeout: 5000 });
   });
 
-  test('selecting a plan on pricing creates a Stripe checkout session directly', async ({ page }) => {
+  test('selecting a plan on pricing starts a free trial for authenticated users', async ({ page }) => {
     await loginByForm(page, VALID_USER);
     await expect(page).toHaveURL(/\/dashboard/);
 
     await page.goto('/pricing');
     await page.getByRole('button', { name: /Yearly/ }).click();
-    await page.locator('[data-tier="max"]').getByRole('button', { name: 'Start 14-day free trial' }).click();
+    await page.locator('[data-tier="max"]').getByRole('button', { name: 'Start Free Trial' }).click();
 
-    // Authenticated users go directly to Stripe Checkout
-    await expect(page).toHaveURL('https://checkout.stripe.com/mock');
+    // Authenticated users start a trial directly and land on dashboard
+    await expect(page).toHaveURL(/\/dashboard\?trial=started/);
   });
 });

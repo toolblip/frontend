@@ -271,20 +271,20 @@ export function BillingSection({
                             }}
                             billing={switchBilling}
                             highlighted={plan.tier === "ultra"}
-                            selected={switchPlanTier === plan.tier}
                             accent="red"
-                            onClick={() => setSwitchPlanTier(switchPlanTier === plan.tier ? null : plan.tier)}
                             footer={
                               isCurrentPlan ? (
-                                <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-400">Current plan</span>
-                              ) : switchPlanTier === plan.tier ? (
+                                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400">
+                                  Current plan
+                                </span>
+                              ) : (
                                 <button type="button" onClick={(e: React.MouseEvent) => { e.stopPropagation(); handleSwitchPlan(plan.tier, switchBilling); }}
                                   disabled={switchingPlan || !priceId}
-                                  className={`tb-v2-btn tb-v2-pricing-btn selected tb-v2-btn-primary ${switchingPlan ? "opacity-50" : ""}`}
+                                  className="w-full cursor-pointer rounded-full bg-gray-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200"
                                 >
-                                  {switchingPlan ? "Switching..." : priceId ? `Switch to ${switchBilling === "yearly" ? "Yearly" : "Monthly"}` : "Not available"}
+                                  {switchingPlan ? "Switching..." : !priceId ? "Not available" : `Switch to ${switchBilling === "yearly" ? "Yearly" : "Monthly"}`}
                                 </button>
-                              ) : null
+                              )
                             }
                           >
                             <div className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
