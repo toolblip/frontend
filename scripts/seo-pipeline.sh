@@ -13,6 +13,8 @@ set -euo pipefail
 export USER="${USER:-$(id -un 2>/dev/null || echo ray)}"
 export LOGNAME="${LOGNAME:-$USER}"
 export HOME=/Users/ray
+# Ensure ~/.local/bin (where claude lives) and homebrew are in PATH for stripped cron envs.
+export PATH="$HOME/.local/bin:/opt/homebrew/bin:$PATH"
 
 # Repo root derived from script location — works from any worktree.
 WORK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

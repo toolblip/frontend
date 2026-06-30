@@ -2,7 +2,7 @@
   "worker": "Toolblip Kanban worker",
   "profile": "tb",
   "board": "tb",
-  "last_restart_cycle_at": "2026-06-26T02:01:00Z",
+  "last_restart_cycle_at": "2026-06-29T14:00:00Z",
   "restart_pending": false,
   "current_task": null,
   "current_task_status": "idle",
@@ -12,9 +12,9 @@
     "running": 0,
     "blocked": 0,
     "review": 0,
-    "done": 3,
-    "archived": 36,
-    "note": "3 done (dashboard refactor, subscription extraction, Stripe-style nav redesign). 36 archived. No ready tasks. No viable task to pick."
+    "done": 0,
+    "archived": 57,
+    "note": "57 archived, 0 active. No ready/blocked/running/review tasks. Board fully quiescent."
   },
   "planning_files_status": {
     "docs/plans/toolblip-mvp/master-plan.md": "missing",
@@ -22,8 +22,8 @@
     "docs/plans/toolblip-mvp/questions.md": "missing",
     "docs/plans/toolblip-mvp/implementation-tracker.md": "missing",
     "current_stage_file": "missing",
-    "note": "Only runtime/supervisor-t.json exists under docs/plans/toolblip-mvp/. Cannot source next-task priority from planning docs."
+    "note": "Only runtime/supervisor-t.json exists under docs/plans/toolblip-mvp/. Planning docs are absent — next-task priority cannot be sourced from them."
   },
-  "worker_liveness": "Gateway healthy, tb board dispatcher active. 0 ready/blocked/running/review tasks. No worker process needed — idle.",
-  "last_action": "Graceful restart cycle 2026-06-26T02:01:00Z: re-read live tb board — unchanged since last cycle (3 done, 36 archived, 0 blocked/ready/running/review). No current task. No ready tasks. restart_pending=false. Planning docs still missing. System healthy, idle."
+  "worker_liveness": "Gateway healthy, tb board dispatcher active. 57 archived, 0 active. No worker process needed — idle.",
+  "last_action": "Graceful restart cycle 2026-06-28T14:00:00Z: re-read live tb board — 0 active, 57 archived. No current task, restart_pending=false, no viable next task. Planning docs still absent. System healthy, idle."
 }

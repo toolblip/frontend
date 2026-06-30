@@ -48,23 +48,18 @@ export function DashboardHeader({
         </div>
 
         <div className="grid gap-3 sm:grid-cols-2">
-          <Link
-            href="/dashboard/subscription"
-            className="block rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition hover:border-gray-300 hover:shadow-md dark:border-gray-700 dark:bg-gray-900 dark:hover:border-gray-600"
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs font-medium text-gray-500 dark:text-gray-400">Plan</p>
-                <p className="mt-1 text-xl font-bold text-gray-900 dark:text-white">
-                  {checkingSession
-                    ? "Checking..."
-                    : subscription === null
-                      ? subscriptionError
-                        ? "Unavailable"
-                        : "Loading..."
-                      : tierName ?? "Free"}
-                </p>
-              </div>
+          <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-gray-900">
+            <p className="text-xs font-medium text-gray-500 dark:text-gray-400">Plan</p>
+            <div className="mt-1 flex items-center gap-2">
+              <p className="text-xl font-bold text-gray-900 dark:text-white">
+                {checkingSession
+                  ? "Checking..."
+                  : subscription === null
+                    ? subscriptionError
+                      ? "Unavailable"
+                      : "Loading..."
+                    : tierName ?? "Free"}
+              </p>
               {subscription && subscription.is_pro && (
                 <span className="inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400">
                   {subscriptionStatusLabel(subscription)}
@@ -82,45 +77,19 @@ export function DashboardHeader({
               )}
             </div>
 
-            {subscription && subscription.is_pro && (
-              <div className="mt-3 flex flex-wrap gap-1.5">
-                {(subscription.storage_gb ?? 0) > 0 && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-gray-50 px-2 py-0.5 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-400">
-                    {subscription.storage_gb}GB storage
-                  </span>
-                )}
-                {(subscription.max_file_size_mb ?? 0) > 0 &&
-                  (() => {
-                    const mb = subscription.max_file_size_mb as number;
-                    return (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-gray-50 px-2 py-0.5 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-400">
-                        Max {mb >= 1000 ? `${mb / 1000}GB` : `${mb}MB`}
-                      </span>
-                    );
-                  })()}
-                {(subscription.team_seats ?? 0) > 0 && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-gray-50 px-2 py-0.5 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-400">
-                    {subscription.team_seats} seat{subscription.team_seats !== 1 ? "s" : ""}
-                  </span>
-                )}
-                {subscription.api_access && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-gray-50 px-2 py-0.5 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-400">
-                    API access
-                  </span>
-                )}
-                {subscription.priority_support && (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-gray-50 px-2 py-0.5 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-400">
-                    Priority support
-                  </span>
-                )}
-              </div>
+            {subscription && !subscription.is_pro && (
+              <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                Upgrade to unlock more features.
+              </p>
             )}
 
-            <div className="mt-3 flex items-center gap-1 text-sm font-medium text-red-600 dark:text-red-400">
-              Configure
-              <span aria-hidden="true">→</span>
-            </div>
-          </Link>
+            <Link
+              href="/dashboard/subscription"
+              className="mt-4 block w-full rounded-lg border border-gray-200 px-3 py-1.5 text-center text-sm font-medium text-gray-700 transition hover:border-gray-300 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:bg-gray-800/50"
+            >
+              Manage subscription
+            </Link>
+          </div>
         </div>
       </div>
     </section>

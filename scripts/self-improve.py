@@ -146,7 +146,7 @@ Format (one per line, no explanation):
 [sub-topic 3]"""
 
     result = subprocess.run(
-        ['claude', '-p', prompt, '--model', 'sonnet', '--max-turns', '3'],
+        ['/Users/ray/.local/bin/claude', '-p', prompt, '--model', 'sonnet', '--max-turns', '3'],
         capture_output=True, text=True, cwd=TOOLBLIP_DIR
     )
     output = result.stdout.strip()

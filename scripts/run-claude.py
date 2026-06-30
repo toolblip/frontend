@@ -19,6 +19,11 @@ env = os.environ.copy()
 env['HOME'] = '/Users/ray'
 env.setdefault('USER', 'ray')
 env.setdefault('LOGNAME', env['USER'])
+# Ensure claude binary is findable in stripped cron environments.
+path = env.get('PATH', '')
+if '/Users/ray/.local/bin' not in path:
+    env['PATH'] = f"/Users/ray/.local/bin:/opt/homebrew/bin:{path}"
+env.setdefault('PATH', '/Users/ray/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin')
 proc = subprocess.Popen(
     cmd,
     stdin=subprocess.PIPE,
