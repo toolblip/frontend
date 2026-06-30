@@ -566,6 +566,7 @@ export default function AccountPage() {
         favoriteCount={favoriteCount}
         favoriteToolsLoading={favoriteToolsLoading}
         tierName={tierName}
+        teamName={teamName}
       />
 
       <TabbedTools
