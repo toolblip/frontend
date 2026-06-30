@@ -101,6 +101,7 @@ export default function AccountPage() {
   const [planOnboardingError, setPlanOnboardingError] = useState("");
   const [favoriteTools, setFavoriteTools] = useState<FavoriteTool[]>([]);
   const [favoriteToolsLoading, setFavoriteToolsLoading] = useState(false);
+  const [apiTeamName, setApiTeamName] = useState<string | null>(null);
   const [recentTools, setRecentTools] = useState<RecentTool[]>([]);
   const [copiedFavoriteSlug, setCopiedFavoriteSlug] = useState<string | null>(null);
   const [pricingPlans, setPricingPlans] = useState<Plan[]>(FALLBACK_PLANS);
@@ -112,6 +113,27 @@ export default function AccountPage() {
   useEffect(() => {
     setRecentTools(getRecentTools());
   }, []);
+
+  // Fetch the actual team name from the API so dashboard header stays in sync with /dashboard/team
+  useEffect(() => {
+    if (!token || user?.requires_terms_acceptance) return;
+    let cancelled = false;
+    async function loadTeamName() {
+      try {
+        const res = await fetch("/api/team", { credentials: "include" });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (cancelled) return;
+        if (data?.team?.name) {
+          setApiTeamName(data.team.name);
+        }
+      } catch {
+        // best-effort — fall back to onboarding/local name
+      }
+    }
+    loadTeamName();
+    return () => { cancelled = true; };
+  }, [token, user?.requires_terms_acceptance]);
 
   // Hydrate trial banner dismissal
   useEffect(() => {
@@ -566,7 +588,7 @@ export default function AccountPage() {
         favoriteCount={favoriteCount}
         favoriteToolsLoading={favoriteToolsLoading}
         tierName={tierName}
-        teamName={teamName || suggestWorkspaceName(user.name) || "My workspace"}
+        teamName={apiTeamName || teamName || suggestWorkspaceName(user.name) || "My workspace"}
       />
 
       <TabbedTools
