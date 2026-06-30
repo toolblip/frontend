@@ -127,7 +127,7 @@ function PlanSwitchModal({
     <>
       <div className="fixed inset-0 z-40 bg-black/40 pointer-events-none" />
       <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto pt-10 pb-10 sm:pt-20 pointer-events-none">
-        <div className="mx-4 w-full max-w-3xl rounded-3xl border border-gray-200 bg-white p-6 shadow-xl dark:border-gray-700 dark:bg-gray-900 sm:p-8 pointer-events-auto">
+        <div className="mx-4 w-full max-w-5xl rounded-3xl border border-gray-200 bg-white p-8 shadow-xl dark:border-gray-700 dark:bg-gray-900 sm:p-10 pointer-events-auto">
         {/* Header */}
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white sm:text-2xl">
@@ -145,7 +145,7 @@ function PlanSwitchModal({
         </div>
 
         {/* Billing toggle */}
-        <div className="mt-5 flex items-center gap-2">
+        <div className="mt-6 flex items-center justify-center gap-2">
           <PricingBillingToggle billing={switchBilling} onBillingChange={setSwitchBilling} accent="red" />
         </div>
 
@@ -160,7 +160,7 @@ function PlanSwitchModal({
         )}
 
         {/* Plan cards */}
-        <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {orderedPlans
             .filter((p) => p.tier !== "free")
             .map((plan) => {
