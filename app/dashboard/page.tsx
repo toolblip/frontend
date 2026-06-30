@@ -566,7 +566,7 @@ export default function AccountPage() {
         favoriteCount={favoriteCount}
         favoriteToolsLoading={favoriteToolsLoading}
         tierName={tierName}
-        teamName={teamName}
+        teamName={teamName || suggestWorkspaceName(user.name) || "My workspace"}
       />
 
       <TabbedTools
