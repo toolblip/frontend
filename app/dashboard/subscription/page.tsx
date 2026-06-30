@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useAuth } from "@/app/providers/auth-provider";
 import { useSubscription } from "@/lib/hooks/useSubscription";
 import { BillingSection } from "@/components/dashboard/BillingSection";
+import { InvoicesSection } from "@/components/dashboard/InvoicesSection";
 
 export default function SubscriptionPage() {
   const { user, loading: authLoading } = useAuth();
@@ -44,7 +45,7 @@ export default function SubscriptionPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 pb-10 sm:px-6 sm:pb-16">
-      <div className="mx-auto max-w-2xl">
+      <div className="space-y-8">
         <BillingSection
           subscription={subscription}
           subscriptionError={subscriptionError}
@@ -70,15 +71,19 @@ export default function SubscriptionPage() {
           handleSwitchPlan={handleSwitchPlan}
           pricingPlans={pricingPlans}
         />
-      </div>
 
-      <div className="mt-8 text-center">
-        <Link
-          href="/dashboard"
-          className="cursor-pointer text-sm text-gray-500 transition-colors hover:text-gray-700 dark:hover:text-gray-300"
-        >
-          ← Back to dashboard
-        </Link>
+        {subscription?.is_pro && (
+          <InvoicesSection />
+        )}
+
+        <div className="text-center">
+          <Link
+            href="/dashboard"
+            className="cursor-pointer text-sm text-gray-500 transition-colors hover:text-gray-700 dark:hover:text-gray-300"
+          >
+            ← Back to dashboard
+          </Link>
+        </div>
       </div>
     </div>
   );
