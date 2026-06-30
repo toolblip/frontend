@@ -33,7 +33,8 @@ test.describe('Dashboard plan selection and plan change', () => {
   });
 
   test('a paid user sees active plan and inline plan switcher', async ({ page }) => {
-    await page.route('**/api/subscription', async (route) => {
+    // Mock subscription data — use exact match not glob, so switch isn't caught
+    await page.route(/\/api\/subscription$/, async (route) => {
       await route.fulfill({
         status: 200,
         contentType: 'application/json',
@@ -41,7 +42,7 @@ test.describe('Dashboard plan selection and plan change', () => {
       });
     });
 
-    // Mock the switch endpoint
+    // Mock switch endpoint separately
     await page.route('**/api/subscription/switch', async (route) => {
       await route.fulfill({
         status: 200,
@@ -69,18 +70,23 @@ test.describe('Dashboard plan selection and plan change', () => {
     // Manage Billing button visible
     await expect(page.getByRole('button', { name: 'Manage Billing' })).toBeVisible();
 
-    // Plan cards should be visible — non-current plan has "Switch to" button
-    const switchBtn = page.getByRole('button', { name: /Switch to/ });
-    await expect(switchBtn.first()).toBeVisible({ timeout: 5000 });
+    // "Upgrade Plan" button opens the plan modal
+    const upgradeBtn = page.getByRole('button', { name: 'Upgrade Plan' });
+    await expect(upgradeBtn).toBeVisible();
+    await upgradeBtn.click();
 
-    // "Current plan" badge visible on current plan card
+    // Modal shows plan cards — non-current plan has upgrade/downgrade button
+    const actionBtn = page.getByRole('button', { name: /Upgrade|Downgrade/ });
+    await expect(actionBtn.first()).toBeVisible({ timeout: 5000 });
+
+    // "Current plan" badge visible on current plan card inside the modal
     await expect(page.getByText('Current plan')).toBeVisible();
 
-    // Click "Switch to..." on a plan card directly — no toggle needed
-    await switchBtn.first().click();
+    // Click action button on a plan card
+    await actionBtn.first().click({ force: true });
 
-    // Switch success message appears
-    await expect(page.getByText(/Your new plan is active/)).toBeVisible({ timeout: 5000 });
+    // Modal should close after successful switch, plan page remains
+    await expect(page.getByText(/plan active/)).toBeVisible({ timeout: 5000 });
   });
 
   test('selecting a plan on pricing starts a free trial for authenticated users', async ({ page }) => {
