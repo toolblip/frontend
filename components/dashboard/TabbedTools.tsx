@@ -15,6 +15,19 @@ interface TabbedToolsProps {
   recentToolsCount: number;
 }
 
+const buttonBase =
+  "shrink-0 rounded-full border px-3 py-1.5 text-xs font-medium transition";
+
+const viewButton =
+  "border-gray-200 text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800 dark:border-gray-700 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:bg-gray-800 dark:hover:text-white";
+
+const shareButton =
+  "border-gray-200 text-gray-600 hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400";
+
+function CopiedLabel({ isCopied }: { isCopied: boolean }) {
+  return <>{isCopied ? "Copied" : "Share"}</>;
+}
+
 export function TabbedTools({
   favoriteTools,
   favoriteToolsLoading,
@@ -87,15 +100,23 @@ export function TabbedTools({
                         </span>
                       </span>
                     </Link>
-                    <button
-                      type="button"
-                      onClick={() => shareFavorite(tool.slug)}
-                      data-testid={`favorite-share-${tool.slug}`}
-                      aria-label={`Copy link to ${tool.name}`}
-                      className="shrink-0 self-center rounded-full border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-gray-700 dark:text-gray-300 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-400"
-                    >
-                      {copiedFavoriteSlug === tool.slug ? "Copied" : "Copy link"}
-                    </button>
+                    <div className="flex shrink-0 items-center gap-2 self-center">
+                      <Link
+                        href={`/tools/${tool.slug}`}
+                        className={`${buttonBase} ${viewButton}`}
+                      >
+                        View
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => shareFavorite(tool.slug)}
+                        data-testid={`favorite-share-${tool.slug}`}
+                        aria-label={`Share link to ${tool.name}`}
+                        className={`${buttonBase} ${shareButton}`}
+                      >
+                        <CopiedLabel isCopied={copiedFavoriteSlug === tool.slug} />
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -119,18 +140,39 @@ export function TabbedTools({
             {recentTools.length > 0 ? (
               <div className="space-y-3">
                 {recentTools.map((tool) => (
-                  <Link
+                  <div
                     key={tool.slug}
-                    href={`/tools/${tool.slug}`}
-                    className="flex items-center gap-3 rounded-2xl border border-gray-200 p-4 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-800 dark:hover:border-red-900 dark:hover:bg-red-950/30"
+                    className="flex items-start gap-3 rounded-2xl border border-gray-200 p-4 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-800 dark:hover:border-red-900 dark:hover:bg-red-950/30"
                   >
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-lg dark:bg-gray-800">
-                      {tool.icon || "🧰"}
-                    </span>
-                    <span className="block font-semibold text-gray-900 dark:text-white">
-                      {tool.name}
-                    </span>
-                  </Link>
+                    <Link
+                      href={`/tools/${tool.slug}`}
+                      className="flex min-w-0 flex-1 items-center gap-3"
+                    >
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-lg dark:bg-gray-800">
+                        {tool.icon || "🧰"}
+                      </span>
+                      <span className="block font-semibold text-gray-900 dark:text-white">
+                        {tool.name}
+                      </span>
+                    </Link>
+                    <div className="flex shrink-0 items-center gap-2 self-center">
+                      <Link
+                        href={`/tools/${tool.slug}`}
+                        className={`${buttonBase} ${viewButton}`}
+                      >
+                        View
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => shareFavorite(tool.slug)}
+                        data-testid={`recent-share-${tool.slug}`}
+                        aria-label={`Share link to ${tool.name}`}
+                        className={`${buttonBase} ${shareButton}`}
+                      >
+                        <CopiedLabel isCopied={copiedFavoriteSlug === tool.slug} />
+                      </button>
+                    </div>
+                  </div>
                 ))}
               </div>
             ) : (
