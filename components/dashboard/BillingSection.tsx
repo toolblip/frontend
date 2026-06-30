@@ -51,14 +51,6 @@ interface Invoice {
   period_end: number;
 }
 
-function FeaturePill({ children }: { children: React.ReactNode }) {
-  return (
-    <span className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs text-gray-700 dark:bg-gray-800 dark:text-gray-300">
-      {children}
-    </span>
-  );
-}
-
 function StorageIcon() {
   return (
     <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -83,14 +75,8 @@ function UsersIcon() {
   );
 }
 
-const cardClasses =
-  "mb-8 overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900/80";
-
 function formatCurrency(amount: number, currency: string): string {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency,
-  }).format(amount / 100);
+  return new Intl.NumberFormat("en-US", { style: "currency", currency }).format(amount / 100);
 }
 
 function formatDate(timestamp: number): string {
@@ -116,6 +102,9 @@ const STATUS_COLORS: Record<string, string> = {
   void: "text-gray-400 dark:text-gray-500",
   draft: "text-gray-500 dark:text-gray-400",
 };
+
+const cardClasses =
+  "mb-8 overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900/80";
 
 export function BillingSection({
   subscription,
@@ -171,51 +160,16 @@ export function BillingSection({
     return () => { cancelled = true; };
   }, [subscription]);
 
-  const renderFeaturePills = () => {
-    if (!subscription) return null;
-    const pills: React.ReactNode[] = [];
-    if ((subscription.storage_gb ?? 0) > 0) {
-      pills.push(
-        <FeaturePill key="storage">
-          <StorageIcon />
-          {subscription.storage_gb}GB storage
-        </FeaturePill>,
-      );
-    }
-    if ((subscription.max_file_size_mb ?? 0) > 0) {
-      const mb = subscription.max_file_size_mb as number;
-      pills.push(
-        <FeaturePill key="file">
-          <FileIcon />
-          Max {mb >= 1000 ? `${mb / 1000}GB` : `${mb}MB`} file
-        </FeaturePill>,
-      );
-    }
-    if ((subscription.team_seats ?? 0) > 0) {
-      pills.push(
-        <FeaturePill key="seats">
-          <UsersIcon />
-          {subscription.team_seats} team seat{subscription.team_seats !== 1 ? "s" : ""}
-        </FeaturePill>,
-      );
-    }
-    return pills.length > 0 ? (
-      <div className="flex flex-wrap gap-2">{pills}</div>
-    ) : null;
-  };
-
   return (
-    <div className={cardClasses}>
+    <section className={cardClasses}>
       <div className="px-6 py-6 lg:px-8 lg:py-8">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+        {/* Red breadcrumb label — matches DashboardHeader */}
+        <p className="text-sm font-semibold text-red-600 dark:text-red-400">
           Subscription
-        </h2>
+        </p>
 
         {subscription === null && subscriptionError ? (
-          <div
-            data-testid="subscription-error"
-            className="mt-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm dark:border-amber-900/50 dark:bg-amber-950/30"
-          >
+          <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm dark:border-amber-900/50 dark:bg-amber-950/30">
             <p className="font-medium text-amber-800 dark:text-amber-200">
               Billing status unavailable
             </p>
@@ -237,19 +191,42 @@ export function BillingSection({
             <span className="text-gray-500">Checking subscription...</span>
           </div>
         ) : subscription.is_pro ? (
-          <div className="mt-5 space-y-5">
-            {/* Status */}
-            <div className="flex items-center gap-3">
-              <div className="h-3 w-3 rounded-full bg-red-500" />
-              <span className="font-medium text-red-700 dark:text-red-400">
+          <>
+            {/* Header row: big bold title + inline badges — matches DashboardHeader */}
+            <div className="mt-2 flex flex-wrap items-center gap-3">
+              <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-4xl">
                 {tierName} plan active
-              </span>
+              </h1>
+              {planScheduledToCancel && (
+                <span className="inline-flex items-center rounded-full bg-amber-50 px-3 py-1 text-sm font-medium text-amber-700 dark:bg-amber-950/30 dark:text-amber-400">
+                  Cancelling
+                </span>
+              )}
             </div>
 
+            {/* Subtitle + link row — matches DashboardHeader */}
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+              <p className="text-base leading-7 text-gray-600 dark:text-gray-300">
+                {(subscription.storage_gb ?? 0) > 0 ? `${subscription.storage_gb}GB storage` : ""}
+                {(subscription.storage_gb ?? 0) > 0 && (subscription.team_seats ?? 0) > 0 ? " · " : ""}
+                {(subscription.team_seats ?? 0) > 0 ? `${subscription.team_seats} team seat${subscription.team_seats !== 1 ? "s" : ""}` : ""}
+                {(subscription.storage_gb ?? 0) > 0 || (subscription.team_seats ?? 0) > 0 ? " · " : ""}
+                Max {(subscription.max_file_size_mb ?? 0) >= 1000 ? `${(subscription.max_file_size_mb ?? 0) / 1000}GB` : `${subscription.max_file_size_mb ?? 0}MB`} file
+              </p>
+              <button
+                onClick={openCustomerPortal}
+                disabled={loadingPortal}
+                className="cursor-pointer text-sm font-medium text-gray-500 transition hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+              >
+                {loadingPortal ? "Opening..." : "Manage Billing →"}
+              </button>
+            </div>
+
+            {/* Renew / cancellation banner */}
             {planScheduledToCancel ? (
               <div
                 data-testid="cancellation-scheduled"
-                className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-200"
+                className="mt-5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900/50 dark:bg-amber-950/30 dark:text-amber-200"
               >
                 <p className="font-medium">Cancellation scheduled</p>
                 <p className="mt-1">
@@ -260,20 +237,17 @@ export function BillingSection({
               </div>
             ) : (
               planEndDate && (
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
                   Renews on {planEndDate}
                 </p>
               )
             )}
 
-            {/* Feature pills */}
-            {renderFeaturePills()}
-
-            {/* Action buttons */}
+            {/* Action pills row */}
             {portalError && (
-              <p className="text-sm text-red-600 dark:text-red-400">{portalError}</p>
+              <p className="mt-4 text-sm text-red-600 dark:text-red-400">{portalError}</p>
             )}
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="mt-4 flex flex-wrap items-center gap-3">
               <button
                 onClick={openCustomerPortal}
                 disabled={loadingPortal}
@@ -288,16 +262,7 @@ export function BillingSection({
               >
                 {switchMode ? "Hide plan options" : "Change Plan"}
               </button>
-            </div>
-
-            {/* Cancel plan */}
-            {!planScheduledToCancel && (
-              <div className="border-t border-gray-100 pt-4 dark:border-gray-800">
-                {cancelSubscriptionError && (
-                  <p role="alert" className="mb-3 text-sm text-red-600 dark:text-red-400">
-                    {cancelSubscriptionError}
-                  </p>
-                )}
+              {!planScheduledToCancel && (
                 <button
                   type="button"
                   onClick={handleCancelSubscription}
@@ -307,27 +272,31 @@ export function BillingSection({
                 >
                   {cancellingSubscription ? "Cancelling..." : "Cancel plan"}
                 </button>
-                <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">
-                  Cancellation isn&apos;t immediate - you keep access until the end of
-                  your billing period.
-                </p>
-              </div>
+              )}
+            </div>
+            {cancelSubscriptionError && (
+              <p role="alert" className="mt-3 text-sm text-red-600 dark:text-red-400">
+                {cancelSubscriptionError}
+              </p>
+            )}
+            {!planScheduledToCancel && (
+              <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">
+                Cancellation isn&apos;t immediate - you keep access until the end of your billing period.
+              </p>
             )}
 
             {/* Plan switching UI */}
-            <div className="border-t border-gray-100 pt-4 dark:border-gray-800">
+            <div className="mt-6 border-t border-gray-100 pt-6 dark:border-gray-800">
               {switchSuccess && (
                 <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/30 dark:text-emerald-200">
                   {switchSuccess}
                 </div>
               )}
-
               {switchError && (
                 <p role="alert" className="mb-4 text-sm text-red-600 dark:text-red-400">
                   {switchError}
                 </p>
               )}
-
               {switchMode && (
                 <div className="space-y-4">
                   <div className="flex items-center gap-2">
@@ -346,7 +315,6 @@ export function BillingSection({
                           switchBilling === "yearly"
                             ? plan.stripe_yearly_id
                             : plan.stripe_monthly_id;
-
                         return (
                           <PricingPlanCard
                             key={plan.tier}
@@ -392,9 +360,7 @@ export function BillingSection({
                             }
                           >
                             <div className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
-                              {isCurrentPlan
-                                ? "Your plan"
-                                : "Switch to this plan"}
+                              {isCurrentPlan ? "Your plan" : "Switch to this plan"}
                             </div>
                             <ul className="tb-v2-pricing-features">
                               {buildPricingPlanFeatures(plan).map((feature) => (
@@ -420,85 +386,82 @@ export function BillingSection({
                 </div>
               )}
             </div>
-          </div>
+
+            {/* Invoices section */}
+            <div className="mt-6 border-t border-gray-100 pt-6 dark:border-gray-800">
+              <p className="text-sm font-semibold text-red-600 dark:text-red-400">
+                Invoices
+              </p>
+              {invoicesLoading ? (
+                <p className="mt-3 text-sm text-gray-500">Loading invoices...</p>
+              ) : invoicesError ? (
+                <p className="mt-3 text-sm text-red-600 dark:text-red-400">
+                  Could not load invoices.
+                </p>
+              ) : invoices.length === 0 ? (
+                <p className="mt-3 text-sm text-gray-400 dark:text-gray-500">
+                  No invoices yet.
+                </p>
+              ) : (
+                <div className="mt-4 overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-gray-200 bg-gray-50 text-left text-xs font-medium uppercase tracking-wide text-gray-500 dark:border-gray-700 dark:bg-gray-800/50 dark:text-gray-400">
+                        <th className="px-4 py-3 font-medium">Date</th>
+                        <th className="px-4 py-3 font-medium">Amount</th>
+                        <th className="px-4 py-3 font-medium">Status</th>
+                        <th className="px-4 py-3 text-right font-medium">Download</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
+                      {invoices.map((inv) => (
+                        <tr
+                          key={inv.id}
+                          className="transition hover:bg-gray-50 dark:hover:bg-gray-900/50"
+                        >
+                          <td className="px-4 py-3 text-gray-700 dark:text-gray-300">
+                            {formatDate(inv.created)}
+                          </td>
+                          <td className="px-4 py-3 text-gray-900 dark:text-white">
+                            {formatCurrency(inv.amount_paid > 0 ? inv.amount_paid : inv.amount_due, inv.currency)}
+                          </td>
+                          <td className="px-4 py-3">
+                            <span className={`font-medium ${STATUS_COLORS[inv.status] ?? "text-gray-500"}`}>
+                              {STATUS_LABELS[inv.status] ?? inv.status}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 text-right">
+                            {inv.invoice_pdf ? (
+                              <a
+                                href={inv.invoice_pdf}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 px-3 py-1 text-xs font-medium text-gray-600 transition hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900 dark:border-gray-700 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:bg-gray-800 dark:hover:text-white"
+                              >
+                                <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                PDF
+                              </a>
+                            ) : (
+                              <span className="text-xs text-gray-400">—</span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </>
         ) : (
           /* Free plan */
           <div className="mt-5">
             <FreePlanCard ctaLabel="View plans" ctaHref="/pricing" />
           </div>
         )}
-
-        {/* Invoices section (only show for Pro users) */}
-        {subscription?.is_pro && (
-          <div className="mt-8 border-t border-gray-100 pt-6 dark:border-gray-800">
-            <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
-              Invoices
-            </h3>
-
-            {invoicesLoading ? (
-              <p className="mt-3 text-sm text-gray-500">Loading invoices...</p>
-            ) : invoicesError ? (
-              <p className="mt-3 text-sm text-red-600 dark:text-red-400">
-                Could not load invoices.
-              </p>
-            ) : invoices.length === 0 ? (
-              <p className="mt-3 text-sm text-gray-400 dark:text-gray-500">
-                No invoices yet.
-              </p>
-            ) : (
-              <div className="mt-4 overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-gray-200 bg-gray-50 text-left text-xs font-medium uppercase tracking-wide text-gray-500 dark:border-gray-700 dark:bg-gray-800/50 dark:text-gray-400">
-                      <th className="px-4 py-3 font-medium">Date</th>
-                      <th className="px-4 py-3 font-medium">Amount</th>
-                      <th className="px-4 py-3 font-medium">Status</th>
-                      <th className="px-4 py-3 text-right font-medium">Download</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
-                    {invoices.map((inv) => (
-                      <tr
-                        key={inv.id}
-                        className="transition hover:bg-gray-50 dark:hover:bg-gray-900/50"
-                      >
-                        <td className="px-4 py-3 text-gray-700 dark:text-gray-300">
-                          {formatDate(inv.created)}
-                        </td>
-                        <td className="px-4 py-3 text-gray-900 dark:text-white">
-                          {formatCurrency(inv.amount_paid > 0 ? inv.amount_paid : inv.amount_due, inv.currency)}
-                        </td>
-                        <td className="px-4 py-3">
-                          <span className={`font-medium ${STATUS_COLORS[inv.status] ?? "text-gray-500"}`}>
-                            {STATUS_LABELS[inv.status] ?? inv.status}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 text-right">
-                          {inv.invoice_pdf ? (
-                            <a
-                              href={inv.invoice_pdf}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 px-3 py-1 text-xs font-medium text-gray-600 transition hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900 dark:border-gray-700 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:bg-gray-800 dark:hover:text-white"
-                            >
-                              <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                              </svg>
-                              PDF
-                            </a>
-                          ) : (
-                            <span className="text-xs text-gray-400">—</span>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-        )}
       </div>
-    </div>
+    </section>
   );
 }
