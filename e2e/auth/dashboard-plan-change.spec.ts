@@ -69,21 +69,14 @@ test.describe('Dashboard plan selection and plan change', () => {
     // Manage Billing button visible
     await expect(page.getByRole('button', { name: 'Manage Billing' })).toBeVisible();
 
-    // "Change Plan" is a toggle button (not a link to /pricing)
-    const changePlanBtn = page.getByRole('button', { name: 'Change Plan' });
-    await expect(changePlanBtn).toBeVisible();
-
-    // Click to open inline plan switcher
-    await changePlanBtn.click();
-
-    // Plan cards should appear — non-current plan has "Switch to" button
+    // Plan cards should be visible — non-current plan has "Switch to" button
     const switchBtn = page.getByRole('button', { name: /Switch to/ });
     await expect(switchBtn.first()).toBeVisible({ timeout: 5000 });
 
     // "Current plan" badge visible on current plan card
     await expect(page.getByText('Current plan')).toBeVisible();
 
-    // Click "Switch to..." on a plan card
+    // Click "Switch to..." on a plan card directly — no toggle needed
     await switchBtn.first().click();
 
     // Switch success message appears

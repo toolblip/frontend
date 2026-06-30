@@ -101,8 +101,6 @@ export function useSubscription() {
     string | null
   >(null);
   const [checkingSession, setCheckingSession] = useState(false);
-  const [switchMode, setSwitchMode] = useState(false);
-  const [switchPlanTier, setSwitchPlanTier] = useState<string | null>(null);
   const [switchBilling, setSwitchBilling] = useState<BillingCycle>("monthly");
   const [switchingPlan, setSwitchingPlan] = useState(false);
   const [switchError, setSwitchError] = useState<string | null>(null);
@@ -265,7 +263,6 @@ export function useSubscription() {
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Failed to switch plan");
         setSwitchSuccess(data.message || "Plan changed successfully.");
-        setSwitchMode(false);
         await checkSubscription();
       } catch (err) {
         setSwitchError(
@@ -327,10 +324,6 @@ export function useSubscription() {
     cancellingSubscription,
     cancelSubscriptionError,
     checkingSession,
-    switchMode,
-    setSwitchMode,
-    switchPlanTier,
-    setSwitchPlanTier,
     switchBilling,
     setSwitchBilling,
     switchingPlan,

@@ -24,10 +24,6 @@ interface BillingSectionProps {
   cancellingSubscription: boolean;
   cancelSubscriptionError: string | null;
   handleCancelSubscription: () => Promise<void>;
-  switchMode: boolean;
-  setSwitchMode: (v: boolean) => void;
-  switchPlanTier: string | null;
-  setSwitchPlanTier: (v: string | null) => void;
   switchBilling: BillingCycle;
   setSwitchBilling: (v: BillingCycle) => void;
   switchingPlan: boolean;
@@ -120,10 +116,6 @@ export function BillingSection({
   cancellingSubscription,
   cancelSubscriptionError,
   handleCancelSubscription,
-  switchMode,
-  setSwitchMode,
-  switchPlanTier,
-  setSwitchPlanTier,
   switchBilling,
   setSwitchBilling,
   switchingPlan,
@@ -199,23 +191,16 @@ export function BillingSection({
 
             {/* Action buttons row */}
             {portalError && <p className="mt-4 text-sm text-red-600 dark:text-red-400">{portalError}</p>}
-            <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-              <div className="flex flex-wrap items-center gap-3">
-                <button type="button" onClick={() => setSwitchMode(!switchMode)}
-                  className="cursor-pointer rounded-full border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900 dark:border-gray-700 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:bg-gray-800 dark:hover:text-white"
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              {!planScheduledToCancel && (
+                <button type="button" onClick={() => setShowCancelConfirm(true)}
+                  disabled={cancellingSubscription}
+                  data-testid="cancel-plan"
+                  className="cursor-pointer text-sm font-medium text-gray-500 underline underline-offset-4 transition hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50 dark:text-gray-400 dark:hover:text-red-400"
                 >
-                  {switchMode ? "Hide plan options" : "Change Plan"}
+                  {cancellingSubscription ? "Cancelling..." : "Cancel plan"}
                 </button>
-                {!planScheduledToCancel && (
-                  <button type="button" onClick={() => setShowCancelConfirm(true)}
-                    disabled={cancellingSubscription}
-                    data-testid="cancel-plan"
-                    className="cursor-pointer text-sm font-medium text-gray-500 underline underline-offset-4 transition hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50 dark:text-gray-400 dark:hover:text-red-400"
-                  >
-                    {cancellingSubscription ? "Cancelling..." : "Cancel plan"}
-                  </button>
-                )}
-              </div>
+              )}
               <button onClick={openCustomerPortal} disabled={loadingPortal}
                 className="cursor-pointer rounded-full bg-gray-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200"
               >
@@ -237,7 +222,7 @@ export function BillingSection({
               cancelling={cancellingSubscription}
             />
 
-            {/* Plan switching UI */}
+            {/* Plan switching UI — always visible */}
             <div className="mt-6 border-t border-gray-100 pt-6 dark:border-gray-800">
               {switchSuccess && (
                 <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-950/30 dark:text-emerald-200">
@@ -247,65 +232,63 @@ export function BillingSection({
               {switchError && (
                 <p role="alert" className="mb-4 text-sm text-red-600 dark:text-red-400">{switchError}</p>
               )}
-              {switchMode && (
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2">
-                    <PricingBillingToggle billing={switchBilling} onBillingChange={setSwitchBilling} accent="red" />
-                  </div>
-                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-                    {orderedPlans
-                      .filter((p) => p.tier !== "free")
-                      .map((plan) => {
-                        const isCurrentPlan = subscription?.tier === plan.tier;
-                        const priceId = switchBilling === "yearly" ? plan.stripe_yearly_id : plan.stripe_monthly_id;
-                        return (
-                          <PricingPlanCard
-                            key={plan.tier}
-                            plan={{
-                              tier: plan.tier,
-                              name: plan.tier === "ultra" ? "Pro" : plan.name,
-                              description: null,
-                              priceMonthly: plan.price_monthly,
-                              priceYearly: plan.price_yearly,
-                              badge: plan.tier === "ultra" ? "Most Popular" : null,
-                            }}
-                            billing={switchBilling}
-                            highlighted={plan.tier === "ultra"}
-                            accent="red"
-                            footer={
-                              isCurrentPlan ? (
-                                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400">
-                                  Current plan
-                                </span>
-                              ) : (
-                                <button type="button" onClick={(e: React.MouseEvent) => { e.stopPropagation(); handleSwitchPlan(plan.tier, switchBilling); }}
-                                  disabled={switchingPlan || !priceId}
-                                  className="w-full cursor-pointer rounded-full bg-gray-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200"
-                                >
-                                  {switchingPlan ? "Switching..." : !priceId ? "Not available" : `Switch to ${switchBilling === "yearly" ? "Yearly" : "Monthly"}`}
-                                </button>
-                              )
-                            }
-                          >
-                            <div className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
-                              {isCurrentPlan ? "Your plan" : "Switch to this plan"}
-                            </div>
-                            <ul className="tb-v2-pricing-features">
-                              {buildPricingPlanFeatures(plan).map((feature) => (
-                                <li key={feature.label} className={feature.included === false ? "text-[color:var(--fg-3)] line-through" : ""}>
-                                  <span className="mt-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center text-[11px] font-bold leading-none text-red-500">
-                                    {feature.included === false ? "\u00d7" : "\u2713"}
-                                  </span>
-                                  {feature.label}
-                                </li>
-                              ))}
-                            </ul>
-                          </PricingPlanCard>
-                        );
-                      })}
-                  </div>
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <PricingBillingToggle billing={switchBilling} onBillingChange={setSwitchBilling} accent="red" />
                 </div>
-              )}
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                  {orderedPlans
+                    .filter((p) => p.tier !== "free")
+                    .map((plan) => {
+                      const isCurrentPlan = subscription?.tier === plan.tier;
+                      const priceId = switchBilling === "yearly" ? plan.stripe_yearly_id : plan.stripe_monthly_id;
+                      return (
+                        <PricingPlanCard
+                          key={plan.tier}
+                          plan={{
+                            tier: plan.tier,
+                            name: plan.tier === "ultra" ? "Pro" : plan.name,
+                            description: null,
+                            priceMonthly: plan.price_monthly,
+                            priceYearly: plan.price_yearly,
+                            badge: plan.tier === "ultra" ? "Most Popular" : null,
+                          }}
+                          billing={switchBilling}
+                          highlighted={plan.tier === "ultra"}
+                          accent="red"
+                          footer={
+                            isCurrentPlan ? (
+                              <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-medium text-emerald-700 dark:bg-emerald-950/30 dark:text-emerald-400">
+                                Current plan
+                              </span>
+                            ) : (
+                              <button type="button" onClick={(e: React.MouseEvent) => { e.stopPropagation(); handleSwitchPlan(plan.tier, switchBilling); }}
+                                disabled={switchingPlan || !priceId}
+                                className="w-full cursor-pointer rounded-full bg-gray-900 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-200"
+                              >
+                                {switchingPlan ? "Switching..." : !priceId ? "Not available" : `Switch to ${switchBilling === "yearly" ? "Yearly" : "Monthly"}`}
+                              </button>
+                            )
+                          }
+                        >
+                          <div className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
+                            {isCurrentPlan ? "Your plan" : "Switch to this plan"}
+                          </div>
+                          <ul className="tb-v2-pricing-features">
+                            {buildPricingPlanFeatures(plan).map((feature) => (
+                              <li key={feature.label} className={feature.included === false ? "text-[color:var(--fg-3)] line-through" : ""}>
+                                <span className="mt-0.5 inline-flex h-4 w-4 flex-shrink-0 items-center justify-center text-[11px] font-bold leading-none text-red-500">
+                                  {feature.included === false ? "\u00d7" : "\u2713"}
+                                </span>
+                                {feature.label}
+                              </li>
+                            ))}
+                          </ul>
+                        </PricingPlanCard>
+                      );
+                    })}
+                </div>
+              </div>
             </div>
           </>
         ) : (

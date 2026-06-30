@@ -22,10 +22,6 @@ export default function SubscriptionPage() {
     cancellingSubscription,
     cancelSubscriptionError,
     handleCancelSubscription,
-    switchMode,
-    setSwitchMode,
-    switchPlanTier,
-    setSwitchPlanTier,
     switchBilling,
     setSwitchBilling,
     switchingPlan,
@@ -59,10 +55,6 @@ export default function SubscriptionPage() {
           cancellingSubscription={cancellingSubscription}
           cancelSubscriptionError={cancelSubscriptionError}
           handleCancelSubscription={handleCancelSubscription}
-          switchMode={switchMode}
-          setSwitchMode={setSwitchMode}
-          switchPlanTier={switchPlanTier}
-          setSwitchPlanTier={setSwitchPlanTier}
           switchBilling={switchBilling}
           setSwitchBilling={setSwitchBilling}
           switchingPlan={switchingPlan}
