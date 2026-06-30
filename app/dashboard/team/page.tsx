@@ -435,30 +435,42 @@ export default function TeamPage() {
       )}
 
       {/* Invite link */}
-      {is_admin && team.invite_code && (
+      {is_admin && (
         <div>
           <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400">Invite link</h2>
           <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">
             Share this link so teammates can join directly.
           </p>
-          <div className="mt-3 flex items-center gap-2">
-            <code className="flex-1 truncate rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
-              {`${APP_URL}/dashboard/team/join?code=${team.invite_code}`}
-            </code>
-            <button
-              onClick={copyInviteLink}
-              className="shrink-0 rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-600 transition hover:border-gray-300 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:bg-gray-800"
-            >
-              {copiedCode ? "Copied!" : "Copy"}
-            </button>
-            <button
-              onClick={regenerateInviteCode}
-              disabled={regenerating}
-              className="shrink-0 text-xs text-gray-400 hover:text-gray-600 disabled:opacity-50 dark:hover:text-gray-300"
-            >
-              {regenerating ? "…" : "Regenerate"}
-            </button>
-          </div>
+          {team.invite_code ? (
+            <div className="mt-3 flex items-center gap-2">
+              <code className="flex-1 truncate rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
+                {`${APP_URL}/dashboard/team/join?code=${team.invite_code}`}
+              </code>
+              <button
+                onClick={copyInviteLink}
+                className="shrink-0 rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-600 transition hover:border-gray-300 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:bg-gray-800"
+              >
+                {copiedCode ? "Copied!" : "Copy"}
+              </button>
+              <button
+                onClick={regenerateInviteCode}
+                disabled={regenerating}
+                className="shrink-0 text-xs text-gray-400 hover:text-gray-600 disabled:opacity-50 dark:hover:text-gray-300"
+              >
+                {regenerating ? "…" : "Regenerate"}
+              </button>
+            </div>
+          ) : (
+            <div className="mt-3">
+              <button
+                onClick={regenerateInviteCode}
+                disabled={regenerating}
+                className="rounded-lg border border-dashed border-gray-300 px-4 py-2 text-sm font-medium text-gray-500 transition hover:border-gray-400 hover:text-gray-700 disabled:opacity-50 dark:border-gray-600 dark:text-gray-400 dark:hover:border-gray-500 dark:hover:text-gray-300"
+              >
+                {regenerating ? "Generating…" : "Generate invite link"}
+              </button>
+            </div>
+          )}
         </div>
       )}
 
