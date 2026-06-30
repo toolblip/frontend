@@ -6,6 +6,8 @@ import Link from "next/link";
 import { useAuth } from "@/app/providers/auth-provider";
 import { useRouter } from "next/navigation";
 
+type TeamRole = "admin" | "member" | "viewer";
+
 interface TeamMember {
   id: number;
   team_id: number;
@@ -13,7 +15,7 @@ interface TeamMember {
   name: string | null;
   email: string;
   avatar_url: string | null;
-  role: "admin" | "member";
+  role: TeamRole;
   status: "active" | "pending";
   invited_email: string | null;
   is_owner: boolean;
@@ -23,7 +25,6 @@ interface Team {
   id: number;
   name: string;
   owner_id: number;
-  invite_code: string | null;
 }
 
 interface TeamData {
@@ -33,7 +34,11 @@ interface TeamData {
   is_admin: boolean;
 }
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://toolblip.com";
+const ROLES: { value: TeamRole; label: string; description: string }[] = [
+  { value: "viewer", label: "Viewer", description: "Can view but cannot change anything" },
+  { value: "member", label: "Member", description: "Can use tools and manage own content" },
+  { value: "admin", label: "Admin", description: "Can manage team and billing" },
+];
 
 export default function TeamPage() {
   const { user, token, login, loading: authLoading } = useAuth();
@@ -52,16 +57,13 @@ export default function TeamPage() {
 
   // Invite member
   const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteRole, setInviteRole] = useState<TeamRole>("viewer");
   const [inviting, setInviting] = useState(false);
   const [inviteError, setInviteError] = useState("");
   const [inviteSuccess, setInviteSuccess] = useState("");
 
   // Remove member
   const [removingId, setRemovingId] = useState<number | null>(null);
-
-  // Invite code
-  const [copiedCode, setCopiedCode] = useState(false);
-  const [regenerating, setRegenerating] = useState(false);
 
   useEffect(() => {
     async function restoreSession() {
@@ -153,7 +155,7 @@ export default function TeamPage() {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: inviteEmail.trim() }),
+        body: JSON.stringify({ email: inviteEmail.trim(), role: inviteRole }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to invite member");
@@ -161,10 +163,11 @@ export default function TeamPage() {
         prev ? { ...prev, members: [...prev.members, data.member] } : prev
       );
       setInviteEmail("");
+      setInviteRole("viewer");
       setInviteSuccess(
         data.member.status === "pending"
-          ? `Invitation sent to ${data.member.email}.`
-          : `${data.member.name || data.member.email} added to the team.`
+          ? `Invitation sent to ${data.member.email} as ${inviteRole}.`
+          : `${data.member.name || data.member.email} added to the team as ${inviteRole}.`
       );
       setTimeout(() => setInviteSuccess(""), 4000);
     } catch (err) {
@@ -195,42 +198,33 @@ export default function TeamPage() {
     }
   }
 
-  async function copyInviteLink() {
-    const code = teamData?.team.invite_code;
-    if (!code) return;
-    const link = `${APP_URL}/dashboard/team/join?code=${code}`;
-    try {
-      await navigator.clipboard.writeText(link);
-    } catch {
-      const el = document.createElement("textarea");
-      el.value = link;
-      el.style.position = "fixed";
-      el.style.left = "-9999px";
-      document.body.appendChild(el);
-      el.select();
-      try { document.execCommand("copy"); } catch { /* best-effort */ }
-      document.body.removeChild(el);
-    }
-    setCopiedCode(true);
-    setTimeout(() => setCopiedCode(false), 2000);
-  }
-
-  async function regenerateInviteCode() {
-    setRegenerating(true);
-    try {
-      const res = await fetch("/api/team/invite-code", {
-        method: "POST",
-        credentials: "include",
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Failed to regenerate");
-      setTeamData((prev) =>
-        prev ? { ...prev, team: { ...prev.team, invite_code: data.invite_code } } : prev
+  function roleBadge(role: TeamRole, isOwner: boolean) {
+    if (isOwner) {
+      return (
+        <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+          Owner
+        </span>
       );
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "Failed to regenerate invite code.");
-    } finally {
-      setRegenerating(false);
+    }
+    switch (role) {
+      case "viewer":
+        return (
+          <span className="rounded-full bg-gray-50 px-2 py-0.5 text-xs font-medium text-gray-500 dark:bg-gray-800 dark:text-gray-400">
+            Viewer
+          </span>
+        );
+      case "member":
+        return (
+          <span className="rounded-full bg-gray-50 px-2 py-0.5 text-xs font-medium text-gray-500 dark:bg-gray-800 dark:text-gray-400">
+            Member
+          </span>
+        );
+      case "admin":
+        return (
+          <span className="rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-950/30 dark:text-blue-400">
+            Admin
+          </span>
+        );
     }
   }
 
@@ -344,21 +338,7 @@ export default function TeamPage() {
                 </div>
               </div>
               <div className="flex shrink-0 items-center gap-2">
-                {member.is_owner && (
-                  <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600 dark:bg-gray-800 dark:text-gray-400">
-                    Owner
-                  </span>
-                )}
-                {!member.is_owner && member.role === "admin" && (
-                  <span className="rounded-full bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-950/30 dark:text-blue-400">
-                    Admin
-                  </span>
-                )}
-                {!member.is_owner && member.role === "member" && (
-                  <span className="rounded-full bg-gray-50 px-2 py-0.5 text-xs font-medium text-gray-500 dark:bg-gray-800 dark:text-gray-400">
-                    Member
-                  </span>
-                )}
+                {roleBadge(member.role, member.is_owner)}
                 {is_admin && !member.is_owner && member.user_id !== user.id && (
                   <button
                     onClick={() => removeMember(member.id)}
@@ -385,7 +365,12 @@ export default function TeamPage() {
                     <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gray-100 text-xs text-gray-400 dark:bg-gray-800">
                       ?
                     </div>
-                    <p className="truncate text-sm text-gray-500 dark:text-gray-400">{member.email}</p>
+                    <div className="min-w-0">
+                      <p className="truncate text-sm text-gray-500 dark:text-gray-400">{member.email}</p>
+                      <p className="truncate text-xs text-gray-400 dark:text-gray-500">
+                        Invited as {member.role}
+                      </p>
+                    </div>
                   </div>
                   <div className="flex shrink-0 items-center gap-2">
                     <span className="rounded-full bg-yellow-50 px-2 py-0.5 text-xs font-medium text-yellow-700 dark:bg-yellow-950/30 dark:text-yellow-400">
@@ -412,65 +397,56 @@ export default function TeamPage() {
       {is_admin && (
         <div>
           <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400">Invite member</h2>
-          <form onSubmit={handleInvite} className="mt-3 flex gap-2">
-            <input
-              type="email"
-              value={inviteEmail}
-              onChange={(e) => setInviteEmail(e.target.value)}
-              placeholder="colleague@example.com"
-              className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-gray-400 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
-              required
-            />
-            <button
-              type="submit"
-              disabled={inviting || !inviteEmail.trim()}
-              className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-700 disabled:opacity-50 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100"
-            >
-              {inviting ? "Sending…" : "Invite"}
-            </button>
+          <form onSubmit={handleInvite} className="mt-3 space-y-3">
+            <div className="flex gap-2">
+              <input
+                type="email"
+                value={inviteEmail}
+                onChange={(e) => setInviteEmail(e.target.value)}
+                placeholder="colleague@example.com"
+                className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-gray-400 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500"
+                required
+              />
+              <div className="relative">
+                <select
+                  value={inviteRole}
+                  onChange={(e) => setInviteRole(e.target.value as TeamRole)}
+                  className="appearance-none rounded-lg border border-gray-300 bg-white px-3 py-2 pr-8 text-sm text-gray-900 focus:border-gray-400 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+                >
+                  {ROLES.map((r) => (
+                    <option key={r.value} value={r.value}>{r.label}</option>
+                  ))}
+                </select>
+                <svg className="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+              <button
+                type="submit"
+                disabled={inviting || !inviteEmail.trim()}
+                className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-700 disabled:opacity-50 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100"
+              >
+                {inviting ? "Sending…" : "Invite"}
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-400 dark:text-gray-500">
+              {ROLES.map((r) => (
+                <label key={r.value} className="flex items-center gap-1.5 cursor-pointer" onClick={() => setInviteRole(r.value)}>
+                  <input
+                    type="radio"
+                    name="invite-role"
+                    checked={inviteRole === r.value}
+                    onChange={() => setInviteRole(r.value)}
+                    className="h-3 w-3 accent-gray-900 dark:accent-white"
+                  />
+                  <span className="font-medium">{r.label}</span>
+                  <span className="text-gray-400">— {r.description}</span>
+                </label>
+              ))}
+            </div>
           </form>
           {inviteError && <p className="mt-2 text-sm text-red-500">{inviteError}</p>}
           {inviteSuccess && <p className="mt-2 text-sm text-emerald-600 dark:text-emerald-400">{inviteSuccess}</p>}
-        </div>
-      )}
-
-      {/* Invite link */}
-      {is_admin && (
-        <div>
-          <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400">Invite link</h2>
-          <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">
-            Share this link so teammates can join directly.
-          </p>
-          {team.invite_code ? (
-            <div className="mt-3 flex items-center gap-2">
-              <code className="flex-1 truncate rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400">
-                {`${APP_URL}/dashboard/team/join?code=${team.invite_code}`}
-              </code>
-              <button
-                onClick={copyInviteLink}
-                className="shrink-0 rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-600 transition hover:border-gray-300 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:border-gray-600 dark:hover:bg-gray-800"
-              >
-                {copiedCode ? "Copied!" : "Copy"}
-              </button>
-              <button
-                onClick={regenerateInviteCode}
-                disabled={regenerating}
-                className="shrink-0 text-xs text-gray-400 hover:text-gray-600 disabled:opacity-50 dark:hover:text-gray-300"
-              >
-                {regenerating ? "…" : "Regenerate"}
-              </button>
-            </div>
-          ) : (
-            <div className="mt-3">
-              <button
-                onClick={regenerateInviteCode}
-                disabled={regenerating}
-                className="rounded-lg border border-dashed border-gray-300 px-4 py-2 text-sm font-medium text-gray-500 transition hover:border-gray-400 hover:text-gray-700 disabled:opacity-50 dark:border-gray-600 dark:text-gray-400 dark:hover:border-gray-500 dark:hover:text-gray-300"
-              >
-                {regenerating ? "Generating…" : "Generate invite link"}
-              </button>
-            </div>
-          )}
         </div>
       )}
 
