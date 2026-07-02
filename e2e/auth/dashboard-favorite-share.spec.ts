@@ -25,7 +25,7 @@ test.describe('Dashboard favorite share flow', () => {
 
     const shareButton = page.getByTestId('favorite-share-json-formatter');
     await expect(shareButton).toBeVisible();
-    await expect(shareButton).toHaveText('Copy link');
+    await expect(shareButton).toHaveText('Share');
 
     await shareButton.click();
 

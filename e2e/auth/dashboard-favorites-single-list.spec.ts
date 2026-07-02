@@ -48,8 +48,9 @@ test.describe('Dashboard single default favorites list', () => {
     await expect(favorites).toBeVisible();
 
     // Both favorites are direct tool links inside the one panel.
+    // Each tool card has two links: the tool name and the "View" button.
     const favoriteLinks = favorites.locator('a[href^="/tools/"]');
-    await expect(favoriteLinks).toHaveCount(2, { timeout: 10000 });
+    await expect(favoriteLinks).toHaveCount(4, { timeout: 10000 });
 
     // Tab shows the count
     await expect(page.getByRole('button', { name: /Favorites.*2/ })).toBeVisible();
@@ -61,7 +62,7 @@ test.describe('Dashboard single default favorites list', () => {
     // Every saved-tool link on the page lives within the single favorites panel —
     // there is no second list container.
     const allFavoriteLinks = page.locator('#favorite-tools a[href^="/tools/"]');
-    await expect(allFavoriteLinks).toHaveCount(2);
+    await expect(allFavoriteLinks).toHaveCount(4);
 
     await expectNoMultiListUi(page);
   });
