@@ -38,6 +38,7 @@ import JwtDecoderClient from '@/components/tools/JwtDecoderClient';
 import JsonToYamlClient from '@/components/tools/JsonToYamlClient';
 import JsonFormatterClient from '@/components/tools/JsonFormatterClient';
 import JsonValidatorClient from '@/components/tools/JsonValidatorClient';
+import JsonGraphVisualizerClient from '@/components/tools/JsonGraphVisualizerClient';
 import JsMinifierClient from '@/components/tools/JsMinifierClient';
 import ImageResizerClient from '@/components/tools/ImageResizerClient';
 import ImageFormatConverterClient from '@/components/tools/ImageFormatConverterClient';
@@ -2797,6 +2798,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <JsonValidatorClient />;
     case 'json-lint':
       return <JsonValidatorClient />;
+    case 'json-graph-visualizer':
+      return <JsonGraphVisualizerClient />;
     case 'json-to-csv':
       return <JsonToCsvClient />;
     case 'json-to-tsv':
