@@ -8,12 +8,14 @@ import {
   Users,
   User,
   Shield,
+  Key,
 } from "lucide-react";
 
 const NAV_ITEMS = [
   { id: "nav-dashboard", href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { id: "nav-subscription", href: "/dashboard/subscription", label: "Subscription", icon: CreditCard },
   { id: "nav-team", href: "/dashboard/team", label: "Team", icon: Users },
+  { id: "nav-api-keys", href: "/dashboard/api-keys", label: "API Keys", icon: Key },
   { id: "nav-profile", href: "/dashboard/profile", label: "Profile", icon: User },
   { id: "nav-security", href: "/dashboard/security", label: "Security", icon: Shield },
 ];
