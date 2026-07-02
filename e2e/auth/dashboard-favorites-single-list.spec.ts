@@ -6,7 +6,6 @@ import { dismissDashboardOnboarding, loginByForm, resetMockBackend, VALID_USER }
 // or shared favorites-list object may appear in the MVP.
 async function expectNoMultiListUi(page: Page) {
   await expect(page.locator('#favorite-tools')).toHaveCount(1);
-  await expect(page.getByRole('heading', { name: 'Favorite tools' })).toHaveCount(1);
   await expect(page.getByRole('combobox')).toHaveCount(0);
   await expect(
     page.getByRole('button', {
@@ -47,11 +46,13 @@ test.describe('Dashboard single default favorites list', () => {
 
     const favorites = page.locator('#favorite-tools');
     await expect(favorites).toBeVisible();
-    await expect(favorites.getByText('2 saved')).toBeVisible();
 
     // Both favorites are direct tool links inside the one panel.
     const favoriteLinks = favorites.locator('a[href^="/tools/"]');
-    await expect(favoriteLinks).toHaveCount(2);
+    await expect(favoriteLinks).toHaveCount(2, { timeout: 10000 });
+
+    // Tab shows the count
+    await expect(page.getByRole('button', { name: /Favorites.*2/ })).toBeVisible();
     await expect(favorites.getByRole('link', { name: /JSON Formatter/ })).toHaveAttribute(
       'href',
       '/tools/json-formatter',

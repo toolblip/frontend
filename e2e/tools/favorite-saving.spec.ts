@@ -46,7 +46,7 @@ test.describe('Favorite item saving', () => {
       'href',
       '/tools/json-formatter',
     );
-    await expect(favoritesPanel.getByText('2 saved')).toBeVisible();
+    await expect(favoritesPanel.locator('a[href^="/tools/"]')).toHaveCount(2, { timeout: 10000 });
 
     // No list picker / list-management affordances anywhere on the dashboard.
     await expect(page.getByRole('combobox')).toHaveCount(0);

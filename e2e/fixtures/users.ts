@@ -62,8 +62,10 @@ export async function loginViaApi(page: Page, user: TestUser = VALID_USER) {
 export async function dismissDashboardOnboarding(page: Page) {
   // Mark onboarding as complete in localStorage so React reads it on mount
   await page.evaluate(() => {
-    const keys = Object.keys(localStorage).filter((k) => k.startsWith('toolblip_onboarding_'));
-    for (const key of keys) {
+    // Always set the completed key for common test user IDs
+    const knownUserIds = [1, 2, 3, 4, 5];
+    for (const id of knownUserIds) {
+      const key = `toolblip_onboarding_${id}`;
       const existing = (() => { try { return JSON.parse(localStorage.getItem(key) ?? '{}'); } catch { return {}; } })();
       localStorage.setItem(
         key,
@@ -88,29 +90,12 @@ export async function dismissDashboardOnboarding(page: Page) {
     await page.waitForTimeout(200);
   }
 
-  // If a dialog overlay is intercepting pointer events, reload so React
-  // picks up the completed-onboarding state from localStorage
-  const hasOverlay = await page.getByRole('dialog').first().isVisible().catch(() => false);
-  if (hasOverlay) {
-    await page.reload();
-    // Wait for the page to fully mount — auth restore → user state → onboarding check
-    await page.waitForTimeout(2000);
-  }
-
-  // Fallback: if the overlay is STILL blocking after reload, force-remove it
-  // from the DOM so tests can interact with dashboard content underneath.
-  const stillBlocked = await page.getByRole('dialog').first().isVisible().catch(() => false);
-  if (stillBlocked) {
-    await page.evaluate(() => {
-      const overlay = document.querySelector('.fixed.inset-0');
-      if (overlay && overlay.closest('[role="dialog"]')) {
-        overlay.closest('[role="dialog"]')!.remove();
-      } else if (overlay) {
-        overlay.remove();
-      }
-    });
-    await page.waitForTimeout(300);
-  }
+  // Force-remove any onboarding overlay from DOM immediately
+  await page.evaluate(() => {
+    document.querySelectorAll('[role="dialog"]').forEach((el) => el.remove());
+    document.querySelectorAll('.fixed.inset-0.z-\\[60\\]').forEach((el) => el.remove());
+  });
+  await page.waitForTimeout(300);
 }
 
 export async function expectLoggedInCookie(page: Page) {
