@@ -5,6 +5,7 @@ import { ToolUI } from './ToolUI';
 import ToolEngagementBar from '@/components/tools/ToolEngagementBar';
 import FaqSection from '@/components/v2/FaqSection';
 import { getFaqs } from '@/lib/faq';
+import { generateToolContent } from '@/lib/generateToolContent';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -174,6 +175,26 @@ export default async function ToolDetailPage({ params }: PageProps) {
           <p className="text-gray-500 dark:text-gray-400 leading-relaxed mb-4">{tool.description}</p>
         )}
         <ToolEngagementBar toolName={tool.name} toolSlug={tool.slug} toolIcon={tool.emoji} />
+      </div>
+
+      {/* SEO-rich content section — server rendered for Googlebot */}
+      <div className="mb-10 space-y-6">
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            How to use the {tool.name}
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+            {generateToolContent(tool).howToUse}
+          </p>
+        </div>
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            Why use the {tool.name}
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+            {generateToolContent(tool).whyUse}
+          </p>
+        </div>
       </div>
 
       {/* Tool UI */}
