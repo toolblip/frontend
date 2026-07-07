@@ -15,7 +15,7 @@ tags:
   - Developer Tools
 author: Toolblip Team
 readingTime: 5 min
-featuredImage: 'https://api.radtx.com/gradient/6b7280-374151/1200/630'
+featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
 ---
 
 # JSON Validation: How to Find and Fix Broken JSON Fast

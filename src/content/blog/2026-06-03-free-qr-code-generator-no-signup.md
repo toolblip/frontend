@@ -11,7 +11,7 @@ tags:
   - Privacy
 author: Toolblip Team
 readingTime: 4 min
-featuredImage: https://api.radtx.com/gradient/6b7280-374151/1200/630
+featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 ---
 
 A free QR code generator with no signup should do one boring job well: take the URL or text you paste, create a scannable code, and let you download it. No email gate. No expiring trial. No hidden redirect that stops working after the vendor changes pricing.

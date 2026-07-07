@@ -6,7 +6,7 @@ slug: css-gradient-generator-guide
 readingTime: 5 min
 tags: ["css", "gradient", "design", "frontend", "web-development"]
 category: Design
-featuredImage: https://api.radtx.com/gradient/10b981-06b6d4/1200/630
+featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 author: Harun R Rayhan
 ---
 

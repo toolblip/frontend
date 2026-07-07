@@ -15,7 +15,7 @@ tags:
   - sha256
   - developer-tools
 category: Cryptography
-featuredImage: 'https://api.radtx.com/gradient/6366f1-ec4899/1200/630'
+featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
 ---
 
 A hash function takes any input - a password, a file, a string - and produces a fixed-length string of characters called a **digest** or **hash**. The same input always produces the same output. But the process is **one-way**: you can't reverse a hash back to the original input.

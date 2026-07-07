@@ -12,7 +12,7 @@ tags:
   - productivity
   - javascript
 category: Developer Tools
-featuredImage: 'https://api.radtx.com/gradient/10b981-3b82f6/1200/630'
+featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
 ---
 
 Every developer works with text. Strings, payloads, code snippets, UI copy, log output  -  it is all text. And yet most developers end up writing one-off scripts to do things a good text utility could handle in milliseconds.

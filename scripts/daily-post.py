@@ -146,7 +146,7 @@ The article must:
 4. Be 1200-1800 words - substantive, not thin
 5. Have 5+ H2 sections with descriptive headings that include the keyword or variation
 6. Include at least 2 specific code examples or tool usage examples
-7. Include a featured image using: https://api.radtx.com/gradient/6b7280-374151/1200/630
+8. Include a featured image using: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 8. End with a clear CTA linking to a relevant tool on toolblip.com
 
 Save the file to: {BLOG_DIR}/{date_slug}-{slug}.md

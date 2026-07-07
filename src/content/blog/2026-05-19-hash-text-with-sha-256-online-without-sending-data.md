@@ -13,7 +13,7 @@ tags:
   - developer-tools
 author: Toolblip Team
 readingTime: 6 min
-featuredImage: https://api.radtx.com/gradient/0f172a-134e4a/1200/630
+featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 ---
 
 A SHA-256 hash is safe to share in many workflows. The text you hash is not always safe to share. That is the part people skip when they paste an API token, webhook secret, customer identifier, or internal payload into the first hash generator they find.

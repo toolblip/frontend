@@ -14,7 +14,7 @@ tags:
   - Tool Sites
 author: Toolblip Team
 readingTime: 7 min
-featuredImage: https://api.radtx.com/gradient/0f172a-334155/1200/630
+featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 ---
 
 # Compound SEO: 7 Moves That Help a Tool Site Grow
@@ -25,7 +25,7 @@ That is the real idea behind compound SEO. One useful page creates another. One 
 
 For a tool site, that means every page should earn its place. It should match a real query, answer it clearly, and point users to the next useful step.
 
-![Compound SEO for tool sites](https://api.radtx.com/gradient/0f172a-334155/1200/630)
+![Compound SEO for tool sites](https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 
 ## 1. Build one canonical page for one real intent
 

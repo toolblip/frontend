@@ -6,7 +6,7 @@ slug: percentage-calculator-guide
 readingTime: 4 min
 tags: ["percentage", "calculator", "math", "finance", "discount"]
 category: Developer Tools
-featuredImage: https://api.radtx.com/gradient/f59e0b-ef4444/1200/630
+featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 author: Harun R Rayhan
 ---
 

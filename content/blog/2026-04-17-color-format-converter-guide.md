@@ -6,7 +6,7 @@ slug: color-format-converter-guide
 readingTime: 5 min
 tags: ["color", "hex", "rgb", "hsl", "css", "design", "frontend"]
 category: Design
-featuredImage: https://api.radtx.com/gradient/ec4899-8b5cf6/1200/630
+featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 author: Harun R Rayhan
 ---
 

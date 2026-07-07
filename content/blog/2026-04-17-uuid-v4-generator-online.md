@@ -6,7 +6,7 @@ slug: uuid-v4-generator-online
 readingTime: 4 min
 tags: ["uuid", "identifier", "database", "backend", "api"]
 category: Developer Tools
-featuredImage: https://api.radtx.com/gradient/6366f1-ec4899/1200/630
+featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 author: Harun R Rayhan
 ---
 

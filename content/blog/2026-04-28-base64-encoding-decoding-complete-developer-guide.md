@@ -6,7 +6,7 @@ category: Developer Tools
 tags: ["base64", "encoding", "decoding", "data-urls", "api", "images", "json", "developer-tools"]
 author: "Toolblip Team"
 readingTime: 8 min
-featuredImage: "https://api.radtx.com/gradient/3b82f6-8b5cf6/1200/630"
+featuredImage: "https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog"
 ---
 
 Every developer uses Base64 daily - in JWTs, data URLs, API responses, and config files. But when you need to *do* something with it, the documentation is scattered. This guide collects every Base64 operation you'll actually need, with working code and a browser tool to match.

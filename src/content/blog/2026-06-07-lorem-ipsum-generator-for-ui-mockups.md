@@ -11,7 +11,7 @@ tags:
   - Developer Tools
 author: Toolblip Team
 readingTime: 7 min
-featuredImage: https://api.radtx.com/gradient/6b7280-374151/1200/630
+featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 ---
 
 When a Figma card or a fresh React component needs filler copy, the fastest path is a lorem ipsum generator for UI mockups that returns text in the exact shape you need. No long form, no signup wall, no email confirmation before you can paste a paragraph into a hero section.

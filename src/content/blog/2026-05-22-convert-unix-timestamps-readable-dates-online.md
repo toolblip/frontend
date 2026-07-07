@@ -13,7 +13,7 @@ tags:
   - developer-tools
 author: Toolblip Team
 readingTime: 6 min
-featuredImage: https://api.radtx.com/gradient/111827-0ea5e9/1200/630
+featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 ---
 
 A Unix timestamp is easy to store and annoying to read. You see `1716403200` in a webhook payload, a database row, or a log line, and now you have to answer a simple question: what time did this actually happen?

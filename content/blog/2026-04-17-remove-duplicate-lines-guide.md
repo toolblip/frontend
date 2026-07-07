@@ -6,7 +6,7 @@ slug: remove-duplicate-lines-guide
 readingTime: 3 min
 tags: ["text", "deduplication", "data-cleaning", "productivity", "utility"]
 category: Developer Tools
-featuredImage: https://api.radtx.com/gradient/f97316-facc15/1200/630
+featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 author: Harun R Rayhan
 ---
 

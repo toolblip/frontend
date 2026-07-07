@@ -6,7 +6,7 @@ category: Developer Tools
 tags: ["yaml", "validation", "devops", "kubernetes", "github-actions", "docker-compose", "ci-cd"]
 author: Toolblip Team
 readingTime: "7 min read"
-featuredImage: "https://api.radtx.com/gradient/06b6d4-f59e0b/1200/630"
+featuredImage: "https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog"
 ---
 
 YAML looks simple. Until it isn't.

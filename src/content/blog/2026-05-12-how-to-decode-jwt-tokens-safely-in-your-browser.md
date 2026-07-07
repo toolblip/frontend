@@ -14,7 +14,7 @@ tags:
   - privacy
 author: Toolblip Team
 readingTime: 6 min
-featuredImage: https://api.radtx.com/gradient/10b981-059669/1200/630
+featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 ---
 
 You pull a JWT from a cookie or response body. It looks like three base64 strings joined by dots. You want to know what is inside the payload: the user ID, the expiration, the roles. The usual approach is to paste it into an online decoder and hope for the best. That works until the token contains something sensitive and the decoder is logging your input on a server somewhere.

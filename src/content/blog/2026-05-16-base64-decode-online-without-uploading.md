@@ -13,7 +13,7 @@ tags:
   - developer-tools
 author: Toolblip Team
 readingTime: 7 min
-featuredImage: https://api.radtx.com/gradient/6b7280-374151/1200/630
+featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 ---
 
 A Base64 string looks harmless until you decode it and find a JWT payload, a Basic Auth header, a Kubernetes secret, or a chunk of customer data. If you use a random decoder that sends the input to a server, the sensitive part has already left your machine before you can decide whether it was safe to share.

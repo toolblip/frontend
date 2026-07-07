@@ -13,7 +13,7 @@ tags:
   - developer-tools
 author: Toolblip Team
 readingTime: 6 min
-featuredImage: https://api.radtx.com/gradient/0f172a-14532d/1200/630
+featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 ---
 
 A password generator is one of those tools that feels too simple to worry about until you think about where the password goes. If you generate a production database password, an API dashboard password, or a temporary admin login, the safest version is boring: generate secure passwords in the browser, copy the result, and make sure the input never leaves your machine.

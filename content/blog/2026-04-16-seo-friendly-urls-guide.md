@@ -14,7 +14,7 @@ tags:
   - Rankings
 author: Toolblip Team
 readingTime: 5 min
-featuredImage: 'https://api.radtx.com/gradient/f97316-facc15/1200/630'
+featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
 ---
 
 # URL Structure and SEO: How to Build URLs That Rank

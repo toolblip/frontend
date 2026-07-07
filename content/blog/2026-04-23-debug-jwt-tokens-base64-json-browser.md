@@ -16,7 +16,7 @@ tags:
   - security
 author: Toolblip Team
 readingTime: 9 min
-featuredImage: 'https://api.radtx.com/gradient/0ea5e9-8b5cf6/1200/630'
+featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
 ---
 
 If you've ever stared at a JWT like `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c` and wondered what the hell it actually says - you're not alone.

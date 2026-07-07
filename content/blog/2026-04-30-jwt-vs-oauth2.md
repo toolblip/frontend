@@ -15,7 +15,7 @@ tags:
   - security
   - api
 category: Authentication
-featuredImage: 'https://api.radtx.com/gradient/8b5cf6-f59e0b/1200/630'
+featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
 ---
 
 If you have ever confused JWT and OAuth 2.0, you are in good company. The two come up together so often in tutorials, Stack Overflow answers, and auth library documentation that it is easy to treat them as interchangeable. They are not.

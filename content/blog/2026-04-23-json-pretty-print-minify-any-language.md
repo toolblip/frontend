@@ -17,7 +17,7 @@ tags:
   - productivity
 author: Toolblip Team
 readingTime: 7 min
-featuredImage: 'https://api.radtx.com/gradient/14b8a6-f59e0b/1200/630'
+featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
 ---
 
 JSON is everywhere. Most of the time you get it formatted. Then you get a single-line blob from a log file, an API response, or a colleague's config, and suddenly you can't read anything.

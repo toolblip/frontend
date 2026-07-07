@@ -17,7 +17,7 @@ readingTime: 6 min
 descriptionSEO: >-
   UUID v1 vs v4 vs v5 vs v7 explained. When to use each UUID version, pros and
   cons, and JavaScript implementation examples.
-featuredImage: 'https://api.radtx.com/gradient/0ea5e9-8b5cf6/1200/630'
+featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
 ---
 
 If you've ever generated a UUID and wondered what all those numbers mean - you're not alone. UUIDs (Universally Unique Identifiers) look like random strings, but there's real structure behind them. Understanding that structure helps you choose the right version for your system.

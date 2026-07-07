@@ -43,10 +43,12 @@
     "generate UUID v4 vs UUID v7 identifiers for databases",
     "validate JWT token signatures online in the browser"
   ],
-  "in_progress": [
-    "minify JavaScript code online for production builds"
-  ],
+  "in_progress": [],
   "done": [
+    {
+      "topic": "minify JavaScript code online for production builds",
+      "completed_at": "2026-07-07T10:25:36Z"
+    },
     {
       "topic": "beautify and format minified JavaScript for debugging",
       "completed_at": "2026-07-07T10:19:33Z"

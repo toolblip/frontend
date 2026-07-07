@@ -11,7 +11,7 @@ tags:
   - Developer Tools
 author: Toolblip Team
 readingTime: 7 min
-featuredImage: https://api.radtx.com/gradient/6b7280-374151/1200/630
+featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 ---
 
 # Unescape HTML Entities Online: A Developer's Debugging Guide
@@ -20,7 +20,7 @@ When you need to unescape HTML entities online, you usually hit one of two walls
 
 Every example here runs locally. Your encoded strings never leave your machine, which matters when you are debugging production payloads that might contain user data or session tokens.
 
-![Unescape HTML entities online](https://api.radtx.com/gradient/6b7280-374151/1200/630)
+![Unescape HTML entities online](https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 
 ## What Are HTML Entities in Web Dev
 

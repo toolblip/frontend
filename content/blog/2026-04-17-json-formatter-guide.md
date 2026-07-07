@@ -13,7 +13,7 @@ tags:
   - api
   - debugging
   - formatter
-featuredImage: 'https://api.radtx.com/gradient/6b7280-374151/1200/630'
+featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
 ---
 
 You know the pain. You open a fetch response in your browser DevTools and see:

@@ -13,7 +13,7 @@ tags:
   - Developer Tools
 author: Toolblip Team
 readingTime: 6 min
-featuredImage: https://api.radtx.com/gradient/6b7280-374151/1200/630
+featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 ---
 
 You type `box-shadow: 2px 2px 4px rgba(0,0,0,0.2)`, refresh the browser, and the shadow looks nothing like what you wanted. Too dark, too offset, bleeding off one edge. Tweak, refresh, squint, repeat.

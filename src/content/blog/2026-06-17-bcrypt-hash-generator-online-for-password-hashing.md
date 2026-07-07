@@ -12,7 +12,7 @@ tags:
   - Developer Tools
 author: Toolblip Team
 readingTime: 6 min
-featuredImage: https://api.radtx.com/gradient/6b7280-374151/1200/630
+featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 ---
 
 If you need a bcrypt hash generator online to create a password hash for your Node.js auth system, you want something that produces the same result your backend will verify later.

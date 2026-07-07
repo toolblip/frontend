@@ -15,7 +15,7 @@ tags:
   - javascript
   - python
 category: Developer Tools
-featuredImage: 'https://api.radtx.com/gradient/0ea5e9-8b5cf6/1200/630'
+featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
 ---
 
 Every server, every database, every logging system eventually touches a Unix timestamp. Yet developers constantly misread them, misconvert them, and lose hours debugging timezone bugs caused by timestamp confusion.

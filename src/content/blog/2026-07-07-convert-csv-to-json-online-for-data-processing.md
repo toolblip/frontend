@@ -12,7 +12,7 @@ tags:
   - developer tools
 author: Toolblip Team
 readingTime: 6 min
-featuredImage: https://api.radtx.com/gradient/6b7280-374151/1200/630
+featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 ---
 
 # Convert CSV to JSON Online for Data Processing
@@ -21,7 +21,7 @@ If you landed here, you have a CSV export - from a spreadsheet, a database dump,
 
 This guide covers when the conversion matters, how to do it in seconds, how headers and types are handled, and how to keep the data private while you work.
 
-![Convert CSV to JSON online for data processing](https://api.radtx.com/gradient/6b7280-374151/1200/630)
+![Convert CSV to JSON online for data processing](https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 
 ## Why Convert CSV to JSON Online for Data Processing
 

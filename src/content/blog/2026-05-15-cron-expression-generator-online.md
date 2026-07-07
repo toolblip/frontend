@@ -11,7 +11,7 @@ tags:
   - Developer Tools
 author: Toolblip Team
 readingTime: 8 min
-featuredImage: https://api.radtx.com/gradient/6b7280-374151/1200/630
+featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 ---
 
 # Cron Expression Generator Online: Build Schedules Without Mistakes
@@ -20,7 +20,7 @@ A cron expression generator online turns plain English schedules into the five o
 
 The guide walks through cron syntax field by field, shows how to use a cron expression generator to avoid common mistakes, and includes a cheat sheet with copy-paste examples.
 
-![Cron expression generator online](https://api.radtx.com/gradient/6b7280-374151/1200/630)
+![Cron expression generator online](https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 
 ## What Is a Cron Expression and Why It Matters
 

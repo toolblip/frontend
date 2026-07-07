@@ -12,7 +12,7 @@ tags:
   - developer tools
 author: Toolblip Team
 readingTime: 6 min
-featuredImage: https://api.radtx.com/gradient/6b7280-374151/1200/630
+featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 ---
 
 # Beautify and Format Minified JavaScript for Debugging
@@ -21,7 +21,7 @@ You opened a production bundle, a third-party script, or a stack trace and found
 
 Here's what beautifying does, how to do it in one paste, how it fits a real debugging workflow, and where it stops helping.
 
-![Beautify and format minified JavaScript for debugging](https://api.radtx.com/gradient/6b7280-374151/1200/630)
+![Beautify and format minified JavaScript for debugging](https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 
 ## Why Beautify and Format Minified JavaScript for Debugging
 

@@ -15,7 +15,7 @@ tags:
 author: Toolblip Team
 readingTime: 4 min
 emoji: "📸"
-featuredImage: 'https://api.radtx.com/gradient/f97316-facc15/1200/630'
+featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
 ---
 
 # How to Optimize Images Without Uploading

@@ -15,7 +15,7 @@ tags:
   - productivity
 author: Toolblip Team
 readingTime: 8 min
-featuredImage: 'https://api.radtx.com/gradient/ef4444-f59e0b/1200/630'
+featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
 ---
 
 You open DevTools. You paste the API response. You squint at 4,000 characters of unstructured JSON crammed into a single line. You have no idea why your code is failing.

@@ -18,7 +18,7 @@ tags:
   - privacy
 author: Toolblip Team
 readingTime: 8 min
-featuredImage: 'https://api.radtx.com/gradient/0ea5e9-8b5cf6/1200/630'
+featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
 ---
 
 Regex101 has been the go-to regex tester for years. It's solid, it's well-known, and it works. But if you've used it recently you've probably noticed the walls going up - save limits, Python flavor locked behind a paywall, a countdown timer nudging you toward premium.

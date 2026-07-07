@@ -11,7 +11,7 @@ tags:
   - Code Review
 author: Toolblip Team
 readingTime: 4 min
-featuredImage: https://api.radtx.com/gradient/6b7280-374151/1200/630
+featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 ---
 
 Developers usually search for a way to format SQL queries online for readability after they paste a single-line query from a log, a support ticket, or a failing test. The database can parse that mess. A human cannot. Before you review the join logic or explain why a report is wrong, you need the query split into readable clauses.

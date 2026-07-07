@@ -12,7 +12,7 @@ tags:
   - DevOps
 author: Toolblip Team
 readingTime: 4 min
-featuredImage: 'https://api.radtx.com/gradient/6b7280-374151/1200/630'
+featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
 ---
 
 # Cron 表达式速查表：5分钟掌握定时任务调度

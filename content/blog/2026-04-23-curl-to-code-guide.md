@@ -17,7 +17,7 @@ tags:
   - api
   - developer-tools
 category: Developer Tools
-featuredImage: 'https://api.radtx.com/gradient/06b6d4-8b5cf6/1200/630'
+featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
 ---
 
 You have been there. You figure out an API call in the terminal with cURL  -  headers, body, auth, all working perfectly. Then you need that same call in your Python script or JavaScript application. So you manually translate every flag: `-H` becomes a headers object, `-X POST` becomes `.post()`, the body becomes a JSON payload. It works, but it is tedious and error-prone.

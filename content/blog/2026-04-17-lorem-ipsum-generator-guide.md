@@ -15,7 +15,7 @@ tags:
   - typography
   - placeholder-text
 category: Design
-featuredImage: 'https://api.radtx.com/gradient/10b981-06b6d4/1200/630'
+featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
 ---
 
 If you've ever opened a design mockup and seen words like "Lorem ipsum dolor sit amet, consectetur adipiscing elit," you've encountered Lorem Ipsum. Despite looking like meaningless Latin gibberish, it's the universal placeholder text in design and development workflows worldwide.

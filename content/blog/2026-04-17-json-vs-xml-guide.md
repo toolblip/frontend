@@ -18,7 +18,7 @@ readingTime: 7 min
 descriptionSEO: >-
   JSON vs XML comparison. When to use JSON vs XML for APIs, config files, and
   data storage. Pros, cons, and real-world examples for developers.
-featuredImage: 'https://api.radtx.com/gradient/0ea5e9-8b5cf6/1200/630'
+featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
 ---
 
 Every developer encounters both JSON and XML at some point. They both encode structured data, both are human-readable, and both have their place in modern software. So when should you reach for each one?

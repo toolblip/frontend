@@ -13,7 +13,7 @@ tags:
   - devops
 author: Toolblip Team
 readingTime: 6 min
-featuredImage: https://api.radtx.com/gradient/6b7280-374151/1200/630
+featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 ---
 
 When a Kubernetes rollout fails with `error converting YAML to JSON`, the cause is almost always one stray space or a missing colon. The fastest way to confirm that is to validate YAML config file online before the next push, instead of waiting for the cluster to tell you again.

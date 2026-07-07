@@ -13,7 +13,7 @@ tags:
   - css
 author: Toolblip Team
 readingTime: 6 min
-featuredImage: https://api.radtx.com/gradient/111827-2563eb/1200/630
+featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 ---
 
 Minified CSS is not only for production builds. It is also useful when you need to shrink a messy snippet before pasting it into a ticket, testing whether comments affect a rule, or turning a long reproduction into something another developer can scan in seconds.

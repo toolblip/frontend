@@ -11,7 +11,7 @@ tags:
   - Developer Tools
 author: Toolblip Team
 readingTime: 7 min
-featuredImage: https://api.radtx.com/gradient/6b7280-374151/1200/630
+featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 ---
 
 Here is the corrected article body:
@@ -24,7 +24,7 @@ If you landed here, you have a hex color like `#6b7280` and you need it as RGB, 
 
 Read on for what each format means, how to convert hex to RGB in CSS, when HSL is the better choice, and how to handle all three at once.
 
-![Hex to RGB HSL color converter for CSS design](https://api.radtx.com/gradient/6b7280-374151/1200/630)
+![Hex to RGB HSL color converter for CSS design](https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 
 ## Why Use a Hex to RGB HSL Converter Online
 

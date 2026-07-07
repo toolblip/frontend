@@ -15,7 +15,7 @@ tags:
   - security
   - javascript
 category: Authentication
-featuredImage: 'https://api.radtx.com/gradient/f59e0b-ef4444/1200/630'
+featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
 ---
 
 If you work with modern web applications, you've seen JWTs - those long strings of dots-separated base64 that show up in browser storage, API responses, and auth headers. But what do they actually contain? And how do you inspect one without sending it to a third-party service?

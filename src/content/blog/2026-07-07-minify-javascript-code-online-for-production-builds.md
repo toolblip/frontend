@@ -12,7 +12,7 @@ tags:
   - developer tools
 author: Toolblip Team
 readingTime: 6 min
-featuredImage: https://api.radtx.com/gradient/6b7280-374151/1200/630
+featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 ---
 
 # Minify JavaScript Code Online for Production Builds
@@ -21,7 +21,7 @@ You have a working script - a widget, an analytics snippet, a small utility - an
 
 Below: what minification actually removes, how to do it in one paste, how much you save, and when a quick online pass is the right call versus a full bundler.
 
-![Minify JavaScript code online for production builds](https://api.radtx.com/gradient/6b7280-374151/1200/630)
+![Minify JavaScript code online for production builds](https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 
 ## Why Minify JavaScript Code Online for Production Builds
 

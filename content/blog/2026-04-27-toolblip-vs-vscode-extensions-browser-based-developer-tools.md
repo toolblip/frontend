@@ -6,7 +6,7 @@ category: Developer Tools
 tags: ["vscode", "browser-tools", "productivity", "developer-tools", "json", "regex", "base64", "privacy", "comparison"]
 author: "Toolblip Team"
 readingTime: "9 min read"
-featuredImage: "https://api.radtx.com/gradient/8b5cf6-f472b6/1200/630"
+featuredImage: "https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog"
 ---
 
 Every developer has been here: you're debugging a tricky JSON response, wrestling with a regex pattern, or trying to decode a base64 string - so you open VS Code, search for the right extension, wait for it to install, restart (maybe), and then finally do the thing you needed to do in thirty seconds.

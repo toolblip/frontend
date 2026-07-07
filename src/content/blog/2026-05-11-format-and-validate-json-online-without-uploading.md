@@ -13,7 +13,7 @@ tags:
   - developer-tools
 author: Toolblip Team
 readingTime: 8 min
-featuredImage: https://api.radtx.com/gradient/6b7280-374151/1200/630
+featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
 ---
 
 You have a 200-line JSON payload from a production webhook. Something is wrong with it, but you do not know what. You paste it into an online JSON formatter and hit validate. A second later, your entire payload is on someone else's server.

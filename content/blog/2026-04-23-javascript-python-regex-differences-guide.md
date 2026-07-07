@@ -15,7 +15,7 @@ tags:
   - troubleshooting
 author: Toolblip Team
 readingTime: 7 min
-featuredImage: 'https://api.radtx.com/gradient/f97316-0ea5e9/1200/630'
+featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
 ---
 
 You copy a regex from Stack Overflow. It works perfectly in the answer's language. You paste it into your project  -  a different language  -  and it silently fails. Or worse, it throws an error.

@@ -14,7 +14,7 @@ tags:
 author: Toolblip Team
 readingTime: 7 min
 descriptionSEO: "UUID v7 is the best identifier format for database primary keys in 2026. Learn why time-ordered UUIDs prevent index bloat, work across distributed systems, and how to generate them instantly in your browser."
-featuredImage: 'https://api.radtx.com/gradient/0ea5e9-8b5cf6/1200/630'
+featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
 ---
 
 If you had to pick one format for every database ID you'd ever create, what would it be? UUIDs are the default in most modern stacks - but not all UUIDs are equally suited for the job. UUID v7 is the version you should be using in 2026, and if your tools don't support it yet, it's time to switch.

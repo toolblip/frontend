@@ -12,7 +12,7 @@ tags:
   - developer-tools
   - api
 category: Developer Tools
-featuredImage: 'https://api.radtx.com/gradient/0f172a-22c55e/1200/630'
+featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
 ---
 
 A JSON formatter feels like one of the safest developer tools imaginable. You paste an API response, click format, scan the indentation, and move on. For years, many developers solved this with a browser extension because it was always one click away from the current tab.
