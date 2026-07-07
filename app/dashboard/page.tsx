@@ -13,6 +13,7 @@ import { getRecentTools, type RecentTool } from "@/lib/toolHistory";
 import type { FavoriteTool, Plan, OnboardingPlanTier, OnboardingStep, OnboardingStatus } from "@/components/dashboard/types";
 import { useSubscription } from "@/lib/hooks/useSubscription";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
+import { OnboardingChecklist } from "@/components/dashboard/OnboardingChecklist";
 import { TrialBanner } from "@/components/dashboard/TrialBanner";
 import { TabbedTools } from "@/components/dashboard/TabbedTools";
 import { TermsOnboarding } from "@/components/dashboard/TermsOnboarding";
@@ -72,6 +73,10 @@ function trialBannerDismissedKey(userId: number | string) {
   return `toolblip_trial_banner_dismissed_${userId}`;
 }
 
+function checklistStorageKey(userId: number | string) {
+  return `toolblip_checklist_${userId}`;
+}
+
 export default function AccountPage() {
   const { user, token, login, logout, loading: authLoading } = useAuth();
   const router = useRouter();
@@ -108,6 +113,7 @@ export default function AccountPage() {
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null);
   const [trialCheckoutLoading, setTrialCheckoutLoading] = useState<string | null>(null);
   const [trialBannerDismissed, setTrialBannerDismissed] = useState(false);
+  const [checklistDismissed, setChecklistDismissed] = useState(false);
 
   // Recent tools live in localStorage
   useEffect(() => {
@@ -146,6 +152,20 @@ export default function AccountPage() {
       setTrialBannerDismissed(stored === "1");
     } catch {
       setTrialBannerDismissed(false);
+    }
+  }, [user]);
+
+  // Hydrate onboarding checklist dismissal
+  useEffect(() => {
+    if (!user) {
+      setChecklistDismissed(false);
+      return;
+    }
+    try {
+      const stored = window.localStorage.getItem(checklistStorageKey(user.id));
+      setChecklistDismissed(stored ? Boolean(JSON.parse(stored).dismissed) : false);
+    } catch {
+      setChecklistDismissed(false);
     }
   }, [user]);
 
@@ -590,6 +610,16 @@ export default function AccountPage() {
         tierName={tierName}
         teamName={apiTeamName || teamName || suggestWorkspaceName(user.name) || "My workspace"}
       />
+
+      {!showTermsOnboarding && !showPlanOnboarding && !checklistDismissed && (
+        <div className="mb-6">
+          <OnboardingChecklist
+            userId={user.id}
+            hasFavorites={favoriteCount > 0}
+            onDismiss={() => setChecklistDismissed(true)}
+          />
+        </div>
+      )}
 
       <TabbedTools
         favoriteTools={favoriteTools}
