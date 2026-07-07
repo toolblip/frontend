@@ -15,8 +15,13 @@ export const metadata: Metadata = {
     type: 'website',
     siteName: 'Toolblip',
   },
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
   twitter: {
-    card: 'summary_large_image',
+    card: "summary_large_image",
   },
 };
 
