@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run claude -p with a prompt from a file, avoiding shell quoting issues."""
+"""Run a prompt through claude.sh daemon, avoiding shell quoting issues."""
 import os
 import subprocess
 import sys
@@ -13,13 +13,14 @@ claude_args = sys.argv[2:]
 with open(prompt_file) as f:
     prompt = f.read()
 
-cmd = ['claude', '-c', '-p', '--input-format', 'text', '--dangerously-skip-permissions', '--enable-auto-mode'] + claude_args
+# Pipe prompt to claude.sh -p which reads from stdin when no inline text follows
+cmd = ['./claude.sh', '-p']
+if claude_args:
+    cmd += ['--'] + claude_args
 env = os.environ.copy()
-# Ensure claude finds macOS Keychain auth regardless of what HOME the caller had.
 env['HOME'] = '/Users/ray'
 env.setdefault('USER', 'ray')
 env.setdefault('LOGNAME', env['USER'])
-# Ensure claude binary is findable in stripped cron environments.
 path = env.get('PATH', '')
 if '/Users/ray/.local/bin' not in path:
     env['PATH'] = f"/Users/ray/.local/bin:/opt/homebrew/bin:{path}"

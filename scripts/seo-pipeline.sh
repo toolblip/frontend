@@ -87,7 +87,7 @@ log() {
 }
 
 claude_is_logged_in() {
-    claude -c -p "say ok" --dangerously-skip-permissions --enable-auto-mode 2>/dev/null | grep -qi "ok"
+    ./claude.sh -p "say ok" 2>/dev/null | grep -qi "ok"
 }
 
 # ─── Queue Management ──────────────────────────────────────────────────────────
@@ -164,7 +164,7 @@ except:
     # Claude keyword selection
     local kw_result
     if claude_is_logged_in; then
-        kw_result=$(claude -c -p "$(cat "$prompt_file")" --model sonnet --max-turns 3 2>/dev/null || echo "")
+        kw_result=$(./claude.sh -p "$(cat "$prompt_file")" -- --model sonnet --max-turns 3 2>/dev/null || echo "")
     else
         kw_result=""
     fi
@@ -319,7 +319,7 @@ $(cat "$article_file")"
     # Run humanizer
     local humanized
     if claude_is_logged_in; then
-        humanized=$(claude -c -p "$full_prompt" --model sonnet --max-turns 5 2>/dev/null || echo "")
+        humanized=$(./claude.sh -p "$full_prompt" -- --model sonnet --max-turns 5 2>/dev/null || echo "")
     else
         humanized=""
     fi
@@ -436,7 +436,7 @@ PROMPTEOF
 
     local rewrite
     if claude_is_logged_in; then
-        rewrite=$(claude -c -p "$(cat "$prompt_file")" --model sonnet --max-turns 5 2>/dev/null || echo "")
+        rewrite=$(./claude.sh -p "$(cat "$prompt_file")" -- --model sonnet --max-turns 5 2>/dev/null || echo "")
     else
         rewrite=""
     fi
