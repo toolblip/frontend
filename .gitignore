@@ -39,8 +39,7 @@ memory/
 # TypeScript
 *.tsbuildinfo
 
-# Auto-generated build artifacts
-content/blog-manifest.ts
+# Auto-generated build artifacts (committed to ensure Railway caching doesn't skip it)
 
 # OS
 .DS_Store
