@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ["nodejs_latest"]
+
+[phases.install]
+cmds = ["npm ci"]
+
+[phases.build]
+cmds = ["rm -f content/blog-manifest.ts", "node scripts/generate-blog-manifest.mjs", "npm run build"]
+
+[start]
+cmd = "npm start"
