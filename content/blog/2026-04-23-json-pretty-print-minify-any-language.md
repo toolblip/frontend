@@ -17,7 +17,7 @@ tags:
   - productivity
 author: Toolblip Team
 readingTime: 7 min
-featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
+featuredImage: 'https://toolblip.com/api/og?title=How%20to%20Pretty-Print%20%28and%20Minify%29%20JSON%20in%20Any%20Language&category=Developer%20Tools&date=2026-04-23'
 ---
 
 JSON is everywhere. Most of the time you get it formatted. Then you get a single-line blob from a log file, an API response, or a colleague's config, and suddenly you can't read anything.

@@ -1,4 +1,5 @@
 ---
+featuredImage: 'https://toolblip.com/api/og?title=How%20to%20Generate%20100%20UUIDs%20in%202%20Seconds%20-%20No%20Signup%2C%20No%20API%20Call&category=Developer%20Tools&date=2026-04-27'
 title: "How to Generate 100 UUIDs in 2 Seconds - No Signup, No API Call"
 description: "Need bulk UUIDs for testing, seeding databases, or generating test data? Here's how to generate hundreds of UUIDs instantly in your browser, completely free."
 date: 2026-04-27

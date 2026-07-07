@@ -13,7 +13,7 @@ tags:
   - api
   - debugging
   - formatter
-featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
+featuredImage: 'https://toolblip.com/api/og?title=JSON%20Formatter%3A%20Debug%20Your%20API%20Responses%20Like%20a%20Pro&category=&date='
 ---
 
 You know the pain. You open a fetch response in your browser DevTools and see:

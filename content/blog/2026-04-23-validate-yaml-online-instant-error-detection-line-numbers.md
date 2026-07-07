@@ -6,7 +6,7 @@ category: Developer Tools
 tags: ["yaml", "validation", "devops", "kubernetes", "github-actions", "docker-compose", "ci-cd"]
 author: Toolblip Team
 readingTime: "7 min read"
-featuredImage: "https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog"
+featuredImage: 'https://toolblip.com/api/og?title=Validate%20YAML%20Online%3A%20Find%20Errors%20by%20Line%20Number%20in%20Seconds&category=Developer%20Tools&date=2026-04-23'
 ---
 
 YAML looks simple. Until it isn't.

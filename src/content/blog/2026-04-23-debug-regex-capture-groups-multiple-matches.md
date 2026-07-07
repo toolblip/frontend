@@ -1,4 +1,5 @@
 ---
+featuredImage: 'https://toolblip.com/api/og?title=Debug%20Regex%20Capture%20Groups%20Across%20Multiple%20Matches%3A%20A%20Developer%20Checklist&category=Developer%20Tools&date=2026-04-23'
 title: "Debug Regex Capture Groups Across Multiple Matches: A Developer Checklist"
 description: Learn how to debug regex capture groups across multiple matches with examples for JavaScript, Python, optional groups, named groups, and split bugs.
 date: 2026-04-23

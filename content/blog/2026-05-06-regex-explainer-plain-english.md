@@ -1,4 +1,5 @@
 ---
+featuredImage: 'https://toolblip.com/api/og?title=Explain%20Any%20Regex%20Pattern%20in%20Plain%20English%20%20-%20%20Free%20Browser%20Tool&category=Developer%20Tools&date=2026-05-06'
 title: Explain Any Regex Pattern in Plain English  -  Free Browser Tool
 description: Paste any regex pattern and get a line-by-line plain English explanation. Understand lookaheads, backreferences, and quantifiers without reading Dense documentation.
 date: 2026-05-06

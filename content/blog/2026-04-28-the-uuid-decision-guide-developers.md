@@ -13,7 +13,7 @@ tags:
 author: Toolblip Team
 readingTime: 8 min
 descriptionSEO: "UUID v1 vs v4 vs v5 vs v7 explained for developers. When to use each version, real code examples in JavaScript and Python, and a decision framework that actually helps."
-featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
+featuredImage: 'https://toolblip.com/api/og?title=The%20UUID%20Decision%20Guide%3A%20Which%20Version%20Should%20You%20Actually%20Use%3F&category=Developer%20Tools&date=2026-04-28'
 ---
 
 Every developer hits the same wall eventually. You need a unique identifier for something  -  a user, an order, a session, a record  -  and someone on your team asks "should we use UUID v4 or... what's the other one?" And then you're reading RFC 4122 at 11pm.

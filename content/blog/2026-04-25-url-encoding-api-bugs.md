@@ -1,4 +1,5 @@
 ---
+featuredImage: 'https://toolblip.com/api/og?title=Why%20Your%20URL%20Encoding%20Is%20Breaking%20Your%20API%20%28And%20How%20to%20Fix%20It%29&category=Developer%20Tools&date=2026-04-25'
 title: Why Your URL Encoding Is Breaking Your API (And How to Fix It)
 description: Double-encoding, percent-sign bugs, and the silent API killers. Learn how URL encoding actually works and stop debugging mystery 400s.
 date: 2026-04-25

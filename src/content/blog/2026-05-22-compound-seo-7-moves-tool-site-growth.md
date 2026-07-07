@@ -14,7 +14,7 @@ tags:
   - Tool Sites
 author: Toolblip Team
 readingTime: 7 min
-featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
+featuredImage: 'https://toolblip.com/api/og?title=Compound%20SEO%3A%207%20Moves%20That%20Help%20a%20Tool%20Site%20Grow&category=SEO&date=2026-05-22'
 ---
 
 # Compound SEO: 7 Moves That Help a Tool Site Grow

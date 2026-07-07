@@ -1,4 +1,5 @@
 ---
+featuredImage: 'https://toolblip.com/api/og?title=Regex%20Lookahead%20and%20Lookbehind%20Explained%3A%20Match%20Without%20Consuming&category=Developer%20Tools&date=2026-05-05'
 title: "Regex Lookahead and Lookbehind Explained: Match Without Consuming"
 description: "Learn how to use regex lookahead and lookbehind to match patterns without consuming characters. Positive vs negative, ahead vs behind  -  with live examples."
 date: 2026-05-05

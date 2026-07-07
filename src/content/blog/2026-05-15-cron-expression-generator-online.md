@@ -11,7 +11,7 @@ tags:
   - Developer Tools
 author: Toolblip Team
 readingTime: 8 min
-featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
+featuredImage: 'https://toolblip.com/api/og?title=Cron%20Expression%20Generator%20Online%3A%20Build%20Schedules%20Right&category=Developer%20Tools&date=2026-05-15'
 ---
 
 # Cron Expression Generator Online: Build Schedules Without Mistakes

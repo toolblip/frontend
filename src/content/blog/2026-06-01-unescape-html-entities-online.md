@@ -11,7 +11,7 @@ tags:
   - Developer Tools
 author: Toolblip Team
 readingTime: 7 min
-featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
+featuredImage: 'https://toolblip.com/api/og?title=Unescape%20HTML%20Entities%20Online%3A%20Fix%20Encoded%20Strings%20Fast&category=Developer%20Tools&date=2026-06-01'
 ---
 
 # Unescape HTML Entities Online: A Developer's Debugging Guide

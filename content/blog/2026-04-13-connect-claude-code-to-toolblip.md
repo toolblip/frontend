@@ -15,7 +15,7 @@ tags:
 author: Toolblip Team
 readingTime: 7 min
 coverImage: /images/blog/connect-claude-code-cover.png
-featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
+featuredImage: 'https://toolblip.com/api/og?title=How%20to%20Connect%20Claude%20Code%20to%20Toolblip%20in%205%20Minutes&category=Tutorial&date=2026-04-13'
 ---
 
 # How to Connect Claude Code to Toolblip in 5 Minutes

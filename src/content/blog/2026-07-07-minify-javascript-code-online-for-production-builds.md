@@ -12,7 +12,7 @@ tags:
   - developer tools
 author: Toolblip Team
 readingTime: 6 min
-featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
+featuredImage: 'https://toolblip.com/api/og?title=Minify%20JavaScript%20Code%20Online%20for%20Production%20Builds&category=Developer%20Tools&date=2026-07-07'
 ---
 
 # Minify JavaScript Code Online for Production Builds

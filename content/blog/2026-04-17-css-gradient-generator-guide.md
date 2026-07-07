@@ -6,7 +6,7 @@ slug: css-gradient-generator-guide
 readingTime: 5 min
 tags: ["css", "gradient", "design", "frontend", "web-development"]
 category: Design
-featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
+featuredImage: 'https://toolblip.com/api/og?title=CSS%20Gradient%20Generator%3A%20Create%20Beautiful%20Gradients%20Without%20Memorizing%20Syntax&category=Design&date='
 author: Harun R Rayhan
 ---
 

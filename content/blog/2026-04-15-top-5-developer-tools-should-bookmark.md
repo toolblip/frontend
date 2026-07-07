@@ -17,7 +17,7 @@ tags:
 author: Toolblip Team
 readingTime: 4 min
 emoji: "🔧"
-featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
+featuredImage: 'https://toolblip.com/api/og?title=Top%205%20Developer%20Tools%20You%20Should%20Bookmark&category=Developer%20Tools&date=2026-04-15'
 ---
 
 # Top 5 Developer Tools You Should Bookmark

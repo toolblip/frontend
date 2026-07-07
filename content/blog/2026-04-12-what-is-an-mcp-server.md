@@ -14,7 +14,7 @@ tags:
 author: Toolblip Team
 readingTime: 8 min
 coverImage: /images/blog/mcp-server-guide-cover.png
-featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
+featuredImage: 'https://toolblip.com/api/og?title=What%20is%20an%20MCP%20Server%3F%20A%20Practical%20Guide%20for%20Developers&category=Guide&date=2026-04-12'
 ---
 
 # What is an MCP Server? A Practical Guide for Developers

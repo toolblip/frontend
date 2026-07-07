@@ -6,7 +6,7 @@ slug: image-format-converter-guide
 readingTime: 5 min
 tags: ["image", "performance", "webp", "avif", "optimization", "core-web-vitals"]
 category: Developer Tools
-featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
+featuredImage: 'https://toolblip.com/api/og?title=Image%20Format%20Converter%3A%20Optimize%20Your%20Images%20for%20Web%20Performance&category=Developer%20Tools&date='
 author: Harun R Rayhan
 ---
 

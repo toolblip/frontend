@@ -15,7 +15,7 @@ tags:
 author: Toolblip Team
 readingTime: 4 min
 emoji: "📸"
-featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
+featuredImage: 'https://toolblip.com/api/og?title=How%20to%20Optimize%20Images%20Without%20Uploading&category=Developer%20Tools&date=2026-04-15'
 ---
 
 # How to Optimize Images Without Uploading

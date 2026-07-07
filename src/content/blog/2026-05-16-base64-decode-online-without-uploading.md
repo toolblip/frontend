@@ -13,7 +13,7 @@ tags:
   - developer-tools
 author: Toolblip Team
 readingTime: 7 min
-featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
+featuredImage: 'https://toolblip.com/api/og?title=Base64%20Decode%20Online%20Without%20Uploading%20Your%20Data&category=Developer%20Tools&date=2026-05-16'
 ---
 
 A Base64 string looks harmless until you decode it and find a JWT payload, a Basic Auth header, a Kubernetes secret, or a chunk of customer data. If you use a random decoder that sends the input to a server, the sensitive part has already left your machine before you can decide whether it was safe to share.

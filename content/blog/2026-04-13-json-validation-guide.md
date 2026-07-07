@@ -15,7 +15,7 @@ tags:
   - Developer Tools
 author: Toolblip Team
 readingTime: 5 min
-featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
+featuredImage: 'https://toolblip.com/api/og?title=JSON%20Validation%3A%20How%20to%20Find%20and%20Fix%20Broken%20JSON%20Fast&category=Guide&date=2026-04-13'
 ---
 
 # JSON Validation: How to Find and Fix Broken JSON Fast

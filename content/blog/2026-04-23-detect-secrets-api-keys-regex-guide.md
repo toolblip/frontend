@@ -6,7 +6,7 @@ category: Developer Tools
 tags: ["regex", "security", "api-keys", "secrets", "detection", "developer-tools", "privacy"]
 author: "Toolblip Team"
 readingTime: 10 min
-featuredImage: "https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog"
+featuredImage: 'https://toolblip.com/api/og?title=How%20to%20Detect%20Secrets%20and%20API%20Keys%20in%20Text%20with%20Regex%20%28And%20Why%20Blind%20Scanning%20Is%20Dangerous%29&category=Developer%20Tools&date=2026-04-23'
 ---
 
 Every few months someone commits a Slack bot token to a public GitHub repo, an API key appears in a Stack Overflow post, or a production config leaks in a support ticket screenshot. Automated scanners catch some of these  -  but not all. And the ones that slip through often do so because a regex was too loose, too strict, or tested against the wrong kind of input.

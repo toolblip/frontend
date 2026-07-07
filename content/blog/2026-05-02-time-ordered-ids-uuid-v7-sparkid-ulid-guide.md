@@ -1,4 +1,5 @@
 ---
+featuredImage: 'https://toolblip.com/api/og?title=Time-Ordered%20IDs%20Explained%3A%20UUID%20v7%20vs%20SparkID%20vs%20ULID%20for%20Database%20Design&category=Developer%20Tools&date=2026-05-02'
 title: "Time-Ordered IDs Explained: UUID v7 vs SparkID vs ULID for Database Design"
 description: "Compare UUID v7, SparkID, and ULID  -  three time-ordered ID formats that fix the performance problems of random UUIDs in databases. Learn which one to use and why."
 date: 2026-05-02

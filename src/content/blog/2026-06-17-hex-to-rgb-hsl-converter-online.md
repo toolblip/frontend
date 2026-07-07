@@ -11,7 +11,7 @@ tags:
   - Developer Tools
 author: Toolblip Team
 readingTime: 7 min
-featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
+featuredImage: 'https://toolblip.com/api/og?title=Hex%20to%20RGB%20HSL%20Converter%20Online%3A%20Complete%20CSS%20Guide&category=Developer%20Tools&date=2026-06-17'
 ---
 
 Here is the corrected article body:

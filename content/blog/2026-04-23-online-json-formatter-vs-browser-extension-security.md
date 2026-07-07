@@ -12,7 +12,7 @@ tags:
   - developer-tools
   - api
 category: Developer Tools
-featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
+featuredImage: 'https://toolblip.com/api/og?title=Online%20JSON%20Formatter%20vs%20Browser%20Extension%3A%20Which%20Is%20Safer%20for%20API%20Payloads%3F&category=Developer%20Tools&date='
 ---
 
 A JSON formatter feels like one of the safest developer tools imaginable. You paste an API response, click format, scan the indentation, and move on. For years, many developers solved this with a browser extension because it was always one click away from the current tab.

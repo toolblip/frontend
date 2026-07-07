@@ -13,7 +13,7 @@ tags:
   - debugging
   - javascript
 category: Developer Tools
-featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
+featuredImage: 'https://toolblip.com/api/og?title=Regex%20Tester%3A%20The%20Developer%27%27s%20Essential%20Debugging%20Tool&category=Developer%20Tools&date='
 ---
 
 Regular expressions - regex - are one of the most powerful tools in a developer's toolkit. They're also notoriously difficult to get right without a good testing environment. A single misplaced character can turn a precise match into a wildcard nightmare.

@@ -1,4 +1,5 @@
 ---
+featuredImage: 'https://toolblip.com/api/og?title=The%20Ultimate%20Guide%20to%20Image%20Conversion%20and%20Optimization&category=Image&date=2026-04-21'
 title: 'The Ultimate Guide to Image Conversion and Optimization'
 description: >-
   WebP, PNG, JPEG - choosing the right image format can make or break your site''s performance. Learn when to use each format, how browser-based conversion works, and why client-side processing is better for your privacy.

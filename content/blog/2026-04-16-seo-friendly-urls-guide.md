@@ -14,7 +14,7 @@ tags:
   - Rankings
 author: Toolblip Team
 readingTime: 5 min
-featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
+featuredImage: 'https://toolblip.com/api/og?title=URL%20Structure%20and%20SEO%3A%20How%20to%20Build%20URLs%20That%20Rank&category=SEO&date=2026-04-16'
 ---
 
 # URL Structure and SEO: How to Build URLs That Rank

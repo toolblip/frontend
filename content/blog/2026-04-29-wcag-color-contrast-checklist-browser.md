@@ -1,4 +1,5 @@
 ---
+featuredImage: 'https://toolblip.com/api/og?title=WCAG%20Color%20Contrast%20Checklist%3A%20Test%20Every%20Color%20Pair%20in%20Under%2030%20Seconds&category=Developer%20Tools&date=2026-04-29'
 title: "WCAG Color Contrast Checklist: Test Every Color Pair in Under 30 Seconds"
 description: "Use this developer checklist to catch WCAG AA and AAA contrast failures before they ship. Free browser tool, no upload required."
 date: 2026-04-29

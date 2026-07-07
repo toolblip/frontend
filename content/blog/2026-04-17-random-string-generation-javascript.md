@@ -19,7 +19,7 @@ readingTime: 5 min
 descriptionSEO: >-
   How to generate cryptographically secure random strings in JavaScript. UUID
   v4, random tokens, passwords - secure methods with code examples.
-featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
+featuredImage: 'https://toolblip.com/api/og?title=How%20to%20Generate%20Random%20strings%20Securely%20in%20JavaScript&category=Developer%20Tools&date=2026-04-17'
 ---
 
 Random strings are everywhere in software - session tokens, password reset links, API keys, UUIDs. Getting them wrong creates security vulnerabilities that are hard to catch. This guide shows you how to do it properly.

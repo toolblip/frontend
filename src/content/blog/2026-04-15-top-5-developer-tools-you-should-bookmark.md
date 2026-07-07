@@ -1,4 +1,5 @@
 ---
+featuredImage: 'https://toolblip.com/api/og?title=Top%205%20Developer%20Tools%20You%20Should%20Bookmark&category=Developer%20Tools&date=2026-04-15'
 title: "Top 5 Developer Tools You Should Bookmark"
 description: >-
   Five browser-based tools that handle the small jobs  -  JSON formatting, Base64 encoding, regex testing, cron parsing, and hashing  -  without installing anything or signing up.

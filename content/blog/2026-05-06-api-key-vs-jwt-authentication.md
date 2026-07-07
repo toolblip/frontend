@@ -12,7 +12,7 @@ tags:
   - security
   - developer-tools
 category: Authentication
-featuredImage: "https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog"
+featuredImage: 'https://toolblip.com/api/og?title=API%20Key%20vs%20JWT%3A%20How%20to%20Choose%20the%20Right%20Authentication%20for%20Your%20Project&category=Authentication&date='
 ---
 
 If you are building an API and wondering whether to use an API key or a JWT token, you are not alone. It is one of the most common authentication decisions developers face  -  and one of the most commonly gotten wrong.

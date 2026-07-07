@@ -11,7 +11,7 @@ tags:
   - developer-tools
 author: Toolblip Team
 readingTime: 5 min
-featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
+featuredImage: 'https://toolblip.com/api/og?title=Validate%20XML%20Against%20XSD%20Online%3A%20A%20Dev%20Guide&category=Developer%20Tools&date=2026-06-04'
 ---
 
 When a partner API returns "schema validation failed", the fastest fix is usually not in your HTTP client. It is in the payload. You need to validate XML against XSD online, see the exact element that broke the contract, and fix it before you send the request again.

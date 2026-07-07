@@ -1,4 +1,5 @@
 ---
+featuredImage: 'https://toolblip.com/api/og?title=Identify%20Any%20Hash%3A%20MD5%2C%20SHA-1%2C%20SHA-256%2C%20bcrypt%2C%20and%20More&category=Developer%20Tools&date=2026-04-23'
 title: "Identify Any Hash: MD5, SHA-1, SHA-256, bcrypt, and More"
 description: "Learn how to identify common hash types by length, format, and prefixes, then verify them safely with browser-based developer tools."
 date: 2026-04-23

@@ -17,7 +17,7 @@ readingTime: 8 min
 descriptionSEO: >-
   Complete HTTP status code reference guide. 1xx to 5xx explained with examples.
   Learn what every HTTP code means and when to use it in your API.
-featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
+featuredImage: 'https://toolblip.com/api/og?title=The%20Complete%20Guide%20to%20HTTP%20Status%20Codes%20in%202026&category=Developer%20Tools&date=2026-04-17'
 ---
 
 Every developer hits an unexpected `403` or `429` at some point and wastes time guessing what happened. HTTP status codes are a shared language between servers and clients - learning them properly saves hours of debugging and makes your APIs better.

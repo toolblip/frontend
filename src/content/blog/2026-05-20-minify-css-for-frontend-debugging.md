@@ -13,7 +13,7 @@ tags:
   - css
 author: Toolblip Team
 readingTime: 6 min
-featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
+featuredImage: 'https://toolblip.com/api/og?title=Minify%20CSS%20online%20for%20quick%20frontend%20debugging&category=Developer%20Tools&date=2026-05-20'
 ---
 
 Minified CSS is not only for production builds. It is also useful when you need to shrink a messy snippet before pasting it into a ticket, testing whether comments affect a rule, or turning a long reproduction into something another developer can scan in seconds.

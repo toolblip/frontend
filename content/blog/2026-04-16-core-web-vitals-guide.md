@@ -14,7 +14,7 @@ tags:
   - UX
 author: Toolblip Team
 readingTime: 6 min
-featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
+featuredImage: 'https://toolblip.com/api/og?title=Core%20Web%20Vitals%20for%20Developers%3A%20What%20Actually%20Matters%20in%202026&category=Performance&date=2026-04-16'
 ---
 
 # Core Web Vitals for Developers: What Actually Matters in 2026

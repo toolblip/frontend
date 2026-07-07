@@ -15,7 +15,7 @@ tags:
   - Data URLs
 author: Toolblip Team
 readingTime: 6 min
-featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
+featuredImage: 'https://toolblip.com/api/og?title=Base64%20Encoding%20Explained%3A%20What%20It%20Is%20and%20When%20to%20Use%20It&category=Guide&date=2026-04-13'
 ---
 
 # Base64 Encoding Explained: What It Is and When to Use It

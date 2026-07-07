@@ -6,7 +6,7 @@ slug: percentage-calculator-guide
 readingTime: 4 min
 tags: ["percentage", "calculator", "math", "finance", "discount"]
 category: Developer Tools
-featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
+featuredImage: 'https://toolblip.com/api/og?title=Percentage%20Calculator%3A%20The%20Mental%20Math%20You%20Don%27t%20Have%20to%20Do&category=Developer%20Tools&date='
 author: Harun R Rayhan
 ---
 

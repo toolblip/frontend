@@ -1,4 +1,5 @@
 ---
+featuredImage: 'https://toolblip.com/api/og?title=How%20to%20Visualize%20Nested%20JSON%20Relationships%20Before%20Writing%20Queries&category=Developer%20Tools&date=2026-04-23'
 title: "How to Visualize Nested JSON Relationships Before Writing Queries"
 description: "Learn how to inspect nested JSON relationships, find paths, reduce duplicate logic, and plan safer JSONPath queries before writing backend code."
 date: 2026-04-23

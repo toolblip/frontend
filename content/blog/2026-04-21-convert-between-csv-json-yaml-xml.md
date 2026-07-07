@@ -1,4 +1,5 @@
 ---
+featuredImage: 'https://toolblip.com/api/og?title=How%20to%20Convert%20Between%20CSV%2C%20JSON%2C%20YAML%2C%20and%20XML&category=Conversion&date=2026-04-21'
 title: 'How to Convert Between CSV, JSON, YAML, and XML'
 description: >-
   Developers constantly convert between data formats - JSON for APIs, YAML for configs, CSV for spreadsheets, XML for legacy systems. Doing it manually is tedious and error-prone. Here''s how to do it fast and right.

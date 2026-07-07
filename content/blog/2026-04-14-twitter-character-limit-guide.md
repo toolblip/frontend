@@ -15,7 +15,7 @@ tags:
   - Character Counter
 author: Toolblip Team
 readingTime: 4 min
-featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
+featuredImage: 'https://toolblip.com/api/og?title=The%20Complete%20Character%20Limit%20Reference%20for%20Every%20Platform&category=Reference&date=2026-04-14'
 ---
 
 # The Complete Character Limit Reference for Every Platform

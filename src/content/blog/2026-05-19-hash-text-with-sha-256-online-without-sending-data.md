@@ -13,7 +13,7 @@ tags:
   - developer-tools
 author: Toolblip Team
 readingTime: 6 min
-featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
+featuredImage: 'https://toolblip.com/api/og?title=Hash%20text%20with%20SHA-256%20online%20without%20sending%20data&category=Developer%20Tools&date=2026-05-19'
 ---
 
 A SHA-256 hash is safe to share in many workflows. The text you hash is not always safe to share. That is the part people skip when they paste an API token, webhook secret, customer identifier, or internal payload into the first hash generator they find.

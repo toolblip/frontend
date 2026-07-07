@@ -1,4 +1,5 @@
 ---
+featuredImage: 'https://toolblip.com/api/og?title=Why%20Is%20My%20Cron%20Job%20Not%20Running%3F%2010%20Common%20Cron%20Expression%20Mistakes&category=Developer%20Tools&date=2026-04-24'
 title: Why Is My Cron Job Not Running? 10 Common Cron Expression Mistakes
 description: Ten cron expression mistakes that cause most silent failures - OR'd date fields, timezone drift, missing output redirects - with minimal examples and fixes.
 date: 2026-04-24

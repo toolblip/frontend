@@ -1,4 +1,5 @@
 ---
+featuredImage: 'https://toolblip.com/api/og?title=Why%20Your%20HTML%20Input%20Pattern%20Regex%20Fails%20Even%20When%20Regex101%20Says%20It%20Works&category=Developer%20Tools&date=2026-04-23'
 title: "Why Your HTML Input Pattern Regex Fails Even When Regex101 Says It Works"
 description: "Debug HTML input pattern regex issues: implicit anchors, escaping, browser validation, Unicode flags, and safer ways to test forms."
 date: 2026-04-23

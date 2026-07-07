@@ -1,4 +1,5 @@
 ---
+featuredImage: 'https://toolblip.com/api/og?title=How%20to%20Optimize%20Images%20Without%20Uploading&category=Developer%20Tools&date=2026-04-15'
 title: "How to Optimize Images Without Uploading"
 description: >-
   Crop, resize, convert formats, and compress images  -  all in your browser without sending a single pixel to a server. Here is how browser-only image processing works and why it is the right default.

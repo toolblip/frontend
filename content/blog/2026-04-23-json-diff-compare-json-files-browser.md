@@ -1,4 +1,5 @@
 ---
+featuredImage: 'https://toolblip.com/api/og?title=JSON%20Diff%3A%20Compare%20Two%20JSON%20Files%20Side-by-Side%20in%20Your%20Browser&category=Developer%20Tools&date=2026-04-23'
 title: "JSON Diff: Compare Two JSON Files Side-by-Side in Your Browser"
 description: "Debug API response differences instantly without uploading anything. This free browser-based JSON diff tool shows exactly what changed, what's missing, and what's new."
 date: 2026-04-23

@@ -1,4 +1,5 @@
 ---
+featuredImage: 'https://toolblip.com/api/og?title=Test%20WebSocket%20Connections%20in%20Your%20Browser%20%20-%20%20Free%2C%20No%20Signup&category=Developer%20Tools&date=2026-05-07'
 title: "Test WebSocket Connections in Your Browser  -  Free, No Signup"
 description: "Debug WebSocket connections without installing Postman or sending data to third parties. Connect, send messages, and inspect real-time responses right from your browser."
 date: 2026-05-07

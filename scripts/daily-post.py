@@ -3,7 +3,7 @@
 daily-post.py — Toolblip daily blog post generator (Mon-Sat).
 Picks 1 topic → researches → generates → humanizes → commits → submits to GSC.
 """
-import json, os, re, subprocess, sys
+import json, os, re, subprocess, sys, urllib.parse
 from pathlib import Path
 from datetime import datetime, timezone
 
@@ -118,6 +118,43 @@ RELATED: [comma-separated related keywords]"""
     best = re.sub(r'[\n\r]+', '', best)  # strip any embedded newlines
     return best, related
 
+def _set_og_image(found_file):
+    """Update the blog post's featuredImage to use the dynamic OG image endpoint."""
+    try:
+        content = found_file.read_text()
+        # Parse frontmatter to get title, category, date
+        m = re.match(r'---\n(.*?)\n---', content, re.DOTALL)
+        if not m:
+            return
+        fm = m.group(1)
+        title = ""
+        category = ""
+        date_str = ""
+        for line in fm.split("\n"):
+            if line.startswith("title:"):
+                title = line.split(":", 1)[1].strip().strip('"').strip("'")
+            elif line.startswith("category:"):
+                category = line.split(":", 1)[1].strip().strip('"').strip("'")
+            elif line.startswith("date:"):
+                date_str = line.split(":", 1)[1].strip().strip('"').strip("'")[:10]
+        if not title:
+            return
+        og_url = f"https://toolblip.com/api/og?title={urllib.parse.quote(title)}&category={urllib.parse.quote(category)}&date={urllib.parse.quote(date_str)}"
+        # Replace or add featuredImage in frontmatter
+        if 'featuredImage:' in fm:
+            content = re.sub(
+                r'^featuredImage:.*$',
+                f"featuredImage: '{og_url}'",
+                content,
+                flags=re.MULTILINE
+            )
+        else:
+            content = content.replace("---\n", f"---\nfeaturedImage: '{og_url}'\n", 1)
+        found_file.write_text(content)
+        log(f"  OG image set: {og_url}")
+    except Exception as e:
+        log(f"  Warning: could not set OG image: {e}")
+
 def generate_post(topic, best_kw, related_kw):
     """Generate blog post via Claude Code. Returns (file_path, url, keyword)."""
     log("STEP 3: Generating content...")
@@ -146,7 +183,7 @@ The article must:
 4. Be 1200-1800 words - substantive, not thin
 5. Have 5+ H2 sections with descriptive headings that include the keyword or variation
 6. Include at least 2 specific code examples or tool usage examples
-8. Include a featured image using: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
+7. Featured image is handled automatically. Do NOT include any markdown images or image references in the article body.
 8. End with a clear CTA linking to a relevant tool on toolblip.com
 
 Save the file to: {BLOG_DIR}/{date_slug}-{slug}.md
@@ -211,6 +248,8 @@ TITLE: [the title you used]"""
         }
         with open(GENERATED_FILE, "a") as f:
             f.write(json.dumps(record) + "\n")
+        # Set OG image from post title
+        _set_og_image(found_file)
         log(f"  Generated: {url}")
         return str(found_file), url, best_kw
     else:

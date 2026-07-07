@@ -1,4 +1,5 @@
 ---
+featuredImage: 'https://toolblip.com/api/og?title=Crop%20Images%20Without%20Uploading%3A%20Why%20Client-Side%20Tools%20Are%20the%20Privacy-First%20Choice&category=Developer%20Tools&date=2026-04-23'
 title: "Crop Images Without Uploading: Why Client-Side Tools Are the Privacy-First Choice"
 description: "Learn why cropping images in your browser keeps your data private, how client-side image processing works, and which tools do it right."
 date: 2026-04-23

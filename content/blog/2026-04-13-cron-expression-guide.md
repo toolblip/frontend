@@ -15,7 +15,7 @@ tags:
   - cron jobs
 author: Toolblip Team
 readingTime: 7 min
-featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
+featuredImage: 'https://toolblip.com/api/og?title=Cron%20Expressions%20Explained%3A%20A%20Practical%20Field%20Guide&category=Guide&date=2026-04-13'
 ---
 
 # Cron Expressions Explained: A Practical Field Guide

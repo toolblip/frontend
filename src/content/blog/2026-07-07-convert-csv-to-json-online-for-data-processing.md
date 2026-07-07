@@ -12,7 +12,7 @@ tags:
   - developer tools
 author: Toolblip Team
 readingTime: 6 min
-featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
+featuredImage: 'https://toolblip.com/api/og?title=Convert%20CSV%20to%20JSON%20Online%20for%20Data%20Processing%20Jobs&category=Developer%20Tools&date=2026-07-07'
 ---
 
 # Convert CSV to JSON Online for Data Processing

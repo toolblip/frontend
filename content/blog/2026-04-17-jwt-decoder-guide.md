@@ -15,7 +15,7 @@ tags:
   - security
   - javascript
 category: Authentication
-featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
+featuredImage: 'https://toolblip.com/api/og?title=JWT%20Decoder%3A%20Inspect%20and%20Validate%20JSON%20Web%20Tokens&category=Authentication&date='
 ---
 
 If you work with modern web applications, you've seen JWTs - those long strings of dots-separated base64 that show up in browser storage, API responses, and auth headers. But what do they actually contain? And how do you inspect one without sending it to a third-party service?

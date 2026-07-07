@@ -1,4 +1,5 @@
 ---
+featuredImage: 'https://toolblip.com/api/og?title=How%20to%20Use%20the%20Cron%20Expression%20Generator&category=Developer%20Tools&date=2026-04-25'
 title: "How to Use the Cron Expression Generator"
 description: "Learn how to build, read, and test cron expressions with Toolblip's free online cron expression generator. Includes field breakdowns, common schedules, and mistakes to avoid."
 date: "2026-04-25"

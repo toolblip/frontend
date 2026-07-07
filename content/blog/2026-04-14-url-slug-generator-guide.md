@@ -15,7 +15,7 @@ tags:
   - Django
 author: Toolblip Team
 readingTime: 5 min
-featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
+featuredImage: 'https://toolblip.com/api/og?title=How%20to%20Create%20URL%20Slugs%3A%20A%20Complete%20Guide%20for%20Developers&category=Guide&date=2026-04-14'
 ---
 
 # How to Create URL Slugs: A Complete Guide for Developers

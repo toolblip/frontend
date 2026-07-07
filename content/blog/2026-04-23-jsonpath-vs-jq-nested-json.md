@@ -1,4 +1,5 @@
 ---
+featuredImage: 'https://toolblip.com/api/og?title=JSONPath%20vs%20jq%3A%20Which%20Should%20You%20Use%20for%20Nested%20JSON%3F&category=Developer%20Tools&date=2026-04-23'
 title: "JSONPath vs jq: Which Should You Use for Nested JSON?"
 description: "Compare JSONPath and jq for nested JSON extraction, API debugging, logs, and scripts with practical examples and a quick decision checklist."
 date: 2026-04-23

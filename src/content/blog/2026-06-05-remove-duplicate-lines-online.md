@@ -11,7 +11,7 @@ tags:
   - developer tools
 author: Toolblip Team
 readingTime: 7 min
-featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
+featuredImage: 'https://toolblip.com/api/og?title=Remove%20duplicate%20lines%20online%20for%20cleaner%20dev%20lists&category=Developer%20Tools&date=2026-06-05'
 ---
 
 When you need to remove duplicate lines online, the job is usually small and urgent. You have a list of user IDs pasted from a query, a column copied from a spreadsheet, or a log dump with repeated stack traces, and you want a clean, unique set without writing a script or opening a Python REPL.

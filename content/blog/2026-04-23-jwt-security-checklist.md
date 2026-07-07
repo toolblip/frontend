@@ -1,4 +1,5 @@
 ---
+featuredImage: 'https://toolblip.com/api/og?title=JWT%20Security%20Checklist%3A%2012%20Things%20to%20Verify%20Before%20You%20Ship&category=Developer%20Tools&date=2026-04-23'
 title: "JWT Security Checklist: 12 Things to Verify Before You Ship"
 description: "Use this practical JWT security checklist to catch weak signing, unsafe storage, missing expiration, and authorization bugs before they reach production."
 date: 2026-04-23

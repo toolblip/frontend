@@ -6,7 +6,7 @@ slug: markdown-to-html-guide
 readingTime: 4 min
 tags: ["markdown", "html", "converter", "documentation", "blog", "static-site"]
 category: Developer Tools
-featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
+featuredImage: 'https://toolblip.com/api/og?title=Markdown%20to%20HTML%3A%20Convert%20and%20Preview%20Your%20Markdown%20Instantly&category=Developer%20Tools&date='
 author: Harun R Rayhan
 ---
 

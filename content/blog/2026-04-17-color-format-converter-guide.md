@@ -6,7 +6,7 @@ slug: color-format-converter-guide
 readingTime: 5 min
 tags: ["color", "hex", "rgb", "hsl", "css", "design", "frontend"]
 category: Design
-featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
+featuredImage: 'https://toolblip.com/api/og?title=Color%20Format%20Converter%3A%20HEX%2C%20RGB%2C%20HSL%20-%20and%20When%20Each%20Format%20Is%20Useful&category=Design&date='
 author: Harun R Rayhan
 ---
 

@@ -13,7 +13,7 @@ tags:
   - developer-tools
 author: Toolblip Team
 readingTime: 6 min
-featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
+featuredImage: 'https://toolblip.com/api/og?title=URL%20encode%20and%20decode%20strings%20for%20API%20testing&category=Developer%20Tools&date=2026-05-21'
 ---
 
 URL encoding looks boring until a test request fails for a reason that has nothing to do with your API. A space turns into `+` in one place and `%20` in another. An ampersand inside a value becomes a second query parameter. A callback URL works in the browser, then breaks when you paste it into a webhook dashboard.

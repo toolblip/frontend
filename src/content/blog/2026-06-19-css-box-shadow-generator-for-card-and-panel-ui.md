@@ -13,7 +13,7 @@ tags:
   - Developer Tools
 author: Toolblip Team
 readingTime: 6 min
-featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
+featuredImage: 'https://toolblip.com/api/og?title=CSS%20Box%20Shadow%20Generator%20for%20Card%20and%20Panel%20UI&category=Developer%20Tools&date=2026-06-19'
 ---
 
 You type `box-shadow: 2px 2px 4px rgba(0,0,0,0.2)`, refresh the browser, and the shadow looks nothing like what you wanted. Too dark, too offset, bleeding off one edge. Tweak, refresh, squint, repeat.

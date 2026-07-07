@@ -15,7 +15,7 @@ tags:
   - Kubernetes
 author: Toolblip Team
 readingTime: 5 min
-featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
+featuredImage: 'https://toolblip.com/api/og?title=YAML%20for%20JSON%20Developers%3A%20A%20Practical%20Introduction&category=Developer%20Tools&date=2026-04-15'
 ---
 
 # YAML for JSON Developers: A Practical Introduction

@@ -11,7 +11,7 @@ tags:
   - Developer Tools
 author: Toolblip Team
 readingTime: 7 min
-featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
+featuredImage: 'https://toolblip.com/api/og?title=UUID%20Generator%20for%20API%20Testing%3A%20Fake%20IDs%20Fast&category=Developer%20Tools&date=2026-05-27'
 ---
 
 # UUID Generator for API Testing: Fake IDs Fast

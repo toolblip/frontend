@@ -1,4 +1,5 @@
 ---
+featuredImage: 'https://toolblip.com/api/og?title=The%20Free%20Regex%20Tester%20That%20Actually%20Respects%20Your%20Time%20%28and%20Privacy%29&category=Developer%20Tools&date=2026-04-28'
 title: "The Free Regex Tester That Actually Respects Your Time (and Privacy)"
 description: "Stop creating accounts just to test a regex. Here's a free, instant regex tester that runs 100% in your browser  -  no signup, no uploads, no lag."
 date: 2026-04-28

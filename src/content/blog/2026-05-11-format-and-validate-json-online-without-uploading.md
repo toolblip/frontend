@@ -13,7 +13,7 @@ tags:
   - developer-tools
 author: Toolblip Team
 readingTime: 8 min
-featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
+featuredImage: 'https://toolblip.com/api/og?title=How%20to%20Format%20and%20Validate%20JSON%20Online%20Without%20Uploading%20Anything&category=Developer%20Tools&date=2026-05-11'
 ---
 
 You have a 200-line JSON payload from a production webhook. Something is wrong with it, but you do not know what. You paste it into an online JSON formatter and hit validate. A second later, your entire payload is on someone else's server.

@@ -13,7 +13,7 @@ tags:
   - git
 author: Toolblip Team
 readingTime: 6 min
-featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
+featuredImage: 'https://toolblip.com/api/og?title=Compare%20Text%20Diffs%20Online%20Before%20Code%20Review&category=Developer%20Tools&date=2026-05-17'
 ---
 
 A code review usually starts before the pull request. You change a config file, copy a patch from Slack, edit a JSON payload, or compare two versions of a README. Git can show the diff, but sometimes the two pieces of text are not in the same repository. That is when people search for a quick way to compare text diffs online for code reviews.

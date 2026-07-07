@@ -17,7 +17,7 @@ readingTime: 6 min
 descriptionSEO: >-
   Regular expression cheatsheet with real-world examples. Learn regex patterns
   for email validation, URL matching, and text extraction.
-featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
+featuredImage: 'https://toolblip.com/api/og?title=Regular%20Expressions%3A%20A%20Practical%20Cheatsheet%20for%20Developers&category=Developer%20Tools&date=2026-04-17'
 ---
 
 Regular expressions (regex) are one of those tools that every developer uses but few feel confident about. This guide cuts through the confusion with practical patterns you can copy, understand, and adapt.

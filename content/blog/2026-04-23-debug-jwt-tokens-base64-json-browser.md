@@ -16,7 +16,7 @@ tags:
   - security
 author: Toolblip Team
 readingTime: 9 min
-featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
+featuredImage: 'https://toolblip.com/api/og?title=Debug%20JWT%20Tokens%20Without%20a%20Library%3A%20Base64%20%2B%20JSON%20View%20in%20Your%20Browser&category=Developer%20Tools&date=2026-04-23'
 ---
 
 If you've ever stared at a JWT like `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c` and wondered what the hell it actually says - you're not alone.

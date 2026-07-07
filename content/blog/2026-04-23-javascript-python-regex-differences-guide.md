@@ -15,7 +15,7 @@ tags:
   - troubleshooting
 author: Toolblip Team
 readingTime: 7 min
-featuredImage: 'https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog'
+featuredImage: 'https://toolblip.com/api/og?title=JavaScript%20vs%20Python%20vs%20PCRE%20Regex%3A%20The%20Differences%20That%20Break%20Your%20Patterns&category=Developer%20Tools&date=2026-04-23'
 ---
 
 You copy a regex from Stack Overflow. It works perfectly in the answer's language. You paste it into your project  -  a different language  -  and it silently fails. Or worse, it throws an error.

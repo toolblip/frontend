@@ -6,7 +6,7 @@ slug: uuid-v4-generator-online
 readingTime: 4 min
 tags: ["uuid", "identifier", "database", "backend", "api"]
 category: Developer Tools
-featuredImage: https://placehold.co/1200x630/374151/FFFFFF?text=Toolblip+Blog
+featuredImage: 'https://toolblip.com/api/og?title=Generate%20UUIDs%20Online%3A%20Why%20V4%20Is%20the%20Right%20Choice%20for%20Most%20Applications&category=Developer%20Tools&date='
 author: Harun R Rayhan
 ---
 
