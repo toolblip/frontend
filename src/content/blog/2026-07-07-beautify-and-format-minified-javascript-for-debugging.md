@@ -19,7 +19,7 @@ featuredImage: https://api.radtx.com/gradient/6b7280-374151/1200/630
 
 You opened a production bundle, a third-party script, or a stack trace and found one endless line of `a.b=function(c){return d(c)}...`. There is no way to read it, no place to set a breakpoint, and the error points at column 18,452. The fix is to beautify and format minified JavaScript for debugging: paste the compressed source, get properly indented code back, and actually follow the logic.
 
-This guide shows what beautifying does, how to do it in one paste, how it fits a real debugging workflow, and where it stops helping.
+Here's what beautifying does, how to do it in one paste, how it fits a real debugging workflow, and where it stops helping.
 
 ![Beautify and format minified JavaScript for debugging](https://api.radtx.com/gradient/6b7280-374151/1200/630)
 
@@ -60,9 +60,9 @@ Now the loop, the accumulator, and the ternary are all visible. You can trace th
 A good beautifier only touches formatting - it never alters behavior. Here is what it adjusts:
 
 - **Line breaks:** each statement, block, and declaration gets its own line.
-- **Indentation:** nested blocks are indented consistently (two or four spaces).
+- **Indentation:** the beautifier indents nested blocks consistently (two or four spaces).
 - **Spacing:** operators, commas, and braces get uniform spacing so `a+b` becomes `a + b`.
-- **Braces and semicolons:** implicit blocks are expanded and statement terminators are made explicit.
+- **Braces and semicolons:** the beautifier expands implicit blocks and adds explicit statement terminators.
 
 What it does **not** do is equally important. It cannot restore original variable names, rebuild removed comments, or undo logic transforms like inlined functions. The output is semantically identical to the input - just readable. If you paste valid minified JavaScript, you get valid formatted JavaScript back, ready to copy into DevTools as a local override or a scratch file.
 
@@ -82,7 +82,7 @@ Without formatting, step 3 is impossible - every match is on line 1. With it, yo
 
 Production bundles often contain proprietary logic, API endpoints, feature flags, or internal comments a minifier missed. Many online formatters upload whatever you paste to a server, which means your code leaves your machine.
 
-Toolblip's beautifier runs entirely in your browser. The parsing and formatting happen in client-side JavaScript on your device - nothing is transmitted.
+Toolblip's beautifier runs entirely in your browser. Parsing and formatting happen in client-side JavaScript on your device, so your code never leaves it.
 
 You can verify this yourself in ten seconds:
 
@@ -107,7 +107,7 @@ One caveat: beautifying a huge bundle produces a huge file. For a multi-megabyte
 No. A beautifier only edits whitespace, indentation, and spacing. The parsed behavior is identical - it is the same program, just readable. You can paste the formatted output back into your app without side effects.
 
 **Can it recover the original variable names?**
-No. Minification renames `getUserProfile` to something like `g`, and that mapping is discarded. A beautifier restores structure, not names. If you need the real names, look for a source map instead.
+No. Minification renames `getUserProfile` to something like `g` and drops that mapping for good. A beautifier restores structure, not names. If you need the real names, look for a source map instead.
 
 **Will it work on obfuscated JavaScript?**
 Partly. Beautifying makes obfuscated code readable in terms of layout, but deliberate obfuscation - string encoding, control-flow flattening - stays confusing. Formatting is still the first step before you untangle it.
@@ -117,6 +117,7 @@ Because it runs in your browser, the limit is your machine's memory, not an uplo
 
 ## Conclusion
 
-Minified code is built for machines, not for the person debugging it at 2 a.m. When a one-line bundle stands between you and a fix, beautify and format the minified JavaScript for debugging first - restore the line breaks, indentation, and spacing, then read the logic and set your breakpoint like normal.
+Minifiers build code for machines, not for the person debugging it at 2 a.m. When a one-line bundle stands between you and a fix, beautify and format the minified JavaScript for debugging first - restore the line breaks, indentation, and spacing, then read the logic and set your breakpoint like normal.
 
 Ready to make that bundle readable? Open the free [JavaScript Beautifier on Toolblip](/tools/js-beautifier), paste your minified code, and get clean, indented output instantly - all in your browser. Working across languages? The [Code Beautifier](/tools/code-beautifier) formats HTML, CSS, and JSON the same way.
+
