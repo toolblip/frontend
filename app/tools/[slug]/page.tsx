@@ -202,6 +202,14 @@ export default async function ToolDetailPage({ params }: PageProps) {
             {generateToolContent(tool).whyUse}
           </p>
         </div>
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            When to use {tool.name}
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+            {generateToolContent(tool).howToUseAlt}
+          </p>
+        </div>
       </div>
 
       {/* Tool UI */}
