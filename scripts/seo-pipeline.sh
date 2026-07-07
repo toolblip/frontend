@@ -87,12 +87,7 @@ log() {
 }
 
 claude_is_logged_in() {
-    claude auth status 2>/dev/null | python3 -c 'import json, sys
-try:
-    data = json.load(sys.stdin)
-    print("1" if data.get("loggedIn") else "0")
-except Exception:
-    print("0")' | grep -qx '1'
+    claude -c -p "say ok" --dangerously-skip-permissions --enable-auto-mode 2>/dev/null | grep -qi "ok"
 }
 
 # ─── Queue Management ──────────────────────────────────────────────────────────
@@ -169,7 +164,7 @@ except:
     # Claude keyword selection
     local kw_result
     if claude_is_logged_in; then
-        kw_result=$(claude -p "$(cat "$prompt_file")" --model sonnet --max-turns 3 2>/dev/null || echo "")
+        kw_result=$(claude -c -p "$(cat "$prompt_file")" --model sonnet --max-turns 3 2>/dev/null || echo "")
     else
         kw_result=""
     fi
@@ -324,7 +319,7 @@ $(cat "$article_file")"
     # Run humanizer
     local humanized
     if claude_is_logged_in; then
-        humanized=$(claude -p "$full_prompt" --model sonnet --max-turns 5 2>/dev/null || echo "")
+        humanized=$(claude -c -p "$full_prompt" --model sonnet --max-turns 5 2>/dev/null || echo "")
     else
         humanized=""
     fi
@@ -441,7 +436,7 @@ PROMPTEOF
 
     local rewrite
     if claude_is_logged_in; then
-        rewrite=$(claude -p "$(cat "$prompt_file")" --model sonnet --max-turns 5 2>/dev/null || echo "")
+        rewrite=$(claude -c -p "$(cat "$prompt_file")" --model sonnet --max-turns 5 2>/dev/null || echo "")
     else
         rewrite=""
     fi

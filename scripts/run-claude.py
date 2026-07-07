@@ -13,7 +13,7 @@ claude_args = sys.argv[2:]
 with open(prompt_file) as f:
     prompt = f.read()
 
-cmd = ['claude', '-p', '--input-format', 'text'] + claude_args
+cmd = ['claude', '-c', '-p', '--input-format', 'text', '--dangerously-skip-permissions', '--enable-auto-mode'] + claude_args
 env = os.environ.copy()
 # Ensure claude finds macOS Keychain auth regardless of what HOME the caller had.
 env['HOME'] = '/Users/ray'
