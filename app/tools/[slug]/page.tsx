@@ -107,6 +107,13 @@ const REDIRECTS: Record<string, string> = {
   'css-to-scss-compiler': 'css-to-scss',
   'css-to-sass-online': 'css-to-scss',
   'sass-to-css-online-tool': 'sass-to-css',
+
+  // Common base64 alias redirects
+  'base64': 'base64-encoder-decoder',
+  'base64-encoder': 'base64-encoder-decoder',
+  'base64-decoder': 'base64-encoder-decoder',
+  'base64-encode': 'base64-encoder-decoder',
+  'base64-decode': 'base64-encoder-decoder',
 };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
