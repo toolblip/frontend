@@ -1,6 +1,5 @@
 {
   "pending": [
-    "minify JavaScript code online for production builds",
     "generate a robots.txt file for SEO",
     "convert Markdown to HTML online in the browser",
     "convert JSON to CSV for spreadsheet analysis",
@@ -45,9 +44,13 @@
     "validate JWT token signatures online in the browser"
   ],
   "in_progress": [
-    "beautify and format minified JavaScript for debugging"
+    "minify JavaScript code online for production builds"
   ],
   "done": [
+    {
+      "topic": "beautify and format minified JavaScript for debugging",
+      "completed_at": "2026-07-07T10:19:33Z"
+    },
     {
       "topic": "convert CSV to JSON online for data processing",
       "completed_at": "2026-07-07T10:05:59Z"

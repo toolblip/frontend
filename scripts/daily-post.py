@@ -245,10 +245,6 @@ Output ONLY the corrected article body (no frontmatter, no explanations).
 ARTICLE:
 {content}"""
 
-    if not claude_ok():
-        log("  Claude unavailable, skipping humanize")
-        return
-
     humanized, rc = run([
         "./claude.sh", "-p", prompt, "--",
         "--model", "sonnet", "--max-turns", "5"
