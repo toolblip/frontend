@@ -352,6 +352,16 @@ export function BillingSection({
                     ? `You'll keep ${tierName ?? "your"} plan access until ${planEndDate}.`
                     : `You'll keep ${tierName ?? "your"} plan access until the end of your billing period.`}
                 </p>
+                <p className="mt-2">
+                  <button
+                    type="button"
+                    onClick={openCustomerPortal}
+                    disabled={loadingPortal}
+                    className="text-sm font-medium text-gray-500 underline underline-offset-4 transition hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50 dark:text-gray-400 dark:hover:text-red-400"
+                  >
+                    {loadingPortal ? "Opening..." : "Need a refund or view invoices?"}
+                  </button>
+                </p>
               </div>
             ) : (
               planEndDate && <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">Renews on {planEndDate}</p>
