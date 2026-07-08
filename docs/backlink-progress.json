@@ -1,6 +1,6 @@
 {
   "sources": [
-    { "name": "GitHub", "dr": 97, "status": "pending", "notes": "" },
+    { "name": "GitHub", "dr": 97, "status": "done", "notes": "README added to toolblip/frontend repo — https://github.com/toolblip/frontend" },
     { "name": "GitHub Pages", "dr": 97, "status": "pending", "notes": "" },
     { "name": "Medium", "dr": 94, "status": "pending", "notes": "" },
     { "name": "Substack", "dr": 94, "status": "pending", "notes": "" },
@@ -30,6 +30,6 @@
     { "name": "Flickr", "dr": 94, "status": "pending", "notes": "" },
     { "name": "Imgur", "dr": 91, "status": "pending", "notes": "" }
   ],
-  "last_updated": "",
-  "current_index": 0
+  "last_updated": "2026-07-08",
+  "current_index": 1
 }
