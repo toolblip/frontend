@@ -2,6 +2,12 @@
 
 import AdSlot from "./AdSlot";
 
-export default function ToolAdSlot() {
-  return <AdSlot placement="tool-below" />;
+interface ToolAdSlotProps {
+  placement?: "tool-above" | "tool-below";
+  slug?: string;
+  category?: string;
+}
+
+export default function ToolAdSlot({ placement = "tool-below", slug, category }: ToolAdSlotProps) {
+  return <AdSlot placement={placement} slug={slug} category={category} />;
 }
