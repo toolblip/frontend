@@ -2,7 +2,6 @@
   "pending": [
     "generate a robots.txt file for SEO",
     "convert Markdown to HTML online in the browser",
-    "convert JSON to CSV for spreadsheet analysis",
     "generate a favicon from an image online",
     "check HTTP response headers online for API debugging",
     "generate Open Graph meta tags for social sharing",
@@ -56,6 +55,12 @@
     {
       "topic": "convert CSV to JSON online for data processing",
       "completed_at": "2026-07-07T10:05:59Z"
+    },
+    {
+      "topic": "convert JSON to CSV for spreadsheet analysis",
+      "completed_at": "2026-07-08T17:00:00Z",
+      "url": "https://toolblip.com/blog/2026-07-08-convert-json-to-csv-for-spreadsheet-analysis",
+      "note": "manual fallback because Claude Code auth was unavailable; conservative one-post run"
     },
     {
       "topic": "CSS box shadow generator online for card and panel UI",
