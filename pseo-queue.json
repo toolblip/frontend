@@ -1,6 +1,5 @@
 {
   "pending": [
-    "convert Markdown to HTML online in the browser",
     "convert JSON to CSV for spreadsheet analysis",
     "generate a favicon from an image online",
     "check HTTP response headers online for API debugging",
@@ -43,7 +42,8 @@
     "validate JWT token signatures online in the browser"
   ],
   "in_progress": [
-    "generate a robots.txt file for SEO"
+    "generate a robots.txt file for SEO",
+    "convert Markdown to HTML online in the browser"
   ],
   "done": [
     {
