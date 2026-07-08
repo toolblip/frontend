@@ -110,14 +110,92 @@ Priority list for a developer-tool site with **1,564 free online tools**. Free s
 **Link type:** Do-follow listing page.
 **Effort:** Low — register + fill profile.
 
+## 19. Medium — DR 94
+**Free?** Free to publish.
+**How:** Repurpose blog posts onto Medium's publication platform with canonical link back to toolblip.com. Include tool links in article body.
+**Link type:** Follow from article (canonical tag preserves SEO value to original).
+**Effort:** Low — cross-post existing blog content.
+
+## 20. Indie Hackers — DR 81
+**Free?** Free.
+**How:** Write a "building in public" story about Toolblip's growth, revenue, and tech stack. Include tool links naturally.
+**Link type:** Do-follow profile + article page.
+**Effort:** Low-medium — one written story.
+
+## 21. Hacker News — DR 91
+**Free?** Free to submit.
+**How:** Submit interesting blog posts or tool features as "Show HN" or story. Can't control link type directly, but organic traffic is massive.
+**Link type:** Link in post; upvotes drive traffic.
+**Effort:** Low (submission) — success depends on community interest.
+
+## 22. YourStory — DR 85
+**Free?** Free for startup story submission.
+**How:** Pitch a founder story about building Toolblip in Bangladesh/Dhaka — angle: global dev tools from an emerging market.
+**Link type:** Editorial (likely do-follow).
+**Effort:** Medium — need a compelling narrative/pitch.
+
+## 23. Tiny Startup — DR 69
+**Free?** Free.
+**How:** List Toolblip as a tiny bootstrapped startup.
+**Link type:** Do-follow listing.
+**Effort:** Low — form.
+
+## 24. GitHub — DR 97
+**Free?** Free.
+**How:** Open source a tool component or the tool catalog dataset (tools.ts). GitHub profile README with link. Stars = social proof.
+**Link type:** Follow from repo README / profile.
+**Effort:** Very low (README link) to medium (full open-source repo).
+
+## 25. PeerPush — DR 69
+**Free?** Free.
+**How:** Submit Toolblip as a product for cross-promotion with other indie products.
+**Link type:** Do-follow profile.
+**Effort:** Low.
+
+## 26. Imgur — DR 91
+**Free?** Free.
+**How:** Upload screenshots/gifs of tools in action with a description linking to toolblip.com. Good for visual tools (image resizer, color picker, etc.).
+**Link type:** Nofollow by default, but high-traffic referral.
+**Effort:** Low — upload + write description.
+
+## 27. Pinterest — DR 97
+**Free?** Free.
+**How:** Create visual pins for tool pages (screenshots, before/after demos). Each pin can link back. Good for design/image tools category.
+**Link type:** Nofollow, but high-volume referral traffic possible.
+**Effort:** Low — pin creation.
+
+## 28. Flickr — DR 94
+**Free?** Free (Yahoo account).
+**How:** Upload tool screenshots to albums with descriptions linking back. Add to relevant groups.
+**Link type:** Nofollow profile/photo page.
+**Effort:** Low.
+
+## 29. SideProjectors — DR 70
+**Free?** Free.
+**How:** List Toolblip as a side project for sale or showcase.
+**Link type:** Do-follow.
+**Effort:** Low — form submission.
+
+## 30. Pixabay — DR 92
+**Free?** Free.
+**How:** Upload free stock images related to coding/development with toolblip.com in the description. Creative angle — original dev-themed images.
+**Link type:** Do-follow image description page.
+**Effort:** Low — upload images.
+
 ---
 
 ## Quick win tier
 
 Green = low effort, free, done in 15 min:
-- [ ] **GitHub Pages** (README link + Pages site)
+- [ ] **GitHub / GitHub Pages** (README link + profile)
+- [ ] **Medium** (cross-pub existing blog posts)
 - [ ] **Substack** (start cross-publishing blog posts)
-- [ ] **TrustMRR, Uneed, Indie Page, TinyLaunch, SaaSHub, AlternativeTo, Alternative Me, BetaList** — quick directory listings
+- [ ] **Indie Hackers** — write building-in-public story
+- [ ] **Pinterest** — pin tool screenshots
+- [ ] **Imgur** — upload tool GIFs
+- [ ] **Flickr** — screenshot album
+- [ ] **Pixabay** — upload free dev images
+- [ ] **TrustMRR, Uneed, Indie Page, TinyLaunch, Tiny Startup, SaaSHub, AlternativeTo, Alternative Me, BetaList, PeerPush, SideProjectors** — quick directory listings
 - [ ] **Privacy Tools** — submit as privacy tool
 - [ ] **SourceForge** — developer utilities listing
 - [ ] **Gumroad** — free PDF lead magnet with link
@@ -126,6 +204,8 @@ Green = low effort, free, done in 15 min:
 - [ ] **Chrome Web Store** — build a simple extension wrapper
 - [ ] **Product Hunt** — schedule a launch
 - [ ] **TrustRadius** — collect genuine reviews first
+- [ ] **Hacker News** — submit story (timing matters)
+- [ ] **YourStory** — pitch founder narrative
 
 ## High effort
 - [ ] **Forbes** — PR/editorial pitch
