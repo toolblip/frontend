@@ -1,0 +1,22 @@
+{
+  "campaigns": [
+    {
+      "id": "house-pro-upgrade",
+      "creative": "pro-upgrade",
+      "type": "house",
+      "priority": 1,
+      "pageTypes": ["directory", "tool", "blog"],
+      "startDate": "2026-07-08",
+      "endDate": null
+    },
+    {
+      "id": "house-blog-library",
+      "creative": "blog-library",
+      "type": "house",
+      "priority": 2,
+      "pageTypes": ["tool", "directory"],
+      "startDate": "2026-07-08",
+      "endDate": null
+    }
+  ]
+}
