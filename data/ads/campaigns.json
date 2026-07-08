@@ -17,6 +17,28 @@
       "pageTypes": ["tool", "directory"],
       "startDate": "2026-07-08",
       "endDate": null
+    },
+    {
+      "id": "rankwell-seo-tools",
+      "creative": "rankwell-seo",
+      "type": "paid",
+      "priority": 1,
+      "pageTypes": ["tool"],
+      "slugs": ["keyword-generator", "sitemap-xml-validator", "robots-txt-generator"],
+      "categories": ["SEO"],
+      "startDate": "2026-07-08",
+      "endDate": null
+    },
+    {
+      "id": "pixelforge-sidebar",
+      "creative": "pixelforge-image",
+      "type": "paid",
+      "priority": 1,
+      "pageTypes": ["tool"],
+      "placements": ["tool-sidebar"],
+      "categories": ["Image"],
+      "startDate": "2026-07-08",
+      "endDate": null
     }
   ]
 }
