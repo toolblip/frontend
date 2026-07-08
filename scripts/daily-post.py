@@ -22,8 +22,13 @@ def log(msg):
         f.write(line + "\n")
 
 def run(cmd, timeout=300, **kwargs):
-    """Run a command, log it, return (stdout, returncode)."""
+    """Run a command, log it, return (stdout, returncode).
+    If the command starts with ./claude.sh, prefix it with CLAUDE_CMD_PREFIX
+    (used by the cron wrapper to access macOS keychain via launchctl asuser)."""
     log(f"  Running: {' '.join(str(c) for c in cmd)[:120]}")
+    prefix = os.environ.get("CLAUDE_CMD_PREFIX", "")
+    if prefix and cmd and "./claude.sh" in str(cmd[0]):
+        cmd = prefix.split() + cmd
     try:
         r = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, **kwargs)
         return r.stdout, r.returncode
@@ -33,7 +38,7 @@ def run(cmd, timeout=300, **kwargs):
 
 def claude_ok():
     """Check if claude daemon is available."""
-    r = subprocess.run(["tmux", "has-session", "-t", "claude"], capture_output=True, text=True)
+    r = subprocess.run(["tmux", "has-session", "-t", "toolblip-haruns-m4-air"], capture_output=True, text=True)
     if r.returncode == 0:
         return True
     r = subprocess.run(["pgrep", "-f", "claude.*daemon"], capture_output=True, text=True)

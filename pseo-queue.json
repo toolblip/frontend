@@ -1,6 +1,5 @@
 {
   "pending": [
-    "generate a robots.txt file for SEO",
     "convert Markdown to HTML online in the browser",
     "convert JSON to CSV for spreadsheet analysis",
     "generate a favicon from an image online",
@@ -43,7 +42,9 @@
     "generate UUID v4 vs UUID v7 identifiers for databases",
     "validate JWT token signatures online in the browser"
   ],
-  "in_progress": [],
+  "in_progress": [
+    "generate a robots.txt file for SEO"
+  ],
   "done": [
     {
       "topic": "minify JavaScript code online for production builds",
