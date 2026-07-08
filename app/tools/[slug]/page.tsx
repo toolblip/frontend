@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { getCanonicalToolSlug, getToolBySlug, getToolRouteSlugs } from '@/data/tools';
 import { ToolUI } from './ToolUI';
 import ToolEngagementBar from '@/components/tools/ToolEngagementBar';
+import ToolAdSlot from '@/components/ads/ToolAdSlot';
 import FaqSection from '@/components/v2/FaqSection';
 import { getFaqs } from '@/lib/faq';
 import { generateToolContent } from '@/lib/generateToolContent';
@@ -207,6 +208,10 @@ export default async function ToolDetailPage({ params }: PageProps) {
       {/* Tool UI */}
       <div className="p-0">
         <ToolUI tool={tool} />
+      </div>
+
+      <div className="mt-8">
+        <ToolAdSlot />
       </div>
 
       <FaqSection toolName={tool.name} faqs={faqs} />
