@@ -65,6 +65,7 @@ import CharacterVarietyCheckerClient from '@/components/tools/CharacterVarietyCh
 import OxfordCommaClient from '@/components/tools/OxfordCommaClient';
 import NotebookToHtmlClient from '@/components/tools/NotebookToHtmlClient';
 import OgImageGeneratorClient from '@/components/tools/OgImageGeneratorClient';
+import TweetToImageClient from '@/components/tools/TweetToImageClient';
 import HexToRgbClient from '@/components/tools/HexToRgbClient';
 import RgbToHexClient from '@/components/tools/RgbToHexClient';
 import RandomStringClient from '@/components/tools/RandomStringClient';
@@ -3527,6 +3528,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'number-to-words-express': return <NumberToWordsClient />;
     case 'number-to-words-tool': return <NumberToWordsClient />;
     case 'banner-generator': return <OgImageGeneratorClient />;
+    case 'tweet-to-image-converter': return <TweetToImageClient />;
     case 'ogg-to-wav': return <AacToWavClient />;
     case 'palindrome-checker-express': return <PalindromeCheckerClient />;
     case 'paragraph-generator': return <RandomParagraphGeneratorClient />;

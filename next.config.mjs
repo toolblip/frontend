@@ -38,7 +38,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https: blob:",
               "font-src 'self' data:",
-              "connect-src 'self' https://toolblip-api-production.up.railway.app https://api.toolblip.com https://*.railway.app",
+              "connect-src 'self' https://toolblip-api-production.up.railway.app https://api.toolblip.com https://*.railway.app https://publish.twitter.com https://publish.x.com",
               "frame-src 'none'",
               "object-src 'none'",
               "base-uri 'self'",
