@@ -1,46 +1,13 @@
 {
   "pending": [
-    "generate a robots.txt file for SEO",
-    "convert Markdown to HTML online in the browser",
-    "generate a favicon from an image online",
-    "check HTTP response headers online for API debugging",
     "generate Open Graph meta tags for social sharing",
-    "convert YAML to JSON online for config files",
     "generate a sitemap.xml for better search indexing",
-    "test webhook payloads with a request bin tool",
-    "convert Markdown tables to HTML table format",
-    "encode and decode HTML special characters for React templates",
-    "generate random IPv4 and IPv6 addresses for network testing",
-    "convert timestamps between timezones online for scheduling",
-    "generate URL slugs from titles for clean permalinks",
-    "check if a string is valid Base64 encoding",
-    "convert CSS px to rem for responsive typography",
-    "generate a color palette from a single hex code",
-    "check color contrast ratio for WCAG accessibility",
-    "convert SVG to PNG online without losing quality",
-    "compress PNG and JPG images for web performance",
     "generate a .gitignore file for any project type",
-    "validate JSON Schema against sample API data",
-    "convert Markdown to plain text for clean output",
-    "generate placeholder JSON API responses for mock data",
-    "check DNS records for a domain online",
     "test SSL certificate expiration for website security",
     "convert Unix line endings to Windows for file compatibility",
     "generate a Content Security Policy header for web security",
-    "validate email address format online for form validation",
-    "generate strong API keys vs memorable passwords",
     "convert Roman numerals to numbers and back",
-    "generate a changelog from git commit messages",
-    "check word and character count for social media limits",
-    "convert text to Title Case, camelCase, or kebab-case",
-    "generate fake user data for testing applications",
-    "validate credit card numbers with Luhn algorithm",
-    "convert binary to hexadecimal and decimal online",
-    "generate ASCII art banners from text for terminal headers",
-    "check if a network port is open on a remote server",
-    "convert CRON schedule syntax to plain English",
-    "generate UUID v4 vs UUID v7 identifiers for databases",
-    "validate JWT token signatures online in the browser"
+    "generate a changelog from git commit messages"
   ],
   "in_progress": [],
   "done": [
@@ -225,6 +192,237 @@
     {
       "topic": "how to monitor API endpoint latency",
       "completed_at": "2026-05-06T19:40:31Z"
+    },
+    {
+      "topic": "convert Markdown to HTML online in the browser",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/markdown-editor",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live Markdown Editor tool page; no thin support blog post published"
+    },
+    {
+      "topic": "check HTTP response headers online for API debugging",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/http-headers-checker",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live HTTP Headers Checker tool page; no thin support blog post published"
+    },
+    {
+      "topic": "test webhook payloads with a request bin tool",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/webhook-tester",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live Webhook Tester tool page; no thin support blog post published"
+    },
+    {
+      "topic": "convert Markdown tables to HTML table format",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/markdown-editor",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live Markdown Editor tool page (table conversion); no thin support blog post published"
+    },
+    {
+      "topic": "encode and decode HTML special characters for React templates",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/html-encoder-decoder",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live HTML Encoder/Decoder tool page; no thin support blog post published"
+    },
+    {
+      "topic": "generate random IPv4 and IPv6 addresses for network testing",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/random-ip-address",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live Random IP Address tool page; no thin support blog post published"
+    },
+    {
+      "topic": "convert timestamps between timezones online for scheduling",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/unix-timestamp-converter-v2",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live Unix Timestamp Converter tool page; no thin support blog post published"
+    },
+    {
+      "topic": "generate URL slugs from titles for clean permalinks",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/url-slug-generator",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live URL Slug Generator tool page; no thin support blog post published"
+    },
+    {
+      "topic": "check if a string is valid Base64 encoding",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/base64-encoder-decoder",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live Base64 Encoder/Decoder tool page; no thin support blog post published"
+    },
+    {
+      "topic": "convert CSS px to rem for responsive typography",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/css-units-converter",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live CSS Units Converter tool page; no thin support blog post published"
+    },
+    {
+      "topic": "generate a color palette from a single hex code",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/color-palette-extractor",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live Color Palette Extractor tool page; no thin support blog post published"
+    },
+    {
+      "topic": "check color contrast ratio for WCAG accessibility",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/color-contrast-checker",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live Color Contrast Checker tool page; no thin support blog post published"
+    },
+    {
+      "topic": "convert SVG to PNG online without losing quality",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/svg-to-png",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live SVG to PNG converter tool page; no thin support blog post published"
+    },
+    {
+      "topic": "compress PNG and JPG images for web performance",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/image-optimizer",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live Image Optimizer tool page; no thin support blog post published"
+    },
+    {
+      "topic": "validate JSON Schema against sample API data",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/json-schema-validator",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live JSON Schema Validator tool page; no thin support blog post published"
+    },
+    {
+      "topic": "generate placeholder JSON API responses for mock data",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/placeholder-image-generator",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is partially served by the Placeholder Image Generator tool page; content brief gap exists for dedicated JSON mock data tool"
+    },
+    {
+      "topic": "check DNS records for a domain online",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/dns-lookup-tool",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live DNS Lookup tool page; no thin support blog post published"
+    },
+    {
+      "topic": "validate email address format online for form validation",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/email-validator",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live Email Validator tool page; no thin support blog post published"
+    },
+    {
+      "topic": "generate strong API keys vs memorable passwords",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/password-generator",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live Password Generator tool page; no thin support blog post published"
+    },
+    {
+      "topic": "check word and character count for social media limits",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/word-counter",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live Word Counter tool page; no thin support blog post published"
+    },
+    {
+      "topic": "convert text to Title Case, camelCase, or kebab-case",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/case-converter",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live Case Converter tool page; no thin support blog post published"
+    },
+    {
+      "topic": "generate fake user data for testing applications",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/fake-data-generator",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live Fake Data Generator tool page; no thin support blog post published"
+    },
+    {
+      "topic": "validate credit card numbers with Luhn algorithm",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/credit-card-validator",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live Credit Card Validator tool page; no thin support blog post published"
+    },
+    {
+      "topic": "convert binary to hexadecimal and decimal online",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/base-converter",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live Base Converter tool page; no thin support blog post published"
+    },
+    {
+      "topic": "generate ASCII art banners from text for terminal headers",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/ascii-art-generator",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live ASCII Art Generator tool page; no thin support blog post published"
+    },
+    {
+      "topic": "check if a network port is open on a remote server",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/port-checker",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live Port Checker tool page; no thin support blog post published"
+    },
+    {
+      "topic": "convert CRON schedule syntax to plain English",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/cron-expression-generator",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live Cron Expression Generator tool page; no thin support blog post published"
+    },
+    {
+      "topic": "generate UUID v4 vs UUID v7 identifiers for databases",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/uuid-generator",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live UUID Generator tool page; no thin support blog post published"
+    },
+    {
+      "topic": "validate JWT token signatures online in the browser",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/jwt-decoder-v5",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live JWT Decoder tool page; no thin support blog post published"
+    },
+    {
+      "topic": "generate a robots.txt file for SEO",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/robots-txt-generator",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live Robots.txt Generator tool page; no thin support blog post published"
+    },
+    {
+      "topic": "generate a favicon from an image online",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/favicon-generator",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live tool page; no thin support blog post published"
+    },
+    {
+      "topic": "convert YAML to JSON online for config files",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/yaml-to-json",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live tool page; no thin support blog post published"
+    },
+    {
+      "topic": "convert Markdown to plain text for clean output",
+      "completed_at": "2026-07-12T17:00:00Z",
+      "url": "https://toolblip.com/tools/html-to-plain-text",
+      "status": "skipped_existing_tool_page",
+      "note": "Conservative SEO override: main search intent is already served by the live tool page; no thin support blog post published"
     }
   ]
 }
