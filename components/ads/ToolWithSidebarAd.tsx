@@ -11,15 +11,19 @@ interface ToolWithSidebarAdProps {
   children: ReactNode;
 }
 
+// Tools whose UI needs the full width of the page and should never get a
+// sidebar ad, regardless of campaign targeting.
+const SIDEBAR_DISABLED_SLUGS = new Set(["tweet-to-image-converter"]);
+
 /**
  * Lays the tool widget out next to an optional desktop sidebar ad. The
  * sidebar only appears when a campaign explicitly targets the
- * `tool-sidebar` placement for this slug/category — otherwise the tool
+ * `tool-sidebar` placement for this slug/category - otherwise the tool
  * widget renders at full width, on every breakpoint.
  */
 export default function ToolWithSidebarAd({ slug, category, children }: ToolWithSidebarAdProps) {
   const showAds = useShowAds();
-  const creative = showAds
+  const creative = showAds && !SIDEBAR_DISABLED_SLUGS.has(slug)
     ? resolveAd({ pageType: "tool", placement: "tool-sidebar", slug, category })
     : null;
 

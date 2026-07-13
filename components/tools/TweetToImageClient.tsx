@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect, useRef, useState, type ChangeEvent, type ReactNode } from 'react';
+import { useSubscription } from '@/hooks/useSubscription';
 
 type ThemeKey = 'light' | 'dim' | 'dark';
 type BackgroundMode = 'gradient' | 'solid' | 'transparent';
-type AspectRatioKey = 'card' | 'square' | 'og';
+type AspectRatioKey = 'card' | 'square' | 'og' | 'instagram-story' | 'instagram-reel';
 type FontSizeKey = 'small' | 'medium' | 'large';
 type InputMode = 'url' | 'custom';
 type FetchStatus = 'idle' | 'loading' | 'error' | 'success';
@@ -42,7 +43,16 @@ const CARD_WIDTH = 560;
 const TWEET_URL_PATTERN = /^https?:\/\/(www\.)?(twitter|x)\.com\/[A-Za-z0-9_]{1,15}\/status\/\d+/i;
 
 const INPUT_CLASS =
-  'w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white';
+  'w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white';
+
+const INSTAGRAM_ASPECT_RATIOS: ReadonlySet<AspectRatioKey> = new Set(['square', 'instagram-story', 'instagram-reel']);
+
+const FRAME_DIMENSIONS: Record<Exclude<AspectRatioKey, 'card'>, { width: number; height: number }> = {
+  square: { width: 1080, height: 1080 },
+  og: { width: 1200, height: 630 },
+  'instagram-story': { width: 1080, height: 1920 },
+  'instagram-reel': { width: 1080, height: 1920 },
+};
 
 interface TweetOEmbedResponse {
   author_name?: string;
@@ -87,6 +97,18 @@ function extractHandle(authorUrl?: string): string {
   if (!authorUrl) return '';
   const match = authorUrl.match(/(?:twitter|x)\.com\/([^/?#]+)/i);
   return match ? `@${match[1]}` : '';
+}
+
+async function fetchProfileImage(handle: string): Promise<string | null> {
+  try {
+    const username = handle.replace('@', '');
+    const res = await fetch(`https://unavatar.io/x/${username}?json=true`);
+    if (res.ok) {
+      const data = await res.json();
+      return data.url || null;
+    }
+  } catch {}
+  return null;
 }
 
 function parseOEmbedHtml(html: string): string {
@@ -218,6 +240,9 @@ function drawImageAvatar(ctx: CanvasRenderingContext2D, img: HTMLImageElement, c
 function loadImage(src: string): Promise<HTMLImageElement> {
   return new Promise((resolve, reject) => {
     const img = new Image();
+    if (!src.startsWith('data:')) {
+      img.crossOrigin = 'anonymous';
+    }
     img.onload = () => resolve(img);
     img.onerror = () => reject(new Error('image-load-failed'));
     img.src = src;
@@ -233,7 +258,15 @@ function SliderLabel({ children, value }: { children: string; value: number }) {
   );
 }
 
-function DownloadButton({ downloadUrl, placement }: { downloadUrl: string; placement: 'top' | 'bottom' }) {
+function DownloadButton({
+  downloadUrl,
+  placement,
+  label = 'Download PNG',
+}: {
+  downloadUrl: string;
+  placement: 'top' | 'bottom';
+  label?: string;
+}) {
   if (!downloadUrl) return null;
 
   return (
@@ -242,12 +275,28 @@ function DownloadButton({ downloadUrl, placement }: { downloadUrl: string; place
       download="tweet-image.png"
       className={
         placement === 'top'
-          ? 'inline-flex items-center justify-center rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700'
-          : 'inline-flex w-full items-center justify-center rounded-xl bg-red-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700'
+          ? 'inline-flex items-center justify-center rounded-xl bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700'
+          : 'inline-flex w-full items-center justify-center rounded-xl bg-red-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-red-700'
       }
     >
-      Download PNG
+      {label}
     </a>
+  );
+}
+
+function ShareInstagramButton({ onShare, placement }: { onShare: () => void; placement: 'top' | 'bottom' }) {
+  return (
+    <button
+      type="button"
+      onClick={onShare}
+      className={
+        placement === 'top'
+          ? 'inline-flex items-center justify-center rounded-xl border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-900'
+          : 'inline-flex w-full items-center justify-center rounded-xl border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-900'
+      }
+    >
+      Share to Instagram
+    </button>
   );
 }
 
@@ -274,7 +323,7 @@ function CollapsibleSection({
         aria-expanded={isOpen}
         aria-label={`${title} controls`}
         onClick={onToggle}
-        className="flex w-full items-center justify-between p-5 text-left transition hover:bg-gray-50 dark:hover:bg-gray-900/60"
+        className="flex w-full items-center justify-between p-4 text-left transition hover:bg-gray-50 dark:hover:bg-gray-900/60"
       >
         <span className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-gray-500 dark:text-gray-400">
           <span className="text-base text-violet-500" aria-hidden="true">{icon}</span>
@@ -283,7 +332,7 @@ function CollapsibleSection({
         <span aria-hidden="true" className={`text-xl text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}>⌄</span>
       </button>
       {isOpen && (
-        <div id={sectionId} className="space-y-5 px-5 pb-5">
+        <div id={sectionId} className="space-y-4 px-4 pb-4">
           {children}
         </div>
       )}
@@ -293,8 +342,17 @@ function CollapsibleSection({
 
 export default function TweetToImageClient() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { tier, loading } = useSubscription();
+  const isPaidUser = !loading && tier !== null && tier !== 'free';
 
   const [mode, setMode] = useState<InputMode>('url');
+
+  useEffect(() => {
+    if (!isPaidUser && mode === 'custom') {
+      setMode('url');
+    }
+  }, [isPaidUser, mode]);
+
   const [tweetUrl, setTweetUrl] = useState('');
   const [fetchStatus, setFetchStatus] = useState<FetchStatus>('idle');
   const [fetchError, setFetchError] = useState('');
@@ -328,6 +386,13 @@ export default function TweetToImageClient() {
   const [layoutOpen, setLayoutOpen] = useState(false);
   const [metricsOpen, setMetricsOpen] = useState(false);
 
+  const [instagramStatus, setInstagramStatus] = useState('');
+  const isInstagramFormat = INSTAGRAM_ASPECT_RATIOS.has(aspectRatio);
+
+  useEffect(() => {
+    setInstagramStatus('');
+  }, [aspectRatio]);
+
   const handleFetchTweet = async () => {
     const trimmed = tweetUrl.trim();
     if (!TWEET_URL_PATTERN.test(trimmed)) {
@@ -338,6 +403,7 @@ export default function TweetToImageClient() {
 
     setFetchStatus('loading');
     setFetchError('');
+    setAvatarDataUrl(null);
 
     try {
       const endpoint = `https://publish.twitter.com/oembed?url=${encodeURIComponent(trimmed)}&omit_script=true`;
@@ -345,14 +411,18 @@ export default function TweetToImageClient() {
       if (!res.ok) throw new Error('tweet-fetch-failed');
       const data = (await res.json()) as TweetOEmbedResponse;
       const parsedText = parseOEmbedHtml(data.html || '');
+      const fetchedHandle = extractHandle(data.author_url) || '@unknown';
 
       setAuthorName(data.author_name || 'Unknown');
-      setHandle(extractHandle(data.author_url) || '@unknown');
+      setHandle(fetchedHandle);
       setTweetText((parsedText || '').slice(0, 280));
       setFetchStatus('success');
+
+      const profileImage = await fetchProfileImage(fetchedHandle);
+      if (profileImage) setAvatarDataUrl(profileImage);
     } catch {
       setFetchStatus('error');
-      setFetchError("Couldn't load that tweet. It may be private, deleted, or the URL is invalid. Try Custom text mode instead.");
+      setFetchError("Couldn't load that tweet. It may be private, deleted, or the URL is invalid.");
     }
   };
 
@@ -365,6 +435,19 @@ export default function TweetToImageClient() {
     };
     reader.readAsDataURL(file);
     event.target.value = '';
+  };
+
+  const handleShareToInstagram = async () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    try {
+      const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png'));
+      if (!blob) throw new Error('no-blob');
+      await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+      setInstagramStatus('Copied! Open Instagram and paste.');
+    } catch {
+      setInstagramStatus("Couldn't copy the image. Try downloading it instead.");
+    }
   };
 
   useEffect(() => {
@@ -459,8 +542,9 @@ export default function TweetToImageClient() {
         cardX = padding;
         cardY = padding;
       } else {
-        outerWidth = aspectRatio === 'square' ? 1080 : 1200;
-        outerHeight = aspectRatio === 'square' ? 1080 : 630;
+        const frame = FRAME_DIMENSIONS[aspectRatio];
+        outerWidth = frame.width;
+        outerHeight = frame.height;
         cardX = (outerWidth - CARD_WIDTH) / 2;
         cardY = Math.max(padding, (outerHeight - cardHeight) / 2);
       }
@@ -562,7 +646,11 @@ export default function TweetToImageClient() {
         });
       }
 
-      setDownloadUrl(canvas.toDataURL('image/png'));
+      try {
+        setDownloadUrl(canvas.toDataURL('image/png'));
+      } catch {
+        setDownloadUrl('');
+      }
       setRenderedSize({ width: Math.round(outerWidth), height: Math.round(outerHeight) });
     };
 
@@ -582,6 +670,7 @@ export default function TweetToImageClient() {
     fontSize,
     handle,
     likes,
+    mode,
     padding,
     presetIndex,
     replies,
@@ -609,22 +698,28 @@ export default function TweetToImageClient() {
         <div className="space-y-2">
           <div className="text-base font-semibold text-gray-900 dark:text-white">Customize your tweet image</div>
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            Paste a tweet URL or write your own content, then style it with themes, backgrounds, and layout controls before downloading a PNG.
+            Paste a tweet URL to fetch and download a tweet image, or switch to Customize for full control over themes, backgrounds, and layout.
           </p>
         </div>
-        <div className="hidden shrink-0 sm:block">
-          <DownloadButton downloadUrl={downloadUrl} placement="top" />
-        </div>
+        {mode === 'custom' && (
+          <div className="hidden shrink-0 sm:block">
+            <DownloadButton downloadUrl={downloadUrl} placement="top" />
+          </div>
+        )}
       </div>
 
-      <div className="grid gap-5 lg:grid-cols-[420px_1fr]">
+      <div className="grid gap-4 lg:grid-cols-[380px_1fr]">
         <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
-          <div className="space-y-5 border-b border-gray-100 p-5 dark:border-gray-800">
-            <div className="grid grid-cols-2 rounded-xl border border-gray-200 bg-gray-50 p-1 dark:border-gray-700 dark:bg-gray-900" role="group" aria-label="Input mode">
-              {([
-                ['url', 'Tweet URL'],
-                ['custom', 'Custom text'],
-              ] as const).map(([value, label]) => (
+          <div className={`space-y-4 p-4 dark:border-gray-800 ${mode === 'custom' ? 'border-b border-gray-100' : ''}`}>
+            <div className={`grid ${isPaidUser ? 'grid-cols-2' : 'grid-cols-1'} rounded-xl border border-gray-200 bg-gray-50 p-1 dark:border-gray-700 dark:bg-gray-900`} role="group" aria-label="Input mode">
+              {(
+                [
+                  ['url', 'General'],
+                  ['custom', 'Customize'],
+                ] as const
+              )
+                .filter(([value]) => value === 'url' || isPaidUser)
+                .map(([value, label]) => (
                 <button
                   key={value}
                   type="button"
@@ -662,7 +757,7 @@ export default function TweetToImageClient() {
                 <button
                   type="submit"
                   disabled={fetchStatus === 'loading'}
-                  className="inline-flex w-full items-center justify-center rounded-xl bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-gray-800 disabled:opacity-60 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100"
+                  className="inline-flex w-full items-center justify-center rounded-xl bg-gray-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-gray-800 disabled:opacity-60 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100"
                 >
                   {fetchStatus === 'loading' ? 'Fetching…' : 'Fetch tweet'}
                 </button>
@@ -671,12 +766,12 @@ export default function TweetToImageClient() {
                 )}
                 {fetchStatus === 'success' && (
                   <p className="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-700 dark:bg-green-950 dark:text-green-300">
-                    Tweet loaded — you can still edit the text or picture below.
+                    Tweet loaded. Your image is ready to download.
                   </p>
                 )}
               </form>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <label className="block space-y-2">
                   <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Author name</span>
                   <input
@@ -709,35 +804,39 @@ export default function TweetToImageClient() {
               </div>
             )}
 
-            <div className="flex items-center gap-3">
-              <div
-                className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-200 text-sm font-semibold text-gray-600 dark:bg-gray-800 dark:text-gray-300"
-                aria-hidden="true"
-              >
-                {avatarDataUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={avatarDataUrl} alt="" className="h-full w-full object-cover" />
-                ) : (
-                  (authorName || 'Y').trim().charAt(0).toUpperCase() || 'Y'
+            {mode === 'custom' && (
+              <div className="flex items-center gap-3">
+                <div
+                  className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-200 text-sm font-semibold text-gray-600 dark:bg-gray-800 dark:text-gray-300"
+                  aria-hidden="true"
+                >
+                  {avatarDataUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={avatarDataUrl} alt="" className="h-full w-full object-cover" />
+                  ) : (
+                    (authorName || 'Y').trim().charAt(0).toUpperCase() || 'Y'
+                  )}
+                </div>
+                <label className="inline-flex cursor-pointer items-center justify-center rounded-xl border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-900">
+                  Upload picture
+                  <input type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} aria-label="Upload profile picture" />
+                </label>
+                {avatarDataUrl && (
+                  <button
+                    type="button"
+                    onClick={() => setAvatarDataUrl(null)}
+                    className="text-sm font-medium text-gray-500 underline-offset-2 hover:underline dark:text-gray-400"
+                  >
+                    Remove
+                  </button>
                 )}
               </div>
-              <label className="inline-flex cursor-pointer items-center justify-center rounded-xl border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-900">
-                Upload picture
-                <input type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} aria-label="Upload profile picture" />
-              </label>
-              {avatarDataUrl && (
-                <button
-                  type="button"
-                  onClick={() => setAvatarDataUrl(null)}
-                  className="text-sm font-medium text-gray-500 underline-offset-2 hover:underline dark:text-gray-400"
-                >
-                  Remove
-                </button>
-              )}
-            </div>
+            )}
           </div>
 
-          <CollapsibleSection icon="◐" isOpen={appearanceOpen} onToggle={() => setAppearanceOpen((open) => !open)} title="Theme">
+          {mode === 'custom' && (
+            <>
+              <CollapsibleSection icon="◐" isOpen={appearanceOpen} onToggle={() => setAppearanceOpen((open) => !open)} title="Theme">
             <div className="grid grid-cols-3 gap-2" role="group" aria-label="Theme">
               {(Object.entries(THEMES) as Array<[ThemeKey, ThemeSpec]>).map(([key, spec]) => (
                 <button
@@ -830,8 +929,10 @@ export default function TweetToImageClient() {
                 className={INPUT_CLASS}
               >
                 <option value="card">Tweet card only</option>
-                <option value="square">Square (1:1)</option>
+                <option value="square">Instagram Post (1:1)</option>
                 <option value="og">Open Graph (1200×630)</option>
+                <option value="instagram-story">Instagram Story (9:16)</option>
+                <option value="instagram-reel">Instagram Reel (9:16)</option>
               </select>
             </label>
 
@@ -962,27 +1063,60 @@ export default function TweetToImageClient() {
             </label>
           </CollapsibleSection>
 
-          <div className="p-5">
-            <DownloadButton downloadUrl={downloadUrl} placement="bottom" />
+          <div className="space-y-2 p-4">
+            <div className={isInstagramFormat ? 'grid grid-cols-2 gap-2' : ''}>
+              <DownloadButton downloadUrl={downloadUrl} placement="bottom" />
+              {isInstagramFormat && <ShareInstagramButton onShare={handleShareToInstagram} placement="bottom" />}
+            </div>
+            {instagramStatus && (
+              <p className="rounded-lg bg-violet-50 px-3 py-2 text-sm text-violet-700 dark:bg-violet-950 dark:text-violet-200">
+                {instagramStatus}
+              </p>
+            )}
           </div>
+            </>
+          )}
         </div>
 
-        <div className="space-y-3">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        {mode === 'url' ? (
+          <div className="space-y-3">
             <div className="text-sm font-semibold text-gray-900 dark:text-white">
-              Preview {renderedSize.width} × {renderedSize.height} px
+              {fetchStatus === 'success' ? `Preview ${renderedSize.width} × ${renderedSize.height} px` : 'Preview'}
             </div>
-            <div className="sm:hidden">
-              <DownloadButton downloadUrl={downloadUrl} placement="top" />
+            {fetchStatus === 'success' ? (
+              <div className="space-y-3">
+                <div
+                  className="flex items-center justify-center rounded-2xl border border-gray-200 p-4 shadow-sm dark:border-gray-800"
+                  style={transparentPreviewStyle}
+                >
+                  <canvas ref={canvasRef} data-testid="tweet-to-image-preview" aria-label="Tweet image preview" className="h-auto w-full rounded-xl" />
+                </div>
+                <DownloadButton downloadUrl={downloadUrl} placement="bottom" label="Download as PNG" />
+              </div>
+            ) : (
+              <div className="flex h-64 items-center justify-center rounded-2xl border border-dashed border-gray-300 p-6 text-center text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">
+                Paste a tweet URL and click Fetch to see your image here.
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="text-sm font-semibold text-gray-900 dark:text-white">
+                Preview {renderedSize.width} × {renderedSize.height} px
+              </div>
+              <div className="sm:hidden">
+                <DownloadButton downloadUrl={downloadUrl} placement="top" />
+              </div>
+            </div>
+            <div
+              className="flex items-center justify-center rounded-2xl border border-gray-200 p-4 shadow-sm dark:border-gray-800"
+              style={transparentPreviewStyle}
+            >
+              <canvas ref={canvasRef} data-testid="tweet-to-image-preview" aria-label="Tweet image preview" className="h-auto w-full rounded-xl" />
             </div>
           </div>
-          <div
-            className="flex items-center justify-center rounded-2xl border border-gray-200 p-4 shadow-sm dark:border-gray-800"
-            style={transparentPreviewStyle}
-          >
-            <canvas ref={canvasRef} data-testid="tweet-to-image-preview" aria-label="Tweet image preview" className="h-auto w-full rounded-xl" />
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
