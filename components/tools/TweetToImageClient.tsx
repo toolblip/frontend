@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, type ChangeEvent, type ReactNode } from 'react';
+import { useSubscription } from '@/hooks/useSubscription';
 
 type ThemeKey = 'light' | 'dim' | 'dark';
 type BackgroundMode = 'gradient' | 'solid' | 'transparent';
@@ -293,8 +294,17 @@ function CollapsibleSection({
 
 export default function TweetToImageClient() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { tier, loading } = useSubscription();
+  const isPaidUser = !loading && tier !== null && tier !== 'free';
 
   const [mode, setMode] = useState<InputMode>('url');
+
+  useEffect(() => {
+    if (!isPaidUser && mode === 'custom') {
+      setMode('url');
+    }
+  }, [isPaidUser, mode]);
+
   const [tweetUrl, setTweetUrl] = useState('');
   const [fetchStatus, setFetchStatus] = useState<FetchStatus>('idle');
   const [fetchError, setFetchError] = useState('');
@@ -620,11 +630,15 @@ export default function TweetToImageClient() {
       <div className="grid gap-5 lg:grid-cols-[420px_1fr]">
         <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
           <div className="space-y-5 border-b border-gray-100 p-5 dark:border-gray-800">
-            <div className="grid grid-cols-2 rounded-xl border border-gray-200 bg-gray-50 p-1 dark:border-gray-700 dark:bg-gray-900" role="group" aria-label="Input mode">
-              {([
-                ['url', 'Tweet URL'],
-                ['custom', 'Custom text'],
-              ] as const).map(([value, label]) => (
+            <div className={`grid ${isPaidUser ? 'grid-cols-2' : 'grid-cols-1'} rounded-xl border border-gray-200 bg-gray-50 p-1 dark:border-gray-700 dark:bg-gray-900`} role="group" aria-label="Input mode">
+              {(
+                [
+                  ['url', 'Tweet URL'],
+                  ['custom', 'Custom text'],
+                ] as const
+              )
+                .filter(([value]) => value === 'url' || isPaidUser)
+                .map(([value, label]) => (
                 <button
                   key={value}
                   type="button"
@@ -671,7 +685,7 @@ export default function TweetToImageClient() {
                 )}
                 {fetchStatus === 'success' && (
                   <p className="rounded-lg bg-green-50 px-3 py-2 text-sm text-green-700 dark:bg-green-950 dark:text-green-300">
-                    Tweet loaded — you can still edit the text or picture below.
+                    Tweet loaded - you can still edit the text or picture below.
                   </p>
                 )}
               </form>
