@@ -804,6 +804,72 @@ export default function TweetToImageClient() {
               </div>
             )}
 
+            {mode === 'url' && fetchStatus === 'success' && (
+              <div className="space-y-4 border-t border-gray-100 pt-4 dark:border-gray-800">
+                <div className="space-y-2">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                    Background
+                  </span>
+                  <div className="flex items-center gap-2" role="group" aria-label="Background preset">
+                    <button
+                      type="button"
+                      onClick={() => setBackgroundMode('transparent')}
+                      aria-pressed={backgroundMode === 'transparent'}
+                      aria-label="None (transparent)"
+                      title="None"
+                      className={`h-6 w-6 shrink-0 rounded-full border-2 transition ${
+                        backgroundMode === 'transparent'
+                          ? 'border-violet-500 ring-2 ring-violet-200'
+                          : 'border-white shadow-sm dark:border-gray-900'
+                      }`}
+                      style={{
+                        backgroundImage: 'repeating-conic-gradient(#d1d5db 0% 25%, #ffffff 0% 50%)',
+                        backgroundSize: '8px 8px',
+                      }}
+                    />
+                    {BACKGROUND_PRESETS.slice(0, 4).map((preset, index) => (
+                      <button
+                        key={preset.name}
+                        type="button"
+                        onClick={() => {
+                          setBackgroundMode('gradient');
+                          setPresetIndex(index);
+                        }}
+                        aria-pressed={backgroundMode === 'gradient' && presetIndex === index}
+                        aria-label={preset.name}
+                        title={preset.name}
+                        className={`h-6 w-6 shrink-0 rounded-full border-2 transition ${
+                          backgroundMode === 'gradient' && presetIndex === index
+                            ? 'border-violet-500 ring-2 ring-violet-200'
+                            : 'border-white shadow-sm dark:border-gray-900'
+                        }`}
+                        style={{ background: `linear-gradient(135deg, ${preset.from}, ${preset.to})` }}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                <label className="flex items-center justify-between gap-3">
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Instagram format</span>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={aspectRatio === 'square'}
+                    onClick={() => setAspectRatio((value) => (value === 'square' ? 'card' : 'square'))}
+                    className={`relative h-6 w-11 shrink-0 rounded-full transition ${
+                      aspectRatio === 'square' ? 'bg-violet-600' : 'bg-gray-300 dark:bg-gray-700'
+                    }`}
+                  >
+                    <span
+                      className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition ${
+                        aspectRatio === 'square' ? 'left-5' : 'left-0.5'
+                      }`}
+                    />
+                  </button>
+                </label>
+              </div>
+            )}
+
             {mode === 'custom' && (
               <div className="flex items-center gap-3">
                 <div
