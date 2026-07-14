@@ -207,7 +207,23 @@ export default async function ToolDetailPage({ params }: PageProps) {
             When to use {tool.name}
           </h2>
           <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-            {generateToolContent(tool).howToUseAlt}
+            {generateToolContent(tool).whenToUse}
+          </p>
+        </div>
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            Key features of {tool.name}
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+            {generateToolContent(tool).benefits}
+          </p>
+        </div>
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            Common use cases for {tool.name}
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+            {generateToolContent(tool).commonUseCases}
           </p>
         </div>
       </div>

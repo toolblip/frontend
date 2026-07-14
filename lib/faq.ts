@@ -71,7 +71,67 @@ const CATEGORY_FAQ: Record<string, (t: Tool) => FAQ> = {
     q: `Is there a character limit when I use the ${t.name}?`,
     a: `There's no hard limit. The ${t.name} handles short snippets and long documents equally well because all processing happens on your device. For very large inputs you may notice a brief delay while the browser parses the text.`,
   }),
+}
+
+const CATEGORY_FAQ2: Record<string, (t: Tool) => FAQ> = {
+  Developer: (t) => ({
+    q: `Can the ${t.name} handle large input files or long text?`,
+    a: `Yes. The ${t.name} processes everything locally in your browser, so the only limit is your device's available memory. There are no arbitrary caps on input size, character count, or processing time that you would typically encounter with server-based tools.`,
+  }),
+  Text: (t) => ({
+    q: `Does the ${t.name} preserve the original formatting of my text?`,
+    a: `The ${t.name} applies only the transformation you select. If you are counting words or characters, the original text is untouched. If you are converting case or removing duplicates, the tool transforms the content as specified and leaves everything else unchanged.`,
+  }),
+  Conversion: (t) => ({
+    q: `Can I convert multiple files at once with the ${t.name}?`,
+    a: `The ${t.name} processes one input at a time. For batch conversions of multiple files, you can paste each input individually. Since the tool runs locally in your browser, there are no rate limits or daily caps that would prevent you from converting as many items as you need.`,
+  }),
+  SEO: (t) => ({
+    q: `Does the ${t.name} store the URLs or content I check?`,
+    a: `No. The ${t.name} processes everything in your browser. No URLs, meta tags, or page content is logged or sent to any server. You can audit competitor sites or sensitive internal pages without leaving a trail on an external platform.`,
+  }),
+  Color: (t) => ({
+    q: `Can I pick a colour visually with the ${t.name}, or do I need to type values?`,
+    a: `The ${t.name} supports both approaches. You can type colour values directly in any format (HEX, RGB, HSL), or click the colour swatch to open your system's native colour picker for visual selection. The tool converts between formats regardless of which input method you use.`,
+  }),
+  Image: (t) => ({
+    q: `What image formats does the ${t.name} support?`,
+    a: `The ${t.name} works with common web image formats including PNG, JPEG, WebP, GIF, and SVG. The specific operations available depend on the format — lossless formats like PNG preserve quality through transformations, while lossy formats like JPEG may show compression artefacts after re-encoding.`,
+  }),
+  "AI Tools": (t) => ({
+    q: `What kind of AI tasks can the ${t.name} handle?`,
+    a: `The ${t.name} supports common text AI tasks such as summarisation, paraphrasing, tone adjustment, and text classification. The specific models and capabilities depend on your device, but all processing happens locally in your browser with no cloud dependency.`,
+  }),
+  Utility: (t) => ({
+    q: `Does the ${t.name} work without an internet connection?`,
+    a: `Yes. Once the ${t.name} page has loaded completely, the core functionality continues to work offline. All logic and processing runs client-side, so you can bookmark the page and use it even when you do not have network access.`,
+  }),
+  "Image Tools": (t) => ({
+    q: `Does the ${t.name} preserve the original quality of my images?`,
+    a: `The ${t.name} preserves original quality for lossless operations like resizing down or converting between lossless formats. For operations that re-encode the image (JPEG compression, format conversion to lossy codecs), you control the quality setting to balance file size against visual fidelity.`,
+  }),
+  "Video Tools": (t) => ({
+    q: `How long does video processing take with the ${t.name}?`,
+    a: `Processing time depends on the file size, the operation, and your device's performance. Because everything runs locally in your browser, there are no server queues or upload delays. Short clips process in seconds; longer videos may take a few minutes.`,
+  }),
+  "PDF Tools": (t) => ({
+    q: `Can the ${t.name} handle password-protected PDFs?`,
+    a: `The ${t.name} can open and process PDFs that do not have encryption restrictions. Password-protected or encrypted PDFs that require a decryption key may not be readable by client-side libraries. If you need to work with a locked PDF, unlock it first using the file owner's credentials.`,
+  }),
+  Network: (t) => ({
+    q: `Does the ${t.name} make real network requests to the URLs I check?`,
+    a: `Yes, where the diagnostic requires it. For HTTP header checks and DNS lookups, the tool makes real network requests from your browser. Toolblip does not log these requests. For operations that do not require network access, everything is handled client-side.`,
+  }),
+  CSS: (t) => ({
+    q: `Is the CSS output from the ${t.name} production-ready?`,
+    a: `The ${t.name} generates clean, valid CSS that you can use directly in production. For complex layouts you may want to review the output for browser compatibility, but the generated code follows standard CSS specifications and uses commonly supported properties.`,
+  }),
+  Math: (t) => ({
+    q: `How accurate are the calculations in the ${t.name}?`,
+    a: `The ${t.name} uses the browser's native JavaScript number handling for calculations. For integers within the safe range and for BigInt-supported operations, results are exact. Floating-point arithmetic follows IEEE 754 and may show minor rounding at extreme precision levels.`,
+  }),
 };
+;
 
 function categoryQuestion(t: Tool): FAQ {
   const fn = CATEGORY_FAQ[t.category];
@@ -100,9 +160,29 @@ function templateFaqs(t: Tool): FAQ[] {
       q: `Is the ${t.name} safe and private?`,
       a: `Yes. The ${t.name} processes your data entirely client-side, so nothing you paste is uploaded or stored on any server. It's safe to use with internal snippets, private keys for debugging, or any other sensitive content you'd rather not send to a remote service.`,
     },
+    {
+      q: `What kind of output does the ${t.name} produce?`,
+      a: `The ${t.name} produces clean, formatted output that you can copy or download with a single click. The output is tailored to the tool's purpose — formatted code, converted data, transformed text, or processed media — and is ready for immediate use in your project or workflow.`,
+    },
+    {
+      q: `Does the ${t.name} work on mobile devices?`,
+      a: `Yes. The ${t.name} is designed to work on any device with a modern browser, including phones and tablets. The interface adapts to smaller screens, and the core functionality — paste input, transform, copy output — works the same way regardless of your device.`,
+    },
   ];
 
   faqs.push(categoryQuestion(t));
+
+  // Second category-specific question
+  const catMap2 = CATEGORY_FAQ2 as unknown as Record<string, (t: Tool) => FAQ>;
+  const fn2 = catMap2[t.category];
+  if (fn2) {
+    faqs.push(fn2(t));
+  } else {
+    faqs.push({
+      q: `Can I bookmark the ${t.name} for quick access?`,
+      a: `Absolutely. Bookmark the ${t.name} page and it will be ready to use whenever you need it, including offline after the initial load. Add it to your browser's bookmarks bar for one-click access during development, writing, or design sessions.`,
+    });
+  }
 
   faqs.push({
     q: `Can I use the ${t.name} offline?`,
