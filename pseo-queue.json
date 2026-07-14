@@ -1,8 +1,8 @@
 {
   "pending": [
-    "generate Open Graph meta tags for social sharing",
-    "generate a sitemap.xml for better search indexing",
     "generate a .gitignore file for any project type",
+    "generate a sitemap.xml for better search indexing",
+    "generate Open Graph meta tags for social sharing",
     "test SSL certificate expiration for website security",
     "convert Unix line endings to Windows for file compatibility",
     "generate a Content Security Policy header for web security",
