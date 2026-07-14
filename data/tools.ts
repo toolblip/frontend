@@ -1763,6 +1763,7 @@ export const tools: Tool[] = [
   { name: 'Regex Match Tester', slug: 'regex-match-tester', description: 'Test regex patterns with live match highlighting, capture groups, and replacements.', emoji: '🔍', category: 'Developer' },
   { name: 'JWT Token Inspector', slug: 'jwt-token-inspector', description: 'Decode JWT tokens and view header, payload, expiration, and signature info.', emoji: '🎫', category: 'Developer' },
   { name: 'Favicon PNG Creator', slug: 'favicon-png-creator', description: 'Create favicon.ico and app icons from any image or emoji with multiple size outputs.', emoji: '🌐', category: 'Image' },
+  { name: 'Tweet to Image Converter', slug: 'tweet-to-image-converter', description: 'Turn any tweet or text into a styled, shareable PNG image. Paste a URL or type custom content, choose themes and backgrounds, and download instantly.', emoji: '🐦', category: 'Image' },
   { name: 'Color Picker Wheel', slug: 'color-picker-wheel', description: 'Pick colors from a visual wheel and get HEX, RGB, HSL, and CSS values instantly.', emoji: '🎨', category: 'Color' },
   { name: 'WCAG Contrast Auditor', slug: 'wcag-contrast-auditor', description: 'Check foreground and background color contrast for WCAG AA and AAA compliance.', emoji: '♿', category: 'Color' },
   { name: 'Unit Measurement Converter', slug: 'unit-measurement-converter', description: 'Convert length, weight, temperature, speed, and volume between metric and imperial units.', emoji: '⚖️', category: 'Conversion' },

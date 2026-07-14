@@ -2,6 +2,7 @@ import { notFound, redirect } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getBlogPost, getBlogPosts, type BlogPost } from '@/lib/blog';
+import AdSlot from '@/components/ads/AdSlot';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -154,6 +155,10 @@ export default async function BlogPostPage({ params }: PageProps) {
           }}
           dangerouslySetInnerHTML={{ __html: currentPost.content }}
         />
+
+        <div className="mt-10">
+          <AdSlot placement="blog-inline" />
+        </div>
 
         {currentPost.tags && currentPost.tags.length > 0 && (
           <div className="mt-10 pt-8 border-t border-[var(--line)]">

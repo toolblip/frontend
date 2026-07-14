@@ -3,6 +3,8 @@ import type { Metadata } from 'next';
 import { getCanonicalToolSlug, getToolBySlug, getToolRouteSlugs } from '@/data/tools';
 import { ToolUI } from './ToolUI';
 import ToolEngagementBar from '@/components/tools/ToolEngagementBar';
+import ToolAdSlot from '@/components/ads/ToolAdSlot';
+import ToolWithSidebarAd from '@/components/ads/ToolWithSidebarAd';
 import FaqSection from '@/components/v2/FaqSection';
 import { getFaqs } from '@/lib/faq';
 import { generateToolContent } from '@/lib/generateToolContent';
@@ -184,6 +186,22 @@ export default async function ToolDetailPage({ params }: PageProps) {
         <ToolEngagementBar toolName={tool.name} toolSlug={tool.slug} toolIcon={tool.emoji} />
       </div>
 
+      {/* Above-tool ad slot */}
+      <div className="mb-6">
+        <ToolAdSlot placement="tool-above" slug={tool.slug} category={tool.category} />
+      </div>
+
+      {/* Tool UI, with an optional sidebar ad on desktop */}
+      <ToolWithSidebarAd slug={tool.slug} category={tool.category}>
+        <div className="p-0">
+          <ToolUI tool={tool} />
+        </div>
+      </ToolWithSidebarAd>
+
+      <div className="mb-10 mt-8">
+        <ToolAdSlot placement="tool-below" slug={tool.slug} category={tool.category} />
+      </div>
+
       {/* SEO-rich content section — server rendered for Googlebot */}
       <div className="mb-10 space-y-6">
         <div>
@@ -226,11 +244,6 @@ export default async function ToolDetailPage({ params }: PageProps) {
             {generateToolContent(tool).commonUseCases}
           </p>
         </div>
-      </div>
-
-      {/* Tool UI */}
-      <div className="p-0">
-        <ToolUI tool={tool} />
       </div>
 
       <FaqSection toolName={tool.name} faqs={faqs} />
