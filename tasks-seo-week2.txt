@@ -1,0 +1,48 @@
+Implement Week 2 SEO improvements for Toolblip at /Users/ray/Work/toolblip-clean on a new branch `feat/seo-week2` from origin/main.
+
+## Task 1: Related Tools Widget
+
+Create a `RelatedTools` component that shows 4-6 related tools at the bottom of each tool page, before the FAQ section. The widget should:
+
+1. Be placed in `components/tools/RelatedTools.tsx`
+2. Accept the current tool's slug and category
+3. Find other tools in the same category (excluding the current tool)
+4. Pick 4-6 related tools — prefer tools that share tags/features if available, otherwise random from same category
+5. Display as a horizontal scrollable row of cards, each showing: emoji, name, category badge
+6. Link each card to `/tools/<slug>`
+7. Render on the tool detail page `app/tools/[slug]/page.tsx` (server component, so it needs to be a client component or use the ToolUI pattern)
+
+The tool data is already on the client via `data/tools.ts` import, so you can filter client-side in a `'use client'` component.
+
+## Task 2: Tool → Blog Links
+
+Create a `RelatedBlogPosts` component (`components/tools/RelatedBlogPosts.tsx`) that shows 2-3 relevant blog posts below the related tools widget.
+
+1. Accept the current tool's name and category
+2. Search through `content/blog/` posts for ones whose title/frontmatter matches the tool name or category
+3. Display as a simple list with title, date, and category
+4. If no matches found, show nothing (don't show an empty section)
+5. Link to `/blog/<slug>`
+
+For blog data, read the blog-manifest at `content/blog-manifest.ts` which has all blog post metadata.
+
+## Task 3: Update ToolUI to include both widgets
+
+In `app/tools/[slug]/ToolUI.tsx`, add the RelatedTools and RelatedBlogPosts widgets after the tool component but before the FAQ section.
+
+## Task 4: Category Hub Pages
+
+Create category hub pages at `/tools?category=<cat>` that show all tools in a category with descriptions. Check `app/directory/page.tsx` — it may already do something similar. If the directory already has category filtering, enhance it. If not, create a simple category hub.
+
+Actually, the existing `/tools` page already filters by category via query param. Make it better:
+- Category header with description
+- Grid of tools with icons and short descriptions
+- "View all" fallback
+
+## Task 5: Build & verify
+- npx tsc --noEmit — 0 errors
+- npm run build — clean
+- Verify RelatedTools shows on a tool page
+- Verify RelatedBlogPosts shows on a tool page that has related blog content
+
+Do NOT change data/tools.ts or the main tool page layout negatively.

@@ -1,27 +1,41 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { tools, type Tool } from '@/data/tools';
+import { tools, categories, type Tool } from '@/data/tools';
 import AdSlot from '@/components/ads/AdSlot';
 
-const CATEGORY_TABS = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS'] as const;
-type CategoryTab = (typeof CATEGORY_TABS)[number];
+type CategoryTab = (typeof categories)[number];
 
-const CATEGORY_MATCHES: Record<CategoryTab, string[] | null> = {
-  All: null,
-  Text: ['Text'],
-  Developer: ['Developer'],
-  Encoder: ['Encoder', 'Encoding'],
-  Image: ['Image'],
-  Conversion: ['Conversion'],
-  Math: ['Math'],
-  CSS: ['CSS'],
+// Only show tabs for categories that actually have tools, so the row never
+// dead-ends on an empty grid.
+const CATEGORY_TABS: CategoryTab[] = categories.filter(
+  (tab) => tab === 'All' || tools.some((tool) => tool.category === tab)
+);
+
+const CATEGORY_DESCRIPTIONS: Partial<Record<CategoryTab, string>> = {
+  Text: 'Word counters, case converters, diff checkers, and other tools for editing and analyzing text.',
+  Developer: 'JSON formatters, encoders, regex testers, and everyday utilities for building software.',
+  Encoder: 'Encode and decode Base64, URLs, HTML entities, and other common data formats.',
+  Image: 'Resize, crop, convert, and clean up images entirely in your browser.',
+  Conversion: 'Convert between units, number bases, file formats, and data types.',
+  Math: 'Calculators and converters for percentages, fractions, and everyday math.',
+  CSS: 'Generate gradients, shadows, grid layouts, and other CSS snippets visually.',
+  SEO: 'Check meta tags, robots.txt, sitemaps, and rankings to keep your site search-friendly.',
+  Color: 'Pick, convert, and check color contrast and accessibility.',
+  Utility: 'Handy one-off tools that do not fit anywhere else.',
+  Network: 'Look up DNS records, test ports, and inspect network configuration.',
+  'Date & Time': 'Convert timestamps, calculate durations, and work across time zones.',
+  'PDF Tools': 'Merge, split, watermark, and convert PDF files.',
+  'Video Tools': 'Convert, compress, and edit video files in your browser.',
+  'AI Tools': 'AI-powered writers, rephrasers, and content generators.',
+  'Document Generator': 'Generate documents like invoices, resumes, and business plans.',
+  'Image Tools': 'Additional image conversion and editing utilities.',
 };
 
 function matchesCategory(tool: Tool, tab: CategoryTab) {
-  const categories = CATEGORY_MATCHES[tab];
-  return !categories || categories.includes(tool.category);
+  return tab === 'All' || tool.category === tab;
 }
 
 function matchesSearch(tool: Tool, query: string) {
@@ -38,8 +52,26 @@ function shorten(description: string) {
 }
 
 export function DirectoryClient() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [query, setQuery] = useState('');
   const [activeTab, setActiveTab] = useState<CategoryTab>('All');
+
+  // Let /directory?category=<cat> (e.g. from a tool page breadcrumb) land
+  // directly on that category hub instead of always showing "All".
+  useEffect(() => {
+    const requested = searchParams.get('category');
+    if (!requested) return;
+    const match = CATEGORY_TABS.find((tab) => tab.toLowerCase() === requested.toLowerCase());
+    if (match) setActiveTab(match);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function selectTab(tab: CategoryTab) {
+    setActiveTab(tab);
+    router.replace(tab === 'All' ? '/directory' : `/directory?category=${encodeURIComponent(tab)}`, { scroll: false });
+  }
 
   const filteredTools = useMemo(() => {
     return tools.filter((tool) => matchesCategory(tool, activeTab) && matchesSearch(tool, query));
@@ -56,7 +88,7 @@ export function DirectoryClient() {
 
   function clearFilters() {
     setQuery('');
-    setActiveTab('All');
+    selectTab('All');
   }
 
   return (
@@ -120,7 +152,7 @@ export function DirectoryClient() {
                 role="tab"
                 aria-selected={isActive}
                 aria-controls="directory-results"
-                onClick={() => setActiveTab(tab)}
+                onClick={() => selectTab(tab)}
                 className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition ${
                   isActive
                     ? 'border-red-500 bg-red-50 text-red-700 dark:border-red-700 dark:bg-red-950/40 dark:text-red-300'
@@ -134,6 +166,28 @@ export function DirectoryClient() {
           })}
         </div>
       </section>
+
+      {activeTab !== 'All' ? (
+        <div className="mb-6 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">{activeTab} tools</h2>
+              {CATEGORY_DESCRIPTIONS[activeTab] ? (
+                <p className="mt-1 max-w-2xl text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                  {CATEGORY_DESCRIPTIONS[activeTab]}
+                </p>
+              ) : null}
+            </div>
+            <button
+              type="button"
+              onClick={() => selectTab('All')}
+              className="shrink-0 rounded-full border border-gray-200 px-3 py-1.5 text-sm text-gray-500 transition hover:border-red-200 hover:text-red-600 dark:border-gray-800 dark:text-gray-400 dark:hover:border-red-900 dark:hover:text-red-400"
+            >
+              View all tools
+            </button>
+          </div>
+        </div>
+      ) : null}
 
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-sm text-gray-500 dark:text-gray-400" aria-live="polite">
