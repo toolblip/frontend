@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { tools, type Tool } from '@/src/data/tools';
+import { tools, type Tool } from '@/data/tools';
 import AdSlot from '@/components/ads/AdSlot';
 
 const CATEGORY_TABS = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS'] as const;
