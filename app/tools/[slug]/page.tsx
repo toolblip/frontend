@@ -6,6 +6,8 @@ import ToolEngagementBar from '@/components/tools/ToolEngagementBar';
 import ToolAdSlot from '@/components/ads/ToolAdSlot';
 import ToolWithSidebarAd from '@/components/ads/ToolWithSidebarAd';
 import FaqSection from '@/components/v2/FaqSection';
+import RelatedTools from '@/components/tools/RelatedTools';
+import RelatedBlogPosts from '@/components/tools/RelatedBlogPosts';
 import { getFaqs } from '@/lib/faq';
 import { generateToolContent } from '@/lib/generateToolContent';
 
@@ -245,6 +247,9 @@ export default async function ToolDetailPage({ params }: PageProps) {
           </p>
         </div>
       </div>
+
+      <RelatedTools slug={tool.slug} category={tool.category} />
+      <RelatedBlogPosts toolName={tool.name} category={tool.category} />
 
       <FaqSection toolName={tool.name} faqs={faqs} />
     </div>
