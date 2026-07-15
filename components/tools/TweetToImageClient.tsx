@@ -5,7 +5,8 @@ import { useSubscription } from '@/hooks/useSubscription';
 
 type ThemeKey = 'light' | 'dim' | 'dark';
 type BackgroundMode = 'gradient' | 'solid' | 'transparent';
-type AspectRatioKey = 'card' | 'square' | 'og' | 'instagram-story' | 'instagram-reel';
+type PlatformKey = 'instagram' | 'linkedin' | 'twitter' | 'facebook' | 'general';
+type AspectRatioKey = 'card' | 'square' | 'og' | 'portrait' | 'story' | 'reel' | 'banner' | 'custom';
 type FontSizeKey = 'small' | 'medium' | 'large';
 type InputMode = 'url' | 'custom';
 type FetchStatus = 'idle' | 'loading' | 'error' | 'success';
@@ -16,6 +17,20 @@ interface ThemeSpec {
   text: string;
   subtext: string;
   border: string;
+}
+
+interface PlatformRatio {
+  key: AspectRatioKey;
+  label: string;
+  width: number;
+  height: number;
+  default?: boolean;
+}
+
+interface PlatformPreset {
+  label: string;
+  icon: string;
+  ratios: PlatformRatio[];
 }
 
 const THEMES: Record<ThemeKey, ThemeSpec> = {
@@ -45,14 +60,60 @@ const TWEET_URL_PATTERN = /^https?:\/\/(www\.)?(twitter|x)\.com\/[A-Za-z0-9_]{1,
 const INPUT_CLASS =
   'w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-900 shadow-sm outline-none focus:border-violet-400 focus:ring-2 focus:ring-violet-100 dark:border-gray-700 dark:bg-gray-900 dark:text-white';
 
-const INSTAGRAM_ASPECT_RATIOS: ReadonlySet<AspectRatioKey> = new Set(['square', 'instagram-story', 'instagram-reel']);
-
-const FRAME_DIMENSIONS: Record<Exclude<AspectRatioKey, 'card'>, { width: number; height: number }> = {
-  square: { width: 1080, height: 1080 },
-  og: { width: 1200, height: 630 },
-  'instagram-story': { width: 1080, height: 1920 },
-  'instagram-reel': { width: 1080, height: 1920 },
+const PLATFORM_PRESETS: Record<PlatformKey, PlatformPreset> = {
+  general: {
+    label: 'General',
+    icon: '🖼️',
+    ratios: [
+      { key: 'card', label: 'Tweet card (auto)', width: 0, height: 0, default: true },
+      { key: 'square', label: 'Square (1:1)', width: 1080, height: 1080 },
+      { key: 'og', label: 'OG (1200×630)', width: 1200, height: 630 },
+      { key: 'custom', label: 'Custom', width: 1200, height: 630 },
+    ],
+  },
+  instagram: {
+    label: 'Instagram',
+    icon: '📷',
+    ratios: [
+      { key: 'square', label: 'Post (1:1)', width: 1080, height: 1080, default: true },
+      { key: 'portrait', label: 'Portrait (4:5)', width: 1080, height: 1350 },
+      { key: 'story', label: 'Story (9:16)', width: 1080, height: 1920 },
+      { key: 'reel', label: 'Reel (9:16)', width: 1080, height: 1920 },
+    ],
+  },
+  linkedin: {
+    label: 'LinkedIn',
+    icon: '💼',
+    ratios: [
+      { key: 'card', label: 'Post (1.91:1)', width: 1200, height: 627, default: true },
+      { key: 'square', label: 'Square (1:1)', width: 1080, height: 1080 },
+      { key: 'story', label: 'Story (9:16)', width: 1080, height: 1920 },
+    ],
+  },
+  twitter: {
+    label: 'Twitter/X',
+    icon: '🐦',
+    ratios: [
+      { key: 'card', label: 'Card (1.91:1)', width: 1200, height: 628, default: true },
+      { key: 'square', label: 'Square (1:1)', width: 800, height: 800 },
+      { key: 'banner', label: 'Banner (3:1)', width: 1500, height: 500 },
+    ],
+  },
+  facebook: {
+    label: 'Facebook',
+    icon: '👍',
+    ratios: [
+      { key: 'card', label: 'Post (1.91:1)', width: 1200, height: 630, default: true },
+      { key: 'square', label: 'Square (1:1)', width: 1080, height: 1080 },
+      { key: 'story', label: 'Story (9:16)', width: 1080, height: 1920 },
+    ],
+  },
 };
+
+function getDefaultRatioKey(platform: PlatformKey): AspectRatioKey {
+  const ratios = PLATFORM_PRESETS[platform].ratios;
+  return (ratios.find((ratio) => ratio.default) ?? ratios[0]).key;
+}
 
 interface TweetOEmbedResponse {
   author_name?: string;
@@ -284,7 +345,15 @@ function DownloadButton({
   );
 }
 
-function ShareInstagramButton({ onShare, placement }: { onShare: () => void; placement: 'top' | 'bottom' }) {
+function ShareButton({
+  onShare,
+  placement,
+  platformLabel,
+}: {
+  onShare: () => void;
+  placement: 'top' | 'bottom';
+  platformLabel: string;
+}) {
   return (
     <button
       type="button"
@@ -295,8 +364,94 @@ function ShareInstagramButton({ onShare, placement }: { onShare: () => void; pla
           : 'inline-flex w-full items-center justify-center rounded-xl border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-900'
       }
     >
-      Share to Instagram
+      Share to {platformLabel}
     </button>
+  );
+}
+
+function PlatformSelector({
+  platform,
+  ratioKey,
+  customWidth,
+  customHeight,
+  onPlatformChange,
+  onRatioChange,
+  onCustomWidthChange,
+  onCustomHeightChange,
+}: {
+  platform: PlatformKey;
+  ratioKey: AspectRatioKey;
+  customWidth: number;
+  customHeight: number;
+  onPlatformChange: (value: PlatformKey) => void;
+  onRatioChange: (value: AspectRatioKey) => void;
+  onCustomWidthChange: (value: number) => void;
+  onCustomHeightChange: (value: number) => void;
+}) {
+  const activePlatform = PLATFORM_PRESETS[platform];
+  const isCustomSize = platform === 'general' && ratioKey === 'custom';
+
+  return (
+    <div className="space-y-3">
+      <label className="block space-y-2">
+        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Platform</span>
+        <select
+          aria-label="Platform"
+          value={platform}
+          onChange={(event) => onPlatformChange(event.target.value as PlatformKey)}
+          className={INPUT_CLASS}
+        >
+          {(Object.keys(PLATFORM_PRESETS) as PlatformKey[]).map((key) => (
+            <option key={key} value={key}>
+              {PLATFORM_PRESETS[key].icon} {PLATFORM_PRESETS[key].label}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      <label className="block space-y-2">
+        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Aspect ratio</span>
+        <select
+          aria-label="Aspect ratio"
+          value={ratioKey}
+          onChange={(event) => onRatioChange(event.target.value as AspectRatioKey)}
+          className={INPUT_CLASS}
+        >
+          {activePlatform.ratios.map((ratio) => (
+            <option key={ratio.key} value={ratio.key}>
+              {ratio.label}
+            </option>
+          ))}
+        </select>
+      </label>
+
+      {isCustomSize && (
+        <div className="grid grid-cols-2 gap-2">
+          <label className="block space-y-2">
+            <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Width</span>
+            <input
+              aria-label="Custom width"
+              type="number"
+              min={100}
+              value={customWidth}
+              onChange={(event) => onCustomWidthChange(Number(event.target.value))}
+              className={INPUT_CLASS}
+            />
+          </label>
+          <label className="block space-y-2">
+            <span className="text-xs font-medium text-gray-700 dark:text-gray-300">Height</span>
+            <input
+              aria-label="Custom height"
+              type="number"
+              min={100}
+              value={customHeight}
+              onChange={(event) => onCustomHeightChange(Number(event.target.value))}
+              className={INPUT_CLASS}
+            />
+          </label>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -374,7 +529,10 @@ export default function TweetToImageClient() {
   const [solidColor, setSolidColor] = useState('#1D9BF0');
   const [padding, setPadding] = useState(40);
   const [rounded, setRounded] = useState(true);
-  const [aspectRatio, setAspectRatio] = useState<AspectRatioKey>('card');
+  const [platform, setPlatform] = useState<PlatformKey>('general');
+  const [ratioKey, setRatioKey] = useState<AspectRatioKey>('card');
+  const [customWidth, setCustomWidth] = useState(1200);
+  const [customHeight, setCustomHeight] = useState(630);
   const [showMetrics, setShowMetrics] = useState(true);
   const [showVerified, setShowVerified] = useState(true);
   const [fontSize, setFontSize] = useState<FontSizeKey>('medium');
@@ -386,12 +544,23 @@ export default function TweetToImageClient() {
   const [layoutOpen, setLayoutOpen] = useState(false);
   const [metricsOpen, setMetricsOpen] = useState(false);
 
-  const [instagramStatus, setInstagramStatus] = useState('');
-  const isInstagramFormat = INSTAGRAM_ASPECT_RATIOS.has(aspectRatio);
+  const [shareStatus, setShareStatus] = useState('');
+  const activePlatform = PLATFORM_PRESETS[platform];
+  const activeRatio = activePlatform.ratios.find((ratio) => ratio.key === ratioKey) ?? activePlatform.ratios[0];
+  const isAutoCard = platform === 'general' && activeRatio.key === 'card';
+  const isCustomSize = platform === 'general' && activeRatio.key === 'custom';
+  const frameWidth = isCustomSize ? customWidth : activeRatio.width;
+  const frameHeight = isCustomSize ? customHeight : activeRatio.height;
+  const showShareButton = platform !== 'general';
+
+  const handlePlatformChange = (value: PlatformKey) => {
+    setPlatform(value);
+    setRatioKey(getDefaultRatioKey(value));
+  };
 
   useEffect(() => {
-    setInstagramStatus('');
-  }, [aspectRatio]);
+    setShareStatus('');
+  }, [platform, ratioKey]);
 
   const handleFetchTweet = async () => {
     const trimmed = tweetUrl.trim();
@@ -437,16 +606,16 @@ export default function TweetToImageClient() {
     event.target.value = '';
   };
 
-  const handleShareToInstagram = async () => {
+  const handleShare = async () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     try {
       const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, 'image/png'));
       if (!blob) throw new Error('no-blob');
       await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
-      setInstagramStatus('Copied! Open Instagram and paste.');
+      setShareStatus(`Copied! Paste on ${activePlatform.label}.`);
     } catch {
-      setInstagramStatus("Couldn't copy the image. Try downloading it instead.");
+      setShareStatus("Couldn't copy the image. Try downloading it instead.");
     }
   };
 
@@ -502,7 +671,7 @@ export default function TweetToImageClient() {
       if (!measureCtx) return;
 
       measureCtx.font = `400 ${textFontPx}px Inter, Arial, sans-serif`;
-      const maxLines = aspectRatio === 'card' ? Infinity : 8;
+      const maxLines = isAutoCard ? Infinity : 8;
       const textLines = wrapLines(measureCtx, tweetText || ' ', maxTextWidth, maxLines);
 
       measureCtx.font = `700 ${nameFontPx}px Inter, Arial, sans-serif`;
@@ -536,15 +705,14 @@ export default function TweetToImageClient() {
       let cardX: number;
       let cardY: number;
 
-      if (aspectRatio === 'card') {
+      if (isAutoCard) {
         outerWidth = CARD_WIDTH + padding * 2;
         outerHeight = cardHeight + padding * 2;
         cardX = padding;
         cardY = padding;
       } else {
-        const frame = FRAME_DIMENSIONS[aspectRatio];
-        outerWidth = frame.width;
-        outerHeight = frame.height;
+        outerWidth = frameWidth;
+        outerHeight = frameHeight;
         cardX = (outerWidth - CARD_WIDTH) / 2;
         cardY = Math.max(padding, (outerHeight - cardHeight) / 2);
       }
@@ -665,7 +833,10 @@ export default function TweetToImageClient() {
   }, [
     authorName,
     avatarDataUrl,
-    aspectRatio,
+    customHeight,
+    customWidth,
+    platform,
+    ratioKey,
     backgroundMode,
     fontSize,
     handle,
@@ -849,24 +1020,21 @@ export default function TweetToImageClient() {
                   </div>
                 </div>
 
-                <label className="flex items-center justify-between gap-3">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Instagram format</span>
-                  <button
-                    type="button"
-                    role="switch"
-                    aria-checked={aspectRatio === 'square'}
-                    onClick={() => setAspectRatio((value) => (value === 'square' ? 'card' : 'square'))}
-                    className={`relative h-6 w-11 shrink-0 rounded-full transition ${
-                      aspectRatio === 'square' ? 'bg-violet-600' : 'bg-gray-300 dark:bg-gray-700'
-                    }`}
-                  >
-                    <span
-                      className={`absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition ${
-                        aspectRatio === 'square' ? 'left-5' : 'left-0.5'
-                      }`}
-                    />
-                  </button>
-                </label>
+                <div className="space-y-2 border-t border-gray-100 pt-4 dark:border-gray-800">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                    Platform
+                  </span>
+                  <PlatformSelector
+                    platform={platform}
+                    ratioKey={ratioKey}
+                    customWidth={customWidth}
+                    customHeight={customHeight}
+                    onPlatformChange={handlePlatformChange}
+                    onRatioChange={setRatioKey}
+                    onCustomWidthChange={setCustomWidth}
+                    onCustomHeightChange={setCustomHeight}
+                  />
+                </div>
               </div>
             )}
 
@@ -985,22 +1153,17 @@ export default function TweetToImageClient() {
             )}
           </CollapsibleSection>
 
-          <CollapsibleSection icon="▦" isOpen={layoutOpen} onToggle={() => setLayoutOpen((open) => !open)} title="Layout">
-            <label className="block space-y-2">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Aspect ratio</span>
-              <select
-                aria-label="Aspect ratio"
-                value={aspectRatio}
-                onChange={(event) => setAspectRatio(event.target.value as AspectRatioKey)}
-                className={INPUT_CLASS}
-              >
-                <option value="card">Tweet card only</option>
-                <option value="square">Instagram Post (1:1)</option>
-                <option value="og">Open Graph (1200×630)</option>
-                <option value="instagram-story">Instagram Story (9:16)</option>
-                <option value="instagram-reel">Instagram Reel (9:16)</option>
-              </select>
-            </label>
+          <CollapsibleSection icon="🌐" isOpen={layoutOpen} onToggle={() => setLayoutOpen((open) => !open)} title="Platform">
+            <PlatformSelector
+              platform={platform}
+              ratioKey={ratioKey}
+              customWidth={customWidth}
+              customHeight={customHeight}
+              onPlatformChange={handlePlatformChange}
+              onRatioChange={setRatioKey}
+              onCustomWidthChange={setCustomWidth}
+              onCustomHeightChange={setCustomHeight}
+            />
 
             <label className="block space-y-2">
               <SliderLabel value={padding}>Padding</SliderLabel>
@@ -1130,13 +1293,13 @@ export default function TweetToImageClient() {
           </CollapsibleSection>
 
           <div className="space-y-2 p-4">
-            <div className={isInstagramFormat ? 'grid grid-cols-2 gap-2' : ''}>
+            <div className={showShareButton ? 'grid grid-cols-2 gap-2' : ''}>
               <DownloadButton downloadUrl={downloadUrl} placement="bottom" />
-              {isInstagramFormat && <ShareInstagramButton onShare={handleShareToInstagram} placement="bottom" />}
+              {showShareButton && <ShareButton onShare={handleShare} placement="bottom" platformLabel={activePlatform.label} />}
             </div>
-            {instagramStatus && (
+            {shareStatus && (
               <p className="rounded-lg bg-violet-50 px-3 py-2 text-sm text-violet-700 dark:bg-violet-950 dark:text-violet-200">
-                {instagramStatus}
+                {shareStatus}
               </p>
             )}
           </div>
@@ -1157,7 +1320,15 @@ export default function TweetToImageClient() {
                 >
                   <canvas ref={canvasRef} data-testid="tweet-to-image-preview" aria-label="Tweet image preview" className="h-auto w-full rounded-xl" />
                 </div>
-                <DownloadButton downloadUrl={downloadUrl} placement="bottom" label="Download as PNG" />
+                <div className={showShareButton ? 'grid grid-cols-2 gap-2' : ''}>
+                  <DownloadButton downloadUrl={downloadUrl} placement="bottom" label="Download as PNG" />
+                  {showShareButton && <ShareButton onShare={handleShare} placement="bottom" platformLabel={activePlatform.label} />}
+                </div>
+                {shareStatus && (
+                  <p className="rounded-lg bg-violet-50 px-3 py-2 text-sm text-violet-700 dark:bg-violet-950 dark:text-violet-200">
+                    {shareStatus}
+                  </p>
+                )}
               </div>
             ) : (
               <div className="flex h-64 items-center justify-center rounded-2xl border border-dashed border-gray-300 p-6 text-center text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">
