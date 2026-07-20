@@ -8,10 +8,12 @@
     "convert Roman numerals to numbers and back",
     "generate a changelog from git commit messages"
   ],
-  "in_progress": [
-    "generate a .gitignore file for any project type"
-  ],
+  "in_progress": [],
   "done": [
+    {
+      "topic": "generate a .gitignore file for any project type",
+      "completed_at": "2026-07-20T04:38:52Z"
+    },
     {
       "topic": "minify JavaScript code online for production builds",
       "completed_at": "2026-07-07T10:25:36Z"

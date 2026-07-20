@@ -1,0 +1,54 @@
+# Toolblip
+> Privacy-first developer tools for everyday tasks. 1,500+ free tools, no signup required, no surveillance. All tools run entirely in your browser — nothing is uploaded to any server.
+
+## Core Pages
+- [Home](https://toolblip.com/)
+- [All Tools](https://toolblip.com/directory)
+- [Pricing](https://toolblip.com/pricing)
+- [Blog](https://toolblip.com/blog)
+- [About](https://toolblip.com/about)
+- [API Docs](https://toolblip.com/api-docs)
+- [Status](https://toolblip.com/frontend-health)
+
+## Tool Categories
+- [Developer](https://toolblip.com/directory?category=Developer) — JSON formatters, code generators, regex testers, hash generators
+- [Image](https://toolblip.com/directory?category=Image) — Resizers, converters, compressors, DPI changers, SVG tools
+- [Text](https://toolblip.com/directory?category=Text) — Diff checkers, case converters, slug generators, lorem ipsum
+- [Color](https://toolblip.com/directory?category=Color) — Palette generators, contrast checkers, HEX/RGB converters
+- [SEO](https://toolblip.com/directory?category=SEO) — Meta tag generators, keyword density checkers, redirect checkers
+- [Converter](https://toolblip.com/directory?category=Converter) — JSON/CSV/XML/YAML/TOML converters, unit converters
+- [Math](https://toolblip.com/directory?category=Math) — Calculators, base converters, statistics tools
+- [Network](https://toolblip.com/directory?category=Network) — HTTP status checkers, ping tools, whois lookups
+
+## API
+- [API Health](https://api.toolblip.com/health)
+- [API Documentation](https://toolblip.com/api-docs)
+
+## Popular Tools
+- [JSON Formatter](https://toolblip.com/tools/json-formatter)
+- [JSON to CSV Converter](https://toolblip.com/tools/json-to-csv)
+- [Password Generator](https://toolblip.com/tools/password-generator)
+- [Image Resizer](https://toolblip.com/tools/image-resizer)
+- [Tweet to Image Converter](https://toolblip.com/tools/tweet-to-image-converter)
+- [QR Code Generator](https://toolblip.com/tools/qr-code-generator)
+- [Regex Tester](https://toolblip.com/tools/regex-tester)
+- [PNG Compressor](https://toolblip.com/tools/png-compressor)
+- [HTML Minifier](https://toolblip.com/tools/html-minifier)
+- [Color Palette Generator](https://toolblip.com/tools/color-palette-generator)
+
+## Key Information
+- **Privacy:** All processing happens client-side. No files, text, or data ever leave your browser.
+- **Pricing:** Free tier with unlimited basic tools. Pro tier ($19.99/mo) adds cloud storage, larger file processing, team seats, and API access.
+- **Signup:** Optional. Most tools work without an account.
+- **Tech Stack:** Next.js 16 (frontend), Laravel (API), Railway (hosting), Cloudflare (CDN).
+- **Contact:** info@toolblip.com
+
+## Structured Data
+All tool pages include:
+- JSON-LD Schema.org `FAQPage` markup with question/answer pairs
+- Open Graph meta tags (og:title, og:description, og:image)
+- Twitter Card meta tags
+
+## Sitemap
+- [Sitemap XML](https://toolblip.com/sitemap.xml)
+- [Blog RSS](https://toolblip.com/blog/rss.xml)
