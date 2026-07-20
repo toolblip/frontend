@@ -1,8 +1,8 @@
 {
   "sources": [
     { "name": "GitHub", "dr": 97, "status": "done", "notes": "README added to toolblip/frontend repo" },
-    { "name": "GitHub Pages", "dr": 97, "status": "pending", "notes": "Create a GitHub Pages org site for toolblip" },
-    { "name": "Medium", "dr": 94, "status": "pending", "notes": "Cross-post blog content with link back" },
+    { "name": "GitHub Pages", "dr": 97, "status": "done", "notes": "toolblip.github.io exists with backlink and canonical to toolblip.com" },
+    { "name": "Medium", "dr": 94, "status": "blocked", "notes": "Cloudflare Turnstile blocks headless browser. Needs a Medium API integration token (set in blog-writer .env) or manual cross-post from full browser." },
     { "name": "Substack", "dr": 94, "status": "blocked", "notes": "Needs email account signup — skip" },
     { "name": "Pixabay", "dr": 92, "status": "pending", "notes": "Upload tool screenshots with watermark" },
     { "name": "SourceForge", "dr": 92, "status": "pending", "notes": "Create project listing" },
@@ -30,6 +30,6 @@
     { "name": "YourStory", "dr": 85, "status": "blocked", "notes": "Needs founder story pitch" },
     { "name": "Forbes", "dr": 94, "status": "blocked", "notes": "Editorial pitch — long shot" }
   ],
-  "last_updated": "2026-07-15",
-  "current_index": 1
+  "last_updated": "2026-07-17",
+  "current_index": 3
 }

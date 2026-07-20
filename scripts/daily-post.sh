@@ -11,6 +11,6 @@ cd "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 # Wrap claude calls with launchctl asuser so the macOS keychain (Claude OAuth)
 # is accessible from the cron context.
-export CLAUDE_CMD_PREFIX="launchctl asuser $(id -u)"
+export CLAUDE_CMD_PREFIX="/bin/launchctl asuser $(id -u)"
 
 exec python3 scripts/daily-post.py

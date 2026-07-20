@@ -83,6 +83,7 @@ if [ "$next_is_prompt" = true ]; then
 fi
 
 if [ -n "$PROMPT" ]; then
+    CLAUDE_BIN="${CLAUDE_BIN:-/Users/ray/.local/bin/claude}"
     # Ensure daemon is running
     if ! tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
         RESTART_LOOP="while true; do export HOME='$REAL_HOME'; claude -c ${BASE_ARGS[*]}; printf '\\\\n[auto-restart] Claude exited — restarting in 5s\\\\n'; sleep 5; done"
@@ -92,7 +93,7 @@ if [ -n "$PROMPT" ]; then
         tmux send-keys -t "$SESSION_NAME" "$RESTART_LOOP" Enter
         sleep 3
     fi
-    exec claude -c -p "$PROMPT" "${BASE_ARGS[@]}" ${claude_args[@]+"${claude_args[@]}"}
+    exec $CLAUDE_BIN -c -p "$PROMPT" "${BASE_ARGS[@]}" ${claude_args[@]+"${claude_args[@]}"}
 fi
 
 # ─── Attach mode ─────────────────────────────────────────────────────

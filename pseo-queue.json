@@ -1,6 +1,5 @@
 {
   "pending": [
-    "generate a .gitignore file for any project type",
     "generate a sitemap.xml for better search indexing",
     "generate Open Graph meta tags for social sharing",
     "test SSL certificate expiration for website security",
@@ -9,7 +8,9 @@
     "convert Roman numerals to numbers and back",
     "generate a changelog from git commit messages"
   ],
-  "in_progress": [],
+  "in_progress": [
+    "generate a .gitignore file for any project type"
+  ],
   "done": [
     {
       "topic": "minify JavaScript code online for production builds",

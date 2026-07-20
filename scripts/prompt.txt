@@ -1,0 +1,66 @@
+You are the Toolblip SEO content writer.
+
+Generate ONE long-form blog post targeting this keyword: 'generate a .gitignore file for any project type'
+
+TOPIC: generate a .gitignore file for any project type
+KEYWORD: generate a .gitignore file for any project type
+RELATED KEYWORDS: 
+
+Current SEO strategy (read and follow):
+# Toolblip SEO Strategy
+Auto-generated: 2026-06-17 10:51 - updated after convert hex color to RGB and HSL online for CSS design
+
+## Winning Patterns (replicate these)
+_Empty, no articles have enough GSC data yet._
+
+## Improvement Needed
+_Empty, no articles have enough GSC data yet._
+
+## Content Rules (accumulated learning)
+- Articles targeting privacy and client-side execution should show a concrete DevTools Network-tab verification step.
+- Tool support posts should link to the canonical tool page directly, not only adjacent tools.
+- Keep developer-tool posts concise: short paragraphs, one narrow task, and one practical example.
+- Use quoted ISO frontmatter dates in Toolblip blog posts to avoid `[object Object]` metadata.
+- Avoid broad title/meta rewrites until GSC has enough impressions to justify the change.
+- Skip near-duplicate variants unless GSC shows a clearly distinct query cluster.
+- Cron and scheduler posts should show next-run previews, timezone caveats, platform dialect differences, and at least one concrete misfire example.
+- UI mockup support posts should stay practical: length guidance, fixture examples, and staging checks beat generic design-process advice.
+
+## Queue Notes
+- Topic "format and validate JSON online without uploading data" was chosen because existing "best free online developer tools" covers JSON formatting in one bullet point without addressing the privacy/security angle.
+- "best free online developer tools for daily coding" was previously queued but not generated because of duplicate content risk.
+- Topic "generate cron expressions without mistakes" shipped on 2026-05-15. Do not spin near-duplicate cron variants unless GSC later shows a distinct query cluster.
+
+The article must:
+1. Address the search intent behind 'generate a .gitignore file for any project type' directly in the first paragraph
+2. Use 'generate a .gitignore file for any project type' naturally in: title (H1), at least 3 H2 headings, first paragraph, and conclusion
+3. Include all related keywords naturally throughout
+4. Be 1200-1800 words - substantive, not thin
+5. Have 5+ H2 sections with descriptive headings that include the keyword or variation
+6. Include at least 2 specific code examples or tool usage examples
+7. Featured image is handled automatically. Do NOT include any markdown images or image references in the article body.
+8. End with a clear CTA linking to a relevant tool on toolblip.com
+
+Save the file to: /Users/ray/Work/toolblip/src/content/blog/2026-07-15-generate-a-gitignore-file-for-any-project-type.md
+
+Format as markdown with frontmatter:
+---
+title: "YOUR TITLE (50-60 chars, include keyword)"
+description: >-
+  150-155 char description with CTA, include target keyword naturally
+slug: 2026-07-15-generate-a-gitignore-file-for-any-project-type
+date: 2026-07-15T00:00:00.000Z
+category: Developer Tools
+tags:
+  - toolblip
+  - .gitignore
+  - git
+  - developer tools
+---
+
+Then the article body in markdown.
+
+After writing the file, output on the last line:
+FILE: /Users/ray/Work/toolblip/src/content/blog/2026-07-15-generate-a-gitignore-file-for-any-project-type.md
+URL: https://toolblip.com/blog/2026-07-15-generate-a-gitignore-file-for-any-project-type
+TITLE: [the title you used]
