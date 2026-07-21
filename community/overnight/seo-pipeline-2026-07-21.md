@@ -63,3 +63,8 @@
 ## Archive
 
 This file: `community/overnight/seo-pipeline-2026-07-21.md`
+
+## Pre-existing Issues Found
+
+- **Blog posts returning 500:** ALL `/blog/[slug]` pages return `Internal Server Error` (500). This affects yesterday's post and all prior posts — it's a pre-existing Next.js deployment/rendering issue, not caused by this run. Homepage (200) and blog index (200) work fine. Sitemap (200) is healthy.
+- **Next Run:** 2026-07-22 11:00 PM Dhaka (scheduled cron `07dd6cf18397`)
