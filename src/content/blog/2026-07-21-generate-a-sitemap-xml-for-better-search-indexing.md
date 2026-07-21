@@ -4,7 +4,7 @@ description: >-
   Learn how to generate a sitemap.xml for better search indexing, validate it,
   and submit it to Google Search Console. Free browser tool, no signup needed.
 slug: 2026-07-21-generate-a-sitemap-xml-for-better-search-indexing
-date: 2026-07-21T00:00:00.000Z
+date: "2026-07-21T00:00:00.000Z"
 category: Developer Tools
 tags:
   - generate-a-sitemap.xml-for-bet
