@@ -1,14 +1,23 @@
 {
   "pending": [
-    "generate Open Graph meta tags for social sharing",
-    "test SSL certificate expiration for website security",
-    "convert Unix line endings to Windows for file compatibility",
     "generate a Content Security Policy header for web security",
     "convert Roman numerals to numbers and back",
     "generate a changelog from git commit messages"
   ],
   "in_progress": [],
   "done": [
+    {
+      "topic": "convert Unix line endings to Windows for file compatibility",
+      "completed_at": "2026-07-22T04:11:46Z"
+    },
+    {
+      "topic": "test SSL certificate expiration for website security",
+      "completed_at": "2026-07-22T04:08:32Z"
+    },
+    {
+      "topic": "generate Open Graph meta tags for social sharing",
+      "completed_at": "2026-07-22T04:05:24Z"
+    },
     {
       "topic": "generate a sitemap.xml for better search indexing",
       "completed_at": "2026-07-21T04:18:20Z"

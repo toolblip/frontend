@@ -152,6 +152,18 @@
     {
       "url": "https://toolblip.com/blog/2026-07-21-generate-a-sitemap-xml-for-better-search-indexing",
       "submitted_at": "2026-07-21T04:18:07Z"
+    },
+    {
+      "url": "https://toolblip.com/blog/2026-07-22-generate-open-graph-meta-tags-for-social-sharing",
+      "submitted_at": "2026-07-22T04:05:11Z"
+    },
+    {
+      "url": "https://toolblip.com/blog/2026-07-22-test-ssl-certificate-expiration-for-website-security",
+      "submitted_at": "2026-07-22T04:08:19Z"
+    },
+    {
+      "url": "https://toolblip.com/blog/2026-07-22-convert-unix-line-endings-to-windows-for-file-compatibility",
+      "submitted_at": "2026-07-22T04:11:58Z"
     }
   ],
   "failed": []
