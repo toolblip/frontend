@@ -38,6 +38,16 @@
 - **GSC submitted:** yes
 - **Commit:** a058cd2b
 
+## Deployment Status
+
+All 3 new URLs return HTTP 500. This is a **pre-existing issue** — not caused by tonight's run:
+- Posts published before July 12 (e.g. July 8, June 19) return HTTP 200
+- Posts published July 12 onwards all return HTTP 500
+- The Cloudflare Pages deployment appears broken since ~July 10
+- The homepage and tools pages work fine (200/307)
+
+**Action needed:** Check Cloudflare Pages deployment logs or rebuild the site to restore blog post routing.
+
 ## Notes
 
 - Pipeline picked 3 topics (default batch size). All completed successfully.
