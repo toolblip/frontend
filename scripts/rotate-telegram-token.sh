@@ -67,11 +67,11 @@ update_env_file "$HOME/.hermes/.env" "TELEGRAM_BOT_TOKEN"
 
 # Toolblip local health-check token aliases (ignored/local only)
 update_env_file "/Users/ray/Work/toolblip/.env" "TELEGRAM_BOT_TOKEN"
-update_env_file "/Users/ray/.openclaw/secrets/tb.env" "TOOLBLIP_TELEGRAM_BOT_TOKEN"
+update_env_file "/Users/ray/.hermes/secrets/tb.env" "TOOLBLIP_TELEGRAM_BOT_TOKEN"
 
 # Keep alert routing defaults available for health script
-update_env_file "/Users/ray/.openclaw/secrets/tb.env" "TOOLBLIP_TELEGRAM_CHAT_ID" "-1003905269197"
-update_env_file "/Users/ray/.openclaw/secrets/tb.env" "TOOLBLIP_TELEGRAM_THREAD_ID" "3"
+update_env_file "/Users/ray/.hermes/secrets/tb.env" "TOOLBLIP_TELEGRAM_CHAT_ID" "-1003905269197"
+update_env_file "/Users/ray/.hermes/secrets/tb.env" "TOOLBLIP_TELEGRAM_THREAD_ID" "3"
 
 echo "Updated local env files (token not printed)."
 

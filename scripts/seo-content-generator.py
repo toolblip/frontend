@@ -27,7 +27,7 @@ def load_env():
                 os.environ["GSC_SERVICE_ACCOUNT"] = val
                 return
     # Fallback: check tb.env
-    tb_env = os.path.expanduser("~/.openclaw/secrets/tb.env")
+    tb_env = os.path.expanduser("~/.hermes/secrets/tb.env")
     if os.path.exists(tb_env):
         for line in open(tb_env):
             line = line.strip()

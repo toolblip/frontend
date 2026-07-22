@@ -19,7 +19,7 @@ STATE_DIR = "/tmp/toolblip-seo-state"
 def load_env():
     """Load secrets from .env"""
     env_paths = [
-        os.path.expanduser("~/.openclaw/secrets/tb.env"),
+        os.path.expanduser("~/.hermes/secrets/tb.env"),
         os.path.join(os.path.dirname(__file__), "..", ".env"),
     ]
     for path in env_paths:

@@ -14,7 +14,7 @@ STATE_DIR = "/tmp/toolblip-seo-state"
 
 def load_env():
     """Load GSC creds from tb.env secrets file."""
-    tb_env = os.path.expanduser("~/.openclaw/secrets/tb.env")
+    tb_env = os.path.expanduser("~/.hermes/secrets/tb.env")
     if os.path.exists(tb_env):
         for line in open(tb_env):
             line = line.strip()
