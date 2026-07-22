@@ -1,10 +1,11 @@
 {
   "pending": [
-    "generate a Content Security Policy header for web security",
     "convert Roman numerals to numbers and back",
     "generate a changelog from git commit messages"
   ],
-  "in_progress": [],
+  "in_progress": [
+    "generate a Content Security Policy header for web security"
+  ],
   "done": [
     {
       "topic": "convert Unix line endings to Windows for file compatibility",
