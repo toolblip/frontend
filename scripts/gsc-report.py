@@ -38,7 +38,13 @@ def get_gsc():
     if not creds_raw:
         print("❌ GSC_SERVICE_ACCOUNT not configured")
         sys.exit(1)
-    creds_info = json.loads(creds_raw)
+    creds_raw = creds_raw.strip()
+    # Handle base64-encoded credentials (common in migrated env files)
+    try:
+        creds_info = json.loads(creds_raw)
+    except (json.JSONDecodeError, ValueError):
+        import base64
+        creds_info = json.loads(base64.b64decode(creds_raw))
     if isinstance(creds_info, str):
         creds_info = json.loads(creds_info)
     credentials = service_account.Credentials.from_service_account_info(

@@ -102,7 +102,12 @@ def gsc_inspect_url(url):
         print("⚠️ GSC_SERVICE_ACCOUNT not configured")
         return
 
-    creds_info = json.loads(creds_raw) if isinstance(creds_raw, str) else creds_raw
+    creds_raw = creds_raw.strip()
+    try:
+        creds_info = json.loads(creds_raw)
+    except (json.JSONDecodeError, ValueError):
+        import base64
+        creds_info = json.loads(base64.b64decode(creds_raw))
     if isinstance(creds_info, str):
         creds_info = json.loads(creds_info)
 
@@ -144,7 +149,12 @@ def gsc_coverage_report():
         print("⚠️ GSC_SERVICE_ACCOUNT not configured")
         return
 
-    creds_info = json.loads(creds_raw) if isinstance(creds_raw, str) else creds_raw
+    creds_raw = creds_raw.strip()
+    try:
+        creds_info = json.loads(creds_raw)
+    except (json.JSONDecodeError, ValueError):
+        import base64
+        creds_info = json.loads(base64.b64decode(creds_raw))
     if isinstance(creds_info, str):
         creds_info = json.loads(creds_info)
 

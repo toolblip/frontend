@@ -44,7 +44,12 @@ def get_gsc():
         print("ERROR: GSC_SERVICE_ACCOUNT env var not set")
         sys.exit(1)
 
-    creds_info = json.loads(creds_raw)
+    creds_raw = creds_raw.strip()
+    try:
+        creds_info = json.loads(creds_raw)
+    except (json.JSONDecodeError, ValueError):
+        import base64
+        creds_info = json.loads(base64.b64decode(creds_raw))
     # .env values may be quoted JSON strings. Decode once more if needed.
     if isinstance(creds_info, str):
         creds_info = json.loads(creds_info)
