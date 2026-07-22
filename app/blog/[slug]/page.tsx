@@ -3,6 +3,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getBlogPost, getBlogPosts, type BlogPost } from '@/lib/blog';
 import AdSlot from '@/components/ads/AdSlot';
+import BlogShareButton from '@/components/share/BlogShareButton';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -143,6 +144,8 @@ export default async function BlogPostPage({ params }: PageProps) {
             <span>{currentPost.date}</span>
             <span>·</span>
             <span>{currentPost.readingTime}</span>
+            <span>·</span>
+            <BlogShareButton url={`https://toolblip.com/blog/${currentPost.slug}`} title={currentPost.title} />
           </div>
         </header>
 

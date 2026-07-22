@@ -9,6 +9,7 @@ import HowItWorksStrip from '@/components/v2/home/HowItWorksStrip';
 import CategoryQuickAccess from '@/components/v2/home/CategoryQuickAccess';
 import WhyToolblip from '@/components/v2/home/WhyToolblip';
 import CategoryGrid from '@/components/v2/home/CategoryGrid';
+import HomeShareButton from '@/components/share/HomeShareButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -82,6 +83,9 @@ export default function HomePage() {
   return (
     <>
       <Hero toolCount={toolCount} />
+      <div className="tb-v2-container flex justify-center -mt-2 mb-6">
+        <HomeShareButton />
+      </div>
       <HowItWorksStrip toolCount={toolCount} categoryCount={categoryCount} />
       <CategoryQuickAccess categories={categories} />
       <WhyToolblip />

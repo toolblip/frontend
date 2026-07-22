@@ -3,10 +3,12 @@
     "convert Roman numerals to numbers and back",
     "generate a changelog from git commit messages"
   ],
-  "in_progress": [
-    "generate a Content Security Policy header for web security"
-  ],
+  "in_progress": [],
   "done": [
+    {
+      "topic": "generate a Content Security Policy header for web security",
+      "completed_at": "2026-07-22T04:36:53Z"
+    },
     {
       "topic": "convert Unix line endings to Windows for file compatibility",
       "completed_at": "2026-07-22T04:11:46Z"
