@@ -1,29 +1,29 @@
-import { NextResponse } from 'next/server';
-import { readFileSync, existsSync } from 'fs';
-import path from 'path';
-
-const DATA_FILE = path.join(process.cwd(), 'data', 'short-links.json');
-
-function loadLinks(): Record<string, string> {
-  if (!existsSync(DATA_FILE)) return {};
-  try {
-    return JSON.parse(readFileSync(DATA_FILE, 'utf-8'));
-  } catch {
-    return {};
-  }
-}
+import { NextResponse } from "next/server";
+import {
+  loadShortLinks,
+  saveShortLinks,
+  trackClick,
+} from "@/lib/shortLinks";
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ code: string }> }
 ) {
   const { code } = await params;
-  const links = loadLinks();
-  const targetUrl = links[code];
+  const data = loadShortLinks();
+  const entry = data.links[code];
 
-  if (!targetUrl) {
-    return NextResponse.json({ error: 'Short link not found' }, { status: 404 });
+  if (!entry) {
+    return NextResponse.json(
+      { error: "Short link not found" },
+      { status: 404 }
+    );
   }
 
-  return NextResponse.redirect(targetUrl, 302);
+  // Track the click
+  const referrer = request.headers.get("referer") || undefined;
+  trackClick(data, code, referrer);
+  saveShortLinks(data);
+
+  return NextResponse.redirect(entry.url, 302);
 }
