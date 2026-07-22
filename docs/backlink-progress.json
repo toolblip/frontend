@@ -4,7 +4,7 @@
     { "name": "GitHub Pages", "dr": 97, "status": "done", "notes": "toolblip.github.io exists with backlink and canonical to toolblip.com" },
     { "name": "Medium", "dr": 94, "status": "blocked", "notes": "Cloudflare Turnstile blocks headless browser. Needs a Medium API integration token (set in blog-writer .env) or manual cross-post from full browser." },
     { "name": "Substack", "dr": 94, "status": "blocked", "notes": "Needs email account signup — skip" },
-    { "name": "Pixabay", "dr": 92, "status": "pending", "notes": "Upload tool screenshots with watermark" },
+    { "name": "Pixabay", "dr": 92, "status": "blocked", "notes": "Needs email account signup with verification. No upload API available. Tool screenshots don't fit stock photography model. Requires manual human signup and content upload." },
     { "name": "SourceForge", "dr": 92, "status": "pending", "notes": "Create project listing" },
     { "name": "Gumroad", "dr": 92, "status": "pending", "notes": "Create free product page with link" },
     { "name": "Pinterest", "dr": 97, "status": "pending", "notes": "Create pins of tool images, link back" },
@@ -30,6 +30,6 @@
     { "name": "YourStory", "dr": 85, "status": "blocked", "notes": "Needs founder story pitch" },
     { "name": "Forbes", "dr": 94, "status": "blocked", "notes": "Editorial pitch — long shot" }
   ],
-  "last_updated": "2026-07-17",
-  "current_index": 3
+  "last_updated": "2026-07-21",
+  "current_index": 5
 }
