@@ -56,3 +56,7 @@ api/
 .claude-home/
 .openclaw/
 .railway_token
+
+# Secrets (never commit)
+.secrets/
+.env
