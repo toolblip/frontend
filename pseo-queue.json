@@ -1,10 +1,13 @@
 {
   "pending": [
-    "convert Roman numerals to numbers and back",
     "generate a changelog from git commit messages"
   ],
   "in_progress": [],
   "done": [
+    {
+      "topic": "convert Roman numerals to numbers and back",
+      "completed_at": "2026-07-23T04:09:02Z"
+    },
     {
       "topic": "generate a Content Security Policy header for web security",
       "completed_at": "2026-07-22T04:36:53Z"
