@@ -10,6 +10,10 @@ import CategoryQuickAccess from '@/components/v2/home/CategoryQuickAccess';
 import WhyToolblip from '@/components/v2/home/WhyToolblip';
 import CategoryGrid from '@/components/v2/home/CategoryGrid';
 import HomeShareButton from '@/components/share/HomeShareButton';
+import { getCategoryMeta, categoryAnchor } from '@/lib/v2/categoryMeta';
+import { IconArrowUR } from '@/components/v2/icons';
+
+const POPULAR_CATEGORIES = ['Text', 'Developer', 'SEO', 'Color', 'Encoder'];
 
 export const dynamic = 'force-dynamic';
 
@@ -79,6 +83,11 @@ export default function HomePage() {
     .sort(([, a], [, b]) => b - a)
     .map(([name]) => ({ name }))
   const categoryCount = categories.length;
+  const categoriesWithCounts = categories.map((c) => ({ ...c, count: categoryCounts[c.name] }));
+
+  const popularTools = POPULAR_CATEGORIES.flatMap((cat) =>
+    tools.filter((t) => t.category === cat).slice(0, 6),
+  );
 
   return (
     <>
@@ -90,6 +99,91 @@ export default function HomePage() {
       <CategoryQuickAccess categories={categories} />
       <WhyToolblip />
       <CategoryGrid />
+
+      <section className="tb-v2-band">
+        <div className="tb-v2-container">
+          <div className="tb-v2-band-head">
+            <div>
+              <div className="tb-v2-kicker">Popular tools</div>
+              <h2>Start with what people search for most.</h2>
+            </div>
+            <div className="tb-v2-band-head-side">
+              A hand-picked set from Text, Developer, SEO, Color, and Encoder &mdash; five of the busiest categories on
+              Toolblip.
+            </div>
+          </div>
+          <div className="tb-v2-dir-grid">
+            {popularTools.map((tool) => {
+              const meta = getCategoryMeta(tool.category);
+              return (
+                <Link
+                  key={tool.slug}
+                  href={`/tools/${tool.slug}`}
+                  className="tb-v2-dir-card"
+                  style={{ '--cat-color': meta.color, '--cat-bg': meta.bg } as React.CSSProperties}
+                >
+                  <div className="tb-v2-dir-card-top">
+                    <span className="tb-v2-dir-card-emoji">{tool.emoji}</span>
+                    <div style={{ flex: 1 }}>
+                      <div className="tb-v2-dir-card-title">{tool.name}</div>
+                    </div>
+                    <IconArrowUR className="tb-v2-ic tb-v2-dir-card-go" />
+                  </div>
+                  <div className="tb-v2-dir-card-desc">{tool.description}</div>
+                  <div className="tb-v2-dir-card-foot">
+                    <span className="tb-v2-dir-tag">{tool.category}</span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+          <div className="pt-4 text-center">
+            <Link href="/all-tools" className="tb-v2-btn" style={{ fontSize: 13, padding: '6px 14px' }}>
+              Browse all {toolCount} tools
+              <IconArrowUR style={{ width: 14, height: 14 }} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="tb-v2-band">
+        <div className="tb-v2-container">
+          <div className="tb-v2-band-head">
+            <div>
+              <div className="tb-v2-kicker">All categories</div>
+              <h2>Every category, one click away.</h2>
+            </div>
+            <div className="tb-v2-band-head-side">
+              {`${categoryCount} categories across ${toolCount} tools — jump straight into the full index for any one of them.`}
+            </div>
+          </div>
+          <div className="tb-v2-dir-grid">
+            {categoriesWithCounts.map(({ name, count }) => {
+              const meta = getCategoryMeta(name);
+              return (
+                <Link
+                  key={name}
+                  href={`/all-tools#${categoryAnchor(name)}`}
+                  className="tb-v2-dir-card"
+                  style={{ '--cat-color': meta.color, '--cat-bg': meta.bg } as React.CSSProperties}
+                >
+                  <div className="tb-v2-dir-card-top">
+                    <div style={{ flex: 1 }}>
+                      <div className="tb-v2-dir-card-title">{name}</div>
+                    </div>
+                    <IconArrowUR className="tb-v2-ic tb-v2-dir-card-go" />
+                  </div>
+                  <div className="tb-v2-dir-card-foot">
+                    <span className="tb-v2-dir-tag">
+                      {count} {count === 1 ? 'tool' : 'tools'}
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
       <section className="tb-v2-band">
         <div className="tb-v2-container">

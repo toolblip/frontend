@@ -31,3 +31,7 @@ export const CAT_META: Record<string, CategoryMeta> = {
 export function getCategoryMeta(category: string): CategoryMeta {
   return CAT_META[category] ?? { icon: IconUtil, color: 'var(--fg-1)', bg: 'var(--surface-2)' };
 }
+
+export function categoryAnchor(category: string): string {
+  return category.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+}
