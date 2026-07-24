@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { CloseIcon, CollapseIcon, ExpandIcon, ShareGlyphIcon, SOCIAL_COLORS } from './shareIcons';
+import { CloseIcon, CollapseIcon, CopyIcon, ExpandIcon, SOCIAL_COLORS } from './shareIcons';
 
 export type ShareChannelLink = {
   /** Short platform name shown under the icon, e.g. "WhatsApp". */
@@ -21,7 +21,7 @@ type ShareCardProps = {
   expanded: boolean;
   onToggleExpand: () => void;
   onClose: () => void;
-  onNativeShare: () => void;
+  onCopy: () => void;
   /** Tool or page title shown under the "SHARE LINK" label. Falls back to "Toolblip". */
   title?: string;
   /**
@@ -42,7 +42,7 @@ export default function ShareCard({
   expanded,
   onToggleExpand,
   onClose,
-  onNativeShare,
+  onCopy,
   title,
   standalone = true,
 }: ShareCardProps) {
@@ -104,6 +104,22 @@ export default function ShareCard({
 
         {/* Social share row */}
         <div className="flex items-center justify-center gap-4">
+          <button
+            type="button"
+            onClick={onCopy}
+            disabled={loading}
+            aria-label="Copy link"
+            className="group flex flex-col items-center gap-1.5 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <span
+              className={`flex ${tileSize} items-center justify-center rounded-full text-white shadow-sm transition group-hover:-translate-y-0.5`}
+              style={{ background: SOCIAL_COLORS.copy }}
+            >
+              <CopyIcon className={tileIconSize} />
+            </span>
+            <span className={`${tileLabelSize} font-medium text-gray-600 dark:text-white/60`}>{copied ? 'Copied!' : 'Copy link'}</span>
+          </button>
+
           {channels.map((link) => (
             <a
               key={link.label}
@@ -123,22 +139,6 @@ export default function ShareCard({
               <span className={`${tileLabelSize} font-medium text-gray-600 dark:text-white/60`}>{link.label}</span>
             </a>
           ))}
-
-          <button
-            type="button"
-            onClick={onNativeShare}
-            disabled={loading}
-            aria-label="More share options"
-            className="group flex flex-col items-center gap-1.5 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <span
-              className={`flex ${tileSize} items-center justify-center rounded-full text-white shadow-sm transition group-hover:-translate-y-0.5`}
-              style={{ background: SOCIAL_COLORS.more }}
-            >
-              <ShareGlyphIcon className={tileIconSize} />
-            </span>
-            <span className={`${tileLabelSize} font-medium text-gray-600 dark:text-white/60`}>{copied ? 'Copied!' : 'More'}</span>
-          </button>
         </div>
       </div>
     </div>

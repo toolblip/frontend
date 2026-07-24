@@ -7,7 +7,7 @@ import GoogleAuthButton from "@/components/auth/GoogleAuthButton";
 import { useAuth } from "@/app/providers/auth-provider";
 import { recordRecentTool } from "@/lib/toolHistory";
 import ShareCard, { type ShareChannelLink } from "@/components/share/ShareCard";
-import { LinkedInIcon, WhatsAppIcon, MessengerIcon, SnapchatIcon, EmailIcon, ShareGlyphIcon, SOCIAL_COLORS } from "@/components/share/shareIcons";
+import { XIcon, FacebookIcon, WhatsAppIcon, LinkedInIcon, MessengerIcon, ShareGlyphIcon, SOCIAL_COLORS } from "@/components/share/shareIcons";
 
 type EngagementStats = {
   slug: string;
@@ -159,7 +159,7 @@ function SharePopover({
   expanded,
   qrDataUrl,
   onToggleExpand,
-  onNativeShare,
+  onCopy,
   onClose,
 }: {
   toolName: string;
@@ -170,7 +170,7 @@ function SharePopover({
   expanded: boolean;
   qrDataUrl: string;
   onToggleExpand: () => void;
-  onNativeShare: () => void;
+  onCopy: () => void;
   onClose: () => void;
 }) {
   return (
@@ -184,7 +184,7 @@ function SharePopover({
         title={title}
         onToggleExpand={onToggleExpand}
         onClose={onClose}
-        onNativeShare={onNativeShare}
+        onCopy={onCopy}
       />
     </div>
   );
@@ -320,6 +320,20 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
     const text = `Check out ${toolName} on Toolblip`;
     return [
       {
+        label: "X",
+        href: `https://x.com/intent/tweet?${new URLSearchParams({ text, url: shortUrl }).toString()}`,
+        icon: <XIcon className="h-full w-full text-white" />,
+        color: SOCIAL_COLORS.x,
+        onClick: () => void recordShare("x"),
+      },
+      {
+        label: "Facebook",
+        href: `https://www.facebook.com/sharer/sharer.php?${new URLSearchParams({ u: shortUrl }).toString()}`,
+        icon: <FacebookIcon className="h-full w-full text-white" />,
+        color: SOCIAL_COLORS.facebook,
+        onClick: () => void recordShare("facebook"),
+      },
+      {
         label: "WhatsApp",
         href: `https://wa.me/?${new URLSearchParams({ text: `${text} ${shortUrl}` }).toString()}`,
         icon: <WhatsAppIcon className="h-full w-full text-white" />,
@@ -339,20 +353,6 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
         icon: <MessengerIcon className="h-full w-full text-white" />,
         color: SOCIAL_COLORS.messenger,
         onClick: () => void recordShare("messenger"),
-      },
-      {
-        label: "Snapchat",
-        href: `https://www.snapchat.com/scan?attachmentUrl=${encodeURIComponent(shortUrl)}`,
-        icon: <SnapchatIcon className="h-full w-full text-white" />,
-        color: SOCIAL_COLORS.snapchat,
-        onClick: () => void recordShare("snapchat"),
-      },
-      {
-        label: "Email",
-        href: `mailto:?${new URLSearchParams({ subject: text, body: shortUrl }).toString()}`,
-        icon: <EmailIcon className="h-full w-full text-white" />,
-        color: SOCIAL_COLORS.email,
-        onClick: () => void recordShare("email"),
       },
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -422,19 +422,6 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
     void recordShare("copy");
-  }
-
-  async function handleNativeShare() {
-    if (typeof navigator !== "undefined" && navigator.share) {
-      try {
-        await navigator.share({ title: toolName, text: `Check out ${toolName} on Toolblip`, url: shortUrl });
-        void recordShare("native");
-      } catch {
-        // user cancelled or share failed — nothing to do
-      }
-      return;
-    }
-    void copyLink();
   }
 
   async function toggleFavorite() {
@@ -562,7 +549,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
             expanded={shareExpanded}
             qrDataUrl={qrDataUrl}
             onToggleExpand={() => setShareExpanded((v) => !v)}
-            onNativeShare={handleNativeShare}
+            onCopy={copyLink}
             onClose={() => setShareOpen(false)}
           />
         )}

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import ShareCard, { type ShareChannelLink } from './ShareCard';
-import { LinkedInIcon, WhatsAppIcon, MessengerIcon, SnapchatIcon, EmailIcon, SOCIAL_COLORS } from './shareIcons';
+import { XIcon, FacebookIcon, WhatsAppIcon, LinkedInIcon, MessengerIcon, SOCIAL_COLORS } from './shareIcons';
 
 type SharePanelProps = {
   open: boolean;
@@ -98,6 +98,18 @@ export default function SharePanel({ open, onClose, url, title }: SharePanelProp
 
   const channels: ShareChannelLink[] = [
     {
+      label: 'X',
+      href: `https://x.com/intent/tweet?${new URLSearchParams({ text: shareText, url: shortUrl }).toString()}`,
+      icon: <XIcon className="h-full w-full text-white" />,
+      color: SOCIAL_COLORS.x,
+    },
+    {
+      label: 'Facebook',
+      href: `https://www.facebook.com/sharer/sharer.php?${new URLSearchParams({ u: shortUrl }).toString()}`,
+      icon: <FacebookIcon className="h-full w-full text-white" />,
+      color: SOCIAL_COLORS.facebook,
+    },
+    {
       label: 'WhatsApp',
       href: `https://wa.me/?${new URLSearchParams({ text: `${shareText} ${shortUrl}` }).toString()}`,
       icon: <WhatsAppIcon className="h-full w-full text-white" />,
@@ -115,18 +127,6 @@ export default function SharePanel({ open, onClose, url, title }: SharePanelProp
       icon: <MessengerIcon className="h-full w-full text-white" />,
       color: SOCIAL_COLORS.messenger,
     },
-    {
-      label: 'Snapchat',
-      href: `https://www.snapchat.com/scan?attachmentUrl=${encodeURIComponent(shortUrl)}`,
-      icon: <SnapchatIcon className="h-full w-full text-white" />,
-      color: SOCIAL_COLORS.snapchat,
-    },
-    {
-      label: 'Email',
-      href: `mailto:?${new URLSearchParams({ subject: shareText, body: shortUrl }).toString()}`,
-      icon: <EmailIcon className="h-full w-full text-white" />,
-      color: SOCIAL_COLORS.email,
-    },
   ];
 
   async function handleCopy() {
@@ -141,18 +141,6 @@ export default function SharePanel({ open, onClose, url, title }: SharePanelProp
     }
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  }
-
-  async function handleNativeShare() {
-    if (typeof navigator !== 'undefined' && navigator.share) {
-      try {
-        await navigator.share({ title: title || 'Toolblip', text: shareText, url: shortUrl });
-      } catch {
-        // user cancelled or share failed — nothing to do
-      }
-      return;
-    }
-    void handleCopy();
   }
 
   return (
@@ -174,7 +162,7 @@ export default function SharePanel({ open, onClose, url, title }: SharePanelProp
         standalone={false}
         onToggleExpand={() => setExpanded((v) => !v)}
         onClose={onClose}
-        onNativeShare={handleNativeShare}
+        onCopy={handleCopy}
       />
     </div>
   );

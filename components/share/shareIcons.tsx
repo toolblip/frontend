@@ -4,18 +4,35 @@ type IconProps = SVGProps<SVGSVGElement>;
 
 /** Brand colors for the share-panel social tiles (circle background). */
 export const SOCIAL_COLORS = {
+  copy: '#6B7280',
+  x: '#000000',
+  facebook: '#1877F2',
   whatsapp: '#25D366',
   linkedin: '#0A66C2',
-  messenger: '#8862F2',
-  snapchat: '#FFFC00',
-  email: '#6B7280',
-  more: '#6B7280',
+  messenger: '#00B2FF',
 } as const;
 
-export function LinkedInIcon(props: IconProps) {
+export function CopyIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+    </svg>
+  );
+}
+
+export function XIcon(props: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
-      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
+}
+
+export function FacebookIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
     </svg>
   );
 }
@@ -29,6 +46,14 @@ export function WhatsAppIcon(props: IconProps) {
   );
 }
 
+export function LinkedInIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+    </svg>
+  );
+}
+
 export function MessengerIcon(props: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
@@ -36,26 +61,7 @@ export function MessengerIcon(props: IconProps) {
         d="M12 2C6.48 2 2 6.15 2 11.25c0 2.9 1.44 5.49 3.7 7.19V22l3.38-1.86c.9.25 1.87.38 2.92.38 5.52 0 10-4.15 10-9.27C22 6.15 17.52 2 12 2z"
         fill="currentColor"
       />
-      <path d="M6.7 14.4l3.5-3.7 2.5 1.9 3.8-3.7-3.8 5.3-2.5-1.9-3.5 3.7z" fill="#8862F2" />
-    </svg>
-  );
-}
-
-export function SnapchatIcon(props: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
-      <path d="M12 3c-3 0-5 2.2-5 5.5v2.3c-.9.2-1.7.6-1.7 1.2 0 .5.6.8 1.2 1-.3.8-.9 1.8-1.8 2.5-.4.3-.2.8.3.9.5.1.9.4.9.9 0 .4.4.7.8.6.4-.1.8.1 1.1.5.4.6 1.1 1.6 2.2 1.6s1.8-1 2.2-1.6c.3-.4.7-.6 1.1-.5.4.1.8-.2.8-.6 0-.5.4-.8.9-.9.5-.1.7-.6.3-.9-.9-.7-1.5-1.7-1.8-2.5.6-.2 1.2-.5 1.2-1 0-.6-.8-1-1.7-1.2V8.5C17 5.2 15 3 12 3z" />
-      <circle cx="9.3" cy="10.5" r="0.6" fill="#000" />
-      <circle cx="14.7" cy="10.5" r="0.6" fill="#000" />
-    </svg>
-  );
-}
-
-export function EmailIcon(props: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
-      <rect x="3" y="5" width="18" height="14" rx="2" />
-      <path d="M3 7l9 6 9-6" />
+      <path d="M6.7 14.4l3.5-3.7 2.5 1.9 3.8-3.7-3.8 5.3-2.5-1.9-3.5 3.7z" fill="#00B2FF" />
     </svg>
   );
 }
@@ -84,7 +90,7 @@ export function CloseIcon(props: IconProps) {
   );
 }
 
-/** Also used as the "More" (native share) tile glyph. */
+/** Used for the top-level "Share" toggle button on the tool engagement bar. */
 export function ShareGlyphIcon(props: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" aria-hidden="true" {...props}>
