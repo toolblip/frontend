@@ -1,17 +1,22 @@
 'use client';
 
+import QRCode from 'qrcode';
+
 /**
- * Simple QR code generator using a free API.
- * Falls back to a "copy link" message if the API fails.
+ * Generate QR code as data URL using client-side qrcode package.
+ * Falls back to null if generation fails.
  */
 export async function generateQRCode(url: string, size = 200): Promise<string | null> {
   try {
-    const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(url)}&format=svg`;
-    const response = await fetch(qrApiUrl);
-    if (response.ok) {
-      return qrApiUrl;
-    }
-    return null;
+    const dataUrl = await QRCode.toDataURL(url, {
+      width: size,
+      margin: 2,
+      color: {
+        dark: '#000000',
+        light: '#FFFFFF',
+      },
+    });
+    return dataUrl;
   } catch {
     return null;
   }

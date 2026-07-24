@@ -37,19 +37,19 @@ export default function ShareCard({
 
   return (
     <div
-      className={`flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#1a1a2e] text-white shadow-2xl transition-[width] duration-300 ease-out ${
+      className={`flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white text-gray-900 shadow-2xl transition-[width] duration-300 ease-out dark:border-white/10 dark:bg-[#1a1a2e] dark:text-white ${
         expanded ? 'w-[640px]' : 'w-[420px]'
       } max-w-[92vw]`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
-        <span className="text-sm font-black tracking-[0.25em] text-white">TOOLBLIP</span>
+      <div className="flex items-center justify-between border-b border-gray-200 px-5 py-4 dark:border-white/10">
+        <span className="text-sm font-black tracking-[0.25em] text-gray-900 dark:text-white">TOOLBLIP</span>
         <div className="flex items-center gap-1">
           <button
             type="button"
             onClick={onToggleExpand}
             aria-label={expanded ? 'Collapse panel' : 'Expand panel'}
-            className="flex h-8 w-8 items-center justify-center rounded-full text-white/60 transition hover:bg-white/10 hover:text-white cursor-pointer"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-gray-500 transition hover:bg-gray-100 hover:text-gray-900 dark:text-white/60 dark:hover:bg-white/10 dark:hover:text-white cursor-pointer"
           >
             {expanded ? <CollapseIcon className="h-4 w-4" /> : <ExpandIcon className="h-4 w-4" />}
           </button>
@@ -57,7 +57,7 @@ export default function ShareCard({
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="flex h-8 w-8 items-center justify-center rounded-full text-white/60 transition hover:bg-white/10 hover:text-white cursor-pointer"
+            className="flex h-8 w-8 items-center justify-center rounded-full text-gray-500 transition hover:bg-gray-100 hover:text-gray-900 dark:text-white/60 dark:hover:bg-white/10 dark:hover:text-white cursor-pointer"
           >
             <CloseIcon className="h-4 w-4" />
           </button>
@@ -67,7 +67,7 @@ export default function ShareCard({
       {/* QR code */}
       <div className="flex flex-col items-center gap-5 px-6 py-6">
         <div
-          className="flex shrink-0 items-center justify-center rounded-2xl bg-white p-4 shadow-lg transition-all duration-300"
+          className="flex shrink-0 items-center justify-center rounded-2xl bg-gray-100 p-4 shadow-lg transition-all duration-300 dark:bg-white"
         >
           {qrDataUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -79,7 +79,7 @@ export default function ShareCard({
             />
           ) : (
             <div style={{ width: qrSize, height: qrSize }} className="flex items-center justify-center transition-all duration-300">
-              <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-200 border-t-red-500" />
+              <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-red-500 dark:border-gray-200" />
             </div>
           )}
         </div>
@@ -94,7 +94,7 @@ export default function ShareCard({
               rel="noopener noreferrer"
               aria-label={link.label}
               onClick={link.onClick}
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition hover:-translate-y-0.5 hover:bg-white/20 cursor-pointer"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-gray-100 text-gray-700 transition hover:-translate-y-0.5 hover:bg-gray-200 dark:bg-white/10 dark:text-white dark:hover:bg-white/20 cursor-pointer"
             >
               <span className="h-5 w-5">{link.icon}</span>
             </a>
@@ -103,12 +103,12 @@ export default function ShareCard({
       </div>
 
       {/* Bottom actions */}
-      <div className="flex gap-2 border-t border-white/10 p-4">
+      <div className="flex gap-2 border-t border-gray-200 p-4 dark:border-white/10">
         <button
           type="button"
           onClick={onNativeShare}
           disabled={loading}
-          className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-white/10 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-white/20 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-gray-100 px-4 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-200 dark:bg-white/10 dark:text-white dark:hover:bg-white/20 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
         >
           <ShareGlyphIcon className="h-4 w-4" />
           Share
