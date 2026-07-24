@@ -181,6 +181,7 @@ function SharePopover({
         copied={copied}
         loading={loading}
         expanded={expanded}
+        title={toolName}
         onToggleExpand={onToggleExpand}
         onClose={onClose}
         onCopy={onCopy}

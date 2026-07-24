@@ -165,6 +165,8 @@ export default function SharePanel({ open, onClose, url, title }: SharePanelProp
         copied={copied}
         loading={loading}
         expanded={expanded}
+        title={title}
+        standalone={false}
         onToggleExpand={() => setExpanded((v) => !v)}
         onClose={onClose}
         onCopy={handleCopy}
