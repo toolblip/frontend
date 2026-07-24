@@ -54,7 +54,7 @@ export function ExpandIcon(props: IconProps) {
 export function CollapseIcon(props: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
-      <path d="M9 3v6H3M15 21v-6h6M3 15l6-6M21 9l-6 6" />
+      <path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7" />
     </svg>
   );
 }

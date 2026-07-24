@@ -152,6 +152,7 @@ function CountPill({
 
 function SharePopover({
   toolName,
+  title,
   channels,
   copied,
   loading,
@@ -163,6 +164,7 @@ function SharePopover({
   onClose,
 }: {
   toolName: string;
+  title: string;
   channels: ShareChannelLink[];
   copied: boolean;
   loading: boolean;
@@ -181,7 +183,7 @@ function SharePopover({
         copied={copied}
         loading={loading}
         expanded={expanded}
-        title={toolName}
+        title={title}
         onToggleExpand={onToggleExpand}
         onClose={onClose}
         onCopy={onCopy}
@@ -205,6 +207,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
   const [favoriteLoading, setFavoriteLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const [pageUrl, setPageUrl] = useState(`https://toolblip.com/tools/${toolSlug}`);
+  const [pageTitle, setPageTitle] = useState(toolName);
   const [shareHovered, setShareHovered] = useState(false);
   const [favoriteIntent, setFavoriteIntent] = useState(false);
   const [unfavoriteOpen, setUnfavoriteOpen] = useState(false);
@@ -216,6 +219,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
 
   useEffect(() => {
     setPageUrl(window.location.href);
+    setPageTitle(document.title);
   }, []);
 
   // Generate short URL when share popover opens
@@ -549,6 +553,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
         {shareOpen && (
           <SharePopover
             toolName={toolName}
+            title={pageTitle}
             channels={shareLinks}
             copied={copied}
             loading={shortUrlLoading}
