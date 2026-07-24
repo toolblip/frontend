@@ -1,12 +1,15 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { CheckIcon, CloseIcon, CollapseIcon, CopyIcon, ExpandIcon, ShareGlyphIcon } from './shareIcons';
+import { CloseIcon, CollapseIcon, ExpandIcon, ShareGlyphIcon, SOCIAL_COLORS } from './shareIcons';
 
 export type ShareChannelLink = {
+  /** Short platform name shown under the icon, e.g. "WhatsApp". */
   label: string;
   href: string;
   icon: ReactNode;
+  /** Brand color for the circular icon background. */
+  color: string;
   onClick?: () => void;
 };
 
@@ -18,9 +21,8 @@ type ShareCardProps = {
   expanded: boolean;
   onToggleExpand: () => void;
   onClose: () => void;
-  onCopy: () => void;
   onNativeShare: () => void;
-  /** Tool or page title shown under the "Share" label. Falls back to "Toolblip". */
+  /** Tool or page title shown under the "SHARE LINK" label. Falls back to "Toolblip". */
   title?: string;
   /**
    * When true (default), expanding the card wraps it in its own centered,
@@ -40,12 +42,14 @@ export default function ShareCard({
   expanded,
   onToggleExpand,
   onClose,
-  onCopy,
   onNativeShare,
   title,
   standalone = true,
 }: ShareCardProps) {
-  const qrSize = expanded ? 400 : 280;
+  const qrSize = expanded ? 400 : 240;
+  const tileSize = expanded ? 'h-14 w-14' : 'h-11 w-11';
+  const tileIconSize = expanded ? 'h-6 w-6' : 'h-5 w-5';
+  const tileLabelSize = expanded ? 'text-xs' : 'text-[10px]';
   const displayTitle = title || 'Toolblip';
 
   const card = (
@@ -57,7 +61,7 @@ export default function ShareCard({
       {/* Header */}
       <div className="flex items-center justify-between border-b border-gray-200 px-5 py-4 dark:border-white/10">
         <div className="min-w-0">
-          <div className="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 dark:text-white/40">Share</div>
+          <div className="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 dark:text-white/40">Share link</div>
           <div className="truncate text-sm font-bold text-gray-900 dark:text-white">{displayTitle}</div>
         </div>
         <div className="flex items-center gap-1">
@@ -81,10 +85,8 @@ export default function ShareCard({
       </div>
 
       {/* QR code */}
-      <div className="flex flex-col items-center gap-5 px-6 py-6">
-        <div
-          className="flex shrink-0 items-center justify-center rounded-2xl bg-gray-100 p-4 shadow-lg transition-all duration-300 dark:bg-white"
-        >
+      <div className="flex flex-col items-center gap-6 px-6 py-6">
+        <div className="flex shrink-0 items-center justify-center rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-300">
           {qrDataUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -95,51 +97,49 @@ export default function ShareCard({
             />
           ) : (
             <div style={{ width: qrSize, height: qrSize }} className="flex items-center justify-center transition-all duration-300">
-              <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-red-500 dark:border-gray-200" />
+              <div className="h-8 w-8 animate-spin rounded-full border-2 border-gray-200 border-t-red-500" />
             </div>
           )}
         </div>
 
         {/* Social share row */}
-        <div className="flex items-center justify-center gap-3">
+        <div className="flex items-center justify-center gap-4">
           {channels.map((link) => (
             <a
               key={link.label}
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={link.label}
+              aria-label={`Share via ${link.label}`}
               onClick={link.onClick}
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-gray-100 text-gray-700 transition hover:-translate-y-0.5 hover:bg-gray-200 dark:bg-white/10 dark:text-white dark:hover:bg-white/20 cursor-pointer"
+              className="group flex flex-col items-center gap-1.5"
             >
-              <span className="h-5 w-5">{link.icon}</span>
+              <span
+                className={`flex ${tileSize} items-center justify-center rounded-full text-white shadow-sm transition group-hover:-translate-y-0.5`}
+                style={{ background: link.color }}
+              >
+                <span className={tileIconSize}>{link.icon}</span>
+              </span>
+              <span className={`${tileLabelSize} font-medium text-gray-600 dark:text-white/60`}>{link.label}</span>
             </a>
           ))}
-        </div>
-      </div>
 
-      {/* Bottom actions */}
-      <div className="flex gap-2 border-t border-gray-200 p-4 dark:border-white/10">
-        <button
-          type="button"
-          onClick={onNativeShare}
-          disabled={loading}
-          className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-gray-100 px-4 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-200 dark:bg-white/10 dark:text-white dark:hover:bg-white/20 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          <ShareGlyphIcon className="h-4 w-4" />
-          Share
-        </button>
-        <button
-          type="button"
-          onClick={onCopy}
-          disabled={loading}
-          className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 ${
-            copied ? 'bg-emerald-500 hover:bg-emerald-500' : 'bg-red-500 hover:bg-red-600'
-          }`}
-        >
-          {copied ? <CheckIcon className="h-4 w-4" /> : <CopyIcon className="h-4 w-4" />}
-          {copied ? 'Copied!' : 'Copy link'}
-        </button>
+          <button
+            type="button"
+            onClick={onNativeShare}
+            disabled={loading}
+            aria-label="More share options"
+            className="group flex flex-col items-center gap-1.5 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <span
+              className={`flex ${tileSize} items-center justify-center rounded-full text-white shadow-sm transition group-hover:-translate-y-0.5`}
+              style={{ background: SOCIAL_COLORS.more }}
+            >
+              <ShareGlyphIcon className={tileIconSize} />
+            </span>
+            <span className={`${tileLabelSize} font-medium text-gray-600 dark:text-white/60`}>{copied ? 'Copied!' : 'More'}</span>
+          </button>
+        </div>
       </div>
     </div>
   );

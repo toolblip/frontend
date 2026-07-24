@@ -7,7 +7,7 @@ import GoogleAuthButton from "@/components/auth/GoogleAuthButton";
 import { useAuth } from "@/app/providers/auth-provider";
 import { recordRecentTool } from "@/lib/toolHistory";
 import ShareCard, { type ShareChannelLink } from "@/components/share/ShareCard";
-import { XIcon, FacebookIcon, LinkedInIcon, WhatsAppIcon, RedditIcon, ShareGlyphIcon } from "@/components/share/shareIcons";
+import { LinkedInIcon, WhatsAppIcon, MessengerIcon, SnapchatIcon, EmailIcon, ShareGlyphIcon, SOCIAL_COLORS } from "@/components/share/shareIcons";
 
 type EngagementStats = {
   slug: string;
@@ -160,7 +160,6 @@ function SharePopover({
   qrDataUrl,
   onToggleExpand,
   onNativeShare,
-  onCopy,
   onClose,
 }: {
   toolName: string;
@@ -172,7 +171,6 @@ function SharePopover({
   qrDataUrl: string;
   onToggleExpand: () => void;
   onNativeShare: () => void;
-  onCopy: () => void;
   onClose: () => void;
 }) {
   return (
@@ -186,7 +184,6 @@ function SharePopover({
         title={title}
         onToggleExpand={onToggleExpand}
         onClose={onClose}
-        onCopy={onCopy}
         onNativeShare={onNativeShare}
       />
     </div>
@@ -323,34 +320,39 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
     const text = `Check out ${toolName} on Toolblip`;
     return [
       {
-        label: "Share on X",
-        href: `https://x.com/intent/tweet?${new URLSearchParams({ text, url: shortUrl }).toString()}`,
-        icon: <XIcon className="h-5 w-5" />,
-        onClick: () => void recordShare("x"),
-      },
-      {
-        label: "Share on Facebook",
-        href: `https://www.facebook.com/sharer/sharer.php?${new URLSearchParams({ u: shortUrl }).toString()}`,
-        icon: <FacebookIcon className="h-5 w-5 text-[#1877F2]" />,
-        onClick: () => void recordShare("facebook"),
-      },
-      {
-        label: "Share on LinkedIn",
-        href: `https://www.linkedin.com/sharing/share-offsite/?${new URLSearchParams({ url: shortUrl }).toString()}`,
-        icon: <LinkedInIcon className="h-5 w-5 text-[#0A66C2]" />,
-        onClick: () => void recordShare("linkedin"),
-      },
-      {
-        label: "Share on WhatsApp",
+        label: "WhatsApp",
         href: `https://wa.me/?${new URLSearchParams({ text: `${text} ${shortUrl}` }).toString()}`,
-        icon: <WhatsAppIcon className="h-5 w-5 text-[#25D366]" />,
+        icon: <WhatsAppIcon className="h-full w-full text-white" />,
+        color: SOCIAL_COLORS.whatsapp,
         onClick: () => void recordShare("whatsapp"),
       },
       {
-        label: "Share on Reddit",
-        href: `https://reddit.com/submit?${new URLSearchParams({ url: shortUrl, title: text }).toString()}`,
-        icon: <RedditIcon className="h-5 w-5 text-[#FF4500]" />,
-        onClick: () => void recordShare("reddit"),
+        label: "LinkedIn",
+        href: `https://www.linkedin.com/sharing/share-offsite/?${new URLSearchParams({ url: shortUrl }).toString()}`,
+        icon: <LinkedInIcon className="h-full w-full text-white" />,
+        color: SOCIAL_COLORS.linkedin,
+        onClick: () => void recordShare("linkedin"),
+      },
+      {
+        label: "Messenger",
+        href: `fb-messenger://share/?link=${encodeURIComponent(shortUrl)}`,
+        icon: <MessengerIcon className="h-full w-full text-white" />,
+        color: SOCIAL_COLORS.messenger,
+        onClick: () => void recordShare("messenger"),
+      },
+      {
+        label: "Snapchat",
+        href: `https://www.snapchat.com/scan?attachmentUrl=${encodeURIComponent(shortUrl)}`,
+        icon: <SnapchatIcon className="h-full w-full text-white" />,
+        color: SOCIAL_COLORS.snapchat,
+        onClick: () => void recordShare("snapchat"),
+      },
+      {
+        label: "Email",
+        href: `mailto:?${new URLSearchParams({ subject: text, body: shortUrl }).toString()}`,
+        icon: <EmailIcon className="h-full w-full text-white" />,
+        color: SOCIAL_COLORS.email,
+        onClick: () => void recordShare("email"),
       },
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -561,7 +563,6 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
             qrDataUrl={qrDataUrl}
             onToggleExpand={() => setShareExpanded((v) => !v)}
             onNativeShare={handleNativeShare}
-            onCopy={copyLink}
             onClose={() => setShareOpen(false)}
           />
         )}

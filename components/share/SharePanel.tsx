@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import ShareCard, { type ShareChannelLink } from './ShareCard';
-import { XIcon, FacebookIcon, LinkedInIcon, WhatsAppIcon, RedditIcon } from './shareIcons';
+import { LinkedInIcon, WhatsAppIcon, MessengerIcon, SnapchatIcon, EmailIcon, SOCIAL_COLORS } from './shareIcons';
 
 type SharePanelProps = {
   open: boolean;
@@ -98,29 +98,34 @@ export default function SharePanel({ open, onClose, url, title }: SharePanelProp
 
   const channels: ShareChannelLink[] = [
     {
-      label: 'Share on X',
-      href: `https://x.com/intent/tweet?${new URLSearchParams({ text: shareText, url: shortUrl }).toString()}`,
-      icon: <XIcon className="h-5 w-5" />,
-    },
-    {
-      label: 'Share on Facebook',
-      href: `https://www.facebook.com/sharer/sharer.php?${new URLSearchParams({ u: shortUrl }).toString()}`,
-      icon: <FacebookIcon className="h-5 w-5 text-[#1877F2]" />,
-    },
-    {
-      label: 'Share on LinkedIn',
-      href: `https://www.linkedin.com/sharing/share-offsite/?${new URLSearchParams({ url: shortUrl }).toString()}`,
-      icon: <LinkedInIcon className="h-5 w-5 text-[#0A66C2]" />,
-    },
-    {
-      label: 'Share on WhatsApp',
+      label: 'WhatsApp',
       href: `https://wa.me/?${new URLSearchParams({ text: `${shareText} ${shortUrl}` }).toString()}`,
-      icon: <WhatsAppIcon className="h-5 w-5 text-[#25D366]" />,
+      icon: <WhatsAppIcon className="h-full w-full text-white" />,
+      color: SOCIAL_COLORS.whatsapp,
     },
     {
-      label: 'Share on Reddit',
-      href: `https://reddit.com/submit?${new URLSearchParams({ url: shortUrl, title: shareText }).toString()}`,
-      icon: <RedditIcon className="h-5 w-5 text-[#FF4500]" />,
+      label: 'LinkedIn',
+      href: `https://www.linkedin.com/sharing/share-offsite/?${new URLSearchParams({ url: shortUrl }).toString()}`,
+      icon: <LinkedInIcon className="h-full w-full text-white" />,
+      color: SOCIAL_COLORS.linkedin,
+    },
+    {
+      label: 'Messenger',
+      href: `fb-messenger://share/?link=${encodeURIComponent(shortUrl)}`,
+      icon: <MessengerIcon className="h-full w-full text-white" />,
+      color: SOCIAL_COLORS.messenger,
+    },
+    {
+      label: 'Snapchat',
+      href: `https://www.snapchat.com/scan?attachmentUrl=${encodeURIComponent(shortUrl)}`,
+      icon: <SnapchatIcon className="h-full w-full text-white" />,
+      color: SOCIAL_COLORS.snapchat,
+    },
+    {
+      label: 'Email',
+      href: `mailto:?${new URLSearchParams({ subject: shareText, body: shortUrl }).toString()}`,
+      icon: <EmailIcon className="h-full w-full text-white" />,
+      color: SOCIAL_COLORS.email,
     },
   ];
 
@@ -169,7 +174,6 @@ export default function SharePanel({ open, onClose, url, title }: SharePanelProp
         standalone={false}
         onToggleExpand={() => setExpanded((v) => !v)}
         onClose={onClose}
-        onCopy={handleCopy}
         onNativeShare={handleNativeShare}
       />
     </div>

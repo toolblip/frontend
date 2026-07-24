@@ -2,21 +2,15 @@ import type { SVGProps } from 'react';
 
 type IconProps = SVGProps<SVGSVGElement>;
 
-export function XIcon(props: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-    </svg>
-  );
-}
-
-export function FacebookIcon(props: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
-      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-    </svg>
-  );
-}
+/** Brand colors for the share-panel social tiles (circle background). */
+export const SOCIAL_COLORS = {
+  whatsapp: '#25D366',
+  linkedin: '#0A66C2',
+  messenger: '#8862F2',
+  snapchat: '#FFFC00',
+  email: '#6B7280',
+  more: '#6B7280',
+} as const;
 
 export function LinkedInIcon(props: IconProps) {
   return (
@@ -35,10 +29,33 @@ export function WhatsAppIcon(props: IconProps) {
   );
 }
 
-export function RedditIcon(props: IconProps) {
+export function MessengerIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <path
+        d="M12 2C6.48 2 2 6.15 2 11.25c0 2.9 1.44 5.49 3.7 7.19V22l3.38-1.86c.9.25 1.87.38 2.92.38 5.52 0 10-4.15 10-9.27C22 6.15 17.52 2 12 2z"
+        fill="currentColor"
+      />
+      <path d="M6.7 14.4l3.5-3.7 2.5 1.9 3.8-3.7-3.8 5.3-2.5-1.9-3.5 3.7z" fill="#8862F2" />
+    </svg>
+  );
+}
+
+export function SnapchatIcon(props: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
-      <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z" />
+      <path d="M12 3c-3 0-5 2.2-5 5.5v2.3c-.9.2-1.7.6-1.7 1.2 0 .5.6.8 1.2 1-.3.8-.9 1.8-1.8 2.5-.4.3-.2.8.3.9.5.1.9.4.9.9 0 .4.4.7.8.6.4-.1.8.1 1.1.5.4.6 1.1 1.6 2.2 1.6s1.8-1 2.2-1.6c.3-.4.7-.6 1.1-.5.4.1.8-.2.8-.6 0-.5.4-.8.9-.9.5-.1.7-.6.3-.9-.9-.7-1.5-1.7-1.8-2.5.6-.2 1.2-.5 1.2-1 0-.6-.8-1-1.7-1.2V8.5C17 5.2 15 3 12 3z" />
+      <circle cx="9.3" cy="10.5" r="0.6" fill="#000" />
+      <circle cx="14.7" cy="10.5" r="0.6" fill="#000" />
+    </svg>
+  );
+}
+
+export function EmailIcon(props: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path d="M3 7l9 6 9-6" />
     </svg>
   );
 }
@@ -67,6 +84,7 @@ export function CloseIcon(props: IconProps) {
   );
 }
 
+/** Also used as the "More" (native share) tile glyph. */
 export function ShareGlyphIcon(props: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" aria-hidden="true" {...props}>
@@ -74,22 +92,6 @@ export function ShareGlyphIcon(props: IconProps) {
       <circle cx="6" cy="12" r="3" />
       <circle cx="18" cy="5.5" r="3" />
       <circle cx="18" cy="18.5" r="3" />
-    </svg>
-  );
-}
-
-export function CopyIcon(props: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
-      <path d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-    </svg>
-  );
-}
-
-export function CheckIcon(props: IconProps) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
-      <path d="M5 13l4 4L19 7" />
     </svg>
   );
 }
