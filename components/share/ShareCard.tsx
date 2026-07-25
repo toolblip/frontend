@@ -54,12 +54,12 @@ export default function ShareCard({
 
   const card = (
     <div
-      className={`flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white text-gray-900 shadow-2xl transition-[width] duration-300 ease-out dark:border-white/10 dark:bg-[#1a1a2e] dark:text-white ${
+      className={`flex flex-col overflow-hidden rounded-2xl border border-[#e8e2d9] bg-[#faf8f5] text-gray-900 shadow-2xl transition-[width] duration-300 ease-out dark:border-white/10 dark:bg-[#1a1a2e] dark:text-white ${
         expanded ? 'w-[640px]' : 'w-[420px]'
       } max-w-[92vw]`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-gray-200 px-5 py-4 dark:border-white/10">
+      <div className="flex items-center justify-between border-b border-[#e8e2d9] px-5 py-4 dark:border-white/10">
         <div className="min-w-0">
           <div className="text-[11px] font-bold uppercase tracking-[0.2em] text-gray-400 dark:text-white/40">Share link</div>
           <div className="truncate text-sm font-bold text-gray-900 dark:text-white">{displayTitle}</div>
