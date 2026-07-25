@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { CloseIcon, CollapseIcon, CopyIcon, ExpandIcon, SOCIAL_COLORS } from './shareIcons';
+import { CloseIcon, CollapseIcon, CopyIcon, ExpandIcon, ShareGlyphIcon, SOCIAL_COLORS } from './shareIcons';
 
 export type ShareChannelLink = {
   /** Short platform name shown under the icon, e.g. "WhatsApp". */
@@ -22,6 +22,7 @@ type ShareCardProps = {
   onToggleExpand: () => void;
   onClose: () => void;
   onCopy: () => void;
+  onNativeShare: () => void;
   /** Tool or page title shown under the "SHARE LINK" label. Falls back to "Toolblip". */
   title?: string;
   /**
@@ -43,6 +44,7 @@ export default function ShareCard({
   onToggleExpand,
   onClose,
   onCopy,
+  onNativeShare,
   title,
   standalone = true,
 }: ShareCardProps) {
@@ -103,13 +105,13 @@ export default function ShareCard({
         </div>
 
         {/* Social share row */}
-        <div className="flex items-center justify-center gap-4">
+        <div className="flex w-full items-center justify-center gap-4 overflow-x-auto px-1 pb-1 [scrollbar-width:thin]">
           <button
             type="button"
             onClick={onCopy}
             disabled={loading}
             aria-label="Copy link"
-            className="group flex flex-col items-center gap-1.5 disabled:cursor-not-allowed disabled:opacity-50"
+            className="group flex shrink-0 flex-col items-center gap-1.5 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <span
               className={`flex ${tileSize} items-center justify-center rounded-full text-white shadow-sm transition group-hover:-translate-y-0.5`}
@@ -128,7 +130,7 @@ export default function ShareCard({
               rel="noopener noreferrer"
               aria-label={`Share via ${link.label}`}
               onClick={link.onClick}
-              className="group flex flex-col items-center gap-1.5"
+              className="group flex shrink-0 flex-col items-center gap-1.5"
             >
               <span
                 className={`flex ${tileSize} items-center justify-center rounded-full text-white shadow-sm transition group-hover:-translate-y-0.5`}
@@ -139,6 +141,22 @@ export default function ShareCard({
               <span className={`${tileLabelSize} font-medium text-gray-600 dark:text-white/60`}>{link.label}</span>
             </a>
           ))}
+
+          <button
+            type="button"
+            onClick={onNativeShare}
+            disabled={loading}
+            aria-label="More share options"
+            className="group flex shrink-0 flex-col items-center gap-1.5 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <span
+              className={`flex ${tileSize} items-center justify-center rounded-full text-white shadow-sm transition group-hover:-translate-y-0.5`}
+              style={{ background: SOCIAL_COLORS.more }}
+            >
+              <ShareGlyphIcon className={tileIconSize} />
+            </span>
+            <span className={`${tileLabelSize} font-medium text-gray-600 dark:text-white/60`}>More</span>
+          </button>
         </div>
       </div>
     </div>

@@ -7,7 +7,7 @@ import GoogleAuthButton from "@/components/auth/GoogleAuthButton";
 import { useAuth } from "@/app/providers/auth-provider";
 import { recordRecentTool } from "@/lib/toolHistory";
 import ShareCard, { type ShareChannelLink } from "@/components/share/ShareCard";
-import { XIcon, FacebookIcon, WhatsAppIcon, LinkedInIcon, MessengerIcon, ShareGlyphIcon, SOCIAL_COLORS } from "@/components/share/shareIcons";
+import { XIcon, FacebookIcon, WhatsAppIcon, LinkedInIcon, MessengerIcon, SnapchatIcon, EmailIcon, ShareGlyphIcon, SOCIAL_COLORS } from "@/components/share/shareIcons";
 
 type EngagementStats = {
   slug: string;
@@ -160,6 +160,7 @@ function SharePopover({
   qrDataUrl,
   onToggleExpand,
   onCopy,
+  onNativeShare,
   onClose,
 }: {
   toolName: string;
@@ -171,6 +172,7 @@ function SharePopover({
   qrDataUrl: string;
   onToggleExpand: () => void;
   onCopy: () => void;
+  onNativeShare: () => void;
   onClose: () => void;
 }) {
   return (
@@ -185,6 +187,7 @@ function SharePopover({
         onToggleExpand={onToggleExpand}
         onClose={onClose}
         onCopy={onCopy}
+        onNativeShare={onNativeShare}
       />
     </div>
   );
@@ -354,6 +357,20 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
         color: SOCIAL_COLORS.messenger,
         onClick: () => void recordShare("messenger"),
       },
+      {
+        label: "Snapchat",
+        href: `https://www.snapchat.com/scan?attachmentUrl=${encodeURIComponent(shortUrl)}`,
+        icon: <SnapchatIcon className="h-full w-full text-white" />,
+        color: SOCIAL_COLORS.snapchat,
+        onClick: () => void recordShare("snapchat"),
+      },
+      {
+        label: "Email",
+        href: `mailto:?${new URLSearchParams({ subject: text, body: shortUrl }).toString()}`,
+        icon: <EmailIcon className="h-full w-full text-white" />,
+        color: SOCIAL_COLORS.email,
+        onClick: () => void recordShare("email"),
+      },
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [toolName, shortUrl]);
@@ -422,6 +439,19 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
     void recordShare("copy");
+  }
+
+  async function handleNativeShare() {
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({ title: toolName, text: `Check out ${toolName} on Toolblip`, url: shortUrl });
+        void recordShare("native");
+      } catch {
+        // user cancelled or share failed — nothing to do
+      }
+      return;
+    }
+    void copyLink();
   }
 
   async function toggleFavorite() {
@@ -550,6 +580,7 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
             qrDataUrl={qrDataUrl}
             onToggleExpand={() => setShareExpanded((v) => !v)}
             onCopy={copyLink}
+            onNativeShare={handleNativeShare}
             onClose={() => setShareOpen(false)}
           />
         )}
