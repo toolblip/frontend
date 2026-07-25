@@ -48,7 +48,7 @@ export default function ShareCard({
   title,
   standalone = true,
 }: ShareCardProps) {
-  const qrSize = expanded ? 320 : 240;
+  const qrSize = expanded ? 320 : 180;
   const tileSize = expanded ? 'h-16 w-16' : 'h-12 w-12';
   const tileIconSize = expanded ? 'h-7 w-7' : 'h-6 w-6';
   const tileLabelSize = expanded ? 'text-xs' : 'text-[10px]';
@@ -91,7 +91,11 @@ export default function ShareCard({
 
       {/* QR code */}
       <div className={`flex flex-col items-center ${expanded ? 'gap-5 px-5 py-5' : 'gap-6 px-6 py-6'}`}>
-        <div className="flex shrink-0 items-center justify-center rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-300">
+        <div
+          className={`flex shrink-0 items-center justify-center rounded-2xl border border-gray-200 bg-white shadow-sm transition-all duration-300 ${
+            expanded ? 'p-4' : 'p-3'
+          }`}
+        >
           {qrDataUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
