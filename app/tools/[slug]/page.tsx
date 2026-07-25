@@ -5,6 +5,7 @@ import { ToolUI } from './ToolUI';
 import ToolEngagementBar from '@/components/tools/ToolEngagementBar';
 import ToolAdSlot from '@/components/ads/ToolAdSlot';
 import ToolWithSidebarAd from '@/components/ads/ToolWithSidebarAd';
+import ToolContentSection from '@/components/tools/ToolContentSection';
 import FaqSection from '@/components/v2/FaqSection';
 import RelatedTools from '@/components/tools/RelatedTools';
 import RelatedBlogPosts from '@/components/tools/RelatedBlogPosts';
@@ -205,10 +206,12 @@ export default async function ToolDetailPage({ params }: PageProps) {
         <ToolAdSlot placement="tool-below" slug={tool.slug} category={tool.category} />
       </div>
 
+      <ToolContentSection toolName={tool.name} content={content} />
+
       <RelatedTools slug={tool.slug} category={tool.category} />
       <RelatedBlogPosts toolName={tool.name} category={tool.category} />
 
-      <FaqSection toolName={tool.name} faqs={faqs} content={content} />
+      <FaqSection toolName={tool.name} faqs={faqs} />
     </div>
   );
 }
