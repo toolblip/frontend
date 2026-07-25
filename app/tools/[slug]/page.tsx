@@ -5,11 +5,13 @@ import { ToolUI } from './ToolUI';
 import ToolEngagementBar from '@/components/tools/ToolEngagementBar';
 import ToolAdSlot from '@/components/ads/ToolAdSlot';
 import ToolWithSidebarAd from '@/components/ads/ToolWithSidebarAd';
+import ToolContentSection from '@/components/tools/ToolContentSection';
 import FaqSection from '@/components/v2/FaqSection';
 import RelatedTools from '@/components/tools/RelatedTools';
 import RelatedBlogPosts from '@/components/tools/RelatedBlogPosts';
 import { getFaqs } from '@/lib/faq';
 import { generateToolContent } from '@/lib/generateToolContent';
+import { getToolContent } from '@/data/tool-content';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -203,6 +205,8 @@ export default async function ToolDetailPage({ params }: PageProps) {
       <div className="mb-10 mt-8">
         <ToolAdSlot placement="tool-below" slug={tool.slug} category={tool.category} />
       </div>
+
+      <ToolContentSection toolName={tool.name} content={getToolContent(tool.slug)} />
 
       {/* SEO-rich content section — server rendered for Googlebot */}
       <div className="mb-10 space-y-6">
