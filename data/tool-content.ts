@@ -15,10 +15,10 @@ export type ToolContent = {
 };
 
 /**
- * Hand-written, per-tool content keyed by slug. Unlike lib/faq.ts's generic
- * templateFaqs() (which picks from a small pool of category-level templates
- * and is near-duplicate across every tool in a category), everything here
- * should be unique prose written for that specific tool.
+ * Hand-written, per-tool content keyed by slug. Unlike lib/generateToolContent.ts
+ * and lib/faq.ts (which pick from a small pool of category-level templates and
+ * are near-duplicate across every tool in a category), everything here should be
+ * unique prose written for that specific tool.
  */
 export const toolContent: Record<string, ToolContent> = {
   'json-formatter': {

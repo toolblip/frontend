@@ -5,10 +5,12 @@ import { ToolUI } from './ToolUI';
 import ToolEngagementBar from '@/components/tools/ToolEngagementBar';
 import ToolAdSlot from '@/components/ads/ToolAdSlot';
 import ToolWithSidebarAd from '@/components/ads/ToolWithSidebarAd';
+import ToolContentSection from '@/components/tools/ToolContentSection';
 import FaqSection from '@/components/v2/FaqSection';
 import RelatedTools from '@/components/tools/RelatedTools';
 import RelatedBlogPosts from '@/components/tools/RelatedBlogPosts';
 import { getFaqs } from '@/lib/faq';
+import { generateToolContent } from '@/lib/generateToolContent';
 import { getToolContent } from '@/data/tool-content';
 
 interface PageProps {
@@ -157,7 +159,6 @@ export default async function ToolDetailPage({ params }: PageProps) {
   const tool = getToolBySlug(canonicalSlug);
   if (!tool) notFound();
   const faqs = getFaqs(tool);
-  const content = getToolContent(tool.slug);
 
   return (
     <div data-testid="tool-detail-shell" className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -205,10 +206,56 @@ export default async function ToolDetailPage({ params }: PageProps) {
         <ToolAdSlot placement="tool-below" slug={tool.slug} category={tool.category} />
       </div>
 
+      <ToolContentSection toolName={tool.name} content={getToolContent(tool.slug)} />
+
+      {/* SEO-rich content section — server rendered for Googlebot */}
+      <div className="mb-10 space-y-6">
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            How to use the {tool.name}
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+            {generateToolContent(tool).howToUse}
+          </p>
+        </div>
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            Why use the {tool.name}
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+            {generateToolContent(tool).whyUse}
+          </p>
+        </div>
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            When to use {tool.name}
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+            {generateToolContent(tool).whenToUse}
+          </p>
+        </div>
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            Key features of {tool.name}
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+            {generateToolContent(tool).benefits}
+          </p>
+        </div>
+        <div>
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+            Common use cases for {tool.name}
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+            {generateToolContent(tool).commonUseCases}
+          </p>
+        </div>
+      </div>
+
       <RelatedTools slug={tool.slug} category={tool.category} />
       <RelatedBlogPosts toolName={tool.name} category={tool.category} />
 
-      <FaqSection toolName={tool.name} faqs={faqs} content={content} />
+      <FaqSection toolName={tool.name} faqs={faqs} />
     </div>
   );
 }
