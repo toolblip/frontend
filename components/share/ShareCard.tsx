@@ -48,16 +48,19 @@ export default function ShareCard({
   title,
   standalone = true,
 }: ShareCardProps) {
-  const qrSize = expanded ? 400 : 240;
-  const tileSize = expanded ? 'h-14 w-14' : 'h-11 w-11';
-  const tileIconSize = expanded ? 'h-6 w-6' : 'h-5 w-5';
+  const qrSize = expanded ? 320 : 240;
+  const tileSize = expanded ? 'h-16 w-16' : 'h-12 w-12';
+  const tileIconSize = expanded ? 'h-7 w-7' : 'h-6 w-6';
   const tileLabelSize = expanded ? 'text-xs' : 'text-[10px]';
   const displayTitle = title || 'Toolblip';
+  // Compact popover only has room for Copy link + 3 channels, no scroll.
+  // Expanded modal shows every channel in a horizontally scrollable row.
+  const visibleChannels = expanded ? channels : channels.slice(0, 3);
 
   const card = (
     <div
       className={`flex flex-col overflow-hidden rounded-2xl border border-[#e8e2d9] bg-[#faf8f5] text-gray-900 shadow-2xl transition-[width] duration-300 ease-out dark:border-white/10 dark:bg-[#1a1a2e] dark:text-white ${
-        expanded ? 'w-[640px]' : 'w-[420px]'
+        expanded ? 'w-[560px]' : 'w-[340px]'
       } max-w-[92vw]`}
     >
       {/* Header */}
@@ -87,7 +90,7 @@ export default function ShareCard({
       </div>
 
       {/* QR code */}
-      <div className="flex flex-col items-center gap-6 px-6 py-6">
+      <div className={`flex flex-col items-center ${expanded ? 'gap-5 px-5 py-5' : 'gap-6 px-6 py-6'}`}>
         <div className="flex shrink-0 items-center justify-center rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition-all duration-300">
           {qrDataUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -105,7 +108,11 @@ export default function ShareCard({
         </div>
 
         {/* Social share row */}
-        <div className="flex w-full items-center justify-center gap-4 overflow-x-auto px-1 pb-1 [scrollbar-width:thin]">
+        <div
+          className={`flex w-full items-center justify-center gap-4 ${
+            expanded ? 'overflow-x-auto px-1 pb-1 [scrollbar-width:thin]' : ''
+          }`}
+        >
           <button
             type="button"
             onClick={onCopy}
@@ -122,7 +129,7 @@ export default function ShareCard({
             <span className={`${tileLabelSize} font-medium text-gray-600 dark:text-white/60`}>{copied ? 'Copied!' : 'Copy link'}</span>
           </button>
 
-          {channels.map((link) => (
+          {visibleChannels.map((link) => (
             <a
               key={link.label}
               href={link.href}
@@ -142,21 +149,23 @@ export default function ShareCard({
             </a>
           ))}
 
-          <button
-            type="button"
-            onClick={onNativeShare}
-            disabled={loading}
-            aria-label="More share options"
-            className="group flex shrink-0 flex-col items-center gap-1.5 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <span
-              className={`flex ${tileSize} items-center justify-center rounded-full text-white shadow-sm transition group-hover:-translate-y-0.5`}
-              style={{ background: SOCIAL_COLORS.more }}
+          {expanded && (
+            <button
+              type="button"
+              onClick={onNativeShare}
+              disabled={loading}
+              aria-label="More share options"
+              className="group flex shrink-0 flex-col items-center gap-1.5 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <ShareGlyphIcon className={tileIconSize} />
-            </span>
-            <span className={`${tileLabelSize} font-medium text-gray-600 dark:text-white/60`}>More</span>
-          </button>
+              <span
+                className={`flex ${tileSize} items-center justify-center rounded-full text-white shadow-sm transition group-hover:-translate-y-0.5`}
+                style={{ background: SOCIAL_COLORS.more }}
+              >
+                <ShareGlyphIcon className={tileIconSize} />
+              </span>
+              <span className={`${tileLabelSize} font-medium text-gray-600 dark:text-white/60`}>More</span>
+            </button>
+          )}
         </div>
       </div>
     </div>
