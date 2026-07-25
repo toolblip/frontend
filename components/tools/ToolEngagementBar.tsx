@@ -7,7 +7,7 @@ import GoogleAuthButton from "@/components/auth/GoogleAuthButton";
 import { useAuth } from "@/app/providers/auth-provider";
 import { recordRecentTool } from "@/lib/toolHistory";
 import ShareCard, { type ShareChannelLink } from "@/components/share/ShareCard";
-import { XIcon, FacebookIcon, WhatsAppIcon, ShareGlyphIcon, SOCIAL_COLORS } from "@/components/share/shareIcons";
+import { XIcon, FacebookIcon, WhatsAppIcon, LinkedInIcon, MessengerIcon, ShareGlyphIcon, SOCIAL_COLORS } from "@/components/share/shareIcons";
 
 type EngagementStats = {
   slug: string;
@@ -339,6 +339,20 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
         icon: <WhatsAppIcon className="h-full w-full text-white" />,
         color: SOCIAL_COLORS.whatsapp,
         onClick: () => void recordShare("whatsapp"),
+      },
+      {
+        label: "LinkedIn",
+        href: `https://www.linkedin.com/sharing/share-offsite/?${new URLSearchParams({ url: shortUrl }).toString()}`,
+        icon: <LinkedInIcon className="h-full w-full text-white" />,
+        color: SOCIAL_COLORS.linkedin,
+        onClick: () => void recordShare("linkedin"),
+      },
+      {
+        label: "Messenger",
+        href: `fb-messenger://share/?link=${encodeURIComponent(shortUrl)}`,
+        icon: <MessengerIcon className="h-full w-full text-white" />,
+        color: SOCIAL_COLORS.messenger,
+        onClick: () => void recordShare("messenger"),
       },
     ];
     // eslint-disable-next-line react-hooks/exhaustive-deps

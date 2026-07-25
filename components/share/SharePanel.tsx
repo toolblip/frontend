@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import ShareCard, { type ShareChannelLink } from './ShareCard';
-import { XIcon, FacebookIcon, WhatsAppIcon, SOCIAL_COLORS } from './shareIcons';
+import { XIcon, FacebookIcon, WhatsAppIcon, LinkedInIcon, MessengerIcon, SOCIAL_COLORS } from './shareIcons';
 
 type SharePanelProps = {
   open: boolean;
@@ -114,6 +114,18 @@ export default function SharePanel({ open, onClose, url, title }: SharePanelProp
       href: `https://wa.me/?${new URLSearchParams({ text: `${shareText} ${shortUrl}` }).toString()}`,
       icon: <WhatsAppIcon className="h-full w-full text-white" />,
       color: SOCIAL_COLORS.whatsapp,
+    },
+    {
+      label: 'LinkedIn',
+      href: `https://www.linkedin.com/sharing/share-offsite/?${new URLSearchParams({ url: shortUrl }).toString()}`,
+      icon: <LinkedInIcon className="h-full w-full text-white" />,
+      color: SOCIAL_COLORS.linkedin,
+    },
+    {
+      label: 'Messenger',
+      href: `fb-messenger://share/?link=${encodeURIComponent(shortUrl)}`,
+      icon: <MessengerIcon className="h-full w-full text-white" />,
+      color: SOCIAL_COLORS.messenger,
     },
   ];
 
