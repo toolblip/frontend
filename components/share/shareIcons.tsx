@@ -72,9 +72,9 @@ export function MessengerIcon(props: IconProps) {
 export function SnapchatIcon(props: IconProps) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
-      <path d="M12 3c-3 0-5 2.2-5 5.5v2.3c-.9.2-1.7.6-1.7 1.2 0 .5.6.8 1.2 1-.3.8-.9 1.8-1.8 2.5-.4.3-.2.8.3.9.5.1.9.4.9.9 0 .4.4.7.8.6.4-.1.8.1 1.1.5.4.6 1.1 1.6 2.2 1.6s1.8-1 2.2-1.6c.3-.4.7-.6 1.1-.5.4.1.8-.2.8-.6 0-.5.4-.8.9-.9.5-.1.7-.6.3-.9-.9-.7-1.5-1.7-1.8-2.5.6-.2 1.2-.5 1.2-1 0-.6-.8-1-1.7-1.2V8.5C17 5.2 15 3 12 3z" />
-      <circle cx="9.3" cy="10.5" r="0.6" fill="#000" />
-      <circle cx="14.7" cy="10.5" r="0.6" fill="#000" />
+      <path d="M5 16 L5 12 A7 9 0 0 1 19 12 L19 16 Q16.67 19 14.33 16 Q12 19 9.67 16 Q7.33 19 5 16 Z" />
+      <circle cx="9.5" cy="12.5" r="1" fill="#000" />
+      <circle cx="14.5" cy="12.5" r="1" fill="#000" />
     </svg>
   );
 }
