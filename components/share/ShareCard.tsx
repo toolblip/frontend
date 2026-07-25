@@ -49,18 +49,15 @@ export default function ShareCard({
   standalone = true,
 }: ShareCardProps) {
   const qrSize = expanded ? 320 : 180;
-  const tileSize = expanded ? 'h-16 w-16' : 'h-12 w-12';
-  const tileIconSize = expanded ? 'h-7 w-7' : 'h-6 w-6';
+  const tileSize = expanded ? 'h-16 w-16' : 'h-10 w-10';
+  const tileIconSize = expanded ? 'h-7 w-7' : 'h-5 w-5';
   const tileLabelSize = expanded ? 'text-xs' : 'text-[10px]';
   const displayTitle = title || 'Toolblip';
-  // Compact popover only has room for Copy link + 3 channels, no scroll.
-  // Expanded modal shows every channel in a horizontally scrollable row.
-  const visibleChannels = expanded ? channels : channels.slice(0, 3);
 
   const card = (
     <div
       className={`flex flex-col overflow-hidden rounded-2xl border border-[#e8e2d9] bg-[#faf8f5] text-gray-900 shadow-2xl transition-[width] duration-300 ease-out dark:border-white/10 dark:bg-[#1a1a2e] dark:text-white ${
-        expanded ? 'w-[560px]' : 'w-[340px]'
+        expanded ? 'w-[560px]' : 'w-[300px]'
       } max-w-[92vw]`}
     >
       {/* Header */}
@@ -112,11 +109,7 @@ export default function ShareCard({
         </div>
 
         {/* Social share row */}
-        <div
-          className={`flex w-full items-center justify-center gap-4 ${
-            expanded ? 'overflow-x-auto px-1 pb-1 [scrollbar-width:thin]' : ''
-          }`}
-        >
+        <div className="flex w-full items-center gap-4 overflow-x-auto px-1 pb-1 [scrollbar-width:thin]">
           <button
             type="button"
             onClick={onCopy}
@@ -133,7 +126,7 @@ export default function ShareCard({
             <span className={`${tileLabelSize} font-medium text-gray-600 dark:text-white/60`}>{copied ? 'Copied!' : 'Copy link'}</span>
           </button>
 
-          {visibleChannels.map((link) => (
+          {channels.map((link) => (
             <a
               key={link.label}
               href={link.href}
@@ -153,23 +146,21 @@ export default function ShareCard({
             </a>
           ))}
 
-          {expanded && (
-            <button
-              type="button"
-              onClick={onNativeShare}
-              disabled={loading}
-              aria-label="More share options"
-              className="group flex shrink-0 flex-col items-center gap-1.5 disabled:cursor-not-allowed disabled:opacity-50"
+          <button
+            type="button"
+            onClick={onNativeShare}
+            disabled={loading}
+            aria-label="More share options"
+            className="group flex shrink-0 flex-col items-center gap-1.5 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <span
+              className={`flex ${tileSize} items-center justify-center rounded-full text-white shadow-sm transition group-hover:-translate-y-0.5`}
+              style={{ background: SOCIAL_COLORS.more }}
             >
-              <span
-                className={`flex ${tileSize} items-center justify-center rounded-full text-white shadow-sm transition group-hover:-translate-y-0.5`}
-                style={{ background: SOCIAL_COLORS.more }}
-              >
-                <ShareGlyphIcon className={tileIconSize} />
-              </span>
-              <span className={`${tileLabelSize} font-medium text-gray-600 dark:text-white/60`}>More</span>
-            </button>
-          )}
+              <ShareGlyphIcon className={tileIconSize} />
+            </span>
+            <span className={`${tileLabelSize} font-medium text-gray-600 dark:text-white/60`}>More</span>
+          </button>
         </div>
       </div>
     </div>
