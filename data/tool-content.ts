@@ -417,10 +417,7 @@ Interpretation:
   "@context": "https://schema.org",
   "@type": "Article",
   "headline": "Your Article Title",
-  "author": {
-    "@type": "Person",
-    "name": "Author Name"
-  },
+
   "datePublished": "2024-01-15"
 }`
         ,note: `Generate article structured data.`
@@ -11393,5 +11390,116 @@ const result = process(input, options);`
       },
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+  },
+
+  "json-formatter": {
+    description: `Format, validate, and minify JSON data with syntax highlighting. Pretty-print compressed JSON, find syntax errors with line numbers, and minify for production. Runs entirely in your browser - no data leaves your device.`,
+    examples: [
+      { title: `Pretty Print`, code: `Input: {"name":"John","age":30,"active":true}
+
+Output:
+{
+  "name": "John",
+  "age": 30,
+  "active": true
+}`
+        ,note: `Format compressed JSON with proper indentation.` },
+      { title: `Minify`, code: `Input: {
+  "name": "John",
+  "age": 30
+}
+
+Output: {"name":"John","age":30}`
+        ,note: `Remove whitespace for production-ready JSON.` },
+    ],
+    features: ["Syntax error highlighting", "Line numbers", "Copy to clipboard", "No data leaves browser"]
+  },
+  "json-validator": {
+    description: `Validate JSON syntax and structure with detailed error reporting. Find syntax errors with exact line and column numbers, making it easy to fix malformed JSON. Supports all JSON data types and nesting levels.`,
+    examples: [
+      { title: `Valid JSON`, code: `Input: {"name": "John", "age": 30}
+
+Result: Valid JSON
+Type: Object
+Keys: 2`
+        ,note: `Instantly validate your JSON structure.` },
+      { title: `Syntax Error`, code: `Input: {"name": "John", "age": 30,}
+
+Result: Invalid JSON
+Error: Unexpected token "," at line 1, column 25
+Cause: Trailing comma`
+        ,note: `Get exact error location and explanation.` },
+    ],
+    features: ["Line/column error reporting", "Real-time validation", "Supports all JSON types", "Detailed error messages"]
+  },
+  "base64-encoder-decoder": {
+    description: `Encode and decode Base64 strings for data transmission and storage. Handle text, images, and binary data. Essential for email attachments, data URLs, and API authentication.`,
+    examples: [
+      { title: `Encode Text`, code: `Input: Hello World!
+
+Output: SGVsbG8gV29ybGQh`
+        ,note: `Encode any text to Base64 format.` },
+      { title: `Decode Base64`, code: `Input: SGVsbG8gV29ybGQh
+
+Output: Hello World!`
+        ,note: `Decode Base64 back to readable text.` },
+    ],
+    features: ["Text and binary support", "URL-safe variant", "Copy to clipboard", "No server processing"]
+  },
+  "color-picker": {
+    description: `Pick and convert colors between HEX, RGB, HSL, and CMYK formats. Get WCAG contrast ratio checks for accessibility compliance. Perfect for designers and developers who need to work with color values across different formats.`,
+    examples: [
+      { title: `Color Formats`, code: `HEX: #3498db
+RGB: rgb(52, 152, 219)
+HSL: hsl(204, 70%, 53%)
+CMYK: cmyk(76%, 30%, 0%, 14%)`
+        ,note: `Convert any color between all major formats.` },
+      { title: `Contrast Check`, code: `Foreground: #ffffff
+Background: #3498db
+
+Contrast ratio: 4.6:1
+WCAG AA: Pass (normal text)
+WCAG AAA: Fail (normal text)
+WCAG AA: Pass (large text)`
+        ,note: `Check if your color combination meets accessibility standards.` },
+    ],
+    features: ["All color formats", "WCAG contrast checking", "Visual picker", "Copy values"]
+  },
+  "password-generator": {
+    description: `Generate strong, random passwords with customizable length and character types. Use crypto.getRandomValues for cryptographically secure randomness. Include uppercase, lowercase, numbers, and symbols.`,
+    examples: [
+      { title: `Strong Password`, code: `Length: 20
+Uppercase: Yes
+Lowercase: Yes
+Numbers: Yes
+Symbols: Yes
+
+Result: k8Lm2nQ9vR5tYw1x`
+        ,note: `Generate a strong 20-character password.` },
+      { title: `PIN Code`, code: `Length: 6
+Numbers only: Yes
+
+Result: 847291`
+        ,note: `Generate a numeric PIN code.` },
+    ],
+    features: ["Cryptographically secure", "Customizable options", "Strength indicator", "Copy to clipboard"]
+  },
+  "markdown-preview": {
+    description: `Preview Markdown text in real-time as you write. See headers, lists, code blocks, links, and formatting rendered instantly. Perfect for writing documentation, READMEs, and blog posts.`,
+    examples: [
+      { title: `Basic Markdown`, code: `# Heading
+
+**Bold text** and *italic*
+
+- List item 1
+- List item 2`
+        ,note: `Write markdown with live preview.` },
+      { title: `Tables`, code: `| Name | Age |
+|------|-----|
+| Alice | 25 |
+| Bob   | 30 |`
+        ,note: `Supports GitHub-flavored markdown tables.` },
+    ],
+    features: ["Live preview", "GitHub-flavored markdown", "Code syntax highlighting", "Export to HTML"]
   },
 };
