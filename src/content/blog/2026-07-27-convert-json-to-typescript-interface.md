@@ -7,9 +7,9 @@ slug: 2026-07-27-convert-json-to-typescript-interface
 date: "2026-07-27T00:00:00.000Z"
 category: Developer Tools
 tags:
-  - Convert-JSON-API-responses-to-
-  - SEO
-  - Developer Tools
+  - json-to-typescript
+  - seo
+  - developer-tools
 author: Toolblip Team
 readingTime: 7 min
 featuredImage: https://api.radtx.com/gradient/6b7280-374151/1200/630
