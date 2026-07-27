@@ -1,26 +1,46 @@
 # Toolblip Issues Tracker
 
 ## Critical Issues
+## Critical Issues
 
-### 1. Google Search Console Indexing
-**Status:** ✅ Complete (content fixed)
-**Problem:** Only 12/910 pages indexed by Google
-**Root Cause:** Tool pages had templated/duplicate content
-**Fix Applied:** Added unique content to all 790 tools (2026-07-25)
-**Fix Applied:** Fixed handcrafted entries for key tools (2026-07-27)
+### 1. Tool Content Quality (HIGHEST PRIORITY)
+**Status:** 🔴 In Progress
+**Problem:** Generated content has template patterns, duplicate words, generic endings
+**Examples of bad content:**
+- "Count and analyze Count syllables" (duplicate words)
+- "Free to use with no signup required" (template text)
+- "Convert Convert WebP to PNG" (duplicate words)
+**Fix Required:** Generate truly unique content for all 790 tools using Claude Code
+**Progress:** 0 / 790 tools fixed
+**Last Updated:** 2026-07-27
 **Next Steps:**
+- [ ] Fix first 50 tools with Claude Code
+- [ ] Fix next 50 tools
+- [ ] Continue until all 790 tools have unique content
+- [ ] Deploy to production
+
+### 2. Google Search Console Indexing
+**Status:** Waiting for content fix
+**Problem:** Only 12/910 pages indexed by Google
+**Root Cause:** Tool pages have templated/duplicate content (currently being fixed)
+**Fix Required:** Complete tool content quality fix first
+**Next Steps:**
+- [ ] Wait for tool content fix to complete
 - [ ] Wait 1-2 weeks for Google to re-crawl
 - [ ] Check GSC again for indexing improvements
 - [ ] Resubmit remaining URLs via IndexNow
 - [ ] Monitor "Crawled - currently not indexed" status
 
-### 2. Tool Content Quality
-**Status:** ✅ Complete (verified working)
-**Problem:** Generated content may still have template patterns
-**Fix Applied:** Generated tool-specific descriptions and examples (2026-07-25)
-**Fix Applied:** Improved short and generic descriptions (2026-07-27)
-**Fix Applied:** Fixed handcrafted entries for key tools (2026-07-27)
-**Verified:** ToolContentSection renders on tool pages (word-counter tested)
+### 3. Blog Post Indexing
+**Status:** Pending (after tool content fix)
+**Problem:** Blog posts show "URL unknown to Google"
+**Root Cause:** No internal links from tool pages
+**Fix Required:** Complete tool content quality fix first
+**Next Steps:**
+- [ ] Wait for tool content fix to complete
+- [ ] Improve matching algorithm to show 1+ related posts
+- [ ] Submit blog URLs to GSC
+- [ ] Monitor blog post indexing
 **Next Steps:**
 - [ ] Spot-check 20-30 tools for content quality
 - [ ] Improve descriptions for high-traffic tools
