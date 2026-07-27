@@ -39,16 +39,17 @@
 ## Medium Priority
 
 ### 4. Directory Submissions
-**Status:** Pending
+**Status:** 🔜 Next
 **Problem:** No backlinks from authority sites
+**Status File:** scripts/directory-submissions.md
 **Platforms:**
-- [ ] SourceForge (registration pending)
-- [ ] BetaList
-- [ ] Crunchbase
-- [ ] LinkedIn
-- [ ] Pinterest
-- [ ] Dev.to
-- [ ] Other platforms
+- [ ] SourceForge (user registration needed)
+- [ ] BetaList (submit for listing)
+- [ ] Crunchbase (create company profile)
+- [ ] LinkedIn (create company page)
+- [ ] Pinterest (create business account)
+- [ ] Dev.to (publish article)
+- [ ] Other platforms (AlternativeTo, ProductHunt, Hacker News, Reddit)
 
 ### 5. Product Hunt Launch
 **Status:** Not Started
