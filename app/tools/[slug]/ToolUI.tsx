@@ -779,6 +779,9 @@ import ImageOptimizerClient from '@/components/tools/ImageOptimizerClient';
 import ImageRotateToolClient from '@/components/tools/ImageRotateToolClient';
 import ImageShadowGeneratorClient from '@/components/tools/ImageShadowGeneratorClient';
 import MergeClient from '@/components/tools/MergeClient';
+import PdfPasswordRemoverClient from '@/components/tools/PdfPasswordRemoverClient';
+import PdfPageDeleterClient from '@/components/tools/PdfPageDeleterClient';
+import PdfPageAdderClient from '@/components/tools/PdfPageAdderClient';
 import MemeMakerClient from '@/components/tools/MemeMakerClient';
 import OgTagDebuggerClient from '@/components/tools/OgTagDebuggerClient';
 import OpenGraphPreviewClient from '@/components/tools/OpenGraphPreviewClient';
@@ -1504,7 +1507,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'add-images':
       return <AddImagesClient />;
     case 'add-pages':
-      return <AddPagesClient />;
+      return <PdfPageAdderClient />;
     case 'add-subtitles':
       return <AddSubtitlesClient />;
     case 'add-text':
@@ -1721,6 +1724,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <CompressMkvClient />;
     case 'compress-mov':
       return <CompressMovClient />;
+    case 'delete-pages':
+      return <PdfPageDeleterClient />;
     case 'content-brief-generator':
       return <ContentBriefGeneratorClient />;
     case 'content-improver':
@@ -4024,7 +4029,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'unblur': return <UnblurImageClient />;
     case 'unicode-escape-encoder': return <UnicodeEscapeEncoderClient />;
     case 'unit-conversion-tool': return <UnitConversionToolClient />;
-    case 'unlock': return <UnlockPDFClient />;
+    case 'unlock': return <PdfPasswordRemoverClient />;
     case 'upscale': return <UpscaleImageClient />;
     case 'uuid-compare': return <UUIDCompareClient />;
     case 'uuid-comparator': return <UUIDComparatorClient />;

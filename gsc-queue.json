@@ -169,6 +169,22 @@
     {
       "url": "https://toolblip.com/blog/2026-07-22-convert-unix-line-endings-to-windows-for-file-compatibility",
       "submitted_at": "2026-07-22T04:11:58Z"
+    },
+    {
+      "url": "https://toolblip.com/blog/2026-07-24-generate-a-changelog-from-git-commit-messages",
+      "submitted_at": "2026-07-24T04:10:27Z"
+    },
+    {
+      "url": "https://toolblip.com/blog/2026-07-27-convert-json-to-typescript-interface",
+      "submitted_at": "2026-07-27T04:12:44Z"
+    },
+    {
+      "url": "https://toolblip.com/blog/2026-07-28-compare-two-json-files-online",
+      "submitted_at": "2026-07-28T04:07:55Z"
+    },
+    {
+      "url": "https://toolblip.com/blog/2026-07-28-test-jsonpath-expressions-online",
+      "submitted_at": "2026-07-28T04:12:09Z"
     }
   ],
   "failed": []

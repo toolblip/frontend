@@ -4,9 +4,11 @@ import { getBlogPosts, type BlogPost } from '@/lib/blog';
 interface RelatedBlogPostsProps {
   toolName: string;
   category: string;
+  tags?: string[];
 }
 
 const MAX_POSTS = 3;
+const MIN_POSTS = 2;
 const STOPWORDS = new Set([
   'online', 'free', 'the', 'and', 'for', 'with', 'your', 'from', 'tool', 'tools',
   'to', 'of', 'in', 'is', 'on', 'at', 'by', 'or', 'an', 'as', 'it', 'be', 'if',
@@ -28,11 +30,11 @@ function overlapCount(a: Set<string>, b: Set<string>): number {
   return count;
 }
 
-function scorePost(post: BlogPost, nameTokens: Set<string>, categoryTokens: Set<string>): number {
+function scorePost(post: BlogPost, toolTokens: Set<string>, categoryTokens: Set<string>): number {
   const titleAndTagTokens = tokenize(`${post.title} ${post.tags.join(' ')}`);
   const categoryFieldTokens = tokenize(post.category);
   return (
-    overlapCount(nameTokens, titleAndTagTokens) * 2 +
+    overlapCount(toolTokens, titleAndTagTokens) * 2 +
     overlapCount(categoryTokens, titleAndTagTokens) +
     overlapCount(categoryTokens, categoryFieldTokens) * 2
   );
@@ -42,23 +44,23 @@ function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
-export default function RelatedBlogPosts({ toolName, category }: RelatedBlogPostsProps) {
-  const nameTokens = tokenize(toolName);
+export default function RelatedBlogPosts({ toolName, category, tags = [] }: RelatedBlogPostsProps) {
+  const toolTokens = tokenize(`${toolName} ${tags.join(' ')}`);
   const categoryTokens = tokenize(category);
 
   const matches = getBlogPosts()
-    .map((post) => ({ post, score: scorePost(post, nameTokens, categoryTokens) }))
+    .map((post) => ({ post, score: scorePost(post, toolTokens, categoryTokens) }))
     .filter(({ score }) => score > 0)
     .sort((a, b) => b.score - a.score || new Date(b.post.date).getTime() - new Date(a.post.date).getTime())
     .slice(0, MAX_POSTS)
     .map(({ post }) => post);
 
-  if (matches.length === 0) return null;
+  if (matches.length < MIN_POSTS) return null;
 
   return (
     <section aria-labelledby="related-blog-title" className="mb-10">
       <h2 id="related-blog-title" className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-        Related reading
+        Related Blog Posts
       </h2>
       <ul className="space-y-3">
         {matches.map((post) => (

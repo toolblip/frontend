@@ -209,7 +209,7 @@ export default async function ToolDetailPage({ params }: PageProps) {
       <ToolContentSection toolName={tool.name} content={content} />
 
       <RelatedTools slug={tool.slug} category={tool.category} />
-      <RelatedBlogPosts toolName={tool.name} category={tool.category} />
+      <RelatedBlogPosts toolName={tool.name} category={tool.category} tags={tool.tags} />
 
       <FaqSection toolName={tool.name} faqs={faqs} />
     </div>
