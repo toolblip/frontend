@@ -74,6 +74,12 @@ const TOOL_CONTENT: Record<string, ToolContent> = {
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
+  "delete-pages": {
+    description: `Removing specific pages from a PDF is a different operation from splitting or merging, those create new files from parts of the original, while deletion modifies the existing document by taking pages out entirely, and the result needs to preserve all the remaining pages exactly as they were without reordering or reshuffling anything. This tool lets you select individual pages to delete from a PDF, showing page previews so you can identify which ones to remove, then produces a new file with only the pages you kept. Useful for removing blank pages from a scanned document, taking out an accidentally included page from a report, or stripping out pages that contain sensitive information before sharing a PDF with others.`,
+    examples: [
+    ],
+    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+  },
   "add-subtitles": {
     description: `SRT and VTT aren't interchangeable formats wearing different file extensions, their timestamp syntax actually differs, SRT separates milliseconds with a comma, VTT with a period, and VTT requires its own header line SRT doesn't carry at all, small enough differences that a subtitle file written for one format often fails silently when fed into software expecting the other. This tool attaches subtitles to a video and accepts either SRT or VTT directly, without requiring one format to be converted into the other first. Useful for adding captions to a video when the subtitle file already exists as SRT from one source and VTT from another, attaching subtitles without a separate conversion step beforehand, or preparing a video for a platform that specifically expects one subtitle format over the other.`,
     examples: [
