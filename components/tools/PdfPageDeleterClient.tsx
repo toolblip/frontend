@@ -2,8 +2,10 @@
 
 import { useState, useCallback } from 'react';
 import { PDFDocument } from 'pdf-lib';
-
+import { useSubscription } from '@/hooks/useSubscription';
+import { checkFileSize } from '@/lib/tier-limits';
 export default function PdfPageDeleterClient() {
+  const { tier } = useSubscription();
   const [file, setFile] = useState<File | null>(null);
   const [pdfDoc, setPdfDoc] = useState<PDFDocument | null>(null);
   const [pages, setPages] = useState<{ index: number; selected: boolean }[]>([]);
@@ -13,6 +15,13 @@ export default function PdfPageDeleterClient() {
   const handleFileChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
     if (selected && selected.type === 'application/pdf') {
+      // Check file size against tier limit
+      const sizeError = checkFileSize(selected, tier);
+      if (sizeError) {
+        setResult({ success: false, message: sizeError });
+        return;
+      }
+      
       setFile(selected);
       setResult(null);
       
@@ -36,6 +45,13 @@ export default function PdfPageDeleterClient() {
     e.preventDefault();
     const dropped = e.dataTransfer.files?.[0];
     if (dropped && dropped.type === 'application/pdf') {
+      // Check file size against tier limit
+      const sizeError = checkFileSize(dropped, tier);
+      if (sizeError) {
+        setResult({ success: false, message: sizeError });
+        return;
+      }
+      
       setFile(dropped);
       setResult(null);
       

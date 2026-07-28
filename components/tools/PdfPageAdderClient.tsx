@@ -2,8 +2,10 @@
 
 import { useState, useCallback } from 'react';
 import { PDFDocument } from 'pdf-lib';
-
+import { useSubscription } from '@/hooks/useSubscription';
+import { checkFileSize } from '@/lib/tier-limits';
 export default function PdfPageAdderClient() {
+  const { tier } = useSubscription();
   const [baseFile, setBaseFile] = useState<File | null>(null);
   const [insertFile, setInsertFile] = useState<File | null>(null);
   const [position, setPosition] = useState<'beginning' | 'end' | 'custom'>('end');
@@ -15,6 +17,13 @@ export default function PdfPageAdderClient() {
   const handleBaseFileChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
     if (selected && selected.type === 'application/pdf') {
+      // Check file size against tier limit
+      const sizeError = checkFileSize(selected, tier);
+      if (sizeError) {
+        setResult({ success: false, message: sizeError });
+        return;
+      }
+      
       setBaseFile(selected);
       setResult(null);
       
@@ -43,6 +52,13 @@ export default function PdfPageAdderClient() {
     e.preventDefault();
     const dropped = e.dataTransfer.files?.[0];
     if (dropped && dropped.type === 'application/pdf') {
+      // Check file size against tier limit
+      const sizeError = checkFileSize(dropped, tier);
+      if (sizeError) {
+        setResult({ success: false, message: sizeError });
+        return;
+      }
+      
       if (type === 'base') {
         setBaseFile(dropped);
         setResult(null);
