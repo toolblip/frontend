@@ -1351,6 +1351,7 @@ export const tools: Tool[] = [
   { name: 'Purchase Agreement Generator', slug: 'purchase-agreement-generator', description: 'Create purchase agreement contracts. Free legal document templates.', emoji: '📝', category: 'Document Generator' },
   { name: 'Real Estate Description Writer', slug: 'real-estate-description', description: 'Write property listing descriptions. Attract buyers with compelling copy.', emoji: '🏠', category: 'AI Tools' },
   { name: 'Rearrange PDF Pages', slug: 'rearrange', description: 'Reorder, rotate, and reorganize PDF pages. Drag and drop interface.', emoji: '📄', category: 'PDF Tools' },
+  { name: 'Delete PDF Pages', slug: 'delete-pages', description: 'Remove specific pages from PDF files. Select and delete unwanted pages.', emoji: '📄', category: 'PDF Tools' },
   { name: 'Remove Image Background', slug: 'remove-bg', description: 'Cut out the background from any image. Clean subject isolation.', emoji: '🖼️', category: 'Image Tools' },
   { name: 'Remove Objects from Photo', slug: 'remove-objects', description: 'Remove unwanted objects from photos. Clone and heal automatically.', emoji: '🖼️', category: 'Image Tools' },
   { name: 'Remove Person from Photo', slug: 'remove-person', description: 'Remove people from images seamlessly. Fill background automatically.', emoji: '🖼️', category: 'Image Tools' },
