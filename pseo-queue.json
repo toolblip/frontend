@@ -1,9 +1,103 @@
 {
   "pending": [
-    "generate a changelog from git commit messages"
+    "Turn JSON arrays into Markdown tables for technical docs",
+    {
+      "topic": "Generate a JSON Schema automatically from sample API data"
+    },
+    {
+      "topic": "Check password strength before enforcing signup rules"
+    },
+    {
+      "topic": "Generate secure Argon2 password hashes for modern authentication"
+    },
+    {
+      "topic": "Generate secure random tokens and API keys with Random String Generator"
+    },
+    {
+      "topic": "Convert RGBA colors with transparency to HEX for CSS"
+    },
+    {
+      "topic": "Find complementary and triadic color schemes with Color Harmony Generator"
+    },
+    {
+      "topic": "Mix two colors to create new palette shades for design systems"
+    },
+    {
+      "topic": "Find the closest named color for any HEX or RGB value"
+    },
+    {
+      "topic": "Resize images to exact social media and Open Graph dimensions"
+    },
+    {
+      "topic": "Compress images for faster page loads without losing quality"
+    },
+    {
+      "topic": "Crop images to any aspect ratio for social posts and thumbnails"
+    },
+    {
+      "topic": "Convert images to Base64 data URLs for embedding in HTML and CSS"
+    },
+    {
+      "topic": "View and strip EXIF metadata from photos before publishing"
+    },
+    {
+      "topic": "Check the Flesch-Kincaid readability score of your writing"
+    },
+    {
+      "topic": "Catch grammar and spelling errors before publishing a blog post"
+    },
+    {
+      "topic": "Turn plain text into realistic handwritten-style notes"
+    },
+    {
+      "topic": "From CSV to production database: convert CSV to JSON, validate the schema, then generate TypeScript types"
+    },
+    {
+      "topic": "Debug a broken API integration: decode the JWT, inspect the headers, and diff the JSON response"
+    },
+    {
+      "topic": "Set up a secure signup form: generate a password, check its strength, then hash it with Argon2"
+    },
+    {
+      "topic": "Build an Open Graph image pipeline: resize the image, convert the format, then preview the OG card"
+    },
+    {
+      "topic": "Migrate a legacy YAML config to validated JSON: convert, validate, and format for code review"
+    },
+    {
+      "topic": "Prep a design handoff: extract a color palette, check contrast ratios, then generate CSS variables"
+    },
+    {
+      "topic": "Prep a page for launch: validate the HTML, check for broken links, then verify security headers"
+    },
+    {
+      "topic": "Turn a legacy XML API into modern JSON: convert XML to JSON, diff the payloads, then generate TypeScript types"
+    },
+    {
+      "topic": "Rotate a leaked credential safely: generate a new random token, hash it, and confirm the old JWT is expired"
+    },
+    {
+      "topic": "Optimize a blog post before publishing: check readability, keyword density, and word count"
+    }
   ],
   "in_progress": [],
   "done": [
+    {
+      "topic": "Test JSONPath queries against API response data with JSON Path Tester",
+      "completed_at": "2026-07-28T04:12:21Z"
+    },
+    {
+      "topic": "Compare two JSON files and catch differences with JSON Diff",
+      "completed_at": "2026-07-28T04:08:06Z"
+    },
+    {
+      "topic": "Convert JSON API responses to TypeScript interfaces with JSON to TypeScript",
+      "completed_at": "2026-07-27T04:12:58Z"
+    },
+    {
+      "topic": "generate a changelog from git commit messages",
+      "completed_at": "2026-07-24T04:10:39Z"
+    },
     {
       "topic": "convert Roman numerals to numbers and back",
       "completed_at": "2026-07-23T04:09:02Z"
