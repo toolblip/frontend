@@ -156,3 +156,12 @@ export default function PdfPasswordRemoverClient() {
     </div>
   );
 }
+      {/* Warning */}
+      <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+        <p className="text-yellow-800 dark:text-yellow-200 text-sm">
+          <strong>⚠️ Limitation:</strong> This tool can remove encryption metadata from PDFs that are not password-protected for opening. 
+          For PDFs that require a password to open, you&apos;ll need to use a desktop tool like Adobe Acrobat or Preview (Mac) to remove the password first.
+        </p>
+      </div>
+
+      {/* File Upload */}
