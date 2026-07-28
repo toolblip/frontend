@@ -1882,8 +1882,9 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'css-filter-generator':
       return <CssGradientGeneratorClient />;
     case 'css-flexbox-generator':
+      return <CssFlexboxGeneratorClient />;
     case 'css-grid-generator':
-      return <CssBorderRadiusGeneratorClient />;
+      return <CssGridGeneratorClient />;
     case 'css-naming-convention':
     case 'css-variable-generator':
       return <CssClassGeneratorClient />;
@@ -1892,8 +1893,9 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'css-to-scss':
       return <CssToScssConverterClient />;
     case 'css-to-styled-components':
+      return <CssToStyledComponentsClient />;
     case 'css-to-tailwind':
-      return <CssPreprocessorClient />;
+      return <CssToTailwindClient />;
     case 'css-units-converter':
     case 'css-units-converter-new':
       return <CssValidatorClient />;
@@ -4110,8 +4112,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'cron-schedule-generator': return <CronExpressionParserClient />;
     case 'cron-schedule-validator': return <CronExpressionParserClient />;
     case 'cron-toolblip': return <CronGeneratorClient />;
-    case 'css-flexbox-generator': return <CssBorderRadiusGeneratorClient />;
-    case 'css-to-styled-components': return <CssPreprocessorClient />;
+    case 'css-flexbox-generator': return <CssFlexboxGeneratorClient />;
+    case 'css-to-styled-components': return <CssToStyledComponentsClient />;
     case 'css-units-converter': return <UnitConverterClient />;
     case 'data-size-converter': return <ByteConverterClient />;
     case 'energy-converter': return <AllInOneUnitConverterClient />;

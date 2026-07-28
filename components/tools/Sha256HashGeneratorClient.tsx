@@ -1,10 +1,41 @@
-'use client';
+"use client";
+import { useState } from 'react';
+
+async function sha256(message: string): Promise<string> {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(message));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
 
 export default function Sha256HashGeneratorClient() {
+  const [input, setInput] = useState('Hello, World!');
+  const [hash, setHash] = useState('');
+  const [copied, setCopied] = useState(false);
+
+  const generate = async () => { setHash(await sha256(input)); };
+  const copy = () => {
+    navigator.clipboard.writeText(hash).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">SHA-256 Hash Generator</h1>
-      <p className="text-gray-600 dark:text-gray-400">Generate SHA-256 hashes from any text or file with one-click copy.</p>
+    <div>
+      <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Input Text</span></div>
+      <textarea value={input} onChange={e => setInput(e.target.value)}
+        className="tb-v2-tool-textarea" style={{ minHeight: '100px', fontFamily: 'monospace' }} />
+      <button onClick={generate} className="tb-v2-btn" style={{ marginTop: '0.75rem' }}>Generate SHA-256</button>
+      {hash && (
+        <div style={{ marginTop: '1rem' }}>
+          <div className="tb-v2-tool-input-head">
+            <span className="tb-v2-tool-label">SHA-256 Hash (256-bit)</span>
+            <button onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
+              {copied ? 'Copied' : 'Copy'}
+            </button>
+          </div>
+          <pre style={{ background: '#1a1a2e', color: '#a5f3fc', padding: '1rem', borderRadius: '8px',
+            fontFamily: 'monospace', fontSize: '0.875rem', wordBreak: 'break-all', margin: 0 }}>{hash}</pre>
+        </div>
+      )}
     </div>
   );
 }
