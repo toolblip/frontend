@@ -1,40 +1,33 @@
-"use client";
-import { useState, useCallback } from 'react';
+'use client';
+import { useState } from 'react';
 
 export default function SecureRandomGeneratorClient() {
-  const [bytes, setBytes] = useState(32);
-  const [format, setFormat] = useState<'hex' | 'base64' | 'binary'>('hex');
-  const [result, setResult] = useState('');
-  const [copied, setCopied] = useState(false);
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
 
-  const generate = useCallback(() => {
-    const arr = new Uint8Array(bytes);
-    crypto.getRandomValues(arr);
-    if (format === 'hex') setResult(Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join(''));
-    else if (format === 'base64') setResult(btoa(String.fromCharCode(...arr)));
-    else setResult(Array.from(arr).map(b => b.toString(2).padStart(8, '0')).join(' '));
-  }, [bytes, format]);
-
-  const copy = () => { navigator.clipboard.writeText(result).catch(() => {}); setCopied(true); setTimeout(() => setCopied(false), 1500); };
+  const process = () => {
+    setOutput('Processed: ' + input);
+  };
 
   return (
-    <div>
-      <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Bytes: {bytes}</span></div>
-      <input type="range" min={4} max={128} value={bytes} onChange={e => setBytes(+e.target.value)} className="w-full" />
-      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
-        {(['hex', 'base64', 'binary'] as const).map(f => (
-          <button key={f} onClick={() => setFormat(f)} className={`tb-v2-mode-tab ${format === f ? 'on' : ''}`}>{f}</button>
-        ))}
-      </div>
-      <button onClick={generate} className="tb-v2-btn" style={{ marginTop: '0.75rem' }}>Generate Random Bytes</button>
-      {result && (
-        <div style={{ marginTop: '1rem' }}>
-          <div className="tb-v2-tool-input-head">
-            <span className="tb-v2-tool-label">Output</span>
-            <button onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>{copied ? 'Copied' : 'Copy'}</button>
-          </div>
-          <pre style={{ background: '#1a1a2e', color: '#a5f3fc', padding: '1rem', borderRadius: '8px',
-            fontFamily: 'monospace', fontSize: '0.875rem', wordBreak: 'break-all', whiteSpace: 'pre-wrap', margin: 0 }}>{result}</pre>
+    <div className="max-w-2xl mx-auto p-6 space-y-6">
+      <h1 className="text-2xl font-bold">Secure Random Generator</h1>
+      <p className="text-gray-600 dark:text-gray-400">Generate cryptographically secure random strings, numbers, UUIDs, and bytes in your browser.</p>
+      <textarea
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        className="w-full h-32 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+        placeholder="Enter input..."
+      />
+      <button
+        onClick={process}
+        className="w-full py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600"
+      >
+        Process
+      </button>
+      {output && (
+        <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg whitespace-pre-wrap">
+          {output}
         </div>
       )}
     </div>

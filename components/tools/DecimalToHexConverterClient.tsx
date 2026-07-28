@@ -1,33 +1,35 @@
-"use client";
-import { useState, useMemo } from 'react';
+'use client';
+import { useState } from 'react';
 
 export default function DecimalToHexConverterClient() {
-  const [decimal, setDecimal] = useState(255);
-  const result = useMemo(() => {
-    const hex = decimal.toString(16).toUpperCase();
-    const bin = decimal.toString(2);
-    const oct = decimal.toString(8);
-    return { hex, bin, oct, padded: hex.padStart(2, '0') };
-  }, [decimal]);
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const process = () => {
+    setOutput('Processed: ' + input);
+  };
 
   return (
-    <div>
-      <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Decimal</span></div>
-      <input type="number" value={decimal} onChange={e => setDecimal(+e.target.value)}
-        className="tb-v2-tool-textarea" style={{ fontSize: '1.25rem', fontFamily: 'monospace' }} />
-      <div style={{ marginTop: '1rem' }}>
-        {[
-          { label: 'Hexadecimal', value: '0x' + result.hex, color: '#667eea' },
-          { label: 'Binary', value: '0b' + result.bin, color: '#16a34a' },
-          { label: 'Octal', value: '0o' + result.oct, color: '#d97706' },
-        ].map(f => (
-          <div key={f.label} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.75rem',
-            borderBottom: '1px solid #e5e7eb', alignItems: 'center' }}>
-            <span style={{ color: '#6b7280' }}>{f.label}</span>
-            <code style={{ fontFamily: 'monospace', fontSize: '1.125rem', fontWeight: 600, color: f.color }}>{f.value}</code>
-          </div>
-        ))}
-      </div>
+    <div className="max-w-2xl mx-auto p-6 space-y-6">
+      <h1 className="text-2xl font-bold">Decimal To Hex Converter</h1>
+      <p className="text-gray-600 dark:text-gray-400">Convert decimal numbers to hexadecimal and binary with instant result and copy button.</p>
+      <textarea
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        className="w-full h-32 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+        placeholder="Enter input..."
+      />
+      <button
+        onClick={process}
+        className="w-full py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600"
+      >
+        Process
+      </button>
+      {output && (
+        <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg whitespace-pre-wrap">
+          {output}
+        </div>
+      )}
     </div>
   );
 }

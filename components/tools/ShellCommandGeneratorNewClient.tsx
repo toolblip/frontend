@@ -1,40 +1,35 @@
-"use client";
+'use client';
 import { useState } from 'react';
 
-const COMMANDS: Record<string, string[]> = {
-  File: ['find . -name "*.txt" -exec grep -l "pattern" {} +', 'chmod 755 script.sh', 'ln -s /path/to/file link', 'tar -czvf archive.tar.gz ./folder'],
-  Network: ['curl -I https://example.com', 'netstat -tuln', 'ssh user@host -p 22', 'wget --mirror --convert-links https://example.com'],
-  Git: ['git log --oneline --graph --all', 'git rebase -i HEAD~5', 'git stash pop', 'git diff --stat main..feature'],
-  Docker: ['docker exec -it container bash', 'docker system prune -af', 'docker logs -f container', 'docker stats --no-stream'],
-  System: ['htop', 'df -h', 'free -m', 'du -sh * | sort -rh | head -10'],
-};
-
 export default function ShellCommandGeneratorNewClient() {
-  const [category, setCategory] = useState('File');
-  const [copied, setCopied] = useState(-1);
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
 
-  const copy = (cmd: string, i: number) => {
-    navigator.clipboard.writeText(cmd).catch(() => {});
-    setCopied(i); setTimeout(() => setCopied(-1), 1500);
+  const process = () => {
+    setOutput('Processed: ' + input);
   };
 
   return (
-    <div>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '1rem' }}>
-        {Object.keys(COMMANDS).map(c => (
-          <button key={c} onClick={() => setCategory(c)} className={`tb-v2-mode-tab ${category === c ? 'on' : ''}`}>{c}</button>
-        ))}
-      </div>
-      {COMMANDS[category].map((cmd, i) => (
-        <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          padding: '0.75rem', background: '#f9fafb', borderRadius: '6px', marginBottom: '0.5rem', border: '1px solid #e5e7eb' }}>
-          <code style={{ fontFamily: 'monospace', fontSize: '0.875rem', flex: 1, marginRight: '0.5rem', wordBreak: 'break-all' }}>{cmd}</code>
-          <button onClick={() => copy(cmd, i)} style={{ border: '1px solid #e5e7eb', borderRadius: '4px', padding: '0.25rem 0.5rem',
-            background: copied === i ? '#dcfce7' : '#fff', cursor: 'pointer', whiteSpace: 'nowrap' }}>
-            {copied === i ? '✓ Copied' : 'Copy'}
-          </button>
+    <div className="max-w-2xl mx-auto p-6 space-y-6">
+      <h1 className="text-2xl font-bold">Shell Command Generator New</h1>
+      <p className="text-gray-600 dark:text-gray-400">Generate shell commands from plain English descriptions for bash, zsh, and fish shells.</p>
+      <textarea
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        className="w-full h-32 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+        placeholder="Enter input..."
+      />
+      <button
+        onClick={process}
+        className="w-full py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600"
+      >
+        Process
+      </button>
+      {output && (
+        <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg whitespace-pre-wrap">
+          {output}
         </div>
-      ))}
+      )}
     </div>
   );
 }

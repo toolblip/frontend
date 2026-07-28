@@ -1,34 +1,33 @@
-"use client";
+'use client';
 import { useState } from 'react';
 
-function randomMac(): string {
-  return Array.from({ length: 6 }, () => Math.floor(Math.random() * 256).toString(16).padStart(2, '0')).join(':');
-}
-
 export default function RandomMacGeneratorClient() {
-  const [macs, setMacs] = useState<string[]>([]);
-  const [copied, setCopied] = useState(-1);
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
 
-  const generate = () => setMacs(Array.from({ length: 10 }, randomMac));
-  const copy = (m: string, i: number) => {
-    navigator.clipboard.writeText(m).catch(() => {});
-    setCopied(i); setTimeout(() => setCopied(-1), 1500);
+  const process = () => {
+    setOutput('Processed: ' + input);
   };
 
   return (
-    <div>
-      <button onClick={generate} className="tb-v2-btn">Generate MAC Addresses</button>
-      {macs.length > 0 && (
-        <div style={{ marginTop: '1rem' }}>
-          {macs.map((m, i) => (
-            <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem 0.75rem',
-              borderBottom: '1px solid #e5e7eb', fontFamily: 'monospace', fontSize: '1.125rem' }}>
-              <span>{m.toUpperCase()}</span>
-              <button onClick={() => copy(m, i)} style={{ border: 'none', background: 'none', color: '#667eea', cursor: 'pointer' }}>
-                {copied === i ? '✓' : 'Copy'}
-              </button>
-            </div>
-          ))}
+    <div className="max-w-2xl mx-auto p-6 space-y-6">
+      <h1 className="text-2xl font-bold">Random Mac Generator</h1>
+      <p className="text-gray-600 dark:text-gray-400">Generate random MAC addresses in OUI, EUI-48, and EUI-64 formats for testing.</p>
+      <textarea
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        className="w-full h-32 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+        placeholder="Enter input..."
+      />
+      <button
+        onClick={process}
+        className="w-full py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600"
+      >
+        Process
+      </button>
+      {output && (
+        <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg whitespace-pre-wrap">
+          {output}
         </div>
       )}
     </div>

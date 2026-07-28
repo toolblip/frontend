@@ -1,43 +1,35 @@
-"use client";
-import { useState, useMemo } from 'react';
+'use client';
+import { useState } from 'react';
 
 export default function TipCalculatorClient() {
-  const [bill, setBill] = useState(50);
-  const [tipPct, setTipPct] = useState(15);
-  const [split, setSplit] = useState(1);
-  const result = useMemo(() => {
-    const tip = bill * tipPct / 100;
-    const total = bill + tip;
-    const perPerson = total / split;
-    return { tip: tip.toFixed(2), total: total.toFixed(2), perPerson: perPerson.toFixed(2) };
-  }, [bill, tipPct, split]);
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const process = () => {
+    setOutput('Processed: ' + input);
+  };
 
   return (
-    <div>
-      <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Bill Amount ($)</span></div>
-      <input type="number" min={0} step={0.01} value={bill} onChange={e => setBill(+e.target.value)}
-        className="tb-v2-tool-textarea" />
-      <div className="tb-v2-tool-input-head" style={{ marginTop: '0.75rem' }}>
-        <span className="tb-v2-tool-label">Tip: {tipPct}%</span>
-      </div>
-      <input type="range" min={0} max={50} value={tipPct} onChange={e => setTipPct(+e.target.value)} className="w-full" />
-      <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
-        {[10, 15, 18, 20, 25].map(p => (
-          <button key={p} onClick={() => setTipPct(p)}
-            className={`tb-v2-mode-tab ${tipPct === p ? 'on' : ''}`} style={{ flex: 1 }}>{p}%</button>
-        ))}
-      </div>
-      <div className="tb-v2-tool-input-head" style={{ marginTop: '0.75rem' }}>
-        <span className="tb-v2-tool-label">Split Between: {split}</span>
-      </div>
-      <input type="range" min={1} max={20} value={split} onChange={e => setSplit(+e.target.value)} className="w-full" />
-      <div style={{ marginTop: '1rem', padding: '1rem', background: '#f3f4f6', borderRadius: '8px' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem', textAlign: 'center' }}>
-          <div><div style={{ fontSize: '0.75rem', color: '#6b7280' }}>Tip</div><div style={{ fontSize: '1.25rem', fontWeight: 600 }}>${result.tip}</div></div>
-          <div><div style={{ fontSize: '0.75rem', color: '#6b7280' }}>Total</div><div style={{ fontSize: '1.25rem', fontWeight: 600, color: '#667eea' }}>${result.total}</div></div>
-          <div><div style={{ fontSize: '0.75rem', color: '#6b7280' }}>Per Person</div><div style={{ fontSize: '1.25rem', fontWeight: 600 }}>${result.perPerson}</div></div>
+    <div className="max-w-2xl mx-auto p-6 space-y-6">
+      <h1 className="text-2xl font-bold">Tip Calculator</h1>
+      <p className="text-gray-600 dark:text-gray-400">Calculate tips and split bills among multiple people. Perfect for restaurants, bars, and services.</p>
+      <textarea
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        className="w-full h-32 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+        placeholder="Enter input..."
+      />
+      <button
+        onClick={process}
+        className="w-full py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600"
+      >
+        Process
+      </button>
+      {output && (
+        <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg whitespace-pre-wrap">
+          {output}
         </div>
-      </div>
+      )}
     </div>
   );
 }

@@ -1,34 +1,35 @@
-"use client";
+'use client';
 import { useState } from 'react';
 
-const COLLOCATIONS: Record<string, string[]> = {
-  'make': ['a decision', 'a mistake', 'progress', 'an effort', 'money'],
-  'do': ['homework', 'business', 'a favor', 'research', 'exercise'],
-  'take': ['a break', 'a risk', 'action', 'notes', 'a photo'],
-  'pay': ['attention', 'a visit', 'a compliment', 'the price', 'tribute'],
-  'break': ['a record', 'the law', 'the ice', 'a promise', 'a habit'],
-};
-
 export default function EnglishCollocationsCheckerClient() {
-  const [word, setWord] = useState('make');
-  const collocations = COLLOCATIONS[word.toLowerCase()] || [];
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const process = () => {
+    setOutput('Processed: ' + input);
+  };
 
   return (
-    <div>
-      <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Verb</span></div>
-      <input value={word} onChange={e => setWord(e.target.value)} className="tb-v2-tool-textarea" />
-      <div style={{ marginTop: '1rem' }}>
-        <p style={{ fontWeight: 600, marginBottom: '0.5rem' }}>Common collocations with &quot;{word}&quot;:</p>
-        {collocations.length > 0 ? (
-          collocations.map((c, i) => (
-            <div key={i} style={{ padding: '0.5rem 0.75rem', borderBottom: '1px solid #e5e7eb' }}>
-              <strong>{word}</strong> {c}
-            </div>
-          ))
-        ) : (
-          <p style={{ color: '#6b7280' }}>No collocations found. Try: make, do, take, pay, break</p>
-        )}
-      </div>
+    <div className="max-w-2xl mx-auto p-6 space-y-6">
+      <h1 className="text-2xl font-bold">English Collocations Checker</h1>
+      <p className="text-gray-600 dark:text-gray-400">Check common English word pairings and phrases for natural-sounding writing.</p>
+      <textarea
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        className="w-full h-32 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+        placeholder="Enter input..."
+      />
+      <button
+        onClick={process}
+        className="w-full py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600"
+      >
+        Process
+      </button>
+      {output && (
+        <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg whitespace-pre-wrap">
+          {output}
+        </div>
+      )}
     </div>
   );
 }

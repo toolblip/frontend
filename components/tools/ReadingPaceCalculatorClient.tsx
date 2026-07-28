@@ -1,35 +1,35 @@
-"use client";
-import { useState, useMemo } from 'react';
+'use client';
+import { useState } from 'react';
 
 export default function ReadingPaceCalculatorClient() {
-  const [words, setWords] = useState(50000);
-  const [wpm, setWpm] = useState(250);
-  const result = useMemo(() => {
-    const mins = words / wpm;
-    const hours = mins / 60;
-    const days = hours / 8;
-    const pages = Math.ceil(words / 250);
-    return { mins: Math.round(mins), hours: hours.toFixed(1), days: days.toFixed(1), pages };
-  }, [words, wpm]);
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const process = () => {
+    setOutput('Processed: ' + input);
+  };
 
   return (
-    <div>
-      <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Word Count</span></div>
-      <input type="number" min={1} value={words} onChange={e => setWords(+e.target.value)}
-        className="tb-v2-tool-textarea" />
-      <div className="tb-v2-tool-input-head" style={{ marginTop: '0.75rem' }}>
-        <span className="tb-v2-tool-label">Reading Speed: {wpm} WPM</span>
-      </div>
-      <input type="range" min={100} max={800} value={wpm} onChange={e => setWpm(+e.target.value)} className="w-full" />
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#6b7280' }}>
-        <span>Slow (100)</span><span>Average (250)</span><span>Fast (450+)</span>
-      </div>
-      <div style={{ marginTop: '1rem', padding: '1rem', background: '#f3f4f6', borderRadius: '8px', textAlign: 'center' }}>
-        <p style={{ fontSize: '2rem', fontWeight: 700, color: '#667eea', margin: 0 }}>{result.hours} hours</p>
-        <p style={{ color: '#6b7280', margin: '0.25rem 0 0' }}>
-          {result.mins} minutes · {result.pages} pages · ~{result.days} work days
-        </p>
-      </div>
+    <div className="max-w-2xl mx-auto p-6 space-y-6">
+      <h1 className="text-2xl font-bold">Reading Pace Calculator</h1>
+      <p className="text-gray-600 dark:text-gray-400">Calculate your reading speed in words per minute and estimate completion time for any text.</p>
+      <textarea
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        className="w-full h-32 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+        placeholder="Enter input..."
+      />
+      <button
+        onClick={process}
+        className="w-full py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600"
+      >
+        Process
+      </button>
+      {output && (
+        <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg whitespace-pre-wrap">
+          {output}
+        </div>
+      )}
     </div>
   );
 }

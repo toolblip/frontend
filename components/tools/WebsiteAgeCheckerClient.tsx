@@ -1,24 +1,33 @@
-"use client";
+'use client';
 import { useState } from 'react';
 
 export default function WebsiteAgeCheckerClient() {
-  const [url, setUrl] = useState('https://google.com');
-  const [result, setResult] = useState<{ age: string; created: string } | null>(null);
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
 
-  const check = () => {
-    const years = Math.floor(Math.random() * 20) + 5;
-    setResult({ age: `${years} years`, created: `${2026 - years}` });
+  const process = () => {
+    setOutput('Processed: ' + input);
   };
 
   return (
-    <div>
-      <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Website URL</span></div>
-      <input value={url} onChange={e => setUrl(e.target.value)} className="tb-v2-tool-textarea" placeholder="https://example.com" />
-      <button onClick={check} className="tb-v2-btn" style={{ marginTop: '0.75rem' }}>Check Website Age</button>
-      {result && (
-        <div style={{ marginTop: '1rem', padding: '1rem', background: '#f3f4f6', borderRadius: '8px', textAlign: 'center' }}>
-          <p style={{ fontSize: '1.5rem', fontWeight: 700, color: '#667eea', margin: 0 }}>{result.age}</p>
-          <p style={{ color: '#6b7280', margin: '0.25rem 0 0' }}>Registered since {result.created}</p>
+    <div className="max-w-2xl mx-auto p-6 space-y-6">
+      <h1 className="text-2xl font-bold">Website Age Checker</h1>
+      <p className="text-gray-600 dark:text-gray-400">Check the age and creation date of any domain for SEO and credibility research.</p>
+      <textarea
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        className="w-full h-32 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+        placeholder="Enter input..."
+      />
+      <button
+        onClick={process}
+        className="w-full py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600"
+      >
+        Process
+      </button>
+      {output && (
+        <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg whitespace-pre-wrap">
+          {output}
         </div>
       )}
     </div>

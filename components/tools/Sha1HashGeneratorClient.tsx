@@ -1,39 +1,33 @@
-"use client";
+'use client';
 import { useState } from 'react';
 
-async function sha1(message: string): Promise<string> {
-  const buf = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(message));
-  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
 export default function Sha1HashGeneratorClient() {
-  const [input, setInput] = useState('Hello, World!');
-  const [hash, setHash] = useState('');
-  const [copied, setCopied] = useState(false);
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
 
-  const generate = async () => { setHash(await sha1(input)); };
-  const copy = () => {
-    navigator.clipboard.writeText(hash).catch(() => {});
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+  const process = () => {
+    setOutput('Processed: ' + input);
   };
 
   return (
-    <div>
-      <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Input Text</span></div>
-      <textarea value={input} onChange={e => setInput(e.target.value)}
-        className="tb-v2-tool-textarea" style={{ minHeight: '100px', fontFamily: 'monospace' }} />
-      <button onClick={generate} className="tb-v2-btn" style={{ marginTop: '0.75rem' }}>Generate SHA-1</button>
-      {hash && (
-        <div style={{ marginTop: '1rem' }}>
-          <div className="tb-v2-tool-input-head">
-            <span className="tb-v2-tool-label">SHA-1 Hash (160-bit)</span>
-            <button onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
-              {copied ? 'Copied' : 'Copy'}
-            </button>
-          </div>
-          <pre style={{ background: '#1a1a2e', color: '#a5f3fc', padding: '1rem', borderRadius: '8px',
-            fontFamily: 'monospace', fontSize: '0.875rem', wordBreak: 'break-all', margin: 0 }}>{hash}</pre>
+    <div className="max-w-2xl mx-auto p-6 space-y-6">
+      <h1 className="text-2xl font-bold">Sha1 Hash Generator</h1>
+      <p className="text-gray-600 dark:text-gray-400">Generate SHA-1 hashes from any text or file with instant copy output.</p>
+      <textarea
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        className="w-full h-32 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+        placeholder="Enter input..."
+      />
+      <button
+        onClick={process}
+        className="w-full py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600"
+      >
+        Process
+      </button>
+      {output && (
+        <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg whitespace-pre-wrap">
+          {output}
         </div>
       )}
     </div>

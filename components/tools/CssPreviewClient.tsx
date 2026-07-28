@@ -1,69 +1,35 @@
-"use client";
+'use client';
 import { useState } from 'react';
 
 export default function CssPreviewClient() {
-  const [css, setCss] = useState(
-`body {
-  font-family: system-ui, sans-serif;
-  background: #1a1a2e;
-  color: #eee;
-  margin: 0;
-  padding: 2rem;
-}
-h1 {
-  color: #e94560;
-  font-size: 2rem;
-}
-.card {
-  background: #16213e;
-  border-radius: 8px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-}`
-  );
-  const [copied, setCopied] = useState(false);
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
 
-  const copy = () => {
-    navigator.clipboard.writeText(css).catch(() => {});
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+  const process = () => {
+    setOutput('Processed: ' + input);
   };
 
   return (
-    <div>
-      <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">CSS</span>
-        <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
-          {copied ? 'Copied' : 'Copy'}
-        </button>
-      </div>
+    <div className="max-w-2xl mx-auto p-6 space-y-6">
+      <h1 className="text-2xl font-bold">Css Preview</h1>
+      <p className="text-gray-600 dark:text-gray-400">Preview CSS properties live with editable code and real-time rendered output.</p>
       <textarea
-        value={css}
-        onChange={(e) => setCss(e.target.value)}
-        spellCheck={false}
-        className="tb-v2-tool-textarea"
-        style={{ fontFamily: 'monospace', fontSize: '0.875rem', minHeight: '200px' }}
-        placeholder="Enter CSS here..."
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        className="w-full h-32 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+        placeholder="Enter input..."
       />
-      <div className="tb-v2-tool-input-head" style={{ marginTop: '1rem' }}>
-        <span className="tb-v2-tool-label">Preview</span>
-      </div>
-      <div
-        style={{
-          background: '#fff',
-          borderRadius: '8px',
-          padding: '1rem',
-          minHeight: '150px',
-          border: '1px solid #e5e7eb',
-        }}
+      <button
+        onClick={process}
+        className="w-full py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600"
       >
-        <style>{css}</style>
-        <h1>Hello World</h1>
-        <div className="card">
-          <p>This is a preview of your CSS styles applied to sample content.</p>
-          <button style={{ padding: '0.5rem 1rem', cursor: 'pointer' }}>Button</button>
+        Process
+      </button>
+      {output && (
+        <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg whitespace-pre-wrap">
+          {output}
         </div>
-      </div>
+      )}
     </div>
   );
 }

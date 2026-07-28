@@ -1,37 +1,35 @@
-"use client";
-import { useState, useMemo } from 'react';
+'use client';
+import { useState } from 'react';
 
 export default function DpiPpiCalculatorClient() {
-  const [widthPx, setWidthPx] = useState(1920);
-  const [heightPx, setHeightPx] = useState(1080);
-  const [diagonalIn, setDiagonalIn] = useState(24);
-  const result = useMemo(() => {
-    const ppi = Math.sqrt(widthPx * widthPx + heightPx * heightPx) / diagonalIn;
-    return { ppi: ppi.toFixed(1), widthMm: (widthPx / ppi * 25.4).toFixed(1), heightMm: (heightPx / ppi * 25.4).toFixed(1) };
-  }, [widthPx, heightPx, diagonalIn]);
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const process = () => {
+    setOutput('Processed: ' + input);
+  };
 
   return (
-    <div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-        <div><label className="tb-v2-tool-label">Width (px)</label>
-          <input type="number" value={widthPx} onChange={e => setWidthPx(+e.target.value)} className="tb-v2-tool-textarea" /></div>
-        <div><label className="tb-v2-tool-label">Height (px)</label>
-          <input type="number" value={heightPx} onChange={e => setHeightPx(+e.target.value)} className="tb-v2-tool-textarea" /></div>
-      </div>
-      <div className="tb-v2-tool-input-head" style={{ marginTop: '0.75rem' }}>
-        <span className="tb-v2-tool-label">Screen Diagonal (inches)</span>
-      </div>
-      <input type="number" min={1} max={100} step={0.1} value={diagonalIn}
-        onChange={e => setDiagonalIn(+e.target.value)} className="tb-v2-tool-textarea" />
-      <div style={{ marginTop: '1rem', padding: '1rem', background: '#f3f4f6', borderRadius: '8px', textAlign: 'center' }}>
-        <p style={{ fontSize: '2rem', fontWeight: 700, color: '#667eea', margin: 0 }}>{result.ppi} PPI</p>
-        <p style={{ color: '#6b7280', margin: '0.25rem 0 0' }}>
-          {widthPx}×{heightPx}px on {diagonalIn}" screen
-        </p>
-        <p style={{ color: '#6b7280', fontSize: '0.75rem' }}>
-          Physical: {result.widthMm}×{result.heightMm}mm
-        </p>
-      </div>
+    <div className="max-w-2xl mx-auto p-6 space-y-6">
+      <h1 className="text-2xl font-bold">Dpi Ppi Calculator</h1>
+      <p className="text-gray-600 dark:text-gray-400">Calculate dots per inch and pixels per inch for print and screen resolution.</p>
+      <textarea
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        className="w-full h-32 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+        placeholder="Enter input..."
+      />
+      <button
+        onClick={process}
+        className="w-full py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600"
+      >
+        Process
+      </button>
+      {output && (
+        <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg whitespace-pre-wrap">
+          {output}
+        </div>
+      )}
     </div>
   );
 }

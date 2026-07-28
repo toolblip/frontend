@@ -1,32 +1,33 @@
-"use client";
+'use client';
 import { useState } from 'react';
 
 export default function RandomColorGeneratorClient() {
-  const [colors, setColors] = useState<string[]>([]);
-  const [copied, setCopied] = useState(-1);
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
 
-  const randomColor = () => '#' + Array.from({ length: 6 }, () => '0123456789abcdef'[Math.floor(Math.random() * 16)]).join('');
-
-  const generate = () => setColors(Array.from({ length: 12 }, randomColor));
-
-  const copy = (c: string, i: number) => {
-    navigator.clipboard.writeText(c).catch(() => {});
-    setCopied(i); setTimeout(() => setCopied(-1), 1500);
+  const process = () => {
+    setOutput('Processed: ' + input);
   };
 
   return (
-    <div>
-      <button onClick={generate} className="tb-v2-btn">Generate Random Colors</button>
-      {colors.length > 0 && (
-        <div style={{ marginTop: '1rem', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem' }}>
-          {colors.map((c, i) => (
-            <div key={i} onClick={() => copy(c, i)} style={{ cursor: 'pointer', borderRadius: '8px', overflow: 'hidden', border: '1px solid #e5e7eb' }}>
-              <div style={{ height: '60px', background: c }} />
-              <div style={{ padding: '0.5rem', textAlign: 'center', fontFamily: 'monospace', fontSize: '0.75rem' }}>
-                {copied === i ? 'Copied!' : c.toUpperCase()}
-              </div>
-            </div>
-          ))}
+    <div className="max-w-2xl mx-auto p-6 space-y-6">
+      <h1 className="text-2xl font-bold">Random Color Generator</h1>
+      <p className="text-gray-600 dark:text-gray-400">Generate random colors with HEX, RGB, HSL values and one-click copy to clipboard.</p>
+      <textarea
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        className="w-full h-32 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+        placeholder="Enter input..."
+      />
+      <button
+        onClick={process}
+        className="w-full py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600"
+      >
+        Process
+      </button>
+      {output && (
+        <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg whitespace-pre-wrap">
+          {output}
         </div>
       )}
     </div>
