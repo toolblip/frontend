@@ -2,7 +2,7 @@
 title: "How to Test JSONPath Expressions Online Against Real Data"
 description: >-
   Need to test JSONPath expressions online? Learn filter syntax, recursive descent, and array slicing with API examples. Try the free JSONPath tester now.
-slug: 2026-07-28-test-jsonpath-expressions-online
+slug: test-jsonpath-expressions-online
 date: 2026-07-28T00:00:00.000Z
 category: Developer Tools
 tags:

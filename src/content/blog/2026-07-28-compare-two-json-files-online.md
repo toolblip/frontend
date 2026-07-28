@@ -2,7 +2,7 @@
 title: "How to Compare Two JSON Files Online with JSON Diff"
 description: >-
   Need to compare two JSON files online? Learn how JSON Diff catches changed keys, added fields, and nested value edits in seconds. Try the free tool now.
-slug: 2026-07-28-compare-two-json-files-online
+slug: compare-two-json-files-online
 date: 2026-07-28T00:00:00.000Z
 category: Developer Tools
 tags:
