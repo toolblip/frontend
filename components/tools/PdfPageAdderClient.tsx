@@ -138,7 +138,7 @@ export default function PdfPageAdderClient() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
+    <div className="tb-v2-tool-card">
       <h1 className="text-2xl font-bold">Add Pages to PDF</h1>
       <p className="text-gray-600 dark:text-gray-400">
         Insert pages from one PDF into another. Works entirely in your browser.

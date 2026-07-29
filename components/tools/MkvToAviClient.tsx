@@ -19,7 +19,7 @@ export default function MkvToAviClient() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-6">
+    <div className="tb-v2-tool-card">
       <h1 className="text-2xl font-bold">MKV to AVI Converter</h1>
       <textarea
         value={input}

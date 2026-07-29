@@ -20,7 +20,7 @@ export default function JsonToTypescriptTypesClient() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-6">
+    <div className="tb-v2-tool-card">
       <h1 className="text-2xl font-bold">JSON to TypeScript Types</h1>
       <textarea
         value={input}

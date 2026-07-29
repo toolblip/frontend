@@ -12,7 +12,7 @@ export default function LoremIpsumWordsClient() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-6">
+    <div className="tb-v2-tool-card">
       <h1 className="text-2xl font-bold">Lorem Ipsum Words Generator</h1>
       <textarea
         value={input}

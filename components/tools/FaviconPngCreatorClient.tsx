@@ -10,7 +10,7 @@ export default function FaviconPngCreatorClient() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-6">
+    <div className="tb-v2-tool-card">
       <h1 className="text-2xl font-bold">Favicon Png Creator</h1>
       <p className="text-gray-600 dark:text-gray-400">Create favicon.ico and app icons from any image or emoji with multiple size outputs.</p>
       <textarea
@@ -21,12 +21,12 @@ export default function FaviconPngCreatorClient() {
       />
       <button
         onClick={process}
-        className="w-full py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600"
+        className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg"
       >
         Process
       </button>
       {output && (
-        <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg whitespace-pre-wrap">
+        <div className="tb-v2-tool-output-body">
           {output}
         </div>
       )}

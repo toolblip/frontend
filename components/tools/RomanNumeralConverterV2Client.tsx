@@ -19,7 +19,7 @@ export default function RomanNumeralConverterV2Client() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-6">
+    <div className="tb-v2-tool-card">
       <h1 className="text-2xl font-bold">Roman Numeral Converter</h1>
       <textarea
         value={input}

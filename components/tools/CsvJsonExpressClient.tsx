@@ -143,7 +143,7 @@ export default function CsvJsonExpressClient() {
   const outputLabel = mode === 'csv-json' || mode === 'tsv-json' ? 'JSON Output' : 'Output Data';
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-6">
+    <div className="tb-v2-tool-card">
       <h1 className="text-2xl font-bold">CSV/TSV/JSON Converter</h1>
       
       <div className="tb-v2-mode-tabs">

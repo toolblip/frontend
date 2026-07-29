@@ -34,7 +34,7 @@ export default function ResizeClient() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-6">
+    <div className="tb-v2-tool-card">
       <h1 className="text-2xl font-bold">Resize Image</h1>
       <label className="block w-full p-8 border-2 border-dashed rounded-xl cursor-pointer text-center hover:border-indigo-400 transition-colors">
         <input type="file" accept="image/*" onChange={handleFile} className="hidden" />

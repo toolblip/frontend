@@ -10,7 +10,7 @@ export default function ReadingTimeEstimatorClient() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-6">
+    <div className="tb-v2-tool-card">
       <h1 className="text-2xl font-bold">Reading Time Estimator</h1>
       <p className="text-gray-600 dark:text-gray-400">Estimate how long it takes to read any text based on average reading speed of 200 words per minute.</p>
       <textarea
@@ -21,12 +21,12 @@ export default function ReadingTimeEstimatorClient() {
       />
       <button
         onClick={process}
-        className="w-full py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600"
+        className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg"
       >
         Process
       </button>
       {output && (
-        <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg whitespace-pre-wrap">
+        <div className="tb-v2-tool-output-body">
           {output}
         </div>
       )}

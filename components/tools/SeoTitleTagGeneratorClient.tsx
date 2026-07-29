@@ -12,7 +12,7 @@ export default function SeoTitleTagGeneratorClient() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-6">
+    <div className="tb-v2-tool-card">
       <h1 className="text-2xl font-bold">SEO Title Tag Generator</h1>
       <input
         type="url"

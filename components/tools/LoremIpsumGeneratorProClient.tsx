@@ -38,7 +38,7 @@ export default function LoremIpsumGeneratorProClient() {
   useEffect(() => { generate(); }, [unit, count]);
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-6">
+    <div className="tb-v2-tool-card">
       <h1 className="text-2xl font-bold">Lorem Ipsum Generator Pro</h1>
       <div className="flex flex-wrap gap-3 items-center">
         <input

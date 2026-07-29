@@ -115,7 +115,7 @@ export default function Base64ImageConverterClient() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6 space-y-6">
+    <div className="tb-v2-tool-card">
       {isMounted && (
       <>
       <h1 className="text-2xl font-bold">Base64 Image Converter</h1>
