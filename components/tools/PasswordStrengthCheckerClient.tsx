@@ -1,80 +1,185 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
-function checkStrength(password: string): { score: number; entropy: number; feedback: string[] } {
+function checkStrength(password: string) {
   const feedback: string[] = [];
   let score = 0;
+
+  // Length checks
   if (password.length >= 8) score++;
   if (password.length >= 12) score++;
   if (password.length >= 16) score++;
-  if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score++;
+  if (password.length >= 20) score++;
+
+  // Character diversity
+  if (/[a-z]/.test(password)) score++;
+  if (/[A-Z]/.test(password)) score++;
   if (/\d/.test(password)) score++;
   if (/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password)) score++;
   if (/[^a-zA-Z0-9!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password)) score++;
 
+  // Feedback
   if (password.length < 8) feedback.push('Use at least 8 characters');
-  if (!/[a-z]/.test(password)) feedback.push('Add lowercase letters');
-  if (!/[A-Z]/.test(password)) feedback.push('Add uppercase letters');
-  if (!/\d/.test(password)) feedback.push('Add numbers');
-  if (!/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password)) feedback.push('Add special characters');
+  if (password.length < 12) feedback.push('Consider using 12+ characters for better security');
+  if (!/[a-z]/.test(password)) feedback.push('Add lowercase letters (a-z)');
+  if (!/[A-Z]/.test(password)) feedback.push('Add uppercase letters (A-Z)');
+  if (!/\d/.test(password)) feedback.push('Add numbers (0-9)');
+  if (!/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password)) feedback.push('Add special characters (!@#$%^&*)');
+  if (/(.)\1{2,}/.test(password)) feedback.push('Avoid repeated characters');
+  if (/^[a-zA-Z]+$/.test(password)) feedback.push('Mix letters with numbers and symbols');
+  if (/^[0-9]+$/.test(password)) feedback.push('Avoid using only numbers');
 
-  const poolSize = (/[a-z]/.test(password) ? 26 : 0) + (/[A-Z]/.test(password) ? 26 : 0) + (/\d/.test(password) ? 10 : 0) + (/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password) ? 32 : 0);
+  // Entropy calculation
+  const poolSize = (/[a-z]/.test(password) ? 26 : 0) +
+    (/[A-Z]/.test(password) ? 26 : 0) +
+    (/\d/.test(password) ? 10 : 0) +
+    (/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password) ? 32 : 0) +
+    (/[^a-zA-Z0-9!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password) ? 100 : 0);
   const entropy = password.length * Math.log2(poolSize || 1);
 
-  return { score, entropy, feedback };
+  // Crack time estimation (assuming 10 billion guesses/sec)
+  const guessesPerSec = 10_000_000_000;
+  const totalGuesses = Math.pow(2, entropy);
+  const seconds = totalGuesses / guessesPerSec;
+
+  let crackTime = '';
+  if (seconds < 1) crackTime = 'Instantly';
+  else if (seconds < 60) crackTime = `${Math.round(seconds)} seconds`;
+  else if (seconds < 3600) crackTime = `${Math.round(seconds / 60)} minutes`;
+  else if (seconds < 86400) crackTime = `${Math.round(seconds / 3600)} hours`;
+  else if (seconds < 31536000) crackTime = `${Math.round(seconds / 86400)} days`;
+  else if (seconds < 31536000 * 1000) crackTime = `${Math.round(seconds / 31536000)} years`;
+  else if (seconds < 31536000 * 1000000) crackTime = `${Math.round(seconds / 31536000 / 1000)}k years`;
+  else if (seconds < 31536000 * 1e9) crackTime = `${Math.round(seconds / 31536000 / 1e6)}M years`;
+  else crackTime = `${(seconds / 31536000 / 1e9).toExponential(1)} billion years`;
+
+  return { score: Math.min(score, 9), entropy, feedback, crackTime, poolSize };
 }
 
 export default function PasswordStrengthCheckerClient() {
   const [password, setPassword] = useState('');
   const [show, setShow] = useState(false);
+  const [copied, setCopied] = useState(false);
 
-  const { score, entropy, feedback } = checkStrength(password);
-  const pct = Math.min(100, (score / 7) * 100);
-  const color = score <= 2 ? '#ef4444' : score <= 4 ? '#f59e0b' : '#10b981';
-  const label = score <= 2 ? 'Weak' : score <= 4 ? 'Fair' : score <= 5 ? 'Good' : 'Strong';
+  const { score, entropy, feedback, crackTime, poolSize } = useMemo(() => checkStrength(password), [password]);
+  const pct = Math.min(100, (score / 9) * 100);
+
+  const getStrength = () => {
+    if (score <= 2) return { label: 'Weak', color: '#ef4444', emoji: '🔴' };
+    if (score <= 4) return { label: 'Fair', color: '#f59e0b', emoji: '🟡' };
+    if (score <= 6) return { label: 'Good', color: '#3b82f6', emoji: '🔵' };
+    return { label: 'Strong', color: '#10b981', emoji: '🟢' };
+  };
+
+  const strength = getStrength();
+
+  const copy = () => {
+    navigator.clipboard.writeText(password);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
 
   return (
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Password</span>
-        <button type="button" onClick={() => setShow(v => !v)} className="tb-v2-mode-tab" style={{ fontSize: 11 }}>
-          {show ? 'HIDE' : 'SHOW'}
-        </button>
+        <div className="flex gap-2">
+          <button type="button" onClick={() => setShow(v => !v)} className="tb-v2-mode-tab">
+            {show ? '🙈 Hide' : '👁️ Show'}
+          </button>
+          {password && (
+            <button type="button" onClick={copy} className="tb-v2-copy-btn">
+              {copied ? 'Copied!' : 'Copy'}
+            </button>
+          )}
+        </div>
       </div>
+
       <input
         type={show ? 'text' : 'password'}
         value={password}
         onChange={e => setPassword(e.target.value)}
-        placeholder="Enter your password..."
+        placeholder="Enter your password to check its strength..."
         className="tb-v2-tool-textarea"
-        style={{ width: '100%', minHeight: 44, resize: 'none', fontFamily: show ? 'var(--f-mono)' : undefined }}
+        style={{ minHeight: 48, fontFamily: show ? 'var(--f-mono)' : undefined }}
       />
+
       {password && (
         <>
-          <div style={{ marginTop: 12 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-              <span style={{ fontSize: 12, color: 'var(--tb-text-secondary)' }}>Strength</span>
-              <span style={{ fontSize: 12, fontWeight: 600, color }}>{label}</span>
+          {/* Strength bar */}
+          <div>
+            <div className="flex justify-between items-center mb-2">
+              <span className="tb-v2-tool-label">Strength</span>
+              <span className="font-semibold" style={{ color: strength.color }}>
+                {strength.emoji} {strength.label}
+              </span>
             </div>
-            <div style={{ height: 6, background: 'var(--tb-bg-secondary)', borderRadius: 3, overflow: 'hidden' }}>
-              <div style={{ width: `${pct}%`, height: '100%', background: color, transition: 'width 0.3s, background 0.3s', borderRadius: 3 }} />
+            <div className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+              <div
+                className="h-full rounded-full transition-all duration-300"
+                style={{ width: `${pct}%`, backgroundColor: strength.color }}
+              />
             </div>
           </div>
-          <div style={{ marginTop: 10, display: 'flex', gap: 16, fontSize: 12 }}>
-            <div><span style={{ color: 'var(--tb-text-secondary)' }}>Entropy: </span><span style={{ fontWeight: 600 }}>{entropy.toFixed(1)} bits</span></div>
-            <div><span style={{ color: 'var(--tb-text-secondary)' }}>Length: </span><span style={{ fontWeight: 600 }}>{password.length}</span></div>
+
+          {/* Stats grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg text-center">
+              <div className="text-lg font-bold">{password.length}</div>
+              <div className="text-xs text-gray-500">Characters</div>
+            </div>
+            <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg text-center">
+              <div className="text-lg font-bold">{entropy.toFixed(0)}</div>
+              <div className="text-xs text-gray-500">Bits of Entropy</div>
+            </div>
+            <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg text-center">
+              <div className="text-lg font-bold">{poolSize}</div>
+              <div className="text-xs text-gray-500">Pool Size</div>
+            </div>
+            <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg text-center">
+              <div className="text-lg font-bold text-xs leading-tight">{crackTime}</div>
+              <div className="text-xs text-gray-500">Crack Time</div>
+            </div>
+          </div>
+
+          {/* Character breakdown */}
+          <div className="flex flex-wrap gap-2 text-xs">
+            <span className={`px-2 py-1 rounded ${/[a-z]/.test(password) ? 'bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400' : 'bg-gray-100 dark:bg-gray-800 text-gray-500'}`}>
+              a-z {/[a-z]/.test(password) ? '✓' : ''}
+            </span>
+            <span className={`px-2 py-1 rounded ${/[A-Z]/.test(password) ? 'bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400' : 'bg-gray-100 dark:bg-gray-800 text-gray-500'}`}>
+              A-Z {/[A-Z]/.test(password) ? '✓' : ''}
+            </span>
+            <span className={`px-2 py-1 rounded ${/\d/.test(password) ? 'bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400' : 'bg-gray-100 dark:bg-gray-800 text-gray-500'}`}>
+              0-9 {/\d/.test(password) ? '✓' : ''}
+            </span>
+            <span className={`px-2 py-1 rounded ${/[!@#$%^&*]/.test(password) ? 'bg-green-100 dark:bg-green-900/20 text-green-700 dark:text-green-400' : 'bg-gray-100 dark:bg-gray-800 text-gray-500'}`}>
+              !@#$ {/[!@#$%^&*]/.test(password) ? '✓' : ''}
+            </span>
           </div>
         </>
       )}
-      <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">Suggestions</span></div>
+
+      {/* Suggestions */}
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">Suggestions</span>
+      </div>
       <div className="tb-v2-tool-output-body">
         {feedback.length > 0 ? (
-          <ul style={{ margin: 0, paddingLeft: 18, display: 'flex', flexDirection: 'column', gap: 4 }}>
-            {feedback.map(f => <li key={f} style={{ fontSize: 13, color: 'var(--tb-text-secondary)' }}>{f}</li>)}
+          <ul className="space-y-1">
+            {feedback.map(f => (
+              <li key={f} className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                <span className="text-amber-500">⚠️</span> {f}
+              </li>
+            ))}
           </ul>
+        ) : password ? (
+          <div className="flex items-center gap-2 text-green-600 dark:text-green-400 font-medium">
+            <span>✅</span> Excellent! Your password meets all recommendations.
+          </div>
         ) : (
-          <div style={{ color: '#10b981', fontSize: 14, fontWeight: 500 }}>Great password! All recommendations met.</div>
+          <div className="text-gray-500 text-sm">Enter a password to see suggestions</div>
         )}
       </div>
     </div>
