@@ -1,40 +1,108 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 export default function WordCounterClient() {
   const [input, setInput] = useState('');
+  const [copied, setCopied] = useState(false);
 
-  const count = () => {
-    const text = input.trim();
-    if (!text) return { words: 0, sentences: 0, paragraphs: 0, readingTime: 0 };
-    const words = text.split(/\s+/).filter(w => w.length > 0).length;
-    const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0).length;
-    const paragraphs = text.split(/\n\n+/).filter(p => p.trim().length > 0).length;
+  const stats = useMemo(() => {
+    const text = input;
+    if (!text) return null;
+
+    const chars = text.length;
+    const charsNoSpaces = text.replace(/\s/g, '').length;
+    const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+    const sentences = text.split(/[.!?]+/).filter(s => s.trim()).length;
+    const paragraphs = text.split(/\n\s*\n/).filter(p => p.trim()).length;
+    const lines = text.split('\n').length;
     const readingTime = Math.ceil(words / 200);
-    return { words, sentences, paragraphs, readingTime };
-  };
+    const speakingTime = Math.ceil(words / 130);
 
-  const { words, sentences, paragraphs, readingTime } = count();
+    return { chars, charsNoSpaces, words, sentences, paragraphs, lines, readingTime, speakingTime };
+  }, [input]);
+
+  const copyStats = () => {
+    if (!stats) return;
+    const text = `Words: ${stats.words}
+Characters: ${stats.chars}
+Characters (no spaces): ${stats.charsNoSpaces}
+Sentences: ${stats.sentences}
+Paragraphs: ${stats.paragraphs}
+Lines: ${stats.lines}
+Reading time: ${stats.readingTime} min
+Speaking time: ${stats.speakingTime} min`;
+    navigator.clipboard.writeText(text);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
 
   return (
     <div>
-      <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Text</span></div>
-      <textarea value={input} onChange={e => setInput(e.target.value)} placeholder="Paste your text here to count words, characters, and lines..." className="tb-v2-tool-textarea" />
-      <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">Statistics</span></div>
-      <div className="tb-v2-tool-output-body" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-        {[
-          { label: 'Words', value: words },
-          { label: 'Sentences', value: sentences },
-          { label: 'Paragraphs', value: paragraphs },
-          { label: 'Reading Time', value: `${readingTime} min` },
-        ].map(stat => (
-          <div key={stat.label} style={{ background: 'var(--tb-bg-secondary)', padding: 12, borderRadius: 8, textAlign: 'center' }}>
-            <div style={{ fontSize: 24, fontWeight: 700 }}>{stat.value}</div>
-            <div style={{ fontSize: 12, color: 'var(--tb-text-secondary)' }}>{stat.label}</div>
-          </div>
-        ))}
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Text</span>
+        <span className="text-xs text-gray-500">{input.length > 0 ? `${input.length} chars` : ''}</span>
       </div>
+
+      <textarea
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        className="tb-v2-tool-textarea"
+        placeholder="Paste your text here to count words, characters, and lines..."
+        rows={8}
+      />
+
+      {stats && (
+        <>
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">Statistics</span>
+            <button onClick={copyStats} className="tb-v2-copy-btn">
+              {copied ? 'Copied!' : 'Copy'}
+            </button>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg text-center">
+              <div className="text-2xl font-bold text-indigo-500">{stats.words.toLocaleString()}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Words</div>
+            </div>
+            <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg text-center">
+              <div className="text-2xl font-bold text-indigo-500">{stats.chars.toLocaleString()}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Characters</div>
+            </div>
+            <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg text-center">
+              <div className="text-2xl font-bold text-indigo-500">{stats.sentences.toLocaleString()}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Sentences</div>
+            </div>
+            <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg text-center">
+              <div className="text-2xl font-bold text-indigo-500">{stats.paragraphs.toLocaleString()}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Paragraphs</div>
+            </div>
+            <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg text-center">
+              <div className="text-2xl font-bold text-indigo-500">{stats.charsNoSpaces.toLocaleString()}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">No Spaces</div>
+            </div>
+            <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg text-center">
+              <div className="text-2xl font-bold text-indigo-500">{stats.lines.toLocaleString()}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Lines</div>
+            </div>
+            <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg text-center">
+              <div className="text-2xl font-bold text-green-500">{stats.readingTime}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Min Read</div>
+            </div>
+            <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg text-center">
+              <div className="text-2xl font-bold text-blue-500">{stats.speakingTime}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">Min Speak</div>
+            </div>
+          </div>
+        </>
+      )}
+
+      {!input && (
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+          <div className="text-4xl mb-2">📝</div>
+          <p>Paste or type text above to see word count statistics</p>
+        </div>
+      )}
     </div>
   );
 }
