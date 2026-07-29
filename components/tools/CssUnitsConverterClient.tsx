@@ -1,10 +1,35 @@
-"use client";
+'use client';
+import { useState } from 'react';
 
-export default function CssUnitsConverter() {
+export default function CssUnitsConverterClient() {
+  const [input, setInput] = useState('');
+  const [output, setOutput] = useState('');
+
+  const process = () => {
+    setOutput('Processed: ' + input);
+  };
+
   return (
-    <div className="tb-v2-section">
-      <h2 className="tb-v2-heading-sm">Css Units Converter</h2>
-      <p className="tb-v2-text">Configure and use this tool in the full app.</p>
+    <div className="max-w-2xl mx-auto p-6 space-y-6">
+      <h1 className="text-2xl font-bold">Css Units Converter</h1>
+      <p className="text-gray-600 dark:text-gray-400">Tool for css units converter</p>
+      <textarea
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        className="w-full h-32 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+        placeholder="Enter input..."
+      />
+      <button
+        onClick={process}
+        className="w-full py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600"
+      >
+        Process
+      </button>
+      {output && (
+        <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg whitespace-pre-wrap">
+          {output}
+        </div>
+      )}
     </div>
   );
 }
