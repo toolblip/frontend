@@ -14,6 +14,7 @@
 - [ ] Submit to Pinterest
 - [ ] Submit to Dev.to
 - [ ] Submit to other platforms
+- [ ] SourceForge: Manual account creation required (email verification)
 
 ### Product Hunt Launch Prep
 - [ ] Prepare Product Hunt page
