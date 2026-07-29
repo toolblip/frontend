@@ -1,12 +1,7 @@
 {
   "pending": [
-    "Turn JSON arrays into Markdown tables for technical docs",
-    {
-      "topic": "Generate a JSON Schema automatically from sample API data"
-    },
-    {
-      "topic": "Check password strength before enforcing signup rules"
-    },
+    "Check password strength before enforcing signup rules",
+    "Generate a JSON Schema automatically from sample API data",
     {
       "topic": "Generate secure Argon2 password hashes for modern authentication"
     },
@@ -538,6 +533,12 @@
       "url": "https://toolblip.com/tools/html-to-plain-text",
       "status": "skipped_existing_tool_page",
       "note": "Conservative SEO override: main search intent is already served by the live tool page; no thin support blog post published"
+    },
+    {
+      "topic": "Turn JSON arrays into Markdown tables for technical docs",
+      "completed_at": "2026-07-29T04:12:12.522457Z",
+      "url": "https://toolblip.com/blog/2026-07-29-convert-json-to-markdown-table",
+      "note": "Generated, humanized, committed, pushed. GSC submission pending."
     }
   ]
 }
