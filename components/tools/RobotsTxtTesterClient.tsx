@@ -13,7 +13,6 @@ export default function RobotsTxtTesterClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">robots.txt Tester</h1>
       <input
         type="url"
         value={url}

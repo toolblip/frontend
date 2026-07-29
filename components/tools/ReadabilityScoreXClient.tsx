@@ -13,7 +13,6 @@ export default function ReadabilityScoreXClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">Readability Score</h1>
       <textarea
         value={input}
         onChange={e => setInput(e.target.value)}

@@ -138,11 +138,6 @@ export default function PdfPageDeleterClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">Delete PDF Pages</h1>
-      <p className="text-gray-600 dark:text-gray-400">
-        Remove unwanted pages from your PDF. Works entirely in your browser.
-      </p>
-
       {/* File Upload */}
       <div
         onDrop={handleDrop}
@@ -158,10 +153,7 @@ export default function PdfPageDeleterClient() {
         />
         <label htmlFor="pdf-upload" className="cursor-pointer">
           <div className="text-4xl mb-2">📄</div>
-          <p className="text-gray-600 dark:text-gray-400">
-            {file ? file.name : 'Drop a PDF here or click to upload'}
-          </p>
-        </label>
+          </label>
       </div>
 
       {/* Page Selection */}

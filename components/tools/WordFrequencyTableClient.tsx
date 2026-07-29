@@ -13,7 +13,6 @@ export default function WordFrequencyTableClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">Word Frequency Table</h1>
       <textarea
         value={input}
         onChange={e => setInput(e.target.value)}

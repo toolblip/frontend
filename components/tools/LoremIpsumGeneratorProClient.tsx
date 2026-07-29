@@ -39,7 +39,6 @@ export default function LoremIpsumGeneratorProClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">Lorem Ipsum Generator Pro</h1>
       <div className="flex flex-wrap gap-3 items-center">
         <input
           type="number"

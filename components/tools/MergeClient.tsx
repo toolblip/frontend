@@ -137,11 +137,6 @@ export default function MergeClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">Merge PDFs</h1>
-      <p className="text-gray-600 dark:text-gray-400">
-        Combine multiple PDF files into one document. Reorder pages as needed. Works entirely in your browser.
-      </p>
-
       {/* File Upload */}
       <div
         onDrop={handleDrop}
@@ -158,9 +153,6 @@ export default function MergeClient() {
         />
         <label htmlFor="pdf-upload" className="cursor-pointer">
           <div className="text-4xl mb-2">📄</div>
-          <p className="text-gray-600 dark:text-gray-400">
-            Drop multiple PDFs here or click to upload
-          </p>
           <p className="text-sm text-gray-500 mt-1">
             Select 2 or more PDF files to merge
           </p>

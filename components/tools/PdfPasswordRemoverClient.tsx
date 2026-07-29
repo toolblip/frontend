@@ -101,11 +101,6 @@ export default function PdfPasswordRemoverClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">PDF Password Remover</h1>
-      <p className="text-gray-600 dark:text-gray-400">
-        Remove password protection from your PDF files. Works entirely in your browser.
-      </p>
-
       {/* File Upload */}
       <div
         onDrop={handleDrop}
@@ -121,9 +116,6 @@ export default function PdfPasswordRemoverClient() {
         />
         <label htmlFor="pdf-upload" className="cursor-pointer">
           <div className="text-4xl mb-2">📄</div>
-          <p className="text-gray-600 dark:text-gray-400">
-            {file ? file.name : 'Drop a PDF here or click to upload'}
-          </p>
           {file && (
             <p className="text-sm text-gray-500 mt-1">
               {(file.size / 1024).toFixed(1)} KB

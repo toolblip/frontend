@@ -213,8 +213,7 @@ export default function PollGeneratorClient({ tool = { name: '', slug: '', descr
     <div className="mx-auto max-w-2xl p-6">
       <div className="mb-6">
         <h1 className="mb-2 text-2xl font-bold">{tool.name}</h1>
-        <p className="text-gray-600 dark:text-gray-400">{tool.description}</p>
-      </div>
+        </div>
 
       <div className="space-y-5">
         <div>

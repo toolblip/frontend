@@ -13,7 +13,6 @@ export default function SeoTitleTagGeneratorClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">SEO Title Tag Generator</h1>
       <input
         type="url"
         value={url}

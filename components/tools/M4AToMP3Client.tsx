@@ -20,7 +20,6 @@ export default function M4AToMp3Client() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">M4A to MP3 Converter</h1>
       <textarea
         value={input}
         onChange={e => setInput(e.target.value)}

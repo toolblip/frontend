@@ -11,8 +11,6 @@ export default function GradientGeneratorClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">Gradient Generator</h1>
-      <p className="text-gray-600 dark:text-gray-400">Create beautiful multi-stop gradients for backgrounds, UI, and design projects.</p>
       <textarea
         value={input}
         onChange={e => setInput(e.target.value)}
@@ -27,6 +25,15 @@ export default function GradientGeneratorClient() {
       </button>
       {output && (
         <div className="tb-v2-tool-output-body">
+        <div className="flex justify-between items-center mb-2">
+          <span className="tb-v2-tool-label">Output</span>
+          <button 
+            onClick={() => { navigator.clipboard.writeText(output); }}
+            className="tb-v2-copy-btn"
+          >
+            Copy
+          </button>
+        </div>
           {output}
         </div>
       )}

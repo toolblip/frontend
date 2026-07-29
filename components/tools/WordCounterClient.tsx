@@ -20,7 +20,7 @@ export default function WordCounterClient() {
   return (
     <div>
       <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Text</span></div>
-      <textarea value={input} onChange={e => setInput(e.target.value)} placeholder="Enter text to analyze..." className="tb-v2-tool-textarea" />
+      <textarea value={input} onChange={e => setInput(e.target.value)} placeholder="Paste your text here to count words, characters, and lines..." className="tb-v2-tool-textarea" />
       <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">Statistics</span></div>
       <div className="tb-v2-tool-output-body" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
         {[

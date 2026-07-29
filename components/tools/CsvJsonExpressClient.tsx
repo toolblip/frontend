@@ -144,8 +144,6 @@ export default function CsvJsonExpressClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">CSV/TSV/JSON Converter</h1>
-      
       <div className="tb-v2-mode-tabs">
         <button
           onClick={() => setMode('csv-json')}

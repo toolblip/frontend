@@ -52,8 +52,6 @@ export default function TempConverterExpressClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">Temperature Converter</h1>
-      
       <div className="flex gap-2 mb-4">
         {(['C', 'F', 'K'] as const).map(unit => (
           <button

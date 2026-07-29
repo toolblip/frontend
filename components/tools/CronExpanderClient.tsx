@@ -103,7 +103,6 @@ export default function CronExpanderClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">Cron Expression Expander</h1>
       <p className="text-gray-600 dark:text-gray-400 text-sm">
         Enter a cron expression to see its human-readable description and next run times
       </p>

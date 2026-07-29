@@ -13,7 +13,6 @@ export default function RobotsTxtValidatorClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">robots.txt Validator</h1>
       <input
         type="url"
         value={url}

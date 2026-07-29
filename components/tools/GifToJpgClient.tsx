@@ -11,8 +11,6 @@ export default function GifToJpgClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">Gif To Jpg</h1>
-      <p className="text-gray-600 dark:text-gray-400">Convert animated GIF to static JPG image. Extract first frame or create thumbnail.</p>
       <textarea
         value={input}
         onChange={e => setInput(e.target.value)}
@@ -27,6 +25,15 @@ export default function GifToJpgClient() {
       </button>
       {output && (
         <div className="tb-v2-tool-output-body">
+        <div className="flex justify-between items-center mb-2">
+          <span className="tb-v2-tool-label">Output</span>
+          <button 
+            onClick={() => { navigator.clipboard.writeText(output); }}
+            className="tb-v2-copy-btn"
+          >
+            Copy
+          </button>
+        </div>
           {output}
         </div>
       )}

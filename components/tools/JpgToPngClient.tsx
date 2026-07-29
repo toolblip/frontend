@@ -73,8 +73,6 @@ export default function JpgToPngClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">JPG to PNG Converter</h1>
-
       {/* Drop zone */}
       <div
         className={`relative border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-colors ${dragOver ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-950' : 'border-gray-300 dark:border-gray-700 hover:border-indigo-400'}`}

@@ -118,8 +118,6 @@ export default function Base64ImageConverterClient() {
     <div className="tb-v2-tool-card">
       {isMounted && (
       <>
-      <h1 className="text-2xl font-bold">Base64 Image Converter</h1>
-      
       <div className="flex gap-4 mb-4">
         <button
           onClick={() => { setMode('encode'); setInput(''); setOutput(''); setPreview(null); setError(''); }}

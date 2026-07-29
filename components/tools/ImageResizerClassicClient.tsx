@@ -35,7 +35,6 @@ export default function ImageResizerClassicClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">Image Resizer</h1>
       <label className="block w-full p-8 border-2 border-dashed rounded-xl cursor-pointer text-center hover:border-indigo-400 transition-colors">
         <input type="file" accept="image/*" onChange={handleFile} className="hidden" />
         <span className="text-gray-500">{file ? file.name : 'Click to upload an image'}</span>

@@ -139,11 +139,6 @@ export default function PdfPageAdderClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">Add Pages to PDF</h1>
-      <p className="text-gray-600 dark:text-gray-400">
-        Insert pages from one PDF into another. Works entirely in your browser.
-      </p>
-
       {/* Base PDF Upload */}
       <div className="space-y-2">
         <label className="block text-sm font-medium">Base PDF (pages will be added to this)</label>
@@ -161,10 +156,7 @@ export default function PdfPageAdderClient() {
           />
           <label htmlFor="base-pdf-upload" className="cursor-pointer">
             <div className="text-3xl mb-2">📄</div>
-            <p className="text-gray-600 dark:text-gray-400">
-              {baseFile ? baseFile.name : 'Drop base PDF here'}
-            </p>
-          </label>
+            </label>
         </div>
       </div>
 
@@ -185,10 +177,7 @@ export default function PdfPageAdderClient() {
           />
           <label htmlFor="insert-pdf-upload" className="cursor-pointer">
             <div className="text-3xl mb-2">📄</div>
-            <p className="text-gray-600 dark:text-gray-400">
-              {insertFile ? insertFile.name : 'Drop PDF to insert here'}
-            </p>
-          </label>
+            </label>
         </div>
       </div>
 

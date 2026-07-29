@@ -21,7 +21,7 @@ export default function CharacterCounterClient() {
   return (
     <div>
       <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Text</span></div>
-      <textarea value={input} onChange={e => setInput(e.target.value)} placeholder="Enter text to count..." className="tb-v2-tool-textarea" />
+      <textarea value={input} onChange={e => setInput(e.target.value)} placeholder="Enter text to count characters..." className="tb-v2-tool-textarea" />
       <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">Character Count</span></div>
       <div className="tb-v2-tool-output-body" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {[

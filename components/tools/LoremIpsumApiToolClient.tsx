@@ -26,7 +26,6 @@ export default function LoremIpsumApiToolClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">Lorem Ipsum API</h1>
       <div className="tb-v2-mode-tabs">
         <input
           type="url"

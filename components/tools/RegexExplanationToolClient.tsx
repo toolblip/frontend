@@ -30,8 +30,7 @@ export default function RegexExplanationToolClient({ tool = { name: "", slug: ""
     <div className="" style={{padding:"20px"}}>
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-2">{tool.name}</h1>
-        <p className="text-gray-600 dark:text-gray-400">{tool.description}</p>
-      </div>
+        </div>
       
       <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
         <div>

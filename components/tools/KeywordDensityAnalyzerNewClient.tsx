@@ -13,7 +13,6 @@ export default function KeywordDensityAnalyzerNewClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">Keyword Density Analyzer</h1>
       <textarea
         value={input}
         onChange={e => setInput(e.target.value)}

@@ -13,7 +13,6 @@ export default function SitemapHtmlNewClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">Sitemap HTML Generator</h1>
       <input
         type="url"
         value={url}

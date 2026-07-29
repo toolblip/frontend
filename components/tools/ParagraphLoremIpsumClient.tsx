@@ -13,7 +13,6 @@ export default function ParagraphLoremIpsumClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">Paragraph Lorem Ipsum</h1>
       <textarea
         value={input}
         onChange={e => setInput(e.target.value)}

@@ -21,7 +21,6 @@ export default function XmlToExcelClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">XML to Excel Converter</h1>
       <textarea
         value={input}
         onChange={e => setInput(e.target.value)}

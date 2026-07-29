@@ -21,7 +21,6 @@ export default function XmlToCsvClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">XML to CSV Converter</h1>
       <textarea
         value={input}
         onChange={e => setInput(e.target.value)}

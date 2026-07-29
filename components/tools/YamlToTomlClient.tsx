@@ -21,7 +21,6 @@ export default function YamlToTomlClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">YAML to TOML</h1>
       <textarea
         value={input}
         onChange={e => setInput(e.target.value)}

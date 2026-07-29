@@ -26,7 +26,6 @@ export default function HttpStatusRefClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">HTTP Status Codes Reference</h1>
       <div className="tb-v2-mode-tabs">
         <input
           type="url"

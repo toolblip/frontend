@@ -13,7 +13,6 @@ export default function RobotsTxtCheckerClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">Robots TXT Checker</h1>
       <input
         type="url"
         value={url}

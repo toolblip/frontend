@@ -27,8 +27,7 @@ export default function CreateZipFileClient({ tool = { name: "", slug: "", descr
     <div className="" style={{padding:"20px"}}>
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-2">{tool?.name ?? 'Create ZIP File'}</h1>
-        <p className="text-gray-600 dark:text-gray-400">{tool?.description ?? 'Create ZIP archives from multiple files directly in your browser.'}</p>
-      </div>
+        </div>
 
       <textarea
         className="tb-v2-input"

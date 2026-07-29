@@ -20,7 +20,6 @@ export default function UnitConverterDgClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">Unit Converter</h1>
       <textarea
         value={input}
         onChange={e => setInput(e.target.value)}

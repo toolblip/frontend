@@ -13,7 +13,6 @@ export default function SerpRankTrackerClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">SERP Rank Tracker</h1>
       <input
         type="url"
         value={url}

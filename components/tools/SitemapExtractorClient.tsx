@@ -13,7 +13,6 @@ export default function SitemapExtractorClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">XML Sitemap URL Extractor</h1>
       <textarea
         value={input}
         onChange={e => setInput(e.target.value)}

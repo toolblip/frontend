@@ -21,7 +21,6 @@ export default function SitemapXmlValidatorExpressClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">Sitemap XML Validator</h1>
       <textarea
         value={input}
         onChange={e => setInput(e.target.value)}

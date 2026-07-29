@@ -11,13 +11,11 @@ export default function CounterClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">Counter</h1>
-      <p className="text-gray-600 dark:text-gray-400">A clean, easy-to-use counter for tracking anything. Perfect for tallying, counting reps, or keeping score.</p>
       <textarea
         value={input}
         onChange={e => setInput(e.target.value)}
         className="tb-v2-input"
-        placeholder="Enter input..."
+        placeholder="Enter text to count characters, words, and lines..."
       />
       <button
         onClick={process}
@@ -27,6 +25,15 @@ export default function CounterClient() {
       </button>
       {output && (
         <div className="tb-v2-tool-output-body">
+        <div className="flex justify-between items-center mb-2">
+          <span className="tb-v2-tool-label">Output</span>
+          <button 
+            onClick={() => { navigator.clipboard.writeText(output); }}
+            className="tb-v2-copy-btn"
+          >
+            Copy
+          </button>
+        </div>
           {output}
         </div>
       )}

@@ -23,8 +23,7 @@ export default function ParagraphRewriterClient({ tool = { name: '', slug: '', d
     <div className="" style={{padding:"20px"}}>
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-2">{tool?.name || 'Paragraph Rewriter'}</h1>
-        <p className="text-gray-600 dark:text-gray-400">{tool?.description || 'Rewrite paragraphs with improved clarity'}</p>
-      </div>
+        </div>
       <textarea className="w-full p-3 border rounded dark:bg-gray-800 mb-3" rows={6} placeholder="Enter paragraph..." value={input} onChange={e => setInput(e.target.value)} />
       <button onClick={rewrite} disabled={isLoading} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50">
         {isLoading ? 'Rewriting...' : 'Rewrite'}

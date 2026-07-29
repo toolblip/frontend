@@ -21,7 +21,6 @@ export default function JsonCsvExpressClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">JSON to CSV</h1>
       <textarea
         value={input}
         onChange={e => setInput(e.target.value)}

@@ -27,8 +27,7 @@ export default function PsdToAIConverterClient({ tool = { name: "", slug: "", de
     <div className="" style={{padding:"20px"}}>
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-2">{tool?.name ?? 'PSD to AI Converter'}</h1>
-        <p className="text-gray-600 dark:text-gray-400">{tool?.description ?? 'Convert Adobe Photoshop PSD files to Adobe Illustrator AI format.'}</p>
-      </div>
+        </div>
 
       <textarea
         className="tb-v2-input"

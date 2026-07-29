@@ -21,7 +21,6 @@ export default function JsonpathQueryTesterClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">JSONPath Query Tester</h1>
       <textarea
         value={input}
         onChange={e => setInput(e.target.value)}

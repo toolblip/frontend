@@ -27,8 +27,7 @@ export default function AddWatermarkToPDFClient({ tool = { name: "", slug: "", d
     <div className="" style={{padding:"20px"}}>
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-2">{tool?.name ?? 'Add Watermark to PDF'}</h1>
-        <p className="text-gray-600 dark:text-gray-400">{tool?.description ?? 'Add text or image watermarks to PDF documents online.'}</p>
-      </div>
+        </div>
 
       <textarea
         className="tb-v2-input"

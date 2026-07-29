@@ -27,8 +27,7 @@ export default function TextTranslatorClient({ tool = { name: "", slug: "", desc
     <div className="" style={{padding:"20px"}}>
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-2">{tool?.name ?? 'Text Translator'}</h1>
-        <p className="text-gray-600 dark:text-gray-400">{tool?.description ?? 'Translate text between multiple languages instantly.'}</p>
-      </div>
+        </div>
 
       <textarea
         className="tb-v2-input"

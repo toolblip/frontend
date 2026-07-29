@@ -20,7 +20,6 @@ export default function TiffToJpgClient() {
 
   return (
     <div className="tb-v2-tool-card">
-      <h1 className="text-2xl font-bold">TIFF to JPG Converter</h1>
       <textarea
         value={input}
         onChange={e => setInput(e.target.value)}
