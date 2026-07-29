@@ -2,6 +2,11 @@
 
 ## In Progress
 
+### API Health Check Issue
+- [ ] API endpoint returning 404 (api.toolblip.com/health)
+- [ ] Investigate if API service is running
+- [ ] Verify API endpoints are working
+
 ### Directory Submissions
 - [ ] Submit to BetaList
 - [ ] Submit to Crunchbase
