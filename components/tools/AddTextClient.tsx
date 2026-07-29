@@ -79,7 +79,7 @@ export default function AddTextClient() {
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className="tb-v2-tool-label">Text Color</label>
-            <div className="flex gap-2">
+            <div className="tb-v2-mode-tabs">
               <input
                 type="color"
                 value={fontColor}
@@ -96,7 +96,7 @@ export default function AddTextClient() {
           </div>
           <div>
             <label className="tb-v2-tool-label">Background Color</label>
-            <div className="flex gap-2">
+            <div className="tb-v2-mode-tabs">
               <input
                 type="color"
                 value={bgColor}

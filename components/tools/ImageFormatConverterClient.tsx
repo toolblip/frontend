@@ -164,7 +164,7 @@ export default function ImageFormatConverterClient() {
   }, [sourceObjectUrl]);
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       {/* Drop zone */}
       <div
         role="button"
@@ -227,7 +227,7 @@ export default function ImageFormatConverterClient() {
             {/* Output format */}
             <div>
               <p className="text-xs text-gray-500 uppercase tracking-wide font-medium mb-2">Output Format</p>
-              <div className="flex flex-wrap gap-2">
+              <div className="tb-v2-mode-tabs">
                 {FORMAT_OPTIONS.map((fmt) => (
                   <button
                     key={fmt.value}

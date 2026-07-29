@@ -146,7 +146,7 @@ export default function CsvJsonExpressClient() {
     <div className="max-w-2xl mx-auto p-6 space-y-6">
       <h1 className="text-2xl font-bold">CSV/TSV/JSON Converter</h1>
       
-      <div className="flex flex-wrap gap-2">
+      <div className="tb-v2-mode-tabs">
         <button
           onClick={() => setMode('csv-json')}
           className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
@@ -190,11 +190,11 @@ export default function CsvJsonExpressClient() {
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{inputLabel}</label>
+        <label className="tb-v2-tool-label">{inputLabel}</label>
         <textarea
           value={input}
           onChange={e => setInput(e.target.value)}
-          className="w-full h-40 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700 font-mono text-sm"
+          className="tb-v2-input"
           placeholder={inputPlaceholder}
         />
       </div>
@@ -207,7 +207,7 @@ export default function CsvJsonExpressClient() {
       </button>
 
       {error && (
-        <div className="p-4 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg text-sm">
+        <div className="tb-v2-banner tb-v2-banner-err">
           {error}
         </div>
       )}
@@ -215,8 +215,8 @@ export default function CsvJsonExpressClient() {
       {output && (
         <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{outputLabel}</label>
-            <div className="flex gap-2">
+            <label className="tb-v2-tool-label">{outputLabel}</label>
+            <div className="tb-v2-mode-tabs">
               <button 
                 onClick={swap}
                 className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline"
@@ -234,7 +234,7 @@ export default function CsvJsonExpressClient() {
           <textarea
             value={output}
             readOnly
-            className="w-full h-40 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700 font-mono text-sm bg-gray-50 dark:bg-gray-900"
+            className="tb-v2-input"
           />
         </div>
       )}

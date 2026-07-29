@@ -13,7 +13,7 @@ export default function ColorPickerToolClient() {
   const rgb = toRgb(color);
 
   return (
-    <div className="space-y-4">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
       <input type="color" value={color} onChange={e => setColor(e.target.value)} className="w-full h-40 rounded-xl cursor-pointer border-0" />
       <div className="grid grid-cols-2 gap-3">
         <div className="bg-gray-50 rounded-xl p-3">

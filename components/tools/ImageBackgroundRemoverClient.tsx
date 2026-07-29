@@ -244,14 +244,14 @@ export default function ImageBackgroundRemoverClient() {
 
       {image && (
         <div className="tb-v2-mt-4">
-          <p className="tb-v2-text-sm tb-v2-font-medium tb-v2-mb-2">Original</p>
+          <p className="tb-v2-tool-label" style={{marginBottom:8}}>Original</p>
           <img src={image} alt="Original" className="tb-v2-max-w-full tb-v2-rounded-lg" />
         </div>
       )}
 
       {processedImage && (
         <div className="tb-v2-mt-4">
-          <p className="tb-v2-text-sm tb-v2-font-medium tb-v2-mb-2">Result (with transparency)</p>
+          <p className="tb-v2-tool-label" style={{marginBottom:8}}>Result (with transparency)</p>
           <img src={processedImage} alt="No Background" className="tb-v2-max-w-full tb-v2-rounded-lg" style={{ backgroundImage: 'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAABUSURBVDiNY/z//z8DJYCJgUIwaAzFMEoYRMVA4Y5LQNNLUMNA4TYowg1QLIMaB4rXIFYN0PQC1HhQ4oBEukE1LpT4IOqB2BgBAE0cFfVvYI0lAAAAAElFTkSuQmCC")', backgroundRepeat: 'repeat' }} />
           <button onClick={handleDownload} className="tb-v2-btn tb-v2-btn-secondary tb-v2-mt-2">
             Download PNG

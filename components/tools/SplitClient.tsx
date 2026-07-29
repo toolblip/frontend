@@ -210,8 +210,8 @@ export default function SplitClient() {
 
       {/* Split Mode */}
       {pdfDoc && (
-        <div className="space-y-4">
-          <div className="flex gap-3">
+        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
+          <div className="tb-v2-mode-tabs">
             <button
               onClick={() => setSplitMode('ranges')}
               className={`px-4 py-2 rounded-lg ${
@@ -236,7 +236,7 @@ export default function SplitClient() {
 
           {splitMode === 'ranges' ? (
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label className="tb-v2-tool-label" style={{marginBottom:8}}>
                 Page Ranges (e.g., 1-3,4-5,7)
               </label>
               <input
@@ -244,7 +244,7 @@ export default function SplitClient() {
                 value={ranges}
                 onChange={(e) => setRanges(e.target.value)}
                 placeholder="1-3,4-5,7"
-                className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700 font-mono"
+                className="tb-v2-input"
               />
               <p className="text-sm text-gray-500 mt-1">
                 Total pages: {pdfDoc.getPageCount()}
@@ -252,7 +252,7 @@ export default function SplitClient() {
             </div>
           ) : (
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label className="tb-v2-tool-label" style={{marginBottom:8}}>
                 Split every N pages
               </label>
               <input

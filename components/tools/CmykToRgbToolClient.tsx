@@ -308,7 +308,7 @@ export default function CmykToRgbToolClient() {
       {history.length > 0 && (
         <div className="mt-6">
           <h3 className="font-medium mb-2">History</h3>
-          <div className="flex flex-wrap gap-2">
+          <div className="tb-v2-mode-tabs">
             {history.map((item, index) => {
               const result = cmykToRgb(item.c, item.m, item.y, item.k);
               const itemHex = rgbToHex(result.r, result.g, result.b);

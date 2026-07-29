@@ -117,7 +117,7 @@ David Brown\t31\tSydney\tAustralia`;
         <div className="tb-v2-form-group">
           <div className="flex justify-between items-center mb-2">
             <label className="tb-v2-label mb-0">TSV Input</label>
-            <div className="flex gap-2">
+            <div className="tb-v2-mode-tabs">
               <button
                 onClick={loadSample}
                 className="tb-v2-button tb-v2-button-secondary text-xs py-1 px-2"
@@ -143,7 +143,7 @@ David Brown\t31\tSydney\tAustralia`;
         <div className="tb-v2-form-group">
           <div className="flex justify-between items-center mb-2">
             <label className="tb-v2-label mb-0">JSON Output</label>
-            <div className="flex gap-2">
+            <div className="tb-v2-mode-tabs">
               <button
                 onClick={copyToClipboard}
                 className="tb-v2-button tb-v2-button-secondary text-xs py-1 px-2"
@@ -231,7 +231,7 @@ David Brown\t31\tSydney\tAustralia`;
           </p>
           <div className="mt-3">
             <p className="font-semibold mb-2">Example:</p>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="tb-v2-grid-2">
               <div>
                 <p className="text-xs text-gray-500 mb-1">TSV Input:</p>
                 <pre className="bg-gray-100 p-2 rounded text-xs font-mono overflow-x-auto">

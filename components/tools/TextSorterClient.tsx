@@ -47,12 +47,12 @@ export default function TextSorterClient() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap gap-2">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
+      <div className="tb-v2-mode-tabs">
         <select
           value={mode}
           onChange={e => setMode(e.target.value as SortMode)}
-          className="bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:border-red-500"
+          className="tb-v2-select"
         >
           <option value="az">A → Z</option>
           <option value="za">Z → A</option>
@@ -71,21 +71,21 @@ export default function TextSorterClient() {
           Case sensitive
         </label>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="tb-v2-grid-2">
         <div>
-          <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">Input (one item per line)</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:6}}>Input (one item per line)</label>
           <textarea
             value={input}
             onChange={e => setInput(e.target.value)}
             placeholder="apple&#10;Banana&#10;cherry&#10;Apple"
             rows={8}
-            className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm focus:outline-none focus:border-red-500 resize-none"
+            className="tb-v2-tool-textarea"
           />
         </div>
         <div>
           <div className="flex items-center justify-between mb-1.5">
             <label className="text-sm font-medium text-gray-600 dark:text-gray-400">Output</label>
-            <button onClick={handleCopy} className="text-xs text-red-600 dark:text-red-400 hover:text-red-700 font-medium">Copy output</button>
+            <button onClick={handleCopy} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm" style={{color:"var(--red)"}}>Copy output</button>
           </div>
           <textarea
             value={sort(input)}

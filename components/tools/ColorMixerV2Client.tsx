@@ -36,24 +36,24 @@ export default function ColorMixerV2Client() {
   const result = mixColors(color1, color2, ratio / 100);
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <label className="block text-sm font-medium mb-2">Color 1</label>
-          <div className="flex gap-2">
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Color 1</label>
+          <div className="tb-v2-mode-tabs">
             <input type="color" value={color1} onChange={e => setColor1(e.target.value)} className="w-12 h-10 rounded cursor-pointer" />
             <input type="text" value={color1} onChange={e => setColor1(e.target.value)} className="flex-1 px-3 py-2 border rounded font-mono text-sm" />
           </div>
         </div>
         <div>
-          <label className="block text-sm font-medium mb-2">Color 2</label>
-          <div className="flex gap-2">
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Color 2</label>
+          <div className="tb-v2-mode-tabs">
             <input type="color" value={color2} onChange={e => setColor2(e.target.value)} className="w-12 h-10 rounded cursor-pointer" />
             <input type="text" value={color2} onChange={e => setColor2(e.target.value)} className="flex-1 px-3 py-2 border rounded font-mono text-sm" />
           </div>
         </div>
         <div>
-          <label className="block text-sm font-medium mb-2">Ratio  -  {ratio}%</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Ratio  -  {ratio}%</label>
           <input type="range" min="0" max="100" value={ratio} onChange={e => setRatio(Number(e.target.value))} className="w-full" />
         </div>
       </div>

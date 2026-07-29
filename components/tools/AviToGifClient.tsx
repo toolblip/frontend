@@ -75,7 +75,7 @@ export default function AviToGifClient() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
       <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-4 text-sm text-amber-800 dark:text-amber-200">
         <strong>Best Effort:</strong> This tool extracts frames from video and creates a preview. Full GIF encoding requires server-side processing or FFmpeg.
       </div>

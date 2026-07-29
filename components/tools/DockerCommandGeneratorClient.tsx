@@ -191,7 +191,7 @@ export default function DockerCommandGeneratorClient() {
             </select>
           </div>
 
-          <div className="flex flex-wrap gap-4">
+          <div className="tb-v2-option-group">
             <label className="flex items-center gap-2">
               <input
                 type="checkbox"

@@ -51,26 +51,26 @@ export default function ListComparatorClient() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="" style={{padding:"20px"}}>
       <h1 className="text-2xl font-bold mb-6">List Comparator</h1>
 
       <div className="grid md:grid-cols-2 gap-6 mb-6">
         <div>
-          <label className="block text-sm font-medium mb-2">List 1</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>List 1</label>
           <textarea
             value={list1}
             onChange={(e) => setList1(e.target.value)}
-            className="w-full p-3 border rounded-lg h-48 dark:bg-gray-800 dark:border-gray-700"
+            className="tb-v2-input"
             placeholder="Enter first list (one item per line or comma separated)..."
           />
           <p className="text-xs text-gray-500 mt-1">{comparison.list1Count} items</p>
         </div>
         <div>
-          <label className="block text-sm font-medium mb-2">List 2</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>List 2</label>
           <textarea
             value={list2}
             onChange={(e) => setList2(e.target.value)}
-            className="w-full p-3 border rounded-lg h-48 dark:bg-gray-800 dark:border-gray-700"
+            className="tb-v2-input"
             placeholder="Enter second list (one item per line or comma separated)..."
           />
           <p className="text-xs text-gray-500 mt-1">{comparison.list2Count} items</p>
@@ -79,7 +79,7 @@ export default function ListComparatorClient() {
 
       {list1 && list2 && (
         <>
-          <div className="bg-blue-50 dark:bg-blue-900/30 p-4 rounded-lg mb-6">
+          <div className="tb-v2-banner tb-v2-banner-info">
             <div className="flex items-center justify-between">
               <span className="text-sm">Similarity Score</span>
               <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
@@ -180,7 +180,7 @@ export default function ListComparatorClient() {
       )}
 
       {list1 && !list2 && (
-        <div className="p-4 bg-yellow-50 dark:bg-yellow-900/30 rounded-lg">
+        <div className="tb-v2-banner tb-v2-banner-warn">
           <p className="text-sm text-yellow-700 dark:text-yellow-400">
             Enter a second list to compare
           </p>
@@ -188,7 +188,7 @@ export default function ListComparatorClient() {
       )}
 
       {!list1 && list2 && (
-        <div className="p-4 bg-yellow-50 dark:bg-yellow-900/30 rounded-lg">
+        <div className="tb-v2-banner tb-v2-banner-warn">
           <p className="text-sm text-yellow-700 dark:text-yellow-400">
             Enter a first list to compare
           </p>
@@ -202,7 +202,7 @@ export default function ListComparatorClient() {
         </div>
       )}
 
-      <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+      <div className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}>
         <h3 className="font-medium mb-2">Use Cases:</h3>
         <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
           <li>• Find differences between two datasets</li>

@@ -27,7 +27,7 @@ export default function HttpHeadersUltraClient() {
   return (
     <div className="max-w-2xl mx-auto p-6 space-y-6">
       <h1 className="text-2xl font-bold">HTTP Headers Viewer</h1>
-      <div className="flex gap-2">
+      <div className="tb-v2-mode-tabs">
         <input
           type="url"
           value={url}
@@ -44,7 +44,7 @@ export default function HttpHeadersUltraClient() {
           {loading ? 'Fetching...' : 'Check Headers'}
         </button>
       </div>
-      {error && <div className="p-4 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg text-sm">{error}</div>}
+      {error && <div className="tb-v2-banner tb-v2-banner-err">{error}</div>}
       {headers && (
         <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
           <div className="px-4 py-3 bg-gray-50 dark:bg-gray-700 font-medium text-sm">Response Headers ({Object.keys(headers).length})</div>

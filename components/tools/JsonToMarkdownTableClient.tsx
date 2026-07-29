@@ -47,7 +47,7 @@ export default function JsonToMarkdownTableClient() {
   return (
     <div className="flex flex-col h-full">
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="tb-v2-tool-label" style={{marginBottom:8}}>
           JSON Input
         </label>
         <textarea
@@ -73,7 +73,7 @@ export default function JsonToMarkdownTableClient() {
 
       {output && (
         <div className="flex-1">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>
             Markdown Table Output
           </label>
           <pre className="w-full h-48 px-3 py-2 bg-gray-50 border border-gray-300 rounded-md overflow-auto font-mono text-sm">

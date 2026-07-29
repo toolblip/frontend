@@ -21,7 +21,7 @@ export default function CompressMkvClient() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center">
         <input type="file" accept="video/x-matroska,.mkv" onChange={handleUpload} className="hidden" id="compress-mkv-upload" />
         <label htmlFor="compress-mkv-upload" className="cursor-pointer">

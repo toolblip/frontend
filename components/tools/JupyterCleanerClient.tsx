@@ -146,15 +146,15 @@ export default function JupyterCleanerClient({ tool = { name: "Jupyter Cleaner",
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="" style={{padding:"20px"}}>
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-2">{tool.name}</h1>
         <p className="text-gray-600 dark:text-gray-400">{tool.description}</p>
       </div>
       
-      <div className="space-y-4">
+      <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
         <div>
-          <label className="block text-sm font-medium mb-2">Upload Jupyter Notebook (.ipynb)</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Upload Jupyter Notebook (.ipynb)</label>
           <input
             type="file"
             accept=".ipynb"
@@ -164,7 +164,7 @@ export default function JupyterCleanerClient({ tool = { name: "Jupyter Cleaner",
         </div>
 
         <div className="relative">
-          <label className="block text-sm font-medium mb-2">Or paste notebook JSON</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Or paste notebook JSON</label>
           <textarea
             className="w-full h-64 p-3 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-800 font-mono text-sm"
             placeholder='{"cells": [], "metadata": {}, "nbformat": 4, "nbformat_minor": 5}'
@@ -182,7 +182,7 @@ export default function JupyterCleanerClient({ tool = { name: "Jupyter Cleaner",
         </button>
         
         {error && (
-          <div className="p-4 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg text-sm">
+          <div className="tb-v2-banner tb-v2-banner-err">
             {error}
           </div>
         )}
@@ -191,7 +191,7 @@ export default function JupyterCleanerClient({ tool = { name: "Jupyter Cleaner",
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <label className="block text-sm font-medium">Cleaned Notebook</label>
-              <div className="flex gap-2">
+              <div className="tb-v2-mode-tabs">
                 <button 
                   onClick={copyToClipboard}
                   className="px-3 py-1 text-sm bg-gray-200 dark:bg-gray-700 rounded hover:bg-gray-300 dark:hover:bg-gray-600"

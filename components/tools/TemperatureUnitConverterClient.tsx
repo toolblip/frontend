@@ -121,7 +121,7 @@ export default function TemperatureUnitConverterClient() {
 
       <div className="tb-v2-form-group">
         <label className="tb-v2-label">Enter Temperature</label>
-        <div className="flex gap-2">
+        <div className="tb-v2-mode-tabs">
           <input
             type="number"
             value={inputValue}

@@ -138,9 +138,9 @@ export default function ImageCropperClient() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
       {/* Presets */}
-      <div className="flex flex-wrap gap-2">
+      <div className="tb-v2-mode-tabs">
         {PRESETS.map(({ label, ratio }) => (
           <button
             key={label}
@@ -188,7 +188,7 @@ export default function ImageCropperClient() {
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
           />
-          <div className="flex gap-3">
+          <div className="tb-v2-mode-tabs">
             <button
               onClick={downloadCrop}
               className="bg-red-600 hover:bg-red-500 text-black font-medium px-4 py-2 rounded-lg text-sm transition-colors disabled:opacity-50"

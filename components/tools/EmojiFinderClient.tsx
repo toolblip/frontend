@@ -101,16 +101,16 @@ export default function EmojiFinderClient() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="" style={{padding:"20px"}}>
       <h1 className="text-2xl font-bold mb-6">Emoji Finder</h1>
 
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-2">Search emojis</label>
+        <label className="tb-v2-tool-label" style={{marginBottom:8}}>Search emojis</label>
         <input
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+          className="tb-v2-input"
           placeholder="Search by name or keyword..."
         />
       </div>
@@ -132,7 +132,7 @@ export default function EmojiFinderClient() {
       </div>
 
       {filteredEmojis.length > 0 && (
-        <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+        <div className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}>
           <p className="text-sm">
             <strong>{filteredEmojis.length}</strong> emojis found
           </p>

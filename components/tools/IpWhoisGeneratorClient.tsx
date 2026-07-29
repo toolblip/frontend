@@ -196,7 +196,7 @@ export default function IpWhoisGeneratorClient() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div className="flex gap-4">
         <div className="flex-1">
           <input
@@ -223,13 +223,13 @@ export default function IpWhoisGeneratorClient() {
       </div>
 
       {whoisData && (
-        <div className="space-y-6">
+        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
           <div className="bg-blue-50 rounded-lg p-4">
             <h3 className="text-lg font-medium text-blue-900">{whoisData.ip}</h3>
             <p className="text-blue-700">{whoisData.network.name}</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="tb-v2-grid-2">
             <div className="bg-white border rounded-lg p-4">
               <h4 className="font-medium text-gray-900 mb-3">Network</h4>
               <dl className="space-y-2 text-sm">

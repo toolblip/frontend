@@ -38,7 +38,7 @@ export default function HslToRgbClient() {
   const copy = () => { navigator.clipboard.writeText(output); setCopied(true); setTimeout(() => setCopied(false), 1500); };
 
   return (
-    <div className="space-y-4">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
       <div className="grid grid-cols-3 gap-3">
         <div>
           <label className="block text-xs text-gray-500 mb-1">Hue (0-360)</label>

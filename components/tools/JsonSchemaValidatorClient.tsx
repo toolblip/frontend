@@ -239,7 +239,7 @@ export default function JsonSchemaValidatorClient() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div>
           <div className="flex justify-between items-center mb-2">

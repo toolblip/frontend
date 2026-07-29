@@ -68,7 +68,7 @@ export default function OgTagDebuggerClient() {
       </div>
 
       {activeTab === 'preview' ? (
-        <div className="space-y-4">
+        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
           <div className="bg-gray-100 rounded-lg p-4 max-w-md mx-auto">
             <div className="bg-white rounded shadow-sm overflow-hidden">
               <div className="h-48 bg-gray-200 flex items-center justify-center">
@@ -138,7 +138,7 @@ export default function OgTagDebuggerClient() {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="tb-v2-grid-2">
             <div>
               <label className="tb-v2-tool-label">Site Name</label>
               <input

@@ -51,12 +51,12 @@ export default function JsonToCsvClient() {
   }, [output]);
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div className="space-y-2">
         <div className="flex justify-between items-center">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">JSON Input</label>
+          <label className="tb-v2-tool-label">JSON Input</label>
           {output && (
-            <button onClick={swap} className="text-xs text-red-600 dark:text-red-400 hover:underline">
+            <button onClick={swap} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm" style={{color:"var(--red)",fontSize:12}}>
               Use output as input ↕
             </button>
           )}
@@ -65,13 +65,13 @@ export default function JsonToCsvClient() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder='[{"name":"John","age":30},{"name":"Jane","age":25}]'
-          className="w-full h-40 px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white font-mono text-sm placeholder-gray-400 focus:outline-none focus:border-red-500 resize-y"
+          className="tb-v2-tool-textarea"
         />
       </div>
 
       <button
         onClick={convert}
-        className="w-full bg-red-600 hover:bg-red-700 text-white rounded-xl py-3 font-medium transition-colors"
+        className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg"
       >
         Convert JSON → CSV
       </button>
@@ -85,8 +85,8 @@ export default function JsonToCsvClient() {
       {output && (
         <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">CSV Output</label>
-            <button onClick={() => copy(output)} className="text-xs text-red-600 dark:text-red-400 hover:underline">
+            <label className="tb-v2-tool-label">CSV Output</label>
+            <button onClick={() => copy(output)} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm" style={{color:"var(--red)",fontSize:12}}>
               Copy
             </button>
           </div>

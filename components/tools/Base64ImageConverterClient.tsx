@@ -137,7 +137,7 @@ export default function Base64ImageConverterClient() {
 
       {mode === 'encode' ? (
         <div>
-          <label className="block text-sm font-medium mb-2">Upload Image</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Upload Image</label>
           <input
             type="file"
             accept="image/*"
@@ -147,11 +147,11 @@ export default function Base64ImageConverterClient() {
         </div>
       ) : (
         <div>
-          <label className="block text-sm font-medium mb-2">Paste Base64 Data</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Paste Base64 Data</label>
           <textarea
             value={input}
             onChange={(e) => handleInputChange(e.target.value)}
-            className="w-full h-40 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700 font-mono text-sm"
+            className="tb-v2-input"
             placeholder="Paste base64 data here (data:image/...;base64,...) or load from file..."
           />
           <div className="mt-2">
@@ -173,7 +173,7 @@ export default function Base64ImageConverterClient() {
       </button>
 
       {error && (
-        <div className="p-4 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg text-sm">
+        <div className="tb-v2-banner tb-v2-banner-err">
           {error}
         </div>
       )}
@@ -196,7 +196,7 @@ export default function Base64ImageConverterClient() {
           <textarea
             value={output}
             readOnly
-            className="w-full h-40 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700 font-mono text-sm bg-gray-50 dark:bg-gray-900"
+            className="tb-v2-input"
           />
         </div>
       )}

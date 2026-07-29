@@ -171,7 +171,7 @@ export default function HtmlValidatorClient() {
   return (
     <div className="flex flex-col h-full">
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="tb-v2-tool-label" style={{marginBottom:8}}>
           HTML Input
         </label>
         <textarea
@@ -198,7 +198,7 @@ export default function HtmlValidatorClient() {
 
       {issues.length > 0 && (
         <div className="flex-1 overflow-auto">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>
             Issues Found ({issues.length})
           </label>
           <div className="space-y-2">

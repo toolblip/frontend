@@ -25,7 +25,7 @@ export default function RegexTesterXClient() {
       <textarea
         value={input}
         onChange={e => setInput(e.target.value)}
-        className="w-full h-40 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700 font-mono text-sm"
+        className="tb-v2-input"
         placeholder="Paste JSON here..."
       />
       <button
@@ -34,7 +34,7 @@ export default function RegexTesterXClient() {
       >
         Format / Process
       </button>
-      {error && <div className="p-4 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg text-sm">{error}</div>}
+      {error && <div className="tb-v2-banner tb-v2-banner-err">{error}</div>}
       {output && (
         <div className="space-y-2">
           <div className="flex justify-between text-sm text-gray-500">
@@ -44,7 +44,7 @@ export default function RegexTesterXClient() {
           <textarea
             value={output}
             readOnly
-            className="w-full h-40 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700 font-mono text-sm bg-gray-50 dark:bg-gray-900"
+            className="tb-v2-input"
           />
         </div>
       )}

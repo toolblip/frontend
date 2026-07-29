@@ -94,38 +94,38 @@ export default function TimeZoneConverterClient() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="" style={{padding:"20px"}}>
       {isMounted ? (
       <>
       <h1 className="text-2xl font-bold mb-6">Time Zone Converter</h1>
 
       <div className="grid md:grid-cols-2 gap-6 mb-6">
         <div>
-          <label className="block text-sm font-medium mb-2">Time</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Time</label>
           <input
             type="time"
             value={inputTime}
             onChange={(e) => setInputTime(e.target.value)}
-            className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+            className="tb-v2-input"
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-2">Date (optional)</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Date (optional)</label>
           <input
             type="date"
             value={inputDate}
             onChange={(e) => setInputDate(e.target.value)}
-            className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+            className="tb-v2-input"
           />
         </div>
       </div>
 
       <div className="mb-6">
-        <label className="block text-sm font-medium mb-2">From Timezone</label>
+        <label className="tb-v2-tool-label" style={{marginBottom:8}}>From Timezone</label>
         <select
           value={fromZone}
           onChange={(e) => setFromZone(e.target.value)}
-          className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+          className="tb-v2-input"
         >
           {timeZones.map(tz => (
             <option key={tz.value} value={tz.value}>{tz.label}</option>
@@ -165,7 +165,7 @@ export default function TimeZoneConverterClient() {
             {convertedTimes.map((result, i) => result && (
               <div
                 key={i}
-                className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg"
+                className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}
               >
                 <div>
                   <div className="font-medium">{result.zone.label}</div>
@@ -189,7 +189,7 @@ export default function TimeZoneConverterClient() {
         </div>
       )}
 
-      <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+      <div className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}>
         <h3 className="font-medium mb-2">Tips:</h3>
         <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
           <li>• Select multiple target timezones to compare</li>
@@ -198,7 +198,7 @@ export default function TimeZoneConverterClient() {
         </ul>
       </div>
       </>
-      ) : <div className="max-w-4xl mx-auto p-6"><span className="text-gray-400">Loading…</span></div>}
+      ) : <div className="" style={{padding:"20px"}}><span className="text-gray-400">Loading…</span></div>}
     </div>
   );
 }

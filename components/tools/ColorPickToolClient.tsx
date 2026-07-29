@@ -14,11 +14,11 @@ export default function ColorPickToolClient() {
   const rgbStr = rgb ? `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})` : ' - ';
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div className="flex flex-col md:flex-row gap-4 items-end">
         <input type="color" value={color} onChange={e=>setColor(e.target.value)} className="w-24 h-24 rounded-xl cursor-pointer border-4 border-gray-100 shadow-lg" />
         <div className="flex-1">
-          <label className="block text-sm font-medium mb-2">Hex</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Hex</label>
           <input type="text" value={color} onChange={e=>setColor(e.target.value)} className="w-full px-4 py-3 border-2 rounded-xl font-mono text-xl" />
         </div>
       </div>

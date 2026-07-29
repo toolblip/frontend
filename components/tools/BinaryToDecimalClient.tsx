@@ -40,9 +40,9 @@ export default function BinaryToDecimalClient() {
   }, []);
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div className="space-y-2">
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Binary Number</label>
+        <label className="tb-v2-tool-label">Binary Number</label>
         <input
           type="text"
           value={input}
@@ -54,7 +54,7 @@ export default function BinaryToDecimalClient() {
 
       <button
         onClick={process}
-        className="w-full bg-red-600 hover:bg-red-700 text-white rounded-xl py-3 font-medium transition-colors"
+        className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg"
       >
         Convert
       </button>
@@ -70,7 +70,7 @@ export default function BinaryToDecimalClient() {
               <div key={label} className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 space-y-2">
                 <div className="flex justify-between items-center">
                   <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">{label}</span>
-                  <button onClick={() => copy(prefix ? prefix + value : value)} className="text-xs text-red-600 dark:text-red-400 hover:underline">
+                  <button onClick={() => copy(prefix ? prefix + value : value)} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm" style={{color:"var(--red)",fontSize:12}}>
                     Copy
                   </button>
                 </div>

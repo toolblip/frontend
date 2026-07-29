@@ -312,7 +312,7 @@ function loadImage(src: string): Promise<HTMLImageElement> {
 
 function SliderLabel({ children, value }: { children: string; value: number }) {
   return (
-    <div className="flex items-center justify-between text-sm font-medium text-gray-700 dark:text-gray-300">
+    <div className="tb-v2-tool-label">
       <span>{children}</span>
       <span className="text-gray-500 dark:text-gray-400">{value}px</span>
     </div>
@@ -394,7 +394,7 @@ function PlatformSelector({
   return (
     <div className="space-y-3">
       <label className="block space-y-2">
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Platform</span>
+        <span className="tb-v2-tool-label">Platform</span>
         <select
           aria-label="Platform"
           value={platform}
@@ -410,7 +410,7 @@ function PlatformSelector({
       </label>
 
       <label className="block space-y-2">
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Aspect ratio</span>
+        <span className="tb-v2-tool-label">Aspect ratio</span>
         <select
           aria-label="Aspect ratio"
           value={ratioKey}
@@ -864,7 +864,7 @@ export default function TweetToImageClient() {
       : undefined;
 
   return (
-    <div className="space-y-6" data-testid="tweet-to-image-generator">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}} data-testid="tweet-to-image-generator">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-2">
           <div className="text-base font-semibold text-gray-900 dark:text-white">Customize your tweet image</div>
@@ -916,7 +916,7 @@ export default function TweetToImageClient() {
                 }}
               >
                 <label className="block space-y-2">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Tweet URL</span>
+                  <span className="tb-v2-tool-label">Tweet URL</span>
                   <input
                     aria-label="Tweet URL"
                     value={tweetUrl}
@@ -944,7 +944,7 @@ export default function TweetToImageClient() {
             ) : (
               <div className="space-y-3">
                 <label className="block space-y-2">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Author name</span>
+                  <span className="tb-v2-tool-label">Author name</span>
                   <input
                     aria-label="Author name"
                     value={authorName}
@@ -953,7 +953,7 @@ export default function TweetToImageClient() {
                   />
                 </label>
                 <label className="block space-y-2">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">@handle</span>
+                  <span className="tb-v2-tool-label">@handle</span>
                   <input
                     aria-label="Handle"
                     value={handle}
@@ -963,7 +963,7 @@ export default function TweetToImageClient() {
                   />
                 </label>
                 <label className="block space-y-2">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Tweet text</span>
+                  <span className="tb-v2-tool-label">Tweet text</span>
                   <textarea
                     aria-label="Tweet text"
                     value={tweetText}
@@ -1132,8 +1132,8 @@ export default function TweetToImageClient() {
 
             {backgroundMode === 'solid' && (
               <label className="block space-y-2">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Color</span>
-                <div className="flex gap-2">
+                <span className="tb-v2-tool-label">Color</span>
+                <div className="tb-v2-mode-tabs">
                   <input
                     aria-label="Background color picker"
                     type="color"
@@ -1200,7 +1200,7 @@ export default function TweetToImageClient() {
             </div>
 
             <label className="block space-y-2">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Font size</span>
+              <span className="tb-v2-tool-label">Font size</span>
               <select
                 aria-label="Font size"
                 value={fontSize}
@@ -1218,7 +1218,7 @@ export default function TweetToImageClient() {
 
           <CollapsibleSection icon="♥" isOpen={metricsOpen} onToggle={() => setMetricsOpen((open) => !open)} title="Badge & stats">
             <label className="flex items-center justify-between gap-3">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Verified badge</span>
+              <span className="tb-v2-tool-label">Verified badge</span>
               <button
                 type="button"
                 role="switch"
@@ -1231,7 +1231,7 @@ export default function TweetToImageClient() {
             </label>
 
             <label className="flex items-center justify-between gap-3">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Show engagement stats</span>
+              <span className="tb-v2-tool-label">Show engagement stats</span>
               <button
                 type="button"
                 role="switch"
@@ -1282,7 +1282,7 @@ export default function TweetToImageClient() {
             )}
 
             <label className="block space-y-2">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Timestamp</span>
+              <span className="tb-v2-tool-label">Timestamp</span>
               <input
                 aria-label="Timestamp"
                 value={timestampLabel}

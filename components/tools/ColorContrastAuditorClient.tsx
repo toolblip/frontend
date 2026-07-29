@@ -86,7 +86,7 @@ export default function ColorContrastAuditorClient() {
       <div className="grid grid-cols-2 gap-6 mb-6">
         <div>
           <label className="block text-sm font-medium mb-1">Foreground Color</label>
-          <div className="flex gap-2">
+          <div className="tb-v2-mode-tabs">
             <input
               type="color"
               value={fg}
@@ -104,7 +104,7 @@ export default function ColorContrastAuditorClient() {
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Background Color</label>
-          <div className="flex gap-2">
+          <div className="tb-v2-mode-tabs">
             <input
               type="color"
               value={bg}

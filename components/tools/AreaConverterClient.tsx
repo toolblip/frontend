@@ -45,7 +45,7 @@ export default function AreaConverterClient() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="grid grid-cols-2 gap-4">
+      <div className="tb-v2-grid-2">
         <div>
           <label className="tb-v2-tool-label">Value</label>
           <input

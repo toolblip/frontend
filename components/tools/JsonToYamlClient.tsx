@@ -51,7 +51,7 @@ export default function JsonToYamlClient() {
   const copy = () => { navigator.clipboard.writeText(output); setCopied(true); setTimeout(() => setCopied(false), 1500); };
 
   return (
-    <div className="space-y-4">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
       <div className="flex items-center gap-4">
         <label className="text-sm text-gray-600 dark:text-gray-400">Indent:</label>
         <select value={indent} onChange={e => setIndent(Number(e.target.value))} className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-3 py-1.5 text-sm">

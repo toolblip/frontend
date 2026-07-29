@@ -120,7 +120,7 @@ export default function SeoMetaTagAnalyzerClient() {
     <div className="max-w-2xl mx-auto p-6 space-y-6">
       <h1 className="text-2xl font-bold">SEO Meta Tag Analyzer</h1>
 
-      <div className="flex gap-3">
+      <div className="tb-v2-mode-tabs">
         <input
           type="url"
           value={url}
@@ -166,7 +166,7 @@ export default function SeoMetaTagAnalyzerClient() {
       {tags && (
         <div className="rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
           <div className="bg-gray-50 dark:bg-gray-800 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Extracted Meta Tags</span>
+            <span className="tb-v2-tool-label">Extracted Meta Tags</span>
           </div>
           <div className="p-4 space-y-0">
             <TagRow label="<title>" value={tags.title} />

@@ -166,7 +166,7 @@ export default function PdfPageDeleterClient() {
 
       {/* Page Selection */}
       {pages.length > 0 && (
-        <div className="space-y-4">
+        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">
               {pages.length} page(s) - {pages.filter(p => p.selected).length} selected for deletion

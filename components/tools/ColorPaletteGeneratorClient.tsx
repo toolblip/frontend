@@ -199,7 +199,7 @@ export default function ColorPaletteGeneratorClient() {
 
       <div className="tb-v2-form-group">
         <div className="tb-v2-label">Generated Palette</div>
-        <div className="flex gap-2">
+        <div className="tb-v2-mode-tabs">
           {palette.map((color, index) => (
             <div key={index} className="flex-1 text-center">
               <button

@@ -178,7 +178,7 @@ export default function MergeClient() {
             {files.map((f, index) => (
               <div
                 key={index}
-                className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"
+                className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}
               >
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">📄</span>

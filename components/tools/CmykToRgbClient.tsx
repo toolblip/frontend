@@ -36,8 +36,8 @@ export default function CmykToRgbClient() {
     <div className="p-6 max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold mb-6">CMYK to RGB Converter</h1>
 
-      <div className="space-y-4">
-        <div className="grid grid-cols-2 gap-4">
+      <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
+        <div className="tb-v2-grid-2">
           <div>
             <label className="block text-sm font-medium mb-1">
               Cyan (C) <span className="text-gray-500">0-100%</span>
@@ -110,7 +110,7 @@ export default function CmykToRgbClient() {
           <div className="mt-6 p-4 bg-gray-100 rounded space-y-4">
             <h3 className="font-medium">Conversion Result:</h3>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="tb-v2-grid-2">
               <div>
                 <label className="block text-sm text-gray-600 mb-1">RGB Values</label>
                 <div className="flex items-center gap-2">

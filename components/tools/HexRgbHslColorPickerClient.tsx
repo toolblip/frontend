@@ -109,7 +109,7 @@ export default function HexRgbHslColorPickerClient() {
       <div className="space-y-4 mb-6">
         <div className="tb-v2-form-group">
           <label className="tb-v2-label">Hex</label>
-          <div className="flex gap-3">
+          <div className="tb-v2-mode-tabs">
             <input
               type="color"
               value={color}

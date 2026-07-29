@@ -85,15 +85,15 @@ export default function ChineseCharConverterClient() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="" style={{padding:"20px"}}>
       <h1 className="text-2xl font-bold mb-6">Chinese Character Converter</h1>
 
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-2">Enter Chinese text or characters</label>
+        <label className="tb-v2-tool-label" style={{marginBottom:8}}>Enter Chinese text or characters</label>
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className="w-full p-3 border rounded-lg h-32 dark:bg-gray-800 dark:border-gray-700 text-2xl"
+          className="tb-v2-input"
           placeholder="Enter Chinese characters..."
         />
       </div>
@@ -160,7 +160,7 @@ export default function ChineseCharConverterClient() {
       )}
 
       <div className="grid md:grid-cols-2 gap-6">
-        <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+        <div className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}>
           <h3 className="font-medium mb-3">Common Radicals</h3>
           <div className="grid grid-cols-2 gap-2 text-sm">
             {Object.entries(radicalStrokes).slice(0, 10).map(([char, info]) => (
@@ -172,7 +172,7 @@ export default function ChineseCharConverterClient() {
           </div>
         </div>
 
-        <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+        <div className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}>
           <h3 className="font-medium mb-3">Numbers in Chinese</h3>
           <div className="grid grid-cols-2 gap-2 text-sm">
             {['一 二 三 四 五 六 七 八 九 十'.split(' '), ['yi', 'er', 'san', 'si', 'wu', 'liu', 'qi', 'ba', 'jiu', 'shi']].map((row, idx) => (
@@ -189,7 +189,7 @@ export default function ChineseCharConverterClient() {
         </div>
       </div>
 
-      <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+      <div className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}>
         <h3 className="font-medium mb-2">How it works:</h3>
         <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
           <li>• Enter Chinese characters to see their pinyin pronunciation</li>

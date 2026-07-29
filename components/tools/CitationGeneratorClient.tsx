@@ -52,7 +52,7 @@ export default function CitationGeneratorClient() {
     <div className="p-6 max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold mb-6">Citation Generator</h1>
 
-      <div className="space-y-4">
+      <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
         <div>
           <label className="block text-sm font-medium mb-1">Citation Type</label>
           <select

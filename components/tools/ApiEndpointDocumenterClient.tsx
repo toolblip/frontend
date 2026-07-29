@@ -136,7 +136,7 @@ export default function ApiEndpointDocumenterClient() {
         ))}
       </div>
 
-      <div className="flex gap-2">
+      <div className="tb-v2-mode-tabs">
         <button type="button" onClick={addEndpoint} className="tb-v2-btn-sm">
           + Add Endpoint
         </button>

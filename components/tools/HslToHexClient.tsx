@@ -159,7 +159,7 @@ export default function HslToHexClient() {
       </div>
 
       {inputMode === 'hsl' ? (
-        <div className="space-y-4">
+        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
           <div className="tb-v2-form-group">
             <label className="tb-v2-label">
               Hue: {hue}°
@@ -232,7 +232,7 @@ export default function HslToHexClient() {
       ) : (
         <div className="tb-v2-form-group">
           <label className="tb-v2-label">HEX Color</label>
-          <div className="flex gap-2">
+          <div className="tb-v2-mode-tabs">
             <input
               type="text"
               value={hexInput}

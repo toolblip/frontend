@@ -213,7 +213,7 @@ export default function CombineImagesClient() {
 
       {processedImage && (
         <div>
-          <p className="tb-v2-text-sm tb-v2-font-medium tb-v2-mb-2">Combined Result</p>
+          <p className="tb-v2-tool-label" style={{marginBottom:8}}>Combined Result</p>
           <img src={processedImage} alt="Combined" className="tb-v2-max-w-full tb-v2-rounded-lg" />
           <button onClick={handleDownload} className="tb-v2-btn tb-v2-btn-secondary tb-v2-mt-2">
             Download

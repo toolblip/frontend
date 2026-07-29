@@ -136,9 +136,9 @@ export default function RobotsTxtGeneratorClient() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div>
-        <label className="block text-sm font-medium mb-2">Site URL (optional, for comments)</label>
+        <label className="tb-v2-tool-label" style={{marginBottom:8}}>Site URL (optional, for comments)</label>
         <input
           type="url"
           value={siteUrl}
@@ -149,7 +149,7 @@ export default function RobotsTxtGeneratorClient() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="space-y-4">
+        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
           <div>
             <h3 className="font-medium mb-3">Disallow Rules</h3>
             <div className="space-y-2">
@@ -210,7 +210,7 @@ export default function RobotsTxtGeneratorClient() {
 
           <div>
             <h3 className="font-medium mb-3">Common Paths</h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="tb-v2-mode-tabs">
               {commonPaths.map(path => (
                 <button
                   key={path}
@@ -225,7 +225,7 @@ export default function RobotsTxtGeneratorClient() {
 
           <div>
             <h3 className="font-medium mb-3">Crawl Delay</h3>
-            <div className="flex gap-2">
+            <div className="tb-v2-mode-tabs">
               <select
                 value={newBot}
                 onChange={(e) => setNewBot(e.target.value)}
@@ -266,7 +266,7 @@ export default function RobotsTxtGeneratorClient() {
 
           <div>
             <h3 className="font-medium mb-3">Sitemap URLs</h3>
-            <div className="flex gap-2">
+            <div className="tb-v2-mode-tabs">
               <input
                 type="url"
                 value={newSitemap}
@@ -294,7 +294,7 @@ export default function RobotsTxtGeneratorClient() {
           </div>
         </div>
 
-        <div className="space-y-4">
+        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
           <div className="flex justify-between items-center">
             <h3 className="font-medium">Generated robots.txt</h3>
             <button

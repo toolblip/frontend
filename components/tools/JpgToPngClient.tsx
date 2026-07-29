@@ -115,10 +115,10 @@ export default function JpgToPngClient() {
       )}
 
       {error && (
-        <div className="p-4 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg text-sm">{error}</div>
+        <div className="tb-v2-banner tb-v2-banner-err">{error}</div>
       )}
 
-      <div className="flex gap-3">
+      <div className="tb-v2-mode-tabs">
         <button
           onClick={convert}
           disabled={!preview || loading}

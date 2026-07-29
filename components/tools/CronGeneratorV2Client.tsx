@@ -180,7 +180,7 @@ export default function CronGeneratorV2Client() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Cron Expression</span>
         <code className="tb-v2-hash-stats font-mono text-lg">{expr}</code>

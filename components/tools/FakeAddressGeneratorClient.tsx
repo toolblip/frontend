@@ -208,7 +208,7 @@ export default function FakeAddressGeneratorClient() {
             </div>
 
             <div className="border-t pt-4 mt-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="tb-v2-grid-2">
                 <div>
                   <p className="text-xs text-gray-500">Name</p>
                   <p className="font-medium">{address.firstName} {address.lastName}</p>
@@ -278,7 +278,7 @@ export default function FakeAddressGeneratorClient() {
 
       <div className="tb-v2-form-group">
         <div className="tb-v2-label">Export All</div>
-        <div className="flex gap-2">
+        <div className="tb-v2-mode-tabs">
           <button
             onClick={() => copyToClipboard(allAddresses.map((a) => a.fullAddress).join('\n'))}
             className="tb-v2-button tb-v2-button-secondary flex-1"

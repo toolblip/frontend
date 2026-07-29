@@ -41,7 +41,7 @@ export default function ScreenResolutionTesterClient() {
   const aspectRatio = (width / height).toFixed(3);
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       {/* Preset grid */}
       <div>
         <label className="block text-xs text-gray-500 uppercase tracking-wide font-medium mb-2">
@@ -66,7 +66,7 @@ export default function ScreenResolutionTesterClient() {
       </div>
 
       {/* Custom dimensions */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="tb-v2-grid-2">
         <div>
           <label className="block text-xs text-gray-500 uppercase tracking-wide font-medium mb-2">
             Width (px)

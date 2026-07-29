@@ -90,7 +90,7 @@ export default function UrlParserClient() {
   return (
     <div className="flex flex-col h-full">
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="tb-v2-tool-label" style={{marginBottom:8}}>
           URL Input
         </label>
         <input

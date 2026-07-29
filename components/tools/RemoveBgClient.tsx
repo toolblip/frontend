@@ -109,7 +109,7 @@ export default function RemoveBgClient() {
       {image && (
         <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-4">
           <div>
-            <p className="tb-v2-text-sm tb-v2-font-medium tb-v2-mb-2">Original Image</p>
+            <p className="tb-v2-tool-label" style={{marginBottom:8}}>Original Image</p>
             <img src={image} alt="Original" className="tb-v2-max-w-full tb-v2-max-h-[300px] tb-v2-object-contain tb-v2-rounded" />
           </div>
 

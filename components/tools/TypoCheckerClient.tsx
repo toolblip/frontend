@@ -178,17 +178,17 @@ export default function TypoCheckerClient() {
       <h1 className="text-2xl font-bold mb-6">Typo Checker</h1>
 
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-2">Enter text to check</label>
+        <label className="tb-v2-tool-label" style={{marginBottom:8}}>Enter text to check</label>
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className="w-full p-3 border rounded-lg h-48 dark:bg-gray-800 dark:border-gray-700"
+          className="tb-v2-input"
           placeholder="Paste or type your text here to check for typos..."
         />
       </div>
 
       {input && (
-        <div className="mb-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+        <div className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}>
           <p className="text-sm">
             Found <strong>{typos.length}</strong> potential typo{typos.length !== 1 ? 's' : ''}
           </p>
@@ -214,8 +214,8 @@ export default function TypoCheckerClient() {
 
       {typos.length > 0 && (
         <div className="mb-6">
-          <label className="block text-sm font-medium mb-2">Typos Found</label>
-          <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Typos Found</label>
+          <div className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}>
             <table className="w-full text-sm">
               <thead className="bg-gray-100 dark:bg-gray-700">
                 <tr>
@@ -237,7 +237,7 @@ export default function TypoCheckerClient() {
       )}
 
       {input && typos.length === 0 && (
-        <div className="mb-6 p-6 bg-green-50 dark:bg-green-900/30 rounded-lg text-center">
+        <div className="tb-v2-banner tb-v2-banner-ok">
           <div className="text-4xl mb-2">✓</div>
           <p className="text-green-700 dark:text-green-400 font-medium">
             No common typos detected!
@@ -245,7 +245,7 @@ export default function TypoCheckerClient() {
         </div>
       )}
 
-      <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+      <div className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}>
         <h3 className="font-medium mb-2">How it works:</h3>
         <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
           <li>• Checks against a dictionary of 100+ common typos</li>

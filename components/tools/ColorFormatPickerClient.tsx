@@ -85,7 +85,7 @@ export default function ColorFormatPickerClient() {
       <div className="space-y-4 mb-6">
         <div>
           <label className="block text-sm font-medium mb-1">HEX</label>
-          <div className="flex gap-2">
+          <div className="tb-v2-mode-tabs">
             <input type="color" value={color} onChange={e => handleHexChange(e.target.value)} className="w-10 h-10 rounded cursor-pointer" />
             <input type="text" value={hex} onChange={e => handleHexChange(e.target.value)} className="flex-1 p-2 border rounded font-mono" />
           </div>
@@ -93,7 +93,7 @@ export default function ColorFormatPickerClient() {
 
         <div>
           <label className="block text-sm font-medium mb-1">RGB ({rgb.r}, {rgb.g}, {rgb.b})</label>
-          <div className="flex gap-2">
+          <div className="tb-v2-mode-tabs">
             {(['r', 'g', 'b'] as const).map(ch => (
               <div key={ch} className="flex-1">
                 <input
@@ -111,7 +111,7 @@ export default function ColorFormatPickerClient() {
 
         <div>
           <label className="block text-sm font-medium mb-1">HSL ({hsl.h}°, {hsl.s}%, {hsl.l}%)</label>
-          <div className="flex gap-2">
+          <div className="tb-v2-mode-tabs">
             {(['h', 's', 'l'] as const).map(ch => (
               <div key={ch} className="flex-1">
                 <input

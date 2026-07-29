@@ -37,7 +37,7 @@ export default function ColorContrastRatioCheckerClient() {
       <div className="grid grid-cols-2 gap-6 mb-6">
         <div>
           <label className="block text-sm font-medium mb-1">Foreground</label>
-          <div className="flex gap-2">
+          <div className="tb-v2-mode-tabs">
             <input
               type="color"
               value={fg}
@@ -54,7 +54,7 @@ export default function ColorContrastRatioCheckerClient() {
         </div>
         <div>
           <label className="block text-sm font-medium mb-1">Background</label>
-          <div className="flex gap-2">
+          <div className="tb-v2-mode-tabs">
             <input
               type="color"
               value={bg}

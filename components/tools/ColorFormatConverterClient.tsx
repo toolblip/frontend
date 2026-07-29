@@ -71,7 +71,7 @@ export default function ColorFormatConverterClient() {
       </div>
 
       {rgb ? (
-        <div className="space-y-4">
+        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
           <div className="p-6 rounded-lg flex items-center gap-4" style={{ backgroundColor: input }}>
             <span className="text-lg font-bold" style={{ color: hsl && hsl.l < 50 ? '#fff' : '#000' }}>
               {input.toUpperCase()}

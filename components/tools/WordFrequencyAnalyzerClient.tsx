@@ -62,37 +62,37 @@ export default function WordFrequencyAnalyzerClient() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
+    <div className="" style={{padding:"20px"}}>
       <h1 className="text-2xl font-bold mb-6">Word Frequency Analyzer</h1>
 
       <div className="mb-4">
-        <label className="block text-sm font-medium mb-2">Enter text</label>
+        <label className="tb-v2-tool-label" style={{marginBottom:8}}>Enter text</label>
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
-          className="w-full p-3 border rounded-lg h-40 dark:bg-gray-800 dark:border-gray-700"
+          className="tb-v2-input"
           placeholder="Paste or type your text here..."
         />
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
         <div>
-          <label className="block text-sm font-medium mb-2">Min word length</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Min word length</label>
           <input
             type="number"
             value={minLength}
             onChange={(e) => setMinLength(Math.max(0, parseInt(e.target.value) || 0))}
-            className="w-full p-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+            className="tb-v2-input"
             min={0}
             max={20}
           />
         </div>
         <div>
-          <label className="block text-sm font-medium mb-2">Sort by</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Sort by</label>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as 'count' | 'alphabetical')}
-            className="w-full p-2 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+            className="tb-v2-input"
           >
             <option value="count">Frequency</option>
             <option value="alphabetical">Alphabetical</option>
@@ -112,7 +112,7 @@ export default function WordFrequencyAnalyzerClient() {
       </div>
 
       {wordCounts.length > 0 && (
-        <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+        <div className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}>
           <p className="text-sm">
             <strong>{wordCounts.length}</strong> unique words found
           </p>
@@ -130,7 +130,7 @@ export default function WordFrequencyAnalyzerClient() {
               Copy
             </button>
           </div>
-          <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 max-h-96 overflow-y-auto">
+          <div className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}>
             <table className="w-full text-sm">
               <thead className="sticky top-0 bg-gray-100 dark:bg-gray-700">
                 <tr>
@@ -154,7 +154,7 @@ export default function WordFrequencyAnalyzerClient() {
       )}
 
       {text && wordCounts.length === 0 && (
-        <div className="mt-6 p-4 bg-yellow-50 dark:bg-yellow-900/30 rounded-lg">
+        <div className="tb-v2-banner tb-v2-banner-warn">
           <p className="text-sm text-yellow-700 dark:text-yellow-400">
             No words match the current filters. Try adjusting the minimum word length or disabling "exclude common words".
           </p>

@@ -51,9 +51,9 @@ export default function GrammarCheckerClient() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
+        <label className="tb-v2-tool-label">
           Enter your text
         </label>
         <textarea
@@ -67,7 +67,7 @@ export default function GrammarCheckerClient() {
       <button
         onClick={checkGrammar}
         disabled={loading || !text.trim()}
-        className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-lg text-sm font-medium transition-colors disabled:cursor-not-allowed"
+        className="tb-v2-btn tb-v2-btn-primary"
       >
         {loading ? 'Checking...' : 'Check Grammar'}
       </button>
@@ -78,7 +78,7 @@ export default function GrammarCheckerClient() {
 
       {issues.length > 0 && (
         <div className="space-y-2">
-          <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          <p className="tb-v2-tool-label">
             {issues.length} issue{issues.length !== 1 ? 's' : ''} found
           </p>
           {issues.map((issue, i) => (

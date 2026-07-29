@@ -86,9 +86,9 @@ export default function CssValidatorClient() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">CSS Input</label>
+        <label className="tb-v2-tool-label" style={{marginBottom:8}}>CSS Input</label>
         <textarea
           value={input}
           onChange={e => { setInput(e.target.value); validateCss(e.target.value); }}

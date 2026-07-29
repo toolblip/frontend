@@ -161,7 +161,7 @@ export default function CropClient() {
 
       {croppedImage && (
         <div className="tb-v2-mt-4">
-          <p className="tb-v2-text-sm tb-v2-font-medium tb-v2-mb-2">Cropped</p>
+          <p className="tb-v2-tool-label" style={{marginBottom:8}}>Cropped</p>
           <img src={croppedImage} alt="Cropped" className="tb-v2-max-w-full tb-v2-rounded-lg" />
           <button onClick={handleDownload} className="tb-v2-btn tb-v2-btn-secondary tb-v2-mt-2">
             Download

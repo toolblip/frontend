@@ -160,9 +160,9 @@ export default function SquareCropClient() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
       {/* Presets */}
-      <div className="flex flex-wrap gap-2">
+      <div className="tb-v2-mode-tabs">
         {SQUARE_PRESETS.map((p) => (
           <button
             key={p.label}
@@ -231,7 +231,7 @@ export default function SquareCropClient() {
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
           />
-          <div className="flex gap-3">
+          <div className="tb-v2-mode-tabs">
             <button
               onClick={downloadCrop}
               disabled={!imgLoaded || isOversized}

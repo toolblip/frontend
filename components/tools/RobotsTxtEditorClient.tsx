@@ -105,7 +105,7 @@ Sitemap: https://example.com/sitemap.xml`);
     <div className="flex flex-col gap-4">
       <div className="flex justify-between items-center">
         <span className="text-sm text-gray-600">Edit robots.txt content</span>
-        <div className="flex gap-2">
+        <div className="tb-v2-mode-tabs">
           <button
             type="button"
             onClick={handleValidate}

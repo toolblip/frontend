@@ -150,7 +150,7 @@ export default function WebpConverterClient() {
 
       {image && (
         <div className="tb-v2-mt-4">
-          <p className="tb-v2-text-sm tb-v2-font-medium tb-v2-mb-2">Original</p>
+          <p className="tb-v2-tool-label" style={{marginBottom:8}}>Original</p>
           <img src={image} alt="Original" className="tb-v2-max-w-full tb-v2-rounded-lg" />
           <p className="tb-v2-text-xs tb-v2-text-gray-500 tb-v2-mt-1">
             {formatFileSize(originalSize)}
@@ -160,7 +160,7 @@ export default function WebpConverterClient() {
 
       {processedImage && (
         <div className="tb-v2-mt-4">
-          <p className="tb-v2-text-sm tb-v2-font-medium tb-v2-mb-2">WebP Result</p>
+          <p className="tb-v2-tool-label" style={{marginBottom:8}}>WebP Result</p>
           <img src={processedImage} alt="WebP" className="tb-v2-max-w-full tb-v2-rounded-lg" />
           <div className="tb-v2-flex tb-v2-items-center tb-v2-gap-4 tb-v2-mt-1">
             <p className="tb-v2-text-xs tb-v2-text-gray-500">

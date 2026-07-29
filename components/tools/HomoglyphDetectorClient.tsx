@@ -163,7 +163,7 @@ export default function HomoglyphDetectorClient() {
 
         {results.length > 0 ? (
           <div className="tb-v2-card p-4 space-y-2">
-            <div className="flex flex-wrap gap-2">
+            <div className="tb-v2-mode-tabs">
               {results.map((result, idx) => (
                 <div
                   key={idx}

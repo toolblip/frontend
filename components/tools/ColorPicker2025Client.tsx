@@ -25,7 +25,7 @@ export default function ColorPicker2025Client() {
   const hsl = rgb ? toHsl(rgb.r,rgb.g,rgb.b) : null;
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div className="flex flex-col md:flex-row gap-6 items-center">
         <input type="color" value={color} onChange={e=>setColor(e.target.value)} className="w-32 h-32 rounded-2xl cursor-pointer border-4 border-gray-100 shadow-lg" />
         <div className="flex-1 space-y-4 w-full">

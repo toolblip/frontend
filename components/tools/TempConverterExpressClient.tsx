@@ -70,7 +70,7 @@ export default function TempConverterExpressClient() {
         ))}
       </div>
 
-      <div className="flex gap-2">
+      <div className="tb-v2-mode-tabs">
         <input
           type="number"
           value={input}
@@ -87,7 +87,7 @@ export default function TempConverterExpressClient() {
         </button>
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="tb-v2-mode-tabs">
         {presets.map(p => (
           <button
             key={p.label}
@@ -103,17 +103,17 @@ export default function TempConverterExpressClient() {
       </div>
 
       {error && (
-        <div className="p-4 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg text-sm">
+        <div className="tb-v2-banner tb-v2-banner-err">
           {error}
         </div>
       )}
 
       {results.length > 0 && (
         <div className="space-y-3">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Results</label>
+          <label className="tb-v2-tool-label">Results</label>
           <div className="grid gap-3">
             {results.map(r => (
-              <div key={r.unit} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <div key={r.unit} className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}>
                 <span className="text-gray-600 dark:text-gray-400">{r.unit}</span>
                 <span className="text-xl font-mono font-semibold">{r.value} <span className="text-sm text-gray-500">{r.symbol}</span></span>
               </div>

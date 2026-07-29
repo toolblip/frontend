@@ -57,7 +57,7 @@ export default function CssClassGeneratorClient() {
   return (
     <div className="flex flex-col h-full">
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="tb-v2-tool-label" style={{marginBottom:8}}>
           Class Prefix
         </label>
         <input
@@ -108,7 +108,7 @@ export default function CssClassGeneratorClient() {
 
       <div className="flex-1 space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>
             Generated CSS
           </label>
           <pre className="w-full h-40 px-3 py-2 bg-gray-50 border border-gray-300 rounded-md overflow-auto font-mono text-sm">
@@ -117,7 +117,7 @@ export default function CssClassGeneratorClient() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>
             Usage Example
           </label>
           <pre className="w-full h-32 px-3 py-2 bg-gray-50 border border-gray-300 rounded-md overflow-auto font-mono text-sm">

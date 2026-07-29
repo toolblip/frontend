@@ -48,9 +48,9 @@ export default function ImageResizerClient() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Select image</label>
+        <label className="tb-v2-tool-label">Select image</label>
         <input
           type="file"
           accept="image/*"
@@ -63,9 +63,9 @@ export default function ImageResizerClient() {
 
       {preview && (
         <>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="tb-v2-grid-2">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Width (px)</label>
+              <label className="tb-v2-tool-label">Width (px)</label>
               <input
                 type="number"
                 value={width}
@@ -81,7 +81,7 @@ export default function ImageResizerClient() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Height (px)</label>
+              <label className="tb-v2-tool-label">Height (px)</label>
               <input
                 type="number"
                 value={height}
@@ -108,11 +108,11 @@ export default function ImageResizerClient() {
             Maintain aspect ratio
           </label>
 
-          <div className="flex gap-3">
+          <div className="tb-v2-mode-tabs">
             <button
               onClick={resize}
               disabled={isOversized}
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="tb-v2-btn tb-v2-btn-primary"
             >
               {isOversized ? 'File Too Large' : 'Resize & Download'}
             </button>

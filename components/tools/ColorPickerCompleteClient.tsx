@@ -47,7 +47,7 @@ export default function ColorPickerCompleteClient() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div className="flex flex-col md:flex-row gap-4 items-end">
         <input type="color" value={color} onChange={e => setColor(e.target.value)} className="w-20 h-20 rounded-xl cursor-pointer border-2 border-gray-200" />
         <div className="flex-1 w-full space-y-2">
@@ -56,7 +56,7 @@ export default function ColorPickerCompleteClient() {
         </div>
       </div>
 
-      <div className="flex gap-2">
+      <div className="tb-v2-mode-tabs">
         {formats.map(f => (
           <button key={f.key} onClick={() => setFormat(f.key as typeof format)}
             className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${format === f.key ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}>

@@ -17,7 +17,7 @@ export default function RegexTool({ tool = { name: "", description: "" } }: Prop
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
+    <div className="" style={{padding:"20px"}}>
       <h1 className="text-2xl font-bold mb-4">{tool?.name ?? "RegexTool"}</h1>
       <p className="text-gray-600 mb-6">{tool?.description ?? 'Tool description'}</p>
       <textarea

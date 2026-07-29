@@ -55,7 +55,7 @@ export default function HtaccessRedirectGeneratorClient() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
       <div>
         <label className="block text-sm font-medium mb-1">Base Domain</label>
         <input
@@ -103,7 +103,7 @@ export default function HtaccessRedirectGeneratorClient() {
         ))}
       </div>
 
-      <div className="flex gap-2">
+      <div className="tb-v2-mode-tabs">
         <button
           onClick={addRule}
           className="px-4 py-2 bg-[var(--tb-accent)] text-white rounded-lg hover:opacity-90"

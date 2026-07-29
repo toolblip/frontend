@@ -53,7 +53,7 @@ export default function ColorNameToolClient() {
   const rgb=hexToRgb(color);
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div className="flex gap-4 items-end">
         <input type="color" value={color} onChange={e=>setColor(e.target.value)} className="w-20 h-20 rounded cursor-pointer border-2 border-gray-200" />
         <div className="flex-1">

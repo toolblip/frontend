@@ -167,14 +167,14 @@ export default function MemeMakerClient() {
 
       {image && (
         <div className="tb-v2-mt-4">
-          <p className="tb-v2-text-sm tb-v2-font-medium tb-v2-mb-2">Preview</p>
+          <p className="tb-v2-tool-label" style={{marginBottom:8}}>Preview</p>
           <img src={image} alt="Original" className="tb-v2-max-w-full tb-v2-rounded-lg" />
         </div>
       )}
 
       {processedImage && (
         <div className="tb-v2-mt-4">
-          <p className="tb-v2-text-sm tb-v2-font-medium tb-v2-mb-2">Meme Result</p>
+          <p className="tb-v2-tool-label" style={{marginBottom:8}}>Meme Result</p>
           <img src={processedImage} alt="Meme" className="tb-v2-max-w-full tb-v2-rounded-lg" />
           <button onClick={handleDownload} className="tb-v2-btn tb-v2-btn-secondary tb-v2-mt-2">
             Download Meme

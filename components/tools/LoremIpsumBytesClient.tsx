@@ -17,7 +17,7 @@ export default function LoremIpsumBytesClient() {
       <textarea
         value={input}
         onChange={e => setInput(e.target.value)}
-        className="w-full h-40 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700 font-mono text-sm"
+        className="tb-v2-input"
         placeholder="Enter text..."
       />
       <button
@@ -35,7 +35,7 @@ export default function LoremIpsumBytesClient() {
           <textarea
             value={output}
             readOnly
-            className="w-full h-40 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700 font-mono text-sm bg-gray-50 dark:bg-gray-900"
+            className="tb-v2-input"
           />
         </div>
       )}

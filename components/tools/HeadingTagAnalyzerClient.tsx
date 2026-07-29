@@ -93,7 +93,7 @@ export default function HeadingTagAnalyzerClient() {
         <textarea
           value={input}
           onChange={e => setInput(e.target.value)}
-          className="w-full h-48 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700 font-mono text-sm"
+          className="tb-v2-input"
           placeholder="Paste your HTML content here..."
         />
       </div>
@@ -106,15 +106,15 @@ export default function HeadingTagAnalyzerClient() {
       </button>
 
       {error && (
-        <div className="p-4 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg text-sm">
+        <div className="tb-v2-banner tb-v2-banner-err">
           {error}
         </div>
       )}
 
       {analysis && (
-        <div className="space-y-6">
+        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
           {analysis.issues.length > 0 && (
-            <div className="p-4 bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-800 rounded-lg space-y-2">
+            <div className="tb-v2-banner tb-v2-banner-warn">
               <h3 className="font-semibold text-yellow-800 dark:text-yellow-200">Issues Found</h3>
               {analysis.issues.map((issue, i) => (
                 <p key={i} className="text-sm text-yellow-700 dark:text-yellow-300">• {issue}</p>
@@ -122,7 +122,7 @@ export default function HeadingTagAnalyzerClient() {
             </div>
           )}
 
-          <div className="space-y-4">
+          <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
             {(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'] as const).map(level => (
               analysis[level].length > 0 && (
                 <div key={level} className="space-y-2">
@@ -151,7 +151,7 @@ export default function HeadingTagAnalyzerClient() {
 
             {analysis.h1.length === 0 && analysis.h2.length === 0 && analysis.h3.length === 0 && 
              analysis.h4.length === 0 && analysis.h5.length === 0 && analysis.h6.length === 0 && (
-              <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg text-center text-gray-500">
+              <div className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}>
                 No heading tags (H1-H6) found in the provided HTML.
               </div>
             )}

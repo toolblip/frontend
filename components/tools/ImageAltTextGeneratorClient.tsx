@@ -150,7 +150,7 @@ export default function ImageAltTextGeneratorClient({ tool = { name: "Image Alt 
           </div>
         )}
 
-        <div className="flex gap-3">
+        <div className="tb-v2-mode-tabs">
           <button
             type="button"
             onClick={generateAltText}

@@ -29,22 +29,22 @@ export default function ColorOpacityGeneratorClient() {
   const rgba = rgb ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${(opacity/100).toFixed(2)})` : ' - ';
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
+      <div className="tb-v2-grid-2">
         <div>
-          <label className="block text-sm font-medium mb-2">Base Color</label>
-          <div className="flex gap-2">
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Base Color</label>
+          <div className="tb-v2-mode-tabs">
             <input type="color" value={color} onChange={e => setColor(e.target.value)} className="w-14 h-12 rounded cursor-pointer" />
             <input type="text" value={color} onChange={e => setColor(e.target.value)} className="flex-1 px-3 py-2 border rounded font-mono text-sm" />
           </div>
         </div>
         <div>
-          <label className="block text-sm font-medium mb-2">Opacity  -  {opacity}%</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Opacity  -  {opacity}%</label>
           <input type="range" min="0" max="100" value={opacity} onChange={e => setOpacity(Number(e.target.value))} className="w-full" />
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="tb-v2-grid-2">
         <div className="rounded-lg overflow-hidden border border-gray-200">
           <div className="h-32 checkerboard" style={{backgroundColor: color}} />
           <div className="bg-gray-50 p-3 text-xs font-medium">Solid {color.toUpperCase()}</div>

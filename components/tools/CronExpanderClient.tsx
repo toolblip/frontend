@@ -142,19 +142,19 @@ export default function CronExpanderClient() {
       </button>
 
       {error && (
-        <div className="p-4 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg text-sm">
+        <div className="tb-v2-banner tb-v2-banner-err">
           {error}
         </div>
       )}
 
       {result && (
-        <div className="space-y-4">
+        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
           <div className="p-4 bg-indigo-50 dark:bg-indigo-900/30 rounded-lg">
             <h3 className="font-semibold text-indigo-800 dark:text-indigo-200 mb-2">Description</h3>
             <p className="text-lg">{result.description}</p>
           </div>
 
-          <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg space-y-3">
+          <div className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}>
             <h3 className="font-semibold text-gray-800 dark:text-gray-200">Field Breakdown</h3>
             <div className="grid grid-cols-5 gap-2 text-center text-sm">
               <div className="p-2 bg-white dark:bg-gray-900 rounded">
@@ -180,7 +180,7 @@ export default function CronExpanderClient() {
             </div>
           </div>
 
-          <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg space-y-2">
+          <div className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}>
             <h3 className="font-semibold text-gray-800 dark:text-gray-200">Next 5 Run Times</h3>
             {result.nextRuns.map((time, i) => (
               <div key={i} className="flex items-center gap-3 p-2 bg-white dark:bg-gray-900 rounded">

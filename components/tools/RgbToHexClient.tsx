@@ -23,9 +23,9 @@ export default function RgbToHexClient() {
     Math.min(max, Math.max(min, val));
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       {/* RGB sliders */}
-      <div className="space-y-4">
+      <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
         {[
           { label: 'Red', value: r, setValue: (v: number) => setR(clamp(v, 0, 255)), color: '#EF4444', gradient: 'linear-gradient(to right, #000 0%, #EF4444 100%)' },
           { label: 'Green', value: g, setValue: (v: number) => setG(clamp(v, 0, 255)), color: '#22C55E', gradient: 'linear-gradient(to right, #000 0%, #22C55E 100%)' },
@@ -33,7 +33,7 @@ export default function RgbToHexClient() {
         ].map(({ label, value, setValue, gradient }) => (
           <div key={label} className="space-y-2">
             <div className="flex justify-between items-center">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</label>
+              <label className="tb-v2-tool-label">{label}</label>
               <input
                 type="number"
                 min={0}
@@ -59,7 +59,7 @@ export default function RgbToHexClient() {
       {/* Alpha */}
       <div className="space-y-2">
         <div className="flex justify-between items-center">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Alpha</label>
+          <label className="tb-v2-tool-label">Alpha</label>
           <input
             type="number"
             min={0}
@@ -83,7 +83,7 @@ export default function RgbToHexClient() {
 
       {/* Output */}
       <div className="space-y-3">
-        <div className="flex gap-2">
+        <div className="tb-v2-mode-tabs">
           <button
             onClick={() => setShowRgba(false)}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${!showRgba ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'}`}
@@ -105,7 +105,7 @@ export default function RgbToHexClient() {
             </span>
             <button
               onClick={() => copy(showRgba ? `rgba(${r}, ${g}, ${b}, ${alpha})` : hex)}
-              className="text-xs text-red-600 dark:text-red-400 hover:underline"
+              className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm" style={{color:"var(--red)",fontSize:12}}
             >
               Copy
             </button>
@@ -118,7 +118,7 @@ export default function RgbToHexClient() {
 
       {/* Preview */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Preview</label>
+        <label className="tb-v2-tool-label">Preview</label>
         <div
           className="h-24 rounded-xl shadow-inner"
           style={{ backgroundColor: `rgba(${r}, ${g}, ${b}, ${alpha})` }}

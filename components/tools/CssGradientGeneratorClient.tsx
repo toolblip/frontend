@@ -107,9 +107,9 @@ export default function CssGradientGeneratorClient() {
   const clampAngle = (val: number) => Math.min(360, Math.max(0, val));
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       {/* Gradient type selector */}
-      <div className="flex gap-2">
+      <div className="tb-v2-mode-tabs">
         {GRADIENT_TYPES.map(t => (
           <button
             key={t}
@@ -212,7 +212,7 @@ export default function CssGradientGeneratorClient() {
         </div>
 
         {/* Preview + output column */}
-        <div className="space-y-4">
+        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
           <div>
             <label className="text-xs text-gray-500 uppercase tracking-wide font-medium block mb-2">
               Live Preview

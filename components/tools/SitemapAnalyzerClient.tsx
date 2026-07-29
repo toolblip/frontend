@@ -180,7 +180,7 @@ export default function SitemapAnalyzerClient() {
 
       {result && (
         <div className="flex flex-col gap-4">
-          <div className="grid grid-cols-3 gap-4">
+          <div className="tb-v2-grid-3">
             <div className="bg-gray-50 rounded-lg p-3 text-center">
               <div className="text-2xl font-bold text-gray-900">{result.totalUrls}</div>
               <div className="text-sm text-gray-500">URLs Found</div>

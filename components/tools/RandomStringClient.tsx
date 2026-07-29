@@ -53,9 +53,9 @@ export default function RandomStringClient() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       {/* Presets */}
-      <div className="flex flex-wrap gap-2">
+      <div className="tb-v2-mode-tabs">
         {presets.map((preset) => (
           <button
             key={preset.label}
@@ -81,7 +81,7 @@ export default function RandomStringClient() {
       {/* Controls */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Length</label>
+          <label className="tb-v2-tool-label">Length</label>
           <input
             type="number"
             min={1}
@@ -92,7 +92,7 @@ export default function RandomStringClient() {
           />
         </div>
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Character Set</label>
+          <label className="tb-v2-tool-label">Character Set</label>
           <select
             value={charsetKey}
             onChange={(e) => setCharsetKey(e.target.value as keyof typeof CHARSETS)}
@@ -108,7 +108,7 @@ export default function RandomStringClient() {
           </select>
         </div>
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Count</label>
+          <label className="tb-v2-tool-label">Count</label>
           <input
             type="number"
             min={1}
@@ -122,7 +122,7 @@ export default function RandomStringClient() {
 
       <button
         onClick={generate}
-        className="w-full bg-red-600 hover:bg-red-700 text-white rounded-xl py-3 font-medium transition-colors"
+        className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg"
       >
         Generate
       </button>
@@ -130,7 +130,7 @@ export default function RandomStringClient() {
       {/* Results */}
       {strings.length > 0 && (
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label className="tb-v2-tool-label">
             {count > 1 ? `${count} Generated Strings` : 'Generated String'}
           </label>
           <div className="space-y-2 max-h-64 overflow-y-auto">

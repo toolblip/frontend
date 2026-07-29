@@ -65,14 +65,14 @@ export default function ColorNameFinderClient() {
   ] : [];
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div className="flex gap-4 items-end">
         <div>
-          <label className="block text-sm font-medium mb-2">Pick a Color</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Pick a Color</label>
           <input type="color" value={color} onChange={e => setColor(e.target.value)} className="w-24 h-24 rounded-lg cursor-pointer border-2 border-gray-200" />
         </div>
         <div className="flex-1">
-          <label className="block text-sm font-medium mb-2">Hex</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Hex</label>
           <input type="text" value={color} onChange={e => setColor(e.target.value)} className="w-full px-4 py-3 border rounded-lg font-mono text-lg" />
         </div>
       </div>

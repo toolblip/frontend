@@ -180,7 +180,7 @@ export default function AddPagesClient() {
         ))}
       </div>
 
-      <div className="flex gap-2">
+      <div className="tb-v2-mode-tabs">
         <button type="button" onClick={addPage} className="tb-v2-btn-sm">
           + Add Page
         </button>

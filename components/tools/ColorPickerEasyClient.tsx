@@ -13,9 +13,9 @@ export default function ColorPickerEasyClient() {
   const rgb = toRgb(color);
 
   return (
-    <div className="space-y-4">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
       <input type="color" value={color} onChange={e => setColor(e.target.value)} className="w-full h-48 rounded-2xl cursor-pointer border-0" />
-      <div className="flex gap-3">
+      <div className="tb-v2-mode-tabs">
         <div className="flex-1 bg-gray-50 rounded-xl p-3">
           <div className="text-xs text-gray-500">HEX</div>
           <div className="font-mono font-bold text-lg">{color.toUpperCase()}</div>

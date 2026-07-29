@@ -248,7 +248,7 @@ export default function PollGeneratorClient({ tool = { name: '', slug: '', descr
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2" htmlFor="poll-input">
+          <label className="tb-v2-tool-label" style={{marginBottom:8}} htmlFor="poll-input">
             Topic or poll prompt
           </label>
           <textarea

@@ -48,7 +48,7 @@ export default function FlipClient() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="tb-v2-grid-2">
         <div className="tb-v2-form-group">
           <label className="tb-v2-label">Input</label>
           <textarea

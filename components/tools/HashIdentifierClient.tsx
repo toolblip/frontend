@@ -87,7 +87,7 @@ export default function HashIdentifierClient() {
   return (
     <div className="flex flex-col h-full">
       <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="tb-v2-tool-label" style={{marginBottom:8}}>
           Hash Input
         </label>
         <input
@@ -105,7 +105,7 @@ export default function HashIdentifierClient() {
       {result && (
         <div className="flex-1 space-y-4">
           <div className="p-4 bg-gray-50 rounded-md">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="tb-v2-grid-2">
               <div>
                 <span className="text-sm text-gray-600">Identified Type:</span>
                 <p className="font-semibold text-lg">{result.type}</p>
@@ -118,12 +118,12 @@ export default function HashIdentifierClient() {
           </div>
 
           <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-2">Description</h3>
+            <h3 className="tb-v2-tool-label" style={{marginBottom:8}}>Description</h3>
             <p className="text-sm text-gray-600">{result.description}</p>
           </div>
 
           <div>
-            <h3 className="text-sm font-medium text-gray-700 mb-2">Character Entropy</h3>
+            <h3 className="tb-v2-tool-label" style={{marginBottom:8}}>Character Entropy</h3>
             <div className="flex items-center gap-2">
               <div className={`w-4 h-4 rounded-full ${
                 result.entropy === 'high' ? 'bg-green-500' :

@@ -26,8 +26,8 @@ export default function PunctuationFixerClient() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex gap-2">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
+      <div className="tb-v2-mode-tabs">
         <button onClick={() => setStyle('smart')} className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${style === 'smart' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'}`}>Smart Quotes</button>
         <button onClick={() => setStyle('straight')} className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors ${style === 'straight' ? 'bg-blue-600 text-white' : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'}`}>Straight Quotes</button>
       </div>

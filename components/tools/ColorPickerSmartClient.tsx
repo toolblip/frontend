@@ -35,7 +35,7 @@ export default function ColorPickerSmartClient() {
   const presets = ['#ef4444','#f97316','#eab308','#22c55e','#14b8a6','#3b82f6','#8b5cf6','#ec4899','#000','#fff'];
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <input type="color" value={color} onChange={e => setColor(e.target.value)} className="w-full h-48 rounded-2xl cursor-pointer border-0" />
       <div className="flex flex-col md:flex-row gap-3">
         <div className="flex-1 bg-gray-50 rounded-xl p-4">
@@ -55,7 +55,7 @@ export default function ColorPickerSmartClient() {
           </div>
         )}
       </div>
-      <div className="flex gap-2">
+      <div className="tb-v2-mode-tabs">
         {presets.map(p => (
           <button key={p} onClick={() => setColor(p)}
             className="w-8 h-8 rounded-full border-2 border-white shadow hover:scale-110 transition-transform"

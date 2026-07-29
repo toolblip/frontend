@@ -48,7 +48,7 @@ export default function ColorHarmonyGeneratorClient() {
       <h1 className="text-2xl font-bold mb-6">Color Harmony Generator</h1>
 
       <div className="mb-6">
-        <label className="block text-sm font-medium mb-2">Base Hue: {hue}°</label>
+        <label className="tb-v2-tool-label" style={{marginBottom:8}}>Base Hue: {hue}°</label>
         <input
           type="range"
           min="0" max="360"
@@ -71,9 +71,9 @@ export default function ColorHarmonyGeneratorClient() {
         ))}
       </div>
 
-      <div className="space-y-4">
+      <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
         {colors.map((group, i) => (
-          <div key={i} className="flex gap-2">
+          <div key={i} className="tb-v2-mode-tabs">
             {group.map((c, j) => (
               <div key={j} className="flex-1 text-center">
                 <div className="h-20 rounded-lg mb-1 border" style={{ backgroundColor: c }} />

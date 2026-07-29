@@ -32,10 +32,10 @@ export default function HexToRgbClient() {
   }, []);
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       {/* Input */}
       <div className="space-y-2">
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">HEX Color</label>
+        <label className="tb-v2-tool-label">HEX Color</label>
         <div className="flex gap-3 items-center">
           <div className="relative">
             <input
@@ -67,7 +67,7 @@ export default function HexToRgbClient() {
       {rgb && (
         <div className="space-y-3">
           <div className="flex justify-between items-center">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Output Format</label>
+            <label className="tb-v2-tool-label">Output Format</label>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 space-y-3">
@@ -75,7 +75,7 @@ export default function HexToRgbClient() {
                 <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">RGB</span>
                 <button
                   onClick={() => copy(`rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`)}
-                  className="text-xs text-red-600 dark:text-red-400 hover:underline"
+                  className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm" style={{color:"var(--red)",fontSize:12}}
                 >
                   Copy
                 </button>
@@ -89,7 +89,7 @@ export default function HexToRgbClient() {
                 <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">RGBA</span>
                 <button
                   onClick={() => copy(`rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alpha})`)}
-                  className="text-xs text-red-600 dark:text-red-400 hover:underline"
+                  className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm" style={{color:"var(--red)",fontSize:12}}
                 >
                   Copy
                 </button>
@@ -116,7 +116,7 @@ export default function HexToRgbClient() {
       {/* Components */}
       {rgb && (
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Individual Components</label>
+          <label className="tb-v2-tool-label">Individual Components</label>
           <div className="grid grid-cols-3 gap-3">
             {[
               { label: 'Red', value: rgb.r },
@@ -135,7 +135,7 @@ export default function HexToRgbClient() {
       {/* Color preview */}
       {rgb && (
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Preview</label>
+          <label className="tb-v2-tool-label">Preview</label>
           <div
             className="h-24 rounded-xl shadow-inner"
             style={{ backgroundColor: hexInput }}

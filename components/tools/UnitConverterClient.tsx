@@ -42,8 +42,8 @@ export default function UnitConverterClient() {
   const result = convert(parseFloat(value) || 0, current);
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap gap-2">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
+      <div className="tb-v2-mode-tabs">
         {(['length', 'weight', 'temperature'] as Category[]).map(cat => (
           <button
             key={cat}
@@ -58,7 +58,7 @@ export default function UnitConverterClient() {
           </button>
         ))}
       </div>
-      <div className="flex flex-wrap gap-2">
+      <div className="tb-v2-mode-tabs">
         {convList.map((conv, i) => (
           <button
             key={i}
@@ -75,7 +75,7 @@ export default function UnitConverterClient() {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
         <div>
-          <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">{current.from}</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:6}}>{current.from}</label>
           <input
             type="number"
             value={value}
@@ -84,7 +84,7 @@ export default function UnitConverterClient() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">{current.to}</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:6}}>{current.to}</label>
           <div className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 text-lg font-medium">
             {isNaN(result) ? result.toFixed(4) : result.toFixed(6).replace(/\.?0+$/, '')}
           </div>

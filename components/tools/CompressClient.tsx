@@ -22,7 +22,7 @@ export default function CompressClient() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center">
         <input type="file" onChange={handleUpload} className="hidden" id="compress-upload" />
         <label htmlFor="compress-upload" className="cursor-pointer">

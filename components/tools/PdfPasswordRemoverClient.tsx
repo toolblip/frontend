@@ -134,13 +134,13 @@ export default function PdfPasswordRemoverClient() {
 
       {/* Password Input */}
       <div>
-        <label className="block text-sm font-medium mb-2">PDF Password</label>
+        <label className="tb-v2-tool-label" style={{marginBottom:8}}>PDF Password</label>
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Enter the PDF password"
-          className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+          className="tb-v2-input"
         />
       </div>
 

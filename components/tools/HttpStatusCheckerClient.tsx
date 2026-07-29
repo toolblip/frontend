@@ -128,7 +128,7 @@ export default function HttpStatusCheckerClient() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex gap-2">
+      <div className="tb-v2-mode-tabs">
         <select
           value={method}
           onChange={(e) => setMethod(e.target.value)}

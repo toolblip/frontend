@@ -245,7 +245,7 @@ export default function QrCodeScannerClient() {
 
       {image && (
         <div className="tb-v2-mt-4">
-          <p className="tb-v2-text-sm tb-v2-font-medium tb-v2-mb-2">Uploaded Image</p>
+          <p className="tb-v2-tool-label" style={{marginBottom:8}}>Uploaded Image</p>
           <img src={image} alt="QR Code" className="tb-v2-max-w-full tb-v2-rounded-lg" />
         </div>
       )}
@@ -258,7 +258,7 @@ export default function QrCodeScannerClient() {
 
       {qrResult && (
         <div className="tb-v2-mt-4">
-          <p className="tb-v2-text-sm tb-v2-font-medium tb-v2-mb-2">QR Code Result</p>
+          <p className="tb-v2-tool-label" style={{marginBottom:8}}>QR Code Result</p>
           <div className="tb-v2-p-4 tb-v2-bg-green-100 tb-v2-text-green-800 tb-v2-rounded-lg tb-v2-break-all">
             {qrResult}
           </div>

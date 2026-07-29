@@ -229,7 +229,7 @@ export default function AddImagesClient() {
 
             <div>
               <label className="tb-v2-tool-label">Images ({images.length})</label>
-              <div className="flex flex-wrap gap-2">
+              <div className="tb-v2-mode-tabs">
                 {images.map((img) => (
                   <div
                     key={img.id}
@@ -258,7 +258,7 @@ export default function AddImagesClient() {
         <canvas ref={canvasRef} className="w-full h-auto bg-white" />
       </div>
 
-      <div className="flex gap-2">
+      <div className="tb-v2-mode-tabs">
         <button type="button" onClick={renderCanvas} className="tb-v2-btn flex-1" disabled={images.length === 0}>
           Update Preview
         </button>

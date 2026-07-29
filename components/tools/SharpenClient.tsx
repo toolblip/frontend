@@ -133,12 +133,12 @@ export default function SharpenClient() {
       {image && (
         <div className="tb-v2-grid tb-v2-grid-cols-2 tb-v2-gap-4">
           <div>
-            <p className="tb-v2-text-sm tb-v2-font-medium tb-v2-mb-2">Original</p>
+            <p className="tb-v2-tool-label" style={{marginBottom:8}}>Original</p>
             <img src={image} alt="Original" className="tb-v2-max-w-full tb-v2-rounded-lg" />
           </div>
           {processedImage && (
             <div>
-              <p className="tb-v2-text-sm tb-v2-font-medium tb-v2-mb-2">Sharpened</p>
+              <p className="tb-v2-tool-label" style={{marginBottom:8}}>Sharpened</p>
               <img src={processedImage} alt="Sharpened" className="tb-v2-max-w-full tb-v2-rounded-lg" />
               <button onClick={handleDownload} className="tb-v2-btn tb-v2-btn-secondary tb-v2-mt-2">
                 Download

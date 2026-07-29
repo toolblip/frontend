@@ -46,8 +46,8 @@ export default function HttpHeadersViewerClient() {
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex gap-2">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
+      <div className="tb-v2-mode-tabs">
         <input
           type="url"
           value={url}
@@ -58,7 +58,7 @@ export default function HttpHeadersViewerClient() {
         <button
           onClick={fetchHeaders}
           disabled={loading || !url.trim()}
-          className="px-4 py-2 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white rounded-lg text-sm font-medium transition-colors disabled:cursor-not-allowed"
+          className="tb-v2-btn tb-v2-btn-primary"
         >
           {loading ? 'Fetching...' : 'Fetch'}
         </button>

@@ -16,7 +16,7 @@ export default function DnsLookupExpressClient() {
       <textarea
         value={input}
         onChange={e => setInput(e.target.value)}
-        className="w-full h-32 p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+        className="tb-v2-input"
         placeholder="Enter input..."
       />
       <button

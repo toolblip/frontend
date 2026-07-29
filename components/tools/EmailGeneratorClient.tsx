@@ -109,10 +109,10 @@ export default function EmailGeneratorClient() {
   ];
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
+      <div className="tb-v2-grid-2">
         <div>
-          <label className="block text-sm font-medium mb-2">Email Format</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Email Format</label>
           <select
             value={emailType}
             onChange={(e) => setEmailType(e.target.value as EmailType)}
@@ -127,7 +127,7 @@ export default function EmailGeneratorClient() {
 
         {emailType === 'custom' && (
           <div>
-            <label className="block text-sm font-medium mb-2">Custom Pattern</label>
+            <label className="tb-v2-tool-label" style={{marginBottom:8}}>Custom Pattern</label>
             <input
               type="text"
               value={customPattern}
@@ -142,7 +142,7 @@ export default function EmailGeneratorClient() {
         )}
 
         <div>
-          <label className="block text-sm font-medium mb-2">Domain</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Domain</label>
           <select
             value={domain}
             onChange={(e) => setDomain(e.target.value)}
@@ -157,7 +157,7 @@ export default function EmailGeneratorClient() {
 
         {domain === 'custom' && (
           <div>
-            <label className="block text-sm font-medium mb-2">Custom Domain</label>
+            <label className="tb-v2-tool-label" style={{marginBottom:8}}>Custom Domain</label>
             <input
               type="text"
               value={customDomain}
@@ -169,7 +169,7 @@ export default function EmailGeneratorClient() {
         )}
 
         <div>
-          <label className="block text-sm font-medium mb-2">Number of Emails</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Number of Emails</label>
           <input
             type="number"
             min={1}
@@ -189,7 +189,7 @@ export default function EmailGeneratorClient() {
       </button>
 
       {generatedEmails.length > 0 && (
-        <div className="space-y-4">
+        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
           <div className="flex justify-between items-center">
             <h3 className="font-medium">Generated Emails</h3>
             <button

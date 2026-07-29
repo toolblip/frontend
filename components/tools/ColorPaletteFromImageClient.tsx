@@ -35,15 +35,15 @@ export default function ColorPaletteFromImageClient() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex gap-2">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
+      <div className="tb-v2-mode-tabs">
         <input type="text" value={url} onChange={e=>setUrl(e.target.value)} placeholder="Image URL..." className="flex-1 px-4 py-3 border rounded-lg" />
         <button onClick={extract} disabled={!url||loading} className="px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 disabled:opacity-50">{loading?'...':'Extract'}</button>
       </div>
       {palette.length>0&&(
         <div className="space-y-3">
           <div className="text-sm font-medium">Palette</div>
-          <div className="flex flex-wrap gap-2">
+          <div className="tb-v2-mode-tabs">
             {palette.map((c,i)=>(
               <div key={i} className="text-center cursor-pointer" onClick={()=>navigator.clipboard.writeText(c)}>
                 <div className="w-14 h-14 rounded-lg border border-gray-200" style={{backgroundColor:c}}/>

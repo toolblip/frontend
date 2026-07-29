@@ -16,7 +16,7 @@ export default function ColorPickerDgClient() {
   const isLight = rgb ? (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000 > 150 : false;
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div className="flex flex-col md:flex-row gap-4 items-end">
         <input type="color" value={color} onChange={e => setColor(e.target.value)} className="w-20 h-20 rounded-2xl cursor-pointer border-4 border-gray-100 shadow-sm" />
         <div className="flex-1 w-full">

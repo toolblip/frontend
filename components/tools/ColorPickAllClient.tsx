@@ -31,14 +31,14 @@ export default function ColorPickAllClient() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div className="flex flex-col md:flex-row gap-4 items-end">
         <input type="color" value={color} onChange={e=>setColor(e.target.value)} className="w-20 h-20 rounded-lg cursor-pointer border-2 border-gray-200" />
         <div className="flex-1 w-full">
           <label className="block text-sm font-medium mb-1">Color</label>
           <input type="text" value={color} onChange={e=>setColor(e.target.value)} className="w-full px-4 py-3 border rounded-lg font-mono text-lg" />
         </div>
-        <div className="flex gap-2">
+        <div className="tb-v2-mode-tabs">
           {(['hex','rgb','hsl'] as const).map(f=>(
             <button key={f} onClick={()=>setFormat(f)} className={`px-4 py-2 rounded-lg text-sm ${format===f?'bg-indigo-600 text-white':'bg-gray-100 hover:bg-gray-200'}`}>{f.toUpperCase()}</button>
           ))}
@@ -54,7 +54,7 @@ export default function ColorPickAllClient() {
         ))}
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="tb-v2-mode-tabs">
         {['#ef4444','#f97316','#eab308','#22c55e','#3b82f6','#8b5cf6','#ec4899','#000000','#ffffff'].map(c=>(
           <div key={c} onClick={()=>setColor(c)} className="w-10 h-10 rounded-full border-2 border-gray-200 cursor-pointer hover:scale-110 transition-transform" style={{backgroundColor:c}}/>
         ))}

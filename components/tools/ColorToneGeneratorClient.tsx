@@ -22,7 +22,7 @@ export default function ColorToneGeneratorClient() {
   }) : [];
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div className="flex flex-col md:flex-row gap-4 items-end">
         <input type="color" value={color} onChange={e => setColor(e.target.value)} className="w-20 h-20 rounded-xl cursor-pointer border-2 border-gray-200" />
         <div className="flex-1 w-full">
@@ -31,7 +31,7 @@ export default function ColorToneGeneratorClient() {
       </div>
       <div>
         <div className="text-xs text-gray-500 mb-2">Tones</div>
-        <div className="flex gap-2">
+        <div className="tb-v2-mode-tabs">
           {tones.map((t, i) => <div key={i} className="flex-1 h-16 rounded-lg" style={{ backgroundColor: t }} title={t} />)}
         </div>
       </div>

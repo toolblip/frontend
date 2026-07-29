@@ -20,7 +20,7 @@ export default function ParagraphRewriterClient({ tool = { name: '', slug: '', d
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
+    <div className="" style={{padding:"20px"}}>
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-2">{tool?.name || 'Paragraph Rewriter'}</h1>
         <p className="text-gray-600 dark:text-gray-400">{tool?.description || 'Rewrite paragraphs with improved clarity'}</p>

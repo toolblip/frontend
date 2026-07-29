@@ -42,17 +42,17 @@ export default function ContrastCheckerClient() {
   const result = ratio !== null ? wcagLevel(ratio) : null;
 
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
+      <div className="tb-v2-grid-2">
         {[
           { label: 'Foreground (text)', value: fg, onChange: setFg, example: '#000000' },
           { label: 'Background', value: bg, onChange: setBg, example: '#ffffff' },
         ].map(({ label, value, onChange, example }) => (
           <div key={label}>
-            <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">{label}</label>
-            <div className="flex gap-2">
+            <label className="tb-v2-tool-label" style={{marginBottom:6}}>{label}</label>
+            <div className="tb-v2-mode-tabs">
               <input type="color" value={value} onChange={e => onChange(e.target.value)} className="w-10 h-10 rounded cursor-pointer border-0" />
-              <input value={value} onChange={e => onChange(e.target.value)} placeholder={example} className="flex-1 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-3 py-1.5 font-mono text-sm focus:outline-none focus:border-red-500" />
+              <input value={value} onChange={e => onChange(e.target.value)} placeholder={example} className="tb-v2-select" />
             </div>
           </div>
         ))}
@@ -67,7 +67,7 @@ export default function ContrastCheckerClient() {
             <span className="text-2xl font-bold" style={{ color: fg }}>Sample Text</span>
             <span className="text-base" style={{ color: fg }}>The quick brown fox jumps over the lazy dog.</span>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="tb-v2-grid-2">
             <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-4 text-center">
               <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Contrast Ratio</div>
               <div className="text-3xl font-bold text-gray-900 dark:text-white">{ratio.toFixed(2)}:1</div>

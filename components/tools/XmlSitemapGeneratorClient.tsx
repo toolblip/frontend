@@ -137,9 +137,9 @@ export default function XmlSitemapGeneratorClient() {
   const changefreqs: UrlEntry['changefreq'][] = ['always', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'never'];
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div>
-        <label className="block text-sm font-medium mb-2">Base URL</label>
+        <label className="tb-v2-tool-label" style={{marginBottom:8}}>Base URL</label>
         <input
           type="url"
           value={baseUrl}
@@ -150,10 +150,10 @@ export default function XmlSitemapGeneratorClient() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="space-y-4">
+        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
           <h3 className="font-medium">Add URLs</h3>
           
-          <div className="flex gap-2">
+          <div className="tb-v2-mode-tabs">
             <input
               type="text"
               value={newUrl}
@@ -170,7 +170,7 @@ export default function XmlSitemapGeneratorClient() {
             </button>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="tb-v2-grid-2">
             <div>
               <label className="block text-sm text-gray-600 mb-1">Last Modified</label>
               <input
@@ -244,7 +244,7 @@ export default function XmlSitemapGeneratorClient() {
           )}
         </div>
 
-        <div className="space-y-4">
+        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
           <div className="flex justify-between items-center">
             <h3 className="font-medium">Generated Sitemap</h3>
             <button

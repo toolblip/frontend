@@ -105,13 +105,13 @@ export default function CssBorderRadiusGeneratorClient() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       {/* Presets */}
       <div>
         <label className="text-xs text-gray-500 uppercase tracking-wide font-medium block mb-2">
           Presets
         </label>
-        <div className="flex flex-wrap gap-2">
+        <div className="tb-v2-mode-tabs">
           {PRESETS.map(preset => (
             <button
               key={preset.name}
@@ -129,7 +129,7 @@ export default function CssBorderRadiusGeneratorClient() {
         <div className="space-y-5">
           {/* Unit selector + link toggle */}
           <div className="flex items-center justify-between">
-            <div className="flex gap-2">
+            <div className="tb-v2-mode-tabs">
               {(['px', '%'] as Unit[]).map(u => (
                 <button
                   key={u}
@@ -158,7 +158,7 @@ export default function CssBorderRadiusGeneratorClient() {
           </div>
 
           {/* Corner sliders */}
-          <div className="space-y-4">
+          <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
             {CORNER_KEYS.map(corner => (
               <div key={corner}>
                 <div className="flex items-center justify-between mb-1">
@@ -242,7 +242,7 @@ export default function CssBorderRadiusGeneratorClient() {
         </div>
 
         {/* Preview + output column */}
-        <div className="space-y-4">
+        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
           {/* Live preview */}
           <div>
             <label className="text-xs text-gray-500 uppercase tracking-wide font-medium block mb-2">

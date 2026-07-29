@@ -30,7 +30,7 @@ export default function BillSplitterClient() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="tb-v2-tool-label mb-2">Bill Amount ($)</label>

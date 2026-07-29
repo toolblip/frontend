@@ -33,7 +33,7 @@ export default function ColorPickerWebClient() {
   const hsl = toHsl(color);
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <input type="color" value={color} onChange={e => setColor(e.target.value)} className="w-full h-48 rounded-2xl cursor-pointer border-0" />
       <div className="flex flex-col md:flex-row gap-3">
         <div className="flex-1 bg-gray-50 rounded-xl p-4">

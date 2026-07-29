@@ -22,7 +22,7 @@ export default function OpenGraphPreviewClient() {
 
   const renderTwitterPreview = () => (
     <div className="bg-[#15202B] rounded-xl p-4 max-w-[500px]">
-      <div className="flex gap-3">
+      <div className="tb-v2-mode-tabs">
         <div className="w-12 h-12 rounded-full bg-gray-200 flex-shrink-0 overflow-hidden">
           <div className="w-full h-full bg-blue-400" />
         </div>
@@ -154,7 +154,7 @@ export default function OpenGraphPreviewClient() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="tb-v2-grid-2">
         <div className="space-y-3">
           <div>
             <label className="tb-v2-tool-label">URL</label>

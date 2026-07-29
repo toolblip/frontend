@@ -105,9 +105,9 @@ export default function CleanupPictureClient() {
       <h1 className="text-2xl font-bold mb-6">Picture Cleanup Tool</h1>
 
       <div className="grid md:grid-cols-2 gap-6">
-        <div className="space-y-4">
+        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
           <div>
-            <label className="block text-sm font-medium mb-2">Upload Image</label>
+            <label className="tb-v2-tool-label" style={{marginBottom:8}}>Upload Image</label>
             <input
               ref={fileInputRef}
               type="file"
@@ -195,7 +195,7 @@ export default function CleanupPictureClient() {
           </button>
         </div>
 
-        <div className="space-y-4">
+        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
           {image && (
             <div>
               <h3 className="font-medium mb-2">Original Image</h3>

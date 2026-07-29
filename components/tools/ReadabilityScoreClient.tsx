@@ -57,9 +57,9 @@ export default function ReadabilityScoreClient() {
   const smog = smogIndex(text);
 
   return (
-    <div className="space-y-4">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
       <div>
-        <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">
+        <label className="tb-v2-tool-label" style={{marginBottom:6}}>
           Paste your text (minimum 3 sentences for accurate results)
         </label>
         <textarea

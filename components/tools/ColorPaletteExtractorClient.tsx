@@ -43,10 +43,10 @@ export default function ColorPaletteExtractorClient() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div>
-        <label className="block text-sm font-medium mb-2">Image URL</label>
-        <div className="flex gap-2">
+        <label className="tb-v2-tool-label" style={{marginBottom:8}}>Image URL</label>
+        <div className="tb-v2-mode-tabs">
           <input
             type="text"
             value={imageUrl}
@@ -65,9 +65,9 @@ export default function ColorPaletteExtractorClient() {
       </div>
 
       {colors.length > 0 && (
-        <div className="space-y-4">
+        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
           <div className="text-sm font-medium">Extracted Colors ({colors.length})</div>
-          <div className="flex flex-wrap gap-2">
+          <div className="tb-v2-mode-tabs">
             {colors.map((color, i) => (
               <div key={i} className="text-center">
                 <div

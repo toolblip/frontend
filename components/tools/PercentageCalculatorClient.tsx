@@ -65,7 +65,7 @@ export default function PercentageCalculatorClient() {
   const presets = [5, 10, 15, 18, 20, 25];
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       {/* Mode tabs */}
       <div className="flex gap-2 border-b border-gray-700 pb-4">
         {([['basic', 'Basic %'], ['change', 'Change'], ['tip', 'Tip']] as [Mode, string][]).map(([m, label]) => (
@@ -85,7 +85,7 @@ export default function PercentageCalculatorClient() {
 
       {/* ── Basic % ─────────────────────────────────── */}
       {mode === 'basic' && (
-        <div className="space-y-4">
+        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-gray-500 uppercase tracking-wide font-medium mb-2">
@@ -144,7 +144,7 @@ export default function PercentageCalculatorClient() {
 
       {/* ── % Change ─────────────────────────────────── */}
       {mode === 'change' && (
-        <div className="space-y-4">
+        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs text-gray-500 uppercase tracking-wide font-medium mb-2">

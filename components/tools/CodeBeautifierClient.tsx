@@ -352,7 +352,7 @@ export default function CodeBeautifierClient() {
 
       <div className="grid md:grid-cols-2 gap-4 mb-4">
         <div>
-          <label className="block text-sm font-medium mb-2">Input Code</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Input Code</label>
           <textarea
             value={code}
             onChange={(e) => setCode(e.target.value)}
@@ -362,7 +362,7 @@ export default function CodeBeautifierClient() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-2">Output</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Output</label>
           <textarea
             value={beautifiedCode}
             readOnly
@@ -423,7 +423,7 @@ export default function CodeBeautifierClient() {
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-4">
+      <div className="tb-v2-option-group">
         <button
           onClick={beautifyCode}
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"

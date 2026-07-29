@@ -217,7 +217,7 @@ export default function CircleCropClient() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
       {/* Upload zone */}
       {!image ? (
         <div
@@ -241,7 +241,7 @@ export default function CircleCropClient() {
           <FileSizeError file={selectedFile} maxSizeMB={maxSizeMB} />
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
           {/* Preview */}
           <div className="flex justify-center">
             {previewCanvas ? (
@@ -259,7 +259,7 @@ export default function CircleCropClient() {
           {/* Shape presets */}
           <div>
             <p className="text-xs text-gray-500 mb-2 font-medium">Shape</p>
-            <div className="flex flex-wrap gap-2">
+            <div className="tb-v2-mode-tabs">
               {CIRCLE_PRESETS.map((p) => (
                 <button
                   key={p.label}
@@ -279,7 +279,7 @@ export default function CircleCropClient() {
           {/* Background type */}
           <div>
             <p className="text-xs text-gray-500 mb-2 font-medium">Background</p>
-            <div className="flex flex-wrap gap-2">
+            <div className="tb-v2-mode-tabs">
               {(['transparent', 'white', 'blur'] as OutputBg[]).map((bg) => (
                 <button
                   key={bg}
@@ -317,7 +317,7 @@ export default function CircleCropClient() {
           </div>
 
           {/* Download */}
-          <div className="flex gap-3">
+          <div className="tb-v2-mode-tabs">
             <button
               onClick={downloadCrop}
               disabled={!previewCanvas || isOversized}

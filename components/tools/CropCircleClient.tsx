@@ -72,7 +72,7 @@ export default function CropCircleClient() {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="tb-v2-grid-2">
           <div className="tb-v2-form-group">
             <label className="tb-v2-label">Size (px)</label>
             <input
@@ -100,7 +100,7 @@ export default function CropCircleClient() {
 
         <div className="tb-v2-form-group">
           <label className="tb-v2-label">Border Color</label>
-          <div className="flex gap-3">
+          <div className="tb-v2-mode-tabs">
             <input
               type="color"
               value={borderColor}

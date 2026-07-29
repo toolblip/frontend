@@ -24,14 +24,14 @@ export default function PsdToAIConverterClient({ tool = { name: "", slug: "", de
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
+    <div className="" style={{padding:"20px"}}>
       <div className="mb-6">
         <h1 className="text-2xl font-bold mb-2">{tool?.name ?? 'PSD to AI Converter'}</h1>
         <p className="text-gray-600 dark:text-gray-400">{tool?.description ?? 'Convert Adobe Photoshop PSD files to Adobe Illustrator AI format.'}</p>
       </div>
 
       <textarea
-        className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700 mb-4"
+        className="tb-v2-input"
         rows={4}
         value={input}
         onChange={(e) => setInput(e.target.value)}
@@ -50,7 +50,7 @@ export default function PsdToAIConverterClient({ tool = { name: "", slug: "", de
         <div className="mt-6">
           <h3 className="font-semibold mb-2">Result:</h3>
           <textarea
-            className="w-full p-3 border rounded-lg dark:bg-gray-800 dark:border-gray-700"
+            className="tb-v2-input"
             rows={4}
             value={output}
             readOnly

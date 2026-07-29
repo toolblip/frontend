@@ -173,7 +173,7 @@ export default function AnnotateClient() {
         className="hidden"
       />
 
-      <div className="flex flex-wrap gap-2">
+      <div className="tb-v2-mode-tabs">
         <button type="button" onClick={() => fileInputRef.current?.click()} className="tb-v2-btn-sm">
           Upload Image
         </button>
@@ -215,7 +215,7 @@ export default function AnnotateClient() {
         </div>
       </div>
 
-      <div className="flex gap-2">
+      <div className="tb-v2-mode-tabs">
         <button type="button" onClick={undo} className="tb-v2-btn-sm" disabled={annotations.length === 0}>
           Undo
         </button>

@@ -30,7 +30,7 @@ export default function AviToMkvClient() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
       <div className="bg-blue-50 dark:bg-blue-950/30 border border-blue-200 dark:border-blue-800 rounded-xl p-4 text-sm text-blue-800 dark:text-blue-200">
         <strong>Re-package only:</strong> This tool re-packages AVI video into MKV container format. No transcoding is performed. For best results, use FFmpeg.
       </div>

@@ -37,7 +37,7 @@ export default function BaseToolblipClient() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Value</span>
       </div>

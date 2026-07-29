@@ -74,10 +74,10 @@ export default function UlidGeneratorClient() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div className="flex flex-wrap gap-4 items-end">
         <div>
-          <label className="block text-sm font-medium mb-2">Number of ULIDs</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Number of ULIDs</label>
           <input
             type="number"
             min={1}
@@ -108,7 +108,7 @@ export default function UlidGeneratorClient() {
       </div>
 
       {ulids.length > 0 && (
-        <div className="space-y-4">
+        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
           <div className="flex justify-between items-center">
             <h3 className="font-medium">Generated ULIDs</h3>
             <button

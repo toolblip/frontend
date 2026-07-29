@@ -43,7 +43,7 @@ export default function ColorLuminanceCheckerClient() {
       <h1 className="text-2xl font-bold mb-6">Color Luminance Checker</h1>
 
       <div className="mb-6 space-y-3">
-        <div className="flex gap-2">
+        <div className="tb-v2-mode-tabs">
           <input
             type="color"
             value={newHex.startsWith('#') ? newHex : '#000000'}

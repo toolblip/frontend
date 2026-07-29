@@ -23,8 +23,8 @@ export default function HtmlEncoderClient() {
   const copy = () => { navigator.clipboard.writeText(output); setCopied(true); setTimeout(() => setCopied(false), 1500); };
 
   return (
-    <div className="space-y-4">
-      <div className="flex gap-2">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
+      <div className="tb-v2-mode-tabs">
         {(['encode', 'decode'] as const).map(m => (
           <button key={m} onClick={() => setMode(m)} className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${mode === m ? 'bg-red-600 text-white' : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'}`}>
             {m.charAt(0).toUpperCase() + m.slice(1)}

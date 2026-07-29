@@ -111,10 +111,10 @@ export default function PortScannerClient() {
   const filteredPorts = results.filter(r => r.status === 'filtered');
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div className="flex flex-col gap-4">
         <div>
-          <label className="block text-sm font-medium mb-2">Host</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Host</label>
           <input
             type="text"
             value={host}
@@ -125,7 +125,7 @@ export default function PortScannerClient() {
         </div>
         
         <div>
-          <label className="block text-sm font-medium mb-2">Ports (e.g., 1-1000, 80, 443, 8080-8090)</label>
+          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Ports (e.g., 1-1000, 80, 443, 8080-8090)</label>
           <input
             type="text"
             value={ports}
@@ -160,7 +160,7 @@ export default function PortScannerClient() {
       )}
 
       {results.length > 0 && (
-        <div className="space-y-4">
+        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
           <div className="flex gap-4 text-sm">
             <span className="text-green-600">● {openPorts.length} Open</span>
             <span className="text-red-600">● {closedPorts.length} Closed</span>

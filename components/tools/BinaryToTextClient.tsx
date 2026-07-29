@@ -34,8 +34,8 @@ export default function BinaryToTextClient() {
   }, [output, mode]);
 
   return (
-    <div className="space-y-6">
-      <div className="flex gap-2">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
+      <div className="tb-v2-mode-tabs">
         {(['toText', 'toBinary'] as const).map((m) => (
           <button
             key={m}
@@ -48,20 +48,20 @@ export default function BinaryToTextClient() {
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
+        <label className="tb-v2-tool-label">
           {mode === 'toText' ? 'Binary Input' : 'Text Input'}
         </label>
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder={mode === 'toText' ? 'Enter binary (e.g., 01001000 01100101)...' : 'Enter text to convert...'}
-          className="w-full h-32 px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white font-mono text-sm placeholder-gray-400 focus:outline-none focus:border-red-500 resize-y"
+          className="tb-v2-tool-textarea"
         />
       </div>
 
       <button
         onClick={process}
-        className="w-full bg-red-600 hover:bg-red-700 text-white rounded-xl py-3 font-medium transition-colors"
+        className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg"
       >
         Convert
       </button>
@@ -69,17 +69,17 @@ export default function BinaryToTextClient() {
       {output && (
         <div className="space-y-2">
           <div className="flex justify-between items-center">
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-300">Output</label>
-            <div className="flex gap-3">
-              <button onClick={swap} className="text-xs text-red-600 dark:text-red-400 hover:underline">
+            <label className="tb-v2-tool-label">Output</label>
+            <div className="tb-v2-mode-tabs">
+              <button onClick={swap} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm" style={{color:"var(--red)",fontSize:12}}>
                 Swap ↕
               </button>
-              <button onClick={() => copy(output)} className="text-xs text-red-600 dark:text-red-400 hover:underline">
+              <button onClick={() => copy(output)} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm" style={{color:"var(--red)",fontSize:12}}>
                 Copy
               </button>
             </div>
           </div>
-          <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 font-mono text-sm text-gray-900 dark:text-white break-all">
+          <div className="tb-v2-tool-pre">
             {output}
           </div>
         </div>

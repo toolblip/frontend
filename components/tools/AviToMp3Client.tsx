@@ -31,7 +31,7 @@ export default function AviToMp3Client() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
       <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-800 rounded-xl p-4 text-sm text-red-800 dark:text-red-200">
         <strong>MP3 encoding not supported:</strong> Browser-based audio extraction from AVI to MP3 is not possible. This tool can extract audio as WAV format or you can use FFmpeg.
       </div>

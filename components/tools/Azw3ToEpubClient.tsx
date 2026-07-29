@@ -29,7 +29,7 @@ export default function Azw3ToEpubClient() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
       <div className="bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-xl p-4 text-sm text-purple-800 dark:text-purple-200">
         <strong>ebook format conversion:</strong> AZW3 (Amazon Kindle) to EPUB conversion requires reading the DRM-free book content and re-formatting. This browser tool provides guidance only.
       </div>
@@ -67,7 +67,7 @@ export default function Azw3ToEpubClient() {
       )}
 
       <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 space-y-2">
-        <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Recommended Desktop Tools:</p>
+        <p className="tb-v2-tool-label">Recommended Desktop Tools:</p>
         <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1 list-disc list-inside">
           <li><strong>Calibre</strong> - Free, open-source, supports AZW3 to EPUB</li>
           <li><strong>KindleUnpack</strong> - Extracts content from AZW3 files</li>

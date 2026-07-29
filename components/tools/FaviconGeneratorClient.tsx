@@ -64,10 +64,10 @@ export default function FaviconGeneratorClient() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-2 gap-4">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
+      <div className="tb-v2-grid-2">
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Emoji</label>
+          <label className="tb-v2-tool-label">Emoji</label>
           <input
             type="text"
             value={emoji}
@@ -77,7 +77,7 @@ export default function FaviconGeneratorClient() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Size (px)</label>
+          <label className="tb-v2-tool-label">Size (px)</label>
           <input
             type="number"
             value={size}
@@ -87,7 +87,7 @@ export default function FaviconGeneratorClient() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Background</label>
+          <label className="tb-v2-tool-label">Background</label>
           <input
             type="color"
             value={bg}
@@ -96,7 +96,7 @@ export default function FaviconGeneratorClient() {
           />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Foreground</label>
+          <label className="tb-v2-tool-label">Foreground</label>
           <input
             type="color"
             value={fg}
@@ -108,7 +108,7 @@ export default function FaviconGeneratorClient() {
 
       <button
         onClick={generate}
-        className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors"
+        className="tb-v2-btn tb-v2-btn-primary"
       >
         Generate
       </button>

@@ -53,7 +53,7 @@ export default function ColorPickerFullClient() {
   const hsv = toHsv(color);
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <input type="color" value={color} onChange={e => setColor(e.target.value)} className="w-full h-56 rounded-2xl cursor-pointer border-0 shadow-lg" />
 
       <div className="flex flex-col md:flex-row gap-3">

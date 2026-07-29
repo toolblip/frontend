@@ -29,7 +29,7 @@ export default function AviToMovClient() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
       <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-4 text-sm text-amber-800 dark:text-amber-200">
         <strong>Note:</strong> Converting AVI to MOV requires re-encoding video/audio streams. This browser tool can only prepare a placeholder. Use FFmpeg for actual conversion.
       </div>

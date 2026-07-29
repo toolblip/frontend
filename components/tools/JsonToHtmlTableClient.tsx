@@ -32,7 +32,7 @@ export default function JsonToHtmlTableClient() {
   const copy = () => { navigator.clipboard.writeText(output); setCopied(true); setTimeout(() => setCopied(false), 1500); };
 
   return (
-    <div className="space-y-4">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
       <textarea
         value={input}
         onChange={e => setInput(e.target.value)}

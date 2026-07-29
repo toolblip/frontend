@@ -44,7 +44,7 @@ export default function ColorizePhotoClient() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
       <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center">
         <input type="file" accept="image/*" onChange={handleUpload} className="hidden" id="colorize-upload" />
         <label htmlFor="colorize-upload" className="cursor-pointer">
@@ -55,7 +55,7 @@ export default function ColorizePhotoClient() {
 
       {original && (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="tb-v2-grid-2">
             <div>
               <div className="text-xs text-gray-500 mb-1">Original (B&W)</div>
               <img src={original} alt="Original" className="w-full rounded-xl" />

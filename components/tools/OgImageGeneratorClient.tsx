@@ -206,7 +206,7 @@ function drawPatternOverlay(ctx: CanvasRenderingContext2D, pattern: PatternOverl
 
 function SliderLabel({ children, value }: { children: string; value: number }) {
   return (
-    <div className="flex items-center justify-between text-sm font-medium text-gray-700 dark:text-gray-300">
+    <div className="tb-v2-tool-label">
       <span>{children}</span>
       <span className="text-gray-500 dark:text-gray-400">{value}px</span>
     </div>
@@ -451,7 +451,7 @@ export default function OgImageGeneratorClient() {
   };
 
   return (
-    <div className="space-y-6" data-testid="article-banner-generator">
+    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}} data-testid="article-banner-generator">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="space-y-2">
           <div className="text-base font-semibold text-gray-900 dark:text-white">Customize your banner</div>
@@ -474,7 +474,7 @@ export default function OgImageGeneratorClient() {
 
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="block space-y-2">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Ratio</span>
+                <span className="tb-v2-tool-label">Ratio</span>
                 <select
                   aria-label="Banner ratio"
                   value={ratio}
@@ -490,7 +490,7 @@ export default function OgImageGeneratorClient() {
               </label>
 
               <label className="block space-y-2">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Resolution</span>
+                <span className="tb-v2-tool-label">Resolution</span>
                 <select
                   aria-label="Banner resolution"
                   value={resolution}
@@ -507,7 +507,7 @@ export default function OgImageGeneratorClient() {
             </div>
 
             <label className="block space-y-2">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Title</span>
+              <span className="tb-v2-tool-label">Title</span>
               <textarea
                 aria-label="Banner title"
                 value={title}
@@ -518,7 +518,7 @@ export default function OgImageGeneratorClient() {
             </label>
 
             <label className="block space-y-2">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Subtitle</span>
+              <span className="tb-v2-tool-label">Subtitle</span>
               <textarea
                 aria-label="Banner subtitle"
                 value={subtitle}
@@ -554,7 +554,7 @@ export default function OgImageGeneratorClient() {
             </div>
 
             <div className="space-y-2" role="group" aria-label="Background presets">
-              <div className="text-sm font-medium text-gray-700 dark:text-gray-300">Presets</div>
+              <div className="tb-v2-tool-label">Presets</div>
               <div className="grid grid-cols-4 gap-2">
                 {PRESETS.map((item) => (
                   <button
@@ -570,10 +570,10 @@ export default function OgImageGeneratorClient() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="tb-v2-grid-2">
               <label className="block space-y-2">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">From</span>
-                <div className="flex gap-2">
+                <span className="tb-v2-tool-label">From</span>
+                <div className="tb-v2-mode-tabs">
                   <input
                     aria-label="From color picker"
                     type="color"
@@ -592,8 +592,8 @@ export default function OgImageGeneratorClient() {
               </label>
 
               <label className="block space-y-2">
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">To</span>
-                <div className="flex gap-2">
+                <span className="tb-v2-tool-label">To</span>
+                <div className="tb-v2-mode-tabs">
                   <input
                     aria-label="To color picker"
                     type="color"
@@ -615,7 +615,7 @@ export default function OgImageGeneratorClient() {
             </div>
 
             <label className="block space-y-2">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Direction</span>
+              <span className="tb-v2-tool-label">Direction</span>
               <select
                 aria-label="Gradient direction"
                 value={direction}
@@ -695,7 +695,7 @@ export default function OgImageGeneratorClient() {
             title="Pattern overlay"
           >
             <label className="block space-y-2">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Pattern</span>
+              <span className="tb-v2-tool-label">Pattern</span>
               <select
                 aria-label="Pattern overlay"
                 value={patternOverlay}
@@ -718,7 +718,7 @@ export default function OgImageGeneratorClient() {
             title="Footer"
           >
             <label className="block space-y-2">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Footer text</span>
+              <span className="tb-v2-tool-label">Footer text</span>
               <input
                 aria-label="Footer text"
                 value={footer}

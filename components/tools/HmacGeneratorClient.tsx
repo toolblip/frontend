@@ -123,7 +123,7 @@ export default function HmacGeneratorClient() {
 
       <div className="tb-v2-form-group">
         <label className="tb-v2-label">Output Format</label>
-        <div className="flex gap-2">
+        <div className="tb-v2-mode-tabs">
           <button
             onClick={() => setFormat('hex')}
             className={`px-4 py-2 rounded border transition-colors ${
