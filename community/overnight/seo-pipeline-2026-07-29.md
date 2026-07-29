@@ -38,9 +38,10 @@
 
 ## Errors & Blockers
 
-1. **Pipeline timeout:** Script timed out after 300 seconds while processing 3 topics
-2. **Duplicate topic selection:** Pipeline selected the same topic twice in one run
-3. **GSC submission incomplete:** Topic 1 GSC submission not completed due to timeout
+1. **Pipeline timeout:** Script timed out after 300 seconds while processing 3 topics. Only Topic 1 completed fully.
+2. **Duplicate topic selection:** Pipeline selected the same topic twice in one run (topics 1 and 3 were identical).
+3. **GSC submission incomplete:** Topic 1 GSC submission not completed due to timeout.
+4. **Live site 500 error:** Blog posts from 2026-07-28 and 2026-07-29 return HTTP 500 on toolblip.com. Pre-existing issue — posts from 2026-07-27 and earlier return 200. Likely caused by the "generate all 167 placeholder tool components" commit (4e11b353). This is a deployment/build issue, not an SEO pipeline issue.
 
 ## Self-Improvement Notes
 
