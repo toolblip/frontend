@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback } from 'react';
 
 interface Selection {
   startX: number;
@@ -13,23 +13,31 @@ export default function CropClient() {
   const [image, setImage] = useState<string | null>(null);
   const [selection, setSelection] = useState<Selection | null>(null);
   const [isSelecting, setIsSelecting] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const [croppedImage, setCroppedImage] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const previewRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
 
+  const loadFile = (file: File | undefined) => {
+    if (!file || !file.type.startsWith('image/')) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setImage(event.target?.result as string);
+      setCroppedImage(null);
+      setSelection(null);
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setImage(event.target?.result as string);
-        setCroppedImage(null);
-        setSelection(null);
-      };
-      reader.readAsDataURL(file);
-    }
+    loadFile(e.target.files?.[0]);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    loadFile(e.dataTransfer.files?.[0]);
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -37,7 +45,7 @@ export default function CropClient() {
     const rect = imageRef.current.getBoundingClientRect();
     const scaleX = imageRef.current.naturalWidth / rect.width;
     const scaleY = imageRef.current.naturalHeight / rect.height;
-    
+
     setIsSelecting(true);
     setSelection({
       startX: (e.clientX - rect.left) * scaleX,
@@ -111,59 +119,77 @@ export default function CropClient() {
   };
 
   return (
-    <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-4 tb-v2-p-4">
-      <h2 className="tb-v2-text-2xl tb-v2-font-bold">Crop Image</h2>
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Crop Image</span>
+      </div>
 
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        onChange={handleImageUpload}
-        className="tb-v2-file-input"
-      />
+      <div
+        className={`tb-v2-dropzone ${isDragging ? 'dragging' : ''}`}
+        onClick={() => fileInputRef.current?.click()}
+        onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+        onDragLeave={() => setIsDragging(false)}
+        onDrop={handleDrop}
+      >
+        <span style={{ fontSize: 28 }}>✂️</span>
+        <span className="tb-v2-dropzone-text">Click or drag an image here</span>
+        <span className="tb-v2-dropzone-hint">Then drag on the preview to select a crop area</span>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleImageUpload}
+          style={{ display: 'none' }}
+        />
+      </div>
 
-      {image && (
-        <button onClick={applyCrop} className="tb-v2-btn tb-v2-btn-primary">
-          Apply Crop
-        </button>
-      )}
-
-      <canvas ref={canvasRef} className="tb-v2-hidden" />
-
-      {image && (
-        <div className="tb-v2-relative tb-v2-inline-block" ref={previewRef}>
-          <div
-            className="tb-v2-relative tb-v2-cursor-crosshair tb-v2-select-none"
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-          >
-            <img
-              ref={imageRef}
-              src={image}
-              alt="Crop preview"
-              className="tb-v2-max-w-full tb-v2-rounded-lg"
-              draggable={false}
-            />
-            {selection && (
-              <div
-                className="tb-v2-absolute tb-v2-border-2 tb-v2-border-blue-500 tb-v2-bg-blue-500/10"
-                style={getSelectionStyle()}
+      {!image ? (
+        <p className="tb-v2-empty">Upload an image above to start cropping.</p>
+      ) : (
+        <>
+          <div className="relative inline-block">
+            <div
+              className="relative cursor-crosshair select-none"
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+            >
+              <img
+                ref={imageRef}
+                src={image}
+                alt="Crop preview"
+                className="max-w-full rounded-lg"
+                draggable={false}
               />
-            )}
+              {selection && (
+                <div
+                  className="absolute border-2 border-blue-500 bg-blue-500/10"
+                  style={getSelectionStyle()}
+                />
+              )}
+            </div>
           </div>
-          <p className="tb-v2-text-xs tb-v2-text-gray-500 tb-v2-mt-1">
-            Click and drag to select crop area
-          </p>
-        </div>
+
+          <button
+            type="button"
+            onClick={applyCrop}
+            disabled={!selection}
+            className="tb-v2-btn tb-v2-btn-primary"
+            style={{ alignSelf: 'flex-start' }}
+          >
+            Apply Crop
+          </button>
+        </>
       )}
+
+      <canvas ref={canvasRef} style={{ display: 'none' }} />
 
       {croppedImage && (
-        <div className="tb-v2-mt-4">
-          <p className="tb-v2-tool-label" style={{marginBottom:8}}>Cropped</p>
-          <img src={croppedImage} alt="Cropped" className="tb-v2-max-w-full tb-v2-rounded-lg" />
-          <button onClick={handleDownload} className="tb-v2-btn tb-v2-btn-secondary tb-v2-mt-2">
+        <div>
+          <p className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Cropped</p>
+          <img src={croppedImage} alt="Cropped" className="max-w-full rounded-lg" />
+          <button type="button" onClick={handleDownload} className="tb-v2-btn" style={{ marginTop: 8 }}>
             Download
           </button>
         </div>
