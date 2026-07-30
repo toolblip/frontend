@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Currency {
   code: string;
@@ -45,6 +45,7 @@ export default function CurrencyConverterClient() {
   const [toCurrency, setToCurrency] = useState('EUR');
   const [result, setResult] = useState<number>(0);
   const [allResults, setAllResults] = useState<Record<string, number>>({});
+  const [copied, setCopied] = useState(false);
 
   const fromCurrencyData = currencies.find((c) => c.code === fromCurrency)!;
   const toCurrencyData = currencies.find((c) => c.code === toCurrency)!;
@@ -81,17 +82,18 @@ export default function CurrencyConverterClient() {
     ['USD', 'CAD'],
   ];
 
-  return (
-    <div className="tb-v2-card">
-      <div className="tb-v2-card-header">
-        <h2 className="tb-v2-card-title">Currency Converter</h2>
-        <p className="tb-v2-card-description">
-          Convert between major world currencies with static exchange rates
-        </p>
-      </div>
+  const copy = () => {
+    navigator.clipboard.writeText(`${result.toFixed(4)} ${toCurrency}`).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
 
-      <div className="tb-v2-form-group">
-        <label className="tb-v2-label">Amount</label>
+  return (
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Amount</span>
+      </div>
+      <div style={{ padding: 20 }} className="flex flex-col gap-4">
         <input
           type="number"
           value={amount}
@@ -101,139 +103,140 @@ export default function CurrencyConverterClient() {
           min="0"
           step="0.01"
         />
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div className="tb-v2-form-group">
-          <label className="tb-v2-label">From</label>
-          <select
-            value={fromCurrency}
-            onChange={(e) => setFromCurrency(e.target.value)}
-            className="tb-v2-input"
-          >
-            {currencies.map((currency) => (
-              <option key={currency.code} value={currency.code}>
-                {currency.code} - {currency.name}
-              </option>
-            ))}
-          </select>
-          <div className="mt-2 text-sm text-gray-500">
-            1 {fromCurrency} = {formatNumber(fromCurrencyData.rate / toCurrencyData.rate, 4)} {toCurrency}
-          </div>
-        </div>
-
-        <div className="tb-v2-form-group">
-          <label className="tb-v2-label">To</label>
-          <select
-            value={toCurrency}
-            onChange={(e) => setToCurrency(e.target.value)}
-            className="tb-v2-input"
-          >
-            {currencies.map((currency) => (
-              <option key={currency.code} value={currency.code}>
-                {currency.code} - {currency.name}
-              </option>
-            ))}
-          </select>
-          <div className="mt-2 text-sm text-gray-500">
-            1 {toCurrency} = {formatNumber(toCurrencyData.rate / fromCurrencyData.rate, 4)} {fromCurrency}
-          </div>
-        </div>
-      </div>
-
-      <div className="flex justify-center mb-6">
-        <button
-          onClick={swapCurrencies}
-          className="tb-v2-button-secondary text-2xl px-4 py-2"
-          title="Swap currencies"
-        >
-          ⇄
-        </button>
-      </div>
-
-      <div className="tb-v2-card p-6 mb-6">
-        <div className="text-center">
-          <div className="text-sm text-gray-500 mb-1">
-            {formatNumber(parseFloat(amount) || 0)} {fromCurrency} =
-          </div>
-          <div className="text-4xl font-bold text-green-600 mb-2">
-            {toCurrencyData.symbol}{formatNumber(result)}
-          </div>
-          <div className="text-lg text-gray-600">
-            {result.toFixed(4)} {toCurrency}
-          </div>
-        </div>
-      </div>
-
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">Quick Convert</div>
-        <div className="flex gap-2 flex-wrap mb-3">
-          {popularPairs.map(([from, to]) => {
-            const fromData = currencies.find((c) => c.code === from)!;
-            const toData = currencies.find((c) => c.code === to)!;
-            const rate = (parseFloat(amount) || 0) / fromData.rate * toData.rate;
-            return (
-              <button
-                key={`${from}-${to}`}
-                onClick={() => {
-                  setFromCurrency(from);
-                  setToCurrency(to);
-                }}
-                className={`tb-v2-button tb-v2-button-secondary text-sm ${
-                  fromCurrency === from && toCurrency === to ? 'tb-v2-button-primary' : ''
-                }`}
-              >
-                {from}/{to}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">All Conversions</div>
-        <div className="tb-v2-card max-h-64 overflow-y-auto">
-          <table className="w-full text-sm">
-            <thead className="sticky top-0 bg-white">
-              <tr className="border-b">
-                <th className="text-left p-2">Currency</th>
-                <th className="text-right p-2">Rate</th>
-                <th className="text-right p-2">Amount</th>
-              </tr>
-            </thead>
-            <tbody>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col gap-1">
+            <label className="tb-v2-tool-label">From</label>
+            <select
+              value={fromCurrency}
+              onChange={(e) => setFromCurrency(e.target.value)}
+              className="tb-v2-input"
+            >
               {currencies.map((currency) => (
-                <tr key={currency.code} className="border-b hover:bg-gray-50">
-                  <td className="p-2">
-                    <span className="font-mono font-bold">{currency.code}</span>
-                    <span className="text-gray-500 ml-2 text-xs">{currency.name}</span>
-                  </td>
-                  <td className="p-2 text-right font-mono">
-                    {formatNumber(currency.rate / fromCurrencyData.rate, 4)}
-                  </td>
-                  <td className="p-2 text-right font-mono font-semibold">
-                    {currency.symbol}{formatNumber(allResults[currency.code] || 0)}
-                  </td>
-                </tr>
+                <option key={currency.code} value={currency.code}>
+                  {currency.code} - {currency.name}
+                </option>
               ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">Exchange Rates (Base: USD)</div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-          {currencies.slice(0, 8).map((currency) => (
-            <div key={currency.code} className="tb-v2-card p-2 text-center">
-              <div className="text-xs text-gray-500">{currency.code}</div>
-              <div className="font-mono font-semibold">{formatNumber(currency.rate, 2)}</div>
+            </select>
+            <div className="mt-1 text-sm text-gray-500">
+              1 {fromCurrency} = {formatNumber(fromCurrencyData.rate / toCurrencyData.rate, 4)} {toCurrency}
             </div>
-          ))}
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <label className="tb-v2-tool-label">To</label>
+            <select
+              value={toCurrency}
+              onChange={(e) => setToCurrency(e.target.value)}
+              className="tb-v2-input"
+            >
+              {currencies.map((currency) => (
+                <option key={currency.code} value={currency.code}>
+                  {currency.code} - {currency.name}
+                </option>
+              ))}
+            </select>
+            <div className="mt-1 text-sm text-gray-500">
+              1 {toCurrency} = {formatNumber(toCurrencyData.rate / fromCurrencyData.rate, 4)} {fromCurrency}
+            </div>
+          </div>
         </div>
-        <p className="text-xs text-gray-500 mt-2">
-          Note: These are static example rates for demonstration purposes and may not reflect current market rates.
-        </p>
+
+        <div className="flex justify-center">
+          <button
+            type="button"
+            onClick={swapCurrencies}
+            className="tb-v2-btn tb-v2-btn-sm text-xl"
+            title="Swap currencies"
+          >
+            ⇄
+          </button>
+        </div>
+
+        <div className="tb-v2-tool-output-body" style={{ padding: 0 }}>
+          <div className="tb-v2-tool-pre text-center" style={{ padding: '20px 16px' }}>
+            <div className="text-sm text-gray-500 mb-1">
+              {formatNumber(parseFloat(amount) || 0)} {fromCurrency} =
+            </div>
+            <div className="text-4xl font-bold text-green-600 mb-2">
+              {toCurrencyData.symbol}{formatNumber(result)}
+            </div>
+            <div className="text-lg text-gray-600 mb-3">
+              {result.toFixed(4)} {toCurrency}
+            </div>
+            <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
+              {copied ? 'Copied' : 'Copy result'}
+            </button>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <span className="tb-v2-tool-label">Quick Convert</span>
+          <div className="flex gap-2 flex-wrap">
+            {popularPairs.map(([from, to]) => {
+              const active = fromCurrency === from && toCurrency === to;
+              return (
+                <button
+                  key={`${from}-${to}`}
+                  type="button"
+                  onClick={() => {
+                    setFromCurrency(from);
+                    setToCurrency(to);
+                  }}
+                  className={`tb-v2-btn tb-v2-btn-sm ${active ? 'tb-v2-btn-primary' : ''}`}
+                >
+                  {from}/{to}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <span className="tb-v2-tool-label">All Conversions</span>
+          <div className="tb-v2-tool-pre max-h-64 overflow-y-auto" style={{ padding: 0 }}>
+            <table className="w-full text-sm">
+              <thead className="sticky top-0" style={{ background: 'var(--surface-2)' }}>
+                <tr className="border-b">
+                  <th className="text-left p-2">Currency</th>
+                  <th className="text-right p-2">Rate</th>
+                  <th className="text-right p-2">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                {currencies.map((currency) => (
+                  <tr key={currency.code} className="border-b">
+                    <td className="p-2">
+                      <span className="font-mono font-bold">{currency.code}</span>
+                      <span className="text-gray-500 ml-2 text-xs">{currency.name}</span>
+                    </td>
+                    <td className="p-2 text-right font-mono">
+                      {formatNumber(currency.rate / fromCurrencyData.rate, 4)}
+                    </td>
+                    <td className="p-2 text-right font-mono font-semibold">
+                      {currency.symbol}{formatNumber(allResults[currency.code] || 0)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <span className="tb-v2-tool-label">Exchange Rates (Base: USD)</span>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {currencies.slice(0, 8).map((currency) => (
+              <div key={currency.code} className="tb-v2-tool-pre p-2 text-center">
+                <div className="text-xs text-gray-500">{currency.code}</div>
+                <div className="font-mono font-semibold">{formatNumber(currency.rate, 2)}</div>
+              </div>
+            ))}
+          </div>
+          <p className="text-xs text-gray-500 mt-1">
+            Note: these are static example rates for demonstration purposes and may not reflect current market rates.
+          </p>
+        </div>
       </div>
     </div>
   );
