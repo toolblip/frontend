@@ -1,9 +1,5 @@
 {
   "pending": [
-    "Generate a JSON Schema automatically from sample API data",
-    {
-      "topic": "Generate secure Argon2 password hashes for modern authentication"
-    },
     {
       "topic": "Generate secure random tokens and API keys with Random String Generator"
     },
@@ -74,10 +70,20 @@
       "topic": "Optimize a blog post before publishing: check readability, keyword density, and word count"
     }
   ],
-  "in_progress": [
-    "Check password strength before enforcing signup rules"
-  ],
+  "in_progress": [],
   "done": [
+    {
+      "topic": "Generate secure Argon2 password hashes for modern authentication",
+      "completed_at": "2026-07-30T04:10:47Z"
+    },
+    {
+      "topic": "Generate a JSON Schema automatically from sample API data",
+      "completed_at": "2026-07-30T04:06:35Z"
+    },
+    {
+      "topic": "Check password strength before enforcing signup rules",
+      "completed_at": "2026-07-30T03:30:54Z"
+    },
     {
       "topic": "Test JSONPath queries against API response data with JSON Path Tester",
       "completed_at": "2026-07-28T04:12:21Z"
