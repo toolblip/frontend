@@ -9,6 +9,7 @@ export default function Base64FileEncoderClient() {
   const [fileName, setFileName] = useState('');
   const [copied, setCopied] = useState(false);
   const [downloadUrl, setDownloadUrl] = useState('');
+  const [isDragging, setIsDragging] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleEncode = (file: File) => {
@@ -61,18 +62,15 @@ export default function Base64FileEncoderClient() {
     }
   };
 
-  const onTextChange = (text: string) => {
-    if (mode === 'decode') {
-      handleDecode(text);
-    } else {
-      setOutput('');
-      setError('');
-      setDownloadUrl('');
-    }
+  const onDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file && mode === 'encode') handleEncode(file);
   };
 
   const copy = () => {
-    navigator.clipboard.writeText(output).catch(() => {});
+    navigator.clipboard.writeText(output);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
@@ -97,62 +95,84 @@ export default function Base64FileEncoderClient() {
       </div>
 
       {mode === 'encode' ? (
-        <>
-          <input
-            ref={fileRef}
-            type="file"
-            onChange={onFileChange}
-            className="tb-v2-file-input"
-            aria-label="Select file to encode"
-          />
-          <p className="tb-v2-hint" style={{ marginTop: '0.5rem' }}>
-            Select a file to encode to Base64
+        <div
+          onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+          onDragLeave={() => setIsDragging(false)}
+          onDrop={onDrop}
+          onClick={() => fileRef.current?.click()}
+          className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors ${
+            isDragging
+              ? 'border-indigo-400 bg-indigo-50 dark:bg-indigo-900/20'
+              : 'border-gray-300 dark:border-gray-600 hover:border-indigo-400 dark:hover:border-indigo-500'
+          }`}
+        >
+          <div className="text-4xl mb-2">📁</div>
+          <p className="text-gray-600 dark:text-gray-400">
+            {isDragging ? 'Drop file here' : 'Click or drag file to encode'}
           </p>
-        </>
+          <p className="text-xs text-gray-500 mt-1">Any file type supported</p>
+        </div>
       ) : (
+        <textarea
+          value={output}
+          onChange={(e) => {
+            setOutput(e.target.value);
+            if (mode === 'decode') handleDecode(e.target.value);
+          }}
+          placeholder="Paste Base64 string or load from file..."
+          className="tb-v2-tool-textarea"
+          style={{ fontFamily: 'var(--f-mono)', minHeight: 120 }}
+          rows={6}
+        />
+      )}
+
+      <input
+        ref={fileRef}
+        type="file"
+        onChange={onFileChange}
+        className="hidden"
+      />
+
+      {error && (
+        <div className="p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-xl">
+          <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+        </div>
+      )}
+
+      {output && (
         <>
-          <textarea
-            value={output}
-            onChange={(e) => onTextChange(e.target.value)}
-            placeholder="Paste Base64 string or load from file..."
-            className="tb-v2-tool-textarea"
-            style={{ fontFamily: 'var(--f-mono)' }}
-            aria-label="Base64 input"
-          />
-          <div style={{ marginTop: '0.5rem' }}>
-            <input
-              ref={fileRef}
-              type="file"
-              onChange={onFileChange}
-              className="tb-v2-file-input"
-              aria-label="Load Base64 from file"
-            />
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">{mode === 'encode' ? 'Base64 Output' : 'Decoded File'}</span>
+            <div className="flex gap-2">
+              {downloadUrl && (
+                <a href={downloadUrl} download={fileName} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm">
+                  ⬇️ Download
+                </a>
+              )}
+              <button onClick={copy} className="tb-v2-copy-btn">
+                {copied ? 'Copied!' : 'Copy'}
+              </button>
+            </div>
           </div>
+          <div className="tb-v2-tool-output-body">
+            <pre className="tb-v2-tool-pre text-sm break-all" style={{ maxHeight: 300, overflowY: 'auto' }}>
+              {output}
+            </pre>
+          </div>
+          {fileName && (
+            <p className="text-xs text-gray-500 text-center">
+              {fileName} {output.length > 100 && `(${(output.length / 1024).toFixed(1)} KB)`}
+            </p>
+          )}
         </>
       )}
 
-      <div className="tb-v2-tool-output-head">
-        <span className="tb-v2-tool-label">{mode === 'encode' ? 'Base64 Output' : 'Decoded File'}</span>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
-          {downloadUrl && (
-            <a href={downloadUrl} download={fileName} className="tb-v2-copy-btn" style={{ textDecoration: 'none' }}>
-              Download
-            </a>
-          )}
-          <button type="button" onClick={copy} disabled={!output} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
-            {copied ? 'Copied' : 'Copy'}
-          </button>
+      {!output && !error && (
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+          <div className="text-4xl mb-2">{mode === 'encode' ? '📁' : '📄'}</div>
+          <p>{mode === 'encode' ? 'Upload a file to encode to Base64' : 'Paste Base64 string to decode'}</p>
         </div>
-      </div>
-      <div className="tb-v2-tool-output-body">
-        {error ? (
-          <p className="tb-v2-error" role="alert">{error}</p>
-        ) : (
-          <pre className="tb-v2-tool-pre" style={{ wordBreak: 'break-all', maxHeight: '300px', overflowY: 'auto' }}>
-            {output || ' - '}
-          </pre>
-        )}
-      </div>
+      )}
     </div>
   );
 }
