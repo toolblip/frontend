@@ -34,76 +34,41 @@ export default function AddPagesClient() {
   };
 
   const generateOutput = () => {
-    let result = '## Page Insert Helper\n\n';
-    result += 'Use this configuration to add new pages to your site:\n\n';
-
+    let result = '## Page Configuration\n\n';
     pages.forEach((page, i) => {
       result += `### Page ${i + 1}: ${page.title || '(Untitled)'}\n\n`;
-      result += `- **URL Slug:** \`${page.slug || '/'}\`\n`;
+      result += `- **URL:** ${page.slug || '/'}\n`;
       result += `- **Title:** ${page.title || '(No title)'}\n`;
-      if (page.parentSlug) {
-        result += `- **Parent Page:** \`${page.parentSlug}\`\n`;
-      }
-      if (page.order !== undefined) {
-        result += `- **Menu Order:** ${page.order}\n`;
-      }
-      if (page.metaDescription) {
-        result += `- **Meta Description:** ${page.metaDescription}\n`;
-      }
+      if (page.parentSlug) result += `- **Parent:** ${page.parentSlug}\n`;
+      if (page.order !== undefined) result += `- **Order:** ${page.order}\n`;
+      if (page.metaDescription) result += `- **Description:** ${page.metaDescription}\n`;
       result += '\n';
     });
-
-    result += '---\n\n';
-    result += '## Next Steps\n\n';
-    result += '1. Copy the page configurations above\n';
-    result += '2. Navigate to your CMS or admin panel\n';
-    result += '3. Add each page with the specified settings\n';
-    result += '4. Verify the pages are accessible at their URLs\n';
-
-    if (pages.length > 1) {
-      result += '\n## Site Structure\n\n';
-      result += '```\n';
-      pages.filter(p => !p.parentSlug).forEach(page => {
-        result += `📄 ${page.title || page.slug} (${page.slug || '/'})\n`;
-        pages.filter(p => p.parentSlug === page.slug).forEach(child => {
-          result += `  📄 ${child.title || child.slug} (${child.slug || '/'})\n`;
-        });
-      });
-      result += '```\n';
-    }
-
     setOutput(result);
   };
 
   const copy = () => {
-    if (!output) return;
-    navigator.clipboard.writeText(output).catch(() => {});
+    navigator.clipboard.writeText(output);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
 
   const generateSlug = (title: string): string => {
-    return '/' + title
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-|-$/g, '');
+    return '/' + title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div>
+      {/* Page list */}
       <div className="space-y-3">
         {pages.map((page, index) => (
-          <div key={index} className="tb-v2-box p-4 space-y-3">
+          <div key={index} className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl space-y-3 border border-gray-200 dark:border-gray-700">
             <div className="flex justify-between items-center">
               <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                Page {index + 1}
+                📄 Page {index + 1}
               </span>
               {pages.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => removePage(index)}
-                  className="tb-v2-btn-sm text-red-500"
-                >
+                <button onClick={() => removePage(index)} className="text-red-500 hover:text-red-600 text-sm">
                   ✕ Remove
                 </button>
               )}
@@ -117,15 +82,12 @@ export default function AddPagesClient() {
                   value={page.title}
                   onChange={(e) => {
                     updatePage(index, 'title', e.target.value);
-                    if (!page.slug) {
-                      updatePage(index, 'slug', generateSlug(e.target.value));
-                    }
+                    if (!page.slug) updatePage(index, 'slug', generateSlug(e.target.value));
                   }}
                   placeholder="Page Title"
                   className="tb-v2-input"
                 />
               </div>
-
               <div>
                 <label className="tb-v2-tool-label">URL Slug</label>
                 <input
@@ -133,34 +95,6 @@ export default function AddPagesClient() {
                   value={page.slug}
                   onChange={(e) => updatePage(index, 'slug', e.target.value)}
                   placeholder="/page-url"
-                  className="tb-v2-input"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div>
-                <label className="tb-v2-tool-label">Parent Page (optional)</label>
-                <select
-                  value={page.parentSlug || ''}
-                  onChange={(e) => updatePage(index, 'parentSlug', e.target.value || undefined)}
-                  className="tb-v2-input"
-                >
-                  <option value="">None (Top Level)</option>
-                  {pages.filter((p, i) => i !== index).map((p, i) => (
-                    <option key={i} value={p.slug || '/'}>
-                      {p.title || p.slug || '/'}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="tb-v2-tool-label">Menu Order</label>
-                <input
-                  type="number"
-                  value={page.order ?? index}
-                  onChange={(e) => updatePage(index, 'order', parseInt(e.target.value) || 0)}
                   className="tb-v2-input"
                 />
               </div>
@@ -180,31 +114,36 @@ export default function AddPagesClient() {
         ))}
       </div>
 
-      <div className="tb-v2-mode-tabs">
-        <button type="button" onClick={addPage} className="tb-v2-btn-sm">
+      {/* Actions */}
+      <div className="flex gap-2">
+        <button onClick={addPage} className="tb-v2-btn tb-v2-btn-ghost flex-1">
           + Add Page
         </button>
-        <button type="button" onClick={generateOutput} className="tb-v2-btn">
-          Generate Documentation
+        <button onClick={generateOutput} className="tb-v2-btn tb-v2-btn-primary flex-1">
+          📝 Generate Config
         </button>
       </div>
 
+      {/* Output */}
       {output && (
         <>
           <div className="tb-v2-tool-output-head">
-            <span className="tb-v2-tool-label">Documentation</span>
-            <button
-              type="button"
-              onClick={copy}
-              className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
-            >
-              {copied ? 'Copied' : 'Copy'}
+            <span className="tb-v2-tool-label">Configuration</span>
+            <button onClick={copy} className="tb-v2-copy-btn">
+              {copied ? 'Copied!' : 'Copy'}
             </button>
           </div>
           <div className="tb-v2-tool-output-body">
-            <pre className="tb-v2-tool-pre whitespace-pre-wrap">{output}</pre>
+            <pre className="tb-v2-tool-pre text-sm whitespace-pre-wrap">{output}</pre>
           </div>
         </>
+      )}
+
+      {!output && (
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+          <div className="text-4xl mb-2">📄</div>
+          <p>Add pages above and click Generate to create configuration</p>
+        </div>
       )}
     </div>
   );
