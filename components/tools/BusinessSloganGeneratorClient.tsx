@@ -29,6 +29,7 @@ export default function BusinessSloganGeneratorClient() {
   const [topic, setTopic] = useState('');
   const [tone, setTone] = useState('all');
   const [slogansList, setSlogansList] = useState<string[]>([]);
+  const [copied, setCopied] = useState<string | null>(null);
 
   const generateSlogans = () => {
     if (!topic.trim()) return;
@@ -38,41 +39,50 @@ export default function BusinessSloganGeneratorClient() {
       filtered = slogans.filter(s => s.tone === tone);
     }
 
-    const results = filtered.map(s => 
+    const results = filtered.map(s =>
       s.template.replace('{topic}', topic.trim().toLowerCase())
     );
 
     setSlogansList(results.sort(() => Math.random() - 0.5).slice(0, 12));
   };
 
+  const loadExample = () => {
+    setTopic('coffee');
+    setTone('all');
+    setSlogansList([]);
+  };
+
   const copyToClipboard = (slogan: string) => {
-    navigator.clipboard.writeText(slogan);
+    navigator.clipboard.writeText(slogan).catch(() => {});
+    setCopied(slogan);
+    setTimeout(() => setCopied(null), 1500);
   };
 
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Enter your business topic</span>
-      </div>
-      
-      <div className="tb-v2-form-group">
-        <input
-          type="text"
-          value={topic}
-          onChange={(e) => setTopic(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && generateSlogans()}
-          placeholder="e.g., coffee, software, education, fitness"
-          className="tb-v2-tool-input"
-          aria-label="Business topic"
-        />
+        <span className="tb-v2-tool-label">Business topic</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
       </div>
 
-      <div className="tb-v2-form-group">
-        <label className="tb-v2-label">Tone</label>
+      <input
+        type="text"
+        value={topic}
+        onChange={(e) => setTopic(e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && generateSlogans()}
+        placeholder="e.g., coffee, software, education, fitness"
+        className="tb-v2-input"
+        aria-label="Business topic"
+      />
+
+      <div>
+        <label className="tb-v2-tool-label" style={{ display: 'block', marginBottom: 6 }}>Tone</label>
         <select
           value={tone}
           onChange={(e) => setTone(e.target.value)}
-          className="tb-v2-tool-select"
+          className="tb-v2-select"
           aria-label="Slogan tone"
         >
           <option value="all">All Tones</option>
@@ -88,29 +98,35 @@ export default function BusinessSloganGeneratorClient() {
       <button
         type="button"
         onClick={generateSlogans}
-        className="tb-v2-btn"
+        className="tb-v2-btn tb-v2-btn-primary"
         disabled={!topic.trim()}
       >
         Generate Slogans
       </button>
 
+      {slogansList.length === 0 && (
+        <p className="tb-v2-empty">
+          Enter a topic and generate a batch of slogans, filterable by tone.
+        </p>
+      )}
+
       {slogansList.length > 0 && (
         <>
           <div className="tb-v2-tool-output-head">
-            <span className="tb-v2-tool-label">Generated Slogans</span>
+            <span className="tb-v2-tool-label">Generated Slogans ({slogansList.length})</span>
           </div>
           <div className="tb-v2-tool-output-body">
-            <div className="tb-v2-list">
+            <div className="flex flex-col gap-2">
               {slogansList.map((slogan, idx) => (
-                <div key={idx} className="tb-v2-list-item">
-                  <span className="tb-v2-list-item-text">{slogan}</span>
+                <div key={idx} className="flex items-center justify-between gap-2 p-2.5 rounded-lg bg-gray-50 dark:bg-gray-800">
+                  <span className="text-sm text-gray-800 dark:text-gray-200">{slogan}</span>
                   <button
                     type="button"
                     onClick={() => copyToClipboard(slogan)}
-                    className="tb-v2-copy-btn"
+                    className={`tb-v2-copy-btn ${copied === slogan ? 'done' : ''}`}
                     aria-label={`Copy ${slogan}`}
                   >
-                    Copy
+                    {copied === slogan ? 'Copied' : 'Copy'}
                   </button>
                 </div>
               ))}

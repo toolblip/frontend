@@ -48,6 +48,9 @@ export default function BrokenLinkCheckerClient() {
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Enter URL to Scan</span>
+        <button type="button" onClick={() => setUrl('https://example.com')} className="tb-v2-btn-sm">
+          Load Example
+        </button>
       </div>
       <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
         <input
@@ -59,7 +62,7 @@ export default function BrokenLinkCheckerClient() {
           style={{ flex: 1 }}
           aria-label="URL input for link checking"
         />
-        <button type="button" onClick={checkLinks} disabled={loading} className="tb-v2-copy-btn">
+        <button type="button" onClick={checkLinks} disabled={loading || !url.trim()} className="tb-v2-btn tb-v2-btn-primary">
           {loading ? 'Scanning...' : 'Scan'}
         </button>
       </div>
@@ -99,11 +102,9 @@ export default function BrokenLinkCheckerClient() {
       )}
 
       {!results && !loading && !error && (
-        <div className="tb-v2-tool-output-body" style={{ marginTop: 16 }}>
-          <div style={{ textAlign: 'center', padding: 24, color: 'var(--tb-text-secondary)' }}>
-            Enter a URL to scan for broken links
-          </div>
-        </div>
+        <p className="tb-v2-empty" style={{ marginTop: 16 }}>
+          Enter a URL above to see a sample link report with broken and working link counts.
+        </p>
       )}
     </div>
   );
