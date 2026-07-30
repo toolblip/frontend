@@ -49,33 +49,40 @@ export default function ByteConverterClient() {
     }
   };
 
+  const loadExample = () => {
+    setValue('1048576');
+    setFromUnit('Bytes');
+    setToUnit('MB');
+    setResults({});
+  };
+
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Enter a byte value</span>
+        <span className="tb-v2-tool-label">Byte value</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
       </div>
 
-      <div className="tb-v2-form-group">
-        <label className="tb-v2-label">Value</label>
-        <input
-          type="number"
-          value={value}
-          onChange={(e) => handleValueChange(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && convert()}
-          placeholder="Enter numeric value"
-          className="tb-v2-tool-input"
-          min="0"
-          aria-label="Byte value"
-        />
-      </div>
+      <input
+        type="number"
+        value={value}
+        onChange={(e) => handleValueChange(e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && convert()}
+        placeholder="Enter numeric value"
+        className="tb-v2-input"
+        min="0"
+        aria-label="Byte value"
+      />
 
       <div className="tb-v2-grid-2">
-        <div className="tb-v2-form-group">
-          <label className="tb-v2-label">From</label>
+        <div>
+          <label className="tb-v2-tool-label" style={{ display: 'block', marginBottom: 6 }}>From</label>
           <select
             value={fromUnit}
             onChange={(e) => setFromUnit(e.target.value)}
-            className="tb-v2-tool-select"
+            className="tb-v2-select"
             aria-label="Source unit"
           >
             {units.map(unit => (
@@ -84,12 +91,12 @@ export default function ByteConverterClient() {
           </select>
         </div>
 
-        <div className="tb-v2-form-group">
-          <label className="tb-v2-label">To</label>
+        <div>
+          <label className="tb-v2-tool-label" style={{ display: 'block', marginBottom: 6 }}>To (highlighted)</label>
           <select
             value={toUnit}
             onChange={(e) => setToUnit(e.target.value)}
-            className="tb-v2-tool-select"
+            className="tb-v2-select"
             aria-label="Target unit"
           >
             {units.map(unit => (
@@ -102,11 +109,17 @@ export default function ByteConverterClient() {
       <button
         type="button"
         onClick={convert}
-        className="tb-v2-btn"
+        className="tb-v2-btn tb-v2-btn-primary"
         disabled={!value}
       >
         Convert
       </button>
+
+      {Object.keys(results).length === 0 && (
+        <p className="tb-v2-empty">
+          Enter a value above to see it converted across every byte unit at once.
+        </p>
+      )}
 
       {Object.keys(results).length > 0 && (
         <>
@@ -118,10 +131,14 @@ export default function ByteConverterClient() {
               {Object.entries(results).map(([unit, result]) => (
                 <div
                   key={unit}
-                  className={`tb-v2-card ${unit === toUnit ? 'tb-v2-card-active' : ''}`}
+                  className={`p-3 rounded-lg text-center ${
+                    unit === toUnit
+                      ? 'bg-indigo-50 dark:bg-indigo-900/30 ring-1 ring-indigo-400'
+                      : 'bg-gray-50 dark:bg-gray-800'
+                  }`}
                 >
-                  <span className="tb-v2-card-label">{unit}</span>
-                  <span className="tb-v2-card-value">{result}</span>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">{unit}</div>
+                  <div className="text-sm font-semibold text-gray-800 dark:text-gray-200 break-all">{result}</div>
                 </div>
               ))}
             </div>

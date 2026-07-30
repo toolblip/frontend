@@ -66,6 +66,9 @@ export default function CaseConverterClient() {
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Input</span>
+        <button type="button" onClick={() => setText('Hello World Example')} className="tb-v2-btn-sm">
+          Load Example
+        </button>
       </div>
       <textarea
         value={text}
@@ -75,6 +78,12 @@ export default function CaseConverterClient() {
         aria-label="Text input"
       />
 
+      {!text.trim() && (
+        <p className="tb-v2-empty">Type or paste text above to see it converted into every case at once.</p>
+      )}
+
+      {text.trim() && (
+      <>
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">All cases</span>
       </div>
@@ -100,6 +109,8 @@ export default function CaseConverterClient() {
           );
         })}
       </div>
+      </>
+      )}
     </div>
   );
 }

@@ -48,6 +48,7 @@ const radicalStrokes: Record<string, { strokes: number; meaning: string }> = {
 
 export default function ChineseCharConverterClient() {
   const [input, setInput] = useState('');
+  const [copied, setCopied] = useState<'original' | 'pinyin' | null>(null);
 
   const charAnalysis = useMemo(() => {
     if (!input.trim()) return [];
@@ -55,8 +56,8 @@ export default function ChineseCharConverterClient() {
     const chars = [...input];
     return chars.map(char => {
       const pinyin = pinyinMap[char] || null;
-      const isChinese = /[\u4e00-\u9fff]/.test(char);
-      
+      const isChinese = /[一-鿿]/.test(char);
+
       let unicode = '';
       if (isChinese) {
         unicode = `U+${char.charCodeAt(0).toString(16).toUpperCase().padStart(4, '0')}`;
@@ -80,28 +81,41 @@ export default function ChineseCharConverterClient() {
     });
   }, [input]);
 
-  const handleCopy = (text: string) => {
-    navigator.clipboard.writeText(text);
+  const loadExample = () => setInput('你好，谢谢');
+
+  const handleCopy = (text: string, which: 'original' | 'pinyin') => {
+    navigator.clipboard.writeText(text).catch(() => {});
+    setCopied(which);
+    setTimeout(() => setCopied(null), 1500);
   };
 
   return (
-    <div className="" style={{padding:"20px"}}>
-      <h1 className="text-2xl font-bold mb-6">Chinese Character Converter</h1>
-
-      <div className="mb-4">
-        <label className="tb-v2-tool-label" style={{marginBottom:8}}>Enter Chinese text or characters</label>
-        <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          className="tb-v2-input"
-          placeholder="Enter Chinese characters..."
-        />
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Chinese text</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
       </div>
+      <textarea
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        className="tb-v2-tool-textarea"
+        placeholder="Enter Chinese characters..."
+      />
+
+      {!input.trim() && (
+        <p className="tb-v2-empty">
+          Enter Chinese characters above to see pinyin, Unicode code points, and radical info for each one.
+        </p>
+      )}
 
       {charAnalysis.length > 0 && (
-        <div className="mb-6">
-          <label className="block text-sm font-medium mb-3">Character Analysis</label>
-          <div className="overflow-x-auto">
+        <>
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">Character Analysis</span>
+          </div>
+          <div className="tb-v2-tool-output-body overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-gray-100 dark:bg-gray-800">
                 <tr>
@@ -139,32 +153,32 @@ export default function ChineseCharConverterClient() {
               </tbody>
             </table>
           </div>
-        </div>
+
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={() => handleCopy(input, 'original')}
+              className={`tb-v2-copy-btn ${copied === 'original' ? 'done' : ''}`}
+            >
+              {copied === 'original' ? 'Copied' : 'Copy Original'}
+            </button>
+            <button
+              type="button"
+              onClick={() => handleCopy(charAnalysis.map(c => c.pinyin || c.char).join(' '), 'pinyin')}
+              className={`tb-v2-copy-btn ${copied === 'pinyin' ? 'done' : ''}`}
+            >
+              {copied === 'pinyin' ? 'Copied' : 'Copy Pinyin'}
+            </button>
+          </div>
+        </>
       )}
 
-      {input && (
-        <div className="flex gap-3 mb-6">
-          <button
-            onClick={() => handleCopy(input)}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
-          >
-            Copy Original
-          </button>
-          <button
-            onClick={() => handleCopy(charAnalysis.map(c => c.pinyin || c.char).join(' '))}
-            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition"
-          >
-            Copy Pinyin
-          </button>
-        </div>
-      )}
-
-      <div className="grid md:grid-cols-2 gap-6">
-        <div className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}>
-          <h3 className="font-medium mb-3">Common Radicals</h3>
+      <div className="grid md:grid-cols-2 gap-4">
+        <div className="tb-v2-section">
+          <h3 className="tb-v2-section-title">Common Radicals</h3>
           <div className="grid grid-cols-2 gap-2 text-sm">
             {Object.entries(radicalStrokes).slice(0, 10).map(([char, info]) => (
-              <div key={char} className="flex items-center gap-2 p-2 bg-white dark:bg-gray-700 rounded">
+              <div key={char} className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-800 rounded">
                 <span className="text-xl">{char}</span>
                 <span className="text-gray-500">{info.strokes} - {info.meaning}</span>
               </div>
@@ -172,30 +186,28 @@ export default function ChineseCharConverterClient() {
           </div>
         </div>
 
-        <div className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}>
-          <h3 className="font-medium mb-3">Numbers in Chinese</h3>
+        <div className="tb-v2-section">
+          <h3 className="tb-v2-section-title">Numbers in Chinese</h3>
           <div className="grid grid-cols-2 gap-2 text-sm">
-            {['一 二 三 四 五 六 七 八 九 十'.split(' '), ['yi', 'er', 'san', 'si', 'wu', 'liu', 'qi', 'ba', 'jiu', 'shi']].map((row, idx) => (
-              <div key={idx} className="contents">
-                {row.map((item, i) => (
-                  <div key={i} className="p-2 bg-white dark:bg-gray-700 rounded text-center">
-                    <span className="text-lg">{['一二三四五六七八九十'][i]}</span>
-                    <span className="text-gray-500 ml-1">{['yi er san si wu liu qi ba jiu shi'][i]}</span>
-                  </div>
-                ))}
+            {'一二三四五六七八九十'.split('').map((char, i) => (
+              <div key={char} className="p-2 bg-gray-50 dark:bg-gray-800 rounded text-center">
+                <span className="text-lg">{char}</span>
+                <span className="text-gray-500 ml-1">
+                  {'yi er san si wu liu qi ba jiu shi'.split(' ')[i]}
+                </span>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      <div className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}>
-        <h3 className="font-medium mb-2">How it works:</h3>
-        <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-          <li>• Enter Chinese characters to see their pinyin pronunciation</li>
-          <li>• Unicode code points are shown for each character</li>
-          <li>• Radical information helps understand character composition</li>
-          <li>• Note: This tool covers common characters but not all Chinese characters</li>
+      <div className="tb-v2-section">
+        <h3 className="tb-v2-section-title">How it works</h3>
+        <ul className="text-sm text-gray-600 dark:text-gray-400 flex flex-col gap-1">
+          <li>Enter Chinese characters to see their pinyin pronunciation</li>
+          <li>Unicode code points are shown for each character</li>
+          <li>Radical information helps understand character composition</li>
+          <li>Note: this tool covers common characters but not all Chinese characters</li>
         </ul>
       </div>
     </div>

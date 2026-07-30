@@ -54,6 +54,13 @@ export default function ChartMakerClient() {
     ctx.textAlign = 'center';
     ctx.fillText(title, width / 2, 30);
 
+    if (dataPoints.length === 0) {
+      ctx.fillStyle = '#9ca3af';
+      ctx.font = '14px system-ui, sans-serif';
+      ctx.fillText('Add data points below to see a chart', width / 2, height / 2);
+      return;
+    }
+
     if (chartType === 'bar') {
       drawBarChart(ctx, width, height, padding);
     } else if (chartType === 'line') {
@@ -259,13 +266,13 @@ export default function ChartMakerClient() {
       </div>
 
       <div style={{ marginBottom: '0.75rem' }}>
-        <label className="tb-v2-hint">Chart Title</label>
+        <label className="text-xs text-gray-500 dark:text-gray-400" style={{ display: 'block', marginBottom: 6 }}>Chart Title</label>
         <input
           type="text"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Enter chart title"
-          className="tb-v2-tool-input"
+          className="tb-v2-input"
           aria-label="Chart title"
         />
       </div>
@@ -279,15 +286,15 @@ export default function ChartMakerClient() {
             key={type}
             type="button"
             onClick={() => setChartType(type)}
-            className={`tb-v2-btn ${chartType === type ? 'tb-v2-btn-primary' : 'tb-v2-btn-secondary'}`}
+            className={`tb-v2-btn ${chartType === type ? 'tb-v2-btn-primary' : ''}`}
           >
             {type.charAt(0).toUpperCase() + type.slice(1)}
           </button>
         ))}
       </div>
 
-      <div className="tb-v2-tool-options" style={{ marginBottom: '0.75rem' }}>
-        <label className="tb-v2-checkbox-label">
+      <div style={{ marginBottom: '0.75rem' }}>
+        <label className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400">
           <input
             type="checkbox"
             checked={showGrid}
@@ -306,7 +313,7 @@ export default function ChartMakerClient() {
           value={newLabel}
           onChange={(e) => setNewLabel(e.target.value)}
           placeholder="Label"
-          className="tb-v2-tool-input"
+          className="tb-v2-input"
           aria-label="Data label"
         />
         <input
@@ -314,7 +321,7 @@ export default function ChartMakerClient() {
           value={newValue}
           onChange={(e) => setNewValue(e.target.value)}
           placeholder="Value"
-          className="tb-v2-tool-input"
+          className="tb-v2-input"
           aria-label="Data value"
         />
         <button
@@ -352,7 +359,7 @@ export default function ChartMakerClient() {
             <button
               type="button"
               onClick={() => removeDataPoint(i)}
-              className="tb-v2-btn tb-v2-btn-secondary"
+              className="tb-v2-btn"
               style={{ padding: '0.125rem 0.5rem', fontSize: '0.75rem' }}
             >
               Remove

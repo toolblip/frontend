@@ -20,8 +20,16 @@ export default function CharacterCounterClient() {
 
   return (
     <div>
-      <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Text</span></div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Text</span>
+        <button type="button" onClick={() => setInput('The quick brown fox jumps over 2 lazy dogs.')} className="tb-v2-btn-sm">
+          Load Example
+        </button>
+      </div>
       <textarea value={input} onChange={e => setInput(e.target.value)} placeholder="Enter text to count characters..." className="tb-v2-tool-textarea" />
+      {!input && <p className="tb-v2-empty">Type or paste text above to see live character counts.</p>}
+      {input && (
+      <>
       <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">Character Count</span></div>
       <div className="tb-v2-tool-output-body" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
         {[
@@ -37,6 +45,8 @@ export default function CharacterCounterClient() {
           </div>
         ))}
       </div>
+      </>
+      )}
     </div>
   );
 }
