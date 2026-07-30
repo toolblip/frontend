@@ -11,6 +11,7 @@ export default function BarcodeScannerClient() {
   const [error, setError] = useState<string | null>(null);
   const [isScanning, setIsScanning] = useState(false);
   const [selectedFormat, setSelectedFormat] = useState<BarcodeFormat>('auto');
+  const [copied, setCopied] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -29,20 +30,16 @@ export default function BarcodeScannerClient() {
   };
 
   const detectBarcodeFormat = (pattern: string): BarcodeFormat => {
-    // Detect barcode format based on pattern characteristics
     const digits = pattern.replace(/\D/g, '');
-    
     if (digits.length === 13) return 'EAN13';
     if (digits.length === 8) return 'EAN8';
     if (digits.length === 12) return 'UPC';
     if (/^[A-Z0-9\-\.\$\/\+\%]+$/.test(pattern) && pattern.length > 10) return 'CODE39';
     if (pattern.length > 20) return 'CODE128';
-    
     return 'CODABAR';
   };
 
   const analyzeBarcodePattern = (gray: number[], width: number, height: number): string | null => {
-    // Sample multiple rows to find barcode patterns
     const sampleRows = [Math.floor(height * 0.3), Math.floor(height * 0.5), Math.floor(height * 0.7)];
     const patterns: string[] = [];
 
@@ -56,7 +53,6 @@ export default function BarcodeScannerClient() {
       while (x < width) {
         const idx = rowY * width + x;
         const isDark = gray[idx] < threshold;
-        
         if (isDark === isBar) {
           barWidth++;
         } else {
@@ -71,17 +67,14 @@ export default function BarcodeScannerClient() {
       patterns.push(row);
     }
 
-    // Find common pattern
     const commonLength = Math.min(...patterns.map(p => p.length));
     let consensus = '';
-    
     for (let i = 0; i < commonLength; i++) {
       const bits = patterns.map(p => p[i]);
       const oneCount = bits.filter(b => b === '1').length;
       consensus += oneCount >= 2 ? '1' : '0';
     }
 
-    // Extract digits from barcode pattern (simplified)
     let digits = '';
     let ones = 0;
     for (const char of consensus) {
@@ -93,16 +86,11 @@ export default function BarcodeScannerClient() {
       }
     }
 
-    if (digits.length >= 4) {
-      return digits.replace(/^0+/, '') || digits;
-    }
-
-    return null;
+    return digits.length >= 4 ? (digits.replace(/^0+/, '') || digits) : null;
   };
 
   const decodeBarcode = useCallback(() => {
     if (!image || !canvasRef.current) return;
-
     setIsScanning(true);
     setError(null);
     setScanResult(null);
@@ -121,28 +109,20 @@ export default function BarcodeScannerClient() {
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const data = imageData.data;
 
-      // Convert to grayscale
       const grayscale: number[] = [];
       for (let i = 0; i < data.length; i += 4) {
-        const gray = (data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114);
-        grayscale.push(gray);
+        grayscale.push(data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114);
       }
 
-      // Try different barcode detection strategies
-      let result: string | null = null;
+      const result = analyzeBarcodePattern(grayscale, canvas.width, canvas.height);
 
-      // Strategy 1: Look for vertical bar patterns
-      result = analyzeBarcodePattern(grayscale, canvas.width, canvas.height);
-
-      // Strategy 2: If auto-detect, analyze pattern for format
       if (result) {
         const format = detectBarcodeFormat(result);
         setDetectedFormat(selectedFormat === 'auto' ? format : selectedFormat);
         setScanResult(result);
       } else {
-        setError('No barcode detected in the image. Please try a clearer image with good contrast.');
+        setError('No barcode detected. Try a clearer image with good contrast.');
       }
-
       setIsScanning(false);
     };
     img.src = image;
@@ -153,26 +133,14 @@ export default function BarcodeScannerClient() {
     setScanResult(null);
     setDetectedFormat(null);
     setError(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  const handleDownload = () => {
+  const copy = () => {
     if (!scanResult) return;
-    const blob = new Blob([`Barcode Result\nFormat: ${detectedFormat}\nValue: ${scanResult}`], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.download = 'barcode-result.txt';
-    link.href = url;
-    link.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const copyToClipboard = () => {
-    if (scanResult) {
-      navigator.clipboard.writeText(scanResult);
-    }
+    navigator.clipboard.writeText(scanResult);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   const formats: { id: BarcodeFormat; name: string }[] = [
@@ -186,102 +154,98 @@ export default function BarcodeScannerClient() {
   ];
 
   return (
-    <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-4 tb-v2-p-4">
-      <h2 className="tb-v2-text-2xl tb-v2-font-bold">Barcode Scanner</h2>
-      <p className="tb-v2-text-sm tb-v2-text-gray-500">Scan and decode common barcode formats from images</p>
-
+    <div>
       {/* Format Selection */}
-      <div className="tb-v2-card">
-        <label className="tb-v2-label">Barcode Format</label>
-        <select
-          value={selectedFormat}
-          onChange={(e) => setSelectedFormat(e.target.value as BarcodeFormat)}
-          className="tb-v2-input"
-        >
+      <div>
+        <label className="tb-v2-tool-label">Barcode Format</label>
+        <div className="flex flex-wrap gap-2">
           {formats.map(f => (
-            <option key={f.id} value={f.id}>{f.name}</option>
+            <button
+              key={f.id}
+              onClick={() => setSelectedFormat(f.id)}
+              className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
+                selectedFormat === f.id
+                  ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-700'
+                  : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'
+              }`}
+            >
+              {f.name}
+            </button>
           ))}
-        </select>
+        </div>
       </div>
 
       {/* Upload */}
-      <div className="tb-v2-card">
-        <label className="tb-v2-label">Upload Image</label>
+      <div>
+        <label className="tb-v2-tool-label">Upload Image</label>
+        <div
+          onClick={() => fileInputRef.current?.click()}
+          className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-8 text-center cursor-pointer hover:border-indigo-400 dark:hover:border-indigo-500 transition-colors"
+        >
+          <div className="text-4xl mb-2">📷</div>
+          <p className="text-gray-600 dark:text-gray-400">Click to upload barcode image</p>
+          <p className="text-xs text-gray-500 mt-1">JPG, PNG, WebP</p>
+        </div>
         <input
           ref={fileInputRef}
           type="file"
           accept="image/*"
           onChange={handleImageUpload}
-          className="tb-v2-file-input"
+          className="hidden"
         />
-        <p className="tb-v2-text-xs tb-v2-text-gray-500 tb-v2-mt-1">
-          Supports JPG, PNG, WebP. For best results, use a clear image with good contrast.
-        </p>
       </div>
 
       {image && (
         <button
           onClick={decodeBarcode}
           disabled={isScanning}
-          className="tb-v2-btn tb-v2-btn-primary tb-v2-disabled:opacity-50"
+          className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg w-full"
         >
-          {isScanning ? 'Scanning...' : 'Scan Barcode'}
+          {isScanning ? '⏳ Scanning...' : '🔍 Scan Barcode'}
         </button>
       )}
 
-      <canvas ref={canvasRef} className="tb-v2-hidden" />
+      <canvas ref={canvasRef} className="hidden" />
 
       {image && (
-        <div className="tb-v2-card">
-          <div className="tb-v2-flex tb-v2-justify-between tb-v2-items-center tb-v2-mb-2">
-            <p className="tb-v2-text-sm tb-v2-font-medium">Uploaded Image</p>
-            <button onClick={handleClear} className="tb-v2-btn tb-v2-btn-secondary tb-v2-text-sm">
+        <div>
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">Uploaded Image</span>
+            <button onClick={handleClear} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm">
               ✕ Clear
             </button>
           </div>
-          <img src={image} alt="Barcode" className="tb-v2-max-w-full tb-v2-rounded-lg tb-v2-mx-auto" />
+          <img src={image} alt="Barcode" className="max-w-full rounded-xl mx-auto border border-gray-200 dark:border-gray-700" />
         </div>
       )}
 
       {error && (
-        <div className="tb-v2-p-4 tb-v2-bg-red-100 tb-v2-text-red-700 tb-v2-rounded-lg">
-          {error}
+        <div className="p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-xl">
+          <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
         </div>
       )}
 
       {scanResult && (
-        <div className="tb-v2-card">
-          <div className="tb-v2-flex tb-v2-justify-between tb-v2-items-center tb-v2-mb-3">
-            <h3 className="tb-v2-text-lg tb-v2-font-semibold">Scan Result</h3>
-            <div className="tb-v2-flex tb-v2-gap-2">
-              <button onClick={copyToClipboard} className="tb-v2-btn tb-v2-btn-secondary tb-v2-text-sm">
-                📋 Copy
-              </button>
-              <button onClick={handleDownload} className="tb-v2-btn tb-v2-btn-primary tb-v2-text-sm">
-                ⬇️ Save
-              </button>
-            </div>
+        <>
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">Scan Result</span>
+            <button onClick={copy} className="tb-v2-copy-btn">
+              {copied ? 'Copied!' : 'Copy'}
+            </button>
           </div>
-          <div className="tb-v2-p-4 tb-v2-bg-green-100 tb-v2-rounded-lg">
-            <p className="tb-v2-text-sm tb-v2-text-green-600 mb-1">Format: {detectedFormat}</p>
-            <p className="tb-v2-text-2xl tb-v2-font-bold tb-v2-text-green-800 tb-v2-break-all">
-              {scanResult}
-            </p>
+          <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl">
+            <p className="text-sm text-green-600 dark:text-green-400 mb-1">Format: {detectedFormat}</p>
+            <p className="text-2xl font-bold text-green-800 dark:text-green-200 break-all font-mono">{scanResult}</p>
           </div>
-        </div>
+        </>
       )}
 
-      <div className="tb-v2-card tb-v2-bg-gray-50">
-        <h3 className="tb-v2-text-lg tb-v2-font-semibold tb-v2-mb-2">Supported Formats</h3>
-        <ul className="tb-v2-text-sm tb-v2-space-y-1">
-          <li><strong>EAN-13:</strong> 13-digit product barcodes</li>
-          <li><strong>EAN-8:</strong> 8-digit product barcodes</li>
-          <li><strong>UPC-A:</strong> 12-digit US product barcodes</li>
-          <li><strong>Code 128:</strong> High-density alphanumeric</li>
-          <li><strong>Code 39:</strong> Alphanumeric for industrial use</li>
-          <li><strong>Codabar:</strong> Libraries, blood banks</li>
-        </ul>
-      </div>
+      {!image && (
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+          <div className="text-4xl mb-2">📸</div>
+          <p>Upload a barcode image to scan</p>
+        </div>
+      )}
     </div>
   );
 }
