@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -11,6 +11,10 @@ function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
         b: parseInt(result[3], 16),
       }
     : null;
+}
+
+function isValidHex(hex: string): boolean {
+  return /^#?[a-f\d]{6}$/i.test(hex);
 }
 
 function getLuminance(r: number, g: number, b: number): number {
@@ -41,13 +45,24 @@ function wcagCompliance(ratio: number): {
   };
 }
 
+const presetCombos = [
+  { fg: '#000000', bg: '#ffffff', name: 'Black on White' },
+  { fg: '#ffffff', bg: '#000000', name: 'White on Black' },
+  { fg: '#000000', bg: '#ffff00', name: 'Black on Yellow' },
+  { fg: '#ffffff', bg: '#0000ff', name: 'White on Blue' },
+  { fg: '#000000', bg: '#00ff00', name: 'Black on Green' },
+  { fg: '#ffffff', bg: '#ff0000', name: 'White on Red' },
+  { fg: '#333333', bg: '#f5f5f5', name: 'Dark Gray on Light' },
+  { fg: '#0066cc', bg: '#ffffff', name: 'Link Blue on White' },
+];
+
 export default function ColorContrastCheckerClient() {
   const [fgColor, setFgColor] = useState('#000000');
+  const [fgInput, setFgInput] = useState('#000000');
   const [bgColor, setBgColor] = useState('#ffffff');
+  const [bgInput, setBgInput] = useState('#ffffff');
   const [fgRgb, setFgRgb] = useState({ r: 0, g: 0, b: 0 });
   const [bgRgb, setBgRgb] = useState({ r: 255, g: 255, b: 255 });
-  const [fgLuminance, setFgLuminance] = useState(0);
-  const [bgLuminance, setBgLuminance] = useState(1);
   const [contrastRatio, setContrastRatio] = useState(21);
   const [compliance, setCompliance] = useState({
     aaLarge: true,
@@ -66,54 +81,63 @@ export default function ColorContrastCheckerClient() {
   useEffect(() => {
     const fgLum = getLuminance(fgRgb.r, fgRgb.g, fgRgb.b);
     const bgLum = getLuminance(bgRgb.r, bgRgb.g, bgRgb.b);
-    setFgLuminance(fgLum);
-    setBgLuminance(bgLum);
     const ratio = getContrastRatio(fgLum, bgLum);
     setContrastRatio(ratio);
     setCompliance(wcagCompliance(ratio));
   }, [fgRgb, bgRgb]);
 
-  const swapColors = () => {
-    const tempColor = fgColor;
-    setFgColor(bgColor);
-    setBgColor(tempColor);
+  const setFg = (value: string) => { setFgColor(value); setFgInput(value); };
+  const setBg = (value: string) => { setBgColor(value); setBgInput(value); };
+
+  const handleFgInput = (value: string) => {
+    setFgInput(value);
+    if (isValidHex(value)) setFgColor(value.startsWith('#') ? value : `#${value}`);
   };
 
-  const presetCombos = [
-    { fg: '#000000', bg: '#ffffff', name: 'Black on White' },
-    { fg: '#ffffff', bg: '#000000', name: 'White on Black' },
-    { fg: '#000000', bg: '#ffff00', name: 'Black on Yellow' },
-    { fg: '#ffffff', bg: '#0000ff', name: 'White on Blue' },
-    { fg: '#000000', bg: '#00ff00', name: 'Black on Green' },
-    { fg: '#ffffff', bg: '#ff0000', name: 'White on Red' },
-    { fg: '#333333', bg: '#f5f5f5', name: 'Dark Gray on Light' },
-    { fg: '#0066cc', bg: '#ffffff', name: 'Link Blue on White' },
-  ];
+  const handleBgInput = (value: string) => {
+    setBgInput(value);
+    if (isValidHex(value)) setBgColor(value.startsWith('#') ? value : `#${value}`);
+  };
+
+  const swapColors = () => {
+    const tempColor = fgColor;
+    setFg(bgColor);
+    setBg(tempColor);
+  };
+
+  const loadExample = () => {
+    setFg('#0066cc');
+    setBg('#ffffff');
+  };
 
   return (
-    <div className="tb-v2-card">
-      <div className="tb-v2-card-header">
-        <h2 className="tb-v2-card-title">Color Contrast Checker</h2>
-        <p className="tb-v2-card-description">
-          Check contrast ratio between two colors for WCAG accessibility compliance
-        </p>
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Color Contrast Checker</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
       </div>
+      <p style={{ fontSize: 13, color: 'var(--tb-text-secondary)' }}>
+        Check the contrast ratio between two colors for WCAG accessibility compliance.
+      </p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <div className="tb-v2-form-group">
-          <label className="tb-v2-label">Foreground Color</label>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label className="tb-v2-tool-label" style={{ marginBottom: 6, display: 'block' }}>Foreground Color</label>
           <div className="flex gap-3 items-center">
             <input
               type="color"
               value={fgColor}
-              onChange={(e) => setFgColor(e.target.value)}
-              className="tb-v2-input h-12 w-24 cursor-pointer rounded border"
+              onChange={(e) => setFg(e.target.value)}
+              style={{ height: 48, width: 96, cursor: 'pointer', borderRadius: 6, border: '1px solid var(--tb-border)' }}
             />
             <input
               type="text"
-              value={fgColor.toUpperCase()}
-              onChange={(e) => setFgColor(e.target.value)}
-              className="tb-v2-input flex-1 uppercase"
+              value={fgInput.toUpperCase()}
+              onChange={(e) => handleFgInput(e.target.value)}
+              className="tb-v2-input flex-1"
+              style={{ textTransform: 'uppercase' }}
               placeholder="#000000"
             />
           </div>
@@ -122,20 +146,21 @@ export default function ColorContrastCheckerClient() {
           </div>
         </div>
 
-        <div className="tb-v2-form-group">
-          <label className="tb-v2-label">Background Color</label>
+        <div>
+          <label className="tb-v2-tool-label" style={{ marginBottom: 6, display: 'block' }}>Background Color</label>
           <div className="flex gap-3 items-center">
             <input
               type="color"
               value={bgColor}
-              onChange={(e) => setBgColor(e.target.value)}
-              className="tb-v2-input h-12 w-24 cursor-pointer rounded border"
+              onChange={(e) => setBg(e.target.value)}
+              style={{ height: 48, width: 96, cursor: 'pointer', borderRadius: 6, border: '1px solid var(--tb-border)' }}
             />
             <input
               type="text"
-              value={bgColor.toUpperCase()}
-              onChange={(e) => setBgColor(e.target.value)}
-              className="tb-v2-input flex-1 uppercase"
+              value={bgInput.toUpperCase()}
+              onChange={(e) => handleBgInput(e.target.value)}
+              className="tb-v2-input flex-1"
+              style={{ textTransform: 'uppercase' }}
               placeholder="#FFFFFF"
             />
           </div>
@@ -145,16 +170,13 @@ export default function ColorContrastCheckerClient() {
         </div>
       </div>
 
-      <div className="flex justify-center mb-6">
-        <button
-          onClick={swapColors}
-          className="tb-v2-button-secondary"
-        >
-          ⇄ Swap Colors
+      <div className="flex justify-center">
+        <button type="button" onClick={swapColors} className="tb-v2-btn">
+          Swap Colors
         </button>
       </div>
 
-      <div className="tb-v2-card p-6 mb-6">
+      <div className="tb-v2-section">
         <div className="text-center mb-4">
           <div className="text-5xl font-bold mb-2">{contrastRatio.toFixed(2)}:1</div>
           <div className="text-sm text-gray-500">Contrast Ratio</div>
@@ -163,33 +185,33 @@ export default function ColorContrastCheckerClient() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className={`p-3 rounded text-center ${compliance.aaLarge ? 'bg-green-100' : 'bg-red-100'}`}>
             <div className={`text-lg font-bold ${compliance.aaLarge ? 'text-green-700' : 'text-red-700'}`}>
-              {compliance.aaLarge ? '✓ PASS' : '✗ FAIL'}
+              {compliance.aaLarge ? 'PASS' : 'FAIL'}
             </div>
             <div className="text-xs text-gray-600">AA Large Text</div>
           </div>
           <div className={`p-3 rounded text-center ${compliance.aaNormal ? 'bg-green-100' : 'bg-red-100'}`}>
             <div className={`text-lg font-bold ${compliance.aaNormal ? 'text-green-700' : 'text-red-700'}`}>
-              {compliance.aaNormal ? '✓ PASS' : '✗ FAIL'}
+              {compliance.aaNormal ? 'PASS' : 'FAIL'}
             </div>
             <div className="text-xs text-gray-600">AA Normal Text</div>
           </div>
           <div className={`p-3 rounded text-center ${compliance.aaaLarge ? 'bg-green-100' : 'bg-red-100'}`}>
             <div className={`text-lg font-bold ${compliance.aaaLarge ? 'text-green-700' : 'text-red-700'}`}>
-              {compliance.aaaLarge ? '✓ PASS' : '✗ FAIL'}
+              {compliance.aaaLarge ? 'PASS' : 'FAIL'}
             </div>
             <div className="text-xs text-gray-600">AAA Large Text</div>
           </div>
           <div className={`p-3 rounded text-center ${compliance.aaaNormal ? 'bg-green-100' : 'bg-red-100'}`}>
             <div className={`text-lg font-bold ${compliance.aaaNormal ? 'text-green-700' : 'text-red-700'}`}>
-              {compliance.aaaNormal ? '✓ PASS' : '✗ FAIL'}
+              {compliance.aaaNormal ? 'PASS' : 'FAIL'}
             </div>
             <div className="text-xs text-gray-600">AAA Normal Text</div>
           </div>
         </div>
       </div>
 
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">Preview</div>
+      <div className="tb-v2-section">
+        <h3 className="tb-v2-section-title">Preview</h3>
         <div
           className="p-6 rounded-lg"
           style={{ backgroundColor: bgColor }}
@@ -204,6 +226,7 @@ export default function ColorContrastCheckerClient() {
             Large Text (20px Bold) - The quick brown fox
           </p>
           <button
+            type="button"
             className="mt-4 px-4 py-2 rounded font-medium"
             style={{ backgroundColor: fgColor, color: bgColor }}
           >
@@ -212,8 +235,8 @@ export default function ColorContrastCheckerClient() {
         </div>
       </div>
 
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">Preset Combinations</div>
+      <div className="tb-v2-section">
+        <h3 className="tb-v2-section-title">Preset Combinations</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           {presetCombos.map((combo) => {
             const fgRgbLocal = hexToRgb(combo.fg)!;
@@ -225,10 +248,8 @@ export default function ColorContrastCheckerClient() {
             return (
               <button
                 key={combo.name}
-                onClick={() => {
-                  setFgColor(combo.fg);
-                  setBgColor(combo.bg);
-                }}
+                type="button"
+                onClick={() => { setFg(combo.fg); setBg(combo.bg); }}
                 className="p-2 rounded border text-left hover:bg-gray-50"
                 style={{
                   backgroundColor: combo.bg,
@@ -251,8 +272,8 @@ export default function ColorContrastCheckerClient() {
         </div>
       </div>
 
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">WCAG Requirements</div>
+      <div className="tb-v2-section">
+        <h3 className="tb-v2-section-title">WCAG Requirements</h3>
         <div className="text-sm space-y-1">
           <p><strong>AA Normal Text:</strong> 4.5:1 minimum</p>
           <p><strong>AA Large Text:</strong> 3:1 minimum (18pt+ or 14pt+ bold)</p>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 function getLuminance(hex: string): number {
   const rgb = parseInt(hex.replace('#', ''), 16);
@@ -19,77 +19,114 @@ function getContrastRatio(hex1: string, hex2: string): number {
   return (lighter + 0.05) / (darker + 0.05);
 }
 
+function isValidHex(hex: string): boolean {
+  return /^#?[a-f\d]{6}$/i.test(hex);
+}
+
 export default function ColorContrastRatioCheckerClient() {
   const [fg, setFg] = useState('#000000');
+  const [fgInput, setFgInput] = useState('#000000');
   const [bg, setBg] = useState('#ffffff');
+  const [bgInput, setBgInput] = useState('#ffffff');
   const [ratio, setRatio] = useState(21);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     setRatio(Math.round(getContrastRatio(fg, bg) * 100) / 100);
   }, [fg, bg]);
 
-  const copyRatio = () => navigator.clipboard.writeText(`${ratio}:1`);
+  const handleFgInput = (value: string) => {
+    setFgInput(value);
+    if (isValidHex(value)) setFg(value.startsWith('#') ? value : `#${value}`);
+  };
+
+  const handleBgInput = (value: string) => {
+    setBgInput(value);
+    if (isValidHex(value)) setBg(value.startsWith('#') ? value : `#${value}`);
+  };
+
+  const loadExample = () => {
+    setFg('#222222'); setFgInput('#222222');
+    setBg('#f5f5f5'); setBgInput('#f5f5f5');
+  };
+
+  const copyRatio = () => {
+    navigator.clipboard.writeText(`${ratio}:1`).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Color Contrast Ratio Checker</h1>
-
-      <div className="grid grid-cols-2 gap-6 mb-6">
-        <div>
-          <label className="block text-sm font-medium mb-1">Foreground</label>
-          <div className="tb-v2-mode-tabs">
-            <input
-              type="color"
-              value={fg}
-              onChange={(e) => setFg(e.target.value)}
-              className="w-12 h-10 rounded cursor-pointer"
-            />
-            <input
-              type="text"
-              value={fg}
-              onChange={(e) => setFg(e.target.value)}
-              className="flex-1 p-2 border rounded font-mono"
-            />
-          </div>
-        </div>
-        <div>
-          <label className="block text-sm font-medium mb-1">Background</label>
-          <div className="tb-v2-mode-tabs">
-            <input
-              type="color"
-              value={bg}
-              onChange={(e) => setBg(e.target.value)}
-              className="w-12 h-10 rounded cursor-pointer"
-            />
-            <input
-              type="text"
-              value={bg}
-              onChange={(e) => setBg(e.target.value)}
-              className="flex-1 p-2 border rounded font-mono"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="mb-6 p-8 rounded-lg text-center text-3xl font-bold" style={{ backgroundColor: bg, color: fg }}>
-        Sample Text Preview
-      </div>
-
-      <div className="text-center mb-6">
-        <div className="text-5xl font-bold mb-2">{ratio}:1</div>
-        <button onClick={copyRatio} className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-sm">
-          Copy ratio
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Color Contrast Ratio Checker</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
         </button>
       </div>
 
-      <div className="grid grid-cols-3 gap-3 text-center">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label className="tb-v2-tool-label" style={{ marginBottom: 6, display: 'block' }}>Foreground</label>
+          <div className="flex items-center gap-2">
+            <input
+              type="color"
+              value={fg}
+              onChange={(e) => { setFg(e.target.value); setFgInput(e.target.value); }}
+              style={{ height: 40, width: 48, cursor: 'pointer', borderRadius: 6, border: '1px solid var(--tb-border)' }}
+            />
+            <input
+              type="text"
+              value={fgInput}
+              onChange={(e) => handleFgInput(e.target.value)}
+              className="tb-v2-input flex-1"
+              style={{ fontFamily: 'var(--f-mono)' }}
+            />
+          </div>
+        </div>
+        <div>
+          <label className="tb-v2-tool-label" style={{ marginBottom: 6, display: 'block' }}>Background</label>
+          <div className="flex items-center gap-2">
+            <input
+              type="color"
+              value={bg}
+              onChange={(e) => { setBg(e.target.value); setBgInput(e.target.value); }}
+              style={{ height: 40, width: 48, cursor: 'pointer', borderRadius: 6, border: '1px solid var(--tb-border)' }}
+            />
+            <input
+              type="text"
+              value={bgInput}
+              onChange={(e) => handleBgInput(e.target.value)}
+              className="tb-v2-input flex-1"
+              style={{ fontFamily: 'var(--f-mono)' }}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="p-8 rounded-lg text-center text-3xl font-bold" style={{ backgroundColor: bg, color: fg }}>
+        Sample Text Preview
+      </div>
+
+      <div className="text-center">
+        <div className="text-5xl font-bold mb-2">{ratio}:1</div>
+        <button
+          type="button"
+          onClick={copyRatio}
+          className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+        >
+          {copied ? 'Copied' : 'Copy ratio'}
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-center">
         {[
           { label: 'AA Normal Text', pass: ratio >= 4.5, req: '4.5:1' },
           { label: 'AA Large Text', pass: ratio >= 3, req: '3:1' },
           { label: 'AAA Normal Text', pass: ratio >= 7, req: '7:1' },
         ].map(({ label, pass, req }) => (
           <div key={label} className={`p-4 rounded border ${pass ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'}`}>
-            <div className="text-xl font-bold">{pass ? '✓ PASS' : '✗ FAIL'}</div>
+            <div className="text-xl font-bold">{pass ? 'PASS' : 'FAIL'}</div>
             <div className="text-sm">{label}</div>
             <div className="text-xs text-gray-500">Min: {req}</div>
           </div>

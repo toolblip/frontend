@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 interface ContrastResult {
   color: string;
@@ -9,6 +9,10 @@ interface ContrastResult {
   aaa: boolean;
   aaLarge: boolean;
   aaaLarge: boolean;
+}
+
+function isValidHex(hex: string): boolean {
+  return /^#?[a-f\d]{6}$/i.test(hex);
 }
 
 function getLuminance(hex: string): number {
@@ -28,26 +32,40 @@ function getContrastRatio(hex1: string, hex2: string): number {
   return (lighter + 0.05) / (darker + 0.05);
 }
 
-function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? {
-    r: parseInt(result[1], 16),
-    g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16)
-  } : null;
-}
-
 export default function ColorContrastAuditorClient() {
   const [fg, setFg] = useState('#000000');
+  const [fgInput, setFgInput] = useState('#000000');
   const [bg, setBg] = useState('#ffffff');
+  const [bgInput, setBgInput] = useState('#ffffff');
   const [results, setResults] = useState<ContrastResult[]>([]);
   const [auditText, setAuditText] = useState('');
+  const [audited, setAudited] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleFgInput = (value: string) => {
+    setFgInput(value);
+    if (isValidHex(value)) setFg(value.startsWith('#') ? value : `#${value}`);
+  };
+
+  const handleBgInput = (value: string) => {
+    setBgInput(value);
+    if (isValidHex(value)) setBg(value.startsWith('#') ? value : `#${value}`);
+  };
 
   const ratio = getContrastRatio(fg, bg);
   const aa = ratio >= 4.5;
   const aaa = ratio >= 7;
   const aaLarge = ratio >= 3;
-  const aaaLarge = ratio >= 4.5;
+
+  const loadExample = () => {
+    setFg('#333333');
+    setFgInput('#333333');
+    setBg('#f5f5f5');
+    setBgInput('#f5f5f5');
+    setAuditText('#ff0000\n#00aa00\n#0000ff\n#888888');
+    setResults([]);
+    setAudited(false);
+  };
 
   const auditColors = () => {
     const lines = auditText.split('\n').filter(l => l.trim());
@@ -70,104 +88,126 @@ export default function ColorContrastAuditorClient() {
       }
     }
     setResults(parsed);
+    setAudited(true);
   };
 
   const copyResults = () => {
+    if (!results.length) return;
     const text = results.map(r =>
-      `${r.color} (${r.ratio}:1) AA:${r.aa ? '✓' : '✗'} AAA:${r.aaa ? '✓' : '✗'}`
+      `${r.color} (${r.ratio}:1) AA:${r.aa ? 'pass' : 'fail'} AAA:${r.aaa ? 'pass' : 'fail'}`
     ).join('\n');
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(text).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Color Contrast Auditor</h1>
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Color Contrast Auditor</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
+      </div>
 
-      <div className="grid grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
-          <label className="block text-sm font-medium mb-1">Foreground Color</label>
-          <div className="tb-v2-mode-tabs">
+          <label className="tb-v2-tool-label" style={{ marginBottom: 6, display: 'block' }}>Foreground Color</label>
+          <div className="flex items-center gap-2">
             <input
               type="color"
               value={fg}
-              onChange={(e) => setFg(e.target.value)}
+              onChange={(e) => { setFg(e.target.value); setFgInput(e.target.value); }}
               className="w-12 h-10 rounded cursor-pointer"
             />
             <input
               type="text"
-              value={fg}
-              onChange={(e) => setFg(e.target.value)}
-              className="flex-1 p-2 border rounded font-mono"
+              value={fgInput}
+              onChange={(e) => handleFgInput(e.target.value)}
+              className="tb-v2-input flex-1"
+              style={{ fontFamily: 'var(--f-mono)' }}
               placeholder="#000000"
             />
           </div>
         </div>
         <div>
-          <label className="block text-sm font-medium mb-1">Background Color</label>
-          <div className="tb-v2-mode-tabs">
+          <label className="tb-v2-tool-label" style={{ marginBottom: 6, display: 'block' }}>Background Color</label>
+          <div className="flex items-center gap-2">
             <input
               type="color"
               value={bg}
-              onChange={(e) => setBg(e.target.value)}
+              onChange={(e) => { setBg(e.target.value); setBgInput(e.target.value); }}
               className="w-12 h-10 rounded cursor-pointer"
             />
             <input
               type="text"
-              value={bg}
-              onChange={(e) => setBg(e.target.value)}
-              className="flex-1 p-2 border rounded font-mono"
+              value={bgInput}
+              onChange={(e) => handleBgInput(e.target.value)}
+              className="tb-v2-input flex-1"
+              style={{ fontFamily: 'var(--f-mono)' }}
               placeholder="#ffffff"
             />
           </div>
         </div>
       </div>
 
-      <div className="mb-6 p-6 rounded border" style={{ backgroundColor: bg, color: fg }}>
+      <div className="p-6 rounded border" style={{ backgroundColor: bg, color: fg }}>
         <p className="text-lg">Sample Text (WCAG 2.1 Contrast Check)</p>
         <p className="text-sm mt-1">Smaller text for body copy</p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 text-center">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
         <div className={`p-3 rounded ${aa ? 'bg-green-100' : 'bg-red-100'}`}>
           <div className="text-2xl font-bold">{ratio.toFixed(2)}:1</div>
           <div className="text-sm">Contrast Ratio</div>
         </div>
         <div className={`p-3 rounded ${aa ? 'bg-green-100' : 'bg-red-100'}`}>
-          <div className="text-2xl font-bold">{aa ? '✓' : '✗'}</div>
+          <div className="text-2xl font-bold">{aa ? 'Pass' : 'Fail'}</div>
           <div className="text-sm">AA Normal</div>
         </div>
         <div className={`p-3 rounded ${aaa ? 'bg-green-100' : 'bg-red-100'}`}>
-          <div className="text-2xl font-bold">{aaa ? '✓' : '✗'}</div>
+          <div className="text-2xl font-bold">{aaa ? 'Pass' : 'Fail'}</div>
           <div className="text-sm">AAA Normal</div>
         </div>
         <div className={`p-3 rounded ${aaLarge ? 'bg-green-100' : 'bg-red-100'}`}>
-          <div className="text-2xl font-bold">{aaLarge ? '✓' : '✗'}</div>
+          <div className="text-2xl font-bold">{aaLarge ? 'Pass' : 'Fail'}</div>
           <div className="text-sm">AA Large</div>
         </div>
       </div>
 
-      <div className="border-t pt-6">
-        <h2 className="text-lg font-semibold mb-3">Batch Audit</h2>
-        <p className="text-sm text-gray-600 mb-2">Enter colors (one per line) to check against background:</p>
+      <div className="tb-v2-section">
+        <h3 className="tb-v2-section-title">Batch Audit</h3>
+        <p style={{ fontSize: 13, color: 'var(--tb-text-secondary)', marginBottom: 8 }}>
+          Enter colors (one per line) to check against the background color above:
+        </p>
         <textarea
           value={auditText}
           onChange={(e) => setAuditText(e.target.value)}
-          className="w-full h-32 p-3 border rounded font-mono text-sm mb-3"
-          placeholder="#ff0000&#10;#00ff00&#10;#0000ff"
+          className="tb-v2-tool-textarea"
+          style={{ height: 128, fontFamily: 'var(--f-mono)', marginBottom: 12 }}
+          placeholder={'#ff0000\n#00ff00\n#0000ff'}
         />
-        <button onClick={auditColors} className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 mb-4">
+        <button type="button" onClick={auditColors} className="tb-v2-btn tb-v2-btn-primary" style={{ marginBottom: 16 }}>
           Audit Colors
         </button>
 
-        {results.length > 0 && (
+        {!audited ? (
+          <p className="tb-v2-empty">Enter colors above, then audit to check them against the background color.</p>
+        ) : results.length === 0 ? (
+          <p className="tb-v2-empty">No valid hex colors found. Enter one 3- or 6-digit hex color per line.</p>
+        ) : (
           <div>
-            <div className="flex justify-between items-center mb-2">
-              <span className="text-sm font-medium">{results.length} colors audited</span>
-              <button onClick={copyResults} className="px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300">
-                Copy
+            <div className="tb-v2-tool-output-head">
+              <span className="tb-v2-tool-label">{results.length} colors audited</span>
+              <button
+                type="button"
+                onClick={copyResults}
+                className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+              >
+                {copied ? 'Copied' : 'Copy'}
               </button>
             </div>
-            <div className="space-y-2">
+            <div className="flex flex-col gap-2" style={{ marginTop: 8 }}>
               {results.map((r, i) => (
                 <div key={i} className="flex items-center justify-between p-3 bg-gray-50 rounded">
                   <div className="flex items-center gap-3">
@@ -175,8 +215,8 @@ export default function ColorContrastAuditorClient() {
                     <span className="font-mono text-sm">{r.color}</span>
                   </div>
                   <div className="flex gap-4 text-sm">
-                    <span className={r.aa ? 'text-green-600' : 'text-red-600'}>AA {r.aa ? '✓' : '✗'}</span>
-                    <span className={r.aaa ? 'text-green-600' : 'text-red-600'}>AAA {r.aaa ? '✓' : '✗'}</span>
+                    <span className={r.aa ? 'text-green-600' : 'text-red-600'}>AA {r.aa ? 'pass' : 'fail'}</span>
+                    <span className={r.aaa ? 'text-green-600' : 'text-red-600'}>AAA {r.aaa ? 'pass' : 'fail'}</span>
                     <span className="font-medium">{r.ratio}:1</span>
                   </div>
                 </div>

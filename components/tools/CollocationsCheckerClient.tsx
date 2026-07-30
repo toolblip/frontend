@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const COMMON_COLLOCATIONS: Record<string, string[]> = {
   'make': ['make a decision', 'make a mistake', 'make money', 'make progress', 'make sure', 'make a call', 'make an effort', 'make a plan'],
@@ -26,6 +26,8 @@ const COMMON_COLLOCATIONS: Record<string, string[]> = {
 export default function CollocationsCheckerClient() {
   const [text, setText] = useState('');
   const [results, setResults] = useState<Array<{ phrase: string; type: string; suggestion?: string }>>([]);
+  const [checked, setChecked] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const checkCollocations = () => {
     const words = text.toLowerCase().split(/\s+/);
@@ -55,53 +57,77 @@ export default function CollocationsCheckerClient() {
     }
 
     setResults(found);
+    setChecked(true);
+  };
+
+  const loadExample = () => {
+    setText('I need to make a decision soon, but first let me take a break and think about it. I want to do a good job and have confidence in my choice.');
+    setResults([]);
+    setChecked(false);
   };
 
   const copyResults = () => {
-    const text = results.map(r =>
-      r.type === 'found' ? `✓ ${r.phrase}` : `? ${r.phrase}${r.suggestion ? ` (did you mean: ${r.suggestion})` : ''}`
+    if (!results.length) return;
+    const output = results.map(r =>
+      r.type === 'found' ? `check: ${r.phrase}` : `maybe: ${r.phrase}${r.suggestion ? ` (did you mean: ${r.suggestion})` : ''}`
     ).join('\n');
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(output).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Collocations Checker</h1>
-      <p className="text-sm text-gray-600 mb-4">
-        Common collocations in English are word pairings that sound natural together.
-        Enter text below and we&apos;ll highlight any common collocations we find.
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Collocations Checker</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
+      </div>
+
+      <p style={{ fontSize: 13, color: 'var(--tb-text-secondary)' }}>
+        Common collocations in English are word pairings that sound natural together. Enter text below and we&apos;ll highlight any common collocations we find.
       </p>
 
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Enter Text</label>
+      <div>
+        <label className="tb-v2-tool-label" style={{ marginBottom: 6, display: 'block' }}>Enter Text</label>
         <textarea
           value={text}
-          onChange={(e) => setText(e.target.value)}
-          className="w-full h-40 p-3 border rounded resize-y"
+          onChange={(e) => { setText(e.target.value); setChecked(false); }}
+          className="tb-v2-tool-textarea"
+          style={{ height: 160 }}
           placeholder="Type or paste text to check for collocations..."
         />
       </div>
 
       <button
+        type="button"
         onClick={checkCollocations}
         disabled={!text.trim()}
-        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+        className="tb-v2-btn tb-v2-btn-primary"
+        style={{ alignSelf: 'flex-start' }}
       >
         Check Collocations
       </button>
 
-      {results.length > 0 && (
-        <div className="mt-6">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium">Found {results.length} collocations</span>
-            <button onClick={copyResults} className="px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300">
-              Copy
+      {!checked ? (
+        <p className="tb-v2-empty">Enter text above, then check to see the collocations we find.</p>
+      ) : results.length > 0 ? (
+        <div>
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">Found {results.length} collocations</span>
+            <button
+              type="button"
+              onClick={copyResults}
+              className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+            >
+              {copied ? 'Copied' : 'Copy'}
             </button>
           </div>
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2" style={{ marginTop: 8 }}>
             {results.map((r, i) => (
               <div key={i} className={`p-3 rounded border ${r.type === 'found' ? 'bg-green-50 border-green-200' : 'bg-yellow-50 border-yellow-200'}`}>
-                <span className="font-medium">{r.type === 'found' ? '✓' : '?'} {r.phrase}</span>
+                <span className="font-medium">{r.type === 'found' ? 'Match:' : 'Maybe:'} {r.phrase}</span>
                 {r.suggestion && (
                   <span className="text-sm text-gray-600 ml-2">
                     Did you mean: <span className="font-medium">{r.suggestion}</span>?
@@ -111,12 +137,10 @@ export default function CollocationsCheckerClient() {
             ))}
           </div>
         </div>
-      )}
-
-      {text && results.length === 0 && (
-        <div className="mt-6 p-4 bg-gray-50 rounded border text-gray-600">
+      ) : (
+        <p className="tb-v2-empty">
           No common collocations detected. Try using verbs like &quot;make&quot;, &quot;take&quot;, &quot;do&quot;, &quot;get&quot;, &quot;have&quot;, &quot;break&quot;, &quot;come&quot; followed by nouns.
-        </div>
+        </p>
       )}
     </div>
   );

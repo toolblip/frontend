@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 interface EmailFields {
   recipient: string;
@@ -22,15 +22,10 @@ export default function ColdEmailWriterClient() {
   });
   const [generated, setGenerated] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const generate = () => {
     setIsGenerating(true);
-    const hooks: Record<string, string[]> = {
-      formal: ['I hope this message finds you well.', 'I am reaching out regarding', 'I wanted to introduce you to'],
-      friendly: ['I came across your work and', 'I think you might find this interesting because', 'Quick question for you  - '],
-      casual: ['Hope you don\'t mind me reaching out! I', 'Been following your work and', 'Wanted to throw an idea your way  - '],
-      persuasive: ['I know you\'re busy, but', 'What if I told you', 'Imagine if'],
-    };
 
     const bodyTemplates: Record<string, string[]> = {
       formal: [
@@ -59,10 +54,10 @@ Wanna grab a quick coffee (virtual or real) and chat about it?
 Let me know what works for you!`,
         `${fields.goal} is something I think you might be interested in. ${fields.product && `We've built ${fields.product}`} specifically for people tackling challenges like yours.
 
-Would love to get your thoughts  -  even a 15-min call would be great!`,
+Would love to get your thoughts - even a 15-min call would be great!`,
       ],
       casual: [
-        `Been meaning to reach out about ${fields.goal}  -  ${fields.product && `we just launched ${fields.product} and`} thought you might vibe with it.
+        `Been meaning to reach out about ${fields.goal} - ${fields.product && `we just launched ${fields.product} and`} thought you might vibe with it.
 
 No pressure at all, but if you're ever curious, I'd love to show you what we've been building.
 
@@ -74,32 +69,30 @@ Got 15 mins for a quick chat sometime? I'd love to hear what you're working on t
       persuasive: [
         `What if you could ${fields.goal} without the usual headache?
 
-${fields.product && `That's exactly what ${fields.product} does  -  it's designed to`} eliminate the friction you're probably dealing with.
+${fields.product && `That's exactly what ${fields.product} does - it's designed to`} eliminate the friction you're probably dealing with.
 
 I've shown this to other ${fields.recipient || 'professionals'} and they've seen results within weeks.
 
-Are you available for a 20-min call this week? I'd love to show you exactly how it works.
-
-${fields.cta ? `P.S. ${fields.cta}` : ''}`,
+Are you available for a 20-min call this week? I'd love to show you exactly how it works.`,
       ],
     };
 
-    const hook = hooks[fields.tone][Math.floor(Math.random() * hooks[fields.tone].length)];
     const bodies = bodyTemplates[fields.tone];
     const body = bodies[Math.floor(Math.random() * bodies.length)];
 
     const subjectLine = fields.subject || (
       fields.tone === 'casual' ? `Quick thought on ${fields.goal.split(' ').slice(0, 3).join(' ')}` :
-      fields.tone === 'friendly' ? `${fields.goal.split(' ').slice(0, 4).join(' ')}  -  thoughts?` :
+      fields.tone === 'friendly' ? `${fields.goal.split(' ').slice(0, 4).join(' ')} - thoughts?` :
       `Regarding ${fields.goal.split(' ').slice(0, 5).join(' ')}`
     );
 
+    const greeting = fields.recipient ? `Hi ${fields.recipient},` : 'Hi there,';
+
     const email = `Subject: ${subjectLine}
 
-${hook},
+${greeting}
 
 ${body}
-
 ${fields.cta ? `\n${fields.cta}` : ''}`;
 
     setTimeout(() => {
@@ -108,98 +101,132 @@ ${fields.cta ? `\n${fields.cta}` : ''}`;
     }, 500);
   };
 
-  const copyEmail = () => navigator.clipboard.writeText(generated);
+  const copyEmail = () => {
+    if (!generated) return;
+    navigator.clipboard.writeText(generated).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
+  const loadExample = () => {
+    setFields({
+      recipient: 'Marketing Managers',
+      subject: '',
+      goal: 'getting a demo call scheduled',
+      product: 'an AI-powered analytics platform',
+      tone: 'friendly',
+      cta: 'First 3 people get a free audit',
+    });
+    setGenerated('');
+  };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Cold Email Writer</h1>
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Cold Email Writer</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
+      </div>
 
-      <div className="space-y-4 mb-6">
+      <div className="flex flex-col gap-4">
         <div>
-          <label className="block text-sm font-medium mb-1">Recipient Name/Role</label>
+          <label className="tb-v2-tool-label" style={{ marginBottom: 6, display: 'block' }}>Recipient Name/Role</label>
           <input
             type="text"
             value={fields.recipient}
             onChange={(e) => setFields({ ...fields, recipient: e.target.value })}
-            className="w-full p-2 border rounded"
+            className="tb-v2-input"
             placeholder="e.g., Marketing Managers"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Subject Line (optional  -  auto-generates if empty)</label>
+          <label className="tb-v2-tool-label" style={{ marginBottom: 6, display: 'block' }}>Subject Line (optional - auto-generates if empty)</label>
           <input
             type="text"
             value={fields.subject}
             onChange={(e) => setFields({ ...fields, subject: e.target.value })}
-            className="w-full p-2 border rounded"
+            className="tb-v2-input"
             placeholder="Leave empty for auto-generated subject"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Goal of the Email</label>
+          <label className="tb-v2-tool-label" style={{ marginBottom: 6, display: 'block' }}>Goal of the Email</label>
           <input
             type="text"
             value={fields.goal}
             onChange={(e) => setFields({ ...fields, goal: e.target.value })}
-            className="w-full p-2 border rounded"
+            className="tb-v2-input"
             placeholder="e.g., getting a demo call scheduled"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Product/Service (optional)</label>
+          <label className="tb-v2-tool-label" style={{ marginBottom: 6, display: 'block' }}>Product/Service (optional)</label>
           <input
             type="text"
             value={fields.product}
             onChange={(e) => setFields({ ...fields, product: e.target.value })}
-            className="w-full p-2 border rounded"
+            className="tb-v2-input"
             placeholder="e.g., an AI-powered analytics platform"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Tone</label>
-          <div className="flex gap-4">
+          <label className="tb-v2-tool-label" style={{ marginBottom: 6, display: 'block' }}>Tone</label>
+          <div className="tb-v2-mode-tabs">
             {(['formal', 'friendly', 'casual', 'persuasive'] as const).map(t => (
-              <label key={t} className="flex items-center gap-2">
-                <input type="radio" checked={fields.tone === t} onChange={() => setFields({ ...fields, tone: t })} />
+              <button
+                key={t}
+                type="button"
+                onClick={() => setFields({ ...fields, tone: t })}
+                className={`tb-v2-mode-tab ${fields.tone === t ? 'on' : ''}`}
+              >
                 {t.charAt(0).toUpperCase() + t.slice(1)}
-              </label>
+              </button>
             ))}
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Call to Action / P.S. (optional)</label>
+          <label className="tb-v2-tool-label" style={{ marginBottom: 6, display: 'block' }}>Call to Action / P.S. (optional)</label>
           <input
             type="text"
             value={fields.cta}
             onChange={(e) => setFields({ ...fields, cta: e.target.value })}
-            className="w-full p-2 border rounded"
+            className="tb-v2-input"
             placeholder="e.g., First 3 people get a free audit"
           />
         </div>
       </div>
 
       <button
+        type="button"
         onClick={generate}
         disabled={isGenerating || !fields.goal}
-        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+        className="tb-v2-btn tb-v2-btn-primary"
+        style={{ alignSelf: 'flex-start' }}
       >
         {isGenerating ? 'Generating...' : 'Generate Email'}
       </button>
 
-      {generated && (
-        <div className="mt-6">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm font-medium">Generated Email</span>
-            <button onClick={copyEmail} className="px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300">
-              Copy
+      {!generated ? (
+        <p className="tb-v2-empty">Fill in the goal and other details above, then generate to see your email here.</p>
+      ) : (
+        <div className="relative">
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">Generated Email</span>
+            <button
+              type="button"
+              onClick={copyEmail}
+              className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+            >
+              {copied ? 'Copied' : 'Copy'}
             </button>
           </div>
-          <pre className="bg-gray-50 border p-4 rounded whitespace-pre-wrap text-sm">
+          <pre className="tb-v2-tool-output-body" style={{ whiteSpace: 'pre-wrap' }}>
             {generated}
           </pre>
         </div>

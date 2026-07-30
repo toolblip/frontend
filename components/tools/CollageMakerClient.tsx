@@ -21,34 +21,39 @@ export default function CollageMakerClient() {
   const [spacing, setSpacing] = useState(10);
   const [bgColor, setBgColor] = useState('#ffffff');
   const [processedImage, setProcessedImage] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const loadFiles = (fileList: FileList | File[]) => {
+    const maxSlots = layoutConfigs[layout].cols * layoutConfigs[layout].rows;
+    const filesToLoad = Array.from(fileList).filter(f => f.type.startsWith('image/')).slice(0, maxSlots);
+    if (filesToLoad.length === 0) return;
+
+    const newImages: string[] = new Array(filesToLoad.length);
+    let loadedCount = 0;
+    filesToLoad.forEach((file, idx) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        newImages[idx] = event.target?.result as string;
+        loadedCount++;
+        if (loadedCount === filesToLoad.length) {
+          setImages(newImages);
+          setProcessedImage(null);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files) {
-      const maxSlots = layoutConfigs[layout].cols * layoutConfigs[layout].rows;
-      const newImages: string[] = [];
-      let filesToLoad = Array.from(files);
-      
-      if (filesToLoad.length > maxSlots) {
-        filesToLoad = filesToLoad.slice(0, maxSlots);
-      }
-      
-      let loadedCount = 0;
-      filesToLoad.forEach((file) => {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          newImages.push(event.target?.result as string);
-          loadedCount++;
-          if (loadedCount === filesToLoad.length) {
-            setImages(newImages);
-            setProcessedImage(null);
-          }
-        };
-        reader.readAsDataURL(file);
-      });
-    }
+    if (e.target.files) loadFiles(e.target.files);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files) loadFiles(e.dataTransfer.files);
   };
 
   const removeImage = (index: number) => {
@@ -90,13 +95,13 @@ export default function CollageMakerClient() {
             const row = Math.floor(i / cols);
             const x = col * (cellWidth + gap);
             const y = row * (cellHeight + gap);
-            
+
             const scale = Math.min(cellWidth / loadedImages[i].width, cellHeight / loadedImages[i].height);
             const scaledWidth = loadedImages[i].width * scale;
             const scaledHeight = loadedImages[i].height * scale;
             const offsetX = x + (cellWidth - scaledWidth) / 2;
             const offsetY = y + (cellHeight - scaledHeight) / 2;
-            
+
             ctx.drawImage(loadedImages[i], offsetX, offsetY, scaledWidth, scaledHeight);
           }
           setProcessedImage(canvas.toDataURL('image/png'));
@@ -121,32 +126,48 @@ export default function CollageMakerClient() {
   };
 
   return (
-    <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-4 tb-v2-p-4">
-      <h2 className="tb-v2-text-2xl tb-v2-font-bold">Collage Maker</h2>
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Collage Maker</span>
+      </div>
 
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        multiple
-        onChange={handleImageUpload}
-        className="tb-v2-file-input"
-      />
-
-      <div className="tb-v2-flex tb-v2-gap-2 tb-v2-flex-wrap">
+      <div className="tb-v2-mode-tabs" style={{ flexWrap: 'wrap' }}>
         {(Object.keys(layoutConfigs) as LayoutType[]).map((l) => (
           <button
             key={l}
+            type="button"
             onClick={() => handleLayoutChange(l)}
-            className={`tb-v2-btn ${layout === l ? 'tb-v2-btn-primary' : 'tb-v2-btn-secondary'}`}
+            className={`tb-v2-mode-tab ${layout === l ? 'on' : ''}`}
           >
             {l}
           </button>
         ))}
       </div>
 
-      <div className="tb-v2-flex tb-v2-items-center tb-v2-gap-4">
-        <label className="tb-v2-text-sm tb-v2-font-medium">Spacing: {spacing}px</label>
+      <div
+        className={`tb-v2-dropzone ${isDragging ? 'dragging' : ''}`}
+        onClick={() => fileInputRef.current?.click()}
+        onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+        onDragLeave={() => setIsDragging(false)}
+        onDrop={handleDrop}
+      >
+        <span style={{ fontSize: 28 }}>🖼️</span>
+        <span className="tb-v2-dropzone-text">Click or drag images here</span>
+        <span className="tb-v2-dropzone-hint">
+          Up to {layoutConfigs[layout].cols * layoutConfigs[layout].rows} images for the {layout} layout
+        </span>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={handleImageUpload}
+          style={{ display: 'none' }}
+        />
+      </div>
+
+      <div className="tb-v2-range-row">
+        <label className="tb-v2-tool-label">Spacing</label>
         <input
           type="range"
           min="0"
@@ -155,55 +176,61 @@ export default function CollageMakerClient() {
           onChange={(e) => setSpacing(Number(e.target.value))}
           className="tb-v2-range"
         />
+        <span className="tb-v2-range-val">{spacing}px</span>
       </div>
 
-      <div className="tb-v2-flex tb-v2-items-center tb-v2-gap-4">
-        <label className="tb-v2-text-sm tb-v2-font-medium">Background:</label>
+      <div className="flex items-center gap-4">
+        <label className="tb-v2-tool-label">Background</label>
         <input
           type="color"
           value={bgColor}
           onChange={(e) => setBgColor(e.target.value)}
-          className="tb-v2-w-10 tb-v2-h-10 tb-v2-rounded"
+          style={{ width: 40, height: 40, borderRadius: 6, border: '1px solid var(--line)' }}
         />
       </div>
 
-      {images.length > 0 && (
+      {images.length === 0 ? (
+        <p className="tb-v2-empty">Upload images above to start building your collage.</p>
+      ) : (
         <>
-          <div className="tb-v2-flex tb-v2-gap-2 tb-v2-flex-wrap">
+          <div className="flex gap-2 flex-wrap">
             {images.map((img, idx) => (
-              <div key={idx} className="tb-v2-relative">
-                <img src={img} alt={`Image ${idx + 1}`} className="tb-v2-w-20 tb-v2-h-20 tb-v2-object-cover tb-v2-rounded" />
+              <div key={idx} className="relative">
+                <img src={img} alt={`Image ${idx + 1}`} className="w-20 h-20 object-cover rounded" />
                 <button
+                  type="button"
                   onClick={() => removeImage(idx)}
-                  className="tb-v2-absolute tb-v2-top-0 tb-v2-right-0 tb-v2-bg-red-500 tb-v2-text-white tb-v2-rounded-full tb-v2-w-5 tb-v2-h-5 tb-v2-flex tb-v2-items-center tb-v2-justify-center tb-v2-text-xs"
+                  className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
                 >
-                  ×
+                  x
                 </button>
               </div>
             ))}
           </div>
 
-          <p className="tb-v2-text-sm tb-v2-text-gray-500">
+          <p style={{ fontSize: 13, color: 'var(--tb-text-secondary)' }}>
             {images.length} of {layoutConfigs[layout].cols * layoutConfigs[layout].rows} slots filled
           </p>
 
           <button
+            type="button"
             onClick={createCollage}
             disabled={images.length === 0}
-            className="tb-v2-btn tb-v2-btn-primary tb-v2-disabled:opacity-50"
+            className="tb-v2-btn tb-v2-btn-primary"
+            style={{ alignSelf: 'flex-start' }}
           >
             Create Collage
           </button>
         </>
       )}
 
-      <canvas ref={canvasRef} className="tb-v2-hidden" />
+      <canvas ref={canvasRef} style={{ display: 'none' }} />
 
       {processedImage && (
         <div>
-          <p className="tb-v2-tool-label" style={{marginBottom:8}}>Collage Result</p>
-          <img src={processedImage} alt="Collage" className="tb-v2-max-w-full tb-v2-rounded-lg" />
-          <button onClick={handleDownload} className="tb-v2-btn tb-v2-btn-secondary tb-v2-mt-2">
+          <p className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Collage Result</p>
+          <img src={processedImage} alt="Collage" className="max-w-full rounded-lg" />
+          <button type="button" onClick={handleDownload} className="tb-v2-btn" style={{ marginTop: 8 }}>
             Download
           </button>
         </div>
