@@ -95,6 +95,7 @@ export default function ColorTemperatureAdjusterClient() {
   const [rgb, setRgb] = useState({ r: 255, g: 255, b: 255 });
   const [hex, setHex] = useState('#f5f5f5');
   const [hsl, setHsl] = useState({ h: 0, s: 0, l: 100 });
+  const [copied, setCopied] = useState('');
 
   useEffect(() => {
     const newRgb = kelvinToRgb(temperature);
@@ -106,6 +107,14 @@ export default function ColorTemperatureAdjusterClient() {
 
   const adjustTemperature = (delta: number) => {
     setTemperature((prev) => Math.max(1000, Math.min(20000, prev + delta)));
+  };
+
+  const loadExample = () => setTemperature(2700);
+
+  const copy = (label: string, value: string) => {
+    navigator.clipboard.writeText(value).catch(() => {});
+    setCopied(label);
+    setTimeout(() => setCopied(''), 1500);
   };
 
   const getTemperatureCategory = (kelvin: number): string => {
@@ -125,23 +134,27 @@ export default function ColorTemperatureAdjusterClient() {
   };
 
   return (
-    <div className="tb-v2-card">
-      <div className="tb-v2-card-header">
-        <h2 className="tb-v2-card-title">Color Temperature Adjuster</h2>
-        <p className="tb-v2-card-description">
-          Adjust color temperature from warm (orange) to cool (blue) based on Kelvin scale
-        </p>
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Color Temperature Adjuster</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
       </div>
+      <p className="text-sm text-gray-500 -mt-2">
+        Adjust color temperature from warm (orange) to cool (blue) based on Kelvin scale
+      </p>
 
-      <div className="tb-v2-form-group">
+      <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between mb-2">
-          <label className="tb-v2-label mb-0">Temperature</label>
+          <span className="text-xs text-gray-500">Temperature</span>
           <span className="text-2xl font-bold font-mono">{temperature}K</span>
         </div>
         <div className="flex items-center gap-4">
           <button
+            type="button"
             onClick={() => adjustTemperature(-500)}
-            className="tb-v2-button tb-v2-button-secondary text-2xl px-4 py-2"
+            className="rounded-xl bg-gray-100 hover:bg-gray-200 text-2xl px-4 py-2"
           >
             -
           </button>
@@ -158,8 +171,9 @@ export default function ColorTemperatureAdjusterClient() {
             }}
           />
           <button
+            type="button"
             onClick={() => adjustTemperature(500)}
-            className="tb-v2-button tb-v2-button-secondary text-2xl px-4 py-2"
+            className="rounded-xl bg-gray-100 hover:bg-gray-200 text-2xl px-4 py-2"
           >
             +
           </button>
@@ -170,40 +184,40 @@ export default function ColorTemperatureAdjusterClient() {
         </div>
       </div>
 
-      <div className="tb-v2-card p-6 mb-6">
+      <div className="bg-gray-50 rounded-xl p-6">
         <div className="flex items-center gap-6">
           <div
             className="w-32 h-32 rounded-xl shadow-lg border-4"
             style={{ backgroundColor: hex, borderColor: hex }}
           />
-          <div className="flex-1 space-y-3">
-            <div className="flex justify-between items-center py-2 border-b">
+          <div className="flex-1 space-y-1">
+            <button type="button" onClick={() => copy('kelvin', `${temperature}K`)} className="flex justify-between items-center py-2 border-b w-full text-left">
               <span className="text-gray-600">Kelvin</span>
-              <span className="font-mono font-bold">{temperature}K</span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b">
+              <span className="font-mono font-bold">{copied === 'kelvin' ? 'Copied' : `${temperature}K`}</span>
+            </button>
+            <button type="button" onClick={() => copy('hex', hex.toUpperCase())} className="flex justify-between items-center py-2 border-b w-full text-left">
               <span className="text-gray-600">HEX</span>
-              <span className="font-mono font-bold">{hex.toUpperCase()}</span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b">
+              <span className="font-mono font-bold">{copied === 'hex' ? 'Copied' : hex.toUpperCase()}</span>
+            </button>
+            <button type="button" onClick={() => copy('rgb', `${rgb.r}, ${rgb.g}, ${rgb.b}`)} className="flex justify-between items-center py-2 border-b w-full text-left">
               <span className="text-gray-600">RGB</span>
               <span className="font-mono font-bold">
-                {rgb.r}, {rgb.g}, {rgb.b}
+                {copied === 'rgb' ? 'Copied' : `${rgb.r}, ${rgb.g}, ${rgb.b}`}
               </span>
-            </div>
-            <div className="flex justify-between items-center py-2 border-b">
+            </button>
+            <button type="button" onClick={() => copy('hsl', `${hsl.h}°, ${hsl.s}%, ${hsl.l}%`)} className="flex justify-between items-center py-2 border-b w-full text-left">
               <span className="text-gray-600">HSL</span>
               <span className="font-mono font-bold">
-                {hsl.h}°, {hsl.s}%, {hsl.l}%
+                {copied === 'hsl' ? 'Copied' : `${hsl.h}°, ${hsl.s}%, ${hsl.l}%`}
               </span>
-            </div>
+            </button>
           </div>
         </div>
       </div>
 
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">Category</div>
-        <div className="tb-v2-card p-4">
+      <div className="flex flex-col gap-2">
+        <div className="text-xs text-gray-500">Category</div>
+        <div className="bg-gray-50 rounded-xl p-4">
           <div className="flex items-center gap-3">
             <div
               className="w-4 h-4 rounded-full"
@@ -220,8 +234,8 @@ export default function ColorTemperatureAdjusterClient() {
         </div>
       </div>
 
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">Preset Temperatures</div>
+      <div className="flex flex-col gap-2">
+        <div className="text-xs text-gray-500">Preset Temperatures</div>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
           {presetTemperatures.map((preset) => {
             const presetRgb = kelvinToRgb(preset.kelvin);
@@ -229,6 +243,7 @@ export default function ColorTemperatureAdjusterClient() {
             return (
               <button
                 key={preset.kelvin}
+                type="button"
                 onClick={() => setTemperature(preset.kelvin)}
                 className={`p-2 rounded border text-left transition-all hover:scale-105 ${
                   temperature === preset.kelvin
@@ -248,8 +263,8 @@ export default function ColorTemperatureAdjusterClient() {
         </div>
       </div>
 
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">Temperature Scale Preview</div>
+      <div className="flex flex-col gap-2">
+        <div className="text-xs text-gray-500">Temperature Scale Preview</div>
         <div className="relative h-8 rounded overflow-hidden">
           <div
             className="absolute inset-0"
@@ -281,8 +296,8 @@ export default function ColorTemperatureAdjusterClient() {
         </div>
       </div>
 
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">Light Quality Preview</div>
+      <div className="flex flex-col gap-2">
+        <div className="text-xs text-gray-500">Light Quality Preview</div>
         <div
           className="p-6 rounded-lg"
           style={{
@@ -290,18 +305,18 @@ export default function ColorTemperatureAdjusterClient() {
             boxShadow: `0 0 30px ${hex}40`,
           }}
         >
-          <p className="text-lg font-medium mb-2" style={{ color: temperature < 5000 ? '#333' : '#333' }}>
+          <p className="text-lg font-medium mb-2" style={{ color: '#333' }}>
             The quick brown fox jumps over the lazy dog
           </p>
-          <p className="text-sm" style={{ color: temperature < 5000 ? '#555' : '#555' }}>
+          <p className="text-sm" style={{ color: '#555' }}>
             This preview shows how text might appear under this lighting condition.
           </p>
         </div>
       </div>
 
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">Common Use Cases</div>
-        <div className="tb-v2-card p-4 text-sm space-y-2">
+      <div className="flex flex-col gap-2">
+        <div className="text-xs text-gray-500">Common Use Cases</div>
+        <div className="bg-gray-50 rounded-xl p-4 text-sm space-y-2">
           <div className="flex items-center gap-2">
             <span className="text-xs font-mono bg-gray-100 px-2 py-1 rounded">2700K</span>
             <span>Bedrooms, living rooms - cozy, relaxing atmosphere</span>
