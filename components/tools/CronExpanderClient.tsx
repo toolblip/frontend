@@ -12,11 +12,108 @@ interface ParsedCron {
   nextRuns: string[];
 }
 
+function parseCronField(raw: string, min: number, max: number): number[] | null {
+  const v = raw.trim();
+  if (!v) return null;
+  const results = new Set<number>();
+  for (const part of v.split(',')) {
+    const p = part.trim();
+    if (p.startsWith('*/')) {
+      const step = parseInt(p.slice(2), 10);
+      if (isNaN(step) || step < 1) return null;
+      for (let i = min; i <= max; i += step) results.add(i);
+      continue;
+    }
+    if (p === '*') {
+      for (let i = min; i <= max; i++) results.add(i);
+      continue;
+    }
+    if (p.includes('-')) {
+      const [sStr, eStr] = p.split('-');
+      const s = parseInt(sStr, 10);
+      const e = parseInt(eStr, 10);
+      if (isNaN(s) || isNaN(e) || s > e) return null;
+      for (let i = Math.max(min, s); i <= Math.min(max, e); i++) results.add(i);
+      continue;
+    }
+    const n = parseInt(p, 10);
+    if (isNaN(n) || n < min || n > max) return null;
+    results.add(n);
+  }
+  return results.size > 0 ? [...results].sort((a, b) => a - b) : null;
+}
+
+function computeNextRuns(minutes: number[], hours: number[], daysOfMonth: number[], months: number[], daysOfWeek: number[]): Date[] {
+  const results: Date[] = [];
+  const cursor = new Date();
+  cursor.setSeconds(0, 0);
+  cursor.setMinutes(cursor.getMinutes() + 1);
+
+  const minuteSet = new Set(minutes);
+  const hourSet = new Set(hours);
+  const domSet = new Set(daysOfMonth);
+  const monthSet = new Set(months);
+  const dowSet = new Set(daysOfWeek);
+
+  const domRestricted = daysOfMonth.length < 31;
+  const dowRestricted = daysOfWeek.length < 7;
+
+  const sortedMinutes = [...minutes].sort((a, b) => a - b);
+  const sortedHours = [...hours].sort((a, b) => a - b);
+  const sortedMonths = [...months].sort((a, b) => a - b);
+
+  for (let i = 0; i < 1000 && results.length < 5; i++) {
+    const month = cursor.getMonth() + 1;
+    if (!monthSet.has(month)) {
+      const next = sortedMonths.find((m) => m > month);
+      if (next !== undefined) cursor.setMonth(next - 1, 1);
+      else { cursor.setFullYear(cursor.getFullYear() + 1); cursor.setMonth(sortedMonths[0] - 1, 1); }
+      cursor.setHours(0, 0, 0, 0);
+      continue;
+    }
+    const dom = cursor.getDate();
+    const dow = cursor.getDay();
+    const domMatch = domRestricted ? domSet.has(dom) : true;
+    const dowMatch = dowRestricted ? dowSet.has(dow) : true;
+    const dayMatch = domRestricted && dowRestricted ? domMatch || dowMatch : domMatch && dowMatch;
+    if (!dayMatch) { cursor.setDate(cursor.getDate() + 1); cursor.setHours(0, 0, 0, 0); continue; }
+
+    const hour = cursor.getHours();
+    if (!hourSet.has(hour)) {
+      const nextHour = sortedHours.find((h) => h > hour);
+      if (nextHour !== undefined) cursor.setHours(nextHour, 0, 0, 0);
+      else { cursor.setDate(cursor.getDate() + 1); cursor.setHours(0, 0, 0, 0); }
+      continue;
+    }
+    const minute = cursor.getMinutes();
+    if (!minuteSet.has(minute)) {
+      const nextMin = sortedMinutes.find((m) => m > minute);
+      if (nextMin !== undefined) cursor.setMinutes(nextMin, 0, 0);
+      else {
+        const nextHour = sortedHours.find((h) => h > hour);
+        if (nextHour !== undefined) cursor.setHours(nextHour, 0, 0, 0);
+        else { cursor.setDate(cursor.getDate() + 1); cursor.setHours(0, 0, 0, 0); }
+      }
+      continue;
+    }
+    results.push(new Date(cursor));
+    cursor.setMinutes(cursor.getMinutes() + 1, 0, 0);
+  }
+  return results;
+}
+
 function parseCronExpression(expression: string): ParsedCron | null {
   const parts = expression.trim().split(/\s+/);
   if (parts.length !== 5) return null;
 
   const [minutes, hours, dayOfMonth, month, dayOfWeek] = parts;
+
+  const minField = parseCronField(minutes, 0, 59);
+  const hourField = parseCronField(hours, 0, 23);
+  const domField = parseCronField(dayOfMonth, 1, 31);
+  const monthField = parseCronField(month, 1, 12);
+  const dowField = parseCronField(dayOfWeek, 0, 6);
+  if (!minField || !hourField || !domField || !monthField || !dowField) return null;
 
   const descriptions: string[] = [];
 
@@ -48,13 +145,7 @@ function parseCronExpression(expression: string): ParsedCron | null {
   if (month !== '*') descriptions.push(`in month ${month}`);
   if (dayOfWeek !== '*') descriptions.push(`on day of week ${dayOfWeek}`);
 
-  const now = new Date();
-  const nextRuns: string[] = [];
-  
-  for (let i = 0; i < 5; i++) {
-    const next = new Date(now.getTime() + (i + 1) * 60000 * 5);
-    nextRuns.push(next.toLocaleString());
-  }
+  const nextRuns = computeNextRuns(minField, hourField, domField, monthField, dowField).map(d => d.toLocaleString());
 
   return {
     minutes,
