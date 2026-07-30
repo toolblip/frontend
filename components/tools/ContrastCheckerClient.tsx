@@ -32,6 +32,11 @@ export default function ContrastCheckerClient() {
   const [fg, setFg] = useState('#000000');
   const [bg, setBg] = useState('#ffffff');
 
+  const loadExample = () => {
+    setFg('#1a73e8');
+    setBg('#ffffff');
+  };
+
   const fgRgb = parseHex(fg);
   const bgRgb = parseHex(bg);
 
@@ -42,7 +47,14 @@ export default function ContrastCheckerClient() {
   const result = ratio !== null ? wcagLevel(ratio) : null;
 
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Contrast Checker</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
+      </div>
+      <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
       <div className="tb-v2-grid-2">
         {[
           { label: 'Foreground (text)', value: fg, onChange: setFg, example: '#000000' },
@@ -80,6 +92,7 @@ export default function ContrastCheckerClient() {
           </div>
         </>
       )}
+      </div>
     </div>
   );
 }
