@@ -2,10 +2,15 @@
 
 import { useState } from 'react';
 
+const EXAMPLE_PRICE = '129.99';
+const EXAMPLE_DISCOUNT = '25';
+const EXAMPLE_TAX = '8.5';
+
 export default function DiscountCalculatorClient() {
   const [originalPrice, setOriginalPrice] = useState('');
   const [discountPercent, setDiscountPercent] = useState('');
   const [taxPercent, setTaxPercent] = useState('0');
+  const [copied, setCopied] = useState(false);
 
   const price = parseFloat(originalPrice) || 0;
   const discount = parseFloat(discountPercent) || 0;
@@ -17,16 +22,29 @@ export default function DiscountCalculatorClient() {
   const finalPrice = priceAfterDiscount + taxAmount;
   const totalSavings = discountAmount;
 
+  const loadExample = () => {
+    setOriginalPrice(EXAMPLE_PRICE);
+    setDiscountPercent(EXAMPLE_DISCOUNT);
+    setTaxPercent(EXAMPLE_TAX);
+  };
+
+  const copy = () => {
+    if (!(price > 0)) return;
+    navigator.clipboard.writeText(`$${finalPrice.toFixed(2)}`).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
   return (
-    <div className="tb-v2-card">
-      <div className="tb-v2-card-header">
-        <h2 className="tb-v2-card-title">Discount Calculator</h2>
-        <p className="tb-v2-card-description">Calculate savings and final prices after discounts</p>
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Discount Details</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
       </div>
 
-      <div className="space-y-4 mb-6">
-        <div className="tb-v2-form-group">
-          <label className="tb-v2-label">Original Price ($)</label>
+      <div className="space-y-4 mb-6" style={{ padding: 20 }}>
+        <div className="flex flex-col gap-1">
+          <label className="tb-v2-tool-label">Original Price ($)</label>
           <input
             type="number"
             value={originalPrice}
@@ -38,8 +56,8 @@ export default function DiscountCalculatorClient() {
           />
         </div>
 
-        <div className="tb-v2-form-group">
-          <label className="tb-v2-label">Discount Percentage (%)</label>
+        <div className="flex flex-col gap-1">
+          <label className="tb-v2-tool-label">Discount Percentage (%)</label>
           <input
             type="number"
             value={discountPercent}
@@ -51,8 +69,8 @@ export default function DiscountCalculatorClient() {
           />
         </div>
 
-        <div className="tb-v2-form-group">
-          <label className="tb-v2-label">Sales Tax (%, optional)</label>
+        <div className="flex flex-col gap-1">
+          <label className="tb-v2-tool-label">Sales Tax (%, optional)</label>
           <input
             type="number"
             value={taxPercent}
@@ -64,7 +82,13 @@ export default function DiscountCalculatorClient() {
         </div>
       </div>
 
-      <div className="tb-v2-card p-6 bg-gray-50">
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">Result</span>
+        <button type="button" onClick={copy} disabled={!(price > 0)} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
+          {copied ? 'Copied' : 'Copy'}
+        </button>
+      </div>
+      <div className="tb-v2-tool-output-body">
         <div className="space-y-3">
           <div className="flex justify-between">
             <span className="text-gray-600">Original Price</span>

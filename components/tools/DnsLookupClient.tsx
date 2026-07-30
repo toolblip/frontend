@@ -5,6 +5,13 @@ import { useState } from 'react';
 const RECORD_TYPES = ['A', 'AAAA', 'MX', 'TXT', 'CNAME', 'NS', 'SOA', 'PTR'];
 type RecordType = typeof RECORD_TYPES[number];
 
+interface DnsAnswer {
+  name: string;
+  type: number;
+  TTL: number;
+  data: string;
+}
+
 export default function DnsLookupClient() {
   const [domain, setDomain] = useState('');
   const [rType, setRType] = useState<RecordType>('A');
@@ -15,12 +22,16 @@ export default function DnsLookupClient() {
     if (!domain.trim()) return;
     setLoading(true);
     try {
-      const res = await fetch(`https://api.apprenable.com/dns-lookup?domain=${encodeURIComponent(domain)}&type=${rType}`);
+      const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(domain.trim())}&type=${rType}`);
       if (!res.ok) throw new Error('API error');
-      const data = await res.json();
-      setResult(data.result || 'No records found');
+      const data: { Status: number; Answer?: DnsAnswer[] } = await res.json();
+      if (data.Status !== 0 || !data.Answer || data.Answer.length === 0) {
+        setResult(`No ${rType} records found for ${domain.trim()}.`);
+      } else {
+        setResult(data.Answer.map(a => `${a.name}\t${rType}\tTTL ${a.TTL}\t${a.data}`).join('\n'));
+      }
     } catch {
-      setResult('DNS lookup requires a backend API. Enter a domain and record type to check.');
+      setResult('DNS lookup failed. Check your connection and try again.');
     }
     setLoading(false);
   };
@@ -38,7 +49,7 @@ export default function DnsLookupClient() {
           style={{ flex: 1, minHeight: 44, resize: 'none' }}
           onKeyDown={e => e.key === 'Enter' && lookup()}
         />
-        <button onClick={lookup} disabled={loading} className="tb-v2-btn-primary" style={{ minWidth: 80 }}>
+        <button onClick={lookup} disabled={loading} className="tb-v2-btn tb-v2-btn-primary" style={{ minWidth: 80 }}>
           {loading ? '...' : 'Lookup'}
         </button>
       </div>
@@ -50,11 +61,11 @@ export default function DnsLookupClient() {
       <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">DNS Records ({rType})</span></div>
       <div className="tb-v2-tool-output-body">
         {result ? (
-          <div style={{ fontFamily: 'var(--f-mono)', fontSize: 13, whiteSpace: 'pre-wrap', color: 'var(--tb-text-secondary)' }}>
+          <div style={{ fontFamily: 'var(--f-mono)', fontSize: 13, whiteSpace: 'pre-wrap', color: 'var(--fg-2)' }}>
             {result}
           </div>
         ) : (
-          <div style={{ color: 'var(--tb-text-secondary)', fontSize: 14 }}>Enter a domain and click Lookup</div>
+          <div style={{ color: 'var(--fg-2)', fontSize: 14 }}>Enter a domain and click Lookup</div>
         )}
       </div>
     </div>

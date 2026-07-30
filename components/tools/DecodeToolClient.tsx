@@ -37,7 +37,7 @@ export default function DecodeToolClient() {
           <button key={d} onClick={() => setDec(d)} className={`tb-v2-mode-tab ${dec === d ? 'on' : ''}`} style={{ fontSize: 12, padding: '4px 10px' }}>{d.toUpperCase()}</button>
         ))}
       </div>
-      <button onClick={decode} className="tb-v2-btn-primary" style={{ marginTop: 10 }}>Decode</button>
+      <button onClick={decode} className="tb-v2-btn tb-v2-btn-primary" style={{ marginTop: 10 }}>Decode</button>
       {error && <span style={{ color: '#ef4444', fontSize: 13, marginTop: 8, display: 'block' }}>{error}</span>}
       <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">Decoded Output</span></div>
       <div className="tb-v2-tool-output-body">

@@ -12,7 +12,6 @@ export default function DuplicateLineFinderClient() {
   const analyze = useCallback(() => {
     const lines = input.split('\n');
     const seen = new Map<string, { count: number; indices: number[] }>();
-    const caseOpt = caseSensitive ? 0 : -1;
 
     lines.forEach((line, idx) => {
       const key = caseSensitive ? line : line.toLowerCase();
@@ -44,10 +43,16 @@ export default function DuplicateLineFinderClient() {
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Input Text</span>
-        <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13 }}>
-          <input type="checkbox" checked={caseSensitive} onChange={(e) => setCaseSensitive(e.target.checked)} />
-          Case sensitive
-        </label>
+        <div style={{ display: 'flex', gap: 12 }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13 }}>
+            <input type="checkbox" checked={caseSensitive} onChange={(e) => setCaseSensitive(e.target.checked)} />
+            Case sensitive
+          </label>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 13 }}>
+            <input type="checkbox" checked={showLineNums} onChange={(e) => setShowLineNums(e.target.checked)} />
+            Show line numbers
+          </label>
+        </div>
       </div>
       <textarea
         value={input}
@@ -56,7 +61,7 @@ export default function DuplicateLineFinderClient() {
         className="tb-v2-tool-textarea"
         aria-label="Text input"
       />
-      <button type="button" onClick={analyze} className="tb-v2-primary-btn" style={{ width: '100%', marginTop: 12, marginBottom: 12 }}>
+      <button type="button" onClick={analyze} className="tb-v2-btn tb-v2-btn-primary" style={{ width: '100%', marginTop: 12, marginBottom: 12 }}>
         Find Duplicates
       </button>
 
@@ -70,12 +75,12 @@ export default function DuplicateLineFinderClient() {
           </div>
           <div className="tb-v2-tool-output-body">
             {results.map((r, i) => (
-              <div key={i} style={{ marginBottom: 12, padding: 8, background: 'var(--tb-bg-secondary)', borderRadius: 6, fontSize: 13 }}>
+              <div key={i} style={{ marginBottom: 12, padding: 8, background: 'var(--surface-2)', borderRadius: 6, fontSize: 13 }}>
                 <div style={{ fontWeight: 600, marginBottom: 4 }}>
                   {showLineNums ? `Line ${r.line}` : `Occurrence 1`}: "{r.text}"
                 </div>
-                <div style={{ color: 'var(--tb-text-secondary)', fontSize: 12 }}>
-                  Also at line{showLineNums ? 's' : 's'}: {r.duplicates.join(', ')} · {r.duplicates.length + 1} total occurrences
+                <div style={{ color: 'var(--fg-2)', fontSize: 12 }}>
+                  Also at line{r.duplicates.length > 1 ? 's' : ''}: {r.duplicates.join(', ')} &middot; {r.duplicates.length + 1} total occurrences
                 </div>
               </div>
             ))}

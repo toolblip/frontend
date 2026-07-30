@@ -12,6 +12,7 @@ export default function DockerCommandGeneratorClient() {
   const [envVars, setEnvVars] = useState('PORT=3000');
   const [volumes, setVolumes] = useState('/data:/data');
   const [network, setNetwork] = useState('bridge');
+  const [customNetwork, setCustomNetwork] = useState('my-network');
   const [detach, setDetach] = useState(true);
   const [rm, setRm] = useState(false);
   const [it, setIt] = useState(false);
@@ -38,7 +39,11 @@ export default function DockerCommandGeneratorClient() {
             if (vol.trim()) cmd += ` -v "${vol.trim()}"`;
           });
         }
-        if (network !== 'bridge') cmd += ` --network ${network}`;
+        if (network === 'custom') {
+          if (customNetwork.trim()) cmd += ` --network ${customNetwork.trim()}`;
+        } else if (network !== 'bridge') {
+          cmd += ` --network ${network}`;
+        }
         cmd += ` ${image}`;
         break;
 
@@ -95,8 +100,24 @@ export default function DockerCommandGeneratorClient() {
     setTimeout(() => setCopied(false), 1500);
   };
 
+  const loadExample = () => {
+    setCommandType('run');
+    setImage('nginx:latest');
+    setContainerName('my-container');
+    setPort('8080:80');
+    setEnvVars('PORT=3000\nNODE_ENV=production');
+    setVolumes('/data:/data');
+    setNetwork('bridge');
+    setDetach(true);
+    setRm(false);
+    setIt(false);
+  };
+
   return (
     <div className="flex flex-col gap-4">
+      <div className="flex justify-end">
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+      </div>
       <div>
         <label className="tb-v2-tool-label">Command</label>
         <select
@@ -190,6 +211,19 @@ export default function DockerCommandGeneratorClient() {
               <option value="custom">custom</option>
             </select>
           </div>
+
+          {network === 'custom' && (
+            <div>
+              <label className="tb-v2-tool-label">Custom Network Name</label>
+              <input
+                type="text"
+                value={customNetwork}
+                onChange={(e) => setCustomNetwork(e.target.value)}
+                placeholder="my-network"
+                className="tb-v2-input"
+              />
+            </div>
+          )}
 
           <div className="tb-v2-option-group">
             <label className="flex items-center gap-2">

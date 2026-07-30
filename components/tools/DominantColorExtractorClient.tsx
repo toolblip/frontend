@@ -1,42 +1,156 @@
 'use client';
-import { useState } from 'react';
+
+import { useState, useRef } from 'react';
+
+interface SwatchColor {
+  hex: string;
+  r: number;
+  g: number;
+  b: number;
+  percent: number;
+}
+
+const BUCKET_SIZE = 32;
+const SAMPLE_DIM = 150;
+const NUM_COLORS = 6;
+
+function rgbToHex(r: number, g: number, b: number): string {
+  return '#' + [r, g, b].map(x => Math.round(x).toString(16).padStart(2, '0')).join('').toUpperCase();
+}
+
+function extractDominantColors(imageData: ImageData, count: number): SwatchColor[] {
+  const data = imageData.data;
+  const buckets = new Map<string, { rSum: number; gSum: number; bSum: number; count: number }>();
+  let totalOpaque = 0;
+
+  for (let i = 0; i < data.length; i += 4) {
+    const a = data[i + 3];
+    if (a < 128) continue;
+    const r = data[i], g = data[i + 1], b = data[i + 2];
+    const key = `${Math.floor(r / BUCKET_SIZE)}-${Math.floor(g / BUCKET_SIZE)}-${Math.floor(b / BUCKET_SIZE)}`;
+    const bucket = buckets.get(key);
+    if (bucket) {
+      bucket.rSum += r; bucket.gSum += g; bucket.bSum += b; bucket.count += 1;
+    } else {
+      buckets.set(key, { rSum: r, gSum: g, bSum: b, count: 1 });
+    }
+    totalOpaque += 1;
+  }
+
+  if (totalOpaque === 0) return [];
+
+  return Array.from(buckets.values())
+    .sort((a, b) => b.count - a.count)
+    .slice(0, count)
+    .map(bucket => {
+      const r = bucket.rSum / bucket.count;
+      const g = bucket.gSum / bucket.count;
+      const b = bucket.bSum / bucket.count;
+      return { hex: rgbToHex(r, g, b), r: Math.round(r), g: Math.round(g), b: Math.round(b), percent: (bucket.count / totalOpaque) * 100 };
+    });
+}
 
 export default function DominantColorExtractorClient() {
-  const [input, setInput] = useState('');
-  const [output, setOutput] = useState('');
+  const [imageSrc, setImageSrc] = useState('');
+  const [colors, setColors] = useState<SwatchColor[]>([]);
+  const [isDragging, setIsDragging] = useState(false);
+  const [copiedHex, setCopiedHex] = useState('');
+  const [error, setError] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const process = () => {
-    setOutput('Processed: ' + input);
+  const loadFile = (file: File | undefined) => {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setError('Please choose an image file.');
+      return;
+    }
+    setError('');
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      setImageSrc(url);
+      const scale = Math.min(1, SAMPLE_DIM / Math.max(img.width, img.height));
+      const w = Math.max(1, Math.round(img.width * scale));
+      const h = Math.max(1, Math.round(img.height * scale));
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      ctx.drawImage(img, 0, 0, w, h);
+      const imageData = ctx.getImageData(0, 0, w, h);
+      setColors(extractDominantColors(imageData, NUM_COLORS));
+    };
+    img.onerror = () => setError('Could not load that image.');
+    img.src = url;
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => loadFile(e.target.files?.[0]);
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    loadFile(e.dataTransfer.files?.[0]);
+  };
+
+  const copy = (hex: string) => {
+    navigator.clipboard.writeText(hex).catch(() => {});
+    setCopiedHex(hex);
+    setTimeout(() => setCopiedHex(''), 1500);
   };
 
   return (
     <div className="tb-v2-tool-card">
-      <textarea
-        value={input}
-        onChange={e => setInput(e.target.value)}
-        className="tb-v2-input"
-        placeholder="Enter input..."
-      />
-      <button
-        onClick={process}
-        className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg"
-      >
-        Process
-      </button>
-      {output && (
-        <div className="tb-v2-tool-output-body">
-        <div className="flex justify-between items-center mb-2">
-          <span className="tb-v2-tool-label">Output</span>
-          <button 
-            onClick={() => { navigator.clipboard.writeText(output); }}
-            className="tb-v2-copy-btn"
-          >
-            Copy
-          </button>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Upload Image</span>
+      </div>
+      <div style={{ padding: 20 }}>
+        <div
+          className={`tb-v2-dropzone ${isDragging ? 'dragging' : ''}`}
+          onClick={() => fileInputRef.current?.click()}
+          onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+          onDragLeave={() => setIsDragging(false)}
+          onDrop={handleDrop}
+        >
+          <span style={{ fontSize: 28 }}>🎨</span>
+          <span className="tb-v2-dropzone-text">Click or drag an image here</span>
+          <span className="tb-v2-dropzone-hint">Colors are extracted entirely in your browser</span>
+          <input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} style={{ display: 'none' }} />
         </div>
-          {output}
-        </div>
-      )}
+        {error && <div className="tb-v2-banner tb-v2-banner-err" style={{ marginTop: 12 }}>{error}</div>}
+        {imageSrc && (
+          <div style={{ marginTop: 12, maxHeight: 260, overflow: 'auto', borderRadius: 8, border: '1px solid var(--line)' }}>
+            <img src={imageSrc} alt="Uploaded" style={{ width: '100%', display: 'block' }} />
+          </div>
+        )}
+      </div>
+
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">Dominant Colors</span>
+      </div>
+      <div className="tb-v2-tool-output-body">
+        {colors.length === 0 ? (
+          <p className="tb-v2-empty">Upload an image above to extract its top dominant colors.</p>
+        ) : (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: 12 }}>
+            {colors.map(c => (
+              <button
+                key={c.hex}
+                type="button"
+                onClick={() => copy(c.hex)}
+                style={{ display: 'flex', flexDirection: 'column', alignItems: 'stretch', border: '1px solid var(--line)', borderRadius: 8, overflow: 'hidden', cursor: 'pointer', background: 'none', padding: 0 }}
+              >
+                <div style={{ height: 56, background: c.hex }} />
+                <div style={{ padding: '8px 10px', textAlign: 'left' }}>
+                  <div style={{ fontFamily: 'var(--f-mono)', fontSize: 13, fontWeight: 700 }}>{copiedHex === c.hex ? 'Copied' : c.hex}</div>
+                  <div style={{ fontSize: 11, color: 'var(--fg-2)' }}>rgb({c.r}, {c.g}, {c.b})</div>
+                  <div style={{ fontSize: 11, color: 'var(--fg-2)' }}>{c.percent.toFixed(1)}% of image</div>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
