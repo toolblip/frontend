@@ -22,26 +22,99 @@ const FIELD_RANGES = ['0–59', '0–23', '1–31', '1–12', '0–7'];
 const DOW_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
+function parseField(raw: string, min: number, max: number): number[] | null {
+  const v = raw.trim();
+  if (!v) return null;
+  const results = new Set<number>();
+  for (const part of v.split(',')) {
+    const p = part.trim();
+    if (p.startsWith('*/')) {
+      const step = parseInt(p.slice(2), 10);
+      if (isNaN(step) || step < 1) return null;
+      for (let i = min; i <= max; i += step) results.add(i);
+      continue;
+    }
+    if (p === '*') {
+      for (let i = min; i <= max; i++) results.add(i);
+      continue;
+    }
+    if (p.includes('-')) {
+      const [sStr, eStr] = p.split('-');
+      const s = parseInt(sStr, 10);
+      const e = parseInt(eStr, 10);
+      if (isNaN(s) || isNaN(e) || s > e) return null;
+      for (let i = Math.max(min, s); i <= Math.min(max, e); i++) results.add(i);
+      continue;
+    }
+    const n = parseInt(p, 10);
+    if (isNaN(n) || n < min || n > max) return null;
+    results.add(n);
+  }
+  return results.size > 0 ? [...results].sort((a, b) => a - b) : null;
+}
+
 function getNextRuns(expr: string, count: number = 5): Date[] {
   try {
-    const [min, hr, dom, mon, dow] = expr.trim().split(/\s+/);
+    const [minP, hrP, domP, monP, dowP] = expr.trim().split(/\s+/);
+    const minutes = parseField(minP, 0, 59);
+    const hours = parseField(hrP, 0, 23);
+    const doms = parseField(domP, 1, 31);
+    const mons = parseField(monP, 1, 12);
+    const dows = parseField(dowP, 0, 6);
+    if (!minutes || !hours || !doms || !mons || !dows) return [];
+
+    const minuteSet = new Set(minutes);
+    const hourSet = new Set(hours);
+    const domSet = new Set(doms);
+    const monthSet = new Set(mons);
+    const dowSet = new Set(dows);
+    const domRestricted = doms.length < 31;
+    const dowRestricted = dows.length < 7;
+    const sortedMinutes = [...minutes];
+    const sortedHours = [...hours];
+    const sortedMonths = [...mons];
+
     const runs: Date[] = [];
-    const now = new Date();
-    const cursor = new Date(now);
+    const cursor = new Date();
     cursor.setSeconds(0, 0);
     cursor.setMinutes(cursor.getMinutes() + 1);
 
-    for (let i = 0; i < 500 && runs.length < count; i++) {
-      const matchMin = min === '*' || min.startsWith('*/') ? true : parseInt(min) === cursor.getMinutes();
-      const matchHr = hr === '*' || hr.startsWith('*/') ? true : parseInt(hr) === cursor.getHours();
-      const matchDom = dom === '*' ? true : parseInt(dom) === cursor.getDate();
-      const matchMon = mon === '*' ? true : parseInt(mon) === cursor.getMonth() + 1;
-      const matchDow = dow === '*' ? true : dow.split(',').map(Number).includes(cursor.getDay());
-
-      if (matchMin && matchHr && matchDom && matchMon && matchDow) {
-        runs.push(new Date(cursor));
+    for (let i = 0; i < 1000 && runs.length < count; i++) {
+      const month = cursor.getMonth() + 1;
+      if (!monthSet.has(month)) {
+        const next = sortedMonths.find((m) => m > month);
+        if (next !== undefined) cursor.setMonth(next - 1, 1);
+        else { cursor.setFullYear(cursor.getFullYear() + 1); cursor.setMonth(sortedMonths[0] - 1, 1); }
+        cursor.setHours(0, 0, 0, 0);
+        continue;
       }
-      cursor.setMinutes(cursor.getMinutes() + 1);
+      const dom = cursor.getDate();
+      const dow = cursor.getDay();
+      const domMatch = domRestricted ? domSet.has(dom) : true;
+      const dowMatch = dowRestricted ? dowSet.has(dow) : true;
+      const dayMatch = domRestricted && dowRestricted ? domMatch || dowMatch : domMatch && dowMatch;
+      if (!dayMatch) { cursor.setDate(cursor.getDate() + 1); cursor.setHours(0, 0, 0, 0); continue; }
+
+      const hour = cursor.getHours();
+      if (!hourSet.has(hour)) {
+        const nextHour = sortedHours.find((h) => h > hour);
+        if (nextHour !== undefined) cursor.setHours(nextHour, 0, 0, 0);
+        else { cursor.setDate(cursor.getDate() + 1); cursor.setHours(0, 0, 0, 0); }
+        continue;
+      }
+      const minute = cursor.getMinutes();
+      if (!minuteSet.has(minute)) {
+        const nextMin = sortedMinutes.find((m) => m > minute);
+        if (nextMin !== undefined) cursor.setMinutes(nextMin, 0, 0);
+        else {
+          const nextHour = sortedHours.find((h) => h > hour);
+          if (nextHour !== undefined) cursor.setHours(nextHour, 0, 0, 0);
+          else { cursor.setDate(cursor.getDate() + 1); cursor.setHours(0, 0, 0, 0); }
+        }
+        continue;
+      }
+      runs.push(new Date(cursor));
+      cursor.setMinutes(cursor.getMinutes() + 1, 0, 0);
     }
     return runs;
   } catch {
