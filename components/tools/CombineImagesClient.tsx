@@ -9,25 +9,50 @@ export default function CombineImagesClient() {
   const [layout, setLayout] = useState<LayoutType>('horizontal');
   const [spacing, setSpacing] = useState(10);
   const [processedImage, setProcessedImage] = useState<string | null>(null);
+  const [dragActive, setDragActive] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const loadFiles = (files: File[]) => {
+    if (files.length === 0) return;
+    const readers = files.map(
+      (file) =>
+        new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (event) => resolve(event.target?.result as string);
+          reader.readAsDataURL(file);
+        })
+    );
+    Promise.all(readers).then((newImages) => {
+      setImages((prev) => [...prev, ...newImages]);
+      setProcessedImage(null);
+    });
+  };
+
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files) {
-      const newImages: string[] = [];
-      Array.from(files).forEach((file) => {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          newImages.push(event.target?.result as string);
-          if (newImages.length === files.length) {
-            setImages([...images, ...newImages]);
-            setProcessedImage(null);
-          }
-        };
-        reader.readAsDataURL(file);
-      });
+    if (e.target.files) loadFiles(Array.from(e.target.files));
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setDragActive(false);
+    if (e.dataTransfer.files) {
+      loadFiles(Array.from(e.dataTransfer.files).filter((f) => f.type.startsWith('image/')));
     }
+  };
+
+  const loadExample = () => {
+    const makeSwatch = (color: string) => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 200;
+      canvas.height = 200;
+      const ctx = canvas.getContext('2d')!;
+      ctx.fillStyle = color;
+      ctx.fillRect(0, 0, 200, 200);
+      return canvas.toDataURL('image/png');
+    };
+    setImages([makeSwatch('#6366f1'), makeSwatch('#ec4899'), makeSwatch('#22c55e')]);
+    setProcessedImage(null);
   };
 
   const removeImage = (index: number) => {
@@ -136,90 +161,104 @@ export default function CombineImagesClient() {
   };
 
   return (
-    <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-4 tb-v2-p-4">
-      <h2 className="tb-v2-text-2xl tb-v2-font-bold">Combine Images</h2>
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Combine Images</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
+      </div>
 
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        multiple
-        onChange={handleImageUpload}
-        className="tb-v2-file-input"
-      />
-
-      {images.length > 0 && (
-        <>
-          <div className="tb-v2-flex tb-v2-gap-2 tb-v2-flex-wrap">
-            {images.map((img, idx) => (
-              <div key={idx} className="tb-v2-relative">
-                <img src={img} alt={`Image ${idx + 1}`} className="tb-v2-w-20 tb-v2-h-20 tb-v2-object-cover tb-v2-rounded" />
-                <button
-                  onClick={() => removeImage(idx)}
-                  className="tb-v2-absolute tb-v2-top-0 tb-v2-right-0 tb-v2-bg-red-500 tb-v2-text-white tb-v2-rounded-full tb-v2-w-5 tb-v2-h-5 tb-v2-flex tb-v2-items-center tb-v2-justify-center tb-v2-text-xs"
-                >
-                  ×
-                </button>
-              </div>
-            ))}
-          </div>
-
-          <p className="tb-v2-text-sm tb-v2-text-gray-500">{images.length} images selected</p>
-
-          <div className="tb-v2-flex tb-v2-gap-2">
-            <button
-              onClick={() => setLayout('horizontal')}
-              className={`tb-v2-btn ${layout === 'horizontal' ? 'tb-v2-btn-primary' : 'tb-v2-btn-secondary'}`}
-            >
-              Horizontal
-            </button>
-            <button
-              onClick={() => setLayout('vertical')}
-              className={`tb-v2-btn ${layout === 'vertical' ? 'tb-v2-btn-primary' : 'tb-v2-btn-secondary'}`}
-            >
-              Vertical
-            </button>
-            <button
-              onClick={() => setLayout('grid')}
-              className={`tb-v2-btn ${layout === 'grid' ? 'tb-v2-btn-primary' : 'tb-v2-btn-secondary'}`}
-            >
-              Grid
-            </button>
-          </div>
-
-          <div className="tb-v2-flex tb-v2-items-center tb-v2-gap-4">
-            <label className="tb-v2-text-sm tb-v2-font-medium">Spacing: {spacing}px</label>
-            <input
-              type="range"
-              min="0"
-              max="50"
-              value={spacing}
-              onChange={(e) => setSpacing(Number(e.target.value))}
-              className="tb-v2-range"
-            />
-          </div>
-
-          <button
-            onClick={combineImages}
-            disabled={images.length < 2}
-            className="tb-v2-btn tb-v2-btn-primary tb-v2-disabled:opacity-50"
-          >
-            Combine Images
-          </button>
-        </>
-      )}
-
-      <canvas ref={canvasRef} className="tb-v2-hidden" />
-
-      {processedImage && (
-        <div>
-          <p className="tb-v2-tool-label" style={{marginBottom:8}}>Combined Result</p>
-          <img src={processedImage} alt="Combined" className="tb-v2-max-w-full tb-v2-rounded-lg" />
-          <button onClick={handleDownload} className="tb-v2-btn tb-v2-btn-secondary tb-v2-mt-2">
-            Download
-          </button>
+      <div className="tb-v2-section" style={{ display: 'flex', flexDirection: 'column', gap: 20, padding: '20px' }}>
+        <div
+          onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
+          onDragLeave={() => setDragActive(false)}
+          onDrop={handleDrop}
+          className={`border-2 border-dashed rounded-xl p-8 text-center transition-colors ${dragActive ? 'border-indigo-400 bg-indigo-50' : 'border-gray-200'}`}
+        >
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleImageUpload}
+            className="hidden"
+            id="combine-images-upload"
+          />
+          <label htmlFor="combine-images-upload" className="cursor-pointer">
+            <div className="text-gray-500 mb-2">Drop images here, or click to upload</div>
+            <div className="text-xs text-gray-400">PNG, JPG, WEBP - select multiple files</div>
+          </label>
         </div>
-      )}
+
+        {images.length > 0 ? (
+          <>
+            <div className="flex gap-2 flex-wrap">
+              {images.map((img, idx) => (
+                <div key={idx} className="relative">
+                  <img src={img} alt={`Image ${idx + 1}`} className="w-20 h-20 object-cover rounded-lg" />
+                  <button
+                    type="button"
+                    onClick={() => removeImage(idx)}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs"
+                  >
+                    x
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-sm text-gray-500">{images.length} images selected</p>
+
+            <div className="tb-v2-mode-tabs">
+              <button type="button" onClick={() => setLayout('horizontal')} className={`tb-v2-mode-tab ${layout === 'horizontal' ? 'on' : ''}`}>
+                Horizontal
+              </button>
+              <button type="button" onClick={() => setLayout('vertical')} className={`tb-v2-mode-tab ${layout === 'vertical' ? 'on' : ''}`}>
+                Vertical
+              </button>
+              <button type="button" onClick={() => setLayout('grid')} className={`tb-v2-mode-tab ${layout === 'grid' ? 'on' : ''}`}>
+                Grid
+              </button>
+            </div>
+
+            <div className="flex items-center gap-4">
+              <label className="text-sm font-medium text-gray-500">Spacing: {spacing}px</label>
+              <input
+                type="range"
+                min="0"
+                max="50"
+                value={spacing}
+                onChange={(e) => setSpacing(Number(e.target.value))}
+                className="tb-v2-range"
+              />
+            </div>
+
+            <button
+              type="button"
+              onClick={combineImages}
+              disabled={images.length < 2}
+              className="tb-v2-btn tb-v2-btn-primary disabled:opacity-50"
+            >
+              Combine Images
+            </button>
+          </>
+        ) : (
+          <div className="tb-v2-empty">Upload two or more images to combine them</div>
+        )}
+
+        <canvas ref={canvasRef} className="hidden" />
+
+        {processedImage && (
+          <div>
+            <p className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Combined Result</p>
+            <img src={processedImage} alt="Combined" className="max-w-full rounded-xl" />
+            <button type="button" onClick={handleDownload} className="tb-v2-btn mt-2">
+              Download
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
