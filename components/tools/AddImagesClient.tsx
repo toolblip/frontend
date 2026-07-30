@@ -18,57 +18,45 @@ export default function AddImagesClient() {
   const [layout, setLayout] = useState<'grid' | 'horizontal' | 'vertical'>('grid');
   const [spacing, setSpacing] = useState(10);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
 
-  const handleFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    const newImages: ImageItem[] = files.map((file) => ({
-      id: Math.random().toString(36).substring(2, 9),
-      file,
-      preview: URL.createObjectURL(file),
-      x: 0,
-      y: 0,
-      scale: 1,
-      zIndex: images.length,
-    }));
-    setImages((prev) => [...prev, ...newImages]);
-    e.target.value = '';
+  const handleFiles = useCallback((files: File[]) => {
+    const newImages: ImageItem[] = files
+      .filter(f => f.type.startsWith('image/'))
+      .map((file) => ({
+        id: Math.random().toString(36).substring(2, 9),
+        file,
+        preview: URL.createObjectURL(file),
+        x: 0, y: 0, scale: 1, zIndex: images.length,
+      }));
+    setImages(prev => [...prev, ...newImages]);
   }, [images.length]);
 
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleFiles(Array.from(e.target.files || []));
+    e.target.value = '';
+  };
+
+  const onDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    handleFiles(Array.from(e.dataTransfer.files));
+  };
+
   const removeImage = (id: string) => {
-    setImages((prev) => {
-      const img = prev.find((i) => i.id === id);
+    setImages(prev => {
+      const img = prev.find(i => i.id === id);
       if (img) URL.revokeObjectURL(img.preview);
-      return prev.filter((i) => i.id !== id);
+      return prev.filter(i => i.id !== id);
     });
     if (selectedId === id) setSelectedId(null);
-  };
-
-  const updatePosition = (id: string, field: 'x' | 'y', value: number) => {
-    setImages((prev) =>
-      prev.map((img) => (img.id === id ? { ...img, [field]: value } : img))
-    );
-  };
-
-  const updateScale = (id: string, scale: number) => {
-    setImages((prev) =>
-      prev.map((img) => (img.id === id ? { ...img, scale } : img))
-    );
-  };
-
-  const bringToFront = (id: string) => {
-    const maxZ = Math.max(...images.map((i) => i.zIndex));
-    updatePosition;
-    setImages((prev) =>
-      prev.map((img) => (img.id === id ? { ...img, zIndex: maxZ + 1 } : img))
-    );
   };
 
   const renderCanvas = useCallback(async () => {
     const canvas = canvasRef.current;
     if (!canvas || images.length === 0) return;
-    
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
@@ -98,52 +86,31 @@ export default function AddImagesClient() {
             const scale = Math.min(imgWidth / imgEl.width, imgHeight / imgEl.height);
             const drawW = imgEl.width * scale;
             const drawH = imgEl.height * scale;
-            const drawX = x + (imgWidth - drawW) / 2;
-            const drawY = y + (imgHeight - drawH) / 2;
-            ctx.drawImage(imgEl, drawX, drawY, drawW, drawH);
+            ctx.drawImage(imgEl, x + (imgWidth - drawW) / 2, y + (imgHeight - drawH) / 2, drawW, drawH);
             resolve();
           };
           imgEl.onerror = () => resolve();
         });
       }
-    } else if (layout === 'horizontal') {
-      const totalW = sortedImages.reduce((sum, _, i) => {
-        const img = sortedImages[i];
-        const imgEl = new Image();
-        imgEl.src = img.preview;
-        return sum + (i > 0 ? spacing : 0);
-      }, 0);
-      let currentX = (canvasSize.width - Math.min(totalW, canvasSize.width)) / 2;
-      
+    } else {
+      let current = spacing;
       for (const img of sortedImages) {
         const imgEl = new Image();
         imgEl.src = img.preview;
         await new Promise<void>((resolve) => {
           imgEl.onload = () => {
-            const scale = Math.min(1, canvasSize.height / imgEl.height);
+            const isHoriz = layout === 'horizontal';
+            const maxDim = isHoriz ? canvasSize.height : canvasSize.width;
+            const scale = Math.min(1, (maxDim - spacing * 2) / (isHoriz ? imgEl.height : imgEl.width));
             const drawW = imgEl.width * scale * 0.8;
             const drawH = imgEl.height * scale * 0.8;
-            const drawY = (canvasSize.height - drawH) / 2;
-            ctx.drawImage(imgEl, currentX, drawY, drawW, drawH);
-            currentX += drawW + spacing;
-            resolve();
-          };
-          imgEl.onerror = () => resolve();
-        });
-      }
-    } else if (layout === 'vertical') {
-      let currentY = spacing;
-      for (const img of sortedImages) {
-        const imgEl = new Image();
-        imgEl.src = img.preview;
-        await new Promise<void>((resolve) => {
-          imgEl.onload = () => {
-            const scale = Math.min(1, canvasSize.width / imgEl.width);
-            const drawW = imgEl.width * scale * 0.8;
-            const drawH = imgEl.height * scale * 0.8;
-            const drawX = (canvasSize.width - drawW) / 2;
-            ctx.drawImage(imgEl, drawX, currentY, drawW, drawH);
-            currentY += drawH + spacing;
+            if (isHoriz) {
+              ctx.drawImage(imgEl, current, (canvasSize.height - drawH) / 2, drawW, drawH);
+              current += drawW + spacing;
+            } else {
+              ctx.drawImage(imgEl, (canvasSize.width - drawW) / 2, current, drawW, drawH);
+              current += drawH + spacing;
+            }
             resolve();
           };
           imgEl.onerror = () => resolve();
@@ -155,7 +122,6 @@ export default function AddImagesClient() {
   const downloadComposite = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    
     const link = document.createElement('a');
     link.download = 'composite-image.png';
     link.href = canvas.toDataURL('image/png');
@@ -163,113 +129,105 @@ export default function AddImagesClient() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="space-y-3">
-        <div>
-          <label className="tb-v2-tool-label">Select Images</label>
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleFileSelect}
-            className="tb-v2-input"
-          />
-        </div>
-
-        {images.length > 0 && (
-          <>
-            <div className="grid grid-cols-3 gap-3">
-              <div>
-                <label className="tb-v2-tool-label">Width</label>
-                <input
-                  type="number"
-                  value={canvasSize.width}
-                  onChange={(e) => setCanvasSize((s) => ({ ...s, width: Number(e.target.value) }))}
-                  className="tb-v2-input"
-                  min={100}
-                  max={4000}
-                />
-              </div>
-              <div>
-                <label className="tb-v2-tool-label">Height</label>
-                <input
-                  type="number"
-                  value={canvasSize.height}
-                  onChange={(e) => setCanvasSize((s) => ({ ...s, height: Number(e.target.value) }))}
-                  className="tb-v2-input"
-                  min={100}
-                  max={4000}
-                />
-              </div>
-              <div>
-                <label className="tb-v2-tool-label">Spacing</label>
-                <input
-                  type="number"
-                  value={spacing}
-                  onChange={(e) => setSpacing(Number(e.target.value))}
-                  className="tb-v2-input"
-                  min={0}
-                  max={100}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="tb-v2-tool-label">Layout</label>
-              <select
-                value={layout}
-                onChange={(e) => setLayout(e.target.value as 'grid' | 'horizontal' | 'vertical')}
-                className="tb-v2-input"
-              >
-                <option value="grid">Grid</option>
-                <option value="horizontal">Horizontal</option>
-                <option value="vertical">Vertical</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="tb-v2-tool-label">Images ({images.length})</label>
-              <div className="tb-v2-mode-tabs">
-                {images.map((img) => (
-                  <div
-                    key={img.id}
-                    className={`relative group cursor-pointer border-2 rounded-lg overflow-hidden ${
-                      selectedId === img.id ? 'border-red-500' : 'border-gray-200 dark:border-gray-700'
-                    }`}
-                    onClick={() => setSelectedId(img.id)}
-                  >
-                    <img src={img.preview} alt="" className="w-16 h-16 object-cover" />
-                    <button
-                      type="button"
-                      onClick={(e) => { e.stopPropagation(); removeImage(img.id); }}
-                      className="absolute top-0 right-0 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </>
-        )}
+    <div>
+      {/* Upload area */}
+      <div
+        onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+        onDragLeave={() => setIsDragging(false)}
+        onDrop={onDrop}
+        onClick={() => fileRef.current?.click()}
+        className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors ${
+          isDragging
+            ? 'border-indigo-400 bg-indigo-50 dark:bg-indigo-900/20'
+            : 'border-gray-300 dark:border-gray-600 hover:border-indigo-400 dark:hover:border-indigo-500'
+        }`}
+      >
+        <div className="text-4xl mb-2">🖼️</div>
+        <p className="text-gray-600 dark:text-gray-400">
+          {isDragging ? 'Drop images here' : 'Click or drag images to combine'}
+        </p>
+        <p className="text-xs text-gray-500 mt-1">Select multiple images</p>
       </div>
 
-      <div className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden" ref={containerRef}>
+      <input ref={fileRef} type="file" accept="image/*" multiple onChange={handleFileSelect} className="hidden" />
+
+      {/* Settings */}
+      {images.length > 0 && (
+        <>
+          <div className="grid grid-cols-3 gap-3">
+            <div>
+              <label className="tb-v2-tool-label">Width</label>
+              <input type="number" value={canvasSize.width} onChange={(e) => setCanvasSize(s => ({ ...s, width: Number(e.target.value) }))} className="tb-v2-input" />
+            </div>
+            <div>
+              <label className="tb-v2-tool-label">Height</label>
+              <input type="number" value={canvasSize.height} onChange={(e) => setCanvasSize(s => ({ ...s, height: Number(e.target.value) }))} className="tb-v2-input" />
+            </div>
+            <div>
+              <label className="tb-v2-tool-label">Spacing</label>
+              <input type="number" value={spacing} onChange={(e) => setSpacing(Number(e.target.value))} className="tb-v2-input" min={0} max={100} />
+            </div>
+          </div>
+
+          {/* Layout selector */}
+          <div className="flex gap-2">
+            {(['grid', 'horizontal', 'vertical'] as const).map(l => (
+              <button
+                key={l}
+                onClick={() => setLayout(l)}
+                className={`flex-1 p-2 rounded-lg text-sm capitalize transition-colors ${
+                  layout === l
+                    ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-700'
+                    : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'
+                }`}
+              >
+                {l === 'grid' ? '⊞' : l === 'horizontal' ? '↔' : '↕'} {l}
+              </button>
+            ))}
+          </div>
+
+          {/* Image list */}
+          <div className="flex flex-wrap gap-2">
+            {images.map(img => (
+              <div
+                key={img.id}
+                className={`relative group cursor-pointer border-2 rounded-lg overflow-hidden ${
+                  selectedId === img.id ? 'border-indigo-500' : 'border-gray-200 dark:border-gray-700'
+                }`}
+                onClick={() => setSelectedId(img.id)}
+              >
+                <img src={img.preview} alt="" className="w-16 h-16 object-cover" />
+                <button
+                  onClick={(e) => { e.stopPropagation(); removeImage(img.id); }}
+                  className="absolute top-0 right-0 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                >✕</button>
+              </div>
+            ))}
+          </div>
+
+          {/* Actions */}
+          <div className="flex gap-2">
+            <button onClick={renderCanvas} className="tb-v2-btn tb-v2-btn-primary flex-1">
+              🔄 Update Preview
+            </button>
+            <button onClick={downloadComposite} className="tb-v2-btn tb-v2-btn-primary flex-1">
+              ⬇️ Download PNG
+            </button>
+          </div>
+        </>
+      )}
+
+      {/* Canvas preview */}
+      <div className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
         <canvas ref={canvasRef} className="w-full h-auto bg-white" />
       </div>
 
-      <div className="tb-v2-mode-tabs">
-        <button type="button" onClick={renderCanvas} className="tb-v2-btn flex-1" disabled={images.length === 0}>
-          Update Preview
-        </button>
-        <button type="button" onClick={downloadComposite} className="tb-v2-btn flex-1" disabled={images.length === 0}>
-          Download PNG
-        </button>
-      </div>
-
-      <p className="text-xs text-amber-600 dark:text-amber-400 text-center">
-        ⚠️ Preview only. Final output quality may vary.
-      </p>
+      {!images.length && (
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+          <div className="text-4xl mb-2">🖼️</div>
+          <p>Upload images to combine them</p>
+        </div>
+      )}
     </div>
   );
 }
