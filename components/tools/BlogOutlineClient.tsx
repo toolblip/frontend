@@ -6,6 +6,7 @@ export default function BlogOutlineClient() {
   const [topic, setTopic] = useState('');
   const [outline, setOutline] = useState<{ title: string; points: string[] }[]>([]);
   const [numSections, setNumSections] = useState(5);
+  const [copied, setCopied] = useState(false);
 
   const generateOutline = () => {
     if (!topic.trim()) return;
@@ -31,10 +32,26 @@ export default function BlogOutlineClient() {
     setOutline(customOutline.slice(0, numSections));
   };
 
+  const loadExample = () => {
+    setTopic('remote team productivity');
+    setNumSections(5);
+  };
+
+  const copyOutline = () => {
+    if (!outline.length) return;
+    const text = outline.map(section => `${section.title}\n${section.points.map(p => `- ${p}`).join('\n')}`).join('\n\n');
+    navigator.clipboard.writeText(text).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
   return (
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Blog Post Topic</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
       </div>
       <input
         type="text"
@@ -45,7 +62,7 @@ export default function BlogOutlineClient() {
         aria-label="Blog topic"
       />
       <div style={{ margin: '0.75rem 0' }}>
-        <label className="tb-v2-hint" style={{ marginRight: '1rem' }}>
+        <label className="text-sm text-gray-500 dark:text-gray-400" style={{ marginRight: '1rem' }}>
           Number of sections:
           <select
             value={numSections}
@@ -58,31 +75,39 @@ export default function BlogOutlineClient() {
         </label>
       </div>
       <div style={{ margin: '0.75rem 0' }}>
-        <button type="button" onClick={generateOutline} className="tb-v2-btn tb-v2-btn-primary">
+        <button type="button" onClick={generateOutline} disabled={!topic.trim()} className="tb-v2-btn tb-v2-btn-primary">
           Generate Outline
         </button>
       </div>
-      <div className="tb-v2-tool-output-head">
-        <span className="tb-v2-tool-label">Blog Outline</span>
-      </div>
-      <div className="tb-v2-tool-output-body">
-        {outline.length === 0 ? (
-          <p className="tb-v2-hint">Enter a topic and generate an outline</p>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            {outline.map((section, i) => (
-              <div key={i} style={{ borderLeft: '3px solid var(--accent)', paddingLeft: '1rem' }}>
-                <h4 style={{ margin: '0 0 0.5rem 0', fontWeight: 600 }}>{section.title}</h4>
-                <ul style={{ margin: 0, paddingLeft: '1.25rem' }}>
-                  {section.points.map((point, j) => (
-                    <li key={j} style={{ marginBottom: '0.25rem' }}>{point}</li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+
+      {outline.length === 0 ? (
+        <p className="tb-v2-empty">
+          Enter a topic above to generate a structured outline with introduction, body sections, and conclusion.
+        </p>
+      ) : (
+        <>
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">Blog Outline</span>
+            <button type="button" onClick={copyOutline} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
+              {copied ? 'Copied' : 'Copy'}
+            </button>
           </div>
-        )}
-      </div>
+          <div className="tb-v2-tool-output-body">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {outline.map((section, i) => (
+                <div key={i} style={{ borderLeft: '3px solid var(--accent)', paddingLeft: '1rem' }}>
+                  <h4 style={{ margin: '0 0 0.5rem 0', fontWeight: 600 }}>{section.title}</h4>
+                  <ul style={{ margin: 0, paddingLeft: '1.25rem' }}>
+                    {section.points.map((point, j) => (
+                      <li key={j} style={{ marginBottom: '0.25rem' }}>{point}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

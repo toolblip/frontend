@@ -7,6 +7,7 @@ export default function BillSplitterClient() {
   const [people, setPeople] = useState(2);
   const [tipPercent, setTipPercent] = useState(15);
   const [customTip, setCustomTip] = useState('');
+  const [copied, setCopied] = useState(false);
 
   const tipAmount = useMemo(() => {
     const amount = parseFloat(billAmount) || 0;
@@ -29,8 +30,27 @@ export default function BillSplitterClient() {
     setCustomTip('');
   };
 
+  const loadExample = () => {
+    setBillAmount('86.40');
+    setPeople(4);
+    setTipPercent(20);
+    setCustomTip('');
+  };
+
+  const copySummary = () => {
+    const summary = `Bill: $${(parseFloat(billAmount) || 0).toFixed(2)}\nTip (${customTip ? `${customTip}%` : `${tipPercent}%`}): $${tipAmount.toFixed(2)}\nTotal: $${totalAmount.toFixed(2)}\nPer person (${people}): $${perPerson.toFixed(2)}`;
+    navigator.clipboard.writeText(summary).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
   return (
     <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
+      <div className="flex justify-end">
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="tb-v2-tool-label mb-2">Bill Amount ($)</label>
@@ -64,7 +84,7 @@ export default function BillSplitterClient() {
               key={tip}
               type="button"
               onClick={() => { setTipPercent(tip); setCustomTip(''); }}
-              className={`tb-v2-btn ${tipPercent === tip && !customTip ? 'tb-v2-btn-primary' : 'tb-v2-btn-secondary'}`}
+              className={`tb-v2-btn ${tipPercent === tip && !customTip ? 'tb-v2-btn-primary' : ''}`}
             >
               {tip}%
             </button>
@@ -112,13 +132,24 @@ export default function BillSplitterClient() {
         </div>
       </div>
 
-      <button
-        type="button"
-        onClick={handleReset}
-        className="tb-v2-btn tb-v2-btn-secondary w-full"
-      >
-        Reset
-      </button>
+      <div className="flex gap-2">
+        <button
+          type="button"
+          onClick={copySummary}
+          className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+          style={{ flex: 1, textAlign: 'center' }}
+        >
+          {copied ? 'Copied' : 'Copy Summary'}
+        </button>
+        <button
+          type="button"
+          onClick={handleReset}
+          className="tb-v2-btn"
+          style={{ flex: 1 }}
+        >
+          Reset
+        </button>
+      </div>
 
       <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 text-sm text-gray-600 dark:text-gray-400">
         <strong>Tip Guide:</strong> 10-15% for adequate service, 15-20% for good service, 20%+ for excellent service. Adjust based on your experience!

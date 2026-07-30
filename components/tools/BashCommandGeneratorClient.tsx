@@ -22,12 +22,22 @@ const COMMANDS: Cmd[] = [
 export default function BashCommandGeneratorClient() {
   const [selected, setSelected] = useState<Cmd | null>(null);
   const [args, setArgs] = useState<Record<string, string>>({});
+  const [copied, setCopied] = useState(false);
 
   const generate = () => {
     if (!selected) return '';
     let cmd = selected.template;
     (selected.args || []).forEach(a => { cmd = cmd.replace(`{${a}}`, args[a] || ''); });
     return cmd;
+  };
+
+  const command = generate();
+
+  const copy = () => {
+    if (!command) return;
+    navigator.clipboard.writeText(command).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   return (
@@ -57,10 +67,26 @@ export default function BashCommandGeneratorClient() {
           ))}
         </div>
       )}
-      <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">Generated Command</span></div>
-      <div className="tb-v2-tool-output-body">
-        <pre style={{ margin: 0, whiteSpace: 'pre-wrap', fontFamily: 'var(--f-mono)', fontSize: 13, background: 'var(--tb-bg-secondary)', padding: 12, borderRadius: 8 }}>{generate() || ' - '}</pre>
-      </div>
+
+      {!selected && (
+        <p className="tb-v2-empty" style={{ marginTop: 16 }}>
+          Pick a command above to build a ready-to-run bash snippet with your own arguments filled in.
+        </p>
+      )}
+
+      {selected && (
+        <>
+          <div className="tb-v2-tool-output-head" style={{ marginTop: 16 }}>
+            <span className="tb-v2-tool-label">Generated Command</span>
+            <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
+              {copied ? 'Copied' : 'Copy'}
+            </button>
+          </div>
+          <div className="tb-v2-tool-output-body">
+            <pre className="tb-v2-tool-pre">{command}</pre>
+          </div>
+        </>
+      )}
     </div>
   );
 }

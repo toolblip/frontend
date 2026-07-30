@@ -7,6 +7,7 @@ export default function BinaryConverterClient() {
   const [input, setInput] = useState('');
   const [result, setResult] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const textToBinary = (text: string): string => {
     return text.split('').map(char => {
@@ -55,43 +56,53 @@ export default function BinaryConverterClient() {
     setError(null);
   };
 
+  const loadExample = () => {
+    setMode('textToBinary');
+    setInput('Hello World');
+    setResult('');
+    setError(null);
+  };
+
   const copyResult = () => {
-    if (result) {
-      navigator.clipboard.writeText(result);
-    }
+    if (!result) return;
+    navigator.clipboard.writeText(result).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-4 tb-v2-p-4">
-      <h2 className="tb-v2-text-2xl tb-v2-font-bold">Binary Converter</h2>
-      <p className="tb-v2-text-sm tb-v2-text-gray-500">Convert text to binary and vice versa</p>
-
-      {/* Mode Selection */}
-      <div className="tb-v2-card">
-        <label className="tb-v2-label">Conversion Mode</label>
-        <div className="tb-v2-grid tb-v2-grid-cols-2 tb-v2-gap-2">
+    <div className="flex flex-col gap-4">
+      <div>
+        <div className="tb-v2-tool-input-head">
+          <span className="tb-v2-tool-label">Conversion Mode</span>
+          <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+            Load Example
+          </button>
+        </div>
+        <div className="grid grid-cols-2 gap-2" style={{ marginTop: 8 }}>
           <button
+            type="button"
             onClick={() => { setMode('textToBinary'); setResult(''); setError(null); }}
-            className={`tb-v2-btn ${mode === 'textToBinary' ? 'tb-v2-btn-primary' : 'tb-v2-btn-secondary'}`}
+            className={`tb-v2-btn ${mode === 'textToBinary' ? 'tb-v2-btn-primary' : ''}`}
           >
-            Text → Binary
+            Text to Binary
           </button>
           <button
+            type="button"
             onClick={() => { setMode('binaryToText'); setResult(''); setError(null); }}
-            className={`tb-v2-btn ${mode === 'binaryToText' ? 'tb-v2-btn-primary' : 'tb-v2-btn-secondary'}`}
+            className={`tb-v2-btn ${mode === 'binaryToText' ? 'tb-v2-btn-primary' : ''}`}
           >
-            Binary → Text
+            Binary to Text
           </button>
         </div>
       </div>
 
-      {/* Input */}
-      <div className="tb-v2-card">
-        <div className="tb-v2-flex tb-v2-justify-between tb-v2-items-center tb-v2-mb-2">
-          <label className="tb-v2-label tb-v2-mb-0">
+      <div>
+        <div className="tb-v2-tool-input-head">
+          <span className="tb-v2-tool-label">
             {mode === 'textToBinary' ? 'Text Input' : 'Binary Input'}
-          </label>
-          <button onClick={handleClear} className="tb-v2-btn tb-v2-btn-secondary tb-v2-text-sm">
+          </span>
+          <button type="button" onClick={handleClear} className="tb-v2-btn-sm">
             Clear
           </button>
         </div>
@@ -99,70 +110,66 @@ export default function BinaryConverterClient() {
           value={input}
           onChange={(e) => { setInput(e.target.value); setResult(''); setError(null); }}
           placeholder={mode === 'textToBinary' ? 'Enter text to convert...' : 'Enter binary (e.g., 01001000 01100101 01101100 01101100 01101111)...'}
-          className="tb-v2-input tb-v2-min-h-[100px]"
+          className="tb-v2-tool-textarea"
           rows={4}
         />
-        {mode === 'textToBinary' && (
-          <p className="tb-v2-text-xs tb-v2-text-gray-400 tb-v2-mt-1">
-            {input.length} characters
-          </p>
+        {mode === 'textToBinary' && input && (
+          <p className="text-xs text-gray-400 mt-1">{input.length} characters</p>
         )}
       </div>
 
-      {/* Actions */}
-      <div className="tb-v2-flex tb-v2-gap-2">
-        <button onClick={handleConvert} className="tb-v2-btn tb-v2-btn-primary">
+      <div className="flex gap-2">
+        <button type="button" onClick={handleConvert} disabled={!input.trim()} className="tb-v2-btn tb-v2-btn-primary" style={{ flex: 1 }}>
           Convert
         </button>
-        <button onClick={handleSwap} className="tb-v2-btn tb-v2-btn-secondary">
-          ⇄ Swap
+        <button type="button" onClick={handleSwap} className="tb-v2-btn">
+          Swap
         </button>
       </div>
 
-      {/* Error */}
       {error && (
-        <div className="tb-v2-p-4 tb-v2-bg-red-100 tb-v2-text-red-700 tb-v2-rounded-lg">
+        <div className="p-3 bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300 rounded-lg text-sm">
           {error}
         </div>
       )}
 
-      {/* Result */}
-      {result && (
-        <div className="tb-v2-card">
-          <div className="tb-v2-flex tb-v2-justify-between tb-v2-items-center tb-v2-mb-2">
-            <label className="tb-v2-label tb-v2-mb-0">Result</label>
-            <button onClick={copyResult} className="tb-v2-btn tb-v2-btn-secondary tb-v2-text-sm">
-              📋 Copy
-            </button>
-          </div>
-          <div className="tb-v2-p-4 tb-v2-bg-green-50 tb-v2-rounded-lg">
-            <p className="tb-v2-text-lg tb-v2-font-mono tb-v2-break-all tb-v2-text-green-800">
-              {result}
-            </p>
-          </div>
-          {mode === 'textToBinary' && (
-            <p className="tb-v2-text-xs tb-v2-text-gray-400 tb-v2-mt-1">
-              {result.split(' ').length} bytes
-            </p>
-          )}
-        </div>
+      {!result && !error && (
+        <p className="tb-v2-empty">
+          Enter text or binary above to convert between the two, byte by byte.
+        </p>
       )}
 
-      {/* Examples */}
-      <div className="tb-v2-card tb-v2-bg-gray-50">
-        <h3 className="tb-v2-text-lg tb-v2-font-semibold tb-v2-mb-2">Examples</h3>
-        <div className="tb-v2-text-sm tb-v2-space-y-2">
+      {result && (
+        <>
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">Result</span>
+            <button type="button" onClick={copyResult} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
+              {copied ? 'Copied' : 'Copy'}
+            </button>
+          </div>
+          <div className="tb-v2-tool-output-body">
+            <p className="font-mono break-all text-gray-800 dark:text-gray-100">{result}</p>
+          </div>
+          {mode === 'textToBinary' && (
+            <p className="text-xs text-gray-400 mt-1">{result.split(' ').length} bytes</p>
+          )}
+        </>
+      )}
+
+      <div className="bg-gray-50 dark:bg-gray-800/60 rounded-xl p-4">
+        <h3 className="text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">Examples</h3>
+        <div className="text-sm space-y-2">
           <div>
-            <span className="tb-v2-text-gray-500">Hello:</span>
-            <span className="tb-v2-font-mono tb-v2-ml-2">01001000 01100101 01101100 01101100 01101111</span>
+            <span className="text-gray-500 dark:text-gray-400">Hello:</span>
+            <span className="font-mono ml-2 text-gray-700 dark:text-gray-300">01001000 01100101 01101100 01101100 01101111</span>
           </div>
           <div>
-            <span className="tb-v2-text-gray-500">World:</span>
-            <span className="tb-v2-font-mono tb-v2-ml-2">01010111 01101111 01110010 01101100 01100100</span>
+            <span className="text-gray-500 dark:text-gray-400">World:</span>
+            <span className="font-mono ml-2 text-gray-700 dark:text-gray-300">01010111 01101111 01110010 01101100 01100100</span>
           </div>
           <div>
-            <span className="tb-v2-text-gray-500">ASCII 65 =:</span>
-            <span className="tb-v2-font-mono tb-v2-ml-2">01000001 = A</span>
+            <span className="text-gray-500 dark:text-gray-400">ASCII 65:</span>
+            <span className="font-mono ml-2 text-gray-700 dark:text-gray-300">01000001 = A</span>
           </div>
         </div>
       </div>

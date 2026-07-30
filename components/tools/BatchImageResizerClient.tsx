@@ -27,6 +27,7 @@ export default function BatchImageResizerClient() {
   const [lockAspect, setLockAspect] = useState(true);
   const [processing, setProcessing] = useState(false);
   const [results, setResults] = useState<string[]>([]);
+  const [isDragging, setIsDragging] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const aspectRef = useRef<number>(1280 / 720);
 
@@ -116,7 +117,14 @@ export default function BatchImageResizerClient() {
 
   const onFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files;
-    if (selected) setFiles(Array.from(selected));
+    if (selected) { setFiles(Array.from(selected)); setResults([]); }
+  };
+
+  const onDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const dropped = Array.from(e.dataTransfer.files || []).filter((f) => f.type.startsWith('image/'));
+    if (dropped.length) { setFiles(dropped); setResults([]); }
   };
 
   return (
@@ -124,17 +132,38 @@ export default function BatchImageResizerClient() {
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Images</span>
       </div>
+      <div
+        onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+        onDragLeave={() => setIsDragging(false)}
+        onDrop={onDrop}
+        onClick={() => fileRef.current?.click()}
+        className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors ${
+          isDragging
+            ? 'border-indigo-400 bg-indigo-50 dark:bg-indigo-900/20'
+            : 'border-gray-300 dark:border-gray-600 hover:border-indigo-400 dark:hover:border-indigo-500'
+        }`}
+      >
+        <div className="text-4xl mb-2">🖼️</div>
+        <p className="text-gray-600 dark:text-gray-400">
+          {isDragging ? 'Drop images here' : 'Click or drag images to resize'}
+        </p>
+      </div>
       <input
         ref={fileRef}
         type="file"
         multiple
         accept="image/*"
         onChange={onFilesChange}
-        className="tb-v2-file-input"
+        className="hidden"
         aria-label="Select images to resize"
       />
       {files.length > 0 && (
-        <p className="tb-v2-hint">{files.length} image(s) selected</p>
+        <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-xl" style={{ marginTop: '0.75rem' }}>
+          <p className="text-sm text-gray-600 dark:text-gray-400">{files.length} image(s) selected</p>
+          <button type="button" onClick={() => { setFiles([]); setResults([]); }} className="text-gray-400 hover:text-gray-600">
+            ✕
+          </button>
+        </div>
       )}
 
       <div style={{ margin: '0.75rem 0' }}>
@@ -154,7 +183,7 @@ export default function BatchImageResizerClient() {
         </select>
       </div>
 
-      <div className="tb-v2-flex-row" style={{ gap: '0.75rem', margin: '0.75rem 0' }}>
+      <div className="flex" style={{ gap: '0.75rem', margin: '0.75rem 0' }}>
         <div style={{ flex: 1 }}>
           <label className="tb-v2-tool-label" style={{ display: 'block', marginBottom: '0.25rem' }}>Width</label>
           <input
@@ -192,11 +221,17 @@ export default function BatchImageResizerClient() {
         type="button"
         onClick={processImages}
         disabled={!files.length || processing}
-        className="tb-v2-btn w-full"
+        className="tb-v2-btn tb-v2-btn-primary w-full"
         style={{ marginBottom: '0.75rem' }}
       >
         {processing ? 'Processing...' : 'Resize Images'}
       </button>
+
+      {!files.length && !results.length && (
+        <p className="tb-v2-empty">
+          Drop one or more images above, pick a size preset, and resize them all at once.
+        </p>
+      )}
 
       {results.length > 0 && (
         <>

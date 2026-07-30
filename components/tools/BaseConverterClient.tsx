@@ -10,11 +10,11 @@ export default function BaseConverterClient() {
   const [toBase, setToBase] = useState<NumberBase>(2);
   const [result, setResult] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const convert = (value: string, from: NumberBase, to: NumberBase): string => {
     if (!value.trim()) return '';
 
-    // Parse to decimal
     let decimal: number;
     if (from === 16) {
       decimal = parseInt(value.replace(/^0x/i, ''), 16);
@@ -26,7 +26,6 @@ export default function BaseConverterClient() {
       throw new Error('Invalid number');
     }
 
-    // Convert from decimal to target base
     if (decimal === 0) return '0';
 
     const chars = '0123456789ABCDEF';
@@ -50,7 +49,7 @@ export default function BaseConverterClient() {
     try {
       const converted = convert(input, fromBase, toBase);
       setResult(converted);
-    } catch (err) {
+    } catch {
       setError('Invalid number format for the selected base');
     }
   };
@@ -70,9 +69,10 @@ export default function BaseConverterClient() {
   };
 
   const copyResult = () => {
-    if (result) {
-      navigator.clipboard.writeText(result);
-    }
+    if (!result) return;
+    navigator.clipboard.writeText(result).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   const bases: { id: NumberBase; name: string; prefix: string }[] = [
@@ -82,115 +82,115 @@ export default function BaseConverterClient() {
     { id: 16, name: 'Hex', prefix: '0x' },
   ];
 
-  return (
-    <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-4 tb-v2-p-4">
-      <h2 className="tb-v2-text-2xl tb-v2-font-bold">Base Converter</h2>
-      <p className="tb-v2-text-sm tb-v2-text-gray-500">Convert between binary, decimal, hexadecimal, and octal</p>
+  const resultPrefix = toBase === 16 ? '0x' : toBase === 8 ? '0o' : toBase === 2 ? '0b' : '';
 
-      {/* Base Selection */}
-      <div className="tb-v2-card">
-        <div className="tb-v2-grid tb-v2-grid-cols-2 tb-v2-gap-4">
-          <div>
-            <label className="tb-v2-label">From</label>
-            <select
-              value={fromBase}
-              onChange={(e) => { setFromBase(Number(e.target.value) as NumberBase); setResult(''); }}
-              className="tb-v2-input"
-            >
-              {bases.map(b => (
-                <option key={b.id} value={b.id}>{b.name} ({b.prefix || '0-9'})</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="tb-v2-label">To</label>
-            <select
-              value={toBase}
-              onChange={(e) => { setToBase(Number(e.target.value) as NumberBase); setResult(''); }}
-              className="tb-v2-input"
-            >
-              {bases.map(b => (
-                <option key={b.id} value={b.id}>{b.name} ({b.prefix || '0-9'})</option>
-              ))}
-            </select>
-          </div>
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="tb-v2-tool-label" style={{ display: 'block', marginBottom: 6 }}>From</label>
+          <select
+            value={fromBase}
+            onChange={(e) => { setFromBase(Number(e.target.value) as NumberBase); setResult(''); }}
+            className="tb-v2-select"
+          >
+            {bases.map(b => (
+              <option key={b.id} value={b.id}>{b.name} ({b.prefix || '0-9'})</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="tb-v2-tool-label" style={{ display: 'block', marginBottom: 6 }}>To</label>
+          <select
+            value={toBase}
+            onChange={(e) => { setToBase(Number(e.target.value) as NumberBase); setResult(''); }}
+            className="tb-v2-select"
+          >
+            {bases.map(b => (
+              <option key={b.id} value={b.id}>{b.name} ({b.prefix || '0-9'})</option>
+            ))}
+          </select>
         </div>
       </div>
 
-      {/* Input */}
-      <div className="tb-v2-card">
-        <div className="tb-v2-flex tb-v2-justify-between tb-v2-items-center tb-v2-mb-2">
-          <label className="tb-v2-label tb-v2-mb-0">Input</label>
-          <button onClick={handleClear} className="tb-v2-btn tb-v2-btn-secondary tb-v2-text-sm">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Input</span>
+        <div className="flex gap-2">
+          <button type="button" onClick={() => { setInput('255'); setFromBase(10); }} className="tb-v2-btn-sm">
+            Load Example
+          </button>
+          <button type="button" onClick={handleClear} className="tb-v2-btn-sm">
             Clear
           </button>
         </div>
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => { setInput(e.target.value); setResult(''); setError(null); }}
-          placeholder={`Enter ${bases.find(b => b.id === fromBase)?.name.toLowerCase()} number...`}
-          className="tb-v2-input"
-        />
+      </div>
+      <input
+        type="text"
+        value={input}
+        onChange={(e) => { setInput(e.target.value); setResult(''); setError(null); }}
+        placeholder={`Enter ${bases.find(b => b.id === fromBase)?.name.toLowerCase()} number...`}
+        className="tb-v2-input"
+      />
+
+      <div className="flex gap-2">
+        <button type="button" onClick={handleConvert} disabled={!input.trim()} className="tb-v2-btn tb-v2-btn-primary" style={{ flex: 1 }}>
+          Convert
+        </button>
+        <button type="button" onClick={handleSwap} className="tb-v2-btn">
+          Swap
+        </button>
       </div>
 
-      {/* Actions */}
-      <div className="tb-v2-flex tb-v2-gap-2">
-        <button onClick={handleConvert} className="tb-v2-btn tb-v2-btn-primary">
-          Convert →
-        </button>
-        <button onClick={handleSwap} className="tb-v2-btn tb-v2-btn-secondary">
-          ⇄ Swap
-        </button>
-      </div>
-
-      {/* Error */}
       {error && (
-        <div className="tb-v2-p-4 tb-v2-bg-red-100 tb-v2-text-red-700 tb-v2-rounded-lg">
+        <div className="p-3 bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300 rounded-lg text-sm">
           {error}
         </div>
       )}
 
-      {/* Result */}
-      {result && (
-        <div className="tb-v2-card">
-          <div className="tb-v2-flex tb-v2-justify-between tb-v2-items-center tb-v2-mb-2">
-            <label className="tb-v2-label tb-v2-mb-0">Result</label>
-            <button onClick={copyResult} className="tb-v2-btn tb-v2-btn-secondary tb-v2-text-sm">
-              📋 Copy
-            </button>
-          </div>
-          <div className="tb-v2-p-4 tb-v2-bg-green-50 tb-v2-rounded-lg">
-            <p className="tb-v2-text-2xl tb-v2-font-bold tb-v2-text-green-800 tb-v2-break-all">
-              {toBase === 16 ? '0x' : toBase === 8 ? '0o' : toBase === 2 ? '0b' : ''}{result}
-            </p>
-          </div>
-        </div>
+      {!result && !error && (
+        <p className="tb-v2-empty">
+          Enter a number above and convert it between binary, octal, decimal, and hex.
+        </p>
       )}
 
-      {/* Quick Reference */}
-      <div className="tb-v2-card tb-v2-bg-gray-50">
-        <h3 className="tb-v2-text-lg tb-v2-font-semibold tb-v2-mb-2">Quick Reference</h3>
-        <div className="tb-v2-text-sm tb-v2-space-y-1">
-          <div className="tb-v2-grid tb-v2-grid-cols-4 tb-v2-gap-2">
-            <span className="tb-v2-text-gray-500">Decimal</span>
-            <span className="tb-v2-text-gray-500">Binary</span>
-            <span className="tb-v2-text-gray-500">Octal</span>
-            <span className="tb-v2-text-gray-500">Hex</span>
+      {result && (
+        <>
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">Result</span>
+            <button type="button" onClick={copyResult} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
+              {copied ? 'Copied' : 'Copy'}
+            </button>
           </div>
-          <div className="tb-v2-grid tb-v2-grid-cols-4 tb-v2-gap-2">
+          <div className="tb-v2-tool-output-body">
+            <p className="text-2xl font-bold break-all text-gray-800 dark:text-gray-100">
+              {resultPrefix}{result}
+            </p>
+          </div>
+        </>
+      )}
+
+      <div className="bg-gray-50 dark:bg-gray-800/60 rounded-xl p-4">
+        <h3 className="text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300">Quick Reference</h3>
+        <div className="text-sm space-y-1">
+          <div className="grid grid-cols-4 gap-2 text-gray-500 dark:text-gray-400">
+            <span>Decimal</span>
+            <span>Binary</span>
+            <span>Octal</span>
+            <span>Hex</span>
+          </div>
+          <div className="grid grid-cols-4 gap-2 text-gray-700 dark:text-gray-300">
             <span>0</span><span>0</span><span>0</span><span>0</span>
           </div>
-          <div className="tb-v2-grid tb-v2-grid-cols-4 tb-v2-gap-2">
+          <div className="grid grid-cols-4 gap-2 text-gray-700 dark:text-gray-300">
             <span>1</span><span>1</span><span>1</span><span>1</span>
           </div>
-          <div className="tb-v2-grid tb-v2-grid-cols-4 tb-v2-gap-2">
+          <div className="grid grid-cols-4 gap-2 text-gray-700 dark:text-gray-300">
             <span>10</span><span>1010</span><span>12</span><span>A</span>
           </div>
-          <div className="tb-v2-grid tb-v2-grid-cols-4 tb-v2-gap-2">
+          <div className="grid grid-cols-4 gap-2 text-gray-700 dark:text-gray-300">
             <span>16</span><span>10000</span><span>20</span><span>10</span>
           </div>
-          <div className="tb-v2-grid tb-v2-grid-cols-4 tb-v2-gap-2">
+          <div className="grid grid-cols-4 gap-2 text-gray-700 dark:text-gray-300">
             <span>255</span><span>11111111</span><span>377</span><span>FF</span>
           </div>
         </div>

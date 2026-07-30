@@ -45,6 +45,9 @@ export default function BcryptHashGeneratorClient() {
       <div>
         <div className="tb-v2-tool-input-head">
           <span className="tb-v2-tool-label">Password</span>
+          <button type="button" onClick={() => setPassword('correct horse battery staple')} className="tb-v2-btn-sm">
+            Load Example
+          </button>
         </div>
         <input
           type="text"
@@ -81,22 +84,32 @@ export default function BcryptHashGeneratorClient() {
         type="button"
         onClick={generate}
         disabled={!password || generating}
-        className="tb-v2-btn w-full"
+        className="tb-v2-btn tb-v2-btn-primary w-full"
       >
         {generating ? 'Generating...' : 'Generate Hash'}
       </button>
 
-      <div className="tb-v2-tool-output-head">
-        <span className="tb-v2-tool-label">Bcrypt Hash</span>
-        <button type="button" onClick={copy} disabled={!hash} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
-          {copied ? 'Copied' : 'Copy'}
-        </button>
-      </div>
-      <div className="tb-v2-tool-output-body">
-        <pre className="tb-v2-tool-pre" style={{ wordBreak: 'break-all', fontSize: '0.85em' }}>
-          {hash || ' - '}
-        </pre>
-      </div>
+      {!hash && (
+        <p className="tb-v2-empty">
+          Enter a password above and generate a salted bcrypt hash you can store or compare against.
+        </p>
+      )}
+
+      {hash && (
+        <>
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">Bcrypt Hash</span>
+            <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
+              {copied ? 'Copied' : 'Copy'}
+            </button>
+          </div>
+          <div className="tb-v2-tool-output-body">
+            <pre className="tb-v2-tool-pre" style={{ wordBreak: 'break-all', fontSize: '0.85em' }}>
+              {hash}
+            </pre>
+          </div>
+        </>
+      )}
 
       <div style={{ borderTop: '1px solid var(--tb-border)', paddingTop: '1rem' }}>
         <div className="tb-v2-tool-input-head">
@@ -131,8 +144,8 @@ export default function BcryptHashGeneratorClient() {
             {verifyResult === 'match' ? '✅ Password matches!' : '❌ Password does not match'}
           </p>
         )}
-        <p className="tb-v2-hint" style={{ marginTop: '0.5rem' }}>
-          Uses bcryptjs — generates standard $2b$ bcrypt hashes compatible with any bcrypt implementation.
+        <p className="text-xs text-gray-500 dark:text-gray-400" style={{ marginTop: '0.5rem' }}>
+          Uses bcryptjs, generating standard $2b$ bcrypt hashes compatible with any bcrypt implementation.
         </p>
       </div>
     </div>
