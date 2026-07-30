@@ -14,7 +14,7 @@ export default function ApiEndpointTesterClient() {
   const [body, setBody] = useState('');
   const [includeBody, setIncludeBody] = useState(true);
   const [output, setOutput] = useState('');
-  const [copied, setCopied] = useState(false);
+  const [copiedSection, setCopiedSection] = useState<'curl' | 'fetch' | 'axios' | null>(null);
 
   const generateCurl = () => {
     let cmd = `curl -X ${method}`;
@@ -92,10 +92,10 @@ ${options.join(',\n')}
     setHeaders(headers.filter((_, i) => i !== index));
   };
 
-  const copy = (text: string) => {
+  const copy = (text: string, section: 'curl' | 'fetch' | 'axios') => {
     navigator.clipboard.writeText(text).catch(() => {});
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    setCopiedSection(section);
+    setTimeout(() => setCopiedSection(null), 1500);
   };
 
   return (
@@ -173,7 +173,6 @@ ${options.join(',\n')}
                 type="checkbox"
                 checked={includeBody}
                 onChange={(e) => setIncludeBody(e.target.checked)}
-                className="tb-v2-checkbox"
               />
               Include in snippet
             </label>
@@ -195,10 +194,10 @@ ${options.join(',\n')}
           <span className="tb-v2-tool-label">curl</span>
           <button
             type="button"
-            onClick={() => copy(generateCurl())}
-            className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+            onClick={() => copy(generateCurl(), 'curl')}
+            className={`tb-v2-copy-btn ${copiedSection === 'curl' ? 'done' : ''}`}
           >
-            {copied ? 'Copied' : 'Copy'}
+            {copiedSection === 'curl' ? 'Copied' : 'Copy'}
           </button>
         </div>
         <div className="tb-v2-tool-output-body">
@@ -212,10 +211,10 @@ ${options.join(',\n')}
           <span className="tb-v2-tool-label">JavaScript Fetch</span>
           <button
             type="button"
-            onClick={() => copy(generateFetch())}
-            className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+            onClick={() => copy(generateFetch(), 'fetch')}
+            className={`tb-v2-copy-btn ${copiedSection === 'fetch' ? 'done' : ''}`}
           >
-            {copied ? 'Copied' : 'Copy'}
+            {copiedSection === 'fetch' ? 'Copied' : 'Copy'}
           </button>
         </div>
         <div className="tb-v2-tool-output-body">
@@ -229,10 +228,10 @@ ${options.join(',\n')}
           <span className="tb-v2-tool-label">Axios</span>
           <button
             type="button"
-            onClick={() => copy(generateAxios())}
-            className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+            onClick={() => copy(generateAxios(), 'axios')}
+            className={`tb-v2-copy-btn ${copiedSection === 'axios' ? 'done' : ''}`}
           >
-            {copied ? 'Copied' : 'Copy'}
+            {copiedSection === 'axios' ? 'Copied' : 'Copy'}
           </button>
         </div>
         <div className="tb-v2-tool-output-body">

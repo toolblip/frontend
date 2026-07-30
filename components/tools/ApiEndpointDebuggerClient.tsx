@@ -201,7 +201,6 @@ export default function ApiEndpointDebuggerClient() {
                 type="checkbox"
                 checked={includeBody}
                 onChange={(e) => setIncludeBody(e.target.checked)}
-                className="tb-v2-checkbox"
               />
               Include
             </label>
@@ -218,14 +217,13 @@ export default function ApiEndpointDebuggerClient() {
 
       <div style={{ marginTop: 12 }}>
         <label className="tb-v2-tool-label" style={{ fontSize: 12, marginBottom: 4 }}>Output Format</label>
-        <div style={{ display: 'flex', gap: 2 }}>
+        <div className="tb-v2-mode-tabs">
           {(['curl', 'fetch', 'axios'] as const).map((f) => (
             <button
               key={f}
               type="button"
               onClick={() => setFormat(f)}
-              className={`tb-v2-copy-btn ${format === f ? 'done' : ''}`}
-              style={{ flex: 1, textTransform: 'capitalize' }}
+              className={`tb-v2-mode-tab capitalize ${format === f ? 'on' : ''}`}
             >
               {f}
             </button>
@@ -240,15 +238,7 @@ export default function ApiEndpointDebuggerClient() {
         </button>
       </div>
       <div className="tb-v2-tool-output-body">
-        <pre style={{
-          fontFamily: 'var(--f-mono)',
-          fontSize: 12,
-          whiteSpace: 'pre-wrap',
-          margin: 0,
-          padding: '12px 0'
-        }}>
-          {getOutput()}
-        </pre>
+        <pre className="tb-v2-tool-pre">{getOutput()}</pre>
       </div>
     </div>
   );

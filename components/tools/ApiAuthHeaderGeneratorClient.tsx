@@ -37,26 +37,30 @@ export default function ApiAuthHeaderGeneratorClient() {
     setTimeout(() => setCopied(false), 1500);
   };
 
+  const header = generateHeader();
+  const curlExample = header ? `curl -H "${header}" https://api.example.com/v1/resource` : '';
+
   return (
-    <div>
-      <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Authentication Type</span>
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-mode-tabs">
+        <button type="button" onClick={() => setAuthType('bearer')} className={`tb-v2-mode-tab ${authType === 'bearer' ? 'on' : ''}`}>
+          Bearer Token
+        </button>
+        <button type="button" onClick={() => setAuthType('basic')} className={`tb-v2-mode-tab ${authType === 'basic' ? 'on' : ''}`}>
+          Basic Auth
+        </button>
+        <button type="button" onClick={() => setAuthType('api-key')} className={`tb-v2-mode-tab ${authType === 'api-key' ? 'on' : ''}`}>
+          API Key
+        </button>
       </div>
-      <select
-        value={authType}
-        onChange={(e) => setAuthType(e.target.value as AuthType)}
-        className="tb-v2-input"
-        style={{ marginBottom: 12 }}
-      >
-        <option value="bearer">Bearer Token</option>
-        <option value="basic">Basic Auth</option>
-        <option value="api-key">API Key</option>
-      </select>
 
       {authType === 'bearer' && (
         <div>
           <div className="tb-v2-tool-input-head">
             <span className="tb-v2-tool-label">Bearer Token</span>
+            <button type="button" onClick={() => setToken('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.example')} className="tb-v2-btn-sm">
+              Load Example
+            </button>
           </div>
           <textarea
             value={token}
@@ -138,32 +142,25 @@ export default function ApiAuthHeaderGeneratorClient() {
         </>
       )}
 
-      <div className="tb-v2-tool-output-head" style={{ marginTop: 16 }}>
+      <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">Authorization Header</span>
-        {generateHeader() && (
+        {header && (
           <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
             {copied ? 'Copied' : 'Copy'}
           </button>
         )}
       </div>
-      <div className="tb-v2-tool-output-body">
-        {generateHeader() ? (
-          <div style={{
-            padding: '12px',
-            background: 'var(--tb-bg-primary)',
-            borderRadius: 8,
-            fontFamily: 'var(--f-mono)',
-            fontSize: 13,
-            wordBreak: 'break-all'
-          }}>
-            {generateHeader()}
+      {header ? (
+        <>
+          <pre className="tb-v2-tool-pre" style={{ wordBreak: 'break-all', whiteSpace: 'pre-wrap' }}>{header}</pre>
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">Example curl Request</span>
           </div>
-        ) : (
-          <div style={{ color: 'var(--tb-text-muted)', fontSize: 13 }}>
-            Fill in the fields above to generate the header
-          </div>
-        )}
-      </div>
+          <pre className="tb-v2-tool-pre" style={{ wordBreak: 'break-all', whiteSpace: 'pre-wrap' }}>{curlExample}</pre>
+        </>
+      ) : (
+        <p className="tb-v2-empty">Fill in the fields above to generate the Authorization header.</p>
+      )}
     </div>
   );
 }

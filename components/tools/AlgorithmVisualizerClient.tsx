@@ -2,8 +2,29 @@
 
 import { useState, useEffect } from 'react';
 
+type Algorithm = 'bubble' | 'selection' | 'insertion';
+
+const ALGO_INFO: Record<Algorithm, { name: string; desc: string; complexity: string }> = {
+  bubble: {
+    name: 'Bubble Sort',
+    desc: 'Repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order. The pass through the list is repeated until the list is sorted.',
+    complexity: 'Time: O(n²) | Space: O(1)',
+  },
+  selection: {
+    name: 'Selection Sort',
+    desc: 'Divides the list into a sorted and unsorted region, repeatedly finds the smallest element in the unsorted region, and moves it to the end of the sorted region.',
+    complexity: 'Time: O(n²) | Space: O(1)',
+  },
+  insertion: {
+    name: 'Insertion Sort',
+    desc: 'Builds the sorted list one item at a time, taking each element and inserting it into its correct position among the already sorted elements.',
+    complexity: 'Time: O(n²) | Space: O(1)',
+  },
+};
+
 export default function AlgorithmVisualizerClient() {
   const [array, setArray] = useState([64, 34, 25, 12, 22, 11, 90]);
+  const [algorithm, setAlgorithm] = useState<Algorithm>('bubble');
   const [steps, setSteps] = useState<number[][]>([]);
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -26,8 +47,50 @@ export default function AlgorithmVisualizerClient() {
     return steps;
   };
 
+  const generateSelectionSortSteps = (arr: number[]): number[][] => {
+    const steps: number[][] = [[...arr]];
+    const a = [...arr];
+    const n = a.length;
+
+    for (let i = 0; i < n - 1; i++) {
+      let minIdx = i;
+      for (let j = i + 1; j < n; j++) {
+        if (a[j] < a[minIdx]) minIdx = j;
+      }
+      if (minIdx !== i) {
+        [a[i], a[minIdx]] = [a[minIdx], a[i]];
+        steps.push([...a]);
+      }
+    }
+    steps.push([...a]);
+    return steps;
+  };
+
+  const generateInsertionSortSteps = (arr: number[]): number[][] => {
+    const steps: number[][] = [[...arr]];
+    const a = [...arr];
+    const n = a.length;
+
+    for (let i = 1; i < n; i++) {
+      const key = a[i];
+      let j = i - 1;
+      while (j >= 0 && a[j] > key) {
+        a[j + 1] = a[j];
+        j--;
+        steps.push([...a]);
+      }
+      a[j + 1] = key;
+      steps.push([...a]);
+    }
+    return steps;
+  };
+
   const startSort = () => {
-    const sortSteps = generateBubbleSortSteps(array);
+    const generator =
+      algorithm === 'bubble' ? generateBubbleSortSteps :
+      algorithm === 'selection' ? generateSelectionSortSteps :
+      generateInsertionSortSteps;
+    const sortSteps = generator(array);
     setSteps(sortSteps);
     setCurrentStep(0);
     setIsPlaying(true);
@@ -59,6 +122,20 @@ export default function AlgorithmVisualizerClient() {
 
   return (
     <div className="flex flex-col gap-4">
+      <div className="tb-v2-mode-tabs">
+        {(Object.keys(ALGO_INFO) as Algorithm[]).map((key) => (
+          <button
+            key={key}
+            type="button"
+            onClick={() => { setAlgorithm(key); reset(); }}
+            disabled={isPlaying}
+            className={`tb-v2-mode-tab ${algorithm === key ? 'on' : ''}`}
+          >
+            {ALGO_INFO[key].name}
+          </button>
+        ))}
+      </div>
+
       <div>
         <label className="tb-v2-tool-label">Array Values (comma-separated)</label>
         <input
@@ -72,8 +149,8 @@ export default function AlgorithmVisualizerClient() {
       </div>
 
       <div className="flex gap-2 flex-wrap">
-        <button type="button" onClick={startSort} disabled={isPlaying} className="tb-v2-btn">
-          Start Bubble Sort
+        <button type="button" onClick={startSort} disabled={isPlaying} className="tb-v2-btn tb-v2-btn-primary">
+          Start {ALGO_INFO[algorithm].name}
         </button>
         <button type="button" onClick={reset} className="tb-v2-btn-sm">
           Reset
@@ -104,15 +181,15 @@ export default function AlgorithmVisualizerClient() {
         <div className="flex items-end justify-center gap-1 h-48">
           {displayArray.map((value, index) => {
             const height = (value / maxValue) * 100;
-            const isSwapping = steps.length > 0 && currentStep < steps.length - 1 &&
-              steps[currentStep + 1]?.some((v, i) => i !== index && v !== displayArray[i]);
-            const isSorted = currentStep >= steps.length - 2 && index >= displayArray.length - (steps.length > 0 ? currentStep + 2 - steps.length : 0);
+            const isDone = steps.length > 0 && currentStep === steps.length - 1;
+            const isSwapping = !isDone && steps.length > 0 && currentStep < steps.length - 1 &&
+              steps[currentStep + 1]?.[index] !== value;
 
             return (
               <div key={index} className="flex flex-col items-center gap-1">
                 <div
                   className={`w-8 rounded-t transition-all duration-200 ${
-                    isSorted
+                    isDone
                       ? 'bg-green-500'
                       : isSwapping
                       ? 'bg-orange-500'
@@ -144,15 +221,13 @@ export default function AlgorithmVisualizerClient() {
         </div>
       </div>
 
-      <div className="tb-v2-box p-4">
-        <h4 className="font-medium text-gray-700 dark:text-gray-300 mb-2">Bubble Sort Algorithm</h4>
-        <p className="text-sm text-gray-600 dark:text-gray-400">
-          Bubble Sort repeatedly steps through the list, compares adjacent elements,
-          and swaps them if they are in the wrong order. The pass through the list
-          is repeated until the list is sorted.
+      <div className="tb-v2-tool-output-body">
+        <span className="tb-v2-tool-label">{ALGO_INFO[algorithm].name}</span>
+        <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+          {ALGO_INFO[algorithm].desc}
         </p>
         <div className="mt-2 text-xs text-gray-500 dark:text-gray-500 font-mono">
-          <p>Time: O(n²) | Space: O(1)</p>
+          <p>{ALGO_INFO[algorithm].complexity}</p>
         </div>
       </div>
     </div>

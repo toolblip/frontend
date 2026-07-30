@@ -23,7 +23,7 @@ const SYNONYM_MAP: Record<string, string[]> = {
   'ask': ['inquire', 'question', 'query', 'probe', 'interrogate'],
   'work': ['function', 'operate', 'perform', 'act', 'run'],
   'seem': ['appear', 'look', 'feel', 'sound', 'emerge'],
-  'feel': ['sense', 'experience', 'perceive', 'undergo', 'undergo'],
+  'feel': ['sense', 'experience', 'perceive', 'undergo', 'detect'],
   'try': ['attempt', 'endeavor', 'strive', 'seek', 'essay'],
   'leave': ['depart', 'exit', 'go away', 'withdraw', 'abandon'],
   'call': ['contact', 'reach', 'telephone', 'ring', 'dial'],
@@ -76,17 +76,24 @@ const SYNONYM_MAP: Record<string, string[]> = {
   'serve': ['assist', 'help', 'aid', 'support', 'attend'],
   'send': ['dispatch', 'transmit', 'forward', 'ship', 'convey'],
   'very': ['extremely', 'incredibly', 'highly', 'remarkably', 'particularly'],
-  'just': ['simply', 'merely', 'only', '纯粹地', 'but'],
+  'just': ['simply', 'merely', 'only', 'plainly', 'but'],
   'really': ['truly', 'genuinely', 'certainly', 'indeed', 'absolutely'],
   'quickly': ['rapidly', 'swiftly', 'promptly', 'hastily', 'expeditiously'],
-  'slowly': ['gradually', 'steadily', 'unhurriedly', 'leisurely', ' tardily'],
+  'slowly': ['gradually', 'steadily', 'unhurriedly', 'leisurely', 'tardily'],
 };
+
+const EXAMPLE_TEXT = "I think this is a really good idea and it can help us make things work quickly. We just need to find a way to show the important parts.";
 
 export default function AiRephraserClient() {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
   const [copied, setCopied] = useState(false);
   const [intensity, setIntensity] = useState<'light' | 'medium' | 'strong'>('medium');
+
+  const loadExample = () => {
+    setInput(EXAMPLE_TEXT);
+    setOutput('');
+  };
 
   const rephrase = useCallback(() => {
     if (!input.trim()) return;
@@ -130,54 +137,56 @@ export default function AiRephraserClient() {
   };
 
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text to Rephrase</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
       </div>
       <textarea
         value={input}
-        onChange={(e) => setInput(e.target.value)}
+        onChange={(e) => { setInput(e.target.value); setOutput(''); }}
         placeholder="Enter text you want to rephrase..."
         className="tb-v2-tool-textarea"
-        style={{ minHeight: 120 }}
+        rows={6}
         aria-label="Text input for rephrasing"
       />
 
-      <div style={{ display: 'flex', gap: 2, marginTop: 12, marginBottom: 12 }}>
+      <div className="tb-v2-mode-tabs">
         {(['light', 'medium', 'strong'] as const).map((level) => (
           <button
             key={level}
             type="button"
             onClick={() => setIntensity(level)}
-            className={`tb-v2-copy-btn ${intensity === level ? 'done' : ''}`}
-            style={{ flex: 1, textTransform: 'capitalize' }}
+            className={`tb-v2-mode-tab capitalize ${intensity === level ? 'on' : ''}`}
           >
             {level}
           </button>
         ))}
       </div>
 
-      <button type="button" onClick={rephrase} className="tb-v2-primary-btn" style={{ width: '100%', marginBottom: 12 }}>
+      <button type="button" onClick={rephrase} disabled={!input.trim()} className="tb-v2-btn tb-v2-btn-primary">
         Rephrase Text
       </button>
 
-      <div className="tb-v2-tool-output-head">
-        <span className="tb-v2-tool-label">Rephrased Output</span>
-        {output && (
-          <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
-            {copied ? 'Copied' : 'Copy'}
-          </button>
-        )}
-      </div>
-      <div className="tb-v2-tool-output-body">
-        <textarea
-          value={output}
-          readOnly
-          className="tb-v2-tool-textarea"
-          style={{ minHeight: 120 }}
-          aria-label="Rephrased output"
-        />
-      </div>
+      {!output && (
+        <p className="tb-v2-empty">
+          Enter text above and choose an intensity, then rephrase to swap common words for synonyms while keeping the meaning intact.
+        </p>
+      )}
+
+      {output && (
+        <div className="tb-v2-tool-output-body">
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">Rephrased Output</span>
+            <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
+              {copied ? 'Copied' : 'Copy'}
+            </button>
+          </div>
+          <pre className="tb-v2-tool-pre">{output}</pre>
+        </div>
+      )}
     </div>
   );
 }

@@ -72,6 +72,14 @@ export default function ApiEndpointDocumenterClient() {
     setOutput(generateMarkdown());
   };
 
+  const loadExample = () => {
+    setEndpoints([
+      { method: 'GET', path: '/users', description: 'List all users', responseExample: '[{ "id": 1, "name": "Ada Lovelace" }]' },
+      { method: 'POST', path: '/users', description: 'Create a new user', requestBody: '{ "name": "Ada Lovelace", "email": "ada@example.com" }', responseExample: '{ "id": 1, "name": "Ada Lovelace" }' },
+    ]);
+    setOutput('');
+  };
+
   const copy = () => {
     if (!output) return;
     navigator.clipboard.writeText(output).catch(() => {});
@@ -83,7 +91,7 @@ export default function ApiEndpointDocumenterClient() {
     <div className="flex flex-col gap-4">
       <div className="space-y-3">
         {endpoints.map((endpoint, index) => (
-          <div key={index} className="tb-v2-box p-4 space-y-3">
+          <div key={index} className="tb-v2-tool-output-body space-y-3">
             <div className="flex gap-2 items-center">
               <select
                 value={endpoint.method}
@@ -136,14 +144,23 @@ export default function ApiEndpointDocumenterClient() {
         ))}
       </div>
 
-      <div className="tb-v2-mode-tabs">
+      <div className="flex gap-2 flex-wrap">
         <button type="button" onClick={addEndpoint} className="tb-v2-btn-sm">
           + Add Endpoint
         </button>
-        <button type="button" onClick={handleGenerate} className="tb-v2-btn">
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
+        <button type="button" onClick={handleGenerate} className="tb-v2-btn tb-v2-btn-primary">
           Generate Markdown
         </button>
       </div>
+
+      {!output && (
+        <p className="tb-v2-empty">
+          Describe each endpoint above, then generate a single Markdown page with per-endpoint details and a summary table.
+        </p>
+      )}
 
       {output && (
         <>

@@ -21,9 +21,12 @@ export default function AnnotateClient() {
   const [isDrawing, setIsDrawing] = useState(false);
   const [startPos, setStartPos] = useState({ x: 0, y: 0 });
   const [tempRect, setTempRect] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
+  const [textDraft, setTextDraft] = useState<{ x: number; y: number; left: number; top: number; value: string } | null>(null);
+  const [isDragOver, setIsDragOver] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const textInputRef = useRef<HTMLInputElement>(null);
 
   const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ffffff', '#000000'];
 
@@ -39,6 +42,16 @@ export default function AnnotateClient() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      loadImage(URL.createObjectURL(file));
+      setAnnotations([]);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file && file.type.startsWith('image/')) {
       loadImage(URL.createObjectURL(file));
       setAnnotations([]);
     }
@@ -70,9 +83,14 @@ export default function AnnotateClient() {
     // Draw annotations
     for (const ann of annotations) {
       ctx.strokeStyle = ann.color;
+      ctx.fillStyle = ann.color;
       ctx.lineWidth = 3;
       if (ann.type === 'rectangle' && ann.width && ann.height) {
         ctx.strokeRect(ann.x, ann.y, ann.width, ann.height);
+      } else if (ann.type === 'text' && ann.text) {
+        ctx.font = 'bold 24px sans-serif';
+        ctx.textBaseline = 'top';
+        ctx.fillText(ann.text, ann.x, ann.y);
       }
     }
     
@@ -93,12 +111,35 @@ export default function AnnotateClient() {
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
     if (tool === 'select') return;
     const pos = getCanvasCoords(e);
+
+    if (tool === 'text') {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      setTextDraft({ x: pos.x, y: pos.y, left: e.clientX - rect.left, top: e.clientY - rect.top, value: '' });
+      return;
+    }
+
     setIsDrawing(true);
     setStartPos(pos);
-    
+
     if (tool === 'rectangle') {
       setTempRect({ x: pos.x, y: pos.y, w: 0, h: 0 });
     }
+  };
+
+  const commitTextDraft = () => {
+    if (textDraft && textDraft.value.trim()) {
+      setAnnotations(prev => [...prev, {
+        id: Math.random().toString(36).substring(2, 9),
+        type: 'text',
+        x: textDraft.x,
+        y: textDraft.y,
+        text: textDraft.value.trim(),
+        color: currentColor,
+      }]);
+    }
+    setTextDraft(null);
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -128,22 +169,6 @@ export default function AnnotateClient() {
       }]);
     }
     setTempRect(null);
-  };
-
-  const handleTextAdd = () => {
-    const text = prompt('Enter text:');
-    if (text) {
-      const centerX = canvasRef.current ? canvasRef.current.width / 2 : 100;
-      const centerY = canvasRef.current ? canvasRef.current.height / 2 : 100;
-      setAnnotations([...annotations, {
-        id: Math.random().toString(36).substring(2, 9),
-        type: 'text',
-        x: centerX,
-        y: centerY,
-        text,
-        color: currentColor,
-      }]);
-    }
   };
 
   const undo = () => {
@@ -178,25 +203,25 @@ export default function AnnotateClient() {
           Upload Image
         </button>
         
-        <div className="flex border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden">
+        <div className="tb-v2-mode-tabs">
           <button
             type="button"
             onClick={() => setTool('select')}
-            className={`px-3 py-1.5 text-sm ${tool === 'select' ? 'bg-red-600 text-white' : 'bg-white dark:bg-gray-800'}`}
+            className={`tb-v2-mode-tab ${tool === 'select' ? 'on' : ''}`}
           >
             Select
           </button>
           <button
             type="button"
             onClick={() => setTool('rectangle')}
-            className={`px-3 py-1.5 text-sm ${tool === 'rectangle' ? 'bg-red-600 text-white' : 'bg-white dark:bg-gray-800'}`}
+            className={`tb-v2-mode-tab ${tool === 'rectangle' ? 'on' : ''}`}
           >
             Rectangle
           </button>
           <button
             type="button"
-            onClick={() => { setTool('text'); handleTextAdd(); }}
-            className={`px-3 py-1.5 text-sm ${tool === 'text' ? 'bg-red-600 text-white' : 'bg-white dark:bg-gray-800'}`}
+            onClick={() => setTool('text')}
+            className={`tb-v2-mode-tab ${tool === 'text' ? 'on' : ''}`}
           >
             Text
           </button>
@@ -227,18 +252,41 @@ export default function AnnotateClient() {
         </button>
       </div>
 
-      <div className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+      <div
+        className="relative border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden"
+        onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
+        onDragLeave={() => setIsDragOver(false)}
+        onDrop={handleDrop}
+      >
         <canvas
           ref={canvasRef}
-          className={`w-full ${image ? '' : 'hidden'}`}
+          className={`w-full ${image ? '' : 'hidden'} ${tool === 'text' ? 'cursor-text' : ''}`}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
         />
+        {textDraft && (
+          <input
+            ref={textInputRef}
+            type="text"
+            autoFocus
+            value={textDraft.value}
+            onChange={(e) => setTextDraft({ ...textDraft, value: e.target.value })}
+            onKeyDown={(e) => { if (e.key === 'Enter') commitTextDraft(); if (e.key === 'Escape') setTextDraft(null); }}
+            onBlur={commitTextDraft}
+            placeholder="Type text, Enter to place"
+            className="absolute z-10 px-2 py-1 text-sm rounded border shadow-lg bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600"
+            style={{ left: textDraft.left, top: textDraft.top, color: currentColor }}
+          />
+        )}
         {!image && (
-          <div className="flex items-center justify-center h-64 bg-gray-100 dark:bg-gray-800">
-            <p className="text-gray-500 dark:text-gray-400">No image loaded</p>
+          <div
+            className={`tb-v2-dropzone ${isDragOver ? 'dragging' : ''}`}
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <p className="tb-v2-dropzone-text">Drop an image here or click to upload</p>
+            <p className="tb-v2-dropzone-hint">PNG, JPG, WebP</p>
           </div>
         )}
       </div>

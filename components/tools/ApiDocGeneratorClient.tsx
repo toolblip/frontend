@@ -98,52 +98,64 @@ export default function ApiDocGeneratorClient() {
     setTimeout(() => setCopied(false), 1500);
   };
 
+  const loadExample = () => {
+    setEndpointName('Get User Profile');
+    setJsonInput(JSON.stringify({ id: 1, name: 'John Doe', email: 'john@example.com', status: 'active', created_at: '2026-01-15T10:00:00Z' }, null, 2));
+    setOutput('');
+  };
+
   return (
-    <div>
-      <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Endpoint Name (optional)</span>
+    <div className="flex flex-col gap-4">
+      <div>
+        <div className="tb-v2-tool-input-head">
+          <span className="tb-v2-tool-label">Endpoint Name (optional)</span>
+          <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+            Load Example
+          </button>
+        </div>
+        <input
+          type="text"
+          value={endpointName}
+          onChange={(e) => setEndpointName(e.target.value)}
+          placeholder="e.g., Get User Profile"
+          className="tb-v2-input"
+        />
       </div>
-      <input
-        type="text"
-        value={endpointName}
-        onChange={(e) => setEndpointName(e.target.value)}
-        placeholder="e.g., Get User Profile"
-        className="tb-v2-input"
-        style={{ marginBottom: 12 }}
-      />
 
-      <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">JSON Sample Response</span>
+      <div>
+        <div className="tb-v2-tool-input-head">
+          <span className="tb-v2-tool-label">JSON Sample Response</span>
+        </div>
+        <textarea
+          value={jsonInput}
+          onChange={(e) => setJsonInput(e.target.value)}
+          placeholder='{"id": 1, "name": "John Doe", "email": "john@example.com"}'
+          className="tb-v2-tool-textarea"
+          style={{ minHeight: 150, fontFamily: 'var(--f-mono)' }}
+        />
       </div>
-      <textarea
-        value={jsonInput}
-        onChange={(e) => setJsonInput(e.target.value)}
-        placeholder='{"id": 1, "name": "John Doe", "email": "john@example.com"}'
-        className="tb-v2-tool-textarea"
-        style={{ minHeight: 150, fontFamily: 'var(--f-mono)' }}
-      />
 
-      <button type="button" onClick={generateDocs} className="tb-v2-primary-btn" style={{ width: '100%', marginTop: 12, marginBottom: 12 }}>
+      <button type="button" onClick={generateDocs} disabled={!jsonInput.trim()} className="tb-v2-btn tb-v2-btn-primary">
         Generate API Documentation
       </button>
 
-      <div className="tb-v2-tool-output-head">
-        <span className="tb-v2-tool-label">Generated Documentation (Markdown)</span>
-        {output && (
-          <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
-            {copied ? 'Copied' : 'Copy'}
-          </button>
-        )}
-      </div>
-      <div className="tb-v2-tool-output-body">
-        <textarea
-          value={output}
-          readOnly
-          className="tb-v2-tool-textarea"
-          style={{ minHeight: 250, fontFamily: 'var(--f-mono)' }}
-          aria-label="Generated API documentation"
-        />
-      </div>
+      {!output && (
+        <p className="tb-v2-empty">
+          Paste a sample JSON response above and generate a ready-to-paste Markdown doc with a field table, example response, and usage snippet.
+        </p>
+      )}
+
+      {output && (
+        <div className="tb-v2-tool-output-body">
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">Generated Documentation (Markdown)</span>
+            <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
+              {copied ? 'Copied' : 'Copy'}
+            </button>
+          </div>
+          <pre className="tb-v2-tool-pre">{output}</pre>
+        </div>
+      )}
     </div>
   );
 }

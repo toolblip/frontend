@@ -9,11 +9,33 @@ interface Issue {
   line?: number;
 }
 
+const EXAMPLE_HTML = `<html>
+  <head></head>
+  <body>
+    <img src="photo.jpg" />
+    <button></button>
+    <a href="/pricing"></a>
+    <input type="text" />
+  </body>
+</html>`;
+
 export default function AccessibilityCheckerClient() {
   const [input, setInput] = useState('');
   const [issues, setIssues] = useState<Issue[]>([]);
   const [analyzed, setAnalyzed] = useState(false);
   const [copied, setCopied] = useState(false);
+
+  const loadExample = () => {
+    setInput(EXAMPLE_HTML);
+    setIssues([]);
+    setAnalyzed(false);
+  };
+
+  const clear = () => {
+    setInput('');
+    setIssues([]);
+    setAnalyzed(false);
+  };
 
   const checkAccessibility = () => {
     if (!input.trim()) {
@@ -175,6 +197,9 @@ export default function AccessibilityCheckerClient() {
     <div className="flex flex-col gap-4">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">HTML Input</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
       </div>
       <textarea
         value={input}
@@ -191,9 +216,22 @@ export default function AccessibilityCheckerClient() {
         rows={10}
       />
 
-      <button type="button" onClick={checkAccessibility} className="tb-v2-btn">
-        Check Accessibility
-      </button>
+      <div className="flex gap-2">
+        <button type="button" onClick={checkAccessibility} className="tb-v2-btn tb-v2-btn-primary">
+          Check Accessibility
+        </button>
+        {(input || analyzed) && (
+          <button type="button" onClick={clear} className="tb-v2-btn">
+            Clear
+          </button>
+        )}
+      </div>
+
+      {!analyzed && !input && (
+        <p className="tb-v2-empty">
+          Paste HTML above, or load the example, then check for missing alt text, labels, landmarks, and keyboard access issues.
+        </p>
+      )}
 
       {analyzed && (
         <>
@@ -221,12 +259,12 @@ export default function AccessibilityCheckerClient() {
           ) : (
             <div className="space-y-2">
               {issues.map((issue, index) => (
-                <div key={index} className="tb-v2-box p-3">
+                <div key={index} className="tb-v2-result-card">
                   <div className="flex items-start gap-2">
-                    <span className={`px-2 py-0.5 rounded text-xs font-medium ${issueTypeColors[issue.type] || 'bg-gray-100 text-gray-700'}`}>
+                    <span className={`px-2 py-0.5 rounded text-xs font-medium shrink-0 ${issueTypeColors[issue.type] || 'bg-gray-100 text-gray-700'}`}>
                       {issue.type}
                     </span>
-                    <div className="flex-1">
+                    <div className="flex-1 min-w-0">
                       <p className="text-sm text-gray-700 dark:text-gray-300">{issue.message}</p>
                       {issue.element && (
                         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 font-mono truncate">
