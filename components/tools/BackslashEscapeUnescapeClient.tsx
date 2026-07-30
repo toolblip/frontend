@@ -1,254 +1,178 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 type EscapeMode = 'escape' | 'unescape';
 type EscapeContext = 'json' | 'javascript' | 'regex' | 'html' | 'general';
+
+const EXAMPLES: Record<EscapeContext, string> = {
+  json: '{"name": "John", "message": "Hello\\nWorld"}',
+  javascript: "const str = 'Hello\\nWorld';",
+  regex: '^\\d{3}-\\d{4}$',
+  html: '<div class="container">Hello & goodbye</div>',
+  general: 'C:\\Users\\Documents\\file.txt',
+};
 
 export default function BackslashEscapeUnescapeClient() {
   const [input, setInput] = useState('');
   const [mode, setMode] = useState<EscapeMode>('escape');
   const [context, setContext] = useState<EscapeContext>('json');
-  const [output, setOutput] = useState('');
+  const [copied, setCopied] = useState(false);
+  const [showExamples, setShowExamples] = useState(false);
 
   const escapeString = (str: string, ctx: EscapeContext): string => {
     switch (ctx) {
       case 'json':
-        return str
-          .replace(/\\/g, '\\\\')
-          .replace(/"/g, '\\"')
-          .replace(/\n/g, '\\n')
-          .replace(/\r/g, '\\r')
-          .replace(/\t/g, '\\t');
+        return str.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t');
       case 'javascript':
-        return str
-          .replace(/\\/g, '\\\\')
-          .replace(/'/g, "\\'")
-          .replace(/"/g, '\\"')
-          .replace(/\n/g, '\\n')
-          .replace(/\r/g, '\\r')
-          .replace(/\t/g, '\\t')
-          .replace(/</g, '\\x3C')
-          .replace(/>/g, '\\x3E');
+        return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\r/g, '\\r').replace(/\t/g, '\\t').replace(/</g, '\\x3C').replace(/>/g, '\\x3E');
       case 'regex':
-        return str
-          .replace(/\\/g, '\\\\')
-          .replace(/[.*+?^${}()|[\]]/g, '\\$&')
-          .replace(/\n/g, '\\n')
-          .replace(/\t/g, '\\t');
+        return str.replace(/\\/g, '\\\\').replace(/[.*+?^${}()|[\]]/g, '\\$&').replace(/\n/g, '\\n').replace(/\t/g, '\\t');
       case 'html':
-        return str
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#39;');
-      case 'general':
+        return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
       default:
-        return str
-          .replace(/\\/g, '\\\\')
-          .replace(/\n/g, '\\n')
-          .replace(/\t/g, '\\t');
+        return str.replace(/\\/g, '\\\\').replace(/\n/g, '\\n').replace(/\t/g, '\\t');
     }
   };
 
   const unescapeString = (str: string, ctx: EscapeContext): string => {
     switch (ctx) {
       case 'json':
-        return str
-          .replace(/\\\\/g, '\\')
-          .replace(/\\"/g, '"')
-          .replace(/\\n/g, '\n')
-          .replace(/\\r/g, '\r')
-          .replace(/\\t/g, '\t');
+        return str.replace(/\\\\/g, '\\').replace(/\\"/g, '"').replace(/\\n/g, '\n').replace(/\\r/g, '\r').replace(/\\t/g, '\t');
       case 'javascript':
-        return str
-          .replace(/\\\\/g, '\\')
-          .replace(/\\'/g, "'")
-          .replace(/\\"/g, '"')
-          .replace(/\\n/g, '\n')
-          .replace(/\\r/g, '\r')
-          .replace(/\\t/g, '\t')
-          .replace(/\\x3C/g, '<')
-          .replace(/\\x3E/g, '>');
+        return str.replace(/\\\\/g, '\\').replace(/\\'/g, "'").replace(/\\"/g, '"').replace(/\\n/g, '\n').replace(/\\r/g, '\r').replace(/\\t/g, '\t').replace(/\\x3C/g, '<').replace(/\\x3E/g, '>');
       case 'regex':
-        return str
-          .replace(/\\\\/g, '\\')
-          .replace(/\\([.*+?^${}()|[\]])/g, '$1')
-          .replace(/\\n/g, '\n')
-          .replace(/\\t/g, '\t');
+        return str.replace(/\\\\/g, '\\').replace(/\\([.*+?^${}()|[\]])/g, '$1').replace(/\\n/g, '\n').replace(/\\t/g, '\t');
       case 'html':
-        return str
-          .replace(/&amp;/g, '&')
-          .replace(/&lt;/g, '<')
-          .replace(/&gt;/g, '>')
-          .replace(/&quot;/g, '"')
-          .replace(/&#39;/g, "'");
-      case 'general':
+        return str.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
       default:
-        return str
-          .replace(/\\\\/g, '\\')
-          .replace(/\\n/g, '\n')
-          .replace(/\\t/g, '\t');
+        return str.replace(/\\\\/g, '\\').replace(/\\n/g, '\n').replace(/\\t/g, '\t');
     }
   };
 
-  const handleProcess = () => {
-    if (!input.trim()) {
-      setOutput('');
-      return;
-    }
-
+  const output = useMemo(() => {
+    if (!input.trim()) return '';
     try {
-      if (mode === 'escape') {
-        setOutput(escapeString(input, context));
-      } else {
-        setOutput(unescapeString(input, context));
-      }
-    } catch (err) {
-      setOutput('Error processing string');
+      return mode === 'escape' ? escapeString(input, context) : unescapeString(input, context);
+    } catch {
+      return 'Error processing string';
     }
+  }, [input, mode, context]);
+
+  const copy = () => {
+    navigator.clipboard.writeText(output);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
-  const handleSwap = () => {
+  const swap = () => {
     setInput(output);
-    setOutput('');
+    setMode(mode === 'escape' ? 'unescape' : 'escape');
   };
 
-  const handleClear = () => {
-    setInput('');
-    setOutput('');
-  };
-
-  const copyToClipboard = () => {
-    if (output) {
-      navigator.clipboard.writeText(output);
-    }
-  };
-
-  const getContextDescription = (ctx: EscapeContext): string => {
-    switch (ctx) {
-      case 'json': return 'Escape for JSON strings';
-      case 'javascript': return 'Escape for JavaScript strings';
-      case 'regex': return 'Escape special regex characters';
-      case 'html': return 'Escape HTML entities';
-      case 'general': return 'General backslash escaping';
-    }
+  const loadExample = (text: string) => {
+    setInput(text);
+    setShowExamples(false);
   };
 
   return (
-    <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-4 tb-v2-p-4">
-      <h2 className="tb-v2-text-2xl tb-v2-font-bold">Backslash Escape/Unescape</h2>
-      <p className="tb-v2-text-sm tb-v2-text-gray-500">Escape and unescape backslash characters for various contexts</p>
-
-      {/* Mode Selection */}
-      <div className="tb-v2-card">
-        <div className="tb-v2-flex tb-v2-gap-2">
+    <div>
+      {/* Mode tabs */}
+      <div className="tb-v2-mode-tabs" role="tablist">
+        {(['escape', 'unescape'] as const).map((m) => (
           <button
-            onClick={() => setMode('escape')}
-            className={`tb-v2-btn ${mode === 'escape' ? 'tb-v2-btn-primary' : 'tb-v2-btn-secondary'}`}
+            key={m}
+            role="tab"
+            aria-selected={mode === m}
+            onClick={() => setMode(m)}
+            className={`tb-v2-mode-tab ${mode === m ? 'on' : ''}`}
           >
-            Escape
+            {m === 'escape' ? '🔒 Escape' : '🔓 Unescape'}
           </button>
-          <button
-            onClick={() => setMode('unescape')}
-            className={`tb-v2-btn ${mode === 'unescape' ? 'tb-v2-btn-primary' : 'tb-v2-btn-secondary'}`}
-          >
-            Unescape
-          </button>
-        </div>
+        ))}
       </div>
 
-      {/* Context Selection */}
-      <div className="tb-v2-card">
-        <label className="tb-v2-label">Context</label>
-        <div className="tb-v2-flex tb-v2-flex-wrap tb-v2-gap-2">
-          {(['json', 'javascript', 'regex', 'html', 'general'] as const).map(ctx => (
+      {/* Context selector */}
+      <div>
+        <label className="tb-v2-tool-label">Context</label>
+        <div className="flex flex-wrap gap-2">
+          {(['json', 'javascript', 'regex', 'html', 'general'] as const).map((ctx) => (
             <button
               key={ctx}
               onClick={() => setContext(ctx)}
-              className={`tb-v2-btn tb-v2-text-sm ${context === ctx ? 'tb-v2-btn-primary' : 'tb-v2-btn-secondary'}`}
-              title={getContextDescription(ctx)}
+              className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
+                context === ctx
+                  ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-700'
+                  : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'
+              }`}
             >
-              {ctx === 'json' && '📄 '}
-              {ctx === 'javascript' && '🟨 '}
-              {ctx === 'regex' && '🔍 '}
-              {ctx === 'html' && '🌐 '}
-              {ctx === 'general' && '⚙️ '}
               {ctx.charAt(0).toUpperCase() + ctx.slice(1)}
             </button>
           ))}
         </div>
-        <p className="tb-v2-text-xs tb-v2-text-gray-500 tb-v2-mt-2">
-          {getContextDescription(context)}
-        </p>
       </div>
 
       {/* Input */}
-      <div className="tb-v2-card">
-        <div className="tb-v2-flex tb-v2-justify-between tb-v2-items-center tb-v2-mb-2">
-          <label className="tb-v2-label tb-v2-mb-0">Input</label>
-          <button onClick={handleClear} className="tb-v2-btn tb-v2-btn-secondary tb-v2-text-sm">
-            Clear
+      <div>
+        <div className="tb-v2-tool-input-head">
+          <span className="tb-v2-tool-label">Input</span>
+          <button
+            type="button"
+            onClick={() => setShowExamples(!showExamples)}
+            className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm"
+          >
+            📋 Examples
           </button>
         </div>
+
+        {showExamples && (
+          <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg mb-3 border border-gray-200 dark:border-gray-700">
+            <div className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Try an example:</div>
+            <button
+              onClick={() => loadExample(EXAMPLES[context])}
+              className="px-3 py-1.5 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors font-mono"
+            >
+              {context.charAt(0).toUpperCase() + context.slice(1)} Example
+            </button>
+          </div>
+        )}
+
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder={mode === 'escape' ? 'Enter text to escape...' : 'Enter escaped text to unescape...'}
-          className="tb-v2-textarea tb-v2-min-h-[120px]"
+          className="tb-v2-tool-textarea"
+          style={{ fontFamily: 'var(--f-mono)', minHeight: 100 }}
+          rows={4}
         />
-      </div>
-
-      {/* Process Button */}
-      <div className="tb-v2-flex tb-v2-gap-2">
-        <button
-          onClick={handleProcess}
-          className="tb-v2-btn tb-v2-btn-primary"
-        >
-          {mode === 'escape' ? 'Escape' : 'Unescape'} →
-        </button>
-        <button
-          onClick={handleSwap}
-          className="tb-v2-btn tb-v2-btn-secondary"
-          disabled={!output}
-        >
-          ⇄ Swap
-        </button>
       </div>
 
       {/* Output */}
       {output && (
-        <div className="tb-v2-card">
-          <div className="tb-v2-flex tb-v2-justify-between tb-v2-items-center tb-v2-mb-2">
-            <label className="tb-v2-label tb-v2-mb-0">Output</label>
-            <button onClick={copyToClipboard} className="tb-v2-btn tb-v2-btn-secondary tb-v2-text-sm">
-              📋 Copy
-            </button>
+        <>
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">Output ({output.length} chars)</span>
+            <div className="flex gap-2">
+              <button onClick={swap} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm">
+                ↕ Swap
+              </button>
+              <button onClick={copy} className="tb-v2-copy-btn">
+                {copied ? 'Copied!' : 'Copy'}
+              </button>
+            </div>
           </div>
-          <textarea
-            value={output}
-            readOnly
-            className="tb-v2-textarea tb-v2-min-h-[120px] tb-v2-bg-gray-50"
-          />
-          <p className="tb-v2-text-xs tb-v2-text-gray-500 tb-v2-mt-2">
-            {output.length} characters
-          </p>
-        </div>
+          <div className="tb-v2-tool-output-body">
+            <pre className="tb-v2-tool-pre text-sm break-all" style={{ fontFamily: 'var(--f-mono)' }}>{output}</pre>
+          </div>
+        </>
       )}
 
-      {/* Quick Reference */}
-      <div className="tb-v2-card tb-v2-bg-gray-50">
-        <h3 className="tb-v2-text-lg tb-v2-font-semibold tb-v2-mb-2">Quick Reference</h3>
-        <div className="tb-v2-grid tb-v2-grid-cols-2 tb-v2-gap-2 tb-v2-text-sm">
-          <div>\\n → Newline</div>
-          <div>\\t → Tab</div>
-          <div>\\r → Carriage return</div>
-          <div>\\\\ → Backslash</div>
-          <div>\\" → Double quote</div>
-          <div>\\' → Single quote</div>
+      {!input && (
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+          <div className="text-4xl mb-2">🔤</div>
+          <p>Enter text above to {mode} for {context} context</p>
         </div>
-      </div>
+      )}
     </div>
   );
 }
