@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 
 export default function ColorPickerUltimateClient() {
   const [color, setColor] = useState('#6366f1');
+  const [copied, setCopied] = useState('');
 
   const toRgb = (hex: string) => {
     const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -32,22 +33,39 @@ export default function ColorPickerUltimateClient() {
   const rgb = toRgb(color);
   const hsl = toHsl(color);
 
+  const loadExample = () => setColor('#f43f5e');
+
+  const copy = (label: string, value: string) => {
+    navigator.clipboard.writeText(value).catch(() => {});
+    setCopied(label);
+    setTimeout(() => setCopied(''), 1500);
+  };
+
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
-      <input type="color" value={color} onChange={e => setColor(e.target.value)} className="w-full h-56 rounded-2xl cursor-pointer border-0 shadow-xl" />
-      <div className="grid grid-cols-3 gap-3">
-        {[
-          { label: 'HEX', value: color.toUpperCase() },
-          { label: 'RGB', value: rgb ? `${rgb.r},${rgb.g},${rgb.b}` : '' },
-          { label: 'HSL', value: hsl ? `${hsl.h}°,${hsl.s}%,${hsl.l}%` : '' },
-        ].map(item => (
-          <div key={item.label} className="bg-gray-50 rounded-xl p-4 text-center">
-            <div className="text-xs text-gray-500 mb-1">{item.label}</div>
-            <div className="font-mono font-bold text-sm">{item.value}</div>
-          </div>
-        ))}
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Color Picker Ultimate</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
       </div>
-      <div className="rounded-2xl h-24 shadow-lg" style={{ backgroundColor: color }} />
+
+      <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
+        <input type="color" value={color} onChange={e => setColor(e.target.value)} className="w-full h-56 rounded-2xl cursor-pointer border-0 shadow-xl" />
+        <div className="grid grid-cols-3 gap-3">
+          {[
+            { key: 'hex', label: 'HEX', value: color.toUpperCase() },
+            { key: 'rgb', label: 'RGB', value: rgb ? `${rgb.r},${rgb.g},${rgb.b}` : '' },
+            { key: 'hsl', label: 'HSL', value: hsl ? `${hsl.h}°,${hsl.s}%,${hsl.l}%` : '' },
+          ].map(item => (
+            <button key={item.key} type="button" disabled={!item.value} onClick={() => copy(item.key, item.value)} className="bg-gray-50 rounded-xl p-4 text-center">
+              <div className="text-xs text-gray-500 mb-1">{item.label}</div>
+              <div className="font-mono font-bold text-sm">{copied === item.key ? 'Copied' : item.value}</div>
+            </button>
+          ))}
+        </div>
+        <div className="rounded-2xl h-24 shadow-lg" style={{ backgroundColor: color }} />
+      </div>
     </div>
   );
 }

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 
 export default function ColorPickerSmartClient() {
   const [color, setColor] = useState('#6366f1');
+  const [copied, setCopied] = useState('');
 
   const toRgb = (hex: string) => {
     const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -34,35 +35,52 @@ export default function ColorPickerSmartClient() {
 
   const presets = ['#ef4444','#f97316','#eab308','#22c55e','#14b8a6','#3b82f6','#8b5cf6','#ec4899','#000','#fff'];
 
+  const loadExample = () => setColor('#ec4899');
+
+  const copy = (label: string, value: string) => {
+    navigator.clipboard.writeText(value).catch(() => {});
+    setCopied(label);
+    setTimeout(() => setCopied(''), 1500);
+  };
+
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
-      <input type="color" value={color} onChange={e => setColor(e.target.value)} className="w-full h-48 rounded-2xl cursor-pointer border-0" />
-      <div className="flex flex-col md:flex-row gap-3">
-        <div className="flex-1 bg-gray-50 rounded-xl p-4">
-          <div className="text-xs text-gray-500">HEX</div>
-          <div className="font-mono font-bold text-lg">{color.toUpperCase()}</div>
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Color Picker Smart</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
+      </div>
+
+      <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
+        <input type="color" value={color} onChange={e => setColor(e.target.value)} className="w-full h-48 rounded-2xl cursor-pointer border-0" />
+        <div className="flex flex-col md:flex-row gap-3">
+          <button type="button" onClick={() => copy('hex', color.toUpperCase())} className="flex-1 bg-gray-50 rounded-xl p-4 text-left">
+            <div className="text-xs text-gray-500">HEX</div>
+            <div className="font-mono font-bold text-lg">{copied === 'hex' ? 'Copied' : color.toUpperCase()}</div>
+          </button>
+          {rgb && (
+            <button type="button" onClick={() => copy('rgb', `${rgb.r},${rgb.g},${rgb.b}`)} className="flex-1 bg-gray-50 rounded-xl p-4 text-left">
+              <div className="text-xs text-gray-500">RGB</div>
+              <div className="font-mono font-bold text-lg">{copied === 'rgb' ? 'Copied' : `${rgb.r},${rgb.g},${rgb.b}`}</div>
+            </button>
+          )}
+          {hsl && (
+            <button type="button" onClick={() => copy('hsl', `${hsl.h}°, ${hsl.s}%, ${hsl.l}%`)} className="flex-1 bg-gray-50 rounded-xl p-4 text-left">
+              <div className="text-xs text-gray-500">HSL</div>
+              <div className="font-mono font-bold text-lg">{copied === 'hsl' ? 'Copied' : `${hsl.h}° ${hsl.s}% ${hsl.l}%`}</div>
+            </button>
+          )}
         </div>
-        {rgb && (
-          <div className="flex-1 bg-gray-50 rounded-xl p-4">
-            <div className="text-xs text-gray-500">RGB</div>
-            <div className="font-mono font-bold text-lg">{rgb.r},{rgb.g},{rgb.b}</div>
-          </div>
-        )}
-        {hsl && (
-          <div className="flex-1 bg-gray-50 rounded-xl p-4">
-            <div className="text-xs text-gray-500">HSL</div>
-            <div className="font-mono font-bold text-lg">{hsl.h}° {hsl.s}% {hsl.l}%</div>
-          </div>
-        )}
+        <div className="flex flex-wrap gap-2">
+          {presets.map(p => (
+            <button key={p} type="button" onClick={() => setColor(p)}
+              className="w-8 h-8 rounded-full border-2 border-white shadow hover:scale-110 transition-transform"
+              style={{ backgroundColor: p }} />
+          ))}
+        </div>
+        <div className="rounded-xl h-16" style={{ backgroundColor: color }} />
       </div>
-      <div className="tb-v2-mode-tabs">
-        {presets.map(p => (
-          <button key={p} onClick={() => setColor(p)}
-            className="w-8 h-8 rounded-full border-2 border-white shadow hover:scale-110 transition-transform"
-            style={{ backgroundColor: p }} />
-        ))}
-      </div>
-      <div className="rounded-xl h-16" style={{ backgroundColor: color }} />
     </div>
   );
 }

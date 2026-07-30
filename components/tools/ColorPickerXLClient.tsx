@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 
 export default function ColorPickerXLClient() {
   const [color, setColor] = useState('#6366f1');
+  const [copied, setCopied] = useState('');
 
   const toRgb = (hex: string) => {
     const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -32,22 +33,45 @@ export default function ColorPickerXLClient() {
   const rgb = toRgb(color);
   const hsl = toHsl(color);
 
+  const loadExample = () => setColor('#8b5cf6');
+
+  const copy = (label: string, value: string) => {
+    navigator.clipboard.writeText(value).catch(() => {});
+    setCopied(label);
+    setTimeout(() => setCopied(''), 1500);
+  };
+
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
-      <input type="color" value={color} onChange={e => setColor(e.target.value)} className="w-full h-56 rounded-2xl cursor-pointer border-0 shadow-xl" />
-      <div className="flex flex-col md:flex-row gap-3">
-        {[
-          { label: 'HEX', value: color.toUpperCase() },
-          { label: 'RGB', value: rgb ? `${rgb.r} ${rgb.g} ${rgb.b}` : '' },
-          { label: 'HSL', value: hsl ? `${hsl.h}° ${hsl.s}% ${hsl.l}%` : '' },
-        ].map(item => (
-          <div key={item.label} className="flex-1 bg-gray-50 rounded-xl p-4 text-center">
-            <div className="text-xs text-gray-500 mb-1">{item.label}</div>
-            <div className="font-mono font-bold text-lg">{item.value}</div>
-          </div>
-        ))}
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Color Picker XL</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
       </div>
-      <div className="rounded-2xl h-24 shadow-lg" style={{ backgroundColor: color }} />
+
+      <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
+        <input type="color" value={color} onChange={e => setColor(e.target.value)} className="w-full h-56 rounded-2xl cursor-pointer border-0 shadow-xl" />
+        <div className="flex flex-col md:flex-row gap-3">
+          <button type="button" onClick={() => copy('hex', color.toUpperCase())} className="flex-1 bg-gray-50 rounded-xl p-4 text-center">
+            <div className="text-xs text-gray-500 mb-1">HEX</div>
+            <div className="font-mono font-bold text-lg">{copied === 'hex' ? 'Copied' : color.toUpperCase()}</div>
+          </button>
+          {rgb && (
+            <button type="button" onClick={() => copy('rgb', `${rgb.r} ${rgb.g} ${rgb.b}`)} className="flex-1 bg-gray-50 rounded-xl p-4 text-center">
+              <div className="text-xs text-gray-500 mb-1">RGB</div>
+              <div className="font-mono font-bold text-lg">{copied === 'rgb' ? 'Copied' : `${rgb.r} ${rgb.g} ${rgb.b}`}</div>
+            </button>
+          )}
+          {hsl && (
+            <button type="button" onClick={() => copy('hsl', `${hsl.h}° ${hsl.s}% ${hsl.l}%`)} className="flex-1 bg-gray-50 rounded-xl p-4 text-center">
+              <div className="text-xs text-gray-500 mb-1">HSL</div>
+              <div className="font-mono font-bold text-lg">{copied === 'hsl' ? 'Copied' : `${hsl.h}° ${hsl.s}% ${hsl.l}%`}</div>
+            </button>
+          )}
+        </div>
+        <div className="rounded-2xl h-24 shadow-lg" style={{ backgroundColor: color }} />
+      </div>
     </div>
   );
 }
