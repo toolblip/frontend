@@ -31,9 +31,16 @@ export default function CreditCardValidatorClient() {
   const cType = clean.length >= 13 ? TYPES.find(t => t.pattern.test(clean)) : null;
   const fmt = clean.replace(/(\d{4})(?=\d)/g, '$1 ');
 
+  const loadExample = () => setNum('4111111111111111');
+
   return (
     <div>
-      <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Card Number</span></div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Card Number</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
+      </div>
       <input type="text" value={fmt} onChange={e => setNum(e.target.value.replace(/\D/g, '').slice(0, 19))} placeholder="1234 5678 9012 3456" className="tb-v2-tool-textarea" style={{ width: '100%', minHeight: 44, resize: 'none', fontFamily: 'var(--f-mono)', letterSpacing: 2 }} maxLength={23} />
       <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">Validation Result</span></div>
       <div className="tb-v2-tool-output-body">

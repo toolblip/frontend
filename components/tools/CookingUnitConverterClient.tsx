@@ -22,10 +22,10 @@ export default function CookingUnitConverterClient() {
   const convert = useCallback(() => {
     const val = parseFloat(input);
     if (isNaN(val)) return;
-    const base = val * FACTORS[fromUnit];
+    const base = val / FACTORS[fromUnit];
     const converted = UNITS.map(u => ({
       unit: u,
-      value: (base / FACTORS[u]).toFixed(6).replace(/\.?0+$/, '')
+      value: (base * FACTORS[u]).toFixed(6).replace(/\.?0+$/, '')
     }));
     setResults(converted);
   }, [input, fromUnit]);
@@ -40,20 +40,20 @@ export default function CookingUnitConverterClient() {
           type="number"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          className="tb-v2-tool-input"
+          className="tb-v2-input"
           style={{ width: 120 }}
           aria-label="Cooking value"
         />
         <select
           value={fromUnit}
           onChange={(e) => setFromUnit(e.target.value)}
-          className="tb-v2-tool-select"
+          className="tb-v2-select"
           style={{ flex: 1 }}
           aria-label="From unit"
         >
           {UNITS.map(u => <option key={u} value={u}>{u.replace('_', ' ')}</option>)}
         </select>
-        <button type="button" onClick={convert} className="tb-v2-primary-btn">Convert</button>
+        <button type="button" onClick={convert} className="tb-v2-btn tb-v2-btn-primary">Convert</button>
       </div>
 
       {results.length > 0 && (

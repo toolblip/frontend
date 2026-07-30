@@ -49,7 +49,6 @@ const COMMON_HEADERS = [
 
 export default function CorsHeaderGeneratorClient() {
   const [scenario, setScenario] = useState<CorsScenario>('public');
-  const [copied, setCopied] = useState(false);
   const [copiedCode, setCopiedCode] = useState('');
 
   const [config, setConfig] = useState<CorsConfig>({
@@ -63,8 +62,6 @@ export default function CorsHeaderGeneratorClient() {
   });
 
   const [newOrigin, setNewOrigin] = useState('');
-  const [newMethod, setNewMethod] = useState('GET');
-  const [newHeader, setNewHeader] = useState('Content-Type');
   const [newExposedHeader, setNewExposedHeader] = useState('');
 
   const applyScenario = (s: CorsScenario) => {
@@ -589,7 +586,7 @@ def add_cors_headers(response):
               value={newOrigin}
               onChange={(e) => setNewOrigin(e.target.value)}
               placeholder="https://example.com"
-              className="tb-v2-tool-input"
+              className="tb-v2-input"
               style={{ flex: 1 }}
             />
             <button type="button" onClick={addOrigin} className="tb-v2-copy-btn" style={{ background: '#2563eb', color: 'white' }}>
@@ -685,7 +682,7 @@ def add_cors_headers(response):
               value={newExposedHeader}
               onChange={(e) => setNewExposedHeader(e.target.value)}
               placeholder="X-Custom-Header"
-              className="tb-v2-tool-input"
+              className="tb-v2-input"
               style={{ flex: 1 }}
             />
             <button
@@ -708,7 +705,7 @@ def add_cors_headers(response):
             type="number"
             value={config.maxAge}
             onChange={(e) => setConfig({ ...config, maxAge: parseInt(e.target.value) || 0 })}
-            className="tb-v2-tool-input"
+            className="tb-v2-input"
             style={{ width: '200px' }}
           />
         </div>

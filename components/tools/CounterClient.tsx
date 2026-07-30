@@ -52,7 +52,7 @@ Paragraphs: ${stats.paragraphs}`;
             onClick={copyStats}
             className="tb-v2-copy-btn"
           >
-            {copied ? 'Copied!' : 'Copy'}
+            {copied ? 'Copied' : 'Copy'}
           </button>
         </div>
       )}
