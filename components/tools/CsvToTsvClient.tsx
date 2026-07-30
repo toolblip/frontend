@@ -40,7 +40,7 @@ export default function CsvToTsvClient() {
         style={{ minHeight: 120 }}
         aria-label="CSV input"
       />
-      <button type="button" onClick={convert} className="tb-v2-primary-btn" style={{ width: '100%', marginTop: 12, marginBottom: 12 }}>
+      <button type="button" onClick={convert} className="tb-v2-btn tb-v2-btn-primary" style={{ width: '100%', marginTop: 12, marginBottom: 12 }}>
         Convert to TSV
       </button>
 
