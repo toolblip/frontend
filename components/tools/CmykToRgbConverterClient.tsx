@@ -61,10 +61,10 @@ export default function CmykToRgbConverterClient() {
                 <div style={{ width: '100%', height: 80, background: result.hex, borderRadius: 8, border: '1px solid var(--tb-border)' }} />
                 <div style={{ marginTop: 12 }}>
                   <button type="button" onClick={() => copy('hex')} className={`tb-v2-copy-btn ${copied === 'hex' ? 'done' : ''}`} style={{ width: '100%', marginBottom: 6, fontSize: 12 }}>
-                    {copied === 'hex' ? 'Copied!' : `HEX: ${result.hex}`}
+                    {copied === 'hex' ? 'Copied' : `HEX: ${result.hex}`}
                   </button>
                   <button type="button" onClick={() => copy('rgb')} className={`tb-v2-copy-btn ${copied === 'rgb' ? 'done' : ''}`} style={{ width: '100%', fontSize: 12 }}>
-                    {copied === 'rgb' ? 'Copied!' : result.rgb}
+                    {copied === 'rgb' ? 'Copied' : result.rgb}
                   </button>
                 </div>
               </>

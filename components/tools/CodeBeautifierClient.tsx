@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 type Language = 'javascript' | 'typescript' | 'python' | 'html' | 'css' | 'json';
 
@@ -16,6 +16,7 @@ export default function CodeBeautifierClient() {
   const [code, setCode] = useState('');
   const [language, setLanguage] = useState<Language>('javascript');
   const [beautifiedCode, setBeautifiedCode] = useState('');
+  const [copied, setCopied] = useState(false);
   const [options, setOptions] = useState<BeautifierOptions>({
     indentSize: 2,
     useTabs: false,
@@ -23,6 +24,12 @@ export default function CodeBeautifierClient() {
     semicolons: true,
     singleQuote: false,
   });
+
+  const loadExample = () => {
+    setLanguage('javascript');
+    setCode('function greet(name){if(!name){return "Hello, stranger!";}console.log("Hi "+name);return true;}');
+    setBeautifiedCode('');
+  };
 
   const beautifyCode = () => {
     let result = code;
@@ -277,12 +284,8 @@ export default function CodeBeautifierClient() {
   };
 
   const beautifyJson = (code: string, opts: BeautifierOptions): string => {
-    try {
-      const parsed = JSON.parse(code);
-      return JSON.stringify(parsed, null, options.useTabs ? '\t' : options.indentSize);
-    } catch {
-      return code;
-    }
+    const parsed = JSON.parse(code);
+    return JSON.stringify(parsed, null, options.useTabs ? '\t' : options.indentSize);
   };
 
   const minifyCode = () => {
@@ -309,7 +312,10 @@ export default function CodeBeautifierClient() {
   };
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(beautifiedCode);
+    if (!beautifiedCode) return;
+    navigator.clipboard.writeText(beautifiedCode).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   const downloadCode = () => {
@@ -332,48 +338,57 @@ export default function CodeBeautifierClient() {
   };
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Code Beautifier</h1>
-
-      <div className="flex flex-wrap gap-4 mb-4">
-        <select
-          value={language}
-          onChange={(e) => setLanguage(e.target.value as Language)}
-          className="p-2 border rounded"
-        >
-          <option value="javascript">JavaScript</option>
-          <option value="typescript">TypeScript</option>
-          <option value="python">Python</option>
-          <option value="html">HTML</option>
-          <option value="css">CSS</option>
-          <option value="json">JSON</option>
-        </select>
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Language</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
       </div>
+      <select
+        value={language}
+        onChange={(e) => setLanguage(e.target.value as Language)}
+        className="tb-v2-select"
+      >
+        <option value="javascript">JavaScript</option>
+        <option value="typescript">TypeScript</option>
+        <option value="python">Python</option>
+        <option value="html">HTML</option>
+        <option value="css">CSS</option>
+        <option value="json">JSON</option>
+      </select>
 
-      <div className="grid md:grid-cols-2 gap-4 mb-4">
+      <div className="grid md:grid-cols-2 gap-4">
         <div>
-          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Input Code</label>
+          <label className="tb-v2-tool-label" style={{ marginBottom: 8, display: 'block' }}>Input Code</label>
           <textarea
             value={code}
             onChange={(e) => setCode(e.target.value)}
-            className="w-full h-64 p-2 border rounded font-mono text-sm"
+            className="tb-v2-tool-textarea"
+            style={{ height: 256, fontFamily: 'var(--f-mono)' }}
             placeholder="Paste your code here..."
           />
         </div>
 
         <div>
-          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Output</label>
-          <textarea
-            value={beautifiedCode}
-            readOnly
-            className="w-full h-64 p-2 border rounded font-mono text-sm bg-gray-50"
-            placeholder="Beautified code will appear here..."
-          />
+          <label className="tb-v2-tool-label" style={{ marginBottom: 8, display: 'block' }}>Output</label>
+          {beautifiedCode ? (
+            <textarea
+              value={beautifiedCode}
+              readOnly
+              className="tb-v2-tool-textarea"
+              style={{ height: 256, fontFamily: 'var(--f-mono)' }}
+            />
+          ) : (
+            <p className="tb-v2-empty" style={{ height: 256, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              Beautified code will appear here.
+            </p>
+          )}
         </div>
       </div>
 
-      <div className="p-4 border rounded mb-4">
-        <h3 className="font-medium mb-3">Options</h3>
+      <div className="tb-v2-section" style={{ padding: '16px 20px' }}>
+        <h3 className="tb-v2-section-title" style={{ marginBottom: 12 }}>Options</h3>
         <div className="flex flex-wrap gap-6">
           <label className="flex items-center gap-2">
             <input
@@ -390,7 +405,8 @@ export default function CodeBeautifierClient() {
               <select
                 value={options.indentSize}
                 onChange={(e) => setOptions({ ...options, indentSize: Number(e.target.value) })}
-                className="p-1 border rounded"
+                className="tb-v2-select"
+                style={{ width: 'auto' }}
               >
                 <option value={2}>2 spaces</option>
                 <option value={4}>4 spaces</option>
@@ -404,7 +420,8 @@ export default function CodeBeautifierClient() {
               type="number"
               value={options.printWidth}
               onChange={(e) => setOptions({ ...options, printWidth: Number(e.target.value) })}
-              className="w-16 p-1 border rounded"
+              className="tb-v2-input"
+              style={{ width: 72 }}
               min="40"
               max="200"
             />
@@ -424,32 +441,28 @@ export default function CodeBeautifierClient() {
       </div>
 
       <div className="tb-v2-option-group">
-        <button
-          onClick={beautifyCode}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
+        <button type="button" onClick={beautifyCode} className="tb-v2-btn tb-v2-btn-primary">
           Beautify
         </button>
 
-        <button
-          onClick={minifyCode}
-          className="px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-700"
-        >
+        <button type="button" onClick={minifyCode} className="tb-v2-btn">
           Minify
         </button>
 
         <button
+          type="button"
           onClick={copyToClipboard}
           disabled={!beautifiedCode}
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:bg-gray-400"
+          className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
         >
-          Copy to Clipboard
+          {copied ? 'Copied' : 'Copy to Clipboard'}
         </button>
 
         <button
+          type="button"
           onClick={downloadCode}
           disabled={!beautifiedCode}
-          className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:bg-gray-400"
+          className="tb-v2-btn"
         >
           Download
         </button>

@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export default function CmykToRgbClient() {
   const [cyan, setCyan] = useState('');
@@ -9,6 +9,8 @@ export default function CmykToRgbClient() {
   const [key, setKey] = useState('');
   const [rgbResult, setRgbResult] = useState<{ r: number; g: number; b: number } | null>(null);
   const [hexResult, setHexResult] = useState<string | null>(null);
+  const [error, setError] = useState('');
+  const [copied, setCopied] = useState<'rgb' | 'hex' | ''>('');
 
   const convertToRgb = () => {
     const c = parseFloat(cyan) / 100;
@@ -17,9 +19,13 @@ export default function CmykToRgbClient() {
     const k = parseFloat(key) / 100;
 
     if (isNaN(c) || isNaN(m) || isNaN(y) || isNaN(k)) {
+      setRgbResult(null);
+      setHexResult(null);
+      setError('Enter a value from 0-100 for each of C, M, Y, and K.');
       return;
     }
 
+    setError('');
     const r = Math.round(255 * (1 - c) * (1 - k));
     const g = Math.round(255 * (1 - m) * (1 - k));
     const b = Math.round(255 * (1 - y) * (1 - k));
@@ -28,18 +34,35 @@ export default function CmykToRgbClient() {
     setHexResult(`#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`.toUpperCase());
   };
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
+  const loadExample = () => {
+    setCyan('62');
+    setMagenta('0');
+    setYellow('34');
+    setKey('9');
+    setRgbResult(null);
+    setHexResult(null);
+    setError('');
+  };
+
+  const copyToClipboard = (text: string, which: 'rgb' | 'hex') => {
+    navigator.clipboard.writeText(text).catch(() => {});
+    setCopied(which);
+    setTimeout(() => setCopied(''), 1500);
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">CMYK to RGB Converter</h1>
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">CMYK Values</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
+      </div>
 
-      <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
+      <div className="tb-v2-section" style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '16px 20px' }}>
         <div className="tb-v2-grid-2">
           <div>
-            <label className="block text-sm font-medium mb-1">
+            <label className="tb-v2-tool-label" style={{ marginBottom: 6, display: 'block' }}>
               Cyan (C) <span className="text-gray-500">0-100%</span>
             </label>
             <input
@@ -48,13 +71,13 @@ export default function CmykToRgbClient() {
               max="100"
               value={cyan}
               onChange={(e) => setCyan(e.target.value)}
-              className="w-full p-2 border rounded"
+              className="tb-v2-input"
               placeholder="0"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">
+            <label className="tb-v2-tool-label" style={{ marginBottom: 6, display: 'block' }}>
               Magenta (M) <span className="text-gray-500">0-100%</span>
             </label>
             <input
@@ -63,13 +86,13 @@ export default function CmykToRgbClient() {
               max="100"
               value={magenta}
               onChange={(e) => setMagenta(e.target.value)}
-              className="w-full p-2 border rounded"
+              className="tb-v2-input"
               placeholder="0"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">
+            <label className="tb-v2-tool-label" style={{ marginBottom: 6, display: 'block' }}>
               Yellow (Y) <span className="text-gray-500">0-100%</span>
             </label>
             <input
@@ -78,13 +101,13 @@ export default function CmykToRgbClient() {
               max="100"
               value={yellow}
               onChange={(e) => setYellow(e.target.value)}
-              className="w-full p-2 border rounded"
+              className="tb-v2-input"
               placeholder="0"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1">
+            <label className="tb-v2-tool-label" style={{ marginBottom: 6, display: 'block' }}>
               Key/Black (K) <span className="text-gray-500">0-100%</span>
             </label>
             <input
@@ -93,67 +116,67 @@ export default function CmykToRgbClient() {
               max="100"
               value={key}
               onChange={(e) => setKey(e.target.value)}
-              className="w-full p-2 border rounded"
+              className="tb-v2-input"
               placeholder="0"
             />
           </div>
         </div>
 
-        <button
-          onClick={convertToRgb}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
+        <button type="button" onClick={convertToRgb} className="tb-v2-btn tb-v2-btn-primary">
           Convert to RGB
         </button>
+        {error && <span style={{ fontSize: 13, color: '#ef4444' }}>{error}</span>}
+      </div>
 
-        {rgbResult && (
-          <div className="mt-6 p-4 bg-gray-100 rounded space-y-4">
-            <h3 className="font-medium">Conversion Result:</h3>
+      {!rgbResult && !error && (
+        <p className="tb-v2-empty">Enter CMYK percentages above and convert to see the RGB and HEX equivalent.</p>
+      )}
 
-            <div className="tb-v2-grid-2">
-              <div>
-                <label className="block text-sm text-gray-600 mb-1">RGB Values</label>
-                <div className="flex items-center gap-2">
-                  <code className="flex-1 p-2 bg-white rounded border">
-                    rgb({rgbResult.r}, {rgbResult.g}, {rgbResult.b})
-                  </code>
-                  <button
-                    onClick={() =>
-                      copyToClipboard(`rgb(${rgbResult.r}, ${rgbResult.g}, ${rgbResult.b})`)
-                    }
-                    className="px-2 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300"
-                  >
-                    Copy
-                  </button>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm text-gray-600 mb-1">HEX Value</label>
-                <div className="flex items-center gap-2">
-                  <code className="flex-1 p-2 bg-white rounded border">
-                    {hexResult}
-                  </code>
-                  <button
-                    onClick={() => copyToClipboard(hexResult || '')}
-                    className="px-2 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300"
-                  >
-                    Copy
-                  </button>
-                </div>
+      {rgbResult && (
+        <div className="tb-v2-tool-output-body" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+          <div className="tb-v2-grid-2">
+            <div>
+              <label className="tb-v2-tool-label" style={{ marginBottom: 6, display: 'block' }}>RGB Values</label>
+              <div className="flex items-center gap-2">
+                <code className="flex-1 p-2 bg-white dark:bg-gray-800 rounded border">
+                  rgb({rgbResult.r}, {rgbResult.g}, {rgbResult.b})
+                </code>
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(`rgb(${rgbResult.r}, ${rgbResult.g}, ${rgbResult.b})`, 'rgb')}
+                  className={`tb-v2-copy-btn ${copied === 'rgb' ? 'done' : ''}`}
+                >
+                  {copied === 'rgb' ? 'Copied' : 'Copy'}
+                </button>
               </div>
             </div>
 
-            <div className="flex items-center gap-4">
-              <label className="block text-sm text-gray-600">Preview:</label>
-              <div
-                className="w-16 h-16 rounded border"
-                style={{ backgroundColor: hexResult || undefined }}
-              />
+            <div>
+              <label className="tb-v2-tool-label" style={{ marginBottom: 6, display: 'block' }}>HEX Value</label>
+              <div className="flex items-center gap-2">
+                <code className="flex-1 p-2 bg-white dark:bg-gray-800 rounded border">
+                  {hexResult}
+                </code>
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(hexResult || '', 'hex')}
+                  className={`tb-v2-copy-btn ${copied === 'hex' ? 'done' : ''}`}
+                >
+                  {copied === 'hex' ? 'Copied' : 'Copy'}
+                </button>
+              </div>
             </div>
           </div>
-        )}
-      </div>
+
+          <div className="flex items-center gap-4">
+            <label className="tb-v2-tool-label">Preview:</label>
+            <div
+              className="w-16 h-16 rounded border"
+              style={{ backgroundColor: hexResult || undefined }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

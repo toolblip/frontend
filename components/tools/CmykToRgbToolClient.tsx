@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 interface CmykColor {
   c: number;
@@ -19,8 +19,11 @@ export default function CmykToRgbToolClient() {
   const [cmyk, setCmyk] = useState<CmykColor>({ c: 0, m: 0, y: 0, k: 0 });
   const [rgb, setRgb] = useState<RgbColor>({ r: 0, g: 0, b: 0 });
   const [hex, setHex] = useState('#000000');
+  const [hexInput, setHexInput] = useState('#000000');
+  const [hexError, setHexError] = useState(false);
   const [mode, setMode] = useState<'cmyk-to-rgb' | 'rgb-to-cmyk'>('cmyk-to-rgb');
   const [history, setHistory] = useState<CmykColor[]>([]);
+  const [copied, setCopied] = useState<'rgb' | 'cmyk' | 'hex' | ''>('');
 
   const cmykToRgb = (c: number, m: number, y: number, k: number): RgbColor => {
     const r = Math.round(255 * (1 - c / 100) * (1 - k / 100));
@@ -55,8 +58,8 @@ export default function CmykToRgbToolClient() {
     return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`.toUpperCase();
   };
 
-  const hexToRgb = (hex: string): RgbColor | null => {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  const hexToRgb = (value: string): RgbColor | null => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(value);
     return result
       ? {
           r: parseInt(result[1], 16),
@@ -70,27 +73,29 @@ export default function CmykToRgbToolClient() {
     if (mode === 'cmyk-to-rgb') {
       const result = cmykToRgb(cmyk.c, cmyk.m, cmyk.y, cmyk.k);
       setRgb(result);
-      setHex(rgbToHex(result.r, result.g, result.b));
+      const newHex = rgbToHex(result.r, result.g, result.b);
+      setHex(newHex);
+      setHexInput(newHex);
     } else {
       const result = rgbToCmyk(rgb.r, rgb.g, rgb.b);
       setCmyk(result);
-      setHex(rgbToHex(rgb.r, rgb.g, rgb.b));
+      const newHex = rgbToHex(rgb.r, rgb.g, rgb.b);
+      setHex(newHex);
+      setHexInput(newHex);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cmyk, rgb, mode]);
 
-  const handleModeSwitch = () => {
-    setMode(mode === 'cmyk-to-rgb' ? 'rgb-to-cmyk' : 'cmyk-to-rgb');
-  };
-
-  const handleSwapValues = () => {
-    const tempCmyk = { ...cmyk };
-    const tempRgb = { ...rgb };
-
-    const newCmyk = rgbToCmyk(tempRgb.r, tempRgb.g, tempRgb.b);
-    const newRgb = cmykToRgb(tempCmyk.c, tempCmyk.m, tempCmyk.y, tempCmyk.k);
-
-    setCmyk(newCmyk);
-    setRgb(newRgb);
+  const handleHexChange = (value: string) => {
+    setHexInput(value);
+    const parsed = hexToRgb(value);
+    if (parsed) {
+      setHexError(false);
+      setRgb(parsed);
+      setMode('rgb-to-cmyk');
+    } else {
+      setHexError(true);
+    }
   };
 
   const saveToHistory = () => {
@@ -102,221 +107,207 @@ export default function CmykToRgbToolClient() {
     setMode('cmyk-to-rgb');
   };
 
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
+  const loadExample = () => {
+    setMode('cmyk-to-rgb');
+    setCmyk({ c: 82, m: 0, y: 34, k: 9 });
+  };
+
+  const copyToClipboard = (text: string, which: 'rgb' | 'cmyk' | 'hex') => {
+    navigator.clipboard.writeText(text).catch(() => {});
+    setCopied(which);
+    setTimeout(() => setCopied(''), 1500);
   };
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">CMYK to RGB Color Tool</h1>
-
-      <div className="flex gap-4 mb-6">
-        <button
-          onClick={() => setMode('cmyk-to-rgb')}
-          className={`px-4 py-2 rounded ${
-            mode === 'cmyk-to-rgb'
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 hover:bg-gray-300'
-          }`}
-        >
-          CMYK → RGB
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">CMYK to RGB Color Tool</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
         </button>
-        <button
-          onClick={() => setMode('rgb-to-cmyk')}
-          className={`px-4 py-2 rounded ${
-            mode === 'rgb-to-cmyk'
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-200 hover:bg-gray-300'
-          }`}
-        >
-          RGB → CMYK
+      </div>
+
+      <div className="tb-v2-mode-tabs">
+        <button type="button" onClick={() => setMode('cmyk-to-rgb')} className={`tb-v2-mode-tab ${mode === 'cmyk-to-rgb' ? 'on' : ''}`}>
+          CMYK to RGB
+        </button>
+        <button type="button" onClick={() => setMode('rgb-to-cmyk')} className={`tb-v2-mode-tab ${mode === 'rgb-to-cmyk' ? 'on' : ''}`}>
+          RGB to CMYK
         </button>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
-        <div className="p-4 border rounded space-y-4">
-          <h3 className="font-medium">CMYK Values</h3>
+        <div className="tb-v2-section" style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: '16px 20px' }}>
+          <h3 className="tb-v2-section-title">CMYK Values</h3>
 
           <div>
-            <label className="block text-sm mb-1">
-              C: {cmyk.c}%
-            </label>
+            <label className="tb-v2-tool-label" style={{ marginBottom: 4, display: 'block' }}>C: {cmyk.c}%</label>
             <input
               type="range"
               min="0"
               max="100"
               value={cmyk.c}
-              onChange={(e) => setCmyk({ ...cmyk, c: Number(e.target.value) })}
-              className="w-full"
+              onChange={(e) => { setCmyk({ ...cmyk, c: Number(e.target.value) }); setMode('cmyk-to-rgb'); }}
+              className="tb-v2-range"
             />
           </div>
 
           <div>
-            <label className="block text-sm mb-1">
-              M: {cmyk.m}%
-            </label>
+            <label className="tb-v2-tool-label" style={{ marginBottom: 4, display: 'block' }}>M: {cmyk.m}%</label>
             <input
               type="range"
               min="0"
               max="100"
               value={cmyk.m}
-              onChange={(e) => setCmyk({ ...cmyk, m: Number(e.target.value) })}
-              className="w-full"
+              onChange={(e) => { setCmyk({ ...cmyk, m: Number(e.target.value) }); setMode('cmyk-to-rgb'); }}
+              className="tb-v2-range"
             />
           </div>
 
           <div>
-            <label className="block text-sm mb-1">
-              Y: {cmyk.y}%
-            </label>
+            <label className="tb-v2-tool-label" style={{ marginBottom: 4, display: 'block' }}>Y: {cmyk.y}%</label>
             <input
               type="range"
               min="0"
               max="100"
               value={cmyk.y}
-              onChange={(e) => setCmyk({ ...cmyk, y: Number(e.target.value) })}
-              className="w-full"
+              onChange={(e) => { setCmyk({ ...cmyk, y: Number(e.target.value) }); setMode('cmyk-to-rgb'); }}
+              className="tb-v2-range"
             />
           </div>
 
           <div>
-            <label className="block text-sm mb-1">
-              K: {cmyk.k}%
-            </label>
+            <label className="tb-v2-tool-label" style={{ marginBottom: 4, display: 'block' }}>K: {cmyk.k}%</label>
             <input
               type="range"
               min="0"
               max="100"
               value={cmyk.k}
-              onChange={(e) => setCmyk({ ...cmyk, k: Number(e.target.value) })}
-              className="w-full"
+              onChange={(e) => { setCmyk({ ...cmyk, k: Number(e.target.value) }); setMode('cmyk-to-rgb'); }}
+              className="tb-v2-range"
             />
           </div>
         </div>
 
-        <div className="p-4 border rounded space-y-4">
-          <h3 className="font-medium">RGB Values</h3>
+        <div className="tb-v2-section" style={{ display: 'flex', flexDirection: 'column', gap: 12, padding: '16px 20px' }}>
+          <h3 className="tb-v2-section-title">RGB Values</h3>
 
           <div>
-            <label className="block text-sm mb-1">R: {rgb.r}</label>
+            <label className="tb-v2-tool-label" style={{ marginBottom: 4, display: 'block' }}>R: {rgb.r}</label>
             <input
               type="range"
               min="0"
               max="255"
               value={rgb.r}
-              onChange={(e) => setRgb({ ...rgb, r: Number(e.target.value) })}
-              className="w-full"
+              onChange={(e) => { setRgb({ ...rgb, r: Number(e.target.value) }); setMode('rgb-to-cmyk'); }}
+              className="tb-v2-range"
               style={{ accentColor: '#ff0000' }}
             />
           </div>
 
           <div>
-            <label className="block text-sm mb-1">G: {rgb.g}</label>
+            <label className="tb-v2-tool-label" style={{ marginBottom: 4, display: 'block' }}>G: {rgb.g}</label>
             <input
               type="range"
               min="0"
               max="255"
               value={rgb.g}
-              onChange={(e) => setRgb({ ...rgb, g: Number(e.target.value) })}
-              className="w-full"
+              onChange={(e) => { setRgb({ ...rgb, g: Number(e.target.value) }); setMode('rgb-to-cmyk'); }}
+              className="tb-v2-range"
               style={{ accentColor: '#00ff00' }}
             />
           </div>
 
           <div>
-            <label className="block text-sm mb-1">B: {rgb.b}</label>
+            <label className="tb-v2-tool-label" style={{ marginBottom: 4, display: 'block' }}>B: {rgb.b}</label>
             <input
               type="range"
               min="0"
               max="255"
               value={rgb.b}
-              onChange={(e) => setRgb({ ...rgb, b: Number(e.target.value) })}
-              className="w-full"
+              onChange={(e) => { setRgb({ ...rgb, b: Number(e.target.value) }); setMode('rgb-to-cmyk'); }}
+              className="tb-v2-range"
               style={{ accentColor: '#0000ff' }}
             />
           </div>
         </div>
       </div>
 
-      <div className="mt-6 p-4 border rounded">
+      <div className="tb-v2-section" style={{ padding: '16px 20px' }}>
         <div className="flex items-center gap-6">
           <div
-            className="w-32 h-32 rounded border"
+            className="w-32 h-32 rounded border shrink-0"
             style={{ backgroundColor: hex }}
           />
 
-          <div className="flex-1 space-y-2">
+          <div className="flex-1 flex flex-col gap-2">
             <div className="flex items-center gap-2">
-              <code className="flex-1 p-2 bg-gray-100 rounded">
+              <code className="flex-1 p-2 bg-gray-100 dark:bg-gray-800 rounded">
                 RGB({rgb.r}, {rgb.g}, {rgb.b})
               </code>
               <button
-                onClick={() =>
-                  copyToClipboard(`RGB(${rgb.r}, ${rgb.g}, ${rgb.b})`)
-                }
-                className="px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300"
+                type="button"
+                onClick={() => copyToClipboard(`RGB(${rgb.r}, ${rgb.g}, ${rgb.b})`, 'rgb')}
+                className={`tb-v2-copy-btn ${copied === 'rgb' ? 'done' : ''}`}
               >
-                Copy
+                {copied === 'rgb' ? 'Copied' : 'Copy'}
               </button>
             </div>
 
             <div className="flex items-center gap-2">
-              <code className="flex-1 p-2 bg-gray-100 rounded">
+              <code className="flex-1 p-2 bg-gray-100 dark:bg-gray-800 rounded">
                 CMYK({cmyk.c}, {cmyk.m}, {cmyk.y}, {cmyk.k})
               </code>
               <button
-                onClick={() =>
-                  copyToClipboard(
-                    `CMYK(${cmyk.c}, ${cmyk.m}, ${cmyk.y}, ${cmyk.k})`
-                  )
-                }
-                className="px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300"
+                type="button"
+                onClick={() => copyToClipboard(`CMYK(${cmyk.c}, ${cmyk.m}, ${cmyk.y}, ${cmyk.k})`, 'cmyk')}
+                className={`tb-v2-copy-btn ${copied === 'cmyk' ? 'done' : ''}`}
               >
-                Copy
+                {copied === 'cmyk' ? 'Copied' : 'Copy'}
               </button>
             </div>
 
             <div className="flex items-center gap-2">
-              <code className="flex-1 p-2 bg-gray-100 rounded">{hex}</code>
+              <input
+                type="text"
+                value={hexInput}
+                onChange={(e) => handleHexChange(e.target.value)}
+                className="tb-v2-input flex-1"
+                style={{ fontFamily: 'var(--f-mono)' }}
+                aria-label="Hex input"
+              />
               <button
-                onClick={() => copyToClipboard(hex)}
-                className="px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300"
+                type="button"
+                onClick={() => copyToClipboard(hex, 'hex')}
+                className={`tb-v2-copy-btn ${copied === 'hex' ? 'done' : ''}`}
               >
-                Copy
+                {copied === 'hex' ? 'Copied' : 'Copy'}
               </button>
             </div>
+            {hexError && <span style={{ fontSize: 12, color: '#ef4444' }}>Enter a valid 6-digit hex color (e.g., #3366FF).</span>}
           </div>
-
-          <button
-            onClick={handleSwapValues}
-            className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700"
-          >
-            Swap
-          </button>
         </div>
       </div>
 
-      <div className="mt-6 flex gap-4">
-        <button
-          onClick={saveToHistory}
-          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-        >
-          Save to History
-        </button>
-      </div>
+      <button type="button" onClick={saveToHistory} className="tb-v2-btn tb-v2-btn-primary" style={{ alignSelf: 'flex-start' }}>
+        Save to History
+      </button>
 
-      {history.length > 0 && (
-        <div className="mt-6">
-          <h3 className="font-medium mb-2">History</h3>
-          <div className="tb-v2-mode-tabs">
+      {history.length === 0 ? (
+        <p className="tb-v2-empty">Save colors to build a quick-access history below.</p>
+      ) : (
+        <div>
+          <h3 className="tb-v2-section-title" style={{ marginBottom: 8 }}>History</h3>
+          <div className="tb-v2-mode-tabs" style={{ flexWrap: 'wrap' }}>
             {history.map((item, index) => {
               const result = cmykToRgb(item.c, item.m, item.y, item.k);
               const itemHex = rgbToHex(result.r, result.g, result.b);
               return (
                 <button
                   key={index}
+                  type="button"
                   onClick={() => loadFromHistory(item)}
-                  className="flex items-center gap-2 px-3 py-1 bg-gray-100 rounded hover:bg-gray-200"
+                  className="tb-v2-mode-tab flex items-center gap-2"
                 >
                   <div
                     className="w-4 h-4 rounded border"

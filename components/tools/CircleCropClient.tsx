@@ -209,10 +209,9 @@ export default function CircleCropClient() {
     ctx.drawImage(img, ox, oy, s, s, 0, 0, outputSize, outputSize);
     ctx.restore();
 
-    const ext = bgType === 'transparent' ? 'png' : 'png';
     const link = document.createElement('a');
-    link.download = `circle-crop-${outputSize}.${ext}`;
-    link.href = canvas.toDataURL(`image/${ext}`);
+    link.download = `circle-crop-${outputSize}.png`;
+    link.href = canvas.toDataURL('image/png');
     link.click();
   };
 
