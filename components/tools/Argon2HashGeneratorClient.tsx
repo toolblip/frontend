@@ -40,20 +40,29 @@ export default function Argon2HashGeneratorClient() {
         </p>
       </div>
 
-      <div>
-        <label className="tb-v2-tool-label">Input Text</label>
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Enter text to hash"
-          className="tb-v2-input"
-        />
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Input Text</span>
+        <button type="button" onClick={() => setInput('correct horse battery staple')} className="tb-v2-btn-sm">
+          Load Example
+        </button>
       </div>
+      <input
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder="Enter text to hash"
+        className="tb-v2-input"
+      />
 
-      <button type="button" onClick={generateHash} className="tb-v2-btn">
+      <button type="button" onClick={generateHash} disabled={!input.trim()} className="tb-v2-btn tb-v2-btn-primary">
         Generate Argon2 Hash
       </button>
+
+      {!output && (
+        <p className="tb-v2-empty">
+          Enter text above to see a correctly formatted Argon2id hash string with realistic parameters.
+        </p>
+      )}
 
       {output && (
         <>
@@ -73,7 +82,7 @@ export default function Argon2HashGeneratorClient() {
         </>
       )}
 
-      <div className="tb-v2-box p-4 space-y-2 text-sm">
+      <div className="tb-v2-tool-output-body space-y-2 text-sm">
         <p className="font-medium text-gray-700 dark:text-gray-300">Argon2 Parameters:</p>
         <ul className="list-disc list-inside text-gray-600 dark:text-gray-400 space-y-1 text-xs">
           <li><strong>v</strong> = Version (19)</li>

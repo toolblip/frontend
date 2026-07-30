@@ -112,40 +112,47 @@ export default function ArticleRewriterClient() {
   };
 
   return (
-    <div>
+    <div className="flex flex-col gap-4">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Article Text to Rewrite</span>
+        <button
+          type="button"
+          onClick={() => setInput('I think this is a good idea. It will help us make important progress and show real results.')}
+          className="tb-v2-btn-sm"
+        >
+          Load Example
+        </button>
       </div>
       <textarea
         value={input}
         onChange={(e) => setInput(e.target.value)}
         placeholder="Paste your article or paragraph here..."
         className="tb-v2-tool-textarea"
-        style={{ minHeight: 150 }}
+        rows={7}
         aria-label="Article input for rewriting"
       />
 
-      <button type="button" onClick={rewrite} className="tb-v2-primary-btn" style={{ width: '100%', marginTop: 12, marginBottom: 12 }}>
+      <button type="button" onClick={rewrite} disabled={!input.trim()} className="tb-v2-btn tb-v2-btn-primary">
         Rewrite Article
       </button>
 
-      <div className="tb-v2-tool-output-head">
-        <span className="tb-v2-tool-label">Rewritten Output</span>
-        {output && (
-          <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
-            {copied ? 'Copied' : 'Copy'}
-          </button>
-        )}
-      </div>
-      <div className="tb-v2-tool-output-body">
-        <textarea
-          value={output}
-          readOnly
-          className="tb-v2-tool-textarea"
-          style={{ minHeight: 150 }}
-          aria-label="Rewritten article output"
-        />
-      </div>
+      {!output && (
+        <p className="tb-v2-empty">
+          Paste an article above and rewrite it to swap common words for synonyms while keeping the structure and meaning.
+        </p>
+      )}
+
+      {output && (
+        <div className="tb-v2-tool-output-body">
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">Rewritten Output</span>
+            <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
+              {copied ? 'Copied' : 'Copy'}
+            </button>
+          </div>
+          <pre className="tb-v2-tool-pre">{output}</pre>
+        </div>
+      )}
     </div>
   );
 }
