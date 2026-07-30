@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
-// 5x7 block letter definitions for A-Z, 0-9, and common punctuation
+const EXAMPLES = ['HELLO', 'WORLD', 'TOOL', 'CODE', '2026'];
+
 const CHAR_MAP: Record<string, string[]> = {
   'A': ['01110', '10001', '10001', '11111', '10001', '10001', '10001'],
   'B': ['11110', '10001', '10001', '11110', '10001', '10001', '11110'],
@@ -41,93 +42,99 @@ const CHAR_MAP: Record<string, string[]> = {
   '8': ['01110', '10001', '10001', '01110', '10001', '10001', '01110'],
   '9': ['01110', '10001', '10001', '01111', '00001', '00001', '01110'],
   ' ': ['00000', '00000', '00000', '00000', '00000', '00000', '00000'],
-  '.': ['00000', '00000', '00000', '00000', '00000', '01100', '01100'],
-  '!': ['00100', '00100', '00100', '00100', '00100', '00000', '00100'],
-  '?': ['01110', '10001', '00001', '00110', '00100', '00000', '00100'],
-  ',': ['00000', '00000', '00000', '00000', '01100', '01100', '01000'],
-  "'": ['00100', '00100', '01000', '00000', '00000', '00000', '00000'],
 };
-
-function charToAscii(char: string): string[] {
-  const upper = char.toUpperCase();
-  return CHAR_MAP[upper] || CHAR_MAP[' '];
-}
 
 function textToAsciiArt(text: string): string {
   const lines = ['', '', '', '', '', '', ''];
-  
-  for (const char of text) {
-    const charLines = charToAscii(char);
+  for (const char of text.toUpperCase()) {
+    const charLines = CHAR_MAP[char] || CHAR_MAP[' '];
     for (let i = 0; i < 7; i++) {
       lines[i] += charLines[i] + ' ';
     }
   }
-  
-  // Convert binary to block characters
-  const blockChars = lines.map(line => {
-    return line.split('').map(c => c === '1' ? '█' : ' ').join('');
-  });
-  
-  return blockChars.join('\n');
+  return lines.map(line => line.split('').map(c => c === '1' ? '█' : ' ').join('')).join('\n');
 }
 
 export default function AsciiArtGeneratorClient() {
   const [input, setInput] = useState('HELLO');
-  const [output, setOutput] = useState('');
   const [copied, setCopied] = useState(false);
+  const [showExamples, setShowExamples] = useState(false);
 
-  const generate = () => {
-    setOutput(textToAsciiArt(input));
-  };
+  const output = useMemo(() => input ? textToAsciiArt(input) : '', [input]);
 
   const copy = () => {
-    if (!output) return;
-    navigator.clipboard.writeText(output).catch(() => {});
+    navigator.clipboard.writeText(output);
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
 
+  const loadExample = (word: string) => {
+    setInput(word);
+    setShowExamples(false);
+  };
+
   return (
-    <div className="flex flex-col gap-4">
-      <div>
-        <label className="tb-v2-tool-label">Text</label>
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Enter text to convert..."
-          className="tb-v2-input"
-          maxLength={30}
-        />
+    <div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Text</span>
+        <button
+          type="button"
+          onClick={() => setShowExamples(!showExamples)}
+          className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm"
+        >
+          📋 Examples
+        </button>
       </div>
 
-      <button type="button" onClick={generate} className="tb-v2-btn">
-        Generate ASCII Art
-      </button>
+      {showExamples && (
+        <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg mb-3 border border-gray-200 dark:border-gray-700">
+          <div className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Try a word:</div>
+          <div className="flex flex-wrap gap-2">
+            {EXAMPLES.map((word) => (
+              <button
+                key={word}
+                type="button"
+                onClick={() => loadExample(word)}
+                className="px-3 py-1.5 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors font-mono"
+              >
+                {word}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <input
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value.toUpperCase())}
+        placeholder="Enter text to convert..."
+        className="tb-v2-tool-textarea"
+        style={{ minHeight: 48, fontFamily: 'var(--f-mono)', textTransform: 'uppercase' }}
+        maxLength={20}
+      />
+      <p className="text-xs text-gray-500 mt-1">Max 20 characters. A-Z, 0-9 only.</p>
 
       {output && (
         <>
           <div className="tb-v2-tool-output-head">
             <span className="tb-v2-tool-label">ASCII Art</span>
-            <button
-              type="button"
-              onClick={copy}
-              className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
-            >
-              {copied ? 'Copied' : 'Copy'}
+            <button onClick={copy} className="tb-v2-copy-btn">
+              {copied ? 'Copied!' : 'Copy'}
             </button>
           </div>
-          <div className="tb-v2-tool-output-body overflow-x-auto">
-            <pre className="tb-v2-tool-pre font-mono text-xs leading-tight">{output}</pre>
+          <div className="tb-v2-tool-output-body overflow-x-auto bg-black rounded-xl p-4">
+            <pre className="font-mono text-xs leading-tight text-green-400">{output}</pre>
           </div>
         </>
       )}
 
-      <div className="text-xs text-gray-500 dark:text-gray-400 space-y-1">
-        <p>• Supports A-Z, 0-9, spaces, and basic punctuation</p>
-        <p>• Uses 5x7 block character format</p>
-        <p>• Maximum 30 characters recommended for best display</p>
-      </div>
+      {!input && (
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+          <div className="text-4xl mb-2">🎨</div>
+          <p>Enter text above to generate ASCII art</p>
+        </div>
+      )}
     </div>
   );
 }
