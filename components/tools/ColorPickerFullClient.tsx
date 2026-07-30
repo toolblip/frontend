@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 
 export default function ColorPickerFullClient() {
   const [color, setColor] = useState('#ef4444');
+  const [copied, setCopied] = useState('');
 
   const toRgb = (hex: string) => {
     const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -52,36 +53,53 @@ export default function ColorPickerFullClient() {
   const hsl = toHsl(color);
   const hsv = toHsv(color);
 
-  return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
-      <input type="color" value={color} onChange={e => setColor(e.target.value)} className="w-full h-56 rounded-2xl cursor-pointer border-0 shadow-lg" />
+  const loadExample = () => setColor('#6366f1');
 
-      <div className="flex flex-col md:flex-row gap-3">
-        <div className="flex-1 bg-gray-50 rounded-xl p-4">
-          <div className="text-xs text-gray-500 mb-1">HEX</div>
-          <div className="font-mono font-bold text-2xl">{color.toUpperCase()}</div>
-        </div>
-        {rgb && (
-          <div className="flex-1 bg-gray-50 rounded-xl p-4">
-            <div className="text-xs text-gray-500 mb-1">RGB</div>
-            <div className="font-mono font-bold text-2xl">{rgb.r},{rgb.g},{rgb.b}</div>
-          </div>
-        )}
-        {hsl && (
-          <div className="flex-1 bg-gray-50 rounded-xl p-4">
-            <div className="text-xs text-gray-500 mb-1">HSL</div>
-            <div className="font-mono font-bold text-2xl">{hsl.h}°, {hsl.s}%, {hsl.l}%</div>
-          </div>
-        )}
-        {hsv && (
-          <div className="flex-1 bg-gray-50 rounded-xl p-4">
-            <div className="text-xs text-gray-500 mb-1">HSV</div>
-            <div className="font-mono font-bold text-2xl">{hsv.h}°, {hsv.s}%, {hsv.v}%</div>
-          </div>
-        )}
+  const copy = (label: string, value: string) => {
+    navigator.clipboard.writeText(value).catch(() => {});
+    setCopied(label);
+    setTimeout(() => setCopied(''), 1500);
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Color Picker Full</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
       </div>
 
-      <div className="rounded-2xl h-24 shadow-lg" style={{ backgroundColor: color }} />
+      <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
+        <input type="color" value={color} onChange={e => setColor(e.target.value)} className="w-full h-56 rounded-2xl cursor-pointer border-0 shadow-lg" />
+
+        <div className="flex flex-col md:flex-row gap-3">
+          <button type="button" onClick={() => copy('hex', color.toUpperCase())} className="flex-1 bg-gray-50 rounded-xl p-4 text-left">
+            <div className="text-xs text-gray-500 mb-1">HEX</div>
+            <div className="font-mono font-bold text-2xl">{copied === 'hex' ? 'Copied' : color.toUpperCase()}</div>
+          </button>
+          {rgb && (
+            <button type="button" onClick={() => copy('rgb', `${rgb.r},${rgb.g},${rgb.b}`)} className="flex-1 bg-gray-50 rounded-xl p-4 text-left">
+              <div className="text-xs text-gray-500 mb-1">RGB</div>
+              <div className="font-mono font-bold text-2xl">{copied === 'rgb' ? 'Copied' : `${rgb.r},${rgb.g},${rgb.b}`}</div>
+            </button>
+          )}
+          {hsl && (
+            <button type="button" onClick={() => copy('hsl', `${hsl.h}°, ${hsl.s}%, ${hsl.l}%`)} className="flex-1 bg-gray-50 rounded-xl p-4 text-left">
+              <div className="text-xs text-gray-500 mb-1">HSL</div>
+              <div className="font-mono font-bold text-2xl">{copied === 'hsl' ? 'Copied' : `${hsl.h}°, ${hsl.s}%, ${hsl.l}%`}</div>
+            </button>
+          )}
+          {hsv && (
+            <button type="button" onClick={() => copy('hsv', `${hsv.h}°, ${hsv.s}%, ${hsv.v}%`)} className="flex-1 bg-gray-50 rounded-xl p-4 text-left">
+              <div className="text-xs text-gray-500 mb-1">HSV</div>
+              <div className="font-mono font-bold text-2xl">{copied === 'hsv' ? 'Copied' : `${hsv.h}°, ${hsv.s}%, ${hsv.v}%`}</div>
+            </button>
+          )}
+        </div>
+
+        <div className="rounded-2xl h-24 shadow-lg" style={{ backgroundColor: color }} />
+      </div>
     </div>
   );
 }

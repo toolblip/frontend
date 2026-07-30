@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 
 export default function ColorPickerFreshClient() {
   const [color, setColor] = useState('#10b981');
+  const [copied, setCopied] = useState('');
 
   const toRgb = (hex: string) => {
     const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -12,22 +13,39 @@ export default function ColorPickerFreshClient() {
 
   const rgb = toRgb(color);
 
+  const loadExample = () => setColor('#f59e0b');
+
+  const copy = (label: string, value: string) => {
+    navigator.clipboard.writeText(value).catch(() => {});
+    setCopied(label);
+    setTimeout(() => setCopied(''), 1500);
+  };
+
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
-      <input type="color" value={color} onChange={e => setColor(e.target.value)} className="w-full h-44 rounded-2xl cursor-pointer border-0" />
-      <div className="tb-v2-mode-tabs">
-        <div className="flex-1 bg-gray-50 rounded-xl p-3">
-          <div className="text-xs text-gray-500">HEX</div>
-          <div className="font-mono font-bold text-lg">{color.toUpperCase()}</div>
-        </div>
-        {rgb && (
-          <div className="flex-1 bg-gray-50 rounded-xl p-3">
-            <div className="text-xs text-gray-500">RGB</div>
-            <div className="font-mono font-bold text-lg">{rgb.r},{rgb.g},{rgb.b}</div>
-          </div>
-        )}
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Color Picker Fresh</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
       </div>
-      <div className="rounded-xl h-16" style={{ backgroundColor: color }} />
+
+      <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
+        <input type="color" value={color} onChange={e => setColor(e.target.value)} className="w-full h-44 rounded-2xl cursor-pointer border-0" />
+        <div className="flex gap-3">
+          <button type="button" onClick={() => copy('hex', color.toUpperCase())} className="flex-1 bg-gray-50 rounded-xl p-3 text-left">
+            <div className="text-xs text-gray-500">HEX</div>
+            <div className="font-mono font-bold text-lg">{copied === 'hex' ? 'Copied' : color.toUpperCase()}</div>
+          </button>
+          {rgb && (
+            <button type="button" onClick={() => copy('rgb', `${rgb.r},${rgb.g},${rgb.b}`)} className="flex-1 bg-gray-50 rounded-xl p-3 text-left">
+              <div className="text-xs text-gray-500">RGB</div>
+              <div className="font-mono font-bold text-lg">{copied === 'rgb' ? 'Copied' : `${rgb.r},${rgb.g},${rgb.b}`}</div>
+            </button>
+          )}
+        </div>
+        <div className="rounded-xl h-16" style={{ backgroundColor: color }} />
+      </div>
     </div>
   );
 }
