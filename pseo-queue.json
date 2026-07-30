@@ -1,6 +1,5 @@
 {
   "pending": [
-    "Check password strength before enforcing signup rules",
     "Generate a JSON Schema automatically from sample API data",
     {
       "topic": "Generate secure Argon2 password hashes for modern authentication"
@@ -75,7 +74,9 @@
       "topic": "Optimize a blog post before publishing: check readability, keyword density, and word count"
     }
   ],
-  "in_progress": [],
+  "in_progress": [
+    "Check password strength before enforcing signup rules"
+  ],
   "done": [
     {
       "topic": "Test JSONPath queries against API response data with JSON Path Tester",
