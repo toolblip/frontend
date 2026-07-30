@@ -1,18 +1,16 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useRef } from 'react';
 
 export default function Base64ImageConverterClient() {
+  const [mode, setMode] = useState<'encode' | 'decode'>('encode');
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');
-  const [mode, setMode] = useState<'encode' | 'decode'>('encode');
   const [error, setError] = useState('');
   const [preview, setPreview] = useState<string | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const [copied, setCopied] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
 
   const encodeImage = (file: File) => {
     const reader = new FileReader();
@@ -32,173 +30,145 @@ export default function Base64ImageConverterClient() {
 
   const decodeImage = (base64: string) => {
     try {
-      // Check if it's a valid base64 data URL
       const match = base64.match(/^data:([^;]+);base64,/);
       if (!match) {
-        // Try to decode as plain base64
         const binary = atob(base64.trim());
         const bytes = new Uint8Array(binary.length);
-        for (let i = 0; i < binary.length; i++) {
-          bytes[i] = binary.charCodeAt(i);
-        }
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
         const blob = new Blob([bytes], { type: 'image/png' });
-        const url = URL.createObjectURL(blob);
-        setPreview(url);
+        setPreview(URL.createObjectURL(blob));
         setOutput(base64);
-        setError('');
       } else {
         const mimeType = match[1];
         const data = base64.replace(/^data:[^;]+;base64,/, '');
         const binary = atob(data);
         const bytes = new Uint8Array(binary.length);
-        for (let i = 0; i < binary.length; i++) {
-          bytes[i] = binary.charCodeAt(i);
-        }
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
         const blob = new Blob([bytes], { type: mimeType });
-        const url = URL.createObjectURL(blob);
-        setPreview(url);
+        setPreview(URL.createObjectURL(blob));
         setOutput(base64);
-        setError('');
       }
-    } catch (e) {
-      setError('Invalid Base64 image data. Please provide valid base64 encoded image data.');
+      setError('');
+    } catch {
+      setError('Invalid Base64 image data');
       setPreview(null);
       setOutput('');
-    }
-  };
-
-  const handleProcess = () => {
-    setError('');
-    setPreview(null);
-    
-    if (!input.trim()) {
-      setOutput('');
-      return;
-    }
-
-    if (mode === 'encode') {
-      // For plain base64 input, just echo it
-      setOutput(input.trim());
-    } else {
-      decodeImage(input);
     }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      if (mode === 'encode') {
-        encodeImage(file);
-      } else {
-        const reader = new FileReader();
-        reader.onload = () => {
-          handleInputChange(reader.result as string);
-        };
-        reader.readAsText(file);
-      }
+    if (!file) return;
+    if (mode === 'encode') {
+      encodeImage(file);
+    } else {
+      const reader = new FileReader();
+      reader.onload = () => decodeImage(reader.result as string);
+      reader.readAsText(file);
     }
   };
 
-  const handleInputChange = (value: string) => {
-    setInput(value);
-    if (mode === 'decode' && value.trim()) {
-      decodeImage(value);
-    } else if (mode === 'encode') {
-      setPreview(null);
+  const onDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file && file.type.startsWith('image/') && mode === 'encode') {
+      encodeImage(file);
     }
   };
 
-  const copyToClipboard = () => {
-    if (output) {
-      navigator.clipboard.writeText(output);
-    }
+  const copy = () => {
+    navigator.clipboard.writeText(output);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div className="tb-v2-tool-card">
-      {isMounted && (
-      <>
-      <div className="flex gap-4 mb-4">
-        <button
-          onClick={() => { setMode('encode'); setInput(''); setOutput(''); setPreview(null); setError(''); }}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors ${mode === 'encode' ? 'bg-indigo-500 text-white' : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'}`}
-        >
-          Encode Image to Base64
-        </button>
-        <button
-          onClick={() => { setMode('decode'); setInput(''); setOutput(''); setPreview(null); setError(''); }}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors ${mode === 'decode' ? 'bg-indigo-500 text-white' : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'}`}
-        >
-          Decode Base64 to Image
-        </button>
+    <div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">{mode === 'encode' ? 'Image' : 'Base64'}</span>
+        <div className="tb-v2-mode-tabs" role="tablist">
+          {(['encode', 'decode'] as const).map((m) => (
+            <button
+              key={m}
+              role="tab"
+              aria-selected={mode === m}
+              onClick={() => { setMode(m); setInput(''); setOutput(''); setPreview(null); setError(''); }}
+              className={`tb-v2-mode-tab ${mode === m ? 'on' : ''}`}
+            >
+              {m === 'encode' ? 'Encode' : 'Decode'}
+            </button>
+          ))}
+        </div>
       </div>
 
       {mode === 'encode' ? (
-        <div>
-          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Upload Image</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-800"
-          />
+        <div
+          onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+          onDragLeave={() => setIsDragging(false)}
+          onDrop={onDrop}
+          onClick={() => fileRef.current?.click()}
+          className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors ${
+            isDragging
+              ? 'border-indigo-400 bg-indigo-50 dark:bg-indigo-900/20'
+              : 'border-gray-300 dark:border-gray-600 hover:border-indigo-400 dark:hover:border-indigo-500'
+          }`}
+        >
+          <div className="text-4xl mb-2">🖼️</div>
+          <p className="text-gray-600 dark:text-gray-400">
+            {isDragging ? 'Drop image here' : 'Click or drag image to encode'}
+          </p>
+          <p className="text-xs text-gray-500 mt-1">JPG, PNG, GIF, WebP</p>
         </div>
       ) : (
-        <div>
-          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Paste Base64 Data</label>
-          <textarea
-            value={input}
-            onChange={(e) => handleInputChange(e.target.value)}
-            className="tb-v2-input"
-            placeholder="Paste base64 data here (data:image/...;base64,...) or load from file..."
-          />
-          <div className="mt-2">
-            <input
-              type="file"
-              accept=".txt,.b64"
-              onChange={handleFileChange}
-              className="text-sm"
-            />
-          </div>
-        </div>
+        <textarea
+          value={input}
+          onChange={(e) => { setInput(e.target.value); if (mode === 'decode' && e.target.value.trim()) decodeImage(e.target.value); }}
+          placeholder="Paste Base64 image data (data:image/...;base64,...)"
+          className="tb-v2-tool-textarea"
+          style={{ fontFamily: 'var(--f-mono)', minHeight: 100 }}
+          rows={4}
+        />
       )}
 
-      <button
-        onClick={handleProcess}
-        className="px-6 py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600"
-      >
-        Convert
-      </button>
+      <input ref={fileRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
 
       {error && (
-        <div className="tb-v2-banner tb-v2-banner-err">
-          {error}
+        <div className="p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-xl">
+          <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
         </div>
       )}
 
       {preview && (
-        <div className="space-y-2">
-          <label className="block text-sm font-medium">Preview</label>
-          <div className="border rounded-lg p-4 bg-gray-50 dark:bg-gray-800">
-            <img src={preview} alt="Preview" className="max-w-full max-h-64 mx-auto rounded" />
+        <div>
+          <label className="tb-v2-tool-label">Preview</label>
+          <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+            <img src={preview} alt="Preview" className="max-w-full max-h-64 mx-auto rounded-lg" />
           </div>
         </div>
       )}
 
       {output && (
-        <div className="space-y-2">
-          <div className="flex justify-between text-sm text-gray-500">
-            <span>Output ({output.length} chars)</span>
-            <button onClick={copyToClipboard} className="text-indigo-500 hover:text-indigo-600">Copy</button>
+        <>
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">Output ({(output.length / 1024).toFixed(1)} KB)</span>
+            <button onClick={copy} className="tb-v2-copy-btn">
+              {copied ? 'Copied!' : 'Copy'}
+            </button>
           </div>
-          <textarea
-            value={output}
-            readOnly
-            className="tb-v2-input"
-          />
-        </div>
+          <div className="tb-v2-tool-output-body">
+            <pre className="tb-v2-tool-pre text-xs break-all" style={{ maxHeight: 200, overflowY: 'auto' }}>
+              {output.slice(0, 500)}{output.length > 500 ? '...' : ''}
+            </pre>
+          </div>
+        </>
       )}
-      </>
+
+      {!preview && !output && !error && (
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+          <div className="text-4xl mb-2">{mode === 'encode' ? '🖼️' : '📄'}</div>
+          <p>{mode === 'encode' ? 'Upload an image to encode to Base64' : 'Paste Base64 data to decode to image'}</p>
+        </div>
       )}
     </div>
   );
