@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 // Extended color name database
 const COLOR_NAMES: Record<string, string> = {
@@ -34,6 +34,10 @@ const COLOR_NAMES: Record<string, string> = {
 function hexToRgb(hex: string): {r:number;g:number;b:number}|null {
   const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return r ? {r:parseInt(r[1],16),g:parseInt(r[2],16),b:parseInt(r[3],16)} : null;
+}
+
+function isValidHex(hex: string): boolean {
+  return /^#?[a-f\d]{6}$/i.test(hex);
 }
 
 function rgbToHsl(r:number,g:number,b:number):{h:number;s:number;l:number} {
@@ -78,69 +82,112 @@ function getShades(hex:string):string[] {
 
 export default function ColorNameFinderV2Client() {
   const [color,setColor]=useState('#6366f1');
+  const [colorInput,setColorInput]=useState('#6366f1');
+  const [hexError,setHexError]=useState(false);
   const [mode,setMode]=useState<'name'|'tints'|'shades'>('name');
+  const [copied,setCopied]=useState('');
   const rgb=hexToRgb(color);
   const hsl=rgb?rgbToHsl(rgb.r,rgb.g,rgb.b):null;
-  const match=findClosest(color);
+  const match=rgb?findClosest(color):null;
   const tints=getTints(color);
   const shades=getShades(color);
 
+  const setColorValue = (value: string) => {
+    setColor(value);
+    setColorInput(value);
+    setHexError(false);
+  };
+
+  const handleColorInput = (value: string) => {
+    setColorInput(value);
+    if (isValidHex(value)) {
+      setColor(value.startsWith('#') ? value : `#${value}`);
+      setHexError(false);
+    } else {
+      setHexError(true);
+    }
+  };
+
+  const loadExample = () => setColorValue('#e74c3c');
+
+  const copy = (label: string, value: string) => {
+    navigator.clipboard.writeText(value).catch(() => {});
+    setCopied(label);
+    setTimeout(() => setCopied(''), 1500);
+  };
+
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Color Name Finder V2</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
+      </div>
+
       <div className="flex flex-col md:flex-row gap-4 items-end">
-        <input type="color" value={color} onChange={e=>setColor(e.target.value)} className="w-20 h-20 rounded-lg cursor-pointer border-2 border-gray-200 flex-shrink-0" />
+        <input type="color" value={color} onChange={e=>setColorValue(e.target.value)} className="rounded-lg cursor-pointer border-2 border-gray-200 flex-shrink-0" style={{width:80,height:80}} />
         <div className="flex-1 w-full">
-          <label className="block text-sm font-medium mb-1">Hex Color</label>
-          <input type="text" value={color} onChange={e=>setColor(e.target.value)} className="w-full px-4 py-3 border rounded-lg font-mono text-lg" />
+          <label className="tb-v2-tool-label" style={{marginBottom:6,display:'block'}}>Hex Color</label>
+          <input type="text" value={colorInput} onChange={e=>handleColorInput(e.target.value)} className="tb-v2-input" style={{fontFamily:'var(--f-mono)',fontSize:18}} />
+          {hexError && <p style={{ fontSize: 12, color: '#ef4444', marginTop: 6 }}>Enter a valid 6-digit hex color (e.g., #3366FF).</p>}
         </div>
-        <div className="tb-v2-mode-tabs">
-          {(['name','tints','shades'] as const).map(m=>(
-            <button key={m} onClick={()=>setMode(m)} className={`px-4 py-2 rounded-lg text-sm font-medium ${mode===m?'bg-indigo-600 text-white':'bg-gray-100 hover:bg-gray-200'}`}>{m.charAt(0).toUpperCase()+m.slice(1)}</button>
-          ))}
-        </div>
+      </div>
+
+      <div className="tb-v2-mode-tabs">
+        {(['name','tints','shades'] as const).map(m=>(
+          <button key={m} type="button" onClick={()=>setMode(m)} className={`tb-v2-mode-tab ${mode===m?'on':''}`}>{m.charAt(0).toUpperCase()+m.slice(1)}</button>
+        ))}
       </div>
 
       {mode==='name'&&match&&(
         <div className="bg-gray-50 rounded-lg p-6 text-center">
           <div className="w-16 h-16 rounded-full mx-auto mb-3 border-2 border-gray-200" style={{backgroundColor:match.hex}}/>
           <div className="text-xl font-bold">{match.name}</div>
-          <div className="text-sm text-gray-500">approx. match · {Math.round(match.distance)}px away</div>
+          <div className="text-sm text-gray-500 mb-3">approx. match, {Math.round(match.distance)}px away</div>
+          <button
+            type="button"
+            onClick={() => copy('match', match.hex.toUpperCase())}
+            className={`tb-v2-copy-btn ${copied === 'match' ? 'done' : ''}`}
+          >
+            {copied === 'match' ? 'Copied' : `Copy ${match.hex.toUpperCase()}`}
+          </button>
         </div>
       )}
 
       {mode==='tints'&&(
-        <div className="space-y-3">
-          <div className="text-sm font-medium">Tints (lighter variations)</div>
-          <div className="tb-v2-mode-tabs">
-            {tints.map((t,i)=>(
-              <div key={t} className="flex-1 text-center">
+        <div className="flex flex-col gap-3">
+          <div className="tb-v2-tool-label">Tints (lighter variations)</div>
+          <div className="grid grid-cols-4 gap-3">
+            {tints.map((t)=>(
+              <button key={t} type="button" onClick={() => copy(t, t.toUpperCase())} className="text-center">
                 <div className="h-16 rounded-lg border border-gray-200" style={{backgroundColor:t}}/>
-                <div className="text-xs font-mono mt-1">{t.toUpperCase()}</div>
-              </div>
+                <div className="text-xs font-mono mt-1">{copied === t ? 'Copied' : t.toUpperCase()}</div>
+              </button>
             ))}
           </div>
         </div>
       )}
 
       {mode==='shades'&&(
-        <div className="space-y-3">
-          <div className="text-sm font-medium">Shades (darker variations)</div>
-          <div className="tb-v2-mode-tabs">
-            {shades.map((s,i)=>(
-              <div key={s} className="flex-1 text-center">
+        <div className="flex flex-col gap-3">
+          <div className="tb-v2-tool-label">Shades (darker variations)</div>
+          <div className="grid grid-cols-4 gap-3">
+            {shades.map((s)=>(
+              <button key={s} type="button" onClick={() => copy(s, s.toUpperCase())} className="text-center">
                 <div className="h-16 rounded-lg border border-gray-200" style={{backgroundColor:s}}/>
-                <div className="text-xs font-mono mt-1">{s.toUpperCase()}</div>
-              </div>
+                <div className="text-xs font-mono mt-1">{copied === s ? 'Copied' : s.toUpperCase()}</div>
+              </button>
             ))}
           </div>
         </div>
       )}
 
       {rgb&&hsl&&(
-        <div className="grid grid-cols-3 md:grid-cols-6 gap-3 text-sm">
-          <div className="bg-gray-50 rounded p-2"><span className="text-gray-500 block">HEX</span><span className="font-mono font-medium">{color.toUpperCase()}</span></div>
-          <div className="bg-gray-50 rounded p-2"><span className="text-gray-500 block">RGB</span><span className="font-mono font-medium">{rgb.r},{rgb.g},{rgb.b}</span></div>
-          <div className="bg-gray-50 rounded p-2"><span className="text-gray-500 block">HSL</span><span className="font-mono font-medium">{hsl.h},{hsl.s}%,{hsl.l}%</span></div>
+        <div className="grid grid-cols-3 gap-3 text-sm">
+          <button type="button" onClick={() => copy('hex', color.toUpperCase())} className="bg-gray-50 rounded p-2 text-left"><span className="text-gray-500 block">HEX</span><span className="font-mono font-medium">{copied === 'hex' ? 'Copied' : color.toUpperCase()}</span></button>
+          <button type="button" onClick={() => copy('rgb', `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`)} className="bg-gray-50 rounded p-2 text-left"><span className="text-gray-500 block">RGB</span><span className="font-mono font-medium">{copied === 'rgb' ? 'Copied' : `${rgb.r},${rgb.g},${rgb.b}`}</span></button>
+          <button type="button" onClick={() => copy('hsl', `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`)} className="bg-gray-50 rounded p-2 text-left"><span className="text-gray-500 block">HSL</span><span className="font-mono font-medium">{copied === 'hsl' ? 'Copied' : `${hsl.h},${hsl.s}%,${hsl.l}%`}</span></button>
         </div>
       )}
     </div>

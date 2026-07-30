@@ -1,14 +1,17 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export default function ColorPaletteExtractorClient() {
   const [imageUrl, setImageUrl] = useState('');
   const [colors, setColors] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [copied, setCopied] = useState('');
 
   const extractColors = async (url: string) => {
     setLoading(true);
+    setError('');
     try {
       const img = new Image();
       img.crossOrigin = 'Anonymous';
@@ -37,58 +40,86 @@ export default function ColorPaletteExtractorClient() {
       setColors(sorted.slice(0, 12).map(([c]) => c));
     } catch {
       setColors([]);
+      setError('Could not load or process that image. Check the URL and make sure the server allows cross-origin image access.');
     } finally {
       setLoading(false);
     }
   };
 
+  const loadExample = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 240;
+    canvas.height = 160;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const swatches = ['#e74c3c', '#f39c12', '#2ecc71', '#3498db', '#9b59b6', '#1abc9c'];
+    swatches.forEach((c, i) => {
+      ctx.fillStyle = c;
+      ctx.fillRect((i % 3) * 80, Math.floor(i / 3) * 80, 80, 80);
+    });
+    const dataUrl = canvas.toDataURL();
+    setImageUrl(dataUrl);
+    extractColors(dataUrl);
+  };
+
+  const copy = (color: string) => {
+    navigator.clipboard.writeText(color.toUpperCase()).catch(() => {});
+    setCopied(color);
+    setTimeout(() => setCopied(''), 1500);
+  };
+
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Color Palette Extractor</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
+      </div>
+
       <div>
-        <label className="tb-v2-tool-label" style={{marginBottom:8}}>Image URL</label>
-        <div className="tb-v2-mode-tabs">
+        <label className="tb-v2-tool-label" style={{marginBottom:8,display:'block'}}>Image URL</label>
+        <div className="flex gap-2">
           <input
             type="text"
             value={imageUrl}
-            onChange={e => setImageUrl(e.target.value)}
+            onChange={e => { setImageUrl(e.target.value); setError(''); }}
             placeholder="https://example.com/image.jpg"
-            className="flex-1 px-4 py-3 border rounded-lg"
+            className="tb-v2-input flex-1"
           />
           <button
+            type="button"
             onClick={() => extractColors(imageUrl)}
             disabled={!imageUrl || loading}
-            className="px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 disabled:opacity-50"
+            className="tb-v2-btn tb-v2-btn-primary"
           >
             {loading ? 'Extracting...' : 'Extract'}
           </button>
         </div>
+        {error && <p style={{ fontSize: 12, color: '#ef4444', marginTop: 6 }}>{error}</p>}
       </div>
 
       {colors.length > 0 && (
         <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
           <div className="text-sm font-medium">Extracted Colors ({colors.length})</div>
-          <div className="tb-v2-mode-tabs">
+          <div className="flex flex-wrap gap-3">
             {colors.map((color, i) => (
-              <div key={i} className="text-center">
+              <button key={i} type="button" onClick={() => copy(color)} className="text-center">
                 <div
                   className="w-16 h-16 rounded-lg border border-gray-200 shadow-sm cursor-pointer hover:scale-105 transition-transform"
                   style={{ backgroundColor: color }}
-                  onClick={() => navigator.clipboard.writeText(color)}
                   title="Click to copy"
                 />
-                <div className="text-xs font-mono mt-1">{color.toUpperCase()}</div>
-              </div>
+                <div className="text-xs font-mono mt-1">{copied === color ? 'Copied' : color.toUpperCase()}</div>
+              </button>
             ))}
           </div>
           <div className="text-xs text-gray-500">Click any swatch to copy hex value</div>
         </div>
       )}
 
-      {!loading && colors.length === 0 && (
-        <div className="text-center py-16 text-gray-400">
-          <div className="text-4xl mb-2">🎨</div>
-          <div>Enter an image URL and click Extract to pull colors</div>
-        </div>
+      {!loading && colors.length === 0 && !error && (
+        <div className="tb-v2-empty">Enter an image URL and click Extract to pull colors, or click Load Example.</div>
       )}
     </div>
   );

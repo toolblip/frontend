@@ -1,19 +1,22 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 export default function ColorPaletteFromImageClient() {
   const [url, setUrl] = useState('');
   const [palette, setPalette] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [copied, setCopied] = useState('');
 
-  const extract = async () => {
-    if (!url) return;
+  const extract = async (imgUrl: string) => {
+    if (!imgUrl) return;
     setLoading(true);
+    setError('');
     try {
       const img = new window.Image();
       img.crossOrigin = 'Anonymous';
-      img.src = url;
+      img.src = imgUrl;
       await new Promise((res, rej) => { img.onload = res; img.onerror = rej; });
 
       const c = document.createElement('canvas');
@@ -30,29 +33,78 @@ export default function ColorPaletteFromImageClient() {
       }
       const top = Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([c])=>c);
       setPalette(top);
-    } catch { setPalette([]); }
+    } catch {
+      setPalette([]);
+      setError('Could not load or process that image. Check the URL and make sure the server allows cross-origin image access.');
+    }
     finally { setLoading(false); }
   };
 
+  const loadExample = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 240;
+    canvas.height = 160;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const swatches = ['#16a085', '#27ae60', '#2980b9', '#8e44ad', '#f39c12', '#d35400'];
+    swatches.forEach((c, i) => {
+      ctx.fillStyle = c;
+      ctx.fillRect((i % 3) * 80, Math.floor(i / 3) * 80, 80, 80);
+    });
+    const dataUrl = canvas.toDataURL();
+    setUrl(dataUrl);
+    extract(dataUrl);
+  };
+
+  const copy = (color: string) => {
+    navigator.clipboard.writeText(color.toUpperCase()).catch(() => {});
+    setCopied(color);
+    setTimeout(() => setCopied(''), 1500);
+  };
+
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
-      <div className="tb-v2-mode-tabs">
-        <input type="text" value={url} onChange={e=>setUrl(e.target.value)} placeholder="Image URL..." className="flex-1 px-4 py-3 border rounded-lg" />
-        <button onClick={extract} disabled={!url||loading} className="px-6 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 disabled:opacity-50">{loading?'...':'Extract'}</button>
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Color Palette From Image</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
       </div>
-      {palette.length>0&&(
-        <div className="space-y-3">
+
+      <div className="flex gap-2">
+        <input
+          type="text"
+          value={url}
+          onChange={e => { setUrl(e.target.value); setError(''); }}
+          placeholder="Image URL..."
+          className="tb-v2-input flex-1"
+        />
+        <button
+          type="button"
+          onClick={() => extract(url)}
+          disabled={!url || loading}
+          className="tb-v2-btn tb-v2-btn-primary"
+        >
+          {loading ? 'Extracting...' : 'Extract'}
+        </button>
+      </div>
+      {error && <p style={{ fontSize: 12, color: '#ef4444' }}>{error}</p>}
+
+      {palette.length > 0 ? (
+        <div className="flex flex-col gap-3">
           <div className="text-sm font-medium">Palette</div>
-          <div className="tb-v2-mode-tabs">
-            {palette.map((c,i)=>(
-              <div key={i} className="text-center cursor-pointer" onClick={()=>navigator.clipboard.writeText(c)}>
+          <div className="flex flex-wrap gap-3">
+            {palette.map((c, i) => (
+              <button key={i} type="button" onClick={() => copy(c)} className="text-center">
                 <div className="w-14 h-14 rounded-lg border border-gray-200" style={{backgroundColor:c}}/>
-                <div className="text-xs font-mono mt-1">{c.toUpperCase()}</div>
-              </div>
+                <div className="text-xs font-mono mt-1">{copied === c ? 'Copied' : c.toUpperCase()}</div>
+              </button>
             ))}
           </div>
           <div className="text-xs text-gray-400">Click swatch to copy</div>
         </div>
+      ) : (
+        !loading && !error && <div className="tb-v2-empty">Enter an image URL and click Extract, or click Load Example.</div>
       )}
     </div>
   );

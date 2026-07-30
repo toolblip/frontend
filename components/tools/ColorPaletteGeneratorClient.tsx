@@ -1,13 +1,13 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 type PaletteType = 'complementary' | 'analogous' | 'triadic' | 'tetradic' | 'split-complementary' | 'monochromatic';
 
 function hexToHsl(hex: string): { h: number; s: number; l: number } | null {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   if (!result) return null;
-  
+
   let r = parseInt(result[1], 16) / 255;
   let g = parseInt(result[2], 16) / 255;
   let b = parseInt(result[3], 16) / 255;
@@ -37,6 +37,10 @@ function hexToHsl(hex: string): { h: number; s: number; l: number } | null {
   return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
 }
 
+function isValidHex(hex: string): boolean {
+  return /^#?[a-f\d]{6}$/i.test(hex);
+}
+
 function hslToHex(h: number, s: number, l: number): string {
   h = ((h % 360) + 360) % 360;
   s = Math.max(0, Math.min(100, s)) / 100;
@@ -47,7 +51,7 @@ function hslToHex(h: number, s: number, l: number): string {
   const m = l - c / 2;
 
   let r = 0, g = 0, b = 0;
-  
+
   if (h < 60) { r = c; g = x; b = 0; }
   else if (h < 120) { r = x; g = c; b = 0; }
   else if (h < 180) { r = 0; g = c; b = x; }
@@ -78,7 +82,7 @@ function generatePalette(baseColor: string, type: PaletteType): string[] {
   };
 
   const hueAngles = palettes[type];
-  
+
   if (type === 'monochromatic') {
     return [
       hslToHex(h, s, Math.max(10, l - 30)),
@@ -92,8 +96,30 @@ function generatePalette(baseColor: string, type: PaletteType): string[] {
   return hueAngles.map((angle) => hslToHex(angle, s, l));
 }
 
+const paletteTypes: { value: PaletteType; label: string; description: string }[] = [
+  { value: 'complementary', label: 'Complementary', description: '2 colors opposite on color wheel' },
+  { value: 'analogous', label: 'Analogous', description: '3-5 colors adjacent on color wheel' },
+  { value: 'triadic', label: 'Triadic', description: '3 colors equally spaced (120°)' },
+  { value: 'tetradic', label: 'Tetradic', description: '4 colors forming a rectangle' },
+  { value: 'split-complementary', label: 'Split Complementary', description: 'Base + 2 colors adjacent to complement' },
+  { value: 'monochromatic', label: 'Monochromatic', description: 'Variations of single hue' },
+];
+
+const presetBaseColors = [
+  '#e74c3c',
+  '#3498db',
+  '#2ecc71',
+  '#f1c40f',
+  '#9b59b6',
+  '#1abc9c',
+  '#e67e22',
+  '#34495e',
+];
+
 export default function ColorPaletteGeneratorClient() {
   const [baseColor, setBaseColor] = useState('#3498db');
+  const [baseColorInput, setBaseColorInput] = useState('#3498db');
+  const [hexError, setHexError] = useState(false);
   const [paletteType, setPaletteType] = useState<PaletteType>('complementary');
   const [palette, setPalette] = useState<string[]>([]);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
@@ -101,6 +127,27 @@ export default function ColorPaletteGeneratorClient() {
   useEffect(() => {
     setPalette(generatePalette(baseColor, paletteType));
   }, [baseColor, paletteType]);
+
+  const setBaseColorValue = (value: string) => {
+    setBaseColor(value);
+    setBaseColorInput(value);
+    setHexError(false);
+  };
+
+  const handleBaseColorInput = (value: string) => {
+    setBaseColorInput(value);
+    if (isValidHex(value)) {
+      setBaseColor(value.startsWith('#') ? value : `#${value}`);
+      setHexError(false);
+    } else {
+      setHexError(true);
+    }
+  };
+
+  const loadExample = () => {
+    setBaseColorValue('#9b59b6');
+    setPaletteType('triadic');
+  };
 
   const copyToClipboard = async (color: string, index: number) => {
     try {
@@ -112,61 +159,45 @@ export default function ColorPaletteGeneratorClient() {
     }
   };
 
-  const paletteTypes: { value: PaletteType; label: string; description: string }[] = [
-    { value: 'complementary', label: 'Complementary', description: '2 colors opposite on color wheel' },
-    { value: 'analogous', label: 'Analogous', description: '3-5 colors adjacent on color wheel' },
-    { value: 'triadic', label: 'Triadic', description: '3 colors equally spaced (120°)' },
-    { value: 'tetradic', label: 'Tetradic', description: '4 colors forming a rectangle' },
-    { value: 'split-complementary', label: 'Split Complementary', description: 'Base + 2 colors adjacent to complement' },
-    { value: 'monochromatic', label: 'Monochromatic', description: 'Variations of single hue' },
-  ];
-
-  const presetBaseColors = [
-    '#e74c3c',
-    '#3498db',
-    '#2ecc71',
-    '#f1c40f',
-    '#9b59b6',
-    '#1abc9c',
-    '#e67e22',
-    '#34495e',
-  ];
-
   return (
-    <div className="tb-v2-card">
-      <div className="tb-v2-card-header">
-        <h2 className="tb-v2-card-title">Color Palette Generator</h2>
-        <p className="tb-v2-card-description">
-          Generate beautiful color palettes from a base color
-        </p>
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Color Palette Generator</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
       </div>
 
-      <div className="tb-v2-form-group">
-        <label className="tb-v2-label">Base Color</label>
+      <div>
+        <label className="tb-v2-tool-label" style={{ marginBottom: 8, display: 'block' }}>Base Color</label>
         <div className="flex gap-3 items-center">
           <input
             type="color"
             value={baseColor}
-            onChange={(e) => setBaseColor(e.target.value)}
-            className="tb-v2-input h-12 w-24 cursor-pointer rounded border"
+            onChange={(e) => setBaseColorValue(e.target.value)}
+            className="cursor-pointer rounded border"
+            style={{ width: 48, height: 40 }}
           />
           <input
             type="text"
-            value={baseColor.toUpperCase()}
-            onChange={(e) => setBaseColor(e.target.value)}
+            value={baseColorInput}
+            onChange={(e) => handleBaseColorInput(e.target.value)}
             className="tb-v2-input flex-1 uppercase"
+            style={{ fontFamily: 'var(--f-mono)' }}
             placeholder="#3498DB"
           />
         </div>
+        {hexError && <p style={{ fontSize: 12, color: '#ef4444', marginTop: 6 }}>Enter a valid 6-digit hex color (e.g., #3366FF).</p>}
       </div>
 
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">Quick Select</div>
+      <div>
+        <div className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Quick Select</div>
         <div className="flex gap-2 flex-wrap">
           {presetBaseColors.map((preset) => (
             <button
               key={preset}
-              onClick={() => setBaseColor(preset)}
+              type="button"
+              onClick={() => setBaseColorValue(preset)}
               className="w-8 h-8 rounded border-2 transition-transform hover:scale-110"
               style={{
                 backgroundColor: preset,
@@ -177,12 +208,13 @@ export default function ColorPaletteGeneratorClient() {
         </div>
       </div>
 
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">Palette Type</div>
+      <div>
+        <div className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Palette Type</div>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
           {paletteTypes.map((type) => (
             <button
               key={type.value}
+              type="button"
               onClick={() => setPaletteType(type.value)}
               className={`p-3 rounded border text-left transition-colors ${
                 paletteType === type.value
@@ -197,19 +229,20 @@ export default function ColorPaletteGeneratorClient() {
         </div>
       </div>
 
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">Generated Palette</div>
-        <div className="tb-v2-mode-tabs">
+      <div>
+        <div className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Generated Palette</div>
+        <div className="flex gap-2">
           {palette.map((color, index) => (
             <div key={index} className="flex-1 text-center">
               <button
+                type="button"
                 onClick={() => copyToClipboard(color, index)}
                 className="w-full h-24 rounded-t-lg shadow-sm transition-transform hover:scale-105 relative"
                 style={{ backgroundColor: color }}
               >
                 {copiedIndex === index && (
                   <span className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white text-xs rounded-t-lg">
-                    Copied!
+                    Copied
                   </span>
                 )}
               </button>
@@ -219,9 +252,9 @@ export default function ColorPaletteGeneratorClient() {
         </div>
       </div>
 
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">Color Preview</div>
-        <div className="tb-v2-card p-4 rounded-lg" style={{ backgroundColor: palette[0] || baseColor }}>
+      <div>
+        <div className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Color Preview</div>
+        <div className="rounded-lg p-4" style={{ backgroundColor: palette[0] || baseColor }}>
           <div className="flex gap-2 mb-3">
             {palette.slice(1).map((color, index) => (
               <div
@@ -240,8 +273,8 @@ export default function ColorPaletteGeneratorClient() {
         </div>
       </div>
 
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">Full Width Preview</div>
+      <div>
+        <div className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Full Width Preview</div>
         <div className="flex h-16 rounded-lg overflow-hidden">
           {palette.map((color, index) => (
             <div
@@ -255,40 +288,42 @@ export default function ColorPaletteGeneratorClient() {
         </div>
       </div>
 
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">Export</div>
-        <div className="tb-v2-card p-4">
+      <div>
+        <div className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Export</div>
+        <div className="tb-v2-section" style={{ padding: 16 }}>
           <div className="text-sm font-mono mb-3">
             {palette.map((c) => c.toUpperCase()).join(', ')}
           </div>
           <div className="flex gap-2 flex-wrap">
             <button
+              type="button"
               onClick={() => copyToClipboard(palette.map((c) => c.toUpperCase()).join(', '), -1)}
-              className="tb-v2-button tb-v2-button-primary text-sm"
+              className="tb-v2-btn tb-v2-btn-primary text-sm"
             >
-              Copy All as HEX
+              {copiedIndex === -1 ? 'Copied' : 'Copy All as HEX'}
             </button>
             <button
+              type="button"
               onClick={() => {
                 const css = palette.map((c, i) => `--color-${i + 1}: ${c.toUpperCase()};`).join('\n');
                 copyToClipboard(`:root {\n${css}\n}`, -2);
               }}
-              className="tb-v2-button tb-v2-button-secondary text-sm"
+              className="tb-v2-btn tb-v2-btn-ghost text-sm"
             >
-              Copy as CSS Variables
+              {copiedIndex === -2 ? 'Copied' : 'Copy as CSS Variables'}
             </button>
           </div>
         </div>
       </div>
 
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">Color Harmony Theory</div>
-        <div className="tb-v2-card p-4 text-sm space-y-2">
+      <div>
+        <div className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Color Harmony Theory</div>
+        <div className="tb-v2-section text-sm space-y-2" style={{ padding: 16 }}>
           <p><strong>Complementary:</strong> Colors opposite each other create high contrast and visual interest.</p>
           <p><strong>Analogous:</strong> Colors next to each other create harmonious, serene designs.</p>
           <p><strong>Triadic:</strong> Three colors equally spaced create vibrant, balanced compositions.</p>
           <p><strong>Tetradic:</strong> Four colors in rectangular arrangement offer variety with balance.</p>
-          <p><strong>Split Complementary:</strong> Base color plus two adjacent to its complement - less tension than complementary.</p>
+          <p><strong>Split Complementary:</strong> Base color plus two adjacent to its complement, less tension than complementary.</p>
           <p><strong>Monochromatic:</strong> Single hue with varying saturation and lightness for cohesive look.</p>
         </div>
       </div>
