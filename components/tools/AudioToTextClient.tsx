@@ -7,6 +7,7 @@ export default function AudioToTextClient() {
   const [isListening, setIsListening] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
   const [manualText, setManualText] = useState('');
+  const [copied, setCopied] = useState(false);
   const recognitionRef = useRef<any>(null);
 
   useEffect(() => {
@@ -62,6 +63,13 @@ export default function AudioToTextClient() {
     setTranscript(manualText);
   };
 
+  const copyTranscript = () => {
+    if (!transcript) return;
+    navigator.clipboard.writeText(transcript).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
   return (
     <div className="space-y-4">
       <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-4 text-sm text-amber-800 dark:text-amber-200">
@@ -91,10 +99,10 @@ export default function AudioToTextClient() {
             {transcript && (
               <button
                 type="button"
-                onClick={() => { navigator.clipboard.writeText(transcript); }}
-                className="tb-v2-copy-btn"
+                onClick={copyTranscript}
+                className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
               >
-                Copy
+                {copied ? 'Copied' : 'Copy'}
               </button>
             )}
           </div>
@@ -119,7 +127,16 @@ export default function AudioToTextClient() {
       </div>
 
       <div>
-        <div className="tb-v2-tool-label mb-2">Manual Input</div>
+        <div className="flex items-center justify-between mb-2">
+          <span className="tb-v2-tool-label">Manual Input</span>
+          <button
+            type="button"
+            onClick={() => setManualText('Welcome back to the show. Today we are talking about how small teams ship big products.')}
+            className="tb-v2-btn-sm"
+          >
+            Load Example
+          </button>
+        </div>
         <textarea
           value={manualText}
           onChange={(e) => setManualText(e.target.value)}
@@ -131,7 +148,7 @@ export default function AudioToTextClient() {
           type="button"
           onClick={handleManualSubmit}
           disabled={!manualText.trim()}
-          className="tb-v2-btn tb-v2-btn-secondary mt-2 w-full"
+          className="tb-v2-btn mt-2 w-full"
         >
           Use This Text
         </button>

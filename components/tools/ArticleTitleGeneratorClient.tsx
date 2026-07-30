@@ -44,6 +44,9 @@ export default function ArticleTitleGeneratorClient() {
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Article Topic</span>
+        <button type="button" onClick={() => setTopic('remote team productivity')} className="tb-v2-btn-sm">
+          Load Example
+        </button>
       </div>
       <input
         type="text"
@@ -54,47 +57,48 @@ export default function ArticleTitleGeneratorClient() {
         style={{ marginBottom: 12 }}
       />
 
-      <button type="button" onClick={generate} className="tb-v2-primary-btn" style={{ width: '100%' }}>
+      <button type="button" onClick={generate} disabled={!topic.trim()} className="tb-v2-btn tb-v2-btn-primary" style={{ width: '100%' }}>
         Generate Title Ideas
       </button>
 
-      {titles.length > 0 && (
-        <div className="tb-v2-tool-output-head" style={{ marginTop: 16 }}>
-          <span className="tb-v2-tool-label">Title Ideas</span>
-        </div>
+      {titles.length === 0 && (
+        <p className="tb-v2-empty" style={{ marginTop: 16 }}>
+          Enter a topic above to get five headline variations you can copy individually.
+        </p>
       )}
-      <div className="tb-v2-tool-output-body">
-        {titles.length > 0 ? (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {titles.map((title, idx) => (
-              <div key={idx} style={{
-                padding: '10px 12px',
-                background: 'var(--tb-bg-primary)',
-                borderRadius: 8,
-                border: '1px solid var(--tb-bg-secondary)',
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                gap: 8
-              }}>
-                <span style={{ fontSize: 14, lineHeight: 1.4 }}>{title}</span>
-                <button
-                  type="button"
-                  onClick={() => copyTitle(title, idx)}
-                  className="tb-v2-copy-btn"
-                  style={{ flexShrink: 0, fontSize: 11 }}
-                >
-                  {copiedIdx === idx ? 'Copied' : 'Copy'}
-                </button>
-              </div>
-            ))}
+      {titles.length > 0 && (
+        <>
+          <div className="tb-v2-tool-output-head" style={{ marginTop: 16 }}>
+            <span className="tb-v2-tool-label">Title Ideas</span>
           </div>
-        ) : (
-          <div style={{ color: 'var(--tb-text-muted)', fontSize: 13 }}>
-            Enter a topic and click generate to get title ideas
+          <div className="tb-v2-tool-output-body">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {titles.map((title, idx) => (
+                <div key={idx} style={{
+                  padding: '10px 12px',
+                  background: 'var(--tb-bg-primary)',
+                  borderRadius: 8,
+                  border: '1px solid var(--tb-bg-secondary)',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  gap: 8
+                }}>
+                  <span style={{ fontSize: 14, lineHeight: 1.4 }}>{title}</span>
+                  <button
+                    type="button"
+                    onClick={() => copyTitle(title, idx)}
+                    className="tb-v2-copy-btn"
+                    style={{ flexShrink: 0, fontSize: 11 }}
+                  >
+                    {copiedIdx === idx ? 'Copied' : 'Copy'}
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
-        )}
-      </div>
+        </>
+      )}
     </div>
   );
 }

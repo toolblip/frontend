@@ -7,16 +7,27 @@ export default function AviToGifClient() {
   const [gifUrl, setGifUrl] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState('');
+  const [isDragging, setIsDragging] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const handleFile = (selected: File) => {
+    setFile(selected);
+    setGifUrl('');
+    setError('');
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
-    if (selected) {
-      setFile(selected);
-      setGifUrl('');
-      setError('');
-    }
+    if (selected) handleFile(selected);
+  };
+
+  const onDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const dropped = e.dataTransfer.files?.[0];
+    if (dropped && dropped.type.startsWith('video/')) handleFile(dropped);
   };
 
   const extractFramesAndCreateGif = async () => {
@@ -80,20 +91,36 @@ export default function AviToGifClient() {
         <strong>Best Effort:</strong> This tool extracts frames from video and creates a preview. Full GIF encoding requires server-side processing or FFmpeg.
       </div>
 
-      <div>
-        <div className="tb-v2-tool-label mb-2">Video File (AVI, MP4, MOV, etc.)</div>
-        <input
-          type="file"
-          accept="video/*"
-          onChange={handleFileChange}
-          className="tb-v2-tool-input w-full"
-        />
-        {file && (
-          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-            Selected: {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
-          </p>
-        )}
+      <div className="tb-v2-tool-label mb-2">Video File (AVI, MP4, MOV, etc.)</div>
+      <div
+        onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+        onDragLeave={() => setIsDragging(false)}
+        onDrop={onDrop}
+        onClick={() => fileRef.current?.click()}
+        className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-colors ${
+          isDragging
+            ? 'border-indigo-400 bg-indigo-50 dark:bg-indigo-900/20'
+            : 'border-gray-300 dark:border-gray-600 hover:border-indigo-400 dark:hover:border-indigo-500'
+        }`}
+      >
+        <div className="text-4xl mb-2">🎬</div>
+        <p className="text-gray-600 dark:text-gray-400">
+          {isDragging ? 'Drop video file here' : 'Click or drag a video file to extract frames'}
+        </p>
+        <p className="text-xs text-gray-500 mt-1">AVI, MP4, MOV, and other video formats</p>
       </div>
+      <input ref={fileRef} type="file" accept="video/*" onChange={handleFileChange} className="hidden" />
+      {file && (
+        <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl flex items-center justify-between">
+          <div>
+            <p className="font-medium">{file.name}</p>
+            <p className="text-sm text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+          </div>
+          <button type="button" onClick={() => { setFile(null); setGifUrl(''); setError(''); }} className="text-gray-400 hover:text-gray-600">
+            ✕
+          </button>
+        </div>
+      )}
 
       {file && (
         <button
@@ -131,11 +158,17 @@ export default function AviToGifClient() {
               link.download = 'frame.png';
               link.click();
             }}
-            className="tb-v2-btn tb-v2-btn-secondary w-full"
+            className="tb-v2-btn w-full"
           >
             Download Frame
           </button>
         </div>
+      )}
+
+      {!file && (
+        <p className="tb-v2-empty">
+          Upload a video above to extract a frame preview. Full GIF encoding needs FFmpeg or a similar desktop tool.
+        </p>
       )}
     </div>
   );

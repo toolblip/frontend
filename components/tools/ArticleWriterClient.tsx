@@ -35,31 +35,35 @@ export default function ArticleWriterClient() {
   const generate = () => {
     if (!topic.trim()) return;
 
-    const templates = [
-      `## Introduction\n\n${LOREM_PARAGRAPHS[0]}\n\n${LOREM_PARAGRAPHS[1]}`,
+    const sectionHeadings = [
+      `Understanding ${topic}`,
+      `The Benefits of ${topic}`,
+      `Getting Started with ${topic}`,
+      `Common Questions About ${topic}`,
+      `Best Practices for ${topic}`,
+      `Advanced Tips on ${topic}`,
+      `Common Mistakes to Avoid with ${topic}`,
+      `${topic} vs Alternative Approaches`,
+      `The Future of ${topic}`,
+      `Conclusion`,
     ];
 
-    const sectionTypes = [
-      `## Understanding ${topic}\n\n${LOREM_PARAGRAPHS[2]}\n\n${LOREM_PARAGRAPHS[3]}`,
-      `## The Benefits of ${topic}\n\n${LOREM_PARAGRAPHS[4]}\n\n${LOREM_PARAGRAPHS[5]}`,
-      `## Getting Started with ${topic}\n\n${LOREM_PARAGRAPHS[6]}\n\n${LOREM_PARAGRAPHS[0]}`,
-      `## Common Questions About ${topic}\n\n${LOREM_PARAGRAPHS[1]}\n\n${LOREM_PARAGRAPHS[2]}`,
-      `## Best Practices for ${topic}\n\n${LOREM_PARAGRAPHS[3]}\n\n${LOREM_PARAGRAPHS[4]}`,
-      `## Advanced Tips on ${topic}\n\n${LOREM_PARAGRAPHS[5]}\n\n${LOREM_PARAGRAPHS[6]}`,
-      `## Common Mistakes to Avoid with ${topic}\n\n${LOREM_PARAGRAPHS[0]}\n\n${LOREM_PARAGRAPHS[1]}`,
-      `## ${topic} vs Alternative Approaches\n\n${LOREM_PARAGRAPHS[2]}\n\n${LOREM_PARAGRAPHS[3]}`,
-      `## The Future of ${topic}\n\n${LOREM_PARAGRAPHS[4]}\n\n${LOREM_PARAGRAPHS[5]}`,
-      `## Conclusion\n\n${LOREM_PARAGRAPHS[6]}\n\n${LOREM_PARAGRAPHS[0]}`,
-    ];
+    let cursor = 0;
+    const nextParagraphs = (count: number) => {
+      const picked: string[] = [];
+      for (let i = 0; i < count; i++) {
+        picked.push(LOREM_PARAGRAPHS[cursor % LOREM_PARAGRAPHS.length]);
+        cursor++;
+      }
+      return picked.join('\n\n');
+    };
 
     let article = `# ${topic}\n\n`;
     article += `*An in-depth guide to ${topic}*\n\n`;
-    article += templates[0];
-    article += '\n\n';
+    article += `## Introduction\n\n${nextParagraphs(paragraphsPerSection)}`;
 
-    for (let i = 0; i < Math.min(outlineItems, sectionTypes.length); i++) {
-      article += '\n\n';
-      article += sectionTypes[i];
+    for (let i = 0; i < Math.min(outlineItems, sectionHeadings.length); i++) {
+      article += `\n\n## ${sectionHeadings[i]}\n\n${nextParagraphs(paragraphsPerSection)}`;
     }
 
     setOutput(article);
@@ -69,6 +73,9 @@ export default function ArticleWriterClient() {
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Article Topic</span>
+        <button type="button" onClick={() => setTopic('sustainable urban gardening')} className="tb-v2-btn-sm">
+          Load Example
+        </button>
       </div>
       <input
         type="text"
@@ -104,27 +111,35 @@ export default function ArticleWriterClient() {
         </div>
       </div>
 
-      <button type="button" onClick={generate} className="tb-v2-primary-btn" style={{ width: '100%' }}>
+      <button type="button" onClick={generate} disabled={!topic.trim()} className="tb-v2-btn tb-v2-btn-primary" style={{ width: '100%' }}>
         Write Article
       </button>
 
-      <div className="tb-v2-tool-output-head" style={{ marginTop: 16 }}>
-        <span className="tb-v2-tool-label">Written Article (Markdown)</span>
-        {output && (
-          <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
-            {copied ? 'Copied' : 'Copy'}
-          </button>
-        )}
-      </div>
-      <div className="tb-v2-tool-output-body">
-        <textarea
-          value={output}
-          onChange={(e) => setOutput(e.target.value)}
-          className="tb-v2-tool-textarea"
-          style={{ minHeight: 300, fontFamily: 'var(--f-mono)' }}
-          aria-label="Written article output"
-        />
-      </div>
+      {!output && (
+        <p className="tb-v2-empty" style={{ marginTop: 16 }}>
+          Enter a topic above and write a placeholder Markdown article you can use to test layout, word counts, or CMS formatting before real copy is ready.
+        </p>
+      )}
+
+      {output && (
+        <>
+          <div className="tb-v2-tool-output-head" style={{ marginTop: 16 }}>
+            <span className="tb-v2-tool-label">Written Article (Markdown)</span>
+            <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
+              {copied ? 'Copied' : 'Copy'}
+            </button>
+          </div>
+          <div className="tb-v2-tool-output-body">
+            <textarea
+              value={output}
+              onChange={(e) => setOutput(e.target.value)}
+              className="tb-v2-tool-textarea"
+              style={{ minHeight: 300, fontFamily: 'var(--f-mono)' }}
+              aria-label="Written article output"
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 }
