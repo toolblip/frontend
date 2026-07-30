@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 function parseColor(input: string): { r: number; g: number; b: number } | null {
   input = input.trim().toLowerCase();
@@ -83,12 +83,19 @@ function toCmyk(c: { r: number; g: number; b: number }): string {
 export default function ColorFormatConverterV2Client() {
   const [input, setInput] = useState('#e74c3c');
   const [parsed, setParsed] = useState<{ r: number; g: number; b: number } | null>(null);
+  const [copied, setCopied] = useState('');
 
-  React.useEffect(() => {
+  useEffect(() => {
     setParsed(parseColor(input));
   }, [input]);
 
-  const copy = (v: string) => navigator.clipboard.writeText(v);
+  const loadExample = () => setInput('hsl(204, 70%, 53%)');
+
+  const copy = (label: string, v: string) => {
+    navigator.clipboard.writeText(v).catch(() => {});
+    setCopied(label);
+    setTimeout(() => setCopied(''), 1500);
+  };
 
   const formats = parsed ? [
     { label: 'HEX', value: toHex(parsed) },
@@ -99,42 +106,52 @@ export default function ColorFormatConverterV2Client() {
   ] : [];
 
   return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold mb-2">Color Format Converter V2</h1>
-      <p className="text-sm text-gray-500 mb-4">Supports HEX, RGB, and HSL input formats</p>
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Color Format Converter V2</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
+      </div>
+      <p style={{ fontSize: 13, color: 'var(--tb-text-secondary)' }}>Supports HEX, RGB, and HSL input formats.</p>
 
       <input
         type="text"
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        className="w-full p-3 border rounded font-mono mb-4"
+        className="tb-v2-input"
+        style={{ fontFamily: 'var(--f-mono)' }}
         placeholder="#e74c3c"
       />
 
-      {parsed && (
+      {parsed ? (
         <>
-          <div className="w-full h-24 rounded-lg mb-6 border flex items-center justify-center text-xl font-bold" style={{ backgroundColor: toHex(parsed), color: parsed.r * 0.299 + parsed.g * 0.587 + parsed.b * 0.114 > 150 ? '#000' : '#fff' }}>
+          <div className="w-full h-24 rounded-lg border flex items-center justify-center text-xl font-bold" style={{ backgroundColor: toHex(parsed), color: parsed.r * 0.299 + parsed.g * 0.587 + parsed.b * 0.114 > 150 ? '#000' : '#fff' }}>
             {toHex(parsed).toUpperCase()}
           </div>
 
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             {formats.map(({ label, value }) => (
               <div key={label} className="flex items-center justify-between p-3 bg-gray-50 rounded border">
                 <div>
                   <span className="text-xs text-gray-400">{label}</span>
                   <div className="font-mono">{value}</div>
                 </div>
-                <button onClick={() => copy(value)} className="px-3 py-1 text-sm bg-gray-200 rounded hover:bg-gray-300">Copy</button>
+                <button
+                  type="button"
+                  onClick={() => copy(label, value)}
+                  className={`tb-v2-copy-btn ${copied === label ? 'done' : ''}`}
+                >
+                  {copied === label ? 'Copied' : 'Copy'}
+                </button>
               </div>
             ))}
           </div>
         </>
-      )}
-
-      {!parsed && input && (
-        <div className="p-4 bg-red-50 rounded border border-red-200 text-red-700">
-          Could not parse color. Try: #ff0000, rgb(255,0,0), hsl(0,100%,50%)
-        </div>
+      ) : input ? (
+        <p className="tb-v2-empty">Could not parse color. Try: #ff0000, rgb(255,0,0), hsl(0,100%,50%)</p>
+      ) : (
+        <p className="tb-v2-empty">Enter a color above to convert it to HEX, RGB, HSL, and CMYK.</p>
       )}
     </div>
   );

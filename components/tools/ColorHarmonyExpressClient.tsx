@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 function hexToHsl(hex: string): { h: number; s: number; l: number } {
   const r = parseInt(hex.slice(1, 3), 16) / 255;
@@ -38,11 +38,18 @@ function hslToHex(h: number, s: number, l: number): string {
   return '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('');
 }
 
+function isValidHex(hex: string): boolean {
+  return /^#?[a-f\d]{6}$/i.test(hex);
+}
+
 type HarmonyType = 'complementary' | 'analogous' | 'triadic' | 'split' | 'tetradic' | 'monochromatic';
 
 export default function ColorHarmonyExpressClient() {
   const [base, setBase] = useState('#6366f1');
+  const [baseInput, setBaseInput] = useState('#6366f1');
+  const [hexError, setHexError] = useState(false);
   const [harmony, setHarmony] = useState<HarmonyType>('complementary');
+  const [copied, setCopied] = useState(false);
 
   const hsl = hexToHsl(base);
 
@@ -58,43 +65,78 @@ export default function ColorHarmonyExpressClient() {
   };
 
   const colors = getColors();
-  const copyAll = () => navigator.clipboard.writeText(colors.join('\n'));
+
+  const setBaseValue = (value: string) => {
+    setBase(value);
+    setBaseInput(value);
+    setHexError(false);
+  };
+
+  const handleBaseInput = (value: string) => {
+    setBaseInput(value);
+    if (isValidHex(value)) {
+      setBase(value.startsWith('#') ? value : `#${value}`);
+      setHexError(false);
+    } else {
+      setHexError(true);
+    }
+  };
+
+  const loadExample = () => {
+    setBaseValue('#e74c3c');
+    setHarmony('triadic');
+  };
+
+  const copyAll = () => {
+    navigator.clipboard.writeText(colors.join('\n')).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Color Harmony Express</h1>
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Color Harmony Express</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
+      </div>
 
-      <div className="flex gap-4 mb-6">
+      <div className="flex gap-4">
         <input
           type="color"
           value={base}
-          onChange={e => setBase(e.target.value)}
-          className="w-16 h-16 rounded cursor-pointer"
+          onChange={e => setBaseValue(e.target.value)}
+          className="rounded cursor-pointer"
+          style={{ width: 64, height: 64 }}
         />
         <div className="flex-1">
           <div className="text-sm text-gray-500 mb-1">Base: {base.toUpperCase()}</div>
           <input
             type="text"
-            value={base}
-            onChange={e => setBase(e.target.value)}
-            className="w-full p-2 border rounded font-mono"
+            value={baseInput}
+            onChange={e => handleBaseInput(e.target.value)}
+            className="tb-v2-input"
+            style={{ fontFamily: 'var(--f-mono)' }}
           />
+          {hexError && <p style={{ fontSize: 12, color: '#ef4444', marginTop: 6 }}>Enter a valid 6-digit hex color (e.g., #3366FF).</p>}
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-2 mb-6">
+      <div className="tb-v2-mode-tabs" style={{ flexWrap: 'wrap' }}>
         {(['complementary', 'analogous', 'triadic', 'split', 'tetradic', 'monochromatic'] as HarmonyType[]).map(h => (
           <button
             key={h}
+            type="button"
             onClick={() => setHarmony(h)}
-            className={`px-3 py-1 rounded text-sm ${harmony === h ? 'bg-blue-600 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
+            className={`tb-v2-mode-tab ${harmony === h ? 'on' : ''}`}
           >
             {h.charAt(0).toUpperCase() + h.slice(1)}
           </button>
         ))}
       </div>
 
-      <div className="grid gap-3 mb-6" style={{ gridTemplateColumns: `repeat(${Math.min(colors.length, 5)}, 1fr)` }}>
+      <div className="grid gap-3" style={{ gridTemplateColumns: `repeat(${Math.min(colors.length, 5)}, 1fr)` }}>
         {colors.map((c, i) => (
           <div key={i} className="text-center">
             <div className="w-full aspect-square rounded-lg mb-1 border" style={{ backgroundColor: c }} />
@@ -103,8 +145,13 @@ export default function ColorHarmonyExpressClient() {
         ))}
       </div>
 
-      <button onClick={copyAll} className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 text-sm">
-        Copy All Colors
+      <button
+        type="button"
+        onClick={copyAll}
+        className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+        style={{ alignSelf: 'flex-start' }}
+      >
+        {copied ? 'Copied' : 'Copy All Colors'}
       </button>
     </div>
   );

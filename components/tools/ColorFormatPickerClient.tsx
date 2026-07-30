@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function ColorFormatPickerClient() {
   const [color, setColor] = useState('#6366f1');
@@ -70,30 +70,37 @@ export default function ColorFormatPickerClient() {
     setRgb(newRgb);
   };
 
+  const loadExample = () => setRgb({ r: 231, g: 76, b: 60 });
+
   const copy = (val: string, label: string) => {
-    navigator.clipboard.writeText(val);
+    navigator.clipboard.writeText(val).catch(() => {});
     setCopied(label);
     setTimeout(() => setCopied(null), 1500);
   };
 
   return (
-    <div className="p-6 max-w-xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Color Format Picker</h1>
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Color Format Picker</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
+      </div>
 
-      <div className="w-full h-32 rounded-lg mb-6 border" style={{ backgroundColor: color }} />
+      <div className="w-full h-32 rounded-lg border" style={{ backgroundColor: color }} />
 
-      <div className="space-y-4 mb-6">
+      <div className="flex flex-col gap-4">
         <div>
-          <label className="block text-sm font-medium mb-1">HEX</label>
-          <div className="tb-v2-mode-tabs">
-            <input type="color" value={color} onChange={e => handleHexChange(e.target.value)} className="w-10 h-10 rounded cursor-pointer" />
-            <input type="text" value={hex} onChange={e => handleHexChange(e.target.value)} className="flex-1 p-2 border rounded font-mono" />
+          <label className="tb-v2-tool-label" style={{ marginBottom: 6, display: 'block' }}>HEX</label>
+          <div className="flex items-center gap-2">
+            <input type="color" value={color} onChange={e => handleHexChange(e.target.value)} style={{ width: 40, height: 40, borderRadius: 6, cursor: 'pointer', border: '1px solid var(--tb-border)' }} />
+            <input type="text" value={hex} onChange={e => handleHexChange(e.target.value)} className="tb-v2-input flex-1" style={{ fontFamily: 'var(--f-mono)' }} />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">RGB ({rgb.r}, {rgb.g}, {rgb.b})</label>
-          <div className="tb-v2-mode-tabs">
+          <label className="tb-v2-tool-label" style={{ marginBottom: 6, display: 'block' }}>RGB ({rgb.r}, {rgb.g}, {rgb.b})</label>
+          <div className="flex gap-3">
             {(['r', 'g', 'b'] as const).map(ch => (
               <div key={ch} className="flex-1">
                 <input
@@ -101,7 +108,7 @@ export default function ColorFormatPickerClient() {
                   min="0" max="255"
                   value={rgb[ch]}
                   onChange={e => setRgb({ ...rgb, [ch]: +e.target.value })}
-                  className="w-full"
+                  className="tb-v2-range"
                 />
                 <div className="text-center text-sm">{rgb[ch]}</div>
               </div>
@@ -110,17 +117,17 @@ export default function ColorFormatPickerClient() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">HSL ({hsl.h}°, {hsl.s}%, {hsl.l}%)</label>
-          <div className="tb-v2-mode-tabs">
+          <label className="tb-v2-tool-label" style={{ marginBottom: 6, display: 'block' }}>HSL ({hsl.h}°, {hsl.s}%, {hsl.l}%)</label>
+          <div className="flex gap-3">
             {(['h', 's', 'l'] as const).map(ch => (
               <div key={ch} className="flex-1">
                 <input
                   type="range"
-                  min={ch === 'h' ? 0 : 0}
+                  min={0}
                   max={ch === 'h' ? 360 : 100}
                   value={hsl[ch]}
                   onChange={e => handleHslChange(ch, +e.target.value)}
-                  className="w-full"
+                  className="tb-v2-range"
                 />
                 <div className="text-center text-sm">{ch === 'h' ? hsl.h + '°' : hsl[ch] + '%'}</div>
               </div>
@@ -137,10 +144,12 @@ export default function ColorFormatPickerClient() {
         ].map(({ label, value }) => (
           <button
             key={label}
+            type="button"
             onClick={() => copy(value, label)}
-            className="p-2 bg-gray-100 rounded border text-sm font-mono hover:bg-gray-200"
+            className={`tb-v2-copy-btn ${copied === label ? 'done' : ''}`}
+            style={{ fontFamily: 'var(--f-mono)' }}
           >
-            {copied === label ? '✓ Copied' : label}
+            {copied === label ? 'Copied' : label}
           </button>
         ))}
       </div>

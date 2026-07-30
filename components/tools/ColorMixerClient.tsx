@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 interface ColorInput {
   hex: string;
@@ -16,6 +16,10 @@ function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
         b: parseInt(result[3], 16),
       }
     : null;
+}
+
+function isValidHex(hex: string): boolean {
+  return /^#?[a-f\d]{6}$/i.test(hex);
 }
 
 function rgbToHex(r: number, g: number, b: number): string {
@@ -56,7 +60,6 @@ function mixAdditive(colors: ColorInput[]): string {
 }
 
 function mixSubtractive(colors: ColorInput[]): string {
-  // Convert to CMY first (subtractive model)
   const cmyColors = colors.map(({ hex }) => {
     const rgb = hexToRgb(hex);
     if (!rgb) return { c: 0, m: 0, y: 0 };
@@ -85,7 +88,6 @@ function mixSubtractive(colors: ColorInput[]): string {
   const avgM = totalM / totalWeight;
   const avgY = totalY / totalWeight;
 
-  // Convert back to RGB
   const r = Math.round((1 - avgC) * 255);
   const g = Math.round((1 - avgM) * 255);
   const b = Math.round((1 - avgY) * 255);
@@ -102,10 +104,10 @@ function mixAverage(colors: ColorInput[]): string {
   colors.forEach(({ hex, weight }) => {
     const rgb = hexToRgb(hex);
     if (rgb) {
-      totalR += rgb.r * rgb.r * weight; // Quadratic for more natural mixing
+      totalR += rgb.r * rgb.r * weight;
       totalG += rgb.g * rgb.g * weight;
       totalB += rgb.b * rgb.b * weight;
-      totalWeight += weight * 255; // Normalize for the squared values
+      totalWeight += weight * 255;
     }
   });
 
@@ -118,13 +120,24 @@ function mixAverage(colors: ColorInput[]): string {
   );
 }
 
+const presetSchemes = [
+  { name: 'RYB Primary', colors: ['#ff0000', '#ffff00', '#0000ff'] },
+  { name: 'RGB Primary', colors: ['#ff0000', '#00ff00', '#0000ff'] },
+  { name: 'Warm Sunset', colors: ['#ff6b6b', '#feca57', '#ff9ff3'] },
+  { name: 'Cool Ocean', colors: ['#00b894', '#0984e3', '#a29bfe'] },
+  { name: 'Earth Tones', colors: ['#d35400', '#f39c12', '#27ae60'] },
+  { name: 'Pastels', colors: ['#fab1a0', '#81ecec', '#a29bfe'] },
+];
+
 export default function ColorMixerClient() {
   const [colors, setColors] = useState<ColorInput[]>([
     { hex: '#ff0000', weight: 1 },
     { hex: '#0000ff', weight: 1 },
   ]);
+  const [hexDrafts, setHexDrafts] = useState<string[]>(['#ff0000', '#0000ff']);
   const [blendMode, setBlendMode] = useState<'additive' | 'subtractive' | 'average'>('additive');
   const [resultColor, setResultColor] = useState('#800080');
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (colors.length === 0) {
@@ -154,83 +167,74 @@ export default function ColorMixerClient() {
     const presetColors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7', '#dfe6e9', '#a29bfe', '#fd79a8'];
     const randomColor = presetColors[Math.floor(Math.random() * presetColors.length)];
     setColors([...colors, { hex: randomColor, weight: 1 }]);
+    setHexDrafts([...hexDrafts, randomColor]);
   };
 
   const removeColor = (index: number) => {
     setColors(colors.filter((_, i) => i !== index));
+    setHexDrafts(hexDrafts.filter((_, i) => i !== index));
   };
 
-  const updateColor = (index: number, field: 'hex' | 'weight', value: string | number) => {
+  const updateWeight = (index: number, weight: number) => {
     const newColors = [...colors];
-    if (field === 'hex') {
-      newColors[index].hex = value as string;
-    } else {
-      newColors[index].weight = Math.max(0.1, Math.min(10, value as number));
-    }
+    newColors[index] = { ...newColors[index], weight: Math.max(0.1, Math.min(10, weight)) };
     setColors(newColors);
   };
 
-  const presetSchemes = [
-    {
-      name: 'RYB Primary',
-      colors: ['#ff0000', '#ffff00', '#0000ff'],
-    },
-    {
-      name: 'RGB Primary',
-      colors: ['#ff0000', '#00ff00', '#0000ff'],
-    },
-    {
-      name: 'Warm Sunset',
-      colors: ['#ff6b6b', '#feca57', '#ff9ff3'],
-    },
-    {
-      name: 'Cool Ocean',
-      colors: ['#00b894', '#0984e3', '#a29bfe'],
-    },
-    {
-      name: 'Earth Tones',
-      colors: ['#d35400', '#f39c12', '#27ae60'],
-    },
-    {
-      name: 'Pastels',
-      colors: ['#fab1a0', '#81ecec', '#a29bfe'],
-    },
-  ];
+  const handleColorPicker = (index: number, value: string) => {
+    const newColors = [...colors];
+    newColors[index] = { ...newColors[index], hex: value };
+    setColors(newColors);
+    const newDrafts = [...hexDrafts];
+    newDrafts[index] = value;
+    setHexDrafts(newDrafts);
+  };
+
+  const handleHexDraft = (index: number, value: string) => {
+    const newDrafts = [...hexDrafts];
+    newDrafts[index] = value;
+    setHexDrafts(newDrafts);
+    if (isValidHex(value)) {
+      const newColors = [...colors];
+      newColors[index] = { ...newColors[index], hex: value.startsWith('#') ? value : `#${value}` };
+      setColors(newColors);
+    }
+  };
 
   const loadPreset = (scheme: typeof presetSchemes[0]) => {
-    setColors(scheme.colors.map((hex) => ({ hex, weight: 1 })));
+    const newColors = scheme.colors.map((hex) => ({ hex, weight: 1 }));
+    setColors(newColors);
+    setHexDrafts(scheme.colors);
+  };
+
+  const copyResult = () => {
+    navigator.clipboard.writeText(resultColor.toUpperCase()).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div className="tb-v2-card">
-      <div className="tb-v2-card-header">
-        <h2 className="tb-v2-card-title">Color Mixer</h2>
-        <p className="tb-v2-card-description">
-          Mix two or more colors using additive, subtractive, or averaging blending
-        </p>
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Color Mixer</span>
+        <button type="button" onClick={() => loadPreset(presetSchemes[0])} className="tb-v2-btn-sm">
+          Load Example
+        </button>
       </div>
 
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">Blend Mode</div>
-        <div className="grid grid-cols-3 gap-2">
-          <button
-            onClick={() => setBlendMode('additive')}
-            className={`tb-v2-button ${blendMode === 'additive' ? 'tb-v2-button-primary' : 'tb-v2-button-secondary'}`}
-          >
-            Additive
-          </button>
-          <button
-            onClick={() => setBlendMode('subtractive')}
-            className={`tb-v2-button ${blendMode === 'subtractive' ? 'tb-v2-button-primary' : 'tb-v2-button-secondary'}`}
-          >
-            Subtractive
-          </button>
-          <button
-            onClick={() => setBlendMode('average')}
-            className={`tb-v2-button ${blendMode === 'average' ? 'tb-v2-button-primary' : 'tb-v2-button-secondary'}`}
-          >
-            Average
-          </button>
+      <div>
+        <div className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Blend Mode</div>
+        <div className="tb-v2-mode-tabs">
+          {(['additive', 'subtractive', 'average'] as const).map((mode) => (
+            <button
+              key={mode}
+              type="button"
+              onClick={() => setBlendMode(mode)}
+              className={`tb-v2-mode-tab ${blendMode === mode ? 'on' : ''}`}
+            >
+              {mode.charAt(0).toUpperCase() + mode.slice(1)}
+            </button>
+          ))}
         </div>
         <p className="text-xs text-gray-500 mt-2">
           {blendMode === 'additive' && 'Light mixing (like light beams) - RGB model'}
@@ -239,58 +243,67 @@ export default function ColorMixerClient() {
         </p>
       </div>
 
-      <div className="tb-v2-form-group">
+      <div>
         <div className="flex justify-between items-center mb-2">
-          <div className="tb-v2-label mb-0">Colors to Mix</div>
-          <button onClick={addColor} className="tb-v2-button tb-v2-button-secondary text-sm py-1 px-3">
+          <div className="tb-v2-tool-label">Colors to Mix</div>
+          <button type="button" onClick={addColor} className="tb-v2-btn-sm">
             + Add Color
           </button>
         </div>
-        <div className="space-y-2">
+        <div className="flex flex-col gap-2">
           {colors.map((color, index) => (
-            <div key={index} className="flex items-center gap-2">
-              <input
-                type="color"
-                value={color.hex}
-                onChange={(e) => updateColor(index, 'hex', e.target.value)}
-                className="tb-v2-input h-10 w-20 cursor-pointer rounded border"
-              />
-              <input
-                type="text"
-                value={color.hex.toUpperCase()}
-                onChange={(e) => updateColor(index, 'hex', e.target.value)}
-                className="tb-v2-input w-28 uppercase"
-              />
-              <input
-                type="range"
-                min="0.1"
-                max="10"
-                step="0.1"
-                value={color.weight}
-                onChange={(e) => updateColor(index, 'weight', parseFloat(e.target.value))}
-                className="flex-1"
-              />
-              <span className="text-sm w-12 text-right font-mono">{color.weight.toFixed(1)}</span>
-              <button
-                onClick={() => removeColor(index)}
-                className="tb-v2-button tb-v2-button-secondary text-red-600 px-2 py-1"
-                disabled={colors.length <= 1}
-              >
-                ×
-              </button>
+            <div key={index}>
+              <div className="flex items-center gap-2">
+                <input
+                  type="color"
+                  value={color.hex}
+                  onChange={(e) => handleColorPicker(index, e.target.value)}
+                  className="cursor-pointer rounded border"
+                  style={{ width: 48, height: 40 }}
+                />
+                <input
+                  type="text"
+                  value={hexDrafts[index] ?? color.hex}
+                  onChange={(e) => handleHexDraft(index, e.target.value)}
+                  className="tb-v2-input uppercase"
+                  style={{ width: 110, fontFamily: 'var(--f-mono)' }}
+                />
+                <input
+                  type="range"
+                  min="0.1"
+                  max="10"
+                  step="0.1"
+                  value={color.weight}
+                  onChange={(e) => updateWeight(index, parseFloat(e.target.value))}
+                  className="tb-v2-range flex-1"
+                />
+                <span className="text-sm w-12 text-right font-mono">{color.weight.toFixed(1)}</span>
+                <button
+                  type="button"
+                  onClick={() => removeColor(index)}
+                  className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm text-red-600"
+                  disabled={colors.length <= 1}
+                >
+                  Remove
+                </button>
+              </div>
+              {!isValidHex(hexDrafts[index] ?? '') && (
+                <p style={{ fontSize: 12, color: '#ef4444', marginTop: 4 }}>Enter a valid 6-digit hex color.</p>
+              )}
             </div>
           ))}
         </div>
       </div>
 
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">Quick Presets</div>
+      <div>
+        <div className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Quick Presets</div>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
           {presetSchemes.map((scheme) => (
             <button
               key={scheme.name}
+              type="button"
               onClick={() => loadPreset(scheme)}
-              className="tb-v2-button tb-v2-button-secondary text-sm py-2"
+              className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm"
             >
               {scheme.name}
             </button>
@@ -298,24 +311,31 @@ export default function ColorMixerClient() {
         </div>
       </div>
 
-      <div className="tb-v2-card p-6 mb-6">
+      <div className="tb-v2-section" style={{ padding: '16px 20px' }}>
         <div className="text-center">
-          <div className="tb-v2-label mb-3">Result</div>
+          <div className="tb-v2-tool-label" style={{ marginBottom: 12 }}>Result</div>
           <div className="flex justify-center items-center gap-6">
             <div
               className="w-32 h-32 rounded-xl shadow-lg border-4"
               style={{ backgroundColor: resultColor, borderColor: resultColor }}
             />
             <div className="text-left">
-              <div className="text-3xl font-bold font-mono">{resultColor.toUpperCase()}</div>
+              <button
+                type="button"
+                onClick={copyResult}
+                className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+                style={{ fontSize: 24, fontFamily: 'var(--f-mono)' }}
+              >
+                {copied ? 'Copied' : resultColor.toUpperCase()}
+              </button>
               <div className="text-sm text-gray-500 mt-1">Click to copy</div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">Color Sources</div>
+      <div>
+        <div className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Color Sources</div>
         <div className="flex gap-2 flex-wrap">
           {colors.map((color, index) => (
             <div key={index} className="flex items-center gap-1 p-2 rounded" style={{ backgroundColor: color.hex + '20' }}>
@@ -327,8 +347,8 @@ export default function ColorMixerClient() {
         </div>
       </div>
 
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">Preview Strip</div>
+      <div>
+        <div className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Preview Strip</div>
         <div className="flex h-8 rounded overflow-hidden">
           {colors.map((color, index) => (
             <div
@@ -346,9 +366,9 @@ export default function ColorMixerClient() {
         </div>
       </div>
 
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">How It Works</div>
-        <div className="tb-v2-card p-4 text-sm space-y-2">
+      <div>
+        <div className="tb-v2-tool-label" style={{ marginBottom: 8 }}>How It Works</div>
+        <div className="tb-v2-section text-sm space-y-2" style={{ padding: 12 }}>
           <p>
             <strong>Additive mixing</strong> combines light wavelengths (RGB). Red + Green = Yellow, Green + Blue = Cyan, Red + Blue = Magenta.
           </p>

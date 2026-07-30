@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -13,16 +13,8 @@ function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
     : null;
 }
 
-function rgbToHex(r: number, g: number, b: number): string {
-  return (
-    '#' +
-    [r, g, b]
-      .map((x) => {
-        const hex = Math.round(Math.max(0, Math.min(255, x))).toString(16);
-        return hex.length === 1 ? '0' + hex : hex;
-      })
-      .join('')
-  );
+function isValidHex(hex: string): boolean {
+  return /^#?[a-f\d]{6}$/i.test(hex);
 }
 
 function rgbToHsl(r: number, g: number, b: number): { h: number; s: number; l: number } {
@@ -66,13 +58,10 @@ function getLuminance(r: number, g: number, b: number): number {
   return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
 }
 
-function getRelativeLuminance(r: number, g: number, b: number): number {
-  const luminance = getLuminance(r, g, b);
-  return luminance; // Already normalized 0-1
-}
-
 export default function ColorLuminanceCalculatorClient() {
   const [colorInput, setColorInput] = useState('#3498db');
+  const [hexInput, setHexInput] = useState('#3498db');
+  const [hexError, setHexError] = useState(false);
   const [rgb, setRgb] = useState({ r: 52, g: 152, b: 219 });
   const [hsl, setHsl] = useState({ h: 204, s: 70, l: 53 });
   const [relativeLuminance, setRelativeLuminance] = useState(0);
@@ -100,6 +89,24 @@ export default function ColorLuminanceCalculatorClient() {
     setHsl(rgbToHsl(rgb.r, rgb.g, rgb.b));
   }, [rgb]);
 
+  const setColorValue = (value: string) => {
+    setColorInput(value);
+    setHexInput(value);
+    setHexError(false);
+  };
+
+  const handleHexInput = (value: string) => {
+    setHexInput(value);
+    if (isValidHex(value)) {
+      setColorInput(value.startsWith('#') ? value : `#${value}`);
+      setHexError(false);
+    } else {
+      setHexError(true);
+    }
+  };
+
+  const loadExample = () => setColorValue('#f39c12');
+
   const presetColors = [
     '#000000',
     '#ffffff',
@@ -115,36 +122,42 @@ export default function ColorLuminanceCalculatorClient() {
 
   const lightnessScale = Array.from({ length: 11 }, (_, i) => i * 10);
 
+  const whiteRatio = (1 + 0.05) / (relativeLuminance + 0.05);
+  const blackRatio = (relativeLuminance + 0.05) / 0.05;
+
   return (
-    <div className="tb-v2-card">
-      <div className="tb-v2-card-header">
-        <h2 className="tb-v2-card-title">Color Luminance Calculator</h2>
-        <p className="tb-v2-card-description">
-          Calculate relative luminance and perceived brightness of a color
-        </p>
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Color Luminance Calculator</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
       </div>
 
-      <div className="tb-v2-form-group">
-        <label className="tb-v2-label">Enter Color (HEX)</label>
+      <div>
+        <label className="tb-v2-tool-label" style={{ marginBottom: 6, display: 'block' }}>Enter Color (HEX)</label>
         <div className="flex gap-3 items-center">
           <input
             type="color"
             value={colorInput}
-            onChange={(e) => setColorInput(e.target.value)}
-            className="tb-v2-input h-12 w-24 cursor-pointer rounded border"
+            onChange={(e) => setColorValue(e.target.value)}
+            className="cursor-pointer rounded border"
+            style={{ width: 48, height: 40 }}
           />
           <input
             type="text"
-            value={colorInput.toUpperCase()}
-            onChange={(e) => setColorInput(e.target.value)}
+            value={hexInput}
+            onChange={(e) => handleHexInput(e.target.value)}
             className="tb-v2-input flex-1 uppercase"
+            style={{ fontFamily: 'var(--f-mono)' }}
             placeholder="#FFFFFF"
           />
         </div>
+        {hexError && <p style={{ fontSize: 12, color: '#ef4444', marginTop: 6 }}>Enter a valid 6-digit hex color (e.g., #3366FF).</p>}
       </div>
 
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">Preset Colors</div>
+      <div>
+        <div className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Preset Colors</div>
         <div className="flex gap-2 flex-wrap">
           {presetColors.map((presetColor) => {
             const parsed = hexToRgb(presetColor);
@@ -152,7 +165,8 @@ export default function ColorLuminanceCalculatorClient() {
             return (
               <button
                 key={presetColor}
-                onClick={() => setColorInput(presetColor)}
+                type="button"
+                onClick={() => setColorValue(presetColor)}
                 className="w-10 h-10 rounded border-2 transition-transform hover:scale-110 relative"
                 style={{
                   backgroundColor: presetColor,
@@ -169,11 +183,11 @@ export default function ColorLuminanceCalculatorClient() {
         </div>
       </div>
 
-      <div className="tb-v2-card p-6 mb-6">
+      <div className="tb-v2-section" style={{ padding: '16px 20px' }}>
         <div className="flex items-center gap-6">
           <div
             className="w-32 h-32 rounded-xl shadow-lg border-4"
-            style={{ borderColor: colorInput }}
+            style={{ borderColor: colorInput, backgroundColor: colorInput }}
           />
           <div className="flex-1 space-y-3">
             <div className="flex justify-between items-center py-2 border-b">
@@ -192,20 +206,20 @@ export default function ColorLuminanceCalculatorClient() {
         </div>
       </div>
 
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">Color Values</div>
+      <div>
+        <div className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Color Values</div>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          <div className="tb-v2-card p-4">
+          <div className="tb-v2-section" style={{ padding: 12 }}>
             <div className="text-xs text-gray-500 mb-1">HEX</div>
             <div className="font-mono font-bold">{colorInput.toUpperCase()}</div>
           </div>
-          <div className="tb-v2-card p-4">
+          <div className="tb-v2-section" style={{ padding: 12 }}>
             <div className="text-xs text-gray-500 mb-1">RGB</div>
             <div className="font-mono font-bold">
               {rgb.r}, {rgb.g}, {rgb.b}
             </div>
           </div>
-          <div className="tb-v2-card p-4">
+          <div className="tb-v2-section" style={{ padding: 12 }}>
             <div className="text-xs text-gray-500 mb-1">HSL</div>
             <div className="font-mono font-bold">
               {hsl.h}°, {hsl.s}%, {hsl.l}%
@@ -214,8 +228,8 @@ export default function ColorLuminanceCalculatorClient() {
         </div>
       </div>
 
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">Lightness Scale Preview</div>
+      <div>
+        <div className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Lightness Scale Preview</div>
         <div className="flex gap-1">
           {lightnessScale.map((lightness) => {
             const simulatedGray = `hsl(0, 0%, ${lightness}%)`;
@@ -237,34 +251,34 @@ export default function ColorLuminanceCalculatorClient() {
         </div>
       </div>
 
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">Contrast Helper</div>
+      <div>
+        <div className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Contrast Helper</div>
         <p className="text-sm text-gray-600 mb-2">
           For text to be readable, use luminance contrast of at least 4.5:1 (AA) or 7:1 (AAA)
         </p>
-        <div className="tb-v2-card p-4">
+        <div className="tb-v2-section" style={{ padding: 12 }}>
           <div className="text-sm space-y-2">
             <div className="flex items-center gap-2">
               <div className="w-6 h-6 rounded bg-white border flex items-center justify-center text-xs">T</div>
               <span>White background: </span>
-              <span className={rgbToHex(255, 255, 255).toLowerCase() !== colorInput.toLowerCase() ? 'text-red-600 font-bold' : ''}>
-                {((1 + 0.05) / (relativeLuminance + 0.05)).toFixed(2)}:1
+              <span className={whiteRatio < 4.5 ? 'text-red-600 font-bold' : 'font-bold'}>
+                {whiteRatio.toFixed(2)}:1
               </span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-6 h-6 rounded bg-black border flex items-center justify-center text-white text-xs">T</div>
               <span>Black background: </span>
-              <span className={colorInput.toLowerCase() !== '#000000' ? 'text-red-600 font-bold' : ''}>
-                {((relativeLuminance + 0.05) / (0 + 0.05)).toFixed(2)}:1
+              <span className={blackRatio < 4.5 ? 'text-red-600 font-bold' : 'font-bold'}>
+                {blackRatio.toFixed(2)}:1
               </span>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="tb-v2-form-group">
-        <div className="tb-v2-label">Formula Used</div>
-        <div className="tb-v2-card p-4 text-sm">
+      <div>
+        <div className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Formula Used</div>
+        <div className="tb-v2-section text-sm" style={{ padding: 12 }}>
           <p className="font-mono mb-2">
             L = 0.2126 × R<sub>s</sub> + 0.7152 × G<sub>s</sub> + 0.0722 × B<sub>s</sub>
           </p>
