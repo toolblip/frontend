@@ -7,6 +7,7 @@ import ToolAdSlot from '@/components/ads/ToolAdSlot';
 import ToolWithSidebarAd from '@/components/ads/ToolWithSidebarAd';
 import ToolContentSection from '@/components/tools/ToolContentSection';
 import FaqSection from '@/components/v2/FaqSection';
+import ToolWrapper from '@/components/tools/ToolWrapper';
 import RelatedTools from '@/components/tools/RelatedTools';
 import RelatedBlogPosts from '@/components/tools/RelatedBlogPosts';
 import { getFaqs } from '@/lib/faq';
@@ -196,9 +197,9 @@ export default async function ToolDetailPage({ params }: PageProps) {
 
         {/* Tool UI, with an optional sidebar ad on desktop */}
         <ToolWithSidebarAd slug={tool.slug} category={tool.category}>
-          <div className="tb-v2-tool-card">
+          <ToolWrapper toolSlug={tool.slug} toolName={tool.name}>
             <ToolUI tool={tool} />
-          </div>
+          </ToolWrapper>
         </ToolWithSidebarAd>
 
         <div style={{ marginTop: 32, marginBottom: 40 }}>
