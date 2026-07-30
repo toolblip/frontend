@@ -4,6 +4,15 @@ import { useState } from 'react';
 
 type Category = 'length' | 'weight' | 'temperature' | 'area' | 'volume' | 'speed';
 
+const CATEGORY_ICONS: Record<Category, string> = {
+  length: '📏',
+  weight: '⚖️',
+  temperature: '🌡️',
+  area: '📐',
+  volume: '🧪',
+  speed: '🚀',
+};
+
 const units: Record<Category, { value: string; label: string; factor: number }[]> = {
   length: [
     { value: 'm', label: 'Meters (m)', factor: 1 },
@@ -58,14 +67,10 @@ const units: Record<Category, { value: string; label: string; factor: number }[]
 
 const convertTemperature = (value: number, from: string, to: string): number => {
   if (from === to) return value;
-
-  // Convert to Celsius first
   let celsius: number;
   if (from === 'c') celsius = value;
   else if (from === 'f') celsius = (value - 32) * 5 / 9;
   else celsius = value - 273.15;
-
-  // Convert from Celsius to target
   if (to === 'c') return celsius;
   if (to === 'f') return celsius * 9 / 5 + 32;
   return celsius + 273.15;
@@ -76,6 +81,7 @@ export default function AllInOneUnitConverterClient() {
   const [inputValue, setInputValue] = useState('1');
   const [fromUnit, setFromUnit] = useState('m');
   const [toUnit, setToUnit] = useState('km');
+  const [copied, setCopied] = useState(false);
 
   const handleCategoryChange = (newCategory: Category) => {
     setCategory(newCategory);
@@ -86,107 +92,115 @@ export default function AllInOneUnitConverterClient() {
 
   const handleConvert = (): number => {
     const value = parseFloat(inputValue) || 0;
-
-    if (category === 'temperature') {
-      return convertTemperature(value, fromUnit, toUnit);
-    }
-
+    if (category === 'temperature') return convertTemperature(value, fromUnit, toUnit);
     const fromFactor = units[category].find(u => u.value === fromUnit)?.factor || 1;
     const toFactor = units[category].find(u => u.value === toUnit)?.factor || 1;
-
     return (value * fromFactor) / toFactor;
   };
 
   const formatResult = (value: number): string => {
-    if (Math.abs(value) < 0.0001 || Math.abs(value) > 9999999) {
-      return value.toExponential(6);
-    }
+    if (Math.abs(value) < 0.0001 || Math.abs(value) > 9999999) return value.toExponential(6);
     return value.toLocaleString(undefined, { maximumFractionDigits: 6 });
   };
 
+  const swap = () => {
+    setFromUnit(toUnit);
+    setToUnit(fromUnit);
+  };
+
+  const copy = () => {
+    const result = handleConvert();
+    const fromLabel = units[category].find(u => u.value === fromUnit)?.label.split(' ')[0] || '';
+    const toLabel = units[category].find(u => u.value === toUnit)?.label.split(' ')[0] || '';
+    navigator.clipboard.writeText(`${inputValue} ${fromLabel} = ${formatResult(result)} ${toLabel}`);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
   return (
-    <div className="flex flex-col gap-4">
+    <div>
+      {/* Category selector */}
       <div>
         <label className="tb-v2-tool-label">Category</label>
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
           {(['length', 'weight', 'temperature', 'area', 'volume', 'speed'] as Category[]).map((cat) => (
             <button
               key={cat}
               type="button"
               onClick={() => handleCategoryChange(cat)}
-              className={`tb-v2-btn-sm capitalize ${category === cat ? 'on' : ''}`}
+              className={`p-2 rounded-lg text-center transition-colors ${
+                category === cat
+                  ? 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 border border-indigo-300 dark:border-indigo-700'
+                  : 'bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700'
+              }`}
             >
-              {cat}
+              <div className="text-lg">{CATEGORY_ICONS[cat]}</div>
+              <div className="text-xs capitalize">{cat}</div>
             </button>
           ))}
         </div>
       </div>
 
-      <div className="tb-v2-grid-2">
+      {/* Converter */}
+      <div className="grid grid-cols-[1fr,auto,1fr] gap-3 items-end">
         <div>
           <label className="tb-v2-tool-label">From</label>
           <input
             type="number"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            className="tb-v2-input"
+            className="tb-v2-input mb-2"
           />
           <select
             value={fromUnit}
             onChange={(e) => setFromUnit(e.target.value)}
-            className="tb-v2-input mt-2"
+            className="tb-v2-input"
           >
             {units[category].map((unit) => (
-              <option key={unit.value} value={unit.value}>
-                {unit.label}
-              </option>
+              <option key={unit.value} value={unit.value}>{unit.label}</option>
             ))}
           </select>
         </div>
 
+        <button
+          onClick={swap}
+          className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 mb-1"
+          title="Swap units"
+        >
+          ⇄
+        </button>
+
         <div>
           <label className="tb-v2-tool-label">To</label>
-          <div className="tb-v2-tool-output-body h-[88px] flex items-center justify-center">
-            <span className="text-2xl font-bold text-gray-700 dark:text-gray-200">
-              {formatResult(handleConvert())}
-            </span>
+          <div className="tb-v2-input mb-2 text-center text-2xl font-bold text-indigo-600 dark:text-indigo-400" style={{ minHeight: 44 }}>
+            {formatResult(handleConvert())}
           </div>
           <select
             value={toUnit}
             onChange={(e) => setToUnit(e.target.value)}
-            className="tb-v2-input mt-2"
+            className="tb-v2-input"
           >
             {units[category].map((unit) => (
-              <option key={unit.value} value={unit.value}>
-                {unit.label}
-              </option>
+              <option key={unit.value} value={unit.value}>{unit.label}</option>
             ))}
           </select>
         </div>
       </div>
 
+      {/* Summary */}
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">Result</span>
+        <button onClick={copy} className="tb-v2-copy-btn">
+          {copied ? 'Copied!' : 'Copy'}
+        </button>
       </div>
-      <div className="tb-v2-tool-output-body">
-        <div className="text-center py-4">
-          <span className="text-3xl font-bold text-gray-700 dark:text-gray-200">
-            {formatResult(handleConvert())}
-          </span>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            {units[category].find(u => u.value === toUnit)?.label}
-          </p>
-        </div>
-      </div>
-
-      <div className="tb-v2-box p-4 text-center">
-        <p className="text-gray-600 dark:text-gray-400">
-          <span className="font-medium">{parseFloat(inputValue) || 0}</span>
-          {' '}{units[category].find(u => u.value === fromUnit)?.label.split(' ')[0]}
+      <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl text-center">
+        <span className="text-lg">
+          <strong>{inputValue}</strong> {units[category].find(u => u.value === fromUnit)?.label.split(' ')[0]}
           {' = '}
-          <span className="font-medium">{formatResult(handleConvert())}</span>
+          <strong className="text-indigo-600 dark:text-indigo-400">{formatResult(handleConvert())}</strong>
           {' '}{units[category].find(u => u.value === toUnit)?.label.split(' ')[0]}
-        </p>
+        </span>
       </div>
     </div>
   );

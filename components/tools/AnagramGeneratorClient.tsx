@@ -2,14 +2,17 @@
 
 import { useState, useMemo } from 'react';
 
+const EXAMPLES = ['LISTEN', 'SILENT', 'EARTH', 'HEART', 'DUST'];
+
 export default function AnagramGeneratorClient() {
   const [input, setInput] = useState('');
   const [minLength, setMinLength] = useState(3);
   const [maxResults, setMaxResults] = useState(50);
+  const [copied, setCopied] = useState(false);
+  const [showExamples, setShowExamples] = useState(false);
 
   const generateAnagrams = (str: string): string[] => {
     if (!str || str.length === 0) return [];
-
     const results: string[] = [];
     
     const generate = (arr: string[], current: string) => {
@@ -32,109 +35,123 @@ export default function AnagramGeneratorClient() {
       .slice(0, maxResults);
   };
 
-  const anagrams = useMemo(() => {
-    return generateAnagrams(input);
-  }, [input, minLength, maxResults]);
+  const anagrams = useMemo(() => generateAnagrams(input), [input, minLength, maxResults]);
 
-  const handleCopy = () => {
+  const copy = () => {
     navigator.clipboard.writeText(anagrams.join('\n'));
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
+  const loadExample = (word: string) => {
+    setInput(word);
+    setShowExamples(false);
   };
 
   return (
-    <div className="" style={{padding:"20px"}}>
-      <h1 className="text-2xl font-bold mb-6">Anagram Generator</h1>
-
-      <div className="mb-4">
-        <label className="tb-v2-tool-label" style={{marginBottom:8}}>Enter letters</label>
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value.replace(/[^a-zA-Z]/g, ''))}
-          className="tb-v2-input"
-          placeholder="Enter letters to generate anagrams..."
-          maxLength={10}
-        />
-        <p className="text-xs text-gray-500 mt-1">
-          Max 10 characters. Only letters are allowed.
-        </p>
+    <div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Letters</span>
+        <button
+          type="button"
+          onClick={() => setShowExamples(!showExamples)}
+          className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm"
+        >
+          📋 Examples
+        </button>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-4">
-        <div>
-          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Min word length</label>
-          <input
-            type="number"
-            value={minLength}
-            onChange={(e) => setMinLength(Math.max(1, Math.min(input.length, parseInt(e.target.value) || 1)))}
-            className="tb-v2-input"
-            min={1}
-            max={input.length || 10}
-          />
-        </div>
-        <div>
-          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Max results</label>
-          <input
-            type="number"
-            value={maxResults}
-            onChange={(e) => setMaxResults(Math.max(1, parseInt(e.target.value) || 50))}
-            className="tb-v2-input"
-            min={1}
-            max={1000}
-          />
-        </div>
-      </div>
-
-      {input && (
-        <div className="tb-v2-banner tb-v2-banner-info">
-          <p className="text-sm">
-            <strong>{anagrams.length}</strong> possible words from "{input.toUpperCase()}"
-          </p>
+      {showExamples && (
+        <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg mb-3 border border-gray-200 dark:border-gray-700">
+          <div className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Try a word:</div>
+          <div className="flex flex-wrap gap-2">
+            {EXAMPLES.map((word) => (
+              <button
+                key={word}
+                type="button"
+                onClick={() => loadExample(word)}
+                className="px-3 py-1.5 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors font-mono"
+              >
+                {word}
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
-      {anagrams.length > 0 && (
-        <div className="mt-6">
-          <div className="flex justify-between items-center mb-2">
-            <label className="block text-sm font-medium">Anagrams</label>
-            <button
-              onClick={handleCopy}
-              className="text-sm text-blue-500 hover:text-blue-600"
-            >
-              Copy All
+      <input
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value.replace(/[^a-zA-Z]/g, ''))}
+        className="tb-v2-tool-textarea"
+        placeholder="Enter letters (e.g., LISTEN)"
+        maxLength={10}
+        style={{ minHeight: 48, fontFamily: 'var(--f-mono)', textTransform: 'uppercase' }}
+      />
+      <p className="text-xs text-gray-500 mt-1">Max 10 characters. Only letters allowed.</p>
+
+      {/* Settings */}
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <label className="tb-v2-tool-label">Min word length: {minLength}</label>
+          <input
+            type="range"
+            min={1}
+            max={input.length || 10}
+            value={minLength}
+            onChange={(e) => setMinLength(parseInt(e.target.value))}
+            className="w-full"
+          />
+        </div>
+        <div>
+          <label className="tb-v2-tool-label">Max results: {maxResults}</label>
+          <input
+            type="range"
+            min={10}
+            max={500}
+            value={maxResults}
+            onChange={(e) => setMaxResults(parseInt(e.target.value))}
+            className="w-full"
+          />
+        </div>
+      </div>
+
+      {/* Results */}
+      {input && anagrams.length > 0 && (
+        <>
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">{anagrams.length} anagrams found</span>
+            <button onClick={copy} className="tb-v2-copy-btn">
+              {copied ? 'Copied!' : 'Copy All'}
             </button>
           </div>
-          <div className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}>
-            <div className="tb-v2-mode-tabs">
-              {anagrams.map((word, i) => (
-                <span
-                  key={i}
-                  className="px-2 py-1 bg-white dark:bg-gray-700 rounded border border-gray-200 dark:border-gray-600 font-mono text-sm"
-                >
-                  {word}
-                </span>
-              ))}
-            </div>
+          <div className="flex flex-wrap gap-2">
+            {anagrams.map((word, i) => (
+              <span
+                key={i}
+                className="px-3 py-1.5 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300 rounded-lg font-mono text-sm border border-indigo-200 dark:border-indigo-800"
+              >
+                {word}
+              </span>
+            ))}
           </div>
-        </div>
+        </>
       )}
 
       {input.length > 0 && anagrams.length === 0 && (
-        <div className="tb-v2-banner tb-v2-banner-warn">
-          <p className="text-sm text-yellow-700 dark:text-yellow-400">
-            No words found with the current settings. Try lowering the minimum word length.
+        <div className="p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl">
+          <p className="text-sm text-amber-700 dark:text-amber-400">
+            No words found. Try lowering the minimum word length.
           </p>
         </div>
       )}
 
-      <div className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}>
-        <h3 className="font-medium mb-2">How it works:</h3>
-        <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-          <li>• Enter any combination of letters</li>
-          <li>• All possible letter combinations are generated</li>
-          <li>• Common English words are highlighted</li>
-          <li>• Adjust settings to filter results</li>
-        </ul>
-      </div>
+      {!input && (
+        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+          <div className="text-4xl mb-2">🔤</div>
+          <p>Enter letters above to generate anagrams</p>
+        </div>
+      )}
     </div>
   );
 }
