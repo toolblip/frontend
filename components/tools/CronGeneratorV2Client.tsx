@@ -26,6 +26,27 @@ interface CronPart {
   options: { value: string; label: string }[];
 }
 
+function parseField(raw: string, min: number, max: number): Set<number> {
+  const result = new Set<number>();
+  for (const part of raw.split(',')) {
+    const p = part.trim();
+    if (p === '*') {
+      for (let i = min; i <= max; i++) result.add(i);
+    } else if (p.startsWith('*/')) {
+      const step = parseInt(p.slice(2), 10);
+      for (let i = min; i <= max; i += step) result.add(i);
+    } else if (p.includes('-')) {
+      const [sStr, eStr] = p.split('-');
+      const s = parseInt(sStr, 10);
+      const e = parseInt(eStr, 10);
+      for (let i = s; i <= e; i++) result.add(i);
+    } else {
+      result.add(parseInt(p, 10));
+    }
+  }
+  return result;
+}
+
 function getNextRuns(expr: string, count: number = 5): Date[] {
   try {
     const [min, hr, dom, mon, dow] = expr.trim().split(/\s+/);
@@ -34,16 +55,12 @@ function getNextRuns(expr: string, count: number = 5): Date[] {
     const cursor = new Date(now);
     cursor.setSeconds(0, 0);
     cursor.setMinutes(cursor.getMinutes() + 1);
-    
-    const minuteSet = new Set(min === '*' ? Array.from({length: 60}, (_, i) => i) : 
-      min.startsWith('*/') ? Array.from({length: Math.floor(60/parseInt(min.slice(2)))}, (_, i) => i * parseInt(min.slice(2))) :
-      min.split(',').map(Number));
-    const hourSet = new Set(hr === '*' ? Array.from({length: 24}, (_, i) => i) :
-      hr.startsWith('*/') ? Array.from({length: Math.floor(24/parseInt(hr.slice(2)))}, (_, i) => i * parseInt(hr.slice(2))) :
-      hr.split(',').map(Number));
-    const domSet = new Set(dom === '*' ? [] : dom.split(',').map(Number));
-    const monSet = new Set(mon === '*' ? [] : mon.split(',').map(Number));
-    const dowSet = new Set(dow === '*' ? [] : dow.split(',').map(Number));
+
+    const minuteSet = parseField(min, 0, 59);
+    const hourSet = parseField(hr, 0, 23);
+    const domSet = new Set(dom === '*' ? [] : [...parseField(dom, 1, 31)]);
+    const monSet = new Set(mon === '*' ? [] : [...parseField(mon, 1, 12)]);
+    const dowSet = new Set(dow === '*' ? [] : [...parseField(dow, 0, 6)]);
     
     const domAll = dom === '*';
     const dowAll = dow === '*';
