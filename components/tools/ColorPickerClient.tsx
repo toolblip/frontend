@@ -43,19 +43,24 @@ function wcagLevel(r: number, g: number, b: number): { bg: string; fg: string; l
 export default function ColorPickerClient() {
   const [hex, setHex] = useState('#EF4444');
   const [hexInput, setHexInput] = useState('#EF4444');
+  const [hexError, setHexError] = useState(false);
+  const [copied, setCopied] = useState('');
 
   const rgb = hexToRgb(hex) ?? { r: 239, g: 68, b: 68 };
   const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
   const wcag = wcagLevel(rgb.r, rgb.g, rgb.b);
 
-  const copy = useCallback((val: string) => {
+  const copy = useCallback((label: string, val: string) => {
     navigator.clipboard.writeText(val).catch(() => {});
+    setCopied(label);
+    setTimeout(() => setCopied(''), 1500);
   }, []);
 
   function handleColorChange(e: React.ChangeEvent<HTMLInputElement>) {
     const val = e.target.value;
     setHex(val);
     setHexInput(val);
+    setHexError(false);
   }
 
   function handleHexInputChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -63,8 +68,17 @@ export default function ColorPickerClient() {
     setHexInput(val);
     if (/^#?[a-f\d]{6}$/i.test(val)) {
       setHex(val.startsWith('#') ? val : '#' + val);
+      setHexError(false);
+    } else {
+      setHexError(true);
     }
   }
+
+  const loadExample = () => {
+    setHex('#0EA5E9');
+    setHexInput('#0EA5E9');
+    setHexError(false);
+  };
 
   const formats = [
     { label: 'HEX', value: hex.toUpperCase() },
@@ -74,7 +88,15 @@ export default function ColorPickerClient() {
   ];
 
   return (
-    <div className="tb-v2-cp-root">
+    <div className="flex flex-col gap-4">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Color Picker</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
+      </div>
+
+      <div className="tb-v2-cp-root">
       {/* Color picker + hex input row */}
       <div className="tb-v2-cp-input-row">
         <div className="tb-v2-cp-swatch-wrap">
@@ -93,6 +115,7 @@ export default function ColorPickerClient() {
           onBlur={() => {
             if (!/^#?[a-f\d]{6}$/i.test(hexInput)) {
               setHexInput(hex);
+              setHexError(false);
             }
           }}
           className="tb-v2-cp-hex-input"
@@ -101,6 +124,7 @@ export default function ColorPickerClient() {
           spellCheck={false}
         />
       </div>
+      {hexError && <p style={{ fontSize: 12, color: '#ef4444' }}>Enter a valid 6-digit hex color (e.g., #3366FF).</p>}
 
       {/* Format cards */}
       <div className="tb-v2-cp-grid">
@@ -111,14 +135,14 @@ export default function ColorPickerClient() {
             <button
               type="button"
               className="tb-v2-cp-copy"
-              onClick={() => copy(value)}
+              onClick={() => copy(label, value)}
               aria-label={`Copy ${label}`}
             >
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
               </svg>
-              Copy
+              {copied === label ? 'Copied' : 'Copy'}
             </button>
           </div>
         ))}
@@ -152,13 +176,14 @@ export default function ColorPickerClient() {
                 {wcag.level}
               </span>
               <span className="tb-v2-cp-wcag-hint">
-                {wcag.level === 'AAA' ? 'Excellent  -  ideal for all text sizes' :
-                 wcag.level === 'AA' ? 'Good  -  suitable for body text' :
-                 'Poor  -  not enough contrast for readable text'}
+                {wcag.level === 'AAA' ? 'Excellent - ideal for all text sizes' :
+                 wcag.level === 'AA' ? 'Good - suitable for body text' :
+                 'Poor - not enough contrast for readable text'}
               </span>
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
