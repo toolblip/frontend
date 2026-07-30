@@ -9,11 +9,15 @@ interface GrammarIssue {
   suggestion?: string;
 }
 
+const EXAMPLE = "Its a nice day and I could of gone to the park, but their isnt enough time. Alot of people say  than they prefer rain anyway.";
+
 export default function EnglishGrammarCheckerClient() {
   const [input, setInput] = useState('');
   const [output, setOutput] = useState<GrammarIssue[]>([]);
+  const [checked, setChecked] = useState(false);
 
   const check = () => {
+    setChecked(true);
     if (!input.trim()) { setOutput([]); return; }
     const issues: GrammarIssue[] = [];
     const patterns: { pat: RegExp; type: 'error' | 'warning' | 'info'; cat: string; msg: string; sug?: string }[] = [
@@ -42,11 +46,20 @@ export default function EnglishGrammarCheckerClient() {
     setOutput(issues);
   };
 
+  const loadExample = () => {
+    setInput(EXAMPLE);
+    setChecked(false);
+    setOutput([]);
+  };
+
   return (
     <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
+      <div className="flex justify-end">
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+      </div>
       <textarea
         value={input}
-        onChange={e => setInput(e.target.value)}
+        onChange={e => { setInput(e.target.value); setChecked(false); }}
         placeholder="Enter text to check for grammar issues..."
         rows={6}
         className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-3 text-sm font-mono focus:ring-2 focus:ring-red-500 outline-none resize-y"
@@ -57,7 +70,9 @@ export default function EnglishGrammarCheckerClient() {
       >
         Check Grammar
       </button>
-      {output.length > 0 ? (
+      {!checked ? (
+        <p className="tb-v2-empty">Enter some text and click Check Grammar to see suggestions.</p>
+      ) : output.length > 0 ? (
         <div className="space-y-2">
           {output.map((issue, i) => (
             <div key={i} className={`p-3 rounded-lg border text-sm ${

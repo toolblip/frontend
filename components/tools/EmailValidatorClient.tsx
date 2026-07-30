@@ -46,7 +46,7 @@ export default function EmailValidatorClient() {
             onClick={copy}
             style={{
               position: 'absolute', right: 8, top: '50%', transform: 'translateY(-50%)',
-              background: 'none', border: 'none', cursor: 'pointer', color: 'var(--tb-accent)', fontSize: 12
+              background: 'none', border: 'none', cursor: 'pointer', color: 'var(--blue)', fontSize: 12
             }}
           >
             {copied ? 'Copied' : 'Copy'}
@@ -56,7 +56,7 @@ export default function EmailValidatorClient() {
       <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">Validation Result</span></div>
       <div className="tb-v2-tool-output-body">
         {!email.trim() ? (
-          <div style={{ color: 'var(--tb-text-secondary)', fontSize: 14 }}>Enter an email address to validate</div>
+          <div className="tb-v2-empty">Enter an email address to validate</div>
         ) : (
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{
@@ -71,7 +71,7 @@ export default function EmailValidatorClient() {
               <div style={{ fontWeight: 600, color: result.valid ? '#10b981' : '#ef4444', fontSize: 15 }}>
                 {result.valid ? 'Valid email address' : 'Invalid email address'}
               </div>
-              {result.reason && <div style={{ fontSize: 13, color: 'var(--tb-text-secondary)' }}>{result.reason}</div>}
+              {result.reason && <div style={{ fontSize: 13, color: 'var(--fg-2)' }}>{result.reason}</div>}
             </div>
           </div>
         )}

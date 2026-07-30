@@ -50,6 +50,7 @@ export default function EmailGeneratorClient() {
   const [customDomain, setCustomDomain] = useState('');
   const [count, setCount] = useState(5);
   const [generatedEmails, setGeneratedEmails] = useState<string[]>([]);
+  const [copied, setCopied] = useState(false);
 
   const generateEmails = useCallback(() => {
     const emails: string[] = [];
@@ -97,7 +98,17 @@ export default function EmailGeneratorClient() {
   }, [emailType, domain, customDomain, customPattern, count]);
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(generatedEmails.join('\n'));
+    if (!generatedEmails.length) return;
+    navigator.clipboard.writeText(generatedEmails.join('\n')).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
+  const loadExample = () => {
+    setEmailType('firstname.lastname');
+    setDomain('gmail.com');
+    setCustomDomain('');
+    setCount(5);
   };
 
   const patterns = [
@@ -110,6 +121,9 @@ export default function EmailGeneratorClient() {
 
   return (
     <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
+      <div className="flex justify-end">
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+      </div>
       <div className="tb-v2-grid-2">
         <div>
           <label className="tb-v2-tool-label" style={{marginBottom:8}}>Email Format</label>
@@ -183,23 +197,25 @@ export default function EmailGeneratorClient() {
 
       <button
         onClick={generateEmails}
-        className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        className="tb-v2-btn tb-v2-btn-primary"
       >
         Generate Emails
       </button>
 
-      {generatedEmails.length > 0 && (
+      {generatedEmails.length === 0 ? (
+        <p className="tb-v2-empty">Click Generate Emails to create some sample addresses.</p>
+      ) : (
         <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
           <div className="flex justify-between items-center">
             <h3 className="font-medium">Generated Emails</h3>
             <button
               onClick={copyToClipboard}
-              className="text-sm text-blue-600 hover:text-blue-700"
+              className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
             >
-              Copy All
+              {copied ? 'Copied' : 'Copy All'}
             </button>
           </div>
-          
+
           <div className="bg-gray-100 rounded-lg p-4">
             <div className="space-y-2 max-h-64 overflow-y-auto">
               {generatedEmails.map((email, i) => (

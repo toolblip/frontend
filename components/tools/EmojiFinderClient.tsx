@@ -85,6 +85,7 @@ const categories = ['All', 'Smileys', 'Gestures', 'Symbols', 'Travel', 'Objects'
 export default function EmojiFinderClient() {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All');
+  const [copiedEmoji, setCopiedEmoji] = useState<string | null>(null);
 
   const filteredEmojis = useMemo(() => {
     return emojiData.filter(emoji => {
@@ -97,7 +98,9 @@ export default function EmojiFinderClient() {
   }, [search, category]);
 
   const handleCopy = (emoji: string) => {
-    navigator.clipboard.writeText(emoji);
+    navigator.clipboard.writeText(emoji).catch(() => {});
+    setCopiedEmoji(emoji);
+    setTimeout(() => setCopiedEmoji(prev => (prev === emoji ? null : prev)), 1200);
   };
 
   return (
@@ -148,16 +151,14 @@ export default function EmojiFinderClient() {
           >
             <div className="text-3xl mb-2">{emoji.emoji}</div>
             <div className="text-xs text-gray-500 dark:text-gray-400 group-hover:text-blue-500 truncate">
-              {emoji.name}
+              {copiedEmoji === emoji.emoji ? 'Copied' : emoji.name}
             </div>
           </button>
         ))}
       </div>
 
       {filteredEmojis.length === 0 && (
-        <div className="p-8 text-center text-gray-500">
-          No emojis found matching your search.
-        </div>
+        <p className="tb-v2-empty">No emojis found matching your search.</p>
       )}
     </div>
   );
