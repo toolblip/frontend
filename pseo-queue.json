@@ -1,12 +1,6 @@
 {
   "pending": [
     {
-      "topic": "Generate secure random tokens and API keys with Random String Generator"
-    },
-    {
-      "topic": "Convert RGBA colors with transparency to HEX for CSS"
-    },
-    {
       "topic": "Find complementary and triadic color schemes with Color Harmony Generator"
     },
     {
@@ -72,6 +66,10 @@
   ],
   "in_progress": [],
   "done": [
+    {
+      "topic": "Convert RGBA colors with transparency to HEX for CSS",
+      "completed_at": "2026-07-31T04:07:58Z"
+    },
     {
       "topic": "Generate secure Argon2 password hashes for modern authentication",
       "completed_at": "2026-07-30T04:10:47Z"
@@ -546,6 +544,9 @@
       "completed_at": "2026-07-29T04:12:12.522457Z",
       "url": "https://toolblip.com/blog/2026-07-29-convert-json-to-markdown-table",
       "note": "Generated, humanized, committed, pushed. GSC submission pending."
+    },
+    {
+      "topic": "Generate secure random tokens and API keys with Random String Generator"
     }
   ]
 }

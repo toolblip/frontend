@@ -7,15 +7,15 @@ slug: 2026-07-31-rgba-to-hex-with-alpha
 date: "2026-07-31T00:00:00.000Z"
 category: Developer Tools
 tags:
-  - Convert-RGBA-colors-with-trans
+  - rgba-to-hex
+  - css
+  - color-conversion
   - SEO
   - Developer Tools
 author: Toolblip Team
 readingTime: 7 min
 featuredImage: https://api.radtx.com/gradient/6b7280-374151/1200/630
 ---
-
-# RGBA to HEX With Alpha: Convert Transparency for CSS
 
 If you need to convert rgba to hex with alpha, the part that trips people up is the fourth value. Red, green, and blue map cleanly to two hex digits each, but alpha arrives as a decimal between 0 and 1 and has to be scaled to a byte first. Here is the exact math, the 8 digit hex format that stores it, the browser support worth caring about, and the cases where the conversion is not lossless.
 
