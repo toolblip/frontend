@@ -37,10 +37,11 @@
 
 ## Deploy / live verification
 
-- Article pushed to `origin/main` (commit for content + finalization)
-- Railway frontend last auto-deploy was older than this push; manual `railway up` used for frontend
-- Live URL target: https://toolblip.com/blog/2026-07-31-rgba-to-hex-with-alpha
-- Sitemap: https://toolblip.com/sitemap.xml
+- Content commits: `53529a72` (article), `0715fa83` (finalize + archive)
+- Railway deploy: `0e9f56bf-4923-4a26-b75c-76196ce83b80` SUCCESS (manual `railway up -s frontend`)
+- Live URL: https://toolblip.com/blog/2026-07-31-rgba-to-hex-with-alpha → **HTTP 200**
+- Title/meta OK; single article H1; no `[object Object]`; tool CTA to `/tools/rgba-to-hex`
+- Sitemap includes URL; GSC sitemap refresh OK
 
 ## Blockers
 
