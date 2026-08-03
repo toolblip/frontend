@@ -29,11 +29,6 @@
       "url": "https://toolblip.com/blog/2026-07-30-check-password-strength-before-signup",
       "topic": "Check password strength before enforcing signup rules",
       "enqueued_at": "2026-07-30T03:30:52Z"
-    },
-    {
-      "url": "https://toolblip.com/blog/2026-08-03-pre-launch-website-checklist-html-broken-links",
-      "topic": "Prep a page for launch: validate the HTML, check for broken links, then verify security headers",
-      "enqueued_at": "2026-08-03T04:06:32Z"
     }
   ],
   "submitted": [
@@ -207,6 +202,10 @@
     {
       "url": "https://toolblip.com/blog/2026-07-31-rgba-to-hex-with-alpha",
       "submitted_at": "2026-07-31T04:07:48Z"
+    },
+    {
+      "url": "https://toolblip.com/blog/2026-08-03-pre-launch-website-checklist-html-broken-links",
+      "submitted_at": "2026-08-03T04:06:57Z"
     }
   ],
   "failed": []
