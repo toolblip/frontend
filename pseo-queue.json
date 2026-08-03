@@ -52,9 +52,6 @@
       "topic": "Prep a design handoff: extract a color palette, check contrast ratios, then generate CSS variables"
     },
     {
-      "topic": "Prep a page for launch: validate the HTML, check for broken links, then verify security headers"
-    },
-    {
       "topic": "Turn a legacy XML API into modern JSON: convert XML to JSON, diff the payloads, then generate TypeScript types"
     },
     {
@@ -66,6 +63,10 @@
   ],
   "in_progress": [],
   "done": [
+    {
+      "topic": "Prep a page for launch: validate the HTML, check for broken links, then verify security headers",
+      "completed_at": "2026-08-03T04:06:32Z"
+    },
     {
       "topic": "Convert RGBA colors with transparency to HEX for CSS",
       "completed_at": "2026-07-31T04:07:58Z"
