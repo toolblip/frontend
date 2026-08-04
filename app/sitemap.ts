@@ -2,6 +2,12 @@ import { MetadataRoute } from 'next';
 import { tools } from '@/data/tools';
 import { getBlogPosts } from '@/lib/blog';
 
+// Tool pages don't carry a per-tool last-modified date, so this is a fixed
+// snapshot date rather than `new Date()` recomputed on every build, which
+// previously made all ~800 tool URLs report a fake "just changed" timestamp
+// on every deploy regardless of whether the page's content actually changed.
+const TOOL_PAGES_LAST_MODIFIED = new Date('2026-08-04T00:00:00.000Z');
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://toolblip.com';
 
@@ -66,7 +72,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     .filter((tool) => tool.slug !== 'serp-simulator')
     .map((tool) => ({
       url: `${baseUrl}/tools/${tool.slug}`,
-      lastModified: new Date(),
+      lastModified: TOOL_PAGES_LAST_MODIFIED,
       changeFrequency: 'monthly' as const,
       priority: 0.6,
     }));

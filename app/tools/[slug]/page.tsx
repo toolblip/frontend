@@ -1,4 +1,4 @@
-import { notFound, redirect } from 'next/navigation';
+import { notFound, permanentRedirect } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getCanonicalToolSlug, getToolBySlug, getToolRouteSlugs } from '@/data/tools';
 import { ToolUI } from './ToolUI';
@@ -155,7 +155,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function ToolDetailPage({ params }: PageProps) {
   const { slug } = await params;
   const canonicalSlug = REDIRECTS[slug] ?? getCanonicalToolSlug(slug);
-  if (canonicalSlug !== slug) redirect(`/tools/${canonicalSlug}`);
+  if (canonicalSlug !== slug) permanentRedirect(`/tools/${canonicalSlug}`);
   const tool = getToolBySlug(canonicalSlug);
   if (!tool) notFound();
   const faqs = getFaqs(tool);
