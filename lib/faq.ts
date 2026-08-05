@@ -2089,6 +2089,16 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What counts as an error versus just a warning?', a: 'Missing the XML declaration, a missing urlset root element, and URLs without a proper http or https prefix are all flagged as issues, alongside a per-URL error if a loc tag is missing entirely.' },
     { q: 'Does it handle sitemap index files too?', a: 'Yes, if it detects a sitemapindex tag it switches to extracting the individual sitemap file URLs listed inside instead of page URLs.' },
   ],
+  'xml-validator': [
+    { q: 'How does it detect XML errors?', a: 'It parses your input with the browser\'s native DOMParser and checks the resulting document for a parsererror node, showing the browser\'s own detailed error message when one appears.' },
+    { q: 'What does a successful validation look like?', a: 'A green checkmark and a "Valid XML" label appear once your input parses without a parsererror node, no extra error details are shown.' },
+    { q: 'Do I need to close every tag exactly?', a: 'Yes, DOMParser enforces strict well-formedness, so unclosed tags, mismatched closing tags, and invalid character sequences will all trigger the error path here.' },
+  ],
+  'yaml-validator': [
+    { q: 'What kinds of YAML mistakes does it catch?', a: 'Unclosed or mismatched brackets and braces, tab characters used for indentation instead of spaces, and duplicate keys repeated at the same indentation level.' },
+    { q: 'Does it tell me exactly where the problem is?', a: 'Yes, when an error is found the line number is pulled out of the error message and shown directly above the error text, like "Error at line 7".' },
+    { q: 'Does it skip over comments and blank lines?', a: 'Yes, lines that are empty or start with a # comment marker are skipped during the bracket and structure checks so they never trigger a false error.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
