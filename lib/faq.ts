@@ -1354,6 +1354,51 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can it also decode?', a: 'Yes, a Decode mode reverses the same five entities back into their original characters.' },
     { q: 'Why not just use JavaScript\'s built-in encoding?', a: 'Attribute encoding has different rules than URL or HTML-body encoding, since a single quote or double quote inside an attribute value needs escaping that those other encoders don\'t apply.' },
   ],
+  'html-encoder': [
+    { q: 'Which characters does the encoder convert?', a: 'The five characters with special meaning in HTML: ampersand, less-than, greater-than, double quote, and single quote, each turned into its named entity such as &amp; or &lt;.' },
+    { q: 'Does decode handle entities beyond the basic five?', a: 'Yes, decoding runs the text through a hidden browser textarea so any valid named entity like &copy; or &trade;, along with decimal and hexadecimal numeric references, resolves correctly, not just the five reserved characters.' },
+    { q: 'What happens with text that has no special characters?', a: 'Encoding returns it unchanged since there is nothing to escape, and the same applies in reverse when decoding plain text.' },
+  ],
+  'html-encoder-decoder': [
+    { q: 'How is this different from a plain find-and-replace?', a: 'Encoding always converts the same five reserved characters, ampersand, less-than, greater-than, double quote, and single quote, to their named entities in one pass, so you do not need to remember or type out entity codes yourself.' },
+    { q: 'Where does the output appear?', a: 'A separate read-only Output field below the input shows the converted text, kept apart from what you typed so you can compare both side by side.' },
+    { q: 'Can I paste HTML markup and get it back exactly?', a: 'Encoding a full HTML snippet escapes the angle brackets and quotes so the tags display as visible text instead of being rendered, useful for showing HTML code inside another HTML page.' },
+  ],
+  'html-entities-reference': [
+    { q: 'How many entities are in the reference table?', a: 'Two dozen commonly used entities, covering the five HTML-reserved characters plus symbols like copyright, trademark, currency signs, dashes, and typographic quotes.' },
+    { q: 'How do I find a specific character?', a: 'Type into the search box and it filters live by matching either the character itself or its name, such as typing "trade" to jump straight to the trademark symbol.' },
+    { q: 'What happens when I click a code in the table?', a: 'It copies that entity code to your clipboard and the button briefly shows "Copied!" so you can confirm it worked before pasting.' },
+  ],
+  'html-live-preview': [
+    { q: 'Does the preview update as I type, or do I need to click a button?', a: 'It updates immediately on every keystroke since the preview pane is bound directly to the HTML input, with no render or refresh button involved.' },
+    { q: 'Is the preview rendered in an isolated frame?', a: 'Yes, the HTML is rendered inside a sandboxed iframe using its srcDoc, keeping the preview separate from the rest of the page.' },
+    { q: 'What HTML does it start with?', a: 'A small placeholder snippet with a heading and paragraph is preloaded so you immediately see how the split view works before typing your own markup.' },
+  ],
+  'html-table-to-json': [
+    { q: 'How does it detect table headers?', a: 'It first looks for <th> cells in the table; if none exist, it falls back to using the text of the first row\'s <td> cells as the header names.' },
+    { q: 'What does the JSON look like when headers are found?', a: 'An object with a headers array and a rows array, where each row is keyed by the matching header name instead of a plain positional array.' },
+    { q: 'What if a table has no headers at all?', a: 'Each cell gets a generic key like col0 and col1 based on its position, and the output becomes a plain array of those row objects.' },
+  ],
+  'html-to-markdown': [
+    { q: 'Which HTML elements does it convert?', a: 'Headings h1 through h6, bold and italic text, links, images, inline and block code, blockquotes, ordered and unordered lists, horizontal rules, and line breaks, each mapped to its Markdown equivalent.' },
+    { q: 'Does it preserve links and images automatically?', a: 'Yes, anchor tags become [text](url) links and img tags become ![alt](src) images automatically, with no separate setting needed to turn that on.' },
+    { q: 'What happens to HTML tags it does not specifically handle?', a: 'Any remaining tags are stripped out after the known conversions run, so the result is plain Markdown text rather than a mix of Markdown and leftover HTML.' },
+  ],
+  'html-plaintext-express': [
+    { q: 'How does it decide where to add line breaks?', a: 'It walks the parsed HTML looking for text sitting inside block-level elements like <p>, <div>, or <li>, and inserts a newline before that text so paragraphs and list items do not run together.' },
+    { q: 'Does it parse the HTML or just strip tags with find-and-replace?', a: 'It parses the HTML with the browser\'s own DOMParser and walks the resulting text nodes, rather than using regular expressions to remove tags.' },
+    { q: 'What happens with multiple blank lines in the source?', a: 'Runs of three or more consecutive line breaks in the extracted text get collapsed down to a single blank line.' },
+  ],
+  'html-to-plain-text-tool': [
+    { q: 'Does it remove script and style code along with the tags?', a: 'Yes, entire <head>, <script>, and <style> blocks are stripped out completely before the remaining tags are removed, so their code never leaks into the output.' },
+    { q: 'How does it handle HTML entities like &amp; or &quot;?', a: 'The six most common entities, including &amp;, &lt;, &gt;, &quot;, &#39;, and &nbsp;, are decoded back to their literal characters in the output.' },
+    { q: 'How is extra whitespace handled?', a: 'Every run of consecutive whitespace left behind after tags are removed is collapsed into a single space.' },
+  ],
+  'html-validator': [
+    { q: 'What counts as a "missing tag" error?', a: 'It tracks opening and closing tags with a stack as it scans, and flags both unclosed tags left on the stack and closing tags that do not match the tag that was actually open.' },
+    { q: 'Which deprecated tags does it flag?', a: 'Old presentational tags like <center>, <font>, <marquee>, <blink>, and <strike>, with a suggestion to use CSS instead.' },
+    { q: 'What accessibility issues does it check for?', a: 'Missing alt attributes on <img> tags, plus javascript: URLs in href attributes, which are flagged as both a security and accessibility concern.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
