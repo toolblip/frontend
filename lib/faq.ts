@@ -1294,6 +1294,26 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I apply the suggested fixes directly?', a: 'Yes, each issue lists up to three replacement options as buttons, and clicking one swaps it into your text at that exact spot.' },
     { q: 'What happens if the grammar service is unreachable?', a: 'It shows a clear connection error instead of a silent failure or a fake result, so you know to try again.' },
   ],
+  'hash-identifier': [
+    { q: 'How does it guess the hash type?', a: 'Mainly by digest length, such as 32 characters for MD5 or 64 for SHA-256, combined with format patterns like the $2a$ prefix for bcrypt or {sha1} for Apache-style hashes.' },
+    { q: 'What is the character entropy indicator for?', a: 'It measures how many unique characters appear relative to the total length, which can hint at whether a string looks like a genuine hash or a low-variation placeholder.' },
+    { q: 'Is the identification guaranteed to be correct?', a: 'No, it is an educated guess based on length and format alone, since many hash algorithms share the same output length and can\'t be told apart with certainty.' },
+  ],
+  'hex-rgb-hsl-color-picker': [
+    { q: 'Can I start from any of the three color formats?', a: 'Yes, editing the Hex field, any of the RGB number inputs, or any of the HSL number inputs immediately recalculates the other two formats.' },
+    { q: 'Is there a visual color picker, not just text fields?', a: 'Yes, a native color swatch picker sits alongside the Hex field for picking a color visually.' },
+    { q: 'What does the output line at the bottom show?', a: 'A single combined line with the color in Hex, rgb(), and hsl() CSS notation, ready to copy into a stylesheet.' },
+  ],
+  'hex-to-cmyk': [
+    { q: 'How is the CMYK value calculated from Hex?', a: 'The Hex code is first converted to RGB, then to CMYK using the standard subtractive color formula based on each channel\'s distance from full black.' },
+    { q: 'Can I pick a color instead of typing a Hex code?', a: 'Yes, a color swatch picker next to the text field lets you choose a color visually and convert it.' },
+    { q: 'What happens if I enter an invalid Hex code?', a: 'It shows an error telling you to use the #RRGGBB format instead of returning a wrong or blank result.' },
+  ],
+  'hex-to-hsl': [
+    { q: 'What does the HSL output include?', a: 'Hue in degrees, and saturation and lightness as percentages, plus a ready-to-copy hsl() CSS string.' },
+    { q: 'How accurate is the conversion?', a: 'It uses the standard RGB-to-HSL formula based on the minimum and maximum channel values, the same math used by browser color tools.' },
+    { q: 'Can I pick a color visually instead of typing Hex?', a: 'Yes, a color swatch picker next to the text field lets you choose a color and convert it to HSL.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
