@@ -1654,6 +1654,46 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Why might a port show as "filtered" instead of open or closed?', a: 'A port is marked filtered when the check to it errors out or does not respond within the one second timeout, which usually means a firewall is silently dropping the connection attempt rather than actively refusing it.' },
     { q: 'Can I watch the scan happen, or do I just get a final list?', a: 'A progress bar tracks completion percentage as batches finish, and the results table fills in and re-sorts by port number after every batch of 50, plus a live count of open, closed, and filtered ports updates above the table.' },
   ],
+  'random-fraction-generator': [
+    { q: 'How are the fractions simplified?', a: 'A Euclidean GCD calculation reduces each numerator and denominator down to lowest terms before displaying it, so 24/36 shows up as 2/3.' },
+    { q: 'What range do the numerator and denominator come from?', a: 'Both are random whole numbers between 1 and 99, generated independently before simplification.' },
+    { q: 'Does it show the decimal value too?', a: 'Yes, each fraction is listed alongside its decimal equivalent, rounded to 6 places with trailing zeros trimmed off.' },
+  ],
+  'random-ip-address': [
+    { q: 'Does it generate both IPv4 and IPv6 addresses?', a: 'Yes, a toggle switches between IPv4 (four dot-separated octets) and IPv6 (eight colon-separated hex groups) generation modes.' },
+    { q: 'Does the IPv6 output ever use the :: shorthand?', a: 'Sometimes, when a pair of consecutive all-zero hex groups happens to land in the random address, the generator collapses them into the standard :: notation instead of printing 0000:0000.' },
+    { q: 'How many addresses can I generate at once?', a: 'Up to 100 per click, listed together with a Copy All button.' },
+  ],
+  'random-number-generator': [
+    { q: 'What happens if I ask for more unique numbers than fit in my range?', a: 'With "Unique numbers only" checked, requesting more values than the min-max range can hold shows the message "Cannot generate more unique numbers than range allows" instead of returning duplicates.' },
+    { q: 'How many numbers can I generate in one batch?', a: 'Up to 1000 numbers per click, displayed as a single comma-separated line with a Copy button.' },
+    { q: 'Can the same number repeat in the results?', a: 'Only if "Unique numbers only" is left unchecked, otherwise every number in that batch is guaranteed distinct.' },
+  ],
+  'random-password-generator': [
+    { q: 'How is password randomness generated?', a: "It uses the browser's crypto.getRandomValues (Web Crypto API) rather than Math.random, filling a Uint32Array and mapping each value into your selected character pool." },
+    { q: 'What does the strength meter measure?', a: 'It calculates entropy as password length times log2 of your selected character pool size, then labels the result Weak, Fair, Strong, or Very strong based on set entropy thresholds.' },
+    { q: 'What does the "No look-alikes" option do?', a: 'Enabling it strips visually ambiguous characters, O, 0, I, l, 1, the backtick, and quote marks, out of the character pool before generating.' },
+  ],
+  'random-sentence-generator': [
+    { q: 'How are the sentences built?', a: 'Each one is assembled by randomly picking one of three grammatical patterns and filling it with words pulled from subject, verb, object, and adverb word banks, so results are template based rather than drawn from real text.' },
+    { q: 'How many sentences can I generate at once?', a: 'Up to 50 per click, each shown on its own line with a Copy All button that joins them into one block of text.' },
+    { q: 'Will the same sentence repeat in a batch?', a: 'It can, since each sentence is chosen independently from the same small set of patterns and words with no duplicate checking across a batch.' },
+  ],
+  'random-string-generator': [
+    { q: 'What preset shortcuts are available?', a: 'Four one-click presets: UUID-shaped (36 characters, hex charset, dash-grouped), API Key (32-character alphanumeric), Token (64-character alphanumeric), and Salt (32-character full ASCII).' },
+    { q: 'What character sets can I choose from?', a: 'Seven options: full alphanumeric, alphanumeric without ambiguous characters (no 0, O, l, 1), uppercase only, lowercase only, numbers only, hexadecimal, and full ASCII with punctuation.' },
+    { q: 'How long can a generated string be?', a: 'Anywhere from 1 to 1024 characters per string, with up to 100 strings generated in one batch.' },
+  ],
+  'random-uuid-v7': [
+    { q: 'Does the timestamp portion reflect the actual generation time?', a: 'Yes, the first 48 bits encode the current Unix timestamp in milliseconds at the moment you click Generate, which is what makes UUIDv7 values sortable by creation order.' },
+    { q: 'Can I format the output with uppercase letters or curly braces?', a: 'Yes, separate toggles switch the hex characters to uppercase and wrap each UUID in {} braces.' },
+    { q: 'How many UUIDs can I generate at once?', a: 'Up to 100 per click, each listed with a line number and a Copy All button.' },
+  ],
+  'read-time-calculator': [
+    { q: 'How is the reading speed customized?', a: 'A slider sets an assumed reading speed anywhere from 100 to 500 words per minute in steps of 10, and the time estimate recalculates immediately.' },
+    { q: 'What counts does it show besides the time estimate?', a: 'Word count, character count excluding whitespace, sentence count based on ., !, and ? marks, and paragraph count based on blank-line breaks all appear alongside the time.' },
+    { q: 'What do the "Quick read" and "Long read" labels mean?', a: 'Results under 1 minute are labeled Quick read, under 3 minutes Short read, under 7 minutes Medium read, and anything longer Long read.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
