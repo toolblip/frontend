@@ -1264,6 +1264,31 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How much text can I generate?', a: 'Pick a preset word count from 10 to 500, or enter any custom amount up to 1000 words.' },
     { q: 'Does the output vary each time?', a: 'Yes, each click of Generate Text picks a new random sequence of words rather than repeating the same fixed paragraph.' },
   ],
+  'filler-word-counter': [
+    { q: 'Which filler words does it look for?', a: 'A list of about twenty common ones, including um, uh, like, you know, basically, actually, literally, and honestly.' },
+    { q: 'Does it catch filler phrases, not just single words?', a: 'Yes, multi-word fillers like "you know" and "at the end of the day" are matched as whole phrases, not split into separate words.' },
+    { q: 'How are the results broken down?', a: 'Each filler word or phrase found is listed with its own count, sorted from most to least frequent, plus a total count at the top.' },
+  ],
+  'flesch-kincaid-calculator': [
+    { q: 'What two scores does it calculate?', a: 'The Flesch Reading Ease score and the Flesch-Kincaid Grade Level, both computed from your text\'s word, sentence, and syllable counts.' },
+    { q: 'How does it count syllables?', a: 'A vowel-group heuristic scans each word for groups of vowels, which approximates syllable count without a dictionary lookup.' },
+    { q: 'What do the score labels mean?', a: 'Reading Ease is labeled from Very Easy down to Very Difficult, and Grade Level is labeled from Elementary through Graduate, so you don\'t have to interpret the raw numbers yourself.' },
+  ],
+  'fraction-calculator': [
+    { q: 'Which operations can it perform?', a: 'Addition, subtraction, multiplication, and division on two fractions, selected with a button between the two input fractions.' },
+    { q: 'Does it simplify the result?', a: 'Yes, the result is automatically reduced to lowest terms using the greatest common divisor.' },
+    { q: 'What other formats does it show?', a: 'Alongside the simplified fraction, it shows the equivalent decimal value and, when applicable, the result as a mixed number.' },
+  ],
+  'fraction-to-decimal': [
+    { q: 'What input formats does it accept?', a: 'A simple fraction like 3/4, a mixed number like 1 2/3, or a plain decimal, all parsed from the same text field.' },
+    { q: 'Can I control how many decimal places show?', a: 'Yes, a decimal places setting from 0 to 15 controls the rounding of the output.' },
+    { q: 'What happens with an invalid fraction?', a: 'It shows a specific error message telling you the expected format instead of a blank or broken result.' },
+  ],
+  'general-unit-converter': [
+    { q: 'Which categories of units does it cover?', a: 'Length, weight, temperature, area, volume, and speed, switchable from a category selector above the conversion fields.' },
+    { q: 'How does it handle temperature conversions?', a: 'Temperature uses its own formula rather than a simple multiplier, since Celsius, Fahrenheit, and Kelvin don\'t share a common zero point.' },
+    { q: 'Does the unit list change based on the category?', a: 'Yes, picking a category updates both dropdowns to only show units that belong to it.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
