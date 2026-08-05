@@ -1534,6 +1534,21 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What input formats does it accept?', a: 'AAC, M4A, and MP4 files, either by clicking the upload area or dragging a file directly onto it.' },
     { q: 'Does it preserve the original number of audio channels and sample rate?', a: 'Yes, both are read from the decoded audio buffer and written into the WAV header exactly as they were in the source file, mono stays mono and the sample rate is not resampled.' },
   ],
+  'markdown-preview': [
+    { q: 'Does the preview update as I type, or do I need to click a button?', a: 'It updates live on every keystroke, rendered with the marked library and GitHub Flavored Markdown enabled, no render or refresh button needed.' },
+    { q: 'Can I see the raw HTML instead of the rendered preview?', a: 'Yes, a tab next to Preview switches the right pane to show the generated HTML source, then a Copy HTML button grabs exactly what is displayed.' },
+    { q: 'What Markdown features are supported?', a: 'GitHub Flavored Markdown, including headings, lists, inline code, fenced code blocks, blockquotes, and links, the same set used in the sample text preloaded when you open the tool.' },
+  ],
+  'merge': [
+    { q: 'Can I change the order of the PDFs before merging?', a: 'Yes, each file in the list has up and down arrows to reorder it, so pages appear in your merged document in whatever sequence you choose.' },
+    { q: 'What happens if I select a non-PDF file?', a: 'It is silently skipped, only files with a PDF mime type are added to the merge list, so dragging in a mixed folder only picks up the PDFs.' },
+    { q: 'How do I know the merge worked correctly?', a: 'The result message reports the exact combined page count, calculated by copying every source PDF\'s pages in order into the new document with pdf-lib.' },
+  ],
+  'meta-description-checker': [
+    { q: 'What character range counts as ideal?', a: '120 to 160 characters shows a green optimal-range badge, under 120 or over 160 shows a warning message telling you how many characters to add or trim.' },
+    { q: 'What happens if my description goes past 200 characters?', a: 'An extra warning appears noting it will likely be truncated in search results, layered on top of the over-160 length warning.' },
+    { q: 'Does the page title field affect the score?', a: 'No, only the meta description length drives the score and messages, the title field is there for context but is not itself scored.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
