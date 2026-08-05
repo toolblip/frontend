@@ -1869,6 +1869,31 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Where does a new note appear on the screen?', a: "It's placed at a random position within your current window and given one of six random pastel colors, then opens straight into edit mode so you can start typing immediately." },
     { q: 'Can I drag a note to reposition it?', a: "No, each note keeps the random position it was given when created, you can still edit or delete it in place, but there's no drag-to-move interaction." },
   ],
+  'syllable-counter': [
+    { q: 'How does it decide how many syllables a word has?', a: 'It counts groups of vowels (a, e, i, o, u, y) in the word, strips a trailing silent e first, then adjusts the count up or down for common endings like "-le", "-ie", and past-tense "-ed" or "-es" suffixes.' },
+    { q: "What's shown besides the total syllable count?", a: 'A word-by-word breakdown tagging each word with its own syllable count, plus a distribution section that groups words together by how many syllables they have.' },
+    { q: 'Can I try it without typing anything myself?', a: 'Yes, six example words like "beautiful" and "extraordinary" sit below the input as clickable buttons that add themselves to your text with their expected count shown right on the button.' },
+  ],
+  'syllable-word-counter': [
+    { q: "Does it treat numbers or punctuation as part of a word's syllable count?", a: "No, before counting it strips out everything except letters, so numbers, hyphens, and punctuation in your text are ignored and don't affect any word's syllable total." },
+    { q: 'How is the total syllable count calculated for a whole passage?', a: 'It splits your text on whitespace into individual words, runs the same vowel-group heuristic on each one, then adds every word\'s count together for the total shown above the breakdown.' },
+    { q: 'Is there a minimum word length before it starts counting vowel groups?', a: 'Words of three letters or fewer are automatically counted as one syllable, the vowel-group logic only kicks in for words longer than that.' },
+  ],
+  'temp-converter-express': [
+    { q: 'Which unit do I convert from?', a: 'Three buttons above the input, °C, °F, and °K, let you pick which scale your number is in, results for all three scales are calculated as soon as you click Convert or press Enter.' },
+    { q: 'What do the preset buttons do?', a: 'Buttons like Freezing, Boiling, Body, Room, and Absolute Zero fill the input with a known Fahrenheit value and switch the unit to °F automatically, giving you a familiar reference point converted instantly.' },
+    { q: 'How many decimal places does the result show?', a: 'Each of the three converted values, Celsius, Fahrenheit, and Kelvin, is displayed to 4 decimal places.' },
+  ],
+  'temperature-unit-converter': [
+    { q: "What's the colored badge above the three converted values?", a: 'A temperature category label ranging from "Extremely Cold" to "Extremely Hot" based on the Celsius value, each category has its own background color from dark blue through to red.' },
+    { q: 'What do the preset buttons like "Oven (High)" or "Sun Surface" do?', a: 'Each one loads a known reference temperature, converted into whichever unit you currently have selected, so you can instantly see it displayed across all three scales.' },
+    { q: 'Is there a visual way to see where my temperature falls on a scale?', a: 'Yes, a gradient bar running from -50°C to 100°C shows a white marker positioned at your converted Celsius value, and all six conversion formulas are also listed further down the page.' },
+  ],
+  'text-case-converter': [
+    { q: 'How many case formats does it convert to at once?', a: 'Eight: UPPER, lower, Title Case, Sentence case, camelCase, snake_case, kebab-case, and CONSTANT_CASE, all calculated simultaneously from the same input, each with its own Copy button.' },
+    { q: 'How does it know where one word ends and the next begins for camelCase or snake_case?', a: 'It splits on spaces, underscores, hyphens, and periods, and also inserts a break wherever a lowercase letter is immediately followed by an uppercase one, so "helloWorld" tokenizes into "hello" and "World" too.' },
+    { q: 'Is there a way to try it without typing my own text?', a: 'Yes, a "Load Example" button above the input fills it with "Hello World Example" so you can see all eight case conversions right away.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
