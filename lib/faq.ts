@@ -1129,6 +1129,76 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I look up multiple record types in one click?', a: 'Yes, toggle any combination of A, AAAA, MX, TXT, and CNAME and Lookup All queries them simultaneously.' },
     { q: 'What happens if a record type does not exist for the domain?', a: 'That type\'s card shows "No records found" rather than an error, while a genuine lookup failure shows "Lookup failed" instead.' },
   ],
+  'dns-lookup-tool': [
+    { q: 'Can I look up multiple domains at once?', a: 'Yes, paste one domain per line and Look Up queries all of them in parallel for whichever record type you choose.' },
+    { q: 'Where does this pull DNS data from?', a: 'Google\'s public DNS-over-HTTPS resolver (dns.google), a live query rather than cached results.' },
+    { q: 'What record types are supported?', a: 'A, AAAA, MX, CNAME, TXT, and NS, one type per lookup, switchable with the tab control above the domain list.' },
+  ],
+  'docker-command-generator': [
+    { q: 'What docker commands can it build?', a: 'docker run, build, exec, ps, images, pull, push, logs, stop, rm, and rmi, each with its own relevant input fields.' },
+    { q: 'What options does docker run support?', a: 'Detached mode, auto-remove, interactive TTY, container name, port mapping, environment variables, volumes, and network selection (bridge, host, none, or a custom network name).' },
+    { q: 'Does it validate the values I enter?', a: 'No, it inserts whatever you type directly into the command string without checking image names, ports, or paths for validity.' },
+  ],
+  'docker-compose-generator': [
+    { q: 'What stack templates are available?', a: 'Node.js + PostgreSQL, Node.js + MySQL, Node.js + Redis, WordPress + MySQL, and a static Nginx site, each producing a complete docker-compose.yml.' },
+    { q: 'Does it set up persistent storage for the database?', a: 'Yes, the database and WordPress templates include a named volume so data survives container restarts.' },
+    { q: 'Can I customize the ports and credentials?', a: 'Yes, host port, container port, database name, user, and password fields all feed directly into the generated YAML.' },
+  ],
+  'domain-age-checker': [
+    { q: 'Where does the registration data come from?', a: 'A live RDAP query to rdap.org, not cached WHOIS data.' },
+    { q: 'What happens if a domain has no public registration record?', a: 'It shows a message that no record was found, which can mean the domain is unregistered or uses a registry without public RDAP data.' },
+    { q: 'What information does it show beyond the age?', a: 'Expiry status with days or years remaining, the registration and expiry dates, and the domain\'s nameservers.' },
+  ],
+  'dominant-color-extractor': [
+    { q: 'How does it determine the dominant colors?', a: 'It draws the image to a canvas, groups pixels into color buckets, and returns the six buckets with the most pixels along with each one\'s percentage of the image.' },
+    { q: 'Does it count transparent pixels?', a: 'No, pixels with less than roughly 50% opacity are excluded from the analysis.' },
+    { q: 'Is the image uploaded anywhere?', a: 'No, the canvas drawing and color analysis happen entirely in your browser.' },
+  ],
+  'dpi-ppi-calculator': [
+    { q: 'What two things can it calculate?', a: 'Print DPI from an image\'s pixel dimensions and physical print size, or screen PPI from a display\'s resolution and diagonal size, switchable with a mode toggle.' },
+    { q: 'Does it show print sizes at different quality levels?', a: 'Yes, in Print Size mode it lists the maximum print dimensions at Draft (150 DPI), Good (200 DPI), Photo Quality (300 DPI), and Fine Art (600 DPI).' },
+    { q: 'Can I enter print dimensions in centimeters instead of inches?', a: 'Yes, a unit toggle switches the print width and height fields between inches and centimeters.' },
+  ],
+  'dummy-text-detector': [
+    { q: 'What kinds of placeholder text does it catch?', a: 'Classic Lorem Ipsum phrases, bracket and mustache placeholders, TODO/FIXME markers, and common filler phrases like "your text here" or "coming soon."' },
+    { q: 'How does it split the document into checkable chunks?', a: 'By blank lines, treating each paragraph separately so only the specific paragraphs containing placeholder patterns get flagged.' },
+    { q: 'Can I get a version with the placeholder text removed?', a: 'Yes, a Cleaned Text section shows the document with every flagged paragraph stripped out, ready to copy.' },
+  ],
+  'duplicate-line-finder': [
+    { q: 'Does it show which lines are duplicated?', a: 'Yes, each result lists the first line number a piece of text appeared on plus every other line number it repeats at.' },
+    { q: 'Can I control whether matching is case sensitive?', a: 'Yes, a Case sensitive checkbox decides whether "Hello" and "hello" count as the same line.' },
+    { q: 'Do blank lines get flagged as duplicates?', a: 'No, empty lines are skipped entirely and never counted toward duplicate groups.' },
+  ],
+  'duplicate-phrase-detector': [
+    { q: 'How long a phrase does it look for?', a: 'Repeated runs of 3 to 8 words, checking longer phrases first so a repeated 8-word run isn\'t also reported as a redundant 3-word subset of itself.' },
+    { q: 'How many times must a phrase repeat to get flagged?', a: 'At least twice anywhere in the text.' },
+    { q: 'Does punctuation affect the matching?', a: 'No, text is lowercased and stripped of punctuation before comparison, so phrases are matched on their words alone.' },
+  ],
+  'duplicate-url-detector': [
+    { q: 'What counts as the "same" URL despite different text?', a: 'A canonical form built by lowercasing the host, dropping a leading www., trimming trailing slashes, and removing known tracking parameters like utm_source, gclid, and fbclid.' },
+    { q: 'What happens to lines that aren\'t valid URLs?', a: 'They\'re listed separately as unparseable rather than silently dropped or grouped in with the duplicates.' },
+    { q: 'Can I get a cleaned, deduplicated list?', a: 'Yes, a Deduplicated URL List section outputs one canonical URL per unique page, ready to copy.' },
+  ],
+  'edit': [
+    { q: 'Does it let me edit the original text already in the PDF?', a: 'No, it adds new text and image overlays on top of the page rather than modifying existing PDF content.' },
+    { q: 'Can I position overlays precisely?', a: 'Yes, anchor to any of 9 positions (left, center, or right combined with top, middle, or bottom) with pixel offsets, and a marker preview shows roughly where each overlay will land.' },
+    { q: 'Can I add overlays to specific pages in a multi-page PDF?', a: 'Yes, use Prev and Next to switch pages, and each overlay you add is tied to whichever page was active when you added it.' },
+  ],
+  'email-generator': [
+    { q: 'Are the generated emails real, active inboxes?', a: 'No, they\'re randomly assembled addresses for testing forms, seeding databases, or demos, not real mailboxes.' },
+    { q: 'What naming patterns can I choose?', a: 'Random characters, firstname-lastname, firstname.lastname, firstname_lastname, firstname+number, or a custom pattern using placeholders like firstname, lastname, first, last, and digits.' },
+    { q: 'Can I set my own domain instead of the built-in list?', a: 'Yes, choose "Custom domain..." from the Domain dropdown and type any domain you want appended.' },
+  ],
+  'email-validator': [
+    { q: 'Does it check whether the email address actually exists?', a: 'No, it only checks the format, things like local part length, domain length, and allowed characters, not whether the mailbox is real or receives mail.' },
+    { q: 'What specific rules does it check?', a: 'Presence of exactly one @, a local part under 64 characters with valid characters, and a domain under 253 characters matching valid hostname label formatting.' },
+    { q: 'What does it tell me when an email is invalid?', a: 'A specific reason, such as a missing @ symbol, invalid characters in the local part, or an invalid domain format.' },
+  ],
+  'emoji-finder': [
+    { q: 'How does the search match emojis?', a: 'By name or by any of its associated keywords, so searching "hi" finds Waving Hand even though "hi" isn\'t in its name.' },
+    { q: 'What categories can I filter by?', a: 'Smileys, Gestures, Symbols, Travel, Objects, People, and Nature, or All to see every emoji at once.' },
+    { q: 'What happens when I click an emoji?', a: 'It\'s copied straight to your clipboard, with the label briefly switching to "Copied" as confirmation.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
