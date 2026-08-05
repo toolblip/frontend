@@ -920,6 +920,30 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What counts as a "tone" here specifically?', a: 'Your color blended with its own gray equivalent (calculated using the standard luminance-weighted gray formula) across six steps, from full color down to mostly gray. This is different from a tint, which blends with white, or a shade, which blends with black.' },
     { q: 'How is the gray value calculated?', a: 'Using the real luma formula, 0.299 times red plus 0.587 times green plus 0.114 times blue, the standard perceptual grayscale weighting, rather than a simple average of the three channels.' },
   ],
+  'combine-images': [
+    { q: 'What layouts are available for combining images?', a: 'Three: horizontal (side by side), vertical (stacked), and grid (automatically arranged into rows and columns based on the number of images you upload).' },
+    { q: 'Can I control the spacing between images?', a: 'Yes, a slider from 0 to 50 pixels sets the gap drawn between each image in the combined canvas.' },
+    { q: 'Is there a minimum number of images required?', a: 'Yes, you need at least two images loaded before the Combine button becomes active, since combining a single image would have nothing to merge it with.' },
+  ],
+  'contrast-checker': [
+    { q: 'How is this different from the Color Contrast Ratio Checker?', a: 'They use the same WCAG relative-luminance formula and check a single foreground and background pair, this tool additionally renders a live sample-text preview against your chosen colors so you can see the actual contrast, not just the ratio number.' },
+    { q: 'What do the AA and AAA levels mean?', a: 'They are the WCAG contrast thresholds, AAA requires a ratio of at least 7:1 for normal text, AA requires at least 4.5:1, and a separate AA Large tier accepts 3:1 for text 18pt or larger.' },
+    { q: 'What happens if my colors fail every level?', a: 'The tool shows a "Fail" result when the ratio falls below 3:1, telling you the pairing is not accessible at any WCAG text size.' },
+  ],
+  'cooking-unit-converter': [
+    { q: 'Which cooking units can I convert between?', a: 'Cups, tablespoons, teaspoons, milliliters, liters, fluid ounces, pounds, and grams, entering a value in any one of them instantly shows the equivalent in all the others.' },
+    { q: 'Are the weight conversions ingredient-specific?', a: 'No, the gram and pound figures use standard volume-to-weight factors rather than a specific ingredient\'s density, so they are closest to accurate for water-like liquids and are an approximation for dense or airy ingredients like flour or sugar.' },
+  ],
+  'cors-header-generator': [
+    { q: 'Which server frameworks can this generate config for?', a: 'Beyond raw HTTP headers, it outputs ready-to-paste CORS code for Nginx, Apache, Express.js, Next.js, Django, and Flask, matching each framework\'s actual header-setting syntax.' },
+    { q: 'What do the preset scenarios configure?', a: 'Nine starting points, including Public API (fully open), With Credentials, Restricted origins, Dynamic Origin, and framework-specific presets for WordPress, Next.js, Express, Django, and Flask, each pre-filling realistic allowed methods, headers, and origins for that case.' },
+    { q: 'Does this tool test my server\'s actual CORS behavior?', a: 'No, it only generates the header configuration for you to add to your own server, it does not send requests to check what your server currently returns.' },
+  ],
+  'countdown-timer': [
+    { q: 'How precise is the countdown while running?', a: 'It ticks down once per second using a real interval timer, with hours, minutes, and seconds set independently before starting.' },
+    { q: 'Can I pause and resume the countdown?', a: 'Yes, the Start button becomes Pause once running, stopping the interval without losing the remaining time, pressing it again resumes from where it left off.' },
+    { q: 'What does Reset do versus Pause?', a: 'Pause just halts the ticking clock, Reset clears the remaining time entirely so the duration inputs become editable again.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
