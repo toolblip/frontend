@@ -2039,6 +2039,26 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What does the WCAG Level result tell me?', a: 'It labels the contrast ratio as AAA, AA, AA Large, or Fail based on the standard WCAG 2.1 thresholds, along with a short description of what that level means for readability.' },
     { q: 'Is there a live preview of the color combination?', a: 'Yes, a sample text block renders using your exact foreground and background colors, so you can see how the pairing actually looks before relying on the numeric ratio alone.' },
   ],
+  'webp-converter': [
+    { q: 'What quality levels can I choose when converting to WebP?', a: 'Four presets, Low (30%), Medium (50%), High (80%), and Maximum (100%), each shown with a short note about the size and quality tradeoff before you convert.' },
+    { q: 'Does it show how much smaller the WebP file is?', a: 'Yes, after converting it compares the original and converted file sizes and displays the percentage change, like "42% smaller", so you can see the savings from the format switch.' },
+    { q: 'How does the conversion actually happen?', a: 'Your image is drawn onto a hidden canvas element and then exported with canvas.toBlob at the image/webp MIME type and your chosen quality, entirely in your browser without uploading the file anywhere.' },
+  ],
+  'webp-to-jpg': [
+    { q: 'Which image formats can I upload as the source?', a: 'JPEG, PNG, WebP, AVIF, or GIF, the uploader checks the file\'s MIME type against that list and rejects anything else with an error message.' },
+    { q: 'Can I adjust the output quality?', a: 'Yes, a 1 to 100 quality slider controls the JPEG compression level, letting you trade off file size against image quality before converting.' },
+    { q: 'What does the before/after comparison show?', a: 'Side-by-side preview panels display the original and converted images along with each one\'s file size and the percentage difference between them, like "38% smaller".' },
+  ],
+  'webp-to-png': [
+    { q: 'Does converting to PNG preserve transparency?', a: 'Yes, PNG is a lossless format so the quality slider is disabled and grayed out for PNG output, since there is no compression tradeoff to make, transparency and pixel data are preserved exactly.' },
+    { q: 'Which source formats does the uploader accept?', a: 'JPEG, PNG, WebP, AVIF, or GIF, checked against the file\'s actual MIME type, with an error message if you try to upload something else.' },
+    { q: 'Can I download the converted PNG afterward?', a: 'Yes, a Download PNG button appears once the conversion finishes, saving the result with your original filename and a .png extension.' },
+  ],
+  'weight-converter': [
+    { q: 'Which weight units does it convert between?', a: 'Kilograms, grams, milligrams, pounds, ounces, and stone, all six shown as simultaneous results rather than one pair at a time.' },
+    { q: 'Do I need to pick both a "from" and "to" unit?', a: 'No, you only choose the unit you are converting from, the result table then lists the equivalent value in every other supported unit at once.' },
+    { q: 'How precise are the converted values?', a: 'Each result is calculated to 6 decimal places and then has trailing zeros trimmed, so a clean value like 2.20462 pounds is not padded with unnecessary zeros.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
