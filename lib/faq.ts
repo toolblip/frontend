@@ -1429,6 +1429,16 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I see the result before downloading?', a: 'Yes, the Original and Flipped versions display side by side so you can confirm the mirroring is correct before saving.' },
     { q: 'Does flipping change the image dimensions?', a: 'No, flipping only mirrors the pixels along the chosen axis, so the width and height stay exactly the same as the original.' },
   ],
+  'detect': [
+    { q: 'How can it tell the real format if the file extension is wrong?', a: 'It reads the first few bytes of the file and checks them against the magic-number signatures for PNG, JPEG, GIF, BMP, WebP, ICO, and SVG, which is the same way image formats identify themselves regardless of what the filename says.' },
+    { q: 'What does the mismatch warning mean?', a: 'It shows up when the MIME type your browser reports for the file does not match what the file\'s own byte signature says it is, a sign the extension or reported type may be misleading.' },
+    { q: 'What color information does it show?', a: 'Bit depth and color type read directly from the format\'s header, such as PNG\'s color type byte or a JPEG\'s SOF marker, showing things like RGBA truecolor or an indexed palette.' },
+  ],
+  'image-format-converter': [
+    { q: 'Which formats can I convert between?', a: 'JPEG, PNG, WebP, and AVIF as output formats, with JPEG, PNG, WebP, AVIF, and GIF all accepted as input.' },
+    { q: 'Why is the quality slider disabled for PNG?', a: 'PNG is a lossless format, so there is no quality setting to adjust, it always encodes at full fidelity regardless of the slider position.' },
+    { q: 'Can I compare the file size before and after converting?', a: 'Yes, the Before and After panels show each version\'s file size side by side, plus a percentage showing how much smaller or larger the converted file turned out.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
