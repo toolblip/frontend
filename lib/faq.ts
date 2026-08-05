@@ -1619,6 +1619,21 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What does the crack time estimate assume about the attacker?', a: 'It assumes ten billion guesses per second, then divides two to the power of your entropy by that rate, ranging from instant for weak passwords up to figures like "3.2 billion years" for very strong ones.' },
     { q: 'Is my password sent anywhere to be checked?', a: 'No, every calculation, the entropy, crack time, and suggestions, runs in your browser using the characters you typed, the Show/Hide toggle only affects the input field\'s own masking.' },
   ],
+  'percentage-change-calc': [
+    { q: 'How does it show whether the change was an increase or a decrease?', a: 'The Difference and % Change figures switch between a "+" prefix and no sign automatically based on your Old and New values, so a lower New Value produces negative numbers indicating a decrease, and a higher one produces positive numbers indicating an increase.' },
+    { q: 'Which tab of the calculator do I use for this?', a: 'Select the "Change" tab at the top, since the same calculator also has separate Basic % and Tip tabs for different kinds of percentage math.' },
+    { q: 'What happens if I enter the same value for Old and New?', a: 'The Difference shows 0 and the % Change shows 0.00%, since there was no change between the two values.' },
+  ],
+  'percentage-difference': [
+    { q: 'How is this different from calculating percentage change?', a: 'Percentage difference compares two values against their average rather than treating one as a fixed starting point, so the two directions of comparison give the same percentage magnitude either way, unlike a change calculation where the order of old versus new value matters.' },
+    { q: 'What does the direction field actually tell me?', a: 'It shows an up arrow and "increase" when Value 2 is larger than Value 1, a down arrow and "decrease" when it is smaller, or "no change" when they are equal.' },
+    { q: 'Does it show the raw difference as well as the percentage?', a: 'Yes, the Difference row shows the plain numeric gap between your two values to four decimal places, alongside the Percentage row showing that gap expressed as a percentage of their average.' },
+  ],
+  'plain-text-counter': [
+    { q: 'How does this differ from just counting words?', a: 'Alongside word and character counts, it also breaks out characters with spaces stripped out, sentence count based on punctuation, paragraph count based on blank lines, and a separate line count based on raw line breaks.' },
+    { q: 'Do the statistics update as I type, or do I need to click something?', a: 'Click Count to run the analysis, the six-stat grid then appears below, it is not a live-updating counter tied to every keystroke.' },
+    { q: 'What exactly counts as a "line" versus a "paragraph" here?', a: 'A line is any text between two line breaks, however short, while a paragraph requires a full blank line, meaning two consecutive line breaks, to separate it from the next block of text.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
