@@ -837,6 +837,89 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What is the HEX8 output?', a: 'Your 6-digit hex value with "ff" appended for full opacity, it always represents fully opaque since there is no alpha value in the accepted input formats.' },
     { q: 'How accurate is the CMYK output for print?', a: 'It uses the standard mathematical RGB to CMYK approximation, not an ICC print profile, so it is suited to quick web reference rather than press-ready color matching.' },
   ],
+  'color-format-picker': [
+    { q: 'Can I edit the color from any of the three formats?', a: 'Yes. Typing or dragging in the HEX field, RGB sliders, or HSL sliders all update the other two formats live, so you can start from whichever format is easiest for your situation.' },
+    { q: 'What happens if I type an invalid hex value?', a: 'The RGB and HSL values simply stop updating until the text matches a valid 6-digit hex pattern again, rather than showing an error message.' },
+    { q: 'Which formats does it support?', a: 'HEX, RGB, and HSL, each shown with its own copy button so you can grab whichever format your CSS or design tool needs.' },
+  ],
+  'color-harmony-generator': [
+    { q: 'What harmony schemes can I generate?', a: 'Complementary, triadic, analogous, split complementary, and square, each calculated as real hue-angle offsets from your chosen base hue, with three saturation and lightness variants shown per hue.' },
+    { q: 'How is this different from the Color Palette Generator?', a: 'This tool starts from a hue angle alone (0 to 360 degrees) and generates three preset lightness and saturation variants per hue. The Color Palette Generator instead starts from an exact hex color and preserves that color\'s own saturation and lightness across its scheme.' },
+    { q: 'Can I copy every generated color at once?', a: 'Yes, the Copy All button copies every swatch in the current scheme to your clipboard as a newline-separated list of hex values.' },
+  ],
+  'color-luminance-calculator': [
+    { q: 'What does this show beyond the luminance number?', a: 'A contrast-ratio helper comparing your color against pure white and pure black backgrounds, flagged red if it falls below the 4.5:1 AA threshold, plus a lightness scale and the exact WCAG luminance formula used for the calculation.' },
+    { q: 'How is perceived brightness determined?', a: 'Your color\'s real relative luminance value is compared against fixed thresholds, above 0.5 is labeled Light, above 0.25 is Medium, and anything lower is Dark.' },
+    { q: 'Does it show its math, or just the result?', a: 'It displays the actual WCAG relative luminance formula (0.2126R + 0.7152G + 0.0722B on linearized sRGB values) directly on the page alongside your color\'s computed result.' },
+  ],
+  'color-luminance-checker': [
+    { q: 'How is this different from the Color Luminance Calculator?', a: 'The Calculator focuses on one color at a time with a detailed contrast-ratio and lightness-scale breakdown. This tool instead lets you build a list of named colors and compare their luminance side by side.' },
+    { q: 'How does it decide whether to recommend light or dark text?', a: 'It uses the real WCAG-based 17.9% relative luminance cutoff, colors above that threshold get a light-background recommendation of dark text, and vice versa.' },
+    { q: 'Can I label the colors I add?', a: 'Yes, an optional name field lets you label each color (like "Brand Blue"), otherwise the hex code itself is shown as the label.' },
+  ],
+  'color-mixer': [
+    { q: 'What blend modes are available?', a: 'Additive (light-mixing, like combining RGB light beams), Subtractive (pigment-style mixing using the CMY model), and Average (a weighted mean of the RGB values), each using genuinely different math rather than the same formula relabeled.' },
+    { q: 'Can I weight colors differently in the mix?', a: 'Yes, each color has its own weight slider from 0.1 to 10, and the final blend is calculated using those weights rather than a simple unweighted average.' },
+    { q: 'Is there a way to see the mix proportions visually?', a: 'Yes, a preview strip sizes each color\'s segment according to its weight, shown right above a swatch of the final mixed result.' },
+  ],
+  'color-name-finder': [
+    { q: 'How does it pick the closest color name?', a: 'It calculates the real Euclidean distance between your color\'s RGB values and roughly 80 built-in named colors, then returns whichever name has the smallest distance, along with that numeric distance.' },
+    { q: 'Will it only match exact named colors?', a: 'No, since arbitrary hex values rarely land exactly on a named color, it shows the closest match along with how far off it is, so you know whether the match is a near-exact fit or a loose approximation.' },
+    { q: 'What are the "variations" it shows?', a: 'Lighten and darken adjust the color\'s HSL lightness by 20%, and saturate and desaturate adjust its HSL saturation by 20%, all computed as real HSL transformations of your original color.' },
+  ],
+  'color-opacity-generator': [
+    { q: 'What is the "flattened on white" swatch showing?', a: 'The real result of alpha-compositing your color at the chosen opacity over a solid white backdrop, useful for seeing how a semi-transparent color will actually look once it is layered on a light page rather than viewed on a checkerboard.' },
+    { q: 'What formats does it output?', a: 'An RGBA string, an 8-digit hex value with the alpha channel appended, and the flattened solid hex equivalent for when transparency isn\'t supported.' },
+    { q: 'How is the transparency preview shown?', a: 'A checkerboard background pattern, the same convention used by design tools, sits behind your semi-transparent color swatch so you can see through it.' },
+  ],
+  'color-palette-extractor': [
+    { q: 'How does it pick the palette colors from an image?', a: 'It reads every pixel of the loaded image using canvas, groups visually similar colors by rounding each RGB channel to the nearest multiple of 8, and returns the 12 most frequent groups.' },
+    { q: 'Why does it fail on some image URLs?', a: 'Cross-origin images without permissive CORS headers block canvas pixel reading entirely, this is a browser security restriction rather than a bug specific to this tool.' },
+    { q: 'How is this different from Color Palette From Image?', a: 'Both use the same real pixel-sampling approach, but this tool groups colors more finely (nearest 8) and returns 12 swatches instead of 10.' },
+  ],
+  'color-palette-from-image': [
+    { q: 'How does it build the palette?', a: 'The same real pixel-sampling technique as the Color Palette Extractor, it groups colors by rounding each channel to the nearest multiple of 16 and returns the 10 most common groups.' },
+    { q: 'How is this different from the Color Palette Extractor?', a: 'This version groups colors a bit more coarsely (nearest 16 versus nearest 8) and returns 10 swatches instead of 12, the underlying extraction method is otherwise identical.' },
+    { q: 'Does it work with any image URL?', a: 'Only ones the browser can read pixel data from without a CORS violation, images hosted on origins that don\'t allow cross-origin reads will fail to extract.' },
+  ],
+  'color-palette-generator': [
+    { q: 'What harmony types can I generate?', a: 'Complementary, analogous, triadic, tetradic, split complementary, and monochromatic, each computed from real HSL hue-angle math applied to your exact base color, preserving its own saturation and lightness.' },
+    { q: 'How can I export the palette?', a: 'Either as a comma-separated list of hex values, or as ready-to-paste CSS custom properties formatted as a :root block.' },
+    { q: 'How is this different from the Color Harmony Generator?', a: 'This tool uses your exact chosen color\'s saturation and lightness and adds CSS variable export plus a live UI preview. The Color Harmony Generator instead starts from a hue slider alone and applies fixed lightness and saturation variants.' },
+  ],
+  'color-picker-v2': [
+    { q: 'Does it show more than the hex value?', a: 'Yes, HEX, RGB, and HSL are all shown at once and each can be copied independently with its own button.' },
+    { q: 'Is the picker a custom color wheel?', a: 'No, it uses your browser\'s native color input control, styled full width, whatever picker interface your browser provides (often including a hue wheel) is what appears when you click it.' },
+  ],
+  'color-picker-wheel': [
+    { q: 'Is this a draggable custom color wheel?', a: 'No, it uses your browser\'s native color input, styled with rounded corners, clicking it opens whatever color picker UI your browser provides rather than a custom in-page wheel.' },
+    { q: 'How is this different from Color Picker V2?', a: 'This version shows HEX and RGB only and displays the swatch as a circle. Color Picker V2 additionally shows the HSL breakdown and uses a rectangular swatch.' },
+  ],
+  'color-saturation-adjuster': [
+    { q: 'What range does the saturation slider cover?', a: '0 to 200%, multiplying your color\'s original HSL saturation value, the result is capped so it never exceeds 100% saturation even at the higher end of the slider.' },
+    { q: 'Does adjusting saturation change the hue or lightness?', a: 'No, only the saturation channel is modified, the hue and lightness from your original color are preserved exactly.' },
+  ],
+  'color-shade-gen': [
+    { q: 'What counts as a "shade" in this tool?', a: 'Your color\'s RGB channels scaled straight down toward black in five steps (100%, 75%, 50%, 25%, and 0% of the original values), rather than adjusting the HSL lightness channel.' },
+    { q: 'Is this the same as reducing lightness in HSL?', a: 'Close, but not identical. Scaling RGB values directly toward black can shift a color slightly differently than converting to HSL and lowering the L channel would.' },
+  ],
+  'color-shade-tints': [
+    { q: 'Does this generate both shades and tints?', a: 'Despite the name, it currently only produces five lighter tints blended toward white, it does not include darker shade variants. For shades toward black, use the Color Shade Generator tool instead.' },
+    { q: 'How are the tints calculated?', a: 'Each tint blends your original RGB color with white in five steps, at 100%, 80%, 60%, 40%, and 20% of the original color\'s strength.' },
+  ],
+  'color-temperature-adjuster': [
+    { q: 'What Kelvin range does it cover?', a: '1000K to 20000K, using a real color-temperature-to-RGB approximation formula, the same style of blackbody radiation curve approximation used in photography and lighting reference tools.' },
+    { q: 'What are the preset temperatures for?', a: 'Ten named real-world references, from 1000K candlelight up to 9000K heavy overcast, each mapped to its actual approximate RGB color so you can jump straight to a familiar lighting condition.' },
+    { q: 'Does it explain when to use each temperature?', a: 'Yes, a common use-cases section lists practical suggestions, like 2700K for bedrooms and living rooms, 4000K for kitchens and offices, and 6500K for daylight simulation and photography.' },
+  ],
+  'color-tint-generator': [
+    { q: 'How does this differ from Color Shade & Tints?', a: 'The tint math is the same five-step white blend used there, this tool is focused purely on producing tints, so if lighter variants are all you need this is the more directly-named option.' },
+    { q: 'What is the exact tint formula?', a: 'Each step blends your RGB color toward white at 100%, 80%, 60%, 40%, and 20% of its original intensity.' },
+  ],
+  'color-tone-generator': [
+    { q: 'What counts as a "tone" here specifically?', a: 'Your color blended with its own gray equivalent (calculated using the standard luminance-weighted gray formula) across six steps, from full color down to mostly gray. This is different from a tint, which blends with white, or a shade, which blends with black.' },
+    { q: 'How is the gray value calculated?', a: 'Using the real luma formula, 0.299 times red plus 0.587 times green plus 0.114 times blue, the standard perceptual grayscale weighting, rather than a simple average of the three channels.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
