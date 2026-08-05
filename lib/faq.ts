@@ -597,6 +597,61 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Which characters are supported?', a: 'Uppercase letters A through Z, digits 0 through 9, and spaces. Lowercase input is automatically uppercased before rendering, and unsupported characters render as a blank space.' },
     { q: 'Can I copy the output as plain text?', a: 'Yes. The result is plain monospaced text using block characters, so it copies and pastes cleanly into any code comment, README, or terminal banner.' },
   ],
+  'avi-to-gif': [
+    { q: 'Does this actually produce a GIF file?', a: 'Not yet. The tool decodes your video with the HTML5 video element and extracts up to 30 frames at 10fps, but encoding those frames into an animated GIF needs a dedicated library the page doesn\'t ship. It currently shows the first extracted frame as a PNG preview, and the banner above the upload box says so upfront.' },
+    { q: 'What should I use for a real animated GIF?', a: 'FFmpeg on your desktop, for example ffmpeg -i input.avi output.gif, will encode the full animation. The in-browser tool is meant for a quick frame preview, not a finished GIF.' },
+    { q: 'Why does it only grab 30 frames?', a: 'Frame extraction happens by seeking the video element to specific timestamps and reading each one off a canvas, which is slow in-browser. Capping it at 30 frames (about 3 seconds at 10fps) keeps the preview responsive instead of locking up the tab on a long video.' },
+  ],
+  'avi-to-mkv': [
+    { q: 'Does this tool re-encode my AVI video?', a: 'No. AVI to MKV is a container change, not a codec change, so the tool re-wraps your original file into an .mkv download without touching the video or audio streams. The blue banner above the upload box explains this before you start.' },
+    { q: 'Will the picture or audio quality change?', a: 'No. Since the underlying streams are copied byte-for-byte into the new container, quality is identical to your source AVI file.' },
+    { q: 'When would I need FFmpeg instead?', a: 'If your player specifically needs the streams re-encoded to different codecs rather than just re-wrapped, ffmpeg -i input.avi -c copy output.mkv (or with real transcoding flags) handles that on desktop.' },
+  ],
+  'avi-to-mov': [
+    { q: 'Does this actually convert AVI to a playable MOV file?', a: 'No, and the amber banner says so directly. MOV typically expects different codecs than AVI, and re-encoding video isn\'t something a browser tab can do, so the download you get is a placeholder, your original file renamed with a .mov extension.' },
+    { q: 'Why show a placeholder instead of just refusing?', a: 'It keeps the workflow visible: you can see exactly what upload/download step a real converter would need, and the yellow result banner repeats that FFmpeg is required for an actual codec conversion before you rely on the file.' },
+    { q: 'What FFmpeg command does real AVI to MOV conversion?', a: 'Something like ffmpeg -i input.avi -c:v prores -c:a pcm_s16le output.mov, which re-encodes into QuickTime-compatible codecs rather than just changing the file extension.' },
+  ],
+  'avi-to-mp3': [
+    { q: 'Can this pull the audio out of my AVI file?', a: 'It tries a real decode first: the Web Audio API attempts to decode your AVI\'s audio track, and if that succeeds you get an actual extracted WAV file, not a fake one. Many AVI audio codecs aren\'t supported by browsers, in which case you get a clear error instead of a broken download.' },
+    { q: 'Why WAV instead of MP3?', a: 'Browsers have no built-in MP3 encoder. The red banner discloses this upfront: whatever audio the tool successfully decodes is written out as PCM WAV, which any audio tool can then convert to MP3 if you need that format specifically.' },
+    { q: 'What if the extraction fails?', a: 'You\'ll see the exact FFmpeg command to run instead, ffmpeg -i video.avi -vn -acodec pcm_s16le output.wav, since some AVI files use audio codecs no browser can decode at all.' },
+  ],
+  'avi-to-mp4': [
+    { q: 'Is this a real video conversion or just a rename?', a: 'It\'s a container re-package: your AVI\'s video and audio streams are copied as-is into an MP4 wrapper, with no transcoding. The blue banner and the note under the download link both say this directly.' },
+    { q: 'Why doesn\'t it convert the actual codec?', a: 'Real codec transcoding needs an encoder library a browser tab doesn\'t have access to. Re-wrapping works because MP4 and AVI can both carry the same compressed video streams; if your AVI uses a codec MP4 players don\'t support, FFmpeg is what actually re-encodes it.' },
+    { q: 'Will this fix an AVI file that won\'t play on my phone?', a: 'Only if the playback problem was the .avi container itself. If the codec inside is the issue, re-wrapping to .mp4 won\'t change that, and you\'d need ffmpeg -i input.avi output.mp4 to force a real re-encode.' },
+  ],
+  'azw3-to-epub': [
+    { q: 'Can this tool actually convert my Kindle book to EPUB?', a: 'No, and it says so before you upload anything: browsers have no way to parse the AZW3 container format, so this page can only point you to the right desktop tool rather than perform the conversion itself.' },
+    { q: 'What should I use instead?', a: 'Calibre is the free, open-source option built specifically for this, and the tool lists it along with KindleUnpack (for extracting AZW3 content) and Sigil (for manually fixing up the resulting EPUB).' },
+    { q: 'Will this work on any AZW3 file I own?', a: 'Only DRM-free ones. Amazon\'s DRM-protected Kindle books can\'t legally or technically be converted by Calibre or any other tool without first being stripped of that protection, which this page does not do.' },
+  ],
+  'azw3-to-mobi': [
+    { q: 'Why would I convert AZW3 down to the older MOBI format?', a: 'Some older Kindle devices and third-party e-readers only support MOBI (KF7), while AZW3 (KF8) is Amazon\'s newer format. Downgrading trades away KF8-only features like fixed layouts and improved typography for broader compatibility.' },
+    { q: 'Will I lose formatting in the conversion?', a: 'Likely some. The tool\'s banner explains that MOBI is an older format with fewer layout features than AZW3, so anything relying on KF8-specific formatting may not carry over cleanly.' },
+    { q: 'Does the browser do the actual conversion?', a: 'No. This page can\'t read AZW3 content directly, it points you to Calibre or Amazon\'s KindleGen for the real conversion, and only helps you decide whether downgrading to MOBI is worth the formatting trade-off.' },
+  ],
+  'backslash-escape-unescape': [
+    { q: 'What contexts does the escaper support?', a: 'JSON, JavaScript, regex, HTML, and a general catch-all, each with its own escaping rules, for example JavaScript also escapes angle brackets to \\x3C/\\x3E, and HTML escapes entities like &amp; and &lt; instead of backslashes.' },
+    { q: 'What\'s the difference between JSON and JavaScript mode?', a: 'JSON mode escapes quotes, backslashes, and whitespace control characters the way a valid JSON string requires. JavaScript mode adds single-quote escaping and also escapes < and > to \\x3C and \\x3E, useful when embedding a string inside an inline <script> tag.' },
+    { q: 'Can I go from escaped text back to plain text?', a: 'Yes. Switch to Unescape mode, or use the Swap button to flip the current output back into the input box with the mode reversed, and the same context-specific rules run in reverse.' },
+  ],
+  'base-number-converter': [
+    { q: 'Which number bases does it support?', a: 'Binary, octal, decimal, hexadecimal, and base-32, selectable independently as both the source and target base, so you can convert directly between any two, not just to and from decimal.' },
+    { q: 'What happens if I enter digits invalid for the selected base?', a: 'The conversion returns "Invalid input for selected base" rather than silently producing a wrong number, since JavaScript\'s parseInt would otherwise interpret out-of-range digits unpredictably.' },
+    { q: 'Can I quickly reverse the conversion?', a: 'Yes. The swap button flips the From and To bases and moves the current result into the input field, so you can convert back without retyping anything.' },
+  ],
+  'base64-file-encoder': [
+    { q: 'Does this work with any file type, or just text?', a: 'Any file type. It reads the file as raw bytes via the FileReader API and Base64-encodes the binary data directly, so PDFs, images, zip archives, and executables all encode correctly, not just plain text.' },
+    { q: 'How do I get my original file back from a Base64 string?', a: 'Switch to Decode mode and paste the Base64 text. The tool reconstructs the original bytes with atob and offers a direct download link, so you get the file back rather than just a text dump.' },
+    { q: 'Is there a file size limit?', a: 'There\'s no hard cap in the tool itself, but very large files can be slow to encode and will produce a Base64 string roughly a third larger than the original file, since Base64 always expands binary data.' },
+  ],
+  'base64-image-converter': [
+    { q: 'Does it show me a preview of the image, or just the raw text?', a: 'Both. Encoding a file renders the actual image using the generated data URL, and decoding a pasted Base64 string reconstructs the image bytes and displays it the same way, not just a text box full of characters.' },
+    { q: 'What image formats can I encode?', a: 'Any format the browser can read as a file, including JPG, PNG, GIF, and WebP. The output data URL embeds the correct MIME type automatically based on what you uploaded.' },
+    { q: 'Can I decode Base64 that isn\'t a full data URL?', a: 'Yes. If you paste raw Base64 without the data:image/...;base64, prefix, the tool assumes image/png and still decodes and previews it.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
