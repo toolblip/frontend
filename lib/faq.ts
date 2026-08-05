@@ -1554,6 +1554,36 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I scan a range of ports instead of listing them one by one?', a: 'Yes, the ports field accepts ranges like "1-1000" and comma-separated mixes such as "80, 443, 8080-8090", which are parsed, deduplicated, and sorted into one port list before scanning starts.' },
     { q: 'Does it tell me what service typically runs on an open port?', a: 'For about twenty well-known ports, like 22 for SSH, 443 for HTTPS, 3306 for MySQL, and 6379 for Redis, the results table shows the matching service name next to the port number.' },
   ],
+  'mp4-to-wav': [
+    { q: 'Does this work on the video file directly, or do I need to extract audio first?', a: 'You upload the MP4 video directly, the tool decodes its audio track through the Web Audio API and writes it straight to a WAV file, no separate audio-extraction step needed.' },
+    { q: 'What happens to the video portion of my MP4 file?', a: 'It is discarded, only the decoded audio stream is used to build the WAV file, so the output is audio-only with no video frames.' },
+    { q: 'Will the output be stereo or mono?', a: 'Whatever the source audio track is, mono stays mono and stereo stays stereo, since the channel count is read straight from the decoded audio buffer rather than forced to one setting.' },
+  ],
+  'network-port-scanner': [
+    { q: "What's the default port range if I don't change anything?", a: '1 to 1000 is pre-filled in the Ports field when you open the tool, covering most common services without needing to type a range yourself.' },
+    { q: 'How does it avoid hanging forever on a slow or unresponsive port?', a: 'Each port check aborts itself after one second via a timeout controller, marking that port as filtered rather than leaving the scan stuck waiting.' },
+    { q: 'Does it check every port one at a time?', a: 'No, ports are grouped into batches of 50 and checked concurrently, with the progress bar and results table updating after each batch finishes.' },
+  ],
+  'notebook-to-html': [
+    { q: 'Do I need to run the notebook first, or can I paste one that already has outputs?', a: 'Paste the raw .ipynb JSON as-is, including any stream text, execute_result, or error outputs already saved in the file, they are rendered directly without re-executing any code.' },
+    { q: 'Does the code get real syntax highlighting?', a: 'Yes, a built-in tokenizer highlights strings, comments, numbers, keywords, and function calls in code cells using pattern matching, no external highlighting library is loaded.' },
+    { q: 'Can I get a standalone HTML file out of this, not just a preview?', a: 'Yes, Copy HTML on the HTML tab copies a complete self-contained HTML document with inline CSS for every cell type, ready to save and open on its own.' },
+  ],
+  'number-to-words': [
+    { q: "What's the largest number it can spell out?", a: 'Up to 1 quadrillion, 1,000,000,000,000,000, anything larger returns a "Number too large" message instead of a result.' },
+    { q: 'Does it handle decimals?', a: 'Yes, the whole-number part is spelled out normally, then "point" is added followed by each digit after the decimal spoken individually, so 12.5 becomes "Twelve point five".' },
+    { q: 'What happens with negative numbers?', a: '"Minus" is prepended to the spelled-out value of the absolute number, so -42 becomes "Minus forty-two".' },
+  ],
+  'octal-to-decimal': [
+    { q: 'Can I type octal numbers with a "0o" prefix?', a: 'Yes, an optional leading "0o" is stripped automatically before conversion, so both "77" and "0o77" are accepted.' },
+    { q: 'What other bases does it show besides decimal?', a: 'Binary and hexadecimal are calculated and displayed alongside the decimal result, each with its own copy button.' },
+    { q: 'What happens if I type an invalid octal digit like 8 or 9?', a: 'An "Invalid octal" message appears below the input, since only digits 0 through 7 plus an optional 0o prefix are accepted.' },
+  ],
+  'open-graph-generator': [
+    { q: 'Do I have to fill in every field before tags are generated?', a: 'No, only the fields you fill in get their own meta tag, empty fields are simply skipped, and og:type is always added automatically as "website".' },
+    { q: 'Can I see what the image will look like before copying the tags?', a: 'Yes, entering an Image URL shows a live image preview below the generated tags, so you can confirm it loads correctly before publishing.' },
+    { q: 'How do I get the generated tags into my page?', a: 'The Copy button next to Generated Tags copies the full block of meta tags to your clipboard, ready to paste into your page\'s head section.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
