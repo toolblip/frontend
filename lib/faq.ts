@@ -2019,6 +2019,26 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can it detect bots and crawlers?', a: 'Yes, it checks the User-Agent against a pattern covering common bot signatures like "bot", "crawl", "spider", "slurp", Googlebot, Bingbot, and Yandex, and flags a match instead of misreading it as a regular browser.' },
     { q: 'Are there sample User-Agent strings I can try?', a: 'Yes, quick-load buttons fill in example strings for Chrome, Firefox, Safari, Edge, or a bot, so you can see how the parser handles each one without hunting for a real string first.' },
   ],
+  'uuid-v1-generator': [
+    { q: 'What goes into the timestamp portion of a v1 UUID?', a: 'The number of 100-nanosecond intervals since October 15, 1582, the official UUID epoch, split across the time_low, time_mid, and time_hi_and_version fields so the UUIDs sort chronologically by creation time.' },
+    { q: 'Does it use my real MAC address for the node ID?', a: 'No, it generates a random 48-bit node ID instead of reading your actual network MAC address, which avoids the privacy concern that made real MAC-based v1 UUIDs controversial.' },
+    { q: 'Can I generate more than one at a time?', a: 'Yes, a number input lets you generate between 1 and 100 at once, with optional uppercase formatting and surrounding braces.' },
+  ],
+  'uuid-validator': [
+    { q: 'Which UUID versions can it identify?', a: 'It checks the version digit in the third group of the UUID and labels the result as v1, v4, or v7, or "unknown" if that digit does not match a recognized version.' },
+    { q: 'What exactly makes a UUID invalid here?', a: 'The input is checked against the full RFC 4122 pattern of 8-4-4-4-12 hex digit groups with a valid version digit (1 through 5) and a valid variant digit (8, 9, a, or b), so a mistyped character or wrong grouping is flagged as invalid.' },
+    { q: 'Can I copy a UUID after validating it?', a: 'Yes, a Copy UUID button appears alongside the validation result and copies the exact text you entered to your clipboard.' },
+  ],
+  'wcag-contrast-auditor': [
+    { q: 'Can it check more than one color at once?', a: 'Yes, a Batch Audit box lets you paste a list of hex colors, one per line, and each one is checked against your chosen background color in a single pass.' },
+    { q: 'What compliance levels does it report?', a: 'Contrast Ratio, AA Normal, AAA Normal, and AA Large results are all shown side by side, each marked Pass or Fail based on the WCAG 2.1 thresholds of 4.5:1, 7:1, and 3:1.' },
+    { q: 'Can I copy the batch audit results?', a: 'Yes, a Copy button turns the audited list into plain text lines like "#ff0000 (2.15:1) AA:fail AAA:fail" that you can paste elsewhere.' },
+  ],
+  'wcag-contrast-checker': [
+    { q: 'How do I enter the colors to compare?', a: 'A color picker and a matching hex text field for both foreground and background, so you can either click to pick a color or type a hex code directly.' },
+    { q: 'What does the WCAG Level result tell me?', a: 'It labels the contrast ratio as AAA, AA, AA Large, or Fail based on the standard WCAG 2.1 thresholds, along with a short description of what that level means for readability.' },
+    { q: 'Is there a live preview of the color combination?', a: 'Yes, a sample text block renders using your exact foreground and background colors, so you can see how the pairing actually looks before relying on the numeric ratio alone.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
