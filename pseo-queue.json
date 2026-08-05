@@ -1,18 +1,6 @@
 {
   "pending": [
     {
-      "topic": "Find complementary and triadic color schemes with Color Harmony Generator"
-    },
-    {
-      "topic": "Mix two colors to create new palette shades for design systems"
-    },
-    {
-      "topic": "Find the closest named color for any HEX or RGB value"
-    },
-    {
-      "topic": "Resize images to exact social media and Open Graph dimensions"
-    },
-    {
       "topic": "Compress images for faster page loads without losing quality"
     },
     {
@@ -63,6 +51,18 @@
   ],
   "in_progress": [],
   "done": [
+    {
+      "topic": "Find the closest named color for any HEX or RGB value",
+      "completed_at": "2026-08-04T04:26:40Z"
+    },
+    {
+      "topic": "Mix two colors to create new palette shades for design systems",
+      "completed_at": "2026-08-04T04:22:25Z"
+    },
+    {
+      "topic": "Find complementary and triadic color schemes with Color Harmony Generator",
+      "completed_at": "2026-08-04T04:14:43Z"
+    },
     {
       "topic": "Prep a page for launch: validate the HTML, check for broken links, then verify security headers",
       "completed_at": "2026-08-03T04:06:32Z"
@@ -548,6 +548,9 @@
     },
     {
       "topic": "Generate secure random tokens and API keys with Random String Generator"
+    },
+    {
+      "topic": "Resize images to exact social media and Open Graph dimensions"
     }
   ]
 }
