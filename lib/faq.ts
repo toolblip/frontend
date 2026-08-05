@@ -457,6 +457,76 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Why does the URL show as a breadcrumb?', a: 'Google replaced raw URLs with breadcrumb paths derived from your URL structure in 2020. Sites with clean, hierarchical URLs (`/category/post-slug`) get cleaner breadcrumbs in search.' },
     { q: 'Does this affect my live SEO?', a: 'No  -  the SERP Preview is a visualizer. It doesn\'t crawl, modify, or submit anything to Google. Push your title/description to the live page first, then test it in Google Search Console for the real scrape.' },
   ],
+  'aac-to-flac': [
+    { q: 'Does the AAC to FLAC tool actually give me a FLAC file?', a: 'No. Browsers don\'t ship a FLAC encoder, so after decoding your AAC audio with the Web Audio API, the tool writes the decoded samples into a standard 16-bit PCM WAV file instead. The banner above the convert button flags this before you start.' },
+    { q: 'Which files can I upload?', a: 'The tool accepts .aac, .m4a, and .mp4 files, since all three commonly carry AAC-encoded audio streams.' },
+    { q: 'Will I lose audio quality in the conversion?', a: 'No extra quality is lost in this step: the WAV file captures the decoded samples as uncompressed PCM. Quality lost when the source was originally encoded to AAC can\'t be recovered, since AAC itself is a lossy format.' },
+  ],
+  'aac-to-m4r': [
+    { q: 'Does this re-encode my audio to build the ringtone?', a: 'No. It repackages your original AAC bytes as-is into a file with the .m4r extension, the format iOS expects for custom ringtones. There\'s no transcoding step, so the underlying audio is untouched.' },
+    { q: 'Will the file work as an iPhone ringtone right away?', a: 'iOS accepts .m4r files added through Finder file sharing, but Apple also caps ringtones at 40 seconds. Trim your source clip to under 40 seconds before converting or iOS may reject or cut off the result.' },
+    { q: 'What\'s the difference between this and the AAC to MP4 tool?', a: 'Both repackage the same AAC audio without re-encoding, just under different extensions: .m4r for iPhone ringtones, .mp4 for a generic audio-in-a-video-container wrapper. Pick whichever your destination app expects.' },
+  ],
+  'aac-to-mp3': [
+    { q: 'Does the AAC to MP3 tool actually produce an MP3?', a: 'No, it produces a WAV file. Browsers can\'t ship an MP3 encoder, so the tool decodes your AAC audio with the Web Audio API and writes the result as 16-bit PCM WAV instead. A banner above the convert button explains this upfront.' },
+    { q: 'Why convert to WAV instead of keeping the AAC file?', a: 'WAV opens cleanly in almost every audio editor, DAW, and voice recorder app, including older software that struggles with AAC, so it trades file size for broad compatibility.' },
+    { q: 'Can I upload M4A files too?', a: 'Yes. The uploader accepts .aac, .m4a, and .mp4, since all three typically hold AAC-encoded audio.' },
+  ],
+  'aac-to-mp4': [
+    { q: 'Does converting to MP4 turn my audio into a video file?', a: 'No. The tool wraps your original AAC bytes in a file labeled with the .mp4 extension and a video/mp4 type, without adding a video track or re-encoding the audio. The banner in the tool spells this out.' },
+    { q: 'Why would I want an MP4-labeled audio file?', a: 'Some upload forms and platforms only accept .mp4 for audio submissions. This gives you that extension without touching the underlying AAC data.' },
+    { q: 'Is any audio quality lost?', a: 'No. The original bytes are copied unchanged into the new container label, so there\'s no re-encoding and no quality loss.' },
+  ],
+  'aac-to-wav': [
+    { q: 'How does the AAC to WAV conversion work?', a: 'The tool decodes your AAC audio with the browser\'s Web Audio API, then writes the decoded samples into a standard 16-bit PCM WAV file at the same sample rate and channel count as the source.' },
+    { q: 'Is the WAV output lossless?', a: 'The step from decoded audio to 16-bit PCM WAV adds no further compression, so you get the full decoded signal. Quality lost during the original AAC encoding can\'t be recovered at this stage, since AAC is a lossy format.' },
+    { q: 'Does it handle stereo audio correctly?', a: 'Yes. The tool reads the channel count from the decoded audio buffer and writes each channel into the WAV file, so mono and stereo sources both convert correctly.' },
+  ],
+  'accessibility-checker': [
+    { q: 'What does the Accessibility Checker actually inspect?', a: 'Paste in HTML and it parses the markup to flag missing image alt text, a missing lang attribute on the html tag, a missing page title, buttons and links without accessible names, form inputs without an associated label, and missing landmark elements like header, main, nav, and footer.' },
+    { q: 'Does it measure color contrast like a full WCAG audit?', a: 'It runs a basic heuristic scan for likely contrast problems rather than computing rendered contrast ratios the way a browser DevTools audit or axe-core would. Use it as a first pass, then verify contrast-sensitive pages with a dedicated contrast checker.' },
+    { q: 'Do I need to give it a live URL?', a: 'No. Paste raw HTML directly into the tool and it parses it with the browser\'s built-in DOMParser, so you can check a page before it\'s even deployed.' },
+  ],
+  'age-calculator': [
+    { q: 'What breakdown does the Age Calculator show?', a: 'Enter a birth date and it shows your exact age in years, months, and days, plus totals in days, weeks, and hours since you were born.' },
+    { q: 'Does it tell me when my next birthday is?', a: 'Yes. It calculates the date of your next birthday and counts down the days remaining until it arrives.' },
+    { q: 'How does it handle the day-of-month math near leap years?', a: 'When the current day of the month falls before your birth day, the calculator borrows days from the previous calendar month using that month\'s actual length, which keeps the day/month/year breakdown accurate across February and leap years.' },
+  ],
+  'article-generator': [
+    { q: 'Does the AI Article Generator use a real AI model?', a: 'No. It builds a placeholder Markdown article from your topic, with headings and filler paragraphs sized to a realistic word count. It\'s meant for testing layout, CMS formatting, and word counts before real copy is ready, not for publishing as-is.' },
+    { q: 'Can I use the output directly as a finished article?', a: 'It\'s not designed for that. Treat it as structured filler text, similar to Lorem Ipsum but shaped like an article, so you can drop it into a template and see how headings, paragraphs, and length actually render.' },
+    { q: 'What format does it generate?', a: 'Markdown, with heading levels and paragraph breaks already in place, so you can paste it straight into a CMS field or static site generator that expects Markdown input.' },
+  ],
+  'article-rewriter': [
+    { q: 'How does the AI Article Rewriter change my text?', a: 'It scans your pasted article word by word and swaps common words for alternatives from a built-in synonym dictionary, keeping sentence structure and punctuation intact.' },
+    { q: 'Does it use a language model to reword sentences?', a: 'No. It\'s a rule-based synonym swap, not generative AI, so it won\'t restructure sentences or change meaning, only substitute individual words it recognizes.' },
+    { q: 'What happens to words that aren\'t in the synonym dictionary?', a: 'They\'re left exactly as you typed them. Only words with a known synonym entry get swapped, so proper nouns, technical terms, and less common words pass through unchanged.' },
+  ],
+  'article-writer': [
+    { q: 'Does the AI Article Writer generate real, publishable copy?', a: 'No. Like the Article Generator, it produces a placeholder Markdown article scaffolded around your topic, useful for testing layout and word counts before you write or commission real copy.' },
+    { q: 'How is this different from the AI Article Generator?', a: 'Both produce the same kind of placeholder Markdown output; this one is framed as drafting a starting scaffold around a specific topic you supply. Use whichever fits your workflow.' },
+    { q: 'Can I edit the output before using it?', a: 'Yes. The output is plain Markdown text, so you can copy it out and edit headings, paragraphs, and structure freely before dropping it into your CMS.' },
+  ],
+  'cold-email-writer': [
+    { q: 'Does the AI Cold Email Writer use AI to write the email?', a: 'No. It fills a tone-based template (formal, friendly, casual, or persuasive) with the recipient, goal, product, and call to action you provide, then assembles a complete subject line and body from those fields.' },
+    { q: 'Can I get a different email each time without changing my inputs?', a: 'Yes. Each tone has a couple of template variants, and the tool picks between them, so regenerating with the same fields can produce a slightly different phrasing.' },
+    { q: 'What happens if I leave the subject line blank?', a: 'The tool builds a subject line automatically from your stated goal and chosen tone, so you still get a complete, sendable draft even without typing one yourself.' },
+  ],
+  'essay-writer': [
+    { q: 'Does the AI Essay Writer use AI to write the essay for me?', a: 'No, and the tool says so directly: it builds a real, structured essay outline and scaffold from your inputs rather than generating finished prose with AI.' },
+    { q: 'What does the scaffold actually include?', a: 'A structured outline built from your thesis and supporting points, organized into an intro, body sections, and conclusion, ready for you to expand into full paragraphs yourself.' },
+    { q: 'Is this meant to replace writing the essay myself?', a: 'No. It\'s meant to solve the blank-page problem by giving you real structure to write into, not a finished essay you submit as-is.' },
+  ],
+  'humanizer-ai': [
+    { q: 'What does the AI Humanizer actually do to my text?', a: 'It swaps common, stiff-sounding words for more natural alternatives from a built-in synonym dictionary, aiming to make robotic-sounding phrasing read a bit more like normal writing.' },
+    { q: 'Will it fool an AI detector?', a: 'It isn\'t designed to defeat AI-detection tools, and results will vary between detectors. It\'s a word-choice smoothing pass, not a rewrite that changes sentence structure or tone at a deeper level.' },
+    { q: 'Does it use a language model?', a: 'No. It runs a rule-based synonym substitution locally, the same mechanism behind the Article Rewriter, just applied to words that tend to sound mechanical.' },
+  ],
+  'ai-rephraser': [
+    { q: 'How does the AI Text Rephraser reword my sentences?', a: 'It walks through your text word by word and swaps recognized words for alternatives from a built-in synonym dictionary, so sentence order and punctuation stay the same while individual word choices change.' },
+    { q: 'Do I get the same rephrasing every time?', a: 'Not necessarily. Where a word has more than one listed synonym, the tool can pick a different one on repeat runs, so rephrasing the same input twice may not produce identical output.' },
+    { q: 'What kind of words does it leave alone?', a: 'Anything not in its synonym dictionary passes through untouched, including names, technical terms, and niche vocabulary, so the output stays readable instead of being force-swapped into odd substitutes.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
