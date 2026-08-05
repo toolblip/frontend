@@ -1719,6 +1719,16 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How do I set flags like case-insensitive matching?', a: 'Flags are typed directly into a small text field next to the pattern input, defaulting to "g", rather than picked from a list of toggle buttons.' },
     { q: 'What happens if my pattern is invalid?', a: "An error message with the JavaScript engine's own error text appears below the pattern field instead of a match count." },
   ],
+  'remove-bg': [
+    { q: 'How does it decide what counts as "background"?', a: 'It samples the pixel color at all four corners of the image, averages them into one reference color, then makes any pixel within a set distance of that color transparent.' },
+    { q: 'Will it work well on any background?', a: 'It works best on solid, uniform-colored backgrounds since transparency is based on color similarity to the corners rather than subject detection, so busy or gradient backgrounds may not clear out completely.' },
+    { q: 'What file format does the result download as?', a: 'A PNG with the removed area set to fully transparent, previewed over a checkerboard pattern before you click Download PNG.' },
+  ],
+  'resize': [
+    { q: 'What size presets are built in?', a: 'Eight common targets: HD and 720p (1280x720), Full HD and 1080p (1920x1080), Square (1080x1080), Portrait (1080x1920), Thumbnail (300x300), and 480p (854x480), plus custom width and height fields.' },
+    { q: 'Does resizing crop my image or fit the whole thing in?', a: 'It fits the whole image inside the target dimensions without cropping, scaling proportionally and filling any leftover space with a white background rather than cutting off part of the picture.' },
+    { q: 'Can I resize more than one image at once?', a: 'Yes, drag and drop or select multiple files, and a Download All button saves every resized image once processing finishes.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
