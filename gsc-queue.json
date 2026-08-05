@@ -29,6 +29,11 @@
       "url": "https://toolblip.com/blog/2026-07-30-check-password-strength-before-signup",
       "topic": "Check password strength before enforcing signup rules",
       "enqueued_at": "2026-07-30T03:30:52Z"
+    },
+    {
+      "url": "https://toolblip.com/blog/2026-08-04-resize-image-for-social-media-dimensions",
+      "topic": "Resize images to exact social media and Open Graph dimensions",
+      "enqueued_at": "2026-08-05T04:05:00Z"
     }
   ],
   "submitted": [
@@ -206,6 +211,18 @@
     {
       "url": "https://toolblip.com/blog/2026-08-03-pre-launch-website-checklist-html-broken-links",
       "submitted_at": "2026-08-03T04:06:57Z"
+    },
+    {
+      "url": "https://toolblip.com/blog/2026-08-04-complementary-and-triadic-color-scheme-generator",
+      "submitted_at": "2026-08-04T04:14:31Z"
+    },
+    {
+      "url": "https://toolblip.com/blog/2026-08-04-mix-two-colors-for-palette-shades",
+      "submitted_at": "2026-08-04T04:21:50Z"
+    },
+    {
+      "url": "https://toolblip.com/blog/2026-08-04-closest-named-color-for-hex",
+      "submitted_at": "2026-08-04T04:26:29Z"
     }
   ],
   "failed": []
