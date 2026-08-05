@@ -1584,6 +1584,41 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I see what the image will look like before copying the tags?', a: 'Yes, entering an Image URL shows a live image preview below the generated tags, so you can confirm it loads correctly before publishing.' },
     { q: 'How do I get the generated tags into my page?', a: 'The Copy button next to Generated Tags copies the full block of meta tags to your clipboard, ready to paste into your page\'s head section.' },
   ],
+  'open-graph-preview': [
+    { q: "Does typing in my URL automatically pull in my page's title, description, and image?", a: 'No, you enter the title, description, image URL, and site name yourself in the form fields, then the preview panel updates live for whichever platform tab is selected, there is no automatic fetch of your page\'s existing meta tags.' },
+    { q: 'Which platforms can I preview the share card for?', a: "Four tabs let you switch between Twitter, Facebook, LinkedIn, and Slack, each rendered with that platform's own card layout and colors so you can compare how the same title and image look across all of them." },
+    { q: 'What happens if my image URL fails to load?', a: 'The broken image is hidden automatically in the preview and the card falls back to its "No Image" placeholder, so a bad link is obvious before you publish.' },
+  ],
+  'oxford-comma': [
+    { q: 'How does it decide whether to add a comma before "and"?', a: 'With three or more items, everything except the last is joined with commas, then a comma is inserted before the word "and" ahead of the final item, following the standard serial comma rule.' },
+    { q: 'What if I only have two items in my list?', a: 'No comma is added, the two items are simply joined with "and", since the Oxford comma rule only applies once there are three or more items.' },
+    { q: 'Can I switch between comma-separated and one-item-per-line input?', a: 'Yes, radio buttons above the input toggle the separator, so pasting a comma-separated list or a newline-separated list both parse correctly into the item list.' },
+  ],
+  'palindrome-checker': [
+    { q: 'Does it ignore spaces and punctuation when checking?', a: 'Yes, the text is lowercased and stripped of everything except letters and numbers before comparing it to its reverse, so phrases like "A man a plan a canal Panama" are correctly detected.' },
+    { q: 'Can I check numbers as well as words?', a: 'Yes, since the cleaning step keeps digits along with letters, entering a number like "12321" is checked the same way as any word or phrase.' },
+    { q: 'What does the result actually show me besides yes or no?', a: 'It displays the cleaned version of your text next to its reversed form side by side, so you can see exactly what was compared.' },
+  ],
+  'paragraph-counter': [
+    { q: 'How does it decide where one paragraph ends and another begins?', a: 'A paragraph break is any blank line, meaning two or more consecutive line breaks, so single line breaks within a block of text are counted as the same paragraph.' },
+    { q: 'Does the average words per paragraph update as I type?', a: 'Yes, every statistic in the grid, including average words per sentence and per paragraph, recalculates live on each keystroke without needing a button click.' },
+    { q: 'What counts as a "sentence" for the sentence total?', a: 'Any run of text ending in a period, question mark, or exclamation point counts as one sentence, so the count updates based on that punctuation rather than a fixed word length.' },
+  ],
+  'paragraph-lorem-ipsum': [
+    { q: 'Can I generate lorem ipsum by word count instead of full paragraphs?', a: 'Yes, a unit toggle switches generation between words, sentences, and paragraphs, and the number field next to it controls exactly how many of that unit to produce.' },
+    { q: 'Does it always start with the classic "Lorem ipsum dolor sit amet"?', a: 'Only if the "Start with Lorem ipsum..." checkbox is checked, unchecking it still generates text from the same Latin word pool but starting partway through instead of at the beginning.' },
+    { q: 'Is the placeholder text regenerated automatically when I change the count?', a: 'Yes, changing the unit or the count number regenerates the output immediately, there is also a Regenerate button if you want a fresh variation using the same settings.' },
+  ],
+  'paraphrasing': [
+    { q: 'Does this use AI to rewrite my text?', a: 'No, it works from a built-in dictionary of roughly eighty common words mapped to five synonym options each, click Find Alternatives and any matching words in your text get highlighted for you to swap manually.' },
+    { q: "How do I actually change a word once it's highlighted?", a: 'Click the highlighted word to select it, then a row of its synonym options appears below, click whichever synonym you want and it becomes the pending replacement for that word.' },
+    { q: 'Do my edits apply automatically as I select synonyms?', a: 'No, selecting synonyms only stages the replacements, nothing in the text changes until you click Apply Changes, which swaps every selected word at once.' },
+  ],
+  'password-strength-checker': [
+    { q: 'How is the entropy number calculated?', a: "It multiplies your password's length by the log2 of the character pool size implied by what you used, lowercase, uppercase, digits, symbols, or other characters, so a longer password drawing from more character types scores higher entropy." },
+    { q: 'What does the crack time estimate assume about the attacker?', a: 'It assumes ten billion guesses per second, then divides two to the power of your entropy by that rate, ranging from instant for weak passwords up to figures like "3.2 billion years" for very strong ones.' },
+    { q: 'Is my password sent anywhere to be checked?', a: 'No, every calculation, the entropy, crack time, and suggestions, runs in your browser using the characters you typed, the Show/Hide toggle only affects the input field\'s own masking.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
