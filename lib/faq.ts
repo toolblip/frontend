@@ -1839,6 +1839,21 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How is the sharpening applied to my photo?', a: 'The image is drawn to a hidden canvas, then every pixel is recalculated from its 8 neighbors using a fixed edge-enhancing kernel, and the result replaces the original pixel data before being redrawn.' },
     { q: 'What format is the downloaded file?', a: 'A PNG named "sharpened-image.png", exported straight from the canvas after you click Apply Sharpen.' },
   ],
+  'sitemap-analyzer': [
+    { q: 'Do I paste the sitemap or point it at a URL?', a: 'You paste the raw XML directly into the text box, there\'s no fetch-by-URL option, a "Load Sample" button fills in a working three-URL example if you want to see the format first.' },
+    { q: 'What specific problems does it flag?', a: 'A missing <?xml version="1.0"?> declaration, a missing <urlset> root element, a missing xmlns namespace, any <url> block without a <loc>, and any <loc> value that doesn\'t start with http:// or https://.' },
+    { q: 'Does it handle a sitemap index file, not just a regular sitemap?', a: 'Yes, if it detects a <sitemapindex> tag it switches to counting and listing the child sitemap URLs instead of page URLs.' },
+  ],
+  'sla-uptime-calculator': [
+    { q: 'What SLA range can I enter?', a: 'A slider and a linked number input both range from 90% to 99.999% in steps of 0.001%, so you can dial in figures like the common 99.9% or 99.95% precisely.' },
+    { q: 'Does it only show downtime for one time period at a time?', a: "No, a grid shows allowed downtime for year, month, week, day, and hour all at once, with whichever period you've selected highlighted and given an exact minutes figure underneath." },
+    { q: 'How precise is the downtime figure?', a: 'The highlighted period shows allowed downtime to 4 decimal places in minutes, while the grid cells switch to a rounded minutes or hours display depending on which is more readable for that period.' },
+  ],
+  'speech-to-text': [
+    { q: 'Does it need a specific browser to work?', a: "It uses the browser's built-in Web Speech API, which Chrome, Edge, and Safari support, if your browser lacks it you'll see an unsupported message instead of the microphone controls." },
+    { q: 'What happens to words while I\'m still mid-sentence?', a: "Interim results appear in square brackets at the end of the transcript and get replaced with plain finalized text once the recognition engine settles on that phrase." },
+    { q: 'Can I use it without a microphone?', a: 'Yes, a manual paste area below the microphone controls lets you type or paste a transcript directly and click "Use This Text" instead of recording anything.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
