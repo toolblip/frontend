@@ -1894,6 +1894,41 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How does it know where one word ends and the next begins for camelCase or snake_case?', a: 'It splits on spaces, underscores, hyphens, and periods, and also inserts a break wherever a lowercase letter is immediately followed by an uppercase one, so "helloWorld" tokenizes into "hello" and "World" too.' },
     { q: 'Is there a way to try it without typing my own text?', a: 'Yes, a "Load Example" button above the input fills it with "Hello World Example" so you can see all eight case conversions right away.' },
   ],
+  'text-line-sorter': [
+    { q: 'What sorting options are available in the dropdown?', a: 'Six modes: A to Z, Z to A, Shortest first, Longest first, Reverse order, and Remove duplicates, chosen from a single dropdown above the input and output boxes.' },
+    { q: 'What does the "Case sensitive" checkbox change?', a: 'With it unchecked, A to Z, Z to A, and Remove duplicates ignore capitalization when comparing lines, so "Apple" and "apple" are treated the same, checking it makes those three modes distinguish uppercase from lowercase.' },
+    { q: 'Does Remove duplicates strip out blank lines too?', a: 'Yes, before any sorting runs the input is filtered to drop empty or whitespace-only lines, so blank lines never appear in the output no matter which mode is selected.' },
+  ],
+  'text-permutation-generator': [
+    { q: 'Is there a limit to how many words I can permute?', a: 'Yes, up to 10 words, entering more triggers a "Maximum 10 words for permutations" error, since the number of arrangements grows factorially and 10 words alone already produces 3,628,800 combinations.' },
+    { q: 'What does the number in parentheses on the Generate button mean?', a: 'It shows how many words you\'ve entered and their factorial, like "3! = 6", updating live as you type so you know roughly how many permutations to expect before generating them.' },
+    { q: 'Does it rearrange individual letters within a word?', a: 'No, it treats each space-separated word as a single unit and rearranges whole words, not the letters inside them.' },
+  ],
+  'text-redundancy-checker': [
+    { q: 'What counts as a "filler phrase" it looks for?', a: 'A fixed list of 18 common filler phrases, things like "in order to", "due to the fact that", and "at this point in time", each one it finds is reported along with how many times it appears.' },
+    { q: 'How does it decide a word is repeated too often?', a: 'Any word longer than 3 letters that appears more than twice in your text gets flagged, with the top 5 most-repeated words shown by count.' },
+    { q: 'What happens if my text has no redundancy issues?', a: 'For text over 50 characters with no filler phrases or over-repeated words found, it shows a "No redundancy detected" confirmation instead of leaving the results area blank.' },
+  ],
+  'text-reverser': [
+    { q: "What's the difference between the three reverse modes?", a: '"chars" reverses every character in the text, "words" keeps each word intact but reverses their order, and "lines" keeps each line intact but reverses the order the lines appear in.' },
+    { q: 'Does the words or lines mode keep empty lines or extra spaces?', a: "No, both modes filter out empty entries before reversing, so blank lines in \"lines\" mode and stray blank entries in \"words\" mode are dropped from the output." },
+    { q: 'Can I copy the reversed text without selecting it manually?', a: 'Yes, a Copy button appears next to the Reversed label as soon as there is output, copying the current mode\'s result to your clipboard in one click.' },
+  ],
+  'text-statistics': [
+    { q: 'How is average sentence length calculated?', a: 'It counts sentences by matching runs of ".", "!", or "?" in your text, then divides your total word count by that sentence count to get words per sentence.' },
+    { q: 'How does it estimate syllables per word?', a: 'It strips non-letters from each word, treats words of 3 letters or fewer as one syllable, drops a trailing silent e or -ed/-es ending, then counts groups of vowels (a, e, i, o, u, y) in what remains.' },
+    { q: 'What other numbers show up besides syllables, sentence length, and word length?', a: 'The full grid also shows character count with and without spaces, paragraph count, estimated reading and speaking time in minutes, and a Flesch reading ease score.' },
+  ],
+  'text-statistics-advanced': [
+    { q: 'What does the Flesch score represent as a reading level indicator?', a: "It's calculated from your average sentence length and average syllables per word using the standard Flesch Reading Ease formula, then clamped between 0 and 100, higher numbers mean easier to read." },
+    { q: 'Where do I see syllables per word specifically?', a: 'It shows up as its own tile labeled "Syllables/word" in the statistics grid, calculated by dividing the total syllable count across your whole text by the total word count.' },
+    { q: 'Does it estimate how long the text takes to read out loud?', a: 'Yes, a separate "Speaking time" figure is shown alongside reading time, calculated at 150 words per minute versus 200 words per minute for silent reading.' },
+  ],
+  'text-statistics-calculator': [
+    { q: 'What counts as the "character breakdown"?', a: 'Two figures: total character count including spaces, and a separate count with all whitespace stripped out, shown as their own tiles labeled "Characters" and "No spaces".' },
+    { q: 'How is average word length calculated?', a: 'For each word it strips out anything that is not a letter, counts the remaining letters, then averages that across every word in your text.' },
+    { q: 'Does sentence count work on text with no punctuation at all?', a: "Yes, if there's no period, question mark, or exclamation point anywhere but you've still entered words, it counts that as one sentence rather than showing zero." },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
