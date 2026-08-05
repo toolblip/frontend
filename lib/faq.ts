@@ -1469,6 +1469,31 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How specific are the error messages?', a: 'Each violation lists the exact property path where it occurred alongside a plain-language description, such as which required property is missing or which minimum a number fell below.' },
     { q: 'Can I clean up messy schema or data JSON before validating?', a: 'Yes, a Format button above each textarea re-indents that panel\'s JSON if it already parses, without needing to run the validation first.' },
   ],
+  'json-to-xml': [
+    { q: 'How does it decide what becomes an XML attribute instead of a child element?', a: 'Any key that starts with an @ symbol is written as an attribute on its parent element, for example "@id" becomes id="...", while every other key becomes a nested child element.' },
+    { q: 'Can I change the name of the outermost XML tag?', a: 'Yes, a Root element field above the input lets you type any tag name, and the output updates as you type.' },
+    { q: 'How are special characters like < or & handled inside values?', a: 'They are escaped to their XML entity equivalents such as &lt; and &amp; automatically, so the output stays valid XML even if your JSON strings contain markup-like text.' },
+  ],
+  'json-ld-generator': [
+    { q: 'Which Schema.org types can I generate?', a: 'WebSite, WebPage, Article, NewsArticle, BlogPosting, Product, LocalBusiness, Restaurant, Event, Person, Organization, BreadcrumbList, and FAQPage, selected from a row of tabs above the form fields.' },
+    { q: 'What form does the output take?', a: 'A ready-to-paste script tag, `<script type="application/ld+json">...</script>`, containing the generated schema as formatted JSON so you can drop it straight into your page\'s head section.' },
+    { q: 'Can I add more than one breadcrumb or FAQ entry?', a: 'Yes, both the BreadcrumbList and FAQPage forms have an "Add" button to append additional items, each with its own remove button.' },
+  ],
+  'jupyter-cleaner': [
+    { q: 'What exactly gets stripped from the notebook?', a: 'Every code cell\'s outputs array is emptied, its execution_count is reset to null, and cell-level metadata like collapsed and scrolled flags are removed, while source code and markdown cells are left untouched.' },
+    { q: 'Does it keep any notebook-level metadata?', a: 'Yes, it preserves the kernelspec and a trimmed language_info (just the name and version), since those are usually needed to reopen the notebook correctly, and discards everything else.' },
+    { q: 'Can I upload a file instead of pasting JSON?', a: 'Yes, an upload field accepts a .ipynb file directly and loads its contents into the editor, or you can paste the notebook JSON by hand.' },
+  ],
+  'jwt-inspector': [
+    { q: 'Does it verify the token\'s signature?', a: 'No, it only decodes the header and payload and displays the signature segment as-is, it never checks the signature against a secret or public key.' },
+    { q: 'How can I tell if a token is expired at a glance?', a: 'A badge next to the input reads "Not expired," "Expired," or "Not yet valid" based on the exp and nbf claims compared against the current time, or "No exp claim" if the token does not set one.' },
+    { q: 'What if I paste something that is not three dot-separated parts?', a: 'It shows an error explaining that a JWT needs a header, payload, and signature separated by dots, rather than trying to guess at a partial token.' },
+  ],
+  'jwt-token-decoder': [
+    { q: 'What standard claims does it surface?', a: 'iss, sub, aud, iat, nbf, and exp are pulled out into a dedicated "Standard claims" section, with iat, nbf, and exp additionally converted to a readable UTC timestamp next to their raw numeric value.' },
+    { q: 'Is there a sample token to try it with?', a: 'Yes, the input starts pre-filled with a sample JWT so you can see decoded header and payload output immediately without needing your own token.' },
+    { q: 'Can I copy just the payload without the header or signature?', a: 'Yes, the header, payload, and signature each have their own Copy button next to their section, so you can grab exactly the part you need.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
