@@ -1439,6 +1439,21 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Why is the quality slider disabled for PNG?', a: 'PNG is a lossless format, so there is no quality setting to adjust, it always encodes at full fidelity regardless of the slider position.' },
     { q: 'Can I compare the file size before and after converting?', a: 'Yes, the Before and After panels show each version\'s file size side by side, plus a percentage showing how much smaller or larger the converted file turned out.' },
   ],
+  'ipv6-generator': [
+    { q: 'What is the difference between the three formats?', a: 'Full writes out all eight hex groups exactly, Compressed shortens the longest run of zero groups to a double colon the way addresses are normally written, and EUI-64 derives the last two groups from a randomly generated MAC address using the standard EUI-64 interface-identifier method.' },
+    { q: 'How many addresses can I generate at once?', a: 'Up to 100 per click, set with the Count field next to the format dropdown.' },
+    { q: 'Are these real, routable addresses?', a: 'No, every group is randomly generated, so they are meant for filling test data or documentation, not for addresses that exist on any real network.' },
+  ],
+  'jpg-to-png': [
+    { q: 'Does it accept formats other than JPEG?', a: 'Yes, the upload also accepts PNG, WebP, GIF, and BMP up to 20MB, though the tool is built around converting a JPEG source into PNG output.' },
+    { q: 'Does converting JPEG to PNG restore detail lost to JPEG compression?', a: 'No, PNG is lossless going forward, so no further quality is lost during this conversion, but any detail already discarded by the original JPEG compression cannot be recovered.' },
+    { q: 'What is actually happening during the conversion?', a: 'The uploaded image is drawn onto a canvas at its full resolution, then read back out as PNG data, which is why the output keeps the same pixel dimensions as the source file.' },
+  ],
+  'jpg-to-webp': [
+    { q: 'How much smaller does the WebP version end up?', a: 'It varies by image, so the tool shows the exact before-and-after file sizes plus a percentage difference after each conversion rather than a fixed number.' },
+    { q: 'Can I control the WebP compression level?', a: 'Yes, a quality slider from 1 to 100 adjusts the WebP encoding, letting you trade off file size against visual quality before downloading.' },
+    { q: 'Can I convert to a different format instead if I change my mind?', a: 'Yes, the same output format buttons also offer JPEG, PNG, and AVIF, so you can switch targets without re-uploading the image.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
