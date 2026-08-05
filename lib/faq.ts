@@ -1854,6 +1854,21 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What happens to words while I\'m still mid-sentence?', a: "Interim results appear in square brackets at the end of the transcript and get replaced with plain finalized text once the recognition engine settles on that phrase." },
     { q: 'Can I use it without a microphone?', a: 'Yes, a manual paste area below the microphone controls lets you type or paste a transcript directly and click "Use This Text" instead of recording anything.' },
   ],
+  'sql-formatter': [
+    { q: 'What does the UPPERCASE keywords toggle do?', a: 'When checked, every recognized SQL keyword in your query, SELECT, FROM, JOIN, GROUP BY, and around 70 others, gets forced to uppercase in the formatted output, unchecking it leaves your original casing untouched.' },
+    { q: 'How does the indent size setting work?', a: 'A dropdown lets you choose 2 or 4 spaces, that value controls how far each nested clause like AND, OR, JOIN, or ON is indented under the SELECT or FROM line above it.' },
+    { q: 'Does the syntax highlighting distinguish more than just keywords?', a: 'Yes, keywords appear in blue, functions like COUNT and SUBSTRING in purple, quoted string literals in green, and numbers in orange, all shown live with a color key underneath the formatted output.' },
+  ],
+  'ssl-certificate-checker': [
+    { q: 'What information does the certificate check show?', a: "Whether the certificate is valid, its issuer, the expiration date, and the days remaining, with the days-remaining figure colored red under 30 days, orange under 90 days, and green beyond that." },
+    { q: 'Can I check a certificate without clicking the Check button?', a: 'Yes, pressing Enter while the domain field is focused runs the same check as clicking the Check button next to it.' },
+    { q: "What happens if the check can't complete?", a: "You'll see a message explaining the SSL check could not be completed and that the tool depends on a backend API, rather than a blank or broken result." },
+  ],
+  'sticky-notes': [
+    { q: 'Do my notes get saved if I close the tab?', a: "Yes, every note is saved to your browser's localStorage as soon as it changes, reopening the page restores the same notes with their text, color, and position intact." },
+    { q: 'Where does a new note appear on the screen?', a: "It's placed at a random position within your current window and given one of six random pastel colors, then opens straight into edit mode so you can start typing immediately." },
+    { q: 'Can I drag a note to reposition it?', a: "No, each note keeps the random position it was given when created, you can still edit or delete it in place, but there's no drag-to-move interaction." },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
