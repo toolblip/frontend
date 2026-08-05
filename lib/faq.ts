@@ -707,6 +707,136 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I go the other direction, decimal to binary?', a: 'No, this tool only accepts binary input. For the reverse direction, the Base Number Converter or Bin-Hex-Dec Converter both let you pick decimal as the source base.' },
     { q: 'What counts as valid input?', a: 'Only the digits 0 and 1, with optional whitespace between groups. Anything else triggers an "Invalid binary" message instead of attempting a conversion.' },
   ],
+  'binary-to-text': [
+    { q: 'What format should the binary input be in?', a: 'Each character is expected as an 8-bit group of 0s and 1s, space separated, for example "01001000 01100101" for "He". Extra whitespace or line breaks between groups are stripped automatically before decoding.' },
+    { q: 'Can I convert text into binary too, not just decode it?', a: 'Yes. The Text to Binary side of the swap converts each character to its 8-bit ASCII binary value, zero padded and space separated, and the swap button flips between the two directions instantly.' },
+    { q: 'What happens if the binary has an invalid character?', a: 'You get an explicit "Invalid binary string" error if anything other than 0, 1, and whitespace is present, instead of a garbled or silently wrong text result.' },
+  ],
+  'blur-background': [
+    { q: 'Does this blur only the background, or the whole photo?', a: 'The whole image gets blurred uniformly using a canvas blur filter. There is no subject detection or background segmentation, so a face or foreground object in the shot is blurred along with everything behind it.' },
+    { q: 'How do I control how strong the blur is?', a: 'A slider sets the blur radius in pixels, and the preview updates live as you drag it, so you can dial in anything from a light softening to a heavy blur before downloading.' },
+    { q: 'Why did loading an image from a URL fail?', a: 'Some hosts block cross-origin canvas reads, which prevents the blurred result from being exported. Uploading the image file directly instead of pasting a URL avoids that restriction entirely.' },
+  ],
+  'bmi-calculator': [
+    { q: 'Does it support both metric and imperial units?', a: 'Yes. Switching to metric uses kilograms and centimeters with the standard kg / m squared formula, while imperial uses pounds and inches with the 703 multiplier formula, so you never have to convert units yourself.' },
+    { q: 'What do the result categories mean?', a: 'Your BMI number is matched against the standard underweight, normal, overweight, and obese thresholds, and the matching category is shown alongside the number rather than leaving you to look up the ranges separately.' },
+    { q: 'Does it account for age, sex, or muscle mass?', a: 'No, it only computes the standard weight-to-height BMI ratio. It does not adjust for age, sex, or body composition, which is a known limitation of the BMI formula itself, not something this calculator tries to correct.' },
+  ],
+  'broken-image-checker': [
+    { q: 'How does it find the images on a page?', a: 'It fetches the page HTML through a server-side proxy, parses out every img tag, and sends a real HEAD request to each resulting image URL to check whether it actually loads.' },
+    { q: 'Why does it flag an image as broken when it looks fine in my browser?', a: 'Some servers block HEAD requests or CORS from outside origins, which can make a perfectly working image report as unreachable. This is a disclosed limitation of checking images from another site rather than from within the page itself.' },
+    { q: 'What does the status shown for each image mean?', a: 'It is the real HTTP status code returned by that image URL, for example 200 for a working image or 404 for one that no longer exists at that path.' },
+  ],
+  'browser-image-resizer': [
+    { q: 'Does my photo get uploaded to a server to resize it?', a: 'No. Resizing happens entirely in a canvas element in your browser, so the file never leaves your device.' },
+    { q: 'Can I resize without distorting the image?', a: 'Yes, a lock aspect ratio toggle recalculates the height automatically whenever you change the width (or vice versa), so the proportions stay correct unless you deliberately unlock it.' },
+    { q: 'What file format does the resized image download as?', a: 'The output is exported as a PNG generated from the canvas, regardless of whether your source image was a JPEG, PNG, or another format.' },
+  ],
+  'bulk-generator': [
+    { q: 'What placeholders can I use in a custom template?', a: 'Any combination of {{i}} for the row number, {{word}}, {{email}}, {{name}}, and {{date}}, which get substituted with generated values on every row you produce.' },
+    { q: 'What is the maximum number of rows I can generate?', a: 'Up to 1000 rows in a single generation. Entering a higher count is automatically capped at 1000.' },
+    { q: 'What output formats are built in?', a: 'Ready-made templates for a JSON array, CSV rows, SQL INSERT statements, and HTML list items, alongside a plain numbered list, all editable before you generate.' },
+  ],
+  'business-name-generator': [
+    { q: 'How does it come up with name ideas?', a: 'It combines your keyword with a fixed set of prefixes (like Nova or Apex), suffixes (like Hub or Labs), and domain-style endings (like tech or app), producing straightforward combinations rather than claiming any AI creativity.' },
+    { q: 'How many suggestions do I get per search?', a: 'Twenty name ideas, shuffled into random order each time, drawn from the full set of prefix, suffix, and domain combinations for your keyword.' },
+    { q: 'Does it check if the name or domain is actually available?', a: 'No, it only generates name and domain-style string ideas. You would still need to check a domain registrar or trademark database separately before committing to one.' },
+  ],
+  'business-slogan-generator': [
+    { q: 'Are the slogans AI-written?', a: 'No, they come from a fixed set of about twenty slogan templates with your topic substituted in, not from an AI model generating new phrasing each time.' },
+    { q: 'Can I filter slogans by tone?', a: 'Yes, you can filter the generated list by tone, such as bold, playful, or professional, to narrow results down to the style you want.' },
+    { q: 'Will I get the same slogans if I search the same topic twice?', a: 'Yes, since the templates are fixed, the same topic and tone filter will produce the same set of slogans each time rather than new random phrasing.' },
+  ],
+  'byte-converter': [
+    { q: 'What units does it convert between?', a: 'Bytes, kilobytes, megabytes, gigabytes, terabytes, and petabytes, all shown at once from a single input value.' },
+    { q: 'Does it use 1024 or 1000 as the conversion factor?', a: 'It uses the binary 1024-based factor between each unit (as used by operating systems reporting file and disk sizes), not the decimal 1000-based factor some storage manufacturers use.' },
+    { q: 'Do I need to pick which unit I am converting from?', a: 'Yes, you select the unit your input number is already in, and every other unit updates automatically from that single value.' },
+  ],
+  'canonical-tag-checker': [
+    { q: 'Does this tool fetch my page to check its actual canonical tag?', a: 'No. It builds a recommended canonical tag from the URL you enter and flags common structural issues, but it does not fetch the page\'s actual HTML to see what canonical tag, if any, is already there.' },
+    { q: 'What kind of issues does it flag?', a: 'Common structural problems like using HTTP instead of HTTPS, inconsistent www usage, unnecessary query parameters, and trailing slash mismatches that can split ranking signals across URL variants.' },
+    { q: 'How is this different from the Canonical URL Generator?', a: 'This tool audits a URL you provide and suggests fixes without touching the page itself. The Canonical URL Generator actually transforms a URL according to rules you toggle on, producing a cleaned-up version you can copy directly.' },
+  ],
+  'canonical-url-generator': [
+    { q: 'What transformations can I apply?', a: 'Toggle switches let you force HTTPS, strip or add www, remove trailing slashes, strip query parameters, and remove hash fragments, each applied using the browser URL API rather than plain string editing.' },
+    { q: 'Will it validate that the URL is reachable?', a: 'No, it only reformats the URL string you enter according to the rules you select. It does not send any request to check whether the resulting URL actually loads.' },
+    { q: 'How is this different from the Canonical Tag Checker?', a: 'This tool transforms and cleans a URL directly based on toggles you control. The Canonical Tag Checker instead builds a suggested tag and flags structural issues without altering a URL you provide.' },
+  ],
+  'character-frequency-counter': [
+    { q: 'Is the count case sensitive?', a: 'You can toggle case sensitivity, so "A" and "a" either count as the same character or as two separate entries depending on your setting.' },
+    { q: 'Can I sort the results?', a: 'Yes, results can be sorted either by frequency (most common character first) or alphabetically by the character itself.' },
+    { q: 'Can I export the frequency table?', a: 'Yes, the full character-by-count breakdown can be exported as a CSV file for use in a spreadsheet.' },
+  ],
+  'character-variety-checker': [
+    { q: 'How is the variety score calculated?', a: 'Twenty five points each are awarded for including uppercase letters, lowercase letters, digits, and special characters, plus a bonus based on how many unique characters appear relative to the total length, capped at 100.' },
+    { q: 'What does it tell me is missing?', a: 'It lists exactly which character types (uppercase, lowercase, digits, special characters) are absent from your text, so you know precisely what to add to raise the variety score.' },
+    { q: 'Is this meant to check password strength?', a: 'It checks character-type variety and uniqueness in any text, including passwords, but it does not check against breached-password lists or estimate crack time the way a dedicated password strength tool would.' },
+  ],
+  'chart-maker': [
+    { q: 'What chart types can I create?', a: 'Bar, line, pie, and doughnut charts, all rendered on a canvas from the data points you enter, with grid lines and labels drawn to scale.' },
+    { q: 'How do I enter my data?', a: 'You add rows manually as a label and value pair, and each point can be removed individually, there is no file import, so it is best suited to smaller hand-entered datasets.' },
+    { q: 'Can I save the chart as an image?', a: 'Yes, the finished chart downloads as a PNG generated directly from the canvas.' },
+  ],
+  'cidr-calculator': [
+    { q: 'What does it calculate from a CIDR block?', a: 'The network address, subnet mask, wildcard mask, broadcast address, first and last usable host, and total usable host count, all computed from real bitwise operations on the address and prefix you enter.' },
+    { q: 'Does it handle /31 and /32 subnets correctly?', a: 'Yes, those are handled as their real-world special cases: /31 as a point-to-point link with no usable host range, and /32 as a single host address, rather than applying the general host-count formula that would give a wrong answer for either.' },
+    { q: 'Do I need to enter the subnet mask separately?', a: 'No, entering an address with its CIDR prefix (like 192.168.1.0/24) is enough, the subnet mask and every other value are derived from that prefix automatically.' },
+  ],
+  'circle-crop': [
+    { q: 'What shapes can I crop to besides a circle?', a: 'Rounded square and plain square presets are also available alongside the circle crop, each using a real canvas clip path rather than just a CSS border-radius overlay.' },
+    { q: 'What background options are there for the cropped-out area?', a: 'Transparent (the clipped-away corners are genuinely see-through in the exported PNG), solid white, or a blurred copy of your own image filling the space behind the cropped shape.' },
+    { q: 'Can I control the output size?', a: 'Yes, a size slider sets the exported image dimensions, so you can produce anything from a small avatar-sized crop up to a larger image.' },
+  ],
+  'citation-generator': [
+    { q: 'Does it look up the source automatically from a URL or ISBN?', a: 'No, you enter the author, title, year, publisher, and other fields yourself, the tool only formats whatever details you provide into the selected citation style, it does not fetch or verify source data.' },
+    { q: 'Which citation styles are supported?', a: 'Book, article, website, and journal formats, each using the fields relevant to that source type, for example a website citation includes the access date and URL fields.' },
+    { q: 'Which fields are required?', a: 'Title and author are required for every citation type, other fields like year fall back to "n.d." (no date) if left blank rather than blocking generation.' },
+  ],
+  'cmyk-to-rgb': [
+    { q: 'What formula does the conversion use?', a: 'The standard CMYK to RGB formula, where each RGB channel is calculated as 255 times (1 minus that channel\'s ink percentage) times (1 minus the black percentage).' },
+    { q: 'Is there a live color preview?', a: 'Yes, a swatch updates immediately to show the resulting RGB color as you adjust any of the four CMYK sliders.' },
+    { q: 'Will this match my printed output exactly?', a: 'It uses the standard mathematical conversion, not an ICC color profile calibrated to a specific printer or paper stock, so it is meant for approximate on-screen reference rather than exact print color matching.' },
+  ],
+  'code-beautifier': [
+    { q: 'Which languages can it format?', a: 'JavaScript, TypeScript, Python, HTML, CSS, and JSON each have their own dedicated formatting logic tailored to that language\'s syntax, rather than one generic formatter applied to everything.' },
+    { q: 'Can it minify code as well as beautify it?', a: 'Yes, a separate minify mode strips unnecessary whitespace and line breaks (or uses compact JSON.stringify output for JSON), producing a condensed version of the same code.' },
+    { q: 'Can I choose tabs vs spaces and the indent size?', a: 'Yes, both are configurable options that control how the beautified output is indented across all supported languages.' },
+  ],
+  'code-diff': [
+    { q: 'What algorithm does it use to compare two code blocks?', a: 'A longest common subsequence (LCS) algorithm, the same class of algorithm behind tools like diff and git diff, which finds the actual minimal set of added and removed lines rather than just flagging any line that moved as changed.' },
+    { q: 'How are additions and removals shown?', a: 'Added lines, removed lines, and unchanged context lines are each shown with a distinct marker, so you can see exactly what changed between the two versions line by line.' },
+    { q: 'Can I copy the diff output?', a: 'Yes, the result copies as plain text with +, -, and space prefixes on each line, a format you can paste elsewhere or include in notes.' },
+  ],
+  'code-to-diagram-generator': [
+    { q: 'Does it use AI to understand what my code does?', a: 'No, it applies a line-based heuristic, for example treating each non-empty line as a node for a flowchart, or looking for arrow-like patterns for a sequence diagram, and outputs Mermaid syntax rather than analyzing program logic.' },
+    { q: 'Which diagram types can it generate?', a: 'Flowchart, sequence, class, and generic Mermaid graph syntax, selectable based on the shape of diagram you want from your pasted code or pseudocode.' },
+    { q: 'How do I actually view the diagram it generates?', a: 'The tool outputs Mermaid syntax as text and links to mermaid.live, where you paste it to render the visual diagram, it does not render the diagram itself.' },
+  ],
+  'color-blindness-simulator': [
+    { q: 'Which types of color blindness does it simulate?', a: 'Protanopia, deuteranopia, and tritanopia, each using a published color transformation matrix specific to that condition rather than a generic desaturation filter.' },
+    { q: 'How is the simulation actually calculated?', a: 'Your image\'s RGB pixel values are multiplied through the relevant simulation matrix for the selected condition, producing a genuine color-space transformation rather than just an overlay tint.' },
+    { q: 'Can I compare the simulated version side by side with the original?', a: 'Yes, the original and the simulated result are shown together so you can directly compare how colors shift under each condition.' },
+  ],
+  'color-contrast-auditor': [
+    { q: 'Does it check one color pair or several at once?', a: 'Both, you can check a single foreground and background pair for its contrast ratio and WCAG rating, or switch to batch mode to audit a whole list of colors against one background at once.' },
+    { q: 'What standard is the contrast ratio based on?', a: 'The WCAG 2.1 relative luminance and contrast ratio formulas, the same math used to determine AA and AAA accessibility compliance.' },
+    { q: 'How is this different from the Color Contrast Matrix tool?', a: 'This tool audits multiple colors against a single fixed background. The Color Contrast Matrix instead checks every color in your list against every other color, showing all pairwise combinations in a grid.' },
+  ],
+  'color-contrast-matrix': [
+    { q: 'How is this different from the Color Contrast Auditor?', a: 'The Auditor checks a list of colors against one background color you choose. This tool instead builds a full grid checking every color in your list against every other color, so you can see all pairwise combinations at once.' },
+    { q: 'What do the colors in the grid cells mean?', a: 'Each cell is color-coded by WCAG pass level, AAA, AA, AA Large, or Fail, based on the real contrast ratio between that row and column\'s colors.' },
+    { q: 'Can I copy a specific ratio from the grid?', a: 'Yes, clicking a cell copies that pair\'s exact contrast ratio to your clipboard.' },
+  ],
+  'color-contrast-ratio-checker': [
+    { q: 'How is this different from the Contrast Auditor and Contrast Matrix tools?', a: 'This is the simplest of the three, it checks exactly one foreground and background pair with a live sample-text preview, without the batch auditing or multi-color grid the other two provide.' },
+    { q: 'What does the live preview show?', a: 'Sample text rendered in your chosen foreground color on your chosen background color, updating immediately so you can see readability alongside the numeric ratio.' },
+    { q: 'What pass levels does it report?', a: 'AA, AAA, and AA Large Text ratings, each shown as pass or fail based on the calculated WCAG contrast ratio for your color pair.' },
+  ],
+  'color-format-converter-v2': [
+    { q: 'Which input formats does it accept?', a: 'HEX (3 or 6 digit), RGB(), and HSL() values can all be typed in directly as your starting point, the tool detects the format and parses it accordingly.' },
+    { q: 'What is the HEX8 output?', a: 'Your 6-digit hex value with "ff" appended for full opacity, it always represents fully opaque since there is no alpha value in the accepted input formats.' },
+    { q: 'How accurate is the CMYK output for print?', a: 'It uses the standard mathematical RGB to CMYK approximation, not an ICC print profile, so it is suited to quick web reference rather than press-ready color matching.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
