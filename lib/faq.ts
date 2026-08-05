@@ -1514,6 +1514,26 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What does the byte count measure?', a: 'The UTF-8 encoded byte size of your full text, which can be larger than the character count for text containing multi-byte characters like emoji or accented letters.' },
     { q: 'Does a trailing newline at the end of the text add an extra line?', a: 'Yes, splitting on newline characters means text ending in a newline produces one additional empty entry after the last line break, which is included in both the total and empty line counts.' },
   ],
+  'list-randomizer': [
+    { q: 'Can I remove duplicate items before shuffling?', a: 'Yes, a "Remove duplicates before shuffling" checkbox deduplicates identical lines before the shuffle runs, so repeated entries only appear once in the result.' },
+    { q: 'How is each item separated?', a: 'One item per line, so pasting a list separated any other way, like commas or tabs, is treated as a single item until you break it onto its own lines.' },
+    { q: 'What shuffling method does it use?', a: 'A Fisher-Yates shuffle, swapping each item with a randomly chosen earlier or equal position, which gives every possible order an equal chance rather than a biased sort-by-random-key approach.' },
+  ],
+  'lorem-ipsum-paragraphs': [
+    { q: 'How many paragraphs can I generate at once?', a: 'Up to 100, set with the count field, with each paragraph built from roughly 80-word blocks of the fixed Lorem ipsum passage split into sentence-length chunks.' },
+    { q: 'Can I switch to sentences or words instead of full paragraphs?', a: 'Yes, the Words, Sentences, and Paragraphs tabs above the count field switch the output unit without needing to re-enter anything.' },
+    { q: 'Does every paragraph start with "Lorem ipsum"?', a: 'Only the first one, if the "Start with Lorem ipsum..." checkbox is on, later paragraphs continue cycling through the same source passage from where the previous paragraph left off.' },
+  ],
+  'lorem-ipsum-words': [
+    { q: 'What happens if I ask for more words than the source passage contains?', a: 'The generator cycles back to the start of the fixed Lorem ipsum passage and keeps going, so requesting 200 words repeats the roughly 69-word source text multiple times seamlessly.' },
+    { q: 'Can I turn off the capitalized "Lorem ipsum" opening?', a: 'Yes, unchecking "Start with Lorem ipsum..." begins the word list from wherever the cycle happens to fall instead of forcing the classic opening.' },
+    { q: 'Is there a maximum word count?', a: 'The count field caps at 100 words per generation.' },
+  ],
+  'm4a-to-wav': [
+    { q: 'Is this a real audio conversion or just a renamed file?', a: 'A real one, the tool decodes the uploaded audio through the Web Audio API and manually writes a 16-bit PCM WAV file with a proper RIFF header, not just a file extension swap.' },
+    { q: 'What input formats does it accept?', a: 'AAC, M4A, and MP4 files, either by clicking the upload area or dragging a file directly onto it.' },
+    { q: 'Does it preserve the original number of audio channels and sample rate?', a: 'Yes, both are read from the decoded audio buffer and written into the WAV header exactly as they were in the source file, mono stays mono and the sample rate is not resampled.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
