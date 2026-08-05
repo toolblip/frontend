@@ -1729,6 +1729,41 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does resizing crop my image or fit the whole thing in?', a: 'It fits the whole image inside the target dimensions without cropping, scaling proportionally and filling any leftover space with a white background rather than cutting off part of the picture.' },
     { q: 'Can I resize more than one image at once?', a: 'Yes, drag and drop or select multiple files, and a Download All button saves every resized image once processing finishes.' },
   ],
+  'rgba-to-hsl': [
+    { q: 'How do I set the RGBA values?', a: 'Four sliders, Red, Green, and Blue each range 0 to 255 and Alpha ranges 0 to 1 in steps of 0.01, with the preview and converted values updating on every drag.' },
+    { q: 'What formats can I copy besides HSL?', a: "Three copy buttons sit under the preview, one for the HEX code, one for the HSL string, and one for the RGBA string exactly as you set it, so you're not limited to HSL alone." },
+    { q: 'Does the alpha value carry over into the copied output?', a: 'Yes, the RGBA copy button includes your alpha setting, and the live preview swatch renders the actual translucent color using that same alpha value.' },
+  ],
+  'roman-numeral-converter': [
+    { q: "What's the valid number range?", a: 'From 1 through 3999, the largest value classical Roman numerals can represent, anything outside that range returns "Invalid (1-3999)" instead of a numeral.' },
+    { q: 'Do I need to press a button to convert?', a: 'No, both directions update live: typing a number instantly shows its Roman numeral, and typing a Roman numeral instantly shows its number, no calculate button required.' },
+    { q: 'Does it accept lowercase Roman numerals?', a: 'Whatever you type in the Roman numeral field is automatically uppercased as you type, so "mmxxiv" converts the same as "MMXXIV".' },
+  ],
+  'rot13-express': [
+    { q: 'Why is there both an Encode and Decode mode if ROT13 is symmetric?', a: "Mathematically running ROT13 twice returns the original text either way, but the two mode buttons are kept separate so decode mode explicitly reverses whatever you last encoded, matching how people expect an encoder/decoder pair to work." },
+    { q: 'Does it update as I type, or do I need to click a button?', a: "The output recalculates on every keystroke, there's no separate Convert button, and a short explanation of how ROT13 works appears underneath the result." },
+    { q: 'What happens to numbers and punctuation?', a: 'Only the 26 letters, upper and lower case, get shifted, digits, spaces, and punctuation pass through unchanged.' },
+  ],
+  'robots-txt-analyzer': [
+    { q: "Does it flag directives it doesn't recognize?", a: 'Yes, running Validate checks every line against the known directive set (User-agent, Allow, Disallow, Sitemap, Crawl-delay, Clean-param) and reports "Unknown directive" by line number for anything else.' },
+    { q: 'How does it check Sitemap lines?', a: 'It confirms the value after Sitemap: starts with http, flagging it as an error if you paste a relative path instead of a full URL.' },
+    { q: 'What does the rule breakdown look like?', a: 'Below the editor, every Allow and Disallow line is listed with its user agent and path, color coded green for allowed and red for disallowed, so crawler directives and blocked paths are easy to scan.' },
+  ],
+  'robots-txt-checker': [
+    { q: 'What counts as a blocked path?', a: 'Every Disallow rule you\'ve written is parsed and listed in the Preview/Rules panel with a red DISALLOW badge next to the user agent and path it applies to, so you can see at a glance what\'s off limits.' },
+    { q: 'What kind of validation does it run?', a: 'Clicking Validate checks for missing values after User-agent, Allow, or Disallow, flags the deprecated bare wildcard *, and flags any directive it doesn\'t recognize, listing each problem by line number.' },
+    { q: 'Does it group rules by user agent?', a: "Yes, the parsed rule list tags each Allow or Disallow entry with the User-agent block it belongs to, so rules for Googlebot and rules for * don't get mixed together." },
+  ],
+  'robots-txt-generator': [
+    { q: 'What crawler-specific controls does it offer?', a: 'A per-bot Crawl-delay setting, pick a bot like Googlebot, Bingbot, or Yandex from a dropdown and assign it a delay in seconds, alongside a one-click list of common paths like /wp-admin/ and /checkout/ to disallow.' },
+    { q: 'Can I add multiple sitemaps?', a: 'Yes, an Add button under Sitemap URLs lets you list as many sitemap locations as you need, each one gets its own Sitemap: line in the generated output.' },
+    { q: 'Does the generated file include a timestamp?', a: 'If you fill in the Site URL field, the output starts with a comment line showing that URL and the exact generation timestamp, both omitted if you leave Site URL blank.' },
+  ],
+  'robots-txt-validator': [
+    { q: 'What specific errors does it catch?', a: 'Missing values after User-agent, Allow, or Disallow, the deprecated bare wildcard * used as a path, non-absolute Sitemap URLs, and any directive outside the recognized set, each reported with its line number.' },
+    { q: 'Does it edit in place or just report errors?', a: 'Both, the same textarea you type or paste your robots.txt into is what gets validated, so you can fix a flagged line and re-run Validate immediately.' },
+    { q: 'What happens if there are no errors?', a: "The Validation Errors panel simply doesn't appear, and the Preview/Rules panel below shows your parsed Allow and Disallow rules as confirmation the file was read correctly." },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
