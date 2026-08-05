@@ -1004,6 +1004,61 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How are the generated class names built?', a: 'Each one combines your chosen prefix with the CSS property name, so a gap property with prefix "util" becomes .util-gap.' },
     { q: 'Does it show how to use the generated classes?', a: 'Yes, alongside the CSS rules it prints a matching HTML snippet with a div for each class, so you can see the class applied directly.' },
   ],
+  'css-flexbox-generator': [
+    { q: 'What flex properties can I adjust?', a: 'Direction (row, row-reverse, column, column-reverse), justify-content, align-items, flex-wrap, and gap, each reflected instantly in the live preview.' },
+    { q: 'Can I change how many items appear in the preview?', a: 'Yes, an Item Count slider from 2 to 8 lets you see how your flex settings behave with different numbers of children.' },
+    { q: 'What does the copied CSS contain?', a: 'A .container rule with display: flex plus your chosen flex-direction, justify-content, align-items, flex-wrap, and gap in pixels.' },
+  ],
+  'css-gradient-generator': [
+    { q: 'What gradient types are supported?', a: 'Linear, radial, and conic, switchable with a tab control at the top. Angle control only appears for linear and conic since radial gradients don\'t use an angle.' },
+    { q: 'Can I use more than two colors?', a: 'Yes, click Add Stop to insert additional color stops anywhere along the gradient and drag each stop\'s position slider to reposition it (a minimum of two stops is required).' },
+    { q: 'Are there ready-made gradients to start from?', a: 'Yes, 14 presets like Sunset, Ocean, Instagram, and Rainbow load a matching type, angle, and full set of color stops that you can then customize further.' },
+  ],
+  'css-grid-generator': [
+    { q: 'What grid layouts can I build?', a: 'Type a column count or a raw grid-template-columns value like repeat(auto-fill, minmax(250px, 1fr)) or 200px 1fr 200px, the same for rows, and the preview updates immediately.' },
+    { q: 'Are there starting layouts?', a: 'Yes, six presets (2 Column, 3 Column, Sidebar, Holy Grail, Card Grid, Dashboard) fill in matching column, row, and gap values you can adjust from there.' },
+    { q: 'Does it generate matching HTML?', a: 'Yes, alongside the CSS it outputs a .grid-container div with one placeholder .grid-item child per cell, so you can paste both blocks together.' },
+  ],
+  'css-minifier': [
+    { q: 'What does minifying actually remove?', a: 'Comments, unnecessary whitespace and line breaks, and it shortens repeated-pair 6-digit hex colors like #ffffff to their 3-digit form (#fff).' },
+    { q: 'Can I see how much smaller the file gets?', a: 'Yes, the tool shows the original and minified byte counts along with the percentage saved.' },
+    { q: 'Does it check my CSS for errors first?', a: 'No, it only compresses whatever you paste in without validating it, use the separate CSS Validator tool for syntax checking.' },
+  ],
+  'css-to-styled-components': [
+    { q: 'How does it name the generated components?', a: 'It converts each selector into PascalCase, so .primary-button becomes const PrimaryButton = styled.div, stripping dashes and underscores and capitalizing each word.' },
+    { q: 'Does it pick the right HTML tag for the styled wrapper?', a: 'For element selectors like nav or button it uses styled.nav or styled.button. For class or ID selectors it defaults to styled.div since an element can\'t be inferred from a class name alone.' },
+    { q: 'Can I convert multiple CSS rules at once?', a: 'Yes, paste any number of rule blocks and each one becomes its own separate styled-components const declaration in the output.' },
+  ],
+  'css-to-tailwind': [
+    { q: 'Which CSS properties get converted to Tailwind classes?', a: 'A wide set including display, flex-direction, justify-content, align-items, position, text-align, font-weight, font-size, width, height, gap, padding, margin, border-radius, colors, cursor, and overflow.' },
+    { q: 'What happens with values that don\'t match a standard Tailwind scale?', a: 'The tool falls back to Tailwind\'s arbitrary value syntax, like w-[350px] or bg-[#112233], so nothing gets dropped even when it isn\'t one of Tailwind\'s default tokens.' },
+    { q: 'Does it convert pixel values to Tailwind\'s spacing scale automatically?', a: 'Yes, for padding, margin, gap, width, and height it divides pixel values by 4 to match Tailwind\'s spacing units, so 16px becomes p-4 rather than an arbitrary value.' },
+  ],
+  'css-validator': [
+    { q: 'What kinds of CSS errors does it catch?', a: 'Missing colons in declarations, incomplete hex colors, empty rule sets, properties with no value, incomplete calc() expressions, and var() calls missing a variable name.' },
+    { q: 'Does it check brace and bracket matching?', a: 'Yes, it tracks braces, parentheses, and brackets separately and flags unbalanced counts as errors, noting whether a closing character is missing or extra.' },
+    { q: 'Does it flag errors by line number?', a: 'Yes, most issues show the exact line number where the problem was found so you can jump straight to it in your stylesheet.' },
+  ],
+  'csv-generator': [
+    { q: 'Does it auto-generate rows based on a number I enter?', a: 'No, rows and columns are added and edited manually with the + Row and + Column buttons and inline text inputs, there\'s no numeric row-count field that bulk-fills sample data.' },
+    { q: 'How does it handle values containing commas or quotes?', a: 'Any cell containing a comma, quote, or line break is automatically wrapped in double quotes with internal quotes escaped, so the exported CSV stays valid.' },
+    { q: 'Can I download the result directly?', a: 'Yes, a Download button saves the current table as generated.csv, alongside a Copy button for the raw text.' },
+  ],
+  'csv-to-excel': [
+    { q: 'What file format does the download actually use?', a: 'It downloads a .xls file, an HTML table wrapped in Excel\'s legacy SpreadsheetML markup, which Excel, Numbers, and Google Sheets all open correctly, rather than a true .xlsx file.' },
+    { q: 'Does it handle quoted fields with embedded commas?', a: 'Yes, the CSV parser tracks quote state character by character, so commas or line breaks inside quoted fields don\'t break the columns.' },
+    { q: 'Can I preview the data before downloading?', a: 'Yes, a table renders your parsed rows with the first row as headers, so you can check the columns lined up correctly before downloading.' },
+  ],
+  'csv-to-json': [
+    { q: 'Does it infer data types automatically?', a: 'Yes, any value that parses as a number is output as a JSON number rather than a string, for example 30 becomes 30 not "30".' },
+    { q: 'Can it handle CSV fields that contain commas inside quotes?', a: 'No, columns are split on plain commas, so a quoted field containing a comma will be split incorrectly. It works best with simple comma-separated values.' },
+    { q: 'How are column headers detected?', a: 'The first line of input is split into headers automatically, quotes around header names are stripped, and each later line is mapped to those header keys to build the JSON objects.' },
+  ],
+  'csv-to-tsv': [
+    { q: 'How does it decide which cells need quotes?', a: 'A cell gets wrapped in double quotes if it contains a tab character, a comma, or leading or trailing spaces, since those would otherwise break the tab-separated format.' },
+    { q: 'Does it handle CSV fields that already contain commas inside quotes?', a: 'No, splitting is done on plain commas, so a source field with a quoted embedded comma will be divided into extra columns. It works best with simple comma-separated values.' },
+    { q: 'Do I need to click a button to convert, or does it update live?', a: 'You click Convert to TSV, the output doesn\'t update automatically as you type in the CSV box.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
