@@ -1799,6 +1799,46 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What happens if I paste more than one sentence?', a: "It combines the first two sentences into one before rewriting, and if there's a recognizable conjunction like \"and\" or \"because\" in the result, adds a Split option that breaks it back into shorter pieces." },
     { q: 'How do I pick between the different rewrite options?', a: 'Each option appears as its own button labeled with its type, Simplified, Expanded, Active Voice, and so on, clicking one sets it as the Selected Result with its own Copy to Clipboard button.' },
   ],
+  'sentence-counter': [
+    { q: 'What counts as a "sentence" for the sentence total?', a: 'Your text is split on periods, question marks, and exclamation points, and any resulting chunk that still has non-whitespace content after trimming counts as one sentence.' },
+    { q: 'Does it update as I type, or do I need to click a button?', a: 'It recalculates live on every keystroke, sentences, words, characters, paragraphs, and unique words all update together with no separate count button.' },
+    { q: 'What does the unique word count measure?', a: "It's a distinct count of the words in your text, so if you use the same word five times it only adds one to that total, separate from the plain word count above it." },
+  ],
+  'seo-meta-tag-analyzer': [
+    { q: 'How does it read another site\'s meta tags?', a: "You enter a URL and it fetches that page's raw HTML through a CORS proxy (api.allorigins.win), then extracts the title, description, keywords, Open Graph tags, Twitter Card tags, canonical link, robots directive, and author tag with regex." },
+    { q: 'How is the SEO score calculated?', a: 'Out of 100 points: 20 each for the title and meta description, 15 each for og:title and og:description, 10 each for og:image and twitter:card, and 5 each for keywords and a canonical URL, with every missing piece listed as an issue underneath.' },
+    { q: 'What happens if the page blocks the request?', a: 'You get a message saying the site could not be fetched because it may block cross-origin requests or be unreachable, instead of a partial or broken result.' },
+  ],
+  'serp-simulator': [
+    { q: 'How does the title limit change between desktop and mobile?', a: 'Desktop truncates the title at 60 characters and mobile at 55, both cutting at the last full word rather than mid-word, with an ellipsis added when the text runs long.' },
+    { q: 'What happens if my description is too long?', a: "Anything past 160 characters gets truncated the same word-safe way as the title, so you can see exactly where Google would cut off your description before you publish it." },
+    { q: 'Where does the breadcrumb line under the site name come from?', a: "It's built directly from the URL you type in, the hostname plus each path segment joined with '›', so /blog/post-name shows as example.com › blog › post-name." },
+  ],
+  'serp-snippet-preview': [
+    { q: 'What three fields can I edit in the preview?', a: 'Page title, page URL, and meta description, each with a live character counter (60 for title, 160 for description) that turns red once you go over the limit.' },
+    { q: 'Does it try to load my actual site favicon?', a: "Yes, it builds a favicon.ico URL from the hostname you enter and attempts to load it next to the site name, falling back to a plain dot icon if the image fails to load." },
+    { q: 'Can I compare the desktop and mobile snippet side by side?', a: 'Not side by side, but a Desktop/Mobile toggle switches the same preview card between the two title-length limits so you can check both without retyping anything.' },
+  ],
+  'sha1-hash-generator': [
+    { q: 'Do I need to click a button, or does it hash as I type?', a: 'You click Generate Hash after typing, it does not hash on every keystroke, the result then appears below with its own Copy button.' },
+    { q: 'Can I switch algorithms without retyping my text?', a: 'Yes, MD5, SHA-1, and SHA-256 are separate buttons above the input, picking a different one and clicking Generate Hash re-hashes the same text you already typed.' },
+    { q: 'Does it accept file uploads?', a: "No, there's only a text box, to hash a file's contents you'd need to paste that content in as text rather than upload the file directly." },
+  ],
+  'sha256-hash-generator': [
+    { q: 'How is the SHA-256 button different from MD5 or SHA-1 here?', a: 'All three share the same input box and Generate Hash button, picking SHA-256 runs your text through the browser\'s built-in crypto.subtle.digest instead of the hand-rolled MD5 routine or the SHA-1 digest.' },
+    { q: 'Is there an uppercase option for the output?', a: 'Yes, an UPPER toggle next to the algorithm buttons switches the hex output between lowercase and uppercase without re-hashing.' },
+    { q: 'Does it accept file uploads?', a: "No, only pasted or typed text goes into the hash, there's no file picker on this tool." },
+  ],
+  'sha-256-hash': [
+    { q: 'Does it hash automatically as I type?', a: 'Yes, there is no Generate button, the SHA-256 result updates live on every keystroke using the browser\'s crypto.subtle.digest.' },
+    { q: 'What do the numbers above the result mean?', a: 'A small counter shows your input\'s character count and its byte count side by side, useful since multi-byte characters make those two numbers diverge.' },
+    { q: 'Is my text sent to a server to compute the hash?', a: 'No, the hash is computed entirely in your browser using the Web Crypto API, nothing you type leaves your device.' },
+  ],
+  'sharpen': [
+    { q: 'What does the Intensity slider actually change?', a: 'It scales a 3x3 sharpen convolution kernel from 0.1x to 3x strength, higher values push the edge-contrast effect further before the result is clamped back into the 0-255 color range.' },
+    { q: 'How is the sharpening applied to my photo?', a: 'The image is drawn to a hidden canvas, then every pixel is recalculated from its 8 neighbors using a fixed edge-enhancing kernel, and the result replaces the original pixel data before being redrawn.' },
+    { q: 'What format is the downloaded file?', a: 'A PNG named "sharpened-image.png", exported straight from the canvas after you click Apply Sharpen.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
