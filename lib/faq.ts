@@ -652,6 +652,61 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What image formats can I encode?', a: 'Any format the browser can read as a file, including JPG, PNG, GIF, and WebP. The output data URL embeds the correct MIME type automatically based on what you uploaded.' },
     { q: 'Can I decode Base64 that isn\'t a full data URL?', a: 'Yes. If you paste raw Base64 without the data:image/...;base64, prefix, the tool assumes image/png and still decodes and previews it.' },
   ],
+  'base64-image-decoder': [
+    { q: 'How is this different from the Base64 Image Converter?', a: 'This tool is decode-only: paste or load a Base64 string and it reconstructs the image and gives you a download link. It doesn\'t have an encode mode for turning an image into Base64, which is what the Converter tool is for.' },
+    { q: 'Can I load Base64 data from a file instead of pasting it?', a: 'Yes. The Load from file button accepts a .txt or .b64 file containing the Base64 string, reads it as text, and decodes it the same way as pasted input.' },
+    { q: 'What happens with invalid Base64 data?', a: 'You\'ll see an "Invalid Base64 image data" message instead of a broken image, since the decode step wraps the atob call in error handling rather than letting it fail silently.' },
+  ],
+  'base64-image-viewer': [
+    { q: 'Does this tool decode the Base64 data like the Decoder does?', a: 'No. It validates that your input is a proper data:image/...;base64,... URL and then hands that string straight to an <img> tag\'s src attribute, letting the browser do the actual decoding. There\'s no atob step or downloadable file, just a live preview.' },
+    { q: 'Why does it reject some Base64 strings?', a: 'It checks two things before displaying anything: that the string matches the data:[mime];base64, pattern, and that the mime type starts with image/. Raw Base64 without that data URL prefix, or a data URL for a non-image type, gets an explicit error instead of a blank preview.' },
+    { q: 'Can I copy the data URL back out after loading it?', a: 'Yes, once the input validates successfully, a Copy Data URL button appears above the preview.' },
+  ],
+  'batch-favicon-downloader': [
+    { q: 'Where do the favicon images actually come from?', a: 'Google\'s public favicon service (www.google.com/s2/favicons), requested at 128px for each domain you list. The tool doesn\'t crawl or host favicons itself, it builds the request URL from each domain and lets Google\'s service return the icon.' },
+    { q: 'How many URLs can I process at once?', a: 'As many as you paste in, one per line. Each line is parsed into a domain and turned into its own favicon request, so a list of dozens of sites is fetched in one batch.' },
+    { q: 'What if a site has no favicon Google can find?', a: 'You\'ll see a red X placeholder for that entry instead of a broken image, since the img tag\'s onError handler catches the failed load and hides the broken icon.' },
+  ],
+  'batch-image-resizer': [
+    { q: 'Can I resize multiple images at once?', a: 'Yes. Drop or select several files and each one is resized independently to the same target dimensions using its own canvas pass, then all results appear as a downloadable grid.' },
+    { q: 'Does resizing crop or stretch my images?', a: 'Neither. Images are scaled to fit within the target box while preserving their aspect ratio, then centered on a white background, so nothing is cropped and nothing is distorted, unlike a straight stretch-to-fit resize.' },
+    { q: 'What size presets are available?', a: 'Common video and thumbnail sizes like HD, Full HD, Square, Portrait, and Thumbnail, or you can type in custom width and height with an optional aspect-ratio lock that keeps the two in proportion as you edit either field.' },
+  ],
+  'bcrypt-hash-generator': [
+    { q: 'What library actually generates the hash?', a: 'The real bcryptjs npm package, running client-side, producing standard $2b$ bcrypt hashes that are compatible with any other bcrypt implementation on a server or in another language.' },
+    { q: 'What does the cost factor slider control?', a: 'The number of hashing rounds, from 4 (fastest) to 14 (slowest and most resistant to brute-force cracking). Bcrypt is deliberately slow, and a higher cost factor makes each guess an attacker tries more expensive.' },
+    { q: 'Can I check whether a password matches an existing hash?', a: 'Yes. The Verify Password field runs bcrypt.compareSync against the hash currently shown, and reports a clear match or no-match result.' },
+  ],
+  'bill-sale-generator': [
+    { q: 'What does the generated document actually cover?', a: 'Seller and buyer names and addresses, an item description, sale price with optional tax, payment method, and toggles for as-is sale versus implied warranty, formatted as a printable bill of sale with signature lines at the bottom.' },
+    { q: 'How do I save it as a PDF?', a: 'The Print / Save PDF button triggers your browser\'s print dialog, where choosing "Save as PDF" as the destination produces a PDF version of the generated document.' },
+    { q: 'Is this a legally binding contract template?', a: 'The generated document includes a disclaimer that it\'s provided for informational purposes only and isn\'t legal advice, since requirements for a valid bill of sale vary by state and item type.' },
+  ],
+  'bill-splitter': [
+    { q: 'How is the tip calculated?', a: 'Either as a percentage of the bill using one of the quick-select buttons (10, 15, 18, 20, or 25 percent) or as a custom flat tip amount you type in directly, whichever you set last.' },
+    { q: 'What if people want to split unevenly?', a: 'The tool divides the bill plus tip equally across the number of people you enter, it doesn\'t support assigning different amounts per person or itemized splitting.' },
+    { q: 'Can I copy the breakdown to share with the group?', a: 'Yes. Copy Summary puts the bill total, tip amount, grand total, and per-person share on your clipboard as plain text, ready to paste into a chat.' },
+  ],
+  'bin-hex-dec-converter': [
+    { q: 'Do I need to convert one pair of bases at a time?', a: 'No. Pick a single input base and enter a number, and the result shows all three: binary, decimal, and hexadecimal, at once, rather than making you choose a separate output base each time.' },
+    { q: 'What does the Next Base button do?', a: 'It cycles the input base through binary, decimal, and hexadecimal in sequence and clears the current input, a quick way to switch what you\'re typing without opening a dropdown.' },
+    { q: 'Can I feed one of the results back in as new input?', a: 'Yes. Each conversion result has a "Use as input" link that loads that value, in its matching base, back into the input field so you can continue converting from there.' },
+  ],
+  'binary-converter': [
+    { q: 'Does this convert numbers between bases like binary-to-hex?', a: 'No. This tool converts text to and from raw binary byte values (each character becomes an 8-bit ASCII code and back), not numeric base conversion. For converting a number like 255 into binary, use a base or hex converter instead.' },
+    { q: 'What format does the binary output use?', a: 'Each character becomes an 8-bit binary byte, zero-padded and separated by spaces, for example "Hello" becomes five space-separated 8-bit groups, one per letter.' },
+    { q: 'What happens if I paste invalid binary in Binary to Text mode?', a: 'You\'ll get an explicit "Invalid binary string" error if the cleaned input contains anything other than 0s and 1s, rather than a garbled or silently wrong text result.' },
+  ],
+  'binary-decimal-hex-converter': [
+    { q: 'How is this different from the Bin-Hex-Dec Converter?', a: 'Both convert one input base to all three bases at once, but this version presents each result in its own color-coded card (blue for binary, green for decimal, purple for hex) with a "Convert to All" button, rather than the cycling next-base swap the other tool uses.' },
+    { q: 'Can I chain conversions using a previous result?', a: 'Yes. Each result card has a "Use as input" link that loads that exact value back into the input field with the matching base already selected.' },
+    { q: 'Does it handle negative numbers?', a: 'Yes. Negative decimal input converts to a minus-signed binary and hex representation rather than using two\'s complement encoding.' },
+  ],
+  'binary-to-decimal': [
+    { q: 'Does it only convert to decimal, or other bases too?', a: 'Despite the name, it converts your binary input to decimal, hexadecimal, and octal all at once, showing all three with individual copy buttons rather than requiring three separate lookups.' },
+    { q: 'Can I go the other direction, decimal to binary?', a: 'No, this tool only accepts binary input. For the reverse direction, the Base Number Converter or Bin-Hex-Dec Converter both let you pick decimal as the source base.' },
+    { q: 'What counts as valid input?', a: 'Only the digits 0 and 1, with optional whitespace between groups. Anything else triggers an "Invalid binary" message instead of attempting a conversion.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
