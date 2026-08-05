@@ -1634,6 +1634,21 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Do the statistics update as I type, or do I need to click something?', a: 'Click Count to run the analysis, the six-stat grid then appears below, it is not a live-updating counter tied to every keystroke.' },
     { q: 'What exactly counts as a "line" versus a "paragraph" here?', a: 'A line is any text between two line breaks, however short, while a paragraph requires a full blank line, meaning two consecutive line breaks, to separate it from the next block of text.' },
   ],
+  'png-to-jpg': [
+    { q: 'Does it keep transparency when converting to JPEG?', a: 'No, JPEG has no alpha channel, so any transparent areas in your PNG get flattened onto whatever color the canvas renders behind them once the image is drawn and re-encoded as JPEG.' },
+    { q: 'Can I control how much the file shrinks?', a: 'Yes, a quality slider from 1 to 100 sets the JPEG compression level, the Before and After panels show both file sizes plus a percentage smaller or larger so you can judge the tradeoff before downloading.' },
+    { q: 'Does my image get uploaded to a server to be converted?', a: 'No, the file is drawn onto a hidden canvas in your browser and re-encoded to JPEG locally using the Canvas API, nothing is sent anywhere.' },
+  ],
+  'png-to-webp': [
+    { q: 'How much smaller does WebP actually end up compared to my PNG?', a: 'It varies by image, the After panel shows the converted file size next to a note like "42% smaller" or "smaller/larger", calculated directly by comparing the two file sizes after conversion.' },
+    { q: 'Is transparency preserved when converting to WebP?', a: 'Yes, unlike a JPEG conversion, WebP supports an alpha channel, so transparent areas in your source PNG stay transparent in the converted file.' },
+    { q: 'Can I fine-tune the compression instead of using a fixed setting?', a: 'Yes, a 1 to 100 quality slider controls the WebP encoding, and you can re-run the conversion at a different quality and compare the resulting file size before deciding which to download.' },
+  ],
+  'port-scanner-full': [
+    { q: 'How does scanning work if browsers cannot open raw TCP connections?', a: "Each port check is sent to this site's own backend endpoint, which attempts the connection on your behalf and reports back whether it was open, closed, or timed out, rather than your browser connecting to the target directly." },
+    { q: 'Why might a port show as "filtered" instead of open or closed?', a: 'A port is marked filtered when the check to it errors out or does not respond within the one second timeout, which usually means a firewall is silently dropping the connection attempt rather than actively refusing it.' },
+    { q: 'Can I watch the scan happen, or do I just get a final list?', a: 'A progress bar tracks completion percentage as batches finish, and the results table fills in and re-sorts by port number after every batch of 50, plus a live count of open, closed, and filtered ports updates above the table.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
