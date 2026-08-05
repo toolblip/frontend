@@ -1984,6 +1984,41 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I inspect more than one character at once?', a: 'Yes, type or paste multiple characters into the input and click Inspect, a separate results card is generated for each individual character in your input.' },
     { q: 'How does it determine the character category shown?', a: 'It checks the code point against known ranges to label letters as Uppercase or Lowercase Letter, digits as Digit, and CJK ideographs by their Unicode block, falling back to "Other" for anything outside those ranges.' },
   ],
+  'unit-converter': [
+    { q: 'Which categories of units can I convert?', a: 'Three tabs cover length (meters, feet, kilometers, miles, and more), weight, and temperature (Celsius, Fahrenheit, Kelvin), each with its own set of conversion pairs to pick from.' },
+    { q: 'Does the result update as I type?', a: 'Yes, typing a number into the input field recalculates the converted value instantly, with no separate convert button to click.' },
+    { q: 'Can I switch which units I am converting between?', a: 'Yes, each category shows a row of conversion pair tabs, like Meters to Feet or Celsius to Fahrenheit, and clicking a different pair swaps the active conversion.' },
+  ],
+  'unix-timestamp-converter': [
+    { q: 'What are the two conversion directions it supports?', a: 'A Timestamp to Date mode that turns a Unix timestamp into a readable date, and a Date to Timestamp mode that turns a date and time you pick back into a Unix timestamp, switchable with mode tabs.' },
+    { q: 'Does it account for my local timezone?', a: 'Yes, converting a timestamp to a date shows both a UTC string and a separate local-timezone string side by side, so you can compare the two.' },
+    { q: 'Is there a shortcut for the current time?', a: 'Yes, a "Use current time" button fills in the present moment instantly instead of typing or picking it manually.' },
+  ],
+  'uptime-calculator': [
+    { q: 'How do I set the SLA percentage?', a: 'A slider and a matching number input let you set anything from 90% to 99.999% uptime in steps of 0.001%, covering everything from a loose SLA down to "five nines".' },
+    { q: 'What time periods does it break the downtime down into?', a: 'Tabs for year, month, week, day, and hour, and the calculator shows the allowed downtime for all five periods at once in a results grid rather than one at a time.' },
+    { q: 'What is the calculation based on?', a: 'It multiplies the length of each period by (100% minus your chosen SLA percentage) to get the allowed downtime, the same math used to translate an SLA target into a concrete outage budget.' },
+  ],
+  'url-encoder': [
+    { q: 'What is the difference between the Encode and Decode modes?', a: 'Encode mode runs your text through encodeURIComponent to escape special characters like spaces and ampersands for safe use in a URL, while Decode mode runs encoded text through decodeURIComponent to turn it back into readable text.' },
+    { q: 'What happens if I try to decode text that is not validly encoded?', a: 'An error message is shown instead of garbled output, since decodeURIComponent throws on malformed percent-encoded sequences rather than guessing at the intended characters.' },
+    { q: 'Can I copy the result directly?', a: 'Yes, a Copy button sits above the output box and copies the encoded or decoded text straight to your clipboard.' },
+  ],
+  'url-parser': [
+    { q: 'Which parts of a URL does it break out?', a: 'Protocol, hostname, port, pathname, search string, hash, host, origin, username, and a masked password, plus every query parameter listed individually as its own key-value pair.' },
+    { q: 'What happens if I paste a URL without a protocol?', a: 'An error message is shown, since a protocol like https:// is required for the underlying URL parser to recognize the input as a valid, absolute URL.' },
+    { q: 'How are query parameters displayed?', a: 'Each parameter from the URL\'s search string is listed on its own line as a separate key and value, rather than left bundled together as one raw query string.' },
+  ],
+  'url-redirect-checker': [
+    { q: 'How many redirect hops will it follow?', a: 'Up to 20 redirects in a chain, following each Location header in turn until it reaches a final, non-redirect response or hits that limit.' },
+    { q: 'What does it show for each hop in the chain?', a: 'A color-coded status code badge for every URL in the sequence, so you can see at a glance which hops were 301, 302, or another redirect status before landing on the final destination.' },
+    { q: 'What happens if the URLs form a redirect loop?', a: 'It tracks every URL it has already visited in the chain, and stops with a loop warning instead of following the same redirect back and forth indefinitely.' },
+  ],
+  'user-agent-parser': [
+    { q: 'What information does it extract from a User-Agent string?', a: 'The browser name, operating system, and device type (Mobile, Tablet, TV, or Desktop), determined by matching the string against known browser and OS patterns.' },
+    { q: 'Can it detect bots and crawlers?', a: 'Yes, it checks the User-Agent against a pattern covering common bot signatures like "bot", "crawl", "spider", "slurp", Googlebot, Bingbot, and Yandex, and flags a match instead of misreading it as a regular browser.' },
+    { q: 'Are there sample User-Agent strings I can try?', a: 'Yes, quick-load buttons fill in example strings for Chrome, Firefox, Safari, Edge, or a bot, so you can see how the parser handles each one without hunting for a real string first.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
