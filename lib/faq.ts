@@ -1059,6 +1059,76 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does it handle CSV fields that already contain commas inside quotes?', a: 'No, splitting is done on plain commas, so a source field with a quoted embedded comma will be divided into extra columns. It works best with simple comma-separated values.' },
     { q: 'Do I need to click a button to convert, or does it update live?', a: 'You click Convert to TSV, the output doesn\'t update automatically as you type in the CSV box.' },
   ],
+  'csv-to-xml': [
+    { q: 'How are column names turned into XML tags?', a: 'Header names are sanitized into valid XML tag names, non-alphanumeric characters become underscores, and a leading underscore is added if the name would otherwise start with a digit.' },
+    { q: 'Does it handle CSV fields with embedded commas or quotes?', a: 'Yes, the CSV parser tracks quote state character by character, so quoted fields containing commas or line breaks are parsed correctly.' },
+    { q: 'What is the structure of the generated XML?', a: 'Each data row becomes a <row> element containing one child element per column, all wrapped in a root <rows> element with an XML declaration at the top.' },
+  ],
+  'curl-command-builder': [
+    { q: 'What request options can I configure?', a: 'HTTP method, one or more headers, a request body (hidden automatically for GET and HEAD), basic auth credentials, and flags for following redirects, insecure mode, verbose output, and compression.' },
+    { q: 'Can I get single-line output instead of the multi-line format?', a: 'Yes, toggle off "Multi-line output" to get the entire command as one line instead of a backslash-continued block.' },
+    { q: 'Does it handle special characters in headers or body safely?', a: 'Yes, every value is wrapped in single quotes with proper shell escaping, so headers or JSON bodies containing quotes or spaces still produce a valid command.' },
+  ],
+  'curl-gen-express': [
+    { q: 'What input format does it expect?', a: 'A raw HTTP request: a request line like POST /path HTTP/1.1, followed by header lines, a blank line, and then the body, the format you\'d see in a captured network request.' },
+    { q: 'How does it figure out the full URL?', a: 'It reads the Host header to combine with the request path, or uses the path directly if it is already a full http or https URL.' },
+    { q: 'Does it preserve the request body?', a: 'Yes, everything after the blank line is passed through as the -d payload, unless the method is GET or HEAD.' },
+  ],
+  'curl-to-javascript': [
+    { q: 'What does the generated code look like?', a: 'A fetch() call with method, headers object, and body, followed by .then() handlers that parse the JSON response and log it, plus a .catch() for errors.' },
+    { q: 'Does it detect JSON request bodies?', a: 'Yes, if the -d payload parses as valid JSON it is wrapped in JSON.stringify(...), otherwise it is passed through as a plain string.' },
+    { q: 'Does it also generate Axios code?', a: 'No, only fetch() output is generated currently, regardless of which library you prefer.' },
+  ],
+  'curl-to-python': [
+    { q: 'What does the generated code include?', a: 'An import requests line, a url string, an optional headers dict built from every -H flag, and a response = requests.METHOD(...) call that prints the status code and response text.' },
+    { q: 'Does it separate URL query parameters into their own params dict?', a: 'No, query strings stay part of the url value, there is no separate params dictionary generated.' },
+    { q: 'How does it detect the request body?', a: 'It looks for a -d flag and assigns whatever follows to a data variable, passed to the requests call as data=data.' },
+  ],
+  'cutter': [
+    { q: 'What output format does the trimmed clip use?', a: 'WebM (VP9 or VP8), since the cut is produced by recording the video\'s playback with the browser\'s MediaRecorder API, regardless of the original file\'s format.' },
+    { q: 'How long does cutting take?', a: 'About as long as the clip itself, the tool plays the selected range in real time while capturing it rather than processing the file instantly.' },
+    { q: 'What if my browser does not support in-browser cutting?', a: 'You will see a fallback FFmpeg command (ffmpeg -ss START -to END -i input.mp4 -c copy output.mp4) to run locally instead, which cuts losslessly without re-encoding.' },
+  ],
+  'data-size-converter': [
+    { q: 'Does it use binary (1024) or decimal (1000) unit sizes?', a: 'Binary only, every unit step multiplies by 1024 (1 KB = 1024 bytes). There is no toggle for decimal, 1000-based units.' },
+    { q: 'What units can I convert between?', a: 'Bytes, KB, MB, GB, TB, and PB, entering a value in any one of them shows the equivalent in all six at once.' },
+    { q: 'Does it round very large or small results?', a: 'Results are shown with up to 6 decimal places, and values that would round to an unreadable near-zero number are hidden from the results list.' },
+  ],
+  'data-uri-generator': [
+    { q: 'What MIME types can I choose for text input?', a: 'text/plain, text/html, text/css, application/javascript, application/json, and image/svg+xml.' },
+    { q: 'Does uploading a file send it anywhere?', a: 'No, files are read and base64-encoded entirely in the browser using the FileReader API, nothing is uploaded to a server.' },
+    { q: 'Can I preview an image before copying its data URI?', a: 'Yes, if the uploaded file is an image type, a thumbnail preview renders using the generated data URI directly.' },
+  ],
+  'db-query-formatter': [
+    { q: 'Which SQL keywords get their own line?', a: 'Major clauses like SELECT, FROM, WHERE, the JOIN variants, GROUP BY, ORDER BY, HAVING, LIMIT, and more each start a new line, with AND/OR conditions indented beneath them.' },
+    { q: 'Does it validate that my SQL is correct?', a: 'No, it only reformats and highlights keywords in whatever text you provide, it does not parse or check the query\'s SQL syntax.' },
+    { q: 'What SQL dialect does the keyword list target?', a: 'A general ANSI-style vocabulary covering SELECT, INSERT, UPDATE, DELETE, and common clauses, not a database-specific dialect like PL/pgSQL or T-SQL extensions.' },
+  ],
+  'decimal-to-binary': [
+    { q: 'What number bases does it convert to?', a: 'Binary, hexadecimal, and octal, all three shown at once with their conventional 0b, 0x, and 0o prefixes.' },
+    { q: 'Is hexadecimal output uppercase or lowercase?', a: 'Uppercase letters, A through F.' },
+    { q: 'Can I copy just one of the results?', a: 'Yes, each of the three result cards has its own Copy button.' },
+  ],
+  'decimal-to-hex-converter': [
+    { q: 'Can I add a 0x prefix to the hex output?', a: 'Yes, a "0x prefix" checkbox adds it to the hex, binary (0b), and octal (0o) results together.' },
+    { q: 'What does "Pad zeros" do?', a: 'It pads the hexadecimal result to an even number of digits with leading zeros, useful when you need consistent byte-pair formatting.' },
+    { q: 'Does it convert to octal too?', a: 'Yes, alongside hexadecimal and binary, an octal result is shown even though it is not mentioned in the tool\'s name.' },
+  ],
+  'delete-pages': [
+    { q: 'How do I choose which pages to remove?', a: 'Click any page thumbnail to mark it for deletion, or use Select All / Deselect All to toggle every page at once.' },
+    { q: 'Can I delete every page in the document?', a: 'No, the tool blocks deleting all pages since that would leave an empty PDF, at least one page must remain.' },
+    { q: 'Does it re-render or compress the remaining pages?', a: 'No, remaining pages are copied directly into a new PDF document with pdf-lib, preserving their original content exactly.' },
+  ],
+  'discount-calculator': [
+    { q: 'Can it factor in sales tax as well as the discount?', a: 'Yes, an optional Sales Tax field applies tax to the price after the discount, so the Final Price reflects both adjustments.' },
+    { q: 'What exactly counts as "Total Savings"?', a: 'Just the discount amount taken off the original price, tax is shown separately since it is an addition rather than a saving.' },
+    { q: 'Does it accept discounts entered as a decimal like 0.25 instead of 25?', a: 'No, the Discount Percentage field expects a whole percent value like 25, not a decimal fraction.' },
+  ],
+  'dns-lookup-v2': [
+    { q: 'Where do the DNS results come from?', a: 'Live queries to Google\'s public DNS-over-HTTPS resolver (dns.google), not cached or simulated data.' },
+    { q: 'Can I look up multiple record types in one click?', a: 'Yes, toggle any combination of A, AAAA, MX, TXT, and CNAME and Lookup All queries them simultaneously.' },
+    { q: 'What happens if a record type does not exist for the domain?', a: 'That type\'s card shows "No records found" rather than an error, while a genuine lookup failure shows "Lookup failed" instead.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
