@@ -1314,6 +1314,46 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How accurate is the conversion?', a: 'It uses the standard RGB-to-HSL formula based on the minimum and maximum channel values, the same math used by browser color tools.' },
     { q: 'Can I pick a color visually instead of typing Hex?', a: 'Yes, a color swatch picker next to the text field lets you choose a color and convert it to HSL.' },
   ],
+  'hex-to-hsv': [
+    { q: 'What is the difference between HSV and HSB?', a: 'None, they are the same model under two names: Hue, Saturation, and Value, also called Brightness.' },
+    { q: 'What does the result show?', a: 'Hue in degrees, saturation and value as percentages, and a ready-to-copy hsv() string.' },
+    { q: 'Can I pick a color visually instead of typing Hex?', a: 'Yes, a color swatch picker next to the text field lets you choose a color and convert it to HSV.' },
+  ],
+  'hex-to-rgba': [
+    { q: 'How does the alpha channel work?', a: 'A slider from 0 to 1 in steps of 0.1 sets the alpha value, which is combined with the converted RGB channels in the final rgba() output.' },
+    { q: 'What does the preview show?', a: 'A swatch rendered with the actual rgba() value, so you can see the transparency effect, not just the solid color.' },
+    { q: 'What happens with an invalid Hex code?', a: 'It shows an error asking for the #RRGGBB format instead of guessing or returning a broken value.' },
+  ],
+  'homoglyph-detector': [
+    { q: 'What counts as a homoglyph here?', a: 'Latin letters and digits that have visually similar Cyrillic, Greek, or other lookalike characters, such as Cyrillic а standing in for Latin a.' },
+    { q: 'Does it check URLs specifically?', a: 'Yes, any http or https URL in the input is pulled out separately and checked for lookalike characters that would make it visually mimic a different domain.' },
+    { q: 'How is risk level decided?', a: 'A character is marked high risk when a Latin letter has a similar character from a different script, since that mismatch is the pattern used in real phishing domains.' },
+  ],
+  'homophone-checker': [
+    { q: 'Which word pairs does it catch?', a: 'Around 15 commonly confused sets, including there/their/they\'re, your/you\'re, its/it\'s, to/too/two, and affect/effect.' },
+    { q: 'How does it decide which word to suggest?', a: 'Each match is checked against simple contraction patterns, like skipping "there" right after an apostrophe so "they\'re" isn\'t flagged as an error.' },
+    { q: 'Does it show where each issue appears?', a: 'Yes, each result includes the surrounding text so you can see the word in context before deciding whether to change it.' },
+  ],
+  'hreflang-tag-generator': [
+    { q: 'How many languages and regions does it support?', a: 'Over 30 locale combinations, from en-US and es-MX to ja-JP and ar-SA, toggled on individually from a grid.' },
+    { q: 'What output formats can I generate?', a: 'HTML link tags, a JSON array, or a full XML sitemap with xhtml:link alternates, switchable with one click.' },
+    { q: 'What does marking a page as x-default do?', a: 'It flags that URL as the fallback shown to visitors whose language doesn\'t match any of your selected locales, and adds the matching x-default tag to the output.' },
+  ],
+  'hsl-to-hex': [
+    { q: 'Can I switch between entering HSL and Hex directly?', a: 'Yes, a toggle switches the input mode between HSL sliders and a Hex text field, and editing either one keeps the other in sync.' },
+    { q: 'Does the preview update as I move the sliders?', a: 'Yes, the color swatch, Hex value, and CSS code all update immediately as you drag the hue, saturation, or lightness slider.' },
+    { q: 'What do the preset swatches do?', a: 'Clicking a preset like Red or Cyan jumps the sliders straight to that color\'s HSL values instead of dragging manually.' },
+  ],
+  'hsv-to-hex': [
+    { q: 'How is HSV different from HSL?', a: 'HSV uses Value (brightness) instead of Lightness, which makes it easier to darken a color toward black without also washing it toward gray.' },
+    { q: 'Does the preview update as I move the sliders?', a: 'Yes, the color swatch and Hex value update immediately as you drag the hue, saturation, or value slider.' },
+    { q: 'Can I start from a Hex code instead?', a: 'Yes, switching to Hex Input mode lets you type or pick a Hex color and see its equivalent HSV sliders.' },
+  ],
+  'html-attribute-encoder': [
+    { q: 'Which characters does it encode?', a: 'Ampersand, double quote, single quote, less-than, and greater-than, the five characters that can break out of an HTML attribute value.' },
+    { q: 'Can it also decode?', a: 'Yes, a Decode mode reverses the same five entities back into their original characters.' },
+    { q: 'Why not just use JavaScript\'s built-in encoding?', a: 'Attribute encoding has different rules than URL or HTML-body encoding, since a single quote or double quote inside an attribute value needs escaping that those other encoders don\'t apply.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
