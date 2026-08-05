@@ -1199,6 +1199,46 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What categories can I filter by?', a: 'Smileys, Gestures, Symbols, Travel, Objects, People, and Nature, or All to see every emoji at once.' },
     { q: 'What happens when I click an emoji?', a: 'It\'s copied straight to your clipboard, with the label briefly switching to "Copied" as confirmation.' },
   ],
+  'encodings-reference': [
+    { q: 'What encoding tables does it include?', a: 'Four reference tables: ASCII characters 32 to 126 with decimal and hex codes, common HTML entities in named and numeric form, URL-encoded special characters, and the full Base64 alphabet with its padding character.' },
+    { q: 'Can I search within a table instead of scrolling?', a: 'Yes, a live search box filters whichever table tab is active, matching against the character, its name, or its code.' },
+    { q: 'Does it encode text I type in?', a: 'No, it\'s a static lookup reference for the tables themselves rather than an encoder for arbitrary input.' },
+  ],
+  'env-parser': [
+    { q: 'Does it handle the "export" prefix used in shell scripts?', a: 'Yes, a leading "export " before a key is stripped automatically before the line is parsed.' },
+    { q: 'How does it handle quoted values?', a: 'Double-quoted values are unescaped, so \\n and \\" convert to a real newline and quote, single-quoted values are taken literally, and unquoted values can carry a trailing # comment that gets stripped.' },
+    { q: 'What happens if the same key appears twice?', a: 'Both lines still show up in the parsed table, but the duplicate is flagged as an issue noting the later value wins.' },
+  ],
+  'english-collocations-checker': [
+    { q: 'What kinds of word pairings does it check?', a: 'Common collocations built around everyday verbs like make, take, do, have, get, break, and about a dozen others, checking whether the word that follows forms a natural-sounding phrase.' },
+    { q: 'Does it cover collocations beyond these verbs?', a: 'Not yet, it checks a fixed dictionary of common verb-based pairings rather than every possible English collocation.' },
+    { q: 'What does it show when a pairing looks off?', a: 'It highlights the phrase in your text and suggests the more natural pairing from its dictionary in its place.' },
+  ],
+  'english-dictionary': [
+    { q: 'Where do the definitions come from?', a: 'A live lookup against the Free Dictionary API, not a static built-in wordlist.' },
+    { q: 'What information does it show beyond the definition?', a: 'Phonetic spelling with audio playback where available, example sentences, and synonyms and antonyms listed under each meaning.' },
+    { q: 'What happens if I search a word that isn\'t found?', a: 'It shows a specific not-found message rather than a generic error, so you know the lookup worked but the word wasn\'t recognized.' },
+  ],
+  'english-grammar-checker': [
+    { q: 'What kinds of errors does it catch?', a: 'A fixed set of common mistakes: its/it\'s confusion, your/you\'re, "could of" instead of "could have", alot, then/than mix-ups, a missing capital on "I", and double spacing.' },
+    { q: 'Does it analyze sentence structure or writing style?', a: 'No, it matches your text against a list of common error patterns rather than parsing grammar or judging style and clarity.' },
+    { q: 'How are corrections shown?', a: 'Each match highlights the specific phrase in your text and offers the corrected wording to swap in.' },
+  ],
+  'excel-to-csv': [
+    { q: 'What Excel format does it accept?', a: '.xlsx files, read directly from the file\'s internal XML and shared-strings data in your browser, nothing is uploaded to a server.' },
+    { q: 'Does it handle workbooks with multiple sheets?', a: 'Yes, every sheet gets its own tab so you can switch between them before copying or downloading.' },
+    { q: 'Is there a row limit?', a: 'The on-screen preview shows the first 200 rows, but the downloaded CSV always includes every row in the sheet.' },
+  ],
+  'excel-to-xml': [
+    { q: 'What does the generated XML look like?', a: 'Each sheet becomes a Worksheet element containing Row elements, and each Row contains Cell elements tagged with a column index.' },
+    { q: 'Does it handle workbooks with multiple sheets?', a: 'Yes, a tab switcher lets you pick which sheet to export, and the XML preview and download update to match.' },
+    { q: 'Can I copy the XML instead of downloading a file?', a: 'Yes, a Copy XML button puts the full generated markup on your clipboard.' },
+  ],
+  'exif-remover': [
+    { q: 'What metadata does it show before removing it?', a: 'Common EXIF tags such as camera make and model, timestamps, exposure time, F-number, ISO, and focal length, listed so you can see what was embedded.' },
+    { q: 'How does it actually strip the metadata?', a: 'It redraws the image onto a canvas and re-exports it from there, which drops all embedded metadata as a side effect, not only the specific tags it listed.' },
+    { q: 'What if no EXIF tags are detected?', a: 'It still re-encodes the image and offers the cleaned file for download, since some formats or cameras embed metadata this parser doesn\'t decode by name.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
