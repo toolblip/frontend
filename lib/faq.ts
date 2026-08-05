@@ -1764,6 +1764,41 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does it edit in place or just report errors?', a: 'Both, the same textarea you type or paste your robots.txt into is what gets validated, so you can fix a flagged line and re-run Validate immediately.' },
     { q: 'What happens if there are no errors?', a: "The Validation Errors panel simply doesn't appear, and the Preview/Rules panel below shows your parsed Allow and Disallow rules as confirmation the file was read correctly." },
   ],
+  'rot47-cipher': [
+    { q: 'How is ROT47 different from ROT13?', a: 'ROT47 shifts across the full 94 printable ASCII characters from ! through ~, not just the 26 letters, so it also scrambles digits, punctuation, and symbols, while ROT13 only rotates letters.' },
+    { q: 'Do Encode and Decode do different things?', a: "Encode shifts each character 47 positions forward through the 94-character set and Decode shifts it 47 positions back, both wrapping around the same range, so they're inverse operations rather than identical buttons." },
+    { q: 'What characters are left untouched?', a: 'Anything outside the ! through ~ printable ASCII range, including a plain space character, passes through unshifted.' },
+  ],
+  'rotate': [
+    { q: 'What rotation angles does it support?', a: 'Three fixed presets, 90, 180, and 270 degrees, selected as buttons.' },
+    { q: 'How is the rotated image produced?', a: "The image is drawn onto a hidden canvas element and rotated with canvas transform math, and the canvas dimensions swap width and height automatically for 90 and 270 degree turns so the output isn't cropped." },
+    { q: 'What format does the download use?', a: 'A PNG file named "rotated-image.png", generated straight from the canvas after you click one of the rotation buttons.' },
+  ],
+  'screen-resolution-tester': [
+    { q: 'How many device presets are included?', a: 'Thirteen, spanning phones like iPhone SE and Pixel 8, tablets like iPad Mini and iPad Pro, laptops, and fixed resolutions up to 4K UHD, each showing its exact pixel dimensions on the button.' },
+    { q: 'What stats does it calculate besides the resolution?', a: 'Aspect ratio to three decimal places, total pixel count (shown in megapixels once it passes one million), and a scaled-down preview rendered at 30% size so large resolutions still fit on screen.' },
+    { q: 'Can I actually open a window at that resolution?', a: 'Yes, an "Open in New Window" link launches a blank browser window sized to your exact width and height, letting you test the real viewport rather than just the scaled preview.' },
+  ],
+  'security-headers-generator': [
+    { q: 'What output formats does it generate besides raw headers?', a: 'Four: a plain header list, an Nginx server block using add_header, an Apache .htaccess block using mod_headers, and a Next.js next.config.js headers() snippet, each with its own Copy button.' },
+    { q: 'What do the built-in presets configure?', a: 'Basic Security enables X-Frame-Options, X-Content-Type-Options, X-XSS-Protection, and Referrer-Policy, Strict CSP adds a strict-dynamic Content-Security-Policy and HSTS, HSTS Preload sets a two-year max-age with the preload flag, and Full Protection turns on all eleven available headers at once.' },
+    { q: "Can I add headers that aren't in the preset list?", a: 'Yes, a Custom Headers section lets you type any header name and value and add it to the generated output alongside the toggled presets.' },
+  ],
+  'semver-checker': [
+    { q: 'What counts as a valid version string?', a: 'Standard semver format, major.minor.patch, with optional pre-release and build metadata suffixes like 1.2.3-beta.1+20130313, checked against a regex before any comparison runs.' },
+    { q: 'How does it decide which version is greater?', a: 'It compares major, then minor, then patch numerically, and only if all three match does it fall back to comparing pre-release labels, where a version without a pre-release tag beats one that has one.' },
+    { q: 'What happens if I enter an invalid version?', a: 'The result shows "Invalid" with the reason "Both must be valid semver (e.g. 1.2.3)" instead of a comparison, so malformed input is caught before it produces a misleading answer.' },
+  ],
+  'sentence-lorem-ipsum': [
+    { q: 'How does it decide what one "sentence" is?', a: 'When Sentences is selected, it pulls 10 words per sentence from the standard Lorem Ipsum passage and splits that chunk on sentence-ending punctuation, so each generated sentence is a consistent word count rather than a copy of one fixed line.' },
+    { q: 'Can I generate words or paragraphs instead of just sentences?', a: 'Yes, a mode toggle switches the same generator between Words, Sentences, and Paragraphs, with the count field controlling how many of whichever unit you pick.' },
+    { q: 'Do I have to start every result with "Lorem ipsum..."?', a: 'No, an unchecked "Start with Lorem ipsum..." box lets the output begin partway through the passage instead of always opening with the classic first words.' },
+  ],
+  'sentence-rewriter': [
+    { q: 'Does it use AI to rewrite sentences?', a: 'No, it runs a fixed set of phrase-substitution and pattern-matching rules, swapping known filler phrases, common passive-voice patterns, and leading adverbs, rather than generating new phrasing with a language model.' },
+    { q: 'What happens if I paste more than one sentence?', a: "It combines the first two sentences into one before rewriting, and if there's a recognizable conjunction like \"and\" or \"because\" in the result, adds a Split option that breaks it back into shorter pieces." },
+    { q: 'How do I pick between the different rewrite options?', a: 'Each option appears as its own button labeled with its type, Simplified, Expanded, Active Voice, and so on, clicking one sets it as the Selected Result with its own Copy to Clipboard button.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
