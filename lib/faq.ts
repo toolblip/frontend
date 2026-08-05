@@ -1694,6 +1694,31 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What counts does it show besides the time estimate?', a: 'Word count, character count excluding whitespace, sentence count based on ., !, and ? marks, and paragraph count based on blank-line breaks all appear alongside the time.' },
     { q: 'What do the "Quick read" and "Long read" labels mean?', a: 'Results under 1 minute are labeled Quick read, under 3 minutes Short read, under 7 minutes Medium read, and anything longer Long read.' },
   ],
+  'readability-score': [
+    { q: 'How does it estimate syllable count for the readability formulas?', a: 'It approximates syllables by counting vowel letters (a, e, i, o, u) in the text rather than performing true syllable segmentation, a fast approximation used in both the Flesch Reading Ease and Flesch-Kincaid Grade calculations.' },
+    { q: 'What scores does it calculate?', a: 'Three: Flesch Reading Ease on a 0 to 100 scale labeled Easy, Moderate, or Difficult, the Flesch-Kincaid Grade Level, and the SMOG Index, each shown with a grade-level interpretation.' },
+    { q: 'What other stats besides the readability scores does it show?', a: 'Word count, sentence count, average word length, and average sentence length, all calculated the moment you type at least one word.' },
+  ],
+  'reading-time-calculator': [
+    { q: 'What format does the time show for very short text?', a: 'Text estimated at under a minute displays as just a seconds value like "38s", switching to the combined "Xm Ys" format only once the estimate reaches a full minute.' },
+    { q: 'How does it treat multiple punctuation marks in a row, like "?!" or "..."?', a: 'A run of consecutive ., !, or ? characters counts as a single sentence ending rather than one per character, so "Wait..." only adds one to the sentence count.' },
+    { q: 'Do I need at least two blank lines to start a new paragraph?', a: 'Yes, the text is split wherever two or more consecutive line breaks appear, a single line break within a block is treated as part of the same paragraph.' },
+  ],
+  'reading-time-estimator': [
+    { q: 'What reading speed does it assume before I touch the slider?', a: 'It starts at 200 words per minute, before you drag the slider anywhere from 100 to 500 to match your own pace.' },
+    { q: 'Do I need to click a button to see the estimate?', a: 'No, the word count, stats, and time estimate all update automatically as you type or paste text, there is no separate calculate button.' },
+    { q: 'What shows before I enter any text?', a: 'A placeholder message reading "Enter text to calculate reading time" appears in the output area until you type or paste something.' },
+  ],
+  'regex-match-tester': [
+    { q: 'What flags can I toggle on the pattern?', a: 'Six standard JavaScript regex flags as buttons: g (global), i (ignore case), m (multiline), s (dotall), u (unicode), and y (sticky), each toggled independently.' },
+    { q: 'Does it show capture groups for each match?', a: 'Yes, both numbered groups (labeled $1, $2, and so on) and any named groups from your pattern are listed underneath each match, with unmatched optional groups shown as an empty-set symbol.' },
+    { q: 'What happens if my pattern matches a huge number of times?', a: 'The match list displays up to the first 100 matches and then shows a note like "...and 12 more" instead of rendering every single one, keeping the page responsive.' },
+  ],
+  'regex-match-visualizer': [
+    { q: 'How does it show which regex tokens I am using?', a: 'Below the pattern field it lists tags for any of ten common tokens found in your pattern, like \\d, \\s, ^, or |, and hovering each tag reveals a plain-language description such as "Digit" or "Start".' },
+    { q: 'How do I set flags like case-insensitive matching?', a: 'Flags are typed directly into a small text field next to the pattern input, defaulting to "g", rather than picked from a list of toggle buttons.' },
+    { q: 'What happens if my pattern is invalid?', a: "An error message with the JavaScript engine's own error text appears below the pattern field instead of a match count." },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
