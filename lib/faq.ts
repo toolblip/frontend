@@ -1399,6 +1399,36 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Which deprecated tags does it flag?', a: 'Old presentational tags like <center>, <font>, <marquee>, <blink>, and <strike>, with a suggestion to use CSS instead.' },
     { q: 'What accessibility issues does it check for?', a: 'Missing alt attributes on <img> tags, plus javascript: URLs in href attributes, which are flagged as both a security and accessibility concern.' },
   ],
+  'collage-maker': [
+    { q: 'How many photos can I put in one collage?', a: 'It depends on the layout you pick, from a single 2x1 pair up to nine photos in the 3x3 grid, and the dropzone tells you how many slots the current layout has left.' },
+    { q: 'What counts as "customizing borders"?', a: 'A spacing slider controls the gap between photos from 0 to 30 pixels, and a background color picker sets what shows through that gap, together framing each photo like a border.' },
+    { q: 'What happens if I switch layouts after adding photos?', a: 'Changing the layout clears the photos you already added, since each layout has a different number of slots to fill from scratch.' },
+  ],
+  'image-background-remover': [
+    { q: 'How does Auto Detect know what the background is?', a: 'It samples the pixel colors at all four corners of the image, averages them into one background color, then flood-fills outward from those corners removing any pixel within your tolerance of that color.' },
+    { q: 'When should I use Color Key instead?', a: 'Color Key removes a specific color you choose with the color picker, such as green screen footage, rather than guessing the background from the corners.' },
+    { q: 'What does the Tolerance slider control?', a: 'It sets how close a pixel\'s color has to be to the detected or chosen background color to get made transparent, so raising it removes more color variation like shadows or gradients.' },
+  ],
+  'image-color-picker': [
+    { q: 'How precise is the color it picks?', a: 'It reads the exact pixel color under your click from the image drawn on a canvas, so you get the true color at that point rather than an averaged or estimated value.' },
+    { q: 'What formats can I copy?', a: 'Hex, RGB, and HSL, each with its own copy button; the RGB and HSL values are written in valid CSS syntax like rgb(r, g, b) so you can paste them straight into a stylesheet.' },
+    { q: 'Can I sample more than one color from the same image?', a: 'Yes, click anywhere else on the image to update the selected color, and each format\'s copy button always reflects whatever pixel you clicked most recently.' },
+  ],
+  'image-compressor': [
+    { q: 'Which output formats can I compress to?', a: 'JPEG, PNG, or WebP, chosen with a button group, with a short note under each explaining when it is the better choice, such as JPEG for photos or WebP for the best overall compression.' },
+    { q: 'How do I control the tradeoff between size and quality?', a: 'A quality slider from 1 to 100 percent controls the compression level, with the tool suggesting 80 percent as a good default balance.' },
+    { q: 'How can I tell how much smaller the result is?', a: 'The Original and Compressed panels show file size side by side, and a compression result card displays the percentage saved after you run Compress Image.' },
+  ],
+  'image-cropper': [
+    { q: 'What preset ratios are available?', a: 'Square 1:1, 16:9, 4:3, 3:2, Portrait 2:3, and Passport 35mm, so you can crop directly to common social, video, or ID photo dimensions.' },
+    { q: 'How do I select the exact area to crop?', a: 'Drag directly on the image to draw a crop rectangle, shown as a semi-transparent overlay you can adjust before cropping.' },
+    { q: 'What happens after I crop?', a: 'The selected region is drawn onto a new canvas at its original resolution and offered as a separate PNG download, leaving your original image untouched.' },
+  ],
+  'image-flip-tool': [
+    { q: 'What flip directions are available?', a: 'Horizontal, Vertical, or Both, each applied with a canvas transform so the flip renders instantly without any quality loss.' },
+    { q: 'Can I see the result before downloading?', a: 'Yes, the Original and Flipped versions display side by side so you can confirm the mirroring is correct before saving.' },
+    { q: 'Does flipping change the image dimensions?', a: 'No, flipping only mirrors the pixels along the chosen axis, so the width and height stay exactly the same as the original.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
