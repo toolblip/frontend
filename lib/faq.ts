@@ -1549,6 +1549,11 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What happens if my description goes past 200 characters?', a: 'An extra warning appears noting it will likely be truncated in search results, layered on top of the over-160 length warning.' },
     { q: 'Does the page title field affect the score?', a: 'No, only the meta description length drives the score and messages, the title field is there for context but is not itself scored.' },
   ],
+  'mock-port-scanner-full': [
+    { q: 'What does a "filtered" result mean compared to "closed"?', a: 'Filtered means the scan request to a given port errored out or timed out after one second without a clear answer, closed means the port responded but reported as not open, and open means it responded as accepting connections.' },
+    { q: 'Can I scan a range of ports instead of listing them one by one?', a: 'Yes, the ports field accepts ranges like "1-1000" and comma-separated mixes such as "80, 443, 8080-8090", which are parsed, deduplicated, and sorted into one port list before scanning starts.' },
+    { q: 'Does it tell me what service typically runs on an open port?', a: 'For about twenty well-known ports, like 22 for SSH, 443 for HTTPS, 3306 for MySQL, and 6379 for Redis, the results table shows the matching service name next to the port number.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
