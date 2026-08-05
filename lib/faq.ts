@@ -1954,6 +1954,36 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What tip percentages are available?', a: 'Six preset buttons, 5%, 10%, 15%, 18%, 20%, and 25%, plus a custom number field if you need a specific percentage outside those presets.' },
     { q: 'How is the per-person amount calculated?', a: 'It adds your tip amount to the bill for a total, then divides that total by the number of people set with the plus and minus buttons next to "Split Between".' },
   ],
+  'toml-to-json': [
+    { q: 'What TOML syntax can it parse?', a: '[section] headers, key = value lines, double or single quoted strings, true/false booleans, and plain numbers, each converted to the matching JSON type of string, boolean, or number.' },
+    { q: 'What happens to lines it cannot parse?', a: 'Blank lines and lines starting with # are skipped, and any line without an = sign is silently ignored rather than converted, so simple key-value pairs and section headers convert most reliably.' },
+    { q: 'Does it support nested tables or arrays?', a: 'No, it only handles single-level [section] tables and flat key = value pairs, TOML arrays, inline tables, and multi-line strings are not parsed.' },
+  ],
+  'tsv-to-csv': [
+    { q: 'How does it handle cells that contain commas or quotes?', a: 'Any cell containing a comma, double quote, or newline gets wrapped in double quotes, with existing double quotes doubled, so the resulting CSV stays valid even when your TSV data has punctuation inside fields.' },
+    { q: 'Does it require a header row?', a: 'No, it converts every line the same way, tab-delimited into comma-delimited, whether or not the first line happens to be a header, so headers pass through unmodified along with the rest of your data.' },
+    { q: 'Can I copy the converted CSV output?', a: 'Yes, a Copy button appears above the CSV output box once you have converted your data, copying the result straight to your clipboard.' },
+  ],
+  'tweet-to-image-converter': [
+    { q: 'What are the two ways to create the image?', a: 'The default General mode fetches a real tweet by URL through oEmbed and renders its author, text, and stats, while a Customize mode on paid plans lets you type your own author name, handle, and tweet text from scratch.' },
+    { q: 'What sizes can I export besides the default tweet card?', a: 'Switching the Platform dropdown gives you presets for Instagram (square, portrait, story), LinkedIn, Twitter/X, and Facebook, each with its own aspect ratio, plus a fully custom width and height in General mode.' },
+    { q: 'Can I share the image without downloading it first?', a: 'Yes, a "Share to" button copies the rendered PNG straight to your clipboard so you can paste it directly into a post, alongside the Download PNG button.' },
+  ],
+  'typo-checker': [
+    { q: 'How large is the typo dictionary it checks against?', a: 'It compares every word in your text, lowercased and stripped of punctuation, against a built-in list of over 100 common misspellings like "recieve", "definately", and "seperate".' },
+    { q: 'Does "Fix All" preserve my original capitalization?', a: 'Yes, if a flagged word started with a capital letter, the replacement is capitalized to match, so "Teh" becomes "The" rather than "the".' },
+    { q: 'What does it show me before I click Fix All?', a: 'A table listing every flagged word next to its suggested correction, plus a live count of how many potential typos were found in your text.' },
+  ],
+  'ulid-generator': [
+    { q: 'How many ULIDs can I generate at once?', a: 'Between 1 and 100 at a time, set with the number input, each one generated fresh with its own timestamp and random portion.' },
+    { q: 'What encoding does it use for the output?', a: "Crockford's Base32, the same 26 character alphabet ULIDs are defined with, which excludes the letters I, L, O, and U to avoid visual confusion with digits." },
+    { q: 'Can I get the letters in lowercase instead?', a: 'Yes, an UPPERCASE checkbox is checked by default, unchecking it converts every generated ULID to lowercase instead.' },
+  ],
+  'unicode-character-inspector': [
+    { q: 'What details does it show for each character?', a: 'Its Unicode code point like U+0041, hex and decimal values, an 8+8 bit binary breakdown, its raw UTF-8 byte sequence, and its HTML numeric entity, all shown in a card per character.' },
+    { q: 'Can I inspect more than one character at once?', a: 'Yes, type or paste multiple characters into the input and click Inspect, a separate results card is generated for each individual character in your input.' },
+    { q: 'How does it determine the character category shown?', a: 'It checks the code point against known ranges to label letters as Uppercase or Lowercase Letter, digits as Digit, and CJK ideographs by their Unicode block, falling back to "Other" for anything outside those ranges.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
