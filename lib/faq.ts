@@ -527,6 +527,76 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Do I get the same rephrasing every time?', a: 'Not necessarily. Where a word has more than one listed synonym, the tool can pick a different one on repeat runs, so rephrasing the same input twice may not produce identical output.' },
     { q: 'What kind of words does it leave alone?', a: 'Anything not in its synonym dictionary passes through untouched, including names, technical terms, and niche vocabulary, so the output stays readable instead of being force-swapped into odd substitutes.' },
   ],
+  'ai-twitter-generator': [
+    { q: 'Does the AI Twitter/X Generator use a real AI model?', a: 'No. It fills fixed hook, body, and call-to-action templates with your topic, picking randomly from several phrasings for whichever hook style you choose: question, statement, stat, or quote.' },
+    { q: 'Are the numbers in the "stat" hooks real statistics?', a: 'No. Stat-style hooks like "97% of people don\'t know this" are placeholder phrasing, not researched figures. Replace any number before posting if you use a stat-style hook.' },
+    { q: 'Can it generate a thread instead of a single tweet?', a: 'Yes. Set the tweet count above 1 and the tool chains multiple templated tweets together into a numbered thread built around the same topic.' },
+  ],
+  'algorithm-visualizer': [
+    { q: 'Which sorting algorithms can I visualize?', a: 'Bubble sort, selection sort, and insertion sort. Each run generates the full sequence of comparison and swap steps for the array you provide, then steps through them one at a time.' },
+    { q: 'Can I use my own array of numbers?', a: 'Yes. Enter your own values and the tool generates the step-by-step sort sequence for that exact array instead of a preset example.' },
+    { q: 'Does it explain the time complexity of each algorithm?', a: 'The tool focuses on the visual step-through of comparisons and swaps rather than a written complexity breakdown, so pair it with a reference on Big O if you need the formal complexity classes.' },
+  ],
+  'audio-to-text': [
+    { q: 'Does it transcribe audio files I upload?', a: 'No. It uses your browser\'s built-in Web Speech API to transcribe live microphone input in real time, not pre-recorded audio files. A banner in the tool makes this clear before you start.' },
+    { q: 'Which browsers support the live transcription?', a: 'Chrome, Edge, and Safari expose the Web Speech API this tool relies on. If your browser isn\'t supported, it falls back to a manual text box where you can paste or type a transcript instead.' },
+    { q: 'Can I edit the transcript after speaking?', a: 'Yes. The transcript appears in an editable area as you speak, and you can copy it to your clipboard once you\'re done, or replace it entirely using the manual input box.' },
+  ],
+  'automation-wizard': [
+    { q: 'Does the Automation Wizard actually run my automations?', a: 'No, it\'s a builder: you assemble triggers, actions, and conditions from template blocks, and it exports the result as a JSON or YAML workflow definition. Running it requires feeding that definition into an actual automation platform.' },
+    { q: 'What kinds of triggers and actions can I add?', a: 'Triggers include webhooks, schedules, incoming email, and form submissions. Actions include HTTP requests, sending email, posting to Slack, and simple data transforms or filters.' },
+    { q: 'What format is the exported workflow in?', a: 'You can export as JSON, structured around a trigger plus an ordered list of steps, or as YAML with the same trigger/steps shape, whichever your automation runner expects.' },
+  ],
+  'api-auth-header-generator': [
+    { q: 'What types of auth headers can it build?', a: 'Bearer tokens, HTTP Basic auth from a username and password, and custom API-key headers with your own header name and optional prefix.' },
+    { q: 'How is the Basic auth header encoded?', a: 'It base64-encodes your username and password together as user:pass using the browser\'s built-in btoa, then formats it as an Authorization: Basic header, the same encoding curl and Postman use.' },
+    { q: 'Does it store or send my credentials anywhere?', a: 'No. The header string is built entirely in your browser and only exists on the page until you copy it; nothing is transmitted or logged.' },
+  ],
+  'api-doc-generator': [
+    { q: 'What input does the API Doc Generator need?', a: 'Paste a sample JSON response and give the endpoint a name. The tool inspects the JSON\'s keys and value types and builds a Markdown reference doc around them.' },
+    { q: 'Does it document more than GET requests?', a: 'The generated template assumes a GET endpoint returning the JSON you provided. For POST/PUT bodies or multiple methods on the same path, use the API Endpoint Documenter tool instead.' },
+    { q: 'What does the output look like?', a: 'A Markdown page with a description section and a response-fields table listing each key, its inferred type (string, number, array, object, and so on), and a short auto-generated description.' },
+  ],
+  'api-endpoint-documenter': [
+    { q: 'Can I document more than one endpoint at once?', a: 'Yes. Add as many endpoints as you need, each with its own method, path, description, request body, and response example, and the tool compiles them into a single Markdown document.' },
+    { q: 'Which HTTP methods does it support?', a: 'GET, POST, PUT, PATCH, and DELETE, each color-coded in the editor so a long list of endpoints stays easy to scan.' },
+    { q: 'Does this tool call my API to get the response examples?', a: 'No. You paste in the request body and response example yourself; the tool only formats what you provide into structured Markdown.' },
+  ],
+  'api-spec-generator': [
+    { q: 'What does the API Spec Generator produce?', a: 'A basic OpenAPI 3.0 YAML skeleton: an info block, a server URL, and structure inferred from a sample JSON response you paste in.' },
+    { q: 'Where does it get the title, version, and base URL from?', a: 'From your JSON if you include title/name, version, and baseUrl/base_path fields. Anything missing falls back to a placeholder like "API", "1.0.0", or https://api.example.com that you edit afterward.' },
+    { q: 'Is this a complete, validated OpenAPI spec?', a: 'It\'s a starting skeleton, not a full spec, since it can only infer structure from one example response. Run the output through an OpenAPI validator before relying on it for codegen or docs hosting.' },
+  ],
+  'all-in-one-unit-converter': [
+    { q: 'Which unit categories does it cover?', a: 'Length, weight, temperature, volume, and several other common categories, all in one converter instead of separate tools per category.' },
+    { q: 'How does it handle temperature, since that isn\'t a simple multiply?', a: 'Temperature uses a dedicated formula-based conversion between Celsius, Fahrenheit, and Kelvin, rather than the multiply-by-factor math used for length, weight, and volume.' },
+    { q: 'How accurate are the conversions?', a: 'Length, weight, and volume conversions use fixed numeric factors between units, so results are exact to floating-point precision, not rounded estimates.' },
+  ],
+  'anagram-generator': [
+    { q: 'Does it only return real English words?', a: 'No. It generates every possible letter rearrangement of your input and filters by minimum length, but it doesn\'t check results against a dictionary, so nonsense letter strings show up mixed in with real words.' },
+    { q: 'Why does it cap the number of results?', a: 'The number of permutations grows factorially with word length: an 8-letter word already has over 40,000 arrangements. The max-results limit keeps the page responsive instead of generating every single one.' },
+    { q: 'Can I filter out short results?', a: 'Yes. Set a minimum length and anything shorter than that is excluded from the list before it\'s capped to your maximum-results setting.' },
+  ],
+  'angle-unit-converter': [
+    { q: 'Which angle units does it support?', a: 'Degrees, radians, gradians, and turns, so you can convert between the units math, engineering, and game-development contexts each tend to prefer.' },
+    { q: 'Is the radian conversion exact?', a: 'It uses the exact mathematical relationship of pi radians equaling 180 degrees, so results are as precise as JavaScript floating-point math allows, not a rounded approximation.' },
+    { q: 'Can I convert negative angles?', a: 'Yes. Negative values pass through the same conversion formulas and produce a correctly signed result in the target unit.' },
+  ],
+  'area-converter': [
+    { q: 'Which area units are supported?', a: 'Common metric and imperial units including square meters, square feet, acres, and hectares, so you can convert between land-measurement and everyday units in one place.' },
+    { q: 'Are the conversions based on fixed ratios?', a: 'Yes. Each unit has a fixed conversion factor relative to a base unit, so results are exact rather than rounded lookup-table estimates.' },
+    { q: 'Can I convert very large areas like hectares to square feet?', a: 'Yes. The conversion is pure arithmetic on the factor between whichever two units you pick, so it works the same whether you\'re converting a small room or a large plot of land.' },
+  ],
+  'article-title-generator': [
+    { q: 'Does the Article Title Generator use AI to write titles?', a: 'No. It fills a set of proven headline templates with your topic and shuffles them, giving you several different angles (how-to, listicle, question-based, and more) to pick from.' },
+    { q: 'Will it give me the same titles every time?', a: 'The template set is fixed, but the order is shuffled on each run, so regenerating with the same topic surfaces the options in a different sequence rather than one fixed list.' },
+    { q: 'Can I use the titles as-is?', a: 'They\'re meant as a starting point. Swap in specifics from your actual article, numbers, names, or outcomes, since the templates use your topic as a generic placeholder.' },
+  ],
+  'ascii-art-generator': [
+    { q: 'How does the ASCII Art Generator turn text into block letters?', a: 'Each letter and digit maps to a fixed 5-column by 7-row pixel grid; the tool looks up your text character by character and renders the grid using block characters.' },
+    { q: 'Which characters are supported?', a: 'Uppercase letters A through Z, digits 0 through 9, and spaces. Lowercase input is automatically uppercased before rendering, and unsupported characters render as a blank space.' },
+    { q: 'Can I copy the output as plain text?', a: 'Yes. The result is plain monospaced text using block characters, so it copies and pastes cleanly into any code comment, README, or terminal banner.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
