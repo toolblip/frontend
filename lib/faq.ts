@@ -944,6 +944,66 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I pause and resume the countdown?', a: 'Yes, the Start button becomes Pause once running, stopping the interval without losing the remaining time, pressing it again resumes from where it left off.' },
     { q: 'What does Reset do versus Pause?', a: 'Pause just halts the ticking clock, Reset clears the remaining time entirely so the duration inputs become editable again.' },
   ],
+  'zip': [
+    { q: 'Does this actually compress the files?', a: 'No, files are stored uncompressed inside a valid ZIP structure (ZIP "store" mode), so the download opens in any ZIP-aware program, it just does not shrink the total size.' },
+    { q: 'Where does the ZIP file get built?', a: 'Entirely in your browser, using a hand-written ZIP writer that assembles the local file headers, central directory, and CRC32 checksums, nothing is uploaded to a server.' },
+    { q: 'What is the output archive named?', a: 'If you added a single file, the archive is named after that file with a .zip extension, if you added multiple files, it is named archive.zip.' },
+  ],
+  'credit-card-validator': [
+    { q: 'Which card networks can it identify?', a: 'Visa, Mastercard, American Express, Discover, and JCB, each matched against that network\'s real number pattern, like Visa always starting with a 4.' },
+    { q: 'What exactly does the Luhn check confirm?', a: 'That the digits pass the standard Luhn checksum algorithm used by all major card networks, this confirms the number is structurally valid, not that the card is active, unexpired, or has available credit.' },
+    { q: 'Why does it say the card type could not be determined?', a: 'That appears when 6 or more digits are entered but they do not match any of the five known network patterns, meaning it is likely a network this tool does not recognize.' },
+  ],
+  'cron-generator': [
+    { q: 'What does "point-and-click" mean for this builder?', a: 'Five dropdown selects, one each for minute, hour, day, month, and weekday, pre-populated with common values like every-N steps and weekday ranges, so you never type raw cron syntax.' },
+    { q: 'Does it show a plain-English sentence describing the schedule?', a: 'No, this builder displays only the raw cron expression and the next five run times, not a sentence like "every weekday at 9 AM." For that, use the Cron Schedule Explainer tool.' },
+    { q: 'How many upcoming run times does it calculate?', a: 'Five, found by scanning forward minute by minute from right now using whatever your five dropdowns currently specify.' },
+  ],
+  'cron-generator-dg': [
+    { q: 'How does the weekday dropdown handle ranges?', a: 'Alongside the seven individual days and an Every wildcard, it includes two ready-made ranges, 1-5 for weekdays and 0,6 for weekends, so common patterns do not need comma-separated digits.' },
+    { q: 'Can I jump straight to a common schedule?', a: 'Yes, eleven preset buttons below the dropdowns, including Every 5 min, Daily midnight, and Monthly 1st, instantly fill in all five fields at once.' },
+    { q: 'Does the schedule update as I change a dropdown?', a: 'Yes, the cron expression and the next five run times both recompute immediately on every change, there is no separate generate or apply button.' },
+  ],
+  'cron-human-readable': [
+    { q: 'Where is the human-readable text this tool is named for?', a: 'This particular builder only displays the raw five-field cron expression and a list of upcoming run times, not a plain-English sentence. For a sentence like "runs every weekday at 9 AM," use the Cron Schedule Explainer tool instead.' },
+    { q: 'How do I actually build a schedule here?', a: 'Pick values from five dropdowns (minute, hour, day, month, weekday), or click one of eleven presets to fill all five at once.' },
+    { q: 'What counts as "now" for the next-run calculation?', a: 'The moment you load the page or change a field, the calculation starts scanning forward from the next full minute to find the next five matching times.' },
+  ],
+  'cron-schedule-validator': [
+    { q: 'How many upcoming run times are shown?', a: 'Five, calculated by scanning forward minute by minute from right now until five matches are found.' },
+    { q: 'What happens if I paste an invalid expression?', a: 'An inline error names the exact problem, like "Invalid minute field (expected 0-59)" or the wrong number of fields, instead of a generic failure message.' },
+    { q: 'Does it accept shorthand like @daily or @hourly?', a: 'Yes, seven named shortcuts are recognized (@yearly, @annually, @monthly, @weekly, @daily, @midnight, @hourly) and expanded to their five-field equivalent automatically.' },
+  ],
+  'cron-schedule-explainer': [
+    { q: 'What does the plain-English summary cover?', a: 'The time of day, which weekdays or weekend it runs on, and the month if restricted, for example "At 9:00 AM on weekdays."' },
+    { q: 'Can I type a cron expression directly instead of clicking a preset?', a: 'Yes, the text field accepts any standard 5-field expression or an @daily-style shortcut, typed or pasted, then press Parse or hit Enter.' },
+    { q: 'How does it handle fields left as a wildcard?', a: 'Unrestricted fields (set to *) are simply left out of the plain-English sentence, so "At 9:00 AM on weekdays" means the day-of-month and month fields are both wildcards.' },
+  ],
+  'cron-schedule-generator': [
+    { q: 'Is this a per-field dropdown builder like the Cron Generator?', a: 'No, despite "point-and-click editor" in the name, this version works by typing or pasting a full cron expression into one field, or clicking one of eight preset buttons, there are no individual minute or hour dropdowns.' },
+    { q: 'What is shown alongside the parsed schedule?', a: 'A plain-English summary sentence, a breakdown of each of the five fields, and the next five calculated run times.' },
+    { q: 'Does it validate before showing the preview?', a: 'Yes, an expression that does not have exactly five fields, or has an out-of-range value, shows a specific inline error instead of a schedule preview.' },
+  ],
+  'cron-validator': [
+    { q: 'How does this differ from Cron Schedule Validator?', a: 'This one shows ten upcoming run times instead of five, and the relative "in X min/hr/day" labels update live once a second rather than being calculated a single time.' },
+    { q: 'What happens when I type an invalid expression?', a: 'A Valid or Invalid badge next to the input flips to Invalid immediately, and the specific parsing error appears below the field.' },
+    { q: 'Does it recognize @daily and @weekly-style shorthand?', a: 'Yes, the same seven named shortcuts (@yearly, @annually, @monthly, @weekly, @daily, @midnight, @hourly) expand automatically to their five-field equivalents.' },
+  ],
+  'crop': [
+    { q: 'How do I select the crop area?', a: 'Click and drag directly on the uploaded image preview, a blue selection box follows your drag and shows exactly what will be kept.' },
+    { q: 'Does cropping reduce the image quality?', a: 'No, the selected region is copied pixel-for-pixel onto a same-size canvas and exported as PNG, without any recompression of the retained pixels.' },
+    { q: 'Can I resize a selection after drawing it?', a: 'Not by dragging its edges, releasing the mouse locks in that selection, draw a new one on the image if you want to change the crop area.' },
+  ],
+  'css-border-radius-generator': [
+    { q: 'Can each corner have a different radius?', a: 'Yes, toggling to Unlinked lets you drag each of the four corner sliders independently, Linked mode moves all four together from one slider.' },
+    { q: 'What do the four presets set up?', a: 'Subtle (4px on all corners), Rounded (16px), Pill (100px), and Circle (50% using percentage units instead of pixels).' },
+    { q: 'Does the copied CSS include the border itself?', a: 'Yes, the output includes both the border-radius value and a border declaration using your chosen width and color, not just the radius alone.' },
+  ],
+  'css-class-generator': [
+    { q: 'What CSS properties can I add to a class?', a: 'Any of 27 common properties, covering layout (display, flex-direction, gap), spacing (padding, margin), and visual styling (background-color, border-radius, box-shadow).' },
+    { q: 'How are the generated class names built?', a: 'Each one combines your chosen prefix with the CSS property name, so a gap property with prefix "util" becomes .util-gap.' },
+    { q: 'Does it show how to use the generated classes?', a: 'Yes, alongside the CSS rules it prints a matching HTML snippet with a div for each class, so you can see the class applied directly.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
