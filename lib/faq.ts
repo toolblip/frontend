@@ -2059,6 +2059,36 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Do I need to pick both a "from" and "to" unit?', a: 'No, you only choose the unit you are converting from, the result table then lists the equivalent value in every other supported unit at once.' },
     { q: 'How precise are the converted values?', a: 'Each result is calculated to 6 decimal places and then has trailing zeros trimmed, so a clean value like 2.20462 pounds is not padded with unnecessary zeros.' },
   ],
+  'word-density-analyzer': [
+    { q: 'Does it analyze multi-word phrases or only single words?', a: 'Only single words. Text is split on whitespace and checked against a built-in list of roughly 100 common words like "the," "and," and "of" before the remaining words are ranked by count and percentage.' },
+    { q: 'Can I filter out short filler words?', a: 'Yes, a minimum word length setting lets you exclude words below a certain length from the results table, on top of the built-in common-word exclusion list.' },
+    { q: 'How are the results sorted?', a: 'A toggle switches the results table between sorting by frequency count, highest first, and plain alphabetical order.' },
+  ],
+  'word-frequency-counter': [
+    { q: 'How does it count words differently from a simple word counter?', a: 'It extracts words with a lowercase letter-only match, then groups and sorts them by how often each one appears, rather than just giving a single total word count.' },
+    { q: 'What summary statistics does it show?', a: 'A total word count and a unique word count are both displayed above the frequency breakdown.' },
+    { q: 'Does it show every word if my text is long?', a: 'It displays up to the top 50 most frequent words with their counts and percentages, and shows a "+N more words" note if your text has more unique words than that.' },
+  ],
+  'word-frequency-table': [
+    { q: 'Which words get excluded from the table automatically?', a: 'About 100 common English words like "the," "be," and "to" are filtered out before the table is built, so the results focus on the more meaningful words in your text.' },
+    { q: 'What does each row in the table show?', a: 'The word itself, how many times it appears, and what percentage of the total word count it represents.' },
+    { q: 'Can I copy the frequency table out of the tool?', a: 'Yes, a Copy button is available once the table is generated.' },
+  ],
+  'xml-formatter': [
+    { q: 'How does it detect invalid XML?', a: 'It parses your input with the browser\'s built-in DOMParser and checks for a parsererror node, flagging the specific parsing failure instead of just failing silently.' },
+    { q: 'Can I switch between formatting and minifying?', a: 'Yes, Format and Minify mode tabs let you either pretty-print the XML with indentation or collapse the whitespace between tags into a single compact line.' },
+    { q: 'What indentation options are available?', a: 'You can choose between 2-space and 4-space indentation, and attribute values and text content are properly escaped for characters like &, <, and " during formatting.' },
+  ],
+  'xml-sitemap-generator': [
+    { q: 'Do I need to type full URLs for every page?', a: 'No, you can set a base URL once and then add each page as a relative path like /about, the tool combines them into the full loc value automatically.' },
+    { q: 'Can I set different priorities and change frequencies per URL?', a: 'Yes, each URL you add gets its own change frequency, from always to never, and priority value from 0.1 to 1.0 before it is added to the list.' },
+    { q: 'Does it support the image sitemap extension?', a: 'Yes, an "Include image sitemap extension" checkbox adds the image namespace declaration to the generated XML output.' },
+  ],
+  'sitemap-extractor': [
+    { q: 'Do I need to upload a file or can I paste the XML directly?', a: 'You paste the sitemap XML into a text box, there is also a Load Sample button that fills in a working example if you want to see the tool in action first.' },
+    { q: 'What counts as an error versus just a warning?', a: 'Missing the XML declaration, a missing urlset root element, and URLs without a proper http or https prefix are all flagged as issues, alongside a per-URL error if a loc tag is missing entirely.' },
+    { q: 'Does it handle sitemap index files too?', a: 'Yes, if it detects a sitemapindex tag it switches to extracting the individual sitemap file URLs listed inside instead of page URLs.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
