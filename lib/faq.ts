@@ -1289,6 +1289,11 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How does it handle temperature conversions?', a: 'Temperature uses its own formula rather than a simple multiplier, since Celsius, Fahrenheit, and Kelvin don\'t share a common zero point.' },
     { q: 'Does the unit list change based on the category?', a: 'Yes, picking a category updates both dropdowns to only show units that belong to it.' },
   ],
+  'grammar-checker': [
+    { q: 'Where do the grammar and spelling checks come from?', a: 'A live call to the LanguageTool grammar API, not a small built-in rule list, so it can catch a much wider range of errors than simple pattern matching.' },
+    { q: 'Can I apply the suggested fixes directly?', a: 'Yes, each issue lists up to three replacement options as buttons, and clicking one swaps it into your text at that exact spot.' },
+    { q: 'What happens if the grammar service is unreachable?', a: 'It shows a clear connection error instead of a silent failure or a fake result, so you know to try again.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
