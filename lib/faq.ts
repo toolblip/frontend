@@ -1454,6 +1454,21 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I control the WebP compression level?', a: 'Yes, a quality slider from 1 to 100 adjusts the WebP encoding, letting you trade off file size against visual quality before downloading.' },
     { q: 'Can I convert to a different format instead if I change my mind?', a: 'Yes, the same output format buttons also offer JPEG, PNG, and AVIF, so you can switch targets without re-uploading the image.' },
   ],
+  'json-escape-unescape': [
+    { q: 'Does it only escape for JSON, or other languages too?', a: 'JSON is the default context, but a context selector also covers JavaScript, regex, HTML, and a general backslash mode, each escaping a different set of characters like quotes, angle brackets, or regex metacharacters.' },
+    { q: 'How do I reverse an escape I already applied?', a: 'Switch to the Unescape tab, or click the Swap button after escaping to move the output back into the input and flip the mode automatically.' },
+    { q: 'What exactly gets escaped in JSON mode?', a: 'Backslashes, double quotes, newlines, carriage returns, and tabs, each converted to its two-character JSON escape sequence like \\n or \\t so the string is safe to embed inside a JSON value.' },
+  ],
+  'json-path-tester': [
+    { q: 'What JSONPath syntax does it support?', a: 'Dot notation for object keys, the * wildcard for all values, numeric array indexes, and simple filter expressions like [?(@.price > 20)] for comparing a field against a value.' },
+    { q: 'Are there example paths I can try?', a: 'Yes, buttons above the path field load ready-made expressions like "All books" or "Expensive items" against the sample bookstore JSON that is preloaded when you first open the tool.' },
+    { q: 'What happens if my path matches nothing?', a: 'The results panel shows a literal "(no matches)" entry instead of an empty list, so you can tell a valid path that found nothing apart from a JSON or syntax error.' },
+  ],
+  'json-schema-validator': [
+    { q: 'Which JSON Schema keywords does it check?', a: 'Type, enum, const, minimum/maximum and their exclusive variants, minLength/maxLength, pattern, format (email, uri, date-time, ipv4), array constraints like minItems and uniqueItems, and object constraints like required and additionalProperties.' },
+    { q: 'How specific are the error messages?', a: 'Each violation lists the exact property path where it occurred alongside a plain-language description, such as which required property is missing or which minimum a number fell below.' },
+    { q: 'Can I clean up messy schema or data JSON before validating?', a: 'Yes, a Format button above each textarea re-indents that panel\'s JSON if it already parses, without needing to run the validation first.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
