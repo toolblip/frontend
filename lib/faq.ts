@@ -1929,6 +1929,31 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How is average word length calculated?', a: 'For each word it strips out anything that is not a letter, counts the remaining letters, then averages that across every word in your text.' },
     { q: 'Does sentence count work on text with no punctuation at all?', a: "Yes, if there's no period, question mark, or exclamation point anywhere but you've still entered words, it counts that as one sentence rather than showing zero." },
   ],
+  'text-to-slug': [
+    { q: 'What separator characters can I choose between?', a: 'A dropdown lets you pick a hyphen, underscore, or period as the separator, generating a fresh slug in that format as soon as you click Generate.' },
+    { q: "What happens to characters that aren't letters or numbers?", a: "Anything that isn't a letter, digit, space, or hyphen gets replaced with a space first, then runs of whitespace collapse into a single separator so you never end up with double dashes or dangling punctuation." },
+    { q: 'Can I keep the original capitalization or surrounding spaces?', a: 'Yes, two checkboxes let you turn off automatic lowercasing and automatic trimming independently, so you can generate a slug that preserves your original casing or edge whitespace if you want.' },
+  ],
+  'text-to-speech': [
+    { q: 'Where do the voice options come from?', a: "It reads whatever voices your browser and operating system have installed via the Web Speech API, and defaults to the first English voice it finds if one is available." },
+    { q: 'What can I adjust besides which voice is used?', a: 'Two sliders control speed (0.5x to 2x) and pitch (0.5x to 2x), both apply the next time you press Speak.' },
+    { q: 'Can I stop playback partway through?', a: 'Yes, the Speak button turns into a Stop button while audio is playing, clicking it cancels the speech immediately.' },
+  ],
+  'text-uniqueness-checker': [
+    { q: 'How does it detect repeated phrases?', a: 'It scans your text for runs of 5 to 10 consecutive words that appear more than once and are longer than 20 characters, listing each repeated phrase with how many times it occurs.' },
+    { q: 'What does "similar sentences" mean here?', a: 'It compares every pair of sentences over 20 characters using Jaccard similarity, shared words divided by total unique words between them, and flags any pair that scores above 70% as similar.' },
+    { q: 'How is the uniqueness percentage calculated?', a: 'It divides your count of distinct words by your total word count and shows that as a percentage, colored green above 70%, yellow above 40%, and red below that.' },
+  ],
+  'timestamp-converter': [
+    { q: "How does it know if I've entered a timestamp or a date?", a: "If your input is all digits it's treated as a Unix timestamp, automatically detecting seconds versus milliseconds based on its size, anything else is parsed as a date string instead." },
+    { q: 'What formats does the result show?', a: 'For a timestamp input you get local date and time, UTC, ISO 8601, and both Unix seconds and milliseconds, for a date-string input you get the reverse: both Unix formats, ISO 8601, and UTC.' },
+    { q: 'Is there a shortcut to convert the current moment?', a: 'Yes, a "Now" button fills the input with the current Unix timestamp in seconds and converts it immediately.' },
+  ],
+  'tip-calculator': [
+    { q: 'How do I reach the tip-splitting calculator specifically?', a: 'The tool opens on a "Basic %" tab by default, click the "Tip" tab next to it to switch to the bill amount, tip percentage, and people-splitting fields.' },
+    { q: 'What tip percentages are available?', a: 'Six preset buttons, 5%, 10%, 15%, 18%, 20%, and 25%, plus a custom number field if you need a specific percentage outside those presets.' },
+    { q: 'How is the per-person amount calculated?', a: 'It adds your tip amount to the bill for a total, then divides that total by the number of people set with the plus and minus buttons next to "Split Between".' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
