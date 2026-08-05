@@ -1494,6 +1494,26 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Is there a sample token to try it with?', a: 'Yes, the input starts pre-filled with a sample JWT so you can see decoded header and payload output immediately without needing your own token.' },
     { q: 'Can I copy just the payload without the header or signature?', a: 'Yes, the header, payload, and signature each have their own Copy button next to their section, so you can grab exactly the part you need.' },
   ],
+  'keyword-density-analyzer-new': [
+    { q: 'Can I check density for a phrase instead of a single word?', a: 'Yes, whatever you type in the Target Keyword field, single word or multi-word phrase, is matched as an exact sequence against the text using a word-by-word sliding comparison.' },
+    { q: 'What do the color changes on the density bar mean?', a: 'The bar and percentage turn green when density falls between 1% and 3%, which the tool treats as the safe SEO range, and orange outside that range with a warning about being too sparse or too spammy.' },
+    { q: 'Is the analysis case-sensitive?', a: 'No, both the content and the keyword are lowercased before comparison, so "SEO Tips" and "seo tips" are treated as the same match.' },
+  ],
+  'keyword-density-checker': [
+    { q: 'How does it count multi-word keyword phrases?', a: 'It splits your keyword on spaces and slides a window of that many words across the text, counting a match every time the sequence appears in order, so "content marketing strategy" is checked as an exact three-word phrase rather than three separate word counts.' },
+    { q: 'What counts as the ideal density range?', a: 'The bar and message turn green between 1% and 3% keyword density, below 1% it flags the keyword as underused, and above 3% it warns the density may look spammy to search engines.' },
+    { q: 'Does it strip out numbers or punctuation when counting total words?', a: 'Yes, the total word count only matches sequences of letters, so numbers, punctuation, and symbols are excluded from both the total word count and the keyword search.' },
+  ],
+  'length-converter': [
+    { q: 'Which units can I convert between?', a: 'Meters, kilometers, centimeters, millimeters, miles, yards, feet, and inches, selectable from the From Unit dropdown, with the Convert button showing your value in all eight at once.' },
+    { q: 'How precise are the converted values?', a: 'Each conversion is calculated to six decimal places and then trailing zeros are trimmed, so results are precise without unnecessary trailing digits.' },
+    { q: 'Why does the result show up as a full list instead of one number?', a: 'Converting your input into all eight units at once lets you compare multiple options side by side, rather than picking a single output unit ahead of time.' },
+  ],
+  'line-counter': [
+    { q: 'How is an "empty line" defined?', a: 'A line counts as empty if it is blank or contains only whitespace after trimming, so a line with just spaces or tabs is counted as empty, not non-empty.' },
+    { q: 'What does the byte count measure?', a: 'The UTF-8 encoded byte size of your full text, which can be larger than the character count for text containing multi-byte characters like emoji or accented letters.' },
+    { q: 'Does a trailing newline at the end of the text add an extra line?', a: 'Yes, splitting on newline characters means text ending in a newline produces one additional empty entry after the last line break, which is included in both the total and empty line counts.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
