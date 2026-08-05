@@ -1239,6 +1239,31 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How does it actually strip the metadata?', a: 'It redraws the image onto a canvas and re-exports it from there, which drops all embedded metadata as a side effect, not only the specific tags it listed.' },
     { q: 'What if no EXIF tags are detected?', a: 'It still re-encodes the image and offers the cleaned file for download, since some formats or cameras embed metadata this parser doesn\'t decode by name.' },
   ],
+  'extract-img': [
+    { q: 'What image encodings can it pull out of a PDF?', a: 'JPEG images are extracted directly, and grayscale, RGB, CMYK, and indexed-RGB images are rebuilt pixel by pixel into PNG files.' },
+    { q: 'Are there image types it can\'t extract?', a: 'Yes, less common encodings like JPEG2000 or CCITT fax compression are skipped rather than guessed at, so every image you get back is a faithful copy of the original.' },
+    { q: 'Can I download every extracted image at once?', a: 'Yes, a Download All as ZIP option bundles every image found in the PDF into a single archive built in your browser.' },
+  ],
+  'favicon-from-emoji': [
+    { q: 'Can I set custom foreground and background colors?', a: 'Yes, both the emoji\'s background fill and the canvas size are adjustable before you generate the icon.' },
+    { q: 'What sizes and formats can I download?', a: 'PNG, ICO, and SVG, at whatever pixel size you set from 16 up to 512, one file per generation rather than a single multi-size bundle.' },
+    { q: 'Does it work with any image or logo I upload?', a: 'No, the icon is built from a typed emoji rather than an uploaded image or logo.' },
+  ],
+  'fake-address-generator': [
+    { q: 'How realistic are the generated addresses?', a: 'Street names, cities, and states are drawn from real US naming patterns, but the combinations are random and the zip codes are not validated against real postal ranges, so no output corresponds to an actual address.' },
+    { q: 'Can I generate more than one address at a time?', a: 'Yes, set the count up to 100 and every generated address is listed and copyable individually or all at once.' },
+    { q: 'What formats can I copy the results in?', a: 'A single formatted address block, or the full batch as plain text or JSON.' },
+  ],
+  'fake-data-generator': [
+    { q: 'What types of fake data can it generate?', a: 'Full person records, or just emails, addresses, or usernames on their own, picked with a mode tab before generating.' },
+    { q: 'How many records can I generate at once?', a: 'Up to 100 rows in one batch, shown in a table you can scan before exporting.' },
+    { q: 'Can I export the generated rows?', a: 'Yes, a Copy CSV button puts every row on your clipboard in comma-separated form.' },
+  ],
+  'fake-text-generator': [
+    { q: 'What kind of placeholder text does it produce?', a: 'Classic lorem ipsum style filler, built by stringing together random words from the traditional lorem ipsum word list.' },
+    { q: 'How much text can I generate?', a: 'Pick a preset word count from 10 to 500, or enter any custom amount up to 1000 words.' },
+    { q: 'Does the output vary each time?', a: 'Yes, each click of Generate Text picks a new random sequence of words rather than repeating the same fixed paragraph.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {
