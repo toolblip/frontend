@@ -311,13 +311,6 @@ const TOOL_CONTENT: Record<string, ToolContent> = {
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "backlink-analyzer": {
-    description: `Knowing the overall shape of a site's backlink profile, roughly how many domains link to it, how authoritative those domains tend to be, which ones contribute the most, is a different question than checking any single link's individual attributes, closer to a high-level snapshot than a link-by-link audit. This tool analyzes a URL's overall backlink profile and shows domain authority estimates, giving a broad picture of where a site's link equity is actually coming from rather than inspecting one link at a time. Useful for getting a quick competitive snapshot of a rival's overall backlink strength before planning an SEO campaign, checking how a site's link profile has grown in authority over time, or getting a high-level read on where the bulk of a domain's backlinks are actually concentrated.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "backlink-checker-express": {
     description: `Knowing which other sites actually link to a page matters for two different reasons, understanding your own site's link profile and seeing where a competitor's authority is actually coming from, and neither is answerable just by looking at the page itself, only by seeing who points to it from the outside. This tool analyzes backlinks pointing to any URL, estimating each linking domain's authority and flagging whether a link is dofollow or nofollow, distinguishing a link that actually passes ranking value from one that doesn't. Useful for auditing your own site's backlink profile after a content campaign to see what actually earned links, researching where a competitor's search authority is actually coming from, or checking whether a specific backlink is a dofollow link worth counting on or a nofollow one that isn't.`,
     examples: [
@@ -1695,29 +1688,8 @@ WCAG AA: Pass (large text)`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "gif-to-avif": {
-    description: `AVIF compresses more efficiently than WebM or APNG, the two other common GIF replacement formats, since it's built on the same underlying compression as the AV1 video codec, which means the same animation can come out meaningfully smaller in AVIF than in either alternative, at the cost of being the newest of the three and not quite as universally supported yet in every browser or platform. This tool converts an animated GIF into AVIF specifically, trading a bit of compatibility for the smallest practical file size among the modern GIF replacement options. Useful for squeezing the smallest possible file size out of an animation on a site or platform confirmed to support AVIF, converting a GIF where every kilobyte of savings matters more than broad compatibility, or comparing AVIF's result against a GIF's file size before deciding whether the format switch is worth it for a specific use case.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "gif-to-jpg": {
     description: `The literal first frame of an animated GIF is sometimes a blank loading state or an awkward mid-transition moment rather than the frame that actually represents what the animation is about, which is exactly why a good static thumbnail sometimes needs to come from a specific, chosen frame rather than automatically whichever one happens to be first. This tool extracts a static JPG from an animated GIF, either the first frame or a specifically chosen one, flattening any transparency to a solid background since JPG has no alpha channel to preserve it. Useful for picking a genuinely representative frame from a GIF to use as a thumbnail rather than defaulting to frame one, extracting a static preview image from an animation for a context that can't display GIFs, or converting a GIF into a single JPG when only a still image is actually needed.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "gif-to-mov": {
-    description: `Airdropping or texting an animated GIF to an iPhone often means it arrives as a flat, low-quality image rather than something that actually plays, since iOS handles GIFs inconsistently outside a browser, but a QuickTime MOV file is a real video, the same format the Photos app and iMessage already know how to play smoothly without any special handling. This tool converts an animated GIF into a MOV video, preserving the same frames and timing in a file format built for Apple's ecosystem rather than the web. Useful for turning a GIF into something that actually plays back correctly after being shared through iMessage, saving a GIF-based animation into the Photos app as a proper video clip, or converting a GIF for editing in a video app that expects a real video container instead of an image format.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "gif-to-mp4": {
-    description: `A GIF is capped at 256 colors and compresses poorly by design, which is exactly why the same short animation saved as MP4 instead can end up a fraction of the file size with noticeably smoother color and playback, a swap several major platforms already make automatically behind the scenes the moment a GIF gets uploaded. This tool converts an animated GIF into MP4 directly, producing the same animation at a dramatically smaller file size with better color quality than GIF's limited palette allows. Useful for shrinking a large GIF's file size before hosting or sharing it somewhere with a strict upload limit, getting smoother playback and richer color out of an animation GIF's harsh 256-color limit was flattening, or preparing an animated GIF for a platform that handles MP4 more efficiently than it handles GIF.`,
     examples: [
 
     ],
@@ -1730,22 +1702,8 @@ WCAG AA: Pass (large text)`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "gif-to-webm": {
-    description: `A GIF has no real audio track and caps out at 256 colors per frame, both real limitations that show up the moment an animation needs to look genuinely good rather than just functional, banding on any gradient, no sound even if one were wanted, file sizes that balloon fast past a few seconds. This tool converts an animated GIF into WebM, a real video format that supports full color depth and, if needed later, audio, typically producing a smaller file than the original GIF at noticeably better visual quality. Useful for converting a GIF with a smooth gradient or photographic content into a format that renders it without color banding, shrinking a large animated GIF down to a smaller file size without a visible quality drop, or moving an animation into a proper video container with room to grow if audio or higher quality is needed later.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "google-algorithm-tracker": {
     description: `Google rarely announces the specifics of an algorithm change directly, most updates get identified after the fact by the SEO community noticing ranking volatility across many sites at once, which means the real value of tracking these updates is connecting a specific date a site's traffic mysteriously shifted to a documented update that actually rolled out around then, rather than being left to wonder what happened. This tool tracks major Google algorithm updates and the SEO factors each one actually affected, turning an unexplained ranking change into a dated event with a known cause. Useful for connecting a sudden traffic drop to a specific documented algorithm update instead of guessing at the cause, checking which SEO factors a recent update actually targeted before making a reactive change, or reviewing a timeline of major updates when investigating a longer-term ranking trend.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "google-rank-checker": {
-    description: `An SEO campaign built around a specific keyword needs an actual answer to one question eventually, whether the targeted page's ranking is actually moving, and that answer changes depending on which region is searching, a page ranking third in one country and nowhere near the first page in another for the exact same keyword. This tool checks a page's approximate Google ranking for a specific keyword and region combination, giving a regional answer rather than one generic global position. Useful for tracking whether an SEO campaign targeting a specific keyword is actually improving a page's ranking over time, checking how a page ranks differently across two separate regions for the same search term, or confirming a page ranks for the keyword it was actually optimized for rather than a related but different one.`,
     examples: [
 
     ],
@@ -1851,13 +1809,6 @@ WCAG AA: Pass (large text)`
   },
   "headline-analyzer": {
     description: `Deciding whether a headline actually works is different from rewriting it, sometimes the real question is just how it measures up, is it too long, does it carry any actual emotional pull, does it include the keyword it's supposed to be targeting, three separate things easy to guess at but harder to actually confirm without measuring each one directly. This tool analyzes a headline for word count, emotional impact, and SEO keyword density, scoring what's already written rather than generating a rewritten alternative. Useful for checking whether an already-drafted headline is running too long before it gets used, measuring how much genuine emotional pull a headline actually carries, or confirming a target keyword actually shows up in a headline meant to rank for it.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "heic-to-avif": {
-    description: `PNG and JPG solve the compatibility problem, they open everywhere, but neither is the smallest option available anymore for a site that only needs to support current browsers. AVIF compresses noticeably smaller than either while holding up better at low file sizes, which is the reason a lot of modern sites have quietly switched their images over to it. This tool converts an iPhone's HEIC photos directly into AVIF, skipping the intermediate step of converting to PNG or JPG first and losing some of that efficiency along the way. It's the right choice specifically when maximum size savings matters more than supporting an older browser or an app that's never heard of AVIF: a photo gallery on a fast, modern site, a background image where every extra kilobyte affects load time, rather than a file headed for a print shop or an older piece of software.`,
     examples: [
 
     ],
@@ -5400,13 +5351,6 @@ Result: 847291`
   },
   "what-if-scenario-calculator": {
     description: `A single fixed calculation answers one specific question, but a real decision usually depends on several variables moving together at once, what happens to a monthly payment if the interest rate shifts by half a point and the loan term changes at the same time, a question a one-off calculation can't actually answer without being rebuilt from scratch for every new combination. This tool models a scenario with adjustable variables and recalculates every result instantly as any one of them changes, letting several possibilities be explored without rebuilding the math each time. Useful for seeing how a monthly payment scales as an interest rate or a loan term shifts, modeling how revenue changes if price and volume move in different directions at once, or exploring several what-if combinations quickly without a spreadsheet built specifically for that one question.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "whois-lookup": {
-    description: `Taking over management of a domain someone else originally set up, a client's site handed off from a previous freelancer, an inherited project with no documentation, means changing DNS blindly is genuinely risky until the current registrar, name servers, and expiry date are actually confirmed first, since a wrong assumption there can quietly break email or another service still depending on the old configuration. This tool looks up a domain's full registration details, owner information, expiry date, and name servers together in one lookup. Useful for confirming a domain's current setup before making any DNS change to a project inherited from someone else, checking exactly when a takeover domain's registration actually expires before it lapses unexpectedly, or identifying who currently holds a domain's registration before reaching out about it.`,
     examples: [
 
     ],

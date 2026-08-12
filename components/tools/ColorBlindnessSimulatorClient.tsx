@@ -1,15 +1,17 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 
-interface ColorBlindnessType {
+interface FilterDef {
+  id: string;
   name: string;
   description: string;
-  matrix: number[][];
+  matrix: number[][] | null;
 }
 
-const colorBlindnessTypes: ColorBlindnessType[] = [
+const filters: FilterDef[] = [
   {
+    id: 'protanopia',
     name: 'Protanopia',
     description: 'Red-blind (no red cones)',
     matrix: [
@@ -19,6 +21,7 @@ const colorBlindnessTypes: ColorBlindnessType[] = [
     ],
   },
   {
+    id: 'deuteranopia',
     name: 'Deuteranopia',
     description: 'Green-blind (no green cones)',
     matrix: [
@@ -28,6 +31,7 @@ const colorBlindnessTypes: ColorBlindnessType[] = [
     ],
   },
   {
+    id: 'tritanopia',
     name: 'Tritanopia',
     description: 'Blue-blind (no blue cones)',
     matrix: [
@@ -36,237 +40,198 @@ const colorBlindnessTypes: ColorBlindnessType[] = [
       [0, 0.475, 0.525],
     ],
   },
+  {
+    id: 'achromatopsia',
+    name: 'Achromatopsia',
+    description: 'Full color blindness (grayscale only)',
+    matrix: null,
+  },
 ];
 
-function hexToRgb(hex: string): { r: number; g: number; b: number } | null {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
-    ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16),
-      }
-    : null;
+function clamp255(value: number): number {
+  return Math.max(0, Math.min(255, Math.round(value)));
 }
-
-function rgbToHex(r: number, g: number, b: number): string {
-  return (
-    '#' +
-    [r, g, b]
-      .map((x) => {
-        const hex = Math.round(Math.max(0, Math.min(255, x))).toString(16);
-        return hex.length === 1 ? '0' + hex : hex;
-      })
-      .join('')
-  );
-}
-
-function applyColorMatrix(
-  rgb: { r: number; g: number; b: number },
-  matrix: number[][]
-): { r: number; g: number; b: number } {
-  const newR = rgb.r * matrix[0][0] + rgb.g * matrix[0][1] + rgb.b * matrix[0][2];
-  const newG = rgb.r * matrix[1][0] + rgb.g * matrix[1][1] + rgb.b * matrix[1][2];
-  const newB = rgb.r * matrix[2][0] + rgb.g * matrix[2][1] + rgb.b * matrix[2][2];
-  return { r: newR, g: newG, b: newB };
-}
-
-const presetColors = [
-  '#e74c3c',
-  '#3498db',
-  '#2ecc71',
-  '#f1c40f',
-  '#9b59b6',
-  '#1abc9c',
-  '#e67e22',
-  '#34495e',
-];
 
 export default function ColorBlindnessSimulatorClient() {
-  const [color, setColor] = useState('#3498db');
-  const [hexInput, setHexInput] = useState('#3498db');
-  const [hexError, setHexError] = useState(false);
-  const [rgb, setRgb] = useState({ r: 52, g: 152, b: 219 });
-  const [simulatedColors, setSimulatedColors] = useState<Record<string, string>>({});
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [fileName, setFileName] = useState('');
+  const [dimensions, setDimensions] = useState<{ width: number; height: number } | null>(null);
+  const [error, setError] = useState('');
+  const [processing, setProcessing] = useState(false);
 
-  useEffect(() => {
-    const parsed = hexToRgb(color);
-    if (parsed) {
-      setRgb(parsed);
-    }
-  }, [color]);
+  const sourceCanvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasMapRef = useRef<Record<string, HTMLCanvasElement | null>>({});
 
-  useEffect(() => {
-    const simulated: Record<string, string> = {};
-    colorBlindnessTypes.forEach((type) => {
-      const newRgb = applyColorMatrix(rgb, type.matrix);
-      simulated[type.name] = rgbToHex(newRgb.r, newRgb.g, newRgb.b);
+  function processImage(img: HTMLImageElement) {
+    const sourceCanvas = sourceCanvasRef.current;
+    if (!sourceCanvas) return;
+
+    const width = img.naturalWidth;
+    const height = img.naturalHeight;
+
+    sourceCanvas.width = width;
+    sourceCanvas.height = height;
+    const sourceCtx = sourceCanvas.getContext('2d');
+    if (!sourceCtx) return;
+
+    sourceCtx.drawImage(img, 0, 0, width, height);
+    const imageData = sourceCtx.getImageData(0, 0, width, height);
+    const original = imageData.data;
+
+    filters.forEach((filter) => {
+      const canvas = canvasMapRef.current[filter.id];
+      if (!canvas) return;
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      const output = ctx.createImageData(width, height);
+      const outData = output.data;
+
+      for (let i = 0; i < original.length; i += 4) {
+        const r = original[i];
+        const g = original[i + 1];
+        const b = original[i + 2];
+        const a = original[i + 3];
+
+        if (filter.matrix) {
+          const [row0, row1, row2] = filter.matrix;
+          outData[i] = clamp255(r * row0[0] + g * row0[1] + b * row0[2]);
+          outData[i + 1] = clamp255(r * row1[0] + g * row1[1] + b * row1[2]);
+          outData[i + 2] = clamp255(r * row2[0] + g * row2[1] + b * row2[2]);
+        } else {
+          const gray = clamp255(r * 0.299 + g * 0.587 + b * 0.114);
+          outData[i] = gray;
+          outData[i + 1] = gray;
+          outData[i + 2] = gray;
+        }
+        outData[i + 3] = a;
+      }
+
+      ctx.putImageData(output, 0, 0);
     });
-    setSimulatedColors(simulated);
-  }, [rgb]);
 
-  const setColorValue = (value: string) => {
-    setColor(value);
-    setHexInput(value);
-    setHexError(false);
-  };
+    setDimensions({ width, height });
+  }
 
-  const handleHexInput = (value: string) => {
-    setHexInput(value);
-    if (hexToRgb(value)) {
-      setColor(value);
-      setHexError(false);
-    } else {
-      setHexError(true);
+  function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setError('Please select a valid image file.');
+      return;
     }
-  };
 
-  const loadExample = () => setColorValue('#e74c3c');
+    setError('');
+    setProcessing(true);
+    setFileName(file.name);
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const src = reader.result as string;
+      const img = new Image();
+      img.onload = () => {
+        setImageSrc(src);
+        try {
+          processImage(img);
+        } catch {
+          setError('Could not process that image.');
+        }
+        setProcessing(false);
+      };
+      img.onerror = () => {
+        setError('Could not load that image.');
+        setProcessing(false);
+      };
+      img.src = src;
+    };
+    reader.onerror = () => {
+      setError('Could not read that file.');
+      setProcessing(false);
+    };
+    reader.readAsDataURL(file);
+  }
 
   return (
     <div className="flex flex-col gap-4">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Color Blindness Simulator</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
-          Load Example
-        </button>
       </div>
       <p style={{ fontSize: 13, color: 'var(--tb-text-secondary)' }}>
-        See how colors appear with different types of color blindness.
+        Upload an image to see how it appears to people with different types of color vision
+        deficiency. Everything runs in your browser — the image is never uploaded to a server.
       </p>
 
-      <div className="tb-v2-section">
-        <h3 className="tb-v2-section-title">Pick a Color</h3>
-        <div className="flex gap-3 items-center">
-          <input
-            type="color"
-            value={color}
-            onChange={(e) => setColorValue(e.target.value)}
-            style={{ height: 48, width: 96, cursor: 'pointer', borderRadius: 6, border: '1px solid var(--tb-border)' }}
-          />
-          <input
-            type="text"
-            value={hexInput.toUpperCase()}
-            onChange={(e) => handleHexInput(e.target.value)}
-            className="tb-v2-input flex-1"
-            style={{ textTransform: 'uppercase' }}
-            placeholder="#FFFFFF"
-          />
+      <div className="tb-v2-tool-card">
+        <label
+          className="block w-full p-8 border-2 border-dashed rounded-xl cursor-pointer text-center hover:border-indigo-400 transition-colors"
+          style={{ borderColor: 'var(--tb-border)' }}
+        >
+          <input type="file" accept="image/*" onChange={handleFile} className="hidden" />
+          <span style={{ color: 'var(--tb-text-secondary)' }}>
+            {fileName ? fileName : 'Click to upload an image'}
+          </span>
+        </label>
+        {error && <p style={{ fontSize: 12, color: '#ef4444', marginTop: 8 }}>{error}</p>}
+        {processing && (
+          <p style={{ fontSize: 13, color: 'var(--tb-text-secondary)', marginTop: 8 }}>
+            Processing image…
+          </p>
+        )}
+      </div>
+
+      {/* Hidden canvas used only to read source pixel data */}
+      <canvas ref={sourceCanvasRef} className="hidden" />
+
+      {!imageSrc && !processing && (
+        <div className="tb-v2-section text-center" style={{ padding: '32px 16px' }}>
+          <p style={{ color: 'var(--tb-text-secondary)' }}>
+            No image uploaded yet. Choose an image above to see simulated results.
+          </p>
         </div>
-        {hexError && <p style={{ fontSize: 12, color: '#ef4444', marginTop: 6 }}>Enter a valid 6-digit hex color (e.g., #3366FF).</p>}
-        <div className="mt-3">
-          <p className="tb-v2-tool-label mb-2">Preset Colors</p>
-          <div className="flex gap-2 flex-wrap">
-            {presetColors.map((presetColor) => (
-              <button
-                key={presetColor}
-                type="button"
-                onClick={() => setColorValue(presetColor)}
-                className="w-8 h-8 rounded border-2 transition-transform hover:scale-110"
-                style={{ backgroundColor: presetColor, borderColor: color === presetColor ? '#000' : 'transparent' }}
+      )}
+
+      {imageSrc && (
+        <div className="tb-v2-section">
+          <h3 className="tb-v2-section-title">
+            Results {dimensions ? `(${dimensions.width}×${dimensions.height})` : ''}
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div
+              className="tb-v2-section"
+              style={{ borderTop: 'none', border: '1px solid var(--tb-border)', borderRadius: 8 }}
+            >
+              <p className="font-semibold text-sm mb-1">Original</p>
+              <p className="text-xs text-gray-500 mb-2">Normal color vision</p>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={imageSrc}
+                alt="Original"
+                style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 6 }}
               />
+            </div>
+
+            {filters.map((filter) => (
+              <div
+                key={filter.id}
+                className="tb-v2-section"
+                style={{ borderTop: 'none', border: '1px solid var(--tb-border)', borderRadius: 8 }}
+              >
+                <p className="font-semibold text-sm mb-1">{filter.name}</p>
+                <p className="text-xs text-gray-500 mb-2">{filter.description}</p>
+                <canvas
+                  ref={(el) => {
+                    canvasMapRef.current[filter.id] = el;
+                  }}
+                  style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 6 }}
+                />
+              </div>
             ))}
           </div>
         </div>
-      </div>
-
-      <div className="tb-v2-section">
-        <h3 className="tb-v2-section-title">Original Color</h3>
-        <div className="flex gap-4 items-center">
-          <div
-            className="w-24 h-24 rounded-lg border-2 shadow-lg"
-            style={{ backgroundColor: color }}
-          />
-          <div className="text-sm">
-            <p className="font-mono">HEX: {color.toUpperCase()}</p>
-            <p className="font-mono">RGB: {rgb.r}, {rgb.g}, {rgb.b}</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="tb-v2-section">
-        <h3 className="tb-v2-section-title">Simulated Views</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {colorBlindnessTypes.map((type) => (
-            <div key={type.name} className="tb-v2-section" style={{ borderTop: 'none', border: '1px solid var(--tb-border)', borderRadius: 8 }}>
-              <div className="flex items-center gap-2 mb-2">
-                <div
-                  className="w-12 h-12 rounded border shadow"
-                  style={{ backgroundColor: simulatedColors[type.name] || '#000' }}
-                />
-                <div>
-                  <p className="font-semibold text-sm">{type.name}</p>
-                  <p className="text-xs text-gray-500">{type.description}</p>
-                </div>
-              </div>
-              <p className="font-mono text-xs mt-2">
-                {simulatedColors[type.name]?.toUpperCase()}
-              </p>
-              <div
-                className="w-full h-8 rounded mt-2"
-                style={{ backgroundColor: simulatedColors[type.name] || '#000' }}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="tb-v2-section">
-        <h3 className="tb-v2-section-title">Side-by-Side Comparison</h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-          <div className="text-center">
-            <div className="text-xs text-gray-500 mb-1">Original</div>
-            <div className="w-full h-12 rounded" style={{ backgroundColor: color }} />
-          </div>
-          {colorBlindnessTypes.map((type) => (
-            <div key={type.name} className="text-center">
-              <div className="text-xs text-gray-500 mb-1">{type.name.split(' ')[0]}</div>
-              <div
-                className="w-full h-12 rounded"
-                style={{ backgroundColor: simulatedColors[type.name] || '#000' }}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <div className="tb-v2-section">
-        <h3 className="tb-v2-section-title">Test Gradient</h3>
-        <div className="relative h-12 rounded overflow-hidden">
-          <div
-            className="absolute inset-0"
-            style={{
-              background: `linear-gradient(to right, #e74c3c, #f1c40f, #2ecc71, #3498db, #9b59b6)`,
-            }}
-          />
-        </div>
-        <div className="relative h-12 rounded overflow-hidden mt-2">
-          {colorBlindnessTypes.map((type, index) => {
-            const simulated = simulatedColors[type.name] || '#000';
-            return (
-              <div
-                key={type.name}
-                className="absolute inset-0"
-                style={{
-                  background: `linear-gradient(to right, ${simulated}, ${simulated})`,
-                  clipPath: `inset(0 ${100 - ((index + 1) / 3) * 100}% 0 0)`,
-                }}
-              />
-            );
-          })}
-          <div
-            className="absolute inset-0"
-            style={{
-              background: `linear-gradient(to right, #e74c3c, #f1c40f, #2ecc71, #3498db, #9b59b6)`,
-              opacity: 0.3,
-            }}
-          />
-        </div>
-        <div className="flex justify-between text-xs text-gray-500 mt-1">
-          <span>Original</span>
-          <span>Simulated</span>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

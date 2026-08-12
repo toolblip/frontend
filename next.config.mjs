@@ -9,6 +9,24 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      // These tool pages were removed: they only shipped as non-functional
+      // stubs or fabricated-data placeholders and would need paid third-party
+      // APIs (WHOIS, backlink/rank data) or heavy video-codec infra (ffmpeg.wasm,
+      // requiring site-wide COOP/COEP headers) to become real. Redirecting to a
+      // working equivalent (or the directory) rather than 404ing.
+      { source: '/tools/gif-to-avif', destination: '/tools/gif-to-png', permanent: true },
+      { source: '/tools/gif-to-mov', destination: '/tools/gif-to-png', permanent: true },
+      { source: '/tools/gif-to-webm', destination: '/tools/gif-to-png', permanent: true },
+      { source: '/tools/gif-to-mp4', destination: '/tools/gif-to-png', permanent: true },
+      { source: '/tools/heic-to-avif', destination: '/tools/heic-to-jpg', permanent: true },
+      { source: '/tools/google-rank-checker', destination: '/tools/google-serp-simulator', permanent: true },
+      { source: '/tools/whois-lookup', destination: '/tools', permanent: true },
+      { source: '/tools/whois-lookup-v2', destination: '/tools', permanent: true },
+      { source: '/tools/backlink-analyzer', destination: '/tools', permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

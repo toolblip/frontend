@@ -23,7 +23,9 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vercel/og": "^0.11.1",
+    "gifuct-js": "^2.1.2",
     "gray-matter": "^4.0.3",
+    "heic2any": "^0.0.4",
     "js-yaml": "^4.1.1",
     "jspdf": "^4.2.1",
     "lightningcss": "^1.33.0",
@@ -38,7 +40,8 @@
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "sass": "^1.99.0",
-    "tailwindcss": "^4.2.2"
+    "tailwindcss": "^4.2.2",
+    "upng-js": "^2.1.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",

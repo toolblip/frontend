@@ -220,7 +220,6 @@ import UserAgentParserClient from '@/components/tools/UserAgentParserClient';
 import UuidValidatorClient from '@/components/tools/UuidValidatorClient';
 import WebpackConfigGeneratorClient from '@/components/tools/WebpackConfigGeneratorClient';
 import WeightConverterClient from '@/components/tools/WeightConverterClient';
-import WhoisLookupClient from '@/components/tools/WhoisLookupClient';
 import WordAssociationClient from '@/components/tools/WordAssociationClient';
 import WordFrequencyAnalyzerClient from '@/components/tools/WordFrequencyAnalyzerClient';
 import WordFrequencyCounterClient from '@/components/tools/WordFrequencyCounterClient';
@@ -272,7 +271,6 @@ import AviToMp3Client from '@/components/tools/AviToMp3Client';
 import AviToMp4Client from '@/components/tools/AviToMp4Client';
 import Azw3ToEpubClient from '@/components/tools/Azw3ToEpubClient';
 import Azw3ToMobiClient from '@/components/tools/Azw3ToMobiClient';
-import BacklinkAnalyzerClient from '@/components/tools/BacklinkAnalyzerClient';
 import BacklinkCheckerExpressClient from '@/components/tools/BacklinkCheckerExpressClient';
 import BacklinkCheckerV2Client from '@/components/tools/BacklinkCheckerV2Client';
 import BackslashEscapeUnescapeClient from '@/components/tools/BackslashEscapeUnescapeClient';
@@ -603,14 +601,9 @@ import FractionToDecimalV2Client from '@/components/tools/FractionToDecimalV2Cli
 import FrequencyConverterClient from '@/components/tools/FrequencyConverterClient';
 import GeneralUnitConverterClient from '@/components/tools/GeneralUnitConverterClient';
 import GifToApngClient from '@/components/tools/GifToApngClient';
-import GifToAvifClient from '@/components/tools/GifToAvifClient';
 import GifToJpgClient from '@/components/tools/GifToJpgClient';
-import GifToMovClient from '@/components/tools/GifToMovClient';
-import GifToMp4Client from '@/components/tools/GifToMp4Client';
 import GifToPngClient from '@/components/tools/GifToPngClient';
-import GifToWebmClient from '@/components/tools/GifToWebmClient';
 import GoogleAlgorithmTrackerClient from '@/components/tools/GoogleAlgorithmTrackerClient';
-import GoogleRankCheckerClient from '@/components/tools/GoogleRankCheckerClient';
 import GoogleSerpPreviewClient from '@/components/tools/GoogleSerpPreviewClient';
 import GoogleSerpSimulatorClient from '@/components/tools/GoogleSerpSimulatorClient';
 import GradientGeneratorClient from '@/components/tools/GradientGeneratorClient';
@@ -704,7 +697,6 @@ import JsonSchemaGenExpressClient from '@/components/tools/JsonSchemaGenExpressC
 import XmlToCsvClient from '@/components/tools/XmlToCsvClient';
 import WebsiteAgeCheckerClient from '@/components/tools/WebsiteAgeCheckerClient';
 import HeadlineAnalyzerClient from '@/components/tools/HeadlineAnalyzerClient';
-import HeicToAvifClient from '@/components/tools/HeicToAvifClient';
 import HeicToJpgClient from '@/components/tools/HeicToJpgClient';
 import HeicToPngClient from '@/components/tools/HeicToPngClient';
 import HexColorPickerClient from '@/components/tools/HexColorPickerClient';
@@ -1194,8 +1186,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <WebpackConfigGeneratorClient />;
     case 'weight-converter':
       return <WeightConverterClient />;
-    case 'whois-lookup':
-      return <WhoisLookupClient />;
     case 'word-association':
       return <WordAssociationClient />;
     case 'word-frequency-analyzer':
@@ -1562,8 +1552,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <Azw3ToEpubClient />;
     case 'azw3-to-mobi':
       return <Azw3ToMobiClient />;
-    case 'backlink-analyzer':
-      return <BacklinkAnalyzerClient />;
     case 'backlink-checker-express':
       return <BacklinkCheckerExpressClient />;
     case 'backlink-checker-v2':
@@ -2076,22 +2064,12 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <FractionToDecimalClient />;
     case 'gif-to-apng':
       return <GifToApngClient />;
-    case 'gif-to-avif':
-      return <GifToAvifClient />;
     case 'gif-to-jpg':
       return <GifToJpgClient />;
-    case 'gif-to-mov':
-      return <GifToMovClient />;
-    case 'gif-to-mp4':
-      return <GifToMp4Client />;
     case 'gif-to-png':
       return <GifToPngClient />;
-    case 'gif-to-webm':
-      return <GifToWebmClient />;
     case 'google-algorithm-tracker':
       return <GoogleAlgorithmTrackerClient />;
-    case 'google-rank-checker':
-      return <GoogleRankCheckerClient />;
     case 'google-serp-preview':
       return <GoogleSerpPreviewClient />;
     case 'google-serp-simulator':
@@ -2188,8 +2166,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <HeadingTagAnalyzerClient />;
     case 'headline-analyzer':
       return <HeadlineAnalyzerClient />;
-    case 'heic-to-avif':
-      return <HeicToAvifClient />;
     case 'heic-to-jpg':
       return <HeicToJpgClient />;
     case 'heic-to-png':
@@ -3486,7 +3462,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'morse-code-express': return <MorseCodeTranslatorClient />;
     case 'morse-code-translator-v2': return <MorseCodeTranslatorClient />;
     case 'mov-to-avi': return <AviToMovClient />;
-    case 'mov-to-gif': return <GifToMovClient />;
     case 'mov-to-mp3': return <AviToMovClient />;
     case 'mov-to-mp4': return <AviToMovClient />;
     case 'mov-to-wav': return <AacToWavClient />;
@@ -3494,7 +3469,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'mp4-to-gif': return <AviToGifClient />;
     case 'mp4-to-mov': return <AviToMovClient />;
     case 'mp4-to-wav': return <AacToWavClient />;
-    case 'mp4-to-webm': return <GifToWebmClient />;
     case 'network-port-scanner': return <PortScannerClient />;
     case 'number-base-browser': return <BaseNumberConverterClient />;
     case 'number-base-convert': return <BaseConvertToolClient />;
@@ -3860,7 +3834,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'webp-to-gif': return <AviToGifClient />;
     case 'website-age-checker': return <WebsiteAgeCheckerClient />;
     case 'weight-converter-express': return <WeightConverterClient />;
-    case 'whois-lookup-v2': return <WhoisLookupClient />;
     case 'wifi-qr-code-generator': return <QrCodeGeneratorClient />;
     case 'word-complexity-analyzer': return <WordFrequencyAnalyzerClient />;
     case 'word-density-analyzer': return <WordFrequencyAnalyzerClient />;
