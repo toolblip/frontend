@@ -1,27 +1,6 @@
 {
   "pending": [
     {
-      "topic": "Compress images for faster page loads without losing quality"
-    },
-    {
-      "topic": "Crop images to any aspect ratio for social posts and thumbnails"
-    },
-    {
-      "topic": "Convert images to Base64 data URLs for embedding in HTML and CSS"
-    },
-    {
-      "topic": "View and strip EXIF metadata from photos before publishing"
-    },
-    {
-      "topic": "Check the Flesch-Kincaid readability score of your writing"
-    },
-    {
-      "topic": "Catch grammar and spelling errors before publishing a blog post"
-    },
-    {
-      "topic": "Turn plain text into realistic handwritten-style notes"
-    },
-    {
       "topic": "From CSV to production database: convert CSV to JSON, validate the schema, then generate TypeScript types"
     },
     {
@@ -551,6 +530,55 @@
     },
     {
       "topic": "Resize images to exact social media and Open Graph dimensions"
+    },
+    {
+      "topic": "Compress images for faster page loads without losing quality",
+      "completed_at": "2026-08-12T04:19:08Z",
+      "status": "skipped_existing_tool_page",
+      "tool_url": "https://toolblip.com/tools/image-compressor",
+      "rationale": "Live tool page /tools/image-compressor covers the compress-images intent; article would repeat the tool page purpose."
+    },
+    {
+      "topic": "Crop images to any aspect ratio for social posts and thumbnails",
+      "completed_at": "2026-08-12T04:19:08Z",
+      "status": "skipped_existing_tool_page",
+      "tool_url": "https://toolblip.com/tools/crop",
+      "rationale": "Live tool page /tools/crop (plus image-cropper, circle-crop) covers cropping intent; article would be thin support content."
+    },
+    {
+      "topic": "Convert images to Base64 data URLs for embedding in HTML and CSS",
+      "completed_at": "2026-08-12T04:19:08Z",
+      "status": "skipped_existing_tool_page",
+      "tool_url": "https://toolblip.com/tools/image-to-base64",
+      "rationale": "Live tool page /tools/image-to-base64 covers the convert-images-to-base64 intent."
+    },
+    {
+      "topic": "View and strip EXIF metadata from photos before publishing",
+      "completed_at": "2026-08-12T04:19:08Z",
+      "status": "skipped_existing_tool_page",
+      "tool_url": "https://toolblip.com/tools/exif-remover",
+      "rationale": "Live tool page /tools/exif-remover covers the strip-EXIF intent."
+    },
+    {
+      "topic": "Check the Flesch-Kincaid readability score of your writing",
+      "completed_at": "2026-08-12T04:19:08Z",
+      "status": "skipped_existing_tool_page",
+      "tool_url": "https://toolblip.com/tools/flesch-kincaid-calculator",
+      "rationale": "Live tool page /tools/flesch-kincaid-calculator covers the readability-score intent."
+    },
+    {
+      "topic": "Catch grammar and spelling errors before publishing a blog post",
+      "completed_at": "2026-08-12T04:19:08Z",
+      "status": "skipped_existing_tool_page",
+      "tool_url": "https://toolblip.com/tools/grammar-checker",
+      "rationale": "Live tool pages /tools/grammar-checker and spelling-checker-tool cover the grammar/spelling intent."
+    },
+    {
+      "topic": "Turn plain text into realistic handwritten-style notes",
+      "completed_at": "2026-08-12T04:19:08Z",
+      "status": "skipped_existing_tool_page",
+      "tool_url": "https://toolblip.com/tools/text-to-handwriting",
+      "rationale": "Live tool page /tools/text-to-handwriting covers the handwriting intent."
     }
   ]
 }
