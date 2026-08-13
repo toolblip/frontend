@@ -173,7 +173,6 @@ import PalindromeCheckerClient from '@/components/tools/PalindromeCheckerClient'
 import PasswordStrengthCheckerClient from '@/components/tools/PasswordStrengthCheckerClient';
 import PingTestClient from '@/components/tools/PingTestClient';
 import PlainTextCounterClient from '@/components/tools/PlainTextCounterClient';
-import PortScannerClient from '@/components/tools/PortScannerClient';
 import PunctuationFixerClient from '@/components/tools/PunctuationFixerClient';
 import RandomFractionGeneratorClient from '@/components/tools/RandomFractionGeneratorClient';
 import RandomIpAddressClient from '@/components/tools/RandomIpAddressClient';
@@ -268,8 +267,6 @@ import AviToMp3Client from '@/components/tools/AviToMp3Client';
 import AviToMp4Client from '@/components/tools/AviToMp4Client';
 import Azw3ToEpubClient from '@/components/tools/Azw3ToEpubClient';
 import Azw3ToMobiClient from '@/components/tools/Azw3ToMobiClient';
-import BacklinkCheckerExpressClient from '@/components/tools/BacklinkCheckerExpressClient';
-import BacklinkCheckerV2Client from '@/components/tools/BacklinkCheckerV2Client';
 import BackslashEscapeUnescapeClient from '@/components/tools/BackslashEscapeUnescapeClient';
 import BarcodeGeneratorClient from '@/components/tools/BarcodeGeneratorClient';
 import BarcodeScannerClient from '@/components/tools/BarcodeScannerClient';
@@ -698,7 +695,6 @@ import MP4ToMP3Client from '@/components/tools/MP4ToMP3Client';
 import MkvToMp3Client from '@/components/tools/MkvToMp3Client';
 import MP4ToOGGClient from '@/components/tools/MP4ToOGGClient';
 import MuteVideoAudioClient from '@/components/tools/MuteVideoAudioClient';
-import NetworkPortCheckerClient from '@/components/tools/NetworkPortCheckerClient';
 import NDAGeneratorClient from '@/components/tools/NDAGeneratorClient';
 import OGGToMP3Client from '@/components/tools/OGGToMP3Client';
 import PageSpeedPreviewClient from '@/components/tools/PageSpeedPreviewClient';
@@ -1326,8 +1322,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <PingTestClient />;
     case 'plain-text-counter':
       return <PlainTextCounterClient />;
-    case 'port-scanner':
-      return <PortScannerClient />;
     case 'punctuation-fixer':
       return <PunctuationFixerClient />;
     case 'random-fraction-generator':
@@ -1422,10 +1416,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <Azw3ToEpubClient />;
     case 'azw3-to-mobi':
       return <Azw3ToMobiClient />;
-    case 'backlink-checker-express':
-      return <BacklinkCheckerExpressClient />;
-    case 'backlink-checker-v2':
-      return <BacklinkCheckerV2Client />;
     case 'backslash-escape-unescape':
       return <BackslashEscapeUnescapeClient />;
     case 'barcode-generator':
@@ -2997,8 +2987,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'mkv-to-mp3': return <MkvToMp3Client />;
     case 'mobi-to-azw3': return <Azw3ToMobiClient />;
     case 'mock-api-generator': return <ApiDocGeneratorClient />;
-    case 'mock-port-scanner': return <PortScannerClient />;
-    case 'mock-port-scanner-full': return <PortScannerClient />;
     case 'morse-code-express': return <MorseCodeTranslatorClient />;
     case 'morse-code-translator-v2': return <MorseCodeTranslatorClient />;
     case 'mov-to-avi': return <AviToMovClient />;
@@ -3009,7 +2997,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'mp4-to-gif': return <AviToGifClient />;
     case 'mp4-to-mov': return <AviToMovClient />;
     case 'mp4-to-wav': return <AacToWavClient />;
-    case 'network-port-scanner': return <PortScannerClient />;
     case 'number-base-browser': return <BaseNumberConverterClient />;
     case 'number-base-convert': return <BaseConvertToolClient />;
     case 'number-base-converter-2025': return <BaseNumberConverterClient />;
@@ -3061,41 +3048,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'png-to-ico': return <FaviconGeneratorClient />;
     case 'port-check-tool': return <ContrastCheckToolClient />;
     case 'port-checker-tool': return <ContrastCheckerToolClient />;
-    case 'port-scanner-2025': return <PortScannerClient />;
-    case 'port-scanner-adv': return <PortScannerClient />;
-    case 'port-scanner-advanced': return <PortScannerClient />;
-    case 'port-scanner-api': return <PortScannerClient />;
-    case 'port-scanner-browser': return <PortScannerClient />;
-    case 'port-scanner-classic': return <PortScannerClient />;
-    case 'port-scanner-complete': return <PortScannerClient />;
-    case 'port-scanner-dg': return <PortScannerClient />;
-    case 'port-scanner-easy': return <PortScannerClient />;
-    case 'port-scanner-enhanced': return <PortScannerClient />;
-    case 'port-scanner-expander': return <PortScannerClient />;
-    case 'port-scanner-express': return <PortScannerClient />;
-    case 'port-scanner-final': return <PortScannerClient />;
-    case 'port-scanner-fresh': return <PortScannerClient />;
-    case 'port-scanner-full': return <PortScannerClient />;
-    case 'port-scanner-lite': return <PortScannerClient />;
-    case 'port-scanner-mock': return <PortScannerClient />;
-    case 'port-scanner-new': return <PortScannerClient />;
-    case 'port-scanner-online': return <PortScannerClient />;
-    case 'port-scanner-prime': return <PortScannerClient />;
-    case 'port-scanner-pro': return <PortScannerClient />;
-    case 'port-scanner-quick': return <PortScannerClient />;
-    case 'port-scanner-smart': return <PortScannerClient />;
-    case 'port-scanner-std': return <PortScannerClient />;
-    case 'port-scanner-tool': return <PortScannerClient />;
-    case 'port-scanner-toolblip': return <PortScannerClient />;
-    case 'port-scanner-ultimate': return <PortScannerClient />;
-    case 'port-scanner-ultra': return <PortScannerClient />;
-    case 'port-scanner-v2': return <PortScannerClient />;
-    case 'port-scanner-v3': return <PortScannerClient />;
-    case 'port-scanner-v4': return <PortScannerClient />;
-    case 'port-scanner-v5': return <PortScannerClient />;
-    case 'port-scanner-v6': return <PortScannerClient />;
-    case 'port-scanner-x': return <PortScannerClient />;
-    case 'port-scanner-xl': return <PortScannerClient />;
     case 'pressure-unit-converter': return <UnitConverterClient />;
     case 'qr-code': return <QrCodeGeneratorClient />;
     case 'random-color-generator': return <ColorHarmonyGeneratorClient />;
@@ -3247,11 +3199,10 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'sla-uptime-calculator': return <UptimeCalculatorClient />;
     case 'smart-text-sorter': return <TextSorterClient />;
     case 'speech-to-text': return <AudioToTextClient />;
-    case 'spelling-checker-tool': return <ContrastCheckerToolClient />;
+    case 'spelling-checker-tool': return <GrammarCheckerClient />;
     case 'srt-to-json': return <CsvToJsonClient />;
     case 'srt-to-json-v2': return <CsvToJsonClient />;
     case 'ssl-certificate-checker-v2': return <SslCertificateCheckerClient />;
-    case 'ssl-checker-express': return <BacklinkCheckerExpressClient />;
     case 'summarizer': return <ContentSummarizerClient />;
     case 'svg-favicon-generator': return <SvgFaviconGeneratorClient />;
     case 'syllable-counter-express': return <SyllableCounterClient />;
@@ -3374,10 +3325,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'jwt-quick': return <JwtDecoderClient />;
     case 'jwt-tool': return <JwtDecoderClient />;
     case 'metadata': return <ImageMetadataViewerClient />;
-    case 'pdf-password-remover': return <AddWatermarkToPDFClient />;
+    case 'pdf-password-remover': return <PdfPasswordRemoverClient />;
     case 'percentage-change-calc': return <PercentageCalculatorClient />;
-    case 'port-checker': return <PortScannerClient />;
-    case 'port-scan-tool': return <PortScannerClient />;
     case 'readability-dg': return <ReadabilityScoreClient />;
     case 'readability-expander': return <ReadabilityScoreClient />;
     case 'readability-grade-tool': return <ReadabilityScoreClient />;
@@ -3433,7 +3382,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'mp4-to-mp3': return <MP4ToMP3Client />;
     case 'mp4-to-ogg': return <MP4ToOGGClient />;
     case 'mute': return <MuteVideoAudioClient />;
-    case 'network-port-checker': return <NetworkPortCheckerClient />;
     case 'nda-generator': return <NDAGeneratorClient />;
     case 'ogg-to-mp3': return <OGGToMP3Client />;
     case 'page-speed-preview': return <PageSpeedPreviewClient />;

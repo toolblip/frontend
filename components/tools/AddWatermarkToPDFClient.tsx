@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import { PDFDocument, StandardFonts, degrees, rgb } from 'pdf-lib';
 
 export default function AddWatermarkToPDFClient() {
   const [watermarkText, setWatermarkText] = useState('CONFIDENTIAL');
@@ -8,12 +9,14 @@ export default function AddWatermarkToPDFClient() {
   const [status, setStatus] = useState<'idle' | 'processing' | 'done' | 'error'>('idle');
   const [message, setMessage] = useState('');
   const [isDragging, setIsDragging] = useState(false);
+  const [resultBlob, setResultBlob] = useState<Blob | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleFile = (f: File) => {
     setFile(f);
     setStatus('idle');
     setMessage('');
+    setResultBlob(null);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,25 +36,44 @@ export default function AddWatermarkToPDFClient() {
     setStatus('processing');
 
     try {
-      // Simulate processing
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Create a simple PDF with watermark text
-      const { jsPDF } = await import('jspdf');
-      const doc = new jsPDF();
-      
-      doc.setFontSize(60);
-      doc.setTextColor(200, 200, 200);
-      doc.text(watermarkText, 105, 148, { align: 'center', angle: 45 });
-      
-      doc.save(`watermarked-${file.name}`);
-      
+      const arrayBuffer = await file.arrayBuffer();
+      const pdfDoc = await PDFDocument.load(arrayBuffer);
+      const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+      for (const page of pdfDoc.getPages()) {
+        const { width, height } = page.getSize();
+        const fontSize = Math.min(width, height) / 8;
+        const textWidth = font.widthOfTextAtSize(watermarkText, fontSize);
+        page.drawText(watermarkText, {
+          x: width / 2 - textWidth / 2,
+          y: height / 2,
+          size: fontSize,
+          font,
+          color: rgb(0.6, 0.6, 0.6),
+          opacity: 0.35,
+          rotate: degrees(45),
+        });
+      }
+
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([pdfBytes as BlobPart], { type: 'application/pdf' });
+      setResultBlob(blob);
       setStatus('done');
-      setMessage('Watermarked PDF downloaded!');
+      setMessage('Watermarked PDF ready to download!');
     } catch {
       setStatus('error');
       setMessage('Error processing PDF. Please ensure it is a valid PDF file.');
     }
+  };
+
+  const downloadResult = () => {
+    if (!resultBlob || !file) return;
+    const url = URL.createObjectURL(resultBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `watermarked-${file.name}`;
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -84,7 +106,7 @@ export default function AddWatermarkToPDFClient() {
             <p className="font-medium">{file.name}</p>
             <p className="text-sm text-gray-500">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
           </div>
-          <button onClick={() => { setFile(null); setStatus('idle'); }} className="text-gray-400 hover:text-gray-600">✕</button>
+          <button onClick={() => { setFile(null); setStatus('idle'); setResultBlob(null); }} className="text-gray-400 hover:text-gray-600">✕</button>
         </div>
       )}
 
@@ -113,7 +135,13 @@ export default function AddWatermarkToPDFClient() {
       {/* Status */}
       {status === 'done' && (
         <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl">
-          <p className="text-sm text-green-600 dark:text-green-400">✅ {message}</p>
+          <p className="text-sm text-green-600 dark:text-green-400 mb-2">✅ {message}</p>
+          <button
+            onClick={downloadResult}
+            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+          >
+            Download Watermarked PDF
+          </button>
         </div>
       )}
 

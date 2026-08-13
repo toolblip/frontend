@@ -374,7 +374,7 @@ const componentMap: Record<string, () => Promise<{ default: React.ComponentType 
 
   // ── Writing & Content Tools ─────────────────────────────────────────────
   'grammar-checker': () => import('@/components/tools/GrammarCheckerV5Client'),
-  'spelling-checker': () => import('@/components/tools/SpellingCheckerToolClient'),
+  'spelling-checker': () => import('@/components/tools/GrammarCheckerClient'),
   'typo-checker': () => import('@/components/tools/TypoCheckerClient'),
   'punctuation-fixer': () => import('@/components/tools/PunctuationFixerClient'),
   'text-improver': () => import('@/components/tools/TextImproverClient'),
@@ -816,7 +816,7 @@ const componentMap: Record<string, () => Promise<{ default: React.ComponentType 
   'heading-analyzer-v2': () => import('@/components/tools/HeadingTagAnalyzerClient'),
   'keyword-density-v2': () => import('@/components/tools/KeywordDensityCheckerClient'),
   'grammar-checker-v2': () => import('@/components/tools/GrammarCheckerV5Client'),
-  'spelling-checker-v2': () => import('@/components/tools/SpellingCheckerToolClient'),
+  'spelling-checker-v2': () => import('@/components/tools/GrammarCheckerClient'),
   'text-improver-v3': () => import('@/components/tools/TextImproverClient'),
   'headline-analyzer-v2': () => import('@/components/tools/HeadlineAnalyzerClient'),
   'ai-detector-v2': () => import('@/components/tools/AiDetectorClient'),

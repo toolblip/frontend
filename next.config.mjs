@@ -33,6 +33,16 @@ const nextConfig = {
       { source: '/tools/mkv-to-avi', destination: '/tools', permanent: true },
       { source: '/tools/mkv-to-mov', destination: '/tools', permanent: true },
       { source: '/tools/mkv-to-mp4', destination: '/tools', permanent: true },
+
+      // Port scanning tools removed: real port scanning of arbitrary hosts
+      // requires a backend proxy plus abuse-prevention infra we don't have.
+      // Backlink checker removed: real backlink/link-index data requires a
+      // paid third-party API (Ahrefs/Moz/Majestic) we don't have.
+      { source: '/tools/port-scanner-full', destination: '/tools', permanent: true },
+      { source: '/tools/network-port-checker', destination: '/tools', permanent: true },
+      { source: '/tools/network-port-scanner', destination: '/tools', permanent: true },
+      { source: '/tools/mock-port-scanner-full', destination: '/tools', permanent: true },
+      { source: '/tools/backlink-checker-express', destination: '/tools', permanent: true },
     ];
   },
   async headers() {
