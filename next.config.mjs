@@ -25,6 +25,14 @@ const nextConfig = {
       { source: '/tools/whois-lookup', destination: '/tools', permanent: true },
       { source: '/tools/whois-lookup-v2', destination: '/tools', permanent: true },
       { source: '/tools/backlink-analyzer', destination: '/tools', permanent: true },
+      { source: '/tools/serp-rank-tracker', destination: '/tools/google-serp-simulator', permanent: true },
+      { source: '/tools/keyword-position-checker', destination: '/tools/google-serp-simulator', permanent: true },
+      { source: '/tools/compress-avi', destination: '/tools', permanent: true },
+      { source: '/tools/compress-mkv', destination: '/tools', permanent: true },
+      { source: '/tools/compress-mov', destination: '/tools', permanent: true },
+      { source: '/tools/mkv-to-avi', destination: '/tools', permanent: true },
+      { source: '/tools/mkv-to-mov', destination: '/tools', permanent: true },
+      { source: '/tools/mkv-to-mp4', destination: '/tools', permanent: true },
     ];
   },
   async headers() {

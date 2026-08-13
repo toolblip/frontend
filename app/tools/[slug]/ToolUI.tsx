@@ -367,10 +367,7 @@ import ColorTintGeneratorClient from '@/components/tools/ColorTintGeneratorClien
 import ColorToneGeneratorClient from '@/components/tools/ColorToneGeneratorClient';
 import ColorToolblipClient from '@/components/tools/ColorToolblipClient';
 import ColorizePhotoClient from '@/components/tools/ColorizePhotoClient';
-import CompressAviClient from '@/components/tools/CompressAviClient';
 import CompressClient from '@/components/tools/CompressClient';
-import CompressMkvClient from '@/components/tools/CompressMkvClient';
-import CompressMovClient from '@/components/tools/CompressMovClient';
 import ContentBriefGeneratorClient from '@/components/tools/ContentBriefGeneratorClient';
 import ContentImproverClient from '@/components/tools/ContentImproverClient';
 import ContentPlannerClient from '@/components/tools/ContentPlannerClient';
@@ -824,6 +821,7 @@ import MetaTagsToolClient from '@/components/tools/MetaTagsToolClient';
 import MetricImperialConverterClient from '@/components/tools/MetricImperialConverterClient';
 import MIMETypesReferenceClient from '@/components/tools/MIMETypesReferenceClient';
 import MP4ToMP3Client from '@/components/tools/MP4ToMP3Client';
+import MkvToMp3Client from '@/components/tools/MkvToMp3Client';
 import MP4ToOGGClient from '@/components/tools/MP4ToOGGClient';
 import MuteVideoAudioClient from '@/components/tools/MuteVideoAudioClient';
 import NetworkPortCheckerClient from '@/components/tools/NetworkPortCheckerClient';
@@ -872,7 +870,6 @@ import SentimentAnalyzerClient from '@/components/tools/SentimentAnalyzerClient'
 import SEOMetaBuilderClient from '@/components/tools/SEOMetaBuilderClient';
 import SEOTitleAnalyzerClient from '@/components/tools/SEOTitleAnalyzerClient';
 import SERPQuickClient from '@/components/tools/SERPQuickClient';
-import SERPRankTrackerClient from '@/components/tools/SERPRankTrackerClient';
 import SERPSnippetViewerClient from '@/components/tools/SERPSnippetViewerClient';
 import ShellCommandReferenceClient from '@/components/tools/ShellCommandReferenceClient';
 import ShortenContentClient from '@/components/tools/ShortenContentClient';
@@ -1706,12 +1703,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <ColorizePhotoClient />;
     case 'compress':
       return <CompressClient />;
-    case 'compress-avi':
-      return <CompressAviClient />;
-    case 'compress-mkv':
-      return <CompressMkvClient />;
-    case 'compress-mov':
-      return <CompressMovClient />;
     case 'delete-pages':
       return <PdfPageDeleterClient />;
     case 'content-brief-generator':
@@ -3359,7 +3350,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'keyword-density-analyzer-new': return <KeywordDensityCheckerClient />;
     case 'keyword-difficulty-checker': return <KeywordDensityCheckerClient />;
     case 'keyword-generator-express': return <KeywordGeneratorExpressClient />;
-    case 'keyword-position-checker': return <KeywordDensityCheckerClient />;
     case 'ldap-filter-generator': return <LdapFilterGeneratorClient />;
     case 'length-converter-express': return <LengthConverterClient />;
     case 'length-weight-converter': return <LengthConverterClient />;
@@ -3449,11 +3439,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'meta-tag-generator-xl': return <MetaTagGeneratorClient />;
     case 'meta-tag-quick': return <MetaTagGeneratorClient />;
     case 'meta-tags-gen-tool': return <MetaTagGeneratorClient />;
-    case 'mkv-to-avi': return <AviToMkvClient />;
     case 'mkv-to-gif': return <AviToGifClient />;
-    case 'mkv-to-mov': return <AviToMkvClient />;
-    case 'mkv-to-mp3': return <AviToMkvClient />;
-    case 'mkv-to-mp4': return <AviToMkvClient />;
+    case 'mkv-to-mp3': return <MkvToMp3Client />;
     case 'mobi-to-azw3': return <Azw3ToMobiClient />;
     case 'mobi-to-epub': return <EpubToMobiClient />;
     case 'mock-api-generator': return <ApiDocGeneratorClient />;
@@ -3964,7 +3951,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'seo-meta-builder': return <SEOMetaBuilderClient />;
     case 'seo-title-analyzer': return <SEOTitleAnalyzerClient />;
     case 'serp-quick': return <SERPQuickClient />;
-    case 'serp-rank-tracker': return <SERPRankTrackerClient />;
     case 'serp-snippet-viewer': return <SERPSnippetViewerClient />;
     case 'shell-command-reference': return <ShellCommandReferenceClient />;
     case 'shorten-content': return <ShortenContentClient />;
@@ -4139,7 +4125,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'fraction-to-decimal-express': return <FractionToDecimalClient />;
     case 'frequency-converter': return <AllInOneUnitConverterClient />;
 
-    case 'keyword-generator-express': return <KeywordGeneratorClient />;
     case 'meta-gen-toolblip': return <MetaTagGeneratorClient />;
     case 'meta-tag-gen-adv': return <MetaTagGeneratorClient />;
     case 'meta-tag-gen-prime': return <MetaTagGeneratorClient />;
