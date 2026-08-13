@@ -415,7 +415,6 @@ import CronBuilderClient from '@/components/tools/CronBuilderClient';
 import CronExpanderClient from '@/components/tools/CronExpanderClient';
 import CronExpressionGeneratorClient from '@/components/tools/CronExpressionGeneratorClient';
 import CronExpressionParserClient from '@/components/tools/CronExpressionParserClient';
-import CronGeneratorV2Client from '@/components/tools/CronGeneratorV2Client';
 import CronValidatorClient from '@/components/tools/CronValidatorClient';
 import CropCircleClient from '@/components/tools/CropCircleClient';
 import CssFlexboxGeneratorClient from '@/components/tools/CssFlexboxGeneratorClient';
