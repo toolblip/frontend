@@ -43,6 +43,66 @@ const nextConfig = {
       { source: '/tools/network-port-scanner', destination: '/tools', permanent: true },
       { source: '/tools/mock-port-scanner-full', destination: '/tools', permanent: true },
       { source: '/tools/backlink-checker-express', destination: '/tools', permanent: true },
+
+      // AI content-generation tools removed: need a paid LLM API (OpenAI/Claude)
+      // we don't have wired up server-side yet.
+      { source: '/tools/instagram-caption-generator', destination: '/tools', permanent: true },
+      { source: '/tools/instagram-story-ideas', destination: '/tools', permanent: true },
+      { source: '/tools/landing-page-copy', destination: '/tools', permanent: true },
+      { source: '/tools/linkedin-post-generator', destination: '/tools', permanent: true },
+      { source: '/tools/listicle-writer', destination: '/tools', permanent: true },
+      { source: '/tools/paragraph-completer', destination: '/tools', permanent: true },
+      { source: '/tools/paragraph-writer', destination: '/tools', permanent: true },
+      { source: '/tools/podcast-writer', destination: '/tools', permanent: true },
+      { source: '/tools/post-generator', destination: '/tools', permanent: true },
+      { source: '/tools/post-ideas', destination: '/tools', permanent: true },
+      { source: '/tools/post-rewriter', destination: '/tools', permanent: true },
+      { source: '/tools/post-writer', destination: '/tools', permanent: true },
+      { source: '/tools/real-estate-description', destination: '/tools', permanent: true },
+      { source: '/tools/story-generator', destination: '/tools', permanent: true },
+      { source: '/tools/tiktok-script-writer', destination: '/tools', permanent: true },
+      { source: '/tools/title-rewriter', destination: '/tools', permanent: true },
+      { source: '/tools/tone-of-voice', destination: '/tools', permanent: true },
+      { source: '/tools/trivia-generator', destination: '/tools', permanent: true },
+      { source: '/tools/youtube-script-writer', destination: '/tools', permanent: true },
+      { source: '/tools/readability-improver', destination: '/tools', permanent: true },
+      { source: '/tools/text-improver', destination: '/tools', permanent: true },
+
+      // AI image-editing tools removed: real object removal / background
+      // removal / upscaling / watermark removal needs an AI inpainting or
+      // super-resolution API (e.g. Replicate) we don't have.
+      { source: '/tools/make-background-transparent', destination: '/tools', permanent: true },
+      { source: '/tools/remove-objects', destination: '/tools', permanent: true },
+      { source: '/tools/remove-person', destination: '/tools', permanent: true },
+      { source: '/tools/remove-text-photo', destination: '/tools', permanent: true },
+      { source: '/tools/remove-watermark', destination: '/tools', permanent: true },
+      { source: '/tools/remove-watermark-photo', destination: '/tools', permanent: true },
+      { source: '/tools/repair-defects', destination: '/tools', permanent: true },
+      { source: '/tools/upscale', destination: '/tools', permanent: true },
+
+      // AI audio/video transcription+summarization tools removed: need a
+      // speech-to-text/LLM API and, for mute, ffmpeg we don't have.
+      { source: '/tools/summarize-podcast', destination: '/tools', permanent: true },
+      { source: '/tools/summarize-youtube', destination: '/tools', permanent: true },
+      { source: '/tools/transcribe-podcast', destination: '/tools', permanent: true },
+      { source: '/tools/youtube-transcript', destination: '/tools', permanent: true },
+      { source: '/tools/mute', destination: '/tools', permanent: true },
+
+      // Misc tools removed: each needs external data/API or a backend proxy
+      // we don't have (WHOIS, headless-browser screenshots, PageSpeed
+      // Insights API, plagiarism index, IPA pronunciation dictionary,
+      // thesaurus data, CORS-blocked header/webhook inspection, PDF AES
+      // encryption which pdf-lib doesn't support).
+      { source: '/tools/website-age-checker', destination: '/tools', permanent: true },
+      { source: '/tools/screenshot-maker', destination: '/tools', permanent: true },
+      { source: '/tools/page-speed-preview', destination: '/tools', permanent: true },
+      { source: '/tools/pagespeed-preview', destination: '/tools', permanent: true },
+      { source: '/tools/plagiarism-checker', destination: '/tools', permanent: true },
+      { source: '/tools/ipa-phonetic-finder', destination: '/tools', permanent: true },
+      { source: '/tools/synonym-finder', destination: '/tools', permanent: true },
+      { source: '/tools/response-header-analyzer', destination: '/tools', permanent: true },
+      { source: '/tools/webhook-tester', destination: '/tools', permanent: true },
+      { source: '/tools/protect', destination: '/tools', permanent: true },
     ];
   },
   async headers() {
