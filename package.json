@@ -26,6 +26,7 @@
     "gifuct-js": "^2.1.2",
     "gray-matter": "^4.0.3",
     "heic2any": "^0.0.4",
+    "imagetracerjs": "^1.2.6",
     "js-yaml": "^4.1.1",
     "jspdf": "^4.2.1",
     "lightningcss": "^1.33.0",
@@ -41,7 +42,8 @@
     "react-dom": "^19.2.5",
     "sass": "^1.99.0",
     "tailwindcss": "^4.2.2",
-    "upng-js": "^2.1.0"
+    "upng-js": "^2.1.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",

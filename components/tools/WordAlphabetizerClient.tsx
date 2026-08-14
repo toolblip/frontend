@@ -1,62 +1,77 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
-interface Props {
-  tool?: {
-    name: string;
-    slug: string;
-    description: string;
-  };
-}
-
-export default function WordAlphabetizerClient({ tool = { name: "", slug: "", description: "" } }: Props) {
+export default function WordAlphabetizerClient() {
   const [input, setInput] = useState('');
-  const [output, setOutput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [caseInsensitive, setCaseInsensitive] = useState(true);
+  const [copied, setCopied] = useState(false);
 
-  const handleProcess = async () => {
-    setIsLoading(true);
-    try {
-      // TODO: Implement WordAlphabetizerClient logic
-      setOutput(`Processed: ${input}`);
-    } catch (error) {
-      setOutput(`Error: ${error}`);
+  const words = useMemo(() => {
+    const tokens = (input.match(/[A-Za-z0-9'-]+/g) || [])
+      .map(w => w.replace(/^['-]+|['-]+$/g, ''))
+      .filter(Boolean);
+
+    const seen = new Set<string>();
+    const unique: string[] = [];
+    for (const w of tokens) {
+      const key = caseInsensitive ? w.toLowerCase() : w;
+      if (!seen.has(key)) {
+        seen.add(key);
+        unique.push(w);
+      }
     }
-    setIsLoading(false);
+
+    return unique.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: caseInsensitive ? 'base' : 'variant' }));
+  }, [input, caseInsensitive]);
+
+  const loadExample = () => {
+    setInput('The quick brown fox jumps over the lazy dog. The Dog barks, and the Fox runs away into the woods near the river.');
+  };
+
+  const copyAll = () => {
+    navigator.clipboard.writeText(words.join('\n')).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div className="" style={{padding:"20px"}}>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">{tool.name}</h1>
-        </div>
-      
-      <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
-        <div>
-          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Input</label>
-          <textarea
-            className="tb-v2-input"
-            placeholder="Enter your text..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Text</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+      </div>
+      <textarea
+        className="tb-v2-tool-textarea"
+        placeholder="Paste any text to extract and alphabetize its unique words..."
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        rows={6}
+      />
+
+      <div className="tb-v2-section">
+        <label className="tb-v2-checkbox-row">
+          <input
+            type="checkbox"
+            checked={caseInsensitive}
+            onChange={e => setCaseInsensitive(e.target.checked)}
           />
-        </div>
-        
-        <button
-          onClick={handleProcess}
-          disabled={isLoading}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
-        >
-          {isLoading ? 'Processing...' : 'Process'}
+          Case-insensitive dedupe (treat &quot;Fox&quot; and &quot;fox&quot; as the same word)
+        </label>
+      </div>
+
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">{words.length} Unique Word{words.length === 1 ? '' : 's'}</span>
+        <button type="button" onClick={copyAll} disabled={words.length === 0} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
+          {copied ? 'Copied' : 'Copy All'}
         </button>
-        
-        {output && (
-          <div>
-            <label className="tb-v2-tool-label" style={{marginBottom:8}}>Output</label>
-            <pre className="tb-v2-input">
-              {output}
-            </pre>
+      </div>
+      <div className="tb-v2-tool-output-body">
+        {words.length === 0 ? (
+          <p className="tb-v2-empty">Enter text to extract and alphabetize its unique words.</p>
+        ) : (
+          <div className="tb-v2-tool-pre" style={{ maxHeight: 360 }}>
+            {words.join('\n')}
           </div>
         )}
       </div>

@@ -1,63 +1,112 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
-interface Props {
-  tool?: {
-    name: string;
-    slug: string;
-    description: string;
-  };
+const ABBREVIATIONS = [
+  'mr', 'mrs', 'ms', 'dr', 'prof', 'sr', 'jr', 'st', 'ave', 'blvd', 'inc', 'ltd', 'co',
+  'vs', 'etc', 'eg', 'ie', 'no', 'fig', 'vol', 'approx', 'dept', 'gov', 'rev', 'gen', 'capt',
+];
+// A marker string that should never occur in real input text - used to temporarily
+// mask periods we don't want to split on, then restored to a real period afterwards.
+const PLACEHOLDER = 'ZZZDOTZZZ';
+
+function splitSentences(text: string): string[] {
+  if (!text.trim()) return [];
+
+  let protectedText = text;
+
+  // Protect periods in common abbreviations (e.g. "Mr. Smith" shouldn't split).
+  const abbrevPattern = new RegExp(`\\b(${ABBREVIATIONS.join('|')})\\.`, 'gi');
+  protectedText = protectedText.replace(abbrevPattern, (m) => m.slice(0, -1) + PLACEHOLDER);
+
+  // Protect decimal numbers (e.g. "3.14") and initials (e.g. "U.S.").
+  protectedText = protectedText.replace(/(\d)\.(\d)/g, `$1${PLACEHOLDER}$2`);
+  protectedText = protectedText.replace(/\b([A-Z])\.(?=[A-Z]\.)/g, `$1${PLACEHOLDER}`);
+
+  // Split on sentence-ending punctuation followed by whitespace (or end of string),
+  // when followed by an uppercase letter, digit, quote, or paren - a reasonable heuristic,
+  // not a perfect NLP sentence boundary detector.
+  const rawParts = protectedText
+    .split(/(?<=[.!?])\s+(?=[A-Z0-9"'(])|(?<=[.!?])\s*$/g)
+    .map(s => s.trim())
+    .filter(Boolean);
+
+  return rawParts.map(s => s.split(PLACEHOLDER).join('.'));
 }
 
-export default function SentenceExtractorClient({ tool = { name: "", slug: "", description: "" } }: Props) {
+export default function SentenceExtractorClient() {
   const [input, setInput] = useState('');
-  const [output, setOutput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [copied, setCopied] = useState<'list' | 'csv' | null>(null);
 
-  const handleProcess = async () => {
-    setIsLoading(true);
-    try {
-      // TODO: Implement SentenceExtractorClient logic
-      setOutput(`Processed: ${input}`);
-    } catch (error) {
-      setOutput(`Error: ${error}`);
-    }
-    setIsLoading(false);
+  const sentences = useMemo(() => splitSentences(input), [input]);
+
+  const copyList = () => {
+    const text = sentences.map((s, i) => `${i + 1}. ${s}`).join('\n');
+    navigator.clipboard.writeText(text).catch(() => {});
+    setCopied('list');
+    setTimeout(() => setCopied(null), 1500);
+  };
+
+  const copyCsv = () => {
+    const csv = sentences.map(s => `"${s.replace(/"/g, '""')}"`).join('\n');
+    navigator.clipboard.writeText(csv).catch(() => {});
+    setCopied('csv');
+    setTimeout(() => setCopied(null), 1500);
+  };
+
+  const downloadTxt = () => {
+    const text = sentences.map((s, i) => `${i + 1}. ${s}`).join('\n');
+    const blob = new Blob([text], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'sentences.txt';
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   return (
-    <div className="" style={{padding:"20px"}}>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">{tool.name}</h1>
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Text</span>
+      </div>
+      <textarea
+        className="tb-v2-tool-textarea"
+        placeholder="Paste a paragraph or block of text..."
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        rows={8}
+      />
+
+      <div className="tb-v2-banner tb-v2-banner-info" style={{ margin: '0 20px 16px' }}>
+        Sentences are split using a punctuation-based heuristic (periods, question marks, exclamation
+        points) with basic handling for common abbreviations and decimals. It will not be 100% accurate
+        on every edge case.
+      </div>
+
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">{sentences.length} sentence{sentences.length === 1 ? '' : 's'}</span>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button type="button" onClick={copyList} disabled={sentences.length === 0} className={`tb-v2-copy-btn ${copied === 'list' ? 'done' : ''}`}>
+            {copied === 'list' ? 'Copied' : 'Copy List'}
+          </button>
+          <button type="button" onClick={copyCsv} disabled={sentences.length === 0} className={`tb-v2-copy-btn ${copied === 'csv' ? 'done' : ''}`}>
+            {copied === 'csv' ? 'Copied' : 'Copy CSV'}
+          </button>
+          <button type="button" onClick={downloadTxt} disabled={sentences.length === 0} className="tb-v2-copy-btn">
+            Download .txt
+          </button>
         </div>
-      
-      <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
-        <div>
-          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Input</label>
-          <textarea
-            className="tb-v2-input"
-            placeholder="Enter your text..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-        </div>
-        
-        <button
-          onClick={handleProcess}
-          disabled={isLoading}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
-        >
-          {isLoading ? 'Processing...' : 'Process'}
-        </button>
-        
-        {output && (
-          <div>
-            <label className="tb-v2-tool-label" style={{marginBottom:8}}>Output</label>
-            <pre className="tb-v2-input">
-              {output}
-            </pre>
-          </div>
+      </div>
+      <div className="tb-v2-tool-output-body">
+        {sentences.length === 0 ? (
+          <p className="tb-v2-empty">Enter some text above to extract its sentences.</p>
+        ) : (
+          <ol style={{ display: 'flex', flexDirection: 'column', gap: 8, paddingLeft: 20 }}>
+            {sentences.map((s, i) => (
+              <li key={i} style={{ fontSize: 14, lineHeight: 1.6, color: 'var(--fg-0)' }}>{s}</li>
+            ))}
+          </ol>
         )}
       </div>
     </div>
