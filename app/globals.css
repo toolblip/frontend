@@ -1637,6 +1637,12 @@ body.tb-v2 a {
 }
 .tb-v2-tool-textarea::placeholder { color: var(--fg-3); }
 
+.tb-idn-text {
+  font-family: var(--f-mono), var(--tb-font-bengali), "Noto Sans Bengali",
+    "Nirmala UI", "Bangla MN", "Noto Sans", "Hiragino Sans", "Microsoft YaHei",
+    "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+}
+
 /* Stats grid (word counter etc.) */
 .tb-v2-stats-grid {
   display: grid;
