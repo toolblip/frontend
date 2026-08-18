@@ -151,27 +151,52 @@ export function toUnicode(domain: string): string {
   return converted.join('.');
 }
 
+interface DomainSpan {
+  prefix: string;
+  domain: string;
+  suffix: string;
+}
+
+function locateDomain(line: string): DomainSpan {
+  if (line.includes('://')) {
+    const match = line.match(/^([a-zA-Z][a-zA-Z0-9+.-]*:\/\/)([^/?#]*)([\s\S]*)$/);
+    if (match) {
+      try {
+        // Validate the line actually parses as a URL. We never read fields back
+        // off this object — new URL() auto-applies IDNA ToASCII to the hostname
+        // on parse, and the .hostname setter/`.toString()` do so again on write,
+        // which would silently defeat the toUnicode direction and percent-encode
+        // the path. We only use it here to confirm URL-shape, then do the actual
+        // host substitution via plain string slicing below.
+        new URL(line);
+        const [, scheme, authority, rest] = match;
+        const atIndex = authority.lastIndexOf('@');
+        const userinfo = atIndex >= 0 ? authority.slice(0, atIndex + 1) : '';
+        const hostport = atIndex >= 0 ? authority.slice(atIndex + 1) : authority;
+        const colonIndex = hostport.lastIndexOf(':');
+        const host = colonIndex >= 0 ? hostport.slice(0, colonIndex) : hostport;
+        const port = colonIndex >= 0 ? hostport.slice(colonIndex) : '';
+        return { prefix: scheme + userinfo, domain: host, suffix: port + rest };
+      } catch {
+        // Not actually a valid URL despite the "://" — fall through, treat the
+        // whole line as a bare domain.
+      }
+    }
+  } else if (EMAIL_SHAPE.test(line)) {
+    const atIndex = line.indexOf('@');
+    return { prefix: line.slice(0, atIndex + 1), domain: line.slice(atIndex + 1), suffix: '' };
+  }
+  return { prefix: '', domain: line, suffix: '' };
+}
+
 export function convertLine(line: string, direction: 'toASCII' | 'toUnicode'): string {
   const convert = direction === 'toASCII' ? toASCII : toUnicode;
+  const { prefix, domain, suffix } = locateDomain(line);
+  return prefix + convert(domain) + suffix;
+}
 
-  if (line.includes('://')) {
-    try {
-      const url = new URL(line);
-      url.hostname = convert(url.hostname);
-      return url.toString();
-    } catch {
-      // Not a valid URL despite the "://" — treat as a bare domain, per spec.
-      return convert(line);
-    }
-  }
-
-  if (EMAIL_SHAPE.test(line)) {
-    const parts = line.split('@');
-    const domain = convert(parts[1]);
-    return `${parts[0]}@${domain}`;
-  }
-
-  return convert(line);
+export function extractDomain(line: string): string {
+  return locateDomain(line).domain;
 }
 
 export function analyse(domain: string): string[] {
@@ -179,8 +204,13 @@ export function analyse(domain: string): string[] {
   const labels = domain.split(IDNA_SEPARATORS);
   const encoder = new TextEncoder();
 
-  if (encoder.encode(domain).length > 253) {
-    warnings.push(`Domain "${domain}" exceeds 253 bytes.`);
+  try {
+    const asciiDomain = toASCII(domain);
+    if (encoder.encode(asciiDomain).length > 253) {
+      warnings.push(`Domain "${domain}" exceeds 253 bytes when encoded.`);
+    }
+  } catch {
+    // Doesn't encode cleanly — the length check doesn't apply here.
   }
 
   for (const label of labels) {
@@ -189,8 +219,13 @@ export function analyse(domain: string): string[] {
       continue;
     }
 
-    if (encoder.encode(label).length > 63) {
-      warnings.push(`Label "${label}" exceeds 63 bytes.`);
+    try {
+      const asciiLabel = toASCII(label);
+      if (encoder.encode(asciiLabel).length > 63) {
+        warnings.push(`Label "${label}" exceeds 63 bytes when encoded.`);
+      }
+    } catch {
+      // Doesn't encode cleanly — the length check doesn't apply here.
     }
 
     const hasLatin = /\p{Script=Latin}/u.test(label);

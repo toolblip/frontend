@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { analyse, convertLine } from '@/lib/punycode';
+import { analyse, convertLine, extractDomain } from '@/lib/punycode';
 
 const EXAMPLES = [
   'হারুন.বাংলা',
@@ -40,7 +40,7 @@ function convertLines(text: string, direction: 'toASCII' | 'toUnicode'): Convert
 }
 
 function collectWarnings(unicodeText: string): string[] {
-  return unicodeText.split('\n').flatMap((line) => (line ? analyse(line) : []));
+  return unicodeText.split('\n').flatMap((line) => (line ? analyse(extractDomain(line)) : []));
 }
 
 export default function PunycodeEncoderClient() {
@@ -185,7 +185,7 @@ export default function PunycodeEncoderClient() {
           {warnings.length > 0 && (
             <div className="p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl">
               {warnings.map((w, i) => (
-                <p key={i} className="text-sm text-amber-700 dark:text-amber-400">
+                <p key={i} className="text-sm text-amber-700 dark:text-amber-400 tb-idn-text">
                   {w}
                 </p>
               ))}

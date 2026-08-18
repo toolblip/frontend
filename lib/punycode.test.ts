@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { toASCII, toUnicode, convertLine, analyse } from '@/lib/punycode';
+import { toASCII, toUnicode, convertLine, analyse, extractDomain } from '@/lib/punycode';
 
 describe('toASCII / toUnicode round trip', () => {
   const vectors: Array<{ unicode: string; punycode: string }> = [
@@ -58,5 +58,30 @@ describe('convertLine dispatch', () => {
 describe('analyse homograph warning', () => {
   it('flags a mixed Latin/Cyrillic label', () => {
     expect(analyse('paypal-раypal.com').length).toBeGreaterThan(0);
+  });
+});
+
+describe('convertLine with URLs', () => {
+  it('round-trips a URL in both directions, preserving a non-ASCII path verbatim', () => {
+    const unicodeUrl = 'https://münchen.de/straße';
+    const asciiUrl = 'https://xn--mnchen-3ya.de/straße';
+    expect(convertLine(unicodeUrl, 'toASCII')).toBe(asciiUrl);
+    expect(convertLine(asciiUrl, 'toUnicode')).toBe(unicodeUrl);
+  });
+});
+
+describe('analyse with extractDomain', () => {
+  it('does not false-positive on a URL-shaped line', () => {
+    const domain = extractDomain('https://münchen.de/straße');
+    expect(domain).toBe('münchen.de');
+    const warnings = analyse(domain);
+    expect(warnings.some((w) => w.includes('disagrees with URL-parser'))).toBe(false);
+  });
+
+  it('does not false-positive on an email-shaped line', () => {
+    const domain = extractDomain('harun@হারুন.বাংলা');
+    expect(domain).toBe('হারুন.বাংলা');
+    const warnings = analyse(domain);
+    expect(warnings.some((w) => w.includes('disagrees with URL-parser'))).toBe(false);
   });
 });
