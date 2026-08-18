@@ -2099,6 +2099,13 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does it tell me exactly where the problem is?', a: 'Yes, when an error is found the line number is pulled out of the error message and shown directly above the error text, like "Error at line 7".' },
     { q: 'Does it skip over comments and blank lines?', a: 'Yes, lines that are empty or start with a # comment marker are skipped during the bracket and structure checks so they never trigger a false error.' },
   ],
+  'punycode-encoder': [
+    { q: 'What does the xn-- prefix mean?', a: 'xn-- is the ASCII Compatible Encoding (ACE) prefix that marks a domain label as Punycode. It tells DNS resolvers and browsers that everything after it is an encoded Unicode string rather than a plain ASCII name.' },
+    { q: 'Why does DNS need Punycode at all?', a: 'DNS itself only understands ASCII. Punycode is the mechanism that represents a Unicode domain label, like one written in Cyrillic, Chinese, or Bengali, in an ASCII form DNS can actually store and resolve.' },
+    { q: 'What is a homograph attack, and does this tool catch it?', a: "A homograph attack swaps in visually similar characters from another script, like a Cyrillic а in place of a Latin a, to spoof a trusted domain. This tool flags a warning when a label mixes Latin characters with Cyrillic or Greek look-alikes, the classic homograph-spoofing pattern." },
+    { q: 'Are emoji domains actually real?', a: 'Yes. Some registrars and browsers allow emoji characters in a domain label, like 🇧🇪.ws, and encode them into Punycode through the exact same mechanism used for any other non-ASCII character.' },
+    { q: 'Why does the tool lowercase the input before encoding?', a: 'IDNA processing is case-insensitive, so the tool case-folds input before encoding to make sure MÜNCHEN.DE and münchen.de produce the same Punycode output, matching how DNS actually treats the two.' },
+  ],
 };
 
 export function getFaqs(tool: Tool): FAQ[] {

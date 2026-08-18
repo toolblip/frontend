@@ -3728,9 +3728,24 @@ Result: 847291`
   "punycode-encoder": {
     description: `DNS itself only understands ASCII, which means a domain name written in Cyrillic, Chinese, or with an emoji has to get represented some other way before it can actually resolve, and Punycode is that specific encoding, converting non-ASCII characters into an ASCII string prefixed with xn-- that DNS infrastructure can handle without ever needing to understand Unicode itself. This tool encodes and decodes Punycode for internationalized domain names, converting between the Unicode domain a person actually types and the ASCII form DNS actually resolves. Useful for converting an internationalized domain into the ASCII Punycode form it actually resolves to behind the scenes, decoding a suspicious xn-- domain to see what Unicode characters it's actually hiding before trusting a link, or checking exactly how a non-ASCII domain gets represented once it leaves a browser's address bar and reaches DNS.`,
     examples: [
+      { title: `Encode a Unicode Domain`, code: `Input: münchen.de
 
+Output: xn--mnchen-3ya.de`
+        ,note: `Convert an internationalized domain into the ASCII Punycode form DNS actually resolves.` },
+      { title: `Decode a Punycode Domain`, code: `Input: xn--h1alffa9f.xn--p1ai
+
+Output: россия.рф`
+        ,note: `Decode an xn-- domain back into its Unicode characters.` },
+      { title: `Encode an Emoji Domain`, code: `Input: 🇧🇪.ws
+
+Output: xn--f77hga.ws`
+        ,note: `Emoji domains encode to Punycode the same way as any other Unicode label.` },
+      { title: `Encode a Non-Latin Script Domain`, code: `Input: হারুন.বাংলা
+
+Output: xn--85bp0auq.xn--54b7fta0cc`
+        ,note: `Each label of a multi-label domain is encoded independently.` }
     ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
+    features: ["Bidirectional Unicode ↔ Punycode conversion", "Supports domains, URLs, and email addresses", "Homograph-attack warnings", "Runs entirely in your browser"]
   },
   "purchase-agreement-generator": {
     description: `A bill of sale is the simple receipt that changes hands once a sale is already agreed on, but getting to that point usually needs something more substantial first, a negotiated contract laying out a financing contingency, an inspection period, an earnest money deposit, and the specific conditions that have to be met before the sale actually closes. This tool generates a purchase agreement covering those negotiated terms and closing conditions, built for the negotiation stage a sale goes through before it's actually final rather than the simple transfer document that follows once it is. Useful for drafting a purchase agreement with a financing or inspection contingency before a deal is finalized, laying out an earnest money deposit and the conditions attached to it, or documenting the negotiated terms both parties agreed to before closing on a sale.`,

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import Script from "next/script";
-import { Inter, Fraunces, Nunito, JetBrains_Mono } from "next/font/google";
+import { Inter, Fraunces, Nunito, JetBrains_Mono, Noto_Sans_Bengali } from "next/font/google";
 import CookieBanner from "@/components/CookieBanner";
 import Analytics from "@/components/Analytics";
 import ThemeProvider from "@/components/ThemeProvider";
@@ -32,6 +32,13 @@ const jetbrainsMono = JetBrains_Mono({
   display: "swap",
   weight: ["500", "700"],
   variable: "--tb-font-mono",
+});
+const notoBengali = Noto_Sans_Bengali({
+  subsets: ["bengali"],
+  display: "swap",
+  weight: ["400", "600"],
+  variable: "--tb-font-bengali",
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -68,7 +75,7 @@ export default function RootLayout({
       data-density="comfy"
       data-fontswap="sans"
       data-cat-color="on"
-      className={`${inter.variable} ${fraunces.variable} ${nunito.variable} ${jetbrainsMono.variable}`}
+      className={`${inter.variable} ${fraunces.variable} ${nunito.variable} ${jetbrainsMono.variable} ${notoBengali.variable}`}
       suppressHydrationWarning
     >
       <head>
