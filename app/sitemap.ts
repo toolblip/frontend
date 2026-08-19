@@ -8,61 +8,66 @@ import { getBlogPosts } from '@/lib/blog';
 // on every deploy regardless of whether the page's content actually changed.
 const TOOL_PAGES_LAST_MODIFIED = new Date('2026-08-04T00:00:00.000Z');
 
+// Same problem applied to these static marketing pages: `new Date()` was
+// recomputed on every build, so bump this only when a page's content
+// actually changes.
+const STATIC_PAGES_LAST_MODIFIED = new Date('2026-08-12T00:00:00.000Z');
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://toolblip.com';
 
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
-      lastModified: new Date(),
+      lastModified: STATIC_PAGES_LAST_MODIFIED,
       changeFrequency: 'daily',
       priority: 1,
     },
     {
       url: `${baseUrl}/tools`,
-      lastModified: new Date(),
+      lastModified: STATIC_PAGES_LAST_MODIFIED,
       changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
       url: `${baseUrl}/directory`,
-      lastModified: new Date(),
+      lastModified: STATIC_PAGES_LAST_MODIFIED,
       changeFrequency: 'weekly',
       priority: 0.7,
     },
     {
       url: `${baseUrl}/pricing`,
-      lastModified: new Date(),
+      lastModified: STATIC_PAGES_LAST_MODIFIED,
       changeFrequency: 'monthly',
       priority: 0.6,
     },
     {
       url: `${baseUrl}/about`,
-      lastModified: new Date(),
+      lastModified: STATIC_PAGES_LAST_MODIFIED,
       changeFrequency: 'monthly',
       priority: 0.5,
     },
     {
       url: `${baseUrl}/blog`,
-      lastModified: new Date(),
+      lastModified: STATIC_PAGES_LAST_MODIFIED,
       changeFrequency: 'weekly',
       priority: 0.7,
     },
     {
       url: `${baseUrl}/seo`,
-      lastModified: new Date(),
+      lastModified: STATIC_PAGES_LAST_MODIFIED,
       changeFrequency: 'monthly',
       priority: 0.5,
     },
     {
       url: `${baseUrl}/api-docs`,
-      lastModified: new Date(),
+      lastModified: STATIC_PAGES_LAST_MODIFIED,
       changeFrequency: 'monthly',
       priority: 0.5,
     },
     {
       url: `${baseUrl}/frontend-health`,
-      lastModified: new Date(),
+      lastModified: STATIC_PAGES_LAST_MODIFIED,
       changeFrequency: 'weekly',
       priority: 0.3,
     },
