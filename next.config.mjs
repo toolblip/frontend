@@ -11,6 +11,55 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Legacy keyword-stuffed slugs ("-express", "-tool", "-new", "-v2", ...)
+      // renamed to a clean canonical slug as part of the GSC index-recovery
+      // work (see reports on toolblip.com's site-level "Crawled - currently
+      // not indexed" verdict). Same tool, same component - only the URL and
+      // the canonical slug changed, so this is a pure 301/308, not a removal.
+      { source: '/tools/photo-resize-tool', destination: '/tools/photo-resize', permanent: true },
+      { source: '/tools/lorem-ipsum-api', destination: '/tools/lorem-ipsum', permanent: true },
+      { source: '/tools/color-format-converter-v2', destination: '/tools/color-format-converter', permanent: true },
+      { source: '/tools/keyword-generator-express', destination: '/tools/keyword-generator', permanent: true },
+      { source: '/tools/json-path-evaluator-express', destination: '/tools/json-path-evaluator', permanent: true },
+      { source: '/tools/curl-gen-express', destination: '/tools/curl-gen', permanent: true },
+      { source: '/tools/temp-converter-express', destination: '/tools/temp-converter', permanent: true },
+      { source: '/tools/ip-address-info-express', destination: '/tools/ip-address-info', permanent: true },
+      { source: '/tools/word-freq-express', destination: '/tools/word-freq', permanent: true },
+      { source: '/tools/html-plaintext-express', destination: '/tools/html-plaintext', permanent: true },
+      { source: '/tools/tsv-json-express', destination: '/tools/tsv-json', permanent: true },
+      { source: '/tools/image-rotate-tool', destination: '/tools/image-rotate', permanent: true },
+      { source: '/tools/image-flip-tool', destination: '/tools/image-flip', permanent: true },
+      { source: '/tools/html-to-plain-text-tool', destination: '/tools/html-to-plain-text', permanent: true },
+      { source: '/tools/spelling-checker-tool', destination: '/tools/spelling-checker', permanent: true },
+      { source: '/tools/favicon-preview-tool', destination: '/tools/favicon-preview', permanent: true },
+      { source: '/tools/jsonpath-query-tool', destination: '/tools/jsonpath-query', permanent: true },
+      { source: '/tools/keyword-density-analyzer-new', destination: '/tools/keyword-density-analyzer', permanent: true },
+      { source: '/tools/css-units-converter-new', destination: '/tools/css-units-converter', permanent: true },
+      { source: '/tools/shell-command-generator-new', destination: '/tools/shell-command-generator', permanent: true },
+      { source: '/tools/image-compression-tool', destination: '/tools/image-compression', permanent: true },
+
+      // Verified byte-for-byte duplicate tool pages (identical component
+      // rendered under two slugs) - consolidated onto the canonical slug
+      // rather than left as unlinked "Duplicate without user-selected
+      // canonical" entries in GSC.
+      { source: '/tools/sql-to-json-v2', destination: '/tools/sql-to-json', permanent: true },
+      { source: '/tools/regex-pattern-generator-v2', destination: '/tools/regex-pattern-generator', permanent: true },
+      { source: '/tools/text-statistics-advanced', destination: '/tools/text-statistics', permanent: true },
+
+      // Verified functionally broken: the rendered UI only accepts a file
+      // type that doesn't match what the slug promises (e.g. an EPS
+      // uploader on a Visio-to-JPG page). No real implementation exists for
+      // these formats yet - redirecting to the closest genuine equivalent
+      // per the "fix it or remove it, never fabricate" rule already used
+      // elsewhere in this file, rather than leaving a mislabeled tool live.
+      { source: '/tools/vsd-to-jpg', destination: '/tools/image-format-converter', permanent: true },
+      { source: '/tools/vsdx-to-jpg', destination: '/tools/image-format-converter', permanent: true },
+      { source: '/tools/vsd-to-pdf', destination: '/tools/excel-to-pdf', permanent: true },
+      { source: '/tools/vsdx-to-pdf', destination: '/tools/excel-to-pdf', permanent: true },
+      { source: '/tools/mp4-to-avi', destination: '/tools/avi-to-mov', permanent: true },
+      { source: '/tools/webp-to-gif', destination: '/tools/image-format-converter', permanent: true },
+      { source: '/tools/json-to-tsv', destination: '/tools/json-to-csv', permanent: true },
+
       // These tool pages were removed: they only shipped as non-functional
       // stubs or fabricated-data placeholders and would need paid third-party
       // APIs (WHOIS, backlink/rank data) or heavy video-codec infra (ffmpeg.wasm,

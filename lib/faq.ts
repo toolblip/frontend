@@ -2111,3 +2111,15 @@ const OVERRIDES: Record<string, FAQ[]> = {
 export function getFaqs(tool: Tool): FAQ[] {
   return OVERRIDES[tool.slug] ?? templateFaqs(tool);
 }
+
+// True only for tools with a hand-written entry in OVERRIDES. The category
+// templates in `templateFaqs` share ~75% of their answer text across
+// unrelated tools once the tool name is substituted back in - real content
+// for a human reader, but not something that should be declared to Google
+// as unique structured FAQ data. Google restricted FAQPage rich results to
+// government/health sites in 2023 anyway, so there's no upside to emitting
+// it for a templated answer, and doing so at scale is a large part of what
+// produced toolblip.com's "Crawled - currently not indexed" verdict.
+export function hasFaqOverride(slug: string): boolean {
+  return slug in OVERRIDES;
+}

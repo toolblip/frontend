@@ -10,7 +10,7 @@ import FaqSection from '@/components/v2/FaqSection';
 import ToolWrapper from '@/components/tools/ToolWrapper';
 import RelatedTools from '@/components/tools/RelatedTools';
 import RelatedBlogPosts from '@/components/tools/RelatedBlogPosts';
-import { getFaqs } from '@/lib/faq';
+import { getFaqs, hasFaqOverride } from '@/lib/faq';
 import { getToolContent } from '@/data/tool-content';
 
 interface PageProps {
@@ -18,8 +18,19 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  return getToolRouteSlugs().map((slug) => ({ slug }));
+  // Union of real tool slugs (+ data/tools.ts's own alias map, via
+  // getToolRouteSlugs) and this file's REDIRECTS map below. dynamicParams
+  // is false, so every one of these needs a static param or its alias
+  // redirect stops working and 404s instead.
+  const slugs = new Set([...getToolRouteSlugs(), ...Object.keys(REDIRECTS)]);
+  return Array.from(slugs).map((slug) => ({ slug }));
 }
+
+// Any slug not covered by generateStaticParams (i.e. not a real tool and not
+// a known legacy alias) 404s immediately instead of falling through to
+// on-demand rendering. Keeps the crawlable surface exactly equal to the
+// tool catalog plus the alias maps.
+export const dynamicParams = false;
 
 /**
  * Legacy slugs, query-variant slugs, and common misspellings that should
@@ -211,7 +222,7 @@ export default async function ToolDetailPage({ params }: PageProps) {
         <RelatedTools slug={tool.slug} category={tool.category} />
         <RelatedBlogPosts toolName={tool.name} category={tool.category} tags={tool.tags} />
 
-        <FaqSection toolName={tool.name} faqs={faqs} />
+        <FaqSection toolName={tool.name} faqs={faqs} emitSchema={hasFaqOverride(tool.slug)} />
       </div>
     </div>
   );

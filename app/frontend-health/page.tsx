@@ -5,6 +5,12 @@ export const metadata: Metadata = {
   title: 'Frontend Health | Toolblip',
   description:
     'Live status dashboard for Toolblip frontend, API, and custom domain. Check service availability and response times in real time.',
+  // Operational status page, not something a searcher is looking for —
+  // keep it out of the sitemap and out of the index (see app/sitemap.ts).
+  robots: {
+    index: false,
+    follow: true,
+  },
   openGraph: {
     title: 'Frontend Health | Toolblip',
     description:

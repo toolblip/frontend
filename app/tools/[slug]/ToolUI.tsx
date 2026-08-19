@@ -1404,8 +1404,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <ColorContrastCheckerClient />;
     case 'color-format-converter':
       return <ColorFormatConverterClient />;
-    case 'color-format-converter-v2':
-      return <ColorFormatConverterV2Client />;
+    case 'color-format-converter-v2': return <ColorFormatConverterV2Client />; // legacy alias, redirected via next.config.mjs
+    case 'color-format-converter': return <ColorFormatConverterV2Client />;
     case 'color-format-picker':
       return <ColorFormatPickerClient />;
     case 'color-harmony-express':
@@ -1711,8 +1711,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'css-to-tailwind':
       return <CssToTailwindClient />;
     case 'css-units-converter':
-    case 'css-units-converter-new':
-      return <CssValidatorClient />;
+    case 'css-units-converter-new': return <CssValidatorClient />; // legacy alias, redirected via next.config.mjs
+    case 'css-units-converter': return <CssValidatorClient />;
     case 'csv-generator':
       return <CsvGeneratorClient />;
     case 'csv-json-express':
@@ -1727,8 +1727,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <CsvToXmlClient />;
     case 'curl-command-builder':
       return <CurlCommandBuilderClient />;
-    case 'curl-gen-express':
-      return <CurlGenExpressClient />;
+    case 'curl-gen-express': return <CurlGenExpressClient />; // legacy alias, redirected via next.config.mjs
+    case 'curl-gen': return <CurlGenExpressClient />;
     case 'curl-to-javascript':
       return <CurlToJavascriptClient />;
     case 'currency-converter-v2':
@@ -2040,16 +2040,16 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <HtmlLivePreviewClient />;
     case 'html-markdown-express':
       return <HtmlMarkdownExpressClient />;
-    case 'html-plaintext-express':
-      return <HtmlPlaintextExpressClient />;
+    case 'html-plaintext-express': return <HtmlPlaintextExpressClient />; // legacy alias, redirected via next.config.mjs
+    case 'html-plaintext': return <HtmlPlaintextExpressClient />;
     case 'html-table-to-json':
       return <HtmlTableToJsonClient />;
     case 'html-to-jsx':
       return <HtmlToJsxClient />;
     case 'html-to-markdown-v2':
       return <HtmlToMarkdownV2Client />;
-    case 'html-to-plain-text-tool':
-      return <HtmlToPlainTextToolClient />;
+    case 'html-to-plain-text-tool': return <HtmlToPlainTextToolClient />; // legacy alias, redirected via next.config.mjs
+    case 'html-to-plain-text': return <HtmlToPlainTextToolClient />;
     case 'html-to-plain-text-v2':
       return <HtmlToPlainTextV2Client />;
     case 'http-headers-2025':
@@ -2112,12 +2112,12 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <ImageBorderAdderClient />;
     case 'image-compressor':
       return <ImageCompressorClient />;
-    case 'image-flip-tool':
-      return <ImageFlipToolClient />;
+    case 'image-flip-tool': return <ImageFlipToolClient />; // legacy alias, redirected via next.config.mjs
+    case 'image-flip': return <ImageFlipToolClient />;
     case 'image-optimizer':
       return <ImageOptimizerClient />;
-    case 'image-rotate-tool':
-      return <ImageRotateToolClient />;
+    case 'image-rotate-tool': return <ImageRotateToolClient />; // legacy alias, redirected via next.config.mjs
+    case 'image-rotate': return <ImageRotateToolClient />;
     case 'image-shadow-generator':
       return <ImageShadowGeneratorClient />;
     case 'merge':
@@ -2793,7 +2793,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'list-randomizer-v2':
       return <ListRandomizerClient />;
     case 'http-headers-viewer-adv': return <HttpHeadersViewerClient />;
-    case 'image-compression-tool': return <ImageFlipToolClient />;
+    case 'image-compression-tool': return <ImageFlipToolClient />; // legacy alias, redirected via next.config.mjs
+    case 'image-compression': return <ImageFlipToolClient />;
     case 'image-metadata-express': return <ImageMetadataViewerClient />;
     case 'image-metadata-tool': return <ImageFlipToolClient />;
     case 'image-resizer-advanced': return <ImageResizerClient />;
@@ -2805,13 +2806,15 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'image-resizer-ultra': return <ImageResizerClient />;
     case 'image-size-resizer': return <ImageResizerClient />;
     case 'ip-address-info': return <RandomIpAddressClient />;
-    case 'ip-address-info-express': return <RandomIpAddressClient />;
+    case 'ip-address-info-express': return <RandomIpAddressClient />; // legacy alias, redirected via next.config.mjs
+    case 'ip-address-info': return <RandomIpAddressClient />;
     case 'ip-address-info-v2': return <RandomIpAddressClient />;
     case 'json-csv-express': return <JsonCsvExpressClient />;
     case 'json-escape-unescape': return <BackslashEscapeUnescapeClient />;
     case 'json-patch-generator': return <JsonLdGeneratorClient />;
     case 'json-path-evaluator': return <JsonPathTesterClient />;
-    case 'json-path-evaluator-express': return <JsonPathEvaluatorExpressClient />;
+    case 'json-path-evaluator-express': return <JsonPathEvaluatorExpressClient />; // legacy alias, redirected via next.config.mjs
+    case 'json-path-evaluator': return <JsonPathEvaluatorExpressClient />;
     case 'json-path-tester-new': return <JsonPathTesterClient />;
     case 'json-schema-editor': return <JsonSchemaValidatorClient />;
     case 'json-schema-gen-express': return <JsonSchemaGenExpressClient />;
@@ -2863,15 +2866,18 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'jwt-decoder-x': return <JwtDecoderClient />;
     case 'jwt-decoder-xl': return <JwtDecoderClient />;
     case 'jwt-token-decoder': return <JwtDecoderClient />;
-    case 'keyword-density-analyzer-new': return <KeywordDensityCheckerClient />;
+    case 'keyword-density-analyzer-new': return <KeywordDensityCheckerClient />; // legacy alias, redirected via next.config.mjs
+    case 'keyword-density-analyzer': return <KeywordDensityCheckerClient />;
     case 'keyword-difficulty-checker': return <KeywordDensityCheckerClient />;
-    case 'keyword-generator-express': return <KeywordGeneratorExpressClient />;
+    case 'keyword-generator-express': return <KeywordGeneratorExpressClient />; // legacy alias, redirected via next.config.mjs
+    case 'keyword-generator': return <KeywordGeneratorExpressClient />;
     case 'ldap-filter-generator': return <LdapFilterGeneratorClient />;
     case 'length-converter-express': return <LengthConverterClient />;
     case 'length-weight-converter': return <LengthConverterClient />;
     case 'lorem-ipsum-adv': return <LoremIpsumGeneratorClient />;
     case 'lorem-ipsum-advanced': return <LoremIpsumGeneratorClient />;
-    case 'lorem-ipsum-api': return <LoremIpsumGeneratorClient />;
+    case 'lorem-ipsum-api': return <LoremIpsumGeneratorClient />; // legacy alias, redirected via next.config.mjs
+    case 'lorem-ipsum': return <LoremIpsumGeneratorClient />;
     case 'lorem-ipsum-api-tool': return <LoremIpsumGeneratorClient />;
     case 'lorem-ipsum-browser': return <LoremIpsumGeneratorClient />;
     case 'lorem-ipsum-bytes': return <LoremIpsumGeneratorClient />;
@@ -3164,14 +3170,16 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'sha256-hash-generator': return <HashGeneratorClient />;
     case 'shell-command-gen-express': return <ShellCommandGenExpressClient />;
     case 'shell-command-generator': return <BashCommandGeneratorClient />;
-    case 'shell-command-generator-new': return <BashCommandGeneratorClient />;
+    case 'shell-command-generator-new': return <BashCommandGeneratorClient />; // legacy alias, redirected via next.config.mjs
+    case 'shell-command-generator': return <BashCommandGeneratorClient />;
     case 'sitemap-html-generator': return <HtmlTableGeneratorClient />;
     case 'sitemap-xml-validator': return <XmlValidatorClient />;
     case 'sitemap-xml-validator-express': return <XmlValidatorClient />;
     case 'sla-uptime-calculator': return <UptimeCalculatorClient />;
     case 'smart-text-sorter': return <TextSorterClient />;
     case 'speech-to-text': return <AudioToTextClient />;
-    case 'spelling-checker-tool': return <GrammarCheckerClient />;
+    case 'spelling-checker-tool': return <GrammarCheckerClient />; // legacy alias, redirected via next.config.mjs
+    case 'spelling-checker': return <GrammarCheckerClient />;
     case 'srt-to-json': return <CsvToJsonClient />;
     case 'srt-to-json-v2': return <CsvToJsonClient />;
     case 'ssl-certificate-checker-v2': return <SslCertificateCheckerClient />;
@@ -3180,7 +3188,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'syllable-counter-express': return <SyllableCounterClient />;
     case 'syllable-word-counter': return <SyllableCounterClient />;
     case 'table-to-markdown': return <JsonToMarkdownTableClient />;
-    case 'temp-converter-express': return <TempConverterExpressClient />;
+    case 'temp-converter-express': return <TempConverterExpressClient />; // legacy alias, redirected via next.config.mjs
+    case 'temp-converter': return <TempConverterExpressClient />;
     case 'text-case-converter': return <CaseConverterClient />;
     case 'text-combinations-generator': return <FakeTextGeneratorClient />;
     case 'text-diff-checker': return <TextDiffClient />;
@@ -3231,7 +3240,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'time-zone-tool': return <TimeZoneConverterClient />;
     case 'title-case-converter': return <CaseConverterClient />;
     case 'toml-to-json-v2': return <TomlToJsonClient />;
-    case 'tsv-json-express': return <TsvToJsonClient />;
+    case 'tsv-json-express': return <TsvToJsonClient />; // legacy alias, redirected via next.config.mjs
+    case 'tsv-json': return <TsvToJsonClient />;
     case 'tsv-to-csv-v2': return <CsvToTsvClient />;
     case 'tsv-to-json-v2': return <TsvToJsonClient />;
     case 'unit-converter-2025': return <UnitConverterClient />;
@@ -3328,7 +3338,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'json-editor': return <JsonEditorClient />;
     case 'json-tree-view': return <JsonTreeViewClient />;
     case 'jsonpath-query-tester': return <JSONPathQueryTesterClient />;
-    case 'jsonpath-query-tool': return <JSONPathQueryToolClient />;
+    case 'jsonpath-query-tool': return <JSONPathQueryToolClient />; // legacy alias, redirected via next.config.mjs
+    case 'jsonpath-query': return <JSONPathQueryToolClient />;
     case 'jwt-token-inspector': return <JwtTokenInspectorClient />;
     case 'jwt-token-tester': return <JwtTokenTesterClient />;
     case 'keyword-difficulty-tool': return <KeywordDifficultyToolClient />;
@@ -3348,7 +3359,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'ogg-to-mp3': return <OGGToMP3Client />;
     case 'page-title-checker': return <PageTitleCheckerClient />;
     case 'photo-metadata-remover': return <PhotoMetadataRemoverClient />;
-    case 'photo-resize-tool': return <PhotoResizeToolClient />;
+    case 'photo-resize-tool': return <PhotoResizeToolClient />; // legacy alias, redirected via next.config.mjs
+    case 'photo-resize': return <PhotoResizeToolClient />;
     case 'physics-constants-reference': return <PhysicsConstantsReferenceClient />;
     case 'poll-generator': return <PollGeneratorClient />;
     case 'pressure-converter': return <PressureConverterClient />;
@@ -3423,7 +3435,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'word-combinations': return <WordCombinationsGeneratorClient />;
     case 'word-count-from-url': return <WordCountFromURLClient />;
     case 'word-finder': return <WordFinderClient />;
-    case 'word-freq-express': return <WordFreqExpressClient />;
+    case 'word-freq-express': return <WordFreqExpressClient />; // legacy alias, redirected via next.config.mjs
+    case 'word-freq': return <WordFreqExpressClient />;
     case 'word-scramble-generator': return <WordScrambleGeneratorClient />;
     case 'yaml-pretty-print': return <YAMLPrettyPrintClient />;
     case 'zip': return <CreateZipFileClient />;
@@ -3455,7 +3468,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'frequency-converter': return <FrequencyConverterClient />;
     case 'force-converter': return <ForceConverterClient />;
     case 'favicon-maker': return <IconFaviconCreatorClient />;
-    case 'favicon-preview-tool': return <FaviconGeneratorClient />;
+    case 'favicon-preview-tool': return <FaviconGeneratorClient />; // legacy alias, redirected via next.config.mjs
+    case 'favicon-preview': return <FaviconGeneratorClient />;
     case 'cron-generator-dg': return <CronGeneratorCompleteClient />;
     case 'cron-schedule-explainer': return <CronScheduleExplainerClient />;
     case 'css-animation-generator': return <CssAnimationGeneratorClient />;
