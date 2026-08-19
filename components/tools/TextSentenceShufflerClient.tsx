@@ -2,62 +2,119 @@
 
 import { useState } from 'react';
 
-interface Props {
-  tool?: {
-    name: string;
-    slug: string;
-    description: string;
-  };
+type Mode = 'paragraph' | 'whole';
+
+const EXAMPLE_TEXT = `The sun rose over the quiet hills. Birds began to sing in the trees. A light breeze carried the scent of pine.
+
+Down in the valley, the town was waking up. Shopkeepers opened their doors. Children ran toward the school gates.`;
+
+function splitSentences(text: string): string[] {
+  const matches = text.match(/[^.!?]+[.!?]+(\s+|$)|[^.!?]+$/g);
+  return matches ? matches.filter(s => s.trim().length > 0) : [];
 }
 
-export default function TextSentenceShufflerClient({ tool = { name: "", slug: "", description: "" } }: Props) {
-  const [input, setInput] = useState('');
-  const [output, setOutput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+function fisherYatesShuffle<T>(arr: T[]): T[] {
+  const result = [...arr];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
 
-  const handleProcess = async () => {
-    setIsLoading(true);
-    try {
-      // TODO: Implement TextSentenceShufflerClient logic
-      setOutput(`Processed: ${input}`);
-    } catch (error) {
-      setOutput(`Error: ${error}`);
-    }
-    setIsLoading(false);
+function shuffleText(text: string, mode: Mode): string {
+  if (mode === 'whole') {
+    const sentences = splitSentences(text);
+    return fisherYatesShuffle(sentences).join('').trim();
+  }
+
+  const paragraphs = text.split(/\n\s*\n/);
+  return paragraphs
+    .map(paragraph => {
+      const sentences = splitSentences(paragraph);
+      if (sentences.length === 0) return paragraph;
+      return fisherYatesShuffle(sentences).join('').trim();
+    })
+    .join('\n\n');
+}
+
+export default function TextSentenceShufflerClient() {
+  const [text, setText] = useState('');
+  const [mode, setMode] = useState<Mode>('paragraph');
+  const [output, setOutput] = useState('');
+  const [copied, setCopied] = useState(false);
+
+  const loadExample = () => {
+    setText(EXAMPLE_TEXT);
+    setOutput('');
+  };
+
+  const reshuffle = () => {
+    setOutput(shuffleText(text, mode));
+  };
+
+  const copyOutput = () => {
+    if (!output) return;
+    navigator.clipboard.writeText(output).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div className="" style={{padding:"20px"}}>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">{tool.name}</h1>
-        </div>
-      
-      <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
-        <div>
-          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Input</label>
-          <textarea
-            className="tb-v2-input"
-            placeholder="Enter your text..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-        </div>
-        
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Enter your text</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+      </div>
+      <textarea
+        value={text}
+        onChange={e => {
+          setText(e.target.value);
+          setOutput('');
+        }}
+        placeholder="Paste text made of multiple sentences to shuffle..."
+        className="tb-v2-tool-textarea"
+        rows={8}
+      />
+
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', padding: '14px 20px', borderBottom: '1px solid var(--line)' }}>
         <button
-          onClick={handleProcess}
-          disabled={isLoading}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+          type="button"
+          onClick={() => setMode('paragraph')}
+          className={`tb-v2-toggle-pill ${mode === 'paragraph' ? 'on' : ''}`}
         >
-          {isLoading ? 'Processing...' : 'Process'}
+          Within each paragraph
         </button>
-        
-        {output && (
-          <div>
-            <label className="tb-v2-tool-label" style={{marginBottom:8}}>Output</label>
-            <pre className="tb-v2-input">
-              {output}
-            </pre>
-          </div>
+        <button
+          type="button"
+          onClick={() => setMode('whole')}
+          className={`tb-v2-toggle-pill ${mode === 'whole' ? 'on' : ''}`}
+        >
+          Across whole text
+        </button>
+      </div>
+
+      <div className="tb-v2-toolbar">
+        <button
+          onClick={reshuffle}
+          disabled={!text.trim()}
+          className="tb-v2-btn tb-v2-btn-primary"
+        >
+          {output ? 'Reshuffle' : 'Shuffle'}
+        </button>
+      </div>
+
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">Shuffled Output</span>
+        <button type="button" onClick={copyOutput} disabled={!output} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
+          {copied ? 'Copied' : 'Copy'}
+        </button>
+      </div>
+      <div className="tb-v2-tool-output-body">
+        {!output ? (
+          <div className="tb-v2-empty">Enter text and click Shuffle to randomize sentence order.</div>
+        ) : (
+          <textarea readOnly value={output} className="tb-v2-tool-textarea" style={{ minHeight: 140 }} rows={8} />
         )}
       </div>
     </div>

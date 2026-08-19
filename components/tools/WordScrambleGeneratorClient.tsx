@@ -1,62 +1,99 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
-interface Props {
-  tool?: {
-    name: string;
-    slug: string;
-    description: string;
-  };
+function shuffleChars(chars: string[]): string[] {
+  const arr = chars.slice();
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
 }
 
-export default function WordScrambleGeneratorClient({ tool = { name: "", slug: "", description: "" } }: Props) {
-  const [input, setInput] = useState('');
-  const [output, setOutput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+function scrambleWord(word: string): string {
+  if (word.length < 2) return word;
+  let result = word;
+  for (let attempt = 0; attempt < 8; attempt++) {
+    const candidate = shuffleChars(word.split('')).join('');
+    result = candidate;
+    if (candidate !== word) break;
+  }
+  return result;
+}
 
-  const handleProcess = async () => {
-    setIsLoading(true);
-    try {
-      // TODO: Implement WordScrambleGeneratorClient logic
-      setOutput(`Processed: ${input}`);
-    } catch (error) {
-      setOutput(`Error: ${error}`);
+function scrambleParagraph(text: string): string {
+  return text.replace(/[A-Za-z]+/g, match => scrambleWord(match));
+}
+
+export default function WordScrambleGeneratorClient() {
+  const [input, setInput] = useState('');
+  const [wholeText, setWholeText] = useState(false);
+  const [version, setVersion] = useState(0);
+
+  const scrambled = useMemo(() => {
+    if (!input.trim()) return '';
+    if (wholeText) {
+      return scrambleParagraph(input);
     }
-    setIsLoading(false);
+    return input
+      .split('\n')
+      .map(line => (line.trim() ? scrambleParagraph(line) : line))
+      .join('\n');
+    // version is intentionally a dependency to force a fresh shuffle on "Re-scramble"
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [input, wholeText, version]);
+
+  const loadExample = () => {
+    setInput('apple\nbanana\nelephant\nkeyboard');
+  };
+
+  const rescramble = () => setVersion(v => v + 1);
+
+  const copyAll = () => {
+    navigator.clipboard.writeText(scrambled).catch(() => {});
   };
 
   return (
-    <div className="" style={{padding:"20px"}}>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">{tool.name}</h1>
-        </div>
-      
-      <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
-        <div>
-          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Input</label>
-          <textarea
-            className="tb-v2-input"
-            placeholder="Enter your text..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">{wholeText ? 'Text' : 'Words (one per line)'}</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+      </div>
+      <textarea
+        className="tb-v2-tool-textarea"
+        placeholder={wholeText ? 'Paste a full sentence or paragraph...' : 'apple\nbanana\nelephant'}
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        rows={6}
+      />
+
+      <div className="tb-v2-section" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+        <label className="tb-v2-checkbox-row">
+          <input
+            type="checkbox"
+            checked={wholeText}
+            onChange={e => setWholeText(e.target.checked)}
           />
-        </div>
-        
-        <button
-          onClick={handleProcess}
-          disabled={isLoading}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
-        >
-          {isLoading ? 'Processing...' : 'Process'}
+          Scramble whole text (preserve word boundaries &amp; punctuation)
+        </label>
+        <button type="button" onClick={rescramble} disabled={!input.trim()} className="tb-v2-btn tb-v2-btn-sm">
+          Re-scramble
         </button>
-        
-        {output && (
-          <div>
-            <label className="tb-v2-tool-label" style={{marginBottom:8}}>Output</label>
-            <pre className="tb-v2-input">
-              {output}
-            </pre>
+      </div>
+
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">Scrambled Output</span>
+        <button type="button" onClick={copyAll} disabled={!scrambled} className="tb-v2-copy-btn">
+          Copy
+        </button>
+      </div>
+      <div className="tb-v2-tool-output-body">
+        {!scrambled ? (
+          <p className="tb-v2-empty">Enter a word, word list, or paragraph to scramble.</p>
+        ) : (
+          <div className="tb-v2-tool-pre" style={{ maxHeight: 360 }}>
+            {scrambled}
           </div>
         )}
       </div>

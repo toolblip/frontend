@@ -1,63 +1,67 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
-interface Props {
-  tool?: {
-    name: string;
-    slug: string;
-    description: string;
-  };
+const SPECIAL_CHARS = /[.*+?^${}()|[\]\\]/g;
+const ESCAPED_CHARS = /\\([.*+?^${}()|[\]\\])/g;
+
+function escapeText(text: string): string {
+  return text.replace(SPECIAL_CHARS, '\\$&');
 }
 
-export default function RegexEscapeClient({ tool = { name: "", slug: "", description: "" } }: Props) {
-  const [input, setInput] = useState('');
-  const [output, setOutput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+function unescapeText(text: string): string {
+  return text.replace(ESCAPED_CHARS, '$1');
+}
 
-  const handleProcess = async () => {
-    setIsLoading(true);
-    try {
-      // TODO: Implement RegexEscapeClient logic
-      setOutput(`Processed: ${input}`);
-    } catch (error) {
-      setOutput(`Error: ${error}`);
-    }
-    setIsLoading(false);
+export default function RegexEscapeClient() {
+  const [input, setInput] = useState('Price: $12.99 (was $15.00) [50% off]?');
+  const [mode, setMode] = useState<'escape' | 'unescape'>('escape');
+  const [copied, setCopied] = useState(false);
+
+  const output = useMemo(() => (mode === 'escape' ? escapeText(input) : unescapeText(input)), [input, mode]);
+
+  const copyOutput = () => {
+    navigator.clipboard.writeText(output).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div className="" style={{padding:"20px"}}>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">{tool.name}</h1>
-        </div>
-      
-      <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
-        <div>
-          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Input</label>
-          <textarea
-            className="tb-v2-input"
-            placeholder="Enter your text..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-        </div>
-        
-        <button
-          onClick={handleProcess}
-          disabled={isLoading}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
-        >
-          {isLoading ? 'Processing...' : 'Process'}
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Mode</span>
+      </div>
+      <div style={{ display: 'flex', gap: 6, marginBottom: 12 }}>
+        <button type="button" onClick={() => setMode('escape')} className={`tb-v2-mode-tab ${mode === 'escape' ? 'on' : ''}`}>
+          Escape (text → pattern-safe)
         </button>
-        
-        {output && (
-          <div>
-            <label className="tb-v2-tool-label" style={{marginBottom:8}}>Output</label>
-            <pre className="tb-v2-input">
-              {output}
-            </pre>
-          </div>
+        <button type="button" onClick={() => setMode('unescape')} className={`tb-v2-mode-tab ${mode === 'unescape' ? 'on' : ''}`}>
+          Unescape (pattern → plain text)
+        </button>
+      </div>
+
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">{mode === 'escape' ? 'Plain text' : 'Escaped pattern'}</span>
+      </div>
+      <textarea
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        placeholder={mode === 'escape' ? 'Enter text to escape for use inside a regex...' : 'Enter escaped text to decode...'}
+        className="tb-v2-tool-textarea"
+        style={{ fontFamily: 'var(--f-mono)' }}
+      />
+
+      <div className="tb-v2-tool-output-head" style={{ marginTop: 16 }}>
+        <span className="tb-v2-tool-label">{mode === 'escape' ? 'Escaped output' : 'Unescaped output'}</span>
+        <button type="button" onClick={copyOutput} disabled={!output} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
+          {copied ? 'Copied' : 'Copy'}
+        </button>
+      </div>
+      <div className="tb-v2-tool-output-body">
+        {output ? (
+          <pre className="tb-v2-tool-pre" style={{ fontFamily: 'var(--f-mono)' }}>{output}</pre>
+        ) : (
+          <p className="tb-v2-empty">Enter text above to see the result.</p>
         )}
       </div>
     </div>

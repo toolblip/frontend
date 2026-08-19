@@ -1,63 +1,88 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
-interface Props {
-  tool?: {
-    name: string;
-    slug: string;
-    description: string;
-  };
+function cleanText(text: string): string {
+  let out = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  out = out.replace(/[ \t]+/g, ' ');
+  out = out
+    .split('\n')
+    .map(line => line.replace(/[ \t]+$/, ''))
+    .join('\n');
+  out = out.replace(/\n{3,}/g, '\n\n');
+  return out.trim();
 }
 
-export default function RemoveExtraSpacesClient({ tool = { name: "", slug: "", description: "" } }: Props) {
+export default function RemoveExtraSpacesClient() {
   const [input, setInput] = useState('');
-  const [output, setOutput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
 
-  const handleProcess = async () => {
-    setIsLoading(true);
-    try {
-      // TODO: Implement RemoveExtraSpacesClient logic
-      setOutput(`Processed: ${input}`);
-    } catch (error) {
-      setOutput(`Error: ${error}`);
-    }
-    setIsLoading(false);
+  const output = useMemo(() => cleanText(input), [input]);
+
+  const reduction = input.length - output.length;
+  const reductionPct = input.length > 0 ? ((reduction / input.length) * 100).toFixed(1) : '0.0';
+
+  const loadExample = () => {
+    setInput('This   is  some\t\tmessy   text.\n\n\n\nIt has   extra spaces,    tabs,\nand   way too many blank lines.   \n\n\n\n\nClean it up!   ');
+  };
+
+  const copyOutput = () => {
+    navigator.clipboard.writeText(output).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div className="" style={{padding:"20px"}}>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">{tool.name}</h1>
-        </div>
-      
-      <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
-        <div>
-          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Input</label>
-          <textarea
-            className="tb-v2-input"
-            placeholder="Enter your text..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-        </div>
-        
-        <button
-          onClick={handleProcess}
-          disabled={isLoading}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
-        >
-          {isLoading ? 'Processing...' : 'Process'}
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Input</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+      </div>
+      <textarea
+        className="tb-v2-tool-textarea"
+        placeholder="Paste messy, copy-pasted text with extra spaces, tabs, or blank lines..."
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        rows={6}
+      />
+
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">Cleaned Output</span>
+        <button type="button" onClick={copyOutput} disabled={!input} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
+          {copied ? 'Copied' : 'Copy'}
         </button>
-        
-        {output && (
-          <div>
-            <label className="tb-v2-tool-label" style={{marginBottom:8}}>Output</label>
-            <pre className="tb-v2-input">
-              {output}
-            </pre>
-          </div>
+      </div>
+      <div className="tb-v2-tool-output-body">
+        {!input ? (
+          <p className="tb-v2-empty">Paste text above to clean up extra spaces, tabs, and line breaks.</p>
+        ) : (
+          <>
+            <textarea
+              readOnly
+              value={output}
+              rows={8}
+              className="tb-v2-input"
+              style={{ fontFamily: 'var(--f-mono)', resize: 'vertical' }}
+            />
+            <div className="tb-v2-stats-grid" style={{ marginTop: 12 }}>
+              <div className="tb-v2-stat-pill">
+                <span className="tb-v2-stat-pill-val">{input.length}</span>
+                <span className="tb-v2-stat-pill-lbl">Before (chars)</span>
+              </div>
+              <div className="tb-v2-stat-pill">
+                <span className="tb-v2-stat-pill-val">{output.length}</span>
+                <span className="tb-v2-stat-pill-lbl">After (chars)</span>
+              </div>
+              <div className="tb-v2-stat-pill">
+                <span className="tb-v2-stat-pill-val">{reduction}</span>
+                <span className="tb-v2-stat-pill-lbl">Chars Removed</span>
+              </div>
+              <div className="tb-v2-stat-pill">
+                <span className="tb-v2-stat-pill-val">{reductionPct}%</span>
+                <span className="tb-v2-stat-pill-lbl">Reduction</span>
+              </div>
+            </div>
+          </>
         )}
       </div>
     </div>

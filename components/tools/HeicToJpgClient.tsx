@@ -1,42 +1,132 @@
 'use client';
-import { useState } from 'react';
+
+import { useState, useRef, useCallback } from 'react';
 
 export default function HeicToJpgClient() {
-  const [input, setInput] = useState('');
-  const [output, setOutput] = useState('');
+  const [file, setFile] = useState<File | null>(null);
+  const [output, setOutput] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
+  const [error, setError] = useState('');
+  const [quality, setQuality] = useState(0.92);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const process = () => {
-    setOutput('Processed: ' + input);
+  const processFile = useCallback((f: File) => {
+    setError('');
+    setOutput(null);
+    const isHeic = /\.(heic|heif)$/i.test(f.name) || f.type === 'image/heic' || f.type === 'image/heif';
+    if (!isHeic) {
+      setError('Please upload a valid HEIC or HEIF file.');
+      return;
+    }
+    if (f.size > 40 * 1024 * 1024) {
+      setError('File too large. Maximum size is 40MB.');
+      return;
+    }
+    setFile(f);
+  }, []);
+
+  const convert = useCallback(async () => {
+    if (!file) return;
+    setLoading(true);
+    setError('');
+    setOutput(null);
+    try {
+      const heic2any = (await import('heic2any')).default;
+      const result = await heic2any({ blob: file, toType: 'image/jpeg', quality });
+      const blob = Array.isArray(result) ? result[0] : result;
+      const url = URL.createObjectURL(blob);
+      setOutput(url);
+    } catch (e) {
+      setError('Conversion failed. This file may not be a valid HEIC/HEIF image, or your browser could not process it.');
+    } finally {
+      setLoading(false);
+    }
+  }, [file, quality]);
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    const f = e.dataTransfer.files[0];
+    if (f) processFile(f);
   };
 
   return (
     <div className="tb-v2-tool-card">
-      <textarea
-        value={input}
-        onChange={e => setInput(e.target.value)}
-        className="tb-v2-input"
-        placeholder="Enter input..."
-      />
-      <button
-        onClick={process}
-        className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg"
+      {/* Drop zone */}
+      <div
+        className={`relative border-2 border-dashed rounded-xl p-10 text-center cursor-pointer transition-colors ${dragOver ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-950' : 'border-gray-300 dark:border-gray-700 hover:border-indigo-400'}`}
+        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={handleDrop}
+        onClick={() => fileInputRef.current?.click()}
       >
-        Process
-      </button>
-      {output && (
-        <div className="tb-v2-tool-output-body">
-        <div className="flex justify-between items-center mb-2">
-          <span className="tb-v2-tool-label">Output</span>
-          <button 
-            onClick={() => { navigator.clipboard.writeText(output); }}
-            className="tb-v2-copy-btn"
-          >
-            Copy
-          </button>
-        </div>
-          {output}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".heic,.heif,image/heic,image/heif"
+          className="hidden"
+          onChange={(e) => { const f = e.target.files?.[0]; if (f) processFile(f); }}
+        />
+        <div className="text-4xl mb-3">📁</div>
+        <p className="font-medium text-gray-700 dark:text-gray-300">Drop your HEIC file here or click to browse</p>
+        <p className="text-sm text-gray-500 mt-1">HEIC, HEIF · Max 40MB</p>
+      </div>
+
+      {file && (
+        <div className="text-sm text-gray-500">Selected: {file.name} ({(file.size / 1024).toFixed(1)} KB)</div>
+      )}
+
+      {file && (
+        <div>
+          <label className="tb-v2-tool-label" style={{ display: 'block', marginBottom: 6 }}>
+            Quality: {quality.toFixed(2)}
+          </label>
+          <input
+            type="range"
+            min="0.1"
+            max="1"
+            step="0.01"
+            value={quality}
+            onChange={(e) => setQuality(Number(e.target.value))}
+            aria-label="JPEG quality"
+          />
         </div>
       )}
+
+      {output && (
+        <div className="flex flex-col sm:flex-row gap-4 items-start">
+          <div>
+            <p className="text-xs text-gray-500 mb-1 font-medium">JPG Result</p>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={output} alt="Converted JPG" className="max-h-48 rounded-lg border border-gray-200 dark:border-gray-700" />
+          </div>
+        </div>
+      )}
+
+      {error && (
+        <div className="tb-v2-banner tb-v2-banner-err">{error}</div>
+      )}
+
+      <div className="tb-v2-mode-tabs">
+        <button
+          onClick={convert}
+          disabled={!file || loading}
+          className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {loading ? 'Converting...' : 'Convert to JPG'}
+        </button>
+        {output && (
+          <a
+            href={output}
+            download="converted.jpg"
+            className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg"
+            style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center' }}
+          >
+            Download JPG
+          </a>
+        )}
+      </div>
     </div>
   );
 }
