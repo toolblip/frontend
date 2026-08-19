@@ -127,7 +127,106 @@ SEO-related and none were touched in this pass — full audit of the ~140
 components absorbed from that branch is real follow-up work, not a quick
 fix.
 
+## Family-verification pass (second commit round)
+
+Went through the 93 shared-component families the previous section
+identified, largest first, checking each slug's own `data/tools.ts`
+description against what its component actually does — not just whether it
+compiles. Covered roughly 20 of the 93 families in this pass (the largest
+ones by slug count); the rest remain as described below. Findings:
+
+- **9 more format-mismatched conversion tools**, same pattern as the
+  original 7: `AviToMovClient` only accepts `.avi` (so `mov-to-avi`,
+  `mov-to-mp3`, `mov-to-mp4`, `mp4-to-mov`, `webm-to-mov` were all
+  broken — only `avi-to-mov` itself worked), `AacToWavClient` only accepts
+  `.aac`/`.m4a`/`.mp4` (`mov-to-wav`, `ogg-to-wav` broken). No working
+  equivalent for cross-container video/audio transcoding exists anywhere in
+  the catalog (real fix needs WebCodecs/ffmpeg.wasm), so these are removed
+  outright rather than redirected — see "404, not 410" below.
+- **A whole family of HTTP dev-tools that don't do what they say**:
+  `http-status-codes`, `http-status-code-lookup`, and `http-status-ref` all
+  promise a static status-code reference table; `http-request-builder` and
+  `http-method-tester` promise sending a request with a chosen
+  method/body/auth. All five actually rendered `HttpHeadersViewerClient` — a
+  hardcoded `HEAD` fetch with no method/body control and no reference data
+  at all. Two components with names that sound like the real thing
+  (`HttpStatusCodesClient`, `HttpStatusCodeLookupClient`) turned out to be
+  the *same* header-fetcher under a misleading filename. Redirected the
+  status-table trio to `http-status-checker` (a real, different, correctly
+  implemented bulk-status-checker) and the two request-builder slugs to
+  `http-headers-viewer` — the closest genuinely real destination in either
+  case, not a perfect match.
+- **Several genuinely broken image tools**: `image-blur-hash-generator`
+  ("BlurHash placeholders") and `image-enlarger` ("AI-style upscaling") both
+  rendered a plain crop tool with none of that functionality — no working
+  alternative exists, removed. `image-clipper` ("remove backgrounds") and
+  `image-orientation-fixer` ("rotate/flip") also rendered the crop tool, but
+  real background-removal (`remove-bg`) and rotate (`rotate`) tools already
+  exist elsewhere in the catalog — redirected to those instead of removing.
+  `png-to-ico`, `icon-favicon-creator`, `ico-file-generator`, and
+  `favicon-preview` all promise real `.ico` output or previewing an existing
+  favicon; the components involved (including two correctly-named orphaned
+  ones, `IconFaviconCreatorClient` and `IcoFileGeneratorClient`) just
+  re-download the uploaded image unchanged with no resizing or ICO
+  encoding at all. No real ICO-encoding implementation exists to redirect
+  to — removed.
+- **`tiff-to-text` promised OCR**, rendered a live-microphone speech
+  transcriber (`AudioToTextClient`) instead. No OCR implementation exists —
+  removed. `text-to-image` (promised a social-graphic generator) and
+  `audio-to-text` (promised uploaded-file transcription) rendered the same
+  microphone tool; redirected to `banner-generator` and `speech-to-text`
+  respectively — real, correctly-scoped equivalents.
+- **Five real, working components had been sitting completely unwired** —
+  imported nowhere, no `case` referencing them, found only because a
+  correctly-named file (`LoremIpsumDetectorClient.tsx`,
+  `TextToHandwritingClient.tsx`) existed for a slug that was actually
+  rendering the wrong component. `TextToHandwritingClient` (real Google-font
+  cursive rendering) is now wired to `text-to-handwriting`, replacing the
+  microphone tool it was shadowed by.
+- **Two components were real stubs (not even mismatched, just fake) behind
+  security-relevant names** — `SecureRandomGeneratorClient`,
+  `RandomPinGeneratorClient`, and `RandomIdGeneratorClient` all existed as
+  unwired files implementing the generic `setOutput('Processed: ' + input)`
+  echo pattern, while the live slugs of the same name rendered
+  `RandomFractionGeneratorClient` (a fraction generator, not random
+  strings/PINs/IDs at all). Given `secure-random-generator` specifically
+  claims to be "cryptographically secure," left broken or silently
+  redirected felt worse than fixed, so these three were rewritten for real:
+  `crypto.getRandomValues()`-backed generation with rejection sampling to
+  avoid modulo bias (not `Math.random()`, and not a naive `% range`, both of
+  which would undermine the tool's own security claim). Same reasoning for
+  `LoremIpsumDetectorClient` (rewritten as a real word-list-density check)
+  and `TimeDurationCalculatorClient` (rewritten as real add/subtract time
+  arithmetic) — both were unwired generic stubs too, and both were cheap,
+  honest, zero-fabrication-risk fixes, unlike OCR or ICO encoding.
+
+**404, not 410, for the removed slugs.** `proxy.ts` was going to carry a
+`GONE_TOOL_SLUGS` set returning a real 410 for the removals with no redirect
+target. While testing it, a bare `console.log` at the top of the `proxy()`
+function **never fired, for any request, in either `next dev` or a real
+`next build && next start`** — the whole proxy/middleware layer is not
+executing at all in this project as currently configured. That's a serious,
+pre-existing bug independent of this work: `PROTECTED_PREFIXES` (the
+`/dashboard`, `/account`, `/submit-tool` auth gate) and the `www.` /
+HTTP→HTTPS redirect in the same file are equally non-functional right now.
+Since fixing it means debugging the same file that carries the auth logic,
+it's out of scope here per the same "don't touch CI/auth code" boundary as
+the broken E2E check — flagging it, not fixing it. The `GONE_TOOL_SLUGS`
+addition was reverted; `proxy.ts` is untouched from `main`. The removed
+slugs get a plain 404 via `dynamicParams = false` (already in place from the
+first commit round), which is still a valid "don't index this" signal to
+Google, just not as fast-processing as a true 410.
+
 ## Confirmed but NOT fixed in this pass — real follow-up work
+
+*Numbers below are from the first commit round; the family-verification pass
+above resolved roughly 20 of the largest remaining families. Re-running the
+same fingerprinting script after both rounds: 700 live tools, 87 families
+still sharing a component across 224 slugs — down from 93/268. The other
+~67 families (mostly smaller, 2-3 slugs each) are the real remaining work;
+apply the same method (read the component, compare against each slug's own
+`data/tools.ts` description, check for an unwired real component under a
+matching filename before assuming a redirect/removal is needed).*
 
 **93 tool-name families share one component across 268 live slugs**
 (discovered via `case 'slug': return <Component/>` mapping in
