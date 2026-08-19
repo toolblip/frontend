@@ -10,7 +10,7 @@ import FaqSection from '@/components/v2/FaqSection';
 import ToolWrapper from '@/components/tools/ToolWrapper';
 import RelatedTools from '@/components/tools/RelatedTools';
 import RelatedBlogPosts from '@/components/tools/RelatedBlogPosts';
-import { getFaqs } from '@/lib/faq';
+import { getFaqs, hasFaqOverride } from '@/lib/faq';
 import { getToolContent } from '@/data/tool-content';
 
 interface PageProps {
@@ -18,15 +18,25 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  return getToolRouteSlugs().map((slug) => ({ slug }));
+  // Union of real tool slugs (+ data/tools.ts's own alias map, via
+  // getToolRouteSlugs) and this file's REDIRECTS map below. dynamicParams
+  // is false, so every one of these needs a static param or its alias
+  // redirect stops working and 404s instead.
+  const slugs = new Set([...getToolRouteSlugs(), ...Object.keys(REDIRECTS)]);
+  return Array.from(slugs).map((slug) => ({ slug }));
 }
+
+// Any slug not covered by generateStaticParams (i.e. not a real tool and not
+// a known legacy alias) 404s immediately instead of falling through to
+// on-demand rendering. Keeps the crawlable surface exactly equal to the
+// tool catalog plus the alias maps.
+export const dynamicParams = false;
 
 /**
  * Legacy slugs, query-variant slugs, and common misspellings that should
  * normalize to the canonical tool pages.
  */
 const REDIRECTS: Record<string, string> = {
-  'lorem-ipsum': 'lorem-ipsum-generator',
   'letter-counter': 'word-counter',
   'mime-type-checker': 'mime-types-reference',
   'random-string': 'password-generator',
@@ -43,19 +53,19 @@ const REDIRECTS: Record<string, string> = {
   'keyword-generator-free': 'keyword-generator',
   'keyword-generator-online-free': 'keyword-generator',
   'online-keywords-generator': 'keyword-generator',
-  'keyword-check-position': 'keyword-position-checker',
-  'check-keyword-position': 'keyword-position-checker',
-  'keyword-position-tool': 'keyword-position-checker',
-  'keyword-position-checker-online': 'keyword-position-checker',
-  'keyword-position-analyzer': 'keyword-position-checker',
-  'keyword-position-search': 'keyword-position-checker',
-  'keyword-placement-checker': 'keyword-position-checker',
-  'keyword-website-checker': 'keyword-position-checker',
-  'keywords-position-checker': 'keyword-position-checker',
-  'check-keywords-position': 'keyword-position-checker',
-  'serp-rank-checker-online': 'serp-rank-tracker',
-  'free-serp-tracking-online': 'serp-rank-tracker',
-  'serprank': 'serp-rank-tracker',
+  'keyword-check-position': 'google-serp-simulator',
+  'check-keyword-position': 'google-serp-simulator',
+  'keyword-position-tool': 'google-serp-simulator',
+  'keyword-position-checker-online': 'google-serp-simulator',
+  'keyword-position-analyzer': 'google-serp-simulator',
+  'keyword-position-search': 'google-serp-simulator',
+  'keyword-placement-checker': 'google-serp-simulator',
+  'keyword-website-checker': 'google-serp-simulator',
+  'keywords-position-checker': 'google-serp-simulator',
+  'check-keywords-position': 'google-serp-simulator',
+  'serp-rank-checker-online': 'google-serp-simulator',
+  'free-serp-tracking-online': 'google-serp-simulator',
+  'serprank': 'google-serp-simulator',
   'serp-simulator': 'google-serp-simulator',
   'og-image-generator': 'banner-generator',
   'serpsimulator': 'google-serp-simulator',
@@ -211,7 +221,7 @@ export default async function ToolDetailPage({ params }: PageProps) {
         <RelatedTools slug={tool.slug} category={tool.category} />
         <RelatedBlogPosts toolName={tool.name} category={tool.category} tags={tool.tags} />
 
-        <FaqSection toolName={tool.name} faqs={faqs} />
+        <FaqSection toolName={tool.name} faqs={faqs} emitSchema={hasFaqOverride(tool.slug)} />
       </div>
     </div>
   );

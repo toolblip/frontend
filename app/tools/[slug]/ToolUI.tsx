@@ -5,6 +5,20 @@ import type { Tool } from '@/data/tools';
 
 
 // ─── Imported tool UIs ──────────────────────────────────────────────────────
+import DataSizeConverterClient from '@/components/tools/DataSizeConverterClient';
+import CronHumanReadableClient from '@/components/tools/CronHumanReadableClient';
+import CronScheduleGeneratorClient from '@/components/tools/CronScheduleGeneratorClient';
+import CronScheduleValidatorClient from '@/components/tools/CronScheduleValidatorClient';
+import EnergyConverterClient from '@/components/tools/EnergyConverterClient';
+import FaviconFromEmojiClient from '@/components/tools/FaviconFromEmojiClient';
+import CssNamingConventionClient from '@/components/tools/CssNamingConventionClient';
+import FrequencyConverterClient from '@/components/tools/FrequencyConverterClient';
+import ForceConverterClient from '@/components/tools/ForceConverterClient';
+import IconFaviconCreatorClient from '@/components/tools/IconFaviconCreatorClient';
+import CronGeneratorCompleteClient from '@/components/tools/CronGeneratorCompleteClient';
+import CronScheduleExplainerClient from '@/components/tools/CronScheduleExplainerClient';
+import CssAnimationGeneratorClient from '@/components/tools/CssAnimationGeneratorClient';
+import CssCursorGeneratorClient from '@/components/tools/CssCursorGeneratorClient';
 import YamlToJsonClient from '@/components/tools/YamlToJsonClient';
 import XmlToJsonClient from '@/components/tools/XmlToJsonClient';
 import XmlFormatterClient from '@/components/tools/XmlFormatterClient';
@@ -23,7 +37,6 @@ import SerpPreviewClient from '@/components/tools/SerpPreviewClient';
 import ScreenResolutionTesterClient from '@/components/tools/ScreenResolutionTesterClient';
 import SSHKeyGeneratorClient from '@/components/tools/SSHKeyGeneratorClient';
 import RemoveDuplicateLinesClient from '@/components/tools/RemoveDuplicateLinesClient';
-import RemoveWatermarkFromPhotoClient from '@/components/tools/RemoveWatermarkFromPhotoClient';
 import RegexTesterClient from '@/components/tools/RegexTesterClient';
 import ReadabilityScoreClient from '@/components/tools/ReadabilityScoreClient';
 import QrCodeGeneratorClient from '@/components/tools/QrCodeGeneratorClient';
@@ -173,7 +186,6 @@ import PalindromeCheckerClient from '@/components/tools/PalindromeCheckerClient'
 import PasswordStrengthCheckerClient from '@/components/tools/PasswordStrengthCheckerClient';
 import PingTestClient from '@/components/tools/PingTestClient';
 import PlainTextCounterClient from '@/components/tools/PlainTextCounterClient';
-import PortScannerClient from '@/components/tools/PortScannerClient';
 import PunctuationFixerClient from '@/components/tools/PunctuationFixerClient';
 import RandomFractionGeneratorClient from '@/components/tools/RandomFractionGeneratorClient';
 import RandomIpAddressClient from '@/components/tools/RandomIpAddressClient';
@@ -220,12 +232,9 @@ import UserAgentParserClient from '@/components/tools/UserAgentParserClient';
 import UuidValidatorClient from '@/components/tools/UuidValidatorClient';
 import WebpackConfigGeneratorClient from '@/components/tools/WebpackConfigGeneratorClient';
 import WeightConverterClient from '@/components/tools/WeightConverterClient';
-import WhoisLookupClient from '@/components/tools/WhoisLookupClient';
 import WordAssociationClient from '@/components/tools/WordAssociationClient';
 import WordFrequencyAnalyzerClient from '@/components/tools/WordFrequencyAnalyzerClient';
 import WordFrequencyCounterClient from '@/components/tools/WordFrequencyCounterClient';
-import VsdToDocxClient from '@/components/tools/VsdToDocxClient';
-import VsdToPptxClient from '@/components/tools/VsdToPptxClient';
 import VsdxToDocxClient from '@/components/tools/VsdxToDocxClient';
 import VsdxToPptxClient from '@/components/tools/VsdxToPptxClient';
 import WordCombinationsGeneratorClient from '@/components/tools/WordCombinationsGeneratorClient';
@@ -243,7 +252,6 @@ import AacToMp3Client from '@/components/tools/AacToMp3Client';
 import AacToMp4Client from '@/components/tools/AacToMp4Client';
 import AacToWavClient from '@/components/tools/AacToWavClient';
 import AddImagesClient from '@/components/tools/AddImagesClient';
-import AddPagesClient from '@/components/tools/AddPagesClient';
 import AddSubtitlesClient from '@/components/tools/AddSubtitlesClient';
 import AddTextClient from '@/components/tools/AddTextClient';
 import AlgorithmVisualizerClient from '@/components/tools/AlgorithmVisualizerClient';
@@ -272,9 +280,6 @@ import AviToMp3Client from '@/components/tools/AviToMp3Client';
 import AviToMp4Client from '@/components/tools/AviToMp4Client';
 import Azw3ToEpubClient from '@/components/tools/Azw3ToEpubClient';
 import Azw3ToMobiClient from '@/components/tools/Azw3ToMobiClient';
-import BacklinkAnalyzerClient from '@/components/tools/BacklinkAnalyzerClient';
-import BacklinkCheckerExpressClient from '@/components/tools/BacklinkCheckerExpressClient';
-import BacklinkCheckerV2Client from '@/components/tools/BacklinkCheckerV2Client';
 import BackslashEscapeUnescapeClient from '@/components/tools/BackslashEscapeUnescapeClient';
 import BarcodeGeneratorClient from '@/components/tools/BarcodeGeneratorClient';
 import BarcodeScannerClient from '@/components/tools/BarcodeScannerClient';
@@ -369,10 +374,7 @@ import ColorTintGeneratorClient from '@/components/tools/ColorTintGeneratorClien
 import ColorToneGeneratorClient from '@/components/tools/ColorToneGeneratorClient';
 import ColorToolblipClient from '@/components/tools/ColorToolblipClient';
 import ColorizePhotoClient from '@/components/tools/ColorizePhotoClient';
-import CompressAviClient from '@/components/tools/CompressAviClient';
 import CompressClient from '@/components/tools/CompressClient';
-import CompressMkvClient from '@/components/tools/CompressMkvClient';
-import CompressMovClient from '@/components/tools/CompressMovClient';
 import ContentBriefGeneratorClient from '@/components/tools/ContentBriefGeneratorClient';
 import ContentImproverClient from '@/components/tools/ContentImproverClient';
 import ContentPlannerClient from '@/components/tools/ContentPlannerClient';
@@ -421,68 +423,14 @@ import CookingUnitConverterClient from '@/components/tools/CookingUnitConverterC
 import CounterClient from '@/components/tools/CounterClient';
 import CronBuilderClient from '@/components/tools/CronBuilderClient';
 import CronExpanderClient from '@/components/tools/CronExpanderClient';
-import CronExprGenClient from '@/components/tools/CronExprGenClient';
-import CronExprGenAdvClient from '@/components/tools/CronExprGenAdvClient';
-import CronExprGenPrimeClient from '@/components/tools/CronExprGenPrimeClient';
-import CronExprGenProClient from '@/components/tools/CronExprGenProClient';
-import CronExprGenUltraClient from '@/components/tools/CronExprGenUltraClient';
-import CronExpressionBuilderClient from '@/components/tools/CronExpressionBuilderClient';
 import CronExpressionGeneratorClient from '@/components/tools/CronExpressionGeneratorClient';
 import CronExpressionParserClient from '@/components/tools/CronExpressionParserClient';
-import CronGenerator2025Client from '@/components/tools/CronGenerator2025Client';
-import CronGeneratorAdvancedClient from '@/components/tools/CronGeneratorAdvancedClient';
-import CronGeneratorApiClient from '@/components/tools/CronGeneratorApiClient';
-import CronGeneratorBrowserClient from '@/components/tools/CronGeneratorBrowserClient';
-import CronGeneratorClassicClient from '@/components/tools/CronGeneratorClassicClient';
-import CronGeneratorCompleteClient from '@/components/tools/CronGeneratorCompleteClient';
-import CronGeneratorDgClient from '@/components/tools/CronGeneratorDgClient';
-import CronGeneratorEasyClient from '@/components/tools/CronGeneratorEasyClient';
-import CronGeneratorEnhancedClient from '@/components/tools/CronGeneratorEnhancedClient';
-import CronGeneratorExpressClient from '@/components/tools/CronGeneratorExpressClient';
-import CronGeneratorFinalClient from '@/components/tools/CronGeneratorFinalClient';
-import CronGeneratorFreshClient from '@/components/tools/CronGeneratorFreshClient';
-import CronGeneratorFullClient from '@/components/tools/CronGeneratorFullClient';
-import CronGeneratorHandyClient from '@/components/tools/CronGeneratorHandyClient';
-import CronGeneratorNewClient from '@/components/tools/CronGeneratorNewClient';
-import CronGeneratorPrimeClient from '@/components/tools/CronGeneratorPrimeClient';
-import CronGeneratorProClient from '@/components/tools/CronGeneratorProClient';
-import CronGeneratorQuickClient from '@/components/tools/CronGeneratorQuickClient';
-import CronGeneratorSmartClient from '@/components/tools/CronGeneratorSmartClient';
-import CronGeneratorStdClient from '@/components/tools/CronGeneratorStdClient';
-import CronGeneratorToolClient from '@/components/tools/CronGeneratorToolClient';
-import CronGeneratorToolblipClient from '@/components/tools/CronGeneratorToolblipClient';
-import CronGeneratorUltimateClient from '@/components/tools/CronGeneratorUltimateClient';
-import CronGeneratorUltraClient from '@/components/tools/CronGeneratorUltraClient';
-import CronGeneratorV2Client from '@/components/tools/CronGeneratorV2Client';
-import CronGeneratorV3Client from '@/components/tools/CronGeneratorV3Client';
-import CronGeneratorV4Client from '@/components/tools/CronGeneratorV4Client';
-import CronGeneratorV5Client from '@/components/tools/CronGeneratorV5Client';
-import CronGeneratorV6Client from '@/components/tools/CronGeneratorV6Client';
-import CronGeneratorXClient from '@/components/tools/CronGeneratorXClient';
-import CronGeneratorXlClient from '@/components/tools/CronGeneratorXlClient';
-import CronHumanReadableClient from '@/components/tools/CronHumanReadableClient';
-import CronScheduleBuilderClient from '@/components/tools/CronScheduleBuilderClient';
-import CronScheduleCheckerClient from '@/components/tools/CronScheduleCheckerClient';
-import CronScheduleExplainerClient from '@/components/tools/CronScheduleExplainerClient';
-import CronScheduleGeneratorClient from '@/components/tools/CronScheduleGeneratorClient';
-import CronScheduleValidatorClient from '@/components/tools/CronScheduleValidatorClient';
-import CronToolblipClient from '@/components/tools/CronToolblipClient';
 import CronValidatorClient from '@/components/tools/CronValidatorClient';
-import CronVisualBuilderClient from '@/components/tools/CronVisualBuilderClient';
 import CropCircleClient from '@/components/tools/CropCircleClient';
-import CssAnimationGeneratorClient from '@/components/tools/CssAnimationGeneratorClient';
-import CssCursorGeneratorClient from '@/components/tools/CssCursorGeneratorClient';
-import CssFilterGeneratorClient from '@/components/tools/CssFilterGeneratorClient';
 import CssFlexboxGeneratorClient from '@/components/tools/CssFlexboxGeneratorClient';
 import CssGridGeneratorClient from '@/components/tools/CssGridGeneratorClient';
-import CssNamingConventionClient from '@/components/tools/CssNamingConventionClient';
-import CssPreviewClient from '@/components/tools/CssPreviewClient';
-import CssToScssClient from '@/components/tools/CssToScssClient';
 import CssToStyledComponentsClient from '@/components/tools/CssToStyledComponentsClient';
 import CssToTailwindClient from '@/components/tools/CssToTailwindClient';
-import CssUnitsConverterClient from '@/components/tools/CssUnitsConverterClient';
-import CssUnitsConverterNewClient from '@/components/tools/CssUnitsConverterNewClient';
-import CssVariableGeneratorClient from '@/components/tools/CssVariableGeneratorClient';
 import CsvGeneratorClient from '@/components/tools/CsvGeneratorClient';
 import CsvJsonExpressClient from '@/components/tools/CsvJsonExpressClient';
 import CsvToExcelClient from '@/components/tools/CsvToExcelClient';
@@ -492,13 +440,9 @@ import CsvToXmlClient from '@/components/tools/CsvToXmlClient';
 import CurlCommandBuilderClient from '@/components/tools/CurlCommandBuilderClient';
 import CurlGenExpressClient from '@/components/tools/CurlGenExpressClient';
 import CurlToJavascriptClient from '@/components/tools/CurlToJavascriptClient';
-import CurrencyConverterV2Client from '@/components/tools/CurrencyConverterV2Client';
 import CutterClient from '@/components/tools/CutterClient';
-import DataSizeConverterClient from '@/components/tools/DataSizeConverterClient';
-import DataSizeConverterExpressClient from '@/components/tools/DataSizeConverterExpressClient';
 import DataUriGeneratorClient from '@/components/tools/DataUriGeneratorClient';
 import DbQueryFormatterClient from '@/components/tools/DbQueryFormatterClient';
-import DecimalToHexConverterClient from '@/components/tools/DecimalToHexConverterClient';
 import DetectClient from '@/components/tools/DetectClient';
 import DiscountCalculatorClient from '@/components/tools/DiscountCalculatorClient';
 import DnsLookupExpressClient from '@/components/tools/DnsLookupExpressClient';
@@ -514,7 +458,6 @@ import DuplicateUrlDetectorClient from '@/components/tools/DuplicateUrlDetectorC
 import EditClient from '@/components/tools/EditClient';
 import EncodingsRefClient from '@/components/tools/EncodingsRefClient';
 import EncodingsReferenceClient from '@/components/tools/EncodingsReferenceClient';
-import EnergyConverterClient from '@/components/tools/EnergyConverterClient';
 import CollocationsCheckerClient from '@/components/tools/CollocationsCheckerClient';
 import EnglishCollocationsUniqueClient from '@/components/tools/EnglishCollocationsUniqueClient';
 import EnglishDictionaryClient from '@/components/tools/EnglishDictionaryClient';
@@ -535,82 +478,13 @@ import ExtractImgClient from '@/components/tools/ExtractImgClient';
 import ExtractTextClient from '@/components/tools/ExtractTextClient';
 import FacebookAdHeadlinesClient from '@/components/tools/FacebookAdHeadlinesClient';
 import FaqGeneratorClient from '@/components/tools/FaqGeneratorClient';
-import FaviconBrowserClient from '@/components/tools/FaviconBrowserClient';
-import FaviconCheckerClient from '@/components/tools/FaviconCheckerClient';
-import FaviconCheckerExpressClient from '@/components/tools/FaviconCheckerExpressClient';
-import FaviconCheckerToolClient from '@/components/tools/FaviconCheckerToolClient';
-import FaviconCreatorClient from '@/components/tools/FaviconCreatorClient';
-import FaviconCreatorToolClient from '@/components/tools/FaviconCreatorToolClient';
-import FaviconFreshClient from '@/components/tools/FaviconFreshClient';
-import FaviconFromEmojiClient from '@/components/tools/FaviconFromEmojiClient';
-import FaviconFullClient from '@/components/tools/FaviconFullClient';
-import FaviconGenAdvClient from '@/components/tools/FaviconGenAdvClient';
-import FaviconGenPrimeClient from '@/components/tools/FaviconGenPrimeClient';
-import FaviconGenProClient from '@/components/tools/FaviconGenProClient';
-import FaviconGenToolClient from '@/components/tools/FaviconGenToolClient';
-import FaviconGenToolblipClient from '@/components/tools/FaviconGenToolblipClient';
-import FaviconGenUltraClient from '@/components/tools/FaviconGenUltraClient';
-import FaviconGenerator2025Client from '@/components/tools/FaviconGenerator2025Client';
-import FaviconGeneratorAdvancedClient from '@/components/tools/FaviconGeneratorAdvancedClient';
-import FaviconGeneratorApiClient from '@/components/tools/FaviconGeneratorApiClient';
-import FaviconGeneratorBrowserClient from '@/components/tools/FaviconGeneratorBrowserClient';
-import FaviconGeneratorClassicClient from '@/components/tools/FaviconGeneratorClassicClient';
-import FaviconGeneratorCompleteClient from '@/components/tools/FaviconGeneratorCompleteClient';
-import FaviconGeneratorDgClient from '@/components/tools/FaviconGeneratorDgClient';
-import FaviconGeneratorEasyClient from '@/components/tools/FaviconGeneratorEasyClient';
-import FaviconGeneratorEnhancedClient from '@/components/tools/FaviconGeneratorEnhancedClient';
-import FaviconGeneratorExpanderClient from '@/components/tools/FaviconGeneratorExpanderClient';
-import FaviconGeneratorExpressClient from '@/components/tools/FaviconGeneratorExpressClient';
-import FaviconGeneratorFinalClient from '@/components/tools/FaviconGeneratorFinalClient';
-import FaviconGeneratorFreshClient from '@/components/tools/FaviconGeneratorFreshClient';
-import FaviconGeneratorFullClient from '@/components/tools/FaviconGeneratorFullClient';
-import FaviconGeneratorNewClient from '@/components/tools/FaviconGeneratorNewClient';
-import FaviconGeneratorPrimeClient from '@/components/tools/FaviconGeneratorPrimeClient';
-import FaviconGeneratorProClient from '@/components/tools/FaviconGeneratorProClient';
-import FaviconGeneratorQuickClient from '@/components/tools/FaviconGeneratorQuickClient';
-import FaviconGeneratorSmartClient from '@/components/tools/FaviconGeneratorSmartClient';
-import FaviconGeneratorStdClient from '@/components/tools/FaviconGeneratorStdClient';
-import FaviconGeneratorToolClient from '@/components/tools/FaviconGeneratorToolClient';
-import FaviconGeneratorUltimateClient from '@/components/tools/FaviconGeneratorUltimateClient';
-import FaviconGeneratorUltraClient from '@/components/tools/FaviconGeneratorUltraClient';
-import FaviconGeneratorV2Client from '@/components/tools/FaviconGeneratorV2Client';
-import FaviconGeneratorV3Client from '@/components/tools/FaviconGeneratorV3Client';
-import FaviconGeneratorV4Client from '@/components/tools/FaviconGeneratorV4Client';
-import FaviconGeneratorV5Client from '@/components/tools/FaviconGeneratorV5Client';
-import FaviconGeneratorV6Client from '@/components/tools/FaviconGeneratorV6Client';
-import FaviconGeneratorXClient from '@/components/tools/FaviconGeneratorXClient';
-import FaviconGeneratorXlClient from '@/components/tools/FaviconGeneratorXlClient';
-import FaviconGrabberClient from '@/components/tools/FaviconGrabberClient';
-import FaviconIconGeneratorClient from '@/components/tools/FaviconIconGeneratorClient';
-import FaviconMakeToolClient from '@/components/tools/FaviconMakeToolClient';
-import FaviconMakerClient from '@/components/tools/FaviconMakerClient';
-import FaviconPngCreatorClient from '@/components/tools/FaviconPngCreatorClient';
-import FaviconPngGeneratorClient from '@/components/tools/FaviconPngGeneratorClient';
-import FaviconPngMakerClient from '@/components/tools/FaviconPngMakerClient';
-import FaviconPreviewClient from '@/components/tools/FaviconPreviewClient';
-import FaviconPreviewToolClient from '@/components/tools/FaviconPreviewToolClient';
-import FaviconQuickClient from '@/components/tools/FaviconQuickClient';
-import FaviconQuickGeneratorClient from '@/components/tools/FaviconQuickGeneratorClient';
-import FaviconSimpleClient from '@/components/tools/FaviconSimpleClient';
-import FaviconToolClient from '@/components/tools/FaviconToolClient';
-import FaviconToolblipClient from '@/components/tools/FaviconToolblipClient';
 import FlipClient from '@/components/tools/FlipClient';
 import FontToPngClient from '@/components/tools/FontToPngClient';
-import ForceConverterClient from '@/components/tools/ForceConverterClient';
 import FractionCalculatorClient from '@/components/tools/FractionCalculatorClient';
-import FractionToDecimalExpressClient from '@/components/tools/FractionToDecimalExpressClient';
-import FractionToDecimalV2Client from '@/components/tools/FractionToDecimalV2Client';
-import FrequencyConverterClient from '@/components/tools/FrequencyConverterClient';
-import GeneralUnitConverterClient from '@/components/tools/GeneralUnitConverterClient';
 import GifToApngClient from '@/components/tools/GifToApngClient';
-import GifToAvifClient from '@/components/tools/GifToAvifClient';
 import GifToJpgClient from '@/components/tools/GifToJpgClient';
-import GifToMovClient from '@/components/tools/GifToMovClient';
-import GifToMp4Client from '@/components/tools/GifToMp4Client';
 import GifToPngClient from '@/components/tools/GifToPngClient';
-import GifToWebmClient from '@/components/tools/GifToWebmClient';
 import GoogleAlgorithmTrackerClient from '@/components/tools/GoogleAlgorithmTrackerClient';
-import GoogleRankCheckerClient from '@/components/tools/GoogleRankCheckerClient';
 import GoogleSerpPreviewClient from '@/components/tools/GoogleSerpPreviewClient';
 import GoogleSerpSimulatorClient from '@/components/tools/GoogleSerpSimulatorClient';
 import GradientGeneratorClient from '@/components/tools/GradientGeneratorClient';
@@ -702,9 +576,7 @@ import JsonEditorClient from '@/components/tools/JsonEditorClient';
 import JsonPathEvaluatorExpressClient from '@/components/tools/JsonPathEvaluatorExpressClient';
 import JsonSchemaGenExpressClient from '@/components/tools/JsonSchemaGenExpressClient';
 import XmlToCsvClient from '@/components/tools/XmlToCsvClient';
-import WebsiteAgeCheckerClient from '@/components/tools/WebsiteAgeCheckerClient';
 import HeadlineAnalyzerClient from '@/components/tools/HeadlineAnalyzerClient';
-import HeicToAvifClient from '@/components/tools/HeicToAvifClient';
 import HeicToJpgClient from '@/components/tools/HeicToJpgClient';
 import HeicToPngClient from '@/components/tools/HeicToPngClient';
 import HexColorPickerClient from '@/components/tools/HexColorPickerClient';
@@ -811,7 +683,6 @@ import UrlRedirectCheckerClient from '@/components/tools/UrlRedirectCheckerClien
 import WebpConverterClient from '@/components/tools/WebpConverterClient';
 import ImageScaleCalculatorClient from '@/components/tools/ImageScaleCalculatorClient';
 import ImageSquareFitClient from '@/components/tools/ImageSquareFitClient';
-import IPAPhoneticFinderClient from '@/components/tools/IPAPhoneticFinderClient';
 import IPynbFormatterClient from '@/components/tools/IPynbFormatterClient';
 import JSONPathQueryTesterClient from '@/components/tools/JSONPathQueryTesterClient';
 import JSONPathQueryToolClient from '@/components/tools/JSONPathQueryToolClient';
@@ -822,43 +693,29 @@ import KeywordExtractorClient from '@/components/tools/KeywordExtractorClient';
 import KeywordGeneratorClient from '@/components/tools/KeywordGeneratorClient';
 import KubernetesYAMLGeneratorClient from '@/components/tools/KubernetesYAMLGeneratorClient';
 import ListDifferenceFinderClient from '@/components/tools/ListDifferenceFinderClient';
-import ListicleWriterClient from '@/components/tools/ListicleWriterClient';
-import LinkedInPostGeneratorClient from '@/components/tools/LinkedInPostGeneratorClient';
-import LandingPageCopyGeneratorClient from '@/components/tools/LandingPageCopyGeneratorClient';
 import M4AToMP3Client from '@/components/tools/M4AToMP3Client';
 import M4AToMP4Client from '@/components/tools/M4AToMP4Client';
-import MakeBackgroundTransparentClient from '@/components/tools/MakeBackgroundTransparentClient';
 import MetaTagsToolClient from '@/components/tools/MetaTagsToolClient';
 import MetricImperialConverterClient from '@/components/tools/MetricImperialConverterClient';
 import MIMETypesReferenceClient from '@/components/tools/MIMETypesReferenceClient';
 import MP4ToMP3Client from '@/components/tools/MP4ToMP3Client';
+import MkvToMp3Client from '@/components/tools/MkvToMp3Client';
 import MP4ToOGGClient from '@/components/tools/MP4ToOGGClient';
-import MuteVideoAudioClient from '@/components/tools/MuteVideoAudioClient';
-import NetworkPortCheckerClient from '@/components/tools/NetworkPortCheckerClient';
 import NDAGeneratorClient from '@/components/tools/NDAGeneratorClient';
 import OGGToMP3Client from '@/components/tools/OGGToMP3Client';
-import PageSpeedPreviewClient from '@/components/tools/PageSpeedPreviewClient';
 import PageTitleCheckerClient from '@/components/tools/PageTitleCheckerClient';
-import ParagraphCompleterClient from '@/components/tools/ParagraphCompleterClient';
 import PhotoMetadataRemoverClient from '@/components/tools/PhotoMetadataRemoverClient';
 import PhotoResizeToolClient from '@/components/tools/PhotoResizeToolClient';
 import PhysicsConstantsReferenceClient from '@/components/tools/PhysicsConstantsReferenceClient';
-import PlagiarismCheckerClient from '@/components/tools/PlagiarismCheckerClient';
-import PodcastWriterClient from '@/components/tools/PodcastWriterClient';
 import PollGeneratorClient from '@/components/tools/PollGeneratorClientV2';
-import PostIdeasGeneratorClient from '@/components/tools/PostIdeasGeneratorClient';
-import PostRewriterClient from '@/components/tools/PostRewriterClient';
 import PressureConverterClient from '@/components/tools/PressureConverterClient';
 import ProfilePhotoEditorClient from '@/components/tools/ProfilePhotoEditorClient';
-import ProtectPDFClient from '@/components/tools/ProtectPDFClient';
 import PurchaseAgreementGeneratorClient from '@/components/tools/PurchaseAgreementGeneratorClient';
 import PunycodeEncoderClient from '@/components/tools/PunycodeEncoderClient';
 import QuoteOfTheDayClient from '@/components/tools/QuoteOfTheDayClient';
 import RandomChoicePickerClient from '@/components/tools/RandomChoicePickerClient';
 import RandomChoiceWheelClient from '@/components/tools/RandomChoiceWheelClient';
-import ReadabilityImproverClient from '@/components/tools/ReadabilityImproverClient';
 import ReadingLevelEstimatorClient from '@/components/tools/ReadingLevelEstimatorClient';
-import RealEstateDescriptionWriterClient from '@/components/tools/RealEstateDescriptionWriterClient';
 import RearrangePDFPagesClient from '@/components/tools/RearrangePDFPagesClient';
 import RegexDescriptionGeneratorClient from '@/components/tools/RegexDescriptionGeneratorClient';
 import RegexEscapeClient from '@/components/tools/RegexEscapeClient';
@@ -866,21 +723,13 @@ import RegexExplainerClient from '@/components/tools/RegexExplainerClient';
 import RegexPatternBuilderClient from '@/components/tools/RegexPatternBuilderClient';
 import RegexPatternGeneratorClient from '@/components/tools/RegexPatternGeneratorClient';
 import RemoveExtraSpacesClient from '@/components/tools/RemoveExtraSpacesClient';
-import RemoveObjectsFromPhotoClient from '@/components/tools/RemoveObjectsFromPhotoClient';
-import RemovePersonFromPhotoClient from '@/components/tools/RemovePersonFromPhotoClient';
-import RemoveTextPhotoClient from '@/components/tools/RemoveTextPhotoClient';
-import RemoveWatermarkPhotoClient from '@/components/tools/RemoveWatermarkPhotoClient';
-import RepairDefectsClient from '@/components/tools/RepairDefectsClient';
-import ResponseHeaderAnalyzerClient from '@/components/tools/ResponseHeaderAnalyzerClient';
 import ScreenDensitySimulatorClient from '@/components/tools/ScreenDensitySimulatorClient';
-import ScreenshotMakerClient from '@/components/tools/ScreenshotMakerClient';
 import ScientificNotationConverterClient from '@/components/tools/ScientificNotationConverterClient';
 import SentenceExtractorClient from '@/components/tools/SentenceExtractorClient';
 import SentimentAnalyzerClient from '@/components/tools/SentimentAnalyzerClient';
 import SEOMetaBuilderClient from '@/components/tools/SEOMetaBuilderClient';
 import SEOTitleAnalyzerClient from '@/components/tools/SEOTitleAnalyzerClient';
 import SERPQuickClient from '@/components/tools/SERPQuickClient';
-import SERPRankTrackerClient from '@/components/tools/SERPRankTrackerClient';
 import SERPSnippetViewerClient from '@/components/tools/SERPSnippetViewerClient';
 import ShellCommandReferenceClient from '@/components/tools/ShellCommandReferenceClient';
 import ShortenContentClient from '@/components/tools/ShortenContentClient';
@@ -890,36 +739,23 @@ import SitemapURLsExtractorClient from '@/components/tools/SitemapURLsExtractorC
 import SlugHealthCheckerClient from '@/components/tools/SlugHealthCheckerClient';
 import SlugPermalinkCheckerClient from '@/components/tools/SlugPermalinkCheckerClient';
 import SlideshowGeneratorClient from '@/components/tools/SlideshowGeneratorClient';
-import StoryGeneratorClient from '@/components/tools/StoryGeneratorClient';
-import SummarizePodcastEpisodesClient from '@/components/tools/SummarizePodcastEpisodesClient';
-import SummarizeYouTubeVideosClient from '@/components/tools/SummarizeYouTubeVideosClient';
-import SynonymFinderClient from '@/components/tools/SynonymFinderClient';
 import TextComplexityAnalyzerClient from '@/components/tools/TextComplexityAnalyzerClient';
 import TextDeduplicatorClient from '@/components/tools/TextDeduplicatorClient';
 import TextHighlighterClient from '@/components/tools/TextHighlighterClient';
-import TextImproverClient from '@/components/tools/TextImproverClient';
 import TextLineDeduplicatorClient from '@/components/tools/TextLineDeduplicatorClient';
 import TextSentenceShufflerClient from '@/components/tools/TextSentenceShufflerClient';
 import TextSortToolClient from '@/components/tools/TextSortToolClient';
 import TextStructureValidatorClient from '@/components/tools/TextStructureValidatorClient';
-import TikTokScriptWriterClient from '@/components/tools/TikTokScriptWriterClient';
 import TimestampDiffCalculatorClient from '@/components/tools/TimestampDiffCalculatorClient';
-import TitleRewriterClient from '@/components/tools/TitleRewriterClient';
-import ToneOfVoiceRewriterClient from '@/components/tools/ToneOfVoiceRewriterClient';
 import LogoTraceConverterClient from '@/components/tools/LogoTraceConverterClient';
-import TranscribePodcastClient from '@/components/tools/TranscribePodcastClient';
-import TriviaGeneratorClient from '@/components/tools/TriviaGeneratorClient';
 import TwitterCardPreviewClient from '@/components/tools/TwitterCardPreviewClient';
 import UAParserExpressClient from '@/components/tools/UAParserExpressClient';
 import UnblurImageClient from '@/components/tools/UnblurImageClient';
 import UnicodeEscapeEncoderClient from '@/components/tools/UnicodeEscapeEncoderClient';
 import UnitConversionToolClient from '@/components/tools/UnitConversionToolClient';
-import UnlockPDFClient from '@/components/tools/UnlockPDFClient';
-import UpscaleImageClient from '@/components/tools/UpscaleImageClient';
 import UUIDCompareClient from '@/components/tools/UUIDCompareClient';
 import UUIDComparatorClient from '@/components/tools/UUIDComparatorClient';
 import UUIDNormalizerClient from '@/components/tools/UUIDNormalizerClient';
-import WebhookTesterClient from '@/components/tools/WebhookTesterClient';
 import WebSocketTesterClient from '@/components/tools/WebSocketTesterClient';
 import WhatIfScenarioCalculatorClient from '@/components/tools/WhatIfScenarioCalculatorClient';
 import WordAlphabetizerClient from '@/components/tools/WordAlphabetizerClient';
@@ -928,16 +764,10 @@ import WordFinderClient from '@/components/tools/WordFinderClient';
 import WordFreqExpressClient from '@/components/tools/WordFreqExpressClient';
 import WordScrambleGeneratorClient from '@/components/tools/WordScrambleGeneratorClient';
 import YAMLPrettyPrintClient from '@/components/tools/YAMLPrettyPrintClient';
-import YouTubeScriptWriterClient from '@/components/tools/YouTubeScriptWriterClient';
-import YouTubeTranscriptGeneratorClient from '@/components/tools/YouTubeTranscriptGeneratorClient';
-import InstagramCaptionGeneratorClient from '@/components/tools/InstagramCaptionGeneratorClient';
-import InstagramStoryIdeasGeneratorClient from '@/components/tools/InstagramStoryIdeasGeneratorClient';
 import JupyterCleanerClient from '@/components/tools/JupyterCleanerClient';
 import JsonTreeViewClient from '@/components/tools/JsonTreeViewClient';
 import JSONToURLEncodedV2Client from '@/components/tools/JSONToURLEncodedV2Client';
 import ParagraphRewriterClient from '@/components/tools/ParagraphRewriterClient';
-import AIParagraphWriterClient from '@/components/tools/AIParagraphWriterClient';
-import AISocialPostWriterClient from '@/components/tools/AISocialPostWriterClient';
 import SearchConsoleInsightsClient from '@/components/tools/SearchConsoleInsightsClient';
 import SplitCSVFileClient from '@/components/tools/SplitCSVFileClient';
 import SplitExcelFileClient from '@/components/tools/SplitExcelFileClient';
@@ -1194,8 +1024,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <WebpackConfigGeneratorClient />;
     case 'weight-converter':
       return <WeightConverterClient />;
-    case 'whois-lookup':
-      return <WhoisLookupClient />;
     case 'word-association':
       return <WordAssociationClient />;
     case 'word-frequency-analyzer':
@@ -1466,8 +1294,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <PingTestClient />;
     case 'plain-text-counter':
       return <PlainTextCounterClient />;
-    case 'port-scanner':
-      return <PortScannerClient />;
     case 'punctuation-fixer':
       return <PunctuationFixerClient />;
     case 'random-fraction-generator':
@@ -1562,12 +1388,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <Azw3ToEpubClient />;
     case 'azw3-to-mobi':
       return <Azw3ToMobiClient />;
-    case 'backlink-analyzer':
-      return <BacklinkAnalyzerClient />;
-    case 'backlink-checker-express':
-      return <BacklinkCheckerExpressClient />;
-    case 'backlink-checker-v2':
-      return <BacklinkCheckerV2Client />;
     case 'backslash-escape-unescape':
       return <BackslashEscapeUnescapeClient />;
     case 'barcode-generator':
@@ -1582,10 +1402,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <BaseConverterQuickClient />;
     case 'color-contrast-checker':
       return <ColorContrastCheckerClient />;
-    case 'color-format-converter':
-      return <ColorFormatConverterClient />;
-    case 'color-format-converter-v2':
-      return <ColorFormatConverterV2Client />;
+    case 'color-format-converter-v2': return <ColorFormatConverterV2Client />; // legacy alias, redirected via next.config.mjs
+    case 'color-format-converter': return <ColorFormatConverterV2Client />; // matches the promised CMYK support; the older ColorFormatConverterClient doesn't have it
     case 'color-format-picker':
       return <ColorFormatPickerClient />;
     case 'color-harmony-express':
@@ -1718,12 +1536,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <ColorizePhotoClient />;
     case 'compress':
       return <CompressClient />;
-    case 'compress-avi':
-      return <CompressAviClient />;
-    case 'compress-mkv':
-      return <CompressMkvClient />;
-    case 'compress-mov':
-      return <CompressMovClient />;
     case 'delete-pages':
       return <PdfPageDeleterClient />;
     case 'content-brief-generator':
@@ -1840,7 +1652,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'cron-generator-browser':
     case 'cron-generator-classic':
     case 'cron-generator-complete':
-    case 'cron-generator-dg':
     case 'cron-generator-easy':
     case 'cron-generator-enhanced':
     case 'cron-generator-express':
@@ -1866,26 +1677,19 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'cron-generator-x':
     case 'cron-generator-xl':
       return <CronGeneratorClient />;
-    case 'cron-human-readable':
     case 'cron-schedule-builder':
     case 'cron-schedule-checker':
-    case 'cron-schedule-explainer':
-    case 'cron-schedule-generator':
-    case 'cron-schedule-validator':
     case 'cron-toolblip':
     case 'cron-visual-builder':
       return <CronExpressionParserClient />;
     case 'crop-circle':
       return <CropCircleClient />;
-    case 'css-animation-generator':
-    case 'css-cursor-generator':
     case 'css-filter-generator':
       return <CssGradientGeneratorClient />;
     case 'css-flexbox-generator':
       return <CssFlexboxGeneratorClient />;
     case 'css-grid-generator':
       return <CssGridGeneratorClient />;
-    case 'css-naming-convention':
     case 'css-variable-generator':
       return <CssClassGeneratorClient />;
     case 'css-preview':
@@ -1897,8 +1701,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'css-to-tailwind':
       return <CssToTailwindClient />;
     case 'css-units-converter':
-    case 'css-units-converter-new':
-      return <CssValidatorClient />;
+    case 'css-units-converter-new': return <CssValidatorClient />; // legacy alias, redirected via next.config.mjs
     case 'csv-generator':
       return <CsvGeneratorClient />;
     case 'csv-json-express':
@@ -1913,15 +1716,14 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <CsvToXmlClient />;
     case 'curl-command-builder':
       return <CurlCommandBuilderClient />;
-    case 'curl-gen-express':
-      return <CurlGenExpressClient />;
+    case 'curl-gen-express': return <CurlGenExpressClient />; // legacy alias, redirected via next.config.mjs
+    case 'curl-gen': return <CurlGenExpressClient />;
     case 'curl-to-javascript':
       return <CurlToJavascriptClient />;
     case 'currency-converter-v2':
       return <CurrencyConverterClient />;
     case 'cutter':
       return <CutterClient />;
-    case 'data-size-converter':
     case 'data-size-converter-express':
       return <ByteConverterClient />;
     case 'data-uri-generator':
@@ -1960,9 +1762,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <EncodingsRefClient />;
     case 'encodings-reference':
       return <EncodingsReferenceClient />;
-    case 'energy-converter':
-    case 'force-converter':
-    case 'frequency-converter':
     case 'general-unit-converter':
       return <AllInOneUnitConverterClient />;
     case 'english-collocations-checker':
@@ -2006,13 +1805,11 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'faq-generator':
       return <FaqGeneratorClient />;
     case 'favicon-browser':
-    case 'favicon-checker':
     case 'favicon-checker-express':
     case 'favicon-checker-tool':
     case 'favicon-creator':
     case 'favicon-creator-tool':
     case 'favicon-fresh':
-    case 'favicon-from-emoji':
     case 'favicon-full':
     case 'favicon-gen-adv':
     case 'favicon-gen-prime':
@@ -2050,14 +1847,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'favicon-generator-v6':
     case 'favicon-generator-x':
     case 'favicon-generator-xl':
-    case 'favicon-grabber':
-    case 'favicon-icon-generator':
     case 'favicon-make-tool':
-    case 'favicon-maker':
-    case 'favicon-png-creator':
     case 'favicon-png-generator':
-    case 'favicon-png-maker':
-    case 'favicon-preview':
     case 'favicon-preview-tool':
     case 'favicon-quick':
     case 'favicon-quick-generator':
@@ -2076,22 +1867,12 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <FractionToDecimalClient />;
     case 'gif-to-apng':
       return <GifToApngClient />;
-    case 'gif-to-avif':
-      return <GifToAvifClient />;
     case 'gif-to-jpg':
       return <GifToJpgClient />;
-    case 'gif-to-mov':
-      return <GifToMovClient />;
-    case 'gif-to-mp4':
-      return <GifToMp4Client />;
     case 'gif-to-png':
       return <GifToPngClient />;
-    case 'gif-to-webm':
-      return <GifToWebmClient />;
     case 'google-algorithm-tracker':
       return <GoogleAlgorithmTrackerClient />;
-    case 'google-rank-checker':
-      return <GoogleRankCheckerClient />;
     case 'google-serp-preview':
       return <GoogleSerpPreviewClient />;
     case 'google-serp-simulator':
@@ -2188,8 +1969,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <HeadingTagAnalyzerClient />;
     case 'headline-analyzer':
       return <HeadlineAnalyzerClient />;
-    case 'heic-to-avif':
-      return <HeicToAvifClient />;
     case 'heic-to-jpg':
       return <HeicToJpgClient />;
     case 'heic-to-png':
@@ -2238,16 +2017,18 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <HtmlLivePreviewClient />;
     case 'html-markdown-express':
       return <HtmlMarkdownExpressClient />;
-    case 'html-plaintext-express':
-      return <HtmlPlaintextExpressClient />;
+    case 'html-plaintext-express': return <HtmlPlaintextExpressClient />; // legacy alias, redirected via next.config.mjs
+    case 'html-plaintext': return <HtmlPlaintextExpressClient />;
     case 'html-table-to-json':
       return <HtmlTableToJsonClient />;
     case 'html-to-jsx':
       return <HtmlToJsxClient />;
     case 'html-to-markdown-v2':
       return <HtmlToMarkdownV2Client />;
-    case 'html-to-plain-text-tool':
-      return <HtmlToPlainTextToolClient />;
+    // 'html-to-plain-text' renders HtmlToPlainTextClient (defined earlier,
+    // ~line 1225) — it uses DOMParser, which is more robust than this
+    // component's regex-based tag stripping.
+    case 'html-to-plain-text-tool': return <HtmlToPlainTextToolClient />; // legacy alias, redirected via next.config.mjs
     case 'html-to-plain-text-v2':
       return <HtmlToPlainTextV2Client />;
     case 'http-headers-2025':
@@ -2310,12 +2091,12 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <ImageBorderAdderClient />;
     case 'image-compressor':
       return <ImageCompressorClient />;
-    case 'image-flip-tool':
-      return <ImageFlipToolClient />;
+    case 'image-flip-tool': return <ImageFlipToolClient />; // legacy alias, redirected via next.config.mjs
+    case 'image-flip': return <ImageFlipToolClient />;
     case 'image-optimizer':
       return <ImageOptimizerClient />;
-    case 'image-rotate-tool':
-      return <ImageRotateToolClient />;
+    case 'image-rotate-tool': return <ImageRotateToolClient />; // legacy alias, redirected via next.config.mjs
+    case 'image-rotate': return <ImageRotateToolClient />;
     case 'image-shadow-generator':
       return <ImageShadowGeneratorClient />;
     case 'merge':
@@ -2464,8 +2245,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <ImageResizerClient />;
     case 'image-resizer-v3':
       return <ImageResizerClient />;
-    case 'image-cropper':
-      return <ImageCropperClient />;
     case 'image-clipper':
       return <ImageCropperClient />;
     case 'image-blur-hash-generator':
@@ -2578,25 +2357,11 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <ImageFormatConverterClient />;
     case 'favicon-ico-generator':
       return <FaviconGeneratorClient />;
-    case 'favicon-png-generator':
-      return <FaviconGeneratorClient />;
     case 'favicon-from-image':
-      return <FaviconGeneratorClient />;
-    case 'favicon-from-emoji':
       return <FaviconGeneratorClient />;
     case 'favicon-from-text':
       return <FaviconGeneratorClient />;
-    case 'favicon-creator':
-      return <FaviconGeneratorClient />;
-    case 'favicon-maker':
-      return <FaviconGeneratorClient />;
-    case 'favicon-generator-v2':
-      return <FaviconGeneratorClient />;
-    case 'favicon-generator-new':
-      return <FaviconGeneratorClient />;
     case 'favicon-generator-adv':
-      return <FaviconGeneratorClient />;
-    case 'favicon-generator-pro':
       return <FaviconGeneratorClient />;
     case 'favicon-generator-premium':
       return <FaviconGeneratorClient />;
@@ -2606,185 +2371,19 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <FaviconGeneratorClient />;
     case 'icon-favicon-creator':
       return <FaviconGeneratorClient />;
-    case 'favicon-grabber':
-      return <FaviconGeneratorClient />;
-    case 'favicon-preview':
-      return <FaviconGeneratorClient />;
-    case 'favicon-checker':
-      return <FaviconGeneratorClient />;
-    case 'color-palette-from-image':
-      return <ColorPaletteGeneratorClient />;
-    case 'color-palette-extractor':
-      return <ColorPaletteGeneratorClient />;
     case 'color-from-image':
       return <ColorPaletteGeneratorClient />;
-    case 'image-color-picker':
-      return <ColorPickerClient />;
-    case 'color-picker-v2':
-      return <ColorPickerClient />;
-    case 'color-picker-v3':
-      return <ColorPickerClient />;
-    case 'color-picker-new':
-      return <ColorPickerClient />;
-    case 'color-picker-adv':
-      return <ColorPickerClient />;
-    case 'color-picker-advanced':
-      return <ColorPickerClient />;
-    case 'color-picker-pro':
-      return <ColorPickerClient />;
-    case 'color-picker-complete':
-      return <ColorPickerClient />;
-    case 'color-picker-full':
-      return <ColorPickerClient />;
-    case 'color-picker-ultimate':
-      return <ColorPickerClient />;
-    case 'color-picker-ultra':
-      return <ColorPickerClient />;
-    case 'color-picker-express':
-      return <ColorPickerClient />;
-    case 'color-picker-quick':
-      return <ColorPickerClient />;
-    case 'color-picker-easy':
-      return <ColorPickerClient />;
-    case 'color-picker-fresh':
-      return <ColorPickerClient />;
-    case 'color-picker-final':
-      return <ColorPickerClient />;
-    case 'color-picker-handy':
-      return <ColorPickerClient />;
-    case 'color-picker-prime':
-      return <ColorPickerClient />;
-    case 'color-picker-smart':
-      return <ColorPickerClient />;
-    case 'color-picker-expander':
-      return <ColorPickerClient />;
-    case 'color-picker-xl':
-      return <ColorPickerClient />;
-    case 'color-picker-x':
-      return <ColorPickerClient />;
-    case 'color-picker-dg':
-      return <ColorPickerClient />;
-    case 'color-picker-wheel':
-      return <ColorPickerClient />;
-    case 'color-picker-web':
-      return <ColorPickerClient />;
-    case 'color-picker-browser':
-      return <ColorPickerClient />;
-    case 'color-picker-api':
-      return <ColorPickerClient />;
-    case 'color-picker-std':
-      return <ColorPickerClient />;
-    case 'color-picker-tool':
-      return <ColorPickerClient />;
-    case 'color-format-converter-v2':
-      return <ColorFormatConverterClient />;
-    case 'color-format-picker':
-      return <ColorFormatConverterClient />;
-    case 'hex-to-rgb':
-      return <HexToRgbClient />;
-    case 'rgb-to-hex':
-      return <RgbToHexClient />;
-    case 'hex-to-hsl':
-      return <HexToHslClient />;
-    case 'hsl-to-hex':
-      return <HslToHexClient />;
-    case 'hex-to-hsv':
-      return <HexToHsvClient />;
-    case 'hsv-to-hex':
-      return <HsvToHexClient />;
-    case 'hex-to-cmyk':
-      return <HexToCmykClient />;
-    case 'cmyk-to-rgb':
-      return <CmykToRgbClient />;
-    case 'color-mixer':
-      return <ColorMixerClient />;
-    case 'color-mixer-v2':
-      return <ColorMixerClient />;
     case 'color-harmony':
       return <ColorHarmonyGeneratorClient />;
     case 'color-contrast-ratio':
-      return <ContrastCheckerClient />;
-    case 'color-contrast-auditor':
       return <ContrastCheckerClient />;
     case 'wcag-contrast-checker':
       return <ContrastCheckerClient />;
     case 'accessibility-contrast-checker':
       return <ContrastCheckerClient />;
-    case 'contrast-checker-v2':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-adv':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-advanced':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-pro':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-complete':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-full':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-ultimate':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-ultra':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-express':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-quick':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-easy':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-fresh':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-final':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-handy':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-prime':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-smart':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-expander':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-xl':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-x':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-dg':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-new':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-v3':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-v4':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-v5':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-v6':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-browser':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-api':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-std':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-tool':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-wcag':
-      return <ContrastCheckerClient />;
-    case 'contrast-fresh':
-      return <ContrastCheckerClient />;
-    case 'contrast-quick':
-      return <ContrastCheckerClient />;
-    case 'contrast-toolblip':
-      return <ContrastCheckerClient />;
-    case 'contrast-browser':
-      return <ContrastCheckerClient />;
-    case 'contrast-check-all':
-      return <ContrastCheckerClient />;
     case 'contrast-tool':
       return <ContrastCheckerClient />;
     case 'contrast-2025':
-      return <ContrastCheckerClient />;
-    case 'contrast-checker-2025':
       return <ContrastCheckerClient />;
     case 'json-formatter-v2':
       return <JsonFormatterClient />;
@@ -2808,22 +2407,16 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <JsonValidatorClient />;
     case 'json-graph-visualizer':
       return <JsonGraphVisualizerClient />;
-    case 'json-to-csv':
-      return <JsonToCsvClient />;
     case 'json-to-tsv':
       return <JsonToCsvClient />;
     case 'json-to-html':
       return <JsonToHtmlTableClient />;
     case 'json-to-markdown':
       return <JsonToMarkdownTableClient />;
-    case 'yaml-validator':
-      return <YamlValidatorClient />;
     case 'yaml-lint':
       return <YamlValidatorClient />;
     case 'yaml-formatter':
       return <YamlToJsonClient />;
-    case 'xml-validator':
-      return <XmlFormatterClient />;
     case 'xml-formatter-v2':
       return <XmlFormatterClient />;
     case 'xml-beautifier':
@@ -2836,8 +2429,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <XmlToJsonClient />;
     case 'yaml-to-xml':
       return <YamlToJsonClient />;
-    case 'toml-to-json':
-      return <YamlToJsonClient />;
     case 'toml-to-yaml':
       return <YamlToJsonClient />;
     case 'base64-encode':
@@ -2848,27 +2439,17 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <Base64EncoderDecoderClient />;
     case 'base64-decoder':
       return <Base64EncoderDecoderClient />;
-    case 'base64-file-encoder':
-      return <Base64FileEncoderClient />;
     case 'base64-file-decoder':
       return <Base64FileEncoderClient />;
     case 'base64-image-encoder':
       return <Base64ImageEncoderClient />;
-    case 'base64-image-decoder':
-      return <Base64ImageDecoderClient />;
-    case 'url-encoder':
-      return <UrlEncodeClient />;
     case 'url-decoder':
       return <UrlEncodeClient />;
     case 'url-encode-decode':
       return <UrlEncodeClient />;
     case 'percent-encoding':
       return <UrlEncodeClient />;
-    case 'html-encoder':
-      return <HtmlEncoderClient />;
     case 'html-decoder':
-      return <HtmlEncoderClient />;
-    case 'html-entity-encoder':
       return <HtmlEncoderClient />;
     case 'html-entity-decoder':
       return <HtmlEncoderClient />;
@@ -2882,14 +2463,10 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <MarkdownToHtmlClient />;
     case 'markdown-to-markdown':
       return <MarkdownToHtmlClient />;
-    case 'css-minifier':
-      return <CssMinifierClient />;
     case 'css-beautifier':
       return <CssMinifierClient />;
     case 'css-prettifier':
       return <CssMinifierClient />;
-    case 'js-minifier':
-      return <JsMinifierClient />;
     case 'js-beautifier':
       return <JsMinifierClient />;
     case 'javascript-minifier':
@@ -2934,10 +2511,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <HashGeneratorClient />;
     case 'argon2-generator':
       return <HashGeneratorClient />;
-    case 'hmac-generator':
-      return <HashGeneratorClient />;
-    case 'hash-identifier':
-      return <HashIdentifierClient />;
     case 'word-counter-v2':
       return <WordCounterClient />;
     case 'word-counter-new':
@@ -2962,81 +2535,13 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <TextStatisticsClient />;
     case 'text-analyzer':
       return <TextStatisticsClient />;
-    case 'readability-checker':
-      return <ReadabilityScoreClient />;
     case 'readability-scorer':
       return <ReadabilityScoreClient />;
     case 'flesch-kincaid':
       return <ReadabilityScoreClient />;
     case 'grammar-check':
       return <GrammarCheckerClient />;
-    case 'grammar-checker-v2':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-new':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-adv':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-advanced':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-pro':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-complete':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-full':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-ultimate':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-ultra':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-express':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-quick':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-easy':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-fresh':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-final':
-      return <GrammarCheckerClient />;
     case 'grammar-checker-handy':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-prime':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-smart':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-expander':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-xl':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-x':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-dg':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-new':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-v3':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-v4':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-v5':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-v6':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-browser':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-api':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-std':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-tool':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-toolblip':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-instant':
-      return <GrammarCheckerClient />;
-    case 'grammar-checker-lite':
-      return <GrammarCheckerClient />;
-    case 'grammar-fixer':
       return <GrammarCheckerClient />;
     case 'grammar-fix':
       return <GrammarCheckerClient />;
@@ -3048,8 +2553,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <GrammarCheckerClient />;
     case 'speller':
       return <GrammarCheckerClient />;
-    case 'typo-checker':
-      return <TypoCheckerClient />;
     case 'typo-finder':
       return <TypoCheckerClient />;
     case 'case-converter-v2':
@@ -3060,8 +2563,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <CaseConverterClient />;
     case 'text-to-case':
       return <CaseConverterClient />;
-    case 'text-to-slug':
-      return <UrlSlugGeneratorClient />;
     case 'slugify':
       return <UrlSlugGeneratorClient />;
     case 'url-slug':
@@ -3122,19 +2623,9 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <UnitConverterClient />;
     case 'unit-converter-adv':
       return <UnitConverterClient />;
-    case 'all-in-one-unit-converter':
-      return <UnitConverterClient />;
-    case 'length-converter':
-      return <UnitConverterClient />;
-    case 'weight-converter':
-      return <UnitConverterClient />;
-    case 'temperature-converter':
-      return <UnitConverterClient />;
     case 'speed-converter':
       return <UnitConverterClient />;
     case 'volume-converter':
-      return <UnitConverterClient />;
-    case 'area-converter':
       return <UnitConverterClient />;
     case 'time-converter':
       return <UnitConverterClient />;
@@ -3147,8 +2638,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'hex-decimal-converter':
       return <NumberBaseConverterClient />;
     case 'octal-converter':
-      return <NumberBaseConverterClient />;
-    case 'binary-converter':
       return <NumberBaseConverterClient />;
     case 'hex-converter':
       return <NumberBaseConverterClient />;
@@ -3166,8 +2655,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <PercentageCalculatorClient />;
     case 'percentage-decrease':
       return <PercentageCalculatorClient />;
-    case 'discount-calculator':
-      return <PercentageCalculatorClient />;
     case 'tip-calculator':
       return <PercentageCalculatorClient />;
     case 'markup-calculator':
@@ -3183,8 +2670,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'random-password':
       return <PasswordGeneratorClient />;
     case 'password-strength':
-      return <PasswordStrengthCheckerClient />;
-    case 'password-strength-checker':
       return <PasswordStrengthCheckerClient />;
     case 'qr-code-generator-v2':
       return <QrCodeGeneratorClient />;
@@ -3204,8 +2689,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <MetaTagGeneratorClient />;
     case 'meta-description-generator':
       return <MetaTagGeneratorClient />;
-    case 'open-graph-generator':
-      return <MetaTagGeneratorClient />;
     case 'twitter-card-generator':
       return <MetaTagGeneratorClient />;
     case 'og-tags':
@@ -3213,8 +2696,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'serp-preview-v2':
       return <SerpPreviewClient />;
     case 'serp-simulator':
-      return <SerpPreviewClient />;
-    case 'google-serp-preview':
       return <SerpPreviewClient />;
     case 'screen-resolution':
       return <ScreenResolutionTesterClient />;
@@ -3248,12 +2729,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <CronValidatorClient />;
     case 'cron-explainer':
       return <CronParserClient />;
-    case 'cron-generator-v2':
-      return <CronGeneratorV2Client />;
-    case 'cron-builder':
-      return <CronBuilderClient />;
-    case 'cron-expression-generator':
-      return <CronExpressionGeneratorClient />;
     case 'cors-configuration':
       return <CorsHeaderGeneratorClient />;
     case 'cors-options':
@@ -3264,10 +2739,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <SqlToJsonClient />;
     case 'sql-to-yaml':
       return <SqlToJsonClient />;
-    case 'csv-to-json':
-      return <TsvToJsonClient />;
-    case 'tsv-to-csv':
-      return <TsvToJsonClient />;
     case 'tsv-to-yaml':
       return <TsvToJsonClient />;
     case 'text-diff-v2':
@@ -3277,8 +2748,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'text-comparison':
       return <TextDiffClient />;
     case 'string-diff':
-      return <TextDiffClient />;
-    case 'code-diff':
       return <TextDiffClient />;
     case 'json-diff':
       return <TextDiffClient />;
@@ -3303,8 +2772,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'list-randomizer-v2':
       return <ListRandomizerClient />;
     case 'http-headers-viewer-adv': return <HttpHeadersViewerClient />;
-    case 'image-alt-text-generator': return <ImageAltTextGeneratorClient />;
-    case 'image-compression-tool': return <ImageFlipToolClient />;
+    case 'image-compression-tool': return <ImageFlipToolClient />; // legacy alias, redirected via next.config.mjs
+    case 'image-compression': return <ImageFlipToolClient />;
     case 'image-metadata-express': return <ImageMetadataViewerClient />;
     case 'image-metadata-tool': return <ImageFlipToolClient />;
     case 'image-resizer-advanced': return <ImageResizerClient />;
@@ -3315,20 +2784,19 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'image-resizer-ultimate': return <ImageResizerClient />;
     case 'image-resizer-ultra': return <ImageResizerClient />;
     case 'image-size-resizer': return <ImageResizerClient />;
-    case 'image-to-svg': return <EpsToSvgClient />;
-    case 'image-to-svg-converter': return <EpsToSvgClient />;
     case 'ip-address-info': return <RandomIpAddressClient />;
-    case 'ip-address-info-express': return <RandomIpAddressClient />;
+    case 'ip-address-info-express': return <RandomIpAddressClient />; // legacy alias, redirected via next.config.mjs
+    case 'ip-address-info': return <RandomIpAddressClient />;
     case 'ip-address-info-v2': return <RandomIpAddressClient />;
-    case 'jpg-to-avif': return <EpsToJpgClient />;
-    case 'jpg-to-gif': return <GifToJpgClient />;
-    case 'jpg-to-svg': return <EpsToJpgClient />;
-    case 'jpg-to-tiff': return <EpsToJpgClient />;
     case 'json-csv-express': return <JsonCsvExpressClient />;
     case 'json-escape-unescape': return <BackslashEscapeUnescapeClient />;
     case 'json-patch-generator': return <JsonLdGeneratorClient />;
+    // 'json-path-evaluator' renders JsonPathTesterClient, not
+    // JsonPathEvaluatorExpressClient below — the "express" component just
+    // pretty-prints JSON, it doesn't evaluate a JSONPath expression at all,
+    // which is what the tool's own description promises.
     case 'json-path-evaluator': return <JsonPathTesterClient />;
-    case 'json-path-evaluator-express': return <JsonPathEvaluatorExpressClient />;
+    case 'json-path-evaluator-express': return <JsonPathEvaluatorExpressClient />; // legacy alias, redirected via next.config.mjs
     case 'json-path-tester-new': return <JsonPathTesterClient />;
     case 'json-schema-editor': return <JsonSchemaValidatorClient />;
     case 'json-schema-gen-express': return <JsonSchemaGenExpressClient />;
@@ -3380,16 +2848,18 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'jwt-decoder-x': return <JwtDecoderClient />;
     case 'jwt-decoder-xl': return <JwtDecoderClient />;
     case 'jwt-token-decoder': return <JwtDecoderClient />;
-    case 'keyword-density-analyzer-new': return <KeywordDensityCheckerClient />;
+    case 'keyword-density-analyzer-new': return <KeywordDensityCheckerClient />; // legacy alias, redirected via next.config.mjs
+    case 'keyword-density-analyzer': return <KeywordDensityCheckerClient />;
     case 'keyword-difficulty-checker': return <KeywordDensityCheckerClient />;
-    case 'keyword-generator-express': return <KeywordGeneratorExpressClient />;
-    case 'keyword-position-checker': return <KeywordDensityCheckerClient />;
+    case 'keyword-generator-express': return <KeywordGeneratorExpressClient />; // legacy alias, redirected via next.config.mjs
+    case 'keyword-generator': return <KeywordGeneratorExpressClient />;
     case 'ldap-filter-generator': return <LdapFilterGeneratorClient />;
     case 'length-converter-express': return <LengthConverterClient />;
     case 'length-weight-converter': return <LengthConverterClient />;
     case 'lorem-ipsum-adv': return <LoremIpsumGeneratorClient />;
     case 'lorem-ipsum-advanced': return <LoremIpsumGeneratorClient />;
-    case 'lorem-ipsum-api': return <LoremIpsumGeneratorClient />;
+    case 'lorem-ipsum-api': return <LoremIpsumGeneratorClient />; // legacy alias, redirected via next.config.mjs
+    case 'lorem-ipsum': return <LoremIpsumGeneratorClient />;
     case 'lorem-ipsum-api-tool': return <LoremIpsumGeneratorClient />;
     case 'lorem-ipsum-browser': return <LoremIpsumGeneratorClient />;
     case 'lorem-ipsum-bytes': return <LoremIpsumGeneratorClient />;
@@ -3473,20 +2943,13 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'meta-tag-generator-xl': return <MetaTagGeneratorClient />;
     case 'meta-tag-quick': return <MetaTagGeneratorClient />;
     case 'meta-tags-gen-tool': return <MetaTagGeneratorClient />;
-    case 'mkv-to-avi': return <AviToMkvClient />;
     case 'mkv-to-gif': return <AviToGifClient />;
-    case 'mkv-to-mov': return <AviToMkvClient />;
-    case 'mkv-to-mp3': return <AviToMkvClient />;
-    case 'mkv-to-mp4': return <AviToMkvClient />;
+    case 'mkv-to-mp3': return <MkvToMp3Client />;
     case 'mobi-to-azw3': return <Azw3ToMobiClient />;
-    case 'mobi-to-epub': return <EpubToMobiClient />;
     case 'mock-api-generator': return <ApiDocGeneratorClient />;
-    case 'mock-port-scanner': return <PortScannerClient />;
-    case 'mock-port-scanner-full': return <PortScannerClient />;
     case 'morse-code-express': return <MorseCodeTranslatorClient />;
     case 'morse-code-translator-v2': return <MorseCodeTranslatorClient />;
     case 'mov-to-avi': return <AviToMovClient />;
-    case 'mov-to-gif': return <GifToMovClient />;
     case 'mov-to-mp3': return <AviToMovClient />;
     case 'mov-to-mp4': return <AviToMovClient />;
     case 'mov-to-wav': return <AacToWavClient />;
@@ -3494,8 +2957,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'mp4-to-gif': return <AviToGifClient />;
     case 'mp4-to-mov': return <AviToMovClient />;
     case 'mp4-to-wav': return <AacToWavClient />;
-    case 'mp4-to-webm': return <GifToWebmClient />;
-    case 'network-port-scanner': return <PortScannerClient />;
     case 'number-base-browser': return <BaseNumberConverterClient />;
     case 'number-base-convert': return <BaseConvertToolClient />;
     case 'number-base-converter-2025': return <BaseNumberConverterClient />;
@@ -3544,54 +3005,10 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'ping-test-v2': return <PingTestClient />;
     case 'placeholder-image-generator': return <ImageShadowGeneratorClient />;
     case 'plain-text-formatter': return <PlainTextCounterClient />;
-    case 'png-to-avif': return <EpsToPngClient />;
-    case 'png-to-eps': return <EpsToPngClient />;
-    case 'png-to-gif': return <GifToPngClient />;
     case 'png-to-ico': return <FaviconGeneratorClient />;
-    case 'png-to-svg': return <EpsToPngClient />;
-    case 'png-to-tiff': return <EpsToPngClient />;
     case 'port-check-tool': return <ContrastCheckToolClient />;
     case 'port-checker-tool': return <ContrastCheckerToolClient />;
-    case 'port-scanner-2025': return <PortScannerClient />;
-    case 'port-scanner-adv': return <PortScannerClient />;
-    case 'port-scanner-advanced': return <PortScannerClient />;
-    case 'port-scanner-api': return <PortScannerClient />;
-    case 'port-scanner-browser': return <PortScannerClient />;
-    case 'port-scanner-classic': return <PortScannerClient />;
-    case 'port-scanner-complete': return <PortScannerClient />;
-    case 'port-scanner-dg': return <PortScannerClient />;
-    case 'port-scanner-easy': return <PortScannerClient />;
-    case 'port-scanner-enhanced': return <PortScannerClient />;
-    case 'port-scanner-expander': return <PortScannerClient />;
-    case 'port-scanner-express': return <PortScannerClient />;
-    case 'port-scanner-final': return <PortScannerClient />;
-    case 'port-scanner-fresh': return <PortScannerClient />;
-    case 'port-scanner-full': return <PortScannerClient />;
-    case 'port-scanner-lite': return <PortScannerClient />;
-    case 'port-scanner-mock': return <PortScannerClient />;
-    case 'port-scanner-new': return <PortScannerClient />;
-    case 'port-scanner-online': return <PortScannerClient />;
-    case 'port-scanner-prime': return <PortScannerClient />;
-    case 'port-scanner-pro': return <PortScannerClient />;
-    case 'port-scanner-quick': return <PortScannerClient />;
-    case 'port-scanner-smart': return <PortScannerClient />;
-    case 'port-scanner-std': return <PortScannerClient />;
-    case 'port-scanner-tool': return <PortScannerClient />;
-    case 'port-scanner-toolblip': return <PortScannerClient />;
-    case 'port-scanner-ultimate': return <PortScannerClient />;
-    case 'port-scanner-ultra': return <PortScannerClient />;
-    case 'port-scanner-v2': return <PortScannerClient />;
-    case 'port-scanner-v3': return <PortScannerClient />;
-    case 'port-scanner-v4': return <PortScannerClient />;
-    case 'port-scanner-v5': return <PortScannerClient />;
-    case 'port-scanner-v6': return <PortScannerClient />;
-    case 'port-scanner-x': return <PortScannerClient />;
-    case 'port-scanner-xl': return <PortScannerClient />;
     case 'pressure-unit-converter': return <UnitConverterClient />;
-    case 'psd-to-jpg': return <EpsToJpgClient />;
-    case 'psd-to-pdf': return <ExcelToPdfClient />;
-    case 'psd-to-png': return <EpsToPngClient />;
-    case 'psd-to-svg': return <EpsToSvgClient />;
     case 'qr-code': return <QrCodeGeneratorClient />;
     case 'random-color-generator': return <ColorHarmonyGeneratorClient />;
     case 'random-id-generator': return <RandomFractionGeneratorClient />;
@@ -3735,24 +3152,26 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'sha256-hash-generator': return <HashGeneratorClient />;
     case 'shell-command-gen-express': return <ShellCommandGenExpressClient />;
     case 'shell-command-generator': return <BashCommandGeneratorClient />;
-    case 'shell-command-generator-new': return <BashCommandGeneratorClient />;
+    case 'shell-command-generator-new': return <BashCommandGeneratorClient />; // legacy alias, redirected via next.config.mjs
+    case 'shell-command-generator': return <BashCommandGeneratorClient />;
     case 'sitemap-html-generator': return <HtmlTableGeneratorClient />;
     case 'sitemap-xml-validator': return <XmlValidatorClient />;
     case 'sitemap-xml-validator-express': return <XmlValidatorClient />;
     case 'sla-uptime-calculator': return <UptimeCalculatorClient />;
     case 'smart-text-sorter': return <TextSorterClient />;
     case 'speech-to-text': return <AudioToTextClient />;
-    case 'spelling-checker-tool': return <ContrastCheckerToolClient />;
+    case 'spelling-checker-tool': return <GrammarCheckerClient />; // legacy alias, redirected via next.config.mjs
+    case 'spelling-checker': return <GrammarCheckerClient />;
     case 'srt-to-json': return <CsvToJsonClient />;
     case 'srt-to-json-v2': return <CsvToJsonClient />;
     case 'ssl-certificate-checker-v2': return <SslCertificateCheckerClient />;
-    case 'ssl-checker-express': return <BacklinkCheckerExpressClient />;
     case 'summarizer': return <ContentSummarizerClient />;
     case 'svg-favicon-generator': return <SvgFaviconGeneratorClient />;
     case 'syllable-counter-express': return <SyllableCounterClient />;
     case 'syllable-word-counter': return <SyllableCounterClient />;
     case 'table-to-markdown': return <JsonToMarkdownTableClient />;
-    case 'temp-converter-express': return <TempConverterExpressClient />;
+    case 'temp-converter-express': return <TempConverterExpressClient />; // legacy alias, redirected via next.config.mjs
+    case 'temp-converter': return <TempConverterExpressClient />;
     case 'text-case-converter': return <CaseConverterClient />;
     case 'text-combinations-generator': return <FakeTextGeneratorClient />;
     case 'text-diff-checker': return <TextDiffClient />;
@@ -3798,15 +3217,13 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'text-statistics-calculator': return <TextStatisticsClient />;
     case 'text-to-handwriting': return <AudioToTextClient />;
     case 'text-to-image': return <AudioToTextClient />;
-    case 'tiff-to-jpg': return <EpsToJpgClient />;
-    case 'tiff-to-png': return <EpsToPngClient />;
-    case 'tiff-to-svg': return <EpsToSvgClient />;
     case 'tiff-to-text': return <AudioToTextClient />;
     case 'time-duration-calculator': return <ReadingTimeCalculatorClient />;
     case 'time-zone-tool': return <TimeZoneConverterClient />;
     case 'title-case-converter': return <CaseConverterClient />;
     case 'toml-to-json-v2': return <TomlToJsonClient />;
-    case 'tsv-json-express': return <TsvToJsonClient />;
+    case 'tsv-json-express': return <TsvToJsonClient />; // legacy alias, redirected via next.config.mjs
+    case 'tsv-json': return <TsvToJsonClient />;
     case 'tsv-to-csv-v2': return <CsvToTsvClient />;
     case 'tsv-to-json-v2': return <TsvToJsonClient />;
     case 'unit-converter-2025': return <UnitConverterClient />;
@@ -3841,7 +3258,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'unit-measurement-converter': return <UnitConverterClient />;
     case 'units-convert-tool': return <BaseConvertToolClient />;
     case 'unix-timestamp-express': return <UnixTimestampConverterClient />;
-    case 'url-encode': return <UrlEncodeClient />;
     case 'url-encoder-decoder': return <Base64EncoderDecoderClient />;
     case 'url-similarity-checker': return <UrlRedirectCheckerClient />;
     case 'user-agent-parser-v2': return <UserAgentParserClient />;
@@ -3854,13 +3270,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'vsdx-to-pdf': return <ExcelToPdfClient />;
     case 'wcag-contrast-auditor': return <ColorContrastAuditorClient />;
     case 'webm-to-mov': return <AviToMovClient />;
-    case 'webm-to-mp3': return <WebmToMp3Client />;
-    case 'webm-to-mp4': return <WebmToMp4Client />;
-    case 'webp-to-avif': return <WebpToAvifClient />;
     case 'webp-to-gif': return <AviToGifClient />;
-    case 'website-age-checker': return <WebsiteAgeCheckerClient />;
     case 'weight-converter-express': return <WeightConverterClient />;
-    case 'whois-lookup-v2': return <WhoisLookupClient />;
     case 'wifi-qr-code-generator': return <QrCodeGeneratorClient />;
     case 'word-complexity-analyzer': return <WordFrequencyAnalyzerClient />;
     case 'word-density-analyzer': return <WordFrequencyAnalyzerClient />;
@@ -3877,10 +3288,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'jwt-quick': return <JwtDecoderClient />;
     case 'jwt-tool': return <JwtDecoderClient />;
     case 'metadata': return <ImageMetadataViewerClient />;
-    case 'pdf-password-remover': return <AddWatermarkToPDFClient />;
+    case 'pdf-password-remover': return <PdfPasswordRemoverClient />;
     case 'percentage-change-calc': return <PercentageCalculatorClient />;
-    case 'port-checker': return <PortScannerClient />;
-    case 'port-scan-tool': return <PortScannerClient />;
     case 'readability-dg': return <ReadabilityScoreClient />;
     case 'readability-expander': return <ReadabilityScoreClient />;
     case 'readability-grade-tool': return <ReadabilityScoreClient />;
@@ -3890,7 +3299,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'regex-quick': return <RegexTesterClient />;
     case 'regex-test-tool': return <RegexTesterClient />;
     case 'regex-tool': return <RegexTesterClient />;
-    case 'remove-watermark': return <RemoveWatermarkFromPhotoClient />;
     case 'rot13-express': return <Rot13CipherClient />;
     case 'serp-browser': return <SerpPreviewClient />;
     case 'serp-fresh': return <SerpPreviewClient />;
@@ -3907,64 +3315,47 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'image-scale-calculator': return <ImageScaleCalculatorClient />;
     case 'image-square-fit': return <ImageSquareFitClient />;
     case 'image-to-base64': return <Base64Client />;
-    case 'instagram-caption-generator': return <InstagramCaptionGeneratorClient />;
-    case 'instagram-story-ideas': return <InstagramStoryIdeasGeneratorClient />;
-    case 'ipa-phonetic-finder': return <IPAPhoneticFinderClient />;
     case 'ipynb-formatter': return <IPynbFormatterClient />;
     case 'jupyter-cleaner': return <JupyterCleanerClient />;
     case 'json-editor': return <JsonEditorClient />;
     case 'json-tree-view': return <JsonTreeViewClient />;
     case 'jsonpath-query-tester': return <JSONPathQueryTesterClient />;
-    case 'jsonpath-query-tool': return <JSONPathQueryToolClient />;
+    case 'jsonpath-query-tool': return <JSONPathQueryToolClient />; // legacy alias, redirected via next.config.mjs
+    case 'jsonpath-query': return <JSONPathQueryToolClient />;
     case 'jwt-token-inspector': return <JwtTokenInspectorClient />;
     case 'jwt-token-tester': return <JwtTokenTesterClient />;
     case 'keyword-difficulty-tool': return <KeywordDifficultyToolClient />;
     case 'keyword-extractor': return <KeywordExtractorClient />;
-    case 'keyword-generator': return <KeywordGeneratorClient />;
+    // 'keyword-generator' itself is defined earlier (~line 2854) as
+    // KeywordGeneratorExpressClient, which is what the current
+    // data/tools.ts entry (renamed from 'keyword-generator-express') was
+    // written against; this duplicate case for the same slug was dead code.
     case 'keyword-generator-v2': return <KeywordGeneratorClient />;
     case 'kubernetes-yaml-generator': return <KubernetesYAMLGeneratorClient />;
     case 'list-difference-finder': return <ListDifferenceFinderClient />;
-    case 'listicle-writer': return <ListicleWriterClient />;
-    case 'linkedin-post-generator': return <LinkedInPostGeneratorClient />;
-    case 'landing-page-copy': return <LandingPageCopyGeneratorClient />;
     case 'm4a-to-mp3': return <M4AToMP3Client />;
     case 'm4a-to-mp4': return <M4AToMP4Client />;
-    case 'make-background-transparent': return <MakeBackgroundTransparentClient />;
     case 'meta-tags-tool': return <MetaTagsToolClient />;
     case 'metric-imperial-converter': return <MetricImperialConverterClient />;
     case 'mime-types-reference': return <MIMETypesReferenceClient />;
     case 'mp4-to-mp3': return <MP4ToMP3Client />;
     case 'mp4-to-ogg': return <MP4ToOGGClient />;
-    case 'mute': return <MuteVideoAudioClient />;
-    case 'network-port-checker': return <NetworkPortCheckerClient />;
     case 'nda-generator': return <NDAGeneratorClient />;
     case 'ogg-to-mp3': return <OGGToMP3Client />;
-    case 'page-speed-preview': return <PageSpeedPreviewClient />;
     case 'page-title-checker': return <PageTitleCheckerClient />;
-    case 'pagespeed-preview': return <PageSpeedPreviewClient />;
-    case 'paragraph-completer': return <ParagraphCompleterClient />;
-    case 'paragraph-writer': return <AIParagraphWriterClient />;
     case 'photo-metadata-remover': return <PhotoMetadataRemoverClient />;
-    case 'photo-resize-tool': return <PhotoResizeToolClient />;
+    case 'photo-resize-tool': return <PhotoResizeToolClient />; // legacy alias, redirected via next.config.mjs
+    case 'photo-resize': return <PhotoResizeToolClient />;
     case 'physics-constants-reference': return <PhysicsConstantsReferenceClient />;
-    case 'plagiarism-checker': return <PlagiarismCheckerClient />;
-    case 'podcast-writer': return <PodcastWriterClient />;
     case 'poll-generator': return <PollGeneratorClient />;
-    case 'post-generator': return <LinkedInPostGeneratorClient />;
-    case 'post-ideas': return <PostIdeasGeneratorClient />;
-    case 'post-rewriter': return <PostRewriterClient />;
-    case 'post-writer': return <AISocialPostWriterClient />;
     case 'pressure-converter': return <PressureConverterClient />;
     case 'profile-photo': return <ProfilePhotoEditorClient />;
-    case 'protect': return <ProtectPDFClient />;
     case 'purchase-agreement-generator': return <PurchaseAgreementGeneratorClient />;
     case 'punycode-encoder': return <PunycodeEncoderClient />;
     case 'quote-of-the-day': return <QuoteOfTheDayClient />;
     case 'random-choice-picker': return <RandomChoicePickerClient />;
     case 'random-choice-wheel': return <RandomChoiceWheelClient />;
-    case 'readability-improver': return <ReadabilityImproverClient />;
     case 'reading-level-estimator': return <ReadingLevelEstimatorClient />;
-    case 'real-estate-description': return <RealEstateDescriptionWriterClient />;
     case 'rearrange': return <RearrangePDFPagesClient />;
     case 'regex-description-generator': return <RegexDescriptionGeneratorClient />;
     case 'regex-escape': return <RegexEscapeClient />;
@@ -3973,17 +3364,10 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'regex-pattern-generator': return <RegexPatternGeneratorClient />;
     case 'regex-pattern-generator-v2': return <RegexPatternGeneratorClient />;
     case 'remove-extra-spaces': return <RemoveExtraSpacesClient />;
-    case 'remove-objects': return <RemoveObjectsFromPhotoClient />;
-    case 'remove-person': return <RemovePersonFromPhotoClient />;
-    case 'remove-text-photo': return <RemoveTextPhotoClient />;
-    case 'remove-watermark-photo': return <RemoveWatermarkPhotoClient />;
-    case 'repair-defects': return <RepairDefectsClient />;
-    case 'response-header-analyzer': return <ResponseHeaderAnalyzerClient />;
     case 'resize': return <BatchImageResizerClient />;
     case 'rot13-cipher-v2': return <Rot13CipherClient />;
     case 'rotate': return <ImageRotateToolClient />;
     case 'screen-density-simulator': return <ScreenDensitySimulatorClient />;
-    case 'screenshot-maker': return <ScreenshotMakerClient />;
     case 'scientific-notation-converter': return <ScientificNotationConverterClient />;
     case 'search-console-insights': return <SearchConsoleInsightsClient />;
     case 'sentence-extractor': return <SentenceExtractorClient />;
@@ -3991,7 +3375,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'seo-meta-builder': return <SEOMetaBuilderClient />;
     case 'seo-title-analyzer': return <SEOTitleAnalyzerClient />;
     case 'serp-quick': return <SERPQuickClient />;
-    case 'serp-rank-tracker': return <SERPRankTrackerClient />;
     case 'serp-snippet-viewer': return <SERPSnippetViewerClient />;
     case 'shell-command-reference': return <ShellCommandReferenceClient />;
     case 'shorten-content': return <ShortenContentClient />;
@@ -4004,35 +3387,24 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'split': return <BillSplitterClient />;
     case 'split-csv': return <SplitCSVFileClient />;
     case 'split-excel': return <SplitExcelFileClient />;
-    case 'story-generator': return <StoryGeneratorClient />;
-    case 'summarize-podcast': return <SummarizePodcastEpisodesClient />;
-    case 'summarize-youtube': return <SummarizeYouTubeVideosClient />;
     case 'svg-compressor': return <CompressClient />;
     case 'svg-minifier': return <SVGMinifierClient />;
     case 'svg-optimizer': return <SVGOptimizerClient />;
-    case 'synonym-finder': return <SynonymFinderClient />;
     case 'text-complexity-analyzer': return <TextComplexityAnalyzerClient />;
     case 'text-deduplicator': return <TextDeduplicatorClient />;
     case 'text-highlighter': return <TextHighlighterClient />;
-    case 'text-improver': return <TextImproverClient />;
     case 'text-line-deduplicator': return <TextLineDeduplicatorClient />;
     case 'text-sentence-shuffler': return <TextSentenceShufflerClient />;
     case 'text-sort-tool': return <TextSortToolClient />;
     case 'text-structure-validator': return <TextStructureValidatorClient />;
-    case 'tiktok-script-writer': return <TikTokScriptWriterClient />;
     case 'timestamp-diff-calculator': return <TimestampDiffCalculatorClient />;
-    case 'title-rewriter': return <TitleRewriterClient />;
-    case 'tone-of-voice': return <ToneOfVoiceRewriterClient />;
     case 'trace': return <LogoTraceConverterClient />;
-    case 'transcribe-podcast': return <TranscribePodcastClient />;
-    case 'trivia-generator': return <TriviaGeneratorClient />;
     case 'twitter-card-preview': return <TwitterCardPreviewClient />;
     case 'ua-parser-express': return <UAParserExpressClient />;
     case 'unblur': return <UnblurImageClient />;
     case 'unicode-escape-encoder': return <UnicodeEscapeEncoderClient />;
     case 'unit-conversion-tool': return <UnitConversionToolClient />;
     case 'unlock': return <PdfPasswordRemoverClient />;
-    case 'upscale': return <UpscaleImageClient />;
     case 'uuid-compare': return <UUIDCompareClient />;
     case 'uuid-comparator': return <UUIDComparatorClient />;
     case 'uuid-normalizer': return <UUIDNormalizerClient />;
@@ -4042,18 +3414,16 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'vsdx-to-docx': return <VsdxToDocxClient />;
     case 'vsdx-to-pptx': return <VsdxToPptxClient />;
     case 'watermark': return <AddWatermarkToPDFClient />;
-    case 'webhook-tester': return <WebhookTesterClient />;
     case 'websocket-tester': return <WebSocketTesterClient />;
     case 'what-if-scenario-calculator': return <WhatIfScenarioCalculatorClient />;
     case 'word-alphabetizer': return <WordAlphabetizerClient />;
     case 'word-combinations': return <WordCombinationsGeneratorClient />;
     case 'word-count-from-url': return <WordCountFromURLClient />;
     case 'word-finder': return <WordFinderClient />;
-    case 'word-freq-express': return <WordFreqExpressClient />;
+    case 'word-freq-express': return <WordFreqExpressClient />; // legacy alias, redirected via next.config.mjs
+    case 'word-freq': return <WordFreqExpressClient />;
     case 'word-scramble-generator': return <WordScrambleGeneratorClient />;
     case 'yaml-pretty-print': return <YAMLPrettyPrintClient />;
-    case 'youtube-script-writer': return <YouTubeScriptWriterClient />;
-    case 'youtube-transcript': return <YouTubeTranscriptGeneratorClient />;
     case 'zip': return <CreateZipFileClient />;
     case 'psd-to-ai': return <PsdToAIConverterClient />;
     case 'regex-toolblip': return <RegexToolClient />;
@@ -4072,117 +3442,29 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'privacy-policy-generator': return <PrivacyPolicyGeneratorClient />;
     case 'token-builder': return <TokenBuilderClient />;
     case 'pixel-density-calculator': return <PixelDensityCalculatorClient />;
-    case 'cron-expr-gen': return <CronGeneratorClient />;
-    case 'cron-expr-gen-adv': return <CronGeneratorClient />;
-    case 'cron-expr-gen-prime': return <CronGeneratorClient />;
-    case 'cron-expr-gen-pro': return <CronGeneratorClient />;
-    case 'cron-expr-gen-ultra': return <CronGeneratorClient />;
-    case 'cron-generator-2025': return <CronGeneratorClient />;
-    case 'cron-generator-advanced': return <CronGeneratorClient />;
-    case 'cron-generator-browser': return <CronGeneratorClient />;
-    case 'cron-generator-classic': return <CronGeneratorClient />;
-    case 'cron-generator-complete': return <CronGeneratorClient />;
-    case 'cron-generator-dg': return <CronGeneratorClient />;
-    case 'cron-generator-easy': return <CronGeneratorClient />;
-    case 'cron-generator-express': return <CronGeneratorClient />;
-    case 'cron-generator-final': return <CronGeneratorClient />;
-    case 'cron-generator-fresh': return <CronGeneratorClient />;
-    case 'cron-generator-full': return <CronGeneratorClient />;
-    case 'cron-generator-handy': return <CronGeneratorClient />;
-    case 'cron-generator-new': return <CronGeneratorClient />;
-    case 'cron-generator-prime': return <CronGeneratorClient />;
-    case 'cron-generator-pro': return <CronGeneratorClient />;
-    case 'cron-generator-quick': return <CronGeneratorClient />;
-    case 'cron-generator-smart': return <CronGeneratorClient />;
-    case 'cron-generator-std': return <CronGeneratorClient />;
-    case 'cron-generator-tool': return <CronGeneratorClient />;
-    case 'cron-generator-toolblip': return <CronGeneratorClient />;
-    case 'cron-generator-ultimate': return <CronGeneratorClient />;
-    case 'cron-generator-ultra': return <CronGeneratorClient />;
-    case 'cron-generator-v3': return <CronGeneratorClient />;
-    case 'cron-generator-v4': return <CronGeneratorClient />;
-    case 'cron-generator-v5': return <CronGeneratorClient />;
-    case 'cron-generator-v6': return <CronGeneratorClient />;
-    case 'cron-generator-x': return <CronGeneratorClient />;
-    case 'cron-generator-xl': return <CronGeneratorClient />;
-    case 'cron-human-readable': return <CronGeneratorClient />;
-    case 'cron-schedule-builder': return <CronExpressionParserClient />;
-    case 'cron-schedule-checker': return <CronExpressionParserClient />;
-    case 'cron-schedule-explainer': return <CronExpressionParserClient />;
-    case 'cron-schedule-generator': return <CronExpressionParserClient />;
-    case 'cron-schedule-validator': return <CronExpressionParserClient />;
-    case 'cron-toolblip': return <CronGeneratorClient />;
-    case 'css-flexbox-generator': return <CssFlexboxGeneratorClient />;
-    case 'css-to-styled-components': return <CssToStyledComponentsClient />;
-    case 'css-units-converter': return <UnitConverterClient />;
-    case 'data-size-converter': return <ByteConverterClient />;
-    case 'energy-converter': return <AllInOneUnitConverterClient />;
-    case 'favicon-checker-express': return <FaviconGeneratorClient />;
-    case 'favicon-checker-tool': return <FaviconGeneratorClient />;
-    case 'favicon-creator-tool': return <FaviconGeneratorClient />;
-    case 'favicon-full': return <FaviconGeneratorClient />;
-    case 'favicon-gen-adv': return <FaviconGeneratorClient />;
-    case 'favicon-gen-prime': return <FaviconGeneratorClient />;
-    case 'favicon-gen-pro': return <FaviconGeneratorClient />;
-    case 'favicon-gen-tool': return <FaviconGeneratorClient />;
-    case 'favicon-gen-ultra': return <FaviconGeneratorClient />;
-    case 'favicon-generator-2025': return <FaviconGeneratorClient />;
-    case 'favicon-generator-advanced': return <FaviconGeneratorClient />;
-    case 'favicon-generator-browser': return <FaviconGeneratorClient />;
-    case 'favicon-generator-classic': return <FaviconGeneratorClient />;
-    case 'favicon-generator-complete': return <FaviconGeneratorClient />;
-    case 'favicon-generator-dg': return <FaviconGeneratorClient />;
-    case 'favicon-generator-easy': return <FaviconGeneratorClient />;
-    case 'favicon-generator-enhanced': return <FaviconGeneratorClient />;
-    case 'favicon-generator-expander': return <FaviconGeneratorClient />;
-    case 'favicon-generator-express': return <FaviconGeneratorClient />;
-    case 'favicon-generator-final': return <FaviconGeneratorClient />;
-    case 'favicon-generator-fresh': return <FaviconGeneratorClient />;
-    case 'favicon-generator-full': return <FaviconGeneratorClient />;
-    case 'favicon-generator-prime': return <FaviconGeneratorClient />;
-    case 'favicon-generator-quick': return <FaviconGeneratorClient />;
-    case 'favicon-generator-smart': return <FaviconGeneratorClient />;
-    case 'favicon-generator-std': return <FaviconGeneratorClient />;
-    case 'favicon-generator-tool': return <FaviconGeneratorClient />;
-    case 'favicon-generator-ultimate': return <FaviconGeneratorClient />;
-    case 'favicon-generator-ultra': return <FaviconGeneratorClient />;
-    case 'favicon-generator-v3': return <FaviconGeneratorClient />;
-    case 'favicon-generator-v4': return <FaviconGeneratorClient />;
-    case 'favicon-generator-v5': return <FaviconGeneratorClient />;
-    case 'favicon-generator-v6': return <FaviconGeneratorClient />;
-    case 'favicon-generator-x': return <FaviconGeneratorClient />;
-    case 'favicon-generator-xl': return <FaviconGeneratorClient />;
-    case 'favicon-icon-generator': return <FaviconGeneratorClient />;
-    case 'favicon-make-tool': return <FaviconGeneratorClient />;
-    case 'favicon-png-creator': return <FaviconGeneratorClient />;
+    case 'url-encode': return <UrlEncodeClient />;
+    case 'data-size-converter': return <DataSizeConverterClient />;
+    case 'cron-human-readable': return <CronHumanReadableClient />;
+    case 'cron-schedule-generator': return <CronScheduleGeneratorClient />;
+    case 'cron-schedule-validator': return <CronScheduleValidatorClient />;
+    case 'energy-converter': return <EnergyConverterClient />;
+    case 'favicon-from-emoji': return <FaviconFromEmojiClient />;
+    case 'css-naming-convention': return <CssNamingConventionClient />;
+    case 'frequency-converter': return <FrequencyConverterClient />;
+    case 'force-converter': return <ForceConverterClient />;
+    case 'favicon-maker': return <IconFaviconCreatorClient />;
+    case 'favicon-preview-tool': return <FaviconGeneratorClient />; // legacy alias, redirected via next.config.mjs
+    case 'favicon-preview': return <FaviconGeneratorClient />;
+    case 'cron-generator-dg': return <CronGeneratorCompleteClient />;
+    case 'cron-schedule-explainer': return <CronScheduleExplainerClient />;
+    case 'css-animation-generator': return <CssAnimationGeneratorClient />;
+    case 'css-cursor-generator': return <CssCursorGeneratorClient />;
+    case 'favicon-grabber': return <BatchFaviconDownloaderClient />;
     case 'favicon-png-maker': return <FaviconGeneratorClient />;
-    case 'favicon-preview-tool': return <FaviconGeneratorClient />;
-    case 'favicon-quick': return <FaviconGeneratorClient />;
-    case 'favicon-quick-generator': return <FaviconGeneratorClient />;
-    case 'favicon-simple': return <FaviconGeneratorClient />;
-    case 'favicon-tool': return <FaviconGeneratorClient />;
-    case 'favicon-toolblip': return <FaviconGeneratorClient />;
-    case 'force-converter': return <AllInOneUnitConverterClient />;
-    case 'fraction-to-decimal-express': return <FractionToDecimalClient />;
-    case 'frequency-converter': return <AllInOneUnitConverterClient />;
+    case 'favicon-icon-generator': return <FaviconGeneratorClient />;
+    case 'favicon-png-creator': return <IconFaviconCreatorClient />;
+    case 'favicon-checker': return <BatchFaviconDownloaderClient />;
 
-    case 'keyword-generator-express': return <KeywordGeneratorClient />;
-    case 'meta-gen-toolblip': return <MetaTagGeneratorClient />;
-    case 'meta-tag-gen-adv': return <MetaTagGeneratorClient />;
-    case 'meta-tag-gen-prime': return <MetaTagGeneratorClient />;
-    case 'meta-tag-gen-pro': return <MetaTagGeneratorClient />;
-    case 'meta-tag-gen-tool': return <MetaTagGeneratorClient />;
-    case 'meta-tag-gen-ultra': return <MetaTagGeneratorClient />;
-    case 'meta-tags-gen-tool': return <MetaTagGeneratorClient />;
-    case 'png-to-ico': return <FaviconGeneratorClient />;
-    case 'regex-visual-builder': return <RegexTesterClient />;
-    case 'seo-tag-analyzer': return <MetaTagGeneratorClient />;
-    case 'svg-favicon-generator': return <SvgFaviconGeneratorClient />;
-    case 'temp-converter-express': return <TemperatureConverterClient />;
-    case 'vsd-to-jpg': return <ImageResizerClient />;
-    case 'vsd-to-pdf': return <ImageResizerClient />;
-    case 'vsdx-to-jpg': return <ImageResizerClient />;
-    case 'vsdx-to-pdf': return <ImageResizerClient />;
     default:
       return <ComingSoonUI tool={tool} />;
   }

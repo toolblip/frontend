@@ -6,6 +6,12 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://toolblip.com/submit-tool',
   },
+  // Account-funnel/form page with no unique content for a searcher to land
+  // on — keep it out of the index but let link equity flow through.
+  robots: {
+    index: false,
+    follow: true,
+  },
   openGraph: {
     title: 'Submit a Tool | Toolblip',
     description: 'Submit a useful browser-based tool to the Toolblip community directory for review.',

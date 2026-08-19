@@ -7,6 +7,12 @@ export const metadata: Metadata = {
   alternates: {
     canonical: 'https://toolblip.com/signup',
   },
+  // Account-funnel page with no unique content for a searcher to land on —
+  // keep it out of the index but let link equity flow through.
+  robots: {
+    index: false,
+    follow: true,
+  },
   openGraph: {
     title: 'Create Account | Toolblip',
     description: 'Create a free Toolblip account to save API keys, manage your profile, and submit MCP servers to the community directory.',

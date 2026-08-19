@@ -1,62 +1,139 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
-interface Props {
-  tool?: {
-    name: string;
-    slug: string;
-    description: string;
-  };
+type Unit = 'in' | 'cm';
+
+function round(n: number): number {
+  return Math.round(n * 100) / 100;
 }
 
-export default function PixelDensityCalculatorClient({ tool = { name: "", slug: "", description: "" } }: Props) {
-  const [input, setInput] = useState('');
-  const [output, setOutput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+function qualityNote(ppi: number): { label: string; detail: string } {
+  if (ppi >= 300) return { label: 'Excellent — print quality', detail: '300+ PPI is the standard for sharp, professional prints.' };
+  if (ppi >= 150) return { label: 'Good — acceptable for most prints', detail: '150–299 PPI looks fine at normal viewing distance.' };
+  if (ppi >= 100) return { label: 'Fair — visible softness possible', detail: '100–149 PPI may look slightly soft up close.' };
+  return { label: 'Low quality — not recommended for print', detail: 'Below 100 PPI usually looks pixelated when printed.' };
+}
 
-  const handleProcess = async () => {
-    setIsLoading(true);
-    try {
-      // TODO: Implement PixelDensityCalculatorClient logic
-      setOutput(`Processed: ${input}`);
-    } catch (error) {
-      setOutput(`Error: ${error}`);
-    }
-    setIsLoading(false);
-  };
+export default function PixelDensityCalculatorClient() {
+  const [width, setWidth] = useState('3000');
+  const [height, setHeight] = useState('2000');
+  const [printWidth, setPrintWidth] = useState('10');
+  const [printHeight, setPrintHeight] = useState('6.67');
+  const [unit, setUnit] = useState<Unit>('in');
+
+  const result = useMemo(() => {
+    const w = parseFloat(width);
+    const h = parseFloat(height);
+    const pw = parseFloat(printWidth);
+    const ph = parseFloat(printHeight);
+    if (!(w > 0) || !(h > 0) || !(pw > 0) || !(ph > 0)) return null;
+
+    const pwIn = unit === 'cm' ? pw / 2.54 : pw;
+    const phIn = unit === 'cm' ? ph / 2.54 : ph;
+
+    const diagonalPixels = Math.sqrt(w * w + h * h);
+    const diagonalInches = Math.sqrt(pwIn * pwIn + phIn * phIn);
+    const diagonalPPI = diagonalPixels / diagonalInches;
+    const horizontalPPI = w / pwIn;
+    const verticalPPI = h / phIn;
+
+    return { diagonalPPI, horizontalPPI, verticalPPI };
+  }, [width, height, printWidth, printHeight, unit]);
+
+  const quality = result ? qualityNote(result.diagonalPPI) : null;
 
   return (
-    <div className="" style={{padding:"20px"}}>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">{tool.name}</h1>
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Image & Print Dimensions</span>
+        <div className="tb-v2-mode-tabs">
+          <button type="button" className={`tb-v2-mode-tab ${unit === 'in' ? 'on' : ''}`} onClick={() => setUnit('in')}>Inches</button>
+          <button type="button" className={`tb-v2-mode-tab ${unit === 'cm' ? 'on' : ''}`} onClick={() => setUnit('cm')}>Centimeters</button>
         </div>
-      
-      <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
-        <div>
-          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Input</label>
-          <textarea
-            className="tb-v2-input"
-            placeholder="Enter your text..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
+      </div>
+      <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <div className="tb-v2-grid-2">
+          <div style={{ paddingRight: 12 }}>
+            <span className="tb-v2-tool-label">Image Width (px)</span>
+            <input
+              type="number"
+              min={1}
+              className="tb-v2-input"
+              style={{ marginTop: 8, fontFamily: 'var(--f-mono)' }}
+              value={width}
+              onChange={(e) => setWidth(e.target.value)}
+            />
+          </div>
+          <div style={{ paddingLeft: 12 }}>
+            <span className="tb-v2-tool-label">Image Height (px)</span>
+            <input
+              type="number"
+              min={1}
+              className="tb-v2-input"
+              style={{ marginTop: 8, fontFamily: 'var(--f-mono)' }}
+              value={height}
+              onChange={(e) => setHeight(e.target.value)}
+            />
+          </div>
         </div>
-        
-        <button
-          onClick={handleProcess}
-          disabled={isLoading}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
-        >
-          {isLoading ? 'Processing...' : 'Process'}
-        </button>
-        
-        {output && (
-          <div>
-            <label className="tb-v2-tool-label" style={{marginBottom:8}}>Output</label>
-            <pre className="tb-v2-input">
-              {output}
-            </pre>
+        <div className="tb-v2-grid-2">
+          <div style={{ paddingRight: 12 }}>
+            <span className="tb-v2-tool-label">Print Width ({unit})</span>
+            <input
+              type="number"
+              min={0.01}
+              step="0.01"
+              className="tb-v2-input"
+              style={{ marginTop: 8, fontFamily: 'var(--f-mono)' }}
+              value={printWidth}
+              onChange={(e) => setPrintWidth(e.target.value)}
+            />
+          </div>
+          <div style={{ paddingLeft: 12 }}>
+            <span className="tb-v2-tool-label">Print Height ({unit})</span>
+            <input
+              type="number"
+              min={0.01}
+              step="0.01"
+              className="tb-v2-input"
+              style={{ marginTop: 8, fontFamily: 'var(--f-mono)' }}
+              value={printHeight}
+              onChange={(e) => setPrintHeight(e.target.value)}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">Pixel Density</span>
+      </div>
+      <div className="tb-v2-tool-output-body">
+        {!result || !quality ? (
+          <p className="tb-v2-empty">Enter image and print dimensions to calculate PPI/DPI.</p>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div className="tb-v2-stats-grid" style={{ border: 0, background: 'transparent', padding: 0 }}>
+              <div className="tb-v2-stat-pill">
+                <div style={{ fontSize: 11, color: 'var(--fg-2)' }}>Diagonal PPI</div>
+                <div style={{ fontFamily: 'var(--f-mono)', fontWeight: 600 }}>{round(result.diagonalPPI)}</div>
+              </div>
+              <div className="tb-v2-stat-pill">
+                <div style={{ fontSize: 11, color: 'var(--fg-2)' }}>Horizontal PPI</div>
+                <div style={{ fontFamily: 'var(--f-mono)', fontWeight: 600 }}>{round(result.horizontalPPI)}</div>
+              </div>
+              <div className="tb-v2-stat-pill">
+                <div style={{ fontSize: 11, color: 'var(--fg-2)' }}>Vertical PPI</div>
+                <div style={{ fontFamily: 'var(--f-mono)', fontWeight: 600 }}>{round(result.verticalPPI)}</div>
+              </div>
+            </div>
+            <div className="tb-v2-banner tb-v2-banner-info">
+              <strong>{quality.label}</strong>
+              <div style={{ marginTop: 4 }}>{quality.detail}</div>
+              <div style={{ marginTop: 8, fontSize: 12, color: 'var(--fg-2)' }}>
+                Guide: 300 PPI = print quality · 150 PPI = acceptable · below 100 PPI = low quality.
+              </div>
+            </div>
           </div>
         )}
       </div>

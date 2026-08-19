@@ -1,19 +1,26 @@
 import type { FAQ } from '@/lib/faq';
 
-type Props = { toolName: string; faqs: FAQ[] };
+type Props = { toolName: string; faqs: FAQ[]; emitSchema: boolean };
 
-export default function FaqSection({ toolName, faqs }: Props) {
+// `emitSchema` should be true only when `faqs` came from a hand-written
+// per-tool override (see lib/faq.ts `hasFaqOverride`), not the category
+// template. The FAQs still render on the page either way - templated
+// answers are still useful to a human reader - but only genuinely unique
+// answers get declared as FAQPage structured data.
+export default function FaqSection({ toolName, faqs, emitSchema }: Props) {
   if (faqs.length === 0) return null;
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: faqs.map((f) => ({
-      '@type': 'Question',
-      name: f.q,
-      acceptedAnswer: { '@type': 'Answer', text: f.a },
-    })),
-  };
+  const jsonLd = emitSchema
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: faqs.map((f) => ({
+          '@type': 'Question',
+          name: f.q,
+          acceptedAnswer: { '@type': 'Answer', text: f.a },
+        })),
+      }
+    : null;
 
   return (
     <section className="tb-v2-faq" aria-labelledby="tb-v2-faq-title">
@@ -39,10 +46,12 @@ export default function FaqSection({ toolName, faqs }: Props) {
           </details>
         ))}
       </div>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
+      {jsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
     </section>
   );
 }

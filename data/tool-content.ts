@@ -311,13 +311,6 @@ const TOOL_CONTENT: Record<string, ToolContent> = {
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "backlink-analyzer": {
-    description: `Knowing the overall shape of a site's backlink profile, roughly how many domains link to it, how authoritative those domains tend to be, which ones contribute the most, is a different question than checking any single link's individual attributes, closer to a high-level snapshot than a link-by-link audit. This tool analyzes a URL's overall backlink profile and shows domain authority estimates, giving a broad picture of where a site's link equity is actually coming from rather than inspecting one link at a time. Useful for getting a quick competitive snapshot of a rival's overall backlink strength before planning an SEO campaign, checking how a site's link profile has grown in authority over time, or getting a high-level read on where the bulk of a domain's backlinks are actually concentrated.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "backlink-checker-express": {
     description: `Knowing which other sites actually link to a page matters for two different reasons, understanding your own site's link profile and seeing where a competitor's authority is actually coming from, and neither is answerable just by looking at the page itself, only by seeing who points to it from the outside. This tool analyzes backlinks pointing to any URL, estimating each linking domain's authority and flagging whether a link is dofollow or nofollow, distinguishing a link that actually passes ranking value from one that doesn't. Useful for auditing your own site's backlink profile after a content campaign to see what actually earned links, researching where a competitor's search authority is actually coming from, or checking whether a specific backlink is a dofollow link worth counting on or a nofollow one that isn't.`,
     examples: [
@@ -710,7 +703,7 @@ Output: Hello World!`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "color-format-converter-v2": {
+  "color-format-converter": {
     description: `A color rarely lives in just one format for long, a HEX code from a design file needs to become RGB for a canvas API, or HSL for an easy lightness adjustment, or CMYK before a print vendor will accept it, and juggling all of that by hand invites a typo in a value that looks like it should just work. This tool takes a color in HEX, RGB, RGBA, HSL, HSLA, or CMYK and converts it into every other format at once, with a live preview showing the actual color rather than trusting the numbers alone. Useful for pulling a HEX value from a design tool and getting the RGBA equivalent for a CSS variable, checking what a designer's CMYK print swatch looks like as an on-screen HEX code, or converting an HSL value with an adjusted lightness back into RGB for code.`,
     examples: [
 
@@ -1128,7 +1121,7 @@ WCAG AA: Pass (large text)`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "css-units-converter-new": {
+  "css-units-converter": {
     description: `A design spec's fixed 16px value doesn't scale if someone increases their browser's font size for readability, since a pixel value stays exactly the same size regardless, while a value set in rem scales relative to the root font size and actually respects that preference, a genuinely different behavior from converting between physical units like inches and centimeters. This tool converts between CSS length units, px, rem, em, vw, vh, ch, and more, handling the relative math each unit depends on rather than a simple fixed ratio. Useful for converting a fixed pixel spec into rem so a layout actually scales with a user's font size preference, converting between viewport units for a responsive layout, or checking what an em value nested inside another em context actually computes to in pixels.`,
     examples: [
 
@@ -1191,7 +1184,7 @@ WCAG AA: Pass (large text)`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "curl-gen-express": {
+  "curl-gen": {
     description: `A request that already happened in the browser, visible in the Network tab after a page loaded or a form submitted, carries every header and body value curl would need, and reconstructing that request manually field by field is redundant work when it can be extracted directly from what already fired. This tool generates a curl command from an actual browser network request, extracting its headers and body automatically rather than requiring them to be specified by hand. Useful for turning a request already captured in DevTools into a curl command to replay it from a terminal, reproducing an API call a webpage made without rebuilding it field by field, or extracting a working curl command from a real request instead of guessing at what headers it originally sent.`,
     examples: [
 
@@ -1611,7 +1604,7 @@ WCAG AA: Pass (large text)`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "favicon-preview-tool": {
+  "favicon-preview": {
     description: `An icon that looks crisp and detailed at full size can turn into an unrecognizable smudge once shrunk down to the sixteen pixels an actual browser tab uses, and a color scheme that reads clearly against a light background can disappear entirely against a dark one, neither of which is obvious just looking at the original full-size artwork. This tool previews how a favicon actually looks at different sizes and against various backgrounds, showing exactly what survives the shrink down to a real browser tab rather than just the original artwork at full size. Useful for checking whether a newly designed icon's fine details actually survive being shrunk to 16 pixels, seeing how an icon looks against both a light and a dark browser tab background before committing to it, or comparing a few icon design candidates side by side at their actual deployed size.`,
     examples: [
 
@@ -1695,29 +1688,8 @@ WCAG AA: Pass (large text)`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "gif-to-avif": {
-    description: `AVIF compresses more efficiently than WebM or APNG, the two other common GIF replacement formats, since it's built on the same underlying compression as the AV1 video codec, which means the same animation can come out meaningfully smaller in AVIF than in either alternative, at the cost of being the newest of the three and not quite as universally supported yet in every browser or platform. This tool converts an animated GIF into AVIF specifically, trading a bit of compatibility for the smallest practical file size among the modern GIF replacement options. Useful for squeezing the smallest possible file size out of an animation on a site or platform confirmed to support AVIF, converting a GIF where every kilobyte of savings matters more than broad compatibility, or comparing AVIF's result against a GIF's file size before deciding whether the format switch is worth it for a specific use case.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "gif-to-jpg": {
     description: `The literal first frame of an animated GIF is sometimes a blank loading state or an awkward mid-transition moment rather than the frame that actually represents what the animation is about, which is exactly why a good static thumbnail sometimes needs to come from a specific, chosen frame rather than automatically whichever one happens to be first. This tool extracts a static JPG from an animated GIF, either the first frame or a specifically chosen one, flattening any transparency to a solid background since JPG has no alpha channel to preserve it. Useful for picking a genuinely representative frame from a GIF to use as a thumbnail rather than defaulting to frame one, extracting a static preview image from an animation for a context that can't display GIFs, or converting a GIF into a single JPG when only a still image is actually needed.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "gif-to-mov": {
-    description: `Airdropping or texting an animated GIF to an iPhone often means it arrives as a flat, low-quality image rather than something that actually plays, since iOS handles GIFs inconsistently outside a browser, but a QuickTime MOV file is a real video, the same format the Photos app and iMessage already know how to play smoothly without any special handling. This tool converts an animated GIF into a MOV video, preserving the same frames and timing in a file format built for Apple's ecosystem rather than the web. Useful for turning a GIF into something that actually plays back correctly after being shared through iMessage, saving a GIF-based animation into the Photos app as a proper video clip, or converting a GIF for editing in a video app that expects a real video container instead of an image format.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "gif-to-mp4": {
-    description: `A GIF is capped at 256 colors and compresses poorly by design, which is exactly why the same short animation saved as MP4 instead can end up a fraction of the file size with noticeably smoother color and playback, a swap several major platforms already make automatically behind the scenes the moment a GIF gets uploaded. This tool converts an animated GIF into MP4 directly, producing the same animation at a dramatically smaller file size with better color quality than GIF's limited palette allows. Useful for shrinking a large GIF's file size before hosting or sharing it somewhere with a strict upload limit, getting smoother playback and richer color out of an animation GIF's harsh 256-color limit was flattening, or preparing an animated GIF for a platform that handles MP4 more efficiently than it handles GIF.`,
     examples: [
 
     ],
@@ -1730,22 +1702,8 @@ WCAG AA: Pass (large text)`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "gif-to-webm": {
-    description: `A GIF has no real audio track and caps out at 256 colors per frame, both real limitations that show up the moment an animation needs to look genuinely good rather than just functional, banding on any gradient, no sound even if one were wanted, file sizes that balloon fast past a few seconds. This tool converts an animated GIF into WebM, a real video format that supports full color depth and, if needed later, audio, typically producing a smaller file than the original GIF at noticeably better visual quality. Useful for converting a GIF with a smooth gradient or photographic content into a format that renders it without color banding, shrinking a large animated GIF down to a smaller file size without a visible quality drop, or moving an animation into a proper video container with room to grow if audio or higher quality is needed later.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "google-algorithm-tracker": {
     description: `Google rarely announces the specifics of an algorithm change directly, most updates get identified after the fact by the SEO community noticing ranking volatility across many sites at once, which means the real value of tracking these updates is connecting a specific date a site's traffic mysteriously shifted to a documented update that actually rolled out around then, rather than being left to wonder what happened. This tool tracks major Google algorithm updates and the SEO factors each one actually affected, turning an unexplained ranking change into a dated event with a known cause. Useful for connecting a sudden traffic drop to a specific documented algorithm update instead of guessing at the cause, checking which SEO factors a recent update actually targeted before making a reactive change, or reviewing a timeline of major updates when investigating a longer-term ranking trend.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "google-rank-checker": {
-    description: `An SEO campaign built around a specific keyword needs an actual answer to one question eventually, whether the targeted page's ranking is actually moving, and that answer changes depending on which region is searching, a page ranking third in one country and nowhere near the first page in another for the exact same keyword. This tool checks a page's approximate Google ranking for a specific keyword and region combination, giving a regional answer rather than one generic global position. Useful for tracking whether an SEO campaign targeting a specific keyword is actually improving a page's ranking over time, checking how a page ranks differently across two separate regions for the same search term, or confirming a page ranks for the keyword it was actually optimized for rather than a related but different one.`,
     examples: [
 
     ],
@@ -1851,13 +1809,6 @@ WCAG AA: Pass (large text)`
   },
   "headline-analyzer": {
     description: `Deciding whether a headline actually works is different from rewriting it, sometimes the real question is just how it measures up, is it too long, does it carry any actual emotional pull, does it include the keyword it's supposed to be targeting, three separate things easy to guess at but harder to actually confirm without measuring each one directly. This tool analyzes a headline for word count, emotional impact, and SEO keyword density, scoring what's already written rather than generating a rewritten alternative. Useful for checking whether an already-drafted headline is running too long before it gets used, measuring how much genuine emotional pull a headline actually carries, or confirming a target keyword actually shows up in a headline meant to rank for it.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "heic-to-avif": {
-    description: `PNG and JPG solve the compatibility problem, they open everywhere, but neither is the smallest option available anymore for a site that only needs to support current browsers. AVIF compresses noticeably smaller than either while holding up better at low file sizes, which is the reason a lot of modern sites have quietly switched their images over to it. This tool converts an iPhone's HEIC photos directly into AVIF, skipping the intermediate step of converting to PNG or JPG first and losing some of that efficiency along the way. It's the right choice specifically when maximum size savings matters more than supporting an older browser or an app that's never heard of AVIF: a photo gallery on a fast, modern site, a background image where every extra kilobyte affects load time, rather than a file headed for a print shop or an older piece of software.`,
     examples: [
 
     ],
@@ -2059,7 +2010,7 @@ WCAG AA: Pass (large text)`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "html-plaintext-express": {
+  "html-plaintext": {
     description: `Pasting rich content copied from a webpage or an email straight into a plain text field, an SMS, a plain text email body, a form that only accepts unformatted input, often brings along the actual HTML tags as visible clutter rather than the readable words those tags were only ever meant to format. This tool strips every HTML tag from a block of markup and extracts just the clean, readable text underneath, ready to use wherever formatting isn't wanted or supported. Useful for pulling readable text out of a webpage's HTML source for a plain text email, cleaning up rich content pasted from a browser before dropping it into a form that shows raw tags otherwise, or converting scraped HTML into plain words for a tool that expects unformatted input.`,
     examples: [
 
@@ -2094,7 +2045,7 @@ WCAG AA: Pass (large text)`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "html-to-plain-text-tool": {
+  "html-to-plain-text": {
     description: `Copy text straight out of a web page and paste it somewhere that doesn't render HTML, a plain-text email, a spreadsheet cell, an SMS, and what shows up is a mess of angle brackets, stray &amp; and &nbsp; entities, and paragraph breaks that either vanish entirely or turn into a single run-on line. This tool strips the markup out properly instead: tags get removed, entities get decoded back into normal characters, and paragraph and line breaks stay roughly where they belong so the result still reads like the original content rather than one wall of text. Paste in a chunk of scraped HTML or a page's source, and get back plain text ready to drop into a place that has no idea what a div is, an email body, a form field, a word counter that would otherwise be counting markup instead of actual words.`,
     examples: [
 
@@ -2248,7 +2199,7 @@ WCAG AA: Pass (large text)`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "image-compression-tool": {
+  "image-compression": {
     description: `A photo destined for a website doesn't need every last bit of its original detail preserved, it needs to load fast without looking noticeably worse, and finding that balance between file size and visible quality is exactly what a compression algorithm is built to calculate rather than requiring a manual trial-and-error export at several different quality settings. This tool compresses JPEG, PNG, and WebP images to reduce file size while keeping quality intact, handling that calculation directly rather than requiring several exports compared by eye. Useful for shrinking a photo's file size before uploading it to a website so the page actually loads faster, comparing how the same image compresses as JPEG versus WebP to see which format actually comes out smaller, or reducing an image's size for an email attachment without a visible drop in quality.`,
     examples: [
 
@@ -2290,7 +2241,7 @@ WCAG AA: Pass (large text)`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "image-flip-tool": {
+  "image-flip": {
     description: `Rotating a photo turns it around a point, text staying perfectly readable after a full 180-degree spin, but flipping does something different entirely, mirroring the image so anything asymmetric, a logo, a piece of text, a person's part in their hair, ends up reversed left to right or top to bottom rather than simply turned. This tool flips an image horizontally or vertically to mirror it, producing a genuine reflection rather than a rotation, with the result ready to download instantly. Useful for correcting a selfie that came out mirrored backwards from a front-facing camera, flipping a scanned image that went into the scanner reversed, or creating a mirrored version of a graphic or a logo for a design that needs a matching, symmetrical pair.`,
     examples: [
 
@@ -2339,7 +2290,7 @@ WCAG AA: Pass (large text)`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "image-rotate-tool": {
+  "image-rotate": {
     description: `Rotating a photo turns the whole image around a fixed point, which is why a phone photo saved sideways still reads perfectly normally after a quick ninety-degree turn, text and faces staying exactly as they were, just reoriented, and a scanned document that went in at a slight unintentional tilt needs the same underlying operation applied at a precise custom angle instead of one of the fixed steps. This tool rotates an image by 90, 180, or 270 degrees with one click, or by a custom angle for that kind of fine correction, turning the image rather than mirroring it. Useful for quickly turning a sideways phone photo right side up, straightening a scanned document that went in slightly skewed using a precise custom angle, or spinning an image a full 180 degrees when it was uploaded upside down by mistake.`,
     examples: [
 
@@ -2402,7 +2353,7 @@ WCAG AA: Pass (large text)`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "ip-address-info-express": {
+  "ip-address-info": {
     description: `An IP address showing up in a server log or an unexpected login alert doesn't mean much on its own, just a string of numbers, until it's actually looked up against real geolocation and network ownership data, which reveals roughly where in the world that address is registered and which internet provider or organization it actually belongs to. This tool looks up geolocation, ISP, and network details for any IPv4 or IPv6 address, translating a bare number into information that actually means something about where a connection is coming from. Useful for investigating an unfamiliar IP address that shows up in a login alert or a server log, checking roughly where a visitor to a site is actually connecting from, or identifying which organization or ISP a specific IP address is registered to before deciding whether it's worth further attention.`,
     examples: [
 
@@ -2557,7 +2508,7 @@ Output: {"name":"John","age":30}`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "json-path-evaluator-express": {
+  "json-path-evaluator": {
     description: `A simple dot-notation path like $.store.name handles the easy case, but JSONPath's real power shows up in a filter expression like $.store.book[?(@.price < 10)], selecting only the nodes that match a condition, or a recursive descent operator like $..author, finding every author field no matter how deeply nested it is, syntax that's genuinely harder to get right than a plain property lookup. This tool evaluates JSONPath expressions against real JSON data, handling filter conditions and recursive descent correctly rather than only simple property paths. Useful for testing a filter expression that selects nodes matching a specific condition, confirming a recursive descent query actually finds every matching field at any depth, or debugging a JSONPath expression that returns the wrong nodes before it goes into actual code.`,
     examples: [
 
@@ -2715,7 +2666,7 @@ Cause: Trailing comma`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "jsonpath-query-tool": {
+  "jsonpath-query": {
     description: `A deeply nested JSON response might bury the one field actually needed several levels down inside arrays and objects, and scrolling through a formatted tree to find it by eye works for a small file but breaks down once a response runs into hundreds of lines. JSONPath solves that with a query syntax built specifically for JSON, something like $.store.book[*].author pulls out every author across an entire array in one expression rather than manually tracing each branch. This tool runs a JSONPath query against pasted JSON and highlights every match instantly, letting an expression be tested and refined before it ends up in actual code. Useful for pulling one specific nested value out of a large API response without writing a script, testing a JSONPath expression before dropping it into an application, or exploring an unfamiliar JSON structure by querying pieces of it directly instead of reading the whole tree.`,
     examples: [
 
@@ -2771,7 +2722,7 @@ Cause: Trailing comma`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "keyword-density-analyzer-new": {
+  "keyword-density-analyzer": {
     description: `A keyword sitting in a page's title tag or an H1 heading carries more SEO weight than the same keyword repeated in a paragraph deep in the body text, which means a flat percentage of how often a keyword appears misses something a placement-aware analysis actually catches, whether the keyword shows up in the specific structural locations that matter most. This tool analyzes keyword density in text or raw HTML, weighing where in the structure each occurrence actually falls, title, headings, body, alt text, rather than treating every occurrence as equally significant regardless of position. Useful for confirming a target keyword isn't just present somewhere on a page but actually appears in the specific tags search engines weight most heavily, or auditing a page's HTML to see whether keyword placement matches where it would actually help most.`,
     examples: [
 
@@ -2799,7 +2750,7 @@ Cause: Trailing comma`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "keyword-generator-express": {
+  "keyword-generator": {
     description: `A single seed term rarely represents everything worth targeting around a topic, the actual related searches people run span variations, questions, and comparisons that don't show up just by staring at one phrase, which is why expanding one term into a broader set of tagged suggestions matters more for content planning than confirming how one specific keyword alone is already performing. This tool generates keyword suggestions from any seed term, tagged with search intent and volume hints, built around expanding one starting idea outward rather than analyzing a keyword that's already been chosen. Useful for expanding a single topic idea into a set of related keywords worth targeting before writing anything, checking which suggestions carry commercial versus informational intent before picking a content angle, or scanning volume hints across a batch of generated suggestions to prioritize which one to write about first.`,
     examples: [
 
@@ -2883,7 +2834,7 @@ Cause: Trailing comma`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "lorem-ipsum-api": {
+  "lorem-ipsum": {
     description: `Most lorem ipsum generators expect someone to open a page, click a button, and copy the result by hand, which works fine for a one-off mockup but breaks down completely for a build script, a test fixture generator, or a CI pipeline that needs placeholder text generated automatically without a person ever touching a browser. This tool exposes lorem ipsum generation as an actual API endpoint, returning customizable paragraphs, sentence counts, and output formats programmatically rather than through a manual web form. Useful for seeding a test database with placeholder content automatically during a CI run, generating filler text on demand from within a script rather than copying it by hand, or fetching lorem ipsum in a specific format directly from application code during development.`,
     examples: [
 
@@ -3480,7 +3431,7 @@ Result: 847291`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "photo-resize-tool": {
+  "photo-resize": {
     description: `Instagram, a LinkedIn banner, and a website's hero image each expect a photo at a completely different exact pixel dimension, and uploading a photo that doesn't match usually means the platform crops or stretches it automatically in whatever way it sees fit, not necessarily the way that was actually intended. This tool resizes a photo to standard dimensions for social media, web, and mobile with a preview shown before saving, matching a specific platform's expected size directly instead of leaving the crop up to that platform. Useful for resizing a photo to an exact Instagram post or story dimension before uploading it, preparing a banner image at a LinkedIn or a Facebook cover photo's exact required size, or fitting a photo to a website's hero image dimension without an unexpected automatic crop.`,
     examples: [
 
@@ -4398,7 +4349,7 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "shell-command-generator-new": {
+  "shell-command-generator": {
     description: `Bash and zsh share most of their core syntax, but fish deliberately breaks from that lineage, using its own syntax for variables, conditionals, and loops, which means the exact same plain English request, find every file modified in the last week, doesn't translate into one universal command, it needs to come out differently depending on which shell is actually going to run it. This tool generates a shell command from a plain English description, targeted specifically at bash, zsh, or fish rather than a single syntax assumed to work everywhere. Useful for getting a fish-specific command that won't silently misbehave if pasted from a bash-oriented answer, generating the same request in both bash and zsh to confirm they're actually interchangeable, or producing a command in whichever shell a specific script or terminal setup actually uses.`,
     examples: [
 
@@ -4524,7 +4475,7 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "spelling-checker-tool": {
+  "spelling-checker": {
     description: `A full grammar pass with explanations for every rule is more than what's actually needed when the only real question is whether a word is spelled correctly, sometimes a fast, single-purpose spellcheck is exactly the point, especially pasting text into a plain textarea or a code comment field that has no spellchecker built in at all. This tool checks spelling specifically, flagging a misspelled word and offering a one-click correction without wading into grammar or punctuation at the same time. Useful for a quick spelling pass on text typed into a field that lacks its own spellchecker, catching a typo in a username, a title, or a short piece of text before it's published, or fixing a misspelled word instantly instead of retyping it by hand.`,
     examples: [
 
@@ -4706,7 +4657,7 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "temp-converter-express": {
+  "temp-converter": {
     description: `Getting a temperature conversion's numeric answer is one thing, but actually seeing Fahrenheit equals Celsius times nine-fifths plus thirty-two, or Kelvin equals Celsius plus 273.15, spelled out alongside the result is what actually lets someone verify the math themselves or learn the formula rather than trusting an opaque number handed back with no visible working. This tool converts between Celsius, Fahrenheit, and Kelvin while showing the actual formula behind each conversion, built for understanding the calculation rather than only producing a number. Useful for a student learning the Celsius-to-Fahrenheit formula rather than just copying an answer, double-checking a temperature conversion done by hand against the shown formula, or converting a temperature while seeing exactly which equation produced the result.`,
     examples: [
 
@@ -5028,7 +4979,7 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "tsv-json-express": {
+  "tsv-json": {
     description: `A comma shows up constantly inside real data, an address, a product description, a number written with a thousands separator, which is exactly why CSV needs quoting rules to avoid breaking on a value that contains one, while a tab almost never appears inside an actual data value, making tab-separated data a naturally safer export format for content that would otherwise need careful escaping. This tool converts tab-separated data into JSON with automatic header row detection and type inference, correctly turning a column of numeric-looking values into actual JSON numbers rather than treating every value as a raw string. Useful for converting a TSV export into JSON without CSV's comma-escaping headaches, getting numeric and boolean columns correctly typed instead of left as strings, or converting tab-separated data copied from a spreadsheet into structured JSON automatically.`,
     examples: [
 
@@ -5420,13 +5371,6 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "whois-lookup": {
-    description: `Taking over management of a domain someone else originally set up, a client's site handed off from a previous freelancer, an inherited project with no documentation, means changing DNS blindly is genuinely risky until the current registrar, name servers, and expiry date are actually confirmed first, since a wrong assumption there can quietly break email or another service still depending on the old configuration. This tool looks up a domain's full registration details, owner information, expiry date, and name servers together in one lookup. Useful for confirming a domain's current setup before making any DNS change to a project inherited from someone else, checking exactly when a takeover domain's registration actually expires before it lapses unexpectedly, or identifying who currently holds a domain's registration before reaching out about it.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "wifi-qr-code-generator": {
     description: `Reading out a WiFi password character by character to a guest, tracking capital letters, symbols, and numbers across a string nobody memorized on purpose, is exactly the kind of friction a WiFi QR code eliminates, since a phone's camera recognizes the standardized WIFI: QR format and offers to join the network directly, no typing required at all. This tool generates a QR code encoding a network's SSID, password, and encryption type in that standard format, ready to scan straight into a phone's WiFi settings. Useful for sharing a home network with a guest without reading a password aloud character by character, printing a WiFi QR code for a café or a waiting room where visitors connect constantly, or setting up quick network access for a device that can scan a code faster than a password can be typed.`,
     examples: [
@@ -5504,7 +5448,7 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "word-freq-express": {
+  "word-freq": {
     description: `A target keyword needs to show up often enough across a full article for a search engine to register what it's actually about, but not so often that it reads like it was stuffed in artificially, and eyeballing that balance across several paragraphs of a longer piece is nearly impossible without actually counting. This tool analyzes word and phrase frequency across an entire piece of text, surfacing SEO and content optimization insights rather than counting occurrences in just a headline or a single sentence. Useful for confirming a target keyword appears often enough across a full article without looking artificially stuffed, discovering which phrases actually recur most throughout a longer document to understand its real thematic focus, or auditing an article's keyword balance before it gets published.`,
     examples: [
 
