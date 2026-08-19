@@ -127,7 +127,106 @@ SEO-related and none were touched in this pass — full audit of the ~140
 components absorbed from that branch is real follow-up work, not a quick
 fix.
 
+## Family-verification pass (second commit round)
+
+Went through the 93 shared-component families the previous section
+identified, largest first, checking each slug's own `data/tools.ts`
+description against what its component actually does — not just whether it
+compiles. Covered roughly 20 of the 93 families in this pass (the largest
+ones by slug count); the rest remain as described below. Findings:
+
+- **9 more format-mismatched conversion tools**, same pattern as the
+  original 7: `AviToMovClient` only accepts `.avi` (so `mov-to-avi`,
+  `mov-to-mp3`, `mov-to-mp4`, `mp4-to-mov`, `webm-to-mov` were all
+  broken — only `avi-to-mov` itself worked), `AacToWavClient` only accepts
+  `.aac`/`.m4a`/`.mp4` (`mov-to-wav`, `ogg-to-wav` broken). No working
+  equivalent for cross-container video/audio transcoding exists anywhere in
+  the catalog (real fix needs WebCodecs/ffmpeg.wasm), so these are removed
+  outright rather than redirected — see "404, not 410" below.
+- **A whole family of HTTP dev-tools that don't do what they say**:
+  `http-status-codes`, `http-status-code-lookup`, and `http-status-ref` all
+  promise a static status-code reference table; `http-request-builder` and
+  `http-method-tester` promise sending a request with a chosen
+  method/body/auth. All five actually rendered `HttpHeadersViewerClient` — a
+  hardcoded `HEAD` fetch with no method/body control and no reference data
+  at all. Two components with names that sound like the real thing
+  (`HttpStatusCodesClient`, `HttpStatusCodeLookupClient`) turned out to be
+  the *same* header-fetcher under a misleading filename. Redirected the
+  status-table trio to `http-status-checker` (a real, different, correctly
+  implemented bulk-status-checker) and the two request-builder slugs to
+  `http-headers-viewer` — the closest genuinely real destination in either
+  case, not a perfect match.
+- **Several genuinely broken image tools**: `image-blur-hash-generator`
+  ("BlurHash placeholders") and `image-enlarger` ("AI-style upscaling") both
+  rendered a plain crop tool with none of that functionality — no working
+  alternative exists, removed. `image-clipper` ("remove backgrounds") and
+  `image-orientation-fixer` ("rotate/flip") also rendered the crop tool, but
+  real background-removal (`remove-bg`) and rotate (`rotate`) tools already
+  exist elsewhere in the catalog — redirected to those instead of removing.
+  `png-to-ico`, `icon-favicon-creator`, `ico-file-generator`, and
+  `favicon-preview` all promise real `.ico` output or previewing an existing
+  favicon; the components involved (including two correctly-named orphaned
+  ones, `IconFaviconCreatorClient` and `IcoFileGeneratorClient`) just
+  re-download the uploaded image unchanged with no resizing or ICO
+  encoding at all. No real ICO-encoding implementation exists to redirect
+  to — removed.
+- **`tiff-to-text` promised OCR**, rendered a live-microphone speech
+  transcriber (`AudioToTextClient`) instead. No OCR implementation exists —
+  removed. `text-to-image` (promised a social-graphic generator) and
+  `audio-to-text` (promised uploaded-file transcription) rendered the same
+  microphone tool; redirected to `banner-generator` and `speech-to-text`
+  respectively — real, correctly-scoped equivalents.
+- **Five real, working components had been sitting completely unwired** —
+  imported nowhere, no `case` referencing them, found only because a
+  correctly-named file (`LoremIpsumDetectorClient.tsx`,
+  `TextToHandwritingClient.tsx`) existed for a slug that was actually
+  rendering the wrong component. `TextToHandwritingClient` (real Google-font
+  cursive rendering) is now wired to `text-to-handwriting`, replacing the
+  microphone tool it was shadowed by.
+- **Two components were real stubs (not even mismatched, just fake) behind
+  security-relevant names** — `SecureRandomGeneratorClient`,
+  `RandomPinGeneratorClient`, and `RandomIdGeneratorClient` all existed as
+  unwired files implementing the generic `setOutput('Processed: ' + input)`
+  echo pattern, while the live slugs of the same name rendered
+  `RandomFractionGeneratorClient` (a fraction generator, not random
+  strings/PINs/IDs at all). Given `secure-random-generator` specifically
+  claims to be "cryptographically secure," left broken or silently
+  redirected felt worse than fixed, so these three were rewritten for real:
+  `crypto.getRandomValues()`-backed generation with rejection sampling to
+  avoid modulo bias (not `Math.random()`, and not a naive `% range`, both of
+  which would undermine the tool's own security claim). Same reasoning for
+  `LoremIpsumDetectorClient` (rewritten as a real word-list-density check)
+  and `TimeDurationCalculatorClient` (rewritten as real add/subtract time
+  arithmetic) — both were unwired generic stubs too, and both were cheap,
+  honest, zero-fabrication-risk fixes, unlike OCR or ICO encoding.
+
+**404, not 410, for the removed slugs.** `proxy.ts` was going to carry a
+`GONE_TOOL_SLUGS` set returning a real 410 for the removals with no redirect
+target. While testing it, a bare `console.log` at the top of the `proxy()`
+function **never fired, for any request, in either `next dev` or a real
+`next build && next start`** — the whole proxy/middleware layer is not
+executing at all in this project as currently configured. That's a serious,
+pre-existing bug independent of this work: `PROTECTED_PREFIXES` (the
+`/dashboard`, `/account`, `/submit-tool` auth gate) and the `www.` /
+HTTP→HTTPS redirect in the same file are equally non-functional right now.
+Since fixing it means debugging the same file that carries the auth logic,
+it's out of scope here per the same "don't touch CI/auth code" boundary as
+the broken E2E check — flagging it, not fixing it. The `GONE_TOOL_SLUGS`
+addition was reverted; `proxy.ts` is untouched from `main`. The removed
+slugs get a plain 404 via `dynamicParams = false` (already in place from the
+first commit round), which is still a valid "don't index this" signal to
+Google, just not as fast-processing as a true 410.
+
 ## Confirmed but NOT fixed in this pass — real follow-up work
+
+*Numbers below are from the first commit round; the family-verification pass
+above resolved roughly 20 of the largest remaining families. Re-running the
+same fingerprinting script after both rounds: 700 live tools, 87 families
+still sharing a component across 224 slugs — down from 93/268. The other
+~67 families (mostly smaller, 2-3 slugs each) are the real remaining work;
+apply the same method (read the component, compare against each slug's own
+`data/tools.ts` description, check for an unwired real component under a
+matching filename before assuming a redirect/removal is needed).*
 
 **93 tool-name families share one component across 268 live slugs**
 (discovered via `case 'slug': return <Component/>` mapping in
@@ -197,6 +296,83 @@ once — has not been done. `sitemap-tools.xml` still lists the full catalog.
 That's the highest-leverage remaining step; it's gated on actually running
 a Playwright smoke test per tool (real input → correct output), not just
 static analysis, which is real effort, not a mechanical follow-up.
+
+## Self-review of the family-verification pass — 15 findings, 13 fixed
+
+Same discipline as the first round: full self-review before merging, not
+just a compile check. Findings and disposition:
+
+**Fixed — real correctness bugs:**
+- `SecureRandomGeneratorClient`'s number mode had no `min <= max` validation
+  and no bound on the range size: a reversed range, an empty field, or a
+  range over 2^32 could silently print `NaN` as "cryptographically secure"
+  output, produce a value outside the requested range, or hang the tab in
+  an infinite rejection-sampling loop. Fixed with explicit validation and a
+  visible error message instead of a silent bad result.
+- `randomString()` in the same file used a plain `% length` instead of
+  rejection sampling — a small but real bias, and ironic given the
+  neighboring `randomNumber()` had a comment explaining why that would be
+  wrong. `crypto.randomUUID()` was called with no feature check, so an
+  insecure context or old browser would throw uncaught mid-loop.
+- `TimeDurationCalculatorClient`'s "hours" field accepted 0-999 for *all*
+  three inputs, but the "time between" mode's wraparound logic
+  (`if (delta < 0) delta += 86400`) only makes sense for genuine clock
+  times under 24 hours — a start/end pair like `100:00:00` produced a
+  negative "elapsed time." Split into `parseClockTime` (0-23h, for
+  start/end) and `parseDuration` (0-999h, for the "add a duration" field,
+  where large values are legitimate).
+- `LoremIpsumDetectorClient`'s word-list-density approach false-positived on
+  ordinary English sentences with a few short function words in common
+  ("in", "at", "id", "do") and false-negatived on short genuine lorem ipsum
+  snippets under 5 words. Rewrote as bigram matching against the actual
+  canonical lorem ipsum text (`"lorem ipsum"`, `"dolor sit"`, etc.) — those
+  adjacent-word pairs don't occur in real prose by chance, and even a
+  2-3-word lorem ipsum snippet contains one.
+- A pre-existing redirect (`favicon-preview-tool` → `favicon-preview`) now
+  dead-ended into a 404, since this pass removed `favicon-preview` too.
+  Removed the redirect so it 404s directly instead of redirect-chaining
+  into another 404.
+- A code comment in `next.config.mjs` claimed the removed video/audio slugs
+  "are 410 via proxy.ts" — true when written, false after the `proxy.ts`
+  attempt was reverted (see below). Corrected.
+- Consolidated the three independent hand-rolled `crypto.getRandomValues()`
+  implementations (in `SecureRandomGeneratorClient`, `RandomPinGeneratorClient`,
+  `RandomIdGeneratorClient`) into `lib/secureRandom.ts` — the security bug
+  above was only in one of the three copies despite all three doing the same
+  thing, exactly the drift risk of writing security-sensitive logic three
+  times. Also fixed: `RandomIdGeneratorClient`'s prefix field had no length
+  bound, so pasting a huge string there produced an "ID" thousands of
+  characters long despite the length field being capped at 64.
+- Both hardcoded-hex-color findings (`LoremIpsumDetectorClient`'s result
+  banner) switched to the existing `--red`/`--red-tint`/`--green`/`--green-tint`/`--fg-1`
+  design tokens already used elsewhere in the codebase (verified against
+  `app/globals.css`, which has dark-mode overrides for all of them) instead
+  of literal hex values with no dark-mode variant.
+
+**An important correction to my own prior conclusion.** The first round's
+self-review (see below) said the dead proxy/middleware layer was "a
+serious, pre-existing bug" without a known cause. This round's review
+flagged that `proxy.ts` might be the wrong filename for this Next.js
+version and should be `middleware.ts`. **That specific claim is wrong** —
+Next.js 16's own migration guide explicitly states `middleware.ts` was
+renamed to `proxy.ts`, and a build against this project prints *"The
+'middleware' file convention is deprecated. Please use 'proxy' instead"* if
+you use the old name. However, the underlying empirical claim (verified via
+`.next/server/middleware-manifest.json`) is correct and worth acting on:
+**building with `proxy.ts` present compiles `"middleware": {}` (empty) in
+the manifest, while renaming the exact same file/function to the deprecated
+`middleware.ts` compiles a real, working entry (`"middleware": ["/"]`)** —
+tested locally, not shipped. This looks like a genuine bug in this specific
+Next.js 16.2.4 Turbopack build (the new convention silently not registering
+routes), not a mistake in how `proxy.ts` was written here. Concretely, this
+means the auth gate on `/dashboard`, `/account`, `/submit-tool` and the
+`www.`/HTTPS redirect are bypassable in production **right now**, and the
+one-line-per-file fix (rename + rename the exported function) has been
+verified to work, at the cost of a deprecation warning until Next.js fixes
+the underlying `proxy.ts` registration bug. This is a security-relevant
+finding outside this PR's scope (SEO/indexing) and outside the "don't touch
+auth code" boundary this work has operated under — raised to the user
+directly rather than acted on unilaterally.
 
 ## CI is red — not this pass's problem, flagging for whoever owns it
 

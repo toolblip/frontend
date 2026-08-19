@@ -47,6 +47,7 @@ import NumberBaseConverterClient from '@/components/tools/NumberBaseConverterCli
 import MetaTagGeneratorClient from '@/components/tools/MetaTagGeneratorClient';
 import MarkdownToHtmlClient from '@/components/tools/MarkdownToHtmlClient';
 import LoremIpsumGeneratorClient from '@/components/tools/LoremIpsumGeneratorClient';
+import LoremIpsumDetectorClient from '@/components/tools/LoremIpsumDetectorClient';
 import JwtDecoderClient from '@/components/tools/JwtDecoderClient';
 import JsonToYamlClient from '@/components/tools/JsonToYamlClient';
 import JsonFormatterClient from '@/components/tools/JsonFormatterClient';
@@ -188,6 +189,9 @@ import PingTestClient from '@/components/tools/PingTestClient';
 import PlainTextCounterClient from '@/components/tools/PlainTextCounterClient';
 import PunctuationFixerClient from '@/components/tools/PunctuationFixerClient';
 import RandomFractionGeneratorClient from '@/components/tools/RandomFractionGeneratorClient';
+import SecureRandomGeneratorClient from '@/components/tools/SecureRandomGeneratorClient';
+import RandomPinGeneratorClient from '@/components/tools/RandomPinGeneratorClient';
+import RandomIdGeneratorClient from '@/components/tools/RandomIdGeneratorClient';
 import RandomIpAddressClient from '@/components/tools/RandomIpAddressClient';
 import RandomNumberGeneratorClient from '@/components/tools/RandomNumberGeneratorClient';
 import RandomParagraphGeneratorClient from '@/components/tools/RandomParagraphGeneratorClient';
@@ -197,6 +201,7 @@ import RandomUuidV7Client from '@/components/tools/RandomUuidV7Client';
 import UlidGeneratorClient from '@/components/tools/UlidGeneratorClient';
 import UuidV1GeneratorClient from '@/components/tools/UuidV1GeneratorClient';
 import ReadingTimeCalculatorClient from '@/components/tools/ReadingTimeCalculatorClient';
+import TimeDurationCalculatorClient from '@/components/tools/TimeDurationCalculatorClient';
 import RegexVisualizerClient from '@/components/tools/RegexVisualizerClient';
 import RgbaToHslConverterClient from '@/components/tools/RgbaToHslConverterClient';
 import RobotsTxtGeneratorClient from '@/components/tools/RobotsTxtGeneratorClient';
@@ -272,6 +277,7 @@ import ArticleTitleGenClient from '@/components/tools/ArticleTitleGenClient';
 import ArticleTitleGeneratorClient from '@/components/tools/ArticleTitleGeneratorClient';
 import ArticleWriterClient from '@/components/tools/ArticleWriterClient';
 import AudioToTextClient from '@/components/tools/AudioToTextClient';
+import TextToHandwritingClient from '@/components/tools/TextToHandwritingClient';
 import AutomationWizardClient from '@/components/tools/AutomationWizardClient';
 import AviToGifClient from '@/components/tools/AviToGifClient';
 import AviToMkvClient from '@/components/tools/AviToMkvClient';
@@ -2866,7 +2872,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'lorem-ipsum-classic': return <LoremIpsumGeneratorClient />;
     case 'lorem-ipsum-complete': return <LoremIpsumGeneratorClient />;
     case 'lorem-ipsum-design': return <LoremIpsumGeneratorClient />;
-    case 'lorem-ipsum-detector': return <LoremIpsumGeneratorClient />;
+    case 'lorem-ipsum-detector': return <LoremIpsumDetectorClient />; // real detector (word-list density check), not the generator
     case 'lorem-ipsum-dg': return <LoremIpsumGeneratorClient />;
     case 'lorem-ipsum-easy': return <LoremIpsumGeneratorClient />;
     case 'lorem-ipsum-enhanced': return <LoremIpsumGeneratorClient />;
@@ -3011,10 +3017,10 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'pressure-unit-converter': return <UnitConverterClient />;
     case 'qr-code': return <QrCodeGeneratorClient />;
     case 'random-color-generator': return <ColorHarmonyGeneratorClient />;
-    case 'random-id-generator': return <RandomFractionGeneratorClient />;
+    case 'random-id-generator': return <RandomIdGeneratorClient />; // real alphanumeric ID generator, not the fraction tool
     case 'random-mac-generator': return <MacAddressGeneratorClient />;
     case 'random-password-generator': return <PasswordGeneratorClient />;
-    case 'random-pin-generator': return <RandomFractionGeneratorClient />;
+    case 'random-pin-generator': return <RandomPinGeneratorClient />; // real numeric PIN generator, not the fraction tool
     case 'read-time-calculator': return <ReadingTimeCalculatorClient />;
     case 'readability-check-tool': return <ContrastCheckToolClient />;
     case 'readability-checker-pro': return <ReadabilityCheckerClient />;
@@ -3106,7 +3112,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'roman-numeral-converter-v2': return <RomanNumeralConverterClient />;
     case 'roman-numeral-express': return <RomanNumeralConverterClient />;
     case 'scrypt-hash-generator': return <HashGeneratorClient />;
-    case 'secure-random-generator': return <RandomFractionGeneratorClient />;
+    case 'secure-random-generator': return <SecureRandomGeneratorClient />; // real crypto.getRandomValues-based generator, not the fraction tool
     case 'sentence-lorem-ipsum': return <LoremIpsumGeneratorClient />;
     case 'seo-meta-generator': return <MetaTagGeneratorClient />;
     case 'seo-meta-tag-analyzer': return <SeoMetaTagAnalyzerClient />;
@@ -3215,10 +3221,10 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'text-sorter-xl': return <TextSorterClient />;
     case 'text-statistics-advanced': return <TextStatisticsClient />;
     case 'text-statistics-calculator': return <TextStatisticsClient />;
-    case 'text-to-handwriting': return <AudioToTextClient />;
+    case 'text-to-handwriting': return <TextToHandwritingClient />; // real cursive-font renderer, not the speech-to-text mic tool
     case 'text-to-image': return <AudioToTextClient />;
     case 'tiff-to-text': return <AudioToTextClient />;
-    case 'time-duration-calculator': return <ReadingTimeCalculatorClient />;
+    case 'time-duration-calculator': return <TimeDurationCalculatorClient />; // real time arithmetic, not a reading-speed estimator
     case 'time-zone-tool': return <TimeZoneConverterClient />;
     case 'title-case-converter': return <CaseConverterClient />;
     case 'toml-to-json-v2': return <TomlToJsonClient />;

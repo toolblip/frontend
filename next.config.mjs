@@ -11,6 +11,54 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Family-verification pass (docs/gsc-recovery-plan.md): all three of
+      // these render HttpHeadersViewerClient (fetch a URL, show its
+      // response headers) but the tool description promises a static HTTP
+      // status code reference table - a genuinely different kind of tool
+      // this repo never built. http-status-checker is a real, distinct
+      // implementation (bulk status checking for a list of URLs) that's at
+      // least topically adjacent, so redirecting there rather than to the
+      // header viewer or to a generic hub.
+      { source: '/tools/http-status-codes', destination: '/tools/http-status-checker', permanent: true },
+      { source: '/tools/http-status-code-lookup', destination: '/tools/http-status-checker', permanent: true },
+      { source: '/tools/http-status-ref', destination: '/tools/http-status-checker', permanent: true },
+      // Same family, same root cause: both promise sending a real request
+      // with a chosen method/body/auth; HttpHeadersViewerClient hardcodes a
+      // HEAD fetch with no body or method control. No real request-builder
+      // implementation exists elsewhere in the catalog to redirect to.
+      { source: '/tools/http-request-builder', destination: '/tools/http-headers-viewer', permanent: true },
+      { source: '/tools/http-method-tester', destination: '/tools/http-headers-viewer', permanent: true },
+
+      // "Image Clipper" promised background removal, "Image Orientation
+      // Fixer" promised rotate/flip - both rendered the plain image
+      // cropper instead. Redirecting to the real, separate tools that
+      // actually do what each promised.
+      { source: '/tools/image-clipper', destination: '/tools/remove-bg', permanent: true },
+      { source: '/tools/image-orientation-fixer', destination: '/tools/rotate', permanent: true },
+      // "Text to Image Generator" promised social-graphic creation from
+      // text; the page rendered the live-microphone speech-to-text tool.
+      // banner-generator does what was actually promised (text -> a real
+      // downloadable social/OG image).
+      { source: '/tools/text-to-image', destination: '/tools/banner-generator', permanent: true },
+      // "Audio to Text Converter" promised transcribing an uploaded MP3/WAV
+      // file; the page rendered a live-microphone-only speech recognizer,
+      // which can't process an uploaded file (no server-side transcription
+      // exists here). speech-to-text is the same underlying capability,
+      // just honestly scoped to live mic input rather than file upload.
+      { source: '/tools/audio-to-text', destination: '/tools/speech-to-text', permanent: true },
+
+      // Verified functionally broken (family-verification pass): the
+      // rendered UI only accepts a file type that doesn't match the slug -
+      // AviToMovClient only accepts .avi, AacToWavClient only accepts
+      // .aac/.m4a/.mp4. No equivalent tool exists to redirect to (real
+      // cross-container video/audio transcoding needs WebCodecs/ffmpeg.wasm,
+      // deliberately not built here - see TODO-SERVER-SIDE-TOOLS.md), so
+      // these are simply removed from data/tools.ts rather than redirected.
+      // A real 410 (rather than the plain 404 dynamicParams=false produces)
+      // was attempted via proxy.ts but reverted - see docs/gsc-recovery-plan.md
+      // for why (the proxy/middleware layer doesn't execute in this project
+      // at all right now, a separate pre-existing bug).
+
       // Legacy keyword-stuffed slugs ("-express", "-tool", "-new", "-v2", ...)
       // renamed to a clean canonical slug as part of the GSC index-recovery
       // work (see reports on toolblip.com's site-level "Crawled - currently
@@ -31,7 +79,10 @@ const nextConfig = {
       { source: '/tools/image-flip-tool', destination: '/tools/image-flip', permanent: true },
       { source: '/tools/html-to-plain-text-tool', destination: '/tools/html-to-plain-text', permanent: true },
       { source: '/tools/spelling-checker-tool', destination: '/tools/spelling-checker', permanent: true },
-      { source: '/tools/favicon-preview-tool', destination: '/tools/favicon-preview', permanent: true },
+      // No longer redirected to /tools/favicon-preview: the family-
+      // verification pass below removed that slug too (no real ICO/favicon
+      // preview implementation exists), so this now 404s directly instead
+      // of redirecting into another 404.
       { source: '/tools/jsonpath-query-tool', destination: '/tools/jsonpath-query', permanent: true },
       { source: '/tools/keyword-density-analyzer-new', destination: '/tools/keyword-density-analyzer', permanent: true },
       { source: '/tools/css-units-converter-new', destination: '/tools/css-units-converter', permanent: true },
