@@ -77,6 +77,56 @@ the next pass (mine or someone else's) doesn't have to re-derive it.
   May 2026 indexing collapse. Building it would work directly against this
   recovery; don't.
 
+## Self-review found real regressions — fixed, not just style nits
+
+A full self-review of the first commit here caught 6 bugs the rename/cleanup
+work introduced and 9 pre-existing bugs in code absorbed from the merged
+`fix/broken-tool-pages` branch. Both categories are worth understanding
+before touching `data/tools.ts` slugs or `ToolUI.tsx`'s switch again.
+
+**What the renames broke (fixed in a follow-up commit):** `data/tools.ts`'s
+`TOOL_SLUG_ALIASES` map and `page.tsx`'s separate local `REDIRECTS` map both
+predate this pass, and several of them used a slug this pass renamed *onto*
+as their alias *source* — e.g. `TOOL_SLUG_ALIASES['keyword-generator'] =
+'keyword-generator-express'` already existed (written back when the
+"-express" slug was canonical), and this pass's `next.config.mjs` redirect
+sends `keyword-generator-express` back to `keyword-generator` — an infinite
+loop. 7 renamed slugs hit this exact loop; 2 more (`html-to-plain-text`,
+`lorem-ipsum`) hit a non-looping version that silently hijacked the newly-
+renamed tool to a *different*, unrelated one. Separately, `ToolUI.tsx`'s
+switch is first-match-wins, and this pass's "insert a case for the new slug
+right after the old one" approach sometimes landed a case that either
+shadowed, or was shadowed by, an already-existing dead case for that same
+slug — 4 instances (`color-format-converter`, `keyword-generator`,
+`json-path-evaluator`, `html-to-plain-text`) required actually comparing the
+two candidate components against the tool's own `description` to pick the
+right one, not just picking whichever compiled. And `data/tool-content.ts`
+still had all 21 renamed tools' content keyed under their old slug -
+`getToolContent()` does an exact match, so the rename silently dropped their
+description/examples for the reader.
+
+**What was already broken in the absorbed branch (not this pass's
+regression, but shipped by merging it in) — flagged, not fixed:** the same
+first-match-wins switch issue predates this pass in ~15+ more cases spanning
+favicon-\*, css-animation/cursor-generator, and several cron-\* slugs, where
+an early catch-all group added before this repo's more recent "70 fake stub
+tool components -> real implementations" work shadows the dedicated
+component that work added — meaning several of those newer, purpose-built
+components were dead code the moment they were written. This pass fixed the
+subset that also collided with something *this* pass touched; the rest is
+still there. On top of that, the review surfaced 9 real, unrelated bugs in
+individual tool components pulled in from that same branch: an LDAP filter
+generator with no RFC 4515 escaping (filter-injection), a word cloud
+generator whose canvas font never resolves (`var(--f-sans)` isn't valid
+Canvas 2D syntax, so every word renders at the default size), a color-
+blindness simulator that's blank on first upload (canvas refs not yet
+mounted when it tries to draw), an SSH key generator that claims Ed25519
+keys work with plain OpenSSH file loading (they need the OPENSSH container
+format), and five more listed in the PR's review history. None of these are
+SEO-related and none were touched in this pass — full audit of the ~140
+components absorbed from that branch is real follow-up work, not a quick
+fix.
+
 ## Confirmed but NOT fixed in this pass — real follow-up work
 
 **93 tool-name families share one component across 268 live slugs**
