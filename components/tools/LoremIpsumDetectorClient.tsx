@@ -2,41 +2,46 @@
 
 import { useMemo, useState } from 'react';
 
-// The ~65 words that appear, in some order, in every variant of the
-// standard "Lorem ipsum dolor sit amet..." filler text traced back to
-// Cicero's De Finibus. Real prose can contain one or two of these words
-// by coincidence, so this flags on density (a minimum share of a text's
-// words matching this list), not on any single hit.
-const LOREM_WORDS = new Set([
-  'lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit',
-  'sed', 'do', 'eiusmod', 'tempor', 'incididunt', 'ut', 'labore', 'et', 'dolore',
-  'magna', 'aliqua', 'enim', 'ad', 'minim', 'veniam', 'quis', 'nostrud',
-  'exercitation', 'ullamco', 'laboris', 'nisi', 'aliquip', 'ex', 'ea', 'commodo',
-  'consequat', 'duis', 'aute', 'irure', 'in', 'reprehenderit', 'voluptate',
-  'velit', 'esse', 'cillum', 'fugiat', 'nulla', 'pariatur', 'excepteur', 'sint',
-  'occaecat', 'cupidatat', 'non', 'proident', 'sunt', 'culpa', 'qui', 'officia',
-  'deserunt', 'mollit', 'anim', 'id', 'est', 'laborum', 'at', 'vero', 'eos',
-  'accusamus', 'iusto', 'odio', 'dignissimos', 'ducimus', 'blanditiis',
-]);
+// The standard "Lorem ipsum dolor sit amet..." filler text, traced back to
+// Cicero's De Finibus. Matching individual words against this list is what
+// the first version of this tool did, and it's unreliable both ways:
+// ordinary English sentences contain enough of the short function words
+// ("in", "at", "id", "do", "non", "et", "ut", "ex") to false-positive, and
+// short genuine lorem ipsum snippets don't hit a density threshold to
+// false-negative. Matching adjacent-word pairs (bigrams) from the actual
+// canonical text fixes both: "lorem ipsum", "dolor sit", "sit amet" etc.
+// essentially never occur in real prose by chance, and even a 2-3 word
+// lorem ipsum snippet contains at least one of them.
+const CANONICAL_LOREM_IPSUM = `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`;
+
+function toWords(text: string): string[] {
+  return text.toLowerCase().match(/[a-z]+/g) ?? [];
+}
+
+function toBigrams(words: string[]): Set<string> {
+  const bigrams = new Set<string>();
+  for (let i = 0; i < words.length - 1; i++) bigrams.add(`${words[i]} ${words[i + 1]}`);
+  return bigrams;
+}
+
+const LOREM_BIGRAMS = toBigrams(toWords(CANONICAL_LOREM_IPSUM));
 
 interface DetectionResult {
   wordCount: number;
-  matchCount: number;
-  density: number;
+  matchedPhrases: string[];
   isLoremIpsum: boolean;
-  matchedWords: string[];
 }
 
 function detect(text: string): DetectionResult {
-  const words = text.toLowerCase().match(/[a-z]+/g) ?? [];
-  const matched = words.filter((w) => LOREM_WORDS.has(w));
-  const wordCount = words.length;
-  const matchCount = matched.length;
-  const density = wordCount > 0 ? matchCount / wordCount : 0;
-  // Real English prose rarely exceeds a couple percent overlap with this
-  // list by chance; genuine lorem ipsum text runs 40%+.
-  const isLoremIpsum = wordCount >= 5 && density >= 0.2;
-  return { wordCount, matchCount, density, isLoremIpsum, matchedWords: [...new Set(matched)] };
+  const words = toWords(text);
+  const inputBigrams = toBigrams(words);
+  const matchedPhrases = [...inputBigrams].filter((b) => LOREM_BIGRAMS.has(b));
+  return { wordCount: words.length, matchedPhrases, isLoremIpsum: matchedPhrases.length > 0 };
 }
 
 export default function LoremIpsumDetectorClient() {
@@ -57,19 +62,20 @@ export default function LoremIpsumDetectorClient() {
           <div
             className="tb-v2-tool-card"
             style={{
-              background: result.isLoremIpsum ? '#fef2f2' : '#f0fdf4',
-              border: `1px solid ${result.isLoremIpsum ? '#fecaca' : '#bbf7d0'}`,
+              background: result.isLoremIpsum ? 'var(--red-tint)' : 'var(--green-tint)',
+              border: `1px solid ${result.isLoremIpsum ? 'var(--red)' : 'var(--green)'}`,
             }}
           >
             <strong>{result.isLoremIpsum ? '⚠️ Lorem ipsum detected' : '✅ No lorem ipsum detected'}</strong>
-            <p style={{ margin: '4px 0 0', fontSize: 14, color: '#6b7280' }}>
-              {result.matchCount} of {result.wordCount} words ({Math.round(result.density * 100)}%) match common
-              lorem ipsum vocabulary.
+            <p style={{ margin: '4px 0 0', fontSize: 14, color: 'var(--fg-1)' }}>
+              {result.isLoremIpsum
+                ? `Found ${result.matchedPhrases.length} phrase${result.matchedPhrases.length === 1 ? '' : 's'} from the standard lorem ipsum text among ${result.wordCount} words.`
+                : `No lorem ipsum phrases found among ${result.wordCount} words.`}
             </p>
           </div>
-          {result.matchedWords.length > 0 && (
-            <div style={{ fontSize: 13, color: '#6b7280' }}>
-              Matched words: {result.matchedWords.join(', ')}
+          {result.matchedPhrases.length > 0 && (
+            <div style={{ fontSize: 13, color: 'var(--fg-1)' }}>
+              Matched phrases: {result.matchedPhrases.join(', ')}
             </div>
           )}
         </div>

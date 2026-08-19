@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { randomFromAlphabet } from '@/lib/secureRandom';
 
 const CHARSETS = {
   alphanumeric: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
@@ -10,20 +11,7 @@ const CHARSETS = {
 
 type CharsetKey = keyof typeof CHARSETS;
 
-// Rejection sampling to avoid modulo bias - see SecureRandomGeneratorClient.
-function randomIndex(charsetSize: number): number {
-  const limit = Math.floor(256 / charsetSize) * charsetSize;
-  let x: number;
-  do {
-    x = crypto.getRandomValues(new Uint8Array(1))[0];
-  } while (x >= limit);
-  return x % charsetSize;
-}
-
-function generateId(length: number, charset: string, prefix: string): string {
-  const body = Array.from({ length }, () => charset[randomIndex(charset.length)]).join('');
-  return prefix ? `${prefix}${body}` : body;
-}
+const MAX_PREFIX_LENGTH = 16;
 
 export default function RandomIdGeneratorClient() {
   const [charsetKey, setCharsetKey] = useState<CharsetKey>('alphanumeric');
@@ -35,8 +23,10 @@ export default function RandomIdGeneratorClient() {
 
   const generate = () => {
     const n = Math.max(1, Math.min(100, count));
+    const len = Math.max(1, Math.min(64, length));
     const charset = CHARSETS[charsetKey];
-    setIds(Array.from({ length: n }, () => generateId(Math.max(1, Math.min(64, length)), charset, prefix.trim())));
+    const cleanPrefix = prefix.trim().slice(0, MAX_PREFIX_LENGTH);
+    setIds(Array.from({ length: n }, () => `${cleanPrefix}${randomFromAlphabet(charset, len)}`));
     setCopied(false);
   };
 
@@ -68,8 +58,14 @@ export default function RandomIdGeneratorClient() {
           />
         </label>
         <label className="tb-v2-tool-label">
-          Prefix (optional)
-          <input className="tb-v2-input" value={prefix} onChange={(e) => setPrefix(e.target.value)} placeholder="e.g. ID-" />
+          Prefix (optional, max {MAX_PREFIX_LENGTH} chars)
+          <input
+            className="tb-v2-input"
+            value={prefix}
+            maxLength={MAX_PREFIX_LENGTH}
+            onChange={(e) => setPrefix(e.target.value.slice(0, MAX_PREFIX_LENGTH))}
+            placeholder="e.g. ID-"
+          />
         </label>
         <label className="tb-v2-tool-label">
           How many

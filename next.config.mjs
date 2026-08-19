@@ -53,7 +53,11 @@ const nextConfig = {
       // .aac/.m4a/.mp4. No equivalent tool exists to redirect to (real
       // cross-container video/audio transcoding needs WebCodecs/ffmpeg.wasm,
       // deliberately not built here - see TODO-SERVER-SIDE-TOOLS.md), so
-      // these are 410 via proxy.ts rather than redirected.
+      // these are simply removed from data/tools.ts rather than redirected.
+      // A real 410 (rather than the plain 404 dynamicParams=false produces)
+      // was attempted via proxy.ts but reverted - see docs/gsc-recovery-plan.md
+      // for why (the proxy/middleware layer doesn't execute in this project
+      // at all right now, a separate pre-existing bug).
 
       // Legacy keyword-stuffed slugs ("-express", "-tool", "-new", "-v2", ...)
       // renamed to a clean canonical slug as part of the GSC index-recovery
@@ -75,7 +79,10 @@ const nextConfig = {
       { source: '/tools/image-flip-tool', destination: '/tools/image-flip', permanent: true },
       { source: '/tools/html-to-plain-text-tool', destination: '/tools/html-to-plain-text', permanent: true },
       { source: '/tools/spelling-checker-tool', destination: '/tools/spelling-checker', permanent: true },
-      { source: '/tools/favicon-preview-tool', destination: '/tools/favicon-preview', permanent: true },
+      // No longer redirected to /tools/favicon-preview: the family-
+      // verification pass below removed that slug too (no real ICO/favicon
+      // preview implementation exists), so this now 404s directly instead
+      // of redirecting into another 404.
       { source: '/tools/jsonpath-query-tool', destination: '/tools/jsonpath-query', permanent: true },
       { source: '/tools/keyword-density-analyzer-new', destination: '/tools/keyword-density-analyzer', permanent: true },
       { source: '/tools/css-units-converter-new', destination: '/tools/css-units-converter', permanent: true },

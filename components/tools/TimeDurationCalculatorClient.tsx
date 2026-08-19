@@ -4,8 +4,20 @@ import { useMemo, useState } from 'react';
 
 type Mode = 'add' | 'diff';
 
-function parseHms(value: string): number | null {
+// A "duration to add" can legitimately exceed 24 hours (e.g. a 30-hour
+// shift), but "start time" and "end time" are clock times on a single day -
+// capping those at 23 hours keeps the "assume the end time is the next day"
+// wraparound below from producing a nonsensical result for something that
+// was never really a time-of-day to begin with.
+function parseDuration(value: string): number | null {
   const m = value.match(/^(\d{1,3}):([0-5]?\d):([0-5]?\d)$/);
+  if (!m) return null;
+  const [, h, mm, s] = m;
+  return Number(h) * 3600 + Number(mm) * 60 + Number(s);
+}
+
+function parseClockTime(value: string): number | null {
+  const m = value.match(/^([01]?\d|2[0-3]):([0-5]?\d):([0-5]?\d)$/);
   if (!m) return null;
   const [, h, mm, s] = m;
   return Number(h) * 3600 + Number(mm) * 60 + Number(s);
@@ -27,8 +39,8 @@ export default function TimeDurationCalculatorClient() {
   const [end, setEnd] = useState('17:00:00');
 
   const addResult = useMemo(() => {
-    const s = parseHms(start);
-    const d = parseHms(duration);
+    const s = parseClockTime(start);
+    const d = parseDuration(duration);
     if (s === null || d === null) return null;
     const total = s + d;
     const days = Math.floor(total / 86400);
@@ -36,8 +48,8 @@ export default function TimeDurationCalculatorClient() {
   }, [start, duration]);
 
   const diffResult = useMemo(() => {
-    const s = parseHms(start);
-    const e = parseHms(end);
+    const s = parseClockTime(start);
+    const e = parseClockTime(end);
     if (s === null || e === null) return null;
     let delta = e - s;
     if (delta < 0) delta += 86400; // assume the end time is the next day

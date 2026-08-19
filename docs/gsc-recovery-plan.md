@@ -297,6 +297,83 @@ That's the highest-leverage remaining step; it's gated on actually running
 a Playwright smoke test per tool (real input → correct output), not just
 static analysis, which is real effort, not a mechanical follow-up.
 
+## Self-review of the family-verification pass — 15 findings, 13 fixed
+
+Same discipline as the first round: full self-review before merging, not
+just a compile check. Findings and disposition:
+
+**Fixed — real correctness bugs:**
+- `SecureRandomGeneratorClient`'s number mode had no `min <= max` validation
+  and no bound on the range size: a reversed range, an empty field, or a
+  range over 2^32 could silently print `NaN` as "cryptographically secure"
+  output, produce a value outside the requested range, or hang the tab in
+  an infinite rejection-sampling loop. Fixed with explicit validation and a
+  visible error message instead of a silent bad result.
+- `randomString()` in the same file used a plain `% length` instead of
+  rejection sampling — a small but real bias, and ironic given the
+  neighboring `randomNumber()` had a comment explaining why that would be
+  wrong. `crypto.randomUUID()` was called with no feature check, so an
+  insecure context or old browser would throw uncaught mid-loop.
+- `TimeDurationCalculatorClient`'s "hours" field accepted 0-999 for *all*
+  three inputs, but the "time between" mode's wraparound logic
+  (`if (delta < 0) delta += 86400`) only makes sense for genuine clock
+  times under 24 hours — a start/end pair like `100:00:00` produced a
+  negative "elapsed time." Split into `parseClockTime` (0-23h, for
+  start/end) and `parseDuration` (0-999h, for the "add a duration" field,
+  where large values are legitimate).
+- `LoremIpsumDetectorClient`'s word-list-density approach false-positived on
+  ordinary English sentences with a few short function words in common
+  ("in", "at", "id", "do") and false-negatived on short genuine lorem ipsum
+  snippets under 5 words. Rewrote as bigram matching against the actual
+  canonical lorem ipsum text (`"lorem ipsum"`, `"dolor sit"`, etc.) — those
+  adjacent-word pairs don't occur in real prose by chance, and even a
+  2-3-word lorem ipsum snippet contains one.
+- A pre-existing redirect (`favicon-preview-tool` → `favicon-preview`) now
+  dead-ended into a 404, since this pass removed `favicon-preview` too.
+  Removed the redirect so it 404s directly instead of redirect-chaining
+  into another 404.
+- A code comment in `next.config.mjs` claimed the removed video/audio slugs
+  "are 410 via proxy.ts" — true when written, false after the `proxy.ts`
+  attempt was reverted (see below). Corrected.
+- Consolidated the three independent hand-rolled `crypto.getRandomValues()`
+  implementations (in `SecureRandomGeneratorClient`, `RandomPinGeneratorClient`,
+  `RandomIdGeneratorClient`) into `lib/secureRandom.ts` — the security bug
+  above was only in one of the three copies despite all three doing the same
+  thing, exactly the drift risk of writing security-sensitive logic three
+  times. Also fixed: `RandomIdGeneratorClient`'s prefix field had no length
+  bound, so pasting a huge string there produced an "ID" thousands of
+  characters long despite the length field being capped at 64.
+- Both hardcoded-hex-color findings (`LoremIpsumDetectorClient`'s result
+  banner) switched to the existing `--red`/`--red-tint`/`--green`/`--green-tint`/`--fg-1`
+  design tokens already used elsewhere in the codebase (verified against
+  `app/globals.css`, which has dark-mode overrides for all of them) instead
+  of literal hex values with no dark-mode variant.
+
+**An important correction to my own prior conclusion.** The first round's
+self-review (see below) said the dead proxy/middleware layer was "a
+serious, pre-existing bug" without a known cause. This round's review
+flagged that `proxy.ts` might be the wrong filename for this Next.js
+version and should be `middleware.ts`. **That specific claim is wrong** —
+Next.js 16's own migration guide explicitly states `middleware.ts` was
+renamed to `proxy.ts`, and a build against this project prints *"The
+'middleware' file convention is deprecated. Please use 'proxy' instead"* if
+you use the old name. However, the underlying empirical claim (verified via
+`.next/server/middleware-manifest.json`) is correct and worth acting on:
+**building with `proxy.ts` present compiles `"middleware": {}` (empty) in
+the manifest, while renaming the exact same file/function to the deprecated
+`middleware.ts` compiles a real, working entry (`"middleware": ["/"]`)** —
+tested locally, not shipped. This looks like a genuine bug in this specific
+Next.js 16.2.4 Turbopack build (the new convention silently not registering
+routes), not a mistake in how `proxy.ts` was written here. Concretely, this
+means the auth gate on `/dashboard`, `/account`, `/submit-tool` and the
+`www.`/HTTPS redirect are bypassable in production **right now**, and the
+one-line-per-file fix (rename + rename the exported function) has been
+verified to work, at the cost of a deprecation warning until Next.js fixes
+the underlying `proxy.ts` registration bug. This is a security-relevant
+finding outside this PR's scope (SEO/indexing) and outside the "don't touch
+auth code" boundary this work has operated under — raised to the user
+directly rather than acted on unilaterally.
+
 ## CI is red — not this pass's problem, flagging for whoever owns it
 
 The `E2E Auth Regression` GitHub Action has been failing on `main` itself

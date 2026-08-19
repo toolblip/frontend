@@ -1,21 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import { randomFromAlphabet } from '@/lib/secureRandom';
 
-// Rejection sampling to avoid modulo bias on the last, short-range digit
-// pick - see SecureRandomGeneratorClient for the same technique.
-function randomDigit(): string {
-  const limit = 250; // largest multiple of 10 that fits a byte (0-255)
-  let x: number;
-  do {
-    x = crypto.getRandomValues(new Uint8Array(1))[0];
-  } while (x >= limit);
-  return String(x % 10);
-}
-
-function generatePin(length: number): string {
-  return Array.from({ length }, randomDigit).join('');
-}
+const DIGITS = '0123456789';
 
 export default function RandomPinGeneratorClient() {
   const [length, setLength] = useState(6);
@@ -25,7 +13,8 @@ export default function RandomPinGeneratorClient() {
 
   const generate = () => {
     const n = Math.max(1, Math.min(50, count));
-    setPins(Array.from({ length: n }, () => generatePin(Math.max(1, Math.min(32, length)))));
+    const len = Math.max(1, Math.min(32, length));
+    setPins(Array.from({ length: n }, () => randomFromAlphabet(DIGITS, len)));
     setCopied(false);
   };
 

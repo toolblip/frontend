@@ -1,34 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { randomFromAlphabet, randomHexBytes, randomInt, randomUuid, supportsRandomUuid } from '@/lib/secureRandom';
 
 type Kind = 'string' | 'number' | 'uuid' | 'bytes';
 
 const ALPHANUMERIC = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-function randomString(length: number): string {
-  const bytes = crypto.getRandomValues(new Uint32Array(length));
-  return Array.from(bytes, (b) => ALPHANUMERIC[b % ALPHANUMERIC.length]).join('');
-}
-
-// Rejection sampling, not a plain modulo, so the result stays uniform - a
-// modulo would bias low values whenever `range` doesn't evenly divide 2^32,
-// which defeats the point of a tool that specifically claims to be
-// cryptographically secure.
-function randomNumber(min: number, max: number): number {
-  const range = max - min + 1;
-  const limit = Math.floor(0x100000000 / range) * range;
-  let x: number;
-  do {
-    x = crypto.getRandomValues(new Uint32Array(1))[0];
-  } while (x >= limit);
-  return min + (x % range);
-}
-
-function randomBytesHex(length: number): string {
-  const bytes = crypto.getRandomValues(new Uint8Array(length));
-  return Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
-}
 
 export default function SecureRandomGeneratorClient() {
   const [kind, setKind] = useState<Kind>('string');
@@ -37,16 +14,37 @@ export default function SecureRandomGeneratorClient() {
   const [max, setMax] = useState(100);
   const [count, setCount] = useState(1);
   const [results, setResults] = useState<string[]>([]);
+  const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
 
   const generate = () => {
+    setError('');
     const n = Math.max(1, Math.min(50, count));
+
+    if (kind === 'number') {
+      const lo = Math.min(min, max);
+      const hi = Math.max(min, max);
+      if (hi - lo + 1 > 0x100000000) {
+        setError('Range is too large (max 2^32 values at once).');
+        setResults([]);
+        return;
+      }
+      setResults(Array.from({ length: n }, () => String(randomInt(lo, hi))));
+      setCopied(false);
+      return;
+    }
+
+    if (kind === 'uuid' && !supportsRandomUuid()) {
+      setError('crypto.randomUUID() is not available in this browser context (requires HTTPS or localhost).');
+      setResults([]);
+      return;
+    }
+
     const out: string[] = [];
     for (let i = 0; i < n; i++) {
-      if (kind === 'string') out.push(randomString(length));
-      else if (kind === 'number') out.push(String(randomNumber(min, max)));
-      else if (kind === 'uuid') out.push(crypto.randomUUID());
-      else out.push(randomBytesHex(length));
+      if (kind === 'string') out.push(randomFromAlphabet(ALPHANUMERIC, length));
+      else if (kind === 'uuid') out.push(randomUuid());
+      else out.push(randomHexBytes(length));
     }
     setResults(out);
     setCopied(false);
@@ -113,6 +111,12 @@ export default function SecureRandomGeneratorClient() {
       <button onClick={generate} className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg" style={{ marginTop: 12 }}>
         Generate
       </button>
+
+      {error && (
+        <div className="tb-v2-tool-output-body" style={{ marginTop: 16, background: 'var(--red-tint)', color: 'var(--red)' }}>
+          {error}
+        </div>
+      )}
 
       {results.length > 0 && (
         <div className="tb-v2-tool-output-body" style={{ marginTop: 16 }}>
