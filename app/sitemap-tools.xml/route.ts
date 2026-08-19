@@ -21,9 +21,12 @@ const TOOL_PAGES_LAST_MODIFIED = new Date('2026-08-19T00:00:00.000Z');
 // key in app/tools/[slug]/page.tsx's REDIRECTS map, so every request to
 // them permanently redirects away before the page ever renders — dead,
 // unreachable data that would otherwise falsely reappear in this sitemap.
-// ('lorem-ipsum' -> 'lorem-ipsum-generator', 'serp-simulator' ->
-// 'google-serp-simulator'.)
-const SHADOWED_BY_REDIRECT = new Set(['lorem-ipsum', 'serp-simulator']);
+// ('serp-simulator' -> 'google-serp-simulator'. 'lorem-ipsum' used to be
+// here too, but that REDIRECTS entry was stale — it predated this pass
+// renaming a different tool, 'lorem-ipsum-api', onto the 'lorem-ipsum'
+// slug, and has since been removed from REDIRECTS so the renamed tool is
+// reachable under its own canonical URL.)
+const SHADOWED_BY_REDIRECT = new Set(['serp-simulator']);
 
 export async function GET(): Promise<Response> {
   const baseUrl = 'https://toolblip.com';

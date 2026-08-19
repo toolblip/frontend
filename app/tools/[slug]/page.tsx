@@ -37,7 +37,6 @@ export const dynamicParams = false;
  * normalize to the canonical tool pages.
  */
 const REDIRECTS: Record<string, string> = {
-  'lorem-ipsum': 'lorem-ipsum-generator',
   'letter-counter': 'word-counter',
   'mime-type-checker': 'mime-types-reference',
   'random-string': 'password-generator',

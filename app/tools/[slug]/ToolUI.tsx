@@ -1402,10 +1402,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <BaseConverterQuickClient />;
     case 'color-contrast-checker':
       return <ColorContrastCheckerClient />;
-    case 'color-format-converter':
-      return <ColorFormatConverterClient />;
     case 'color-format-converter-v2': return <ColorFormatConverterV2Client />; // legacy alias, redirected via next.config.mjs
-    case 'color-format-converter': return <ColorFormatConverterV2Client />;
+    case 'color-format-converter': return <ColorFormatConverterV2Client />; // matches the promised CMYK support; the older ColorFormatConverterClient doesn't have it
     case 'color-format-picker':
       return <ColorFormatPickerClient />;
     case 'color-harmony-express':
@@ -1654,7 +1652,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'cron-generator-browser':
     case 'cron-generator-classic':
     case 'cron-generator-complete':
-    case 'cron-generator-dg':
     case 'cron-generator-easy':
     case 'cron-generator-enhanced':
     case 'cron-generator-express':
@@ -1680,26 +1677,19 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'cron-generator-x':
     case 'cron-generator-xl':
       return <CronGeneratorClient />;
-    case 'cron-human-readable':
     case 'cron-schedule-builder':
     case 'cron-schedule-checker':
-    case 'cron-schedule-explainer':
-    case 'cron-schedule-generator':
-    case 'cron-schedule-validator':
     case 'cron-toolblip':
     case 'cron-visual-builder':
       return <CronExpressionParserClient />;
     case 'crop-circle':
       return <CropCircleClient />;
-    case 'css-animation-generator':
-    case 'css-cursor-generator':
     case 'css-filter-generator':
       return <CssGradientGeneratorClient />;
     case 'css-flexbox-generator':
       return <CssFlexboxGeneratorClient />;
     case 'css-grid-generator':
       return <CssGridGeneratorClient />;
-    case 'css-naming-convention':
     case 'css-variable-generator':
       return <CssClassGeneratorClient />;
     case 'css-preview':
@@ -1712,7 +1702,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <CssToTailwindClient />;
     case 'css-units-converter':
     case 'css-units-converter-new': return <CssValidatorClient />; // legacy alias, redirected via next.config.mjs
-    case 'css-units-converter': return <CssValidatorClient />;
     case 'csv-generator':
       return <CsvGeneratorClient />;
     case 'csv-json-express':
@@ -1735,7 +1724,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <CurrencyConverterClient />;
     case 'cutter':
       return <CutterClient />;
-    case 'data-size-converter':
     case 'data-size-converter-express':
       return <ByteConverterClient />;
     case 'data-uri-generator':
@@ -1774,9 +1762,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <EncodingsRefClient />;
     case 'encodings-reference':
       return <EncodingsReferenceClient />;
-    case 'energy-converter':
-    case 'force-converter':
-    case 'frequency-converter':
     case 'general-unit-converter':
       return <AllInOneUnitConverterClient />;
     case 'english-collocations-checker':
@@ -1820,13 +1805,11 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'faq-generator':
       return <FaqGeneratorClient />;
     case 'favicon-browser':
-    case 'favicon-checker':
     case 'favicon-checker-express':
     case 'favicon-checker-tool':
     case 'favicon-creator':
     case 'favicon-creator-tool':
     case 'favicon-fresh':
-    case 'favicon-from-emoji':
     case 'favicon-full':
     case 'favicon-gen-adv':
     case 'favicon-gen-prime':
@@ -1864,14 +1847,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'favicon-generator-v6':
     case 'favicon-generator-x':
     case 'favicon-generator-xl':
-    case 'favicon-grabber':
-    case 'favicon-icon-generator':
     case 'favicon-make-tool':
-    case 'favicon-maker':
-    case 'favicon-png-creator':
     case 'favicon-png-generator':
-    case 'favicon-png-maker':
-    case 'favicon-preview':
     case 'favicon-preview-tool':
     case 'favicon-quick':
     case 'favicon-quick-generator':
@@ -2048,8 +2025,10 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <HtmlToJsxClient />;
     case 'html-to-markdown-v2':
       return <HtmlToMarkdownV2Client />;
+    // 'html-to-plain-text' renders HtmlToPlainTextClient (defined earlier,
+    // ~line 1225) — it uses DOMParser, which is more robust than this
+    // component's regex-based tag stripping.
     case 'html-to-plain-text-tool': return <HtmlToPlainTextToolClient />; // legacy alias, redirected via next.config.mjs
-    case 'html-to-plain-text': return <HtmlToPlainTextToolClient />;
     case 'html-to-plain-text-v2':
       return <HtmlToPlainTextV2Client />;
     case 'http-headers-2025':
@@ -2812,9 +2791,12 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'json-csv-express': return <JsonCsvExpressClient />;
     case 'json-escape-unescape': return <BackslashEscapeUnescapeClient />;
     case 'json-patch-generator': return <JsonLdGeneratorClient />;
+    // 'json-path-evaluator' renders JsonPathTesterClient, not
+    // JsonPathEvaluatorExpressClient below — the "express" component just
+    // pretty-prints JSON, it doesn't evaluate a JSONPath expression at all,
+    // which is what the tool's own description promises.
     case 'json-path-evaluator': return <JsonPathTesterClient />;
     case 'json-path-evaluator-express': return <JsonPathEvaluatorExpressClient />; // legacy alias, redirected via next.config.mjs
-    case 'json-path-evaluator': return <JsonPathEvaluatorExpressClient />;
     case 'json-path-tester-new': return <JsonPathTesterClient />;
     case 'json-schema-editor': return <JsonSchemaValidatorClient />;
     case 'json-schema-gen-express': return <JsonSchemaGenExpressClient />;
@@ -3344,7 +3326,10 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'jwt-token-tester': return <JwtTokenTesterClient />;
     case 'keyword-difficulty-tool': return <KeywordDifficultyToolClient />;
     case 'keyword-extractor': return <KeywordExtractorClient />;
-    case 'keyword-generator': return <KeywordGeneratorClient />;
+    // 'keyword-generator' itself is defined earlier (~line 2854) as
+    // KeywordGeneratorExpressClient, which is what the current
+    // data/tools.ts entry (renamed from 'keyword-generator-express') was
+    // written against; this duplicate case for the same slug was dead code.
     case 'keyword-generator-v2': return <KeywordGeneratorClient />;
     case 'kubernetes-yaml-generator': return <KubernetesYAMLGeneratorClient />;
     case 'list-difference-finder': return <ListDifferenceFinderClient />;
