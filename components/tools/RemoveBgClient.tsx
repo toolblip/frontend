@@ -1,24 +1,30 @@
 'use client';
 
 import { useState, useRef } from 'react';
+import { convertHeicIfNeeded } from '@/lib/heic';
 
 export default function RemoveBgClient() {
   const [image, setImage] = useState<string | null>(null);
   const [processedImage, setProcessedImage] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isConvertingHeic, setIsConvertingHeic] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setImage(event.target?.result as string);
-        setProcessedImage(null);
-      };
-      reader.readAsDataURL(file);
-    }
+    if (!file) return;
+
+    setIsConvertingHeic(true);
+    const decodable = await convertHeicIfNeeded(file);
+    setIsConvertingHeic(false);
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setImage(event.target?.result as string);
+      setProcessedImage(null);
+    };
+    reader.readAsDataURL(decodable);
   };
 
   const removeBackground = () => {
@@ -103,8 +109,11 @@ export default function RemoveBgClient() {
         type="file"
         accept="image/*"
         onChange={handleImageUpload}
+        disabled={isConvertingHeic}
         className="tb-v2-file-input"
       />
+
+      {isConvertingHeic && <p className="tb-v2-text-sm tb-v2-text-gray-500">Converting HEIC photo...</p>}
 
       {image && (
         <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-4">

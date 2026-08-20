@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useSubscription } from '@/hooks/useSubscription';
 import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
+import { convertHeicIfNeeded } from '@/lib/heic';
 
 interface RGB {
   r: number;
@@ -26,6 +27,7 @@ export default function EraseColorClient() {
   const [tolerance, setTolerance] = useState(32);
   const [erasedCount, setErasedCount] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isConvertingHeic, setIsConvertingHeic] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { tier } = useSubscription();
   const maxSizeMB = tier === 'free' ? 5 : tier === 'starter' ? 10 : tier === 'ultra' ? 100 : tier === 'max' ? 500 : 5;
@@ -47,7 +49,11 @@ export default function EraseColorClient() {
     img.src = src;
   };
 
-  const loadImage = (file: File) => {
+  const loadImage = async (file: File) => {
+    setIsConvertingHeic(true);
+    const decodable = await convertHeicIfNeeded(file);
+    setIsConvertingHeic(false);
+
     const reader = new FileReader();
     reader.onload = (e) => {
       const src = e.target?.result as string;
@@ -55,7 +61,7 @@ export default function EraseColorClient() {
       setPickedColor(null);
       setErasedCount(0);
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(decodable);
   };
 
   // Runs after `originalImage` triggers the canvas to mount (a call made
@@ -77,7 +83,9 @@ export default function EraseColorClient() {
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
+    // HEIC/HEIF files often report an empty or non-"image/" MIME type
+    // (OS-dependent), so fall back to checking the extension too.
+    if (file && (file.type.startsWith('image/') || /\.(heic|heif)$/i.test(file.name))) {
       setSelectedFile(file);
       loadImage(file);
     }
@@ -155,8 +163,14 @@ export default function EraseColorClient() {
           onClick={() => document.getElementById('erase-color-input')?.click()}
         >
           <span className="text-3xl mb-3 block">🎨</span>
-          <p className="text-gray-400 text-sm">Drag & drop an image, or click to browse</p>
-          <p className="text-gray-600 text-xs mt-1">PNG, JPG, WebP, GIF</p>
+          {isConvertingHeic ? (
+            <p className="text-gray-400 text-sm">Converting HEIC photo...</p>
+          ) : (
+            <>
+              <p className="text-gray-400 text-sm">Drag & drop an image, or click to browse</p>
+              <p className="text-gray-600 text-xs mt-1">PNG, JPG, WebP, GIF, HEIC</p>
+            </>
+          )}
           <input
             id="erase-color-input"
             type="file"

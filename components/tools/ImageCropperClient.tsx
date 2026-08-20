@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { useSubscription } from '@/hooks/useSubscription';
 import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
+import { convertHeicIfNeeded } from '@/lib/heic';
 
 const PRESETS = [
   { label: '1:1 Square', ratio: 1 },
@@ -21,6 +22,7 @@ export default function ImageCropperClient() {
   const [cropRect, setCropRect] = useState({ x: 0, y: 0, w: 0, h: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [isConvertingHeic, setIsConvertingHeic] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
   const { tier } = useSubscription();
@@ -28,7 +30,11 @@ export default function ImageCropperClient() {
 
   const isOversized = selectedFile != null && selectedFile.size / (1024 * 1024) > maxSizeMB;
 
-  const loadImage = (file: File) => {
+  const loadImage = async (file: File) => {
+    setIsConvertingHeic(true);
+    const decodable = await convertHeicIfNeeded(file);
+    setIsConvertingHeic(false);
+
     const reader = new FileReader();
     reader.onload = (e) => {
       const src = e.target?.result as string;
@@ -40,7 +46,7 @@ export default function ImageCropperClient() {
       };
       img.src = src;
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(decodable);
   };
 
   const drawCanvas = useCallback(
@@ -80,7 +86,12 @@ export default function ImageCropperClient() {
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) loadImage(file);
+    // HEIC/HEIF files often report an empty or non-"image/" MIME type
+    // (OS-dependent), so fall back to checking the extension too.
+    if (file && (file.type.startsWith('image/') || /\.(heic|heif)$/i.test(file.name))) {
+      setSelectedFile(file);
+      loadImage(file);
+    }
   };
 
   const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -165,8 +176,14 @@ export default function ImageCropperClient() {
           onClick={() => document.getElementById('image-input')?.click()}
         >
           <span className="text-3xl mb-3 block">🖼️</span>
-          <p className="text-gray-400 text-sm">Drag & drop an image, or click to browse</p>
-          <p className="text-gray-600 text-xs mt-1">PNG, JPG, WebP, GIF</p>
+          {isConvertingHeic ? (
+            <p className="text-gray-400 text-sm">Converting HEIC photo...</p>
+          ) : (
+            <>
+              <p className="text-gray-400 text-sm">Drag & drop an image, or click to browse</p>
+              <p className="text-gray-600 text-xs mt-1">PNG, JPG, WebP, GIF, HEIC</p>
+            </>
+          )}
           <input
             id="image-input"
             type="file"
