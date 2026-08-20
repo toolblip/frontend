@@ -70,7 +70,12 @@ const REDIRECTS: Record<string, string> = {
   'serp-rank-checker-online': 'google-serp-simulator',
   'free-serp-tracking-online': 'google-serp-simulator',
   'serprank': 'google-serp-simulator',
-  'serp-simulator': 'google-serp-simulator',
+  // 'serp-simulator' used to redirect here too, but that shadowed a real,
+  // live, distinct data/tools.ts entry of the exact same name (rendering
+  // SerpPreviewClient, not GoogleSerpSimulatorClient) - REDIRECTS is
+  // checked before getCanonicalToolSlug, so the real tool was permanently
+  // unreachable at its own canonical URL. Removed rather than repointed;
+  // see app/sitemap-tools.xml/route.ts for the matching sitemap fix.
   'og-image-generator': 'banner-generator',
   'serpsimulator': 'google-serp-simulator',
   'serp-test': 'google-serp-simulator',
@@ -84,6 +89,7 @@ const REDIRECTS: Record<string, string> = {
   // removed in round 4 (family-verification pass - no per-URL "is this
   // allowed for Googlebot" testing exists anywhere in the catalog). No real
   // destination to chain to, so this now 404s directly too.
+
   // sitemap-xml-validator itself is gone (family-verification pass -
   // XmlValidatorClient doesn't have sitemap-specific tag/URL checks the
   // description promised) and redirects to xml-validator via
@@ -102,6 +108,7 @@ const REDIRECTS: Record<string, string> = {
   // next.config.mjs for the full explanation, which also covers gif-maker,
   // the one dedicated GIF tool, having the same underlying defect). No real
   // destination to chain to, so these now 404 directly too.
+
   'poll-maker': 'poll-generator',
   'make-a-poll': 'poll-generator',
   'create-a-poll': 'poll-generator',

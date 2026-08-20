@@ -12,7 +12,7 @@ A pattern matches the first sample. The first group contains the value you expec
 
 This guide is a practical checklist for debugging capture groups across **multiple matches**, not just one happy-path example. It is especially useful when you are parsing logs, scraping text, extracting IDs, validating imports, or trying to understand why `split()` returned empty strings.
 
-If you want to test while reading, open Toolblip's [Regex Tester](/tools/regex-tester) in another tab. For patterns you do not fully understand yet, paste them into the [Regex Explainer](/tools/regex-explainer). If you need a quick syntax reminder, keep the [Regex Cheatsheet](/tools/regex-cheatsheet) nearby.
+If you want to test while reading, open Toolblip's [Regex Tester](/tools/regex-tester) in another tab. For patterns you do not fully understand yet, paste them into the [Regex Explainer](/tools/regex-explainer). If you need a quick syntax reminder, keep the [Regex Cheatsheet](/blog/regex-cheatsheet) nearby.
 
 ## The Problem: One Match Is Not Enough
 
@@ -441,7 +441,7 @@ Use both when the extraction matters:
 
 - Start in [Regex Tester](/tools/regex-tester) to see matches and groups quickly
 - Use [Regex Explainer](/tools/regex-explainer) when a pattern is too dense to reason about
-- Check [Regex Cheatsheet](/tools/regex-cheatsheet) for syntax you only use occasionally
+- Check [Regex Cheatsheet](/blog/regex-cheatsheet) for syntax you only use occasionally
 - Confirm in JavaScript, Python, Go, Ruby, or whatever runtime will actually execute the regex
 
 If you are building a lightweight debugging workflow, the broader Toolblip guides [Top 5 Developer Tools You Should Bookmark](/blog/top-5-developer-tools-you-should-bookmark) and [Why Browser-Based Tools Are the Future](/blog/why-browser-based-tools-are-the-future) explain why quick, no-install tools are often enough for everyday parsing work.

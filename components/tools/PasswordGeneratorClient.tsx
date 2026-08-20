@@ -7,7 +7,12 @@ const UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const LOWER = 'abcdefghijklmnopqrstuvwxyz';
 const DIGITS = '0123456789';
 const SYMBOLS = '!@#$%^&*()-_=+[]{};:,.?/';
-const AMBIGUOUS = /[O0Il1|`'"]/g;
+// `|` inside a character class is a literal pipe, not regex alternation -
+// the previous /[O0Il1|`'"]/g accidentally also stripped backtick/pipe/
+// quote characters (harmless today since SYMBOLS doesn't contain any of
+// them, but confusing and inconsistent with RandomStringGeneratorClient's
+// identical O0Il1 definition of "ambiguous").
+const AMBIGUOUS = /[O0Il1]/g;
 
 type Options = {
   length: number;

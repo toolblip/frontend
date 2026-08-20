@@ -477,6 +477,114 @@ consolidation candidates (`word-combinations-generator`/`word-combinations`,
 — not mismatches, just two slugs describing the same real tool, worth a 301
 in a future pass to reduce duplicate-content surface.
 
+## Self-review of round 4 — 9 findings, 9 fixed
+
+10 finder angles run in parallel against this round's larger diff. Every
+finding was real; all fixed.
+
+- **A genuine live bug my own fix exposed.** The `'random'` sort mode I
+  just made reachable in `TextSorterClient` called `sort(input)`
+  independently in the render (`value={sort(input)}`) and again in the
+  copy handler — since the comparator calls `Math.random()`, each call
+  produced an *independent* shuffle, so the copied text never matched what
+  was on screen, and any unrelated re-render (toggling the case-sensitive
+  checkbox) silently reshuffled the visible output. Memoized the result
+  per `(input, mode, caseSensitive)` and had both the display and the copy
+  button read the same value. Also swapped the biased
+  `sort(() => Math.random() - 0.5)` shuffle for a real Fisher-Yates while
+  already in the function.
+- **The two new SVG tools were broken for a common class of real input.**
+  Many real-world SVGs declare only a `viewBox`, no explicit
+  `width`/`height` — for those, `img.naturalWidth`/`naturalHeight` come
+  back `0`, sizing the canvas to 0×0 and failing the conversion. Added a
+  fallback that reads the dimensions straight out of the SVG markup
+  (explicit width/height attributes, or the viewBox) when the image's own
+  reported size is 0. Also hardened the upload check itself: `.svg`'s MIME
+  type is well known to come back empty depending on OS/browser
+  (especially via drag-and-drop), which would've rejected valid SVGs at
+  the door — added a file-extension fallback alongside the MIME check.
+- **5 dead links in 3 already-indexed blog posts**, pointing at tool pages
+  this and earlier rounds removed with no redirect (`/tools/regex-cheatsheet`
+  ×3, `/tools/json-to-go-struct` ×2) — exactly the kind of broken link a
+  GSC-recovery initiative shouldn't be creating in its own indexed content.
+  `regex-cheatsheet` has a real blog post covering the same material
+  (`/blog/regex-cheatsheet`) — repointed the 3 links there rather than
+  adding an unusual tool→blog-post redirect. No real destination exists for
+  `json-to-go-struct` — removed the 2 dead links rather than point them at
+  a red herring.
+- **A live tool permanently unreachable at its own URL — a new bug class
+  the family-fingerprinting method can't see.** `serp-simulator` is a real,
+  live `data/tools.ts` entry rendering a real, distinct component
+  (`SerpPreviewClient`, not `GoogleSerpSimulatorClient`), but
+  `page.tsx`'s `REDIRECTS` map had a `'serp-simulator': 'google-serp-simulator'`
+  entry with the *same key* as the live slug — and `REDIRECTS` is checked
+  before `getCanonicalToolSlug`, so every visit permanently redirected away
+  before the real tool ever rendered. The project already knew about this
+  (`app/sitemap-tools.xml/route.ts` excluded it from the sitemap via a
+  `SHADOWED_BY_REDIRECT` set with a comment describing the exact bug) but
+  had worked around the symptom instead of the cause. The family-fingerprint
+  script that drives this whole sweep groups slugs by which component they
+  render *if reached* — it has no way to know a slug's own switch case is
+  unreachable because something upstream shadows it first. Checked for more
+  instances of this pattern (a live tool slug also appearing as a key in
+  `TOOL_SLUG_ALIASES` or `page.tsx` `REDIRECTS`) — this was the only one.
+  Removed the shadowing redirect and un-excluded the slug from the sitemap.
+- **A real crash and a real usability bug in the exact function this
+  round's own crash-fix hunk touches.** `UptimeCalculatorClient`'s number
+  input clamped `[90, 99.999]` on every keystroke's `onChange`, so typing
+  "9" (the first digit of, say, "95.5") from an empty field immediately
+  snapped back to "90" — making most values impossible to type digit by
+  digit, only pasteable or reachable via the slider. Moved the clamp to
+  `onBlur`; `onChange` now only guards against `NaN`.
+- **Sitemap freshness signal not bumped**, in the same file
+  (`app/sitemap-tools.xml/route.ts`) whose own comment says to bump
+  `TOOL_PAGES_LAST_MODIFIED` "when the tool catalog changes meaningfully" —
+  exactly what round 4 did (34 removals, 2 additions) without touching this
+  file. Bumped the date and folded in the `serp-simulator` sitemap fix
+  above in the same edit.
+- **Two floating multi-line comments with no blank-line separator before
+  the next unrelated map entry** in `page.tsx`'s `REDIRECTS` (the
+  `test-robots-txt-online` and `mp4-gif` removal rationales, both added
+  this round) — a future reader could misattribute either explanation to
+  the entry that happens to follow it. Added the missing blank lines.
+- **A confusing, technically-wrong regex** in `PasswordGeneratorClient`:
+  `/[O0Il1|`'"]/g` — inside a character class, `|` is a literal pipe, not
+  regex alternation, so this was also (harmlessly, since none of those
+  characters are in the symbol pool) stripping backtick/pipe/quote
+  characters under the "exclude ambiguous" label. Simplified to `/[O0Il1]/g`,
+  matching `RandomStringGeneratorClient`'s identical definition of
+  "ambiguous" elsewhere in the catalog.
+
+**Noted, not fixed** — real but smaller, or out of scope for a routing/bug-fix
+pass: `exif-remover`'s EXIF tag *parser* only decodes JPEG (gates on the
+`0xff 0xd8` SOI marker), so a PNG/WebP upload via the new
+`image-metadata-viewer`/`metadata` redirects shows "no readable EXIF tags"
+rather than real tags — the component already discloses this honestly
+("...or use a format this parser doesn't decode") and its actual
+metadata-*stripping* function (re-encoding through canvas) still works for
+every format, so the redirect is still a net improvement over the old
+slugs' zero real EXIF functionality either way; extending the parser to
+PNG `tEXt`/`eXIf` chunks and WebP's `EXIF` RIFF chunk is real work, not a
+one-line fix. Two meta-level findings about the recurring cost of this
+whole sweep, not concrete bugs, so not actioned as code: no CI guardrail
+exists to catch a stub component before a slug describing it gets
+registered and indexed (this is the 4th manual round finding
+already-indexed stub tools after the fact); and slug routing is hand-split
+across three independently-edited registries
+(`next.config.mjs`/`page.tsx REDIRECTS`/`TOOL_SLUG_ALIASES`) with no single
+source of truth, which is the root cause behind every chain-length and
+shadowing bug found across all four rounds. Both are real process
+improvements worth a dedicated pass, not something to bolt onto a content
+cleanup PR.
+
+Re-ran the full verification suite after these fixes: shadowing/coverage
+parser (0 conflicts, 0 missing across 627 live slugs), chain-resolution
+trace (0 loops, 0 dead ends across 866 sources) plus a new check for any
+live tool slug shadowed by a same-key alias/redirect (0, after fixing
+`serp-simulator`), `tsc --noEmit`, a clean `.next` rebuild (killing the
+port first this time), and live testing of every touched URL — including
+the 4 edited blog posts — plus a random 15-tool sample.
+
 ## Confirmed but NOT fixed in this pass — real follow-up work
 
 *Numbers below are from the first commit round; four family-verification
@@ -660,3 +768,36 @@ work too. Per this repo's split of responsibilities (content/code vs.
 infra/ops), diagnosing and fixing that gate is out of scope here — flagging
 it because it's the actual reason none of this reaches production without
 an admin merge override.
+
+## Unrelated but urgent — a stale `src/content/blog/` tree is silently serving wrong content for at least 1 live post
+
+Found while fixing a dead link in round 4's self-review: `scripts/generate-blog-manifest.mjs`
+(the `prebuild` step that generates `content/blog-manifest.ts`, the file
+every blog page actually renders from) scans **two** directories —
+`src/content/blog/` first, then `content/blog/` — and its dedup keeps
+whichever copy it sees *first* for a given slug
+(`if (!postsBySlug.has(slug)) postsBySlug.set(...)`). `src/content/blog/`
+is a stale duplicate (56 files, vs. 73 in the real `content/blog/`), and
+because it's scanned first, **any post that exists in both directories
+silently ignores edits made to the real `content/blog/` copy.**
+
+3 posts currently overlap: `2026-04-23-visualize-nested-json-relationships.md`
+(byte-identical, harmless for now), `2026-04-23-debug-regex-capture-groups-multiple-matches.md`
+(only differed in the dead link this round just fixed — patched both
+copies so the fix actually takes effect), and, more seriously,
+**`2026-04-15-why-browser-based-tools-are-the-future.md` — the live site
+is currently serving a substantively different, older description and
+tag set than what's in the maintained `content/blog/` copy**, with no
+indication anywhere that an edit to that file silently does nothing.
+
+Not fixed here — didn't touch `generate-blog-manifest.mjs`'s directory
+order or delete `src/content/blog/`, since neither the intended
+authoritative source nor the reason `src/` exists in parallel with the
+project's on `content/` convention is knowable from the code alone, and
+either fix has a blast radius beyond this PR's scope (up to 56 posts,
+not the 3 that happen to overlap today — a future edit to any currently-
+non-overlapping post is safe only until someone creates a `src/`-side copy
+of it). Needs a decision: delete the stale `src/content/blog/` (and the
+matching stale `src/lib/blog.ts` this session also noticed sitting next to
+the real `lib/blog.ts`) if it's genuinely dead, or reverse the scan order
+if `content/blog/` isn't actually meant to be authoritative.
