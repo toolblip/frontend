@@ -50,28 +50,39 @@ const nextConfig = {
       // Second family-verification pass (docs/gsc-recovery-plan.md): these
       // slugs all render a component that doesn't do what the slug's own
       // description promises, and in each case a real, different tool
-      // elsewhere in the catalog does. JsonSchemaGeneratorClient,
-      // JsonSchemaViewerClient, and JsonSchemaEditorClient (three of them)
-      // are all the same "JSON.parse then pretty-print" stub - none infer a
-      // schema, render a tree diagram, or offer a visual builder like their
-      // slugs promise; json-schema-validator is real. JsonPatchGeneratorClient
-      // is the same pretty-print stub, not an RFC 6902 diff; json-diff is a
-      // real two-document JSON comparison tool. ImageMetadataRemoverClient
+      // elsewhere in the catalog does. json-schema-generator and
+      // json-patch-generator both actually render JsonLdGeneratorClient -
+      // a byte-for-byte duplicate of the live json-ld-generator page, not a
+      // schema/patch tool at all - so both point straight at json-ld-generator
+      // rather than at json-schema-validator/json-diff (self-review caught
+      // this: an earlier version of this comment sourced its component
+      // claims from an orphaned, unimported file instead of the live
+      // ToolUI.tsx routing table). json-schema-viewer and json-schema-editor
+      // do render the real JsonSchemaValidatorClient, so those two keep
+      // json-schema-validator as their target. ImageMetadataRemoverClient
       // just re-downloads the uploaded image unchanged (no EXIF stripping);
       // exif-remover is the real implementation of the exact same feature.
       // TextDifferenceCheckerClient, TextFluencyCheckerClient, and
-      // WordComplexityAnalyzerClient are all the generic echo stub; text-diff
-      // and readability-score are real and topically closest. favicon-checker
-      // promises checking 6 platforms (favicon.ico, Apple Touch, Google SERP,
-      // Android manifest, Open Graph) but has no dedicated component at all -
-      // it silently fell back to BatchFaviconDownloaderClient; favicon-grabber
-      // is the closest real function that component actually has.
-      { source: '/tools/json-schema-generator', destination: '/tools/json-schema-validator', permanent: true },
+      // WordComplexityAnalyzerClient are all the generic echo stub.
+      // text-difference-checker redirects to code-diff (a real LCS-based
+      // line-by-line added/removed/context diff) rather than text-diff,
+      // since text-diff's own TextDiffClient only computes a Levenshtein
+      // similarity score/edit count with no line highlighting - not what
+      // "difference checker" promises either (text-diff's own description
+      // mismatch predates this PR and is flagged as follow-up in the docs,
+      // not fixed here). text-fluency-checker and word-complexity-analyzer
+      // go to readability-score, the real, topically closest tool.
+      // favicon-checker promises checking 6 platforms (favicon.ico, Apple
+      // Touch, Google SERP, Android manifest, Open Graph) but has no
+      // dedicated component at all - it silently fell back to
+      // BatchFaviconDownloaderClient; favicon-grabber is the closest real
+      // function that component actually has.
+      { source: '/tools/json-schema-generator', destination: '/tools/json-ld-generator', permanent: true },
       { source: '/tools/json-schema-viewer', destination: '/tools/json-schema-validator', permanent: true },
       { source: '/tools/json-schema-editor', destination: '/tools/json-schema-validator', permanent: true },
-      { source: '/tools/json-patch-generator', destination: '/tools/json-diff', permanent: true },
+      { source: '/tools/json-patch-generator', destination: '/tools/json-ld-generator', permanent: true },
       { source: '/tools/image-metadata-remover', destination: '/tools/exif-remover', permanent: true },
-      { source: '/tools/text-difference-checker', destination: '/tools/text-diff', permanent: true },
+      { source: '/tools/text-difference-checker', destination: '/tools/code-diff', permanent: true },
       { source: '/tools/text-fluency-checker', destination: '/tools/readability-score', permanent: true },
       { source: '/tools/word-complexity-analyzer', destination: '/tools/readability-score', permanent: true },
       { source: '/tools/favicon-checker', destination: '/tools/favicon-grabber', permanent: true },

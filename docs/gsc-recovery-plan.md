@@ -223,24 +223,24 @@ Continued past the ~20 largest families from round 2 through the remaining
 87 (down to size-2). Same method: read the description, read the component,
 check for an unwired real implementation before assuming redirect/removal.
 
-**48 more slugs resolved** — 1 format-mismatch (`mobi-to-azw3`, same
-extension-gating bug class as round 2), and ~40 genuine
+**42 slugs removed from the registry, 43 total resolved** — 1 newly
+registered (`rgb-to-hex`, see below), 14 redirected to a real, different
+tool elsewhere in the catalog (e.g. `image-metadata-remover` →
+`exif-remover`, `text-difference-checker` → `code-diff`, `mobi-to-azw3` →
+`azw3-to-mobi` — same extension-gating bug class as round 2), 28 removed
+outright with no real destination to point to. Examples of the
 description-vs-component mismatches this method hadn't caught yet, because
 they don't fit the "X-to-Y" conversion pattern the automated heuristic
-checks. Examples: `css-variable-generator` promised CSS custom
-properties/theming, rendered a utility-class generator with none of that;
-`ip-address-info` promised geolocation/ISP lookup, rendered a random-IP
-*generator* (would need a paid geolocation API anyway — removed, matching
-the project's existing precedent for tools needing infra it doesn't have);
-`js-beautifier` promised formatting/indenting, rendered the minifier
-(literally the opposite operation); `favicon-maker`/`favicon-png-creator`
-had the exact same "promises real .ico output, just re-downloads the
-uploaded PNG unchanged" bug already found and fixed for 3 sibling slugs in
-round 2, just missed then. Redirected where a real, different tool exists
-elsewhere in the catalog (18 slugs — e.g. `image-metadata-remover` →
-`exif-remover`, `json-schema-generator`/`-viewer`/`-editor` →
-`json-schema-validator`, `text-difference-checker` → `text-diff`); removed
-outright where nothing real exists to point to (24 slugs).
+checks: `css-variable-generator` promised CSS custom properties/theming,
+rendered a utility-class generator with none of that; `ip-address-info`
+promised geolocation/ISP lookup, rendered a random-IP *generator* (would
+need a paid geolocation API anyway — removed, matching the project's
+existing precedent for tools needing infra it doesn't have); `js-beautifier`
+promised formatting/indenting, rendered the minifier (literally the opposite
+operation); `favicon-maker`/`favicon-png-creator` had the exact same
+"promises real .ico output, just re-downloads the uploaded PNG unchanged"
+bug already found and fixed for 3 sibling slugs in round 2, just missed
+then.
 
 **A live infinite redirect loop, found by testing the round's own fixes,
 not by the automated checker.** Redirecting `rgb-to-hex-new` → `rgb-to-hex`
@@ -266,20 +266,99 @@ tables together.
 
 Verified with the same shadowing/coverage parser (0 conflicts, 0 missing
 across 659 live slugs), the new chain-resolution trace (0 loops, 0 dead
-ends across 865 alias/redirect sources), a full `next build`, and a random
+ends across 947 alias/redirect sources), a full `next build`, and a random
 25-tool sample plus every changed URL hit against `next build && next
 start`.
 
+## Self-review of round 3 — 7 findings, 7 fixed
+
+Self-reviewed via the same process as rounds 1 and 2 (10 independent finder
+passes). Every finding was real; all fixed.
+
+- **Two redirect destinations were picked from the wrong source file.**
+  `json-schema-generator` and `json-patch-generator` were redirected to
+  `json-schema-validator`/`json-diff` on the strength of component names
+  (`JsonSchemaGeneratorClient`, `JsonPatchGeneratorClient`) that only exist
+  in an orphaned, unimported file (`src/data/toolComponents.ts`) — not the
+  live routing table (`app/tools/[slug]/ToolUI.tsx`) `page.tsx` actually
+  renders through. Both slugs actually render `JsonLdGeneratorClient`, a
+  byte-for-byte duplicate of the already-live `/tools/json-ld-generator`
+  page. Retargeted both redirects there instead. `json-schema-viewer` and
+  `json-schema-editor` do render the real `JsonSchemaValidatorClient` as
+  claimed, so those two keep their original target — the review confirmed
+  the outcome was right there, just not the stated reasoning.
+- **`text-difference-checker` → `text-diff` sent traffic to a destination
+  that doesn't do what either slug's description promises.** `text-diff`'s
+  own `TextDiffClient` only computes a Levenshtein similarity score/edit
+  count — no line highlighting, despite `text-diff`'s own description
+  promising "added, removed, and unchanged lines highlighted" (a
+  pre-existing mismatch on `text-diff` itself, predating this round — not
+  fixed here, flagged below). Retargeted to `/tools/code-diff` instead,
+  which is a real LCS-based line-by-line added/removed/context diff and
+  the actual best match for what "difference checker" promises.
+- **A genuine dead-end regression from this round's own chain-resolution
+  audit**, caused by a real gap in that audit script: it traced
+  `TOOL_SLUG_ALIASES` and `page.tsx` `REDIRECTS` chains but never checked
+  whether an alias's *target* was itself a `next.config.mjs` redirect
+  source. `sitemap-xml-validator-express` → `sitemap-xml-validator` was a
+  working 2-hop chain before this round (the second hop being a
+  `next.config.mjs` redirect to `xml-validator`) and got false-flagged as
+  dead and deleted. Restored, repointed straight at `xml-validator` (1 hop,
+  matching the pattern used for `xml-sitemap-validator` elsewhere in this
+  same round). Checked all 4 other slugs this round's audit called dead
+  ends against the same blind spot — the other 3 (`ip-address-info-v2`,
+  `keyword-difficulty-tool`, `yaml-to-toml-v2`) were genuinely dead, no
+  further false positives.
+- **This round's own new redirects lengthened 3 pre-existing alias chains
+  from 1 hop to 2** (and one page.tsx pair from 2 hops to 3):
+  `favicon-checker-express`/`favicon-checker-tool` (and, one level up,
+  `check-favicon`/`favicon-test`) pointed at `favicon-checker`, which this
+  round redirected onward to `favicon-grabber`; `json-schema-gen-express`
+  pointed at `json-schema-generator`; `text-diff-checker` pointed at
+  `text-difference-checker`. Repointed all of them straight at the final
+  live destination. Checked every alias/redirect pointing at a slug this
+  round retargeted or removed for the same pattern — 9 pre-existing 2-hop
+  chains remain (`curl-generator`, `html-to-plain-text-v2`,
+  `keyword-generator-v2`, `lorem-ipsum-api-tool`,
+  `shell-command-gen-express`, `temperature-converter`, `tsv-to-json`,
+  `tsv-to-json-v2`, `word-frequency-analyzer`), none introduced by this
+  round, none dead — left alone as pre-existing, out-of-scope items.
+- **A live ad campaign (`rankwell-seo-tools`, active since 2026-07-08,
+  `data/ads/campaigns.json`) still targeted `sitemap-xml-validator`** in
+  its `slugs` array. That page has permanently redirected away since this
+  slug was pulled from the registry (round 2), so the campaign's targeting
+  entry has silently never matched since — no crash, just lost ad
+  placement. Repointed the entry to `xml-validator`, the tool that slug now
+  redirects to.
+
+Re-ran the full verification suite after these fixes: shadowing/coverage
+parser (0 conflicts, 0 missing across 659 live slugs), chain-resolution
+trace (0 loops, 0 dead ends across 947 sources, all single-hop except the 9
+pre-existing chains above), `tsc --noEmit`, full `next build`, and live
+testing of every URL this round touched plus a random 15-tool sample.
+
 ## Confirmed but NOT fixed in this pass — real follow-up work
 
-*Numbers below are from the first commit round; the family-verification pass
-above resolved roughly 20 of the largest remaining families. Re-running the
-same fingerprinting script after both rounds: 700 live tools, 87 families
-still sharing a component across 224 slugs — down from 93/268. The other
-~67 families (mostly smaller, 2-3 slugs each) are the real remaining work;
-apply the same method (read the component, compare against each slug's own
+*Numbers below are from the first commit round; three family-verification
+rounds since then (this doc's two sections above) have worked through every
+family down to size 2. Re-running the same fingerprinting script after all
+three rounds: 659 live tools, 54 families still sharing a component across
+150 slugs, largest at size 7 — down from 93 families / 268 slugs after
+round 1. What's left is the long tail: no more size-8+ families, mostly
+3-7 slug groups where the automated "X-to-Y conversion" heuristic doesn't
+apply and each slug needs a manual description-vs-component read. Apply the
+same method (read the component, compare against each slug's own
 `data/tools.ts` description, check for an unwired real component under a
-matching filename before assuming a redirect/removal is needed).*
+matching filename before assuming a redirect/removal is needed) for round 4.
+Also worth doing in round 4: fix `text-diff`'s own description-vs-component
+mismatch (promises line-highlighting, `TextDiffClient` only computes a
+similarity score — flagged during round 3's self-review, not fixed there
+since it predates that round); and commit the ad-hoc chain-resolution
+script used informally in rounds 2 and 3 as a real, checked-in script
+(`scripts/check-redirect-chains.js` or similar) — it has caught a real bug
+each of the three times it's been run, and being rewritten from scratch
+each round is exactly the kind of gap that let round 3's own version
+false-flag a live redirect as dead.*
 
 **93 tool-name families share one component across 268 live slugs**
 (discovered via `case 'slug': return <Component/>` mapping in

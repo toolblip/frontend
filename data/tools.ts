@@ -171,8 +171,8 @@ const TOOL_SLUG_ALIASES: Record<string, string> = {
   'encodings-ref': 'encodings-reference',
   'english-collocations-unique': 'english-collocations-checker',
   'favicon-browser': 'favicon-generator',
-  'favicon-checker-express': 'favicon-checker',
-  'favicon-checker-tool': 'favicon-checker',
+  'favicon-checker-express': 'favicon-grabber',
+  'favicon-checker-tool': 'favicon-grabber',
   'favicon-creator': 'favicon-generator',
   'favicon-creator-tool': 'favicon-generator',
   'favicon-fresh': 'favicon-generator',
@@ -329,7 +329,7 @@ const TOOL_SLUG_ALIASES: Record<string, string> = {
   'image-to-svg-converter': 'image-to-svg',
   'json-csv-express': 'json-to-csv',
   'json-path-tester-new': 'json-path-tester',
-  'json-schema-gen-express': 'json-schema-generator',
+  'json-schema-gen-express': 'json-ld-generator',
   'json-to-csv-v2': 'json-to-csv',
   'json-to-url-encoded-v2': 'json-to-url-encoded',
   'json-to-xml-v2': 'json-to-xml',
@@ -651,13 +651,19 @@ const TOOL_SLUG_ALIASES: Record<string, string> = {
   'serp-snippet-viewer': 'serp-preview',
   'serp-toolblip': 'serp-preview',
   'shell-command-gen-express': 'shell-command-generator-new',
+  // Restored - self-review caught that this round's chain-resolution audit
+  // false-flagged this as a dead end (it only checked TOOL_SLUG_ALIASES and
+  // page.tsx REDIRECTS, not that the target also resolved via a
+  // next.config.mjs redirect). sitemap-xml-validator itself 301s to
+  // xml-validator, so point straight there instead of chaining through it.
+  'sitemap-xml-validator-express': 'xml-validator',
   'srt-to-json-v2': 'srt-to-json',
   'ssh-key-gen': 'ssh-key-generator',
   'ssl-certificate-checker-v2': 'ssl-certificate-checker',
   'ssl-checker-express': 'ssl-certificate-checker',
   'syllable-counter-express': 'syllable-counter',
   'temperature-converter': 'temp-converter-express',
-  'text-diff-checker': 'text-difference-checker',
+  'text-diff-checker': 'code-diff',
   'text-diff-express': 'text-diff',
   'text-sort-tool': 'text-sorter',
   'text-sorter-2025': 'text-sorter',
