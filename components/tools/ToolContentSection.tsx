@@ -30,8 +30,15 @@ export default function ToolContentSection({ toolName, content }: Props) {
       <p className="px-5 py-4 text-gray-600 dark:text-gray-300 leading-relaxed">{teaser}</p>
 
       {hasMore && (
-        <details className="group border-t border-gray-200 dark:border-gray-800">
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-3">
+        // flex + order (not DOM order) puts the toggle after the expanded
+        // content when open, so "See less" lands at the bottom instead of
+        // sitting above the text it collapses. The content itself is still
+        // ordinary server-rendered markup inside <details> either way — it's
+        // in the initial HTML regardless of open/closed state, so this is
+        // purely a visual rearrangement and doesn't hide anything from
+        // crawlers (unlike a JS-mounted-only-when-open approach would).
+        <details className="group flex flex-col border-t border-gray-200 dark:border-gray-800">
+          <summary className="order-2 flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-3">
             <span className="text-sm font-semibold text-gray-900 dark:text-white">
               <span className="group-open:hidden">See more</span>
               <span className="hidden group-open:inline">See less</span>
@@ -53,7 +60,7 @@ export default function ToolContentSection({ toolName, content }: Props) {
             </svg>
           </summary>
 
-          <div className="space-y-6 border-t border-gray-200 dark:border-gray-800 px-5 py-5">
+          <div className="order-1 space-y-6 border-t border-gray-200 dark:border-gray-800 px-5 py-5">
             {rest && <p className="text-gray-600 dark:text-gray-300 leading-relaxed">{rest}</p>}
 
             {content.examples.length > 0 && (

@@ -150,6 +150,13 @@ const REDIRECTS: Record<string, string> = {
   'base64-decode': 'base64-encoder-decoder',
 };
 
+// Tools with a purpose-built social share card instead of the generic
+// site-wide og-preview.png. Add an entry here + the matching file in
+// public/ to give a specific tool its own image.
+const CUSTOM_OG_IMAGES: Record<string, string> = {
+  'punycode-encoder': '/og-punycode-encoder.png',
+};
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const canonicalSlug = getCanonicalToolSlug(slug);
@@ -157,6 +164,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const tool = getToolBySlug(canonicalSlug);
   if (!tool) return { title: 'Tool Not Found' };
   const url = `https://toolblip.com/tools/${canonicalSlug}`;
+  const ogImage = `https://toolblip.com${CUSTOM_OG_IMAGES[tool.slug] ?? '/og-preview.png'}`;
 
   return {
     title: `${tool.name} | Toolblip`,
@@ -170,12 +178,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: tool.description,
       url,
       siteName: 'Toolblip',
-      images: [{ url: 'https://toolblip.com/og-preview.png', width: 1200, height: 630, alt: tool.name }],
+      images: [{ url: ogImage, width: 1200, height: 630, alt: tool.name }],
     },
     twitter: {
-      card: 'summary',
+      card: 'summary_large_image',
       title: `${tool.name} | Toolblip`,
       description: tool.description,
+      images: [ogImage],
     },
   };
 }
