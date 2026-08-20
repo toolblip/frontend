@@ -80,7 +80,10 @@ export default function ImageBackgroundRemoverClient() {
   }, [image, method, tolerance, chromaKeyColor]);
 
   const removeBackgroundFloodFill = (data: Uint8ClampedArray, width: number, height: number) => {
-    const visited = new Set<string>();
+    // One flag per pixel (not a Set<string> of index strings) - avoids
+    // allocating/hashing a string per pixel, which otherwise dominates
+    // runtime on any real photo.
+    const visited = new Uint8Array(width * height);
     const cornerColors: { r: number; g: number; b: number }[] = [];
 
     // Sample corner pixels to determine background color
@@ -106,21 +109,26 @@ export default function ImageBackgroundRemoverClient() {
       b: Math.round(cornerColors.reduce((sum, c) => sum + c.b, 0) / cornerColors.length),
     };
 
-    // Flood fill from all corners
-    const fillQueue: number[][] = [];
-    
-    // Add corner pixels to queue
-    corners.forEach((i) => {
-      const key = i.toString();
-      if (!visited.has(key)) {
-        visited.add(key);
-        fillQueue.push([i, bgColor.r, bgColor.g, bgColor.b]);
-      }
-    });
+    // Flood fill from all corners. `fillQueue` holds pixel *indices*
+    // (0..width*height-1), not byte offsets - kept as a growable array
+    // read via an advancing `head` pointer instead of `.shift()`, which is
+    // O(n) per call and turns this into an O(n^2) walk on any real photo
+    // (a 1920x1080 image is ~2M pixels).
+    const fillQueue: number[] = [];
+    let head = 0;
 
-    while (fillQueue.length > 0) {
-      const [pixelIdx, , ,] = fillQueue.shift()!;
-      const idx = pixelIdx / 4;
+    const enqueue = (idx: number) => {
+      if (!visited[idx]) {
+        visited[idx] = 1;
+        fillQueue.push(idx);
+      }
+    };
+
+    corners.forEach((byteIdx) => enqueue(byteIdx / 4));
+
+    while (head < fillQueue.length) {
+      const idx = fillQueue[head++];
+      const pixelIdx = idx * 4;
       const x = idx % width;
       const y = Math.floor(idx / width);
 
@@ -134,23 +142,15 @@ export default function ImageBackgroundRemoverClient() {
         // Make transparent
         data[pixelIdx + 3] = 0;
 
-        // Add neighbors
-        const neighbors = [
-          (y - 1) * width + x,
-          (y + 1) * width + x,
-          y * width + (x - 1),
-          y * width + (x + 1),
-        ];
-
-        neighbors.forEach((nIdx) => {
-          if (nIdx >= 0 && nIdx < width * height) {
-            const key = (nIdx * 4).toString();
-            if (!visited.has(key)) {
-              visited.add(key);
-              fillQueue.push([nIdx * 4, bgColor.r, bgColor.g, bgColor.b]);
-            }
-          }
-        });
+        // 4-connected neighbors. Left/right (`idx - 1` / `idx + 1`) are
+        // only added when still on the same row - without the x-bounds
+        // check, those wrap into the previous/next row at the image edges
+        // (a background-colored region that's genuinely disconnected from
+        // every corner could get erased anyway through that phantom edge).
+        if (y > 0) enqueue(idx - width);
+        if (y < height - 1) enqueue(idx + width);
+        if (x > 0) enqueue(idx - 1);
+        if (x < width - 1) enqueue(idx + 1);
       }
     }
   };
