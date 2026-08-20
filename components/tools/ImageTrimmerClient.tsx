@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback } from 'react';
 import { useSubscription } from '@/hooks/useSubscription';
 import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
+import { convertHeicIfNeeded } from '@/lib/heic';
 
 interface TrimBox {
   x: number;
@@ -72,12 +73,17 @@ export default function ImageTrimmerClient() {
   const [trimmedUrl, setTrimmedUrl] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [status, setStatus] = useState<'idle' | 'nothing-to-trim'>('idle');
+  const [isConvertingHeic, setIsConvertingHeic] = useState(false);
   const imgRef = useRef<HTMLImageElement | null>(null);
   const { tier } = useSubscription();
   const maxSizeMB = tier === 'free' ? 5 : tier === 'starter' ? 10 : tier === 'ultra' ? 100 : tier === 'max' ? 500 : 5;
   const isOversized = selectedFile != null && selectedFile.size / (1024 * 1024) > maxSizeMB;
 
-  const loadImage = (file: File) => {
+  const loadImage = async (file: File) => {
+    setIsConvertingHeic(true);
+    const decodable = await convertHeicIfNeeded(file);
+    setIsConvertingHeic(false);
+
     const reader = new FileReader();
     reader.onload = (e) => {
       const src = e.target?.result as string;
@@ -91,7 +97,7 @@ export default function ImageTrimmerClient() {
       };
       img.src = src;
     };
-    reader.readAsDataURL(file);
+    reader.readAsDataURL(decodable);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,7 +111,9 @@ export default function ImageTrimmerClient() {
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
+    // HEIC/HEIF files often report an empty or non-"image/" MIME type
+    // (OS-dependent), so fall back to checking the extension too.
+    if (file && (file.type.startsWith('image/') || /\.(heic|heif)$/i.test(file.name))) {
       setSelectedFile(file);
       loadImage(file);
     }
@@ -178,8 +186,14 @@ export default function ImageTrimmerClient() {
           onClick={() => document.getElementById('trim-image-input')?.click()}
         >
           <span className="text-3xl mb-3 block">✂️</span>
-          <p className="text-gray-400 text-sm">Drag & drop an image, or click to browse</p>
-          <p className="text-gray-600 text-xs mt-1">PNG, JPG, WebP, GIF</p>
+          {isConvertingHeic ? (
+            <p className="text-gray-400 text-sm">Converting HEIC photo...</p>
+          ) : (
+            <>
+              <p className="text-gray-400 text-sm">Drag & drop an image, or click to browse</p>
+              <p className="text-gray-600 text-xs mt-1">PNG, JPG, WebP, GIF, HEIC</p>
+            </>
+          )}
           <input
             id="trim-image-input"
             type="file"

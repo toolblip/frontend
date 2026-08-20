@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
+import { convertHeicIfNeeded } from '@/lib/heic';
 
 type RemovalMethod = 'floodfill' | 'chroma' | 'ai';
 
@@ -15,6 +16,7 @@ export default function ImageBackgroundRemoverClient() {
   const [aiProgress, setAiProgress] = useState<number | null>(null);
   const [aiStage, setAiStage] = useState<'fetch' | 'compute'>('fetch');
   const [aiError, setAiError] = useState<string | null>(null);
+  const [isConvertingHeic, setIsConvertingHeic] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   // Bumped on every upload so an in-flight AI request can tell it's been
@@ -37,20 +39,25 @@ export default function ImageBackgroundRemoverClient() {
     setAiError(null);
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      requestIdRef.current += 1;
-      releaseProcessedBlobUrl();
-      setImageFile(file);
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setImage(event.target?.result as string);
-        setProcessedImage(null);
-        setAiError(null);
-      };
-      reader.readAsDataURL(file);
-    }
+    if (!file) return;
+
+    requestIdRef.current += 1;
+    releaseProcessedBlobUrl();
+
+    setIsConvertingHeic(true);
+    const decodable = await convertHeicIfNeeded(file);
+    setIsConvertingHeic(false);
+
+    setImageFile(decodable);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      setImage(event.target?.result as string);
+      setProcessedImage(null);
+      setAiError(null);
+    };
+    reader.readAsDataURL(decodable);
   };
 
   const hexToRgb = (hex: string): { r: number; g: number; b: number } => {
@@ -278,9 +285,11 @@ export default function ImageBackgroundRemoverClient() {
         type="file"
         accept="image/*"
         onChange={handleImageUpload}
-        disabled={isProcessing}
+        disabled={isProcessing || isConvertingHeic}
         className="tb-v2-file-input"
       />
+
+      {isConvertingHeic && <p className="tb-v2-text-sm tb-v2-text-gray-500">Converting HEIC photo...</p>}
 
       {image && (
         <>
