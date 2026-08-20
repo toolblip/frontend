@@ -17,7 +17,11 @@ export default function UptimeCalculatorClient() {
   const [period, setPeriod] = useState<Period>('year');
 
   const downtime = calcDowntime(sla, period);
-  const slaDecimal = (100 - sla).toFixed(6 - String(sla).split('.')[1].length + 1 > 6 ? 6 : String(sla).split('.')[1].length + 1);
+  // A whole-number sla (typed in the number field, or the slider's own min
+  // of 90) has no '.' to split - String(sla).split('.')[1] is undefined and
+  // .length used to throw, crashing the tool on that exact realistic input.
+  const slaDecimalPlaces = (String(sla).split('.')[1] ?? '').length;
+  const slaDecimal = (100 - sla).toFixed(Math.min(6, slaDecimalPlaces + 1));
   const periods: Period[] = ['year', 'month', 'week', 'day', 'hour'];
 
   return (
@@ -36,7 +40,12 @@ export default function UptimeCalculatorClient() {
           <input
             type="number"
             value={sla}
-            onChange={e => setSla(Math.max(90, Math.min(99.999, parseFloat(e.target.value) || 90)))}
+            // Clamping on every keystroke snapped the field back to 90 the
+            // instant a typed digit (e.g. the "9" in "95.5") parsed below
+            // the min, making most values impossible to type from scratch.
+            // Only sanitize NaN while typing; clamp the range on blur.
+            onChange={e => { const v = parseFloat(e.target.value); if (!Number.isNaN(v)) setSla(v); }}
+            onBlur={e => { const v = parseFloat(e.target.value); setSla(Math.max(90, Math.min(99.999, Number.isNaN(v) ? 90 : v))); }}
             className="tb-v2-tool-textarea"
             style={{ width: 100, minHeight: 36, resize: 'none', textAlign: 'center' }}
             step={0.001}

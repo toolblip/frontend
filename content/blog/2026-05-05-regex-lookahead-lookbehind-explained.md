@@ -248,7 +248,7 @@ No signup. No data uploaded. Everything runs locally in your browser.
 
 👉 **[Try the Regex Tester](/tools/regex-tester)**  -  paste a pattern, write test strings, and see matches highlighted in real time.
 
-Pair it with the **[Regex Cheatsheet](/tools/regex-cheatsheet)** for quick pattern reminders.
+Pair it with the **[Regex Cheatsheet](/blog/regex-cheatsheet)** for quick pattern reminders.
 
 ## When to Use Each
 

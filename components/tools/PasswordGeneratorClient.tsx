@@ -1,12 +1,18 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { randomFromAlphabet } from '@/lib/secureRandom';
 
 const UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const LOWER = 'abcdefghijklmnopqrstuvwxyz';
 const DIGITS = '0123456789';
 const SYMBOLS = '!@#$%^&*()-_=+[]{};:,.?/';
-const AMBIGUOUS = /[O0Il1|`'"]/g;
+// `|` inside a character class is a literal pipe, not regex alternation -
+// the previous /[O0Il1|`'"]/g accidentally also stripped backtick/pipe/
+// quote characters (harmless today since SYMBOLS doesn't contain any of
+// them, but confusing and inconsistent with RandomStringGeneratorClient's
+// identical O0Il1 definition of "ambiguous").
+const AMBIGUOUS = /[O0Il1]/g;
 
 type Options = {
   length: number;
@@ -30,13 +36,10 @@ function buildPool(opts: Options): string {
 function generatePassword(opts: Options): string {
   const pool = buildPool(opts);
   if (!pool) return '';
-  const out = new Array<string>(opts.length);
-  const rnd = new Uint32Array(opts.length);
-  crypto.getRandomValues(rnd);
-  for (let i = 0; i < opts.length; i++) {
-    out[i] = pool[rnd[i] % pool.length];
-  }
-  return out.join('');
+  // Rejection-sampled, not `% pool.length` - a plain modulo biases whichever
+  // pool characters fall below 2^32 % pool.length, which real password
+  // generators can't afford (see lib/secureRandom.ts).
+  return randomFromAlphabet(pool, opts.length);
 }
 
 type Strength = { score: 0 | 1 | 2 | 3 | 4; label: string; cls: string };

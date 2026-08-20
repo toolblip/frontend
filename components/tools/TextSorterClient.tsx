@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 type SortMode = 'az' | 'za' | 'length-asc' | 'length-desc' | 'reverse' | 'random' | 'unique';
 
@@ -28,9 +28,18 @@ export default function TextSorterClient() {
       case 'reverse':
         sorted = [...lines].reverse();
         break;
-      case 'random':
-        sorted = [...lines].sort(() => Math.random() - 0.5);
+      case 'random': {
+        // Fisher-Yates, not sort(() => Math.random() - 0.5) - the
+        // sort-comparator trick is a well-known biased shuffle, and calling
+        // Math.random() inside a comparator that also gets re-invoked by
+        // React re-renders made the old dead code doubly wrong once reachable.
+        sorted = [...lines];
+        for (let i = sorted.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [sorted[i], sorted[j]] = [sorted[j], sorted[i]];
+        }
         break;
+      }
       case 'unique':
         sorted = caseSensitive
           ? [...new Set(lines)]
@@ -42,8 +51,14 @@ export default function TextSorterClient() {
     return sorted.join('\n');
   };
 
+  // Computed once per (input, mode, caseSensitive) and reused for both the
+  // display and the copy button - calling sort(input) separately in each
+  // place, as before, gave 'random' mode two independent Math.random()
+  // shuffles, so what got copied never matched what was on screen.
+  const output = useMemo(() => sort(input), [input, mode, caseSensitive]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const handleCopy = () => {
-    navigator.clipboard.writeText(sort(input));
+    navigator.clipboard.writeText(output);
   };
 
   return (
@@ -59,6 +74,7 @@ export default function TextSorterClient() {
           <option value="length-asc">Shortest first</option>
           <option value="length-desc">Longest first</option>
           <option value="reverse">Reverse order</option>
+          <option value="random">Random order</option>
           <option value="unique">Remove duplicates</option>
         </select>
         <label className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">
@@ -88,7 +104,7 @@ export default function TextSorterClient() {
             <button onClick={handleCopy} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm" style={{color:"var(--red)"}}>Copy output</button>
           </div>
           <textarea
-            value={sort(input)}
+            value={output}
             readOnly
             rows={8}
             className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm resize-none"

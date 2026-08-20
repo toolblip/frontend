@@ -19,7 +19,28 @@ const FORMAT_OPTIONS: { value: OutputFormat; label: string; ext: string }[] = [
   { value: 'image/avif', label: 'AVIF', ext: 'avif' },
 ];
 
-const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif'];
+const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif', 'image/svg+xml'];
+
+// Many real-world SVGs declare only a viewBox, no explicit width/height -
+// for those, img.naturalWidth/naturalHeight come back 0 (or a UA-default
+// replaced-element size) since there's no intrinsic pixel size to report,
+// which would size the canvas to 0x0 and make toBlob() fail. Read the
+// dimensions straight out of the SVG markup as a fallback.
+async function getSvgFallbackSize(file: File): Promise<{ width: number; height: number } | null> {
+  const text = await file.text();
+  const svgTag = text.match(/<svg\b[^>]*>/);
+  if (!svgTag) return null;
+  const widthAttr = svgTag[0].match(/\swidth="([\d.]+)/);
+  const heightAttr = svgTag[0].match(/\sheight="([\d.]+)/);
+  if (widthAttr && heightAttr) {
+    return { width: parseFloat(widthAttr[1]), height: parseFloat(heightAttr[1]) };
+  }
+  const viewBox = svgTag[0].match(/\sviewBox="[\-\d.]+\s+[\-\d.]+\s+([\d.]+)\s+([\d.]+)"/);
+  if (viewBox) {
+    return { width: parseFloat(viewBox[1]), height: parseFloat(viewBox[2]) };
+  }
+  return null;
+}
 
 function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -60,8 +81,12 @@ export default function ImageFormatConverterClient() {
 
   const isOversized = sourceFile != null && sourceFile.size / (1024 * 1024) > maxSizeMB;
   const handleFile = useCallback((file: File) => {
-    if (!ACCEPTED_TYPES.includes(file.type)) {
-      setError('Unsupported format. Please upload a JPEG, PNG, WebP, AVIF, or GIF image.');
+    // .svg files are notorious for an empty/unset file.type depending on
+    // OS and browser (especially via drag-and-drop), so a bare MIME check
+    // rejects genuinely valid SVGs - fall back to the file extension.
+    const isSvgByExtension = file.type === '' && file.name.toLowerCase().endsWith('.svg');
+    if (!ACCEPTED_TYPES.includes(file.type) && !isSvgByExtension) {
+      setError('Unsupported format. Please upload a JPEG, PNG, WebP, AVIF, GIF, or SVG image.');
       return;
     }
     setError(null);
@@ -110,8 +135,16 @@ export default function ImageFormatConverterClient() {
 
       const canvas = canvasRef.current;
       if (!canvas) throw new Error('Canvas not available.');
-      canvas.width = img.naturalWidth;
-      canvas.height = img.naturalHeight;
+      let width = img.naturalWidth;
+      let height = img.naturalHeight;
+      const isSvg = sourceFile.type === 'image/svg+xml' || sourceFile.name.toLowerCase().endsWith('.svg');
+      if ((!width || !height) && isSvg) {
+        const svgSize = await getSvgFallbackSize(sourceFile);
+        if (svgSize) { width = svgSize.width; height = svgSize.height; }
+      }
+      if (!width || !height) throw new Error('Could not determine the image dimensions. Try an SVG with explicit width/height or viewBox attributes.');
+      canvas.width = width;
+      canvas.height = height;
 
       const ctx = canvas.getContext('2d');
       if (!ctx) throw new Error('Canvas context not available.');
@@ -185,14 +218,14 @@ export default function ImageFormatConverterClient() {
           ref={fileInputRef}
           type="file"
           className="hidden"
-          accept="image/jpeg,image/png,image/webp,image/avif,image/gif"
+          accept="image/jpeg,image/png,image/webp,image/avif,image/gif,image/svg+xml"
           onChange={handleInputChange}
         />
         <div className="text-4xl mb-3 pointer-events-none">🖼️</div>
         <p className="text-gray-300 font-medium pointer-events-none">
           {isDragging ? 'Drop image here' : 'Drop an image here or click to upload'}
         </p>
-        <p className="text-gray-500 text-sm mt-1 pointer-events-none">JPEG · PNG · WebP · AVIF · GIF</p>
+        <p className="text-gray-500 text-sm mt-1 pointer-events-none">JPEG · PNG · WebP · AVIF · GIF · SVG</p>
         <FileSizeError file={sourceFile} maxSizeMB={maxSizeMB} />
       </div>
 

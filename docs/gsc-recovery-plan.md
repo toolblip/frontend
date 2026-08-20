@@ -337,28 +337,279 @@ trace (0 loops, 0 dead ends across 947 sources, all single-hop except the 9
 pre-existing chains above), `tsc --noEmit`, full `next build`, and live
 testing of every URL this round touched plus a random 15-tool sample.
 
+## Family-verification pass, round 4 — the remaining 54 families down to size 2
+
+Worked through every family left after round 3 (all size ≤7). Used three
+parallel analysis passes (one per ~18 families) to read each component
+against every slug's own description before deciding redirect/remove/keep,
+since the earlier heuristic (does the slug fit an "X-to-Y" conversion
+pattern) stops finding anything at this tail — every remaining mismatch
+needed an actual read of the component logic.
+
+**34 slugs removed from the registry: 11 redirected to a real different
+tool, 23 removed outright with no real destination.** Two new tools
+registered. 627 live tools remain (down from 659), 41 families still share
+a component across 113 slugs (down from 54/150), largest now size 7.
+
+Redirects:
+- `percentage-off-calculator` → `discount-calculator` — a pure
+  duplicate-routing bug, not a missing feature: `PercentageCalculatorClient`
+  has no discount mode, but a separate, real, already-correct
+  `DiscountCalculatorClient` existed under its own slug the whole time.
+- `volume-unit-converter`, `speed-converter`, `unit-measurement-converter` →
+  `all-in-one-unit-converter` — `UnitConverterClient` only implements
+  length/weight/temperature; the promised volume/speed categories don't
+  exist in it at all, but do in the separate all-in-one tool.
+- `text-diff`, `json-diff` → `code-diff` — closes out the mismatch round
+  3's own self-review flagged as follow-up work: `TextDiffClient` only
+  computes a Levenshtein similarity score, no line highlighting and no
+  JSON-structural comparison despite both slugs promising exactly that.
+- `image-metadata-viewer`, `metadata` → `exif-remover` — the metadata
+  viewer only reads basic File API properties (name/size/type/dimensions),
+  zero EXIF/IPTC/XMP parsing despite both descriptions promising it;
+  `exif-remover` has a real hand-rolled JPEG/TIFF EXIF tag parser that
+  displays the real tags before stripping them.
+- `syllable-word-counter` → `readability-score-calculator` — promises
+  "estimate reading level," `SyllableCounterClient` only counts syllables
+  per word, no grade-level formula at all.
+- `random-paragraph-generator` → `lorem-ipsum-paragraphs` — promises
+  "lorem ipsum text," `RandomParagraphGeneratorClient` generates templated
+  tech-jargon mad-libs sentences with zero actual Latin lorem ipsum.
+- `seo-tag-analyzer` → `meta-tag-generator` — promises "analyze and
+  generate... with preview," `SeoMetaTagAnalyzerClient` only fetches a URL
+  and scores its existing tags, no generation UI at all.
+
+Removed outright (no real alternative found anywhere in the catalog,
+including a check for orphaned unwired components under a matching
+filename — all confirmed stubs): `json-to-go-struct`, `srt-to-json`,
+`json-to-url-encoded`, `json-to-php-array` (CsvToJsonClient family — the
+shared component only ever does CSV→JSON regardless of slug, and every
+orphaned candidate, e.g. `JsonToGoStructClient`, `JSONToURLEncodedV2Client`,
+is itself a `JSON.parse` → pretty-print stub); `markup-calculator`,
+`scrypt-hash-generator`, `regex-cheatsheet`, `wifi-qr-code-generator`,
+`vcard-qr-generator` (each an orphaned stub with no real logic for the
+promised feature — markup pricing math, Scrypt KDF, structured WiFi/vCard
+payload encoding, static reference content); `robots-txt-tester`,
+`robots-txt-simulator` (no per-URL "is this allowed for Googlebot" testing
+exists anywhere in the catalog); `avi-to-gif`, `mkv-to-gif`, `mp4-to-gif`,
+and — found incidentally, not part of any family, but the same underlying
+defect — `gif-maker` itself: no real animated-GIF encoder exists anywhere
+in this codebase, and `GifMakerClient`'s own `canvas.toDataURL('image/gif')`
+call is a spec no-op (the Canvas spec only guarantees `image/png` support,
+so browsers silently fall back to PNG), meaning even the one dedicated "GIF
+Maker" tool never actually produced a GIF; `ai-rephraser`, `humanizer-ai`
+(a hardcoded ~80-word synonym-substitution table with zero API calls
+anywhere in the codebase — no tone change, no rewriting, and "bypass AI
+detection" is a flatly false claim, not just an overclaim);
+`content-summarizer`, `summarizer` (`trimmed.slice(0, limit)` character
+truncation behind a fake 1-second loading spinner — no key-point extraction
+of any kind, the exact "fake processing" doorway pattern the original SEO
+diagnosis flagged); `vsd-to-docx`, `vsdx-to-docx`, `vsd-to-pptx`,
+`vsdx-to-pptx` (`handleProcess` is `setOutput(input)` — a literal unchanged
+echo — behind an unfilled placeholder template and a dead
+`// Visio to Word conversion logic here` comment; no real Visio parser
+exists anywhere in the codebase).
+
+**Two new tools registered, not redirected or removed** — `svg-to-jpg` and
+`svg-to-webp`. Found while checking `svg-to-png`: `ImageFormatConverterClient`
+rejected `image/svg+xml` uploads entirely even though the rest of its
+pipeline (`new Image()` from a blob URL → `canvas.drawImage` →
+`canvas.toBlob`) handles SVG rasterization fine — a one-line
+`ACCEPTED_TYPES` gap, not a missing capability. Fixed the component, then
+found the exact rgb-to-hex pattern from round 3 again: real, dedicated
+`case 'svg-to-jpg'`/`case 'svg-to-webp'` switch cases already existed with
+no `data/tools.ts` entry ever routing to them. Registered both.
+
+**Four real code bugs fixed, unrelated to redirect/remove decisions** (the
+components themselves are legitimate and stay live under their existing
+slugs):
+- `PasswordGeneratorClient` had the same modulo-bias defect
+  (`pool[rnd[i] % pool.length]`) that `lib/secureRandom.ts` was built to fix
+  in round 2 — just never applied here. Swapped in `randomFromAlphabet`.
+- `UptimeCalculatorClient` crashed on any whole-number SLA input (typing
+  `95` in the number field, or the slider's own min of `90`) —
+  `String(sla).split('.')[1].length` throws when there's no `.` to split.
+  Fixed to handle a missing decimal part.
+- `TextSorterClient`'s `'random'` sort mode was fully implemented in the
+  switch statement but had no corresponding `<option>` in the `<select>` —
+  dead, unreachable code exposed by the family read. Added the option.
+- `PdfPasswordRemoverClient` had a limitation-warning `<div>` sitting after
+  the component function's closing brace — valid but discarded JSX that
+  never rendered. Moved it inside the actual return.
+
+Verified with the same shadowing/coverage parser (0 conflicts, 0 missing
+across 627 live slugs), the chain-resolution trace (0 loops, 0 dead ends
+across 867 sources — proactively checked every alias/redirect pointing at
+an affected slug *before* committing, based on the exact chain-lengthening
+and false-dead-end mistakes round 3's own self-review caught after the
+fact), `tsc --noEmit`, a full `next build`, and live testing of every
+changed URL plus a random 15-tool sample. One process note: the first
+`next build` silently didn't pick up the two newly-registered slugs in the
+running `next start` server — traced to a stale server process left
+listening on port 3000 from the previous round's testing, not a build
+problem; a `rm -rf .next` clean rebuild plus killing the stale process
+resolved it. Worth remembering for future rounds: always confirm the port
+is actually free before trusting a live-server verification pass.
+
+Left deliberately unactioned this round (real, but smaller, description-only
+overclaims with no better redirect/removal target — flagged for a future
+content-accuracy pass, not a routing fix): `lorem-ipsum`'s "via API" claim
+(pure client-side); `lorem-ipsum-bytes`'s "byte-size control, HTML tags"
+claim (only paragraph-count control exists); `title-case-converter`'s
+"small words, numbers, custom exceptions" claim (plain Title Case only);
+`markdown-editor`'s "Export to... PDF" claim (unverified, likely false);
+`json-to-typescript-interface`/`-types`' strict/readonly/nullable-modifier
+claims (unverified, moderate confidence); `robots-txt-editor`'s "live
+crawler simulation" claim; `color-contrast-auditor`'s "suggested fixes"
+claim; `image-rotate`/`rotate`'s "custom angle" claim (fixed 90/180/270°
+buttons only); `mac-address-generator`/`random-mac-generator`'s "OUI,
+EUI-64" claims (3 separator formats, no vendor-prefix or 64-bit support);
+`readability-score-calculator`'s ARI/Coleman-Liau claim (only
+Flesch-Kincaid + SMOG implemented); `random-color-generator`'s "random
+colors" claim (`ColorHarmonyGeneratorClient` is a deterministic
+hue-harmony generator, not random — no clean redirect target and a real
+fix means adding an actual random mode, judged out of scope for this
+pass); `word-density-analyzer`'s "phrase frequency" claim (single words
+only). Also noted but not acted on: 4 near-duplicate-description
+consolidation candidates (`word-combinations-generator`/`word-combinations`,
+`jwt-tester`/`jwt-token-tester`, `english-collocations-checker`/
+`collocations-checker`, `all-in-one-unit-converter`/`general-unit-converter`)
+— not mismatches, just two slugs describing the same real tool, worth a 301
+in a future pass to reduce duplicate-content surface.
+
+## Self-review of round 4 — 9 findings, 9 fixed
+
+10 finder angles run in parallel against this round's larger diff. Every
+finding was real; all fixed.
+
+- **A genuine live bug my own fix exposed.** The `'random'` sort mode I
+  just made reachable in `TextSorterClient` called `sort(input)`
+  independently in the render (`value={sort(input)}`) and again in the
+  copy handler — since the comparator calls `Math.random()`, each call
+  produced an *independent* shuffle, so the copied text never matched what
+  was on screen, and any unrelated re-render (toggling the case-sensitive
+  checkbox) silently reshuffled the visible output. Memoized the result
+  per `(input, mode, caseSensitive)` and had both the display and the copy
+  button read the same value. Also swapped the biased
+  `sort(() => Math.random() - 0.5)` shuffle for a real Fisher-Yates while
+  already in the function.
+- **The two new SVG tools were broken for a common class of real input.**
+  Many real-world SVGs declare only a `viewBox`, no explicit
+  `width`/`height` — for those, `img.naturalWidth`/`naturalHeight` come
+  back `0`, sizing the canvas to 0×0 and failing the conversion. Added a
+  fallback that reads the dimensions straight out of the SVG markup
+  (explicit width/height attributes, or the viewBox) when the image's own
+  reported size is 0. Also hardened the upload check itself: `.svg`'s MIME
+  type is well known to come back empty depending on OS/browser
+  (especially via drag-and-drop), which would've rejected valid SVGs at
+  the door — added a file-extension fallback alongside the MIME check.
+- **5 dead links in 3 already-indexed blog posts**, pointing at tool pages
+  this and earlier rounds removed with no redirect (`/tools/regex-cheatsheet`
+  ×3, `/tools/json-to-go-struct` ×2) — exactly the kind of broken link a
+  GSC-recovery initiative shouldn't be creating in its own indexed content.
+  `regex-cheatsheet` has a real blog post covering the same material
+  (`/blog/regex-cheatsheet`) — repointed the 3 links there rather than
+  adding an unusual tool→blog-post redirect. No real destination exists for
+  `json-to-go-struct` — removed the 2 dead links rather than point them at
+  a red herring.
+- **A live tool permanently unreachable at its own URL — a new bug class
+  the family-fingerprinting method can't see.** `serp-simulator` is a real,
+  live `data/tools.ts` entry rendering a real, distinct component
+  (`SerpPreviewClient`, not `GoogleSerpSimulatorClient`), but
+  `page.tsx`'s `REDIRECTS` map had a `'serp-simulator': 'google-serp-simulator'`
+  entry with the *same key* as the live slug — and `REDIRECTS` is checked
+  before `getCanonicalToolSlug`, so every visit permanently redirected away
+  before the real tool ever rendered. The project already knew about this
+  (`app/sitemap-tools.xml/route.ts` excluded it from the sitemap via a
+  `SHADOWED_BY_REDIRECT` set with a comment describing the exact bug) but
+  had worked around the symptom instead of the cause. The family-fingerprint
+  script that drives this whole sweep groups slugs by which component they
+  render *if reached* — it has no way to know a slug's own switch case is
+  unreachable because something upstream shadows it first. Checked for more
+  instances of this pattern (a live tool slug also appearing as a key in
+  `TOOL_SLUG_ALIASES` or `page.tsx` `REDIRECTS`) — this was the only one.
+  Removed the shadowing redirect and un-excluded the slug from the sitemap.
+- **A real crash and a real usability bug in the exact function this
+  round's own crash-fix hunk touches.** `UptimeCalculatorClient`'s number
+  input clamped `[90, 99.999]` on every keystroke's `onChange`, so typing
+  "9" (the first digit of, say, "95.5") from an empty field immediately
+  snapped back to "90" — making most values impossible to type digit by
+  digit, only pasteable or reachable via the slider. Moved the clamp to
+  `onBlur`; `onChange` now only guards against `NaN`.
+- **Sitemap freshness signal not bumped**, in the same file
+  (`app/sitemap-tools.xml/route.ts`) whose own comment says to bump
+  `TOOL_PAGES_LAST_MODIFIED` "when the tool catalog changes meaningfully" —
+  exactly what round 4 did (34 removals, 2 additions) without touching this
+  file. Bumped the date and folded in the `serp-simulator` sitemap fix
+  above in the same edit.
+- **Two floating multi-line comments with no blank-line separator before
+  the next unrelated map entry** in `page.tsx`'s `REDIRECTS` (the
+  `test-robots-txt-online` and `mp4-gif` removal rationales, both added
+  this round) — a future reader could misattribute either explanation to
+  the entry that happens to follow it. Added the missing blank lines.
+- **A confusing, technically-wrong regex** in `PasswordGeneratorClient`:
+  `/[O0Il1|`'"]/g` — inside a character class, `|` is a literal pipe, not
+  regex alternation, so this was also (harmlessly, since none of those
+  characters are in the symbol pool) stripping backtick/pipe/quote
+  characters under the "exclude ambiguous" label. Simplified to `/[O0Il1]/g`,
+  matching `RandomStringGeneratorClient`'s identical definition of
+  "ambiguous" elsewhere in the catalog.
+
+**Noted, not fixed** — real but smaller, or out of scope for a routing/bug-fix
+pass: `exif-remover`'s EXIF tag *parser* only decodes JPEG (gates on the
+`0xff 0xd8` SOI marker), so a PNG/WebP upload via the new
+`image-metadata-viewer`/`metadata` redirects shows "no readable EXIF tags"
+rather than real tags — the component already discloses this honestly
+("...or use a format this parser doesn't decode") and its actual
+metadata-*stripping* function (re-encoding through canvas) still works for
+every format, so the redirect is still a net improvement over the old
+slugs' zero real EXIF functionality either way; extending the parser to
+PNG `tEXt`/`eXIf` chunks and WebP's `EXIF` RIFF chunk is real work, not a
+one-line fix. Two meta-level findings about the recurring cost of this
+whole sweep, not concrete bugs, so not actioned as code: no CI guardrail
+exists to catch a stub component before a slug describing it gets
+registered and indexed (this is the 4th manual round finding
+already-indexed stub tools after the fact); and slug routing is hand-split
+across three independently-edited registries
+(`next.config.mjs`/`page.tsx REDIRECTS`/`TOOL_SLUG_ALIASES`) with no single
+source of truth, which is the root cause behind every chain-length and
+shadowing bug found across all four rounds. Both are real process
+improvements worth a dedicated pass, not something to bolt onto a content
+cleanup PR.
+
+Re-ran the full verification suite after these fixes: shadowing/coverage
+parser (0 conflicts, 0 missing across 627 live slugs), chain-resolution
+trace (0 loops, 0 dead ends across 866 sources) plus a new check for any
+live tool slug shadowed by a same-key alias/redirect (0, after fixing
+`serp-simulator`), `tsc --noEmit`, a clean `.next` rebuild (killing the
+port first this time), and live testing of every touched URL — including
+the 4 edited blog posts — plus a random 15-tool sample.
+
 ## Confirmed but NOT fixed in this pass — real follow-up work
 
-*Numbers below are from the first commit round; three family-verification
-rounds since then (this doc's two sections above) have worked through every
-family down to size 2. Re-running the same fingerprinting script after all
-three rounds: 659 live tools, 54 families still sharing a component across
-150 slugs, largest at size 7 — down from 93 families / 268 slugs after
-round 1. What's left is the long tail: no more size-8+ families, mostly
-3-7 slug groups where the automated "X-to-Y conversion" heuristic doesn't
-apply and each slug needs a manual description-vs-component read. Apply the
-same method (read the component, compare against each slug's own
-`data/tools.ts` description, check for an unwired real component under a
-matching filename before assuming a redirect/removal is needed) for round 4.
-Also worth doing in round 4: fix `text-diff`'s own description-vs-component
-mismatch (promises line-highlighting, `TextDiffClient` only computes a
-similarity score — flagged during round 3's self-review, not fixed there
-since it predates that round); and commit the ad-hoc chain-resolution
-script used informally in rounds 2 and 3 as a real, checked-in script
+*Numbers below are from the first commit round; four family-verification
+rounds since then (this doc's sections above) have worked through every
+family down to size 2, including the full long tail in round 4. Re-running
+the same fingerprinting script after all four rounds: 627 live tools, 41
+families still sharing a component across 113 slugs, largest at size 7 —
+down from 93 families / 268 slugs after round 1. There is no natural
+stopping point left in family size — every remaining family is small
+(2-7 slugs) and needs the same manual description-vs-component read round
+4 used. Treat round 5 as "more of round 4," not a new phase: same method
+(read the component, compare against each slug's own `data/tools.ts`
+description, check for an unwired real component under a matching filename
+before assuming redirect/removal, proactively check every alias pointing at
+an affected slug before committing rather than relying on self-review to
+catch chain-lengthening after the fact). Also still open: the 12
+description-only overclaims flagged at the end of round 4 (real, but no
+better redirect target, deferred as a content-accuracy pass rather than a
+routing fix); the 4 near-duplicate-description consolidation candidates
+from round 4; and committing the ad-hoc chain-resolution script used
+informally in rounds 2-4 as a real, checked-in script
 (`scripts/check-redirect-chains.js` or similar) — it has caught a real bug
-each of the three times it's been run, and being rewritten from scratch
-each round is exactly the kind of gap that let round 3's own version
-false-flag a live redirect as dead.*
+every time it's been run, and being rewritten from scratch each round is
+exactly the kind of gap that let round 3's own version false-flag a live
+redirect as dead.*
 
 **93 tool-name families share one component across 268 live slugs**
 (discovered via `case 'slug': return <Component/>` mapping in
@@ -517,3 +768,36 @@ work too. Per this repo's split of responsibilities (content/code vs.
 infra/ops), diagnosing and fixing that gate is out of scope here — flagging
 it because it's the actual reason none of this reaches production without
 an admin merge override.
+
+## Unrelated but urgent — a stale `src/content/blog/` tree is silently serving wrong content for at least 1 live post
+
+Found while fixing a dead link in round 4's self-review: `scripts/generate-blog-manifest.mjs`
+(the `prebuild` step that generates `content/blog-manifest.ts`, the file
+every blog page actually renders from) scans **two** directories —
+`src/content/blog/` first, then `content/blog/` — and its dedup keeps
+whichever copy it sees *first* for a given slug
+(`if (!postsBySlug.has(slug)) postsBySlug.set(...)`). `src/content/blog/`
+is a stale duplicate (56 files, vs. 73 in the real `content/blog/`), and
+because it's scanned first, **any post that exists in both directories
+silently ignores edits made to the real `content/blog/` copy.**
+
+3 posts currently overlap: `2026-04-23-visualize-nested-json-relationships.md`
+(byte-identical, harmless for now), `2026-04-23-debug-regex-capture-groups-multiple-matches.md`
+(only differed in the dead link this round just fixed — patched both
+copies so the fix actually takes effect), and, more seriously,
+**`2026-04-15-why-browser-based-tools-are-the-future.md` — the live site
+is currently serving a substantively different, older description and
+tag set than what's in the maintained `content/blog/` copy**, with no
+indication anywhere that an edit to that file silently does nothing.
+
+Not fixed here — didn't touch `generate-blog-manifest.mjs`'s directory
+order or delete `src/content/blog/`, since neither the intended
+authoritative source nor the reason `src/` exists in parallel with the
+project's on `content/` convention is knowable from the code alone, and
+either fix has a blast radius beyond this PR's scope (up to 56 posts,
+not the 3 that happen to overlap today — a future edit to any currently-
+non-overlapping post is safe only until someone creates a `src/`-side copy
+of it). Needs a decision: delete the stale `src/content/blog/` (and the
+matching stale `src/lib/blog.ts` this session also noticed sitting next to
+the real `lib/blog.ts`) if it's genuinely dead, or reverse the scan order
+if `content/blog/` isn't actually meant to be authoritative.

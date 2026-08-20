@@ -41,7 +41,11 @@ const REDIRECTS: Record<string, string> = {
   'mime-type-checker': 'mime-types-reference',
   'random-string': 'password-generator',
   'uuid-v4': 'uuid-generator',
-  'wifi-qr': 'wifi-qr-code-generator',
+  // wifi-qr used to point at wifi-qr-code-generator, itself removed in
+  // round 4 (family-verification pass - WifiQrCodeGeneratorClient is an
+  // orphaned stub with no real SSID/password/encryption-type logic despite
+  // the slug's own description promising it). No real destination to chain
+  // to, so this now 404s directly too.
 
   // High-impression SEO aliases from GSC / search variants
   'keywords-generator-online': 'keyword-generator',
@@ -66,7 +70,12 @@ const REDIRECTS: Record<string, string> = {
   'serp-rank-checker-online': 'google-serp-simulator',
   'free-serp-tracking-online': 'google-serp-simulator',
   'serprank': 'google-serp-simulator',
-  'serp-simulator': 'google-serp-simulator',
+  // 'serp-simulator' used to redirect here too, but that shadowed a real,
+  // live, distinct data/tools.ts entry of the exact same name (rendering
+  // SerpPreviewClient, not GoogleSerpSimulatorClient) - REDIRECTS is
+  // checked before getCanonicalToolSlug, so the real tool was permanently
+  // unreachable at its own canonical URL. Removed rather than repointed;
+  // see app/sitemap-tools.xml/route.ts for the matching sitemap fix.
   'og-image-generator': 'banner-generator',
   'serpsimulator': 'google-serp-simulator',
   'serp-test': 'google-serp-simulator',
@@ -76,7 +85,11 @@ const REDIRECTS: Record<string, string> = {
   'google-serps-preview': 'google-serp-simulator',
   'robots-txt-check': 'robots-txt-checker',
   'robots-txt-check-online': 'robots-txt-checker',
-  'test-robots-txt-online': 'robots-txt-tester',
+  // test-robots-txt-online used to point at robots-txt-tester, itself
+  // removed in round 4 (family-verification pass - no per-URL "is this
+  // allowed for Googlebot" testing exists anywhere in the catalog). No real
+  // destination to chain to, so this now 404s directly too.
+
   // sitemap-xml-validator itself is gone (family-verification pass -
   // XmlValidatorClient doesn't have sitemap-specific tag/URL checks the
   // description promised) and redirects to xml-validator via
@@ -88,13 +101,14 @@ const REDIRECTS: Record<string, string> = {
   'create-online-poll': 'poll-generator',
   'check-favicon': 'favicon-grabber',
   'favicon-test': 'favicon-grabber',
-  'metadata-viewer': 'metadata',
-  'mp4-gif': 'mp4-to-gif',
-  'mp4-to-gif-converter': 'mp4-to-gif',
-  'mp4-gif-converter': 'mp4-to-gif',
-  'convert-mp4-to-gif': 'mp4-to-gif',
-  'convert-mp4-to-gif-online': 'mp4-to-gif',
-  'mp4-to-gif-online': 'mp4-to-gif',
+  'metadata-viewer': 'exif-remover',
+  // The 6 mp4-gif/convert-mp4-to-gif* aliases used to point at mp4-to-gif,
+  // itself removed in round 4 (family-verification pass - no real
+  // animated-GIF encoder exists anywhere in this codebase; see
+  // next.config.mjs for the full explanation, which also covers gif-maker,
+  // the one dedicated GIF tool, having the same underlying defect). No real
+  // destination to chain to, so these now 404 directly too.
+
   'poll-maker': 'poll-generator',
   'make-a-poll': 'poll-generator',
   'create-a-poll': 'poll-generator',

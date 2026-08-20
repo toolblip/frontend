@@ -174,7 +174,6 @@ JSON rarely exists in isolation. You frequently need to convert it to work with 
 - [JSON to CSV](/tools/json-to-csv)  -  export data for spreadsheets
 - [JSON to YAML](/tools/json-to-yaml)  -  make it readable for config files
 - [JSON to TypeScript](/tools/json-to-typescript)  -  generate type definitions from API responses
-- [JSON to Go Struct](/tools/json-to-go-struct)  -  generate Go types for quick iteration
 - [JSON to Python](/tools/json-to-python)  -  Python dict output for scripts
 
 The workflow: get JSON from an API, paste it into one of these converters, get clean output in your target format. No manual reformatting.
@@ -243,7 +242,6 @@ Here's the complete set of tools for a full JSON debugging workflow:
 | Edit with validation | [JSON Editor](/tools/json-editor) |
 | Convert to CSV | [JSON to CSV](/tools/json-to-csv) |
 | Convert to TypeScript | [JSON to TypeScript](/tools/json-to-typescript) |
-| Convert to Go struct | [JSON to Go Struct](/tools/json-to-go-struct) |
 | Convert to YAML | [JSON to YAML](/tools/json-to-yaml) |
 | Infer schema from data | [JSON Schema Generator](/tools/json-schema-generator) |
 

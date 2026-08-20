@@ -5,9 +5,9 @@ import { sitemapXmlResponse, type SitemapUrlEntry } from '@/lib/sitemap-xml';
 // snapshot rather than `new Date()` recomputed on every build, which
 // previously made every tool URL report a fake "just changed" timestamp on
 // every deploy regardless of whether the page's content actually changed.
-// Bump when the tool catalog changes meaningfully (this cleanup pass:
-// broken/duplicate slugs removed and legacy suffixes renamed).
-const TOOL_PAGES_LAST_MODIFIED = new Date('2026-08-19T00:00:00.000Z');
+// Bump when the tool catalog changes meaningfully (most recently: round 4
+// of the family-verification pass, 34 slugs removed/redirected, 2 added).
+const TOOL_PAGES_LAST_MODIFIED = new Date('2026-08-20T00:00:00.000Z');
 
 // NOTE: this still lists the full tool catalog. The GSC recovery plan's
 // next step is narrowing this to a verified "tier A" subset (unique
@@ -21,12 +21,15 @@ const TOOL_PAGES_LAST_MODIFIED = new Date('2026-08-19T00:00:00.000Z');
 // key in app/tools/[slug]/page.tsx's REDIRECTS map, so every request to
 // them permanently redirects away before the page ever renders — dead,
 // unreachable data that would otherwise falsely reappear in this sitemap.
-// ('serp-simulator' -> 'google-serp-simulator'. 'lorem-ipsum' used to be
-// here too, but that REDIRECTS entry was stale — it predated this pass
-// renaming a different tool, 'lorem-ipsum-api', onto the 'lorem-ipsum'
-// slug, and has since been removed from REDIRECTS so the renamed tool is
-// reachable under its own canonical URL.)
-const SHADOWED_BY_REDIRECT = new Set(['serp-simulator']);
+// ('lorem-ipsum' used to be here, but that REDIRECTS entry was stale — it
+// predated a pass renaming a different tool, 'lorem-ipsum-api', onto the
+// 'lorem-ipsum' slug, and has since been removed from REDIRECTS so the
+// renamed tool is reachable under its own canonical URL. 'serp-simulator'
+// used to be here too, shadowing a real, different, live tool
+// (SerpPreviewClient vs GoogleSerpSimulatorClient) — the shadowing
+// REDIRECTS entry has now been removed instead, so the real tool is
+// reachable and belongs in this sitemap again.)
+const SHADOWED_BY_REDIRECT = new Set<string>([]);
 
 export async function GET(): Promise<Response> {
   const baseUrl = 'https://toolblip.com';

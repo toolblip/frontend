@@ -278,6 +278,85 @@ const nextConfig = {
       { source: '/tools/response-header-analyzer', destination: '/tools', permanent: true },
       { source: '/tools/webhook-tester', destination: '/tools', permanent: true },
       { source: '/tools/protect', destination: '/tools', permanent: true },
+
+      // Round 4 family-verification pass (docs/gsc-recovery-plan.md): the
+      // remaining ~54 shared-component families, all size <=7. Same rule as
+      // every prior round - redirect to a real matching tool where one
+      // exists, 404 outright where none does.
+      // PercentageCalculatorClient has no discount-specific mode at all;
+      // discount-calculator is a separate, real, already-correct component
+      // - this was a pure duplicate-routing bug, not a missing feature.
+      { source: '/tools/percentage-off-calculator', destination: '/tools/discount-calculator', permanent: true },
+      // UnitConverterClient only implements length/weight/temperature -
+      // volume and speed conversion don't exist in it at all.
+      // all-in-one-unit-converter genuinely has both categories.
+      { source: '/tools/volume-unit-converter', destination: '/tools/all-in-one-unit-converter', permanent: true },
+      { source: '/tools/speed-converter', destination: '/tools/all-in-one-unit-converter', permanent: true },
+      { source: '/tools/unit-measurement-converter', destination: '/tools/all-in-one-unit-converter', permanent: true },
+      // TextDiffClient only computes a Levenshtein similarity score/edit
+      // count - no line highlighting, no JSON-structural comparison, despite
+      // both text-diff and json-diff promising exactly that (this was
+      // flagged as follow-up work in round 3's own self-review). code-diff
+      // is a real LCS-based line-by-line added/removed/context diff -
+      // already the established destination for the same mismatch on
+      // text-difference-checker in round 3.
+      { source: '/tools/text-diff', destination: '/tools/code-diff', permanent: true },
+      { source: '/tools/json-diff', destination: '/tools/code-diff', permanent: true },
+      // ImageMetadataViewerClient only reads basic File API properties
+      // (name/size/type/dimensions) - zero EXIF/IPTC/XMP parsing despite
+      // both slugs promising it. exif-remover has a real hand-rolled
+      // JPEG/TIFF EXIF tag parser that displays the real tags before
+      // stripping them - the closest genuine match in the catalog.
+      { source: '/tools/image-metadata-viewer', destination: '/tools/exif-remover', permanent: true },
+      { source: '/tools/metadata', destination: '/tools/exif-remover', permanent: true },
+      // SyllableCounterClient counts syllables per word only - no
+      // Flesch-Kincaid/grade-level calculation despite "estimate reading
+      // level" promising one; readability-score-calculator is real.
+      { source: '/tools/syllable-word-counter', destination: '/tools/readability-score-calculator', permanent: true },
+      // RandomParagraphGeneratorClient generates templated tech-jargon
+      // mad-libs sentences with zero actual Latin lorem ipsum text, despite
+      // the slug's own description explicitly promising "lorem ipsum text".
+      { source: '/tools/random-paragraph-generator', destination: '/tools/lorem-ipsum-paragraphs', permanent: true },
+      // SeoMetaTagAnalyzerClient only fetches a URL and scores its existing
+      // tags - no generation UI at all, despite "Analyze and generate...
+      // with preview" promising one; meta-tag-generator is the real,
+      // separate tool that actually does what this slug claims.
+      { source: '/tools/seo-tag-analyzer', destination: '/tools/meta-tag-generator', permanent: true },
+
+      // Round 4: verified functionally broken, no real alternative anywhere
+      // in the catalog - removed from data/tools.ts with no entry here, so
+      // dynamicParams=false 404s them directly (per the plan's own rule:
+      // mass redirects to a generic hub read as soft-404s to Google, so a
+      // real 404 is the honest signal when nothing real exists to point to).
+      // CsvToJsonClient only ever does CSV->JSON regardless of slug; the
+      // orphaned candidates for each of these (JsonToGoStructClient,
+      // SrtToJsonClient, JsonToPhpArrayClient, JSONToURLEncodedV2Client)
+      // were all individually checked and are themselves JSON.parse ->
+      // pretty-print stubs, not real implementations.
+      // MarkupCalculatorClient/ScryptHashGeneratorClient/
+      // WifiQrCodeGeneratorClient/VcardQrGeneratorClient/
+      // RegexCheatsheetClient: same pattern, orphaned stub with no real
+      // logic for the promised feature (markup pricing math, Scrypt KDF,
+      // structured WiFi/vCard payload encoding, static reference content).
+      // RobotsTxtEditorClient has no per-URL "is this allowed for Googlebot"
+      // testing logic at all - robots-txt-tester and robots-txt-simulator
+      // both promise it, nothing in the catalog implements it.
+      // AviToGifClient/GifMakerClient: no real animated-GIF encoder exists
+      // anywhere in this codebase - GifMakerClient's own canvas.toDataURL(
+      // 'image/gif') call is a spec no-op that silently falls back to PNG
+      // (the Canvas spec only guarantees image/png support), so even the
+      // one dedicated "GIF Maker" tool never actually produced a GIF.
+      // AiRephraserClient (ai-rephraser, humanizer-ai) is a hardcoded
+      // ~80-word synonym-substitution table with zero API calls anywhere in
+      // the codebase - no tone change, no rewriting, and "bypass AI
+      // detection" is a flatly false claim, not just an overclaim.
+      // ContentSummarizerClient (content-summarizer, summarizer) is
+      // trimmed.slice(0, limit) character truncation behind a fake 1s
+      // loading spinner - no key-point extraction of any kind.
+      // VsdxToDocxClient/VsdxToPptxClient: handleProcess is setOutput(
+      // input) - a literal unchanged echo - behind an unfilled placeholder
+      // template and a dead "// Visio to Word conversion logic here"
+      // comment; no real Visio parser exists anywhere in the codebase.
     ];
   },
   async headers() {
