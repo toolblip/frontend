@@ -142,12 +142,11 @@ export default function ImageBackgroundRemoverClient() {
         // Make transparent
         data[pixelIdx + 3] = 0;
 
-        // 4-connected neighbors. Left/right are only added when still on
-        // the same row - `y * width + (x - 1)` / `(x + 1)` without that
-        // check silently wraps into the previous/next row at the image
-        // edges (a background-colored region that's genuinely
-        // disconnected from every corner could get erased anyway through
-        // that phantom edge).
+        // 4-connected neighbors. Left/right (`idx - 1` / `idx + 1`) are
+        // only added when still on the same row - without the x-bounds
+        // check, those wrap into the previous/next row at the image edges
+        // (a background-colored region that's genuinely disconnected from
+        // every corner could get erased anyway through that phantom edge).
         if (y > 0) enqueue(idx - width);
         if (y < height - 1) enqueue(idx + width);
         if (x > 0) enqueue(idx - 1);
