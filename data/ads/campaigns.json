@@ -24,7 +24,7 @@
       "type": "paid",
       "priority": 1,
       "pageTypes": ["tool"],
-      "slugs": ["keyword-generator", "sitemap-xml-validator", "robots-txt-generator"],
+      "slugs": ["keyword-generator", "xml-validator", "robots-txt-generator"],
       "categories": ["SEO"],
       "startDate": "2026-07-08",
       "endDate": null
