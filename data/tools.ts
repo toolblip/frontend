@@ -779,6 +779,8 @@ export const tools: Tool[] = [
   { name: 'JSON-LD Generator', slug: 'json-ld-generator', description: 'Generate Schema.org JSON-LD structured data for websites.', emoji: '📋', category: 'SEO' },
   { name: 'URL Encode / Decode', slug: 'url-encode', description: 'Encode and decode URLs or URL components for safe use in links.', emoji: '🔗', category: 'Encoder' },
   { name: 'Image Cropper', slug: 'image-cropper', description: 'Crop images to any ratio or preset size - passport, 16:9, square, and more.', emoji: '✂️', category: 'Image' },
+  { name: 'Image Trimmer', slug: 'image-trimmer', description: 'Automatically trim solid-color borders and padding from an image. Samples the corner pixel and crops away matching edges, no manual selection needed.', emoji: '🪚', category: 'Image', tags: ['crop', 'trim', 'border', 'whitespace', 'png'] },
+  { name: 'Erase Color from Image', slug: 'erase-color', description: 'Pick a color with an eyedropper and erase every matching pixel to transparency. Great for cleaning up scanned logos or removing a flat background color.', emoji: '🧽', category: 'Image', tags: ['background', 'transparent', 'chroma-key', 'eyedropper', 'png'] },
   { name: 'Square Crop', slug: 'square-crop', description: 'Crop images to perfect squares for Instagram, Facebook, Twitter, and more. No upload required.', emoji: '◻️', category: 'Image' },
   { name: 'Circle Crop', slug: 'circle-crop', description: 'Crop images into circles, ovals, and rounded squares. Transparent PNG output. No upload required.', emoji: '⭕', category: 'Image' },
   { name: 'Image Format Converter', slug: 'image-format-converter', description: 'Convert images between JPEG, PNG, WebP, and AVIF with quality control and side-by-side preview.', emoji: '🖼️', category: 'Image' },
