@@ -164,7 +164,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const tool = getToolBySlug(canonicalSlug);
   if (!tool) return { title: 'Tool Not Found' };
   const url = `https://toolblip.com/tools/${canonicalSlug}`;
-  const ogImage = `https://toolblip.com${CUSTOM_OG_IMAGES[tool.slug] ?? '/og-preview.png'}`;
+  const ogImage = `https://toolblip.com${CUSTOM_OG_IMAGES[canonicalSlug] ?? '/og-preview.png'}`;
 
   return {
     title: `${tool.name} | Toolblip`,
@@ -184,7 +184,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       card: 'summary_large_image',
       title: `${tool.name} | Toolblip`,
       description: tool.description,
-      images: [ogImage],
+      images: [{ url: ogImage, alt: tool.name }],
     },
   };
 }

@@ -38,7 +38,7 @@ export default function ToolContentSection({ toolName, content }: Props) {
         // purely a visual rearrangement and doesn't hide anything from
         // crawlers (unlike a JS-mounted-only-when-open approach would).
         <details className="group flex flex-col border-t border-gray-200 dark:border-gray-800">
-          <summary className="order-2 flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-3">
+          <summary className="order-2 flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-3 group-open:border-t group-open:border-gray-200 dark:group-open:border-gray-800">
             <span className="text-sm font-semibold text-gray-900 dark:text-white">
               <span className="group-open:hidden">See more</span>
               <span className="hidden group-open:inline">See less</span>
@@ -60,7 +60,7 @@ export default function ToolContentSection({ toolName, content }: Props) {
             </svg>
           </summary>
 
-          <div className="order-1 space-y-6 border-t border-gray-200 dark:border-gray-800 px-5 py-5">
+          <div className="order-1 space-y-6 px-5 py-5">
             {rest && <p className="text-gray-600 dark:text-gray-300 leading-relaxed">{rest}</p>}
 
             {content.examples.length > 0 && (
