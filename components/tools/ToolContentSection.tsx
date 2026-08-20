@@ -6,12 +6,16 @@ type Props = {
 };
 
 // Splits off the first couple of sentences as an always-visible SEO teaser,
-// leaving the rest to go behind the "See more" toggle below.
+// leaving the rest to go behind the "See more" toggle below. Uses split()
+// rather than a match-and-require-trailing-whitespace regex so a period that
+// isn't followed by whitespace (decimals like "273.15", abbreviations, a
+// period butted up against a closing quote) just fails to split there
+// instead of silently dropping that whole stretch of text.
 function splitDescription(description: string, sentenceCount = 2): { teaser: string; rest: string } {
-  const sentences = description.match(/[^.!?]+[.!?]+(?:\s+|$)/g) ?? [description];
+  const sentences = description.split(/(?<=[.!?])\s+/);
   return {
-    teaser: sentences.slice(0, sentenceCount).join('').trim(),
-    rest: sentences.slice(sentenceCount).join('').trim(),
+    teaser: sentences.slice(0, sentenceCount).join(' ').trim(),
+    rest: sentences.slice(sentenceCount).join(' ').trim(),
   };
 }
 
@@ -27,13 +31,11 @@ export default function ToolContentSection({ toolName, content }: Props) {
 
       {hasMore && (
         <details className="group border-t border-gray-200 dark:border-gray-800">
-          <summary
-            className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-3"
-            aria-label={`See more about the ${toolName}`}
-          >
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-3">
             <span className="text-sm font-semibold text-gray-900 dark:text-white">
               <span className="group-open:hidden">See more</span>
               <span className="hidden group-open:inline">See less</span>
+              <span className="sr-only"> about the {toolName}</span>
             </span>
             <svg
               className="h-4 w-4 shrink-0 text-gray-400 transition-transform group-open:rotate-180"
