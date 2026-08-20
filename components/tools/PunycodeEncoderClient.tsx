@@ -3,13 +3,16 @@
 import { useCallback, useState } from 'react';
 import { analyse, convertLine, extractDomain } from '@/lib/punycode';
 
+// Deliberately distinct from the worked examples in data/tool-content.ts
+// (münchen.de, россия.рф, 🇧🇪.ws, হারুন.বাংলা) so the quick-load chips here
+// don't just repeat what's already shown in the "See more" section below.
 const EXAMPLES = [
-  'হারুন.বাংলা',
-  '🇧🇪.ws',
-  'münchen.de',
-  'россия.рф',
-  'harun@হারুন.বাংলা',
-  'https://münchen.de/straße',
+  'schön.de',
+  '日本語.jp',
+  '▲.to',
+  'пример.рф',
+  'yuki@日本語.jp',
+  'https://schön.de/straße',
 ];
 
 // Pre-converted once at module scope so both panes' chip rows stay in sync.
@@ -126,7 +129,7 @@ export default function PunycodeEncoderClient() {
 
   return (
     <div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 divide-y divide-[var(--line)] md:divide-y-0 md:divide-x">
         <div>
           <div className="tb-v2-tool-input-head">
             <span className="tb-v2-tool-label">Unicode / IDN</span>
