@@ -2,25 +2,30 @@
 
 import { useState, useRef, useCallback } from 'react';
 
-type RemovalMethod = 'floodfill' | 'chroma';
+type RemovalMethod = 'floodfill' | 'chroma' | 'ai';
 
 export default function ImageBackgroundRemoverClient() {
   const [image, setImage] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [processedImage, setProcessedImage] = useState<string | null>(null);
-  const [method, setMethod] = useState<RemovalMethod>('floodfill');
+  const [method, setMethod] = useState<RemovalMethod>('ai');
   const [tolerance, setTolerance] = useState(32);
   const [chromaKeyColor, setChromaKeyColor] = useState('#00ff00');
   const [isProcessing, setIsProcessing] = useState(false);
+  const [aiProgress, setAiProgress] = useState<number | null>(null);
+  const [aiError, setAiError] = useState<string | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      setImageFile(file);
       const reader = new FileReader();
       reader.onload = (event) => {
         setImage(event.target?.result as string);
         setProcessedImage(null);
+        setAiError(null);
       };
       reader.readAsDataURL(file);
     }
@@ -44,6 +49,41 @@ export default function ImageBackgroundRemoverClient() {
       Math.pow(c1.b - c2.b, 2)
     );
   };
+
+  const removeBackgroundAI = useCallback(async () => {
+    if (!imageFile) return;
+
+    setIsProcessing(true);
+    setAiProgress(0);
+    setAiError(null);
+
+    try {
+      // Dynamically imported so the ~1MB library (and its onnxruntime-web
+      // glue) only ever loads for someone who actually picks AI Remove -
+      // everyone else never pays for it. The segmentation model itself
+      // (~40MB, the quantized "small" model - trades a little edge quality
+      // for a download size that's reasonable for a free tool) is fetched
+      // separately from IMG.LY's CDN on first use.
+      const { removeBackground: imglyRemoveBackground } = await import('@imgly/background-removal');
+      const blob = await imglyRemoveBackground(imageFile, {
+        model: 'isnet_quint8',
+        progress: (key, current, total) => {
+          setAiProgress(total > 0 ? Math.round((current / total) * 100) : null);
+        },
+      });
+      setProcessedImage(URL.createObjectURL(blob));
+    } catch (err) {
+      console.error('AI background removal failed:', err);
+      setAiError(
+        err instanceof Error
+          ? `AI background removal failed: ${err.message}. Try Auto Detect or Color Key instead.`
+          : 'AI background removal failed. Try Auto Detect or Color Key instead.'
+      );
+    } finally {
+      setIsProcessing(false);
+      setAiProgress(null);
+    }
+  }, [imageFile]);
 
   const removeBackground = useCallback(() => {
     if (!image || !canvasRef.current) return;
@@ -193,6 +233,12 @@ export default function ImageBackgroundRemoverClient() {
         <>
           <div className="tb-v2-flex tb-v2-gap-2">
             <button
+              onClick={() => setMethod('ai')}
+              className={`tb-v2-btn ${method === 'ai' ? 'tb-v2-btn-primary' : 'tb-v2-btn-secondary'}`}
+            >
+              AI Remove
+            </button>
+            <button
               onClick={() => setMethod('floodfill')}
               className={`tb-v2-btn ${method === 'floodfill' ? 'tb-v2-btn-primary' : 'tb-v2-btn-secondary'}`}
             >
@@ -206,6 +252,13 @@ export default function ImageBackgroundRemoverClient() {
             </button>
           </div>
 
+          {method === 'ai' && (
+            <p className="tb-v2-text-sm tb-v2-text-gray-500">
+              Uses an AI segmentation model to cut out the subject, even against busy or uneven backgrounds.
+              The model downloads once per browser session (~40MB) and is cached after that.
+            </p>
+          )}
+
           {method === 'chroma' && (
             <div className="tb-v2-flex tb-v2-items-center tb-v2-gap-4">
               <label className="tb-v2-text-sm tb-v2-font-medium">Key Color:</label>
@@ -218,25 +271,33 @@ export default function ImageBackgroundRemoverClient() {
             </div>
           )}
 
-          <div className="tb-v2-flex tb-v2-items-center tb-v2-gap-4">
-            <label className="tb-v2-text-sm tb-v2-font-medium">Tolerance: {tolerance}</label>
-            <input
-              type="range"
-              min="1"
-              max="128"
-              value={tolerance}
-              onChange={(e) => setTolerance(Number(e.target.value))}
-              className="tb-v2-range"
-            />
-          </div>
+          {method !== 'ai' && (
+            <div className="tb-v2-flex tb-v2-items-center tb-v2-gap-4">
+              <label className="tb-v2-text-sm tb-v2-font-medium">Tolerance: {tolerance}</label>
+              <input
+                type="range"
+                min="1"
+                max="128"
+                value={tolerance}
+                onChange={(e) => setTolerance(Number(e.target.value))}
+                className="tb-v2-range"
+              />
+            </div>
+          )}
 
           <button
-            onClick={removeBackground}
+            onClick={method === 'ai' ? removeBackgroundAI : removeBackground}
             disabled={isProcessing}
             className="tb-v2-btn tb-v2-btn-primary tb-v2-disabled:opacity-50"
           >
-            {isProcessing ? 'Processing...' : 'Remove Background'}
+            {isProcessing
+              ? aiProgress !== null
+                ? `Downloading model... ${aiProgress}%`
+                : 'Processing...'
+              : 'Remove Background'}
           </button>
+
+          {aiError && <p className="tb-v2-text-sm" style={{ color: '#ef4444' }}>{aiError}</p>}
         </>
       )}
 
@@ -262,9 +323,10 @@ export default function ImageBackgroundRemoverClient() {
       <div className="tb-v2-text-sm tb-v2-text-gray-500 tb-v2-mt-4">
         <p className="tb-v2-font-medium">Tips:</p>
         <ul className="tb-v2-list-disc tb-v2-pl-5">
+          <li><strong>AI Remove:</strong> AI segmentation model - best for photos, works on any background</li>
           <li><strong>Auto Detect:</strong> Samples corners to identify and remove background color</li>
           <li><strong>Color Key:</strong> Removes a specific color (e.g., green screen)</li>
-          <li>Increase tolerance for more color variation in removal</li>
+          <li>Auto Detect and Color Key both use the Tolerance slider - raise it for more color variation</li>
         </ul>
       </div>
     </div>

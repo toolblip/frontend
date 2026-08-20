@@ -17,6 +17,7 @@
     "seo:bing:submit": "python3 scripts/bing-nightly-submit.py"
   },
   "dependencies": {
+    "@imgly/background-removal": "^1.7.0",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@tailwindcss/postcss": "^4.2.2",
     "@types/js-yaml": "^4.0.9",
