@@ -19,7 +19,7 @@ const FORMAT_OPTIONS: { value: OutputFormat; label: string; ext: string }[] = [
   { value: 'image/avif', label: 'AVIF', ext: 'avif' },
 ];
 
-const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif'];
+const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/avif', 'image/gif', 'image/svg+xml'];
 
 function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -61,7 +61,7 @@ export default function ImageFormatConverterClient() {
   const isOversized = sourceFile != null && sourceFile.size / (1024 * 1024) > maxSizeMB;
   const handleFile = useCallback((file: File) => {
     if (!ACCEPTED_TYPES.includes(file.type)) {
-      setError('Unsupported format. Please upload a JPEG, PNG, WebP, AVIF, or GIF image.');
+      setError('Unsupported format. Please upload a JPEG, PNG, WebP, AVIF, GIF, or SVG image.');
       return;
     }
     setError(null);
@@ -185,14 +185,14 @@ export default function ImageFormatConverterClient() {
           ref={fileInputRef}
           type="file"
           className="hidden"
-          accept="image/jpeg,image/png,image/webp,image/avif,image/gif"
+          accept="image/jpeg,image/png,image/webp,image/avif,image/gif,image/svg+xml"
           onChange={handleInputChange}
         />
         <div className="text-4xl mb-3 pointer-events-none">🖼️</div>
         <p className="text-gray-300 font-medium pointer-events-none">
           {isDragging ? 'Drop image here' : 'Drop an image here or click to upload'}
         </p>
-        <p className="text-gray-500 text-sm mt-1 pointer-events-none">JPEG · PNG · WebP · AVIF · GIF</p>
+        <p className="text-gray-500 text-sm mt-1 pointer-events-none">JPEG · PNG · WebP · AVIF · GIF · SVG</p>
         <FileSizeError file={sourceFile} maxSizeMB={maxSizeMB} />
       </div>
 

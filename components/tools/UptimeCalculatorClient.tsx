@@ -17,7 +17,11 @@ export default function UptimeCalculatorClient() {
   const [period, setPeriod] = useState<Period>('year');
 
   const downtime = calcDowntime(sla, period);
-  const slaDecimal = (100 - sla).toFixed(6 - String(sla).split('.')[1].length + 1 > 6 ? 6 : String(sla).split('.')[1].length + 1);
+  // A whole-number sla (typed in the number field, or the slider's own min
+  // of 90) has no '.' to split - String(sla).split('.')[1] is undefined and
+  // .length used to throw, crashing the tool on that exact realistic input.
+  const slaDecimalPlaces = (String(sla).split('.')[1] ?? '').length;
+  const slaDecimal = (100 - sla).toFixed(Math.min(6, slaDecimalPlaces + 1));
   const periods: Period[] = ['year', 'month', 'week', 'day', 'hour'];
 
   return (

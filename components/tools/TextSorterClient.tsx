@@ -59,6 +59,7 @@ export default function TextSorterClient() {
           <option value="length-asc">Shortest first</option>
           <option value="length-desc">Longest first</option>
           <option value="reverse">Reverse order</option>
+          <option value="random">Random order</option>
           <option value="unique">Remove duplicates</option>
         </select>
         <label className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">

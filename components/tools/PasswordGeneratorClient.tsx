@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { randomFromAlphabet } from '@/lib/secureRandom';
 
 const UPPER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const LOWER = 'abcdefghijklmnopqrstuvwxyz';
@@ -30,13 +31,10 @@ function buildPool(opts: Options): string {
 function generatePassword(opts: Options): string {
   const pool = buildPool(opts);
   if (!pool) return '';
-  const out = new Array<string>(opts.length);
-  const rnd = new Uint32Array(opts.length);
-  crypto.getRandomValues(rnd);
-  for (let i = 0; i < opts.length; i++) {
-    out[i] = pool[rnd[i] % pool.length];
-  }
-  return out.join('');
+  // Rejection-sampled, not `% pool.length` - a plain modulo biases whichever
+  // pool characters fall below 2^32 % pool.length, which real password
+  // generators can't afford (see lib/secureRandom.ts).
+  return randomFromAlphabet(pool, opts.length);
 }
 
 type Strength = { score: 0 | 1 | 2 | 3 | 4; label: string; cls: string };
