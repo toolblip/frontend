@@ -2,12 +2,15 @@
 
 import { useState, useRef, useCallback } from 'react';
 import { convertHeicIfNeeded } from '@/lib/heic';
+import { useSubscription } from '@/hooks/useSubscription';
+import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
 
 type RemovalMethod = 'floodfill' | 'chroma' | 'ai';
 
 export default function ImageBackgroundRemoverClient() {
   const [image, setImage] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [processedImage, setProcessedImage] = useState<string | null>(null);
   const [method, setMethod] = useState<RemovalMethod>('ai');
   const [tolerance, setTolerance] = useState(32);
@@ -19,6 +22,9 @@ export default function ImageBackgroundRemoverClient() {
   const [isConvertingHeic, setIsConvertingHeic] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { tier } = useSubscription();
+  const maxSizeMB = tier === 'free' ? 5 : tier === 'starter' ? 10 : tier === 'ultra' ? 100 : tier === 'max' ? 500 : 5;
+  const isOversized = selectedFile != null && selectedFile.size / (1024 * 1024) > maxSizeMB;
   // Bumped on every upload so an in-flight AI request can tell it's been
   // superseded (e.g. the user picked a new image while a slow ~40MB model
   // download/inference was still running) and skip applying its stale result.
@@ -39,10 +45,8 @@ export default function ImageBackgroundRemoverClient() {
     setAiError(null);
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  const loadImage = async (file: File) => {
+    setSelectedFile(file);
     requestIdRef.current += 1;
     releaseProcessedBlobUrl();
 
@@ -58,6 +62,21 @@ export default function ImageBackgroundRemoverClient() {
       setAiError(null);
     };
     reader.readAsDataURL(decodable);
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) loadImage(file);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    // HEIC/HEIF files often report an empty or non-"image/" MIME type
+    // (OS-dependent), so fall back to checking the extension too.
+    if (file && (file.type.startsWith('image/') || /\.(heic|heif)$/i.test(file.name))) {
+      loadImage(file);
+    }
   };
 
   const hexToRgb = (hex: string): { r: number; g: number; b: number } => {
@@ -280,18 +299,35 @@ export default function ImageBackgroundRemoverClient() {
     <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-4 tb-v2-p-4">
       <h2 className="tb-v2-text-2xl tb-v2-font-bold">Background Remover</h2>
 
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        onChange={handleImageUpload}
-        disabled={isProcessing || isConvertingHeic}
-        className="tb-v2-file-input"
-      />
-
-      {isConvertingHeic && <p className="tb-v2-text-sm tb-v2-text-gray-500">Converting HEIC photo...</p>}
-
-      {image && (
+      {!image ? (
+        <div
+          className="border-2 border-dashed border-gray-700 hover:border-red-600 rounded-xl p-12 text-center transition-colors cursor-pointer"
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={handleDrop}
+          onClick={() => fileInputRef.current?.click()}
+        >
+          <span className="text-3xl mb-3 block">🖼️</span>
+          {isConvertingHeic ? (
+            <p className="text-gray-400 text-sm">Converting HEIC photo...</p>
+          ) : (
+            <>
+              <p className="text-gray-400 text-sm">Drag & drop an image, or click to browse</p>
+              <p className="text-gray-600 text-xs mt-1">PNG, JPG, WebP, GIF, HEIC</p>
+            </>
+          )}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            disabled={isConvertingHeic}
+            className="hidden"
+            aria-label="Upload image"
+          />
+          <UpgradeNotice tier={tier} />
+          <FileSizeError file={selectedFile} maxSizeMB={maxSizeMB} />
+        </div>
+      ) : (
         <>
           <div className="tb-v2-flex tb-v2-gap-2">
             <button
@@ -350,19 +386,30 @@ export default function ImageBackgroundRemoverClient() {
             </div>
           )}
 
-          <button
-            onClick={method === 'ai' ? removeBackgroundAI : removeBackground}
-            disabled={isProcessing}
-            className="tb-v2-btn tb-v2-btn-primary tb-v2-disabled:opacity-50"
-          >
-            {isProcessing
-              ? aiProgress !== null
-                ? aiStage === 'fetch'
-                  ? `Downloading model... ${aiProgress}%`
-                  : `Processing image... ${aiProgress}%`
-                : 'Processing...'
-              : 'Remove Background'}
-          </button>
+          <div className="tb-v2-flex tb-v2-gap-2">
+            <button
+              onClick={method === 'ai' ? removeBackgroundAI : removeBackground}
+              disabled={isProcessing || isOversized}
+              className="tb-v2-btn tb-v2-btn-primary tb-v2-disabled:opacity-50"
+              title={isOversized ? 'File size exceeds your plan limit' : ''}
+            >
+              {isProcessing
+                ? aiProgress !== null
+                  ? aiStage === 'fetch'
+                    ? `Downloading model... ${aiProgress}%`
+                    : `Processing image... ${aiProgress}%`
+                  : 'Processing...'
+                : isOversized
+                  ? 'File Too Large'
+                  : 'Remove Background'}
+            </button>
+            <button
+              onClick={() => { setImage(null); setImageFile(null); setSelectedFile(null); setProcessedImage(null); setAiError(null); }}
+              className="tb-v2-btn tb-v2-btn-secondary"
+            >
+              Choose New Image
+            </button>
+          </div>
 
           {aiError && (
             <div className="tb-v2-p-4 tb-v2-bg-red-100 tb-v2-text-red-700 tb-v2-rounded-lg">{aiError}</div>

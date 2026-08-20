@@ -2,19 +2,23 @@
 
 import { useState, useRef } from 'react';
 import { convertHeicIfNeeded } from '@/lib/heic';
+import { useSubscription } from '@/hooks/useSubscription';
+import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
 
 export default function RemoveBgClient() {
   const [image, setImage] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [processedImage, setProcessedImage] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isConvertingHeic, setIsConvertingHeic] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { tier } = useSubscription();
+  const maxSizeMB = tier === 'free' ? 5 : tier === 'starter' ? 10 : tier === 'ultra' ? 100 : tier === 'max' ? 500 : 5;
+  const isOversized = selectedFile != null && selectedFile.size / (1024 * 1024) > maxSizeMB;
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  const loadImage = async (file: File) => {
+    setSelectedFile(file);
     setIsConvertingHeic(true);
     const decodable = await convertHeicIfNeeded(file);
     setIsConvertingHeic(false);
@@ -25,6 +29,21 @@ export default function RemoveBgClient() {
       setProcessedImage(null);
     };
     reader.readAsDataURL(decodable);
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) loadImage(file);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    // HEIC/HEIF files often report an empty or non-"image/" MIME type
+    // (OS-dependent), so fall back to checking the extension too.
+    if (file && (file.type.startsWith('image/') || /\.(heic|heif)$/i.test(file.name))) {
+      loadImage(file);
+    }
   };
 
   const removeBackground = () => {
@@ -104,31 +123,57 @@ export default function RemoveBgClient() {
       <h2 className="tb-v2-text-2xl tb-v2-font-bold">Remove Background</h2>
       <p className="tb-v2-text-sm tb-v2-text-gray-500">Remove background from images</p>
 
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        onChange={handleImageUpload}
-        disabled={isConvertingHeic}
-        className="tb-v2-file-input"
-      />
-
-      {isConvertingHeic && <p className="tb-v2-text-sm tb-v2-text-gray-500">Converting HEIC photo...</p>}
-
-      {image && (
+      {!image ? (
+        <div
+          className="border-2 border-dashed border-gray-700 hover:border-red-600 rounded-xl p-12 text-center transition-colors cursor-pointer"
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={handleDrop}
+          onClick={() => fileInputRef.current?.click()}
+        >
+          <span className="text-3xl mb-3 block">🖼️</span>
+          {isConvertingHeic ? (
+            <p className="text-gray-400 text-sm">Converting HEIC photo...</p>
+          ) : (
+            <>
+              <p className="text-gray-400 text-sm">Drag & drop an image, or click to browse</p>
+              <p className="text-gray-600 text-xs mt-1">PNG, JPG, WebP, GIF, HEIC</p>
+            </>
+          )}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            disabled={isConvertingHeic}
+            className="hidden"
+            aria-label="Upload image"
+          />
+          <UpgradeNotice tier={tier} />
+          <FileSizeError file={selectedFile} maxSizeMB={maxSizeMB} />
+        </div>
+      ) : (
         <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-4">
           <div>
             <p className="tb-v2-tool-label" style={{marginBottom:8}}>Original Image</p>
             <img src={image} alt="Original" className="tb-v2-max-w-full tb-v2-max-h-[300px] tb-v2-object-contain tb-v2-rounded" />
           </div>
 
-          <button
-            onClick={removeBackground}
-            disabled={isProcessing}
-            className="tb-v2-btn tb-v2-btn-primary tb-v2-disabled:opacity-50"
-          >
-            {isProcessing ? 'Processing...' : 'Remove Background'}
-          </button>
+          <div className="tb-v2-flex tb-v2-gap-2">
+            <button
+              onClick={removeBackground}
+              disabled={isProcessing || isOversized}
+              className="tb-v2-btn tb-v2-btn-primary tb-v2-disabled:opacity-50"
+              title={isOversized ? 'File size exceeds your plan limit' : ''}
+            >
+              {isProcessing ? 'Processing...' : isOversized ? 'File Too Large' : 'Remove Background'}
+            </button>
+            <button
+              onClick={() => { setImage(null); setSelectedFile(null); setProcessedImage(null); }}
+              className="tb-v2-btn tb-v2-btn-secondary"
+            >
+              Choose New Image
+            </button>
+          </div>
         </div>
       )}
 
