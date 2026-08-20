@@ -217,6 +217,59 @@ slugs get a plain 404 via `dynamicParams = false` (already in place from the
 first commit round), which is still a valid "don't index this" signal to
 Google, just not as fast-processing as a true 410.
 
+## Family-verification pass, round 3 — the rest of the size-3 and size-2 families
+
+Continued past the ~20 largest families from round 2 through the remaining
+87 (down to size-2). Same method: read the description, read the component,
+check for an unwired real implementation before assuming redirect/removal.
+
+**48 more slugs resolved** — 1 format-mismatch (`mobi-to-azw3`, same
+extension-gating bug class as round 2), and ~40 genuine
+description-vs-component mismatches this method hadn't caught yet, because
+they don't fit the "X-to-Y" conversion pattern the automated heuristic
+checks. Examples: `css-variable-generator` promised CSS custom
+properties/theming, rendered a utility-class generator with none of that;
+`ip-address-info` promised geolocation/ISP lookup, rendered a random-IP
+*generator* (would need a paid geolocation API anyway — removed, matching
+the project's existing precedent for tools needing infra it doesn't have);
+`js-beautifier` promised formatting/indenting, rendered the minifier
+(literally the opposite operation); `favicon-maker`/`favicon-png-creator`
+had the exact same "promises real .ico output, just re-downloads the
+uploaded PNG unchanged" bug already found and fixed for 3 sibling slugs in
+round 2, just missed then. Redirected where a real, different tool exists
+elsewhere in the catalog (18 slugs — e.g. `image-metadata-remover` →
+`exif-remover`, `json-schema-generator`/`-viewer`/`-editor` →
+`json-schema-validator`, `text-difference-checker` → `text-diff`); removed
+outright where nothing real exists to point to (24 slugs).
+
+**A live infinite redirect loop, found by testing the round's own fixes,
+not by the automated checker.** Redirecting `rgb-to-hex-new` → `rgb-to-hex`
+(one of this round's fixes) exposed that `rgb-to-hex` had never actually
+been a registered tool — only a `TOOL_SLUG_ALIASES` entry pointing it *at*
+`rgb-to-hex-new`. Two live things pointing at each other: an infinite loop
+the moment both existed simultaneously. The interesting part: a real,
+working `RgbToHexClient` component and a dedicated `case 'rgb-to-hex':` in
+`ToolUI.tsx` existed the whole time, just with no `data/tools.ts` entry to
+route to them — so the fix was to actually register the tool, not redirect
+around the gap. Wrote a small script
+(`resolve()` in the session transcript, not checked into the repo) that
+traces every alias/redirect chain across all three mechanisms
+(`TOOL_SLUG_ALIASES`, `page.tsx`'s `REDIRECTS`, `next.config.mjs`
+`redirects()`) to a final live/dead/loop verdict — found and fixed 5 more
+dead-end chains this way (redirects pointing at slugs this round had just
+removed), none of them loops, all now either resolve live or 404 directly.
+**This checker is worth keeping and running after any future slug rename or
+removal** — the fragmented-redirect-tables risk flagged in round 1's
+self-review is real, and this is now three separate times a chain-resolution
+bug slipped past manual review and was only caught by tracing all three
+tables together.
+
+Verified with the same shadowing/coverage parser (0 conflicts, 0 missing
+across 659 live slugs), the new chain-resolution trace (0 loops, 0 dead
+ends across 865 alias/redirect sources), a full `next build`, and a random
+25-tool sample plus every changed URL hit against `next build && next
+start`.
+
 ## Confirmed but NOT fixed in this pass — real follow-up work
 
 *Numbers below are from the first commit round; the family-verification pass

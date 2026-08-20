@@ -77,7 +77,11 @@ const REDIRECTS: Record<string, string> = {
   'robots-txt-check': 'robots-txt-checker',
   'robots-txt-check-online': 'robots-txt-checker',
   'test-robots-txt-online': 'robots-txt-tester',
-  'xml-sitemap-validator': 'sitemap-xml-validator',
+  // sitemap-xml-validator itself is gone (family-verification pass -
+  // XmlValidatorClient doesn't have sitemap-specific tag/URL checks the
+  // description promised) and redirects to xml-validator via
+  // next.config.mjs; pointing straight there instead of chaining.
+  'xml-sitemap-validator': 'xml-validator',
   'readability-checker-free': 'readability-score',
   'flesch-kincaid-readability-calculator': 'readability-score',
   'free-online-poll-tools': 'poll-generator',

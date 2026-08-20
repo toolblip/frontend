@@ -47,6 +47,59 @@ const nextConfig = {
       // just honestly scoped to live mic input rather than file upload.
       { source: '/tools/audio-to-text', destination: '/tools/speech-to-text', permanent: true },
 
+      // Second family-verification pass (docs/gsc-recovery-plan.md): these
+      // slugs all render a component that doesn't do what the slug's own
+      // description promises, and in each case a real, different tool
+      // elsewhere in the catalog does. JsonSchemaGeneratorClient,
+      // JsonSchemaViewerClient, and JsonSchemaEditorClient (three of them)
+      // are all the same "JSON.parse then pretty-print" stub - none infer a
+      // schema, render a tree diagram, or offer a visual builder like their
+      // slugs promise; json-schema-validator is real. JsonPatchGeneratorClient
+      // is the same pretty-print stub, not an RFC 6902 diff; json-diff is a
+      // real two-document JSON comparison tool. ImageMetadataRemoverClient
+      // just re-downloads the uploaded image unchanged (no EXIF stripping);
+      // exif-remover is the real implementation of the exact same feature.
+      // TextDifferenceCheckerClient, TextFluencyCheckerClient, and
+      // WordComplexityAnalyzerClient are all the generic echo stub; text-diff
+      // and readability-score are real and topically closest. favicon-checker
+      // promises checking 6 platforms (favicon.ico, Apple Touch, Google SERP,
+      // Android manifest, Open Graph) but has no dedicated component at all -
+      // it silently fell back to BatchFaviconDownloaderClient; favicon-grabber
+      // is the closest real function that component actually has.
+      { source: '/tools/json-schema-generator', destination: '/tools/json-schema-validator', permanent: true },
+      { source: '/tools/json-schema-viewer', destination: '/tools/json-schema-validator', permanent: true },
+      { source: '/tools/json-schema-editor', destination: '/tools/json-schema-validator', permanent: true },
+      { source: '/tools/json-patch-generator', destination: '/tools/json-diff', permanent: true },
+      { source: '/tools/image-metadata-remover', destination: '/tools/exif-remover', permanent: true },
+      { source: '/tools/text-difference-checker', destination: '/tools/text-diff', permanent: true },
+      { source: '/tools/text-fluency-checker', destination: '/tools/readability-score', permanent: true },
+      { source: '/tools/word-complexity-analyzer', destination: '/tools/readability-score', permanent: true },
+      { source: '/tools/favicon-checker', destination: '/tools/favicon-grabber', permanent: true },
+      { source: '/tools/sitemap-xml-validator', destination: '/tools/xml-validator', permanent: true },
+      // MOBI to AZW3 needed a .mobi upload; Azw3ToMobiClient only accepts
+      // .azw3 (it only ever did the reverse direction). No MOBI-accepting
+      // ebook converter exists elsewhere to redirect to more precisely.
+      { source: '/tools/mobi-to-azw3', destination: '/tools/azw3-to-mobi', permanent: true },
+
+      // Same pass, more real-destination redirects: FakeTextGeneratorClient
+      // has no word-combination logic (word-combinations does, and is a
+      // real, separate, correctly-working tool). LengthConverterClient only
+      // handles length units despite the "length-weight-converter" name
+      // promising weight too - all-in-one-unit-converter actually has a
+      // weight category. HexToRgbExpressClient/HexToRgbNewClient are both
+      // hex-to-rgb only (no reverse direction at all, confirmed by reading
+      // the source - neither has an rgbToHex function), so the two
+      // "rgb-to-hex-*" aliases pointing at them never worked; rgb-to-hex is
+      // the real, dedicated RgbToHexClient. AudioToTextClient is a live-
+      // microphone recognizer with no video/URL input path - same as the
+      // audio-to-text fix above, redirecting to speech-to-text rather than
+      // to a YouTube-transcription feature nothing in the catalog has.
+      { source: '/tools/text-combinations-generator', destination: '/tools/word-combinations', permanent: true },
+      { source: '/tools/length-weight-converter', destination: '/tools/all-in-one-unit-converter', permanent: true },
+      { source: '/tools/rgb-to-hex-express', destination: '/tools/rgb-to-hex', permanent: true },
+      { source: '/tools/rgb-to-hex-new', destination: '/tools/rgb-to-hex', permanent: true },
+      { source: '/tools/youtube-to-text', destination: '/tools/speech-to-text', permanent: true },
+
       // Verified functionally broken (family-verification pass): the
       // rendered UI only accepts a file type that doesn't match the slug -
       // AviToMovClient only accepts .avi, AacToWavClient only accepts
@@ -71,7 +124,12 @@ const nextConfig = {
       { source: '/tools/json-path-evaluator-express', destination: '/tools/json-path-evaluator', permanent: true },
       { source: '/tools/curl-gen-express', destination: '/tools/curl-gen', permanent: true },
       { source: '/tools/temp-converter-express', destination: '/tools/temp-converter', permanent: true },
-      { source: '/tools/ip-address-info-express', destination: '/tools/ip-address-info', permanent: true },
+      // ip-address-info itself is gone (family-verification pass -
+      // RandomIpAddressClient generates addresses, it doesn't look up real
+      // geolocation/ISP data, which would need a paid API this project
+      // deliberately hasn't integrated). No real lookup tool to redirect
+      // to, so this 404s directly instead of chaining through a removed
+      // slug.
       { source: '/tools/word-freq-express', destination: '/tools/word-freq', permanent: true },
       { source: '/tools/html-plaintext-express', destination: '/tools/html-plaintext', permanent: true },
       { source: '/tools/tsv-json-express', destination: '/tools/tsv-json', permanent: true },
@@ -85,9 +143,15 @@ const nextConfig = {
       // of redirecting into another 404.
       { source: '/tools/jsonpath-query-tool', destination: '/tools/jsonpath-query', permanent: true },
       { source: '/tools/keyword-density-analyzer-new', destination: '/tools/keyword-density-analyzer', permanent: true },
-      { source: '/tools/css-units-converter-new', destination: '/tools/css-units-converter', permanent: true },
+      // css-units-converter itself is gone (family-verification pass -
+      // CssValidatorClient validates syntax, it has no px/rem/em unit
+      // conversion at all despite the slug's own description promising
+      // it, and no real unit-converting component exists to redirect to).
       { source: '/tools/shell-command-generator-new', destination: '/tools/shell-command-generator', permanent: true },
-      { source: '/tools/image-compression-tool', destination: '/tools/image-compression', permanent: true },
+      // image-compression itself is gone (family-verification pass -
+      // ImageFlipToolClient flips images, it doesn't compress); redirecting
+      // to the real, working image-compressor instead of a bare 404.
+      { source: '/tools/image-compression-tool', destination: '/tools/image-compressor', permanent: true },
 
       // Verified byte-for-byte duplicate tool pages (identical component
       // rendered under two slugs) - consolidated onto the canonical slug
