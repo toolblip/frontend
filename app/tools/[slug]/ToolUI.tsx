@@ -57,6 +57,8 @@ import JsMinifierClient from '@/components/tools/JsMinifierClient';
 import ImageResizerClient from '@/components/tools/ImageResizerClient';
 import ImageFormatConverterClient from '@/components/tools/ImageFormatConverterClient';
 import ImageCropperClient from '@/components/tools/ImageCropperClient';
+import ImageTrimmerClient from '@/components/tools/ImageTrimmerClient';
+import EraseColorClient from '@/components/tools/EraseColorClient';
 import HttpHeadersViewerClient from '@/components/tools/HttpHeadersViewerClient';
 import HtmlEncoderClient from '@/components/tools/HtmlEncoderClient';
 import HashGeneratorClient from '@/components/tools/HashGeneratorClient';
@@ -920,6 +922,10 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <ImageFormatConverterClient />;
     case 'image-cropper':
       return <ImageCropperClient />;
+    case 'image-trimmer':
+      return <ImageTrimmerClient />;
+    case 'erase-color':
+      return <EraseColorClient />;
     case 'http-headers-viewer':
       return <HttpHeadersViewerClient />;
     case 'html-encoder':

@@ -1,0 +1,248 @@
+'use client';
+
+import { useState, useRef, useCallback, useEffect } from 'react';
+import { useSubscription } from '@/hooks/useSubscription';
+import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
+
+interface RGB {
+  r: number;
+  g: number;
+  b: number;
+}
+
+function rgbToHex({ r, g, b }: RGB): string {
+  return `#${[r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('')}`;
+}
+
+function colorDistance(a: RGB, b: RGB): number {
+  return Math.sqrt((a.r - b.r) ** 2 + (a.g - b.g) ** 2 + (a.b - b.b) ** 2);
+}
+
+export default function EraseColorClient() {
+  const [originalImage, setOriginalImage] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [workingUrl, setWorkingUrl] = useState<string | null>(null);
+  const [pickedColor, setPickedColor] = useState<RGB | null>(null);
+  const [tolerance, setTolerance] = useState(32);
+  const [erasedCount, setErasedCount] = useState(0);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { tier } = useSubscription();
+  const maxSizeMB = tier === 'free' ? 5 : tier === 'starter' ? 10 : tier === 'ultra' ? 100 : tier === 'max' ? 500 : 5;
+  const isOversized = selectedFile != null && selectedFile.size / (1024 * 1024) > maxSizeMB;
+
+  const drawToCanvas = (src: string) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const img = new Image();
+    img.onload = () => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0);
+      setWorkingUrl(canvas.toDataURL('image/png'));
+    };
+    img.src = src;
+  };
+
+  const loadImage = (file: File) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const src = e.target?.result as string;
+      setOriginalImage(src);
+      setPickedColor(null);
+      setErasedCount(0);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // Runs after `originalImage` triggers the canvas to mount (a call made
+  // synchronously from loadImage's reader.onload would race React's commit -
+  // canvasRef.current is still null since the <canvas> only renders once
+  // this component re-renders past the `!originalImage` upload-zone branch).
+  useEffect(() => {
+    if (originalImage) drawToCanvas(originalImage);
+  }, [originalImage]);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      loadImage(file);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      setSelectedFile(file);
+      loadImage(file);
+    }
+  };
+
+  const pickColorAt = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const x = Math.floor((e.clientX - rect.left) * scaleX);
+    const y = Math.floor((e.clientY - rect.top) * scaleY);
+    const [r, g, b] = ctx.getImageData(x, y, 1, 1).data;
+    setPickedColor({ r, g, b });
+  };
+
+  const eraseColor = useCallback(() => {
+    if (!pickedColor) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    setIsProcessing(true);
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data;
+    let count = 0;
+    for (let i = 0; i < data.length; i += 4) {
+      const pixel = { r: data[i], g: data[i + 1], b: data[i + 2] };
+      if (data[i + 3] > 0 && colorDistance(pixel, pickedColor) <= tolerance) {
+        data[i + 3] = 0;
+        count++;
+      }
+    }
+    ctx.putImageData(imageData, 0, 0);
+    setWorkingUrl(canvas.toDataURL('image/png'));
+    setErasedCount((prev) => prev + count);
+    setPickedColor(null);
+    setIsProcessing(false);
+  }, [pickedColor, tolerance]);
+
+  const downloadResult = () => {
+    if (!workingUrl) return;
+    const link = document.createElement('a');
+    link.download = 'color-erased-image.png';
+    link.href = workingUrl;
+    link.click();
+  };
+
+  const reset = () => {
+    if (!originalImage) return;
+    setPickedColor(null);
+    setErasedCount(0);
+    drawToCanvas(originalImage);
+  };
+
+  const clearAll = () => {
+    setOriginalImage(null);
+    setSelectedFile(null);
+    setWorkingUrl(null);
+    setPickedColor(null);
+    setErasedCount(0);
+  };
+
+  return (
+    <div className="tb-v2-section" style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '16px 20px' }}>
+      {!originalImage ? (
+        <div
+          className="border-2 border-dashed border-gray-700 hover:border-red-600 rounded-xl p-12 text-center transition-colors cursor-pointer"
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={handleDrop}
+          onClick={() => document.getElementById('erase-color-input')?.click()}
+        >
+          <span className="text-3xl mb-3 block">🎨</span>
+          <p className="text-gray-400 text-sm">Drag & drop an image, or click to browse</p>
+          <p className="text-gray-600 text-xs mt-1">PNG, JPG, WebP, GIF</p>
+          <input
+            id="erase-color-input"
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
+            className="hidden"
+            aria-label="Upload image"
+          />
+          <UpgradeNotice tier={tier} />
+          <FileSizeError file={selectedFile} maxSizeMB={maxSizeMB} />
+        </div>
+      ) : (
+        <div className="space-y-3">
+          <p className="text-xs text-gray-500">
+            Click anywhere on the image to pick a color with the eyedropper, then erase every matching pixel.
+            Repeat with a new color as many times as you need — each pass builds on the last.
+          </p>
+
+          <canvas
+            ref={canvasRef}
+            className="max-w-full rounded-lg cursor-crosshair"
+            style={{
+              backgroundImage:
+                'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAABUSURBVDiNY/z//z8DJYCJgUIwaAzFMEoYRMVA4Y5LQNNLUMNA4TYowg1QLIMaB4rXIFYN0PQC1HhQ4oBEukE1LpT4IOqB2BgBAE0cFfVvYI0lAAAAAElFTkSuQmCC")',
+              backgroundRepeat: 'repeat',
+            }}
+            onClick={pickColorAt}
+          />
+
+          <div className="tb-v2-flex tb-v2-items-center tb-v2-gap-4">
+            <label className="tb-v2-text-sm tb-v2-font-medium">Tolerance: {tolerance}</label>
+            <input
+              type="range"
+              min="1"
+              max="128"
+              value={tolerance}
+              onChange={(e) => setTolerance(Number(e.target.value))}
+              className="tb-v2-range"
+            />
+          </div>
+
+          {pickedColor && (
+            <div className="tb-v2-flex tb-v2-items-center tb-v2-gap-3">
+              <span
+                className="tb-v2-w-8 tb-v2-h-8 tb-v2-rounded border border-gray-600"
+                style={{ display: 'inline-block', width: 32, height: 32, backgroundColor: rgbToHex(pickedColor) }}
+              />
+              <span className="text-xs text-gray-400">{rgbToHex(pickedColor)} picked</span>
+            </div>
+          )}
+
+          <div className="tb-v2-mode-tabs">
+            <button
+              onClick={eraseColor}
+              disabled={!pickedColor || isProcessing || isOversized}
+              className="bg-red-600 hover:bg-red-500 text-black font-medium px-4 py-2 rounded-lg text-sm transition-colors disabled:opacity-50"
+              title={isOversized ? 'File size exceeds your plan limit' : ''}
+            >
+              {isProcessing ? 'Erasing...' : isOversized ? 'File Too Large' : 'Erase Picked Color'}
+            </button>
+            <button
+              onClick={downloadResult}
+              disabled={!workingUrl}
+              className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm transition-colors disabled:opacity-50"
+            >
+              Download PNG
+            </button>
+            <button
+              onClick={reset}
+              className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm transition-colors"
+            >
+              Undo All Erasing
+            </button>
+            <button
+              onClick={clearAll}
+              className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm transition-colors"
+            >
+              Choose New Image
+            </button>
+          </div>
+
+          {erasedCount > 0 && (
+            <p className="text-xs text-gray-500">{erasedCount.toLocaleString()} pixels erased so far.</p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
