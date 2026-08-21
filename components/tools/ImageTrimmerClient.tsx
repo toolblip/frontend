@@ -73,7 +73,7 @@ export default function ImageTrimmerClient() {
   const [trimBox, setTrimBox] = useState<TrimBox | null>(null);
   const [trimmedUrl, setTrimmedUrl] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [status, setStatus] = useState<'idle' | 'nothing-to-trim'>('idle');
+  const [status, setStatus] = useState<'idle' | 'nothing-to-trim' | 'sample-error'>('idle');
   const [isConvertingHeic, setIsConvertingHeic] = useState(false);
   const imgRef = useRef<HTMLImageElement | null>(null);
   const { tier } = useSubscription();
@@ -109,13 +109,20 @@ export default function ImageTrimmerClient() {
     }
   };
 
-  const loadSample = async (e: React.MouseEvent) => {
+  const loadSample = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const res = await fetch('/samples/image-trimmer-sample.png');
-    const blob = await res.blob();
-    const file = new File([blob], 'image-trimmer-sample.png', { type: 'image/png' });
-    setSelectedFile(file);
-    loadImage(file);
+    const src = '/samples/image-trimmer-sample.png';
+    setSelectedFile(null);
+    setTrimmedUrl(null);
+    setTrimBox(null);
+    const img = new Image();
+    img.onload = () => {
+      imgRef.current = img;
+      setImage(src);
+      setStatus('idle');
+    };
+    img.onerror = () => setStatus('sample-error');
+    img.src = src;
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -202,9 +209,15 @@ export default function ImageTrimmerClient() {
             <>
               <p className="text-gray-400 text-sm">Drag & drop an image, or click to browse</p>
               <p className="text-gray-600 text-xs mt-1">PNG, JPG, WebP, GIF, HEIC</p>
-              <button onClick={loadSample} className="text-xs text-red-500 underline hover:no-underline mt-3">
+              <button
+                onClick={loadSample}
+                className="text-xs text-red-700 dark:text-red-400 underline hover:no-underline mt-3"
+              >
                 Or try a sample image
               </button>
+              {status === 'sample-error' && (
+                <p className="text-xs text-amber-500 mt-2">Couldn&apos;t load the sample image, try again.</p>
+              )}
             </>
           )}
           <input
