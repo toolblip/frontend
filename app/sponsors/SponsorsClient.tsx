@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { IconX } from '@/components/v2/icons';
+import { IconRefresh, IconX } from '@/components/v2/icons';
 import {
   apiPath,
   fetchSponsorsLeaderboard,
@@ -234,6 +234,7 @@ export default function SponsorsClient() {
   const checkoutStatus = searchParams.get('checkout');
 
   const [board, setBoard] = useState<SponsorsLeaderboardResponse | null>(null);
+  const [refreshing, setRefreshing] = useState(false);
 
   const [url, setUrl] = useState('');
   const previewDomain = useMemo(() => previewDomainFor(url), [url]);
@@ -260,6 +261,17 @@ export default function SponsorsClient() {
         // covers a fetch failure the same as a genuinely empty board.
       });
   }, []);
+
+  // Manual refresh button — same fetch as the mount effect, just callable on
+  // demand. Swallows errors the same way: a failed manual refresh just
+  // leaves the board as it was, no need to surface a scary error for it.
+  const refreshLeaderboard = () => {
+    setRefreshing(true);
+    fetchSponsorsLeaderboard()
+      .then(setBoard)
+      .catch(() => {})
+      .finally(() => setRefreshing(false));
+  };
 
   // Hard floor of $1 regardless of what the API reports — a $0 bid must
   // never be reachable even if min_bid_cents is ever misconfigured.
@@ -492,6 +504,17 @@ export default function SponsorsClient() {
               ))}
             </div>
           )}
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 8 }}>
+            <button
+              type="button"
+              className="tb-v2-btn tb-v2-btn-sm"
+              onClick={refreshLeaderboard}
+              disabled={refreshing}
+            >
+              <IconRefresh className="tb-v2-ic" aria-hidden="true" />
+              Refresh
+            </button>
+          </div>
         </div>
       </div>
 
