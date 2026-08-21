@@ -2,31 +2,61 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { IconX } from '@/components/v2/icons';
 import {
   apiPath,
   fetchSponsorsLeaderboard,
   formatBid,
+  formatTimeAgo,
   type SponsorSlot,
   type SponsorsLeaderboardResponse,
 } from '@/lib/sponsors';
 
-function useCountdown(periodEndsAt: string | null): string {
-  const [now, setNow] = useState(() => Date.now());
+const AVATAR_COLORS = ['#d93030', '#a855f7', '#0ea5e9', '#16a34a', '#f59e0b', '#ec4899'];
 
-  useEffect(() => {
-    if (!periodEndsAt) return;
-    const id = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(id);
-  }, [periodEndsAt]);
+function avatarColor(seed: string): string {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) hash = (hash * 31 + seed.charCodeAt(i)) | 0;
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+}
 
-  if (!periodEndsAt) return '';
-  const diffMs = new Date(periodEndsAt).getTime() - now;
-  if (diffMs <= 0) return 'resetting…';
+function SponsorAvatar({ domain, name }: { domain: string; name: string }) {
+  const [error, setError] = useState(false);
 
-  const days = Math.floor(diffMs / 86_400_000);
-  const hours = Math.floor((diffMs % 86_400_000) / 3_600_000);
-  const minutes = Math.floor((diffMs % 3_600_000) / 60_000);
-  return `${days}d ${hours}h ${minutes}m`;
+  if (error) {
+    return (
+      <span
+        className="tb-v2-sponsor-row-avatar"
+        style={{ background: avatarColor(domain) }}
+        aria-hidden="true"
+      >
+        {name.charAt(0).toUpperCase()}
+      </span>
+    );
+  }
+
+  return (
+    <img
+      src={`https://unavatar.io/${domain}`}
+      alt=""
+      className="tb-v2-sponsor-row-avatar"
+      onError={() => setError(true)}
+    />
+  );
+}
+
+/** The hostname to fetch a favicon preview for, or '' if the input isn't a
+ * recognizable domain yet (empty, an @handle, or still mid-typing). */
+function previewDomainFor(input: string): string {
+  const trimmed = input.trim();
+  if (trimmed === '' || trimmed.startsWith('@')) return '';
+  const withScheme = /^[a-z][a-z0-9+.-]*:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
+  try {
+    const host = new URL(withScheme).hostname.toLowerCase().replace(/^www\./, '');
+    return host.includes('.') ? host : '';
+  } catch {
+    return '';
+  }
 }
 
 export default function SponsorsClient() {
@@ -34,25 +64,29 @@ export default function SponsorsClient() {
   const checkoutStatus = searchParams.get('checkout');
 
   const [board, setBoard] = useState<SponsorsLeaderboardResponse | null>(null);
-  const [loadError, setLoadError] = useState(false);
 
   const [url, setUrl] = useState('');
-  const [name, setName] = useState('');
-  const [tagline, setTagline] = useState('');
-  const [amount, setAmount] = useState('10');
+  const previewDomain = useMemo(() => previewDomainFor(url), [url]);
+  const [faviconError, setFaviconError] = useState(false);
+  useEffect(() => setFaviconError(false), [previewDomain]);
+  const [amount, setAmount] = useState('1');
   const [amountTouched, setAmountTouched] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const formRef = useRef<HTMLDivElement>(null);
+  const urlInputRef = useRef<HTMLInputElement>(null);
+  const [rulesOpen, setRulesOpen] = useState(false);
 
   useEffect(() => {
     fetchSponsorsLeaderboard()
       .then(setBoard)
-      .catch(() => setLoadError(true));
+      .catch(() => {
+        // Leave board null — the empty leaderboard state ("No bid yet.")
+        // covers a fetch failure the same as a genuinely empty board.
+      });
   }, []);
 
-  const countdown = useCountdown(board?.period_ends_at ?? null);
-  const minBidDollars = board ? Math.round(board.min_bid_cents / 100) : 10;
+  const minBidDollars = board ? Math.round(board.min_bid_cents / 100) : 1;
   const rows = useMemo(() => board?.data ?? [], [board]);
 
   // Price to take #1 right now — same framing as the reference: a bid below
@@ -77,6 +111,23 @@ export default function SponsorsClient() {
     formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
+  const focusBidInput = () => {
+    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    urlInputRef.current?.focus();
+    urlInputRef.current?.select();
+  };
+
+  useEffect(() => {
+    if (!rulesOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setRulesOpen(false);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [rulesOpen]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
@@ -86,7 +137,7 @@ export default function SponsorsClient() {
       setFormError('A URL is required.');
       return;
     }
-    if (!Number.isFinite(dollars) || Math.round(dollars * 100) < (board?.min_bid_cents ?? 1000)) {
+    if (!Number.isFinite(dollars) || Math.round(dollars * 100) < (board?.min_bid_cents ?? 100)) {
       setFormError(`Minimum bid is $${minBidDollars}.`);
       return;
     }
@@ -98,8 +149,6 @@ export default function SponsorsClient() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           url: url.trim(),
-          name: name.trim() || undefined,
-          tagline: tagline.trim() || undefined,
           amount_cents: Math.round(dollars * 100),
         }),
       });
@@ -117,14 +166,10 @@ export default function SponsorsClient() {
   };
 
   return (
-    <div className="tb-v2-container" style={{ paddingTop: 40, paddingBottom: 64 }}>
-      <h1 style={{ fontFamily: 'var(--f-display)', fontSize: 32, fontWeight: 800, marginBottom: 8 }}>
+    <div className="tb-v2-container" style={{ position: 'relative', paddingTop: 40, paddingBottom: 64 }}>
+      <h1 style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>
         Sponsors
       </h1>
-      <p style={{ color: 'var(--fg-2)', maxWidth: 640, marginBottom: 28 }}>
-        Top 3 bids get a spot on every page. Resets monthly, others roll over.
-        {countdown && <> Next reset: <strong>{countdown}</strong>.</>}
-      </p>
 
       {checkoutStatus === 'success' && (
         <div className="tb-v2-sponsor-banner tb-v2-sponsor-banner-ok">
@@ -150,12 +195,24 @@ export default function SponsorsClient() {
             </p>
 
             <div className="tb-v2-sponsor-bid-row">
-              <span className="tb-v2-sponsor-bid-icon" aria-hidden="true">🌐</span>
+              {url.trim().startsWith('@') ? (
+                <IconX className="tb-v2-ic tb-v2-sponsor-bid-icon" aria-hidden="true" />
+              ) : previewDomain && !faviconError ? (
+                <img
+                  src={`https://unavatar.io/${previewDomain}`}
+                  alt=""
+                  className="tb-v2-sponsor-bid-favicon"
+                  onError={() => setFaviconError(true)}
+                />
+              ) : (
+                <span className="tb-v2-sponsor-bid-icon" aria-hidden="true">🌐</span>
+              )}
               <input
+                ref={urlInputRef}
                 className="tb-v2-sponsor-bid-input"
-                type="url"
+                type="text"
                 required
-                placeholder="Your product URL"
+                placeholder="Your product URL or @handle"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
               />
@@ -165,63 +222,113 @@ export default function SponsorsClient() {
             </div>
             {formError && <p style={{ color: 'var(--red)', fontSize: 13 }}>{formError}</p>}
             <p className="tb-v2-sponsor-fineprint">
-              Already listed? Enter the same URL and up your bid to move up.
-            </p>
-
-            <div className="tb-v2-sponsor-secondary-fields">
-              <input
-                className="tb-v2-input"
-                type="text"
-                maxLength={80}
-                placeholder="Name (optional)"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-              <input
-                className="tb-v2-input"
-                type="text"
-                maxLength={60}
-                placeholder="Tagline (optional)"
-                value={tagline}
-                onChange={(e) => setTagline(e.target.value)}
-              />
-            </div>
-            <p style={{ color: 'var(--fg-3)', fontSize: 12 }}>
-              Paid via Stripe Checkout. No account needed.
+              Already listed? Enter the same URL or @handle and up your bid to move up.
             </p>
           </form>
         </div>
 
         <div>
-          <h2 style={{ fontSize: 15, fontWeight: 700, marginBottom: 10 }}>Leaderboard</h2>
-          {loadError && <p style={{ color: 'var(--fg-3)' }}>Couldn&apos;t load the leaderboard. Try refreshing.</p>}
-          {!loadError && rows.length === 0 && (
-            <p style={{ color: 'var(--fg-3)' }}>No sponsors yet.</p>
-          )}
+          <h2 style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>
+            Leaderboard
+          </h2>
           <div className="tb-v2-sponsor-table">
-            {rows.map((row) => (
-              <div key={row.id} className="tb-v2-sponsor-row">
-                <span className="tb-v2-sponsor-row-rank">#{row.rank}</span>
-                <div className="tb-v2-sponsor-row-main">
-                  <a href={row.url} target="_blank" rel="sponsored nofollow noopener">
-                    {row.name}
-                  </a>
-                  {row.tagline && <span className="tb-v2-sponsor-row-tagline">{row.tagline}</span>}
-                </div>
-                <span className="tb-v2-sponsor-row-meta">{row.clicks} clicks</span>
-                <span className="tb-v2-sponsor-row-balance">{formatBid(row.balance_cents)}</span>
-                <button
-                  type="button"
-                  className="tb-v2-btn tb-v2-btn-sm"
-                  onClick={() => handleClaim(row)}
-                >
-                  Claim for {formatBid(row.balance_cents + 100)}
+            {rows.length === 0 && (
+              <div className="tb-v2-sponsor-empty-board">
+                <p>No bid yet.</p>
+                <button type="button" className="tb-v2-btn tb-v2-btn-primary" onClick={focusBidInput}>
+                  Bid Now
                 </button>
               </div>
-            ))}
+            )}
+            {rows.map((row) => {
+              const isTop = row.rank === 1;
+              const timeAgo = formatTimeAgo(row.last_bid_at);
+              return (
+                <div key={row.id} className={`tb-v2-sponsor-row${isTop ? ' tb-v2-sponsor-row-top' : ''}`}>
+                  {isTop && (
+                    <button
+                      type="button"
+                      className="tb-v2-sponsor-row-claim-badge"
+                      onClick={() => handleClaim(row)}
+                    >
+                      Claim this rank for {formatBid(row.balance_cents + 100)}
+                    </button>
+                  )}
+                  <span className="tb-v2-sponsor-row-rank">#{row.rank}</span>
+                  <SponsorAvatar domain={row.domain} name={row.name} />
+                  <div className="tb-v2-sponsor-row-main">
+                    <a href={row.url} target="_blank" rel="sponsored nofollow noopener">
+                      {row.name}
+                    </a>
+                    {row.tagline && <span className="tb-v2-sponsor-row-tagline">{row.tagline}</span>}
+                    <span className="tb-v2-sponsor-row-meta">
+                      {timeAgo}{timeAgo ? ' · ' : ''}{row.clicks} clicks
+                    </span>
+                  </div>
+                  <span className="tb-v2-sponsor-row-balance">{formatBid(row.balance_cents)}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
+
+      <p style={{ textAlign: 'center', fontSize: 12, marginTop: 40, marginBottom: 4 }}>
+        <button
+          type="button"
+          onClick={() => setRulesOpen(true)}
+          style={{
+            background: 'none',
+            border: 'none',
+            padding: 0,
+            font: 'inherit',
+            color: 'var(--fg-2)',
+            textDecoration: 'underline',
+            cursor: 'pointer',
+          }}
+        >
+          Rules
+        </button>
+      </p>
+      <p style={{ textAlign: 'center', fontSize: 12, color: 'var(--fg-3)' }}>
+        Inspired by{' '}
+        <a href="https://outbid.lol/" target="_blank" rel="noopener noreferrer">
+          outbid.lol
+        </a>
+      </p>
+
+      {rulesOpen && (
+        <div
+          className="tb-v2-sponsor-rules-backdrop"
+          onClick={() => setRulesOpen(false)}
+          role="presentation"
+        >
+          <div
+            className="tb-v2-sponsor-rules-modal"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Sponsors rules"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="tb-v2-sponsor-rules-close"
+              onClick={() => setRulesOpen(false)}
+              aria-label="Close"
+            >
+              ×
+            </button>
+            <h2 style={{ fontFamily: 'var(--f-display)', fontSize: 20, fontWeight: 800, marginBottom: 12 }}>
+              Rules
+            </h2>
+            <p style={{ margin: 0, lineHeight: 1.6 }}>
+              Credit rolls over automatically every month, except for whoever is in the
+              top 3 when the month closes, and anyone who has held a top-3 spot for at
+              least an hour during the month.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

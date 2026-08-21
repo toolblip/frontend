@@ -7,6 +7,7 @@ export interface SponsorSlot {
   tagline: string | null;
   clicks: number;
   balance_cents: number;
+  last_bid_at: string | null;
 }
 
 export interface SponsorsTopResponse {
@@ -84,6 +85,19 @@ export async function fetchSponsorsLeaderboard(page = 1): Promise<SponsorsLeader
 
 export function formatBid(cents: number): string {
   return `$${Math.round(cents / 100).toLocaleString("en-US")}`;
+}
+
+/** "1 minute ago" / "6 hours ago" / "14 days ago", relative to now. */
+export function formatTimeAgo(iso: string | null, now: number = Date.now()): string {
+  if (!iso) return "";
+  const diffMs = now - new Date(iso).getTime();
+  const minutes = Math.max(0, Math.round(diffMs / 60_000));
+  if (minutes < 1) return "just now";
+  if (minutes < 60) return `${minutes} minute${minutes === 1 ? "" : "s"} ago`;
+  const hours = Math.round(minutes / 60);
+  if (hours < 24) return `${hours} hour${hours === 1 ? "" : "s"} ago`;
+  const days = Math.round(hours / 24);
+  return `${days} day${days === 1 ? "" : "s"} ago`;
 }
 
 /** Fire-and-forget click ping — never blocks or delays the outbound navigation. */

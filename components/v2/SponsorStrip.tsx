@@ -13,9 +13,11 @@ import {
   type SponsorSlot,
 } from '@/lib/sponsors';
 
-// Suppressed inside logged-in app surfaces — a sponsor strip above an admin
-// screen or the dashboard reads as a bug, not a feature.
-const SUPPRESSED_PREFIXES = ['/dashboard', '/account', '/admin'];
+// Suppressed inside logged-in app surfaces (a sponsor strip above an admin
+// screen or the dashboard reads as a bug, not a feature), on /sponsors itself
+// (the whole page is already about sponsors), and on /pricing (undercuts the
+// "no ads" pitch for Pro). Shown on every other page.
+const SUPPRESSED_PREFIXES = ['/dashboard', '/account', '/admin', '/sponsors', '/pricing'];
 
 export default function SponsorStrip() {
   const pathname = usePathname();
@@ -55,11 +57,9 @@ export default function SponsorStrip() {
           <SlotCard rank={2} slot={second} loading={loading} className="tb-v2-sponsor-slot-2" />
           <SlotCard rank={1} slot={first} loading={loading} className="tb-v2-sponsor-slot-1" primary />
           <SlotCard rank={3} slot={third} loading={loading} className="tb-v2-sponsor-slot-3" />
-          {!loading && (
-            <div className="tb-v2-sponsor-bidyours">
-              <Link href="/sponsors">Bid Yours →</Link>
-            </div>
-          )}
+          <Link href="/sponsors" className="tb-v2-sponsor-bidyours tb-v2-btn tb-v2-btn-primary">
+            Bid Now
+          </Link>
         </div>
       </div>
     </div>
@@ -86,8 +86,7 @@ function SlotCard({
   if (!slot) {
     return (
       <Link href="/sponsors" className={`tb-v2-sponsor-card tb-v2-sponsor-card-empty ${className}`}>
-        <span className="tb-v2-sponsor-empty-label">Your spot</span>
-        <span className="tb-v2-sponsor-empty-cta">Bid from $10</span>
+        <span className="tb-v2-sponsor-empty-label">Bid Now</span>
       </Link>
     );
   }

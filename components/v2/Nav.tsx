@@ -467,7 +467,7 @@ export default function Nav({ onOpenSearch }: Props) {
               <Link
                 key={menu.key}
                 href={menu.href}
-                className={pathname?.startsWith(menu.href) ? 'on' : ''}
+                className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-sm"
               >
                 {menu.label}
               </Link>
@@ -505,10 +505,8 @@ export default function Nav({ onOpenSearch }: Props) {
             <IconSearch style={{ width: 14, height: 14, color: 'var(--fg-3)' }} />
             <span className="tb-v2-nav-search-label">⌘K or /</span>
           </button>
-          {user ? (
+          {user && (
             <Link href="/dashboard" className="tb-v2-nav-pro">Dashboard</Link>
-          ) : (
-            <Link href="/pricing" className="tb-v2-nav-pro">Get Pro</Link>
           )}
           <ThemeMenu />
           <div className="tb-v2-nav-signin">
