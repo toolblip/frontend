@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import useShowAds from '@/hooks/useShowAds';
 import {
+  displayIdentity,
   fetchSponsorsTop,
   formatBid,
   pingSponsorClick,
@@ -58,10 +59,13 @@ export default function SponsorStrip() {
           <SlotCard rank={2} slot={second} loading={loading} className="tb-v2-sponsor-slot-2" />
           <SlotCard rank={1} slot={first} loading={loading} className="tb-v2-sponsor-slot-1" primary />
           <SlotCard rank={3} slot={third} loading={loading} className="tb-v2-sponsor-slot-3" />
-          <Link href="/sponsors" className="tb-v2-sponsor-bidyours tb-v2-btn tb-v2-btn-primary">
-            <span>Bid</span>
-            <span>Now</span>
-          </Link>
+          <div className="tb-v2-sponsor-bidyours-wrap">
+            <Link href="/sponsors" className="tb-v2-sponsor-bidyours tb-v2-btn tb-v2-btn-primary">
+              <span>Outbid</span>
+              <span>Now →</span>
+            </Link>
+            <span className="tb-v2-sponsor-disclosure">Sponsored</span>
+          </div>
         </div>
       </div>
     </div>
@@ -103,8 +107,7 @@ function SlotCard({
       data-testid={primary ? 'sponsor-strip-primary' : 'sponsor-strip-slot'}
     >
       <span className="tb-v2-sponsor-rank">#{rank}</span>
-      <span className="tb-v2-sponsor-disclosure">Sponsored</span>
-      <span className="tb-v2-sponsor-name">{slot.name}</span>
+      <span className="tb-v2-sponsor-name">{displayIdentity(slot.domain)}</span>
       {slot.tagline && <span className="tb-v2-sponsor-tagline">{slot.tagline}</span>}
       <span className="tb-v2-sponsor-meta">
         {formatBid(slot.balance_cents)}

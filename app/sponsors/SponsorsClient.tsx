@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { IconRefresh, IconX } from '@/components/v2/icons';
 import {
   apiPath,
+  displayIdentity,
   fetchSponsorsLeaderboard,
   formatBid,
   formatTimeAgo,
@@ -53,12 +54,6 @@ function SponsorAvatar({ domain, name, sizePx }: { domain: string; name: string;
       onError={() => setError(true)}
     />
   );
-}
-
-/** "@handle" for an x.com identity, the raw domain otherwise — always the
- * one real, verifiable identifier, never the free-text display name. */
-function displayIdentity(domain: string): string {
-  return domain.startsWith('x.com/') ? '@' + domain.slice('x.com/'.length) : domain;
 }
 
 // Rank 1-3 get a card treatment that fades by rank (100% / 65% / 42%);
