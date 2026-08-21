@@ -153,6 +153,18 @@ export default function RemoveBgClient() {
         </div>
       ) : (
         <div className="flex flex-col gap-4">
+          {processedImage && (
+            <div className="flex flex-col gap-2">
+              <p className="text-sm font-medium">Result (Transparent Background)</p>
+              <div className="border border-gray-200 rounded p-2 bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAGElEQVQYlWNgYGCQwoKxgqGgcJA5h3yFAXcADqUH/3O7yz4AAAAASUVORK5CYII=')]">
+                <img src={processedImage} alt="Processed" className="max-w-full max-h-[300px] object-contain" />
+              </div>
+              <button onClick={handleDownload} className="tb-v2-btn tb-v2-btn-ghost">
+                Download PNG
+              </button>
+            </div>
+          )}
+
           <div>
             <p className="tb-v2-tool-label" style={{marginBottom:8}}>Original Image</p>
             <img src={image} alt="Original" className="max-w-full max-h-[300px] object-contain rounded" />
@@ -178,18 +190,6 @@ export default function RemoveBgClient() {
       )}
 
       <canvas ref={canvasRef} className="hidden" />
-
-      {processedImage && (
-        <div className="flex flex-col gap-2">
-          <p className="text-sm font-medium">Result (Transparent Background)</p>
-          <div className="border border-gray-200 rounded p-2 bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAGElEQVQYlWNgYGCQwoKxgqGgcJA5h3yFAXcADqUH/3O7yz4AAAAASUVORK5CYII=')]">
-            <img src={processedImage} alt="Processed" className="max-w-full max-h-[300px] object-contain" />
-          </div>
-          <button onClick={handleDownload} className="tb-v2-btn tb-v2-btn-ghost">
-            Download PNG
-          </button>
-        </div>
-      )}
     </div>
   );
 }
