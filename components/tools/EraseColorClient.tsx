@@ -28,6 +28,7 @@ export default function EraseColorClient() {
   const [erasedCount, setErasedCount] = useState(0);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isConvertingHeic, setIsConvertingHeic] = useState(false);
+  const [sampleError, setSampleError] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { tier } = useSubscription();
   const maxSizeMB = tier === 'free' ? 5 : tier === 'starter' ? 10 : tier === 'ultra' ? 100 : tier === 'max' ? 500 : 5;
@@ -78,6 +79,21 @@ export default function EraseColorClient() {
       setSelectedFile(file);
       loadImage(file);
     }
+  };
+
+  const loadSample = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const src = '/samples/tool-sample.png';
+    setSelectedFile(null);
+    const img = new Image();
+    img.onload = () => {
+      setSampleError(false);
+      setOriginalImage(src);
+      setPickedColor(null);
+      setErasedCount(0);
+    };
+    img.onerror = () => setSampleError(true);
+    img.src = src;
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -169,6 +185,15 @@ export default function EraseColorClient() {
             <>
               <p className="text-gray-400 text-sm">Drag & drop an image, or click to browse</p>
               <p className="text-gray-600 text-xs mt-1">PNG, JPG, WebP, GIF, HEIC</p>
+              <button
+                onClick={loadSample}
+                className="text-xs text-red-700 dark:text-red-400 underline hover:no-underline mt-3"
+              >
+                Or try a sample image
+              </button>
+              {sampleError && (
+                <p className="text-xs text-amber-500 mt-2">Couldn&apos;t load the sample image, try again.</p>
+              )}
             </>
           )}
           <input
