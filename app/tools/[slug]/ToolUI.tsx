@@ -59,7 +59,6 @@ import ImageFormatConverterClient from '@/components/tools/ImageFormatConverterC
 import ImageCropperClient from '@/components/tools/ImageCropperClient';
 import ImageTrimmerClient from '@/components/tools/ImageTrimmerClient';
 import EraseColorClient from '@/components/tools/EraseColorClient';
-import HttpHeadersViewerClient from '@/components/tools/HttpHeadersViewerClient';
 import HtmlEncoderClient from '@/components/tools/HtmlEncoderClient';
 import HashGeneratorClient from '@/components/tools/HashGeneratorClient';
 import Sha256HashClient from '@/components/tools/Sha256HashClient';
@@ -74,7 +73,6 @@ import CreditCardValidatorClient from '@/components/tools/CreditCardValidatorCli
 import ContrastCheckerClient from '@/components/tools/ContrastCheckerClient';
 import ColorPickerClient from '@/components/tools/ColorPickerClient';
 import CircleCropClient from '@/components/tools/CircleCropClient';
-import ChangeBgPhotoClient from '@/components/tools/ChangeBgPhotoClient';
 import CharacterCounterClient from '@/components/tools/CharacterCounterClient';
 import CharacterFrequencyCounterClient from '@/components/tools/CharacterFrequencyCounterClient';
 import CharacterVarietyCheckerClient from '@/components/tools/CharacterVarietyCheckerClient';
@@ -105,11 +103,9 @@ import BrokenLinkCheckerExpressClient from '@/components/tools/BrokenLinkChecker
 import BrokenLinkCheckerV2Client from '@/components/tools/BrokenLinkCheckerV2Client';
 import BrowserImageResizerClient from '@/components/tools/BrowserImageResizerClient';
 import BulkGeneratorClient from '@/components/tools/BulkGeneratorClient';
-import BusinessNameGeneratorClient from '@/components/tools/BusinessNameGeneratorClient';
 import BusinessPlanGeneratorClient from '@/components/tools/BusinessPlanGeneratorClient';
 import BusinessSloganGeneratorClient from '@/components/tools/BusinessSloganGeneratorClient';
 import ByteConverterClient from '@/components/tools/ByteConverterClient';
-import CanonicalTagCheckerClient from '@/components/tools/CanonicalTagCheckerClient';
 import CanonicalUrlGeneratorClient from '@/components/tools/CanonicalUrlGeneratorClient';
 import ChineseCharConverterClient from '@/components/tools/ChineseCharConverterClient';
 import CidrCalculatorClient from '@/components/tools/CidrCalculatorClient';
@@ -155,7 +151,6 @@ import HtmlTableGeneratorClient from '@/components/tools/HtmlTableGeneratorClien
 import HtmlToMarkdownClient from '@/components/tools/HtmlToMarkdownClient';
 import HtmlToPlainTextClient from '@/components/tools/HtmlToPlainTextClient';
 import HtmlValidatorClient from '@/components/tools/HtmlValidatorClient';
-import ImageColorPickerClient from '@/components/tools/ImageColorPickerClient';
 import ImageMetadataViewerClient from '@/components/tools/ImageMetadataViewerClient';
 import IpRangeCalculatorClient from '@/components/tools/IpRangeCalculatorClient';
 import IpWhoisGeneratorClient from '@/components/tools/IpWhoisGeneratorClient';
@@ -215,10 +210,8 @@ import SemanticVersioningClient from '@/components/tools/SemanticVersioningClien
 import SemverCheckerClient from '@/components/tools/SemverCheckerClient';
 import SlugGeneratorClient from '@/components/tools/SlugGeneratorClient';
 import SqlPrettifierClient from '@/components/tools/SqlPrettifierClient';
-import SslCertificateCheckerClient from '@/components/tools/SslCertificateCheckerClient';
 import StickyNotesClient from '@/components/tools/StickyNotesClient';
 import SvgCleanerClient from '@/components/tools/SvgCleanerClient';
-import SvgFaviconGeneratorClient from '@/components/tools/SvgFaviconGeneratorClient';
 import SyllableCounterClient from '@/components/tools/SyllableCounterClient';
 import TemperatureConverterClient from '@/components/tools/TemperatureConverterClient';
 import TextPermutationGeneratorClient from '@/components/tools/TextPermutationGeneratorClient';
@@ -239,7 +232,6 @@ import UserAgentParserClient from '@/components/tools/UserAgentParserClient';
 import UuidValidatorClient from '@/components/tools/UuidValidatorClient';
 import WebpackConfigGeneratorClient from '@/components/tools/WebpackConfigGeneratorClient';
 import WeightConverterClient from '@/components/tools/WeightConverterClient';
-import WordAssociationClient from '@/components/tools/WordAssociationClient';
 import WordFrequencyAnalyzerClient from '@/components/tools/WordFrequencyAnalyzerClient';
 import WordFrequencyCounterClient from '@/components/tools/WordFrequencyCounterClient';
 import VsdxToDocxClient from '@/components/tools/VsdxToDocxClient';
@@ -247,20 +239,12 @@ import VsdxToPptxClient from '@/components/tools/VsdxToPptxClient';
 import WordCombinationsGeneratorClient from '@/components/tools/WordCombinationsGeneratorClient';
 import XmlSitemapGeneratorClient from '@/components/tools/XmlSitemapGeneratorClient';
 import XmlValidatorClient from '@/components/tools/XmlValidatorClient';
-import YamlValidatorClient from '@/components/tools/YamlValidatorClient';
 import AiDetectorClient from '@/components/tools/AiDetectorClient';
 import AiRephraserClient from '@/components/tools/AiRephraserClient';
-import AiTwitterGeneratorClient from '@/components/tools/AiTwitterGeneratorClient';
 import ApiAuthHeaderGeneratorClient from '@/components/tools/ApiAuthHeaderGeneratorClient';
 import ApiDocGeneratorClient from '@/components/tools/ApiDocGeneratorClient';
-import AacToFlacClient from '@/components/tools/AacToFlacClient';
-import AacToM4rClient from '@/components/tools/AacToM4rClient';
-import AacToMp3Client from '@/components/tools/AacToMp3Client';
-import AacToMp4Client from '@/components/tools/AacToMp4Client';
 import AacToWavClient from '@/components/tools/AacToWavClient';
-import AddImagesClient from '@/components/tools/AddImagesClient';
 import AddSubtitlesClient from '@/components/tools/AddSubtitlesClient';
-import AddTextClient from '@/components/tools/AddTextClient';
 import AlgorithmVisualizerClient from '@/components/tools/AlgorithmVisualizerClient';
 import AnnotateClient from '@/components/tools/AnnotateClient';
 import AsciiArtGeneratorClient from '@/components/tools/AsciiArtGeneratorClient';
@@ -268,29 +252,17 @@ import AllInOneUnitConverterClient from '@/components/tools/AllInOneUnitConverte
 import AngleUnitConverterClient from '@/components/tools/AngleUnitConverterClient';
 import ApiEndpointDebuggerClient from '@/components/tools/ApiEndpointDebuggerClient';
 import ApiEndpointDocumenterClient from '@/components/tools/ApiEndpointDocumenterClient';
-import ApiEndpointTesterClient from '@/components/tools/ApiEndpointTesterClient';
 import ApiSpecGeneratorClient from '@/components/tools/ApiSpecGeneratorClient';
 import AccessibilityCheckerClient from '@/components/tools/AccessibilityCheckerClient';
 import AreaConverterClient from '@/components/tools/AreaConverterClient';
-import Argon2HashGeneratorClient from '@/components/tools/Argon2HashGeneratorClient';
-import ArticleGeneratorClient from '@/components/tools/ArticleGeneratorClient';
 import ArticleRewriterClient from '@/components/tools/ArticleRewriterClient';
 import ArticleTitleGenClient from '@/components/tools/ArticleTitleGenClient';
 import ArticleTitleGeneratorClient from '@/components/tools/ArticleTitleGeneratorClient';
-import ArticleWriterClient from '@/components/tools/ArticleWriterClient';
 import AudioToTextClient from '@/components/tools/AudioToTextClient';
 import TextToHandwritingClient from '@/components/tools/TextToHandwritingClient';
 import AutomationWizardClient from '@/components/tools/AutomationWizardClient';
 import AviToGifClient from '@/components/tools/AviToGifClient';
-import AviToMkvClient from '@/components/tools/AviToMkvClient';
-import AviToMovClient from '@/components/tools/AviToMovClient';
-import AviToMp3Client from '@/components/tools/AviToMp3Client';
-import AviToMp4Client from '@/components/tools/AviToMp4Client';
-import Azw3ToEpubClient from '@/components/tools/Azw3ToEpubClient';
-import Azw3ToMobiClient from '@/components/tools/Azw3ToMobiClient';
 import BackslashEscapeUnescapeClient from '@/components/tools/BackslashEscapeUnescapeClient';
-import BarcodeGeneratorClient from '@/components/tools/BarcodeGeneratorClient';
-import BarcodeScannerClient from '@/components/tools/BarcodeScannerClient';
 import BaseConvertToolClient from '@/components/tools/BaseConvertToolClient';
 import BcryptHashGeneratorClient from '@/components/tools/BcryptHashGeneratorClient';
 import BillSaleGeneratorClient from '@/components/tools/BillSaleGeneratorClient';
@@ -304,7 +276,6 @@ import BinaryConverterClient from '@/components/tools/BinaryConverterClient';
 import BinaryDecimalHexConverterClient from '@/components/tools/BinaryDecimalHexConverterClient';
 import BinaryTextExpressClient from '@/components/tools/BinaryTextExpressClient';
 import BinaryToTextV2Client from '@/components/tools/BinaryToTextV2Client';
-import BlurBackgroundClient from '@/components/tools/BlurBackgroundClient';
 import BlogOutlineClient from '@/components/tools/BlogOutlineClient';
 import BorderClient from '@/components/tools/BorderClient';
 import BmiCalculatorClient from '@/components/tools/BmiCalculatorClient';
@@ -361,7 +332,6 @@ import ColorPickerStdClient from '@/components/tools/ColorPickerStdClient';
 import ColorPickerToolClient from '@/components/tools/ColorPickerToolClient';
 import ColorPickerUltimateClient from '@/components/tools/ColorPickerUltimateClient';
 import ColorPickerUltraClient from '@/components/tools/ColorPickerUltraClient';
-import ColorPickerV2Client from '@/components/tools/ColorPickerV2Client';
 import ColorPickerV3Client from '@/components/tools/ColorPickerV3Client';
 import ColorPickerV4Client from '@/components/tools/ColorPickerV4Client';
 import ColorPickerV5Client from '@/components/tools/ColorPickerV5Client';
@@ -381,11 +351,6 @@ import ColorShadeToolClient from '@/components/tools/ColorShadeToolClient';
 import ColorTintGeneratorClient from '@/components/tools/ColorTintGeneratorClient';
 import ColorToneGeneratorClient from '@/components/tools/ColorToneGeneratorClient';
 import ColorToolblipClient from '@/components/tools/ColorToolblipClient';
-import ColorizePhotoClient from '@/components/tools/ColorizePhotoClient';
-import CompressClient from '@/components/tools/CompressClient';
-import ContentBriefGeneratorClient from '@/components/tools/ContentBriefGeneratorClient';
-import ContentImproverClient from '@/components/tools/ContentImproverClient';
-import ContentPlannerClient from '@/components/tools/ContentPlannerClient';
 import ContentSummarizerClient from '@/components/tools/ContentSummarizerClient';
 import ContrastBrowserClient from '@/components/tools/ContrastBrowserClient';
 import ContrastCheckAllClient from '@/components/tools/ContrastCheckAllClient';
@@ -428,7 +393,6 @@ import ContrastFreshClient from '@/components/tools/ContrastFreshClient';
 import ContrastQuickClient from '@/components/tools/ContrastQuickClient';
 import ContrastToolblipClient from '@/components/tools/ContrastToolblipClient';
 import CookingUnitConverterClient from '@/components/tools/CookingUnitConverterClient';
-import CounterClient from '@/components/tools/CounterClient';
 import CronBuilderClient from '@/components/tools/CronBuilderClient';
 import CronExpanderClient from '@/components/tools/CronExpanderClient';
 import CronExpressionGeneratorClient from '@/components/tools/CronExpressionGeneratorClient';
@@ -470,12 +434,6 @@ import CollocationsCheckerClient from '@/components/tools/CollocationsCheckerCli
 import EnglishCollocationsUniqueClient from '@/components/tools/EnglishCollocationsUniqueClient';
 import EnglishDictionaryClient from '@/components/tools/EnglishDictionaryClient';
 import EnvParserClient from '@/components/tools/EnvParserClient';
-import EpsToJpgClient from '@/components/tools/EpsToJpgClient';
-import EpsToPngClient from '@/components/tools/EpsToPngClient';
-import EpsToSvgClient from '@/components/tools/EpsToSvgClient';
-import EpubToAzw3Client from '@/components/tools/EpubToAzw3Client';
-import EpubToMobiClient from '@/components/tools/EpubToMobiClient';
-import EssayWriterClient from '@/components/tools/EssayWriterClient';
 import ExcelToCsvClient from '@/components/tools/ExcelToCsvClient';
 import ExcelToPdfClient from '@/components/tools/ExcelToPdfClient';
 import ExcelToXmlClient from '@/components/tools/ExcelToXmlClient';
@@ -483,10 +441,8 @@ import ExifRemoverClient from '@/components/tools/ExifRemoverClient';
 import ExplainLikeFiveClient from '@/components/tools/ExplainLikeFiveClient';
 import ExtractAudioClient from '@/components/tools/ExtractAudioClient';
 import ExtractImgClient from '@/components/tools/ExtractImgClient';
-import ExtractTextClient from '@/components/tools/ExtractTextClient';
 import FacebookAdHeadlinesClient from '@/components/tools/FacebookAdHeadlinesClient';
 import FaqGeneratorClient from '@/components/tools/FaqGeneratorClient';
-import FlipClient from '@/components/tools/FlipClient';
 import FontToPngClient from '@/components/tools/FontToPngClient';
 import FractionCalculatorClient from '@/components/tools/FractionCalculatorClient';
 import GifToApngClient from '@/components/tools/GifToApngClient';
@@ -541,34 +497,10 @@ import HashCollisionFinderClient from '@/components/tools/HashCollisionFinderCli
 import HashDiffCheckerClient from '@/components/tools/HashDiffCheckerClient';
 import HeadingTagAnalyzerClient from '@/components/tools/HeadingTagAnalyzerClient';
 import JpgToPngClient from '@/components/tools/JpgToPngClient';
-import JpgToAvifClient from '@/components/tools/JpgToAvifClient';
-import JpgToGifClient from '@/components/tools/JpgToGifClient';
-import JpgToSvgClient from '@/components/tools/JpgToSvgClient';
-import JpgToTiffClient from '@/components/tools/JpgToTiffClient';
-import PngToAvifClient from '@/components/tools/PngToAvifClient';
-import PngToEpsClient from '@/components/tools/PngToEpsClient';
-import PngToGifClient from '@/components/tools/PngToGifClient';
-import PngToSvgClient from '@/components/tools/PngToSvgClient';
-import PngToTiffClient from '@/components/tools/PngToTiffClient';
-import TiffToJpgClient from '@/components/tools/TiffToJpgClient';
-import TiffToPngClient from '@/components/tools/TiffToPngClient';
-import TiffToSvgClient from '@/components/tools/TiffToSvgClient';
-import PsdToJpgClient from '@/components/tools/PsdToJpgClient';
-import PsdToPdfClient from '@/components/tools/PsdToPdfClient';
-import PsdToPngClient from '@/components/tools/PsdToPngClient';
-import PsdToSvgClient from '@/components/tools/PsdToSvgClient';
-import WebmToMp3Client from '@/components/tools/WebmToMp3Client';
-import WebmToMp4Client from '@/components/tools/WebmToMp4Client';
-import MovToGifClient from '@/components/tools/MovToGifClient';
-import Mp4ToWebmClient from '@/components/tools/Mp4ToWebmClient';
-import MobiToEpubClient from '@/components/tools/MobiToEpubClient';
-import ImageToSvgClient from '@/components/tools/ImageToSvgClient';
 import ImageToSvgConverterClient from '@/components/tools/ImageToSvgConverterClient';
-import WebpToAvifClient from '@/components/tools/WebpToAvifClient';
 import SeoMetaTagAnalyzerClient from '@/components/tools/SeoMetaTagAnalyzerClient';
 import LoremIpsumGeneratorProClient from '@/components/tools/LoremIpsumGeneratorProClient';
 import LdapFilterGeneratorClient from '@/components/tools/LdapFilterGeneratorClient';
-import RegexVisualBuilderClient from '@/components/tools/RegexVisualBuilderClient';
 import KeywordGeneratorExpressClient from '@/components/tools/KeywordGeneratorExpressClient';
 import MetaGenToolblipClient from '@/components/tools/MetaGenToolblipClient';
 import MetaTagGenAdvClient from '@/components/tools/MetaTagGenAdvClient';
@@ -583,7 +515,6 @@ import JsonCsvExpressClient from '@/components/tools/JsonCsvExpressClient';
 import JsonEditorClient from '@/components/tools/JsonEditorClient';
 import JsonPathEvaluatorExpressClient from '@/components/tools/JsonPathEvaluatorExpressClient';
 import JsonSchemaGenExpressClient from '@/components/tools/JsonSchemaGenExpressClient';
-import XmlToCsvClient from '@/components/tools/XmlToCsvClient';
 import HeadlineAnalyzerClient from '@/components/tools/HeadlineAnalyzerClient';
 import HeicToJpgClient from '@/components/tools/HeicToJpgClient';
 import HeicToPngClient from '@/components/tools/HeicToPngClient';
@@ -606,7 +537,6 @@ import HslToRgbNewClient from '@/components/tools/HslToRgbNewClient';
 import HsvToHexClient from '@/components/tools/HsvToHexClient';
 import HtmlAttributeEncoderClient from '@/components/tools/HtmlAttributeEncoderClient';
 import HtmlEncoderDecoderClient from '@/components/tools/HtmlEncoderDecoderClient';
-import HtmlEntitiesReferenceClient from '@/components/tools/HtmlEntitiesReferenceClient';
 import HtmlLivePreviewClient from '@/components/tools/HtmlLivePreviewClient';
 import HtmlMarkdownExpressClient from '@/components/tools/HtmlMarkdownExpressClient';
 import HtmlPlaintextExpressClient from '@/components/tools/HtmlPlaintextExpressClient';
@@ -629,13 +559,10 @@ import HttpHeadersInspectorClient from '@/components/tools/HttpHeadersInspectorC
 import HttpHeadersQuickClient from '@/components/tools/HttpHeadersQuickClient';
 import ColorTemperatureAdjusterClient from '@/components/tools/ColorTemperatureAdjusterClient';
 import ChartMakerClient from '@/components/tools/ChartMakerClient';
-import CitationGeneratorClient from '@/components/tools/CitationGeneratorClient';
-import CleanupPictureClient from '@/components/tools/CleanupPictureClient';
 import CodeBeautifierClient from '@/components/tools/CodeBeautifierClient';
 import CodeDiffClient from '@/components/tools/CodeDiffClient';
 import CodeDiffToolClient from '@/components/tools/CodeDiffToolClient';
 import CodeToDiagramGeneratorClient from '@/components/tools/CodeToDiagramGeneratorClient';
-import ColdEmailWriterClient from '@/components/tools/ColdEmailWriterClient';
 import CollageMakerClient from '@/components/tools/CollageMakerClient';
 import CombineImagesClient from '@/components/tools/CombineImagesClient';
 import CropClient from '@/components/tools/CropClient';
@@ -650,7 +577,6 @@ import GrayscaleClient from '@/components/tools/GrayscaleClient';
 import HomophoneCheckerClient from '@/components/tools/HomophoneCheckerClient';
 import HtmlMinifierClient from '@/components/tools/HtmlMinifierClient';
 import HttpStatusCheckerClient from '@/components/tools/HttpStatusCheckerClient';
-import ImageAltTextGeneratorClient from '@/components/tools/ImageAltTextGeneratorClient';
 import ImageBackgroundRemoverClient from '@/components/tools/ImageBackgroundRemoverClient';
 import ImageBorderAdderClient from '@/components/tools/ImageBorderAdderClient';
 import ImageCompressorClient from '@/components/tools/ImageCompressorClient';
@@ -669,13 +595,9 @@ import ParagraphCounterClient from '@/components/tools/ParagraphCounterClient';
 import ParaphrasingClient from '@/components/tools/ParaphrasingClient';
 import PassiveVoiceDetectorClient from '@/components/tools/PassiveVoiceDetectorClient';
 import PixelateClient from '@/components/tools/PixelateClient';
-import PngCompressorClient from '@/components/tools/PngCompressorClient';
-import QrCodeScannerClient from '@/components/tools/QrCodeScannerClient';
 import ReadabilityCheckerClient from '@/components/tools/ReadabilityCheckerClient';
-import RemoveBgClient from '@/components/tools/RemoveBgClient';
 import RobotsTxtEditorClient from '@/components/tools/RobotsTxtEditorClient';
 import SentenceCounterClient from '@/components/tools/SentenceCounterClient';
-import SentenceRewriterClient from '@/components/tools/SentenceRewriterClient';
 import SharpenClient from '@/components/tools/SharpenClient';
 import SitemapAnalyzerClient from '@/components/tools/SitemapAnalyzerClient';
 import SqlFormatterClient from '@/components/tools/SqlFormatterClient';
@@ -683,34 +605,24 @@ import TemperatureUnitConverterClient from '@/components/tools/TemperatureUnitCo
 import TextUniquenessCheckerClient from '@/components/tools/TextUniquenessCheckerClient';
 import AddWatermarkToPDFClient from '@/components/tools/AddWatermarkToPDFClient';
 import CreateZipFileClient from '@/components/tools/CreateZipFileClient';
-import PsdToAIConverterClient from '@/components/tools/PsdToAIConverterClient';
-import SleepDurationCalculatorClient from '@/components/tools/SleepDurationCalculatorClient';
-import TextTranslatorClient from '@/components/tools/TextTranslatorClient';
 import TsvToJsonClient from '@/components/tools/TsvToJsonClient';
 import UrlRedirectCheckerClient from '@/components/tools/UrlRedirectCheckerClient';
 import WebpConverterClient from '@/components/tools/WebpConverterClient';
 import ImageScaleCalculatorClient from '@/components/tools/ImageScaleCalculatorClient';
 import ImageSquareFitClient from '@/components/tools/ImageSquareFitClient';
 import IPynbFormatterClient from '@/components/tools/IPynbFormatterClient';
-import JSONPathQueryTesterClient from '@/components/tools/JSONPathQueryTesterClient';
-import JSONPathQueryToolClient from '@/components/tools/JSONPathQueryToolClient';
 import JwtTokenInspectorClient from '@/components/tools/JwtTokenInspectorClient';
 import JwtTokenTesterClient from '@/components/tools/JwtTokenTesterClient';
 import KeywordDifficultyToolClient from '@/components/tools/KeywordDifficultyToolClient';
 import KeywordExtractorClient from '@/components/tools/KeywordExtractorClient';
 import KeywordGeneratorClient from '@/components/tools/KeywordGeneratorClient';
-import KubernetesYAMLGeneratorClient from '@/components/tools/KubernetesYAMLGeneratorClient';
 import ListDifferenceFinderClient from '@/components/tools/ListDifferenceFinderClient';
-import M4AToMP3Client from '@/components/tools/M4AToMP3Client';
-import M4AToMP4Client from '@/components/tools/M4AToMP4Client';
 import MetaTagsToolClient from '@/components/tools/MetaTagsToolClient';
 import MetricImperialConverterClient from '@/components/tools/MetricImperialConverterClient';
 import MIMETypesReferenceClient from '@/components/tools/MIMETypesReferenceClient';
 import MP4ToMP3Client from '@/components/tools/MP4ToMP3Client';
 import MkvToMp3Client from '@/components/tools/MkvToMp3Client';
-import MP4ToOGGClient from '@/components/tools/MP4ToOGGClient';
 import NDAGeneratorClient from '@/components/tools/NDAGeneratorClient';
-import OGGToMP3Client from '@/components/tools/OGGToMP3Client';
 import PageTitleCheckerClient from '@/components/tools/PageTitleCheckerClient';
 import PhotoMetadataRemoverClient from '@/components/tools/PhotoMetadataRemoverClient';
 import PhotoResizeToolClient from '@/components/tools/PhotoResizeToolClient';
@@ -743,7 +655,6 @@ import ShellCommandReferenceClient from '@/components/tools/ShellCommandReferenc
 import ShortenContentClient from '@/components/tools/ShortenContentClient';
 import SignPDFClient from '@/components/tools/SignPDFClient';
 import SitemapHTMLNewClient from '@/components/tools/SitemapHTMLNewClient';
-import SitemapURLsExtractorClient from '@/components/tools/SitemapURLsExtractorClient';
 import SlugHealthCheckerClient from '@/components/tools/SlugHealthCheckerClient';
 import SlugPermalinkCheckerClient from '@/components/tools/SlugPermalinkCheckerClient';
 import SlideshowGeneratorClient from '@/components/tools/SlideshowGeneratorClient';
@@ -767,20 +678,15 @@ import UUIDNormalizerClient from '@/components/tools/UUIDNormalizerClient';
 import WebSocketTesterClient from '@/components/tools/WebSocketTesterClient';
 import WhatIfScenarioCalculatorClient from '@/components/tools/WhatIfScenarioCalculatorClient';
 import WordAlphabetizerClient from '@/components/tools/WordAlphabetizerClient';
-import WordCountFromURLClient from '@/components/tools/WordCountFromURLClient';
 import WordFinderClient from '@/components/tools/WordFinderClient';
 import WordFreqExpressClient from '@/components/tools/WordFreqExpressClient';
 import WordScrambleGeneratorClient from '@/components/tools/WordScrambleGeneratorClient';
-import YAMLPrettyPrintClient from '@/components/tools/YAMLPrettyPrintClient';
 import JupyterCleanerClient from '@/components/tools/JupyterCleanerClient';
 import JsonTreeViewClient from '@/components/tools/JsonTreeViewClient';
 import JSONToURLEncodedV2Client from '@/components/tools/JSONToURLEncodedV2Client';
-import ParagraphRewriterClient from '@/components/tools/ParagraphRewriterClient';
 import SearchConsoleInsightsClient from '@/components/tools/SearchConsoleInsightsClient';
 import SplitCSVFileClient from '@/components/tools/SplitCSVFileClient';
 import SplitExcelFileClient from '@/components/tools/SplitExcelFileClient';
-import SVGMinifierClient from '@/components/tools/SVGMinifierClient';
-import SVGOptimizerClient from '@/components/tools/SVGOptimizerClient';
 import MockPortCheckClient from '@/components/tools/MockPortCheckClient';
 import MetaToolClient from '@/components/tools/MetaToolClient';
 import PortToolClient from '@/components/tools/PortToolClient';
@@ -926,8 +832,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <ImageTrimmerClient />;
     case 'erase-color':
       return <EraseColorClient />;
-    case 'http-headers-viewer':
-      return <HttpHeadersViewerClient />;
     case 'html-encoder':
       return <HtmlEncoderClient />;
     case 'hash-generator':
@@ -952,8 +856,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <ContrastCheckerClient />;
     case 'color-picker':
       return <ColorPickerClient />;
-    case 'change-bg-photo':
-      return <ChangeBgPhotoClient />;
     case 'circle-crop':
       return <CircleCropClient />;
     case 'chart-maker':
@@ -990,8 +892,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <SlugGeneratorClient />;
     case 'sql-prettifier':
       return <SqlPrettifierClient />;
-    case 'ssl-certificate-checker':
-      return <SslCertificateCheckerClient />;
     case 'sticky-notes':
       return <StickyNotesClient />;
     case 'svg-cleaner':
@@ -1036,8 +936,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <WebpackConfigGeneratorClient />;
     case 'weight-converter':
       return <WeightConverterClient />;
-    case 'word-association':
-      return <WordAssociationClient />;
     case 'word-frequency-analyzer':
       return <WordFrequencyAnalyzerClient />;
     case 'word-frequency-counter':
@@ -1046,8 +944,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <XmlSitemapGeneratorClient />;
     case 'xml-validator':
       return <XmlValidatorClient />;
-    case 'yaml-validator':
-      return <YamlValidatorClient />;
     case 'age-calculator':
       return <AgeCalculatorClient />;
     case 'anagram-generator':
@@ -1094,8 +990,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <BinaryToTextV2Client />;
     case 'blog-outline':
       return <BlogOutlineClient />;
-    case 'blur-background':
-      return <BlurBackgroundClient />;
     case 'border':
       return <BorderClient />;
     case 'bmi-calculator':
@@ -1114,16 +1008,12 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <BrowserImageResizerClient />;
     case 'bulk-generator':
       return <BulkGeneratorClient />;
-    case 'business-name-generator':
-      return <BusinessNameGeneratorClient />;
     case 'business-plan-generator':
       return <BusinessPlanGeneratorClient />;
     case 'business-slogan-generator':
       return <BusinessSloganGeneratorClient />;
     case 'byte-converter':
       return <ByteConverterClient />;
-    case 'canonical-tag-checker':
-      return <CanonicalTagCheckerClient />;
     case 'canonical-url-generator':
       return <CanonicalUrlGeneratorClient />;
     case 'chinese-char-converter':
@@ -1144,8 +1034,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <CodeDiffToolClient />;
     case 'code-to-diagram-generator':
       return <CodeToDiagramGeneratorClient />;
-    case 'cold-email-writer':
-      return <ColdEmailWriterClient />;
     case 'collocations-checker':
       return <CollocationsCheckerClient />;
     case 'color-blindness-simulator':
@@ -1156,12 +1044,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <ColorContrastMatrixClient />;
     case 'color-contrast-ratio-checker':
       return <ColorContrastRatioCheckerClient />;
-    case 'cleanup-picture':
-      return <CleanupPictureClient />;
     case 'cors-header-generator':
       return <CorsHeaderGeneratorClient />;
-    case 'citation-generator':
-      return <CitationGeneratorClient />;
     case 'countdown-timer':
       return <CountdownTimerClient />;
     case 'crontab-generator':
@@ -1238,8 +1122,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <HtmlToPlainTextClient />;
     case 'html-validator':
       return <HtmlValidatorClient />;
-    case 'image-color-picker':
-      return <ImageColorPickerClient />;
     case 'image-metadata-viewer':
       return <ImageMetadataViewerClient />;
     case 'ip-range-calculator':
@@ -1324,32 +1206,18 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <AiDetectorClient />;
     case 'ai-rephraser':
       return <AiRephraserClient />;
-    case 'ai-twitter-generator':
-      return <AiTwitterGeneratorClient />;
     case 'api-auth-header-generator':
       return <ApiAuthHeaderGeneratorClient />;
     case 'api-doc-generator':
       return <ApiDocGeneratorClient />;
     case 'accessibility-checker':
       return <AccessibilityCheckerClient />;
-    case 'aac-to-flac':
-      return <AacToFlacClient />;
-    case 'aac-to-m4r':
-      return <AacToM4rClient />;
-    case 'aac-to-mp3':
-      return <AacToMp3Client />;
-    case 'aac-to-mp4':
-      return <AacToMp4Client />;
     case 'aac-to-wav':
       return <AacToWavClient />;
-    case 'add-images':
-      return <AddImagesClient />;
     case 'add-pages':
       return <PdfPageAdderClient />;
     case 'add-subtitles':
       return <AddSubtitlesClient />;
-    case 'add-text':
-      return <AddTextClient />;
     case 'algorithm-visualizer':
       return <AlgorithmVisualizerClient />;
     case 'annotate':
@@ -1364,48 +1232,24 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <ApiEndpointDebuggerClient />;
     case 'api-endpoint-documenter':
       return <ApiEndpointDocumenterClient />;
-    case 'api-endpoint-tester':
-      return <ApiEndpointTesterClient />;
     case 'api-spec-generator':
       return <ApiSpecGeneratorClient />;
     case 'area-converter':
       return <AreaConverterClient />;
-    case 'argon2-hash-generator':
-      return <Argon2HashGeneratorClient />;
-    case 'article-generator':
-      return <ArticleGeneratorClient />;
     case 'article-rewriter':
       return <ArticleRewriterClient />;
     case 'article-title-gen':
       return <ArticleTitleGenClient />;
     case 'article-title-generator':
       return <ArticleTitleGeneratorClient />;
-    case 'article-writer':
-      return <ArticleWriterClient />;
     case 'audio-to-text':
       return <AudioToTextClient />;
     case 'automation-wizard':
       return <AutomationWizardClient />;
     case 'avi-to-gif':
       return <AviToGifClient />;
-    case 'avi-to-mkv':
-      return <AviToMkvClient />;
-    case 'avi-to-mov':
-      return <AviToMovClient />;
-    case 'avi-to-mp3':
-      return <AviToMp3Client />;
-    case 'avi-to-mp4':
-      return <AviToMp4Client />;
-    case 'azw3-to-epub':
-      return <Azw3ToEpubClient />;
-    case 'azw3-to-mobi':
-      return <Azw3ToMobiClient />;
     case 'backslash-escape-unescape':
       return <BackslashEscapeUnescapeClient />;
-    case 'barcode-generator':
-      return <BarcodeGeneratorClient />;
-    case 'barcode-scanner':
-      return <BarcodeScannerClient />;
     case 'base-convert-tool':
       return <BaseConvertToolClient />;
     case 'base-converter':
@@ -1504,8 +1348,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <ColorPickerUltimateClient />;
     case 'color-picker-ultra':
       return <ColorPickerUltraClient />;
-    case 'color-picker-v2':
-      return <ColorPickerV2Client />;
     case 'color-picker-v3':
       return <ColorPickerV3Client />;
     case 'color-picker-v4':
@@ -1544,18 +1386,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <ColorToneGeneratorClient />;
     case 'color-toolblip':
       return <ColorToolblipClient />;
-    case 'colorize-photo':
-      return <ColorizePhotoClient />;
-    case 'compress':
-      return <CompressClient />;
     case 'delete-pages':
       return <PdfPageDeleterClient />;
-    case 'content-brief-generator':
-      return <ContentBriefGeneratorClient />;
-    case 'content-improver':
-      return <ContentImproverClient />;
-    case 'content-planner':
-      return <ContentPlannerClient />;
     case 'content-summarizer':
       return <ContentSummarizerClient />;
     case 'contrast-browser':
@@ -1640,8 +1472,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <ContrastToolblipClient />;
     case 'cooking-unit-converter':
       return <CookingUnitConverterClient />;
-    case 'counter':
-      return <CounterClient />;
     case 'cron-builder':
       return <CronBuilderClient />;
     case 'cron-expander':
@@ -1784,18 +1614,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <EnglishDictionaryClient />;
     case 'env-parser':
       return <EnvParserClient />;
-    case 'eps-to-jpg':
-      return <EpsToJpgClient />;
-    case 'eps-to-png':
-      return <EpsToPngClient />;
-    case 'eps-to-svg':
-      return <EpsToSvgClient />;
-    case 'epub-to-azw3':
-      return <EpubToAzw3Client />;
-    case 'epub-to-mobi':
-      return <EpubToMobiClient />;
-    case 'essay-writer':
-      return <EssayWriterClient />;
     case 'excel-to-csv':
       return <ExcelToCsvClient />;
     case 'excel-to-pdf':
@@ -1810,8 +1628,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <ExtractAudioClient />;
     case 'extract-img':
       return <ExtractImgClient />;
-    case 'extract-text':
-      return <ExtractTextClient />;
     case 'facebook-ad-headlines':
       return <FacebookAdHeadlinesClient />;
     case 'faq-generator':
@@ -1868,8 +1684,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'favicon-tool':
     case 'favicon-toolblip':
       return <FaviconGeneratorClient />;
-    case 'flip':
-      return <FlipClient />;
     case 'font-to-png':
       return <FontToPngClient />;
     case 'fraction-calculator':
@@ -2023,8 +1837,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <HtmlAttributeEncoderClient />;
     case 'html-encoder-decoder':
       return <HtmlEncoderDecoderClient />;
-    case 'html-entities-reference':
-      return <HtmlEntitiesReferenceClient />;
     case 'html-live-preview':
       return <HtmlLivePreviewClient />;
     case 'html-markdown-express':
@@ -2127,20 +1939,12 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <PassiveVoiceDetectorClient />;
     case 'pixelate':
       return <PixelateClient />;
-    case 'png-compressor':
-      return <PngCompressorClient />;
-    case 'qr-code-scanner':
-      return <QrCodeScannerClient />;
     case 'readability-checker':
       return <ReadabilityCheckerClient />;
-    case 'remove-bg':
-      return <RemoveBgClient />;
     case 'robots-txt-editor':
       return <RobotsTxtEditorClient />;
     case 'sentence-counter':
       return <SentenceCounterClient />;
-    case 'sentence-rewriter':
-      return <SentenceRewriterClient />;
     case 'sharpen':
       return <SharpenClient />;
     case 'sitemap-analyzer':
@@ -2157,84 +1961,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <UrlRedirectCheckerClient />;
     case 'webp-converter':
       return <WebpConverterClient />;
-    case 'http-headers-viewer-advanced':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-viewer-api':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-viewer-browser':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-viewer-classic':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-viewer-complete':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-viewer-enhanced':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-viewer-express':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-viewer-final':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-viewer-fresh':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-viewer-full':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-viewer-new':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-viewer-prime':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-viewer-pro':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-viewer-quick':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-viewer-smart':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-viewer-std':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-viewer-tool':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-viewer-ultimate':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-viewer-ultra':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-viewer-v2':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-viewer-v3':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-viewer-v4':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-viewer-v5':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-viewer-v6':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-viewer-x':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-viewer-xl':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-simple':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-tool':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-toolblip':
-      return <HttpHeadersViewerClient />;
-    case 'http-headers-ultra':
-      return <HttpHeadersViewerClient />;
-    case 'http-request-builder':
-      return <HttpHeadersViewerClient />;
-    case 'http-request-headers-inspector':
-      return <HttpHeadersViewerClient />;
-    case 'http-response-headers':
-      return <HttpHeadersViewerClient />;
-    case 'http-status-codes':
-      return <HttpHeadersViewerClient />;
-    case 'http-status-code-lookup':
-      return <HttpHeadersViewerClient />;
-    case 'http-status-ref':
-      return <HttpHeadersViewerClient />;
-    case 'http-method-tester':
-      return <HttpHeadersViewerClient />;
     case 'humanizer-ai':
       return <AiRephraserClient />;
-    case 'image-alt-text-generator':
-      return <ImageAltTextGeneratorClient />;
     case 'image-aspect-ratio-calculator':
       return <ImageResizerClient />;
     case 'image-resizer-adv':
@@ -2301,54 +2029,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <ImageFormatConverterClient />;
     case 'jpg-to-png':
       return <JpgToPngClient />;
-    case 'jpg-to-avif':
-      return <JpgToAvifClient />;
-    case 'jpg-to-gif':
-      return <JpgToGifClient />;
-    case 'jpg-to-svg':
-      return <JpgToSvgClient />;
-    case 'jpg-to-tiff':
-      return <JpgToTiffClient />;
-    case 'png-to-avif':
-      return <PngToAvifClient />;
-    case 'png-to-eps':
-      return <PngToEpsClient />;
-    case 'png-to-gif':
-      return <PngToGifClient />;
-    case 'png-to-svg':
-      return <PngToSvgClient />;
-    case 'png-to-tiff':
-      return <PngToTiffClient />;
-    case 'tiff-to-jpg':
-      return <TiffToJpgClient />;
-    case 'tiff-to-png':
-      return <TiffToPngClient />;
-    case 'tiff-to-svg':
-      return <TiffToSvgClient />;
-    case 'psd-to-jpg':
-      return <PsdToJpgClient />;
-    case 'psd-to-pdf':
-      return <PsdToPdfClient />;
-    case 'psd-to-png':
-      return <PsdToPngClient />;
-    case 'psd-to-svg':
-      return <PsdToSvgClient />;
-    case 'webm-to-mp3':
-      return <WebmToMp3Client />;
-    case 'webm-to-mp4':
-      return <WebmToMp4Client />;
-    case 'mov-to-gif':
-      return <MovToGifClient />;
-    case 'mp4-to-webm':
-      return <Mp4ToWebmClient />;
-    case 'mobi-to-epub':
-      return <MobiToEpubClient />;
-    case 'image-to-svg':
-      return <ImageToSvgClient />;
     case 'image-to-svg-converter':
       return <ImageToSvgConverterClient />;
-    case 'webp-to-avif':
-      return <WebpToAvifClient />;
     case 'jpg-to-webp':
       return <ImageFormatConverterClient />;
     case 'webp-to-png':
@@ -2425,8 +2107,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <JsonToHtmlTableClient />;
     case 'json-to-markdown':
       return <JsonToMarkdownTableClient />;
-    case 'yaml-lint':
-      return <YamlValidatorClient />;
     case 'yaml-formatter':
       return <YamlToJsonClient />;
     case 'xml-formatter-v2':
@@ -2783,7 +2463,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <ListRandomizerClient />;
     case 'list-randomizer-v2':
       return <ListRandomizerClient />;
-    case 'http-headers-viewer-adv': return <HttpHeadersViewerClient />;
     case 'image-compression-tool': return <ImageFlipToolClient />; // legacy alias, redirected via next.config.mjs
     case 'image-compression': return <ImageFlipToolClient />;
     case 'image-metadata-express': return <ImageMetadataViewerClient />;
@@ -2957,17 +2636,12 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'meta-tags-gen-tool': return <MetaTagGeneratorClient />;
     case 'mkv-to-gif': return <AviToGifClient />;
     case 'mkv-to-mp3': return <MkvToMp3Client />;
-    case 'mobi-to-azw3': return <Azw3ToMobiClient />;
     case 'mock-api-generator': return <ApiDocGeneratorClient />;
     case 'morse-code-express': return <MorseCodeTranslatorClient />;
     case 'morse-code-translator-v2': return <MorseCodeTranslatorClient />;
-    case 'mov-to-avi': return <AviToMovClient />;
-    case 'mov-to-mp3': return <AviToMovClient />;
-    case 'mov-to-mp4': return <AviToMovClient />;
     case 'mov-to-wav': return <AacToWavClient />;
     case 'mp4-to-avi': return <AviToGifClient />;
     case 'mp4-to-gif': return <AviToGifClient />;
-    case 'mp4-to-mov': return <AviToMovClient />;
     case 'mp4-to-wav': return <AacToWavClient />;
     case 'number-base-browser': return <BaseNumberConverterClient />;
     case 'number-base-convert': return <BaseConvertToolClient />;
@@ -3104,7 +2778,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'regex-tester-web': return <RegexTesterClient />;
     case 'regex-tester-x': return <RegexTesterClient />;
     case 'regex-tester-xl': return <RegexTesterClient />;
-    case 'regex-visual-builder': return <RegexVisualBuilderClient />;
     case 'rgb-hsl-color-picker': return <ColorPickerHexRgbHslClient />;
     case 'rgb-to-hex-express': return <HexToRgbExpressClient />;
     case 'rgb-to-hex-new': return <HexToRgbNewClient />;
@@ -3176,9 +2849,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'spelling-checker': return <GrammarCheckerClient />;
     case 'srt-to-json': return <CsvToJsonClient />;
     case 'srt-to-json-v2': return <CsvToJsonClient />;
-    case 'ssl-certificate-checker-v2': return <SslCertificateCheckerClient />;
     case 'summarizer': return <ContentSummarizerClient />;
-    case 'svg-favicon-generator': return <SvgFaviconGeneratorClient />;
     case 'syllable-counter-express': return <SyllableCounterClient />;
     case 'syllable-word-counter': return <SyllableCounterClient />;
     case 'table-to-markdown': return <JsonToMarkdownTableClient />;
@@ -3276,12 +2947,9 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'uuid-v1-generator': return <UuidV1GeneratorClient />;
     case 'vcard-qr-generator': return <QrCodeGeneratorClient />;
     case 'volume-unit-converter': return <UnitConverterClient />;
-    case 'vsd-to-jpg': return <EpsToJpgClient />;
     case 'vsd-to-pdf': return <ExcelToPdfClient />;
-    case 'vsdx-to-jpg': return <EpsToJpgClient />;
     case 'vsdx-to-pdf': return <ExcelToPdfClient />;
     case 'wcag-contrast-auditor': return <ColorContrastAuditorClient />;
-    case 'webm-to-mov': return <AviToMovClient />;
     case 'webp-to-gif': return <AviToGifClient />;
     case 'weight-converter-express': return <WeightConverterClient />;
     case 'wifi-qr-code-generator': return <QrCodeGeneratorClient />;
@@ -3290,7 +2958,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'word-frequency-table': return <WordFrequencyAnalyzerClient />;
     case 'xml-json-express': return <XmlToJsonClient />;
     case 'xml-sitemap-parser': return <XmlSitemapGeneratorClient />;
-    case 'xml-to-csv': return <XmlToCsvClient />;
     case 'xml-to-excel': return <ExcelToXmlClient />;
     case 'yaml-json-express': return <YamlToJsonClient />;
     case 'yaml-to-json-v2': return <JsonToYamlClient />;
@@ -3315,10 +2982,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'serp-browser': return <SerpPreviewClient />;
     case 'serp-fresh': return <SerpPreviewClient />;
     case 'sitemap-extractor': return <SitemapAnalyzerClient />;
-    case 'sleep-duration-calculator': return <SleepDurationCalculatorClient />;
     case 'ssh-key-gen': return <SSHKeyGeneratorClient />;
     case 'text-sorting-tool': return <TextSorterClient />;
-    case 'translate': return <TextTranslatorClient />;
     case 'unit-convert-toolblip': return <UnitConverterClient />;
     case 'unit-fresh': return <UnitConverterClient />;
     case 'unit-quick': return <UnitConverterClient />;
@@ -3331,9 +2996,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'jupyter-cleaner': return <JupyterCleanerClient />;
     case 'json-editor': return <JsonEditorClient />;
     case 'json-tree-view': return <JsonTreeViewClient />;
-    case 'jsonpath-query-tester': return <JSONPathQueryTesterClient />;
-    case 'jsonpath-query-tool': return <JSONPathQueryToolClient />; // legacy alias, redirected via next.config.mjs
-    case 'jsonpath-query': return <JSONPathQueryToolClient />;
     case 'jwt-token-inspector': return <JwtTokenInspectorClient />;
     case 'jwt-token-tester': return <JwtTokenTesterClient />;
     case 'keyword-difficulty-tool': return <KeywordDifficultyToolClient />;
@@ -3343,17 +3005,12 @@ export function ToolUI({ tool }: { tool: Tool }) {
     // data/tools.ts entry (renamed from 'keyword-generator-express') was
     // written against; this duplicate case for the same slug was dead code.
     case 'keyword-generator-v2': return <KeywordGeneratorClient />;
-    case 'kubernetes-yaml-generator': return <KubernetesYAMLGeneratorClient />;
     case 'list-difference-finder': return <ListDifferenceFinderClient />;
-    case 'm4a-to-mp3': return <M4AToMP3Client />;
-    case 'm4a-to-mp4': return <M4AToMP4Client />;
     case 'meta-tags-tool': return <MetaTagsToolClient />;
     case 'metric-imperial-converter': return <MetricImperialConverterClient />;
     case 'mime-types-reference': return <MIMETypesReferenceClient />;
     case 'mp4-to-mp3': return <MP4ToMP3Client />;
-    case 'mp4-to-ogg': return <MP4ToOGGClient />;
     case 'nda-generator': return <NDAGeneratorClient />;
-    case 'ogg-to-mp3': return <OGGToMP3Client />;
     case 'page-title-checker': return <PageTitleCheckerClient />;
     case 'photo-metadata-remover': return <PhotoMetadataRemoverClient />;
     case 'photo-resize-tool': return <PhotoResizeToolClient />; // legacy alias, redirected via next.config.mjs
@@ -3392,16 +3049,12 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'shorten-content': return <ShortenContentClient />;
     case 'sign': return <SignPDFClient />;
     case 'sitemap-html-new': return <SitemapHTMLNewClient />;
-    case 'sitemap-urls-extractor': return <SitemapURLsExtractorClient />;
     case 'slug-health-checker': return <SlugHealthCheckerClient />;
     case 'slug-permalink-checker': return <SlugPermalinkCheckerClient />;
     case 'slideshow-generator': return <SlideshowGeneratorClient />;
     case 'split': return <BillSplitterClient />;
     case 'split-csv': return <SplitCSVFileClient />;
     case 'split-excel': return <SplitExcelFileClient />;
-    case 'svg-compressor': return <CompressClient />;
-    case 'svg-minifier': return <SVGMinifierClient />;
-    case 'svg-optimizer': return <SVGOptimizerClient />;
     case 'text-complexity-analyzer': return <TextComplexityAnalyzerClient />;
     case 'text-deduplicator': return <TextDeduplicatorClient />;
     case 'text-highlighter': return <TextHighlighterClient />;
@@ -3430,14 +3083,11 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'what-if-scenario-calculator': return <WhatIfScenarioCalculatorClient />;
     case 'word-alphabetizer': return <WordAlphabetizerClient />;
     case 'word-combinations': return <WordCombinationsGeneratorClient />;
-    case 'word-count-from-url': return <WordCountFromURLClient />;
     case 'word-finder': return <WordFinderClient />;
     case 'word-freq-express': return <WordFreqExpressClient />; // legacy alias, redirected via next.config.mjs
     case 'word-freq': return <WordFreqExpressClient />;
     case 'word-scramble-generator': return <WordScrambleGeneratorClient />;
-    case 'yaml-pretty-print': return <YAMLPrettyPrintClient />;
     case 'zip': return <CreateZipFileClient />;
-    case 'psd-to-ai': return <PsdToAIConverterClient />;
     case 'regex-toolblip': return <RegexToolClient />;
     case 'jwt-toolblip': return <JwtToolClient />;
     case 'port-toolblip': return <PortToolClient />;
@@ -3449,7 +3099,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'json-to-url-encoded-v2': return <JSONToURLEncodedV2Client />;
     case 'ssh-key-generator': return <SSHKeyGeneratorClient />;
     case 'jwt-tester': return <JwtTokenTesterClient />;
-    case 'paragraph-rewriter': return <ParagraphRewriterClient />;
     case 'press-release-generator': return <PressReleaseGeneratorClient />;
     case 'privacy-policy-generator': return <PrivacyPolicyGeneratorClient />;
     case 'token-builder': return <TokenBuilderClient />;

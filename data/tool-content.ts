@@ -18,34 +18,6 @@ export function getToolContent(slug: string): ToolContent | undefined {
 }
 
 const TOOL_CONTENT: Record<string, ToolContent> = {
-  "aac-to-flac": {
-    description: `Converting a lossy AAC file into lossless FLAC doesn't recover any quality that AAC's compression already discarded, once detail is gone during that original lossy encoding, no downstream conversion gets it back, it only repackages the same already-reduced audio into a larger, uncompressed container, which is worth knowing before expecting the FLAC file to sound noticeably better. This tool converts AAC audio into FLAC, useful for compatibility with software or hardware that specifically expects a FLAC container rather than as a way to improve audio quality that's already been lost. Useful for converting AAC into the FLAC format a specific piece of software or hardware requires, preparing an audio file for an archival system that only accepts FLAC containers, or matching a workflow's expected file format without mistaking the conversion for an actual quality upgrade.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "aac-to-m4r": {
-    description: `An iPhone won't let an AAC or even a regular M4A file be set as a ringtone directly, no matter how good the audio actually sounds, since iOS specifically looks for the M4R file extension to recognize a sound as a ringtone rather than just another song sitting in a music library. This tool converts AAC audio into M4R format, producing the exact file type iPhone's Settings app will actually offer as a ringtone choice rather than one it quietly ignores. Useful for turning a favorite song clip into an actual selectable iPhone ringtone, converting a short sound effect into the ringtone format iOS specifically requires, or preparing an AAC audio clip so it shows up as a ringtone option instead of just another audio file.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "aac-to-mp3": {
-    description: `AAC generally sounds a little better than MP3 at the same bitrate, which is exactly why Apple, YouTube, and plenty of streaming platforms default to it, but that quality edge doesn't matter if the destination, an older device, a specific piece of software, a car stereo from a few years back, only actually plays MP3 and has never supported AAC at all. This tool converts an AAC file into MP3, trading AAC's slight efficiency advantage for the near-universal compatibility MP3 still carries. Useful for getting an AAC file playing on an older device or piece of software that never added AAC support, converting a downloaded AAC track for a music player that only recognizes MP3, or standardizing a mixed audio collection on the one format that's guaranteed to open literally anywhere.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "aac-to-mp4": {
-    description: `An AAC file is audio only, no video track at all, which becomes a real problem the moment a platform's upload form specifically requires an MP4 video file and simply rejects a raw audio upload outright, no matter how good the actual audio is. This tool converts AAC audio into MP4 video format, wrapping the audio into the container format a platform actually requires rather than leaving it stuck as a file type that gets rejected on upload. Useful for uploading a podcast episode or a voice memo to a platform that only accepts MP4 uploads, converting an AAC file for compatibility with an older device or app that only recognizes MP4, or preparing an audio track for a service that requires a video container format even when there's no actual video content.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "aac-to-wav": {
     description: `Converting a lossy AAC file to WAV doesn't restore any detail AAC's compression already discarded, that damage was done during the original encoding and no format change afterward gets it back, what actually happens is the compressed audio gets decoded into an uncompressed, universally readable container instead. This tool converts AAC into WAV, producing a file virtually any audio editor or piece of hardware can open without needing an AAC decoder installed at all. Useful for feeding an AAC recording into editing software that doesn't handle the format natively, archiving audio in a format that doesn't depend on a specific codec surviving long-term, or preparing an AAC file for a device or workflow that specifically expects uncompressed WAV input.`,
     examples: [
@@ -55,13 +27,6 @@ const TOOL_CONTENT: Record<string, ToolContent> = {
   },
   "accessibility-checker": {
     description: `A page can pass a basic HTML syntax check and still be genuinely unusable for someone relying on a screen reader or navigating with low vision, a heading structure that skips from an h1 straight to an h4, text with a contrast ratio too low to actually read comfortably, or an image with no alt text at all, none of which show up as a markup error. This tool checks web content specifically against WCAG accessibility standards, flagging a contrast ratio that falls short, a missing alt attribute, or a heading structure that skips a level rather than just confirming the HTML itself is valid. Useful for catching a genuine WCAG compliance gap before it becomes a legal or an accessibility complaint, confirming a heading hierarchy is structured correctly for screen reader navigation, or checking whether a design's color choices actually meet a minimum contrast standard.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "add-images": {
-    description: `Getting a new image into a PDF that already exists, a signature stamp, a photo, a chart exported from somewhere else, usually means going back to whatever created the original file and adding it there, which is a dead end if that source file is gone or was never something you had in the first place. This tool drops an image directly onto an existing PDF page instead: pick where it lands, resize it to fit the available space, and place additional images on the same page or different ones as needed. It's built for adding something new to a document rather than modifying what's already printed on the page. Useful for inserting a scanned signature onto a signature line, attaching a photo as evidence to a filled-out form, or adding a company logo to a report that was exported without one.`,
     examples: [
 
     ],
@@ -87,13 +52,6 @@ const TOOL_CONTENT: Record<string, ToolContent> = {
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "add-text": {
-    description: `A signature line, a date, or an annotation that needs to land on a PDF that has no actual fillable field there at all, just blank space on a scanned page or a flattened form, can't be typed in the normal way a form field would accept text, it needs an actual text layer placed directly on top of the document at an exact position. This tool adds a text overlay to a PDF with the font, size, and position all customizable, placing new text exactly where it's needed rather than requiring an editable field that doesn't exist. Useful for adding a signature line or a date to a contract that has no fillable field for it, stamping a label like confidential across a document's pages, or filling in a blank on a scanned form by placing text precisely where the blank actually is.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "age-calculator": {
     description: `Subtracting a birth year from the current year gets the wrong answer more often than it seems like it should, if today's date falls before this year's birthday has actually happened yet, that simple subtraction overcounts by a full year, an easy mistake that only shows up as a wrong result rather than an obvious error. This tool calculates exact age in years, months, and days from a birth date, correctly accounting for whether this year's birthday has occurred yet, and also reports total days lived. Useful for getting a precise age broken into years, months, and days rather than a rounded year count, calculating exactly how many total days someone has been alive, or confirming an age calculation is correct for a date near someone's actual birthday when simple subtraction would get it wrong.`,
     examples: [
@@ -110,13 +68,6 @@ const TOOL_CONTENT: Record<string, ToolContent> = {
   },
   "ai-rephraser": {
     description: `Sometimes text needs a different tone entirely, formal instead of casual, sometimes it just needs the same tone but clearer phrasing, and sometimes the whole thing needs a genuine rewrite rather than a light touch-up, three meaningfully different jobs that a single generic rephrasing pass tends to blur together into one output regardless of which one was actually needed. This tool offers all three as distinct modes: shift the tone while keeping the same content, improve clarity without changing the register, or rewrite the passage completely, selected depending on what the text in front of you actually calls for rather than one fixed transformation applied every time. Useful for picking exactly the right degree of change a piece of text needs, from a light clarity pass to a full rewrite, rather than getting the same generic treatment regardless of what was actually asked for.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "ai-twitter-generator": {
-    description: `A tweet has to work inside a hard 280-character limit, and a genuinely engaging thread needs an opening line built specifically to stop someone mid-scroll, then a handful of connected posts that each build on the last without losing momentum, a very different writing problem from drafting a paragraph with no length constraint at all. This tool generates tweets and full threads from a topic or a rough idea, sized to fit Twitter's character limit and structured so a thread actually reads as one connected sequence rather than a list of disconnected posts. Useful for turning a rough idea into a properly hooked opening tweet, breaking a longer thought into a numbered thread that keeps someone reading past the first post, or drafting a handful of standalone tweet options to pick from for a single announcement.`,
     examples: [
 
     ],
@@ -185,13 +136,6 @@ const TOOL_CONTENT: Record<string, ToolContent> = {
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "api-endpoint-tester": {
-    description: `Building a request with the correct auth headers assembled just right is one part of testing an API, but once that request actually gets sent, the more immediate need is usually seeing the response back in a form that's actually readable, pretty-printed JSON, a raw view, whichever format makes the returned data easiest to check right now. This tool sends a request to any API endpoint and displays the response with selectable format options, focused on making the response itself easy to inspect rather than on assembling a complex, reusable request definition. Useful for sending a quick request to an endpoint and viewing the response formatted as readable JSON, switching between a raw and a formatted view of the same response to check something specific, or testing an endpoint fast without first building out a saved, reusable request.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "api-spec-generator": {
     description: `Writing an OpenAPI or Swagger specification by hand from scratch is slow, and documenting an API that already exists but was never formally specified usually means someone has to reverse-engineer its shape from an actual example response instead of a written contract that was never created in the first place. This tool generates an OpenAPI or Swagger spec directly from JSON sample data, inferring the structure and types from an actual response rather than requiring the specification written manually field by field. Useful for bootstrapping API documentation from a real example response instead of writing YAML by hand, documenting an existing but previously undocumented endpoint by feeding in one of its actual responses, or generating a starting spec that can be refined rather than built entirely from nothing.`,
     examples: [
@@ -206,20 +150,6 @@ const TOOL_CONTENT: Record<string, ToolContent> = {
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "argon2-hash-generator": {
-    description: `Argon2 won the Password Hashing Competition specifically because it tunes three separate knobs independently, memory cost, time cost, and parallelism, rather than the single cost factor older algorithms rely on, letting a hash be deliberately expensive to compute on the exact kind of parallel hardware, GPUs and custom chips, that makes cracking older hashes cheap at scale. This tool generates Argon2 password hashes with all three parameters configurable, matching the memory and thread settings to actual server hardware rather than accepting one fixed difficulty level. Useful for tuning a hash's memory cost high enough to resist GPU-based cracking attempts, setting a parallelism value that matches the CPU cores actually available at hashing time, or generating a properly configured Argon2 hash for a new user authentication system.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "article-generator": {
-    description: `Handing over nothing but a topic and getting back a fully structured article means the AI is making every structural decision itself, the heading breakdown, the paragraph order, the overall angle, decisions someone providing an actual outline would rather make themselves and have the writing simply fill in. This tool generates a complete article from just a topic, handling the full structure automatically rather than requiring an outline to already exist. Useful for turning a bare topic idea into a fully structured, publishable draft without planning the outline first, generating a complete blog post fast when the specific structure matters less than getting a solid first draft, or producing a full article from minimal input when there's no time to outline one first.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "article-rewriter": {
     description: `Refreshing an entire existing article, an old post that's fallen out of date, a competitor's piece covering ground worth revisiting from a different angle, is a different scale of task than rewording a single paragraph, since the whole piece's structure, pacing, and flow all need to hold together as one coherent rewrite rather than a collection of independently reworded sections. This tool rewrites a full article at that scale, taking an existing piece and producing a complete rewritten version with fresh wording throughout rather than a patchwork of individually rephrased paragraphs. Useful for refreshing an old piece of content that's still relevant but reads stale, rewriting an article covering a topic you want to approach from a different angle, or producing a full alternate version of a piece rather than editing it section by section.`,
     examples: [
@@ -229,13 +159,6 @@ const TOOL_CONTENT: Record<string, ToolContent> = {
   },
   "article-title-generator": {
     description: `A title stuffed with the exact keyword phrase can read stiffly enough that nobody actually wants to click it, while a genuinely catchy headline sometimes skips the specific words people are searching for entirely, and the real answer usually isn't picking one extreme, it's generating several different angles on the same topic, a how-to framing, a listicle framing, a question framing, and choosing whichever one actually fits the article underneath it. This tool generates multiple title options from a single topic, each built around a different angle and balanced between SEO keyword inclusion and genuine click appeal. Useful for generating a handful of different title angles for the same article before picking the one that fits best, comparing a keyword-focused title against a curiosity-driven one for the same topic, or drafting several headline options quickly instead of staring at a blank title field.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "article-writer": {
-    description: `Starting from an outline that already lays out the sections and their order is a fundamentally different writing task than starting from nothing but a bare topic, the structural decisions are already made, and what's actually needed is prose that fills in each section faithfully rather than an AI inventing its own structure from scratch. This tool writes a complete article from an existing outline through to a finished draft, following a structure that's already been decided rather than generating one automatically. Useful for turning a rough outline into full prose without losing the section order already planned, drafting an article's full text once the heading structure has already been worked out, or writing a complete piece from a specific outline rather than letting an AI choose the structure itself.`,
     examples: [
 
     ],
@@ -269,48 +192,6 @@ const TOOL_CONTENT: Record<string, ToolContent> = {
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "avi-to-mkv": {
-    description: `AVI is an aging container with real limitations that show up the moment a project outgrows them, a hard cap on file size for very long recordings, no clean way to hold more than one audio track or a subtitle track alongside the video, constraints that simply don't apply to MKV, a much more flexible container built to hold multiple tracks and larger files without the same ceiling. This tool converts an AVI file into MKV, moving old footage into a container that can actually accommodate an added subtitle track, a second audio track, or a file size AVI was never designed to handle gracefully. Useful for modernizing an old AVI archive before adding subtitles or an alternate audio track to it, or converting AVI footage into a container that plays more comfortably with current video editing software.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "avi-to-mov": {
-    description: `An old AVI file, downloaded years ago or pulled off an old camcorder, doesn't drop cleanly into a Mac-based editing workflow the way a native Apple format would, since AVI was never part of Apple's own ecosystem and needs converting before QuickTime or Final Cut Pro treats it as a normal video file rather than something requiring an extra codec. This tool converts an AVI file into MOV, the format QuickTime and Apple's editing software actually expect, so old or downloaded AVI footage opens and edits the way native Mac video would. Useful for bringing an old AVI archive into a Final Cut Pro project without a codec error, playing a downloaded AVI file through QuickTime without installing extra software, or modernizing old camcorder footage for editing on a current Mac-based workflow.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "avi-to-mp3": {
-    description: `An old AVI file from a camcorder recording or a downloaded video from years ago often holds a soundtrack worth keeping, an interview, a song, a bit of commentary, long after the aging video codec and bulky file size have stopped being worth keeping around at all. This tool extracts the audio from an AVI video file and saves it as an MP3, keeping just the sound rather than requiring the entire legacy video file kept around. Useful for pulling a song or a soundtrack out of an old AVI recording without keeping its outdated video, extracting an interview's audio from a legacy video file to listen to separately, or converting an old camcorder recording's audio into a smaller, more usable MP3.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "avi-to-mp4": {
-    description: `AVI's typical codecs compress noticeably less efficiently than MP4's modern H.264 encoding, which means the same footage usually comes out both smaller and more broadly compatible once it's converted, a real upgrade rather than a lateral format swap, especially since plenty of phones, browsers, and social platforms don't accept a raw AVI upload at all. This tool converts AVI video into MP4, typically producing a smaller file that plays and uploads virtually everywhere AVI itself doesn't. Useful for shrinking old camcorder or downloaded AVI footage down to a size that's actually practical to store or share, converting an AVI file for a platform or an app that flatly rejects the format, or modernizing legacy video footage into the format phones and browsers actually expect today.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "azw3-to-epub": {
-    description: `A book purchased or downloaded in Amazon's own AZW3 format is stuck there the moment it needs to open on a Kobo, a Nook, an iPad's Books app, or any Android e-reader that doesn't recognize Amazon's proprietary Kindle formats at all, while EPUB, the open standard nearly every e-reader outside Kindle actually supports, opens everywhere else without issue. This tool converts an AZW3 ebook into EPUB, moving it out of Amazon's closed format into the one standard almost every non-Kindle device and app actually reads. Useful for reading a Kindle-formatted book on a Kobo or another dedicated e-reader that doesn't support AZW3, opening an AZW3 file in a tablet's or phone's e-reader app outside the Kindle ecosystem, or converting a personal ebook library into the one format that works across nearly every reading device except Kindle itself.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "azw3-to-mobi": {
-    description: `AZW3 carries formatting an older Kindle simply can't read at all, an embedded font, a fixed layout for something like a graphic novel, more elaborate styling, and while that richer format looks great on a modern Kindle app, an original Kindle or an older Kindle Keyboard only understands the earlier MOBI format and won't open an AZW3 file no matter how the formatting inside it is arranged. This tool converts an AZW3 ebook into MOBI, trading its more advanced formatting for compatibility with legacy Kindle hardware that never supported the newer format. Useful for converting an AZW3 book so it actually opens on an original Kindle or an older Kindle Keyboard, keeping an ebook library readable across both older and newer Kindle devices, or downgrading a book's format specifically for a device that predates AZW3 support.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "backlink-checker-express": {
     description: `Knowing which other sites actually link to a page matters for two different reasons, understanding your own site's link profile and seeing where a competitor's authority is actually coming from, and neither is answerable just by looking at the page itself, only by seeing who points to it from the outside. This tool analyzes backlinks pointing to any URL, estimating each linking domain's authority and flagging whether a link is dofollow or nofollow, distinguishing a link that actually passes ranking value from one that doesn't. Useful for auditing your own site's backlink profile after a content campaign to see what actually earned links, researching where a competitor's search authority is actually coming from, or checking whether a specific backlink is a dofollow link worth counting on or a nofollow one that isn't.`,
     examples: [
@@ -327,20 +208,6 @@ const TOOL_CONTENT: Record<string, ToolContent> = {
   },
   "banner-generator": {
     description: `Twelve hundred by six hundred thirty pixels isn't an arbitrary choice, it's the specific dimension Facebook, LinkedIn, and Twitter all expect for a link preview image, and a banner sized anything else gets awkwardly cropped or padded the moment it's actually shared rather than displaying the way it was designed. This tool creates banners and Open Graph images at exactly that dimension, with editable copy and gradient presets, producing a graphic that's already correctly sized rather than one that needs manual cropping afterward. Useful for generating a blog cover image sized correctly for social sharing from the start, creating an Open Graph image that won't get cropped unpredictably when a link gets shared, or producing a polished banner with a gradient background without opening a separate design tool.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "barcode-generator": {
-    description: `EAN and UPC codes aren't just any string of digits, they carry a fixed length and a checksum digit mathematically calculated from the rest, so a scanner rejects a code where that final digit doesn't actually validate, while Code 128 and Code 39 work completely differently, encoding letters alongside numbers for shipping labels and inventory tracking rather than retail products with a mandated digit count. This tool generates EAN, UPC, Code 128, and Code 39 barcodes, calculating a valid checksum where the format actually requires one rather than accepting any arbitrary string. Useful for generating a UPC barcode with a correctly calculated checksum digit for retail packaging, creating a Code 128 barcode encoding letters and numbers for a shipping label, or producing an EAN barcode that will actually pass a scanner's validation instead of getting rejected.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "barcode-scanner": {
-    description: `A barcode from a product on a store shelf and a barcode on a shipping label or an internal inventory tag usually aren't even using the same encoding, retail products use globally standardized UPC or EAN formats, while logistics and inventory systems often use more flexible alphanumeric formats like Code 128 or Code 39 built for internal tracking rather than universal product identification. This tool scans and decodes across all of those formats, rather than assuming every barcode encountered is a retail product code. Useful for scanning a retail product's UPC or EAN to look up what it actually is, decoding a Code 128 or Code 39 label from a shipping box or an inventory tag, or reading an unfamiliar barcode format without knowing in advance which encoding it actually uses.`,
     examples: [
 
     ],
@@ -472,13 +339,6 @@ Output: Hello World!`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "blur-background": {
-    description: `A phone camera's small sensor physically can't produce the shallow depth of field a wide-aperture portrait lens creates naturally, that soft, blurred background look has to be simulated after the fact instead, which means actually separating the subject from everything behind it first and then applying a graduated blur specifically to the background while leaving the subject perfectly sharp. This tool blurs an image's background while keeping its subject in focus, simulating a professional lens's shallow depth of field on a photo that was never actually shot with one. Useful for giving a phone-shot portrait the same soft background look a wide-aperture lens produces optically, making a product photo's background fade so the subject stands out clearly, or applying a professional-looking blur to a photo shot with a camera too small to produce that effect on its own.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "bmi-calculator": {
     description: `Body Mass Index is a simple ratio of weight to height squared, and it makes no distinction between muscle and fat, which is exactly why a heavily muscled athlete can register as overweight by the number alone despite carrying very little actual body fat, a limitation worth remembering rather than treating the result as a precise measurement of body composition. This tool calculates Body Mass Index from height and weight in either metric or imperial units, handling the unit conversion directly rather than requiring measurements converted by hand first. Useful for getting a quick general health screening baseline rather than a precise body composition reading, tracking a weight change over time relative to a fixed height, or calculating BMI directly from imperial measurements without converting to metric first.`,
     examples: [
@@ -521,13 +381,6 @@ Output: Hello World!`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "business-name-generator": {
-    description: `A name that sounds perfect is dead on arrival if the matching domain is already registered, and finding that out usually means naming something first, then separately checking a domain registrar, then going back to the drawing board if it's taken, a slow back-and-forth that repeats for every idea worth considering. This tool generates multiple business name ideas and checks domain availability for each one immediately, so a name only gets seriously considered once its matching domain is confirmed as actually available. Useful for brainstorming a batch of name ideas and immediately seeing which ones have an available .com, narrowing down naming options to only the ones that are actually registrable today, or checking a specific name idea's domain availability before getting attached to it.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "business-plan-generator": {
     description: `Applying for a small business loan or pitching to a potential investor both expect a business plan with the same core sections in place, an executive summary, a market analysis, financial projections, and staring at a blank document trying to remember what those sections are even supposed to be called wastes time better spent on the actual content. This tool creates a professional business plan outline with the key sections already covered, giving a structure to fill in rather than a blank page to start from. Useful for drafting a business plan outline quickly when applying for a loan that specifically requires one, creating a starting structure for a pitch deck aimed at potential investors, or getting a section-by-section skeleton so the actual writing can focus on content instead of remembering the standard structure.`,
     examples: [
@@ -549,13 +402,6 @@ Output: Hello World!`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "canonical-tag-checker": {
-    description: `A canonical tag that's simply missing is a problem, but a canonical tag that's present and pointing at the wrong URL entirely is a worse one, quietly telling Google not to index the actual page at all because a templating bug pointed its canonical at an old URL, a competitor's page, or something completely unrelated, an error that stays invisible until search traffic for that page mysteriously disappears. This tool checks whether a webpage has a canonical tag and confirms exactly which URL it's actually pointing at, catching both a missing tag and one that's pointing somewhere it shouldn't. Useful for confirming a page's canonical tag actually points at itself rather than an unrelated URL, catching a templating bug that's silently sending a canonical tag to the wrong page, or auditing a site's canonical tags after a URL structure change to confirm nothing broke.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "canonical-url-generator": {
     description: `The same article reachable through a tracking parameter, a trailing slash, both http and https, or a paginated duplicate splits its ranking signal across several URLs instead of consolidating it onto one, since a search engine has no way to know which version is actually supposed to be authoritative without being told directly. A canonical tag solves exactly that by pointing explicitly to the one URL that should receive credit, consolidating link and ranking signals that would otherwise scatter across duplicates. This tool generates that canonical link tag for a given page, ready to drop into its head section. Useful for consolidating ranking signal across a page reachable through several tracked or parameterized URLs, fixing a duplicate content warning flagged during an SEO audit, or specifying the correct canonical version of a paginated series.`,
     examples: [
@@ -565,13 +411,6 @@ Output: Hello World!`
   },
   "case-converter": {
     description: `A React component needs PascalCase, the variable inside it needs camelCase, and a CSS class or a URL slug referencing the same concept needs kebab-case, which means the same underlying name has to exist in several different capitalization conventions depending on exactly where in a codebase it's actually being used. This tool converts a name or a batch of names between all of those conventions at once, UPPERCASE, lowercase, Title Case, camelCase, snake_case, kebab-case, and PascalCase, so naming a concept once translates cleanly into whichever convention a specific language or context actually requires. Useful for converting a component name into its camelCase variable equivalent, generating a matching kebab-case slug or CSS class from the same base name, or converting a whole list of identifiers between conventions at once instead of retyping each one by hand.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "change-bg-photo": {
-    description: `An official ID photo, a passport application, or a visa form usually requires a plain white or a specific solid-colored background, a requirement a photo taken at home in front of an actual wall or a cluttered room can't meet without the background being swapped out entirely rather than just cropped or blurred. This tool cuts the subject out of a photo and places it onto a new background entirely, replacing what was there rather than leaving transparency or a blur behind. Useful for meeting a passport or an ID photo's specific plain background requirement without a professional photo session, swapping a casual photo's background for a solid color that satisfies an official form's rules, or replacing any photo's backdrop with one that actually matches what a specific document requires.`,
     examples: [
 
     ],
@@ -619,20 +458,6 @@ Output: Hello World!`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "citation-generator": {
-    description: `Each citation style has its own specific rules for ordering author names, formatting a publication date, and punctuating a title, and those rules genuinely differ between APA, MLA, and Chicago rather than being cosmetic variations on the same format, which is exactly why a citation formatted correctly in one style is often wrong in another even though it lists the same underlying source. This tool builds a properly formatted citation in whichever style is required, for a book, a website, a journal article, or another source type, applying that style's specific formatting rules rather than a generic one-size-fits-all citation format. Useful for formatting a bibliography correctly in whatever style an assignment or publication requires, converting a citation from one style to another when a paper's requirements change, or double-checking a citation actually follows its style's specific rules before submitting a paper.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "cleanup-picture": {
-    description: `Removing a single unwanted object from a photo, a stray photobomber in the background, a power line cutting across a landscape, a timestamp burned into the corner, a blemish on a face, is a fundamentally different job from cutting a subject out from its background entirely, since everything else in the frame needs to stay exactly where it is while just the erased area gets convincingly filled back in. This tool removes a marked object or imperfection from a photo and fills the gap it leaves behind with content that blends into the surrounding image. Useful for erasing a photobomber from an otherwise good group photo, removing a distracting power line or wire from a landscape shot, or cleaning a skin blemish or a scratch out of a photo without touching anything else in the frame.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "cmyk-to-rgb": {
     description: `A brand that started as a printed product or a packaging design often has its actual color defined in CMYK first, a value from a print vendor's spec sheet or a physical brand guideline, and the first time that same brand needs a website or a digital app, that print-native color has to be translated into RGB and HEX before it means anything to a browser or a design tool built for screens. This tool converts CMYK color values into RGB and HEX, translating a print-first color definition into the format screen-based design actually uses. Useful for translating a printed brand guideline's CMYK values into HEX for a new digital style guide, checking how a packaging design's ink-based color will actually display on a screen, or converting a Pantone-adjacent CMYK spec into RGB for a website's first color palette.`,
     examples: [
@@ -656,13 +481,6 @@ Output: Hello World!`
   },
   "code-to-diagram-generator": {
     description: `Reading a function and mentally tracing every branch, loop, and call it makes is possible but slow, and explaining that same logic to someone else verbally is slower still, whereas a visual flowchart or sequence diagram shows the actual control flow and interactions at a glance in a way a written explanation has to build up sentence by sentence. This tool converts code directly into a visual flowchart or sequence diagram, mapping branches, loops, and function calls into an actual diagram rather than requiring the flow to be hand-drawn or described in prose. Useful for documenting a complex function's control flow visually before onboarding a new team member, generating a sequence diagram of how several functions or services actually interact, or turning tangled legacy code into a diagram that makes its structure visible before attempting to refactor it.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "cold-email-writer": {
-    description: `A cold email that reads like it was mail-merged, a first name dropped into an otherwise identical template, gets ignored or deleted immediately, while genuine personalization, referencing something specific about the recipient's actual company or role, is what makes a cold email worth reading at all, which is exactly the harder problem to solve once outreach needs to happen at any real volume rather than one email at a time. This tool generates personalized cold emails at scale, built around the specific details of each individual recipient rather than one generic template with a name swapped in. Useful for running a legitimate outreach campaign that still reads as individually written rather than obviously templated, drafting a first version of many personalized emails quickly before a final human review pass, or scaling a sales outreach effort without every email reading like the same message sent a hundred times.`,
     examples: [
 
     ],
@@ -799,13 +617,6 @@ WCAG AA: Pass (large text)`
     ],
     features: ["All color formats", "WCAG contrast checking", "Visual picker", "Copy values"]
   },
-  "color-picker-v2": {
-    description: `A design tool's own color picker dialog often works in HSV rather than HSL, Photoshop's wheel included, and a print spec sheet needs CMYK entirely, which means a color chosen visually sometimes needs translating into a format neither a basic hex-RGB-HSL picker nor a plain conversion tool actually covers together. This tool picks a color visually and returns it in hex, RGB, HSL, HSV, and CMYK all at once, bridging the specific formats a design application's own picker and a print specification both actually need. Useful for matching a color visually picked here to the same value inside a design tool's HSV-based picker, getting a CMYK equivalent alongside the usual screen-based formats without a separate conversion step, or picking one color and having every format a project might actually need available immediately.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "color-picker-wheel": {
     description: `Typing in a HEX code or clicking through a flat grid of preset swatches works fine when a specific color is already known, but exploring the full range of what's actually available, browsing hues, adjusting saturation, seeing how a color shifts as it moves around the wheel, is a fundamentally more visual, intuitive way to actually find a color rather than guess at one by typing values. This tool picks colors from an interactive wheel, returning HEX, RGB, HSL, and CSS values for whatever's selected, built around visual exploration rather than typing a value that's already decided. Useful for browsing the full color space visually to find something that feels right rather than typing a value in blind, adjusting a hue by dragging around the wheel until it looks correct, or exploring color relationships visually before settling on one specific value.`,
     examples: [
@@ -855,22 +666,8 @@ WCAG AA: Pass (large text)`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "colorize-photo": {
-    description: `A genuinely black-and-white photo has actually lost its original color information entirely, there's no hidden color hiding underneath the grayscale to recover, which means colorizing it means synthesizing a plausible color based on learned patterns, skin tones, sky, grass, common objects, rather than restoring anything that's technically still there. This tool adds color to black-and-white photos automatically, producing a plausible, natural-looking result rather than a historically verified reconstruction of the original colors. Useful for bringing an old black-and-white family photo to life with a natural-looking colorized version, giving an archival image more visual engagement for a presentation or a display, or adding color to a vintage photo without expecting the exact original hues to come back.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "combine-images": {
     description: `A grid layout with adjustable borders and spacing is more setup than what's actually needed when the real goal is simpler, a before-and-after pair placed directly side by side, or a handful of screenshots stacked into one vertical strip for a step-by-step tutorial, not a full photo collage. This tool merges multiple images into one, stacking them vertically or horizontally, a direct, straightforward join rather than a configurable grid layout with borders to set up first. Useful for placing a before-and-after pair of photos directly side by side for a comparison, stacking a sequence of screenshots into one vertical image for a tutorial, or joining two photos horizontally into a single combined image without setting up a grid layout tool first.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "compress": {
-    description: `Most of a PDF's file size usually comes from its embedded images, a high-resolution scan, a batch of photos dropped into a report, rather than the actual text, which barely takes up any space at all, so real compression means re-encoding those images down without pushing the reduction far enough to blur a scanned page or make an embedded photo start looking degraded. This tool reduces a PDF's file size by compressing its embedded images and removing redundant internal resources, staying inside the range where the document is still practically usable. Useful for shrinking a scanned document down small enough to email when the original file is too large to attach, compressing a PDF full of embedded photos without the images turning visibly blurry, or reducing a report's file size for upload without the text itself losing any clarity.`,
     examples: [
 
     ],
@@ -885,27 +682,6 @@ WCAG AA: Pass (large text)`
   },
   "compress-mov": {
     description: `An iPhone screen recording or a MOV export from an older Mac editing project often comes out far larger than it needs to be for actually putting online, and a video that's too big for a specific upload limit or too slow to load on mobile needs its file size brought down without necessarily changing the format entirely. This tool compresses QuickTime MOV videos, reducing file size specifically for web and mobile use while keeping the same MOV format the source file already uses. Useful for shrinking an iPhone screen recording before sharing it or uploading it somewhere with a size limit, compressing a MOV export from an older editing project before hosting it on a website, or reducing a video's file size to load faster on a mobile connection without converting it to a different format.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "content-brief-generator": {
-    description: `A finished article and the document a writer actually needs before starting one aren't the same thing at all, a brief has to lay out the target keyword, a suggested heading structure, a rough word count, and the specific questions a reader is searching for answers to, everything a writer needs to know before drafting a single sentence, rather than any of the sentences themselves. This tool generates that planning document, a structured, SEO-informed outline built around a target keyword rather than a finished piece of writing. Useful for handing a freelance writer a clear brief instead of a vague topic to figure out alone, outlining the heading structure an article should follow before any of it gets written, or specifying the related questions a piece of content actually needs to address to satisfy a search intent.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "content-improver": {
-    description: `Catching a subject-verb agreement error and suggesting a punchier sentence structure are two different kinds of feedback, mechanical correctness on one hand, stylistic judgment on the other, and getting both in a single pass beats running a draft through a purely grammar-focused tool and then a separate style-focused one afterward. This tool improves writing with AI suggestions covering grammar, clarity, and style together, combining mechanical correction with stylistic feedback in one integrated pass. Useful for catching a grammar mistake and a clarity issue in the same review instead of two separate tools, tightening a sentence's structure while also fixing an actual error within it, or getting both mechanical and stylistic feedback on a draft without switching between different tools for each.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "content-planner": {
-    description: `Deciding that a product tip goes out in week one, a customer story in week two, and industry news in week three is a calendar-level decision that happens before any single post gets outlined or written, a different layer of planning than detailing what one specific article should cover, or brainstorming a pool of angles with no schedule attached to any of them yet. This tool plans a content calendar across weeks or months, organizing what topic or format goes where in the schedule rather than detailing one piece of content or listing angles with no timeline. Useful for mapping out a month's worth of content themes before any individual piece gets outlined, organizing a content calendar's overall rhythm and topic variety across several weeks, or planning when each type of content should go out before deciding exactly what each one will say.`,
     examples: [
 
     ],
@@ -941,13 +717,6 @@ WCAG AA: Pass (large text)`
   },
   "countdown-timer": {
     description: `Stepping away from the screen while something bakes, rests, or brews only works if there's an actual sound to catch attention when time's up, since a silent timer ticking down on a screen no one's watching might as well not exist at all. This tool sets a countdown timer with a custom duration, alerts, and sound notifications, making sure time running out is actually noticed rather than requiring the screen watched continuously. Useful for a kitchen timer that needs an audible alert once a dish is actually done, running a workout interval timer with a sound cue marking each round's start and end, or timing a presentation or an exam with a clear alert when time is up instead of someone having to watch a clock.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "counter": {
-    description: `A calculator performs an operation on numbers that already exist, but tallying reps during a workout, attendees walking through a door, or points during a game is counting something happening live, right now, one discrete event at a time, which calls for a big, immediately tappable button rather than a calculator's input field. This tool provides a simple counter for tracking anything in real time, built around fast, in-the-moment tallying rather than a calculation performed on existing numbers. Useful for counting reps during a workout without looking away from what you're actually doing, keeping score during a game with one tap per point, or tallying attendees or items as they pass by in real time rather than after the fact.`,
     examples: [
 
     ],
@@ -1415,48 +1184,6 @@ WCAG AA: Pass (large text)`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "eps-to-jpg": {
-    description: `A vector logo destined for a catalog thumbnail or a quick web preview doesn't need transparency preserved, it needs a small, flattened file that loads fast, which makes JPEG's lossy compression and lack of an alpha channel a reasonable tradeoff specifically when the background is going to be solid anyway and file size matters more than a see-through edge. This tool converts EPS vector files into JPG, producing a flattened, compressed raster image built for a solid-background context rather than one needing transparency. Useful for generating a small, fast-loading thumbnail preview of vector artwork for a catalog or a gallery, converting EPS artwork into a compressed raster image when transparency was never actually needed, or producing a lightweight JPG version of vector art for a web page where file size matters more than perfect edge quality.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "eps-to-png": {
-    description: `A logo that needs to sit over a colored background, a photo, or anything other than solid white can't afford to lose its transparency the way a flattened JPEG export would, which is exactly the case a PNG output is actually built for, preserving the see-through areas an EPS file's vector paths defined rather than filling them in with an assumed background color. This tool converts EPS vector files into PNG, keeping transparency intact rather than flattening it the way a JPEG conversion would. Useful for converting a logo into a PNG that still sits transparently over any background color or image, preserving an EPS file's transparent areas when the destination isn't a solid background, or producing a raster version of vector artwork that keeps its see-through edges intact.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "eps-to-svg": {
-    description: `An EPS file, unlike a PNG or a JPEG, usually already contains genuine vector path data written in PostScript's own drawing language, which means converting it to SVG is mostly a translation problem, taking PostScript's path operators and rewriting them as SVG's own path syntax, rather than tracing a bitmap into vector shapes from scratch the way converting an actual raster image would require. This tool converts an EPS file into SVG, translating its existing PostScript vector paths directly into SVG path data rather than re-tracing an image that never had real vector data to begin with. Useful for modernizing an old logo that only exists as EPS into a web-ready SVG, converting vector artwork received from a print vendor or an old client relationship into a format a browser actually renders, or bringing decades-old PostScript vector work into a current web design workflow.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "epub-to-azw3": {
-    description: `MOBI, the older Kindle ebook format, gets text onto a device fine but drops some finer formatting, an embedded font, a fixed layout for something like a graphic novel, more elaborate CSS styling, while AZW3, the newer Kindle format also called KF8, actually preserves that detail on a modern Kindle app or device. This tool converts an EPUB ebook into AZW3, keeping formatting that would otherwise be simplified away by an older format. Useful for converting a self-published EPUB into AZW3 so a modern Kindle app renders its custom fonts and layout correctly, preparing an illustrated or fixed-layout EPUB for Kindle without losing its formatting, or moving an EPUB library onto a Kindle device in the more capable of its two native formats.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "epub-to-mobi": {
-    description: `Kindle's oldest and most broadly compatible ereader hardware and apps expect MOBI specifically, and while EPUB works nearly everywhere else, sending it straight to an older Kindle or an app built around Amazon's earlier format can produce spotty results or need Amazon's own background conversion step first. This tool converts an EPUB file into MOBI directly, so a book bought from a non-Amazon store or downloaded from a library service opens cleanly on Kindle hardware that expects that specific format rather than relying on an automatic conversion during a send-to-Kindle step. Useful for getting an EPUB book reading correctly on an older Kindle device, sideloading a non-Amazon ebook onto Kindle hardware without going through Amazon's own conversion pipeline, or standardizing a personal ebook library on the one format a specific device actually reads best.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "essay-writer": {
-    description: `Starting an essay from just a topic name is a different problem than finishing one that's already underway: there's no existing sentence to pick up the tone from, no established argument to continue, just a blank page and a subject. This tool builds a complete essay structure from scratch, an introduction that states a thesis, body paragraphs that each develop one supporting point, and a conclusion that ties the argument back together, based on a topic and a stance provided up front. Give it "should remote work be the default" and a position to argue, and it drafts a full essay around that position rather than a single paragraph or a loose list of points. Useful as a starting structure for a school assignment, an opinion piece, or any writing task where the hardest part is deciding how to organize an argument before writing the details.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "excel-to-csv": {
     description: `A workbook with several tabs, a summary sheet, a data sheet, a notes sheet, doesn't map cleanly onto CSV at all, since CSV is fundamentally a single flat table with no concept of multiple sheets, which means exporting a multi-sheet workbook means picking one sheet at a time or ending up with a separate CSV file for each, not one file somehow representing the whole structure. This tool converts an Excel spreadsheet into CSV, exporting sheet data cleanly into the single flat structure CSV actually supports. Useful for exporting one specific sheet from a multi-tab workbook without the other sheets coming along, converting Excel data into CSV for a system that only accepts a flat, single-table format, or extracting a spreadsheet's data cleanly when only one sheet's worth of information is actually needed.`,
     examples: [
@@ -1501,13 +1228,6 @@ WCAG AA: Pass (large text)`
   },
   "extract-img": {
     description: `A PDF report with embedded photos or charts holds each image as a separate object inside the file's structure, and getting one of those images back out usually means an awkward screenshot-and-crop rather than actually recovering the original embedded file at its full quality. This tool pulls every image embedded in a PDF out directly, downloadable individually or bundled together as a ZIP, rather than requiring a screenshot workaround that loses quality and adds unnecessary cropping. Useful for recovering a photo or chart embedded in a PDF report without the quality loss a screenshot would introduce, pulling every image out of a PDF at once instead of extracting each one individually, or getting a specific graphic back out of a document where the original image file is otherwise nowhere to be found.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "extract-text": {
-    description: `A photographed page, a screenshot of an error message, a picture of a whiteboard covered in notes, all contain text that looks completely readable to a person but is just pixels as far as a computer is concerned, no way to select it, search it, or copy it out, until optical character recognition actually reads the shapes and converts them into real text characters. This tool applies OCR to an image and extracts the text it recognizes into actual editable, selectable text, rather than leaving it trapped as pixels inside a picture. Useful for pulling text out of a photographed document instead of retyping it by hand, extracting a message from a screenshot that can't otherwise be copied, or converting a photo of handwritten or printed notes into text that can actually be searched and edited.`,
     examples: [
 
     ],
@@ -1620,13 +1340,6 @@ WCAG AA: Pass (large text)`
   },
   "flesch-kincaid-calculator": {
     description: `Whether a piece of writing actually fits its intended audience's reading level isn't something to guess at, a children's book, a public health notice, and a legal disclaimer all need genuinely different reading levels, and Flesch-Kincaid is the established formula, based on sentence length and syllable count, that actually measures where a text falls. This tool calculates a text's Flesch-Kincaid grade level and reading ease score, giving an actual standardized number rather than a subjective impression of how readable something feels. Useful for confirming a children's book or a public-facing notice actually targets its intended grade level, checking whether a company's content meets a plain-language or an accessibility guideline requiring a specific reading level, or comparing two drafts' reading ease scores to see which one is genuinely easier to read.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "flip": {
-    description: `Rotating an image spins it to a different angle while text and faces stay oriented the same relative way, but flipping actually mirrors an image left to right or top to bottom, which is exactly why text or a logo turns backward and unreadable under a flip in a way it never would under a rotation, two genuinely different operations that solve different problems. This tool flips an image horizontally or vertically, producing a true mirror effect rather than a rotation to a different angle. Useful for correcting a selfie that looks mirrored compared to how other people actually see your face, since a phone's front camera preview is often flipped from reality, mirroring a graphic intentionally for a design that calls for it, or fixing an image that's backward rather than simply sideways.`,
     examples: [
 
     ],
@@ -1982,13 +1695,6 @@ WCAG AA: Pass (large text)`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "html-entities-reference": {
-    description: `Encoding a specific block of text into HTML entities is an action performed on input you actually supply, but knowing what code represents a copyright symbol or a non-breaking space in the first place is a different need entirely, one better served by browsing a reference table than by running any specific text through an encoder. This tool provides a browsable reference of HTML named entities alongside their decimal and hexadecimal codes, built for looking up a specific character's entity rather than transforming a block of text. Useful for looking up the exact entity code for a special character like a copyright symbol or an em dash, browsing available named entities when the specific one needed isn't already known, or referencing a numeric code without needing to encode or decode any actual text.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "html-entity-encoder": {
     description: `An ampersand can be represented in HTML three genuinely different but equivalent ways, the named entity &amp;, the decimal reference &#38;, or the hexadecimal reference &#x26;, and while a modern browser accepts all three interchangeably, an older parser, a strict XML context, or a system generating markup programmatically often expects one specific format and will choke on or mangle the others. This tool encodes and decodes HTML entities across all three formats, named, decimal, and hexadecimal, converting between them rather than only handling the most common named form. Useful for converting a named entity into its numeric equivalent for a context that doesn't recognize named references, decoding a hexadecimal entity back into its actual character, or generating markup in whichever entity format a specific downstream system actually expects.`,
     examples: [
@@ -2066,29 +1772,8 @@ WCAG AA: Pass (large text)`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "http-headers-viewer": {
-    description: `Sometimes the actual need is just seeing what headers a URL is currently sending, a fast look rather than a scored security assessment or a detailed analysis flagging what falls short of best practice, closer to glancing at a list than running a full audit. This tool displays request and response headers for any URL along with a timing breakdown, organized by caching, CORS, and security categories for a quick, readable view rather than a deeper analytical pass. Useful for quickly checking what headers a page is currently sending without running a full security audit, glancing at a URL's caching and CORS headers during a fast debugging session, or getting an immediate, readable view of headers before deciding whether a deeper analysis is actually needed.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "http-request-builder": {
     description: `Getting an authenticated API request right on the first try usually means assembling several pieces correctly at once, a Bearer token or an API key formatted into exactly the header a server expects, custom headers beyond the standard ones, a request body matching the content type declared alongside it, rather than sending one field at a time and troubleshooting whichever piece the server rejects. This tool builds a complete HTTP request, headers, body, and authentication together, as a single defined request rather than a quick ad hoc send-and-see attempt. Useful for assembling a Bearer token request with the exact header format an API expects, building a request with a custom header and JSON body together before sending it, or putting together a reusable request definition to test the same endpoint repeatedly with small changes.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "http-request-headers-inspector": {
-    description: `Knowing what headers a server sent back only tells half the story, the other half is what the browser actually sent as a request in the first place, and neither one explains where the time in a slow request actually went, DNS lookup, TLS handshake, waiting on the server, without an actual timing breakdown alongside the headers themselves. This tool inspects both request and response headers for any URL together, with a timing breakdown showing where time was spent and a security analysis flagging headers that fall short of best practice. Useful for seeing exactly what headers a browser sent alongside what a server returned for the same request, diagnosing whether a slow request is actually a DNS, TLS, or server response delay, or getting a security assessment of a page's headers rather than just a plain list of what's present.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "http-response-headers": {
-    description: `A page that loads stale content long after it was updated, a legitimate cross-origin request that gets silently blocked, a security scan flagging a missing header nobody remembered to set, all three trace back to the same place, the actual response headers a server sent back, which are invisible during normal browsing and only show up when something is specifically inspecting them. This tool fetches and displays every response header for any URL, organized by caching, CORS, and security categories rather than as one undifferentiated list. Useful for checking whether a Cache-Control header is causing a page to serve stale content longer than intended, confirming a CORS header is actually present before a cross-origin request gets blocked, or auditing which security headers, CSP, HSTS, X-Frame-Options, a page is or isn't sending.`,
     examples: [
 
     ],
@@ -2143,13 +1828,6 @@ WCAG AA: Pass (large text)`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "image-alt-text-generator": {
-    description: `A screen reader doesn't see an image, it reads whatever text sits in the alt attribute out loud, which means a blank alt tag or a lazy "image1" leaves a visually impaired visitor with literally nothing where a sighted visitor sees a photo, a chart, or a product shot. Search engines have the same blind spot in a different sense: they can't interpret pixels either, so alt text is effectively the only description they have of what an image actually shows. This tool generates alt text that describes what's actually in an image rather than a generic filler phrase; upload a photo and get back a description specific enough that someone who can't see the image still understands what it depicts. Useful for making a product catalog accessible, adding real alt text to a blog's images before publishing, or fixing a site audit that flagged missing or unhelpful alt attributes.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "image-aspect-ratio-calculator": {
     description: `Keeping a video at 16:9 while changing its width, or checking whether a photo's current dimensions actually match a standard ratio like 4:3 rather than being subtly off, both come down to the same underlying math, and figuring that out by hand for an unfamiliar dimension is more error-prone than it looks. This tool calculates aspect ratios and finds the standard dimensions that match any given image size, working out exactly what height keeps a specific ratio intact as a width changes. Useful for finding the correct height to keep a video's 16:9 ratio when only a target width is known, checking whether an image's dimensions actually match a standard ratio like 16:9 or 4:3, or calculating the exact dimensions a banner ad spec requires before resizing an image to fit.`,
     examples: [
@@ -2187,13 +1865,6 @@ WCAG AA: Pass (large text)`
   },
   "image-clipper": {
     description: `Fine-tuning a cutout's edges manually makes sense for one important photo, but processing a batch of product images or quickly pulling a subject out of a casual photo doesn't call for that level of manual control, it calls for clicking once and getting a reasonable result immediately rather than adjusting settings for every single image. This tool removes an image's background and cuts out its subject with a single click, prioritizing speed over manual edge refinement. Useful for quickly extracting a subject from a batch of product photos without adjusting settings on each one, pulling a person out of a casual photo in one click for a quick edit, or getting a fast background removal when precise manual refinement isn't actually necessary.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "image-color-picker": {
-    description: `A brand's exact color sitting inside a logo screenshot or a specific shade spotted in a photo isn't something to guess at with a color wheel, it needs to actually be sampled directly from the pixel it lives in, since eyeballing a close approximation from a swatch rarely lands on the exact value used. This tool picks a color directly from an uploaded image and returns its HEX, RGB, HSL, and CSS values instantly, sampling the actual pixel rather than approximating a nearby shade. Useful for matching a brand's exact color from a logo image when its hex code was never documented anywhere, extracting a small color palette from a photo for a design project, or sampling one specific pixel's color from a screenshot to match it precisely in CSS.`,
     examples: [
 
     ],
@@ -2332,13 +2003,6 @@ WCAG AA: Pass (large text)`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "image-to-svg": {
-    description: `Vectorizing a photo or a graphic isn't an all-or-nothing conversion, since the same image can be traced as a handful of simplified, flat-colored shapes or as a much more detailed set of paths that mirrors the original closely, and the right choice depends entirely on whether the result needs to look like a clean logo or a faithful reproduction. This tool traces any raster image into SVG with adjustable detail and color count, letting the same source image come out as a simplified vector or a far more detailed one depending on how those settings are tuned. Useful for reducing a photo to a small set of flat colors before vectorizing it into a clean, logo-style graphic, tracing a complex image at high detail when the vector needs to closely match the original, or dialing in exactly how many distinct paths a traced image ends up with.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "instagram-caption-generator": {
     description: `Instagram truncates a caption after roughly the first two lines in the feed, everything past that sits behind a "more" tap most people never bother making, which means the opening of a caption is doing almost all the actual work regardless of how much thought went into the rest of it. This tool writes captions built around that constraint specifically, a strong opening line that earns the tap, followed by the supporting text and a relevant set of hashtags, rather than a generic caption that reads fine in full but buries its best line somewhere in the middle where the truncation cuts it off. Useful for writing a caption where the first line actually needs to work on its own, pairing a caption with a relevant hashtag set without hunting them down separately, or drafting captions for a batch of feed posts at once.`,
     examples: [
@@ -2388,36 +2052,8 @@ WCAG AA: Pass (large text)`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "jpg-to-avif": {
-    description: `AVIF, built on the same compression technology behind the AV1 video codec, squeezes a photo down noticeably smaller than even WebP manages in many cases, but that extra compression comes from a slower, more computationally expensive encoding process, and while modern browsers support it well, that support is newer and less universal than WebP's, a real tradeoff between the smallest possible file and the widest possible compatibility. This tool converts JPEG images into AVIF, producing files roughly ten times smaller than the original JPEG at comparable visual quality. Useful for serving the smallest possible image to visitors on modern browsers that support AVIF, cutting page weight aggressively on a site that doesn't need to support very old browsers, or comparing AVIF's file size against WebP for the same source photo.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "jpg-to-gif": {
-    description: `A phone's burst mode or a quick sequence of process photos, three or four JPGs capturing a moment in stages, is a natural fit for a simple animated GIF, and JPG being the default photo format for virtually every camera and phone makes it the actual starting point most people have on hand rather than some other image format they'd need to convert first. This tool turns a sequence of JPEG photos into an animated GIF, with the frame timing adjustable, built specifically around the format most photos already exist in rather than requiring a different starting format first. Useful for turning a burst-mode photo sequence into a simple looping animation, building a quick stop-motion-style GIF from a handful of process photos, or animating a short sequence of JPGs without needing to convert them to another format before starting.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "jpg-to-png": {
     description: `A JPEG loses a little quality every single time it's opened, edited, and saved again as a JPEG, since its compression is lossy and each re-save recompresses the image from what's already a slightly degraded version, a kind of generational loss that quietly compounds over several rounds of editing. This tool converts a JPEG into PNG, a lossless format, so any further edits and saves after the conversion stop losing quality altogether rather than degrading further with each pass. Useful for converting a JPEG to PNG before a round of edits so repeated saving afterward doesn't degrade it further, preserving a photo's current quality exactly instead of letting one more JPEG re-save erode it, or converting an image into a format where saving it five more times looks identical to saving it once.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "jpg-to-svg": {
-    description: `Converting a JPEG into most other image formats just repackages the same grid of pixels differently, but turning one into an SVG is a fundamentally different process, tracing the shapes and color regions in the bitmap and rebuilding them as actual vector paths, an approximation of the original image rather than a pixel-for-pixel copy in a new container. This tool vectorizes a JPEG photo or graphic into SVG, producing scalable vector paths instead of a fixed grid of pixels. Useful for turning a small raster logo into an SVG that scales to any size without pixelating, converting a simple photo or illustration into editable vector shapes for a design tool, or getting a JPEG into a format that stays sharp on a high-resolution display regardless of how large it's rendered.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "jpg-to-tiff": {
-    description: `A JPEG re-saved and re-edited over and over accumulates compression artifacts with every single pass, since each save recompresses the image and throws away a little more detail permanently, a cumulative quality loss that print shops and long-term archives specifically avoid by converting to TIFF, a lossless format that stops that degradation the moment a file gets converted into it. This tool converts JPEG images into TIFF format, producing a high-quality file built for printing and archiving rather than further lossy compression. Useful for converting a JPEG into a lossless format before it enters a print shop's prepress workflow, archiving a photo in a format that won't degrade further no matter how many times it gets reopened and resaved, or preparing an image for professional printing where TIFF is the expected, uncompressed standard.`,
     examples: [
 
     ],
@@ -2659,20 +2295,6 @@ Cause: Trailing comma`
     ],
     features: ["Line/column error reporting", "Real-time validation", "Supports all JSON types", "Detailed error messages"]
   },
-  "jsonpath-query-tester": {
-    description: `Getting a JSONPath expression exactly right on the first try is rare, since a small difference, a filter condition's syntax, whether to use dot notation or bracket notation for a specific key, changes what actually matches, which means the real workflow is trying a few candidate expressions against the same data and comparing results rather than writing one expression and assuming it's correct. This tool runs a JSONPath expression against real JSON data and shows exactly what matches, making it easy to try a variation, tweak a filter condition, adjust a wildcard, and immediately see how the result changes. Useful for iterating on an expression until it matches exactly the right nodes, comparing two candidate JSONPath expressions side by side to see which one actually returns what's needed, or debugging why an expression that looks correct isn't matching the expected data.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "jsonpath-query": {
-    description: `A deeply nested JSON response might bury the one field actually needed several levels down inside arrays and objects, and scrolling through a formatted tree to find it by eye works for a small file but breaks down once a response runs into hundreds of lines. JSONPath solves that with a query syntax built specifically for JSON, something like $.store.book[*].author pulls out every author across an entire array in one expression rather than manually tracing each branch. This tool runs a JSONPath query against pasted JSON and highlights every match instantly, letting an expression be tested and refined before it ends up in actual code. Useful for pulling one specific nested value out of a large API response without writing a script, testing a JSONPath expression before dropping it into an application, or exploring an unfamiliar JSON structure by querying pieces of it directly instead of reading the whole tree.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "jupyter-cleaner": {
     description: `A notebook's code can stay completely unchanged between two commits and still produce an enormous, unreadable diff, because every time a cell runs, its execution count increments and its output, sometimes a large embedded plot image encoded as a long base64 string, gets rewritten even when nothing about the actual logic changed at all. This tool strips every output, execution count, and piece of metadata out of a Jupyter notebook, keeping only the source code and markdown cells that actually reflect real changes. Useful for cleaning a notebook before committing it so diffs reflect genuine code changes instead of output noise, stripping large embedded plot images out of a notebook before it goes into version control, or removing execution counts that increment on every run and clutter a diff with nothing meaningful in it.`,
     examples: [
@@ -2759,13 +2381,6 @@ Cause: Trailing comma`
   },
   "keyword-position-checker": {
     description: `Knowing a keyword's overall search volume or difficulty doesn't tell you where your own specific page actually lands in results for it today, page one, page three, not ranking at all, which is a completely different, page-specific question that requires checking an actual URL against an actual keyword rather than researching the keyword in the abstract. This tool checks where a specific URL currently ranks for a specific keyword, returning the actual position in search results rather than a general difficulty estimate. Useful for tracking whether a page's ranking for a target keyword is actually improving after an SEO change, checking where a competitor's page currently sits for the same keyword being targeted, or confirming a keyword a page was optimized for actually moved the needle in real rankings rather than just on paper.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "kubernetes-yaml-generator": {
-    description: `A Kubernetes Deployment, a Service, and a ConfigMap each require their own specific apiVersion, their own required fields structured differently, and YAML's whitespace sensitivity means a manifest that looks almost right can still fail to apply over a single misplaced indent, a mistake that's easy to make and sometimes tedious to spot just by reading the file. This tool generates correctly structured manifests for Deployments, Services, ConfigMaps, and other common resource types, with each one's specific required fields and structure already accounted for rather than assembled from memory. Useful for scaffolding a new Deployment or Service manifest without misremembering its specific required fields, generating a ConfigMap with the correct structure before applying it to a cluster, or avoiding a YAML indentation mistake that would otherwise fail silently or with an error that doesn't point clearly at the actual problem.`,
     examples: [
 
     ],
@@ -2878,20 +2493,6 @@ Cause: Trailing comma`
   },
   "lorem-ipsum-words": {
     description: `A button label, a card headline, a short bio field, these spots need placeholder text sized to exactly what fits there, a specific handful of words, not a full paragraph that would overflow a small text box or make a compact mockup element look broken before any real content even gets written. This tool generates a specific number of lorem ipsum words for placeholder content in design mockups, sized precisely to a small UI element rather than a paragraph generator's larger output. Useful for filling a button or a headline with exactly the right amount of placeholder text to preview how it actually fits, testing whether a compact UI element handles a specific word count without overflowing, or generating a short placeholder phrase for a form field without a full paragraph's worth of unnecessary text.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "m4a-to-mp3": {
-    description: `An M4A file exported from iTunes or downloaded through Apple Music plays fine in Apple's own ecosystem, but the moment it needs to go somewhere that only recognizes MP3, an older car stereo, a non-Apple music player, a service that doesn't accept M4A uploads, the format itself becomes the actual blocker rather than anything about the audio quality. This tool converts an M4A file into MP3, moving audio out of Apple's specific ecosystem into the one format that plays almost anywhere regardless of device or software. Useful for getting a song purchased through iTunes playing on a device that's never recognized M4A, converting an Apple Music download for a platform that specifically requires MP3 uploads, or standardizing an audio library that's a mix of M4A and other formats onto one consistently playable type.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "m4a-to-mp4": {
-    description: `M4A is audio-only, so converting it to MP4 isn't about adding a picture, it's about repackaging the same audio into a container that also supports album art and metadata the way a music library or media player actually expects to display it, cover art, artist, track title, information an M4A file can carry too but that some players read more reliably from an MP4 wrapper. This tool converts an M4A file into MP4, letting album art and metadata be attached during the conversion rather than requiring a separate step afterward. Useful for preparing an audio file for a media player that displays album art more reliably from MP4 containers, attaching missing metadata to a track before adding it to a library, or getting an audio file into the container format a specific app expects for full metadata support.`,
     examples: [
 
     ],
@@ -3076,13 +2677,6 @@ Cause: Trailing comma`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "mobi-to-epub": {
-    description: `MOBI was Kindle's own format until Amazon moved on to newer ones, which leaves an old MOBI e-book stuck in a format that a Kobo, a Nook, Apple Books, or a library reading app won't open at all, none of them ever having supported Amazon's proprietary format to begin with. This tool converts MOBI files into EPUB, the open standard nearly every e-reader other than Kindle actually supports, making an old MOBI book readable well beyond the one ecosystem it was originally tied to. Useful for reading an old MOBI e-book on a Kobo, a Nook, or any e-reader that isn't a Kindle, converting a downloaded MOBI file into a format a library or a reading app can actually open, or future-proofing an old MOBI library now that the format itself has been discontinued.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "mock-api-generator": {
     description: `Building a loading spinner or an error message actually requires seeing a slow response or a failed request happen, but a backend that isn't built yet, or one that's simply unavailable while a frontend is being developed, only ever returns the sunny-day success case, if it returns anything at all, leaving error states and loading behavior effectively untested until a real API exists to misbehave against. This tool generates a mock JSON API response with a customizable status code, an artificial delay, and a specific payload, simulating exactly the slow or failing responses a real backend would eventually produce. Useful for testing a loading state against an artificially slow mock response before a real API exists, building error-handling UI against a mocked 500 or 429 status code, or developing an entire frontend feature against a realistic mock response while the actual backend is still being built.`,
     examples: [
@@ -3106,13 +2700,6 @@ Cause: Trailing comma`
   },
   "mov-to-avi": {
     description: `A video recorded on an iPhone or a Mac saves as MOV by default, a format QuickTime handles natively but that a lot of older or business-standard Windows software either mishandles or won't open at all, while AVI, despite its age, remains deeply embedded in Windows Media Player and countless legacy applications that have supported it for decades. This tool converts a MOV file into AVI, trading MOV's native Apple-ecosystem support for a format that opens reliably on Windows machines and older software. Useful for converting a video shot on an iPhone so it opens on an older Windows PC without extra codecs installed, preparing a MOV file for legacy business software that only accepts AVI, or sharing a Mac-recorded video with someone on Windows who can't open QuickTime formats directly.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "mov-to-gif": {
-    description: `A GIF autoplays and loops the instant it loads wherever it's posted, Twitter, Slack, Discord, an old forum, with no click required, while a MOV file typically needs a tap or a click to start playing as a native video, a real difference when the whole point of a clip is to loop instantly as a quick reaction. This tool converts a MOV video into an animated GIF, preserving the clip's motion in a format built to autoplay anywhere rather than wait for someone to press play. Useful for turning a short screen recording into a reaction GIF that loops the moment it's posted, converting a phone video clip for a platform that doesn't autoplay MOV files, or preparing a quick animated clip for a forum or chat that only supports GIFs.`,
     examples: [
 
     ],
@@ -3160,22 +2747,8 @@ Cause: Trailing comma`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "mp4-to-ogg": {
-    description: `MP3 carried patent licensing baggage for years, which mattered to open-source software that didn't want a proprietary codec bundled into a free project, and Ogg Vorbis existed specifically as the open, patent-unencumbered alternative that a Linux application or an open-source project could actually depend on without that concern. This tool converts an MP4 video's audio track into OGG format, producing a file built around that open-source codec lineage rather than a proprietary compressed format. Useful for converting audio for a Linux-native application or an open-source project that specifically avoids proprietary codec dependencies, producing an OGG file for a platform or a game engine that expects that specific open format, or extracting an MP4's audio into a codec that doesn't carry MP3's old licensing history.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "mp4-to-wav": {
     description: `Speech-to-text software and audio analysis tools frequently require WAV input specifically rather than MP3, because they need the raw, uncompressed waveform to analyze accurately, and MP3's lossy compression has already discarded some of the detail that kind of analysis actually depends on. This tool extracts audio from an MP4 video and saves it as WAV, preserving the full uncompressed audio data instead of introducing MP3's compression artifacts into a file that's about to be analyzed or transcribed. Useful for preparing a video's audio track for a transcription or speech-to-text tool that specifically expects WAV, feeding a video's audio into an analysis tool that needs uncompressed data to work accurately, or extracting audio at full quality before any further processing that would be sensitive to compression artifacts.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "mp4-to-webm": {
-    description: `MP4 plays reliably on nearly every device and piece of software that exists, which is exactly why it's rarely the format worth converting away from unless a specific destination benefits from something else, and a web page is exactly that case, WebM's VP8 and VP9 codecs are open, royalty-free, and typically compress noticeably smaller than MP4's H.264 at comparable quality when the destination is specifically a browser's native video tag. This tool converts MP4 into WebM, trading a small amount of MP4's broader device compatibility for meaningfully smaller file sizes purpose-built for web playback. Useful for shrinking a video file specifically for faster page load times on a website, converting a video for HTML5 playback without a proprietary codec dependency, or preparing a smaller web-optimized version of a video that already plays everywhere as MP4.`,
     examples: [
 
     ],
@@ -3239,13 +2812,6 @@ Cause: Trailing comma`
   },
   "og-tag-debugger": {
     description: `When a shared link isn't previewing correctly anywhere, on Facebook, on Twitter, in a Slack unfurl, the actual problem could be a missing Open Graph tag, a malformed Twitter Card tag, or both at once, and checking one platform's preview at a time doesn't reveal which underlying tag is actually broken or absent. This tool validates both Open Graph and Twitter Card meta tags for a URL together, flagging exactly which tags are missing or malformed rather than only showing how a link happens to render on one specific platform. Useful for diagnosing why a link isn't generating a preview on any platform at all, confirming both tag systems are present and correctly formatted after a site redesign, or catching a malformed og:image tag that's silently breaking previews everywhere it's shared.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "ogg-to-mp3": {
-    description: `OGG Vorbis is a genuinely good open codec, but plenty of car stereos, older portable players, and specific apps simply don't recognize an .ogg file at all, while MP3, despite being a less efficient format by comparison, plays on nearly everything without a second thought, which is exactly the tradeoff this conversion makes. This tool converts OGG audio into MP3, trading OGG's open format for MP3's far broader hardware and software compatibility. Useful for converting an OGG file so it actually plays on a car stereo or an older device that doesn't support it, preparing audio for an app or a platform that only accepts MP3 uploads, or making an OGG-based audio library playable on hardware that never added support for the format.`,
     examples: [
 
     ],
@@ -3330,13 +2896,6 @@ Cause: Trailing comma`
   },
   "paragraph-lorem-ipsum": {
     description: `A body-text block in a mockup usually needs to hold roughly a specific amount of content, not a single sentence and not an unpredictably long wall of text, which means the actual control that matters is over word count and sentence count together rather than picking between one sentence or an entire uncontrolled block. This tool generates paragraphs of lorem ipsum placeholder text with a custom word and sentence count, sizing the output to match a layout's actual paragraph space rather than guessing at how much text fills it. Useful for filling a body-text block in a mockup with a paragraph sized to match the space it's meant to hold, generating a specific sentence count to test how a layout handles a paragraph of that length, or producing a controlled word count of lorem ipsum for a design that needs a predictable amount of text.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "paragraph-rewriter": {
-    description: `Rewording a paragraph you already wrote yourself for a fresher angle mid-edit is a different task from restating someone else's source material to avoid repeating it word for word, the first is an ordinary editing pass on your own draft, the second carries a specific citation concern the first never has to think about. This tool rewrites an individual paragraph with fresh wording while preserving its original meaning, built for refreshing your own already-written draft rather than rephrasing quoted or cited source material. Useful for giving a paragraph you've already drafted a different angle before finalizing it, reworking an awkward paragraph's phrasing without changing what it actually says, or trying a few wording variations of the same paragraph before picking the one that reads best.`,
     examples: [
 
     ],
@@ -3494,34 +3053,6 @@ Result: 847291`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "png-compressor": {
-    description: `PNG compression is lossless by design, DEFLATE under the hood, which means shrinking a PNG isn't the same tradeoff as compressing a JPEG, there's no quality to sacrifice in exchange for size, only a more efficient encoding to find, better palette reduction, leaner filtering, unnecessary metadata stripped out, all while the image's actual pixel data and its alpha transparency stay completely intact. This tool compresses PNG images to reduce file size while preserving transparency and quality, optimizing the lossless encoding itself rather than trading visible quality away for a smaller file. Useful for shrinking a PNG logo or icon that needs its transparent background to survive the process untouched, reducing a screenshot's file size without introducing any visible quality loss, or compressing a batch of UI graphics where losing even a little sharpness or transparency isn't an acceptable tradeoff.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "png-to-avif": {
-    description: `PNG usually gets chosen specifically because an image needs a transparent background, a logo, an icon, a UI graphic, but that transparency has historically meant accepting PNG's much larger file size as the cost, when AVIF actually supports an alpha channel too and can carry that same transparency at a fraction of PNG's file weight. This tool converts a PNG into AVIF, preserving transparency while moving to a dramatically smaller file rather than assuming transparency requires staying on a larger lossless format. Useful for shrinking a transparent logo or icon's file size without losing its transparent background in the process, converting a UI graphic that needs an alpha channel into a lighter format for faster page loads, or realizing a smaller file was actually available all along instead of defaulting to PNG purely for its transparency support.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "png-to-eps": {
-    description: `A print shop's prepress software or an older PostScript-based layout program sometimes won't accept a modern web format like SVG at all, but EPS, an older PostScript-based standard, has been the expected format for that kind of prepress workflow for decades, whether that means wrapping a raster image inside a PostScript container as-is or actually tracing it into vector paths first. This tool converts a PNG into EPS, preparing a raster image for a print production pipeline that specifically expects PostScript-based artwork rather than a modern vector or raster web format. Useful for submitting artwork to a print vendor whose prepress software specifically requires EPS files, preparing a PNG logo for placement in older layout software built around PostScript formats, or converting a raster image into the format a legacy print workflow has expected for decades.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "png-to-gif": {
-    description: `PNG carries an actual alpha channel, smooth, partial transparency, unlike a JPG, which makes a sequence of PNGs the natural source for animating something like a logo or an icon that needs to sit on top of a transparent or a varying background, though GIF itself only supports fully transparent or fully opaque pixels, so that smooth alpha channel gets flattened into a hard edge during conversion. This tool turns a sequence of PNG images into an animated GIF, handling that transparency flattening directly rather than leaving an unexpected white or black box where a transparent area used to be. Useful for animating a logo or an icon sequence that needs to sit cleanly over a varying background, turning a series of transparent UI screenshots into a looping animation, or converting PNG frames into a GIF without an ugly transparency artifact showing up unexpectedly.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "png-to-ico": {
     description: `A website's favicon and a Windows desktop application's icon are solving genuinely different problems, a favicon lives in a browser tab, while ICO is the format Windows itself expects for an application's taskbar icon, its desktop shortcut, or a Store app tile, built around a different set of required sizes entirely. This tool converts a PNG into ICO format specifically for Windows icons, generating the multiple sizes a Windows application or shortcut actually needs rather than the sizes a website favicon would use. Useful for creating an icon file for a Windows desktop application from a PNG source image, generating a properly sized ICO for a desktop shortcut rather than a browser tab, or producing the specific icon sizes Windows' shell expects instead of a web-oriented favicon set.`,
     examples: [
@@ -3531,20 +3062,6 @@ Result: 847291`
   },
   "png-to-jpg": {
     description: `A transparent PNG converted to JPEG runs into a format limitation right away, JPEG has no alpha channel, so whatever was previously see-through needs a fill color chosen for it, white by default but not always the right call for a logo meant to sit on a dark background, and getting that choice wrong is how a transparent PNG turns into a graphic with an ugly white box around it. This tool converts PNG to JPEG with a chosen fill color for anything that was transparent, plus an adjustable compression quality level PNG's lossless format never required. Useful for converting a transparent logo to JPEG with a fill color matching a dark page background instead of defaulting to white, choosing a specific compression quality to balance file size against visible artifacts, or converting a PNG screenshot to JPEG for a smaller file where transparency was never actually needed.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "png-to-svg": {
-    description: `A JPEG usually carries compression artifacts that confuse a tracing algorithm into mistaking noise for real edges, but a PNG is often already close to what tracing needs, an icon, a logo, a screenshot, flat colors and clean boundaries with none of that lossy compression noise to begin with, which usually makes for a noticeably cleaner vector trace. This tool converts a PNG into SVG by tracing shapes based on color boundaries, vectorizing an image that's typically already a strong candidate for it rather than fighting compression noise along the way. Useful for vectorizing a logo or an icon saved as PNG so it stays crisp at any size instead of blurring when enlarged, converting a flat-color screenshot or UI graphic into scalable vector paths, or tracing simple line art that was saved as PNG specifically to avoid JPEG's compression artifacts in the first place.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "png-to-tiff": {
-    description: `A print shop, a photo lab, or a scientific imaging workflow typically wants TIFF specifically, not because it's smaller or more convenient, but because it supports lossless compression and far higher bit depth than a web-oriented format like PNG was ever designed around, which matters when a printed result or an archival scan needs to preserve every bit of captured detail rather than something optimized for a screen. This tool converts a PNG into TIFF, formatted for the print and archival workflows that specifically expect it rather than a format built for web display. Useful for preparing a raster graphic for a professional print shop's layout software that requires TIFF, archiving a scanned image in a format built for long-term preservation rather than screen display, or converting a PNG for a workflow, print production, scientific imaging, that was never built around web-native formats in the first place.`,
     examples: [
 
     ],
@@ -3634,41 +3151,6 @@ Result: 847291`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "psd-to-ai": {
-    description: `Handing a logo off to another designer who works in Illustrator calls for something more specific than a universal web vector format, an AI file that opens directly in Illustrator with its artboards, swatches, and layer structure intact, ready for further editing inside the same Adobe ecosystem rather than a generic SVG meant for a browser to render. This tool converts a PSD file into Adobe Illustrator's AI format, translating vector shape layers into editable Illustrator paths built for continued work inside Adobe's own tools. Useful for handing a logo design off to a colleague who'll refine it further in Illustrator, converting a PSD's vector layers into an AI file for a print production workflow built around Adobe software, or moving a design from Photoshop into Illustrator without flattening its editable vector paths.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "psd-to-jpg": {
-    description: `A PSD built from a retouched photograph, a wedding shot with color grading and skin retouching layered on top, doesn't need transparency preserved the way a logo composite would, which means JPG's lossy compression is actually the right tradeoff rather than a limitation, a smaller, faster-to-share file with no visible quality cost on photographic content that was never going to need a transparent background in the first place. This tool flattens a PSD and exports it directly as JPEG, merging every visible layer into one compressed image sized for fast sharing rather than lossless archival. Useful for exporting a retouched photo composite as a small, easy-to-share JPEG, quickly flattening a multi-layer PSD into one image for a client preview, or getting a photographic PSD into the one format that's small enough to email or upload without a second thought.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "psd-to-pdf": {
-    description: `A flattened PNG or JPEG export shows one version of a design, but a client reviewing several layout variations, or a design with distinct layer groups meant to be compared side by side, benefits from something a single flattened image can't provide, each variation on its own page within one document that can be paged through and annotated with standard PDF review tools. This tool converts a PSD file into a PDF, with layers preserved and optionally split across separate pages rather than flattened into one image. Useful for turning several design variations stored as layer groups into a single paginated PDF for client review, preserving transparency and layer structure in a format that supports commenting and markup, or producing a multi-page proof document from one PSD file instead of exporting each variation separately.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "psd-to-png": {
-    description: `A PSD file with a transparent background needs Photoshop, or at least something that understands Photoshop's layer format, just to open it at all, which is rarely what's actually needed once a design is finished, usually the image just needs to drop into a website, a slide deck, or an email with its transparent background staying transparent rather than flattened to solid white the way a JPEG export would. This tool exports a PSD file as a PNG, keeping the same transparency intact in a format nearly anything can open without Photoshop installed. Useful for exporting a logo or icon with a see-through background for use on a website, handing off a finished design asset to someone without Photoshop, or flattening a layered PSD into a single image that still keeps its transparent edges.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "psd-to-svg": {
-    description: `A Photoshop file's actual vector shape layers, if it has any, translate cleanly into real SVG paths that scale infinitely just like they did in Photoshop, but a painted brush layer or a photo layer was never vector data to begin with, so that content has to be traced and approximated into vector shapes rather than converted directly, meaning how well a specific PSD converts depends entirely on what's actually inside it. This tool converts a PSD file into SVG, translating genuine vector shape layers directly and tracing raster content into vector paths where no real vector data exists. Useful for converting a PSD's vector shape layers, like a logo built from paths, directly into clean, scalable SVG, tracing a flattened raster PSD into an approximate vector version, or exporting a design file into a format that scales for both web and print use.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "punctuation-fixer": {
     description: `Text pasted from an older document sometimes carries two spaces after every period, a typewriter-era habit that reads as inconsistent spacing today, alongside a missing comma or a dropped period at the end of a bullet point, small punctuation issues that are tedious to hunt down one at a time across a longer piece of writing. This tool fixes missing or incorrect punctuation marks and applies consistent spacing throughout, focusing specifically on punctuation rather than grammar or broader style. Useful for normalizing inconsistent spacing after periods in text pasted from an older document, adding a missing punctuation mark at the end of a list of bullet points, or cleaning up scattered punctuation issues before submitting text somewhere with strict formatting requirements.`,
     examples: [
@@ -3707,13 +3189,6 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
   },
   "qr-code-generator": {
     description: `A URL scanned as a QR code just opens a link, but WiFi credentials need the network name, password, and encryption type encoded in a specific format a phone's camera recognizes well enough to offer connecting automatically, and a vCard needs full contact details structured so scanning it offers adding the person to contacts directly, each content type requiring its own internal format rather than plain text dumped in. This tool generates QR codes for URLs, plain text, WiFi credentials, and vCards, downloadable as PNG or SVG, encoding each content type in the specific structure a scanning app actually recognizes. Useful for generating a WiFi QR code guests can scan to connect automatically without typing a password, creating a vCard QR code that offers adding a contact directly when scanned, or producing a scalable SVG QR code for a URL that needs to print clearly at a large size.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "qr-code-scanner": {
-    description: `A QR code printed on a flyer or embedded in an email doesn't reveal where it actually leads until it's scanned, and scanning it directly with a phone means committing to whatever page or action it triggers before actually knowing what that is, which matters when the code showed up somewhere less than trustworthy. This tool scans and decodes a QR code from an uploaded image or a live webcam feed, showing the actual text or URL hidden inside instantly rather than requiring a phone's camera app to commit to opening it. Useful for checking a QR code's actual destination before scanning it with a phone and getting redirected somewhere unexpected, decoding a QR code from a screenshot or a saved image without a phone on hand, or reading a code live through a webcam during a presentation or a meeting.`,
     examples: [
 
     ],
@@ -3966,20 +3441,6 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
   },
   "regex-tester": {
     description: `Writing a regular expression rarely works on the first try, and the real test isn't whether a pattern looks right, it's whether it actually matches the specific strings it's supposed to and rejects the ones it isn't, edge cases included, something that's nearly impossible to verify just by reading the pattern itself. This tool runs a regex against real sample text, highlighting every match live as the pattern changes and displaying each capture group separately, so the actual matching behavior stays visible while a pattern is still being refined rather than only after it ships in actual code. Useful for iterating on a pattern against a handful of test strings until it correctly separates the ones that should match from the ones that shouldn't, checking exactly what a capture group pulls out of a match, or confirming a regex handles an edge case before it goes into production code.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "regex-visual-builder": {
-    description: `Every other way to build a regex here eventually means typing or editing actual regex syntax, characters, quantifiers, character classes, at some point in the process, which assumes a baseline comfort with that syntax that not everyone building a pattern actually has yet. This tool builds a regex pattern visually through a node-based editor, connecting individual pieces, a character class, a quantifier, a group, without ever requiring regex syntax to be typed directly, and shows matches updating in real time as the visual structure changes. Useful for constructing a working pattern without needing to already know regex syntax well enough to type it correctly, building a complex pattern by arranging its pieces visually rather than writing dense syntax by hand, or seeing exactly how each visual piece added actually changes what the pattern matches in real time.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "remove-bg": {
-    description: `Cutting a subject out cleanly around fine detail, loose hair, a translucent edge, a gap between an arm and a body, is where background removal actually gets difficult, since a rough cutout that ignores those details leaves a visible fringe or a hard edge that immediately gives away that the background was removed rather than genuinely absent. This tool isolates a subject with that fine detail specifically handled, rather than a blunt cutout that treats every edge the same way regardless of how complex it actually is. Useful for isolating a product photo cleanly for a marketplace listing that requires a plain background, cutting out a portrait's hair and edges without a visible fringe left behind, or preparing a batch of product photos with consistent, clean isolation quality across every image.`,
     examples: [
 
     ],
@@ -4251,13 +3712,6 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "sentence-rewriter": {
-    description: `One specific sentence sitting awkwardly in an otherwise solid paragraph doesn't need the whole passage reworked or a plagiarism-avoidance rewrite of an entire source text, it needs a targeted fix to just that sentence's clarity and flow, leaving everything around it untouched. This tool rewrites individual sentences with AI to improve clarity and flow, operating at the single-sentence level rather than restating a whole passage or correcting grammar and style across an entire document. Useful for fixing one clunky sentence in an otherwise finished paragraph without reworking anything around it, improving a specific sentence's flow when it reads awkwardly despite being grammatically correct, or rewriting a single sentence for clarity without touching the rest of an already-solid draft.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "sentiment-analyzer": {
     description: `A customer review or a social media comment carries a tone that isn't always obvious from a quick read, especially something that sounds neutral on the surface but actually reads as frustrated or sarcastic once scored more carefully, and responding to feedback without registering that undertone can land badly. This tool analyzes text and detects whether its tone is positive, negative, or neutral, attaching an actual score rather than just a label, so the strength of a sentiment is visible, not only its direction. Useful for gauging a customer review's actual tone before writing a response, checking a social media post for an unintended negative undertone before it's published, or scanning a batch of feedback comments to spot an overall trend in sentiment.`,
     examples: [
@@ -4398,13 +3852,6 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "sitemap-urls-extractor": {
-    description: `A sitemap isn't always a single flat list, a large site often has a sitemap index file that itself just points to several other sitemaps, and pulling every actual page URL out of that structure means following each of those referenced sitemaps in turn rather than reading only the top-level file and missing everything nested underneath it. This tool extracts every URL from an XML sitemap, following a sitemap index down into its individual sitemaps automatically, and outputs one flat, plain list of page URLs, ready to paste into another tool. Useful for pulling a complete URL list out of a sitemap index for a bulk link checker, exporting every page URL from a site for a spreadsheet-based audit, or generating a clean URL list to feed into a separate crawling or indexing tool.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "sitemap-xml-validator": {
     description: `A sitemap can list nothing but perfectly healthy URLs and still get rejected by Search Console if the XML file itself is missing a required tag, uses the wrong namespace, or is malformed in some structural way that has nothing to do with whether any individual URL actually works. This tool validates a sitemap's XML structure directly, checking for a missing tag, a malformed element, or a URL formatting issue within the file itself rather than checking whether the listed URLs are actually reachable. Useful for catching a structural problem that would get a sitemap rejected before it's ever submitted to Search Console, confirming a sitemap generated by an unfamiliar tool actually follows the expected XML format, or finding a missing required tag hiding somewhere in a large sitemap file.`,
     examples: [
@@ -4414,13 +3861,6 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
   },
   "sla-uptime-calculator": {
     description: `Each additional nine in an uptime percentage sounds like a small difference on paper, 99.9 percent versus 99.99 percent, but the actual allowable downtime behind those numbers changes dramatically, roughly nine hours a year at three nines, down to about five minutes a year at five nines, a gap that's easy to underestimate until it's translated into actual hours and minutes rather than left as an abstract percentage. This tool calculates exactly how much downtime a given SLA percentage actually allows across a year, a month, and a day, turning an uptime commitment into concrete, comparable time figures. Useful for understanding what a vendor's uptime guarantee actually promises in real hours rather than an abstract percentage, comparing two SLA offers by their actual allowed downtime instead of just their percentage, or checking whether an internal system's actual uptime record still meets a stated SLA commitment.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "sleep-duration-calculator": {
-    description: `Two nights of exactly seven hours of sleep can feel completely different depending on where in a sleep cycle the alarm actually goes off, since waking up mid-cycle during deep sleep tends to feel groggier than waking at a natural cycle boundary, even with the same total hours logged. This tool does more than subtract a bedtime from a wake time: it also works out how many complete roughly ninety-minute sleep cycles fit into that window, which is the number that actually predicts how rested you're likely to feel. Enter when you fell asleep and when the alarm went off, and see both the raw duration and how many full cycles it lines up with. Useful for figuring out whether a rough night was actually short on time or just badly timed against a cycle boundary, or picking a better bedtime for tomorrow's wake-up time.`,
     examples: [
 
     ],
@@ -4552,13 +3992,6 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "ssl-certificate-checker": {
-    description: `An SSL certificate usually renews itself silently in the background for years without anyone noticing, right up until a DNS change, an expired payment method, or a missed manual step breaks that renewal and a site suddenly greets every visitor with a browser warning that its connection isn't private, with no advance notice that anything was about to go wrong. This tool checks any HTTPS domain's certificate for its expiry date, issuer, and full chain, including a missing intermediate certificate that can leave a cert valid on some browsers while failing silently on others. Useful for catching a certificate that's about to expire before it actually takes a site offline, verifying a certificate chain is complete rather than missing an intermediate that only some browsers tolerate, or checking who actually issued a domain's certificate before trusting it.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "sticky-notes": {
     description: `A structured to-do list keeps everything in one tidy, linear order, which is exactly the wrong shape for a handful of quick reminders that need to be color-coded, glanced at, and rearranged freely the way actual sticky notes on a corkboard would be, disposable, visual, and spatial rather than a single ranked list. This tool creates digital sticky notes in different colors that can be placed and repositioned freely, closer to a corkboard than a task manager. Useful for jotting down a quick reminder that doesn't belong in a formal to-do list, color-coding a handful of loosely related ideas by topic at a glance, or arranging a set of quick notes spatially instead of forcing them into one ranked order.`,
     examples: [
@@ -4596,27 +4029,6 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
   },
   "svg-compressor": {
     description: `An SVG exported straight out of a design tool like Illustrator or Figma usually carries a fair amount of dead weight along with the actual artwork, editor metadata, unused definitions, comments, and path coordinates stored with far more decimal precision than a rendered icon will ever visibly need. This tool compresses an SVG file by stripping that unnecessary metadata and comments and optimizing its path data, shrinking the file down to roughly what the actual visible artwork requires. Useful for shrinking an icon's file size before shipping it to production, cleaning up an SVG that's bloated with editor-specific metadata from a design tool export, or trimming excess decimal precision out of path coordinates that a rendered icon doesn't actually need.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "svg-favicon-generator": {
-    description: `A raster favicon is one fixed image no matter what background it sits against, but an SVG favicon can carry a prefers-color-scheme media query directly inside the file, letting it automatically swap to a different color palette when a visitor's system is set to dark mode, a capability no PNG or ICO favicon format can offer since those are static images with no way to respond to anything. This tool creates SVG-based favicons from text, icons, or vector shapes with customizable colors and sizes, producing a favicon that adapts to a browser tab's light or dark appearance rather than staying fixed. Useful for generating a favicon that switches color scheme to match a visitor's dark mode setting, creating a vector favicon that stays sharp at any size instead of a fixed-resolution image, or building an SVG favicon from a simple vector shape when a static raster icon isn't flexible enough.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "svg-minifier": {
-    description: `An SVG exported straight from a design tool like Illustrator or Figma usually carries a lot of dead weight that has nothing to do with how it actually looks, editor-specific metadata, unused IDs left over from deleted layers, coordinate values carried out to far more decimal precision than the eye could ever perceive, comments, and indentation, all of it adding size without changing a single visible pixel. This tool strips that unnecessary content out of an SVG file, removing excess attributes, comments, and whitespace while keeping the rendered image pixel-identical. Useful for shrinking an icon exported from a design tool before it ships in production, cleaning out editor metadata that has no effect on how a graphic renders, or trimming excess coordinate precision from a path without altering its visible shape.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "svg-optimizer": {
-    description: `An SVG exported straight out of Illustrator or Figma usually carries a lot more than the actual shape data needed to render it: editor metadata nobody reads, redundant grouping left over from the design file's layer structure, path coordinates specified to far more decimal places than a screen could ever display a visible difference for. None of that affects how the image looks, all of it adds to the file size. This tool strips that overhead out: removes unused metadata, simplifies path data down to a sensible precision, and minifies the remaining markup, without changing a single visible pixel of the result. Useful for shrinking an icon set before it ships to production, cleaning up a logo file exported from a design tool before embedding it inline in HTML, or finding out why a "simple" icon was somehow forty kilobytes.`,
     examples: [
 
     ],
@@ -4846,27 +4258,6 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "tiff-to-jpg": {
-    description: `A TIFF file straight out of a scanner or a professional camera is often massive, saved uncompressed for archival or print quality, which is exactly the wrong size for actually putting on a website where a visitor's browser has to download the whole thing before the page even finishes loading. This tool converts a TIFF image into JPEG, shrinking the file size down to something reasonable for the web while a TIFF's original lossless quality gets left behind. Useful for taking a huge archival scan and shrinking it down to something a website can actually load quickly, converting a professional camera's TIFF export into a smaller format before sharing it online, or reducing a document scan's file size before attaching it somewhere with a size limit.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "tiff-to-png": {
-    description: `Converting a TIFF into JPEG trades away some quality for a smaller file, which is fine for the web but not for a workflow where the original detail and embedded metadata genuinely need to survive the conversion, exactly the case PNG covers by staying lossless the same way TIFF is while still working in literally any browser or image viewer that TIFF itself often doesn't. This tool converts TIFF to PNG while preserving the image's full quality and its metadata, rather than trading any of it away the way a JPEG conversion would. Useful for converting a TIFF scan into a format a browser can actually display without losing any original detail, preserving embedded metadata that a lossy JPEG conversion would otherwise strip out, or archiving a TIFF file as PNG for a workflow that needs lossless quality without the TIFF container itself.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "tiff-to-svg": {
-    description: `TIFF is usually the highest-resolution version of an image that exists, a professionally scanned logo, an archival print asset saved at full quality rather than compressed for the web, which means a trace starting from a TIFF source generally has more actual detail available to work with than one starting from a smaller, web-optimized file. This tool converts a TIFF bitmap into SVG vector format by tracing and vectorizing it, working from the highest-quality source an image is likely to exist in rather than a downsampled version. Useful for vectorizing a professionally scanned logo saved at full archival resolution, converting a high-DPI print asset into a scalable SVG without starting from a compressed web copy, or tracing artwork from its best available source rather than whatever smaller version happens to be on hand.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "tiff-to-text": {
     description: `A scanned document or an old fax saved as a TIFF file, the format many scanners default to for lossless archival quality, holds text that's completely unsearchable and untouchable until it's actually extracted, since a TIFF is just a picture of the words rather than the words themselves. This tool extracts text from a TIFF image using OCR, turning a scanned document into text that can actually be searched, copied, or edited rather than only viewed as an image. Useful for digitizing an old scanned document or fax that only exists as a TIFF file, extracting searchable text from an archived paper record without retyping it by hand, or pulling text out of a multi-page TIFF scan page by page.`,
     examples: [
@@ -4960,13 +4351,6 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
   },
   "transcribe-podcast": {
     description: `A summary tells you the main points of an episode, but a full transcript is a completely different asset: every word actually spoken, searchable for one specific phrase mentioned partway through a two-hour conversation, usable as captions, and publishable alongside the episode itself so search engines can index spoken content that would otherwise be invisible to them entirely. This tool converts a podcast episode's audio into a complete text transcript rather than a condensed summary, preserving the full conversation as searchable, shareable text. Useful for publishing a transcript alongside an episode so its content becomes indexable by search engines, searching for one specific moment or quote across a long episode without scrubbing through the audio, or making an episode accessible to someone who can't or would rather not listen to the audio directly.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "translate": {
-    description: `Getting the gist of a foreign email, a restaurant menu, or a sign is a genuinely different bar to clear than producing a translation precise enough for a legal contract or a piece of literature, where word choice, tone, and cultural nuance actually carry weight, and a fast machine translation is built for the first case, understanding and communicating quickly, rather than replacing a professional translator for the second. This tool translates text between more than a hundred languages instantly, built for quick comprehension and everyday communication rather than certified or literary-grade translation. Useful for quickly understanding an email or a document written in an unfamiliar language, translating a message well enough to communicate casually with someone who speaks a different language, or getting the general meaning of foreign text before deciding whether it needs a professional translation.`,
     examples: [
 
     ],
@@ -5294,29 +4678,8 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "webm-to-mp3": {
-    description: `A WebM video recorded from a screen capture or downloaded from a web-native source usually carries its audio in Opus or Vorbis, codecs common inside WebM but with noticeably spottier support across devices and software than MP3 gets almost everywhere, and when only the sound actually matters, a lecture, a webinar, a podcast-style recording, converting straight to MP3 skips carrying the video along for no reason. This tool extracts a WebM video's audio track and saves it as MP3, discarding the video entirely for the widest possible audio compatibility. Useful for pulling just the audio out of a recorded webinar or lecture without keeping the video file, converting a WebM screen recording's narration into a portable MP3, or extracting sound from a web video for an audio-only use case where the picture was never actually needed.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "webm-to-mp4": {
-    description: `WebM plays fine in most modern browsers, but plenty of older devices, some social platforms, and software that was never updated to handle newer web codecs specifically expect MP4, the format with the broadest possible support across hardware and software built over the last decade. This tool converts a WebM file into MP4, trading WebM's typically smaller file size for compatibility with essentially anything that plays video at all. Useful for converting a browser-recorded WebM screencast so it plays on a device or app that's never heard of the format, preparing a WebM video for a platform that specifically requires MP4 uploads, or standardizing a mixed video collection on the one format most likely to open anywhere.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "webp-converter": {
     description: `Page weight is one of the more direct levers over how fast a site actually loads, and WebP compresses meaningfully smaller than JPEG or PNG at comparable visual quality, which makes converting an existing image library into WebP one of the more effective ways to cut load time without touching anything else about a page. This tool converts images into WebP format for high-quality web compression with smaller file sizes, built for improving a site's actual load performance rather than for compatibility with a destination that doesn't accept WebP at all. Useful for converting a site's existing image library into WebP to reduce page weight across the board, shrinking a large batch of photos before deploying them to a page where load speed actually matters, or adopting WebP as a default format specifically for the compression gain it offers over older image formats.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "webp-to-avif": {
-    description: `WebP already compresses noticeably smaller than JPEG or PNG, which means the jump from WebP to AVIF isn't the dramatic leap that converting from an older, less efficient format would produce, it's squeezing out the remaining margin between two formats that were both already built for efficient web delivery. This tool converts WebP images into AVIF format, next-generation compression for a site that's already adopted WebP and wants to push further rather than starting from an older baseline. Useful for moving a site that's already standardized on WebP to AVIF for the additional compression gain still available, converting an existing WebP image library to squeeze out further file size savings, or adopting AVIF specifically because WebP alone no longer represents the smallest option actually available.`,
     examples: [
 
     ],
@@ -5385,13 +4748,6 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "word-association": {
-    description: `A thesaurus only answers half the question when a specific word choice feels slightly off, since a strict synonym isn't always what a sentence actually needs, sometimes the better word is related in meaning without being interchangeable, ocean calling to mind tide, wave, or salt rather than only a direct substitute. This tool generates synonyms, antonyms, and related words together for any input term, covering both a direct substitute and the wider neighborhood of words a term actually calls to mind. Useful for finding a direct synonym when a word feels overused in a piece of writing, discovering an antonym for a contrast or a comparison, or brainstorming related words around a concept for a crossword, a word game, or a stuck sentence.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "word-cloud-generator": {
     description: `A frequency table communicates precisely how often each word appears, useful for analysis, but it's a poor way to convey an impression at a glance, while a word cloud trades that precision for immediate visual impact, sizing each word by how often it shows up so the most prominent words are literally the biggest thing on the page rather than a row buried in a list. This tool turns any text into a visual word cloud, with word size mapped to frequency and a customizable shape and color scheme. Useful for creating a visual summary for a presentation slide or a report cover rather than a precise data table, generating a classroom activity that shows students which words dominate a piece of text at a glance, or turning a large body of text into a shareable graphic rather than a spreadsheet of numbers.`,
     examples: [
@@ -5415,13 +4771,6 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
   },
   "word-complexity-analyzer": {
     description: `A readability score gives back one number for an entire passage, but it doesn't point at which specific word actually dragged that number down, 'utilize' instead of 'use,' 'facilitate' instead of 'help,' individual multi-syllable words a reader stumbles on even when the surrounding sentence structure is otherwise perfectly fine. This tool analyzes text for average syllable count and suggests simpler word-level alternatives, flagging specific complex words directly rather than only producing a single overall readability score for the whole passage. Useful for finding the exact words dragging a document's readability down rather than just seeing a grade-level number with no clear next step, swapping an unnecessarily complex word for a simpler one a reader won't stumble on, or catching a habit of reaching for inflated vocabulary throughout a draft one flagged word at a time.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "word-count-from-url": {
-    description: `Checking a competitor's blog post's actual word count usually means opening the page, selecting all the text, and pasting it somewhere else just to get a number, a slow detour when the URL itself is really the only thing that should be needed. This tool fetches a webpage directly from its URL and counts its words, characters, and paragraphs, skipping the copy-paste step entirely. Useful for benchmarking a competitor's article length for content planning without manually copying the whole page, confirming your own published post actually meets a guest submission's minimum word count by just pasting its URL, or quickly comparing several competing articles' lengths one URL at a time without opening and copying each one.`,
     examples: [
 
     ],
@@ -5497,13 +4846,6 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "xml-to-csv": {
-    description: `Opening a converted file in Excel for a teammate to review is a different destination than feeding it straight into a script, a database import, or another system that expects a plain, universally readable format rather than a spreadsheet's binary file structure that needs a compatible library just to parse it. This tool converts XML data into CSV format, producing a plain, universally importable file built for a script or a database pipeline rather than a spreadsheet meant for a person to open and review. Useful for feeding a converted XML export directly into a script or an import pipeline that expects CSV, getting XML data into a format nearly any system can ingest without a spreadsheet library, or converting structured XML data for a destination that's another program rather than a human opening a spreadsheet.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "xml-to-excel": {
     description: `XML data nests elements and attributes in a hierarchy that a spreadsheet simply doesn't have, rows and columns are flat by nature, so converting one into the other means actually deciding how a repeated child element or a nested attribute maps onto individual spreadsheet columns rather than just changing the file extension. This tool converts XML into an Excel spreadsheet, mapping nested data into rows and columns so each XML record becomes one readable spreadsheet row. Useful for importing an XML export from an older system into Excel for analysis, converting a product feed's XML structure into a spreadsheet a non-technical teammate can actually work with, or turning repeated nested XML elements into individual columns instead of an unreadable nested block.`,
     examples: [
@@ -5525,13 +4867,6 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "yaml-pretty-print": {
-    description: `YAML generated programmatically or written quickly under time pressure is often technically valid, no syntax errors, nothing actually broken, but inconsistently indented in a way that makes it genuinely hard to read and review, two spaces in one block and four in another, which is a formatting problem rather than the kind of error that stops a file from parsing at all. This tool formats and indents YAML with syntax highlighting and configurable spacing, cleaning up already-valid YAML for readability rather than hunting for a syntax error that's actually breaking it. Useful for reformatting a programmatically generated YAML file into consistent, readable indentation, cleaning up a config file that mixes indentation styles before a code review, or applying syntax highlighting and consistent spacing to a YAML file that's already valid but genuinely hard to read as written.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
   "yaml-to-json": {
     description: `A Kubernetes manifest, a GitHub Actions workflow, a Docker Compose file, all get authored in YAML because it's genuinely easier for a person to read and write, but the moment that same configuration needs to be consumed programmatically, a script parsing it, an API accepting it as a payload, JSON is usually the format actually expected, since virtually every language parses it natively while YAML often needs an extra library just to read. This tool converts YAML into JSON instantly, with pretty-print or compact output and custom indentation, bridging human-authored config into the format code actually consumes directly. Useful for converting a YAML config file into JSON for a script that only parses JSON natively, feeding a YAML-authored configuration into an API that expects a JSON payload, or checking exactly how a YAML structure actually translates into JSON's stricter, more explicit format.`,
     examples: [
@@ -5541,13 +4876,6 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
   },
   "yaml-to-toml": {
     description: `YAML's indentation-based structure hides a well-known parsing trap: an unquoted value like "no" or "NO" or even a two-letter country code can get silently interpreted as a boolean or a different type entirely depending on which YAML parser reads it, the same ambiguity that made TOML's designers build a format specifically to avoid it. This tool converts YAML into TOML, validating the source structure and pretty-printing the result, which matters for landing in the exact format a growing number of developer tools specifically expect for config files, Rust's Cargo.toml, Python's pyproject.toml, several static site generators, rather than the YAML config those tools were never actually built around. Useful for converting an existing YAML config into TOML for a tool that specifically requires it, sidestepping YAML's implicit type-conversion quirks in the process, or standardizing a project's config files on TOML's less ambiguous syntax.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "yaml-validator": {
-    description: `YAML's indentation-based structure is notoriously easy to break in a way that fails silently or confusingly, a single tab character where only spaces are allowed, a block indented one space off from its parent, and a Kubernetes manifest or a CI pipeline config built on that fragile structure can fail in a genuinely confusing way that has nothing to do with the actual settings inside it. This tool validates YAML syntax and catches an error with its specific line number and a helpful explanation of what actually broke, rather than a cryptic parser failure with no clear location. Useful for finding exactly which line a stray tab character snuck into where only spaces are allowed, catching a misaligned indentation block before a Kubernetes or a CI config fails to apply, or validating a docker-compose file's syntax before committing it.`,
     examples: [
 
     ],
@@ -5582,3 +4910,4 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
 };
+

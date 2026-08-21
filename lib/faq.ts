@@ -457,26 +457,6 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Why does the URL show as a breadcrumb?', a: 'Google replaced raw URLs with breadcrumb paths derived from your URL structure in 2020. Sites with clean, hierarchical URLs (`/category/post-slug`) get cleaner breadcrumbs in search.' },
     { q: 'Does this affect my live SEO?', a: 'No  -  the SERP Preview is a visualizer. It doesn\'t crawl, modify, or submit anything to Google. Push your title/description to the live page first, then test it in Google Search Console for the real scrape.' },
   ],
-  'aac-to-flac': [
-    { q: 'Does the AAC to FLAC tool actually give me a FLAC file?', a: 'No. Browsers don\'t ship a FLAC encoder, so after decoding your AAC audio with the Web Audio API, the tool writes the decoded samples into a standard 16-bit PCM WAV file instead. The banner above the convert button flags this before you start.' },
-    { q: 'Which files can I upload?', a: 'The tool accepts .aac, .m4a, and .mp4 files, since all three commonly carry AAC-encoded audio streams.' },
-    { q: 'Will I lose audio quality in the conversion?', a: 'No extra quality is lost in this step: the WAV file captures the decoded samples as uncompressed PCM. Quality lost when the source was originally encoded to AAC can\'t be recovered, since AAC itself is a lossy format.' },
-  ],
-  'aac-to-m4r': [
-    { q: 'Does this re-encode my audio to build the ringtone?', a: 'No. It repackages your original AAC bytes as-is into a file with the .m4r extension, the format iOS expects for custom ringtones. There\'s no transcoding step, so the underlying audio is untouched.' },
-    { q: 'Will the file work as an iPhone ringtone right away?', a: 'iOS accepts .m4r files added through Finder file sharing, but Apple also caps ringtones at 40 seconds. Trim your source clip to under 40 seconds before converting or iOS may reject or cut off the result.' },
-    { q: 'What\'s the difference between this and the AAC to MP4 tool?', a: 'Both repackage the same AAC audio without re-encoding, just under different extensions: .m4r for iPhone ringtones, .mp4 for a generic audio-in-a-video-container wrapper. Pick whichever your destination app expects.' },
-  ],
-  'aac-to-mp3': [
-    { q: 'Does the AAC to MP3 tool actually produce an MP3?', a: 'No, it produces a WAV file. Browsers can\'t ship an MP3 encoder, so the tool decodes your AAC audio with the Web Audio API and writes the result as 16-bit PCM WAV instead. A banner above the convert button explains this upfront.' },
-    { q: 'Why convert to WAV instead of keeping the AAC file?', a: 'WAV opens cleanly in almost every audio editor, DAW, and voice recorder app, including older software that struggles with AAC, so it trades file size for broad compatibility.' },
-    { q: 'Can I upload M4A files too?', a: 'Yes. The uploader accepts .aac, .m4a, and .mp4, since all three typically hold AAC-encoded audio.' },
-  ],
-  'aac-to-mp4': [
-    { q: 'Does converting to MP4 turn my audio into a video file?', a: 'No. The tool wraps your original AAC bytes in a file labeled with the .mp4 extension and a video/mp4 type, without adding a video track or re-encoding the audio. The banner in the tool spells this out.' },
-    { q: 'Why would I want an MP4-labeled audio file?', a: 'Some upload forms and platforms only accept .mp4 for audio submissions. This gives you that extension without touching the underlying AAC data.' },
-    { q: 'Is any audio quality lost?', a: 'No. The original bytes are copied unchanged into the new container label, so there\'s no re-encoding and no quality loss.' },
-  ],
   'aac-to-wav': [
     { q: 'How does the AAC to WAV conversion work?', a: 'The tool decodes your AAC audio with the browser\'s Web Audio API, then writes the decoded samples into a standard 16-bit PCM WAV file at the same sample rate and channel count as the source.' },
     { q: 'Is the WAV output lossless?', a: 'The step from decoded audio to 16-bit PCM WAV adds no further compression, so you get the full decoded signal. Quality lost during the original AAC encoding can\'t be recovered at this stage, since AAC is a lossy format.' },
@@ -492,30 +472,10 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does it tell me when my next birthday is?', a: 'Yes. It calculates the date of your next birthday and counts down the days remaining until it arrives.' },
     { q: 'How does it handle the day-of-month math near leap years?', a: 'When the current day of the month falls before your birth day, the calculator borrows days from the previous calendar month using that month\'s actual length, which keeps the day/month/year breakdown accurate across February and leap years.' },
   ],
-  'article-generator': [
-    { q: 'Does the AI Article Generator use a real AI model?', a: 'No. It builds a placeholder Markdown article from your topic, with headings and filler paragraphs sized to a realistic word count. It\'s meant for testing layout, CMS formatting, and word counts before real copy is ready, not for publishing as-is.' },
-    { q: 'Can I use the output directly as a finished article?', a: 'It\'s not designed for that. Treat it as structured filler text, similar to Lorem Ipsum but shaped like an article, so you can drop it into a template and see how headings, paragraphs, and length actually render.' },
-    { q: 'What format does it generate?', a: 'Markdown, with heading levels and paragraph breaks already in place, so you can paste it straight into a CMS field or static site generator that expects Markdown input.' },
-  ],
   'article-rewriter': [
     { q: 'How does the AI Article Rewriter change my text?', a: 'It scans your pasted article word by word and swaps common words for alternatives from a built-in synonym dictionary, keeping sentence structure and punctuation intact.' },
     { q: 'Does it use a language model to reword sentences?', a: 'No. It\'s a rule-based synonym swap, not generative AI, so it won\'t restructure sentences or change meaning, only substitute individual words it recognizes.' },
     { q: 'What happens to words that aren\'t in the synonym dictionary?', a: 'They\'re left exactly as you typed them. Only words with a known synonym entry get swapped, so proper nouns, technical terms, and less common words pass through unchanged.' },
-  ],
-  'article-writer': [
-    { q: 'Does the AI Article Writer generate real, publishable copy?', a: 'No. Like the Article Generator, it produces a placeholder Markdown article scaffolded around your topic, useful for testing layout and word counts before you write or commission real copy.' },
-    { q: 'How is this different from the AI Article Generator?', a: 'Both produce the same kind of placeholder Markdown output; this one is framed as drafting a starting scaffold around a specific topic you supply. Use whichever fits your workflow.' },
-    { q: 'Can I edit the output before using it?', a: 'Yes. The output is plain Markdown text, so you can copy it out and edit headings, paragraphs, and structure freely before dropping it into your CMS.' },
-  ],
-  'cold-email-writer': [
-    { q: 'Does the AI Cold Email Writer use AI to write the email?', a: 'No. It fills a tone-based template (formal, friendly, casual, or persuasive) with the recipient, goal, product, and call to action you provide, then assembles a complete subject line and body from those fields.' },
-    { q: 'Can I get a different email each time without changing my inputs?', a: 'Yes. Each tone has a couple of template variants, and the tool picks between them, so regenerating with the same fields can produce a slightly different phrasing.' },
-    { q: 'What happens if I leave the subject line blank?', a: 'The tool builds a subject line automatically from your stated goal and chosen tone, so you still get a complete, sendable draft even without typing one yourself.' },
-  ],
-  'essay-writer': [
-    { q: 'Does the AI Essay Writer use AI to write the essay for me?', a: 'No, and the tool says so directly: it builds a real, structured essay outline and scaffold from your inputs rather than generating finished prose with AI.' },
-    { q: 'What does the scaffold actually include?', a: 'A structured outline built from your thesis and supporting points, organized into an intro, body sections, and conclusion, ready for you to expand into full paragraphs yourself.' },
-    { q: 'Is this meant to replace writing the essay myself?', a: 'No. It\'s meant to solve the blank-page problem by giving you real structure to write into, not a finished essay you submit as-is.' },
   ],
   'humanizer-ai': [
     { q: 'What does the AI Humanizer actually do to my text?', a: 'It swaps common, stiff-sounding words for more natural alternatives from a built-in synonym dictionary, aiming to make robotic-sounding phrasing read a bit more like normal writing.' },
@@ -526,11 +486,6 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How does the AI Text Rephraser reword my sentences?', a: 'It walks through your text word by word and swaps recognized words for alternatives from a built-in synonym dictionary, so sentence order and punctuation stay the same while individual word choices change.' },
     { q: 'Do I get the same rephrasing every time?', a: 'Not necessarily. Where a word has more than one listed synonym, the tool can pick a different one on repeat runs, so rephrasing the same input twice may not produce identical output.' },
     { q: 'What kind of words does it leave alone?', a: 'Anything not in its synonym dictionary passes through untouched, including names, technical terms, and niche vocabulary, so the output stays readable instead of being force-swapped into odd substitutes.' },
-  ],
-  'ai-twitter-generator': [
-    { q: 'Does the AI Twitter/X Generator use a real AI model?', a: 'No. It fills fixed hook, body, and call-to-action templates with your topic, picking randomly from several phrasings for whichever hook style you choose: question, statement, stat, or quote.' },
-    { q: 'Are the numbers in the "stat" hooks real statistics?', a: 'No. Stat-style hooks like "97% of people don\'t know this" are placeholder phrasing, not researched figures. Replace any number before posting if you use a stat-style hook.' },
-    { q: 'Can it generate a thread instead of a single tweet?', a: 'Yes. Set the tweet count above 1 and the tool chains multiple templated tweets together into a numbered thread built around the same topic.' },
   ],
   'algorithm-visualizer': [
     { q: 'Which sorting algorithms can I visualize?', a: 'Bubble sort, selection sort, and insertion sort. Each run generates the full sequence of comparison and swap steps for the array you provide, then steps through them one at a time.' },
@@ -601,36 +556,6 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does this actually produce a GIF file?', a: 'Not yet. The tool decodes your video with the HTML5 video element and extracts up to 30 frames at 10fps, but encoding those frames into an animated GIF needs a dedicated library the page doesn\'t ship. It currently shows the first extracted frame as a PNG preview, and the banner above the upload box says so upfront.' },
     { q: 'What should I use for a real animated GIF?', a: 'FFmpeg on your desktop, for example ffmpeg -i input.avi output.gif, will encode the full animation. The in-browser tool is meant for a quick frame preview, not a finished GIF.' },
     { q: 'Why does it only grab 30 frames?', a: 'Frame extraction happens by seeking the video element to specific timestamps and reading each one off a canvas, which is slow in-browser. Capping it at 30 frames (about 3 seconds at 10fps) keeps the preview responsive instead of locking up the tab on a long video.' },
-  ],
-  'avi-to-mkv': [
-    { q: 'Does this tool re-encode my AVI video?', a: 'No. AVI to MKV is a container change, not a codec change, so the tool re-wraps your original file into an .mkv download without touching the video or audio streams. The blue banner above the upload box explains this before you start.' },
-    { q: 'Will the picture or audio quality change?', a: 'No. Since the underlying streams are copied byte-for-byte into the new container, quality is identical to your source AVI file.' },
-    { q: 'When would I need FFmpeg instead?', a: 'If your player specifically needs the streams re-encoded to different codecs rather than just re-wrapped, ffmpeg -i input.avi -c copy output.mkv (or with real transcoding flags) handles that on desktop.' },
-  ],
-  'avi-to-mov': [
-    { q: 'Does this actually convert AVI to a playable MOV file?', a: 'No, and the amber banner says so directly. MOV typically expects different codecs than AVI, and re-encoding video isn\'t something a browser tab can do, so the download you get is a placeholder, your original file renamed with a .mov extension.' },
-    { q: 'Why show a placeholder instead of just refusing?', a: 'It keeps the workflow visible: you can see exactly what upload/download step a real converter would need, and the yellow result banner repeats that FFmpeg is required for an actual codec conversion before you rely on the file.' },
-    { q: 'What FFmpeg command does real AVI to MOV conversion?', a: 'Something like ffmpeg -i input.avi -c:v prores -c:a pcm_s16le output.mov, which re-encodes into QuickTime-compatible codecs rather than just changing the file extension.' },
-  ],
-  'avi-to-mp3': [
-    { q: 'Can this pull the audio out of my AVI file?', a: 'It tries a real decode first: the Web Audio API attempts to decode your AVI\'s audio track, and if that succeeds you get an actual extracted WAV file, not a fake one. Many AVI audio codecs aren\'t supported by browsers, in which case you get a clear error instead of a broken download.' },
-    { q: 'Why WAV instead of MP3?', a: 'Browsers have no built-in MP3 encoder. The red banner discloses this upfront: whatever audio the tool successfully decodes is written out as PCM WAV, which any audio tool can then convert to MP3 if you need that format specifically.' },
-    { q: 'What if the extraction fails?', a: 'You\'ll see the exact FFmpeg command to run instead, ffmpeg -i video.avi -vn -acodec pcm_s16le output.wav, since some AVI files use audio codecs no browser can decode at all.' },
-  ],
-  'avi-to-mp4': [
-    { q: 'Is this a real video conversion or just a rename?', a: 'It\'s a container re-package: your AVI\'s video and audio streams are copied as-is into an MP4 wrapper, with no transcoding. The blue banner and the note under the download link both say this directly.' },
-    { q: 'Why doesn\'t it convert the actual codec?', a: 'Real codec transcoding needs an encoder library a browser tab doesn\'t have access to. Re-wrapping works because MP4 and AVI can both carry the same compressed video streams; if your AVI uses a codec MP4 players don\'t support, FFmpeg is what actually re-encodes it.' },
-    { q: 'Will this fix an AVI file that won\'t play on my phone?', a: 'Only if the playback problem was the .avi container itself. If the codec inside is the issue, re-wrapping to .mp4 won\'t change that, and you\'d need ffmpeg -i input.avi output.mp4 to force a real re-encode.' },
-  ],
-  'azw3-to-epub': [
-    { q: 'Can this tool actually convert my Kindle book to EPUB?', a: 'No, and it says so before you upload anything: browsers have no way to parse the AZW3 container format, so this page can only point you to the right desktop tool rather than perform the conversion itself.' },
-    { q: 'What should I use instead?', a: 'Calibre is the free, open-source option built specifically for this, and the tool lists it along with KindleUnpack (for extracting AZW3 content) and Sigil (for manually fixing up the resulting EPUB).' },
-    { q: 'Will this work on any AZW3 file I own?', a: 'Only DRM-free ones. Amazon\'s DRM-protected Kindle books can\'t legally or technically be converted by Calibre or any other tool without first being stripped of that protection, which this page does not do.' },
-  ],
-  'azw3-to-mobi': [
-    { q: 'Why would I convert AZW3 down to the older MOBI format?', a: 'Some older Kindle devices and third-party e-readers only support MOBI (KF7), while AZW3 (KF8) is Amazon\'s newer format. Downgrading trades away KF8-only features like fixed layouts and improved typography for broader compatibility.' },
-    { q: 'Will I lose formatting in the conversion?', a: 'Likely some. The tool\'s banner explains that MOBI is an older format with fewer layout features than AZW3, so anything relying on KF8-specific formatting may not carry over cleanly.' },
-    { q: 'Does the browser do the actual conversion?', a: 'No. This page can\'t read AZW3 content directly, it points you to Calibre or Amazon\'s KindleGen for the real conversion, and only helps you decide whether downgrading to MOBI is worth the formatting trade-off.' },
   ],
   'backslash-escape-unescape': [
     { q: 'What contexts does the escaper support?', a: 'JSON, JavaScript, regex, HTML, and a general catch-all, each with its own escaping rules, for example JavaScript also escapes angle brackets to \\x3C/\\x3E, and HTML escapes entities like &amp; and &lt; instead of backslashes.' },
@@ -712,11 +637,6 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I convert text into binary too, not just decode it?', a: 'Yes. The Text to Binary side of the swap converts each character to its 8-bit ASCII binary value, zero padded and space separated, and the swap button flips between the two directions instantly.' },
     { q: 'What happens if the binary has an invalid character?', a: 'You get an explicit "Invalid binary string" error if anything other than 0, 1, and whitespace is present, instead of a garbled or silently wrong text result.' },
   ],
-  'blur-background': [
-    { q: 'Does this blur only the background, or the whole photo?', a: 'The whole image gets blurred uniformly using a canvas blur filter. There is no subject detection or background segmentation, so a face or foreground object in the shot is blurred along with everything behind it.' },
-    { q: 'How do I control how strong the blur is?', a: 'A slider sets the blur radius in pixels, and the preview updates live as you drag it, so you can dial in anything from a light softening to a heavy blur before downloading.' },
-    { q: 'Why did loading an image from a URL fail?', a: 'Some hosts block cross-origin canvas reads, which prevents the blurred result from being exported. Uploading the image file directly instead of pasting a URL avoids that restriction entirely.' },
-  ],
   'bmi-calculator': [
     { q: 'Does it support both metric and imperial units?', a: 'Yes. Switching to metric uses kilograms and centimeters with the standard kg / m squared formula, while imperial uses pounds and inches with the 703 multiplier formula, so you never have to convert units yourself.' },
     { q: 'What do the result categories mean?', a: 'Your BMI number is matched against the standard underweight, normal, overweight, and obese thresholds, and the matching category is shown alongside the number rather than leaving you to look up the ranges separately.' },
@@ -737,11 +657,6 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What is the maximum number of rows I can generate?', a: 'Up to 1000 rows in a single generation. Entering a higher count is automatically capped at 1000.' },
     { q: 'What output formats are built in?', a: 'Ready-made templates for a JSON array, CSV rows, SQL INSERT statements, and HTML list items, alongside a plain numbered list, all editable before you generate.' },
   ],
-  'business-name-generator': [
-    { q: 'How does it come up with name ideas?', a: 'It combines your keyword with a fixed set of prefixes (like Nova or Apex), suffixes (like Hub or Labs), and domain-style endings (like tech or app), producing straightforward combinations rather than claiming any AI creativity.' },
-    { q: 'How many suggestions do I get per search?', a: 'Twenty name ideas, shuffled into random order each time, drawn from the full set of prefix, suffix, and domain combinations for your keyword.' },
-    { q: 'Does it check if the name or domain is actually available?', a: 'No, it only generates name and domain-style string ideas. You would still need to check a domain registrar or trademark database separately before committing to one.' },
-  ],
   'business-slogan-generator': [
     { q: 'Are the slogans AI-written?', a: 'No, they come from a fixed set of about twenty slogan templates with your topic substituted in, not from an AI model generating new phrasing each time.' },
     { q: 'Can I filter slogans by tone?', a: 'Yes, you can filter the generated list by tone, such as bold, playful, or professional, to narrow results down to the style you want.' },
@@ -751,11 +666,6 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What units does it convert between?', a: 'Bytes, kilobytes, megabytes, gigabytes, terabytes, and petabytes, all shown at once from a single input value.' },
     { q: 'Does it use 1024 or 1000 as the conversion factor?', a: 'It uses the binary 1024-based factor between each unit (as used by operating systems reporting file and disk sizes), not the decimal 1000-based factor some storage manufacturers use.' },
     { q: 'Do I need to pick which unit I am converting from?', a: 'Yes, you select the unit your input number is already in, and every other unit updates automatically from that single value.' },
-  ],
-  'canonical-tag-checker': [
-    { q: 'Does this tool fetch my page to check its actual canonical tag?', a: 'No. It builds a recommended canonical tag from the URL you enter and flags common structural issues, but it does not fetch the page\'s actual HTML to see what canonical tag, if any, is already there.' },
-    { q: 'What kind of issues does it flag?', a: 'Common structural problems like using HTTP instead of HTTPS, inconsistent www usage, unnecessary query parameters, and trailing slash mismatches that can split ranking signals across URL variants.' },
-    { q: 'How is this different from the Canonical URL Generator?', a: 'This tool audits a URL you provide and suggests fixes without touching the page itself. The Canonical URL Generator actually transforms a URL according to rules you toggle on, producing a cleaned-up version you can copy directly.' },
   ],
   'canonical-url-generator': [
     { q: 'What transformations can I apply?', a: 'Toggle switches let you force HTTPS, strip or add www, remove trailing slashes, strip query parameters, and remove hash fragments, each applied using the browser URL API rather than plain string editing.' },
@@ -786,11 +696,6 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What shapes can I crop to besides a circle?', a: 'Rounded square and plain square presets are also available alongside the circle crop, each using a real canvas clip path rather than just a CSS border-radius overlay.' },
     { q: 'What background options are there for the cropped-out area?', a: 'Transparent (the clipped-away corners are genuinely see-through in the exported PNG), solid white, or a blurred copy of your own image filling the space behind the cropped shape.' },
     { q: 'Can I control the output size?', a: 'Yes, a size slider sets the exported image dimensions, so you can produce anything from a small avatar-sized crop up to a larger image.' },
-  ],
-  'citation-generator': [
-    { q: 'Does it look up the source automatically from a URL or ISBN?', a: 'No, you enter the author, title, year, publisher, and other fields yourself, the tool only formats whatever details you provide into the selected citation style, it does not fetch or verify source data.' },
-    { q: 'Which citation styles are supported?', a: 'Book, article, website, and journal formats, each using the fields relevant to that source type, for example a website citation includes the access date and URL fields.' },
-    { q: 'Which fields are required?', a: 'Title and author are required for every citation type, other fields like year fall back to "n.d." (no date) if left blank rather than blocking generation.' },
   ],
   'cmyk-to-rgb': [
     { q: 'What formula does the conversion use?', a: 'The standard CMYK to RGB formula, where each RGB channel is calculated as 255 times (1 minus that channel\'s ink percentage) times (1 minus the black percentage).' },
@@ -886,10 +791,6 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What harmony types can I generate?', a: 'Complementary, analogous, triadic, tetradic, split complementary, and monochromatic, each computed from real HSL hue-angle math applied to your exact base color, preserving its own saturation and lightness.' },
     { q: 'How can I export the palette?', a: 'Either as a comma-separated list of hex values, or as ready-to-paste CSS custom properties formatted as a :root block.' },
     { q: 'How is this different from the Color Harmony Generator?', a: 'This tool uses your exact chosen color\'s saturation and lightness and adds CSS variable export plus a live UI preview. The Color Harmony Generator instead starts from a hue slider alone and applies fixed lightness and saturation variants.' },
-  ],
-  'color-picker-v2': [
-    { q: 'Does it show more than the hex value?', a: 'Yes, HEX, RGB, and HSL are all shown at once and each can be copied independently with its own button.' },
-    { q: 'Is the picker a custom color wheel?', a: 'No, it uses your browser\'s native color input control, styled full width, whatever picker interface your browser provides (often including a hue wheel) is what appears when you click it.' },
   ],
   'color-picker-wheel': [
     { q: 'Is this a draggable custom color wheel?', a: 'No, it uses your browser\'s native color input, styled with rounded corners, clicking it opens whatever color picker UI your browser provides rather than a custom in-page wheel.' },
@@ -1364,11 +1265,6 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Where does the output appear?', a: 'A separate read-only Output field below the input shows the converted text, kept apart from what you typed so you can compare both side by side.' },
     { q: 'Can I paste HTML markup and get it back exactly?', a: 'Encoding a full HTML snippet escapes the angle brackets and quotes so the tags display as visible text instead of being rendered, useful for showing HTML code inside another HTML page.' },
   ],
-  'html-entities-reference': [
-    { q: 'How many entities are in the reference table?', a: 'Two dozen commonly used entities, covering the five HTML-reserved characters plus symbols like copyright, trademark, currency signs, dashes, and typographic quotes.' },
-    { q: 'How do I find a specific character?', a: 'Type into the search box and it filters live by matching either the character itself or its name, such as typing "trade" to jump straight to the trademark symbol.' },
-    { q: 'What happens when I click a code in the table?', a: 'It copies that entity code to your clipboard and the button briefly shows "Copied!" so you can confirm it worked before pasting.' },
-  ],
   'html-live-preview': [
     { q: 'Does the preview update as I type, or do I need to click a button?', a: 'It updates immediately on every keystroke since the preview pane is bound directly to the HTML input, with no render or refresh button involved.' },
     { q: 'Is the preview rendered in an isolated frame?', a: 'Yes, the HTML is rendered inside a sandboxed iframe using its srcDoc, keeping the preview separate from the rest of the page.' },
@@ -1408,11 +1304,6 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How does Auto Detect know what the background is?', a: 'It samples the pixel colors at all four corners of the image, averages them into one background color, then flood-fills outward from those corners removing any pixel within your tolerance of that color.' },
     { q: 'When should I use Color Key instead?', a: 'Color Key removes a specific color you choose with the color picker, such as green screen footage, rather than guessing the background from the corners.' },
     { q: 'What does the Tolerance slider control?', a: 'It sets how close a pixel\'s color has to be to the detected or chosen background color to get made transparent, so raising it removes more color variation like shadows or gradients.' },
-  ],
-  'image-color-picker': [
-    { q: 'How precise is the color it picks?', a: 'It reads the exact pixel color under your click from the image drawn on a canvas, so you get the true color at that point rather than an averaged or estimated value.' },
-    { q: 'What formats can I copy?', a: 'Hex, RGB, and HSL, each with its own copy button; the RGB and HSL values are written in valid CSS syntax like rgb(r, g, b) so you can paste them straight into a stylesheet.' },
-    { q: 'Can I sample more than one color from the same image?', a: 'Yes, click anywhere else on the image to update the selected color, and each format\'s copy button always reflects whatever pixel you clicked most recently.' },
   ],
   'image-compressor': [
     { q: 'Which output formats can I compress to?', a: 'JPEG, PNG, or WebP, chosen with a button group, with a short note under each explaining when it is the better choice, such as JPEG for photos or WebP for the best overall compression.' },
@@ -1719,11 +1610,6 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'How do I set flags like case-insensitive matching?', a: 'Flags are typed directly into a small text field next to the pattern input, defaulting to "g", rather than picked from a list of toggle buttons.' },
     { q: 'What happens if my pattern is invalid?', a: "An error message with the JavaScript engine's own error text appears below the pattern field instead of a match count." },
   ],
-  'remove-bg': [
-    { q: 'How does it decide what counts as "background"?', a: 'It samples the pixel color at all four corners of the image, averages them into one reference color, then makes any pixel within a set distance of that color transparent.' },
-    { q: 'Will it work well on any background?', a: 'It works best on solid, uniform-colored backgrounds since transparency is based on color similarity to the corners rather than subject detection, so busy or gradient backgrounds may not clear out completely.' },
-    { q: 'What file format does the result download as?', a: 'A PNG with the removed area set to fully transparent, previewed over a checkerboard pattern before you click Download PNG.' },
-  ],
   'resize': [
     { q: 'What size presets are built in?', a: 'Eight common targets: HD and 720p (1280x720), Full HD and 1080p (1920x1080), Square (1080x1080), Portrait (1080x1920), Thumbnail (300x300), and 480p (854x480), plus custom width and height fields.' },
     { q: 'Does resizing crop my image or fit the whole thing in?', a: 'It fits the whole image inside the target dimensions without cropping, scaling proportionally and filling any leftover space with a white background rather than cutting off part of the picture.' },
@@ -1794,11 +1680,6 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I generate words or paragraphs instead of just sentences?', a: 'Yes, a mode toggle switches the same generator between Words, Sentences, and Paragraphs, with the count field controlling how many of whichever unit you pick.' },
     { q: 'Do I have to start every result with "Lorem ipsum..."?', a: 'No, an unchecked "Start with Lorem ipsum..." box lets the output begin partway through the passage instead of always opening with the classic first words.' },
   ],
-  'sentence-rewriter': [
-    { q: 'Does it use AI to rewrite sentences?', a: 'No, it runs a fixed set of phrase-substitution and pattern-matching rules, swapping known filler phrases, common passive-voice patterns, and leading adverbs, rather than generating new phrasing with a language model.' },
-    { q: 'What happens if I paste more than one sentence?', a: "It combines the first two sentences into one before rewriting, and if there's a recognizable conjunction like \"and\" or \"because\" in the result, adds a Split option that breaks it back into shorter pieces." },
-    { q: 'How do I pick between the different rewrite options?', a: 'Each option appears as its own button labeled with its type, Simplified, Expanded, Active Voice, and so on, clicking one sets it as the Selected Result with its own Copy to Clipboard button.' },
-  ],
   'sentence-counter': [
     { q: 'What counts as a "sentence" for the sentence total?', a: 'Your text is split on periods, question marks, and exclamation points, and any resulting chunk that still has non-whitespace content after trimming counts as one sentence.' },
     { q: 'Does it update as I type, or do I need to click a button?', a: 'It recalculates live on every keystroke, sentences, words, characters, paragraphs, and unique words all update together with no separate count button.' },
@@ -1858,11 +1739,6 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What does the UPPERCASE keywords toggle do?', a: 'When checked, every recognized SQL keyword in your query, SELECT, FROM, JOIN, GROUP BY, and around 70 others, gets forced to uppercase in the formatted output, unchecking it leaves your original casing untouched.' },
     { q: 'How does the indent size setting work?', a: 'A dropdown lets you choose 2 or 4 spaces, that value controls how far each nested clause like AND, OR, JOIN, or ON is indented under the SELECT or FROM line above it.' },
     { q: 'Does the syntax highlighting distinguish more than just keywords?', a: 'Yes, keywords appear in blue, functions like COUNT and SUBSTRING in purple, quoted string literals in green, and numbers in orange, all shown live with a color key underneath the formatted output.' },
-  ],
-  'ssl-certificate-checker': [
-    { q: 'What information does the certificate check show?', a: "Whether the certificate is valid, its issuer, the expiration date, and the days remaining, with the days-remaining figure colored red under 30 days, orange under 90 days, and green beyond that." },
-    { q: 'Can I check a certificate without clicking the Check button?', a: 'Yes, pressing Enter while the domain field is focused runs the same check as clicking the Check button next to it.' },
-    { q: "What happens if the check can't complete?", a: "You'll see a message explaining the SSL check could not be completed and that the tool depends on a backend API, rather than a blank or broken result." },
   ],
   'sticky-notes': [
     { q: 'Do my notes get saved if I close the tab?', a: "Yes, every note is saved to your browser's localStorage as soon as it changes, reopening the page restores the same notes with their text, color, and position intact." },
@@ -2094,11 +1970,6 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What does a successful validation look like?', a: 'A green checkmark and a "Valid XML" label appear once your input parses without a parsererror node, no extra error details are shown.' },
     { q: 'Do I need to close every tag exactly?', a: 'Yes, DOMParser enforces strict well-formedness, so unclosed tags, mismatched closing tags, and invalid character sequences will all trigger the error path here.' },
   ],
-  'yaml-validator': [
-    { q: 'What kinds of YAML mistakes does it catch?', a: 'Unclosed or mismatched brackets and braces, tab characters used for indentation instead of spaces, and duplicate keys repeated at the same indentation level.' },
-    { q: 'Does it tell me exactly where the problem is?', a: 'Yes, when an error is found the line number is pulled out of the error message and shown directly above the error text, like "Error at line 7".' },
-    { q: 'Does it skip over comments and blank lines?', a: 'Yes, lines that are empty or start with a # comment marker are skipped during the bracket and structure checks so they never trigger a false error.' },
-  ],
   'punycode-encoder': [
     { q: 'What does the xn-- prefix mean?', a: 'xn-- is the ASCII Compatible Encoding (ACE) prefix that marks a domain label as Punycode. It tells DNS resolvers and browsers that everything after it is an encoded Unicode string rather than a plain ASCII name.' },
     { q: 'Why does DNS need Punycode at all?', a: 'DNS itself only understands ASCII. Punycode is the mechanism that represents a Unicode domain label, like one written in Cyrillic, Chinese, or Bengali, in an ASCII form DNS can actually store and resolve.' },
@@ -2123,3 +1994,4 @@ export function getFaqs(tool: Tool): FAQ[] {
 export function hasFaqOverride(slug: string): boolean {
   return slug in OVERRIDES;
 }
+
