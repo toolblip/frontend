@@ -7,6 +7,35 @@ import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
 
 type RemovalMethod = 'floodfill' | 'chroma' | 'ai';
 
+const MODEL_CACHE_NAME = 'imgly-bg-removal-model-v1';
+const MODEL_CDN_PREFIX = 'https://staticimgly.com/';
+
+// Captured once at module load, before removeBackgroundAI ever swaps
+// window.fetch out - fetchWithModelCache below must call through this,
+// not the bare `fetch` identifier, or it would resolve to itself
+// (window.fetch at call time) and recurse forever instead of ever
+// reaching the network.
+const nativeFetch = typeof window !== 'undefined' ? window.fetch.bind(window) : undefined;
+
+// The model CDN sends no Cache-Control header, so the browser can't
+// safely reuse its own HTTP cache across visits - every request behaves
+// as a fresh fetch. Cache Storage doesn't depend on the response's own
+// headers, so once a chunk is stored here it stays until we evict it.
+async function fetchWithModelCache(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
+  const url = typeof input === 'string' ? input : input instanceof URL ? input.toString() : input.url;
+  if (!url.startsWith(MODEL_CDN_PREFIX) || !nativeFetch || !('caches' in window)) {
+    return nativeFetch ? nativeFetch(input, init) : fetch(input, init);
+  }
+  const cache = await caches.open(MODEL_CACHE_NAME);
+  const cached = await cache.match(url);
+  if (cached) return cached;
+  const response = await nativeFetch(input, init);
+  if (response.ok) {
+    cache.put(url, response.clone()).catch(() => {});
+  }
+  return response;
+}
+
 export default function ImageBackgroundRemoverClient() {
   const [image, setImage] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -107,6 +136,12 @@ export default function ImageBackgroundRemoverClient() {
     setAiStage('fetch');
     setAiError(null);
 
+    // Swapped in only for the duration of this call so the imgly library's
+    // internal fetch() of model chunks goes through the Cache Storage
+    // wrapper above - restored in `finally` below regardless of outcome.
+    const originalFetch = window.fetch;
+    window.fetch = fetchWithModelCache as typeof fetch;
+
     try {
       // Dynamically imported so this library and its onnxruntime-web
       // runtime dependency only ever load for someone who actually picks
@@ -146,6 +181,7 @@ export default function ImageBackgroundRemoverClient() {
           : 'AI background removal failed. Try Auto Detect or Color Key instead.'
       );
     } finally {
+      window.fetch = originalFetch;
       if (requestIdRef.current === requestId) {
         setIsProcessing(false);
         setAiProgress(null);
@@ -353,11 +389,25 @@ export default function ImageBackgroundRemoverClient() {
             </button>
           </div>
 
-          {method === 'ai' && (
+          {method === 'ai' && !(isProcessing && aiStage === 'fetch') && (
             <p className="text-sm text-gray-500">
               Uses an AI segmentation model to cut out the subject, even against busy or uneven backgrounds.
-              The model downloads once (~40MB) and your browser will typically cache it for later visits.
             </p>
+          )}
+
+          {isProcessing && aiStage === 'fetch' && (
+            <div className="text-sm text-gray-500">
+              <div className="flex items-center justify-between mb-1">
+                <span>Downloading local AI model (first use only, then cached)</span>
+                <span>{aiProgress ?? 0}%</span>
+              </div>
+              <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-red-600 transition-all"
+                  style={{ width: `${aiProgress ?? 0}%` }}
+                />
+              </div>
+            </div>
           )}
 
           {method === 'chroma' && (
@@ -396,7 +446,7 @@ export default function ImageBackgroundRemoverClient() {
               {isProcessing
                 ? aiProgress !== null
                   ? aiStage === 'fetch'
-                    ? `Downloading model... ${aiProgress}%`
+                    ? `Downloading model...`
                     : `Processing image... ${aiProgress}%`
                   : 'Processing...'
                 : isOversized
