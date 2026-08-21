@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { convertHeicIfNeeded } from '@/lib/heic';
 import { useSubscription } from '@/hooks/useSubscription';
 import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
@@ -23,6 +23,12 @@ type RemovalMethod = 'floodfill' | 'chroma' | 'ai';
 // change under this path.
 const MODEL_PUBLIC_PATH = '/models/imgly-bg-removal/1.7.0/';
 
+// A cache-hit fetch resolves in well under a second; a real cold download
+// takes several seconds. This is comfortably above the former, so it
+// never flashes "Downloading..." for a cache hit, and comfortably below
+// the latter, so a genuine download still gets that messaging promptly.
+const FETCH_SLOW_THRESHOLD_MS = 800;
+
 export default function ImageBackgroundRemoverClient() {
   const [image, setImage] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -36,12 +42,29 @@ export default function ImageBackgroundRemoverClient() {
   const [aiStage, setAiStage] = useState<'fetch' | 'compute'>('fetch');
   const [aiError, setAiError] = useState<string | null>(null);
   const [isConvertingHeic, setIsConvertingHeic] = useState(false);
-  // null = still checking, -1 = IndexedDB unavailable/error, 0+ = chunk count
+  // Model chunks come from our own origin with a long-lived Cache-Control
+  // header (see MODEL_PUBLIC_PATH), so the 'fetch' stage below is usually
+  // a cache hit that resolves in well under a second - but the progress
+  // callback fires for it either way, cache hit or genuine download. This
+  // stays false through a fast cache-hit fetch and only flips true if
+  // 'fetch' is still running after FETCH_SLOW_THRESHOLD_MS, so "Downloading
+  // the AI model..." only ever shows for an actual download, never a
+  // near-instant cache read.
+  const [isSlowFetch, setIsSlowFetch] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { tier } = useSubscription();
   const maxSizeMB = tier === 'free' ? 5 : tier === 'starter' ? 10 : tier === 'ultra' ? 100 : tier === 'max' ? 500 : 5;
   const isOversized = selectedFile != null && selectedFile.size / (1024 * 1024) > maxSizeMB;
+
+  useEffect(() => {
+    if (!isProcessing || method !== 'ai' || aiStage !== 'fetch') {
+      setIsSlowFetch(false);
+      return;
+    }
+    const timer = setTimeout(() => setIsSlowFetch(true), FETCH_SLOW_THRESHOLD_MS);
+    return () => clearTimeout(timer);
+  }, [isProcessing, aiStage, method]);
 
   // Bumped on every upload so an in-flight AI request can tell it's been
   // superseded (e.g. the user picked a new image while a slow ~40MB model
@@ -386,10 +409,10 @@ export default function ImageBackgroundRemoverClient() {
             </p>
           )}
 
-          {isProcessing && aiStage === 'fetch' && (
+          {isProcessing && isSlowFetch && (
             <div className="text-sm text-gray-500">
               <div className="flex items-center justify-between mb-1">
-                <span>Downloading local AI model (first use only, then cached)</span>
+                <span>Downloading the AI model, hold on a bit longer...</span>
                 <span>{aiProgress ?? 0}%</span>
               </div>
               <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
@@ -401,10 +424,10 @@ export default function ImageBackgroundRemoverClient() {
             </div>
           )}
 
-          {isProcessing && aiStage === 'compute' && (
+          {isProcessing && !isSlowFetch && aiStage === 'compute' && (
             <div className="text-sm text-gray-500">
               <div className="flex items-center justify-between mb-1">
-                <span>Running AI segmentation on your image (model already cached, this is the analysis step)</span>
+                <span>Hold on, we're processing your image...</span>
                 <span>{aiProgress ?? 0}%</span>
               </div>
               <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
@@ -414,6 +437,10 @@ export default function ImageBackgroundRemoverClient() {
                 />
               </div>
             </div>
+          )}
+
+          {isProcessing && !isSlowFetch && aiStage === 'fetch' && (
+            <p className="text-sm text-gray-500">Hold on, we're processing your image...</p>
           )}
 
           {method === 'chroma' && (
@@ -449,10 +476,8 @@ export default function ImageBackgroundRemoverClient() {
             title={isOversized ? 'File size exceeds your plan limit' : ''}
           >
             {isProcessing
-              ? aiProgress !== null
-                ? aiStage === 'fetch'
-                  ? `Downloading model...`
-                  : `Processing image...`
+              ? isSlowFetch
+                ? 'Downloading AI model...'
                 : 'Processing...'
               : isOversized
                 ? 'File Too Large'
