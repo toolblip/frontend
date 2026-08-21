@@ -202,7 +202,7 @@ export default function GifMakerClient() {
         </>
       )}
 
-      <canvas ref={canvasRef} className="tb-v2-hidden" />
+      <canvas ref={canvasRef} className="hidden" />
 
       {processedGif && (
         <div>

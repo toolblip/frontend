@@ -177,7 +177,7 @@ export default function RemoveBgClient() {
         </div>
       )}
 
-      <canvas ref={canvasRef} className="tb-v2-hidden" />
+      <canvas ref={canvasRef} className="hidden" />
 
       {processedImage && (
         <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-2">

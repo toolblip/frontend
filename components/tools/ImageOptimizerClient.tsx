@@ -251,7 +251,7 @@ export default function ImageOptimizerClient() {
         </div>
       )}
 
-      <canvas ref={canvasRef} className="tb-v2-hidden" />
+      <canvas ref={canvasRef} className="hidden" />
 
       {result && (
         <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-3 tb-v2-card tb-v2-bg-green-50">
