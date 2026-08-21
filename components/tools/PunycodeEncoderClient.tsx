@@ -3,10 +3,7 @@
 import { useCallback, useRef, useState } from 'react';
 import { analyse, convertLine, extractDomain } from '@/lib/punycode';
 import EmojiPicker from './EmojiPicker';
-
-// A hand-picked subset of lib/emoji-data.ts's full list, shown inline in
-// the example panel so the common case doesn't need the search modal.
-const QUICK_EMOJI = ['😀', '❤️', '🔥', '⭐', '🚀', '🐱', '🍕', '🌈', '🎉', '💡', '▲', '✓'];
+import { QUICK_PICKS } from '@/lib/emoji-data';
 
 // Deliberately distinct from the worked examples in data/tool-content.ts
 // (münchen.de, россия.рф, 🇧🇪.ws, হারুন.বাংলা) so the quick-load chips here
@@ -133,18 +130,27 @@ export default function PunycodeEncoderClient() {
   // Inserts at the textarea's current cursor position rather than replacing
   // the whole field, since the point is building a domain out of characters
   // that aren't on a keyboard - not swapping in a full canned example.
-  const insertEmoji = (char: string) => {
-    const el = leftTextareaRef.current;
-    const start = el?.selectionStart ?? left.length;
-    const end = el?.selectionEnd ?? left.length;
-    const next = left.slice(0, start) + char + left.slice(end);
-    applyLeft(next);
-    const cursor = start + char.length;
-    requestAnimationFrame(() => {
-      el?.focus();
-      el?.setSelectionRange(cursor, cursor);
-    });
-  };
+  // refocusTextarea is false when called from EmojiPicker's search modal:
+  // that modal is meant to stay open for picking several characters in a
+  // row, and stealing focus back to the (now hidden-behind-the-modal)
+  // textarea after the first pick would silently redirect the next
+  // keystrokes away from the search box.
+  const insertEmoji = useCallback(
+    (char: string, { refocusTextarea = true }: { refocusTextarea?: boolean } = {}) => {
+      const el = leftTextareaRef.current;
+      const start = el?.selectionStart ?? left.length;
+      const end = el?.selectionEnd ?? left.length;
+      const next = left.slice(0, start) + char + left.slice(end);
+      applyLeft(next);
+      if (!refocusTextarea) return;
+      const cursor = start + char.length;
+      requestAnimationFrame(() => {
+        el?.focus();
+        el?.setSelectionRange(cursor, cursor);
+      });
+    },
+    [applyLeft, left]
+  );
 
   const loadExampleRight = (seed: string) => {
     applyRight(seed);
@@ -197,14 +203,16 @@ export default function PunycodeEncoderClient() {
                 Insert an emoji or symbol (no keyboard needed):
               </div>
               <div className="flex flex-wrap items-center gap-2">
-                {QUICK_EMOJI.map((char) => (
+                {QUICK_PICKS.map((pick) => (
                   <button
-                    key={char}
+                    key={pick.char}
                     type="button"
-                    onClick={() => insertEmoji(char)}
+                    title={pick.name}
+                    aria-label={pick.name}
+                    onClick={() => insertEmoji(pick.char)}
                     className="flex h-9 w-9 items-center justify-center rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
                   >
-                    {char}
+                    {pick.char}
                   </button>
                 ))}
                 <button
@@ -313,7 +321,7 @@ export default function PunycodeEncoderClient() {
 
       {showEmojiPicker && (
         <EmojiPicker
-          onSelect={insertEmoji}
+          onSelect={(char) => insertEmoji(char, { refocusTextarea: false })}
           onClose={() => setShowEmojiPicker(false)}
         />
       )}

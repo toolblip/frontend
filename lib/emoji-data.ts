@@ -87,7 +87,7 @@ export const EMOJI_DATA: EmojiEntry[] = [
   { char: "🍎", name: "red apple", keywords: ["apple", "fruit"] },
   { char: "🍌", name: "banana", keywords: ["banana", "fruit"] },
   { char: "🥑", name: "avocado", keywords: ["avocado", "fruit"] },
-  { char: "🛢️", name: "oil drum", keywords: ["barrel", "drum", "oil"] },
+  { char: "🛢️", name: "oil drum", keywords: ["barrel", "barrell", "drum", "oil"] },
 
   // Travel & places
   { char: "🚀", name: "rocket", keywords: ["rocket", "space", "launch"] },
@@ -162,3 +162,35 @@ export const EMOJI_DATA: EmojiEntry[] = [
   { char: "🏁", name: "checkered flag", keywords: ["flag", "finish", "race"] },
   { char: "🏳️‍🌈", name: "rainbow flag", keywords: ["pride", "flag", "rainbow"] },
 ];
+
+// A dozen entries shown inline (outside the search modal) as quick picks.
+// Looked up by name instead of hand-copying the char/keywords so this can
+// never silently drift out of sync with EMOJI_DATA above - a renamed or
+// removed entry fails loudly here instead of leaving a stale duplicate.
+const QUICK_PICK_NAMES = [
+  "grinning face",
+  "red heart",
+  "fire",
+  "star",
+  "rocket",
+  "cat face",
+  "pizza",
+  "rainbow",
+  "party popper",
+  "light bulb",
+  "black up-pointing triangle",
+  "check mark",
+];
+
+export const QUICK_PICKS: EmojiEntry[] = QUICK_PICK_NAMES.map((name) => {
+  const entry = EMOJI_DATA.find((e) => e.name === name);
+  if (!entry) throw new Error(`emoji-data: quick pick "${name}" not found in EMOJI_DATA`);
+  return entry;
+});
+
+// Precomputed once at module load rather than re-lowercasing every
+// name/keyword on every search keystroke.
+export const EMOJI_SEARCH_INDEX = EMOJI_DATA.map((entry) => ({
+  entry,
+  haystack: [entry.name, ...entry.keywords].join(" ").toLowerCase(),
+}));
