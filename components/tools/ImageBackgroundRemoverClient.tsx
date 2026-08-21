@@ -378,28 +378,40 @@ export default function ImageBackgroundRemoverClient() {
         <>
           <div>
             <p className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Method</p>
-            <div className="tb-v2-mode-tabs">
-              <button
-                onClick={() => selectMethod('ai')}
-                disabled={isProcessing}
-                className={`tb-v2-mode-tab ${method === 'ai' ? 'on' : ''} disabled:opacity-50`}
-              >
+            <div className="flex flex-wrap gap-4">
+              <label className="flex items-center gap-2 text-sm cursor-pointer">
+                <input
+                  type="radio"
+                  name="bg-removal-method"
+                  checked={method === 'ai'}
+                  onChange={() => selectMethod('ai')}
+                  disabled={isProcessing}
+                  className="w-4 h-4 accent-red-600"
+                />
                 AI Remove
-              </button>
-              <button
-                onClick={() => selectMethod('floodfill')}
-                disabled={isProcessing}
-                className={`tb-v2-mode-tab ${method === 'floodfill' ? 'on' : ''} disabled:opacity-50`}
-              >
+              </label>
+              <label className="flex items-center gap-2 text-sm cursor-pointer">
+                <input
+                  type="radio"
+                  name="bg-removal-method"
+                  checked={method === 'floodfill'}
+                  onChange={() => selectMethod('floodfill')}
+                  disabled={isProcessing}
+                  className="w-4 h-4 accent-red-600"
+                />
                 Auto Detect
-              </button>
-              <button
-                onClick={() => selectMethod('chroma')}
-                disabled={isProcessing}
-                className={`tb-v2-mode-tab ${method === 'chroma' ? 'on' : ''} disabled:opacity-50`}
-              >
+              </label>
+              <label className="flex items-center gap-2 text-sm cursor-pointer">
+                <input
+                  type="radio"
+                  name="bg-removal-method"
+                  checked={method === 'chroma'}
+                  onChange={() => selectMethod('chroma')}
+                  disabled={isProcessing}
+                  className="w-4 h-4 accent-red-600"
+                />
                 Color Key
-              </button>
+              </label>
             </div>
           </div>
 
@@ -480,20 +492,33 @@ export default function ImageBackgroundRemoverClient() {
             </div>
           )}
 
-          <button
-            onClick={method === 'ai' ? removeBackgroundAI : removeBackground}
-            disabled={isProcessing || isOversized}
-            className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg w-full disabled:opacity-50"
-            title={isOversized ? 'File size exceeds your plan limit' : ''}
-          >
-            {isProcessing
-              ? isSlowFetch
-                ? 'Downloading AI model...'
-                : 'Processing...'
-              : isOversized
-                ? 'File Too Large'
-                : 'Remove Background'}
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={method === 'ai' ? removeBackgroundAI : removeBackground}
+              disabled={isProcessing || isOversized}
+              className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg flex-1 disabled:opacity-50"
+              title={isOversized ? 'File size exceeds your plan limit' : ''}
+            >
+              {isProcessing
+                ? isSlowFetch
+                  ? 'Downloading AI model...'
+                  : 'Processing...'
+                : isOversized
+                  ? 'File Too Large'
+                  : 'Remove Background'}
+            </button>
+            <button
+              onClick={() => { setImage(null); setImageFile(null); setSelectedFile(null); setProcessedImage(null); setAiError(null); }}
+              className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-lg"
+            >
+              Choose New Image
+            </button>
+            {processedImage && (
+              <button onClick={handleDownload} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-lg">
+                Download PNG
+              </button>
+            )}
+          </div>
 
           {aiError && (
             <div className="p-4 bg-red-100 text-red-700 rounded-lg">{aiError}</div>
@@ -506,15 +531,7 @@ export default function ImageBackgroundRemoverClient() {
       {image && (
         <div className={`mt-4 grid gap-4 ${processedImage ? 'sm:grid-cols-2' : ''}`}>
           <div className="min-w-0">
-            <div className="flex items-center justify-between" style={{ marginBottom: 8 }}>
-              <p className="tb-v2-tool-label" style={{ marginBottom: 0 }}>Original</p>
-              <button
-                onClick={() => { setImage(null); setImageFile(null); setSelectedFile(null); setProcessedImage(null); setAiError(null); }}
-                className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm"
-              >
-                Choose New Image
-              </button>
-            </div>
+            <p className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Original</p>
             <img src={image} alt="Original" className="w-full h-auto max-h-[60vh] object-contain rounded-lg" />
           </div>
 
@@ -522,9 +539,6 @@ export default function ImageBackgroundRemoverClient() {
             <div className="min-w-0">
               <p className="tb-v2-tool-label" style={{marginBottom:8}}>Result (with transparency)</p>
               <img src={processedImage} alt="No Background" className="w-full h-auto max-h-[60vh] object-contain rounded-lg" style={{ backgroundImage: 'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAABUSURBVDiNY/z//z8DJYCJgUIwaAzFMEoYRMVA4Y5LQNNLUMNA4TYowg1QLIMaB4rXIFYN0PQC1HhQ4oBEukE1LpT4IOqB2BgBAE0cFfVvYI0lAAAAAElFTkSuQmCC")', backgroundRepeat: 'repeat' }} />
-              <button onClick={handleDownload} className="tb-v2-btn tb-v2-btn-ghost mt-2">
-                Download PNG
-              </button>
             </div>
           )}
         </div>
