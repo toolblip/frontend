@@ -1,7 +1,15 @@
 import { readFileSync, writeFileSync, existsSync } from "fs";
 import path from "path";
 
-const DATA_FILE = path.join(process.cwd(), "data", "short-links.json");
+// Short links are created at runtime (via /api/shorten) and need to survive
+// deploys and restarts. The repo's own data/ directory lives on the
+// container's ephemeral filesystem and gets wiped on every deploy, so in
+// production this must point at a mounted persistent volume instead -
+// SHORT_LINKS_DATA_DIR is set to that mount path on Railway. Falls back to
+// the repo directory for local dev, where there's no volume and losing data
+// across restarts doesn't matter.
+const DATA_DIR = process.env.SHORT_LINKS_DATA_DIR || path.join(process.cwd(), "data");
+const DATA_FILE = path.join(DATA_DIR, "short-links.json");
 const BASE62 = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 export interface ShortLinkEntry {
