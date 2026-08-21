@@ -296,8 +296,8 @@ export default function ImageBackgroundRemoverClient() {
   };
 
   return (
-    <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-4 tb-v2-p-4">
-      <h2 className="tb-v2-text-2xl tb-v2-font-bold">Background Remover</h2>
+    <div className="flex flex-col gap-4 p-4">
+      <h2 className="text-2xl font-bold">Background Remover</h2>
 
       {!image ? (
         <div
@@ -329,52 +329,52 @@ export default function ImageBackgroundRemoverClient() {
         </div>
       ) : (
         <>
-          <div className="tb-v2-flex tb-v2-gap-2">
+          <div className="flex gap-2">
             <button
               onClick={() => selectMethod('ai')}
               disabled={isProcessing}
-              className={`tb-v2-btn ${method === 'ai' ? 'tb-v2-btn-primary' : 'tb-v2-btn-secondary'} tb-v2-disabled:opacity-50`}
+              className={`tb-v2-btn ${method === 'ai' ? 'tb-v2-btn-primary' : 'tb-v2-btn-ghost'} disabled:opacity-50`}
             >
               AI Remove
             </button>
             <button
               onClick={() => selectMethod('floodfill')}
               disabled={isProcessing}
-              className={`tb-v2-btn ${method === 'floodfill' ? 'tb-v2-btn-primary' : 'tb-v2-btn-secondary'} tb-v2-disabled:opacity-50`}
+              className={`tb-v2-btn ${method === 'floodfill' ? 'tb-v2-btn-primary' : 'tb-v2-btn-ghost'} disabled:opacity-50`}
             >
               Auto Detect
             </button>
             <button
               onClick={() => selectMethod('chroma')}
               disabled={isProcessing}
-              className={`tb-v2-btn ${method === 'chroma' ? 'tb-v2-btn-primary' : 'tb-v2-btn-secondary'} tb-v2-disabled:opacity-50`}
+              className={`tb-v2-btn ${method === 'chroma' ? 'tb-v2-btn-primary' : 'tb-v2-btn-ghost'} disabled:opacity-50`}
             >
               Color Key
             </button>
           </div>
 
           {method === 'ai' && (
-            <p className="tb-v2-text-sm tb-v2-text-gray-500">
+            <p className="text-sm text-gray-500">
               Uses an AI segmentation model to cut out the subject, even against busy or uneven backgrounds.
               The model downloads once (~40MB) and your browser will typically cache it for later visits.
             </p>
           )}
 
           {method === 'chroma' && (
-            <div className="tb-v2-flex tb-v2-items-center tb-v2-gap-4">
-              <label className="tb-v2-text-sm tb-v2-font-medium">Key Color:</label>
+            <div className="flex items-center gap-4">
+              <label className="text-sm font-medium">Key Color:</label>
               <input
                 type="color"
                 value={chromaKeyColor}
                 onChange={(e) => setChromaKeyColor(e.target.value)}
-                className="tb-v2-w-10 tb-v2-h-10 tb-v2-rounded"
+                className="w-10 h-10 rounded"
               />
             </div>
           )}
 
           {method !== 'ai' && (
-            <div className="tb-v2-flex tb-v2-items-center tb-v2-gap-4">
-              <label className="tb-v2-text-sm tb-v2-font-medium">Tolerance: {tolerance}</label>
+            <div className="flex items-center gap-4">
+              <label className="text-sm font-medium">Tolerance: {tolerance}</label>
               <input
                 type="range"
                 min="1"
@@ -386,11 +386,11 @@ export default function ImageBackgroundRemoverClient() {
             </div>
           )}
 
-          <div className="tb-v2-flex tb-v2-gap-2">
+          <div className="flex gap-2">
             <button
               onClick={method === 'ai' ? removeBackgroundAI : removeBackground}
               disabled={isProcessing || isOversized}
-              className="tb-v2-btn tb-v2-btn-primary tb-v2-disabled:opacity-50"
+              className="tb-v2-btn tb-v2-btn-primary disabled:opacity-50"
               title={isOversized ? 'File size exceeds your plan limit' : ''}
             >
               {isProcessing
@@ -405,14 +405,14 @@ export default function ImageBackgroundRemoverClient() {
             </button>
             <button
               onClick={() => { setImage(null); setImageFile(null); setSelectedFile(null); setProcessedImage(null); setAiError(null); }}
-              className="tb-v2-btn tb-v2-btn-secondary"
+              className="tb-v2-btn tb-v2-btn-ghost"
             >
               Choose New Image
             </button>
           </div>
 
           {aiError && (
-            <div className="tb-v2-p-4 tb-v2-bg-red-100 tb-v2-text-red-700 tb-v2-rounded-lg">{aiError}</div>
+            <div className="p-4 bg-red-100 text-red-700 rounded-lg">{aiError}</div>
           )}
         </>
       )}
@@ -420,25 +420,25 @@ export default function ImageBackgroundRemoverClient() {
       <canvas ref={canvasRef} className="hidden" />
 
       {image && (
-        <div className="tb-v2-mt-4">
+        <div className="mt-4">
           <p className="tb-v2-tool-label" style={{marginBottom:8}}>Original</p>
-          <img src={image} alt="Original" className="tb-v2-max-w-full tb-v2-rounded-lg" />
+          <img src={image} alt="Original" className="max-w-full rounded-lg" />
         </div>
       )}
 
       {processedImage && (
-        <div className="tb-v2-mt-4">
+        <div className="mt-4">
           <p className="tb-v2-tool-label" style={{marginBottom:8}}>Result (with transparency)</p>
-          <img src={processedImage} alt="No Background" className="tb-v2-max-w-full tb-v2-rounded-lg" style={{ backgroundImage: 'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAABUSURBVDiNY/z//z8DJYCJgUIwaAzFMEoYRMVA4Y5LQNNLUMNA4TYowg1QLIMaB4rXIFYN0PQC1HhQ4oBEukE1LpT4IOqB2BgBAE0cFfVvYI0lAAAAAElFTkSuQmCC")', backgroundRepeat: 'repeat' }} />
-          <button onClick={handleDownload} className="tb-v2-btn tb-v2-btn-secondary tb-v2-mt-2">
+          <img src={processedImage} alt="No Background" className="max-w-full rounded-lg" style={{ backgroundImage: 'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAABUSURBVDiNY/z//z8DJYCJgUIwaAzFMEoYRMVA4Y5LQNNLUMNA4TYowg1QLIMaB4rXIFYN0PQC1HhQ4oBEukE1LpT4IOqB2BgBAE0cFfVvYI0lAAAAAElFTkSuQmCC")', backgroundRepeat: 'repeat' }} />
+          <button onClick={handleDownload} className="tb-v2-btn tb-v2-btn-ghost mt-2">
             Download PNG
           </button>
         </div>
       )}
 
-      <div className="tb-v2-text-sm tb-v2-text-gray-500 tb-v2-mt-4">
-        <p className="tb-v2-font-medium">Tips:</p>
-        <ul className="tb-v2-list-disc tb-v2-pl-5">
+      <div className="text-sm text-gray-500 mt-4">
+        <p className="font-medium">Tips:</p>
+        <ul className="list-disc pl-5">
           <li><strong>AI Remove:</strong> AI segmentation model - best for photos, works on any background</li>
           <li><strong>Auto Detect:</strong> Samples corners to identify and remove background color</li>
           <li><strong>Color Key:</strong> Removes a specific color (e.g., green screen)</li>

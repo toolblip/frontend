@@ -184,24 +184,27 @@ export default function EraseColorClient() {
         </div>
       ) : (
         <div className="space-y-3">
-          <p className="text-xs text-gray-500">
+          <p className="text-sm text-gray-500">
             Click anywhere on the image to pick a color with the eyedropper, then erase every matching pixel.
-            Repeat with a new color as many times as you need — each pass builds on the last.
+            Repeat with a new color as many times as you need, each pass builds on the last.
           </p>
 
-          <canvas
-            ref={canvasRef}
-            className="max-w-full rounded-lg cursor-crosshair"
-            style={{
-              backgroundImage:
-                'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAABUSURBVDiNY/z//z8DJYCJgUIwaAzFMEoYRMVA4Y5LQNNLUMNA4TYowg1QLIMaB4rXIFYN0PQC1HhQ4oBEukE1LpT4IOqB2BgBAE0cFfVvYI0lAAAAAElFTkSuQmCC")',
-              backgroundRepeat: 'repeat',
-            }}
-            onClick={pickColorAt}
-          />
+          <div>
+            <p className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Click to pick a color</p>
+            <canvas
+              ref={canvasRef}
+              className="max-w-full rounded-lg cursor-crosshair"
+              style={{
+                backgroundImage:
+                  'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAABUSURBVDiNY/z//z8DJYCJgUIwaAzFMEoYRMVA4Y5LQNNLUMNA4TYowg1QLIMaB4rXIFYN0PQC1HhQ4oBEukE1LpT4IOqB2BgBAE0cFfVvYI0lAAAAAElFTkSuQmCC")',
+                backgroundRepeat: 'repeat',
+              }}
+              onClick={pickColorAt}
+            />
+          </div>
 
-          <div className="tb-v2-flex tb-v2-items-center tb-v2-gap-4">
-            <label className="tb-v2-text-sm tb-v2-font-medium">Tolerance: {tolerance}</label>
+          <div className="flex items-center gap-4">
+            <label className="text-sm font-medium">Tolerance: {tolerance}</label>
             <input
               type="range"
               min="1"
@@ -212,21 +215,27 @@ export default function EraseColorClient() {
             />
           </div>
 
-          {pickedColor && (
-            <div className="tb-v2-flex tb-v2-items-center tb-v2-gap-3">
-              <span
-                className="tb-v2-w-8 tb-v2-h-8 tb-v2-rounded border border-gray-600"
-                style={{ display: 'inline-block', width: 32, height: 32, backgroundColor: rgbToHex(pickedColor) }}
-              />
-              <span className="text-xs text-gray-400">{rgbToHex(pickedColor)} picked</span>
-            </div>
-          )}
+          <div className="flex items-center gap-3" style={{ minHeight: 32 }}>
+            <span
+              className="rounded"
+              style={{
+                display: 'inline-block',
+                width: 32,
+                height: 32,
+                border: '1px solid var(--line-2)',
+                backgroundColor: pickedColor ? rgbToHex(pickedColor) : 'transparent',
+              }}
+            />
+            <span className="text-sm text-gray-500">
+              {pickedColor ? `${rgbToHex(pickedColor)} picked - click Erase to remove it` : 'No color picked yet'}
+            </span>
+          </div>
 
-          <div className="tb-v2-mode-tabs">
+          <div className="flex gap-2" style={{ flexWrap: 'wrap' }}>
             <button
               onClick={eraseColor}
               disabled={!pickedColor || isProcessing || isOversized}
-              className="bg-red-600 hover:bg-red-500 text-black font-medium px-4 py-2 rounded-lg text-sm transition-colors disabled:opacity-50"
+              className="tb-v2-btn tb-v2-btn-primary disabled:opacity-50"
               title={isOversized ? 'File size exceeds your plan limit' : ''}
             >
               {isProcessing ? 'Erasing...' : isOversized ? 'File Too Large' : 'Erase Picked Color'}
@@ -234,26 +243,20 @@ export default function EraseColorClient() {
             <button
               onClick={downloadResult}
               disabled={!workingUrl}
-              className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm transition-colors disabled:opacity-50"
+              className="tb-v2-btn tb-v2-btn-ghost disabled:opacity-50"
             >
               Download PNG
             </button>
-            <button
-              onClick={reset}
-              className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm transition-colors"
-            >
+            <button onClick={reset} className="tb-v2-btn tb-v2-btn-ghost">
               Undo All Erasing
             </button>
-            <button
-              onClick={clearAll}
-              className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm transition-colors"
-            >
+            <button onClick={clearAll} className="tb-v2-btn tb-v2-btn-ghost">
               Choose New Image
             </button>
           </div>
 
           {erasedCount > 0 && (
-            <p className="text-xs text-gray-500">{erasedCount.toLocaleString()} pixels erased so far.</p>
+            <p className="text-sm text-gray-500">{erasedCount.toLocaleString()} pixels erased so far.</p>
           )}
         </div>
       )}
