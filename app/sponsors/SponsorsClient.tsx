@@ -8,6 +8,8 @@ import {
   fetchSponsorsLeaderboard,
   formatBid,
   formatTimeAgo,
+  pingSponsorClick,
+  withSponsorSource,
   type SponsorSlot,
   type SponsorsLeaderboardResponse,
 } from '@/lib/sponsors';
@@ -20,16 +22,21 @@ function avatarColor(seed: string): string {
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
 }
 
+/** Google's favicon proxy — bigger and more reliable than unavatar for a
+ * plain site icon. Not used for X handles, which have no real "favicon";
+ * unavatar's per-profile image is the only sensible source there. */
+function faviconUrl(domain: string, size = 128): string {
+  return `https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${encodeURIComponent(`https://${domain}`)}&size=${size}`;
+}
+
 function SponsorAvatar({ domain, name }: { domain: string; name: string }) {
   const [error, setError] = useState(false);
+  const className = 'tb-v2-sponsor-row-avatar';
+  const isHandle = domain.startsWith('x.com/');
 
   if (error) {
     return (
-      <span
-        className="tb-v2-sponsor-row-avatar"
-        style={{ background: avatarColor(domain) }}
-        aria-hidden="true"
-      >
+      <span className={className} style={{ background: avatarColor(domain) }} aria-hidden="true">
         {name.charAt(0).toUpperCase()}
       </span>
     );
@@ -37,11 +44,81 @@ function SponsorAvatar({ domain, name }: { domain: string; name: string }) {
 
   return (
     <img
-      src={`https://unavatar.io/${domain}`}
+      src={isHandle ? `https://unavatar.io/${domain}` : faviconUrl(domain)}
       alt=""
-      className="tb-v2-sponsor-row-avatar"
+      className={className}
       onError={() => setError(true)}
     />
+  );
+}
+
+/** "@handle" for an x.com identity, the raw domain otherwise — always the
+ * one real, verifiable identifier, never the free-text display name. */
+function displayIdentity(domain: string): string {
+  return domain.startsWith('x.com/') ? '@' + domain.slice('x.com/'.length) : domain;
+}
+
+// Rank 1-3 get a card treatment that fades by rank (100% / 60% / 30%);
+// rank 4+ all render identically as a plain flat list (see the outbid.lol
+// reference) — color-mix blends the red accent toward the neutral border/
+// tint color by that share, rather than duplicating three near-identical
+// color pairs by hand.
+const CARD_TINT: Record<number, number> = { 1: 1, 2: 0.6, 3: 0.3 };
+
+function cardRowStyle(rank: number): React.CSSProperties | undefined {
+  const t = CARD_TINT[rank];
+  if (!t) return undefined;
+  return {
+    borderColor: `color-mix(in srgb, var(--red) ${t * 100}%, var(--line))`,
+    background: `color-mix(in srgb, var(--red-tint) ${t * 100}%, var(--surface))`,
+  };
+}
+
+function cardRankBadgeStyle(rank: number): React.CSSProperties | undefined {
+  const t = CARD_TINT[rank];
+  if (!t) return undefined;
+  return { background: `color-mix(in srgb, var(--red) ${t * 100}%, var(--fg-3))` };
+}
+
+function SponsorRow({ row, onClaim }: { row: SponsorSlot; onClaim: (row: SponsorSlot) => void }) {
+  const isCard = row.rank <= 3;
+  const timeAgo = formatTimeAgo(row.last_bid_at);
+
+  return (
+    <div
+      className={`tb-v2-sponsor-row${isCard ? ' tb-v2-sponsor-row-card' : ' tb-v2-sponsor-row-flat'}`}
+      style={isCard ? cardRowStyle(row.rank) : undefined}
+    >
+      <span
+        className={`tb-v2-sponsor-row-rank${isCard ? ' tb-v2-sponsor-row-rank-card' : ''}`}
+        style={isCard ? cardRankBadgeStyle(row.rank) : undefined}
+      >
+        #{row.rank}
+      </span>
+      <SponsorAvatar domain={row.domain} name={row.name} />
+      <div className="tb-v2-sponsor-row-main">
+        <a
+          href={withSponsorSource(row.url, 'leaderboard')}
+          target="_blank"
+          rel="sponsored nofollow noopener"
+          onClick={() => pingSponsorClick(row.id)}
+          className="tb-v2-sponsor-row-domain"
+        >
+          {displayIdentity(row.domain)}
+        </a>
+        {row.tagline && <span className="tb-v2-sponsor-row-tagline">{row.tagline}</span>}
+        <span className="tb-v2-sponsor-row-meta">
+          {timeAgo && <>{timeAgo}<span className="tb-v2-sponsor-live-dot" aria-hidden="true" /></>}
+          {row.clicks} clicks
+        </span>
+      </div>
+      <button type="button" className="tb-v2-sponsor-row-claim-badge" onClick={() => onClaim(row)}>
+        Claim this rank for {formatBid(row.balance_cents + 100)}
+      </button>
+      <div className="tb-v2-sponsor-row-price-wrap">
+        <span className="tb-v2-sponsor-row-balance">{formatBid(row.balance_cents)}</span>
+      </div>
+    </div>
   );
 }
 
@@ -71,6 +148,7 @@ export default function SponsorsClient() {
   useEffect(() => setFaviconError(false), [previewDomain]);
   const [amount, setAmount] = useState('1');
   const [amountTouched, setAmountTouched] = useState(false);
+  const [claimRank, setClaimRank] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const formRef = useRef<HTMLDivElement>(null);
@@ -86,7 +164,9 @@ export default function SponsorsClient() {
       });
   }, []);
 
-  const minBidDollars = board ? Math.round(board.min_bid_cents / 100) : 1;
+  // Hard floor of $1 regardless of what the API reports — a $0 bid must
+  // never be reachable even if min_bid_cents is ever misconfigured.
+  const minBidDollars = Math.max(1, board ? Math.round(board.min_bid_cents / 100) : 1);
   const rows = useMemo(() => board?.data ?? [], [board]);
 
   // Price to take #1 right now — same framing as the reference: a bid below
@@ -108,6 +188,7 @@ export default function SponsorsClient() {
   const handleClaim = (slot: SponsorSlot) => {
     setAmountTouched(true);
     setAmount(String(Math.round(slot.balance_cents / 100) + 1));
+    setClaimRank(slot.rank);
     formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
@@ -137,18 +218,28 @@ export default function SponsorsClient() {
       setFormError('A URL is required.');
       return;
     }
-    if (!Number.isFinite(dollars) || Math.round(dollars * 100) < (board?.min_bid_cents ?? 100)) {
+    if (!Number.isFinite(dollars) || Math.round(dollars * 100) < Math.max(100, board?.min_bid_cents ?? 100)) {
       setFormError(`Minimum bid is $${minBidDollars}.`);
       return;
     }
 
     setSubmitting(true);
     try {
+      // The backend's URL validator (PHP's FILTER_VALIDATE_URL) requires a
+      // scheme, but the placeholder invites a bare domain like
+      // "crontinel.com" — normalize it the same way the live favicon
+      // preview already does, rather than rejecting what the form itself
+      // suggests typing.
+      const trimmedUrl = url.trim();
+      const normalizedUrl = trimmedUrl.startsWith('@') || /^[a-z][a-z0-9+.-]*:\/\//i.test(trimmedUrl)
+        ? trimmedUrl
+        : `https://${trimmedUrl}`;
+
       const res = await fetch(apiPath('/api/sponsors/checkout'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          url: url.trim(),
+          url: normalizedUrl,
           amount_cents: Math.round(dollars * 100),
         }),
       });
@@ -166,7 +257,7 @@ export default function SponsorsClient() {
   };
 
   return (
-    <div className="tb-v2-container" style={{ position: 'relative', paddingTop: 40, paddingBottom: 64 }}>
+    <div className="tb-v2-sponsor-page">
       <h1 style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>
         Sponsors
       </h1>
@@ -184,7 +275,7 @@ export default function SponsorsClient() {
         <div ref={formRef}>
           <form onSubmit={handleSubmit} className="tb-v2-sponsor-form">
             <div className="tb-v2-sponsor-claim-hero">
-              <span>Claim #1 for</span>
+              <span>Claim #{claimRank} for</span>
               <button type="button" className="tb-v2-sponsor-stepper" onClick={() => step(-1)} aria-label="Decrease bid">−</button>
               <span className="tb-v2-sponsor-claim-price">${Number(amount || 0).toLocaleString('en-US')}</span>
               <button type="button" className="tb-v2-sponsor-stepper" onClick={() => step(1)} aria-label="Increase bid">+</button>
@@ -240,36 +331,17 @@ export default function SponsorsClient() {
                 </button>
               </div>
             )}
-            {rows.map((row) => {
-              const isTop = row.rank === 1;
-              const timeAgo = formatTimeAgo(row.last_bid_at);
-              return (
-                <div key={row.id} className={`tb-v2-sponsor-row${isTop ? ' tb-v2-sponsor-row-top' : ''}`}>
-                  {isTop && (
-                    <button
-                      type="button"
-                      className="tb-v2-sponsor-row-claim-badge"
-                      onClick={() => handleClaim(row)}
-                    >
-                      Claim this rank for {formatBid(row.balance_cents + 100)}
-                    </button>
-                  )}
-                  <span className="tb-v2-sponsor-row-rank">#{row.rank}</span>
-                  <SponsorAvatar domain={row.domain} name={row.name} />
-                  <div className="tb-v2-sponsor-row-main">
-                    <a href={row.url} target="_blank" rel="sponsored nofollow noopener">
-                      {row.name}
-                    </a>
-                    {row.tagline && <span className="tb-v2-sponsor-row-tagline">{row.tagline}</span>}
-                    <span className="tb-v2-sponsor-row-meta">
-                      {timeAgo}{timeAgo ? ' · ' : ''}{row.clicks} clicks
-                    </span>
-                  </div>
-                  <span className="tb-v2-sponsor-row-balance">{formatBid(row.balance_cents)}</span>
-                </div>
-              );
-            })}
+            {rows.filter((r) => r.rank <= 3).map((row) => (
+              <SponsorRow key={row.id} row={row} onClaim={handleClaim} />
+            ))}
           </div>
+          {rows.some((r) => r.rank > 3) && (
+            <div className="tb-v2-sponsor-flat-list">
+              {rows.filter((r) => r.rank > 3).map((row) => (
+                <SponsorRow key={row.id} row={row} onClaim={handleClaim} />
+              ))}
+            </div>
+          )}
         </div>
       </div>
 

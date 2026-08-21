@@ -9,6 +9,7 @@ import {
   formatBid,
   pingSponsorClick,
   readSponsorsTopCache,
+  withSponsorSource,
   writeSponsorsTopCache,
   type SponsorSlot,
 } from '@/lib/sponsors';
@@ -93,7 +94,7 @@ function SlotCard({
 
   return (
     <a
-      href={slot.url}
+      href={withSponsorSource(slot.url, 'strip')}
       target="_blank"
       rel="sponsored nofollow noopener"
       onClick={() => pingSponsorClick(slot.id)}

@@ -108,3 +108,17 @@ export function pingSponsorClick(id: number): void {
     // best-effort only
   }
 }
+
+/** Tags an outbound sponsor URL so the sponsor's own analytics can attribute
+ * the click back to Toolblip and which surface it came from. */
+export function withSponsorSource(url: string, source: string): string {
+  try {
+    const u = new URL(url);
+    u.searchParams.set('utm_source', 'toolblip');
+    u.searchParams.set('utm_medium', 'sponsor');
+    u.searchParams.set('utm_content', source);
+    return u.toString();
+  } catch {
+    return url;
+  }
+}
