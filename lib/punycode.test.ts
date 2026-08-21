@@ -83,15 +83,24 @@ describe('analyse with extractDomain', () => {
     expect(analyse(domain)).toEqual([]);
   });
 
-  // Regression test: analyse() used to compare toASCII()'s output against
-  // new URL('http://' + domain).hostname and warn on any mismatch. That
-  // comparison is against full UTS-46/IDNA domain-validity rules (which
-  // strip "default ignorable" codepoints like the U+FE0F variation
-  // selector before encoding) that toASCII() never claimed to implement -
-  // this tool encodes/decodes Punycode for arbitrary input, not just
-  // strings meant to be registrable domains, so a plain emoji like this
-  // (U+2708 airplane + U+FE0F variation selector) isn't a bug to flag.
+  // Regression test: analyse() compares toASCII()'s output against
+  // new URL('http://' + domain).hostname to catch real encoding bugs, but
+  // the browser's IDNA mapping silently drops "default ignorable"
+  // codepoints (emoji variation selectors, ZWJ) before encoding, which
+  // toASCII() doesn't - so a plain emoji using one of these isn't a real
+  // divergence and shouldn't warn. (U+2708 airplane + U+FE0F selector.)
   it('does not warn about a variation-selector emoji disagreeing with the browser URL parser', () => {
     expect(analyse('✈️')).toEqual([]);
+  });
+
+  // Regression test for the opposite failure mode: don't let silencing the
+  // emoji false-positive above turn into silencing every disagreement.
+  // toASCII()'s NFC+toLowerCase() maps Cherokee uppercase syllabics to the
+  // Cherokee Supplement lowercase block, which real IDNA/UTS-46 mapping
+  // does not do - the two encoders produce genuinely different domains, and
+  // that's exactly the class of bug this warning exists to catch.
+  it('still warns when toASCII genuinely disagrees with the browser (Cherokee case-folding)', () => {
+    const warnings = analyse('ᏔᏬᎵᎵ.com');
+    expect(warnings.some((w) => w.includes("disagrees with the browser's own IDNA encoding"))).toBe(true);
   });
 });

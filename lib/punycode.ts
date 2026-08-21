@@ -122,6 +122,10 @@ export const IDNA_SEPARATORS = /[.。．｡]/;
 const ASCII_ONLY = /^[\x00-\x7F]*$/;
 const XN_PREFIX = /^xn--/i;
 const EMAIL_SHAPE = /^[^@\s]+@[^@\s]+$/;
+// Variation selectors (text/emoji presentation) and zero-width joiners -
+// real IDNA/UTS-46 mapping drops these before encoding a domain label; used
+// only to line up analyse()'s browser-agreement check, not real conversion.
+const DEFAULT_IGNORABLE = /[︎️‍]/g;
 
 export function toASCII(domain: string): string {
   const normalized = domain.normalize('NFC').toLowerCase();
@@ -237,6 +241,29 @@ export function analyse(domain: string): string[] {
         .join(' and ');
       warnings.push(`Label "${label}" mixes Latin with ${mixed} script — possible homograph attack.`);
     }
+  }
+
+  try {
+    const url = new URL('http://' + domain);
+    // The browser's URL parser applies real UTS-46/IDNA mapping, which
+    // silently drops "default ignorable" codepoints (emoji variation
+    // selectors, zero-width joiners) before encoding - toASCII() doesn't,
+    // so comparing its raw output against url.hostname would false-positive
+    // on any plain emoji using one of these (✈️, ❤️, 🏳️‍🌈, ...), which
+    // aren't actually encoding bugs. Stripping the same characters before
+    // our own comparison keeps that noise down while still catching real
+    // divergences - e.g. toASCII()'s NFC+toLowerCase() maps Cherokee
+    // uppercase syllabics to the (IDNA-non-standard) Cherokee Supplement
+    // lowercase block, producing a domain a real browser/DNS resolver would
+    // never actually resolve to.
+    const asciiForm = toASCII(domain.replace(DEFAULT_IGNORABLE, ''));
+    if (url.hostname !== asciiForm) {
+      warnings.push(
+        `Domain "${domain}" disagrees with the browser's own IDNA encoding ("${url.hostname}") — this tool's simplified Punycode conversion may not match what actually resolves.`
+      );
+    }
+  } catch {
+    // domain doesn't parse as a hostname at all — not every analyse() input is one, skip silently.
   }
 
   return warnings;
