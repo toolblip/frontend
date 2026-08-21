@@ -160,7 +160,6 @@ export const EMOJI_DATA: EmojiEntry[] = [
   { char: "🏳️", name: "white flag", keywords: ["flag", "surrender", "white"] },
   { char: "🏴", name: "black flag", keywords: ["flag", "black", "pirate"] },
   { char: "🏁", name: "checkered flag", keywords: ["flag", "finish", "race"] },
-  { char: "🏳️‍🌈", name: "rainbow flag", keywords: ["pride", "flag", "rainbow"] },
 ];
 
 // A dozen entries shown inline (outside the search modal) as quick picks.
