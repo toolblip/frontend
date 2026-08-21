@@ -96,7 +96,7 @@ const CATEGORY_FAQ2: Record<string, (t: Tool) => FAQ> = {
   }),
   Image: (t) => ({
     q: `What image formats does the ${t.name} support?`,
-    a: `The ${t.name} works with common web image formats including PNG, JPEG, WebP, GIF, and SVG. The specific operations available depend on the format — lossless formats like PNG preserve quality through transformations, while lossy formats like JPEG may show compression artefacts after re-encoding.`,
+    a: `The ${t.name} works with common web image formats including PNG, JPEG, WebP, GIF, and SVG. The specific operations available depend on the format: lossless formats like PNG preserve quality through transformations, while lossy formats like JPEG may show compression artefacts after re-encoding.`,
   }),
   "AI Tools": (t) => ({
     q: `What kind of AI tasks can the ${t.name} handle?`,
@@ -162,11 +162,11 @@ function templateFaqs(t: Tool): FAQ[] {
     },
     {
       q: `What kind of output does the ${t.name} produce?`,
-      a: `The ${t.name} produces clean, formatted output that you can copy or download with a single click. The output is tailored to the tool's purpose — formatted code, converted data, transformed text, or processed media — and is ready for immediate use in your project or workflow.`,
+      a: `The ${t.name} produces clean, formatted output that you can copy or download with a single click. The output is tailored to the tool's purpose (formatted code, converted data, transformed text, or processed media) and is ready for immediate use in your project or workflow.`,
     },
     {
       q: `Does the ${t.name} work on mobile devices?`,
-      a: `Yes. The ${t.name} is designed to work on any device with a modern browser, including phones and tablets. The interface adapts to smaller screens, and the core functionality — paste input, transform, copy output — works the same way regardless of your device.`,
+      a: `Yes. The ${t.name} is designed to work on any device with a modern browser, including phones and tablets. The interface adapts to smaller screens, and the core functionality (paste input, transform, copy output) works the same way regardless of your device.`,
     },
   ];
 
