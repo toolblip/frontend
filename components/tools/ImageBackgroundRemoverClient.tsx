@@ -422,14 +422,14 @@ export default function ImageBackgroundRemoverClient() {
       {image && (
         <div className="mt-4">
           <p className="tb-v2-tool-label" style={{marginBottom:8}}>Original</p>
-          <img src={image} alt="Original" className="max-w-full rounded-lg" />
+          <img src={image} alt="Original" className="max-w-full max-h-[70vh] object-contain rounded-lg" />
         </div>
       )}
 
       {processedImage && (
         <div className="mt-4">
           <p className="tb-v2-tool-label" style={{marginBottom:8}}>Result (with transparency)</p>
-          <img src={processedImage} alt="No Background" className="max-w-full rounded-lg" style={{ backgroundImage: 'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAABUSURBVDiNY/z//z8DJYCJgUIwaAzFMEoYRMVA4Y5LQNNLUMNA4TYowg1QLIMaB4rXIFYN0PQC1HhQ4oBEukE1LpT4IOqB2BgBAE0cFfVvYI0lAAAAAElFTkSuQmCC")', backgroundRepeat: 'repeat' }} />
+          <img src={processedImage} alt="No Background" className="max-w-full max-h-[70vh] object-contain rounded-lg" style={{ backgroundImage: 'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAABUSURBVDiNY/z//z8DJYCJgUIwaAzFMEoYRMVA4Y5LQNNLUMNA4TYowg1QLIMaB4rXIFYN0PQC1HhQ4oBEukE1LpT4IOqB2BgBAE0cFfVvYI0lAAAAAElFTkSuQmCC")', backgroundRepeat: 'repeat' }} />
           <button onClick={handleDownload} className="tb-v2-btn tb-v2-btn-ghost mt-2">
             Download PNG
           </button>
