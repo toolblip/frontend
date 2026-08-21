@@ -30,6 +30,19 @@ const CACHE_KEY = "tb_sponsors_top_v1";
 const CACHE_TTL_MS = 60_000;
 
 /**
+ * Prefixes an absolute app path with NEXT_PUBLIC_BASE_PATH when set. Only
+ * the local Tailscale-preview tooling sets this (path-mounting a worktree's
+ * dev server at /{slug}/toolblip) — Next.js rewrites next/link/next/router
+ * automatically under a basePath, but not plain fetch()/sendBeacon() calls
+ * to a hardcoded string, so those need the prefix applied explicitly.
+ * A no-op everywhere else (local dev, CI, Railway), where the var is unset.
+ */
+export function apiPath(path: string): string {
+  const base = process.env.NEXT_PUBLIC_BASE_PATH || "";
+  return `${base}${path}`;
+}
+
+/**
  * Session-scoped cache so repeat navigations across the ~1,400 tool pages
  * don't refetch on every click — the strip renders instantly from cache and
  * revalidates in the background. Not a correctness mechanism (server is the
@@ -56,13 +69,13 @@ export function writeSponsorsTopCache(data: SponsorsTopResponse): void {
 }
 
 export async function fetchSponsorsTop(): Promise<SponsorsTopResponse> {
-  const res = await fetch("/api/sponsors/top", { headers: { Accept: "application/json" } });
+  const res = await fetch(apiPath("/api/sponsors/top"), { headers: { Accept: "application/json" } });
   if (!res.ok) throw new Error("Failed to load sponsors");
   return res.json();
 }
 
 export async function fetchSponsorsLeaderboard(page = 1): Promise<SponsorsLeaderboardResponse> {
-  const res = await fetch(`/api/sponsors/leaderboard?page=${page}`, {
+  const res = await fetch(apiPath(`/api/sponsors/leaderboard?page=${page}`), {
     headers: { Accept: "application/json" },
   });
   if (!res.ok) throw new Error("Failed to load the sponsors leaderboard");
@@ -76,7 +89,7 @@ export function formatBid(cents: number): string {
 /** Fire-and-forget click ping — never blocks or delays the outbound navigation. */
 export function pingSponsorClick(id: number): void {
   try {
-    navigator.sendBeacon?.(`/api/sponsors/click/${id}`);
+    navigator.sendBeacon?.(apiPath(`/api/sponsors/click/${id}`));
   } catch {
     // best-effort only
   }

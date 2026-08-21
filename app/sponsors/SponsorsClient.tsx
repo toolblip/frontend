@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import {
+  apiPath,
   fetchSponsorsLeaderboard,
   formatBid,
   type SponsorSlot,
@@ -73,7 +74,7 @@ export default function SponsorsClient() {
 
     setSubmitting(true);
     try {
-      const res = await fetch('/api/sponsors/checkout', {
+      const res = await fetch(apiPath('/api/sponsors/checkout'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

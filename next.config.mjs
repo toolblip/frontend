@@ -1,6 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   allowedDevOrigins: ['127.0.0.1'],
+  // Set only by the local Tailscale-preview tooling (toolblip-workspace's
+  // scripts/tailscale-dev), which path-mounts a worktree's dev server at
+  // /{slug}/toolblip. No-op — and unset — for every other run (local dev,
+  // CI, Railway). Next.js only rewrites next/link, next/router, next/image,
+  // and its own generated asset URLs under a basePath; plain fetch() calls
+  // to hardcoded absolute paths are not rewritten automatically, which is
+  // why lib/sponsors.ts's requests are prefixed with the same public env
+  // var below rather than relying on this alone.
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || undefined,
+  assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH || undefined,
   images: {
     remotePatterns: [
       {
