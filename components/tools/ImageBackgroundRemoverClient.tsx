@@ -417,7 +417,7 @@ export default function ImageBackgroundRemoverClient() {
         </>
       )}
 
-      <canvas ref={canvasRef} className="tb-v2-hidden" />
+      <canvas ref={canvasRef} className="hidden" />
 
       {image && (
         <div className="tb-v2-mt-4">
