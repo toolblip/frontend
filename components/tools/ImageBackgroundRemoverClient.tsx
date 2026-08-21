@@ -1,122 +1,27 @@
 'use client';
 
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { convertHeicIfNeeded } from '@/lib/heic';
 import { useSubscription } from '@/hooks/useSubscription';
 import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
 
 type RemovalMethod = 'floodfill' | 'chroma' | 'ai';
 
-const MODEL_DB_NAME = 'imgly-bg-removal-model-idb-v1';
-const MODEL_DB_STORE = 'chunks';
-const MODEL_CDN_PREFIX = 'https://staticimgly.com/';
-
-// Captured once at module load, before removeBackgroundAI ever swaps
-// window.fetch out - fetchWithModelCache below must call through this,
-// not the bare `fetch` identifier, or it would resolve to itself
-// (window.fetch at call time) and recurse forever instead of ever
-// reaching the network.
-const nativeFetch = typeof window !== 'undefined' ? window.fetch.bind(window) : undefined;
-
-// "Best-effort" storage (the default) can be evicted by the browser under
-// disk pressure without warning, which would silently make the ~40MB
-// model re-download on a later visit. Asking for "persistent" storage
-// tells the browser this origin's data shouldn't be first in line for
-// that eviction. Best-effort call - most browsers grant it automatically
-// for sites with any meaningful engagement, but there's no downside to
-// asking unconditionally.
-if (typeof navigator !== 'undefined' && navigator.storage?.persist) {
-  navigator.storage.persist().catch(() => {});
-}
-
-// Storing model chunks via the Cache Storage API (caches.open/match/put)
-// worked reliably in Chrome but not in Safari - WebKit's Cache API
-// implementation is known to be unreliable for persisting data across
-// page loads (works within a session, but frequently doesn't survive a
-// reload). IndexedDB is the standard workaround: it's older, more widely
-// implemented, and Safari's support for it is much more consistent.
-function openModelDb(): Promise<IDBDatabase> {
-  return new Promise((resolve, reject) => {
-    const req = indexedDB.open(MODEL_DB_NAME, 1);
-    req.onupgradeneeded = () => {
-      if (!req.result.objectStoreNames.contains(MODEL_DB_STORE)) {
-        req.result.createObjectStore(MODEL_DB_STORE);
-      }
-    };
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
-  });
-}
-
-async function idbGetChunk(url: string): Promise<{ blob: Blob; contentType: string } | undefined> {
-  const db = await openModelDb();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(MODEL_DB_STORE, 'readonly');
-    const req = tx.objectStore(MODEL_DB_STORE).get(url);
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
-  });
-}
-
-async function idbPutChunk(url: string, blob: Blob, contentType: string): Promise<void> {
-  const db = await openModelDb();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(MODEL_DB_STORE, 'readwrite');
-    tx.objectStore(MODEL_DB_STORE).put({ blob, contentType }, url);
-    tx.oncomplete = () => resolve();
-    tx.onerror = () => reject(tx.error);
-  });
-}
-
-// Surfaced in the UI (not just devtools) so a report of "it's not caching"
-// can be checked without asking anyone to open the console - this has
-// already gone through two storage mechanisms that measured as working
-// in testing but didn't hold up on the browser someone actually reported
-// the problem on.
-async function idbCountChunks(): Promise<number> {
-  const db = await openModelDb();
-  return new Promise((resolve, reject) => {
-    const tx = db.transaction(MODEL_DB_STORE, 'readonly');
-    const req = tx.objectStore(MODEL_DB_STORE).count();
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
-  });
-}
-
-// The model CDN sends no Cache-Control header, so the browser can't
-// safely reuse its own HTTP cache across visits - every request behaves
-// as a fresh fetch. IndexedDB doesn't depend on the response's own
-// headers, so once a chunk is stored here it stays until we evict it.
-async function fetchWithModelCache(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
-  const url = typeof input === 'string' ? input : input instanceof URL ? input.toString() : input.url;
-  if (!url.startsWith(MODEL_CDN_PREFIX) || !nativeFetch || typeof indexedDB === 'undefined') {
-    return nativeFetch ? nativeFetch(input, init) : fetch(input, init);
-  }
-  try {
-    const cached = await idbGetChunk(url);
-    if (cached) {
-      return new Response(cached.blob, { status: 200, headers: { 'Content-Type': cached.contentType } });
-    }
-  } catch (err) {
-    console.error('[bg-remover] model cache read failed, falling back to network:', url, err);
-  }
-  const response = await nativeFetch(input, init);
-  if (response.ok) {
-    const contentType = response.headers.get('content-type') || 'application/octet-stream';
-    // Not awaited - storing shouldn't hold up handing the response back.
-    // Logged rather than swallowed: a silent failure here (most likely
-    // storage quota) is indistinguishable from "it's just not caching"
-    // with no way to tell which from the outside.
-    response
-      .clone()
-      .blob()
-      .then((blob) => idbPutChunk(url, blob, contentType))
-      .catch((err) => {
-        console.error('[bg-remover] failed to cache model chunk, will re-download next time:', url, err);
-      });
-  }
-  return response;
-}
+// Self-hosted instead of fetched from IMG.LY's CDN (staticimgly.com).
+// Three separate client-side caching approaches (browser HTTP cache via
+// CSP allowance, Cache Storage API, IndexedDB) all measured as working
+// in testing but didn't reliably persist across a reload for at least
+// one real user - the common failure point was always "make an
+// individual browser's storage behave," which is inherently unreliable
+// across engines. Serving these ourselves with a real Cache-Control
+// header sidesteps that category of problem entirely: it's the
+// browser's own standard HTTP cache, the same mechanism every other
+// static asset on this site already relies on, with no custom JS layer
+// that can silently misbehave per-browser. Files are content-addressed
+// (hash-named, from @imgly/background-removal's own resources.json) so
+// `immutable` in next.config.mjs's headers() is correct - they never
+// change under this path.
+const MODEL_PUBLIC_PATH = '/models/imgly-bg-removal/1.7.0/';
 
 export default function ImageBackgroundRemoverClient() {
   const [image, setImage] = useState<string | null>(null);
@@ -132,20 +37,12 @@ export default function ImageBackgroundRemoverClient() {
   const [aiError, setAiError] = useState<string | null>(null);
   const [isConvertingHeic, setIsConvertingHeic] = useState(false);
   // null = still checking, -1 = IndexedDB unavailable/error, 0+ = chunk count
-  const [modelCacheCount, setModelCacheCount] = useState<number | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { tier } = useSubscription();
   const maxSizeMB = tier === 'free' ? 5 : tier === 'starter' ? 10 : tier === 'ultra' ? 100 : tier === 'max' ? 500 : 5;
   const isOversized = selectedFile != null && selectedFile.size / (1024 * 1024) > maxSizeMB;
 
-  useEffect(() => {
-    let cancelled = false;
-    idbCountChunks()
-      .then((count) => { if (!cancelled) setModelCacheCount(count); })
-      .catch(() => { if (!cancelled) setModelCacheCount(-1); });
-    return () => { cancelled = true; };
-  }, []);
   // Bumped on every upload so an in-flight AI request can tell it's been
   // superseded (e.g. the user picked a new image while a slow ~40MB model
   // download/inference was still running) and skip applying its stale result.
@@ -228,22 +125,22 @@ export default function ImageBackgroundRemoverClient() {
     setAiStage('fetch');
     setAiError(null);
 
-    // Swapped in only for the duration of this call so the imgly library's
-    // internal fetch() of model chunks goes through the IndexedDB-backed
-    // wrapper above - restored in `finally` below regardless of outcome.
-    const originalFetch = window.fetch;
-    window.fetch = fetchWithModelCache as typeof fetch;
-
     try {
       // Dynamically imported so this library and its onnxruntime-web
       // runtime dependency only ever load for someone who actually picks
       // AI Remove - everyone else never pays for it. The segmentation
       // model itself (~40MB, the quantized "small" model - trades a
       // little edge quality for a download size that's reasonable for a
-      // free tool) is fetched separately from IMG.LY's CDN on first use.
+      // free tool) is served from our own /models path (see
+      // MODEL_PUBLIC_PATH above) with a long-lived Cache-Control header,
+      // so the browser's normal HTTP cache handles repeat visits.
       const { removeBackground: imglyRemoveBackground } = await import('@imgly/background-removal');
       const blob = await imglyRemoveBackground(imageFile, {
         model: 'isnet_quint8',
+        // The library resolves chunk URLs via `new URL(name, publicPath)`,
+        // which requires an absolute base - a bare path throws "Invalid
+        // base URL".
+        publicPath: `${window.location.origin}${MODEL_PUBLIC_PATH}`,
         progress: (key, current, total) => {
           if (requestIdRef.current !== requestId) return;
           // imgly reports progress in independent phases under different
@@ -273,11 +170,9 @@ export default function ImageBackgroundRemoverClient() {
           : 'AI background removal failed. Try Auto Detect or Color Key instead.'
       );
     } finally {
-      window.fetch = originalFetch;
       if (requestIdRef.current === requestId) {
         setIsProcessing(false);
         setAiProgress(null);
-        idbCountChunks().then(setModelCacheCount).catch(() => setModelCacheCount(-1));
       }
     }
   }, [imageFile]);
@@ -488,15 +383,6 @@ export default function ImageBackgroundRemoverClient() {
           {method === 'ai' && !isProcessing && (
             <p className="text-sm text-gray-500">
               Uses an AI segmentation model to cut out the subject, even against busy or uneven backgrounds.
-              {modelCacheCount !== null && (
-                <span className="block text-xs mt-1">
-                  {modelCacheCount > 0
-                    ? `Model cache: ready (${modelCacheCount} files stored on this device)`
-                    : modelCacheCount === -1
-                      ? "Model cache: unavailable in this browser - it'll download fresh every time"
-                      : "Model cache: not downloaded yet"}
-                </span>
-              )}
             </p>
           )}
 

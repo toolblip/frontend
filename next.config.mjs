@@ -368,6 +368,17 @@ const nextConfig = {
         ],
       },
       {
+        // The AI Remove model files (see MODEL_PUBLIC_PATH in
+        // ImageBackgroundRemoverClient.tsx) are content-addressed -
+        // hash-named, tied to a specific @imgly/background-removal
+        // version - so they never change under this path and are safe
+        // to cache forever.
+        source: '/models/imgly-bg-removal/:path*',
+        headers: [
+          { key: 'Cache-Control', value: 'public, max-age=31536000, immutable' },
+        ],
+      },
+      {
         source: '/(.*)',
         headers: [
           { key: 'X-DNS-Prefetch-Control', value: 'on' },
@@ -384,12 +395,12 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob: https://staticimgly.com",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https: blob:",
               "font-src 'self' data:",
-              "connect-src 'self' blob: https://toolblip-api-production.up.railway.app https://api.toolblip.com https://*.railway.app https://publish.twitter.com https://publish.x.com https://unavatar.io https://staticimgly.com",
-              "worker-src 'self' blob: https://staticimgly.com",
+              "connect-src 'self' blob: https://toolblip-api-production.up.railway.app https://api.toolblip.com https://*.railway.app https://publish.twitter.com https://publish.x.com https://unavatar.io",
+              "worker-src 'self' blob:",
               "frame-src 'none'",
               "object-src 'none'",
               "base-uri 'self'",
