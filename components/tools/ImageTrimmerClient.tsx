@@ -223,26 +223,23 @@ export default function ImageTrimmerClient() {
             color from the edges. Raise the tolerance for borders with slight noise or compression artifacts.
           </p>
 
-          <div>
-            <p className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Original</p>
-            <img src={image} alt="Original" className="max-w-full rounded-lg" />
-          </div>
-
-          <div className="tb-v2-mode-tabs">
+          <div className="flex gap-2">
             <button
               onClick={trimImage}
               disabled={isProcessing || isOversized}
-              className="bg-red-600 hover:bg-red-500 text-black font-medium px-4 py-2 rounded-lg text-sm transition-colors disabled:opacity-50"
+              className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg flex-1 disabled:opacity-50"
               title={isOversized ? 'File size exceeds your plan limit' : ''}
             >
               {isProcessing ? 'Trimming...' : isOversized ? 'File Too Large' : 'Trim Image'}
             </button>
-            <button
-              onClick={reset}
-              className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm transition-colors"
-            >
+            <button onClick={reset} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-lg">
               Choose New Image
             </button>
+            {trimmedUrl && (
+              <button onClick={downloadTrim} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-lg">
+                Download PNG
+              </button>
+            )}
           </div>
 
           {status === 'nothing-to-trim' && (
@@ -251,20 +248,21 @@ export default function ImageTrimmerClient() {
             </p>
           )}
 
-          {trimmedUrl && trimBox && (
-            <div className="mt-4">
-              <p className="tb-v2-tool-label" style={{ marginBottom: 8 }}>
-                Trimmed ({trimBox.w} × {trimBox.h}px)
-              </p>
-              <img src={trimmedUrl} alt="Trimmed" className="max-w-full rounded-lg" />
-              <button
-                onClick={downloadTrim}
-                className="bg-red-600 hover:bg-red-500 text-black font-medium px-4 py-2 rounded-lg text-sm transition-colors mt-2"
-              >
-                Download PNG
-              </button>
+          <div className={`grid gap-4 ${trimmedUrl ? 'sm:grid-cols-2' : ''}`}>
+            <div className="min-w-0">
+              <p className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Original</p>
+              <img src={image} alt="Original" className="w-full h-auto max-h-[60vh] object-contain rounded-lg" />
             </div>
-          )}
+
+            {trimmedUrl && trimBox && (
+              <div className="min-w-0">
+                <p className="tb-v2-tool-label" style={{ marginBottom: 8 }}>
+                  Trimmed ({trimBox.w} × {trimBox.h}px)
+                </p>
+                <img src={trimmedUrl} alt="Trimmed" className="w-full h-auto max-h-[60vh] object-contain rounded-lg" />
+              </div>
+            )}
+          </div>
         </div>
       )}
     </div>

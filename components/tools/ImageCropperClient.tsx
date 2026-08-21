@@ -150,21 +150,22 @@ export default function ImageCropperClient() {
 
   return (
     <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
-      {/* Presets */}
-      <div className="tb-v2-mode-tabs">
-        {PRESETS.map(({ label, ratio }) => (
-          <button
-            key={label}
-            onClick={() => setPreset({ label, ratio })}
-            className={`text-xs px-3 py-1.5 rounded-full transition-colors ${
-              preset.label === label
-                ? 'bg-red-600 text-black font-medium'
-                : 'bg-gray-800 text-gray-400 hover:text-white'
-            }`}
-          >
-            {label}
-          </button>
-        ))}
+      <div>
+        <p className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Aspect Ratio</p>
+        <div className="flex flex-wrap gap-4">
+          {PRESETS.map(({ label, ratio }) => (
+            <label key={label} className="flex items-center gap-2 text-sm cursor-pointer">
+              <input
+                type="radio"
+                name="crop-preset"
+                checked={preset.label === label}
+                onChange={() => setPreset({ label, ratio })}
+                className="w-4 h-4 accent-red-600"
+              />
+              {label}
+            </label>
+          ))}
+        </div>
       </div>
 
       {/* Upload zone */}
@@ -199,16 +200,16 @@ export default function ImageCropperClient() {
         <div className="space-y-3">
           <canvas
             ref={canvasRef}
-            className="max-w-full rounded-lg cursor-crosshair"
+            className="w-full h-auto max-h-[70vh] object-contain rounded-lg cursor-crosshair"
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
             onMouseLeave={handleMouseUp}
           />
-          <div className="tb-v2-mode-tabs">
+          <div className="flex gap-2">
             <button
               onClick={downloadCrop}
-              className="bg-red-600 hover:bg-red-500 text-black font-medium px-4 py-2 rounded-lg text-sm transition-colors disabled:opacity-50"
+              className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg flex-1 disabled:opacity-50"
               disabled={cropRect.w === 0 || isOversized}
               title={isOversized ? 'File size exceeds your plan limit' : ''}
             >
@@ -216,7 +217,7 @@ export default function ImageCropperClient() {
             </button>
             <button
               onClick={() => { setImage(null); setCropRect({ x: 0, y: 0, w: 0, h: 0 }); }}
-              className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm transition-colors"
+              className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-lg"
             >
               Choose New Image
             </button>
