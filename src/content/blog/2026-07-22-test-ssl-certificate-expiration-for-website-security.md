@@ -2,7 +2,7 @@
 title: "Test SSL Certificate Expiration for Website Security"
 description: >-
   Learn to test SSL certificate expiration for website security, check the
-  expiry date, and monitor renewals before they lapse. Free browser tool.
+  expiry date, and monitor renewals before they lapse.
 slug: 2026-07-22-test-ssl-certificate-expiration-for-website-security
 date: 2026-07-22T00:00:00.000Z
 category: Developer Tools
@@ -31,9 +31,7 @@ The damage doesn't stop at a scary page. Search crawlers treat an expired cert a
 
 ## How to Check SSL Certificate Expiration Date in the Browser
 
-The fastest path needs no install. A browser tool reads the live certificate a server presents and shows the expiry date plainly.
-
-Open the [SSL Certificate Checker](https://toolblip.com/tools/ssl-certificate-checker), enter your domain, and run it. The tool connects to the host, reads the certificate the server sends, and reports the "valid until" date along with the issuer and the covered hostnames.
+The fastest path needs no install. Click the padlock icon next to any site's address bar and open the certificate details, or run `openssl s_client -connect example.com:443 -servername example.com | openssl x509 -noout -dates` from a terminal to read the "valid until" date along with the issuer and the covered hostnames directly.
 
 Three fields matter most on the result.
 
@@ -123,5 +121,5 @@ What matters for security is that the certificate is unexpired, covers the right
 
 Test SSL certificate expiration for website security on a schedule, not the morning your users report an outage. Read the "Not After" date, verify the chain resolves, and confirm every subdomain presents a current certificate. A cert that expires quietly at 2 a.m. is entirely preventable with a check that runs before it does.
 
-The fastest way to look right now is the free [SSL Certificate Checker](https://toolblip.com/tools/ssl-certificate-checker). Enter your domain, read the expiry date and issuer, and confirm the covered hostnames in seconds. Choosing the best free SSL certificate checker tool comes down to one thing: does it show you the "Not After" date before that date shows you an outage. No account, no signup, just the answer.
+The fastest way to look right now is your browser's own certificate viewer or the `openssl` one-liner above. Either way, read the expiry date and issuer, and confirm the covered hostnames in seconds. It comes down to one thing: seeing the "Not After" date before that date shows you an outage.
 

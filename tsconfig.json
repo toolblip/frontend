@@ -30,7 +30,6 @@
     "src/pages",
     "src/layouts",
     "src/styles",
-    "src/app",
     "src/data",
     "astro.config.mjs",
     "wrangler.toml",

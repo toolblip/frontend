@@ -13,7 +13,7 @@ const FEATURED_GRID_SLUGS = [
   'css-class-generator',
   'robots-txt-generator',
   'xml-sitemap-generator',
-  'image-alt-text-generator',
+  'image-compressor',
   'color-palette-generator',
   'image-aspect-ratio-calculator',
   'hash-from-text',

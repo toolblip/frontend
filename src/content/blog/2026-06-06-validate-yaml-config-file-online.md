@@ -24,7 +24,7 @@ A browser linter shows the offending line in under a second. You paste the file,
 
 Most YAML problems are not logic bugs. They are whitespace bugs. A tab where a space belongs, a list item indented one column too far, or a key that quietly overrides another because it appears twice. The parser raises a generic error, and you stare at the file for ten minutes.
 
-[Toolblip's YAML validator](https://toolblip.com/tools/yaml-validator) is faster than spinning up `yamllint` in a fresh shell when you just need a quick syntax check. It shows highlighted lines, expandable trees, and a side panel with the parsed structure so you can confirm the file matches the shape your tool expects.
+[Toolblip's YAML to JSON converter](https://toolblip.com/tools/yaml-to-json) is faster than spinning up `yamllint` in a fresh shell when you just need a quick syntax check. Paste your YAML and it either converts cleanly or surfaces the parser's error message, with line and column, so you can confirm the file matches the shape your tool expects.
 
 ## How to check YAML syntax errors with a browser linter
 
@@ -133,4 +133,4 @@ That loop replaces the older one where you committed, waited for CI, watched it 
 
 Validate YAML config file online before the push, not after the rollback. The error messages are the same, but you read them on your own time instead of during an incident.
 
-Ready to clean up the next Kubernetes manifest or Compose file? Try the [Toolblip YAML validator](https://toolblip.com/tools/yaml-validator) and keep your config checks in the browser, where the file never leaves your machine.
+Ready to clean up the next Kubernetes manifest or Compose file? Try the [Toolblip YAML to JSON converter](https://toolblip.com/tools/yaml-to-json) and keep your config checks in the browser, where the file never leaves your machine.

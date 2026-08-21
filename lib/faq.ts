@@ -67,10 +67,6 @@ const CATEGORY_FAQ: Record<string, (t: Tool) => FAQ> = {
     q: `Are documents from the ${t.name} legally valid?`,
     a: `The ${t.name} produces templates and drafts  -  a strong starting point for contracts, invoices, and official forms  -  but it is not a substitute for legal advice. Have a qualified lawyer review any document before you rely on it in a legal or regulated context.`,
   }),
-  'Text Tools': (t) => ({
-    q: `Is there a character limit when I use the ${t.name}?`,
-    a: `There's no hard limit. The ${t.name} handles short snippets and long documents equally well because all processing happens on your device. For very large inputs you may notice a brief delay while the browser parses the text.`,
-  }),
 }
 
 const CATEGORY_FAQ2: Record<string, (t: Tool) => FAQ> = {

@@ -26,13 +26,18 @@ const nextConfig = {
       // with a chosen method/body/auth; HttpHeadersViewerClient hardcodes a
       // HEAD fetch with no body or method control. No real request-builder
       // implementation exists elsewhere in the catalog to redirect to.
+      // http-headers-viewer itself was later removed in the 2026-08-21
+      // functional audit pass below, so these now go straight to the
+      // homepage instead of chaining through a since-removed tool.
       { source: '/tools/http-request-builder', destination: '/', permanent: true },
       { source: '/tools/http-method-tester', destination: '/', permanent: true },
 
       // "Image Clipper" promised background removal, "Image Orientation
       // Fixer" promised rotate/flip - both rendered the plain image
-      // cropper instead. Redirecting to the real, separate tools that
-      // actually do what each promised.
+      // cropper instead. remove-bg was itself removed in the 2026-08-21
+      // functional audit pass below (a fake corner-color heuristic
+      // duplicating the real image-background-remover tool), so
+      // image-clipper now goes straight to the homepage.
       { source: '/tools/image-clipper', destination: '/', permanent: true },
       { source: '/tools/image-orientation-fixer', destination: '/tools/rotate', permanent: true },
       // "Text to Image Generator" promised social-graphic creation from
@@ -88,8 +93,10 @@ const nextConfig = {
       { source: '/tools/favicon-checker', destination: '/tools/favicon-grabber', permanent: true },
       { source: '/tools/sitemap-xml-validator', destination: '/tools/xml-validator', permanent: true },
       // MOBI to AZW3 needed a .mobi upload; Azw3ToMobiClient only accepts
-      // .azw3 (it only ever did the reverse direction). No MOBI-accepting
-      // ebook converter exists elsewhere to redirect to more precisely.
+      // .azw3 (it only ever did the reverse direction). azw3-to-mobi was
+      // itself removed in the 2026-08-21 functional audit pass below (no
+      // ebook encoder library exists in this codebase), so this now goes
+      // straight to the homepage instead of chaining through it.
       { source: '/tools/mobi-to-azw3', destination: '/', permanent: true },
 
       // Same pass, more real-destination redirects: FakeTextGeneratorClient
@@ -182,6 +189,10 @@ const nextConfig = {
       { source: '/tools/vsdx-to-jpg', destination: '/tools/image-format-converter', permanent: true },
       { source: '/tools/vsd-to-pdf', destination: '/tools/excel-to-pdf', permanent: true },
       { source: '/tools/vsdx-to-pdf', destination: '/tools/excel-to-pdf', permanent: true },
+      // avi-to-mov, this line's original destination, was itself removed
+      // in the 2026-08-21 functional audit pass below (no real transcoding
+      // - it just relabeled the uploaded bytes), so this now goes straight
+      // to the homepage.
       { source: '/tools/mp4-to-avi', destination: '/', permanent: true },
       { source: '/tools/webp-to-gif', destination: '/tools/image-format-converter', permanent: true },
       { source: '/tools/json-to-tsv', destination: '/tools/json-to-csv', permanent: true },

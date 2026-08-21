@@ -136,7 +136,7 @@ Look at:
 - Auth-related headers
 - Whether the response is compressed or truncated
 
-If the issue is actually a CORS, caching, or header problem, the JSON formatter is not the first tool you need. Use an [HTTP Headers Viewer](/tools/http-headers-viewer) or CORS debugger instead.
+If the issue is actually a CORS, caching, or header problem, the JSON formatter is not the first tool you need. Use an [HTTP Status Checker](/tools/http-status-checker) or CORS debugger instead.
 
 ### 2. Redact Secrets Before Formatting
 

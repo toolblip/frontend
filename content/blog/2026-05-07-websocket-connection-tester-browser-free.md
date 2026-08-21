@@ -104,7 +104,7 @@ Then verify the server broadcasts the expected response format. Check that the m
 
 If your `wss://` endpoint fails but `ws://` works locally, you likely have a TLS configuration issue. Check:
 
-- Is your certificate valid and not expired? Use [Toolblip's SSL Certificate Checker](/tools/ssl-certificate-checker) to inspect.
+- Is your certificate valid and not expired? Check it with your browser's dev tools or a dedicated SSL inspector.
 - Does your server support TLS 1.2 or higher?
 - Is the certificate chain complete?
 
@@ -164,7 +164,7 @@ This kind of live testing is exactly what the browser-based approach is good for
 
 When debugging WebSocket issues, you'll sometimes need to inspect the HTTP headers of the initial handshake. The handshake is just an HTTP request  -  so headers like `Sec-WebSocket-Protocol`, `Upgrade`, and `Sec-WebSocket-Extensions` tell you what was negotiated.
 
-If something's failing at the handshake level, check your [HTTP headers](/tools/http-headers-viewer) to confirm the `Upgrade` header is being sent and the server responds with `101 Switching Protocols`.
+If something's failing at the handshake level, check your browser's Network tab to confirm the `Upgrade` header is being sent and the server responds with `101 Switching Protocols`.
 
 ## Conclusion
 

@@ -62,7 +62,7 @@ The browser enforces CORS based on what the server being called allows. It answe
 
 The CSP vs CORS difference matters when a fetch fails. If the console says the request violated a CSP directive, fix `connect-src` in your own header. If it says the response lacked `Access-Control-Allow-Origin`, the fix lives on the API server, not in your policy. Adding an origin to `connect-src` will never resolve a CORS error, and loosening CORS will never satisfy a CSP block.
 
-Confirm which one you are looking at with the [HTTP Headers Viewer](https://toolblip.com/tools/http-headers-viewer), which shows both the CSP you are sending and the CORS headers the remote endpoint returns.
+Confirm which one you are looking at with the [HTTP Status Checker](https://toolblip.com/tools/http-status-checker), which shows both the CSP you are sending and the CORS headers the remote endpoint returns.
 
 ## Use CSP Report-Only Mode for Testing
 
@@ -163,5 +163,5 @@ Then load the site with DevTools open and watch the Console tab. A clean load wi
 
 Generate a Content Security Policy header for web security in report-only mode first, collect real violations for a full week, replace every `'unsafe-inline'` with a nonce or hash, then promote it to enforcing. Include `frame-ancestors`, `base-uri`, and `form-action`, and verify with curl that the header survives your CDN.
 
-Start with the free [Security Headers Generator](https://toolblip.com/tools/security-headers-generator) to build a complete, valid policy in your browser, then confirm what your server actually sends with the [HTTP Headers Viewer](https://toolblip.com/tools/http-headers-viewer). No account, no signup, and no guessing about which directive blocked your script.
+Start with the free [Security Headers Generator](https://toolblip.com/tools/security-headers-generator) to build a complete, valid policy in your browser, then confirm what your server actually sends with the [HTTP Status Checker](https://toolblip.com/tools/http-status-checker). No account, no signup, and no guessing about which directive blocked your script.
 

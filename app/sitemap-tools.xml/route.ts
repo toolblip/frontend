@@ -7,7 +7,7 @@ import { sitemapXmlResponse, type SitemapUrlEntry } from '@/lib/sitemap-xml';
 // every deploy regardless of whether the page's content actually changed.
 // Bump when the tool catalog changes meaningfully (most recently: round 4
 // of the family-verification pass, 34 slugs removed/redirected, 2 added).
-const TOOL_PAGES_LAST_MODIFIED = new Date('2026-08-20T00:00:00.000Z');
+const TOOL_PAGES_LAST_MODIFIED = new Date('2026-08-21T00:00:00.000Z');
 
 // NOTE: this still lists the full tool catalog. The GSC recovery plan's
 // next step is narrowing this to a verified "tier A" subset (unique
