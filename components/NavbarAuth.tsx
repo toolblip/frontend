@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/app/providers/auth-provider';
+import { IconUser } from '@/components/v2/icons';
 
 export default function NavbarAuth() {
   const { user, logout, loading } = useAuth();
@@ -74,8 +75,8 @@ export default function NavbarAuth() {
   }
 
   return (
-    <Link href="/login" className="tb-v2-btn tb-v2-btn-primary">
-      Sign In
+    <Link href="/login" className="tb-v2-btn tb-v2-btn-ghost tb-v2-tm-trigger tb-v2-nav-signin-icon" aria-label="Sign in">
+      <IconUser className="tb-v2-ic" />
     </Link>
   );
 }

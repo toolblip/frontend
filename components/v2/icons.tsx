@@ -14,6 +14,22 @@ const compound = (children: React.ReactNode) => (props: IconProps) => (
   </svg>
 );
 
+// A filled brand mark, not a stroke icon like the rest of this file — .tb-v2-ic
+// sets fill:none/stroke:currentColor, so this overrides both back via inline
+// style (which beats a class rule) rather than through base()/compound().
+export function IconX({ style, ...props }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className="tb-v2-ic"
+      style={{ fill: 'currentColor', stroke: 'none', ...style }}
+      {...props}
+    >
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+    </svg>
+  );
+}
+
 export const IconDev = compound(
   <>
     <path d="m9 8-4 4 4 4" />
@@ -286,6 +302,12 @@ export const IconClock = compound(
   <>
     <circle cx="12" cy="12" r="9" />
     <path d="M12 7v5l3 2" />
+  </>
+);
+export const IconUser = compound(
+  <>
+    <circle cx="12" cy="8" r="4" />
+    <path d="M4 21c0-4 4-7 8-7s8 3 8 7" />
   </>
 );
 export const IconDice = compound(

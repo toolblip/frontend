@@ -19,6 +19,9 @@ dist/
 # Local secrets (single source of truth for Toolblip secrets)
 secrets/
 
+# Local Tailscale dev-preview tooling (toolblip-workspace's scripts/tailscale-dev)
+.tailscale-preview/
+
 # Logs / local health checks
 *.log
 npm-debug.log*

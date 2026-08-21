@@ -1,6 +1,21 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  allowedDevOrigins: ['127.0.0.1'],
+  // '127.0.0.1' covers plain localhost dev; the Tailscale hostname/wildcard
+  // covers the toolblip-preview tooling's path-mounted worktree URLs. Without
+  // this, Next's dev server refuses the cross-origin HMR websocket handshake
+  // (a 502 through nginx) and Turbopack's dev client never completes its
+  // bootstrap — the whole app silently never hydrates, not just one component.
+  allowedDevOrigins: ['127.0.0.1', 'mx.ewe-ulmer.ts.net', '*.ts.net'],
+  // Set only by the local Tailscale-preview tooling (toolblip-workspace's
+  // scripts/tailscale-dev), which path-mounts a worktree's dev server at
+  // /{slug}/toolblip. No-op — and unset — for every other run (local dev,
+  // CI, Railway). Next.js only rewrites next/link, next/router, next/image,
+  // and its own generated asset URLs under a basePath; plain fetch() calls
+  // to hardcoded absolute paths are not rewritten automatically, which is
+  // why lib/sponsors.ts's requests are prefixed with the same public env
+  // var below rather than relying on this alone.
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH || undefined,
+  assetPrefix: process.env.NEXT_PUBLIC_BASE_PATH || undefined,
   images: {
     remotePatterns: [
       {
@@ -11,6 +26,10 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // /advertise (the old house-ad media kit) was replaced by the
+      // pay-to-rank Sponsors leaderboard. Never listed in a sitemap, so
+      // no other reference needs updating.
+      { source: '/advertise', destination: '/sponsors', permanent: true },
       // Family-verification pass (docs/gsc-recovery-plan.md): all three of
       // these render HttpHeadersViewerClient (fetch a URL, show its
       // response headers) but the tool description promises a static HTTP

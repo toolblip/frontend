@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { tools, categories, type Tool } from '@/data/tools';
-import AdSlot from '@/components/ads/AdSlot';
 import SharePanel from '@/components/share/SharePanel';
 
 type CategoryTab = (typeof categories)[number];
@@ -268,10 +267,6 @@ export function DirectoryClient() {
           </button>
         </section>
       )}
-
-      <div className="mt-6 grid grid-cols-1">
-        <AdSlot placement="directory" />
-      </div>
     </div>
   );
 }
