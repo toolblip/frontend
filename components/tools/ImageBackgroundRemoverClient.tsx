@@ -17,6 +17,17 @@ const MODEL_CDN_PREFIX = 'https://staticimgly.com/';
 // reaching the network.
 const nativeFetch = typeof window !== 'undefined' ? window.fetch.bind(window) : undefined;
 
+// "Best-effort" storage (the default) can be evicted by the browser under
+// disk pressure without warning, which would silently make the ~40MB
+// model re-download on a later visit despite the caching logic below
+// being correct. Asking for "persistent" storage tells the browser this
+// origin's data shouldn't be first in line for that eviction. Best-effort
+// call - most browsers grant it automatically for sites with any
+// meaningful engagement, but there's no downside to asking unconditionally.
+if (typeof navigator !== 'undefined' && navigator.storage?.persist) {
+  navigator.storage.persist().catch(() => {});
+}
+
 // The model CDN sends no Cache-Control header, so the browser can't
 // safely reuse its own HTTP cache across visits - every request behaves
 // as a fresh fetch. Cache Storage doesn't depend on the response's own
@@ -31,7 +42,13 @@ async function fetchWithModelCache(input: RequestInfo | URL, init?: RequestInit)
   if (cached) return cached;
   const response = await nativeFetch(input, init);
   if (response.ok) {
-    cache.put(url, response.clone()).catch(() => {});
+    // Not awaited - storing shouldn't hold up handing the response back.
+    // Logged rather than swallowed: a silent failure here (most likely
+    // storage quota) is indistinguishable from "it's just not caching"
+    // with no way to tell which from the outside.
+    cache.put(url, response.clone()).catch((err) => {
+      console.error('[bg-remover] failed to cache model chunk, will re-download next time:', url, err);
+    });
   }
   return response;
 }
@@ -365,28 +382,31 @@ export default function ImageBackgroundRemoverClient() {
         </div>
       ) : (
         <>
-          <div className="flex gap-2">
-            <button
-              onClick={() => selectMethod('ai')}
-              disabled={isProcessing}
-              className={`tb-v2-btn ${method === 'ai' ? 'tb-v2-btn-primary' : 'tb-v2-btn-ghost'} disabled:opacity-50`}
-            >
-              AI Remove
-            </button>
-            <button
-              onClick={() => selectMethod('floodfill')}
-              disabled={isProcessing}
-              className={`tb-v2-btn ${method === 'floodfill' ? 'tb-v2-btn-primary' : 'tb-v2-btn-ghost'} disabled:opacity-50`}
-            >
-              Auto Detect
-            </button>
-            <button
-              onClick={() => selectMethod('chroma')}
-              disabled={isProcessing}
-              className={`tb-v2-btn ${method === 'chroma' ? 'tb-v2-btn-primary' : 'tb-v2-btn-ghost'} disabled:opacity-50`}
-            >
-              Color Key
-            </button>
+          <div>
+            <p className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Method</p>
+            <div className="tb-v2-mode-tabs">
+              <button
+                onClick={() => selectMethod('ai')}
+                disabled={isProcessing}
+                className={`tb-v2-mode-tab ${method === 'ai' ? 'on' : ''} disabled:opacity-50`}
+              >
+                AI Remove
+              </button>
+              <button
+                onClick={() => selectMethod('floodfill')}
+                disabled={isProcessing}
+                className={`tb-v2-mode-tab ${method === 'floodfill' ? 'on' : ''} disabled:opacity-50`}
+              >
+                Auto Detect
+              </button>
+              <button
+                onClick={() => selectMethod('chroma')}
+                disabled={isProcessing}
+                className={`tb-v2-mode-tab ${method === 'chroma' ? 'on' : ''} disabled:opacity-50`}
+              >
+                Color Key
+              </button>
+            </div>
           </div>
 
           {method === 'ai' && !isProcessing && (
@@ -451,30 +471,22 @@ export default function ImageBackgroundRemoverClient() {
             </div>
           )}
 
-          <div className="flex gap-2">
-            <button
-              onClick={method === 'ai' ? removeBackgroundAI : removeBackground}
-              disabled={isProcessing || isOversized}
-              className="tb-v2-btn tb-v2-btn-primary disabled:opacity-50"
-              title={isOversized ? 'File size exceeds your plan limit' : ''}
-            >
-              {isProcessing
-                ? aiProgress !== null
-                  ? aiStage === 'fetch'
-                    ? `Downloading model...`
-                    : `Processing image...`
-                  : 'Processing...'
-                : isOversized
-                  ? 'File Too Large'
-                  : 'Remove Background'}
-            </button>
-            <button
-              onClick={() => { setImage(null); setImageFile(null); setSelectedFile(null); setProcessedImage(null); setAiError(null); }}
-              className="tb-v2-btn tb-v2-btn-ghost"
-            >
-              Choose New Image
-            </button>
-          </div>
+          <button
+            onClick={method === 'ai' ? removeBackgroundAI : removeBackground}
+            disabled={isProcessing || isOversized}
+            className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg w-full disabled:opacity-50"
+            title={isOversized ? 'File size exceeds your plan limit' : ''}
+          >
+            {isProcessing
+              ? aiProgress !== null
+                ? aiStage === 'fetch'
+                  ? `Downloading model...`
+                  : `Processing image...`
+                : 'Processing...'
+              : isOversized
+                ? 'File Too Large'
+                : 'Remove Background'}
+          </button>
 
           {aiError && (
             <div className="p-4 bg-red-100 text-red-700 rounded-lg">{aiError}</div>
@@ -486,7 +498,15 @@ export default function ImageBackgroundRemoverClient() {
 
       {image && (
         <div className="mt-4">
-          <p className="tb-v2-tool-label" style={{marginBottom:8}}>Original</p>
+          <div className="flex items-center justify-between" style={{ marginBottom: 8 }}>
+            <p className="tb-v2-tool-label" style={{ marginBottom: 0 }}>Original</p>
+            <button
+              onClick={() => { setImage(null); setImageFile(null); setSelectedFile(null); setProcessedImage(null); setAiError(null); }}
+              className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm"
+            >
+              Choose New Image
+            </button>
+          </div>
           <img src={image} alt="Original" className="max-w-full max-h-[70vh] object-contain rounded-lg" />
         </div>
       )}
