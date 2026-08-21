@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { convertHeicIfNeeded } from '@/lib/heic';
 import { useSubscription } from '@/hooks/useSubscription';
 import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
@@ -68,6 +68,21 @@ async function idbPutChunk(url: string, blob: Blob, contentType: string): Promis
   });
 }
 
+// Surfaced in the UI (not just devtools) so a report of "it's not caching"
+// can be checked without asking anyone to open the console - this has
+// already gone through two storage mechanisms that measured as working
+// in testing but didn't hold up on the browser someone actually reported
+// the problem on.
+async function idbCountChunks(): Promise<number> {
+  const db = await openModelDb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(MODEL_DB_STORE, 'readonly');
+    const req = tx.objectStore(MODEL_DB_STORE).count();
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
 // The model CDN sends no Cache-Control header, so the browser can't
 // safely reuse its own HTTP cache across visits - every request behaves
 // as a fresh fetch. IndexedDB doesn't depend on the response's own
@@ -116,11 +131,21 @@ export default function ImageBackgroundRemoverClient() {
   const [aiStage, setAiStage] = useState<'fetch' | 'compute'>('fetch');
   const [aiError, setAiError] = useState<string | null>(null);
   const [isConvertingHeic, setIsConvertingHeic] = useState(false);
+  // null = still checking, -1 = IndexedDB unavailable/error, 0+ = chunk count
+  const [modelCacheCount, setModelCacheCount] = useState<number | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { tier } = useSubscription();
   const maxSizeMB = tier === 'free' ? 5 : tier === 'starter' ? 10 : tier === 'ultra' ? 100 : tier === 'max' ? 500 : 5;
   const isOversized = selectedFile != null && selectedFile.size / (1024 * 1024) > maxSizeMB;
+
+  useEffect(() => {
+    let cancelled = false;
+    idbCountChunks()
+      .then((count) => { if (!cancelled) setModelCacheCount(count); })
+      .catch(() => { if (!cancelled) setModelCacheCount(-1); });
+    return () => { cancelled = true; };
+  }, []);
   // Bumped on every upload so an in-flight AI request can tell it's been
   // superseded (e.g. the user picked a new image while a slow ~40MB model
   // download/inference was still running) and skip applying its stale result.
@@ -204,7 +229,7 @@ export default function ImageBackgroundRemoverClient() {
     setAiError(null);
 
     // Swapped in only for the duration of this call so the imgly library's
-    // internal fetch() of model chunks goes through the Cache Storage
+    // internal fetch() of model chunks goes through the IndexedDB-backed
     // wrapper above - restored in `finally` below regardless of outcome.
     const originalFetch = window.fetch;
     window.fetch = fetchWithModelCache as typeof fetch;
@@ -252,6 +277,7 @@ export default function ImageBackgroundRemoverClient() {
       if (requestIdRef.current === requestId) {
         setIsProcessing(false);
         setAiProgress(null);
+        idbCountChunks().then(setModelCacheCount).catch(() => setModelCacheCount(-1));
       }
     }
   }, [imageFile]);
@@ -462,6 +488,15 @@ export default function ImageBackgroundRemoverClient() {
           {method === 'ai' && !isProcessing && (
             <p className="text-sm text-gray-500">
               Uses an AI segmentation model to cut out the subject, even against busy or uneven backgrounds.
+              {modelCacheCount !== null && (
+                <span className="block text-xs mt-1">
+                  {modelCacheCount > 0
+                    ? `Model cache: ready (${modelCacheCount} files stored on this device)`
+                    : modelCacheCount === -1
+                      ? "Model cache: unavailable in this browser - it'll download fresh every time"
+                      : "Model cache: not downloaded yet"}
+                </span>
+              )}
             </p>
           )}
 
@@ -546,28 +581,30 @@ export default function ImageBackgroundRemoverClient() {
 
       <canvas ref={canvasRef} className="hidden" />
 
-      {processedImage && (
-        <div className="mt-4">
-          <p className="tb-v2-tool-label" style={{marginBottom:8}}>Result (with transparency)</p>
-          <img src={processedImage} alt="No Background" className="max-w-full max-h-[70vh] object-contain rounded-lg" style={{ backgroundImage: 'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAABUSURBVDiNY/z//z8DJYCJgUIwaAzFMEoYRMVA4Y5LQNNLUMNA4TYowg1QLIMaB4rXIFYN0PQC1HhQ4oBEukE1LpT4IOqB2BgBAE0cFfVvYI0lAAAAAElFTkSuQmCC")', backgroundRepeat: 'repeat' }} />
-          <button onClick={handleDownload} className="tb-v2-btn tb-v2-btn-ghost mt-2">
-            Download PNG
-          </button>
-        </div>
-      )}
-
       {image && (
-        <div className="mt-4">
-          <div className="flex items-center justify-between" style={{ marginBottom: 8 }}>
-            <p className="tb-v2-tool-label" style={{ marginBottom: 0 }}>Original</p>
-            <button
-              onClick={() => { setImage(null); setImageFile(null); setSelectedFile(null); setProcessedImage(null); setAiError(null); }}
-              className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm"
-            >
-              Choose New Image
-            </button>
+        <div className={`mt-4 grid gap-4 ${processedImage ? 'sm:grid-cols-2' : ''}`}>
+          <div className="min-w-0">
+            <div className="flex items-center justify-between" style={{ marginBottom: 8 }}>
+              <p className="tb-v2-tool-label" style={{ marginBottom: 0 }}>Original</p>
+              <button
+                onClick={() => { setImage(null); setImageFile(null); setSelectedFile(null); setProcessedImage(null); setAiError(null); }}
+                className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm"
+              >
+                Choose New Image
+              </button>
+            </div>
+            <img src={image} alt="Original" className="w-full h-auto max-h-[60vh] object-contain rounded-lg" />
           </div>
-          <img src={image} alt="Original" className="max-w-full max-h-[70vh] object-contain rounded-lg" />
+
+          {processedImage && (
+            <div className="min-w-0">
+              <p className="tb-v2-tool-label" style={{marginBottom:8}}>Result (with transparency)</p>
+              <img src={processedImage} alt="No Background" className="w-full h-auto max-h-[60vh] object-contain rounded-lg" style={{ backgroundImage: 'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAABUSURBVDiNY/z//z8DJYCJgUIwaAzFMEoYRMVA4Y5LQNNLUMNA4TYowg1QLIMaB4rXIFYN0PQC1HhQ4oBEukE1LpT4IOqB2BgBAE0cFfVvYI0lAAAAAElFTkSuQmCC")', backgroundRepeat: 'repeat' }} />
+              <button onClick={handleDownload} className="tb-v2-btn tb-v2-btn-ghost mt-2">
+                Download PNG
+              </button>
+            </div>
+          )}
         </div>
       )}
 
