@@ -253,24 +253,20 @@ export default function SponsorsClient() {
   const urlInputRef = useRef<HTMLInputElement>(null);
   const [rulesOpen, setRulesOpen] = useState(false);
 
+  // Shared by the initial mount fetch and the manual Refresh button — always
+  // swallows errors the same way: a failed fetch just leaves the board as it
+  // was (the empty-board state covers a fetch failure the same as a
+  // genuinely empty one), never a scary error for what's meant to be a
+  // low-stakes background refresh.
+  const loadLeaderboard = () => fetchSponsorsLeaderboard().then(setBoard).catch(() => {});
+
   useEffect(() => {
-    fetchSponsorsLeaderboard()
-      .then(setBoard)
-      .catch(() => {
-        // Leave board null — the empty leaderboard state ("No bid yet.")
-        // covers a fetch failure the same as a genuinely empty board.
-      });
+    loadLeaderboard();
   }, []);
 
-  // Manual refresh button — same fetch as the mount effect, just callable on
-  // demand. Swallows errors the same way: a failed manual refresh just
-  // leaves the board as it was, no need to surface a scary error for it.
   const refreshLeaderboard = () => {
     setRefreshing(true);
-    fetchSponsorsLeaderboard()
-      .then(setBoard)
-      .catch(() => {})
-      .finally(() => setRefreshing(false));
+    loadLeaderboard().finally(() => setRefreshing(false));
   };
 
   // Hard floor of $1 regardless of what the API reports — a $0 bid must
@@ -507,7 +503,7 @@ export default function SponsorsClient() {
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 8 }}>
             <button
               type="button"
-              className="tb-v2-btn tb-v2-btn-sm"
+              className="tb-v2-btn tb-v2-btn-sm tb-v2-sponsor-refresh-btn"
               onClick={refreshLeaderboard}
               disabled={refreshing}
             >

@@ -3801,3 +3801,5 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   margin: 0;
 }
 
+.tb-v2-sponsor-refresh-btn:disabled { opacity: 0.45; cursor: default; }
+
