@@ -3438,6 +3438,16 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   100% { background-position: 0 50%; }
 }
 
+/* Stacks the Bid Now button above a single strip-wide "Sponsored" disclosure
+   — one label for the whole strip instead of repeating it per-card. */
+.tb-v2-sponsor-bidyours-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
 /* Wraps to two short lines ("Bid" / "Now") to read smaller/more compact
    than a single wide line — needs height:auto and align-self:center to
    override .tb-v2-btn's fixed pill height, which would otherwise clip the
@@ -3462,7 +3472,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   .tb-v2-sponsor-slot-2 { order: 2; }
   .tb-v2-sponsor-slot-1 { order: 1; }
   .tb-v2-sponsor-slot-3 { order: 3; }
-  .tb-v2-sponsor-bidyours { grid-column: 1; order: 4; margin-top: 0; }
+  .tb-v2-sponsor-bidyours-wrap { grid-column: 1; order: 4; margin-top: 0; }
 }
 
 /* ==========================================================================

@@ -87,6 +87,12 @@ export function formatBid(cents: number): string {
   return `$${Math.round(cents / 100).toLocaleString("en-US")}`;
 }
 
+/** "@handle" for an x.com identity, the raw domain otherwise — always the
+ * one real, verifiable identifier, never a free-text display name. */
+export function displayIdentity(domain: string): string {
+  return domain.startsWith("x.com/") ? "@" + domain.slice("x.com/".length) : domain;
+}
+
 /** Raw elapsed minutes since a bid, or null if there's no timestamp — used
  * to decide whether a row still counts as "recently bid" for highlighting. */
 export function minutesSince(iso: string | null, now: number = Date.now()): number | null {
