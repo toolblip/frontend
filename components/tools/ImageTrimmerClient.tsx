@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useCallback } from 'react';
+import Link from 'next/link';
 import { useSubscription } from '@/hooks/useSubscription';
 import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
 import { convertHeicIfNeeded } from '@/lib/heic';
@@ -214,13 +215,15 @@ export default function ImageTrimmerClient() {
               min="0"
               max="128"
               value={tolerance}
-              onChange={(e) => setTolerance(Number(e.target.value))}
+              onChange={(e) => { setTolerance(Number(e.target.value)); setStatus('idle'); }}
               className="tb-v2-range"
             />
           </div>
           <p className="text-xs text-gray-500">
             Trim samples the top-left pixel as the border color, then removes any solid rows/columns of that
             color from the edges. Raise the tolerance for borders with slight noise or compression artifacts.
+            Image Trimmer only works on images with a flat, uniform-color margin (screenshots, logos, scans) -
+            it can&apos;t crop a photo&apos;s subject out of a busy background.
           </p>
 
           <div className="flex gap-2">
@@ -244,7 +247,17 @@ export default function ImageTrimmerClient() {
 
           {status === 'nothing-to-trim' && (
             <p className="text-xs text-amber-500">
-              No uniform border found at this tolerance, try raising it, or the image may already be trimmed.
+              No uniform border found to trim - either this image is already tightly cropped with no padding,
+              or (if it&apos;s a photo with a busy background) it never had a solid-color margin to begin with.
+              Raising the tolerance only helps with the former; for the latter, try{' '}
+              <Link
+                href="/tools/image-background-remover"
+                prefetch={false}
+                className="text-red-700 dark:text-red-400 underline hover:no-underline"
+              >
+                Image Background Remover
+              </Link>{' '}
+              instead.
             </p>
           )}
 
