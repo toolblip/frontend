@@ -25,6 +25,10 @@ export default function ImageCropperClient() {
   const [sampleError, setSampleError] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
+  // Which direction each axis currently extends from dragStart. Only flips once a
+  // real (past-deadzone) movement happens on that axis - otherwise near-zero mouse
+  // jitter on the non-dominant axis would make the box teleport to the other side.
+  const dragDirRef = useRef({ x: 1, y: 1 });
   const { tier } = useSubscription();
   const maxSizeMB = tier === 'free' ? 5 : tier === 'starter' ? 10 : tier === 'ultra' ? 100 : tier === 'max' ? 500 : 5;
 
@@ -119,6 +123,12 @@ export default function ImageCropperClient() {
     const x = (e.clientX - rect.left) * scaleX;
     const y = (e.clientY - rect.top) * scaleY;
 
+    // Default each axis's growth direction toward whichever side has more room,
+    // so a drag starting near an edge isn't immediately cramped into a sliver.
+    dragDirRef.current = {
+      x: x < imgRef.current.width / 2 ? 1 : -1,
+      y: y < imgRef.current.height / 2 ? 1 : -1,
+    };
     setIsDragging(true);
     setDragStart({ x, y });
     setCropRect({ x, y, w: 0, h: 0 });
@@ -137,6 +147,14 @@ export default function ImageCropperClient() {
     const rawW = Math.abs(dx);
     const rawH = Math.abs(dy);
 
+    // Only commit a new direction once the drag has moved a real amount on that
+    // axis - a few px of hand tremor near zero shouldn't flip which side grows.
+    const DIR_DEADZONE = 3;
+    if (rawW > DIR_DEADZONE) dragDirRef.current.x = dx >= 0 ? 1 : -1;
+    if (rawH > DIR_DEADZONE) dragDirRef.current.y = dy >= 0 ? 1 : -1;
+    const dirX = dragDirRef.current.x;
+    const dirY = dragDirRef.current.y;
+
     // Constrain the drag to the selected aspect ratio, tracking whichever axis
     // the user is dragging further along (ratio-adjusted), like most cropping UIs.
     let w: number;
@@ -150,22 +168,31 @@ export default function ImageCropperClient() {
     }
 
     // Clamp to the available space in the drag direction, scaling both dimensions
-    // together so the ratio stays exact even when the drag would exceed the image.
-    const maxW = dx >= 0 ? imgRef.current.width - dragStart.x : dragStart.x;
-    const maxH = dy >= 0 ? imgRef.current.height - dragStart.y : dragStart.y;
-    if (w > maxW) { h *= maxW / w; w = maxW; }
-    if (h > maxH) { w *= maxH / h; h = maxH; }
+    // by the same factor so the ratio stays exact even past the image edge.
+    const maxW = dirX >= 0 ? imgRef.current.width - dragStart.x : dragStart.x;
+    const maxH = dirY >= 0 ? imgRef.current.height - dragStart.y : dragStart.y;
+    const scale = Math.min(1, maxW / w, maxH / h);
+    w *= scale;
+    h *= scale;
 
-    const newX = dx >= 0 ? dragStart.x : dragStart.x - w;
-    const newY = dy >= 0 ? dragStart.y : dragStart.y - h;
+    const newX = dirX >= 0 ? dragStart.x : dragStart.x - w;
+    const newY = dirY >= 0 ? dragStart.y : dragStart.y - h;
 
-    const newRect = { x: newX, y: newY, w, h };
+    const newRect = { x: Math.round(newX), y: Math.round(newY), w: Math.round(w), h: Math.round(h) };
     setCropRect(newRect);
     drawCanvas(imgRef.current, newRect.x, newRect.y, newRect.w, newRect.h);
   };
 
   const handleMouseUp = () => {
     setIsDragging(false);
+  };
+
+  const selectPreset = (label: string, ratio: number) => {
+    setPreset({ label, ratio });
+    // An existing crop rect was drawn against the old ratio - clear it rather
+    // than let a stale-ratio selection silently remain droppable/downloadable.
+    setCropRect({ x: 0, y: 0, w: 0, h: 0 });
+    if (imgRef.current) drawCanvas(imgRef.current, 0, 0, 0, 0);
   };
 
   const downloadCrop = () => {
@@ -197,7 +224,7 @@ export default function ImageCropperClient() {
                 type="radio"
                 name="crop-preset"
                 checked={preset.label === label}
-                onChange={() => setPreset({ label, ratio })}
+                onChange={() => selectPreset(label, ratio)}
                 className="w-4 h-4 accent-red-600"
               />
               {label}
@@ -263,7 +290,7 @@ export default function ImageCropperClient() {
               {isOversized ? 'File Too Large' : 'Download Crop'}
             </button>
             <button
-              onClick={() => { setImage(null); setCropRect({ x: 0, y: 0, w: 0, h: 0 }); setSampleError(false); }}
+              onClick={() => { setImage(null); setSelectedFile(null); setCropRect({ x: 0, y: 0, w: 0, h: 0 }); setSampleError(false); }}
               className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-lg"
             >
               Choose New Image
