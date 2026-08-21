@@ -3496,11 +3496,21 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   background: var(--surface-2);
 }
 
+/* Just a positioning context now — the row's actual layout lives on the
+   .tb-v2-sponsor-row-link anchor inside it, so the claim badge (its other
+   child) can be an absolutely-positioned sibling instead of nesting a
+   <button> inside the <a>, which the whole row now is. */
 .tb-v2-sponsor-row {
   position: relative;
+}
+
+.tb-v2-sponsor-row-link {
   display: flex;
   align-items: flex-start;
   gap: 14px;
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
 }
 
 /* Ranks 1-3: a standalone rounded card, tint intensity set inline per rank
@@ -3513,13 +3523,16 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 }
 
 /* Rank 4+: a plain flat list, no card, just a divider between rows — the
-   whole point per the reference is that these all look identical. */
+   whole point per the reference is that these all look identical. Flex +
+   align-items:center here (not on the link) so a short row (no tagline)
+   still centers vertically in the fixed min-height. */
 .tb-v2-sponsor-flat-list { display: flex; flex-direction: column; }
 .tb-v2-sponsor-row-flat {
+  display: flex;
+  align-items: center;
   padding: 12px 4px;
   border-bottom: 1px solid var(--line);
   min-height: 96px;
-  align-items: center;
 }
 .tb-v2-sponsor-flat-list .tb-v2-sponsor-row-flat:last-child { border-bottom: none; }
 
@@ -3583,6 +3596,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   width: 40px;
   height: 40px;
   border-radius: 8px;
+  background: transparent;
   object-fit: cover;
 }
 
@@ -3596,7 +3610,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.tb-v2-sponsor-row-domain:hover { color: var(--red); }
+.tb-v2-sponsor-row-link:hover .tb-v2-sponsor-row-domain { color: var(--red); }
 .tb-v2-sponsor-row-tagline {
   font-size: 13px;
   color: var(--fg-2);
@@ -3634,7 +3648,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 }
 
 @media (max-width: 560px) {
-  .tb-v2-sponsor-row { flex-wrap: wrap; }
+  .tb-v2-sponsor-row-link { flex-wrap: wrap; }
   .tb-v2-sponsor-row-price-wrap { margin-left: auto; }
 }
 

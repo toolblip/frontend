@@ -26,7 +26,7 @@ function avatarColor(seed: string): string {
  * plain site icon. Not used for X handles, which have no real "favicon";
  * unavatar's per-profile image is the only sensible source there. */
 function faviconUrl(domain: string, size = 128): string {
-  return `https://t3.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${encodeURIComponent(`https://${domain}`)}&size=${size}`;
+  return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=${size}`;
 }
 
 function SponsorAvatar({ domain, name }: { domain: string; name: string }) {
@@ -89,35 +89,35 @@ function SponsorRow({ row, onClaim }: { row: SponsorSlot; onClaim: (row: Sponsor
       className={`tb-v2-sponsor-row${isCard ? ' tb-v2-sponsor-row-card' : ' tb-v2-sponsor-row-flat'}`}
       style={isCard ? cardRowStyle(row.rank) : undefined}
     >
-      <span
-        className={`tb-v2-sponsor-row-rank${isCard ? ' tb-v2-sponsor-row-rank-card' : ''}`}
-        style={isCard ? cardRankBadgeStyle(row.rank) : undefined}
+      <a
+        href={withSponsorSource(row.url, 'leaderboard')}
+        target="_blank"
+        rel="sponsored nofollow noopener"
+        onClick={() => pingSponsorClick(row.id)}
+        className="tb-v2-sponsor-row-link"
       >
-        #{row.rank}
-      </span>
-      <SponsorAvatar domain={row.domain} name={row.name} />
-      <div className="tb-v2-sponsor-row-main">
-        <a
-          href={withSponsorSource(row.url, 'leaderboard')}
-          target="_blank"
-          rel="sponsored nofollow noopener"
-          onClick={() => pingSponsorClick(row.id)}
-          className="tb-v2-sponsor-row-domain"
+        <span
+          className={`tb-v2-sponsor-row-rank${isCard ? ' tb-v2-sponsor-row-rank-card' : ''}`}
+          style={isCard ? cardRankBadgeStyle(row.rank) : undefined}
         >
-          {displayIdentity(row.domain)}
-        </a>
-        {row.tagline && <span className="tb-v2-sponsor-row-tagline">{row.tagline}</span>}
-        <span className="tb-v2-sponsor-row-meta">
-          {timeAgo && <>{timeAgo}<span className="tb-v2-sponsor-live-dot" aria-hidden="true" /></>}
-          {row.clicks} clicks
+          #{row.rank}
         </span>
-      </div>
+        <SponsorAvatar domain={row.domain} name={row.name} />
+        <div className="tb-v2-sponsor-row-main">
+          <span className="tb-v2-sponsor-row-domain">{displayIdentity(row.domain)}</span>
+          {row.tagline && <span className="tb-v2-sponsor-row-tagline">{row.tagline}</span>}
+          <span className="tb-v2-sponsor-row-meta">
+            {timeAgo && <>{timeAgo}<span className="tb-v2-sponsor-live-dot" aria-hidden="true" /></>}
+            {row.clicks} clicks
+          </span>
+        </div>
+        <div className="tb-v2-sponsor-row-price-wrap">
+          <span className="tb-v2-sponsor-row-balance">{formatBid(row.balance_cents)}</span>
+        </div>
+      </a>
       <button type="button" className="tb-v2-sponsor-row-claim-badge" onClick={() => onClaim(row)}>
         Claim this rank for {formatBid(row.balance_cents + 100)}
       </button>
-      <div className="tb-v2-sponsor-row-price-wrap">
-        <span className="tb-v2-sponsor-row-balance">{formatBid(row.balance_cents)}</span>
-      </div>
     </div>
   );
 }
