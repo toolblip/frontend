@@ -1,7 +1,12 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { analyse, convertLine, extractDomain } from '@/lib/punycode';
+import EmojiPicker from './EmojiPicker';
+
+// A hand-picked subset of lib/emoji-data.ts's full list, shown inline in
+// the example panel so the common case doesn't need the search modal.
+const QUICK_EMOJI = ['😀', '❤️', '🔥', '⭐', '🚀', '🐱', '🍕', '🌈', '🎉', '💡', '▲', '✓'];
 
 // Deliberately distinct from the worked examples in data/tool-content.ts
 // (münchen.de, россия.рф, 🇧🇪.ws, হারুন.বাংলা) so the quick-load chips here
@@ -59,6 +64,8 @@ export default function PunycodeEncoderClient() {
   const [copiedRight, setCopiedRight] = useState(false);
   const [showExamplesLeft, setShowExamplesLeft] = useState(false);
   const [showExamplesRight, setShowExamplesRight] = useState(false);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const leftTextareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Editing the left (Unicode) pane: derive the right (Punycode) pane from it.
   const applyLeft = useCallback((text: string) => {
@@ -123,6 +130,22 @@ export default function PunycodeEncoderClient() {
     setShowExamplesLeft(false);
   };
 
+  // Inserts at the textarea's current cursor position rather than replacing
+  // the whole field, since the point is building a domain out of characters
+  // that aren't on a keyboard - not swapping in a full canned example.
+  const insertEmoji = (char: string) => {
+    const el = leftTextareaRef.current;
+    const start = el?.selectionStart ?? left.length;
+    const end = el?.selectionEnd ?? left.length;
+    const next = left.slice(0, start) + char + left.slice(end);
+    applyLeft(next);
+    const cursor = start + char.length;
+    requestAnimationFrame(() => {
+      el?.focus();
+      el?.setSelectionRange(cursor, cursor);
+    });
+  };
+
   const loadExampleRight = (seed: string) => {
     applyRight(seed);
     setShowExamplesRight(false);
@@ -169,10 +192,34 @@ export default function PunycodeEncoderClient() {
                   </button>
                 ))}
               </div>
+
+              <div className="text-xs font-medium text-gray-500 dark:text-gray-400 mt-3 mb-2">
+                Insert an emoji or symbol (no keyboard needed):
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                {QUICK_EMOJI.map((char) => (
+                  <button
+                    key={char}
+                    type="button"
+                    onClick={() => insertEmoji(char)}
+                    className="flex h-9 w-9 items-center justify-center rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                  >
+                    {char}
+                  </button>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => setShowEmojiPicker(true)}
+                  className="px-3 py-1.5 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                >
+                  Show full list…
+                </button>
+              </div>
             </div>
           )}
 
           <textarea
+            ref={leftTextareaRef}
             className="tb-v2-tool-textarea tb-idn-text"
             placeholder="Enter Unicode/IDN domains, one per line..."
             value={left}
@@ -263,6 +310,13 @@ export default function PunycodeEncoderClient() {
           ))}
         </div>
       </div>
+
+      {showEmojiPicker && (
+        <EmojiPicker
+          onSelect={insertEmoji}
+          onClose={() => setShowEmojiPicker(false)}
+        />
+      )}
     </div>
   );
 }
