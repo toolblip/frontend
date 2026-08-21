@@ -440,7 +440,18 @@ export default function ImageBackgroundRemoverClient() {
           )}
 
           {isProcessing && !isSlowFetch && aiStage === 'fetch' && (
-            <p className="text-sm text-gray-500">Hold on, we're processing your image...</p>
+            <div className="text-sm text-gray-500">
+              <div className="flex items-center justify-between mb-1">
+                <span>Hold on, we're processing your image...</span>
+                <span>{aiProgress ?? 0}%</span>
+              </div>
+              <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-red-600 transition-all"
+                  style={{ width: `${aiProgress ?? 0}%` }}
+                />
+              </div>
+            </div>
           )}
 
           {method === 'chroma' && (
