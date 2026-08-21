@@ -7,7 +7,8 @@ import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
 
 type RemovalMethod = 'floodfill' | 'chroma' | 'ai';
 
-const MODEL_CACHE_NAME = 'imgly-bg-removal-model-v1';
+const MODEL_DB_NAME = 'imgly-bg-removal-model-idb-v1';
+const MODEL_DB_STORE = 'chunks';
 const MODEL_CDN_PREFIX = 'https://staticimgly.com/';
 
 // Captured once at module load, before removeBackgroundAI ever swaps
@@ -19,36 +20,85 @@ const nativeFetch = typeof window !== 'undefined' ? window.fetch.bind(window) : 
 
 // "Best-effort" storage (the default) can be evicted by the browser under
 // disk pressure without warning, which would silently make the ~40MB
-// model re-download on a later visit despite the caching logic below
-// being correct. Asking for "persistent" storage tells the browser this
-// origin's data shouldn't be first in line for that eviction. Best-effort
-// call - most browsers grant it automatically for sites with any
-// meaningful engagement, but there's no downside to asking unconditionally.
+// model re-download on a later visit. Asking for "persistent" storage
+// tells the browser this origin's data shouldn't be first in line for
+// that eviction. Best-effort call - most browsers grant it automatically
+// for sites with any meaningful engagement, but there's no downside to
+// asking unconditionally.
 if (typeof navigator !== 'undefined' && navigator.storage?.persist) {
   navigator.storage.persist().catch(() => {});
 }
 
+// Storing model chunks via the Cache Storage API (caches.open/match/put)
+// worked reliably in Chrome but not in Safari - WebKit's Cache API
+// implementation is known to be unreliable for persisting data across
+// page loads (works within a session, but frequently doesn't survive a
+// reload). IndexedDB is the standard workaround: it's older, more widely
+// implemented, and Safari's support for it is much more consistent.
+function openModelDb(): Promise<IDBDatabase> {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(MODEL_DB_NAME, 1);
+    req.onupgradeneeded = () => {
+      if (!req.result.objectStoreNames.contains(MODEL_DB_STORE)) {
+        req.result.createObjectStore(MODEL_DB_STORE);
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function idbGetChunk(url: string): Promise<{ blob: Blob; contentType: string } | undefined> {
+  const db = await openModelDb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(MODEL_DB_STORE, 'readonly');
+    const req = tx.objectStore(MODEL_DB_STORE).get(url);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function idbPutChunk(url: string, blob: Blob, contentType: string): Promise<void> {
+  const db = await openModelDb();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(MODEL_DB_STORE, 'readwrite');
+    tx.objectStore(MODEL_DB_STORE).put({ blob, contentType }, url);
+    tx.oncomplete = () => resolve();
+    tx.onerror = () => reject(tx.error);
+  });
+}
+
 // The model CDN sends no Cache-Control header, so the browser can't
 // safely reuse its own HTTP cache across visits - every request behaves
-// as a fresh fetch. Cache Storage doesn't depend on the response's own
+// as a fresh fetch. IndexedDB doesn't depend on the response's own
 // headers, so once a chunk is stored here it stays until we evict it.
 async function fetchWithModelCache(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
   const url = typeof input === 'string' ? input : input instanceof URL ? input.toString() : input.url;
-  if (!url.startsWith(MODEL_CDN_PREFIX) || !nativeFetch || !('caches' in window)) {
+  if (!url.startsWith(MODEL_CDN_PREFIX) || !nativeFetch || typeof indexedDB === 'undefined') {
     return nativeFetch ? nativeFetch(input, init) : fetch(input, init);
   }
-  const cache = await caches.open(MODEL_CACHE_NAME);
-  const cached = await cache.match(url);
-  if (cached) return cached;
+  try {
+    const cached = await idbGetChunk(url);
+    if (cached) {
+      return new Response(cached.blob, { status: 200, headers: { 'Content-Type': cached.contentType } });
+    }
+  } catch (err) {
+    console.error('[bg-remover] model cache read failed, falling back to network:', url, err);
+  }
   const response = await nativeFetch(input, init);
   if (response.ok) {
+    const contentType = response.headers.get('content-type') || 'application/octet-stream';
     // Not awaited - storing shouldn't hold up handing the response back.
     // Logged rather than swallowed: a silent failure here (most likely
     // storage quota) is indistinguishable from "it's just not caching"
     // with no way to tell which from the outside.
-    cache.put(url, response.clone()).catch((err) => {
-      console.error('[bg-remover] failed to cache model chunk, will re-download next time:', url, err);
-    });
+    response
+      .clone()
+      .blob()
+      .then((blob) => idbPutChunk(url, blob, contentType))
+      .catch((err) => {
+        console.error('[bg-remover] failed to cache model chunk, will re-download next time:', url, err);
+      });
   }
   return response;
 }
