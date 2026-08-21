@@ -2,7 +2,7 @@
 title: "How to Generate Argon2 Password Hash With Right Params"
 description: >-
   Learn how to generate Argon2 password hash output with the correct memory,
-  time, and parallelism settings. Try the free Argon2 hash generator right now.
+  time, and parallelism settings using a real Argon2 library.
 slug: 2026-07-30-generate-argon2-password-hash
 date: "2026-07-30T00:00:00.000Z"
 category: Developer Tools
@@ -110,15 +110,15 @@ Bcrypt's advantage is maturity and ubiquity. It has been deployed and attacked s
 
 If you are choosing today, pick Argon2id. If you already run bcrypt at a sensible cost factor, migrating is worthwhile but not urgent, and you can rehash opportunistically as users log in. The [Bcrypt Hash Generator](https://toolblip.com/tools/bcrypt-hash-generator) is useful for producing comparison hashes while you evaluate the switch.
 
-## Using the Best Argon2 Hash Generator Online
+## Generating Argon2 Hashes to Test Parameters
 
-Testing parameter combinations by writing a script each time is slower than adjusting values in a form and reading the result.
+Testing parameter combinations by writing a script each time is slower than adjusting values in a form and reading the result, but it's also the only way to get a hash you can actually trust: Argon2 has no native browser API, so any "generate it client-side in your browser" tool is either shipping a large WASM build of the real algorithm or, more often, faking the output. Reach for your language's real Argon2 library instead — Node's `argon2` package, PHP's built-in `password_hash()` with `PASSWORD_ARGON2ID`, or Python's `argon2-cffi` — and run it locally or in a scratch script:
 
-The [Argon2 Hash Generator](https://toolblip.com/tools/argon2-hash-generator) produces Argon2 password hashes with configurable memory, time, and parallelism. Enter a password, set the three parameters, and read back the full encoded hash.
+```
+node -e "require('argon2').hash('correct horse battery staple', { type: require('argon2').argon2id, memoryCost: 65536, timeCost: 3, parallelism: 4 }).then(console.log)"
+```
 
-Everything runs in the browser. To confirm that instead of trusting the claim, open DevTools, switch to the Network tab, clear the existing requests, then enter a password and generate. No request appears.
-
-That property matters here more than for most tools. A password sent to a hashing endpoint travels the network in plaintext and probably lands in a request log, which defeats the point of hashing it carefully.
+That property matters here more than for most tools. A password sent to a hashing endpoint travels the network in plaintext and probably lands in a request log, which defeats the point of hashing it carefully — another reason to reach for a real local library rather than a web form.
 
 If you inherit a hash and cannot tell what produced it, the [Hash Identifier](https://toolblip.com/tools/hash-identifier) reads the prefix and format to name the likely algorithm. Useful when auditing a legacy database before planning a migration.
 
@@ -142,5 +142,5 @@ When you generate Argon2 password hash output, the algorithm choice is settled: 
 
 Start from `m=65536`, `t=3`, `p=4`, then benchmark on production-equivalent hardware and raise memory until a single hash lands in the 250 to 500 millisecond range. Store the full encoded string, verify using the parameters embedded in it, and rehash opportunistically when you raise your floor.
 
-Test your parameter combinations in the [Argon2 Hash Generator](https://toolblip.com/tools/argon2-hash-generator) before committing them to your auth config, and see the encoded output your backend will need to parse.
+Test your parameter combinations with a real Argon2 library before committing them to your auth config, and check the encoded output matches what your backend will need to parse.
 

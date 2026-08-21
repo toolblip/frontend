@@ -65,7 +65,7 @@ Export the report. File tickets for every broken internal URL. External 404s can
 
 ## Check security headers that browsers actually enforce
 
-Valid pages with working links can still ship with a weak response header set. Open the live (or staging) response in an [HTTP headers viewer](/tools/http-headers-viewer) and confirm the basics are present:
+Valid pages with working links can still ship with a weak response header set. Open the live (or staging) response in an [HTTP Status Checker](/tools/http-status-checker) and confirm the basics are present:
 
 ```http
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
@@ -105,6 +105,6 @@ You can run the whole pre launch website checklist in the browser:
 
 1. [HTML Validator](/tools/html-validator) for markup errors and accessibility footguns
 2. [Broken Link Checker](/tools/broken-link-checker) for dead internal and external URLs
-3. [HTTP Headers Viewer](/tools/http-headers-viewer) for HSTS, CSP, and frame protections
+3. [HTTP Status Checker](/tools/http-status-checker) for HSTS, CSP, and frame protections
 
 Keep the three tabs open during every staging promote. When all three reports are clean, you have done the boring half of launch QA. The exciting half (load tests, feature flags, rollback plan) can start from a site that already loads, links, and answers securely.

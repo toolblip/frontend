@@ -32,7 +32,7 @@
 - [Tweet to Image Converter](https://toolblip.com/tools/tweet-to-image-converter)
 - [QR Code Generator](https://toolblip.com/tools/qr-code-generator)
 - [Regex Tester](https://toolblip.com/tools/regex-tester)
-- [PNG Compressor](https://toolblip.com/tools/png-compressor)
+- [Image Compressor](https://toolblip.com/tools/image-compressor)
 - [HTML Minifier](https://toolblip.com/tools/html-minifier)
 - [Color Palette Generator](https://toolblip.com/tools/color-palette-generator)
 
