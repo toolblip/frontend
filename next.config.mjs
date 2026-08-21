@@ -1,6 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  allowedDevOrigins: ['127.0.0.1'],
+  // '127.0.0.1' covers plain localhost dev; the Tailscale hostname/wildcard
+  // covers the toolblip-preview tooling's path-mounted worktree URLs. Without
+  // this, Next's dev server refuses the cross-origin HMR websocket handshake
+  // (a 502 through nginx) and Turbopack's dev client never completes its
+  // bootstrap — the whole app silently never hydrates, not just one component.
+  allowedDevOrigins: ['127.0.0.1', 'mx.ewe-ulmer.ts.net', '*.ts.net'],
   // Set only by the local Tailscale-preview tooling (toolblip-workspace's
   // scripts/tailscale-dev), which path-mounts a worktree's dev server at
   // /{slug}/toolblip. No-op — and unset — for every other run (local dev,
