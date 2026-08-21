@@ -167,6 +167,7 @@ export default function EraseColorClient() {
     setWorkingUrl(null);
     setPickedColor(null);
     setErasedCount(0);
+    setSampleError(false);
   };
 
   return (

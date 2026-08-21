@@ -132,12 +132,34 @@ export default function ImageCropperClient() {
     const x = (e.clientX - rect.left) * scaleX;
     const y = (e.clientY - rect.top) * scaleY;
 
-    const newRect = {
-      x: Math.min(dragStart.x, x),
-      y: Math.min(dragStart.y, y),
-      w: Math.abs(x - dragStart.x),
-      h: Math.abs(y - dragStart.y),
-    };
+    const dx = x - dragStart.x;
+    const dy = y - dragStart.y;
+    const rawW = Math.abs(dx);
+    const rawH = Math.abs(dy);
+
+    // Constrain the drag to the selected aspect ratio, tracking whichever axis
+    // the user is dragging further along (ratio-adjusted), like most cropping UIs.
+    let w: number;
+    let h: number;
+    if (rawW / preset.ratio > rawH) {
+      w = rawW;
+      h = w / preset.ratio;
+    } else {
+      h = rawH;
+      w = h * preset.ratio;
+    }
+
+    // Clamp to the available space in the drag direction, scaling both dimensions
+    // together so the ratio stays exact even when the drag would exceed the image.
+    const maxW = dx >= 0 ? imgRef.current.width - dragStart.x : dragStart.x;
+    const maxH = dy >= 0 ? imgRef.current.height - dragStart.y : dragStart.y;
+    if (w > maxW) { h *= maxW / w; w = maxW; }
+    if (h > maxH) { w *= maxH / h; h = maxH; }
+
+    const newX = dx >= 0 ? dragStart.x : dragStart.x - w;
+    const newY = dy >= 0 ? dragStart.y : dragStart.y - h;
+
+    const newRect = { x: newX, y: newY, w, h };
     setCropRect(newRect);
     drawCanvas(imgRef.current, newRect.x, newRect.y, newRect.w, newRect.h);
   };
@@ -241,7 +263,7 @@ export default function ImageCropperClient() {
               {isOversized ? 'File Too Large' : 'Download Crop'}
             </button>
             <button
-              onClick={() => { setImage(null); setCropRect({ x: 0, y: 0, w: 0, h: 0 }); }}
+              onClick={() => { setImage(null); setCropRect({ x: 0, y: 0, w: 0, h: 0 }); setSampleError(false); }}
               className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-lg"
             >
               Choose New Image
