@@ -111,7 +111,7 @@ export default function ImageTrimmerClient() {
 
   const loadSample = (e: React.MouseEvent) => {
     e.stopPropagation();
-    const src = '/samples/image-trimmer-sample.png';
+    const src = '/samples/tool-sample.png';
     setSelectedFile(null);
     setTrimmedUrl(null);
     setTrimBox(null);

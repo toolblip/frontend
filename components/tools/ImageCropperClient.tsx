@@ -18,11 +18,11 @@ export default function ImageCropperClient() {
   const [image, setImage] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preset, setPreset] = useState(PRESETS[0]);
-  const [cropping, setCropping] = useState(false);
   const [cropRect, setCropRect] = useState({ x: 0, y: 0, w: 0, h: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [isConvertingHeic, setIsConvertingHeic] = useState(false);
+  const [sampleError, setSampleError] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
   const { tier } = useSubscription();
@@ -83,6 +83,23 @@ export default function ImageCropperClient() {
     if (file) { setSelectedFile(file); loadImage(file); }
   };
 
+  const loadSample = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const src = '/samples/tool-sample.png';
+    setSelectedFile(null);
+    const img = new Image();
+    img.onload = () => {
+      imgRef.current = img;
+      setSampleError(false);
+      setImage(src);
+      // Wait a frame so the canvas (only mounted once `image` is truthy) exists
+      // by the time we draw into it - setImage's re-render hasn't landed yet here.
+      requestAnimationFrame(() => drawCanvas(img, 0, 0, img.width, img.height));
+    };
+    img.onerror = () => setSampleError(true);
+    img.src = src;
+  };
+
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
@@ -102,7 +119,7 @@ export default function ImageCropperClient() {
     const x = (e.clientX - rect.left) * scaleX;
     const y = (e.clientY - rect.top) * scaleY;
 
-    setCropping(true);
+    setIsDragging(true);
     setDragStart({ x, y });
     setCropRect({ x, y, w: 0, h: 0 });
   };
@@ -127,7 +144,6 @@ export default function ImageCropperClient() {
 
   const handleMouseUp = () => {
     setIsDragging(false);
-    setCropping(false);
   };
 
   const downloadCrop = () => {
@@ -183,6 +199,15 @@ export default function ImageCropperClient() {
             <>
               <p className="text-gray-400 text-sm">Drag & drop an image, or click to browse</p>
               <p className="text-gray-600 text-xs mt-1">PNG, JPG, WebP, GIF, HEIC</p>
+              <button
+                onClick={loadSample}
+                className="text-xs text-red-700 dark:text-red-400 underline hover:no-underline mt-3"
+              >
+                Or try a sample image
+              </button>
+              {sampleError && (
+                <p className="text-xs text-amber-500 mt-2">Couldn&apos;t load the sample image, try again.</p>
+              )}
             </>
           )}
           <input
