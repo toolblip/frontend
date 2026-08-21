@@ -109,6 +109,15 @@ export default function ImageTrimmerClient() {
     }
   };
 
+  const loadSample = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const res = await fetch('/samples/image-trimmer-sample.png');
+    const blob = await res.blob();
+    const file = new File([blob], 'image-trimmer-sample.png', { type: 'image/png' });
+    setSelectedFile(file);
+    loadImage(file);
+  };
+
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const file = e.dataTransfer.files[0];
@@ -193,6 +202,9 @@ export default function ImageTrimmerClient() {
             <>
               <p className="text-gray-400 text-sm">Drag & drop an image, or click to browse</p>
               <p className="text-gray-600 text-xs mt-1">PNG, JPG, WebP, GIF, HEIC</p>
+              <button onClick={loadSample} className="text-xs text-red-500 underline hover:no-underline mt-3">
+                Or try a sample image
+              </button>
             </>
           )}
           <input
