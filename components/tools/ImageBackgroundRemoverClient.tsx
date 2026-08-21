@@ -389,7 +389,7 @@ export default function ImageBackgroundRemoverClient() {
             </button>
           </div>
 
-          {method === 'ai' && !(isProcessing && aiStage === 'fetch') && (
+          {method === 'ai' && !isProcessing && (
             <p className="text-sm text-gray-500">
               Uses an AI segmentation model to cut out the subject, even against busy or uneven backgrounds.
             </p>
@@ -399,6 +399,21 @@ export default function ImageBackgroundRemoverClient() {
             <div className="text-sm text-gray-500">
               <div className="flex items-center justify-between mb-1">
                 <span>Downloading local AI model (first use only, then cached)</span>
+                <span>{aiProgress ?? 0}%</span>
+              </div>
+              <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
+                <div
+                  className="h-full bg-red-600 transition-all"
+                  style={{ width: `${aiProgress ?? 0}%` }}
+                />
+              </div>
+            </div>
+          )}
+
+          {isProcessing && aiStage === 'compute' && (
+            <div className="text-sm text-gray-500">
+              <div className="flex items-center justify-between mb-1">
+                <span>Running AI segmentation on your image (model already cached, this is the analysis step)</span>
                 <span>{aiProgress ?? 0}%</span>
               </div>
               <div className="w-full h-2 bg-gray-800 rounded-full overflow-hidden">
@@ -447,7 +462,7 @@ export default function ImageBackgroundRemoverClient() {
                 ? aiProgress !== null
                   ? aiStage === 'fetch'
                     ? `Downloading model...`
-                    : `Processing image... ${aiProgress}%`
+                    : `Processing image...`
                   : 'Processing...'
                 : isOversized
                   ? 'File Too Large'
