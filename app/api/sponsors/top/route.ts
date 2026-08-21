@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { parseLaravelJsonResponse } from "@/lib/adminApi";
 
 const LARAVEL_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.toolblip.com";
 
@@ -12,9 +13,10 @@ export async function GET() {
       headers: { Accept: "application/json" },
       cache: "no-store",
     });
-    const data = await laravelRes.json();
+    const data = await parseLaravelJsonResponse(laravelRes, "Unable to load sponsors.");
     return NextResponse.json(data, { status: laravelRes.status });
-  } catch {
+  } catch (err) {
+    console.error("Sponsors top proxy error:", err);
     return NextResponse.json({ message: "Unable to load sponsors." }, { status: 500 });
   }
 }

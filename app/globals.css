@@ -680,8 +680,6 @@ body.tb-v2 a {
 }
 
 .tb-v2-nav-signin-icon {
-  width: 36px; height: 36px; padding: 0;
-  display: inline-flex; align-items: center; justify-content: center;
   border-radius: 999px;
 }
 .tb-v2-tm-pop {
@@ -3382,6 +3380,16 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 }
 .tb-v2-sponsor-slot-1 .tb-v2-sponsor-rank { color: var(--red); }
 
+/* Visible paid-placement disclosure — an FTC-style label, not a design
+   element, so it stays small and muted rather than a badge/pill. */
+.tb-v2-sponsor-disclosure {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--fg-3);
+}
+
 .tb-v2-sponsor-name {
   font-family: var(--f-display);
   font-weight: 700;
@@ -3401,6 +3409,9 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 }
 
 .tb-v2-sponsor-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 11px;
   color: var(--fg-3);
 }
@@ -3427,10 +3438,21 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   100% { background-position: 0 50%; }
 }
 
+/* Wraps to two short lines ("Bid" / "Now") to read smaller/more compact
+   than a single wide line — needs height:auto and align-self:center to
+   override .tb-v2-btn's fixed pill height, which would otherwise clip the
+   second line and leave the button pinned to the top of its grid cell. */
 .tb-v2-sponsor-bidyours {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  align-self: center;
+  gap: 0;
+  height: auto;
+  min-height: 44px;
+  padding: 6px 16px;
+  line-height: 1.15;
   text-align: center;
   text-decoration: none;
 }
@@ -3481,6 +3503,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   display: flex;
   flex-direction: column;
   gap: 12px;
+  margin-bottom: 20px;
 }
 
 .tb-v2-sponsor-empty-board {
@@ -3516,28 +3539,30 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 /* Ranks 1-3: a standalone rounded card, tint intensity set inline per rank
    (100% / 60% / 30%) via cardRowStyle() in SponsorsClient.tsx. */
 .tb-v2-sponsor-row-card {
-  padding: 16px 18px;
+  padding: 22px 26px;
   border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: 20px;
   background: var(--surface);
 }
 
-/* Rank 4+: a plain flat list, no card, just a divider between rows — the
-   whole point per the reference is that these all look identical. Flex +
-   align-items:center here (not on the link) so a short row (no tagline)
-   still centers vertically in the fixed min-height. */
+/* Rank 4+: a plain flat list, no card — the whole point per the reference is
+   that these all look identical. A small margin (not just the border) gives
+   the claim badge a clear band to straddle without touching either row's
+   text; the border-bottom still draws the visible divider inside that gap. */
 .tb-v2-sponsor-flat-list { display: flex; flex-direction: column; }
 .tb-v2-sponsor-row-flat {
   display: flex;
   align-items: center;
   padding: 12px 4px;
+  margin-bottom: 14px;
   border-bottom: 1px solid var(--line);
   min-height: 96px;
 }
-.tb-v2-sponsor-flat-list .tb-v2-sponsor-row-flat:last-child { border-bottom: none; }
+.tb-v2-sponsor-flat-list .tb-v2-sponsor-row-flat:last-child { margin-bottom: 0; border-bottom: none; }
 
 /* Sits centered on the row's top border, like a tab straddling the edge —
-   not inline with the balance. Shows only on hover, for every rank. */
+   not inline with the balance. Shows only on hover, for every rank, same
+   placement for card rows and flat rows alike. */
 .tb-v2-sponsor-row-claim-badge {
   position: absolute;
   top: 0;
@@ -3546,8 +3571,8 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   z-index: 2;
   background: var(--red);
   color: #fff;
-  font-size: 14.4px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
   padding: 6px 14px;
   border-radius: 999px;
   white-space: nowrap;
@@ -3559,15 +3584,8 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 }
 .tb-v2-sponsor-row-claim-badge:hover { background: var(--red-hover); }
 .tb-v2-sponsor-row-price-wrap { flex-shrink: 0; display: flex; align-items: center; }
-.tb-v2-sponsor-row:hover .tb-v2-sponsor-row-claim-badge { opacity: 1; pointer-events: auto; }
-
-/* Flat rows (rank 4+) sit tight against a 1px divider — straddling the
-   border like the card rows do would overlap the row above. Tuck it just
-   inside the top edge instead. */
-.tb-v2-sponsor-row-flat .tb-v2-sponsor-row-claim-badge {
-  top: 6px;
-  transform: translateX(-50%);
-}
+.tb-v2-sponsor-row:hover .tb-v2-sponsor-row-claim-badge,
+.tb-v2-sponsor-row:focus-within .tb-v2-sponsor-row-claim-badge { opacity: 1; pointer-events: auto; }
 
 .tb-v2-sponsor-row-rank {
   flex-shrink: 0;
@@ -3578,14 +3596,14 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   padding-top: 2px;
 }
 .tb-v2-sponsor-row-rank-card {
-  width: 34px;
-  height: 34px;
+  min-width: 30px;
+  height: 26px;
+  padding: 0 8px;
   border-radius: 999px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
-  padding-top: 0;
 }
 
 /* No forced background — the real favicon/avatar image shows as-is, just
@@ -3593,9 +3611,9 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
    rank/card-vs-flat. */
 .tb-v2-sponsor-row-avatar {
   flex-shrink: 0;
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
   background: transparent;
   object-fit: cover;
 }
@@ -3603,6 +3621,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 .tb-v2-sponsor-row-main { display: flex; flex-direction: column; min-width: 0; flex: 1; gap: 2px; }
 .tb-v2-sponsor-row-domain {
   display: block;
+  font-size: 19px;
   font-weight: 700;
   color: var(--fg-0);
   text-decoration: none;
@@ -3612,7 +3631,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 }
 .tb-v2-sponsor-row-link:hover .tb-v2-sponsor-row-domain { color: var(--red); }
 .tb-v2-sponsor-row-tagline {
-  font-size: 13px;
+  font-size: 15px;
   color: var(--fg-2);
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -3623,7 +3642,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: 13px;
   color: var(--fg-3);
   white-space: nowrap;
 }
@@ -3640,7 +3659,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 }
 .tb-v2-sponsor-row-balance {
   flex-shrink: 0;
-  font-size: 15px;
+  font-size: 21px;
   font-weight: 700;
   color: var(--red);
   white-space: nowrap;

@@ -598,10 +598,8 @@ export default function Nav({ onOpenSearch }: Props) {
           })}
           <div className="tb-v2-nav-mobile-divider" />
           <Link href="/directory" onClick={() => setMobileOpen(false)}>All Tools</Link>
-          {user ? (
+          {user && (
             <Link href="/dashboard" onClick={() => setMobileOpen(false)}>Dashboard</Link>
-          ) : (
-            <Link href="/pricing" onClick={() => setMobileOpen(false)}>Get Pro</Link>
           )}
           <Link href="/login" onClick={() => setMobileOpen(false)}>Sign in</Link>
         </div>

@@ -87,11 +87,19 @@ export function formatBid(cents: number): string {
   return `$${Math.round(cents / 100).toLocaleString("en-US")}`;
 }
 
+/** Raw elapsed minutes since a bid, or null if there's no timestamp — used
+ * to decide whether a row still counts as "recently bid" for highlighting. */
+export function minutesSince(iso: string | null, now: number = Date.now()): number | null {
+  if (!iso) return null;
+  const minutes = Math.round((now - new Date(iso).getTime()) / 60_000);
+  if (!Number.isFinite(minutes)) return null;
+  return Math.max(0, minutes);
+}
+
 /** "1 minute ago" / "6 hours ago" / "14 days ago", relative to now. */
 export function formatTimeAgo(iso: string | null, now: number = Date.now()): string {
-  if (!iso) return "";
-  const diffMs = now - new Date(iso).getTime();
-  const minutes = Math.max(0, Math.round(diffMs / 60_000));
+  const minutes = minutesSince(iso, now);
+  if (minutes === null) return "";
   if (minutes < 1) return "just now";
   if (minutes < 60) return `${minutes} minute${minutes === 1 ? "" : "s"} ago`;
   const hours = Math.round(minutes / 60);

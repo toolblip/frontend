@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { parseLaravelJsonResponse } from "@/lib/adminApi";
 
 const LARAVEL_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.toolblip.com";
 
@@ -18,9 +19,10 @@ export async function POST(request: Request) {
       body: JSON.stringify(body),
     });
 
-    const data = await laravelRes.json();
+    const data = await parseLaravelJsonResponse(laravelRes, "Unable to start checkout. Please try again.");
     return NextResponse.json(data, { status: laravelRes.status });
-  } catch {
+  } catch (err) {
+    console.error("Sponsors checkout proxy error:", err);
     return NextResponse.json(
       { message: "Unable to start checkout. Please try again." },
       { status: 500 }

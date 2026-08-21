@@ -42,7 +42,7 @@ export default function SponsorStrip() {
     };
   }, []);
 
-  if (SUPPRESSED_PREFIXES.some((p) => pathname?.startsWith(p))) return null;
+  if (SUPPRESSED_PREFIXES.some((p) => pathname === p || pathname?.startsWith(`${p}/`))) return null;
   if (!showAds) return null;
 
   const bySlot = (rank: number): SponsorSlot | undefined => slots?.find((s) => s.rank === rank);
@@ -59,7 +59,8 @@ export default function SponsorStrip() {
           <SlotCard rank={1} slot={first} loading={loading} className="tb-v2-sponsor-slot-1" primary />
           <SlotCard rank={3} slot={third} loading={loading} className="tb-v2-sponsor-slot-3" />
           <Link href="/sponsors" className="tb-v2-sponsor-bidyours tb-v2-btn tb-v2-btn-primary">
-            Bid Now
+            <span>Bid</span>
+            <span>Now</span>
           </Link>
         </div>
       </div>
@@ -102,9 +103,14 @@ function SlotCard({
       data-testid={primary ? 'sponsor-strip-primary' : 'sponsor-strip-slot'}
     >
       <span className="tb-v2-sponsor-rank">#{rank}</span>
+      <span className="tb-v2-sponsor-disclosure">Sponsored</span>
       <span className="tb-v2-sponsor-name">{slot.name}</span>
       {slot.tagline && <span className="tb-v2-sponsor-tagline">{slot.tagline}</span>}
-      <span className="tb-v2-sponsor-meta">{formatBid(slot.balance_cents)} · {slot.clicks} clicks</span>
+      <span className="tb-v2-sponsor-meta">
+        {formatBid(slot.balance_cents)}
+        <span className="tb-v2-sponsor-live-dot" aria-hidden="true" />
+        {slot.clicks} clicks
+      </span>
     </a>
   );
 }

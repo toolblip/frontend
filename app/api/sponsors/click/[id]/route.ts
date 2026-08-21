@@ -12,8 +12,10 @@ export async function POST(_req: Request, context: RouteContext) {
       method: "POST",
       headers: { Accept: "application/json" },
     });
-  } catch {
-    // Best-effort — a dropped click ping shouldn't surface anywhere.
+  } catch (err) {
+    // Best-effort — a dropped click ping shouldn't surface to the caller,
+    // but it should still leave a trace server-side.
+    console.error("Sponsors click proxy error:", err);
   }
   return new Response(null, { status: 204 });
 }

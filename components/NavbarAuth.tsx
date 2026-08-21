@@ -75,7 +75,7 @@ export default function NavbarAuth() {
   }
 
   return (
-    <Link href="/login" className="tb-v2-btn tb-v2-btn-ghost tb-v2-nav-signin-icon" aria-label="Sign in">
+    <Link href="/login" className="tb-v2-btn tb-v2-btn-ghost tb-v2-tm-trigger tb-v2-nav-signin-icon" aria-label="Sign in">
       <IconUser className="tb-v2-ic" />
     </Link>
   );
