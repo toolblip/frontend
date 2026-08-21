@@ -11,6 +11,7 @@ const EXAMPLES = [
   '日本語.jp',
   '▲.to',
   'пример.рф',
+  'হারুহারুন.bd',
   'yuki@日本語.jp',
   'https://schön.de/straße',
 ];
