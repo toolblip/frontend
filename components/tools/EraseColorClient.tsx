@@ -193,7 +193,7 @@ export default function EraseColorClient() {
             <p className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Click to pick a color</p>
             <canvas
               ref={canvasRef}
-              className="max-w-full rounded-lg cursor-crosshair"
+              className="w-full h-auto max-h-[60vh] object-contain rounded-lg cursor-crosshair"
               style={{
                 backgroundImage:
                   'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAABUSURBVDiNY/z//z8DJYCJgUIwaAzFMEoYRMVA4Y5LQNNLUMNA4TYowg1QLIMaB4rXIFYN0PQC1HhQ4oBEukE1LpT4IOqB2BgBAE0cFfVvYI0lAAAAAElFTkSuQmCC")',
@@ -231,28 +231,26 @@ export default function EraseColorClient() {
             </span>
           </div>
 
-          <div className="flex gap-2" style={{ flexWrap: 'wrap' }}>
+          <div className="flex gap-2">
             <button
               onClick={eraseColor}
               disabled={!pickedColor || isProcessing || isOversized}
-              className="tb-v2-btn tb-v2-btn-primary disabled:opacity-50"
+              className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg flex-1 disabled:opacity-50"
               title={isOversized ? 'File size exceeds your plan limit' : ''}
             >
               {isProcessing ? 'Erasing...' : isOversized ? 'File Too Large' : 'Erase Picked Color'}
             </button>
-            <button
-              onClick={downloadResult}
-              disabled={!workingUrl}
-              className="tb-v2-btn tb-v2-btn-ghost disabled:opacity-50"
-            >
-              Download PNG
-            </button>
-            <button onClick={reset} className="tb-v2-btn tb-v2-btn-ghost">
+            <button onClick={reset} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-lg">
               Undo All Erasing
             </button>
-            <button onClick={clearAll} className="tb-v2-btn tb-v2-btn-ghost">
+            <button onClick={clearAll} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-lg">
               Choose New Image
             </button>
+            {workingUrl && (
+              <button onClick={downloadResult} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-lg">
+                Download PNG
+              </button>
+            )}
           </div>
 
           {erasedCount > 0 && (
