@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import BrandMark from './BrandMark';
 import ThemeMenu from './ThemeMenu';
 import {
@@ -390,15 +391,17 @@ function MegaMenu({ which, onClose }: { which: string; onClose: () => void }) {
   );
 }
 
-const menus = [
+const menus: Array<{ key: string; label: string; href?: string }> = [
   { key: 'tools', label: 'Tools' },
   { key: 'mcp',   label: 'MCP' },
   { key: 'aiml',  label: 'AI / ML' },
+  { key: 'sponsors', label: 'Sponsors', href: '/sponsors' },
   { key: 'more',  label: 'More' },
 ];
 
 export default function Nav({ onOpenSearch }: Props) {
   const { user } = useAuth();
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
@@ -459,27 +462,37 @@ export default function Nav({ onOpenSearch }: Props) {
         </Link>
 
         <div className="tb-v2-nav-links tb-v2-nav-links-center">
-          {menus.map((menu) => (
-            <div
-              key={menu.key}
-              className="tb-v2-nav-dropdown-root"
-              onMouseEnter={() => { cancelClose(); setOpenMenu(menu.key); }}
-              onMouseLeave={scheduleClose}
-            >
-              <button
-                type="button"
-                className={`tb-v2-nav-trigger${openMenu === menu.key ? ' on' : ''}`}
-                onClick={() => setOpenMenu(openMenu === menu.key ? null : menu.key)}
-                aria-expanded={openMenu === menu.key}
+          {menus.map((menu) =>
+            menu.href ? (
+              <Link
+                key={menu.key}
+                href={menu.href}
+                className={pathname?.startsWith(menu.href) ? 'on' : ''}
               >
-                <span>{menu.label}</span>
-                <IconChevronDown
-                  className="tb-v2-ic tb-v2-nav-trigger-chev"
-                  style={{ width: 12, height: 12 }}
-                />
-              </button>
-            </div>
-          ))}
+                {menu.label}
+              </Link>
+            ) : (
+              <div
+                key={menu.key}
+                className="tb-v2-nav-dropdown-root"
+                onMouseEnter={() => { cancelClose(); setOpenMenu(menu.key); }}
+                onMouseLeave={scheduleClose}
+              >
+                <button
+                  type="button"
+                  className={`tb-v2-nav-trigger${openMenu === menu.key ? ' on' : ''}`}
+                  onClick={() => setOpenMenu(openMenu === menu.key ? null : menu.key)}
+                  aria-expanded={openMenu === menu.key}
+                >
+                  <span>{menu.label}</span>
+                  <IconChevronDown
+                    className="tb-v2-ic tb-v2-nav-trigger-chev"
+                    style={{ width: 12, height: 12 }}
+                  />
+                </button>
+              </div>
+            ),
+          )}
         </div>
 
         <div className="tb-v2-nav-right">
@@ -525,6 +538,13 @@ export default function Nav({ onOpenSearch }: Props) {
       {mobileOpen && (
         <div className="tb-v2-nav-mobile-sheet open">
           {menus.map((menu) => {
+            if (menu.href) {
+              return (
+                <Link key={menu.key} href={menu.href} onClick={() => setMobileOpen(false)}>
+                  {menu.label}
+                </Link>
+              );
+            }
             const content = getMenuContent(menu.key);
             const expanded = mobileExpanded === menu.key;
             return (

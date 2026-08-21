@@ -3,8 +3,6 @@ import type { Metadata } from 'next';
 import { getCanonicalToolSlug, getToolBySlug, getToolRouteSlugs } from '@/data/tools';
 import { ToolUI } from './ToolUI';
 import ToolEngagementBar from '@/components/tools/ToolEngagementBar';
-import ToolAdSlot from '@/components/ads/ToolAdSlot';
-import ToolWithSidebarAd from '@/components/ads/ToolWithSidebarAd';
 import ToolContentSection from '@/components/tools/ToolContentSection';
 import FaqSection from '@/components/v2/FaqSection';
 import ToolWrapper from '@/components/tools/ToolWrapper';
@@ -227,21 +225,9 @@ export default async function ToolDetailPage({ params }: PageProps) {
         )}
         <ToolEngagementBar toolName={tool.name} toolSlug={tool.slug} toolIcon={tool.emoji} />
 
-        {/* Above-tool ad slot */}
-        <div style={{ marginBottom: 24 }}>
-          <ToolAdSlot placement="tool-above" slug={tool.slug} category={tool.category} />
-        </div>
-
-        {/* Tool UI, with an optional sidebar ad on desktop */}
-        <ToolWithSidebarAd slug={tool.slug} category={tool.category}>
-          <ToolWrapper toolSlug={tool.slug} toolName={tool.name}>
-            <ToolUI tool={tool} />
-          </ToolWrapper>
-        </ToolWithSidebarAd>
-
-        <div style={{ marginTop: 32, marginBottom: 40 }}>
-          <ToolAdSlot placement="tool-below" slug={tool.slug} category={tool.category} />
-        </div>
+        <ToolWrapper toolSlug={tool.slug} toolName={tool.name}>
+          <ToolUI tool={tool} />
+        </ToolWrapper>
 
         <ToolContentSection toolName={tool.name} content={content} />
 

@@ -11,6 +11,10 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // /advertise (the old house-ad media kit) was replaced by the
+      // pay-to-rank Sponsors leaderboard. Never listed in a sitemap, so
+      // no other reference needs updating.
+      { source: '/advertise', destination: '/sponsors', permanent: true },
       // Family-verification pass (docs/gsc-recovery-plan.md): all three of
       // these render HttpHeadersViewerClient (fetch a URL, show its
       // response headers) but the tool description promises a static HTTP

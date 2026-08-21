@@ -81,7 +81,7 @@ function buildPlanFeatures(plan: Plan): PlanFeature[] {
   }
 
   features.push({ label: 'Everything in Free' });
-  features.push({ label: 'No ads' });
+  features.push({ label: 'No ads or sponsor strip' });
 
   if (plan.storage_gb > 0) {
     features.push({ label: `${formatStorage(plan.storage_gb)} cloud storage` });

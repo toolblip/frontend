@@ -6,7 +6,7 @@ export const dynamic = 'force-dynamic';
 export const metadata: Metadata = {
   title: 'Pricing',
   description:
-    'Start a 14-day free trial, or keep using the free plan. No credit card required. Free, Starter ($4.99/mo), Pro ($19.99/mo), and Max ($49.99/mo) plans with no ads, cloud storage, and team features.',
+    'Start a 14-day free trial, or keep using the free plan. No credit card required. Free, Starter ($4.99/mo), Pro ($19.99/mo), and Max ($49.99/mo) plans with no ads or sponsor strip, cloud storage, and team features.',
   alternates: {
     canonical: 'https://toolblip.com/pricing',
   },

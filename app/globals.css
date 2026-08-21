@@ -3316,3 +3316,202 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
     padding: 10px;
   }
 }
+
+/* ==========================================================================
+   TOOLBLIP v2 - Sponsors strip (site-wide, under the nav — see Shell.tsx)
+   ========================================================================== */
+
+.tb-v2-sponsor-strip {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface-2);
+}
+
+.tb-v2-sponsor-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr; /* left 25% / center 50% / right 25% */
+  gap: 10px;
+  align-items: stretch;
+}
+
+.tb-v2-sponsor-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: 10px 14px;
+  text-decoration: none;
+  color: var(--fg-1);
+  transition: border-color .12s, transform .12s;
+  min-height: 64px;
+  justify-content: center;
+}
+.tb-v2-sponsor-card:hover { border-color: var(--line-2); transform: translateY(-1px); }
+
+.tb-v2-sponsor-slot-1 {
+  border-color: var(--red);
+  background: var(--red-tint);
+  padding: 14px 20px;
+  min-height: 80px;
+}
+.tb-v2-sponsor-slot-1 .tb-v2-sponsor-name { font-size: 17px; }
+.tb-v2-sponsor-slot-1:hover { border-color: var(--red-hover); }
+
+.tb-v2-sponsor-rank {
+  font-family: var(--f-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--fg-3);
+}
+.tb-v2-sponsor-slot-1 .tb-v2-sponsor-rank { color: var(--red); }
+
+.tb-v2-sponsor-name {
+  font-family: var(--f-display);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--fg-0);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tb-v2-sponsor-tagline {
+  font-size: 12px;
+  color: var(--fg-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.tb-v2-sponsor-meta {
+  font-size: 11px;
+  color: var(--fg-3);
+}
+
+.tb-v2-sponsor-card-empty {
+  border-style: dashed;
+  background: transparent;
+  color: var(--fg-3);
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.tb-v2-sponsor-card-empty:hover { border-color: var(--red); color: var(--red); }
+.tb-v2-sponsor-empty-label { font-size: 13px; font-weight: 600; }
+.tb-v2-sponsor-empty-cta { font-size: 11px; }
+
+.tb-v2-sponsor-card-skeleton {
+  background: linear-gradient(90deg, var(--surface) 25%, var(--surface-2) 37%, var(--surface) 63%);
+  background-size: 400% 100%;
+  animation: tb-v2-sponsor-shimmer 1.4s ease infinite;
+  border-style: solid;
+}
+@keyframes tb-v2-sponsor-shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0 50%; }
+}
+
+.tb-v2-sponsor-bidyours {
+  grid-column: 3;
+  text-align: right;
+  margin-top: 4px;
+}
+.tb-v2-sponsor-bidyours a {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--red);
+}
+.tb-v2-sponsor-bidyours a:hover { color: var(--red-hover); }
+
+@media (max-width: 760px) {
+  .tb-v2-sponsor-grid { grid-template-columns: 1fr; }
+  .tb-v2-sponsor-slot-2 { order: 2; }
+  .tb-v2-sponsor-slot-1 { order: 1; }
+  .tb-v2-sponsor-slot-3 { order: 3; }
+  .tb-v2-sponsor-bidyours { grid-column: 1; order: 4; text-align: center; margin-top: 0; }
+}
+
+/* ==========================================================================
+   TOOLBLIP v2 - /sponsors page
+   ========================================================================== */
+
+.tb-v2-sponsor-banner {
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 13px;
+  color: var(--fg-2);
+  margin-bottom: 20px;
+}
+.tb-v2-sponsor-banner-ok { border-color: var(--red); color: var(--fg-0); }
+
+.tb-v2-sponsor-layout {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+@media (max-width: 760px) {
+  .tb-v2-sponsor-layout { grid-template-columns: 1fr; }
+}
+
+.tb-v2-sponsor-table {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.tb-v2-sponsor-row {
+  display: grid;
+  grid-template-columns: 32px 1fr auto auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+.tb-v2-sponsor-row:last-child { border-bottom: none; }
+
+.tb-v2-sponsor-row-rank {
+  font-family: var(--f-mono);
+  font-size: 12px;
+  color: var(--fg-3);
+}
+.tb-v2-sponsor-row-main { display: flex; flex-direction: column; min-width: 0; }
+.tb-v2-sponsor-row-main a { font-weight: 600; color: var(--fg-0); text-decoration: none; }
+.tb-v2-sponsor-row-main a:hover { color: var(--red); }
+.tb-v2-sponsor-row-tagline {
+  font-size: 12px; color: var(--fg-3);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.tb-v2-sponsor-row-meta { font-size: 12px; color: var(--fg-3); white-space: nowrap; }
+.tb-v2-sponsor-row-balance { font-size: 13px; font-weight: 600; color: var(--fg-1); white-space: nowrap; }
+
+@media (max-width: 560px) {
+  .tb-v2-sponsor-row { grid-template-columns: 24px 1fr; grid-auto-rows: auto; row-gap: 4px; }
+  .tb-v2-sponsor-row-meta, .tb-v2-sponsor-row-balance { grid-column: 2; }
+  .tb-v2-sponsor-row button { grid-column: 1 / -1; margin-top: 6px; }
+}
+
+.tb-v2-sponsor-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+  background: var(--surface);
+}
+.tb-v2-sponsor-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fg-1);
+}

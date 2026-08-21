@@ -42,7 +42,7 @@ export default function Footer() {
             <ul>
               <li><Link href="/api-docs">API Docs</Link></li>
               <li><Link href="/frontend-health">Status</Link></li>
-              <li><Link href="/advertise">Advertise</Link></li>
+              <li><Link href="/sponsors">Sponsors</Link></li>
               <li><a href="/sitemap.xml">Sitemap</a></li>
             </ul>
           </div>

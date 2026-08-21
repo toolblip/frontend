@@ -66,12 +66,12 @@ export default function DonatePage() {
             <h2 className="tb-v2-donate-section-title">Sponsor a tool</h2>
             <div className="tb-v2-donate-section-body">
               <p>
-                For <strong>$50/month</strong>, get tasteful &quot;Powered by [Your Company]&quot; attribution on a single tool page.
-                Reaches developers directly while they&apos;re using the tool.
+                Bid for a spot in the top-3 sponsor strip shown on every page.
+                Rank is decided by bid amount, and unclaimed credit rolls over to next month.
               </p>
               <p>
-                For broader sponsorship options and media kit, see the{' '}
-                <a href="/advertise">/advertise</a> page.
+                See the{' '}
+                <a href="/sponsors">/sponsors</a> leaderboard to place a bid.
               </p>
             </div>
           </div>
