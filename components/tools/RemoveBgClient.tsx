@@ -119,9 +119,9 @@ export default function RemoveBgClient() {
   };
 
   return (
-    <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-4 tb-v2-p-4">
-      <h2 className="tb-v2-text-2xl tb-v2-font-bold">Remove Background</h2>
-      <p className="tb-v2-text-sm tb-v2-text-gray-500">Remove background from images</p>
+    <div className="flex flex-col gap-4 p-4">
+      <h2 className="text-2xl font-bold">Remove Background</h2>
+      <p className="text-sm text-gray-500">Remove background from images</p>
 
       {!image ? (
         <div
@@ -152,24 +152,24 @@ export default function RemoveBgClient() {
           <FileSizeError file={selectedFile} maxSizeMB={maxSizeMB} />
         </div>
       ) : (
-        <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-4">
+        <div className="flex flex-col gap-4">
           <div>
             <p className="tb-v2-tool-label" style={{marginBottom:8}}>Original Image</p>
-            <img src={image} alt="Original" className="tb-v2-max-w-full tb-v2-max-h-[300px] tb-v2-object-contain tb-v2-rounded" />
+            <img src={image} alt="Original" className="max-w-full max-h-[300px] object-contain rounded" />
           </div>
 
-          <div className="tb-v2-flex tb-v2-gap-2">
+          <div className="flex gap-2">
             <button
               onClick={removeBackground}
               disabled={isProcessing || isOversized}
-              className="tb-v2-btn tb-v2-btn-primary tb-v2-disabled:opacity-50"
+              className="tb-v2-btn tb-v2-btn-primary disabled:opacity-50"
               title={isOversized ? 'File size exceeds your plan limit' : ''}
             >
               {isProcessing ? 'Processing...' : isOversized ? 'File Too Large' : 'Remove Background'}
             </button>
             <button
               onClick={() => { setImage(null); setSelectedFile(null); setProcessedImage(null); }}
-              className="tb-v2-btn tb-v2-btn-secondary"
+              className="tb-v2-btn tb-v2-btn-ghost"
             >
               Choose New Image
             </button>
@@ -180,12 +180,12 @@ export default function RemoveBgClient() {
       <canvas ref={canvasRef} className="hidden" />
 
       {processedImage && (
-        <div className="tb-v2-flex tb-v2-flex-col tb-v2-gap-2">
-          <p className="tb-v2-text-sm tb-v2-font-medium">Result (Transparent Background)</p>
-          <div className="tb-v2-border tb-v2-border-gray-200 tb-v2-rounded tb-v2-p-2 tb-v2-bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAGElEQVQYlWNgYGCQwoKxgqGgcJA5h3yFAXcADqUH/3O7yz4AAAAASUVORK5CYII=')]">
-            <img src={processedImage} alt="Processed" className="tb-v2-max-w-full tb-v2-max-h-[300px] tb-v2-object-contain" />
+        <div className="flex flex-col gap-2">
+          <p className="text-sm font-medium">Result (Transparent Background)</p>
+          <div className="border border-gray-200 rounded p-2 bg-[url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAGElEQVQYlWNgYGCQwoKxgqGgcJA5h3yFAXcADqUH/3O7yz4AAAAASUVORK5CYII=')]">
+            <img src={processedImage} alt="Processed" className="max-w-full max-h-[300px] object-contain" />
           </div>
-          <button onClick={handleDownload} className="tb-v2-btn tb-v2-btn-secondary">
+          <button onClick={handleDownload} className="tb-v2-btn tb-v2-btn-ghost">
             Download PNG
           </button>
         </div>

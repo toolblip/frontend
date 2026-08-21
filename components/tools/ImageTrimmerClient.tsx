@@ -207,8 +207,8 @@ export default function ImageTrimmerClient() {
         </div>
       ) : (
         <div className="space-y-3">
-          <div className="tb-v2-flex tb-v2-items-center tb-v2-gap-4">
-            <label className="tb-v2-text-sm tb-v2-font-medium">Tolerance: {tolerance}</label>
+          <div className="flex items-center gap-4">
+            <label className="text-sm font-medium">Tolerance: {tolerance}</label>
             <input
               type="range"
               min="0"
@@ -247,7 +247,7 @@ export default function ImageTrimmerClient() {
 
           {status === 'nothing-to-trim' && (
             <p className="text-xs text-amber-500">
-              No uniform border found at this tolerance — try raising it, or the image may already be trimmed.
+              No uniform border found at this tolerance, try raising it, or the image may already be trimmed.
             </p>
           )}
 
