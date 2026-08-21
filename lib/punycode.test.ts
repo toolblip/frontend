@@ -71,17 +71,27 @@ describe('convertLine with URLs', () => {
 });
 
 describe('analyse with extractDomain', () => {
-  it('does not false-positive on a URL-shaped line', () => {
+  it('does not warn on a URL-shaped line', () => {
     const domain = extractDomain('https://münchen.de/straße');
     expect(domain).toBe('münchen.de');
-    const warnings = analyse(domain);
-    expect(warnings.some((w) => w.includes('disagrees with URL-parser'))).toBe(false);
+    expect(analyse(domain)).toEqual([]);
   });
 
-  it('does not false-positive on an email-shaped line', () => {
+  it('does not warn on an email-shaped line', () => {
     const domain = extractDomain('harun@হারুন.বাংলা');
     expect(domain).toBe('হারুন.বাংলা');
-    const warnings = analyse(domain);
-    expect(warnings.some((w) => w.includes('disagrees with URL-parser'))).toBe(false);
+    expect(analyse(domain)).toEqual([]);
+  });
+
+  // Regression test: analyse() used to compare toASCII()'s output against
+  // new URL('http://' + domain).hostname and warn on any mismatch. That
+  // comparison is against full UTS-46/IDNA domain-validity rules (which
+  // strip "default ignorable" codepoints like the U+FE0F variation
+  // selector before encoding) that toASCII() never claimed to implement -
+  // this tool encodes/decodes Punycode for arbitrary input, not just
+  // strings meant to be registrable domains, so a plain emoji like this
+  // (U+2708 airplane + U+FE0F variation selector) isn't a bug to flag.
+  it('does not warn about a variation-selector emoji disagreeing with the browser URL parser', () => {
+    expect(analyse('✈️')).toEqual([]);
   });
 });

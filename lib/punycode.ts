@@ -239,17 +239,5 @@ export function analyse(domain: string): string[] {
     }
   }
 
-  try {
-    const url = new URL('http://' + domain);
-    const asciiForm = toASCII(domain);
-    if (url.hostname !== asciiForm) {
-      warnings.push(
-        `Domain "${domain}" disagrees with URL-parser hostname "${url.hostname}" — possible encoding edge case.`
-      );
-    }
-  } catch {
-    // domain doesn't parse as a hostname at all — not every analyse() input is one, skip silently.
-  }
-
   return warnings;
 }
