@@ -1,4 +1,5 @@
 import { tools } from '@/data/tools';
+import { isToolIndexable } from '@/lib/indexable-tools';
 import { sitemapXmlResponse, type SitemapUrlEntry } from '@/lib/sitemap-xml';
 
 // Tool pages don't carry a per-tool last-modified date, so this is a fixed
@@ -7,16 +8,12 @@ import { sitemapXmlResponse, type SitemapUrlEntry } from '@/lib/sitemap-xml';
 // every deploy regardless of whether the page's content actually changed.
 // Bump when the tool catalog changes meaningfully (most recently: round 4
 // of the family-verification pass, 34 slugs removed/redirected, 2 added).
-const TOOL_PAGES_LAST_MODIFIED = new Date('2026-08-21T00:00:00.000Z');
+const TOOL_PAGES_LAST_MODIFIED = new Date('2026-08-25T00:00:00.000Z');
 
-// NOTE: this still lists the full tool catalog. The GSC recovery plan's
-// next step is narrowing this to a verified "tier A" subset (unique
-// rendered UI, passes a functional smoke test, real per-tool copy) and
-// noindexing the rest rather than deleting it — see
-// reports/you-need-to-go-purrfect-castle.md in the workspace repo. This
-// pass only removed pages confirmed broken/duplicate (see next.config.mjs
-// redirects) and split this sitemap out on its own so indexed-vs-discovered
-// counts for the tool corpus can be tracked separately from the blog.
+// Tier-A gate: only tools with hand-written FAQ overrides are listed
+// (isToolIndexable). Others stay live with noindex,follow until they have
+// differentiated copy — see docs/gsc-recovery-plan.md. This sitemap is
+// split from core/blog so GSC can track tool-corpus recovery separately.
 // Slugs that exist as a real entry in data/tools.ts but are also a source
 // key in app/tools/[slug]/page.tsx's REDIRECTS map, so every request to
 // them permanently redirects away before the page ever renders — dead,
@@ -35,7 +32,7 @@ export async function GET(): Promise<Response> {
   const baseUrl = 'https://toolblip.com';
 
   const entries: SitemapUrlEntry[] = tools
-    .filter((tool) => !SHADOWED_BY_REDIRECT.has(tool.slug))
+    .filter((tool) => !SHADOWED_BY_REDIRECT.has(tool.slug) && isToolIndexable(tool.slug))
     .map((tool) => ({
       url: `${baseUrl}/tools/${tool.slug}`,
       lastModified: TOOL_PAGES_LAST_MODIFIED,

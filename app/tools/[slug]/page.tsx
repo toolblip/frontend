@@ -9,6 +9,7 @@ import ToolWrapper from '@/components/tools/ToolWrapper';
 import RelatedTools from '@/components/tools/RelatedTools';
 import RelatedBlogPosts from '@/components/tools/RelatedBlogPosts';
 import { getFaqs, hasFaqOverride } from '@/lib/faq';
+import { isToolIndexable } from '@/lib/indexable-tools';
 import { getToolContent } from '@/data/tool-content';
 
 interface PageProps {
@@ -163,6 +164,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!tool) return { title: 'Tool Not Found' };
   const url = `https://toolblip.com/tools/${canonicalSlug}`;
   const ogImage = `https://toolblip.com${CUSTOM_OG_IMAGES[canonicalSlug] ?? '/og-preview.png'}`;
+  const indexable = isToolIndexable(canonicalSlug);
 
   return {
     title: `${tool.name} | Toolblip`,
@@ -171,6 +173,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     alternates: {
       canonical: url,
     },
+    robots: indexable
+      ? { index: true, follow: true }
+      : { index: false, follow: true },
     openGraph: {
       title: `${tool.name} | Toolblip`,
       description: tool.description,

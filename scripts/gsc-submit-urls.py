@@ -34,14 +34,36 @@ def load_env():
                     os.environ["GSC_SERVICE_ACCOUNT"] = val
 
 def get_sitemap_urls():
-    """Fetch all URLs from the sitemap."""
+    """Fetch all URLs from the sitemap index (and its child urlsets)."""
     import xml.etree.ElementTree as ET
+
+    ns = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+
+    def parse_url(url):
+        with urllib.request.urlopen(url, timeout=15) as resp:
+            return ET.parse(resp)
+
+    def locs_from_urlset(tree):
+        return [
+            el.text
+            for el in tree.findall("sm:url/sm:loc", ns)
+            if el is not None and el.text
+        ]
+
     try:
-        resp = urllib.request.urlopen(f"{BASE_URL}/sitemap.xml", timeout=15)
-        tree = ET.parse(resp)
-        ns = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
-        urls = [url.find("sm:loc", ns).text for url in tree.findall("sm:url", ns)]
-        return urls
+        root_tree = parse_url(f"{BASE_URL}/sitemap.xml")
+        # Sitemap index → follow each child; plain urlset → use locs directly.
+        child_locs = [
+            el.text
+            for el in root_tree.findall("sm:sitemap/sm:loc", ns)
+            if el is not None and el.text
+        ]
+        if child_locs:
+            urls = []
+            for child in child_locs:
+                urls.extend(locs_from_urlset(parse_url(child)))
+            return urls
+        return locs_from_urlset(root_tree)
     except Exception as e:
         print(f"⚠️ Failed to fetch sitemap: {e}")
         return []

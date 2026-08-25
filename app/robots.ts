@@ -1,19 +1,14 @@
 import { MetadataRoute } from 'next';
 
-// Split into three sitemaps (core/tools/blog) instead of one combined
-// sitemap.xml so Search Console's per-sitemap indexed/discovered counts
-// show whether the tool corpus or the blog is recovering independently —
-// see the GSC index-recovery plan for why that split matters here.
+// Child sitemaps live at sitemap-core/tools/blog.xml (for GSC per-corpus
+// counts). robots.txt only declares the sitemap index so Google discovers
+// children once via the index — see docs/gsc-recovery-plan.md.
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: [
-      'https://toolblip.com/sitemap-core.xml',
-      'https://toolblip.com/sitemap-tools.xml',
-      'https://toolblip.com/sitemap-blog.xml',
-    ],
+    sitemap: 'https://toolblip.com/sitemap.xml',
   };
 }
