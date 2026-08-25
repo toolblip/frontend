@@ -32,6 +32,7 @@ export function getCategoryMeta(category: string): CategoryMeta {
     case 'MCP':
       return { color: 'var(--c-mcp)', bg: 'var(--c-mcp-bg)' };
     case 'AI/ML':
+    case 'AI Tools':
       return { color: 'var(--c-aiml)', bg: 'var(--c-aiml-bg)' };
     default:
       return { color: 'var(--fg-1)', bg: 'var(--surface-2)' };
