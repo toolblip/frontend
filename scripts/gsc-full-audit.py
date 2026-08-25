@@ -74,8 +74,10 @@ def query_analytics(gsc, start, end, dimensions, row_count=1000, dimension_filte
         "endDate": end,
         "dimensions": dimensions,
         "rowCount": row_count,
-        "aggregationType": "byProperty",
     }
+    # byProperty is only valid for query-centric requests; page dims reject it.
+    if dimensions == ["query"]:
+        body["aggregationType"] = "byProperty"
     if dimension_filter:
         body["dimensionFilterGroups"] = dimension_filter
     return gsc.searchanalytics().query(siteUrl=SITE_URL, body=body).execute().get("rows", [])
