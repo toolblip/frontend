@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """
-gsc-full-audit.py — Pull indexing status, performance, and opportunities from GSC.
+gsc-full-audit.py — Pull Search Analytics, sitemap status, and opportunity
+signals (striking-distance / low-CTR queries) from Google Search Console.
+
+Does not include the Page Indexing / URL Inspection coverage breakdown —
+use the GSC UI (or URL Inspection separately) for those.
 
 Requires GSC_SERVICE_ACCOUNT in one of:
   - ~/.hermes/secrets/tb.env
@@ -24,7 +28,9 @@ SITE_URL = "sc-domain:toolblip.com"
 def load_env():
     candidates = [
         os.path.expanduser("~/.hermes/secrets/tb.env"),
-        os.path.expanduser("~/.herdr/worktrees/toolblip-workspace/.secrets/tb.env"),
+        # Prefer the canonical workspace secrets dir (worktrees often symlink here)
+        os.path.join(os.path.expanduser("~/Code/toolblip-workspace"), ".secrets", "tb.env"),
+        os.path.join(os.path.dirname(__file__), "..", "..", "toolblip-workspace", ".secrets", "tb.env"),
         os.path.join(os.path.dirname(__file__), "..", ".secrets", "tb.env"),
         os.path.join(os.path.dirname(__file__), "..", ".env"),
         ".env",
