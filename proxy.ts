@@ -1,3 +1,4 @@
+/** Live edge entry for Next.js 16+ (middleware.ts is forbidden alongside this file). */
 import { NextRequest, NextResponse } from "next/server";
 
 const PROTECTED_PREFIXES = ["/account", "/dashboard", "/submit-tool"];
