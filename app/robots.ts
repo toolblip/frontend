@@ -11,6 +11,7 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
     },
     sitemap: [
+      'https://toolblip.com/sitemap.xml',
       'https://toolblip.com/sitemap-core.xml',
       'https://toolblip.com/sitemap-tools.xml',
       'https://toolblip.com/sitemap-blog.xml',
