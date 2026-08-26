@@ -3335,9 +3335,10 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
    ========================================================================== */
 
 .tb-v2-sponsor-strip {
-  padding: 14px 0;
+  padding: 18px 0 14px;
   border-bottom: 1px solid var(--line);
   background: var(--surface-2);
+  overflow: visible;
 }
 
 .tb-v2-sponsor-grid {
@@ -3345,6 +3346,12 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   grid-template-columns: 30% 40% 20% 10%; /* #2 / #1 (center) / #3 / Bid Now */
   gap: 10px;
   align-items: stretch;
+  overflow: visible;
+}
+
+.tb-v2-sponsor-card-wrap {
+  position: relative;
+  min-width: 0;
 }
 
 .tb-v2-sponsor-card {
@@ -3352,6 +3359,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   flex-direction: row;
   align-items: center;
   gap: 10px;
+  height: 100%;
   border-radius: var(--radius-sm);
   border: 1px solid var(--line);
   background: var(--surface);
@@ -3363,13 +3371,42 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 }
 .tb-v2-sponsor-card:hover { border-color: var(--line-2); transform: translateY(-1px); }
 
-.tb-v2-sponsor-slot-1 {
+.tb-v2-sponsor-slot-1.tb-v2-sponsor-card,
+.tb-v2-sponsor-slot-1 .tb-v2-sponsor-card {
   border-color: var(--red);
   background: var(--red-tint);
   padding: 12px 16px;
 }
 .tb-v2-sponsor-slot-1 .tb-v2-sponsor-name { font-size: 17px; }
-.tb-v2-sponsor-slot-1:hover { border-color: var(--red-hover); }
+.tb-v2-sponsor-slot-1.tb-v2-sponsor-card:hover,
+.tb-v2-sponsor-slot-1 .tb-v2-sponsor-card:hover { border-color: var(--red-hover); }
+
+/* Same tab-on-the-edge treatment as /sponsors, but pinned top-right and
+   always visible so a passer-by can snatch the rank without hovering. */
+.tb-v2-sponsor-card-claim {
+  position: absolute;
+  top: 0;
+  right: 8px;
+  transform: translateY(-50%);
+  z-index: 2;
+  background: var(--red);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.2;
+  padding: 3px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+  text-decoration: none;
+}
+.tb-v2-sponsor-card-claim:hover { background: var(--red-hover); }
+
+.tb-v2-sponsor-slot-3 .tb-v2-sponsor-card-claim {
+  right: 4px;
+  max-width: calc(100% - 8px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 .tb-v2-sponsor-rank {
   flex-shrink: 0;
@@ -3487,7 +3524,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 }
 
 @media (max-width: 760px) {
-  .tb-v2-sponsor-grid { grid-template-columns: 1fr; }
+  .tb-v2-sponsor-grid { grid-template-columns: 1fr; row-gap: 16px; }
   .tb-v2-sponsor-slot-2 { order: 2; }
   .tb-v2-sponsor-slot-1 { order: 1; }
   .tb-v2-sponsor-slot-3 { order: 3; }
