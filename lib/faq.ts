@@ -468,11 +468,6 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does it tell me when my next birthday is?', a: 'Yes. It calculates the date of your next birthday and counts down the days remaining until it arrives.' },
     { q: 'How does it handle the day-of-month math near leap years?', a: 'When the current day of the month falls before your birth day, the calculator borrows days from the previous calendar month using that month\'s actual length, which keeps the day/month/year breakdown accurate across February and leap years.' },
   ],
-  'article-rewriter': [
-    { q: 'How does the AI Article Rewriter change my text?', a: 'It scans your pasted article word by word and swaps common words for alternatives from a built-in synonym dictionary, keeping sentence structure and punctuation intact.' },
-    { q: 'Does it use a language model to reword sentences?', a: 'No. It\'s a rule-based synonym swap, not generative AI, so it won\'t restructure sentences or change meaning, only substitute individual words it recognizes.' },
-    { q: 'What happens to words that aren\'t in the synonym dictionary?', a: 'They\'re left exactly as you typed them. Only words with a known synonym entry get swapped, so proper nouns, technical terms, and less common words pass through unchanged.' },
-  ],
   'humanizer-ai': [
     { q: 'What does the AI Humanizer actually do to my text?', a: 'It swaps common, stiff-sounding words for more natural alternatives from a built-in synonym dictionary, aiming to make robotic-sounding phrasing read a bit more like normal writing.' },
     { q: 'Will it fool an AI detector?', a: 'It isn\'t designed to defeat AI-detection tools, and results will vary between detectors. It\'s a word-choice smoothing pass, not a rewrite that changes sentence structure or tone at a deeper level.' },
@@ -647,16 +642,6 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does my photo get uploaded to a server to resize it?', a: 'No. Resizing happens entirely in a canvas element in your browser, so the file never leaves your device.' },
     { q: 'Can I resize without distorting the image?', a: 'Yes, a lock aspect ratio toggle recalculates the height automatically whenever you change the width (or vice versa), so the proportions stay correct unless you deliberately unlock it.' },
     { q: 'What file format does the resized image download as?', a: 'The output is exported as a PNG generated from the canvas, regardless of whether your source image was a JPEG, PNG, or another format.' },
-  ],
-  'bulk-generator': [
-    { q: 'What placeholders can I use in a custom template?', a: 'Any combination of {{i}} for the row number, {{word}}, {{email}}, {{name}}, and {{date}}, which get substituted with generated values on every row you produce.' },
-    { q: 'What is the maximum number of rows I can generate?', a: 'Up to 1000 rows in a single generation. Entering a higher count is automatically capped at 1000.' },
-    { q: 'What output formats are built in?', a: 'Ready-made templates for a JSON array, CSV rows, SQL INSERT statements, and HTML list items, alongside a plain numbered list, all editable before you generate.' },
-  ],
-  'business-slogan-generator': [
-    { q: 'Are the slogans AI-written?', a: 'No, they come from a fixed set of about twenty slogan templates with your topic substituted in, not from an AI model generating new phrasing each time.' },
-    { q: 'Can I filter slogans by tone?', a: 'Yes, you can filter the generated list by tone, such as bold, playful, or professional, to narrow results down to the style you want.' },
-    { q: 'Will I get the same slogans if I search the same topic twice?', a: 'Yes, since the templates are fixed, the same topic and tone filter will produce the same set of slogans each time rather than new random phrasing.' },
   ],
   'byte-converter': [
     { q: 'What units does it convert between?', a: 'Bytes, kilobytes, megabytes, gigabytes, terabytes, and petabytes, all shown at once from a single input value.' },
@@ -1495,11 +1480,6 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I generate lorem ipsum by word count instead of full paragraphs?', a: 'Yes, a unit toggle switches generation between words, sentences, and paragraphs, and the number field next to it controls exactly how many of that unit to produce.' },
     { q: 'Does it always start with the classic "Lorem ipsum dolor sit amet"?', a: 'Only if the "Start with Lorem ipsum..." checkbox is checked, unchecking it still generates text from the same Latin word pool but starting partway through instead of at the beginning.' },
     { q: 'Is the placeholder text regenerated automatically when I change the count?', a: 'Yes, changing the unit or the count number regenerates the output immediately, there is also a Regenerate button if you want a fresh variation using the same settings.' },
-  ],
-  'paraphrasing': [
-    { q: 'Does this use AI to rewrite my text?', a: 'No, it works from a built-in dictionary of roughly eighty common words mapped to five synonym options each, click Find Alternatives and any matching words in your text get highlighted for you to swap manually.' },
-    { q: "How do I actually change a word once it's highlighted?", a: 'Click the highlighted word to select it, then a row of its synonym options appears below, click whichever synonym you want and it becomes the pending replacement for that word.' },
-    { q: 'Do my edits apply automatically as I select synonyms?', a: 'No, selecting synonyms only stages the replacements, nothing in the text changes until you click Apply Changes, which swaps every selected word at once.' },
   ],
   'password-strength-checker': [
     { q: 'How is the entropy number calculated?', a: "It multiplies your password's length by the log2 of the character pool size implied by what you used, lowercase, uppercase, digits, symbols, or other characters, so a longer password drawing from more character types scores higher entropy." },

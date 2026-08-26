@@ -104,9 +104,7 @@ import BrokenImageCheckerClient from '@/components/tools/BrokenImageCheckerClien
 import BrokenLinkCheckerExpressClient from '@/components/tools/BrokenLinkCheckerExpressClient';
 import BrokenLinkCheckerV2Client from '@/components/tools/BrokenLinkCheckerV2Client';
 import BrowserImageResizerClient from '@/components/tools/BrowserImageResizerClient';
-import BulkGeneratorClient from '@/components/tools/BulkGeneratorClient';
 import BusinessPlanGeneratorClient from '@/components/tools/BusinessPlanGeneratorClient';
-import BusinessSloganGeneratorClient from '@/components/tools/BusinessSloganGeneratorClient';
 import ByteConverterClient from '@/components/tools/ByteConverterClient';
 import CanonicalUrlGeneratorClient from '@/components/tools/CanonicalUrlGeneratorClient';
 import ChineseCharConverterClient from '@/components/tools/ChineseCharConverterClient';
@@ -241,7 +239,6 @@ import VsdxToPptxClient from '@/components/tools/VsdxToPptxClient';
 import WordCombinationsGeneratorClient from '@/components/tools/WordCombinationsGeneratorClient';
 import XmlSitemapGeneratorClient from '@/components/tools/XmlSitemapGeneratorClient';
 import XmlValidatorClient from '@/components/tools/XmlValidatorClient';
-import AiDetectorClient from '@/components/tools/AiDetectorClient';
 import AiRephraserClient from '@/components/tools/AiRephraserClient';
 import ApiAuthHeaderGeneratorClient from '@/components/tools/ApiAuthHeaderGeneratorClient';
 import ApiDocGeneratorClient from '@/components/tools/ApiDocGeneratorClient';
@@ -257,7 +254,6 @@ import ApiEndpointDocumenterClient from '@/components/tools/ApiEndpointDocumente
 import ApiSpecGeneratorClient from '@/components/tools/ApiSpecGeneratorClient';
 import AccessibilityCheckerClient from '@/components/tools/AccessibilityCheckerClient';
 import AreaConverterClient from '@/components/tools/AreaConverterClient';
-import ArticleRewriterClient from '@/components/tools/ArticleRewriterClient';
 import ArticleTitleGenClient from '@/components/tools/ArticleTitleGenClient';
 import ArticleTitleGeneratorClient from '@/components/tools/ArticleTitleGeneratorClient';
 import AudioToTextClient from '@/components/tools/AudioToTextClient';
@@ -278,7 +274,6 @@ import BinaryConverterClient from '@/components/tools/BinaryConverterClient';
 import BinaryDecimalHexConverterClient from '@/components/tools/BinaryDecimalHexConverterClient';
 import BinaryTextExpressClient from '@/components/tools/BinaryTextExpressClient';
 import BinaryToTextV2Client from '@/components/tools/BinaryToTextV2Client';
-import BlogOutlineClient from '@/components/tools/BlogOutlineClient';
 import BmiCalculatorClient from '@/components/tools/BmiCalculatorClient';
 import BatchFaviconDownloaderClient from '@/components/tools/BatchFaviconDownloaderClient';
 import BatchImageResizerClient from '@/components/tools/BatchImageResizerClient';
@@ -439,11 +434,8 @@ import ExcelToCsvClient from '@/components/tools/ExcelToCsvClient';
 import ExcelToPdfClient from '@/components/tools/ExcelToPdfClient';
 import ExcelToXmlClient from '@/components/tools/ExcelToXmlClient';
 import ExifRemoverClient from '@/components/tools/ExifRemoverClient';
-import ExplainLikeFiveClient from '@/components/tools/ExplainLikeFiveClient';
 import ExtractAudioClient from '@/components/tools/ExtractAudioClient';
 import ExtractImgClient from '@/components/tools/ExtractImgClient';
-import FacebookAdHeadlinesClient from '@/components/tools/FacebookAdHeadlinesClient';
-import FaqGeneratorClient from '@/components/tools/FaqGeneratorClient';
 import FontToPngClient from '@/components/tools/FontToPngClient';
 import FractionCalculatorClient from '@/components/tools/FractionCalculatorClient';
 import GifToApngClient from '@/components/tools/GifToApngClient';
@@ -593,7 +585,6 @@ import MemeMakerClient from '@/components/tools/MemeMakerClient';
 import OgTagDebuggerClient from '@/components/tools/OgTagDebuggerClient';
 import OpenGraphPreviewClient from '@/components/tools/OpenGraphPreviewClient';
 import ParagraphCounterClient from '@/components/tools/ParagraphCounterClient';
-import ParaphrasingClient from '@/components/tools/ParaphrasingClient';
 import PassiveVoiceDetectorClient from '@/components/tools/PassiveVoiceDetectorClient';
 import PixelateClient from '@/components/tools/PixelateClient';
 import ReadabilityCheckerClient from '@/components/tools/ReadabilityCheckerClient';
@@ -653,7 +644,6 @@ import SEOTitleAnalyzerClient from '@/components/tools/SEOTitleAnalyzerClient';
 import SERPQuickClient from '@/components/tools/SERPQuickClient';
 import SERPSnippetViewerClient from '@/components/tools/SERPSnippetViewerClient';
 import ShellCommandReferenceClient from '@/components/tools/ShellCommandReferenceClient';
-import ShortenContentClient from '@/components/tools/ShortenContentClient';
 import SignPDFClient from '@/components/tools/SignPDFClient';
 import SitemapHTMLNewClient from '@/components/tools/SitemapHTMLNewClient';
 import SlugHealthCheckerClient from '@/components/tools/SlugHealthCheckerClient';
@@ -700,42 +690,6 @@ import PressReleaseGeneratorClient from '@/components/tools/PressReleaseGenerato
 import PrivacyPolicyGeneratorClient from '@/components/tools/PrivacyPolicyGeneratorClient';
 import TokenBuilderClient from '@/components/tools/TokenBuilderClient';
 import PixelDensityCalculatorClient from '@/components/tools/PixelDensityCalculatorClient';
-
-// ─── Individual tool UIs ────────────────────────────────────────────────────
-
-function ComingSoonUI({ tool }: { tool: Tool }) {
-  // Fallback for tools that aren't available in the browser yet (no client-side
-  // implementation, or work that needs server-side fetches / third-party APIs /
-  // credentials / heavy processing we can't run safely in the browser). Show a
-  // clear coming-soon notice instead of a fake processor that echoes input.
-  return (
-    <div className="space-y-6">
-      <div
-        data-testid="tool-coming-soon"
-        role="status"
-        className="rounded-2xl border border-amber-200 bg-amber-50 p-8 text-center dark:border-amber-900/50 dark:bg-amber-950/30"
-      >
-        <div className="mb-4 text-5xl" aria-hidden="true">{tool.emoji}</div>
-        <span className="inline-block rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-amber-800 dark:bg-amber-900/50 dark:text-amber-200">
-          Coming soon
-        </span>
-        <h2 className="mt-4 text-xl font-semibold text-gray-900 dark:text-white">
-          {tool.name} isn&apos;t available yet
-        </h2>
-        <p className="mx-auto mt-2 max-w-md text-sm text-gray-600 dark:text-gray-300">
-          We&apos;re still building this tool. It needs support we can&apos;t run in your browser yet,
-          so it isn&apos;t ready to use. Check back soon&mdash;we add new tools regularly.
-        </p>
-        <a
-          href="/tools"
-          className="mt-6 inline-flex items-center justify-center rounded-xl bg-red-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900"
-        >
-          Browse available tools
-        </a>
-      </div>
-    </div>
-  );
-}
 
 // ─── Tool routing ────────────────────────────────────────────────────────────
 
@@ -989,8 +943,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <BinaryToTextClient />;
     case 'binary-to-text-v2':
       return <BinaryToTextV2Client />;
-    case 'blog-outline':
-      return <BlogOutlineClient />;
     case 'border':
       return <ImageBorderAdderClient />;
     case 'bmi-calculator':
@@ -1007,12 +959,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <BrokenLinkCheckerV2Client />;
     case 'browser-image-resizer':
       return <BrowserImageResizerClient />;
-    case 'bulk-generator':
-      return <BulkGeneratorClient />;
     case 'business-plan-generator':
       return <BusinessPlanGeneratorClient />;
-    case 'business-slogan-generator':
-      return <BusinessSloganGeneratorClient />;
     case 'byte-converter':
       return <ByteConverterClient />;
     case 'canonical-url-generator':
@@ -1203,8 +1151,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <RandomSentenceGeneratorClient />;
     case 'random-string-generator-tool':
       return <RandomStringGeneratorToolClient />;
-    case 'ai-detector':
-      return <AiDetectorClient />;
     case 'ai-rephraser':
       return <AiRephraserClient />;
     case 'api-auth-header-generator':
@@ -1237,8 +1183,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <ApiSpecGeneratorClient />;
     case 'area-converter':
       return <AreaConverterClient />;
-    case 'article-rewriter':
-      return <ArticleRewriterClient />;
     case 'article-title-gen':
       return <ArticleTitleGenClient />;
     case 'article-title-generator':
@@ -1623,16 +1567,10 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <ExcelToXmlClient />;
     case 'exif-remover':
       return <ExifRemoverClient />;
-    case 'explain-like-five':
-      return <ExplainLikeFiveClient />;
     case 'extract-audio':
       return <ExtractAudioClient />;
     case 'extract-img':
       return <ExtractImgClient />;
-    case 'facebook-ad-headlines':
-      return <FacebookAdHeadlinesClient />;
-    case 'faq-generator':
-      return <FaqGeneratorClient />;
     case 'favicon-browser':
     case 'favicon-checker-express':
     case 'favicon-checker-tool':
@@ -1934,8 +1872,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <OpenGraphPreviewClient />;
     case 'paragraph-counter':
       return <ParagraphCounterClient />;
-    case 'paraphrasing':
-      return <ParaphrasingClient />;
     case 'passive-voice-detector':
       return <PassiveVoiceDetectorClient />;
     case 'pixelate':
@@ -3047,7 +2983,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'serp-quick': return <SERPQuickClient />;
     case 'serp-snippet-viewer': return <SERPSnippetViewerClient />;
     case 'shell-command-reference': return <ShellCommandReferenceClient />;
-    case 'shorten-content': return <ShortenContentClient />;
     case 'sign': return <SignPDFClient />;
     case 'sitemap-html-new': return <SitemapHTMLNewClient />;
     case 'slug-health-checker': return <SlugHealthCheckerClient />;
@@ -3128,7 +3063,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'favicon-checker': return <BatchFaviconDownloaderClient />;
 
     default:
-      return <ComingSoonUI tool={tool} />;
+      return null;
   }
 }
 
