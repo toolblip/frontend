@@ -3381,8 +3381,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 .tb-v2-sponsor-slot-1.tb-v2-sponsor-card:hover,
 .tb-v2-sponsor-slot-1 .tb-v2-sponsor-card:hover { border-color: var(--red-hover); }
 
-/* Same tab-on-the-edge treatment as /sponsors, but pinned top-right and
-   always visible so a passer-by can snatch the rank without hovering. */
+/* Same hover-only tab as /sponsors, pinned top-right on the strip card. */
 .tb-v2-sponsor-card-claim {
   position: absolute;
   top: 0;
@@ -3398,8 +3397,16 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   border-radius: 999px;
   white-space: nowrap;
   text-decoration: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .12s;
 }
 .tb-v2-sponsor-card-claim:hover { background: var(--red-hover); }
+.tb-v2-sponsor-card-wrap:hover .tb-v2-sponsor-card-claim,
+.tb-v2-sponsor-card-wrap:focus-within .tb-v2-sponsor-card-claim {
+  opacity: 1;
+  pointer-events: auto;
+}
 
 .tb-v2-sponsor-slot-3 .tb-v2-sponsor-card-claim {
   right: 4px;
