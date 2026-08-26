@@ -21,7 +21,6 @@ const CATEGORY_META: Record<string, { icon: string; borderColor: string }> = {
   Math:       { icon: '∑', borderColor: '#9b1f1a' },
   Encoder:    { icon: '🔐', borderColor: '#5a2d8a' },
   Generate:   { icon: '⚡', borderColor: '#c27a0a' },
-  'AI Tools': { icon: '✦', borderColor: '#7c3aed' },
 };
 
 const FALLBACK = { icon: '📁', borderColor: '#6b7280' };

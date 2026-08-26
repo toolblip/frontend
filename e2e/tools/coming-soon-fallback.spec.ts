@@ -9,8 +9,8 @@ async function dismissCookies(page: import('@playwright/test').Page) {
 
 test.describe('Browser-only fallback messaging', () => {
   test('a supported browser tool renders its real UI, not the fallback', async ({ page }) => {
-    // All 1,564 tools now have real implementations — the ComingSoonUI
-    // fallback is dead code. Verify a sample tool renders correctly.
+    // Catalog tools all have real implementations. Verify a sample tool
+    // does not render a coming-soon fallback.
     await page.goto('/tools/word-counter');
     await dismissCookies(page);
 
