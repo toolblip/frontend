@@ -31,7 +31,7 @@ const CARD_TINT: Record<number, number> = { 1: 1, 2: 0.65, 3: 0.42 };
 // instead of just the text or just the avatar.
 const CARD_SCALE: Record<number, number> = { 1: 1.1, 2: 1.05 };
 
-const BASE_AVATAR_PX = 48;
+const BASE_AVATAR_PX = 64;
 const BASE_DOMAIN_FONT_PX = 19;
 const BASE_TAGLINE_FONT_PX = 15;
 const BASE_BALANCE_FONT_PX = 21;
