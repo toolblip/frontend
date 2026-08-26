@@ -4,6 +4,7 @@ import Link from "next/link";
 import React from "react";
 import type { FavoriteTool } from "./types";
 import type { RecentTool } from "@/lib/toolHistory";
+import { getToolPathBySlug } from "@/lib/tool-path";
 
 interface TabbedToolsProps {
   favoriteTools: FavoriteTool[];
@@ -85,7 +86,7 @@ export function TabbedTools({
                     className="flex items-start gap-3 rounded-2xl border border-gray-200 p-4 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-800 dark:hover:border-red-900 dark:hover:bg-red-950/30"
                   >
                     <Link
-                      href={`/tools/${tool.slug}`}
+                      href={getToolPathBySlug(tool.slug)}
                       className="flex min-w-0 flex-1 items-start gap-3"
                     >
                       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-lg dark:bg-gray-800">
@@ -102,7 +103,7 @@ export function TabbedTools({
                     </Link>
                     <div className="flex shrink-0 items-center gap-2 self-center">
                       <Link
-                        href={`/tools/${tool.slug}`}
+                        href={getToolPathBySlug(tool.slug)}
                         className={`${buttonBase} ${viewButton}`}
                       >
                         View
@@ -145,7 +146,7 @@ export function TabbedTools({
                     className="flex items-start gap-3 rounded-2xl border border-gray-200 p-4 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-800 dark:hover:border-red-900 dark:hover:bg-red-950/30"
                   >
                     <Link
-                      href={`/tools/${tool.slug}`}
+                      href={getToolPathBySlug(tool.slug)}
                       className="flex min-w-0 flex-1 items-center gap-3"
                     >
                       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-lg dark:bg-gray-800">
@@ -157,7 +158,7 @@ export function TabbedTools({
                     </Link>
                     <div className="flex shrink-0 items-center gap-2 self-center">
                       <Link
-                        href={`/tools/${tool.slug}`}
+                        href={getToolPathBySlug(tool.slug)}
                         className={`${buttonBase} ${viewButton}`}
                       >
                         View

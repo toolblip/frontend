@@ -58,12 +58,12 @@ const nextConfig = {
       // duplicating the real image-background-remover tool), so
       // image-clipper now goes straight to the homepage.
       { source: '/tools/image-clipper', destination: '/', permanent: true },
-      { source: '/tools/image-orientation-fixer', destination: '/tools/rotate', permanent: true },
+      { source: '/tools/image-orientation-fixer', destination: '/tools/images/rotate', permanent: true },
       // "Text to Image Generator" promised social-graphic creation from
       // text; the page rendered the live-microphone speech-to-text tool.
       // banner-generator does what was actually promised (text -> a real
       // downloadable social/OG image).
-      { source: '/tools/text-to-image', destination: '/tools/banner-generator', permanent: true },
+      { source: '/tools/text-to-image', destination: '/tools/images/banner-generator', permanent: true },
       // "Audio to Text Converter" promised transcribing an uploaded MP3/WAV
       // file; the page rendered a live-microphone-only speech recognizer,
       // which can't process an uploaded file (no server-side transcription
@@ -105,11 +105,11 @@ const nextConfig = {
       { source: '/tools/json-schema-viewer', destination: '/tools/json-schema-validator', permanent: true },
       { source: '/tools/json-schema-editor', destination: '/tools/json-schema-validator', permanent: true },
       { source: '/tools/json-patch-generator', destination: '/tools/json-ld-generator', permanent: true },
-      { source: '/tools/image-metadata-remover', destination: '/tools/exif-remover', permanent: true },
+      { source: '/tools/image-metadata-remover', destination: '/tools/images/exif-remover', permanent: true },
       { source: '/tools/text-difference-checker', destination: '/tools/code-diff', permanent: true },
       { source: '/tools/text-fluency-checker', destination: '/tools/readability-score', permanent: true },
       { source: '/tools/word-complexity-analyzer', destination: '/tools/readability-score', permanent: true },
-      { source: '/tools/favicon-checker', destination: '/tools/favicon-grabber', permanent: true },
+      { source: '/tools/favicon-checker', destination: '/tools/images/favicon-grabber', permanent: true },
       { source: '/tools/sitemap-xml-validator', destination: '/tools/xml-validator', permanent: true },
       // MOBI to AZW3 needed a .mobi upload; Azw3ToMobiClient only accepts
       // .azw3 (it only ever did the reverse direction). azw3-to-mobi was
@@ -154,7 +154,7 @@ const nextConfig = {
       // work (see reports on toolblip.com's site-level "Crawled - currently
       // not indexed" verdict). Same tool, same component - only the URL and
       // the canonical slug changed, so this is a pure 301/308, not a removal.
-      { source: '/tools/photo-resize-tool', destination: '/tools/photo-resize', permanent: true },
+      { source: '/tools/photo-resize-tool', destination: '/tools/images/photo-resize', permanent: true },
       { source: '/tools/lorem-ipsum-api', destination: '/tools/lorem-ipsum', permanent: true },
       { source: '/tools/color-format-converter-v2', destination: '/tools/color-format-converter', permanent: true },
       { source: '/tools/keyword-generator-express', destination: '/tools/keyword-generator', permanent: true },
@@ -170,8 +170,8 @@ const nextConfig = {
       { source: '/tools/word-freq-express', destination: '/tools/word-freq', permanent: true },
       { source: '/tools/html-plaintext-express', destination: '/tools/html-plaintext', permanent: true },
       { source: '/tools/tsv-json-express', destination: '/tools/tsv-json', permanent: true },
-      { source: '/tools/image-rotate-tool', destination: '/tools/image-rotate', permanent: true },
-      { source: '/tools/image-flip-tool', destination: '/tools/image-flip', permanent: true },
+      { source: '/tools/image-rotate-tool', destination: '/tools/images/image-rotate', permanent: true },
+      { source: '/tools/image-flip-tool', destination: '/tools/images/image-flip', permanent: true },
       { source: '/tools/html-to-plain-text-tool', destination: '/tools/html-to-plain-text', permanent: true },
       { source: '/tools/spelling-checker-tool', destination: '/tools/spelling-checker', permanent: true },
       // No longer redirected to /tools/favicon-preview: the family-
@@ -188,7 +188,7 @@ const nextConfig = {
       // image-compression itself is gone (family-verification pass -
       // ImageFlipToolClient flips images, it doesn't compress); redirecting
       // to the real, working image-compressor instead of a bare 404.
-      { source: '/tools/image-compression-tool', destination: '/tools/image-compressor', permanent: true },
+      { source: '/tools/image-compression-tool', destination: '/tools/images/image-compressor', permanent: true },
 
       // Verified byte-for-byte duplicate tool pages (identical component
       // rendered under two slugs) - consolidated onto the canonical slug
@@ -204,8 +204,8 @@ const nextConfig = {
       // these formats yet - redirecting to the closest genuine equivalent
       // per the "fix it or remove it, never fabricate" rule already used
       // elsewhere in this file, rather than leaving a mislabeled tool live.
-      { source: '/tools/vsd-to-jpg', destination: '/tools/image-format-converter', permanent: true },
-      { source: '/tools/vsdx-to-jpg', destination: '/tools/image-format-converter', permanent: true },
+      { source: '/tools/vsd-to-jpg', destination: '/tools/images/image-format-converter', permanent: true },
+      { source: '/tools/vsdx-to-jpg', destination: '/tools/images/image-format-converter', permanent: true },
       { source: '/tools/vsd-to-pdf', destination: '/tools/excel-to-pdf', permanent: true },
       { source: '/tools/vsdx-to-pdf', destination: '/tools/excel-to-pdf', permanent: true },
       // avi-to-mov, this line's original destination, was itself removed
@@ -213,7 +213,7 @@ const nextConfig = {
       // - it just relabeled the uploaded bytes), so this now goes straight
       // to the homepage.
       { source: '/tools/mp4-to-avi', destination: '/', permanent: true },
-      { source: '/tools/webp-to-gif', destination: '/tools/image-format-converter', permanent: true },
+      { source: '/tools/webp-to-gif', destination: '/tools/images/image-format-converter', permanent: true },
       { source: '/tools/json-to-tsv', destination: '/tools/json-to-csv', permanent: true },
 
       // These tool pages were removed: they only shipped as non-functional
@@ -337,8 +337,8 @@ const nextConfig = {
       // both slugs promising it. exif-remover has a real hand-rolled
       // JPEG/TIFF EXIF tag parser that displays the real tags before
       // stripping them - the closest genuine match in the catalog.
-      { source: '/tools/image-metadata-viewer', destination: '/tools/exif-remover', permanent: true },
-      { source: '/tools/metadata', destination: '/tools/exif-remover', permanent: true },
+      { source: '/tools/image-metadata-viewer', destination: '/tools/images/exif-remover', permanent: true },
+      { source: '/tools/metadata', destination: '/tools/images/exif-remover', permanent: true },
       // SyllableCounterClient counts syllables per word only - no
       // Flesch-Kincaid/grade-level calculation despite "estimate reading
       // level" promising one; readability-score-calculator is real.

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import GoogleAuthButton from "@/components/auth/GoogleAuthButton";
 import { useAuth } from "@/app/providers/auth-provider";
 import { recordRecentTool } from "@/lib/toolHistory";
+import { getToolPathBySlug } from "@/lib/tool-path";
 import ShareCard, { type ShareChannelLink } from "@/components/share/ShareCard";
 import { XIcon, FacebookIcon, WhatsAppIcon, LinkedInIcon, MessengerIcon, SnapchatIcon, EmailIcon, ShareGlyphIcon, SOCIAL_COLORS } from "@/components/share/shareIcons";
 
@@ -206,12 +207,12 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
   const [loginLoading, setLoginLoading] = useState(false);
   const [favoriteLoading, setFavoriteLoading] = useState(false);
   const [copied, setCopied] = useState(false);
-  const [pageUrl, setPageUrl] = useState(`https://toolblip.com/tools/${toolSlug}`);
+  const [pageUrl, setPageUrl] = useState(`https://toolblip.com${getToolPathBySlug(toolSlug)}`);
   const [pageTitle, setPageTitle] = useState(toolName);
   const [shareHovered, setShareHovered] = useState(false);
   const [favoriteIntent, setFavoriteIntent] = useState(false);
   const [unfavoriteOpen, setUnfavoriteOpen] = useState(false);
-  const [shortUrl, setShortUrl] = useState(`https://toolblip.com/tools/${toolSlug}`);
+  const [shortUrl, setShortUrl] = useState(`https://toolblip.com${getToolPathBySlug(toolSlug)}`);
   const [shortUrlLoading, setShortUrlLoading] = useState(false);
   const [shareExpanded, setShareExpanded] = useState(false);
   const [qrDataUrl, setQrDataUrl] = useState("");
@@ -261,8 +262,9 @@ export default function ToolEngagementBar({ toolName, toolSlug, toolIcon = "🧰
     if (!shareOpen) setShareExpanded(false);
   }, [shareOpen]);
 
-  const registerHref = `/signup?next=${encodeURIComponent(`/tools/${toolSlug}`)}&favorite=1`;
-  const favoriteReturnHref = `/tools/${toolSlug}?favorite=1`;
+  const toolPath = getToolPathBySlug(toolSlug);
+  const registerHref = `/signup?next=${encodeURIComponent(toolPath)}&favorite=1`;
+  const favoriteReturnHref = `${toolPath}?favorite=1`;
   const loginHref = `/login?next=${encodeURIComponent(favoriteReturnHref)}`;
   const googleHref = `/api/auth/google/start?next=${encodeURIComponent(favoriteReturnHref)}`;
 

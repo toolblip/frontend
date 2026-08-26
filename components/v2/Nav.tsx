@@ -13,6 +13,7 @@ import {
 } from './icons';
 import { CAT_META } from '@/lib/v2/categoryMeta';
 import { tools } from '@/data/tools';
+import { getCategoryPath, getToolPath, getToolPathBySlug } from '@/lib/tool-path';
 import NavbarAuth from '@/components/NavbarAuth';
 import { useAuth } from '@/app/providers/auth-provider';
 
@@ -97,7 +98,7 @@ function getMenuContent(key: string): MenuContent | null {
       featuredLabel: 'Featured',
       featured,
       ctaLabel: 'All Tools',
-      ctaTarget: '/directory',
+      ctaTarget: '/tools',
     };
   }
 
@@ -253,8 +254,8 @@ function MegaMenu({ which, onClose }: { which: string; onClose: () => void }) {
           const Ic = meta?.icon ?? IconUtil;
           const active = activeIdx === i;
           const handleClick = () => {
-            if (s.slug) window.location.href = `/tools/${s.slug}`;
-            else window.location.href = `/directory?cat=${encodeURIComponent(s.cat)}`;
+            if (s.slug) window.location.href = getToolPathBySlug(s.slug);
+            else window.location.href = getCategoryPath(s.cat);
             onClose();
           };
           return (
@@ -287,7 +288,7 @@ function MegaMenu({ which, onClose }: { which: string; onClose: () => void }) {
                 return (
                   <Link
                     key={t.slug}
-                    href={`/tools/${t.slug}`}
+                    href={getToolPath(t)}
                     className="tb-v2-mm-feat-card"
                     onClick={onClose}
                     style={{ '--cat-color': meta?.color, '--cat-bg': meta?.bg } as React.CSSProperties}
@@ -310,7 +311,7 @@ function MegaMenu({ which, onClose }: { which: string; onClose: () => void }) {
               {activeList.map((t) => (
                 <Link
                   key={t.slug}
-                  href={`/tools/${t.slug}`}
+                  href={getToolPath(t)}
                   className="tb-v2-mm-list-row"
                   onClick={onClose}
                 >
@@ -347,7 +348,7 @@ function MegaMenu({ which, onClose }: { which: string; onClose: () => void }) {
                     .split('-')
                     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
                     .join(' ');
-                const href = t ? `/tools/${slug}` : content.ctaTarget;
+                const href = t ? getToolPath(t) : content.ctaTarget;
                 return (
                   <Link
                     key={slug}
@@ -548,7 +549,7 @@ export default function Nav({ onOpenSearch }: Props) {
                     {content.sidebar.map((s, i) => (
                       <Link
                         key={i}
-                        href={`/directory?cat=${encodeURIComponent(s.cat)}`}
+                        href={s.slug ? getToolPathBySlug(s.slug) : getCategoryPath(s.cat)}
                         onClick={() => setMobileOpen(false)}
                       >
                         {s.label}
@@ -578,7 +579,7 @@ export default function Nav({ onOpenSearch }: Props) {
             );
           })}
           <div className="tb-v2-nav-mobile-divider" />
-          <Link href="/directory" onClick={() => setMobileOpen(false)}>All Tools</Link>
+          <Link href="/tools" onClick={() => setMobileOpen(false)}>All Tools</Link>
           {user && (
             <Link href="/dashboard" onClick={() => setMobileOpen(false)}>Dashboard</Link>
           )}

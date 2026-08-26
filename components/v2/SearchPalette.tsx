@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { tools } from '@/data/tools';
 import { getCategoryMeta } from '@/lib/v2/categoryMeta';
+import { getToolPath } from '@/lib/tool-path';
 import { IconSearch, IconArrowUR } from './icons';
 
 type Props = {
@@ -74,7 +75,7 @@ export default function SearchPalette({ open, onClose }: Props) {
         e.preventDefault();
         const picked = results[idx];
         if (picked) {
-          router.push(`/tools/${picked.slug}`);
+          router.push(getToolPath(picked));
           onClose();
         } else if (q.trim()) {
           router.push(`/directory?q=${encodeURIComponent(q.trim())}`);
@@ -140,7 +141,7 @@ export default function SearchPalette({ open, onClose }: Props) {
               <Link
                 key={t.slug}
                 data-idx={i}
-                href={`/tools/${t.slug}`}
+                href={getToolPath(t)}
                 className={`tb-v2-sp-row ${i === idx ? 'on' : ''}`}
                 onMouseEnter={() => setIdx(i)}
                 onClick={onClose}

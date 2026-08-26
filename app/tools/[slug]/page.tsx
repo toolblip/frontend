@@ -1,16 +1,9 @@
 import { notFound, permanentRedirect } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getCanonicalToolSlug, getToolBySlug, getToolRouteSlugs } from '@/data/tools';
-import { ToolUI } from './ToolUI';
-import ToolEngagementBar from '@/components/tools/ToolEngagementBar';
-import ToolContentSection from '@/components/tools/ToolContentSection';
-import FaqSection from '@/components/v2/FaqSection';
-import ToolWrapper from '@/components/tools/ToolWrapper';
-import RelatedTools from '@/components/tools/RelatedTools';
-import RelatedBlogPosts from '@/components/tools/RelatedBlogPosts';
-import { getFaqs, hasFaqOverride } from '@/lib/faq';
-import { isToolIndexable } from '@/lib/indexable-tools';
-import { getToolContent } from '@/data/tool-content';
+import { getToolPathBySlug, IMAGE_CATEGORY } from '@/lib/tool-path';
+import ToolDetailView from '../ToolDetailView';
+import { buildToolMetadata } from '../tool-page-meta';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -20,7 +13,8 @@ export async function generateStaticParams() {
   // Union of real tool slugs (+ data/tools.ts's own alias map, via
   // getToolRouteSlugs) and this file's REDIRECTS map below. dynamicParams
   // is false, so every one of these needs a static param or its alias
-  // redirect stops working and 404s instead.
+  // redirect stops working and 404s instead. Image slugs stay here so
+  // the old /tools/<slug> URLs permanently redirect to /tools/images/<slug>.
   const slugs = new Set([...getToolRouteSlugs(), ...Object.keys(REDIRECTS)]);
   return Array.from(slugs).map((slug) => ({ slug }));
 }
@@ -149,98 +143,22 @@ const REDIRECTS: Record<string, string> = {
   'base64-decode': 'base64-encoder-decoder',
 };
 
-// Tools with a purpose-built social share card instead of the generic
-// site-wide og-preview.png. Add an entry here + the matching file in
-// public/ to give a specific tool its own image.
-const CUSTOM_OG_IMAGES: Record<string, string> = {
-  'punycode-encoder': '/og-punycode-encoder.png',
-};
-
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const canonicalSlug = getCanonicalToolSlug(slug);
   if (REDIRECTS[slug] || canonicalSlug !== slug) return { title: 'Redirecting...' };
   const tool = getToolBySlug(canonicalSlug);
   if (!tool) return { title: 'Tool Not Found' };
-  const url = `https://toolblip.com/tools/${canonicalSlug}`;
-  const ogImage = `https://toolblip.com${CUSTOM_OG_IMAGES[canonicalSlug] ?? '/og-preview.png'}`;
-  const indexable = isToolIndexable(canonicalSlug);
-
-  return {
-    title: `${tool.name} | Toolblip`,
-    description: tool.description,
-    keywords: tool.tags,
-    alternates: {
-      canonical: url,
-    },
-    robots: indexable
-      ? { index: true, follow: true }
-      : { index: false, follow: true },
-    openGraph: {
-      title: `${tool.name} | Toolblip`,
-      description: tool.description,
-      url,
-      siteName: 'Toolblip',
-      images: [{ url: ogImage, width: 1200, height: 630, alt: tool.name }],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: `${tool.name} | Toolblip`,
-      description: tool.description,
-      images: [{ url: ogImage, alt: tool.name }],
-    },
-  };
+  if (tool.category === IMAGE_CATEGORY) return { title: 'Redirecting...' };
+  return buildToolMetadata(tool);
 }
 
 export default async function ToolDetailPage({ params }: PageProps) {
   const { slug } = await params;
   const canonicalSlug = REDIRECTS[slug] ?? getCanonicalToolSlug(slug);
-  if (canonicalSlug !== slug) permanentRedirect(`/tools/${canonicalSlug}`);
+  if (canonicalSlug !== slug) permanentRedirect(getToolPathBySlug(canonicalSlug));
   const tool = getToolBySlug(canonicalSlug);
   if (!tool) notFound();
-  const faqs = getFaqs(tool);
-  const content = getToolContent(tool.slug);
-
-  return (
-    <div data-testid="tool-detail-shell" className="tb-v2-tool-page">
-      <div className="tb-v2-container">
-        {/* Breadcrumb */}
-        <nav className="tb-v2-breadcrumb">
-          <a href="/">Home</a>
-          <span className="tb-v2-breadcrumb-sep">/</span>
-          <a href="/all-tools">All Tools</a>
-          <span className="tb-v2-breadcrumb-sep">/</span>
-          <a href={`/tools?category=${encodeURIComponent(tool.category)}`}>{tool.category}</a>
-          <span className="tb-v2-breadcrumb-sep">/</span>
-          <span>{tool.name}</span>
-        </nav>
-
-        {/* Header */}
-        <div className="tb-v2-tool-header">
-          <div className="tb-v2-tool-emoji">{tool.emoji}</div>
-          <div className="tb-v2-tool-title-group">
-            <h1 className="tb-v2-tool-title">{tool.name}</h1>
-            <div className="tb-v2-tool-header-row">
-              <span className="tb-v2-tool-cat-pill">{tool.category}</span>
-            </div>
-          </div>
-        </div>
-        {tool.slug !== 'banner-generator' && (
-          <p className="tb-v2-tool-desc" style={{ marginBottom: 20 }}>{tool.description}</p>
-        )}
-        <ToolEngagementBar toolName={tool.name} toolSlug={tool.slug} toolIcon={tool.emoji} />
-
-        <ToolWrapper toolSlug={tool.slug} toolName={tool.name}>
-          <ToolUI tool={tool} />
-        </ToolWrapper>
-
-        <ToolContentSection toolName={tool.name} content={content} />
-
-        <RelatedTools slug={tool.slug} category={tool.category} />
-        <RelatedBlogPosts toolName={tool.name} category={tool.category} tags={tool.tags} />
-
-        <FaqSection toolName={tool.name} faqs={faqs} emitSchema={hasFaqOverride(tool.slug)} />
-      </div>
-    </div>
-  );
+  if (tool.category === IMAGE_CATEGORY) permanentRedirect(getToolPathBySlug(tool.slug));
+  return <ToolDetailView tool={tool} />;
 }
