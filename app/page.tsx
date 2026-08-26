@@ -11,6 +11,7 @@ import WhyToolblip from '@/components/v2/home/WhyToolblip';
 import CategoryGrid from '@/components/v2/home/CategoryGrid';
 import HomeShareButton from '@/components/share/HomeShareButton';
 import { getCategoryMeta, categoryAnchor } from '@/lib/v2/categoryMeta';
+import { getToolPath } from '@/lib/tool-path';
 import { IconArrowUR } from '@/components/v2/icons';
 
 const POPULAR_CATEGORIES = ['Text', 'Developer', 'SEO', 'Color', 'Encoder'];
@@ -118,7 +119,7 @@ export default function HomePage() {
               return (
                 <Link
                   key={tool.slug}
-                  href={`/tools/${tool.slug}`}
+                  href={getToolPath(tool)}
                   className="tb-v2-dir-card"
                   style={{ '--cat-color': meta.color, '--cat-bg': meta.bg } as React.CSSProperties}
                 >

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { tools } from '@/data/tools';
+import { getCategoryPath } from '@/lib/tool-path';
 
 interface CategoryQuickAccessProps {
   /** Optional category list. When provided, overrides internal derivation from tools. */
@@ -65,7 +66,7 @@ export default function CategoryQuickAccess({ categories }: CategoryQuickAccessP
             return (
               <Link
                 key={name}
-                href={`/tools?category=${encodeURIComponent(name)}`}
+                href={getCategoryPath(name)}
                 className="category-pill"
                 aria-label={`Browse ${counts[name] ?? 0} ${name} tools`}
                 style={

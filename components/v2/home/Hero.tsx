@@ -19,7 +19,7 @@ export default function Hero({ toolCount }: { toolCount: number }) {
               No signup. No tracking. No server round-trips. Just paste and go.
             </p>
             <div className="tb-v2-hero-cta">
-              <Link href="/directory" className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg">
+              <Link href="/tools" className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg">
                 Browse all tools <IconArrow style={{ width: 16, height: 16 }} />
               </Link>
               <a href="/submit-tool" className="tb-v2-btn tb-v2-btn-lg">

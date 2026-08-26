@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { tools } from '@/data/tools';
 import { getCategoryMeta } from '@/lib/v2/categoryMeta';
+import { getToolPath } from '@/lib/tool-path';
 import { IconArrowUR } from '@/components/v2/icons';
 
 const FEATURED_GRID_SLUGS = [
@@ -72,7 +73,7 @@ export default function CategoryGrid() {
             return (
               <Link
                 key={tool.slug}
-                href={`/tools/${tool.slug}`}
+                href={getToolPath(tool)}
                 className="tb-v2-dir-card"
                 style={
                   {

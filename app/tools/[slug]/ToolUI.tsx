@@ -55,6 +55,8 @@ import JsonValidatorClient from '@/components/tools/JsonValidatorClient';
 import JsonGraphVisualizerClient from '@/components/tools/JsonGraphVisualizerClient';
 import JsMinifierClient from '@/components/tools/JsMinifierClient';
 import ImageResizerClient from '@/components/tools/ImageResizerClient';
+import ImageAspectRatioCalculatorClient from '@/components/tools/ImageAspectRatioCalculatorClient';
+import ImageDpiResizerClient from '@/components/tools/ImageDpiResizerClient';
 import ImageFormatConverterClient from '@/components/tools/ImageFormatConverterClient';
 import ImageCropperClient from '@/components/tools/ImageCropperClient';
 import ImageTrimmerClient from '@/components/tools/ImageTrimmerClient';
@@ -277,7 +279,6 @@ import BinaryDecimalHexConverterClient from '@/components/tools/BinaryDecimalHex
 import BinaryTextExpressClient from '@/components/tools/BinaryTextExpressClient';
 import BinaryToTextV2Client from '@/components/tools/BinaryToTextV2Client';
 import BlogOutlineClient from '@/components/tools/BlogOutlineClient';
-import BorderClient from '@/components/tools/BorderClient';
 import BmiCalculatorClient from '@/components/tools/BmiCalculatorClient';
 import BatchFaviconDownloaderClient from '@/components/tools/BatchFaviconDownloaderClient';
 import BatchImageResizerClient from '@/components/tools/BatchImageResizerClient';
@@ -991,7 +992,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'blog-outline':
       return <BlogOutlineClient />;
     case 'border':
-      return <BorderClient />;
+      return <ImageBorderAdderClient />;
     case 'bmi-calculator':
       return <BmiCalculatorClient />;
     case 'bash-command-generator':
@@ -1964,7 +1965,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'humanizer-ai':
       return <AiRephraserClient />;
     case 'image-aspect-ratio-calculator':
-      return <ImageResizerClient />;
+      return <ImageAspectRatioCalculatorClient />;
     case 'image-resizer-adv':
       return <ImageResizerClient />;
     case 'image-resizer-complete':
@@ -1992,9 +1993,9 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'image-brightness-adjuster':
       return <ImageCropperClient />;
     case 'image-dimension-checker':
-      return <ImageResizerClient />;
+      return <DetectClient />;
     case 'image-dpi-resizer':
-      return <ImageResizerClient />;
+      return <ImageDpiResizerClient />;
     case 'image-enlarger':
       return <ImageCropperClient />;
     case 'image-metadata-remover':
@@ -2991,7 +2992,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'vsd-to-docx': return <VsdxToDocxClient />;
     case 'image-scale-calculator': return <ImageScaleCalculatorClient />;
     case 'image-square-fit': return <ImageSquareFitClient />;
-    case 'image-to-base64': return <Base64Client />;
+    case 'image-to-base64': return <Base64ImageConverterClient />;
     case 'ipynb-formatter': return <IPynbFormatterClient />;
     case 'jupyter-cleaner': return <JupyterCleanerClient />;
     case 'json-editor': return <JsonEditorClient />;
@@ -3033,7 +3034,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'regex-pattern-generator': return <RegexPatternGeneratorClient />;
     case 'regex-pattern-generator-v2': return <RegexPatternGeneratorClient />;
     case 'remove-extra-spaces': return <RemoveExtraSpacesClient />;
-    case 'resize': return <BatchImageResizerClient />;
+    case 'resize': return <ImageResizerClient />;
     case 'rot13-cipher-v2': return <Rot13CipherClient />;
     case 'rotate': return <ImageRotateToolClient />;
     case 'screen-density-simulator': return <ScreenDensitySimulatorClient />;
@@ -3142,7 +3143,7 @@ export default function ToolClient({ tool }: { tool: Tool }) {
         <span>/</span>
         <a href="/tools" className="hover:text-red-600 dark:hover:text-red-400 transition-colors">Tools</a>
         <span>/</span>
-        <a href={`/tools?category=${encodeURIComponent(tool.category)}`} className="hover:text-red-600 dark:hover:text-red-400 transition-colors">{tool.category}</a>
+        <a href={tool.category === 'Image' ? '/tools/images' : `/tools?category=${encodeURIComponent(tool.category)}`} className="hover:text-red-600 dark:hover:text-red-400 transition-colors">{tool.category}</a>
         <span>/</span>
         <span className="text-gray-900 dark:text-white">{tool.name}</span>
       </nav>

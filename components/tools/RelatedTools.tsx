@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { tools, type Tool } from '@/data/tools';
+import { getToolPath } from '@/lib/tool-path';
 
 interface RelatedToolsProps {
   slug: string;
@@ -50,7 +51,7 @@ export default function RelatedTools({ slug, category }: RelatedToolsProps) {
         {related.map((tool) => (
           <Link
             key={tool.slug}
-            href={`/tools/${tool.slug}`}
+            href={getToolPath(tool)}
             className="group shrink-0 w-40 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-red-500 dark:hover:border-red-600 rounded-xl p-4 transition-all"
           >
             <span className="text-2xl" aria-hidden="true">{tool.emoji}</span>

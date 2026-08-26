@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { tools } from '@/data/tools';
 import { getCategoryMeta } from '@/lib/v2/categoryMeta';
+import { getToolPath } from '@/lib/tool-path';
 import { IconArrowUR } from '@/components/v2/icons';
 
 const FEATURED_SLUGS = [
@@ -35,7 +36,7 @@ export default function FeaturedStrip() {
             return (
               <Link
                 key={tool.slug}
-                href={`/tools/${tool.slug}`}
+                href={getToolPath(tool)}
                 style={{
                   display: 'flex',
                   alignItems: 'center',

@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { tools, categories, type Tool } from '@/data/tools';
 import SharePanel from '@/components/share/SharePanel';
+import { getToolPath, IMAGE_CATEGORY, IMAGE_CATEGORY_PATH } from '@/lib/tool-path';
 
 type CategoryTab = (typeof categories)[number];
 
@@ -62,14 +63,22 @@ export function DirectoryClient() {
   // Let /directory?category=<cat> (e.g. from a tool page breadcrumb) land
   // directly on that category hub instead of always showing "All".
   useEffect(() => {
-    const requested = searchParams.get('category');
+    const requested = searchParams.get('category') ?? searchParams.get('cat');
     if (!requested) return;
+    if (requested.toLowerCase() === 'image') {
+      router.replace(IMAGE_CATEGORY_PATH);
+      return;
+    }
     const match = CATEGORY_TABS.find((tab) => tab.toLowerCase() === requested.toLowerCase());
     if (match) setActiveTab(match);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function selectTab(tab: CategoryTab) {
+    if (tab === IMAGE_CATEGORY) {
+      router.push(IMAGE_CATEGORY_PATH);
+      return;
+    }
     setActiveTab(tab);
     router.replace(tab === 'All' ? '/directory' : `/directory?category=${encodeURIComponent(tab)}`, { scroll: false });
   }
@@ -227,7 +236,7 @@ export function DirectoryClient() {
           {filteredTools.map((tool) => (
             <Link
               key={tool.slug}
-              href={`/tools/${tool.slug}`}
+              href={getToolPath(tool)}
               className="group flex items-start gap-3 p-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl hover:border-red-400 dark:hover:border-red-600 hover:shadow-md transition-all"
             >
               <span className="text-2xl shrink-0 mt-0.5" aria-hidden="true">

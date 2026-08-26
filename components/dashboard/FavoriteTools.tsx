@@ -3,6 +3,7 @@
 import Link from "next/link";
 import React from "react";
 import type { FavoriteTool } from "./types";
+import { getToolPathBySlug } from "@/lib/tool-path";
 
 interface FavoriteToolsProps {
   favoriteTools: FavoriteTool[];
@@ -56,7 +57,7 @@ export function FavoriteTools({
                 className="flex items-start gap-3 rounded-2xl border border-gray-200 p-4 transition hover:border-red-200 hover:bg-red-50 dark:border-gray-800 dark:hover:border-red-900 dark:hover:bg-red-950/30"
               >
                 <Link
-                  href={`/tools/${tool.slug}`}
+                  href={getToolPathBySlug(tool.slug)}
                   className="flex min-w-0 flex-1 items-start gap-3"
                 >
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-lg dark:bg-gray-800">

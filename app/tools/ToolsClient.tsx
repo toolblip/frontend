@@ -1,14 +1,30 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { tools, categories } from '@/data/tools';
+import { getCategoryPath, getToolPath, IMAGE_CATEGORY } from '@/lib/tool-path';
 
 const allTools = tools;
 
-export default function ToolsClient() {
+export default function ToolsClient({ initialCategory }: { initialCategory?: string }) {
+  const router = useRouter();
   const [query, setQuery] = useState('');
-  const [activeCategory, setActiveCategory] = useState('All');
+  const [activeCategory, setActiveCategory] = useState(() => {
+    if (!initialCategory) return 'All';
+    return categories.includes(initialCategory as (typeof categories)[number])
+      ? initialCategory
+      : 'All';
+  });
+
+  const selectCategory = (cat: string) => {
+    if (cat === IMAGE_CATEGORY) {
+      router.push(getCategoryPath(IMAGE_CATEGORY));
+      return;
+    }
+    setActiveCategory(cat);
+  };
 
   const filtered = useMemo(() => {
     const q = query.toLowerCase().trim();
@@ -54,7 +70,7 @@ export default function ToolsClient() {
         {categories.map(cat => (
           <button
             key={cat}
-            onClick={() => setActiveCategory(cat)}
+            onClick={() => selectCategory(cat)}
             className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
               activeCategory === cat
                 ? 'bg-red-600 text-white dark:bg-red-700 dark:text-white'
@@ -79,7 +95,7 @@ export default function ToolsClient() {
           {filtered.map(tool => (
             <Link
               key={tool.slug}
-              href={`/tools/${tool.slug}`}
+              href={getToolPath(tool)}
               className="group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-red-500 dark:hover:border-red-600 rounded-xl p-4 transition-all"
             >
               <div className="flex items-start gap-3">
@@ -104,7 +120,7 @@ export default function ToolsClient() {
           <p className="text-gray-500 dark:text-gray-400 text-lg mb-2">
             No tools match &ldquo;{query}&rdquo;
           </p>
-          <button onClick={() => { setQuery(''); setActiveCategory('All'); }} className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 text-sm">
+          <button onClick={() => { setQuery(''); selectCategory('All'); }} className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 text-sm">
             Clear filters
           </button>
         </div>

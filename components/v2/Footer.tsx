@@ -21,11 +21,11 @@ export default function Footer() {
           <div>
             <h4>Tools</h4>
             <ul>
-              <li><Link href="/directory?cat=Developer">Developer</Link></li>
-              <li><Link href="/directory?cat=Text">Text</Link></li>
-              <li><Link href="/directory?cat=Image">Image</Link></li>
-              <li><Link href="/directory?cat=AI%20Tools">AI Tools</Link></li>
-              <li><Link href="/directory">All {toolCount} →</Link></li>
+              <li><Link href="/tools?category=Developer">Developer</Link></li>
+              <li><Link href="/tools?category=Text">Text</Link></li>
+              <li><Link href="/tools/images">Image</Link></li>
+              <li><Link href="/tools?category=AI%20Tools">AI Tools</Link></li>
+              <li><Link href="/tools">All {toolCount} →</Link></li>
             </ul>
           </div>
           <div>
