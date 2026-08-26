@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import useShowAds from '@/hooks/useShowAds';
+import SponsorAvatar from '@/components/v2/SponsorAvatar';
 import {
   displayIdentity,
   fetchSponsorsTop,
@@ -107,13 +108,16 @@ function SlotCard({
       data-testid={primary ? 'sponsor-strip-primary' : 'sponsor-strip-slot'}
     >
       <span className="tb-v2-sponsor-rank">#{rank}</span>
-      <span className="tb-v2-sponsor-name">{displayIdentity(slot.domain)}</span>
-      {slot.tagline && <span className="tb-v2-sponsor-tagline">{slot.tagline}</span>}
-      <span className="tb-v2-sponsor-meta">
-        {formatBid(slot.balance_cents)}
-        <span className="tb-v2-sponsor-live-dot" aria-hidden="true" />
-        {slot.clicks} clicks
-      </span>
+      <SponsorAvatar domain={slot.domain} name={slot.name} className="tb-v2-sponsor-card-avatar" />
+      <div className="tb-v2-sponsor-card-copy">
+        <span className="tb-v2-sponsor-name">{displayIdentity(slot.domain)}</span>
+        {slot.tagline && <span className="tb-v2-sponsor-tagline">{slot.tagline}</span>}
+        <span className="tb-v2-sponsor-meta">
+          {formatBid(slot.balance_cents)}
+          <span className="tb-v2-sponsor-live-dot" aria-hidden="true" />
+          {slot.clicks} clicks
+        </span>
+      </div>
     </a>
   );
 }

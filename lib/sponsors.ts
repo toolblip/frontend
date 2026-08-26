@@ -27,7 +27,7 @@ export interface SponsorsLeaderboardResponse {
   data: SponsorSlot[];
 }
 
-const CACHE_KEY = "tb_sponsors_top_v1";
+const CACHE_KEY = "tb_sponsors_top_v2";
 const CACHE_TTL_MS = 60_000;
 
 /**
