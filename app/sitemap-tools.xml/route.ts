@@ -9,7 +9,7 @@ import { getToolPath } from '@/lib/tool-path';
 // every deploy regardless of whether the page's content actually changed.
 // Bump when the tool catalog changes meaningfully (most recently: round 4
 // of the family-verification pass, 34 slugs removed/redirected, 2 added).
-const TOOL_PAGES_LAST_MODIFIED = new Date('2026-08-26T00:00:00.000Z');
+const TOOL_PAGES_LAST_MODIFIED = new Date('2026-08-26T18:00:00.000Z');
 
 // Tier-A gate: only tools with hand-written FAQ overrides are listed
 // (isToolIndexable). Others stay live with noindex,follow until they have

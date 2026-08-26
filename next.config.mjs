@@ -557,6 +557,20 @@ const nextConfig = {
       { source: '/tools/yaml-pretty-print', destination: '/', permanent: true },
       { source: '/tools/yaml-validator', destination: '/', permanent: true },
 
+      // 2026-08-26: AI Tools category removed — these pages were template /
+      // heuristic stubs (fake detector score, synonym swap, mad-libs), not
+      // model-backed tools. Send leftover URLs home.
+      { source: '/tools/ai-detector', destination: '/', permanent: true },
+      { source: '/tools/paraphrasing', destination: '/', permanent: true },
+      { source: '/tools/article-rewriter', destination: '/', permanent: true },
+      { source: '/tools/faq-generator', destination: '/', permanent: true },
+      { source: '/tools/blog-outline', destination: '/', permanent: true },
+      { source: '/tools/business-slogan-generator', destination: '/', permanent: true },
+      { source: '/tools/shorten-content', destination: '/', permanent: true },
+      { source: '/tools/explain-like-five', destination: '/', permanent: true },
+      { source: '/tools/facebook-ad-headlines', destination: '/', permanent: true },
+      { source: '/tools/bulk-generator', destination: '/', permanent: true },
+
       // Legacy alias slugs (data/tools.ts TOOL_SLUG_ALIASES) that used to
       // resolve to one of the removed tools above - same redirect target.
       { source: '/tools/http-headers-2025', destination: '/', permanent: true },

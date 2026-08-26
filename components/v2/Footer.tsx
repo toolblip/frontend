@@ -24,7 +24,6 @@ export default function Footer() {
               <li><Link href="/tools?category=Developer">Developer</Link></li>
               <li><Link href="/tools?category=Text">Text</Link></li>
               <li><Link href="/tools/images">Image</Link></li>
-              <li><Link href="/tools?category=AI%20Tools">AI Tools</Link></li>
               <li><Link href="/tools">All {toolCount} →</Link></li>
             </ul>
           </div>
