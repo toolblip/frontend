@@ -34,7 +34,7 @@ export const COMMON_RATIOS = [
 
 export function nearestCommonRatio(decimal: number): { label: string; ratio: number } | null {
   if (decimal <= 0 || !Number.isFinite(decimal)) return null;
-  let best = COMMON_RATIOS[0];
+  let best: (typeof COMMON_RATIOS)[number] = COMMON_RATIOS[0];
   let bestDelta = Math.abs(decimal - best.ratio);
   for (const preset of COMMON_RATIOS) {
     const delta = Math.abs(decimal - preset.ratio);
