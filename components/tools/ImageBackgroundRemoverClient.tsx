@@ -53,6 +53,8 @@ export default function ImageBackgroundRemoverClient() {
   const [isSlowFetch, setIsSlowFetch] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const replaceDialogRef = useRef<HTMLDialogElement>(null);
+  const [replaceConfirmOpen, setReplaceConfirmOpen] = useState(false);
   const { tier } = useSubscription();
   const maxSizeMB = tier === 'free' ? 5 : tier === 'starter' ? 10 : tier === 'ultra' ? 100 : tier === 'max' ? 500 : 5;
   const isOversized = selectedFile != null && selectedFile.size / (1024 * 1024) > maxSizeMB;
@@ -65,6 +67,16 @@ export default function ImageBackgroundRemoverClient() {
     const timer = setTimeout(() => setIsSlowFetch(true), FETCH_SLOW_THRESHOLD_MS);
     return () => clearTimeout(timer);
   }, [isProcessing, aiStage, method]);
+
+  useEffect(() => {
+    const dialog = replaceDialogRef.current;
+    if (!dialog) return;
+    if (replaceConfirmOpen) {
+      if (!dialog.open) dialog.showModal();
+    } else if (dialog.open) {
+      dialog.close();
+    }
+  }, [replaceConfirmOpen]);
 
   // Bumped on every upload so an in-flight AI request can tell it's been
   // superseded (e.g. the user picked a new image while a slow ~40MB model
@@ -342,9 +354,37 @@ export default function ImageBackgroundRemoverClient() {
     link.click();
   };
 
+  const openFilePicker = () => {
+    replaceDialogRef.current?.close();
+    setReplaceConfirmOpen(false);
+    const input = fileInputRef.current;
+    if (!input) return;
+    input.value = '';
+    // Close the modal first so the native picker is not blocked by <dialog>.
+    requestAnimationFrame(() => input.click());
+  };
+
+  const requestReplace = () => {
+    if (image) {
+      setReplaceConfirmOpen(true);
+      return;
+    }
+    openFilePicker();
+  };
+
   return (
     <div className="flex flex-col gap-4 p-4">
       <h2 className="text-2xl font-bold">Background Remover</h2>
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleImageUpload}
+        disabled={isConvertingHeic}
+        className="hidden"
+        aria-label="Upload image"
+      />
 
       {!image ? (
         <div
@@ -362,15 +402,6 @@ export default function ImageBackgroundRemoverClient() {
               <p className="text-gray-600 text-xs mt-1">PNG, JPG, WebP, GIF, HEIC</p>
             </>
           )}
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            disabled={isConvertingHeic}
-            className="hidden"
-            aria-label="Upload image"
-          />
           <UpgradeNotice tier={tier} />
           <FileSizeError file={selectedFile} maxSizeMB={maxSizeMB} />
         </div>
@@ -492,11 +523,12 @@ export default function ImageBackgroundRemoverClient() {
             </div>
           )}
 
-          <div className="flex gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
+              type="button"
               onClick={method === 'ai' ? removeBackgroundAI : removeBackground}
               disabled={isProcessing || isOversized}
-              className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg flex-1 disabled:opacity-50"
+              className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg w-auto disabled:opacity-50"
               title={isOversized ? 'File size exceeds your plan limit' : ''}
             >
               {isProcessing
@@ -508,16 +540,13 @@ export default function ImageBackgroundRemoverClient() {
                   : 'Remove Background'}
             </button>
             <button
-              onClick={() => { setImage(null); setImageFile(null); setSelectedFile(null); setProcessedImage(null); setAiError(null); }}
+              type="button"
+              onClick={requestReplace}
+              disabled={isProcessing}
               className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-lg"
             >
-              Choose New Image
+              Replace
             </button>
-            {processedImage && (
-              <button onClick={handleDownload} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-lg">
-                Download PNG
-              </button>
-            )}
           </div>
 
           {aiError && (
@@ -539,10 +568,57 @@ export default function ImageBackgroundRemoverClient() {
             <div className="min-w-0">
               <p className="tb-v2-tool-label" style={{marginBottom:8}}>Result (with transparency)</p>
               <img src={processedImage} alt="No Background" className="w-full h-auto max-h-[60vh] object-contain rounded-lg" style={{ backgroundImage: 'url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAdgAAAHYBTnsmCAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAABUSURBVDiNY/z//z8DJYCJgUIwaAzFMEoYRMVA4Y5LQNNLUMNA4TYowg1QLIMaB4rXIFYN0PQC1HhQ4oBEukE1LpT4IOqB2BgBAE0cFfVvYI0lAAAAAElFTkSuQmCC")', backgroundRepeat: 'repeat' }} />
+              <button
+                type="button"
+                onClick={handleDownload}
+                className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg mt-3"
+              >
+                Download PNG
+              </button>
             </div>
           )}
         </div>
       )}
+
+      <dialog
+        ref={replaceDialogRef}
+        onClose={() => setReplaceConfirmOpen(false)}
+        onCancel={() => setReplaceConfirmOpen(false)}
+        className="m-auto w-[min(28rem,calc(100vw-2rem))] rounded-2xl border border-gray-200 bg-white p-0 shadow-2xl backdrop:bg-black/50 dark:border-gray-700 dark:bg-gray-900"
+        aria-labelledby="replace-image-title"
+      >
+        <div className="p-6">
+          <h2 id="replace-image-title" className="mb-2 text-lg font-bold text-gray-900 dark:text-white">
+            Replace this image?
+          </h2>
+          <p className="mb-6 text-sm text-gray-600 dark:text-gray-300">
+            Download your result first if you want to keep it. Replacing the image will reset this tool, and the current result will be gone.
+          </p>
+          <div className="flex flex-wrap justify-end gap-2">
+            <button
+              type="button"
+              onClick={() => setReplaceConfirmOpen(false)}
+              className="tb-v2-btn tb-v2-btn-ghost"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={openFilePicker}
+              className="tb-v2-btn"
+            >
+              Proceed Anyway
+            </button>
+            <button
+              type="button"
+              onClick={openFilePicker}
+              className="tb-v2-btn tb-v2-btn-primary"
+            >
+              I have downloaded it
+            </button>
+          </div>
+        </div>
+      </dialog>
 
       <div className="text-sm text-gray-500 mt-4">
         <p className="font-medium">Tips:</p>
