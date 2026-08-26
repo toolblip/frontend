@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { useSubscription } from '@/hooks/useSubscription';
 import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
 import { convertHeicIfNeeded } from '@/lib/heic';
+import { fitAspectCrop, isCommittedDrag, type CropRect } from '@/lib/image-crop';
 
 const PRESETS = [
   { label: '1:1 Square', ratio: 1 },
@@ -14,17 +15,25 @@ const PRESETS = [
   { label: 'Passport (35mm)', ratio: 35 / 45 },
 ];
 
+const EMPTY_CROP: CropRect = { x: 0, y: 0, w: 0, h: 0 };
+
 export default function ImageCropperClient() {
   const [image, setImage] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preset, setPreset] = useState(PRESETS[0]);
-  const [cropRect, setCropRect] = useState({ x: 0, y: 0, w: 0, h: 0 });
-  const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [cropRect, setCropRect] = useState<CropRect>(EMPTY_CROP);
   const [isConvertingHeic, setIsConvertingHeic] = useState(false);
   const [sampleError, setSampleError] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const presetRef = useRef(preset);
+  const cropRectRef = useRef(cropRect);
+  const isDraggingRef = useRef(false);
+  const dragCommittedRef = useRef(false);
+  const dragStartRef = useRef({ x: 0, y: 0 });
+  const dragOriginClientRef = useRef({ x: 0, y: 0 });
+  const cropBeforeDragRef = useRef<CropRect>(EMPTY_CROP);
   // Which direction each axis currently extends from dragStart. Only flips once a
   // real (past-deadzone) movement happens on that axis - otherwise near-zero mouse
   // jitter on the non-dominant axis would make the box teleport to the other side.
@@ -32,7 +41,57 @@ export default function ImageCropperClient() {
   const { tier } = useSubscription();
   const maxSizeMB = tier === 'free' ? 5 : tier === 'starter' ? 10 : tier === 'ultra' ? 100 : tier === 'max' ? 500 : 5;
 
+  presetRef.current = preset;
+  cropRectRef.current = cropRect;
+
   const isOversized = selectedFile != null && selectedFile.size / (1024 * 1024) > maxSizeMB;
+
+  const drawCanvas = useCallback((img: HTMLImageElement, rect: CropRect) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    canvas.width = img.width;
+    canvas.height = img.height;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0);
+
+    const { x, y, w, h } = rect;
+    if (w > 0 && h > 0) {
+      ctx.fillStyle = 'rgba(0,0,0,0.55)';
+      ctx.fillRect(0, 0, canvas.width, y);
+      ctx.fillRect(0, y + h, canvas.width, canvas.height - y - h);
+      ctx.fillRect(0, y, x, h);
+      ctx.fillRect(x + w, y, canvas.width - x - w, h);
+      ctx.strokeStyle = '#EF4444';
+      ctx.lineWidth = Math.max(2, Math.round(Math.min(img.width, img.height) / 280));
+      ctx.strokeRect(x + 1, y + 1, Math.max(0, w - 2), Math.max(0, h - 2));
+
+      const corner = Math.max(12, Math.round(Math.min(w, h) / 12));
+      ctx.lineWidth = Math.max(3, Math.round(Math.min(img.width, img.height) / 200));
+      ctx.beginPath();
+      ctx.moveTo(x, y + corner); ctx.lineTo(x, y); ctx.lineTo(x + corner, y);
+      ctx.moveTo(x + w - corner, y); ctx.lineTo(x + w, y); ctx.lineTo(x + w, y + corner);
+      ctx.moveTo(x, y + h - corner); ctx.lineTo(x, y + h); ctx.lineTo(x + corner, y + h);
+      ctx.moveTo(x + w - corner, y + h); ctx.lineTo(x + w, y + h); ctx.lineTo(x + w, y + h - corner);
+      ctx.stroke();
+    }
+  }, []);
+
+  // Draw after the canvas mounts. Calling drawCanvas from FileReader/Image onload
+  // races React's commit — the <canvas> only exists once `image` is set.
+  useEffect(() => {
+    if (!image || !imgRef.current) return;
+    drawCanvas(imgRef.current, cropRect);
+  }, [image, cropRect, drawCanvas]);
+
+  const applyLoadedImage = (img: HTMLImageElement, src: string) => {
+    imgRef.current = img;
+    setCropRect(fitAspectCrop(img.width, img.height, presetRef.current.ratio));
+    setSampleError(false);
+    setImage(src);
+  };
 
   const loadImage = async (file: File) => {
     setIsConvertingHeic(true);
@@ -42,49 +101,20 @@ export default function ImageCropperClient() {
     const reader = new FileReader();
     reader.onload = (e) => {
       const src = e.target?.result as string;
-      setImage(src);
       const img = new Image();
-      img.onload = () => {
-        imgRef.current = img;
-        drawCanvas(img, 0, 0, img.width, img.height);
-      };
+      img.onload = () => applyLoadedImage(img, src);
       img.src = src;
     };
     reader.readAsDataURL(decodable);
   };
 
-  const drawCanvas = useCallback(
-    (img: HTMLImageElement, x: number, y: number, w: number, h: number) => {
-      const canvas = canvasRef.current;
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return;
-
-      canvas.width = img.width;
-      canvas.height = img.height;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0);
-
-      // Draw crop overlay
-      if (w > 0 && h > 0) {
-        ctx.fillStyle = 'rgba(0,0,0,0.5)';
-        ctx.fillRect(0, 0, canvas.width, y);
-        ctx.fillRect(0, y + h, canvas.width, canvas.height - y - h);
-        ctx.fillRect(0, y, x, h);
-        ctx.fillRect(x + w, y, canvas.width - x - w, h);
-        ctx.strokeStyle = '#EF4444';
-        ctx.lineWidth = 2;
-        ctx.strokeRect(x, y, w, h);
-      }
-    },
-    []
-  );
-
-
-
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) { setSelectedFile(file); loadImage(file); }
+    if (file) {
+      setSelectedFile(file);
+      loadImage(file);
+    }
+    e.target.value = '';
   };
 
   const loadSample = (e: React.MouseEvent) => {
@@ -92,14 +122,7 @@ export default function ImageCropperClient() {
     const src = '/samples/tool-sample.png';
     setSelectedFile(null);
     const img = new Image();
-    img.onload = () => {
-      imgRef.current = img;
-      setSampleError(false);
-      setImage(src);
-      // Wait a frame so the canvas (only mounted once `image` is truthy) exists
-      // by the time we draw into it - setImage's re-render hasn't landed yet here.
-      requestAnimationFrame(() => drawCanvas(img, 0, 0, img.width, img.height));
-    };
+    img.onload = () => applyLoadedImage(img, src);
     img.onerror = () => setSampleError(true);
     img.src = src;
   };
@@ -115,35 +138,50 @@ export default function ImageCropperClient() {
     }
   };
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!imgRef.current || !canvasRef.current) return;
-    const rect = canvasRef.current.getBoundingClientRect();
-    const scaleX = imgRef.current.width / rect.width;
-    const scaleY = imgRef.current.height / rect.height;
-    const x = (e.clientX - rect.left) * scaleX;
-    const y = (e.clientY - rect.top) * scaleY;
-
-    // Default each axis's growth direction toward whichever side has more room,
-    // so a drag starting near an edge isn't immediately cramped into a sliver.
-    dragDirRef.current = {
-      x: x < imgRef.current.width / 2 ? 1 : -1,
-      y: y < imgRef.current.height / 2 ? 1 : -1,
+  const pointerToImage = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    const canvas = canvasRef.current;
+    const img = imgRef.current;
+    if (!canvas || !img) return null;
+    const bounds = canvas.getBoundingClientRect();
+    if (bounds.width === 0 || bounds.height === 0) return null;
+    const scaleX = img.width / bounds.width;
+    const scaleY = img.height / bounds.height;
+    return {
+      x: (e.clientX - bounds.left) * scaleX,
+      y: (e.clientY - bounds.top) * scaleY,
     };
-    setIsDragging(true);
-    setDragStart({ x, y });
-    setCropRect({ x, y, w: 0, h: 0 });
   };
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    if (!isDragging || !imgRef.current) return;
-    const rect = canvasRef.current!.getBoundingClientRect();
-    const scaleX = imgRef.current.width / rect.width;
-    const scaleY = imgRef.current.height / rect.height;
-    const x = (e.clientX - rect.left) * scaleX;
-    const y = (e.clientY - rect.top) * scaleY;
+  const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (!imgRef.current || !canvasRef.current) return;
+    const pos = pointerToImage(e);
+    if (!pos) return;
+    e.currentTarget.setPointerCapture(e.pointerId);
 
-    const dx = x - dragStart.x;
-    const dy = y - dragStart.y;
+    dragDirRef.current = {
+      x: pos.x < imgRef.current.width / 2 ? 1 : -1,
+      y: pos.y < imgRef.current.height / 2 ? 1 : -1,
+    };
+    isDraggingRef.current = true;
+    dragCommittedRef.current = false;
+    dragStartRef.current = pos;
+    dragOriginClientRef.current = { x: e.clientX, y: e.clientY };
+    cropBeforeDragRef.current = cropRectRef.current;
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (!isDraggingRef.current || !imgRef.current) return;
+    if (!dragCommittedRef.current) {
+      if (!isCommittedDrag(e.clientX - dragOriginClientRef.current.x, e.clientY - dragOriginClientRef.current.y)) {
+        return;
+      }
+      dragCommittedRef.current = true;
+    }
+    const pos = pointerToImage(e);
+    if (!pos) return;
+
+    const dx = pos.x - dragStartRef.current.x;
+    const dy = pos.y - dragStartRef.current.y;
     const rawW = Math.abs(dx);
     const rawH = Math.abs(dy);
 
@@ -159,40 +197,48 @@ export default function ImageCropperClient() {
     // the user is dragging further along (ratio-adjusted), like most cropping UIs.
     let w: number;
     let h: number;
-    if (rawW / preset.ratio > rawH) {
+    if (rawW / presetRef.current.ratio > rawH) {
       w = rawW;
-      h = w / preset.ratio;
+      h = w / presetRef.current.ratio;
     } else {
       h = rawH;
-      w = h * preset.ratio;
+      w = h * presetRef.current.ratio;
     }
 
     // Clamp to the available space in the drag direction, scaling both dimensions
     // by the same factor so the ratio stays exact even past the image edge.
-    const maxW = dirX >= 0 ? imgRef.current.width - dragStart.x : dragStart.x;
-    const maxH = dirY >= 0 ? imgRef.current.height - dragStart.y : dragStart.y;
+    const maxW = dirX >= 0 ? imgRef.current.width - dragStartRef.current.x : dragStartRef.current.x;
+    const maxH = dirY >= 0 ? imgRef.current.height - dragStartRef.current.y : dragStartRef.current.y;
     const scale = Math.min(1, maxW / w, maxH / h);
     w *= scale;
     h *= scale;
 
-    const newX = dirX >= 0 ? dragStart.x : dragStart.x - w;
-    const newY = dirY >= 0 ? dragStart.y : dragStart.y - h;
+    const newX = dirX >= 0 ? dragStartRef.current.x : dragStartRef.current.x - w;
+    const newY = dirY >= 0 ? dragStartRef.current.y : dragStartRef.current.y - h;
 
     const newRect = { x: Math.round(newX), y: Math.round(newY), w: Math.round(w), h: Math.round(h) };
     setCropRect(newRect);
-    drawCanvas(imgRef.current, newRect.x, newRect.y, newRect.w, newRect.h);
+    drawCanvas(imgRef.current, newRect);
   };
 
-  const handleMouseUp = () => {
-    setIsDragging(false);
+  const handlePointerUp = () => {
+    if (!isDraggingRef.current) return;
+    isDraggingRef.current = false;
+    if (dragCommittedRef.current) return;
+    dragCommittedRef.current = false;
+    if (cropBeforeDragRef.current.w > 0) {
+      setCropRect(cropBeforeDragRef.current);
+      return;
+    }
+    if (imgRef.current) {
+      setCropRect(fitAspectCrop(imgRef.current.width, imgRef.current.height, presetRef.current.ratio));
+    }
   };
 
   const selectPreset = (label: string, ratio: number) => {
     setPreset({ label, ratio });
-    // An existing crop rect was drawn against the old ratio - clear it rather
-    // than let a stale-ratio selection silently remain droppable/downloadable.
-    setCropRect({ x: 0, y: 0, w: 0, h: 0 });
-    if (imgRef.current) drawCanvas(imgRef.current, 0, 0, 0, 0);
+    if (!imgRef.current) return;
+    setCropRect(fitAspectCrop(imgRef.current.width, imgRef.current.height, ratio));
   };
 
   const downloadCrop = () => {
@@ -211,6 +257,15 @@ export default function ImageCropperClient() {
     link.download = 'cropped-image.png';
     link.href = canvas.toDataURL('image/png');
     link.click();
+  };
+
+  const resetImage = () => {
+    setImage(null);
+    setSelectedFile(null);
+    setCropRect(EMPTY_CROP);
+    setSampleError(false);
+    imgRef.current = null;
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   return (
@@ -233,13 +288,22 @@ export default function ImageCropperClient() {
         </div>
       </div>
 
-      {/* Upload zone */}
+      <input
+        ref={fileInputRef}
+        id="image-input"
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        className="hidden"
+        aria-label="Upload image"
+      />
+
       {!image ? (
         <div
           className="border-2 border-dashed border-gray-700 hover:border-red-600 rounded-xl p-12 text-center transition-colors cursor-pointer"
           onDragOver={(e) => e.preventDefault()}
           onDrop={handleDrop}
-          onClick={() => document.getElementById('image-input')?.click()}
+          onClick={() => fileInputRef.current?.click()}
         >
           <span className="text-3xl mb-3 block">🖼️</span>
           {isConvertingHeic ? (
@@ -259,27 +323,14 @@ export default function ImageCropperClient() {
               )}
             </>
           )}
-          <input
-            id="image-input"
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            className="hidden"
-            aria-label="Upload image"
-          />
           <UpgradeNotice tier={tier} />
           <FileSizeError file={selectedFile} maxSizeMB={maxSizeMB} />
         </div>
       ) : (
         <div className="space-y-3">
-          <canvas
-            ref={canvasRef}
-            className="w-full h-auto max-h-[70vh] object-contain rounded-lg cursor-crosshair"
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-          />
+          <p className="text-xs text-gray-500">
+            {preset.label} crop is ready — drag on the image to choose a different area
+          </p>
           <div className="flex gap-2">
             <button
               onClick={downloadCrop}
@@ -290,15 +341,23 @@ export default function ImageCropperClient() {
               {isOversized ? 'File Too Large' : 'Download Crop'}
             </button>
             <button
-              onClick={() => { setImage(null); setSelectedFile(null); setCropRect({ x: 0, y: 0, w: 0, h: 0 }); setSampleError(false); }}
+              onClick={resetImage}
               className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-lg"
             >
               Choose New Image
             </button>
           </div>
+          <canvas
+            ref={canvasRef}
+            className="max-w-full max-h-[50vh] w-auto h-auto mx-auto block rounded-lg cursor-crosshair touch-none"
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
+          />
           {cropRect.w > 0 && (
             <p className="text-xs text-gray-500">
-              Crop area: {Math.round(cropRect.w)} × {Math.round(cropRect.h)}px - drag on the image to adjust
+              Crop area: {Math.round(cropRect.w)} × {Math.round(cropRect.h)}px
             </p>
           )}
         </div>
