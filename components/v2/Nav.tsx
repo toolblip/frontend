@@ -91,7 +91,7 @@ function getMenuContent(key: string): MenuContent | null {
         { cat: 'Text',       label: 'Text',       desc: 'Count, convert, diff' },
         { cat: 'Image',      label: 'Image',      desc: 'Resize, crop, compress' },
         { cat: 'Color',      label: 'Color',      desc: 'Palettes, contrast, picker' },
-        { cat: 'Conversion', label: 'Conversion', desc: 'YAML, CSV, timestamps' },
+        { cat: 'AI Tools',   label: 'AI Tools',   desc: 'Detect, rewrite, outline' },
         { cat: 'SEO',        label: 'SEO',        desc: 'Meta tags, sitemaps, OG' },
       ],
       featuredLabel: 'Featured',
@@ -101,60 +101,42 @@ function getMenuContent(key: string): MenuContent | null {
     };
   }
 
-  if (key === 'mcp') {
-    return {
-      more: false,
-      sidebarLabel: 'MCP',
-      sidebar: [
-        { cat: 'MCP', slug: 'mcp-inspector',        label: 'Server Inspector', desc: 'Explore any MCP server live' },
-        { cat: 'MCP', slug: 'mcp-registry',         label: 'Server Registry',  desc: 'Browse 400+ community servers' },
-        { cat: 'MCP', slug: 'mcp-schema-validator', label: 'Schema Validator', desc: 'Check tool schemas vs spec' },
-        { cat: 'MCP', slug: 'mcp-config-builder',   label: 'Config Builder',   desc: 'Claude, Cursor, Zed configs' },
-        { cat: 'MCP', slug: 'mcp-transport-tester', label: 'Transport Tester', desc: 'stdio / SSE / HTTP probe' },
-        { cat: 'MCP', slug: 'mcp-prompt-debugger',  label: 'Prompt Debugger',  desc: 'Replay prompt requests' },
-      ],
-      featuredLabel: 'Featured',
-      featured: [
-        { slug: 'mcp-inspector', name: 'MCP Inspector', category: 'MCP', description: 'Browse capabilities, tools, resources of any MCP server.' },
-        { slug: 'mcp-registry',  name: 'MCP Registry',  category: 'MCP', description: 'Search 400+ community MCP servers with rich filters.' },
-      ],
-      learn: [
-        { label: 'What is MCP?',            desc: 'Protocol primer in 5 min' },
-        { label: 'Build your first server', desc: 'TypeScript walkthrough' },
-        { label: 'Security best practices', desc: 'Sandboxing, secrets, audit' },
-        { label: 'MCP spec (1.2)',          desc: 'Official specification' },
-      ],
-      ctaLabel: 'All MCP Tools',
-      ctaTarget: '/directory?cat=MCP',
-    };
-  }
-
   if (key === 'aiml') {
+    // Only link tools that exist in data/tools.ts — the old MCP / AI·ML
+    // mega-menu pointed at placeholder slugs that were never shipped.
+    const aiSidebar: Array<{ slug: string; label: string; desc: string }> = [
+      { slug: 'ai-detector',               label: 'AI Detector',        desc: 'Spot AI-written text' },
+      { slug: 'paraphrasing',              label: 'Paraphraser',        desc: 'Rephrase, keep meaning' },
+      { slug: 'article-rewriter',          label: 'Article Rewriter',   desc: 'Rewrite existing copy' },
+      { slug: 'faq-generator',             label: 'FAQ Generator',      desc: 'Q&A sections for SEO' },
+      { slug: 'blog-outline',              label: 'Blog Outline',       desc: 'Structure before you write' },
+      { slug: 'business-slogan-generator', label: 'Slogan Generator',   desc: 'Taglines for your brand' },
+    ].filter((s) => tools.some((t) => t.slug === s.slug));
+    const featured = [
+      lookup('ai-detector'),
+      lookup('paraphrasing'),
+    ].filter((x): x is FeaturedItem => !!x);
+    const moreList = [
+      'shorten-content',
+      'explain-like-five',
+      'facebook-ad-headlines',
+      'bulk-generator',
+    ].filter((slug) => tools.some((t) => t.slug === slug));
     return {
       more: false,
-      sidebarLabel: 'AI / ML',
-      sidebar: [
-        { cat: 'AI/ML', slug: 'token-counter',        label: 'Token Counter',     desc: 'GPT, Claude, Gemini, Llama' },
-        { cat: 'AI/ML', slug: 'prompt-library',       label: 'Prompt Library',    desc: '1000+ curated prompts' },
-        { cat: 'AI/ML', slug: 'llm-playground',       label: 'LLM Playground',    desc: 'Side-by-side model compare' },
-        { cat: 'AI/ML', slug: 'cost-calculator',      label: 'Cost Calculator',   desc: 'Monthly spend estimates' },
-        { cat: 'AI/ML', slug: 'embedding-visualizer',label: 'Embeddings',        desc: '2D/3D UMAP & t-SNE' },
-        { cat: 'AI/ML', slug: 'prompt-optimizer',    label: 'Prompt Optimizer',  desc: 'Rewrite for clarity' },
-      ],
+      sidebarLabel: 'AI Tools',
+      sidebar: aiSidebar.map((s) => ({
+        cat: 'AI Tools',
+        slug: s.slug,
+        label: s.label,
+        desc: s.desc,
+      })),
       featuredLabel: 'Featured',
-      featured: [
-        { slug: 'token-counter',  name: 'Token Counter',  category: 'AI/ML', description: 'Instant token counts across GPT-4o, Claude 4, Gemini 2.5 and more.' },
-        { slug: 'prompt-library', name: 'Prompt Library', category: 'AI/ML', description: '1000+ curated prompts, remixable, versioned, with eval scores.' },
-      ],
-      learn: [
-        { label: 'Prompt engineering guide', desc: 'Patterns that hold up' },
-        { label: 'Eval-driven development',  desc: 'Ship with confidence' },
-        { label: 'Model-routing cookbook',   desc: 'Cost vs quality, solved' },
-      ],
+      featured,
       listLabel: 'More AI Tools',
-      list: ['image-to-alt', 'model-leaderboard'],
+      list: moreList,
       ctaLabel: 'All AI Tools',
-      ctaTarget: '/directory?cat=AI%2FML',
+      ctaTarget: '/directory?cat=AI%20Tools',
     };
   }
 
@@ -393,8 +375,7 @@ function MegaMenu({ which, onClose }: { which: string; onClose: () => void }) {
 
 const menus: Array<{ key: string; label: string; href?: string }> = [
   { key: 'tools', label: 'Tools' },
-  { key: 'mcp',   label: 'MCP' },
-  { key: 'aiml',  label: 'AI / ML' },
+  { key: 'aiml',  label: 'AI Tools' },
   { key: 'sponsors', label: 'Sponsors', href: '/sponsors' },
   { key: 'more',  label: 'More' },
 ];

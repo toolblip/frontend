@@ -24,7 +24,7 @@ export default function Footer() {
               <li><Link href="/directory?cat=Developer">Developer</Link></li>
               <li><Link href="/directory?cat=Text">Text</Link></li>
               <li><Link href="/directory?cat=Image">Image</Link></li>
-              <li><Link href="/directory?cat=Color">Color</Link></li>
+              <li><Link href="/directory?cat=AI%20Tools">AI Tools</Link></li>
               <li><Link href="/directory">All {toolCount} →</Link></li>
             </ul>
           </div>

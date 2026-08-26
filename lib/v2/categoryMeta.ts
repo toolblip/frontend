@@ -26,6 +26,7 @@ export const CAT_META: Record<string, CategoryMeta> = {
   Math:       { icon: IconMath,  color: 'var(--c-math)', bg: 'var(--c-math-bg)' },
   MCP:        { icon: IconMCP,   color: 'var(--c-mcp)',  bg: 'var(--c-mcp-bg)'  },
   'AI/ML':    { icon: IconAI,    color: 'var(--c-aiml)', bg: 'var(--c-aiml-bg)' },
+  'AI Tools': { icon: IconAI,    color: 'var(--c-aiml)', bg: 'var(--c-aiml-bg)' },
 };
 
 export function getCategoryMeta(category: string): CategoryMeta {

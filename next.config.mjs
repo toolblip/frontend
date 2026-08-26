@@ -354,10 +354,9 @@ const nextConfig = {
       { source: '/tools/seo-tag-analyzer', destination: '/tools/meta-tag-generator', permanent: true },
 
       // Round 4: verified functionally broken, no real alternative anywhere
-      // in the catalog - removed from data/tools.ts with no entry here, so
-      // dynamicParams=false 404s them directly (per the plan's own rule:
-      // mass redirects to a generic hub read as soft-404s to Google, so a
-      // real 404 is the honest signal when nothing real exists to point to).
+      // in the catalog - originally left as bare 404s. Follow-up (2026-08-25):
+      // send these dead URLs to the homepage instead so bookmarks/search
+      // hits land somewhere useful. Still not in data/tools.ts.
       // CsvToJsonClient only ever does CSV->JSON regardless of slug; the
       // orphaned candidates for each of these (JsonToGoStructClient,
       // SrtToJsonClient, JsonToPhpArrayClient, JSONToURLEncodedV2Client)
@@ -387,6 +386,69 @@ const nextConfig = {
       // input) - a literal unchanged echo - behind an unfilled placeholder
       // template and a dead "// Visio to Word conversion logic here"
       // comment; no real Visio parser exists anywhere in the codebase.
+      { source: '/tools/ai-rephraser', destination: '/', permanent: true },
+      { source: '/tools/avi-to-gif', destination: '/', permanent: true },
+      { source: '/tools/content-summarizer', destination: '/', permanent: true },
+      { source: '/tools/css-filter-generator', destination: '/', permanent: true },
+      { source: '/tools/css-preview', destination: '/', permanent: true },
+      { source: '/tools/css-units-converter-new', destination: '/', permanent: true },
+      { source: '/tools/css-variable-generator', destination: '/', permanent: true },
+      { source: '/tools/favicon-maker', destination: '/', permanent: true },
+      { source: '/tools/favicon-png-creator', destination: '/', permanent: true },
+      { source: '/tools/favicon-preview-tool', destination: '/', permanent: true },
+      { source: '/tools/gif-maker', destination: '/', permanent: true },
+      { source: '/tools/humanizer-ai', destination: '/', permanent: true },
+      { source: '/tools/ico-file-generator', destination: '/', permanent: true },
+      { source: '/tools/icon-favicon-creator', destination: '/', permanent: true },
+      { source: '/tools/image-blur-hash-generator', destination: '/', permanent: true },
+      { source: '/tools/image-brightness-adjuster', destination: '/', permanent: true },
+      { source: '/tools/image-enlarger', destination: '/', permanent: true },
+      { source: '/tools/ip-address-info-express', destination: '/', permanent: true },
+      { source: '/tools/js-beautifier', destination: '/', permanent: true },
+      { source: '/tools/json-to-go-struct', destination: '/', permanent: true },
+      { source: '/tools/json-to-php-array', destination: '/', permanent: true },
+      { source: '/tools/json-to-url-encoded', destination: '/', permanent: true },
+      { source: '/tools/keyword-difficulty-checker', destination: '/', permanent: true },
+      { source: '/tools/markup-calculator', destination: '/', permanent: true },
+      { source: '/tools/meta-description-generator', destination: '/', permanent: true },
+      { source: '/tools/mkv-to-gif', destination: '/', permanent: true },
+      { source: '/tools/mock-api-generator', destination: '/', permanent: true },
+      { source: '/tools/mov-to-avi', destination: '/', permanent: true },
+      { source: '/tools/mov-to-mp3', destination: '/', permanent: true },
+      { source: '/tools/mov-to-mp4', destination: '/', permanent: true },
+      { source: '/tools/mov-to-wav', destination: '/', permanent: true },
+      { source: '/tools/mp4-to-gif', destination: '/', permanent: true },
+      { source: '/tools/mp4-to-mov', destination: '/', permanent: true },
+      { source: '/tools/ogg-to-wav', destination: '/', permanent: true },
+      { source: '/tools/placeholder-image-generator', destination: '/', permanent: true },
+      { source: '/tools/plain-text-formatter', destination: '/', permanent: true },
+      { source: '/tools/png-to-ico', destination: '/', permanent: true },
+      { source: '/tools/port-scanner', destination: '/', permanent: true },
+      { source: '/tools/regex-cheatsheet', destination: '/', permanent: true },
+      { source: '/tools/rgba-to-hex', destination: '/', permanent: true },
+      { source: '/tools/robots-txt-simulator', destination: '/', permanent: true },
+      { source: '/tools/robots-txt-tester', destination: '/', permanent: true },
+      { source: '/tools/scrypt-hash-generator', destination: '/', permanent: true },
+      { source: '/tools/seo-title-tag-generator', destination: '/', permanent: true },
+      { source: '/tools/sitemap-html-generator', destination: '/', permanent: true },
+      { source: '/tools/split', destination: '/', permanent: true },
+      { source: '/tools/srt-to-json', destination: '/', permanent: true },
+      { source: '/tools/summarizer', destination: '/', permanent: true },
+      { source: '/tools/svg-compressor', destination: '/', permanent: true },
+      { source: '/tools/table-to-markdown', destination: '/', permanent: true },
+      { source: '/tools/tiff-to-text', destination: '/', permanent: true },
+      { source: '/tools/url-encoder-decoder', destination: '/', permanent: true },
+      { source: '/tools/url-similarity-checker', destination: '/', permanent: true },
+      { source: '/tools/vcard-qr-generator', destination: '/', permanent: true },
+      { source: '/tools/vsd-to-docx', destination: '/', permanent: true },
+      { source: '/tools/vsd-to-pptx', destination: '/', permanent: true },
+      { source: '/tools/vsdx-to-docx', destination: '/', permanent: true },
+      { source: '/tools/vsdx-to-pptx', destination: '/', permanent: true },
+      { source: '/tools/webm-to-mov', destination: '/', permanent: true },
+      { source: '/tools/wifi-qr-code-generator', destination: '/', permanent: true },
+      { source: '/tools/xml-sitemap-parser', destination: '/', permanent: true },
+      { source: '/tools/xml-to-excel', destination: '/', permanent: true },
+      { source: '/tools/yaml-to-toml', destination: '/', permanent: true },
 
       // Functional audit pass (2026-08-21): each of these tool pages
       // rendered a component that was fake or non-functional under real
