@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { fitAspectCrop } from '@/lib/image-crop';
+import { fitAspectCrop, isCommittedDrag } from '@/lib/image-crop';
 
 describe('fitAspectCrop', () => {
   it('centers a 1:1 crop inside a landscape image', () => {
@@ -21,5 +21,17 @@ describe('fitAspectCrop', () => {
   it('returns an empty rect for invalid input', () => {
     expect(fitAspectCrop(0, 600, 1)).toEqual({ x: 0, y: 0, w: 0, h: 0 });
     expect(fitAspectCrop(800, 600, 0)).toEqual({ x: 0, y: 0, w: 0, h: 0 });
+  });
+});
+
+describe('isCommittedDrag', () => {
+  it('ignores tap-sized jitter in screen pixels', () => {
+    expect(isCommittedDrag(3, 4)).toBe(false);
+    expect(isCommittedDrag(0, 0)).toBe(false);
+  });
+
+  it('commits once movement reaches 8 screen pixels', () => {
+    expect(isCommittedDrag(8, 0)).toBe(true);
+    expect(isCommittedDrag(6, 6)).toBe(true);
   });
 });

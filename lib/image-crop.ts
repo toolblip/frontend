@@ -23,3 +23,10 @@ export function fitAspectCrop(imgW: number, imgH: number, ratio: number): CropRe
     h: Math.round(h),
   };
 }
+
+const DRAG_COMMIT_PX = 8;
+
+/** True once pointer movement in screen pixels is a real drag, not a tap. */
+export function isCommittedDrag(clientDx: number, clientDy: number, minPx = DRAG_COMMIT_PX): boolean {
+  return Math.hypot(clientDx, clientDy) >= minPx;
+}

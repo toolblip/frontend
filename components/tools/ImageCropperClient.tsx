@@ -4,7 +4,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { useSubscription } from '@/hooks/useSubscription';
 import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
 import { convertHeicIfNeeded } from '@/lib/heic';
-import { fitAspectCrop, type CropRect } from '@/lib/image-crop';
+import { fitAspectCrop, isCommittedDrag, type CropRect } from '@/lib/image-crop';
 
 const PRESETS = [
   { label: '1:1 Square', ratio: 1 },
@@ -30,7 +30,10 @@ export default function ImageCropperClient() {
   const presetRef = useRef(preset);
   const cropRectRef = useRef(cropRect);
   const isDraggingRef = useRef(false);
+  const dragCommittedRef = useRef(false);
   const dragStartRef = useRef({ x: 0, y: 0 });
+  const dragOriginClientRef = useRef({ x: 0, y: 0 });
+  const cropBeforeDragRef = useRef<CropRect>(EMPTY_CROP);
   // Which direction each axis currently extends from dragStart. Only flips once a
   // real (past-deadzone) movement happens on that axis - otherwise near-zero mouse
   // jitter on the non-dominant axis would make the box teleport to the other side.
@@ -160,12 +163,20 @@ export default function ImageCropperClient() {
       y: pos.y < imgRef.current.height / 2 ? 1 : -1,
     };
     isDraggingRef.current = true;
+    dragCommittedRef.current = false;
     dragStartRef.current = pos;
-    setCropRect({ x: pos.x, y: pos.y, w: 0, h: 0 });
+    dragOriginClientRef.current = { x: e.clientX, y: e.clientY };
+    cropBeforeDragRef.current = cropRectRef.current;
   };
 
   const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (!isDraggingRef.current || !imgRef.current) return;
+    if (!dragCommittedRef.current) {
+      if (!isCommittedDrag(e.clientX - dragOriginClientRef.current.x, e.clientY - dragOriginClientRef.current.y)) {
+        return;
+      }
+      dragCommittedRef.current = true;
+    }
     const pos = pointerToImage(e);
     if (!pos) return;
 
@@ -213,8 +224,13 @@ export default function ImageCropperClient() {
   const handlePointerUp = () => {
     if (!isDraggingRef.current) return;
     isDraggingRef.current = false;
-    // A click without a real drag would leave a 0×0 crop and disable download.
-    if (cropRectRef.current.w === 0 && imgRef.current) {
+    if (dragCommittedRef.current) return;
+    dragCommittedRef.current = false;
+    if (cropBeforeDragRef.current.w > 0) {
+      setCropRect(cropBeforeDragRef.current);
+      return;
+    }
+    if (imgRef.current) {
       setCropRect(fitAspectCrop(imgRef.current.width, imgRef.current.height, presetRef.current.ratio));
     }
   };
