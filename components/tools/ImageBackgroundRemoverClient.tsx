@@ -545,7 +545,7 @@ export default function ImageBackgroundRemoverClient() {
               disabled={isProcessing}
               className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-lg"
             >
-              Replace
+              Choose New Image
             </button>
           </div>
 
@@ -601,13 +601,6 @@ export default function ImageBackgroundRemoverClient() {
               className="tb-v2-btn tb-v2-btn-ghost"
             >
               Cancel
-            </button>
-            <button
-              type="button"
-              onClick={openFilePicker}
-              className="tb-v2-btn"
-            >
-              Proceed Anyway
             </button>
             <button
               type="button"
