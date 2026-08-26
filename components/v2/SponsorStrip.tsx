@@ -26,6 +26,7 @@ export default function SponsorStrip() {
   const pathname = usePathname();
   const showAds = useShowAds();
   const [slots, setSlots] = useState<SponsorSlot[] | null>(() => readSponsorsTopCache()?.slots ?? null);
+  const [minBidCents, setMinBidCents] = useState(() => Math.max(100, readSponsorsTopCache()?.min_bid_cents ?? 100));
 
   useEffect(() => {
     let cancelled = false;
@@ -34,6 +35,7 @@ export default function SponsorStrip() {
         if (cancelled) return;
         writeSponsorsTopCache(data);
         setSlots(data.slots);
+        setMinBidCents(Math.max(100, data.min_bid_cents));
       })
       .catch(() => {
         // Leave any cached slots in place; an empty strip on fetch failure
@@ -57,9 +59,9 @@ export default function SponsorStrip() {
     <div className="tb-v2-sponsor-strip">
       <div className="tb-v2-container">
         <div className="tb-v2-sponsor-grid">
-          <SlotCard rank={2} slot={second} loading={loading} className="tb-v2-sponsor-slot-2" />
-          <SlotCard rank={1} slot={first} loading={loading} className="tb-v2-sponsor-slot-1" primary />
-          <SlotCard rank={3} slot={third} loading={loading} className="tb-v2-sponsor-slot-3" />
+          <SlotCard rank={2} slot={second} loading={loading} minBidCents={minBidCents} className="tb-v2-sponsor-slot-2" />
+          <SlotCard rank={1} slot={first} loading={loading} minBidCents={minBidCents} className="tb-v2-sponsor-slot-1" primary />
+          <SlotCard rank={3} slot={third} loading={loading} minBidCents={minBidCents} className="tb-v2-sponsor-slot-3" />
           <div className="tb-v2-sponsor-bidyours-wrap">
             <Link href="/sponsors" className="tb-v2-sponsor-bidyours tb-v2-btn tb-v2-btn-primary">
               <span>Outbid</span>
@@ -77,12 +79,14 @@ function SlotCard({
   rank,
   slot,
   loading,
+  minBidCents,
   className,
   primary,
 }: {
   rank: number;
   slot?: SponsorSlot;
   loading: boolean;
+  minBidCents: number;
   className: string;
   primary?: boolean;
 }) {
@@ -98,26 +102,34 @@ function SlotCard({
     );
   }
 
+  // Same floor as /sponsors: current balance + $1, never below the site minimum.
+  const claimPriceCents = Math.max(slot.balance_cents + 100, minBidCents);
+
   return (
-    <a
-      href={withSponsorSource(slot.url, 'strip')}
-      target="_blank"
-      rel="sponsored nofollow noopener"
-      onClick={() => pingSponsorClick(slot.id)}
-      className={`tb-v2-sponsor-card ${className}`}
-      data-testid={primary ? 'sponsor-strip-primary' : 'sponsor-strip-slot'}
-    >
-      <span className="tb-v2-sponsor-rank">#{rank}</span>
-      <SponsorAvatar domain={slot.domain} name={slot.name} className="tb-v2-sponsor-card-avatar" />
-      <div className="tb-v2-sponsor-card-copy">
-        <span className="tb-v2-sponsor-name">{displayIdentity(slot.domain)}</span>
-        {slot.tagline && <span className="tb-v2-sponsor-tagline">{slot.tagline}</span>}
-        <span className="tb-v2-sponsor-meta">
-          {formatBid(slot.balance_cents)}
-          <span className="tb-v2-sponsor-live-dot" aria-hidden="true" />
-          {slot.clicks} clicks
-        </span>
-      </div>
-    </a>
+    <div className={`tb-v2-sponsor-card-wrap ${className}`}>
+      <a
+        href={withSponsorSource(slot.url, 'strip')}
+        target="_blank"
+        rel="sponsored nofollow noopener"
+        onClick={() => pingSponsorClick(slot.id)}
+        className="tb-v2-sponsor-card"
+        data-testid={primary ? 'sponsor-strip-primary' : 'sponsor-strip-slot'}
+      >
+        <span className="tb-v2-sponsor-rank">#{rank}</span>
+        <SponsorAvatar domain={slot.domain} name={slot.name} className="tb-v2-sponsor-card-avatar" />
+        <div className="tb-v2-sponsor-card-copy">
+          <span className="tb-v2-sponsor-name">{displayIdentity(slot.domain)}</span>
+          {slot.tagline && <span className="tb-v2-sponsor-tagline">{slot.tagline}</span>}
+          <span className="tb-v2-sponsor-meta">
+            {formatBid(slot.balance_cents)}
+            <span className="tb-v2-sponsor-live-dot" aria-hidden="true" />
+            {slot.clicks} clicks
+          </span>
+        </div>
+      </a>
+      <Link href="/sponsors" className="tb-v2-sponsor-card-claim" data-testid="sponsor-strip-claim">
+        claim this rank for {formatBid(claimPriceCents)}
+      </Link>
+    </div>
   );
 }
