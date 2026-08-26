@@ -13,7 +13,7 @@ function avatarColor(seed: string): string {
 /** Google's favicon proxy — bigger and more reliable than unavatar for a
  * plain site icon. Not used for X handles, which have no real "favicon";
  * unavatar's per-profile image is the only sensible source there. */
-function faviconUrl(domain: string, size = 128): string {
+function faviconUrl(domain: string, size = 256): string {
   return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=${size}`;
 }
 
