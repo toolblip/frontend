@@ -28,7 +28,6 @@ const CATEGORIES = [
   'Utility',
   'PDF Tools',
   'Video Tools',
-  'AI Tools',
   'Document Generator',
 ];
 

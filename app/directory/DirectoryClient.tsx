@@ -27,12 +27,9 @@ const CATEGORY_DESCRIPTIONS: Partial<Record<CategoryTab, string>> = {
   Color: 'Pick, convert, and check color contrast and accessibility.',
   Utility: 'Handy one-off tools that do not fit anywhere else.',
   Network: 'Look up DNS records, test ports, and inspect network configuration.',
-  'Date & Time': 'Convert timestamps, calculate durations, and work across time zones.',
   'PDF Tools': 'Merge, split, watermark, and convert PDF files.',
   'Video Tools': 'Convert, compress, and edit video files in your browser.',
-  'AI Tools': 'AI-powered writers, rephrasers, and content generators.',
   'Document Generator': 'Generate documents like invoices, resumes, and business plans.',
-  'Image Tools': 'Additional image conversion and editing utilities.',
 };
 
 function matchesCategory(tool: Tool, tab: CategoryTab) {

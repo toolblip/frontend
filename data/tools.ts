@@ -1028,16 +1028,11 @@ export const tools: Tool[] = [
   { name: 'AAC to WAV Converter', slug: 'aac-to-wav', description: 'Convert AAC audio to WAV format. Preserve original audio quality.', emoji: '🎵', category: 'Conversion' },
   { name: 'Add Pages to PDF', slug: 'add-pages', description: 'Add blank or existing pages to a PDF document. Rearrange page order.', emoji: '📄', category: 'PDF Tools' },
   { name: 'Add Subtitles to Video', slug: 'add-subtitles', description: 'Add subtitle files to your videos. Support for SRT and VTT formats.', emoji: '🎬', category: 'Video Tools' },
-  { name: 'AI Content Detector', slug: 'ai-detector', description: 'Detect if text was written by AI (ChatGPT, Claude, Gemini, etc.). Free instant analysis.', emoji: '🤖', category: 'AI Tools' },
   { name: 'PDF Annotator', slug: 'annotate', description: 'Add comments, highlights, and annotations to PDF files. Free and browser-based.', emoji: '📝', category: 'PDF Tools' },
-  { name: 'AI Article Rewriter', slug: 'article-rewriter', description: 'Rewrite existing articles with AI. Avoid plagiarism, improve quality.', emoji: '🤖', category: 'AI Tools' },
   { name: 'Automation Wizard', slug: 'automation-wizard', description: 'Create workflow automations without coding. Connect apps and automate tasks.', emoji: '⚡', category: 'Utility' },
   { name: 'Bill of Sale Generator', slug: 'bill-sale-generator', description: 'Generate a bill of sale document for vehicle or property sales. Free template.', emoji: '📝', category: 'Document Generator' },
-  { name: 'Blog Post Outline Generator', slug: 'blog-outline', description: 'Generate structured outlines for blog posts. Organize thoughts before writing.', emoji: '📝', category: 'AI Tools' },
   { name: 'Add Border to Image', slug: 'border', description: 'Add customizable borders to images. Choose color, width, and style.', emoji: '🖼️', category: 'Image' },
-  { name: 'Bulk Content Generator', slug: 'bulk-generator', description: 'Generate multiple content pieces at once. Scale your content production.', emoji: '🤖', category: 'AI Tools' },
   { name: 'Business Plan Generator', slug: 'business-plan-generator', description: 'Create a professional business plan outline. Key sections covered.', emoji: '💼', category: 'Document Generator' },
-  { name: 'Business Slogan Generator', slug: 'business-slogan-generator', description: 'Generate catchy slogans and taglines for your brand. Free and instant.', emoji: '💼', category: 'AI Tools' },
   { name: 'Chart Maker', slug: 'chart-maker', description: 'Create charts and graphs from data. Bar, line, pie, and more chart types.', emoji: '📊', category: 'Utility' },
   { name: 'Image Collage Maker', slug: 'collage-maker', description: 'Create photo collages with multiple images. Choose layouts and customize borders.', emoji: '🖼️', category: 'Image' },
   { name: 'Combine Images', slug: 'combine-images', description: 'Merge multiple images into one. Stack vertically or horizontally.', emoji: '🖼️', category: 'Image' },
@@ -1051,11 +1046,8 @@ export const tools: Tool[] = [
   { name: 'Excel to CSV Converter', slug: 'excel-to-csv', description: 'Convert Excel spreadsheets to CSV format. Fast and accurate data export.', emoji: '📊', category: 'Conversion' },
   { name: 'Excel to PDF Converter', slug: 'excel-to-pdf', description: 'Convert Excel spreadsheets to PDF format. Preserve formatting and layout.', emoji: '📊', category: 'Conversion' },
   { name: 'Excel to XML Converter', slug: 'excel-to-xml', description: 'Convert Excel data to XML format. Map cells to XML elements easily.', emoji: '📊', category: 'Conversion' },
-  { name: 'Explain Like I am Five', slug: 'explain-like-five', description: 'Simplify complex topics into easy-to-understand explanations. Perfect for learning.', emoji: '🤖', category: 'AI Tools' },
   { name: 'Extract Audio from Video', slug: 'extract-audio', description: 'Extract audio tracks from video files. Save as MP3, WAV, or other formats.', emoji: '🎵', category: 'Conversion' },
   { name: 'Extract Images from PDF', slug: 'extract-img', description: 'Pull out all images embedded in a PDF file. Download as ZIP or individually.', emoji: '📄', category: 'PDF Tools' },
-  { name: 'Facebook Ad Headline Generator', slug: 'facebook-ad-headlines', description: 'Generate catchy Facebook ad headlines. Increase click-through rates.', emoji: '📝', category: 'AI Tools' },
-  { name: 'Frequently Asked Questions Generator', slug: 'faq-generator', description: 'Generate FAQ sections for any topic. SEO-friendly question-answer pairs.', emoji: '📝', category: 'AI Tools' },
   { name: 'Font to PNG Converter', slug: 'font-to-png', description: 'Turn text into PNG images with custom fonts. Create typographic graphics.', emoji: '🖼️', category: 'Image' },
   { name: 'GIF to APNG Converter', slug: 'gif-to-apng', description: 'Convert animated GIF to animated PNG. Better quality, smaller file size.', emoji: '🎬', category: 'Conversion' },
   { name: 'GIF to JPG Converter', slug: 'gif-to-jpg', description: 'Convert animated GIF to static JPG image. Extract first frame or create thumbnail.', emoji: '🖼️', category: 'Conversion' },
@@ -1072,7 +1064,6 @@ export const tools: Tool[] = [
   { name: 'MP4 to MP3 Converter', slug: 'mp4-to-mp3', description: 'Extract audio from MP4 videos. Save music and soundtracks as MP3.', emoji: '🎵', category: 'Conversion' },
   { name: 'MP4 to WAV Converter', slug: 'mp4-to-wav', description: 'Convert MP4 video to WAV audio. High quality audio extraction.', emoji: '🎵', category: 'Conversion' },
   { name: 'Non-Disclosure Agreement Generator', slug: 'nda-generator', description: 'Generate a free NDA document. Standard legal templates for business.', emoji: '📝', category: 'Document Generator' },
-  { name: 'Paraphrasing Tool', slug: 'paraphrasing', description: 'Rephrase any text while keeping the original meaning. Avoid plagiarism.', emoji: '🤖', category: 'AI Tools' },
   { name: 'Pixelate Image', slug: 'pixelate', description: 'Pixelate faces or objects in photos. Privacy protection in one click.', emoji: '🖼️', category: 'Image' },
   { name: 'PNG to WebP Converter', slug: 'png-to-webp', description: 'Convert PNG to WebP format. Smaller size, same quality.', emoji: '🖼️', category: 'Conversion' },
   { name: 'Poll Generator', slug: 'poll-generator', description: 'Free online poll generator. Create simple polls for Twitter, Instagram, and audience surveys with ready-to-share options.', emoji: '📝', category: 'Utility', tags: ['poll generator', 'create a poll', 'make a poll', 'online poll', 'poll maker', 'twitter poll', 'instagram poll'] },
@@ -1085,7 +1076,6 @@ export const tools: Tool[] = [
   { name: 'Resize Image', slug: 'resize', description: 'Resize images to any dimension. Maintain aspect ratio or set exact size.', emoji: '📐', category: 'Image' },
   { name: 'Rotate Image', slug: 'rotate', description: 'Rotate images by 90, 180, or custom angle. Fix orientation instantly.', emoji: '🖼️', category: 'Image' },
   { name: 'Sharpen Image', slug: 'sharpen', description: 'Sharpen blurry photos. Enhance details and improve image clarity.', emoji: '🖼️', category: 'Image' },
-  { name: 'Content Shortener', slug: 'shorten-content', description: 'Shorten text while keeping key points. Condense articles and paragraphs.', emoji: '🤖', category: 'AI Tools' },
   { name: 'Sign PDF', slug: 'sign', description: 'Add signature to PDF documents. Draw, type, or upload your signature.', emoji: '✍️', category: 'PDF Tools' },
   { name: 'Split CSV File', slug: 'split-csv', description: 'Split large CSV files into smaller parts. Handle big data with ease.', emoji: '📊', category: 'Utility' },
   { name: 'Split Excel File', slug: 'split-excel', description: 'Split large Excel files into smaller spreadsheets. Manage data better.', emoji: '📊', category: 'Utility' },
@@ -1261,4 +1251,4 @@ export function getToolRouteSlugs(): string[] {
   ]));
 }
 
-export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'Date & Time', 'PDF Tools', 'Video Tools', 'AI Tools', 'Document Generator', 'Image Tools'] as const;
+export const categories = ['All', 'Text', 'Developer', 'Encoder', 'Image', 'Conversion', 'Math', 'CSS', 'SEO', 'Color', 'Utility', 'Network', 'PDF Tools', 'Video Tools', 'Document Generator'] as const;

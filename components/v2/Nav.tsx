@@ -92,52 +92,12 @@ function getMenuContent(key: string): MenuContent | null {
         { cat: 'Text',       label: 'Text',       desc: 'Count, convert, diff' },
         { cat: 'Image',      label: 'Image',      desc: 'Resize, crop, compress' },
         { cat: 'Color',      label: 'Color',      desc: 'Palettes, contrast, picker' },
-        { cat: 'AI Tools',   label: 'AI Tools',   desc: 'Detect, rewrite, outline' },
         { cat: 'SEO',        label: 'SEO',        desc: 'Meta tags, sitemaps, OG' },
       ],
       featuredLabel: 'Featured',
       featured,
       ctaLabel: 'All Tools',
       ctaTarget: '/tools',
-    };
-  }
-
-  if (key === 'aiml') {
-    // Only link tools that exist in data/tools.ts — the old MCP / AI·ML
-    // mega-menu pointed at placeholder slugs that were never shipped.
-    const aiSidebar: Array<{ slug: string; label: string; desc: string }> = [
-      { slug: 'ai-detector',               label: 'AI Detector',        desc: 'Spot AI-written text' },
-      { slug: 'paraphrasing',              label: 'Paraphraser',        desc: 'Rephrase, keep meaning' },
-      { slug: 'article-rewriter',          label: 'Article Rewriter',   desc: 'Rewrite existing copy' },
-      { slug: 'faq-generator',             label: 'FAQ Generator',      desc: 'Q&A sections for SEO' },
-      { slug: 'blog-outline',              label: 'Blog Outline',       desc: 'Structure before you write' },
-      { slug: 'business-slogan-generator', label: 'Slogan Generator',   desc: 'Taglines for your brand' },
-    ].filter((s) => tools.some((t) => t.slug === s.slug));
-    const featured = [
-      lookup('ai-detector'),
-      lookup('paraphrasing'),
-    ].filter((x): x is FeaturedItem => !!x);
-    const moreList = [
-      'shorten-content',
-      'explain-like-five',
-      'facebook-ad-headlines',
-      'bulk-generator',
-    ].filter((slug) => tools.some((t) => t.slug === slug));
-    return {
-      more: false,
-      sidebarLabel: 'AI Tools',
-      sidebar: aiSidebar.map((s) => ({
-        cat: 'AI Tools',
-        slug: s.slug,
-        label: s.label,
-        desc: s.desc,
-      })),
-      featuredLabel: 'Featured',
-      featured,
-      listLabel: 'More AI Tools',
-      list: moreList,
-      ctaLabel: 'All AI Tools',
-      ctaTarget: '/directory?cat=AI%20Tools',
     };
   }
 
@@ -149,19 +109,12 @@ function getMenuContent(key: string): MenuContent | null {
           label: 'Product',
           items: [
             { icon: 'zap',     label: 'Toolblip Pro',       desc: 'Higher limits, history, team vault', href: '/pricing' },
-            { icon: 'command', label: 'Desktop app',         desc: 'Mac, Windows, Linux  -  offline',      href: '/' },
-            { icon: 'file',    label: 'Browser extension',   desc: 'Right-click any text or link',       href: '/' },
-            { icon: 'shield',  label: 'Self-hosted',         desc: 'Run Toolblip behind your firewall',  href: '/' },
-            { icon: 'gift',    label: "What's new",          desc: 'Changelog · shipped this week',      href: '/blog' },
           ],
         },
         {
           label: 'Resources',
           items: [
-            { icon: 'help',    label: 'Help Center',  desc: 'Guides, how-tos, FAQs',         href: '/blog' },
-            { icon: 'command', label: 'Keyboard Map', desc: 'Every shortcut, one page',      href: '/', kbd: '?' },
             { icon: 'file',    label: 'API Docs',     desc: 'REST endpoints + examples',     href: '/api-docs' },
-            { icon: 'util',    label: 'Cheat sheets', desc: 'Regex, HTTP status, CSS tricks', href: '/blog' },
             { icon: 'zap',     label: 'Blog',         desc: 'Notes on building small tools', href: '/blog' },
           ],
         },
@@ -169,8 +122,6 @@ function getMenuContent(key: string): MenuContent | null {
           label: 'Company',
           items: [
             { icon: 'gift',    label: 'About',         desc: 'Who makes this, and why',       href: '/about' },
-            { icon: 'file',    label: 'Press & Brand', desc: 'Assets, logo kit, copy',        href: '/about' },
-            { icon: 'util',    label: 'Contact',       desc: 'Support, sales, partnerships',  href: '/about' },
             { icon: 'shield',  label: 'Privacy',       desc: 'We do the boring thing: nothing', href: '/privacy' },
             { icon: 'command', label: 'Terms',         desc: 'The short, plain-English version', href: '/terms' },
           ],
@@ -376,7 +327,6 @@ function MegaMenu({ which, onClose }: { which: string; onClose: () => void }) {
 
 const menus: Array<{ key: string; label: string; href?: string }> = [
   { key: 'tools', label: 'Tools' },
-  { key: 'aiml',  label: 'AI Tools' },
   { key: 'sponsors', label: 'Sponsors', href: '/sponsors' },
   { key: 'more',  label: 'More' },
 ];
