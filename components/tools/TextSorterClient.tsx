@@ -1,76 +1,39 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-
-type SortMode = 'az' | 'za' | 'length-asc' | 'length-desc' | 'reverse' | 'random' | 'unique';
+import {
+  TEXT_SORTER_EXAMPLE,
+  formatSortedLines,
+  type SortMode,
+} from '@/lib/text-sort';
 
 export default function TextSorterClient() {
   const [input, setInput] = useState('');
   const [mode, setMode] = useState<SortMode>('az');
   const [caseSensitive, setCaseSensitive] = useState(false);
 
-  const sort = (text: string): string => {
-    const lines = text.split('\n').filter(l => l.trim());
-    let sorted: string[];
-    switch (mode) {
-      case 'az':
-        sorted = [...lines].sort((a, b) => caseSensitive ? a.localeCompare(b) : a.toLowerCase().localeCompare(b.toLowerCase()));
-        break;
-      case 'za':
-        sorted = [...lines].sort((a, b) => caseSensitive ? b.localeCompare(a) : b.toLowerCase().localeCompare(a.toLowerCase()));
-        break;
-      case 'length-asc':
-        sorted = [...lines].sort((a, b) => a.length - b.length);
-        break;
-      case 'length-desc':
-        sorted = [...lines].sort((a, b) => b.length - a.length);
-        break;
-      case 'reverse':
-        sorted = [...lines].reverse();
-        break;
-      case 'random': {
-        // Fisher-Yates, not sort(() => Math.random() - 0.5) - the
-        // sort-comparator trick is a well-known biased shuffle, and calling
-        // Math.random() inside a comparator that also gets re-invoked by
-        // React re-renders made the old dead code doubly wrong once reachable.
-        sorted = [...lines];
-        for (let i = sorted.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [sorted[i], sorted[j]] = [sorted[j], sorted[i]];
-        }
-        break;
-      }
-      case 'unique':
-        sorted = caseSensitive
-          ? [...new Set(lines)]
-          : [...new Set(lines.map(l => l.toLowerCase()))].map(l => lines.find(x => x.toLowerCase() === l) ?? l);
-        break;
-      default:
-        sorted = lines;
-    }
-    return sorted.join('\n');
-  };
-
-  // Computed once per (input, mode, caseSensitive) and reused for both the
-  // display and the copy button - calling sort(input) separately in each
-  // place, as before, gave 'random' mode two independent Math.random()
-  // shuffles, so what got copied never matched what was on screen.
-  const output = useMemo(() => sort(input), [input, mode, caseSensitive]); // eslint-disable-line react-hooks/exhaustive-deps
+  const output = useMemo(
+    () => formatSortedLines(input, mode, caseSensitive),
+    [input, mode, caseSensitive],
+  );
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(output);
+    if (!output) return;
+    navigator.clipboard.writeText(output).catch(() => {});
   };
 
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
+    <div className="tb-v2-section" style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '16px 20px' }}>
       <div className="tb-v2-mode-tabs">
         <select
           value={mode}
-          onChange={e => setMode(e.target.value as SortMode)}
+          onChange={(e) => setMode(e.target.value as SortMode)}
           className="tb-v2-select"
+          aria-label="Sort mode"
         >
           <option value="az">A → Z</option>
           <option value="za">Z → A</option>
+          <option value="numeric">Numeric</option>
           <option value="length-asc">Shortest first</option>
           <option value="length-desc">Longest first</option>
           <option value="reverse">Reverse order</option>
@@ -81,7 +44,7 @@ export default function TextSorterClient() {
           <input
             type="checkbox"
             checked={caseSensitive}
-            onChange={e => setCaseSensitive(e.target.checked)}
+            onChange={(e) => setCaseSensitive(e.target.checked)}
             className="rounded"
           />
           Case sensitive
@@ -89,24 +52,48 @@ export default function TextSorterClient() {
       </div>
       <div className="tb-v2-grid-2">
         <div>
-          <label className="tb-v2-tool-label" style={{marginBottom:6}}>Input (one item per line)</label>
+          <div className="tb-v2-tool-input-head">
+            <label className="tb-v2-tool-label" htmlFor="text-sorter-input">
+              Input (one item per line)
+            </label>
+            <button
+              type="button"
+              onClick={() => setInput(TEXT_SORTER_EXAMPLE)}
+              className="tb-v2-btn-sm"
+            >
+              Load Example
+            </button>
+          </div>
           <textarea
+            id="text-sorter-input"
             value={input}
-            onChange={e => setInput(e.target.value)}
-            placeholder="apple&#10;Banana&#10;cherry&#10;Apple"
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Paste one item per line…"
             rows={8}
             className="tb-v2-tool-textarea"
           />
         </div>
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className="text-sm font-medium text-gray-600 dark:text-gray-400">Output</label>
-            <button onClick={handleCopy} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm" style={{color:"var(--red)"}}>Copy output</button>
+            <label className="text-sm font-medium text-gray-600 dark:text-gray-400" htmlFor="text-sorter-output">
+              Output
+            </label>
+            <button
+              type="button"
+              onClick={handleCopy}
+              disabled={!output}
+              className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm"
+              style={{ color: 'var(--red)' }}
+            >
+              Copy output
+            </button>
           </div>
           <textarea
+            id="text-sorter-output"
             value={output}
             readOnly
             rows={8}
+            placeholder="Sorted lines appear here as you type, or load an example."
             className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 font-mono text-sm resize-none"
           />
         </div>
