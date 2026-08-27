@@ -1,61 +1,68 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
+import { READING_STATS_EXAMPLE } from '@/components/tools/reading-stats-example';
 
 export default function PlainTextCounterClient() {
   const [text, setText] = useState('');
-  const [counts, setCounts] = useState<{ chars: number; charsNoSpaces: number; words: number; sentences: number; paragraphs: number; lines: number } | null>(null);
 
-  const analyze = useCallback(() => {
+  const counts = (() => {
+    if (!text.trim()) return null;
+
     const chars = text.length;
     const charsNoSpaces = text.replace(/\s/g, '').length;
-    const words = text.trim() ? text.trim().split(/\s+/).length : 0;
-    const sentences = text.split(/[.!?]+/).filter(s => s.trim()).length;
-    const paragraphs = text.split(/\n\n+/).filter(p => p.trim()).length;
+    const words = text.trim().split(/\s+/).length;
+    const sentences = (text.match(/[.!?]+/g) || []).length || 1;
+    const paragraphs = text.split(/\n\n+/).filter((p) => p.trim()).length || 1;
     const lines = text.split('\n').length;
 
-    setCounts({ chars, charsNoSpaces, words, sentences, paragraphs, lines });
-  }, [text]);
+    return { chars, charsNoSpaces, words, sentences, paragraphs, lines };
+  })();
 
   return (
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text</span>
+        <button type="button" onClick={() => setText(READING_STATS_EXAMPLE)} className="tb-v2-btn-sm">
+          Load Example
+        </button>
       </div>
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Paste text to analyze..."
         className="tb-v2-tool-textarea"
+        style={{ minHeight: 120 }}
         aria-label="Text input"
       />
-      <button type="button" onClick={analyze} className="tb-v2-primary-btn" style={{ width: '100%', marginTop: 12, marginBottom: 12 }}>
-        Count
-      </button>
 
-      {counts && (
+      {counts ? (
         <>
           <div className="tb-v2-tool-output-head">
             <span className="tb-v2-tool-label">Statistics</span>
           </div>
           <div className="tb-v2-tool-output-body">
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))', gap: 8 }}>
               {[
                 ['Characters', counts.chars],
-                ['No Spaces', counts.charsNoSpaces],
+                ['No spaces', counts.charsNoSpaces],
                 ['Words', counts.words],
                 ['Sentences', counts.sentences],
                 ['Paragraphs', counts.paragraphs],
                 ['Lines', counts.lines],
               ].map(([label, val]) => (
-                <div key={label} style={{ padding: 8, background: 'var(--tb-bg-secondary)', borderRadius: 6, textAlign: 'center' }}>
-                  <div style={{ fontSize: 20, fontWeight: 600 }}>{val.toLocaleString()}</div>
-                  <div style={{ fontSize: 12, color: 'var(--tb-text-secondary)' }}>{label}</div>
+                <div key={label} style={{ background: 'var(--tb-bg-secondary)', borderRadius: 8, padding: '8px 12px' }}>
+                  <div style={{ fontSize: 11, color: 'var(--tb-text-secondary)', textTransform: 'uppercase' }}>{label}</div>
+                  <div style={{ fontSize: 16, fontWeight: 600 }}>{val.toLocaleString()}</div>
                 </div>
               ))}
             </div>
           </div>
         </>
+      ) : (
+        <div className="tb-v2-tool-output-body" style={{ marginTop: 12 }}>
+          <span style={{ color: 'var(--tb-text-secondary)', fontSize: 14 }}>Enter text to see counts</span>
+        </div>
       )}
     </div>
   );
