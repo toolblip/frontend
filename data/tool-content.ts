@@ -2785,7 +2785,18 @@ Cause: Trailing comma`
   "oxford-comma": {
     description: `'I'd like to thank my parents, Oprah and God' reads like Oprah and God are the parents, while 'my parents, Oprah, and God' clearly lists three separate things, the entire difference resting on one comma placed before the final 'and,' which is exactly the ambiguity the Oxford comma exists to resolve and exactly the kind of thing easy to miss scanning through a long list by eye. This tool automatically applies the Oxford comma rule to any list of items, pasted as comma-separated or newline-separated text, catching every instance consistently rather than relying on manually spotting each one. Useful for applying a consistent serial comma across a long list without checking each item by hand, fixing a document that mixes Oxford and non-Oxford lists inconsistently, or converting a newline-separated list into properly punctuated, comma-separated text with the rule already applied.`,
     examples: [
+      { title: `Thank-you list`, code: `Input: parents, Oprah, God
 
+Output: parents, Oprah, and God`, note: `Three or more items get a comma before the final "and".` },
+      { title: `Two items skip the comma`, code: `Input: salt, pepper
+
+Output: salt and pepper`, note: `The Oxford comma only applies once the list has three items.` },
+      { title: `One item per line`, code: `Input:
+red
+green
+blue
+
+Output: red, green, and blue`, note: `Switch the separator to New line, then paste a vertical list.` }
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
@@ -3091,7 +3102,12 @@ Result: 847291`
   "punctuation-fixer": {
     description: `Text pasted from an older document sometimes carries two spaces after every period, a typewriter-era habit that reads as inconsistent spacing today, alongside a missing comma or a dropped period at the end of a bullet point, small punctuation issues that are tedious to hunt down one at a time across a longer piece of writing. This tool fixes missing or incorrect punctuation marks and applies consistent spacing throughout, focusing specifically on punctuation rather than grammar or broader style. Useful for normalizing inconsistent spacing after periods in text pasted from an older document, adding a missing punctuation mark at the end of a list of bullet points, or cleaning up scattered punctuation issues before submitting text somewhere with strict formatting requirements.`,
     examples: [
+      { title: `Close the gap before punctuation`, code: `Input: Wait here .
 
+Output: Wait here.`, note: `A space sitting between a word and its period, comma, or question mark is removed.` },
+      { title: `Collapse extra spaces`, code: `Input: This    line   has   gaps.
+
+Output: This line has gaps.`, note: `Runs of spaces collapse to a single space.` }
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
@@ -3827,7 +3843,21 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
   "smart-text-sorter": {
     description: `Alphabetical order works for a list of names but puts "10" before "9" and treats a long line the same as a short one, which means a list of scores, file paths, or log lines often needs sorting by an entirely different rule depending on what's actually being looked at. This tool sorts a list of text lines alphabetically, by length, numerically, or into random order, picking whichever rule actually fits the data instead of forcing every list through the same alphabetical pass. Useful for sorting a list of numeric scores in actual numeric order instead of alphabetical, arranging file paths or log lines by length to spot an unusually long outlier, or shuffling a list of names into random order for a randomized drawing or a raffle.`,
     examples: [
+      { title: `Sort scores numerically`, code: `Input:
+9
+10
+2
 
+Output:
+2
+9
+10`, note: `Numeric mode puts 2 before 10. Alphabetical mode would put 10 first.` },
+      { title: `Shuffle a short list`, code: `Input:
+Maya
+Luis
+Priya
+
+Output: (order changes each time)`, note: `Random order uses a Fisher-Yates shuffle, not a biased sort.` }
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
@@ -4086,7 +4116,23 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
   "text-line-sorter": {
     description: `A mailing list assembled from several sources, an export of URLs pulled from more than one report, or any list built up over time from multiple places usually ends up with the same entry appearing more than once, and finding every duplicate by scanning a long list manually is slow and easy to get wrong. This tool sorts text lines alphabetically, by length, or in reverse order, and removes duplicate lines in one click, cleaning up a list at the same time it gets sorted rather than requiring a separate deduplication pass. Useful for removing repeated entries from a mailing list built from several sources, deduplicating a list of URLs pulled from more than one report, or cleaning up a data export that accumulated the same entry multiple times before it's used somewhere else.`,
     examples: [
+      { title: `Sort and drop duplicates`, code: `Input:
+docs.example.com/a
+docs.example.com/b
+docs.example.com/a
 
+Output:
+docs.example.com/a
+docs.example.com/b`, note: `Choose Remove duplicates. The first spelling of each line is kept.` },
+      { title: `Shortest line first`, code: `Input:
+changelog.md
+README
+package.json
+
+Output:
+README
+changelog.md
+package.json`, note: `Length sort is useful for spotting an unusually long path or title.` }
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
@@ -4121,7 +4167,24 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
   "text-sorter": {
     description: `Sorting a list one direction is only half the job when the actual need is the opposite order, a leaderboard read worst-to-best instead of best-to-worst, or a log file where the most recent entry needs to surface at the top instead of buried at the bottom after everything older. This tool sorts text lines alphabetically, by length, numerically, or into random order, with every mode reversible so a list built one direction can be flipped without re-sorting it from scratch. Useful for reversing a chronological log so the newest entry appears first instead of last, flipping an alphabetical list into a Z-to-A order for a specific report format, or reversing a numeric ranking to read worst-to-best instead of the usual best-to-worst order.`,
     examples: [
+      { title: `A to Z`, code: `Input:
+Zurich
+Oslo
+Cairo
 
+Output:
+Cairo
+Oslo
+Zurich`, note: `Paste one item per line, or click Load Example in the tool.` },
+      { title: `Z to A`, code: `Input:
+Cairo
+Oslo
+Zurich
+
+Output:
+Zurich
+Oslo
+Cairo`, note: `Same list, flipped. Use this for a reverse leaderboard or log.` }
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
