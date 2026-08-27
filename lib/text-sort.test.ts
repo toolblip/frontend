@@ -49,6 +49,22 @@ describe('sortLines', () => {
       'cherry',
     ]);
   });
+
+  it('does not split spaces when there are multiple lines', () => {
+    expect(sortLines('hello world\nfoo bar', 'az', false)).toEqual([
+      'foo bar',
+      'hello world',
+    ]);
+  });
+
+  it('treats a single line surrounded by blanks as one-line input', () => {
+    expect(sortLines('\napple Banana cherry Apple\n\n', 'az', false)).toEqual([
+      'apple',
+      'Apple',
+      'Banana',
+      'cherry',
+    ]);
+  });
 });
 
 describe('TEXT_SORTER_EXAMPLE', () => {
