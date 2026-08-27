@@ -2,6 +2,12 @@
 
 import { useState } from 'react';
 
+const EXAMPLE = `Our product helps teams ship faster and build better software. Many companies trust our platform every day.
+
+Our product helps teams ship faster and build better software. We continue to improve the experience each week.
+
+Clear writing helps readers finish your article quickly. Clear writing helps readers finish your article when you revise carefully.`;
+
 interface DuplicateGroup {
   phrase: string;
   count: number;
@@ -87,6 +93,16 @@ export default function TextUniquenessCheckerClient() {
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text to Check</span>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button type="button" onClick={() => setText(EXAMPLE)} className="tb-v2-btn-sm">
+            Load Example
+          </button>
+          {text && (
+            <button type="button" onClick={clear} className="tb-v2-btn-sm">
+              Clear
+            </button>
+          )}
+        </div>
       </div>
       <textarea
         value={text}
@@ -96,10 +112,6 @@ export default function TextUniquenessCheckerClient() {
         style={{ minHeight: 150 }}
         aria-label="Text input for uniqueness checking"
       />
-
-      <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-        <button type="button" onClick={clear} className="tb-v2-copy-btn" style={{ flex: 1 }}>Clear</button>
-      </div>
 
       {text.length > 0 && (
         <>
