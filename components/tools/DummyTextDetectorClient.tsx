@@ -111,7 +111,7 @@ export default function DummyTextDetectorClient() {
           <div className="flex flex-col gap-3">
             {results.filter(r => r.flagged).map((r, i) => (
               <div key={i} className="tb-v2-tool-pre" style={{ padding: '10px 14px' }}>
-                <div style={{ color: 'var(--red, #dc2626)', fontSize: 12, fontWeight: 700, marginBottom: 6 }}>{r.reasons.join(' &middot; ')}</div>
+                <div style={{ color: 'var(--red, #dc2626)', fontSize: 12, fontWeight: 700, marginBottom: 6 }}>{r.reasons.join(' · ')}</div>
                 <div>{r.text}</div>
               </div>
             ))}
