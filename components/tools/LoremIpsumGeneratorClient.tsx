@@ -71,10 +71,12 @@ export default function LoremIpsumGeneratorClient() {
           />
           Start with “Lorem ipsum…”
         </label>
+      </div>
+      <div>
         <button
           type="button"
           onClick={() => setCycle((value) => value + 1)}
-          className="tb-v2-btn tb-v2-btn-primary ml-auto"
+          className="tb-v2-btn tb-v2-btn-primary"
         >
           Regenerate
         </button>
