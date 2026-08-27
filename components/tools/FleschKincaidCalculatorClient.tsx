@@ -1,31 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { READING_STATS_EXAMPLE } from '@/components/tools/reading-stats-example';
-
-function countSyllables(word: string): number {
-  word = word.toLowerCase().replace(/[^a-z]/g, '');
-  if (word.length <= 3) return 1;
-  
-  word = word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '');
-  word = word.replace(/^y/, '');
-  
-  const syllables = word.match(/[aeiouy]{1,2}/g);
-  return syllables ? syllables.length : 1;
-}
+import {
+  countSyllablesInText,
+  getGradeLevelLabel,
+  getReadingEaseLabel,
+} from '@/lib/count-syllables';
 
 function countWords(text: string): number {
-  return text.split(/\s+/).filter(w => w.length > 0).length;
+  return text.split(/\s+/).filter((w) => w.length > 0).length;
 }
 
 function countSentences(text: string): number {
-  const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
+  const sentences = text.split(/[.!?]+/).filter((s) => s.trim().length > 0);
   return Math.max(1, sentences.length);
-}
-
-function countSyllablesInText(text: string): number {
-  const words = text.split(/\s+/).filter(w => w.length > 0);
-  return words.reduce((sum, word) => sum + countSyllables(word), 0);
 }
 
 function calculateFleschKincaid(text: string): { readingEase: number; gradeLevel: number } {
@@ -37,65 +26,37 @@ function calculateFleschKincaid(text: string): { readingEase: number; gradeLevel
     return { readingEase: 0, gradeLevel: 0 };
   }
 
-  // Flesch Reading Ease
   const readingEase = 206.835 - 1.015 * (words / sentences) - 84.6 * (syllables / words);
-
-  // Flesch-Kincaid Grade Level
   const gradeLevel = 0.39 * (words / sentences) + 11.8 * (syllables / words) - 15.59;
 
   return {
     readingEase: Math.max(0, Math.min(100, readingEase)),
-    gradeLevel: Math.max(0, gradeLevel)
+    gradeLevel: Math.max(0, gradeLevel),
   };
-}
-
-function getReadingEaseLabel(score: number): string {
-  if (score >= 90) return 'Very Easy';
-  if (score >= 80) return 'Easy';
-  if (score >= 70) return 'Fairly Easy';
-  if (score >= 60) return 'Standard';
-  if (score >= 50) return 'Fairly Difficult';
-  if (score >= 30) return 'Difficult';
-  return 'Very Difficult';
-}
-
-function getGradeLevelLabel(grade: number): string {
-  if (grade <= 5) return 'Elementary';
-  if (grade <= 8) return 'Middle School';
-  if (grade <= 12) return 'High School';
-  if (grade <= 16) return 'College';
-  return 'Graduate';
 }
 
 export default function FleschKincaidCalculatorClient() {
   const [text, setText] = useState('');
-  const [result, setResult] = useState<{ readingEase: number; gradeLevel: number } | null>(null);
 
-  const loadExample = () => {
-    setText(READING_STATS_EXAMPLE);
-    setResult(calculateFleschKincaid(READING_STATS_EXAMPLE));
-  };
-
-  const analyze = () => {
-    setResult(calculateFleschKincaid(text));
-  };
-
-  const clear = () => {
-    setText('');
-    setResult(null);
-  };
-
-  const words = text.split(/\s+/).filter(w => w.length > 0).length;
-  const sentences = countSentences(text);
-  const syllables = text ? countSyllablesInText(text) : 0;
+  const result = useMemo(() => (text.trim() ? calculateFleschKincaid(text) : null), [text]);
+  const words = countWords(text);
+  const sentences = text.trim() ? countSentences(text) : 0;
+  const syllables = text.trim() ? countSyllablesInText(text) : 0;
 
   return (
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text to analyze</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
-          Load Example
-        </button>
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button type="button" onClick={() => setText(READING_STATS_EXAMPLE)} className="tb-v2-btn-sm">
+            Load Example
+          </button>
+          {text && (
+            <button type="button" onClick={() => setText('')} className="tb-v2-btn-sm">
+              Clear
+            </button>
+          )}
+        </div>
       </div>
       <textarea
         value={text}
@@ -106,63 +67,57 @@ export default function FleschKincaidCalculatorClient() {
         aria-label="Text input for Flesch-Kincaid calculation"
       />
 
-      <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-        <button type="button" onClick={analyze} className="tb-v2-copy-btn" style={{ flex: 1 }}>Calculate</button>
-        <button type="button" onClick={clear} className="tb-v2-copy-btn" style={{ flex: 1 }}>Clear</button>
-      </div>
-
-      {result && (
+      {result ? (
         <>
-          <div className="tb-v2-tool-output-head" style={{ marginTop: 16 }}>
+          <div className="tb-v2-tool-output-head">
             <span className="tb-v2-tool-label">Readability Scores</span>
           </div>
-          <div className="tb-v2-tool-output-body" style={{ marginTop: 8 }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div className="tb-v2-tool-output-body">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 12 }}>
               <div style={{ padding: 16, background: 'var(--tb-bg-secondary)', borderRadius: 8, textAlign: 'center' }}>
-                <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--tb-accent)' }}>
+                <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--tb-accent)' }}>
                   {result.readingEase.toFixed(1)}
                 </div>
-                <div style={{ fontSize: 11, color: 'var(--tb-text-secondary)', marginTop: 4 }}>
-                  Reading Ease
-                </div>
-                <div style={{ fontSize: 12, color: '#22c55e', marginTop: 4 }}>
+                <div style={{ fontSize: 11, color: 'var(--tb-text-secondary)', marginTop: 4 }}>Reading Ease</div>
+                <div style={{ fontSize: 12, color: 'var(--tb-text-secondary)', marginTop: 6 }}>
                   {getReadingEaseLabel(result.readingEase)}
                 </div>
               </div>
               <div style={{ padding: 16, background: 'var(--tb-bg-secondary)', borderRadius: 8, textAlign: 'center' }}>
-                <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--tb-accent)' }}>
+                <div style={{ fontSize: 28, fontWeight: 700, color: 'var(--tb-accent)' }}>
                   {result.gradeLevel.toFixed(1)}
                 </div>
-                <div style={{ fontSize: 11, color: 'var(--tb-text-secondary)', marginTop: 4 }}>
-                  Grade Level
-                </div>
-                <div style={{ fontSize: 12, color: '#22c55e', marginTop: 4 }}>
+                <div style={{ fontSize: 11, color: 'var(--tb-text-secondary)', marginTop: 4 }}>Grade Level</div>
+                <div style={{ fontSize: 12, color: 'var(--tb-text-secondary)', marginTop: 6 }}>
                   {getGradeLevelLabel(result.gradeLevel)}
                 </div>
               </div>
             </div>
 
-            <div style={{ marginTop: 16, padding: 12, background: 'var(--tb-bg-secondary)', borderRadius: 6 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 6 }}>
-                <span>Words</span>
-                <span style={{ fontWeight: 600 }}>{words}</span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 6 }}>
-                <span>Sentences</span>
-                <span style={{ fontWeight: 600 }}>{sentences}</span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12 }}>
-                <span>Syllables</span>
-                <span style={{ fontWeight: 600 }}>{syllables}</span>
-              </div>
+            <div
+              style={{
+                marginTop: 16,
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(120px, 1fr))',
+                gap: 8,
+              }}
+            >
+              {[
+                ['Words', words],
+                ['Sentences', sentences],
+                ['Syllables', syllables],
+              ].map(([label, val]) => (
+                <div key={label} style={{ background: 'var(--tb-bg-secondary)', borderRadius: 8, padding: '8px 12px' }}>
+                  <div style={{ fontSize: 11, color: 'var(--tb-text-secondary)', textTransform: 'uppercase' }}>{label}</div>
+                  <div style={{ fontSize: 16, fontWeight: 600 }}>{val}</div>
+                </div>
+              ))}
             </div>
           </div>
         </>
-      )}
-
-      {!result && text.length > 0 && text.length <= 10 && (
-        <div className="tb-v2-tool-output-body" style={{ marginTop: 8 }}>
-          <span style={{ color: 'var(--tb-text-secondary)' }}>Enter more text to analyze</span>
+      ) : (
+        <div className="tb-v2-tool-output-body" style={{ marginTop: 12 }}>
+          <span style={{ color: 'var(--tb-text-secondary)', fontSize: 14 }}>Enter text to calculate readability scores</span>
         </div>
       )}
     </div>
