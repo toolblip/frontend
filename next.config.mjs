@@ -163,6 +163,7 @@ const nextConfig = {
       { source: '/tools/sentence-lorem-ipsum', destination: '/tools/lorem-ipsum-generator', permanent: true },
       { source: '/tools/lorem-ipsum-bytes', destination: '/tools/lorem-ipsum-generator', permanent: true },
       { source: '/tools/lorem-ipsum-generator-pro', destination: '/tools/lorem-ipsum-generator', permanent: true },
+      { source: '/tools/text-line-deduplicator', destination: '/tools/text-deduplicator', permanent: true },
       { source: '/tools/color-format-converter-v2', destination: '/tools/color-format-converter', permanent: true },
       { source: '/tools/keyword-generator-express', destination: '/tools/keyword-generator', permanent: true },
       { source: '/tools/json-path-evaluator-express', destination: '/tools/json-path-evaluator', permanent: true },
