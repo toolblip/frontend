@@ -155,7 +155,12 @@ const nextConfig = {
       // not indexed" verdict). Same tool, same component - only the URL and
       // the canonical slug changed, so this is a pure 301/308, not a removal.
       { source: '/tools/photo-resize-tool', destination: '/tools/images/photo-resize', permanent: true },
-      { source: '/tools/lorem-ipsum-api', destination: '/tools/lorem-ipsum', permanent: true },
+      { source: '/tools/lorem-ipsum-api', destination: '/tools/lorem-ipsum-generator', permanent: true },
+      // Catalog duplicates of LoremIpsumGeneratorClient — one canonical tool.
+      { source: '/tools/lorem-ipsum', destination: '/tools/lorem-ipsum-generator', permanent: true },
+      { source: '/tools/lorem-ipsum-paragraphs', destination: '/tools/lorem-ipsum-generator', permanent: true },
+      { source: '/tools/paragraph-lorem-ipsum', destination: '/tools/lorem-ipsum-generator', permanent: true },
+      { source: '/tools/sentence-lorem-ipsum', destination: '/tools/lorem-ipsum-generator', permanent: true },
       { source: '/tools/color-format-converter-v2', destination: '/tools/color-format-converter', permanent: true },
       { source: '/tools/keyword-generator-express', destination: '/tools/keyword-generator', permanent: true },
       { source: '/tools/json-path-evaluator-express', destination: '/tools/json-path-evaluator', permanent: true },
@@ -346,7 +351,7 @@ const nextConfig = {
       // RandomParagraphGeneratorClient generates templated tech-jargon
       // mad-libs sentences with zero actual Latin lorem ipsum text, despite
       // the slug's own description explicitly promising "lorem ipsum text".
-      { source: '/tools/random-paragraph-generator', destination: '/tools/lorem-ipsum-paragraphs', permanent: true },
+      { source: '/tools/random-paragraph-generator', destination: '/tools/lorem-ipsum-generator', permanent: true },
       // SeoMetaTagAnalyzerClient only fetches a URL and scores its existing
       // tags - no generation UI at all, despite "Analyze and generate...
       // with preview" promising one; meta-tag-generator is the real,
