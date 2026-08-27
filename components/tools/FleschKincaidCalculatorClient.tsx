@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { READING_STATS_EXAMPLE } from '@/components/tools/reading-stats-example';
 
 function countSyllables(word: string): number {
   word = word.toLowerCase().replace(/[^a-z]/g, '');
@@ -70,6 +71,11 @@ export default function FleschKincaidCalculatorClient() {
   const [text, setText] = useState('');
   const [result, setResult] = useState<{ readingEase: number; gradeLevel: number } | null>(null);
 
+  const loadExample = () => {
+    setText(READING_STATS_EXAMPLE);
+    setResult(calculateFleschKincaid(READING_STATS_EXAMPLE));
+  };
+
   const analyze = () => {
     setResult(calculateFleschKincaid(text));
   };
@@ -86,7 +92,10 @@ export default function FleschKincaidCalculatorClient() {
   return (
     <div>
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Text to Analyze</span>
+        <span className="tb-v2-tool-label">Text to analyze</span>
+        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
+          Load Example
+        </button>
       </div>
       <textarea
         value={text}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { READING_STATS_EXAMPLE } from '@/components/tools/reading-stats-example';
 
 export default function ReadingTimeCalculatorClient() {
   const [text, setText] = useState('');
@@ -20,7 +21,12 @@ export default function ReadingTimeCalculatorClient() {
 
   return (
     <div>
-      <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Text</span></div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Text</span>
+        <button type="button" onClick={() => setText(READING_STATS_EXAMPLE)} className="tb-v2-btn-sm">
+          Load Example
+        </button>
+      </div>
       <textarea
         value={text}
         onChange={e => setText(e.target.value)}

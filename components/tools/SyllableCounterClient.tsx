@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { SYLLABLE_COUNTER_EXAMPLE } from '@/components/tools/reading-stats-example';
 
 interface WordSyllable {
   word: string;
@@ -65,7 +66,12 @@ export default function SyllableCounterClient() {
       <h1 className="text-2xl font-bold mb-6">Syllable Counter</h1>
 
       <div className="mb-4">
-        <label className="tb-v2-tool-label" style={{marginBottom:8}}>Enter words or text</label>
+        <div className="tb-v2-tool-input-head" style={{ padding: 0, borderBottom: 'none', marginBottom: 8 }}>
+          <span className="tb-v2-tool-label">Enter words or text</span>
+          <button type="button" onClick={() => setInput(SYLLABLE_COUNTER_EXAMPLE)} className="tb-v2-btn-sm">
+            Load Example
+          </button>
+        </div>
         <textarea
           value={input}
           onChange={(e) => setInput(e.target.value)}
