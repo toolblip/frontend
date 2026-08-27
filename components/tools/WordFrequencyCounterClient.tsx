@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { WORD_FREQUENCY_EXAMPLE } from '@/components/tools/reading-stats-example';
 
 export default function WordFrequencyCounterClient() {
   const [text, setText] = useState('');
@@ -18,7 +19,12 @@ export default function WordFrequencyCounterClient() {
 
   return (
     <div>
-      <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Text</span></div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Text</span>
+        <button type="button" onClick={() => setText(WORD_FREQUENCY_EXAMPLE)} className="tb-v2-btn-sm">
+          Load Example
+        </button>
+      </div>
       <textarea
         value={text}
         onChange={e => setText(e.target.value)}
