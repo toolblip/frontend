@@ -54,7 +54,7 @@ export default function TextSorterClient() {
         <div>
           <div className="tb-v2-tool-input-head">
             <label className="tb-v2-tool-label" htmlFor="text-sorter-input">
-              Input (one item per line)
+              Input (one item per line, or a single space- or comma-separated line)
             </label>
             <button
               type="button"
@@ -68,7 +68,7 @@ export default function TextSorterClient() {
             id="text-sorter-input"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Paste one item per line…"
+            placeholder="Paste one item per line, or a single space- or comma-separated line…"
             rows={8}
             className="tb-v2-tool-textarea"
           />

@@ -32,6 +32,23 @@ describe('sortLines', () => {
       'Banana',
     ]);
   });
+
+  it('sorts a single space-separated line into separate items', () => {
+    expect(sortLines('apple Banana cherry Apple', 'az', false)).toEqual([
+      'apple',
+      'Apple',
+      'Banana',
+      'cherry',
+    ]);
+  });
+
+  it('sorts a single comma-separated line', () => {
+    expect(sortLines('cherry, apple, Banana', 'az', false)).toEqual([
+      'apple',
+      'Banana',
+      'cherry',
+    ]);
+  });
 });
 
 describe('TEXT_SORTER_EXAMPLE', () => {

@@ -22,8 +22,31 @@ function compareText(a: string, b: string, caseSensitive: boolean, numeric = fal
   });
 }
 
+/** Multiple lines stay line-based; a single line splits on commas or whitespace. */
+export function parseItems(text: string): string[] {
+  const lines = text.split('\n');
+  const nonEmpty = lines.filter((line) => line.trim());
+
+  if (nonEmpty.length <= 1) {
+    const single = (nonEmpty[0] ?? '').trim();
+    if (!single) return [];
+    if (single.includes(',')) {
+      return single
+        .split(',')
+        .map((item) => item.trim())
+        .filter(Boolean);
+    }
+    if (/\s/.test(single)) {
+      return single.split(/\s+/).filter(Boolean);
+    }
+    return [single];
+  }
+
+  return nonEmpty;
+}
+
 export function sortLines(text: string, mode: SortMode, caseSensitive: boolean): string[] {
-  const lines = text.split('\n').filter((line) => line.trim());
+  const lines = parseItems(text);
   switch (mode) {
     case 'az':
       return [...lines].sort((a, b) => compareText(a, b, caseSensitive));
