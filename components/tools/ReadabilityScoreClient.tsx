@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { READING_STATS_EXAMPLE } from '@/components/tools/reading-stats-example';
 
 function getWords(text: string): string[] {
   return text.trim().split(/\s+/).filter(Boolean);
@@ -59,9 +60,12 @@ export default function ReadabilityScoreClient() {
   return (
     <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
       <div>
-        <label className="tb-v2-tool-label" style={{marginBottom:6}}>
-          Paste your text (minimum 3 sentences for accurate results)
-        </label>
+        <div className="tb-v2-tool-input-head" style={{ padding: 0, borderBottom: 'none', marginBottom: 6 }}>
+          <span className="tb-v2-tool-label">Text</span>
+          <button type="button" onClick={() => setText(READING_STATS_EXAMPLE)} className="tb-v2-btn-sm">
+            Load Example
+          </button>
+        </div>
         <textarea
           value={text}
           onChange={e => setText(e.target.value)}
