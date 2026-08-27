@@ -19,7 +19,7 @@ consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
 cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
 non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`;
 
-const EXAMPLE = `Product launch page — draft copy
+const EXAMPLE = `Product launch page (draft copy)
 
 The hero headline and pricing table are final.
 
@@ -59,7 +59,7 @@ export default function LoremIpsumDetectorClient() {
   return (
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Text to scan</span>
+        <span className="tb-v2-tool-label">Document text</span>
         <button type="button" onClick={() => setInput(EXAMPLE)} className="tb-v2-btn-sm">
           Load Example
         </button>
@@ -67,32 +67,69 @@ export default function LoremIpsumDetectorClient() {
       <textarea
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        className="tb-v2-input"
+        className="tb-v2-tool-textarea"
         placeholder="Paste text to check for placeholder lorem ipsum content..."
-        rows={8}
+        style={{ minHeight: 180 }}
       />
+
       {result && (
-        <div className="space-y-3" style={{ marginTop: 16 }}>
-          <div
-            className="tb-v2-tool-card"
-            style={{
-              background: result.isLoremIpsum ? 'var(--red-tint)' : 'var(--green-tint)',
-              border: `1px solid ${result.isLoremIpsum ? 'var(--red)' : 'var(--green)'}`,
-            }}
-          >
-            <strong>{result.isLoremIpsum ? '⚠️ Lorem ipsum detected' : '✅ No lorem ipsum detected'}</strong>
-            <p style={{ margin: '4px 0 0', fontSize: 14, color: 'var(--fg-1)' }}>
-              {result.isLoremIpsum
-                ? `Found ${result.matchedPhrases.length} phrase${result.matchedPhrases.length === 1 ? '' : 's'} from the standard lorem ipsum text among ${result.wordCount} words.`
-                : `No lorem ipsum phrases found among ${result.wordCount} words.`}
-            </p>
+        <>
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">Result</span>
+            <span style={{ fontSize: 12, color: 'var(--fg-2)' }}>{result.wordCount} words scanned</span>
           </div>
-          {result.matchedPhrases.length > 0 && (
-            <div style={{ fontSize: 13, color: 'var(--fg-1)' }}>
-              Matched phrases: {result.matchedPhrases.join(', ')}
-            </div>
-          )}
-        </div>
+          <div className="tb-v2-tool-output-body">
+            {result.isLoremIpsum ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+                <div className="tb-v2-banner tb-v2-banner-warn">
+                  <div>
+                    <strong>Lorem ipsum detected</strong>
+                    <p style={{ margin: '6px 0 0', fontWeight: 400 }}>
+                      Found {result.matchedPhrases.length} matching phrase
+                      {result.matchedPhrases.length === 1 ? '' : 's'} from the standard lorem ipsum text.
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <div className="tb-v2-tool-label" style={{ display: 'block', marginBottom: 10 }}>
+                    Matched phrases
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+                    {result.matchedPhrases.map((phrase) => (
+                      <span
+                        key={phrase}
+                        style={{
+                          fontFamily: 'var(--f-mono)',
+                          fontSize: 12,
+                          lineHeight: 1.4,
+                          padding: '5px 10px',
+                          borderRadius: 999,
+                          background: 'var(--surface-2)',
+                          border: '1px solid var(--line)',
+                          color: 'var(--fg-1)',
+                        }}
+                      >
+                        {phrase}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div
+                style={{
+                  padding: 16,
+                  background: 'var(--surface-2)',
+                  borderRadius: 'var(--radius-sm)',
+                  border: '1px solid var(--line)',
+                  textAlign: 'center',
+                }}
+              >
+                <span style={{ color: '#16a34a', fontWeight: 600 }}>No lorem ipsum detected</span>
+              </div>
+            )}
+          </div>
+        </>
       )}
     </div>
   );
