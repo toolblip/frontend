@@ -2994,7 +2994,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'text-complexity-analyzer': return <TextComplexityAnalyzerClient />;
     case 'text-deduplicator': return <TextDeduplicatorClient />;
     case 'text-highlighter': return <TextHighlighterClient />;
-    case 'text-line-deduplicator': return <TextLineDeduplicatorClient />;
+    case 'text-line-deduplicator': return <TextDeduplicatorClient />;
     case 'text-sentence-shuffler': return <TextSentenceShufflerClient />;
     case 'text-sort-tool': return <TextSortToolClient />;
     case 'text-structure-validator': return <TextStructureValidatorClient />;
