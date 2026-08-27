@@ -19,6 +19,14 @@ consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
 cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
 non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`;
 
+const EXAMPLE = `Product launch page — draft copy
+
+The hero headline and pricing table are final.
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+Features section reviewed by marketing. Ready to publish.`;
+
 function toWords(text: string): string[] {
   return text.toLowerCase().match(/[a-z]+/g) ?? [];
 }
@@ -50,6 +58,12 @@ export default function LoremIpsumDetectorClient() {
 
   return (
     <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Text to scan</span>
+        <button type="button" onClick={() => setInput(EXAMPLE)} className="tb-v2-btn-sm">
+          Load Example
+        </button>
+      </div>
       <textarea
         value={input}
         onChange={(e) => setInput(e.target.value)}
