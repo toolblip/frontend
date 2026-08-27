@@ -12,6 +12,9 @@ function formatOxfordComma(items: string[]): string {
   return `${rest.join(', ')}, and ${last}`;
 }
 
+const OXFORD_COMMA_EXAMPLE = 'milk, eggs, bread, butter';
+const OXFORD_NEWLINE_EXAMPLE = 'milk\neggs\nbread\nbutter';
+
 export default function OxfordCommaClient() {
   const [input, setInput] = useState('');
   const [separator, setSeparator] = useState<'comma' | 'newline'>('comma');
@@ -50,16 +53,26 @@ export default function OxfordCommaClient() {
 
       <div className="tb-v2-grid-2">
         <div>
-          <label className="tb-v2-tool-label" style={{marginBottom:6}}>
-            Items {separator === 'comma' ? '(comma-separated)' : '(one per line)'}
-          </label>
+          <div className="tb-v2-tool-input-head">
+            <label className="tb-v2-tool-label" htmlFor="oxford-comma-input">
+              Items {separator === 'comma' ? '(comma-separated)' : '(one per line)'}
+            </label>
+            <button
+              type="button"
+              onClick={() => setInput(separator === 'comma' ? OXFORD_COMMA_EXAMPLE : OXFORD_NEWLINE_EXAMPLE)}
+              className="tb-v2-btn-sm"
+            >
+              Load Example
+            </button>
+          </div>
           <textarea
+            id="oxford-comma-input"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder={
               separator === 'comma'
-                ? 'apple, banana, cherry, date'
-                : 'apple\nbanana\ncherry\ndate'
+                ? 'Paste a comma-separated list…'
+                : 'Paste one item per line…'
             }
             rows={8}
             className="tb-v2-tool-textarea"
