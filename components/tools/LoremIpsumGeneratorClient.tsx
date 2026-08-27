@@ -27,8 +27,9 @@ export default function LoremIpsumGeneratorClient() {
 
   return (
     <div className="tb-v2-section" style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '16px 20px' }}>
-      <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
         <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+          <span>Count</span>
           <input
             id="lorem-count"
             type="number"
@@ -40,18 +41,27 @@ export default function LoremIpsumGeneratorClient() {
             className="w-16 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-2 py-1.5 text-center text-sm text-gray-900 dark:text-white"
           />
         </label>
-        <div className="tb-v2-mode-tabs" role="group" aria-label="Output unit">
+        <fieldset className="flex flex-wrap items-center gap-4 border-0 p-0 m-0">
+          <legend className="float-left mr-3 text-sm font-medium text-gray-600 dark:text-gray-400">
+            Type
+          </legend>
           {UNITS.map(({ value, label }) => (
-            <button
+            <label
               key={value}
-              type="button"
-              onClick={() => setUnit(value)}
-              className={`tb-v2-mode-tab ${unit === value ? 'on' : ''}`}
+              className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400 cursor-pointer"
             >
+              <input
+                type="radio"
+                name="lorem-unit"
+                value={value}
+                checked={unit === value}
+                onChange={() => setUnit(value)}
+                className="accent-red-600"
+              />
               {label}
-            </button>
+            </label>
           ))}
-        </div>
+        </fieldset>
         <label className="flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">
           <input
             type="checkbox"
@@ -64,7 +74,7 @@ export default function LoremIpsumGeneratorClient() {
         <button
           type="button"
           onClick={() => setCycle((value) => value + 1)}
-          className="tb-v2-btn-sm ml-auto"
+          className="tb-v2-btn tb-v2-btn-primary ml-auto"
         >
           Regenerate
         </button>
