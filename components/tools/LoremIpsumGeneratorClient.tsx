@@ -41,10 +41,7 @@ export default function LoremIpsumGeneratorClient() {
             className="w-16 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 px-2 py-1.5 text-center text-sm text-gray-900 dark:text-white"
           />
         </label>
-        <fieldset className="flex flex-wrap items-center gap-4 border-0 p-0 m-0">
-          <legend className="float-left mr-3 text-sm font-medium text-gray-600 dark:text-gray-400">
-            Type
-          </legend>
+        <fieldset className="flex flex-wrap items-center gap-4 border-0 p-0 m-0" aria-label="Output unit">
           {UNITS.map(({ value, label }) => (
             <label
               key={value}
