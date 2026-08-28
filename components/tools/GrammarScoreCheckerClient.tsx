@@ -229,20 +229,28 @@ export default function GrammarScoreCheckerClient() {
     setTimeout(() => setCopied(false), 1500);
   };
 
-  const severityColors: Record<Issue['severity'], string> = {
-    error: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300',
-    warning: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300',
-    info: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300',
+  const severityStatus: Record<Issue['severity'], string> = {
+    error: 'tb-v2-status-err',
+    warning: 'tb-v2-status-warn',
+    info: 'tb-v2-status-info',
+  };
+
+  const formatSnippet = (issue: Issue) => {
+    if (issue.type === 'Double space') return 'two consecutive spaces';
+    return issue.snippet;
   };
 
   return (
     <div className="tb-v2-tool-card">
-      <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+      <div
+        className="tb-v2-banner tb-v2-banner-info"
+        style={{ borderRadius: 0, borderLeft: 0, borderRight: 0, borderTop: 0 }}
+      >
         Rule-based grammar and readability checks. Not AI-powered grammar correction.
-      </p>
+      </div>
 
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Text</span>
+        <span className="tb-v2-tool-label">Enter your text</span>
         <ToolExampleClearActions
           onExample={() => {
             setInput(EXAMPLE_TEXT);
@@ -261,33 +269,51 @@ export default function GrammarScoreCheckerClient() {
           setInput(e.target.value);
           resetAnalysis();
         }}
-        placeholder="Paste or type your text here..."
-        className="tb-v2-input"
-        rows={10}
+        placeholder="Paste or type your text to check structure, spacing, repetition, passive voice, and filler words..."
+        className="tb-v2-tool-textarea"
+        rows={6}
       />
 
-      <div className="flex gap-2 mt-3">
-        <button
-          type="button"
-          onClick={analyze}
-          className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg"
-        >
+      <div className="tb-v2-toolbar">
+        <button type="button" onClick={analyze} className="tb-v2-btn tb-v2-btn-primary">
           Check Text
         </button>
       </div>
 
       {!analyzed && !input && (
-        <p className="tb-v2-empty">
-          Paste text above, or load the example, to check sentence structure, spacing,
-          repeated words, passive voice, filler-word overuse, and get a transparent
-          0-100 quality score.
-        </p>
+        <div className="tb-v2-tool-output-body">
+          <div className="tb-v2-empty">
+            Paste text above, or load the example, to get a transparent 0–100 quality score and
+            rule-based issue list.
+          </div>
+        </div>
       )}
 
       {analyzed && (
-        <div className="tb-v2-tool-output-body">
-          <div className="flex justify-between items-center mb-3">
-            <span className="tb-v2-tool-label">Results</span>
+        <>
+          <div className="tb-v2-stats-grid">
+            <div className="tb-v2-stat-pill">
+              <span className="tb-v2-stat-pill-val">{stats.words}</span>
+              <span className="tb-v2-stat-pill-lbl">Words</span>
+            </div>
+            <div className="tb-v2-stat-pill">
+              <span className="tb-v2-stat-pill-val">{stats.sentences}</span>
+              <span className="tb-v2-stat-pill-lbl">Sentences</span>
+            </div>
+            <div className="tb-v2-stat-pill">
+              <span className="tb-v2-stat-pill-val">{stats.avgSentenceLength}</span>
+              <span className="tb-v2-stat-pill-lbl">Avg / sentence</span>
+            </div>
+            <div className="tb-v2-stat-pill">
+              <span className="tb-v2-stat-pill-val">{stats.score}</span>
+              <span className="tb-v2-stat-pill-lbl">Quality / 100</span>
+            </div>
+          </div>
+
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">
+              Issues{issues.length > 0 ? ` (${issues.length})` : ''}
+            </span>
             {issues.length > 0 && (
               <button
                 type="button"
@@ -299,58 +325,51 @@ export default function GrammarScoreCheckerClient() {
             )}
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-            <div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">Words</div>
-              <div className="text-lg font-semibold">{stats.words}</div>
-            </div>
-            <div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">Sentences</div>
-              <div className="text-lg font-semibold">{stats.sentences}</div>
-            </div>
-            <div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">Avg words/sentence</div>
-              <div className="text-lg font-semibold">{stats.avgSentenceLength}</div>
-            </div>
-            <div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">Quality score</div>
-              <div className="text-lg font-semibold">{stats.score}/100</div>
-            </div>
-          </div>
-
-          <div className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-            Issues Found: {issues.length}
-          </div>
-
-          {issues.length === 0 ? (
-            <p className="text-green-700 dark:text-green-300 text-center py-4">
-              No issues found by the rule-based checks above.
-            </p>
-          ) : (
-            <div className="space-y-2">
-              {issues.map((issue, index) => (
-                <div key={index} className="tb-v2-result-card">
-                  <div className="flex items-start gap-2">
-                    <span
-                      className={`px-2 py-0.5 rounded text-xs font-medium shrink-0 ${severityColors[issue.severity]}`}
-                    >
-                      {issue.type}
-                    </span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm text-gray-700 dark:text-gray-300">
-                        {issue.message}
-                        {issue.sentenceIndex >= 0 && ` (sentence ${issue.sentenceIndex + 1})`}
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 font-mono truncate">
-                        "{issue.snippet}" at position {issue.index}
-                      </p>
+          <div className="tb-v2-tool-output-body">
+            {issues.length === 0 ? (
+              <div className="tb-v2-empty">
+                <span className="tb-v2-status tb-v2-status-ok">No issues found</span>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {issues.map((issue, index) => (
+                  <div
+                    key={index}
+                    style={{
+                      border: '1px solid var(--line)',
+                      borderRadius: 'var(--radius-sm)',
+                      padding: 12,
+                      background: 'var(--surface)',
+                    }}
+                  >
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10 }}>
+                      <span className={`tb-v2-status ${severityStatus[issue.severity]}`}>
+                        {issue.type}
+                      </span>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <p style={{ fontSize: 13.5, color: 'var(--fg-0)', fontWeight: 600, margin: 0 }}>
+                          {issue.message}
+                          {issue.sentenceIndex >= 0 && ` (sentence ${issue.sentenceIndex + 1})`}
+                        </p>
+                        <p
+                          style={{
+                            fontSize: 12,
+                            color: 'var(--fg-3)',
+                            marginTop: 6,
+                            fontFamily: 'var(--f-mono)',
+                            wordBreak: 'break-word',
+                          }}
+                        >
+                          &ldquo;{formatSnippet(issue)}&rdquo; at position {issue.index}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </>
       )}
     </div>
   );
