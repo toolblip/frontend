@@ -1,17 +1,29 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+
+const EXAMPLE = 'red green blue';
 
 export default function TextPermutationGeneratorClient() {
   const [input, setInput] = useState('');
   const [permutations, setPermutations] = useState<string[]>([]);
   const [error, setError] = useState('');
 
-  const generate = useCallback(() => {
+  const generate = useCallback((raw?: string) => {
+    const source = raw ?? input;
     setError('');
-    const words = input.split(/\s+/).filter(Boolean);
-    if (words.length === 0) { setError('Please enter some words'); return; }
-    if (words.length > 10) { setError('Maximum 10 words for permutations'); return; }
+    const words = source.split(/\s+/).filter(Boolean);
+    if (words.length === 0) {
+      setError('Please enter some words');
+      setPermutations([]);
+      return;
+    }
+    if (words.length > 10) {
+      setError('Maximum 10 words for permutations');
+      setPermutations([]);
+      return;
+    }
 
     function permute<T>(arr: T[]): T[][] {
       if (arr.length <= 1) return [arr];
@@ -23,18 +35,33 @@ export default function TextPermutationGeneratorClient() {
       return result;
     }
 
-    const perms = permute(words).map(p => p.join(' '));
-    setPermutations(perms);
+    setPermutations(permute(words).map((p) => p.join(' ')));
   }, [input]);
+
+  const loadExample = () => {
+    setInput(EXAMPLE);
+    generate(EXAMPLE);
+  };
+
+  const clear = () => {
+    setInput('');
+    setPermutations([]);
+    setError('');
+  };
 
   const copy = () => {
     navigator.clipboard.writeText(permutations.join('\n')).catch(() => {});
   };
 
   return (
-    <div>
+    <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Words to Permute</span>
+        <ToolExampleClearActions
+          onExample={loadExample}
+          onClear={clear}
+          canClear={input.length > 0 || permutations.length > 0}
+        />
       </div>
       <textarea
         value={input}
@@ -43,21 +70,46 @@ export default function TextPermutationGeneratorClient() {
         className="tb-v2-tool-textarea"
         aria-label="Words input"
       />
-      <button type="button" onClick={generate} className="tb-v2-primary-btn" style={{ width: '100%', marginTop: 12, marginBottom: 12 }}>
-        Generate Permutations ({input.split(/\s+/).filter(Boolean).length}! = {factorial(input.split(/\s+/).filter(Boolean).length)})
-      </button>
+      <div style={{ padding: '0 20px 16px' }}>
+        <button
+          type="button"
+          onClick={() => generate()}
+          className="tb-v2-primary-btn"
+          style={{ width: '100%', marginTop: 12 }}
+        >
+          Generate Permutations (
+          {input.split(/\s+/).filter(Boolean).length}! ={' '}
+          {factorial(input.split(/\s+/).filter(Boolean).length)})
+        </button>
+      </div>
 
-      {error && <div style={{ color: 'var(--tb-accent)', fontSize: 13, marginBottom: 8 }}>{error}</div>}
+      {error && (
+        <div style={{ color: 'var(--tb-accent)', fontSize: 13, padding: '0 20px 12px' }}>
+          {error}
+        </div>
+      )}
 
       {permutations.length > 0 && (
         <>
           <div className="tb-v2-tool-output-head">
             <span className="tb-v2-tool-label">{permutations.length} Permutations</span>
-            <button type="button" onClick={copy} className="tb-v2-copy-btn">Copy All</button>
+            <button type="button" onClick={copy} className="tb-v2-copy-btn">
+              Copy All
+            </button>
           </div>
           <div className="tb-v2-tool-output-body">
-            <div style={{ fontFamily: 'var(--f-mono)', fontSize: 13, lineHeight: 1.6, maxHeight: 300, overflowY: 'auto' }}>
-              {permutations.map((p, i) => <div key={i}>{p}</div>)}
+            <div
+              style={{
+                fontFamily: 'var(--f-mono)',
+                fontSize: 13,
+                lineHeight: 1.6,
+                maxHeight: 300,
+                overflowY: 'auto',
+              }}
+            >
+              {permutations.map((p, i) => (
+                <div key={i}>{p}</div>
+              ))}
             </div>
           </div>
         </>
