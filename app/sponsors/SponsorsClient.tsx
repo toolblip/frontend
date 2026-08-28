@@ -33,7 +33,7 @@ const CARD_SCALE: Record<number, number> = { 1: 1.1, 2: 1.05 };
 
 const BASE_AVATAR_PX = 64;
 const BASE_DOMAIN_FONT_PX = 19;
-const BASE_TAGLINE_FONT_PX = 15;
+const BASE_TAGLINE_FONT_PX = 13;
 const BASE_BALANCE_FONT_PX = 21;
 const BASE_CARD_PADDING_Y = 22;
 const BASE_CARD_PADDING_X = 26;

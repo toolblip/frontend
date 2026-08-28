@@ -10,10 +10,19 @@ function avatarColor(seed: string): string {
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
 }
 
+/** Google's s2 endpoint only returns crisp icons for a few sizes — odd values
+ * like 141 come back as 16×16 and look muddy when scaled to the leaderboard. */
+function faviconFetchSize(displayPx?: number): number {
+  const target = displayPx ? displayPx * 2 : 128;
+  if (target <= 64) return 64;
+  if (target <= 128) return 128;
+  return 256;
+}
+
 /** Same-origin proxy — see app/api/favicon/route.ts. Avoids Serwist breaking
  * Google/unavatar cross-origin image redirects for returning PWA clients. */
 export function sponsorFaviconSrc(domain: string, size = 128): string {
-  return `/api/favicon?domain=${encodeURIComponent(domain)}&sz=${size}`;
+  return `/api/favicon?domain=${encodeURIComponent(domain)}&sz=${faviconFetchSize(size)}`;
 }
 
 export default function SponsorAvatar({
@@ -29,7 +38,6 @@ export default function SponsorAvatar({
 }) {
   const [error, setError] = useState(false);
   const sizeStyle: React.CSSProperties | undefined = sizePx ? { width: sizePx, height: sizePx } : undefined;
-  const fetchSize = sizePx ? Math.min(256, Math.max(64, Math.round(sizePx * 2))) : 128;
 
   if (error) {
     return (
@@ -41,7 +49,7 @@ export default function SponsorAvatar({
 
   return (
     <img
-      src={sponsorFaviconSrc(domain, fetchSize)}
+      src={sponsorFaviconSrc(domain, sizePx ?? 128)}
       alt=""
       className={className}
       style={sizeStyle}

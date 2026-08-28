@@ -3732,8 +3732,8 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   width: 64px;
   height: 64px;
   border-radius: 14px;
-  background: transparent;
-  object-fit: cover;
+  background: var(--surface-2);
+  object-fit: contain;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3755,7 +3755,7 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
 }
 .tb-v2-sponsor-row-link:hover .tb-v2-sponsor-row-domain { color: var(--red); }
 .tb-v2-sponsor-row-tagline {
-  font-size: 15px;
+  font-size: 13px;
   color: var(--fg-2);
   display: -webkit-box;
   -webkit-line-clamp: 2;
