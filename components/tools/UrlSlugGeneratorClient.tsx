@@ -1,31 +1,24 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type Sep = '-' | '_' | '.';
 
-const EXAMPLES = [
-  'Hello World Example!',
-  '  Multiple   Spaces   Here  ',
-  'Special!@#Characters$%^',
-  'UPPERCASE Text Input',
-  'Café au lait  -  résumé',
-];
+const EXAMPLE = 'Hello World Example!';
 
 function slugify(input: string, sep: Sep, lowercase: boolean, trim: boolean, limit: number): string {
   if (!input) return '';
   let s = input.replace(/<[^>]*>/g, '');
   // Normalize accents (NFD strip combining marks)
-  s = s.normalize('NFKD').replace(/[̀-ͯ]/g, '');
+  s = s.normalize('NFKD').replace(/[\u0300-\u036f]/g, '');
   if (trim) s = s.trim();
   if (lowercase) s = s.toLowerCase();
 
   const allowed = sep === '.' ? 'a-zA-Z0-9.' : `a-zA-Z0-9${sep === '-' ? '\\-' : '_'}`;
-  // Replace anything not allowed (and not whitespace) with space, then collapse spaces to sep
   s = s.replace(new RegExp(`[^${allowed}\\s]`, 'g'), ' ');
   s = s.replace(/\s+/g, sep);
 
-  // Collapse repeated separators
   const sepEsc = sep === '.' ? '\\.' : sep === '-' ? '\\-' : '_';
   s = s.replace(new RegExp(`${sepEsc}+`, 'g'), sep);
   s = s.replace(new RegExp(`^${sepEsc}|${sepEsc}$`, 'g'), '');
@@ -57,9 +50,16 @@ export default function UrlSlugGeneratorClient() {
   };
 
   return (
-    <div>
+    <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text</span>
+        <ToolExampleClearActions
+          onExample={() => setInput(EXAMPLE)}
+          onClear={() => setInput('')}
+          canClear={input.length > 0}
+        />
+      </div>
+      <div style={{ padding: '8px 20px 0', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
         <div className="tb-v2-mode-tabs" role="group" aria-label="Separator">
           {(['-', '_', '.'] as Sep[]).map((s) => (
             <button
@@ -101,7 +101,9 @@ export default function UrlSlugGeneratorClient() {
           Trim
         </button>
         <span className="tb-v2-slug-divider" aria-hidden="true" />
-        <span className="tb-v2-tool-label" style={{ marginRight: 4 }}>Limit</span>
+        <span className="tb-v2-tool-label" style={{ marginRight: 4 }}>
+          Limit
+        </span>
         {[0, 50, 60, 75].map((l) => (
           <button
             key={l}
@@ -127,29 +129,16 @@ export default function UrlSlugGeneratorClient() {
         </button>
       </div>
       <div className="tb-v2-tool-output-body">
-        <pre className="tb-v2-tool-pre tb-v2-slug-out">{slug || ' - '}</pre>
-        {slug && (
-          <p className="tb-v2-hash-stats" style={{ marginTop: 8 }}>
-            {slug.length} chars{limit > 0 ? ` / limit ${limit}` : ''}
-          </p>
+        {!slug ? (
+          <div className="tb-v2-empty">Paste text or load Examples to generate a slug</div>
+        ) : (
+          <>
+            <pre className="tb-v2-tool-pre tb-v2-slug-out">{slug}</pre>
+            <p className="tb-v2-hash-stats" style={{ marginTop: 8 }}>
+              {slug.length} chars{limit > 0 ? ` / limit ${limit}` : ''}
+            </p>
+          </>
         )}
-      </div>
-
-      <div className="tb-v2-slug-examples">
-        <span className="tb-v2-tool-label">Examples</span>
-        <div>
-          {EXAMPLES.map((ex) => (
-            <button
-              key={ex}
-              type="button"
-              onClick={() => setInput(ex)}
-              className="tb-v2-mode-tab"
-              title={ex}
-            >
-              {ex.length > 26 ? ex.slice(0, 26) + '…' : ex}
-            </button>
-          ))}
-        </div>
       </div>
     </div>
   );

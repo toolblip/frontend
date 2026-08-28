@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const STOPWORDS = new Set([
   'a', 'an', 'the', 'and', 'or', 'but', 'of', 'in', 'on', 'at', 'to', 'for', 'with', 'is', 'are',
@@ -66,6 +67,9 @@ function analyzeStructure(slug: string): { issues: string[]; score: number } {
   return { issues, score: Math.max(0, Math.min(100, score)) };
 }
 
+const EXAMPLE =
+  '/blog/best-running-shoes\n/blog/best-running-shoes-2\n/blog/best-running-shoe\n/products/widget\n/blog/best-running-shoes';
+
 export default function SlugHealthCheckerClient() {
   const [input, setInput] = useState('');
 
@@ -111,6 +115,11 @@ export default function SlugHealthCheckerClient() {
 
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Slug List</span>
+        <ToolExampleClearActions
+          onExample={() => setInput(EXAMPLE)}
+          onClear={() => setInput('')}
+          canClear={input.length > 0}
+        />
       </div>
       <textarea
         className="tb-v2-tool-textarea"

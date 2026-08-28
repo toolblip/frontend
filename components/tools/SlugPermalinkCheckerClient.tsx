@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const STOPWORDS = new Set([
   'a', 'an', 'the', 'and', 'or', 'but', 'of', 'in', 'on', 'at', 'to', 'for', 'with', 'is', 'are',
@@ -121,6 +122,11 @@ export default function SlugPermalinkCheckerClient() {
 
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Slug or URL Path</span>
+        <ToolExampleClearActions
+          onExample={() => setInput('/blog/How_To_Bake_Sourdough_Bread')}
+          onClear={() => setInput('')}
+          canClear={input.length > 0}
+        />
       </div>
       <div style={{ padding: '16px 20px' }}>
         <input
