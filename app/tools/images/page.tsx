@@ -33,9 +33,9 @@ export default function ImageToolsPage() {
     <main className="tb-v2-blog">
       <div className="tb-v2-container">
         <nav className="tb-v2-breadcrumb">
-          <a href="/">Home</a>
+          <Link href="/">Home</Link>
           <span className="tb-v2-breadcrumb-sep">/</span>
-          <a href="/tools">Tools</a>
+          <Link href="/tools">Tools</Link>
           <span className="tb-v2-breadcrumb-sep">/</span>
           <span>Image</span>
         </nav>

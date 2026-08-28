@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import BrandMark from './BrandMark';
 import ThemeMenu from './ThemeMenu';
 import {
@@ -145,6 +145,7 @@ const MORE_ICONS: Record<string, IconComp> = {
 function MegaMenu({ which, onClose }: { which: string; onClose: () => void }) {
   const content = getMenuContent(which);
   const [activeIdx, setActiveIdx] = useState<number>(0);
+  const router = useRouter();
 
   if (!content) return null;
 
@@ -205,8 +206,8 @@ function MegaMenu({ which, onClose }: { which: string; onClose: () => void }) {
           const Ic = meta?.icon ?? IconUtil;
           const active = activeIdx === i;
           const handleClick = () => {
-            if (s.slug) window.location.href = getToolPathBySlug(s.slug);
-            else window.location.href = getCategoryPath(s.cat);
+            if (s.slug) router.push(getToolPathBySlug(s.slug));
+            else router.push(getCategoryPath(s.cat));
             onClose();
           };
           return (

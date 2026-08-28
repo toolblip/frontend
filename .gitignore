@@ -1,3 +1,7 @@
+# Serwist generated service worker
+public/sw*
+public/swe-worker*
+
 # Dependencies
 node_modules/
 

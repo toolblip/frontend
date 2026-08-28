@@ -3,8 +3,7 @@ export const dynamic = "force-dynamic";
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { useAuth } from "@/app/providers/auth-provider";
-import { useRouter } from "next/navigation";
+import { useRequireAuth } from "@/lib/hooks/useRequireAuth";
 
 type TeamRole = "admin" | "member" | "viewer";
 
@@ -41,8 +40,7 @@ const ROLES: { value: TeamRole; label: string; description: string }[] = [
 ];
 
 export default function TeamPage() {
-  const { user, token, login, loading: authLoading } = useAuth();
-  const router = useRouter();
+  const { user, token, loading: authLoading } = useRequireAuth();
 
   const [teamData, setTeamData] = useState<TeamData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -64,36 +62,6 @@ export default function TeamPage() {
 
   // Remove member
   const [removingId, setRemovingId] = useState<number | null>(null);
-
-  useEffect(() => {
-    async function restoreSession() {
-      if (authLoading || token) return;
-      for (let attempt = 0; attempt < 2; attempt += 1) {
-        try {
-          const res = await fetch("/api/auth/me", { credentials: "include" });
-          if (res.ok) {
-            const data = await res.json();
-            if (data.user && data.token) {
-              login(data.user, data.token);
-              return;
-            }
-          }
-        } catch {
-          // retry once
-        }
-        await new Promise((resolve) => setTimeout(resolve, 250));
-      }
-      const params = new URLSearchParams(window.location.search);
-      const currentPath = window.location.pathname;
-      const currentNext = params.get("next");
-      const nextPath =
-        (currentPath === "/login" || currentPath === "/signup") && currentNext && currentNext.startsWith("/") && !currentNext.startsWith("//")
-          ? currentNext
-          : `${currentPath}${window.location.search}`;
-      router.replace(`/login?next=${encodeURIComponent(nextPath)}`);
-    }
-    restoreSession();
-  }, [authLoading, token, login, router]);
 
   useEffect(() => {
     if (!token) return;
