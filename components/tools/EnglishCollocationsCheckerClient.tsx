@@ -12,6 +12,7 @@ interface CollocationRule {
 
 const RULES: CollocationRule[] = [
   { pattern: /\bdo\s+a\s+mistake\b/gi, wrong: 'do a mistake', correct: 'make a mistake', note: 'Mistakes are "made", not "done".' },
+  { pattern: /\bdid\s+a\s+mistake\b/gi, wrong: 'did a mistake', correct: 'made a mistake', note: 'Mistakes are "made", not "done".' },
   { pattern: /\bmake\s+(my|your|his|her|our|their)?\s*homework\b/gi, wrong: 'make homework', correct: 'do homework', note: 'Homework is "done".' },
   { pattern: /\bmake\s+a\s+photo\b/gi, wrong: 'make a photo', correct: 'take a photo', note: 'Photos are "taken".' },
   { pattern: /\bmake\s+a\s+shower\b/gi, wrong: 'make a shower', correct: 'take a shower', note: 'Showers are "taken".' },
