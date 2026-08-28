@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 function countSentences(text: string): number {
   const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
@@ -29,6 +30,9 @@ function countUniqueWords(text: string): number {
   const uniqueWords = new Set(words);
   return uniqueWords.size;
 }
+
+const EXAMPLE =
+  'The quick brown fox jumps over the lazy dog. How many sentences are in this sample? Count them here!';
 
 export default function SentenceCounterClient() {
   const [text, setText] = useState('');
@@ -61,6 +65,11 @@ export default function SentenceCounterClient() {
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text to Analyze</span>
+        <ToolExampleClearActions
+          onExample={() => setText(EXAMPLE)}
+          onClear={clear}
+          canClear={text.length > 0}
+        />
       </div>
       <textarea
         value={text}
@@ -71,9 +80,6 @@ export default function SentenceCounterClient() {
         aria-label="Text input for sentence counting"
       />
 
-      <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-        <button type="button" onClick={clear} className="tb-v2-copy-btn" style={{ flex: 1 }}>Clear</button>
-      </div>
 
       {text.length > 0 && (
         <>

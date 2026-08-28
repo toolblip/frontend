@@ -8,6 +8,7 @@ import {
   getGradeLevelLabel,
   getReadingEaseLabel,
 } from '@/lib/count-syllables';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 function getWords(text: string): string[] {
   return text.trim().split(/\s+/).filter(Boolean);
@@ -48,9 +49,11 @@ export default function ReadabilityScoreClient() {
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text</span>
-        <button type="button" onClick={() => setText(READING_STATS_EXAMPLE)} className="tb-v2-btn-sm">
-          Load Example
-        </button>
+        <ToolExampleClearActions
+          onExample={() => setText(READING_STATS_EXAMPLE)}
+          onClear={() => setText('')}
+          canClear={text.length > 0}
+        />
       </div>
       <textarea
         value={text}

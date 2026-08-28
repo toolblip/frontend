@@ -7,6 +7,7 @@ import {
   getGradeLevelLabel,
   getReadingEaseLabel,
 } from '@/lib/count-syllables';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 function countWords(text: string): number {
   return text.split(/\s+/).filter((w) => w.length > 0).length;
@@ -47,16 +48,11 @@ export default function FleschKincaidCalculatorClient() {
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text to analyze</span>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <button type="button" onClick={() => setText(READING_STATS_EXAMPLE)} className="tb-v2-btn-sm">
-            Load Example
-          </button>
-          {text && (
-            <button type="button" onClick={() => setText('')} className="tb-v2-btn-sm">
-              Clear
-            </button>
-          )}
-        </div>
+        <ToolExampleClearActions
+          onExample={() => setText(READING_STATS_EXAMPLE)}
+          onClear={() => setText('')}
+          canClear={text.length > 0}
+        />
       </div>
       <textarea
         value={text}

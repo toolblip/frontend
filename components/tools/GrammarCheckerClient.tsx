@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 interface Issue {
   message: string;
@@ -13,25 +14,30 @@ interface Issue {
   length: number;
 }
 
+const EXAMPLE_TEXT =
+  "Their going to the store tomorrow, but there not sure if it's open. Me and him was hoping to buy some supplies for the party.";
+
 export default function GrammarCheckerClient() {
   const [text, setText] = useState('');
   const [issues, setIssues] = useState<Issue[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  const resetResults = () => {
+    setIssues([]);
+    setError('');
+  };
+
   const checkGrammar = async () => {
     if (!text.trim()) return;
     setLoading(true);
     setError('');
     try {
-      const res = await fetch(
-        `https://api.languagetool.org/v2/check`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: `text=${encodeURIComponent(text)}&language=en-US`,
-        }
-      );
+      const res = await fetch('https://api.languagetool.org/v2/check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `text=${encodeURIComponent(text)}&language=en-US`,
+      });
       if (!res.ok) throw new Error('Grammar API unavailable');
       const data = await res.json();
       setIssues(data.matches || []);
@@ -51,66 +57,84 @@ export default function GrammarCheckerClient() {
   };
 
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
-      <div>
-        <label className="tb-v2-tool-label">
-          Enter your text
-        </label>
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Type or paste your text here to check for grammar and spelling errors..."
-          className="w-full h-40 px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 resize-y focus:outline-none focus:ring-2 focus:ring-red-500 dark:focus:ring-red-400"
+    <div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Enter your text</span>
+        <ToolExampleClearActions
+          onExample={() => {
+            setText(EXAMPLE_TEXT);
+            resetResults();
+          }}
+          onClear={() => {
+            setText('');
+            resetResults();
+          }}
+          canClear={text.length > 0}
         />
       </div>
+      <textarea
+        value={text}
+        onChange={(e) => {
+          setText(e.target.value);
+          resetResults();
+        }}
+        placeholder="Type or paste your text here to check for grammar and spelling errors..."
+        className="tb-v2-tool-textarea"
+        style={{ minHeight: 150 }}
+      />
 
-      <button
-        onClick={checkGrammar}
-        disabled={loading || !text.trim()}
-        className="tb-v2-btn tb-v2-btn-primary"
-      >
-        {loading ? 'Checking...' : 'Check Grammar'}
-      </button>
+      <div style={{ marginTop: 12 }}>
+        <button
+          type="button"
+          onClick={checkGrammar}
+          disabled={loading || !text.trim()}
+          className="tb-v2-btn tb-v2-btn-primary"
+        >
+          {loading ? 'Checking...' : 'Check Grammar'}
+        </button>
+      </div>
 
       {error && (
-        <p className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-3 py-2 rounded-lg">{error}</p>
-      )}
-
-      {issues.length > 0 && (
-        <div className="space-y-2">
-          <p className="tb-v2-tool-label">
-            {issues.length} issue{issues.length !== 1 ? 's' : ''} found
-          </p>
-          {issues.map((issue, i) => (
-            <div
-              key={i}
-              className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 bg-white dark:bg-gray-900"
-            >
-              <p className="text-sm text-red-600 dark:text-red-400 font-medium">{issue.message}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{issue.rule.description}</p>
-              {issue.replacements.length > 0 && (
-                <div className="mt-2 flex items-center gap-2 flex-wrap">
-                  <span className="text-xs text-gray-500 dark:text-gray-400">Fix:</span>
-                  {issue.replacements.slice(0, 3).map((r, j) => (
-                    <button
-                      key={j}
-                      onClick={() => applyFix(issue)}
-                      className="text-xs px-2 py-1 bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 rounded border border-red-200 dark:border-red-800 hover:bg-red-100 dark:hover:bg-red-900/50 transition-colors"
-                    >
-                      {r.value}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
+        <div className="tb-v2-tool-output-body" style={{ marginTop: 12 }}>
+          <p className="tb-v2-status tb-v2-status-err">{error}</p>
         </div>
       )}
 
+      {issues.length > 0 && (
+        <>
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">
+              {issues.length} issue{issues.length !== 1 ? 's' : ''} found
+            </span>
+          </div>
+          <div className="tb-v2-tool-output-body" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            {issues.map((issue, i) => (
+              <div
+                key={i}
+                style={{ border: '1px solid var(--line)', borderRadius: 8, padding: 12, background: 'var(--tb-bg-secondary)' }}
+              >
+                <p style={{ fontSize: 13, fontWeight: 600, margin: 0 }}>{issue.message}</p>
+                <p style={{ fontSize: 12, color: 'var(--tb-text-secondary)', marginTop: 4 }}>{issue.rule.description}</p>
+                {issue.replacements.length > 0 && (
+                  <div style={{ marginTop: 8, display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+                    <span style={{ fontSize: 11, color: 'var(--tb-text-secondary)' }}>Fix:</span>
+                    {issue.replacements.slice(0, 3).map((r, j) => (
+                      <button key={j} type="button" onClick={() => applyFix(issue)} className="tb-v2-copy-btn">
+                        {r.value}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
       {!loading && !error && issues.length === 0 && text.trim().length > 0 && (
-        <p className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 px-3 py-2 rounded-lg">
-          ✅ No issues found. Your text looks good!
-        </p>
+        <div className="tb-v2-tool-output-body" style={{ marginTop: 12 }}>
+          <span style={{ color: 'var(--tb-text-secondary)', fontSize: 14 }}>No issues found yet. Click Check Grammar to analyze.</span>
+        </div>
       )}
     </div>
   );

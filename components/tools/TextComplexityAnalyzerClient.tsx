@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const EXAMPLE_TEXT =
   "Understanding text complexity requires examining multiple dimensions simultaneously. Sophisticated vocabulary, elongated sentence structures, and infrequent terminology contribute to perceived difficulty. Simple texts use short sentences and common words.";
@@ -63,7 +64,11 @@ export default function TextComplexityAnalyzerClient() {
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Enter your text</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+        <ToolExampleClearActions
+          onExample={loadExample}
+          onClear={() => setText('')}
+          canClear={text.length > 0}
+        />
       </div>
       <textarea
         value={text}

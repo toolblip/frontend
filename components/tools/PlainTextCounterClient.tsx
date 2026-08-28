@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { READING_STATS_EXAMPLE } from '@/components/tools/reading-stats-example';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 export default function PlainTextCounterClient() {
   const [text, setText] = useState('');
@@ -23,9 +24,11 @@ export default function PlainTextCounterClient() {
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text</span>
-        <button type="button" onClick={() => setText(READING_STATS_EXAMPLE)} className="tb-v2-btn-sm">
-          Load Example
-        </button>
+        <ToolExampleClearActions
+          onExample={() => setText(READING_STATS_EXAMPLE)}
+          onClear={() => setText('')}
+          canClear={text.length > 0}
+        />
       </div>
       <textarea
         value={text}

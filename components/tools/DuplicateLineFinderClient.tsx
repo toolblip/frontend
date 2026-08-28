@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const EXAMPLE = `apple
 banana
@@ -52,9 +53,11 @@ export default function DuplicateLineFinderClient() {
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Input Text</span>
-        <button type="button" onClick={() => setInput(EXAMPLE)} className="tb-v2-btn-sm">
-          Load Example
-        </button>
+        <ToolExampleClearActions
+          onExample={() => setInput(EXAMPLE)}
+          onClear={() => setInput('')}
+          canClear={input.length > 0}
+        />
       </div>
       <textarea
         value={input}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 interface LineCounts {
   total: number;
@@ -8,6 +9,12 @@ interface LineCounts {
   empty: number;
   bytes: number;
 }
+
+const EXAMPLE = `First line
+Second line
+
+Fourth line after a blank
+Fifth line`;
 
 export default function LineCounterClient() {
   const [text, setText] = useState('');
@@ -30,6 +37,11 @@ export default function LineCounterClient() {
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Input Text</span>
+        <ToolExampleClearActions
+          onExample={() => setText(EXAMPLE)}
+          onClear={() => setText('')}
+          canClear={text.length > 0}
+        />
       </div>
       <textarea
         value={text}

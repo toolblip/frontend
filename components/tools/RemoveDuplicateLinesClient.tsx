@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type Options = {
   caseSensitive: boolean;
@@ -23,6 +24,13 @@ function dedupe(input: string, opts: Options): { result: string; original: numbe
   }
   return { result: out.join('\n'), original: lines.length, after: out.length };
 }
+
+const EXAMPLE = `apple
+banana
+apple
+cherry
+banana
+date`;
 
 export default function RemoveDuplicateLinesClient() {
   const [input, setInput] = useState('');
@@ -49,7 +57,13 @@ export default function RemoveDuplicateLinesClient() {
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Input</span>
-        <div className="tb-v2-mode-tabs" role="group" aria-label="Dedupe options">
+        <ToolExampleClearActions
+          onExample={() => setInput(EXAMPLE)}
+          onClear={() => setInput('')}
+          canClear={input.length > 0}
+        />
+      </div>
+      <div className="tb-v2-mode-tabs" role="group" aria-label="Dedupe options" style={{ marginBottom: 12 }}>
           <button
             type="button"
             onClick={() => toggle('caseSensitive')}
@@ -74,7 +88,6 @@ export default function RemoveDuplicateLinesClient() {
           >
             Skip empty
           </button>
-        </div>
       </div>
       <textarea
         value={input}

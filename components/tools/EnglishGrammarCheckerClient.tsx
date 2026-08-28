@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 interface GrammarIssue {
   type: 'error' | 'warning' | 'info';
@@ -9,7 +10,8 @@ interface GrammarIssue {
   suggestion?: string;
 }
 
-const EXAMPLE = "Its a nice day and I could of gone to the park, but their isnt enough time. Alot of people say  than they prefer rain anyway.";
+const EXAMPLE =
+  "Its a nice day and I could of gone to the park, but their isnt enough time. Alot of people say than they prefer rain anyway.";
 
 export default function EnglishGrammarCheckerClient() {
   const [input, setInput] = useState('');
@@ -18,18 +20,53 @@ export default function EnglishGrammarCheckerClient() {
 
   const check = () => {
     setChecked(true);
-    if (!input.trim()) { setOutput([]); return; }
+    if (!input.trim()) {
+      setOutput([]);
+      return;
+    }
     const issues: GrammarIssue[] = [];
     const patterns: { pat: RegExp; type: 'error' | 'warning' | 'info'; cat: string; msg: string; sug?: string }[] = [
-      { pat: /\b(their)\s+(?:is|are|was|were)\b/gi, type: 'error', cat: 'Subject-Verb Agreement', msg: 'Check subject-verb agreement with "their"', sug: undefined },
-      { pat: /\b(its)\s+(?:is|are|was|were)\b/gi, type: 'error', cat: 'Possessive vs Contraction', msg: '"Its" shows possession, not a contraction of "it is"', sug: 'it\'s' },
-      { pat: /\b(your)\s+(?:is|are|was|were)\b/gi, type: 'error', cat: 'Possessive vs Contraction', msg: '"Your" shows possession, not a contraction of "you are"', sug: 'you\'re' },
-      { pat: /\b(could of|would of|should of|might of|must of|has of|had of)\b/gi, type: 'error', cat: 'Verb Forms', msg: 'Use "have" instead of "of" with modal verbs', sug: undefined },
-      { pat: /\b(then)\s+(?:i|he|she|we|they|you)\b/gi, type: 'warning', cat: 'Common Confusions', msg: 'Did you mean "than" for comparison?', sug: 'than' },
-      { pat: /\b(than)\s+(?:came|went|saw|had|did|said|knew|thought|found|got|made|took)\b/gi, type: 'warning', cat: 'Common Confusions', msg: 'Did you mean "then" for time/sequence?', sug: 'then' },
+      {
+        pat: /\b(their)\s+(?:is|are|was|were)\b/gi,
+        type: 'error',
+        cat: 'Subject-Verb Agreement',
+        msg: 'Check subject-verb agreement with "their"',
+      },
+      {
+        pat: /\b(its)\s+(?:is|are|was|were)\b/gi,
+        type: 'error',
+        cat: 'Possessive vs Contraction',
+        msg: '"Its" shows possession, not a contraction of "it is"',
+        sug: "it's",
+      },
+      {
+        pat: /\b(your)\s+(?:is|are|was|were)\b/gi,
+        type: 'error',
+        cat: 'Possessive vs Contraction',
+        msg: '"Your" shows possession, not a contraction of "you are"',
+        sug: "you're",
+      },
+      {
+        pat: /\b(could of|would of|should of|might of|must of|has of|had of)\b/gi,
+        type: 'error',
+        cat: 'Verb Forms',
+        msg: 'Use "have" instead of "of" with modal verbs',
+      },
+      {
+        pat: /\b(then)\s+(?:i|he|she|we|they|you)\b/gi,
+        type: 'warning',
+        cat: 'Common Confusions',
+        msg: 'Did you mean "than" for comparison?',
+        sug: 'than',
+      },
+      {
+        pat: /\b(than)\s+(?:came|went|saw|had|did|said|knew|thought|found|got|made|took)\b/gi,
+        type: 'warning',
+        cat: 'Common Confusions',
+        msg: 'Did you mean "then" for time/sequence?',
+        sug: 'then',
+      },
       { pat: /\b(alot)\b/gi, type: 'error', cat: 'Common Typos', msg: '"alot" is not a word. Did you mean "a lot"?', sug: 'a lot' },
-      { pat: /\b(couldnt|couldn\'t|wouldnt|wouldn\'t|shouldnt|shouldn\'t|isnt|isn\'t|arent|aren\'t|wasnt|wasn\'t|werent|weren\'t|dont|don\'t|didnt|didn\'t|hasnt|hasn\'t|hadnt|hadn\'t|was|were)\b/gi, type: 'warning', cat: 'Contractions', msg: 'Check contraction usage', sug: undefined },
-      { pat: /\b(i)\s+(?:am|is|are|was|were)\b/gi, type: 'error', cat: 'Capitalization', msg: '"I" should always be capitalized', sug: 'I' },
       { pat: /\s{2,}/g, type: 'info', cat: 'Spacing', msg: 'Multiple spaces detected', sug: 'single space' },
       { pat: /\b(etc)\s*\.\s*\./gi, type: 'info', cat: 'Punctuation', msg: '"Etc." already includes a period', sug: 'etc.' },
     ];
@@ -38,7 +75,12 @@ export default function EnglishGrammarCheckerClient() {
       if (pat.test(input)) {
         const matches = input.match(pat);
         if (matches) {
-          issues.push({ type, category: cat, message: `${matches.length} occurrence(s): "${matches[0]}"  -  ${msg}`, suggestion: sug });
+          issues.push({
+            type,
+            category: cat,
+            message: `${matches.length} occurrence(s): "${matches[0]}"  -  ${msg}`,
+            suggestion: sug,
+          });
         }
       }
     }
@@ -46,55 +88,70 @@ export default function EnglishGrammarCheckerClient() {
     setOutput(issues);
   };
 
-  const loadExample = () => {
-    setInput(EXAMPLE);
-    setChecked(false);
-    setOutput([]);
-  };
-
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
-      <div className="flex justify-end">
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+    <div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Enter your text</span>
+        <ToolExampleClearActions
+          onExample={() => {
+            setInput(EXAMPLE);
+            setChecked(false);
+            setOutput([]);
+          }}
+          onClear={() => {
+            setInput('');
+            setChecked(false);
+            setOutput([]);
+          }}
+          canClear={input.length > 0}
+        />
       </div>
       <textarea
         value={input}
-        onChange={e => { setInput(e.target.value); setChecked(false); }}
+        onChange={(e) => {
+          setInput(e.target.value);
+          setChecked(false);
+        }}
         placeholder="Enter text to check for grammar issues..."
-        rows={6}
-        className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-3 text-sm font-mono focus:ring-2 focus:ring-red-500 outline-none resize-y"
+        className="tb-v2-tool-textarea"
+        style={{ minHeight: 140 }}
       />
-      <button
-        onClick={check}
-        className="w-full bg-red-600 hover:bg-red-500 text-white font-medium py-2.5 rounded-lg transition-colors text-sm"
-      >
-        Check Grammar
-      </button>
+      <div style={{ marginTop: 12 }}>
+        <button type="button" onClick={check} className="tb-v2-btn tb-v2-btn-primary">
+          Check Grammar
+        </button>
+      </div>
       {!checked ? (
-        <p className="tb-v2-empty">Enter some text and click Check Grammar to see suggestions.</p>
+        <div className="tb-v2-tool-output-body" style={{ marginTop: 12 }}>
+          <span style={{ color: 'var(--tb-text-secondary)', fontSize: 14 }}>
+            Enter some text and click Check Grammar to see suggestions.
+          </span>
+        </div>
       ) : output.length > 0 ? (
-        <div className="space-y-2">
+        <div className="tb-v2-tool-output-body" style={{ marginTop: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
           {output.map((issue, i) => (
-            <div key={i} className={`p-3 rounded-lg border text-sm ${
-              issue.type === 'error' ? 'bg-red-50 border-red-200' :
-              issue.type === 'warning' ? 'bg-yellow-50 border-yellow-200' :
-              'bg-blue-50 border-blue-200'
-            }`}>
-              <div className="flex items-start gap-2">
-                <span className={`mt-0.5 w-2 h-2 rounded-full flex-shrink-0 ${
-                  issue.type === 'error' ? 'bg-red-500' : issue.type === 'warning' ? 'bg-yellow-500' : 'bg-blue-500'
-                }`}></span>
-                <div>
-                  <span className="font-medium text-xs uppercase tracking-wide opacity-70">{issue.category}</span>
-                  <p className="mt-1">{issue.message}</p>
-                  {issue.suggestion && <p className="mt-1 text-xs opacity-70">Suggestion: {issue.suggestion}</p>}
-                </div>
-              </div>
+            <div
+              key={i}
+              style={{
+                padding: 12,
+                borderRadius: 8,
+                border: '1px solid var(--line)',
+                background: 'var(--tb-bg-secondary)',
+                fontSize: 13,
+              }}
+            >
+              <div style={{ fontSize: 11, textTransform: 'uppercase', color: 'var(--tb-text-secondary)' }}>{issue.category}</div>
+              <p style={{ margin: '6px 0 0' }}>{issue.message}</p>
+              {issue.suggestion && (
+                <p style={{ margin: '4px 0 0', fontSize: 12, color: 'var(--tb-text-secondary)' }}>Suggestion: {issue.suggestion}</p>
+              )}
             </div>
           ))}
         </div>
-      ) : input && (
-        <p className="text-center text-sm text-green-600 dark:text-green-400 py-4">No issues detected!</p>
+      ) : (
+        <div className="tb-v2-tool-output-body" style={{ marginTop: 12 }}>
+          <span style={{ color: 'var(--tb-text-secondary)', fontSize: 14 }}>No issues detected!</span>
+        </div>
       )}
     </div>
   );

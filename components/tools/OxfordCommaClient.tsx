@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 function formatOxfordComma(items: string[]): string {
   const filtered = items.filter((item) => item.trim() !== '');
@@ -57,13 +58,11 @@ export default function OxfordCommaClient() {
             <label className="tb-v2-tool-label" htmlFor="oxford-comma-input">
               Items {separator === 'comma' ? '(comma-separated)' : '(one per line)'}
             </label>
-            <button
-              type="button"
-              onClick={() => setInput(separator === 'comma' ? OXFORD_COMMA_EXAMPLE : OXFORD_NEWLINE_EXAMPLE)}
-              className="tb-v2-btn-sm"
-            >
-              Load Example
-            </button>
+            <ToolExampleClearActions
+              onExample={() => setInput(separator === 'comma' ? OXFORD_COMMA_EXAMPLE : OXFORD_NEWLINE_EXAMPLE)}
+              onClear={() => setInput('')}
+              canClear={input.length > 0}
+            />
           </div>
           <textarea
             id="oxford-comma-input"
