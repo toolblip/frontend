@@ -42,17 +42,17 @@ export default function GrammarCheckerV2Client() {
     setLoading(true);
     setError('');
     try {
-      const res = await fetch('https://api.languagetool.org/v2/check', {
+      const res = await fetch('/api/grammar-check', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `text=${encodeURIComponent(text)}&language=en-US`,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text, language: 'en-US' }),
       });
-      if (!res.ok) throw new Error('Grammar API unavailable');
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Grammar API unavailable');
       setIssues(data.matches || []);
       setChecked(true);
     } catch {
-      setError('Could not reach grammar service. Check your connection.');
+      setError('Could not reach grammar service. Try again in a moment.');
       setIssues([]);
     } finally {
       setLoading(false);
