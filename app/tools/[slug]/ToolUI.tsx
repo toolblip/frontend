@@ -772,7 +772,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'jwt-decoder':
       return <JwtDecoderClient />;
     case 'json-to-yaml':
-      return <JsonToYamlClient />;
+      return <YamlToJsonClient />;
     case 'js-minifier':
       return <JsMinifierClient />;
     case 'image-resizer':
@@ -1012,7 +1012,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'csv-to-json':
       return <CsvToJsonClient />;
     case 'csv-to-tsv':
-      return <CsvToTsvClient />;
+      return <TsvToCsvClient />;
     case 'curl-to-python':
       return <CurlToPythonClient />;
     case 'decimal-to-binary':
@@ -1092,7 +1092,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'json-schema-validator':
       return <JsonSchemaValidatorClient />;
     case 'json-to-csv':
-      return <JsonToCsvClient />;
+      return <CsvToJsonClient />;
     case 'json-to-html-table':
       return <JsonToHtmlTableClient />;
     case 'json-to-markdown-table':
@@ -1102,7 +1102,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'json-to-typescript':
       return <JsonToTypescriptClient />;
     case 'json-to-xml':
-      return <JsonToXmlClient />;
+      return <XmlToJsonClient />;
     case 'keyword-density-checker':
       return <KeywordDensityCheckerClient />;
     case 'length-converter':
@@ -2837,10 +2837,12 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'time-zone-tool': return <TimeZoneConverterClient />;
     case 'title-case-converter': return <CaseConverterClient />;
     case 'toml-to-json-v2': return <TomlToJsonClient />;
-    case 'tsv-json-express': return <TsvToJsonClient />; // legacy alias, redirected via next.config.mjs
-    case 'tsv-json': return <TsvToJsonClient />;
-    case 'tsv-to-csv-v2': return <CsvToTsvClient />;
-    case 'tsv-to-json-v2': return <TsvToJsonClient />;
+    case 'tsv-json-express':
+    case 'tsv-json':
+    case 'tsv-to-json-v2':
+      return <CsvToJsonClient />;
+    case 'tsv-to-csv-v2':
+      return <TsvToCsvClient />;
     case 'unit-converter-2025': return <UnitConverterClient />;
     case 'unit-converter-advanced': return <UnitConverterClient />;
     case 'unit-converter-browser': return <UnitConverterClient />;
