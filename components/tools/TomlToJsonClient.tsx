@@ -1,6 +1,14 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+
+const EXAMPLE = `name = "toolblip"
+version = "1.0.0"
+
+[server]
+host = "localhost"
+port = 8080`;
 
 function parseTOML(tomlString: string): Record<string, unknown> {
   const result: Record<string, unknown> = {};
@@ -10,9 +18,9 @@ function parseTOML(tomlString: string): Record<string, unknown> {
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
-    
+
     if (!line || line.startsWith('#')) continue;
-    
+
     if (line.startsWith('[') && line.endsWith(']')) {
       if (currentSection && currentSectionName) {
         result[currentSectionName] = currentSection;
@@ -53,80 +61,65 @@ function parseTOML(tomlString: string): Record<string, unknown> {
   return result;
 }
 
+function convert(input: string): { result: string; error: string } {
+  if (!input.trim()) return { result: '', error: '' };
+  try {
+    const parsed = parseTOML(input);
+    return { result: JSON.stringify(parsed, null, 2), error: '' };
+  } catch (e) {
+    return { result: '', error: e instanceof Error ? e.message : 'Invalid TOML syntax' };
+  }
+}
+
 export default function TomlToJsonClient() {
   const [input, setInput] = useState('');
-  const [output, setOutput] = useState('');
-  const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
 
-  const convert = () => {
-    if (!input.trim()) {
-      setOutput('');
-      setError('');
-      return;
-    }
-    try {
-      const parsed = parseTOML(input);
-      setOutput(JSON.stringify(parsed, null, 2));
-      setError('');
-    } catch (e) {
-      setError(e instanceof Error ? e.message : 'Invalid TOML syntax');
-      setOutput('');
-    }
-  };
+  const { result, error } = useMemo(() => convert(input), [input]);
 
   const copy = () => {
-    if (!output) return;
-    navigator.clipboard.writeText(output).catch(() => {});
+    if (!result) return;
+    navigator.clipboard.writeText(result).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
 
-  const clear = () => {
-    setInput('');
-    setOutput('');
-    setError('');
-  };
-
   return (
-    <div>
+    <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">TOML Input</span>
-        <button type="button" onClick={clear} className="tb-v2-mode-tab">Clear</button>
+        <ToolExampleClearActions
+          onExample={() => setInput(EXAMPLE)}
+          onClear={() => setInput('')}
+          canClear={input.length > 0}
+        />
       </div>
       <textarea
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        placeholder="Paste TOML config here...&#10;&#10;Example:&#10;name = &quot;example&quot;&#10;version = &quot;1.0.0&quot;&#10;&#10;[server]&#10;host = &quot;localhost&quot;&#10;port = 8080"
+        placeholder={'Paste TOML config here...\n\nname = "example"\nversion = "1.0.0"\n\n[server]\nhost = "localhost"\nport = 8080'}
         className="tb-v2-tool-textarea"
         style={{ fontFamily: 'var(--f-mono)' }}
         aria-label="TOML input"
       />
 
-      <div className="tb-v2-tool-actions">
-        <button type="button" onClick={convert} className="tb-v2-primary-btn">Convert to JSON</button>
-      </div>
-
-      {error && (
-        <div className="tb-v2-error-box">{error}</div>
-      )}
-
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">JSON Output</span>
-        {output && (
+        {result ? (
           <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
             {copied ? 'Copied' : 'Copy'}
           </button>
+        ) : null}
+      </div>
+      <div className="tb-v2-tool-output-body">
+        {error ? (
+          <p className="tb-v2-error" role="alert">
+            {error}
+          </p>
+        ) : (
+          <pre className="tb-v2-tool-pre">{result || ' - '}</pre>
         )}
       </div>
-      <textarea
-        value={output}
-        readOnly
-        placeholder="JSON output will appear here..."
-        className="tb-v2-tool-textarea"
-        style={{ fontFamily: 'var(--f-mono)' }}
-        aria-label="JSON output"
-      />
     </div>
   );
 }

@@ -2,8 +2,19 @@
 
 import { useMemo, useState } from 'react';
 import yaml from 'js-yaml';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type Mode = 'y2j' | 'j2y';
+
+const EXAMPLE_YAML = `name: toolblip
+tools:
+  - json
+  - yaml`;
+
+const EXAMPLE_JSON = `{
+  "name": "toolblip",
+  "tools": ["json", "yaml"]
+}`;
 
 function convert(input: string, mode: Mode): { result: string; error: string } {
   if (!input.trim()) return { result: '', error: '' };
@@ -46,9 +57,33 @@ export default function YamlToJsonClient() {
     : '{\n  "name": "toolblip",\n  "tools": ["json", "yaml"]\n}';
 
   return (
-    <div>
+    <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">{inputLbl}</span>
+        <ToolExampleClearActions
+          onExample={() => setInput(mode === 'y2j' ? EXAMPLE_YAML : EXAMPLE_JSON)}
+          onClear={() => setInput('')}
+          canClear={input.length > 0}
+        />
+      </div>
+      <textarea
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder={placeholder}
+        className="tb-v2-tool-textarea"
+        style={{ fontFamily: 'var(--f-mono)' }}
+        aria-label={`${inputLbl} input`}
+      />
+
+      <div
+        style={{
+          display: 'flex',
+          gap: 8,
+          flexWrap: 'wrap',
+          padding: '12px 20px',
+          borderTop: '1px solid var(--line)',
+        }}
+      >
         <div className="tb-v2-mode-tabs" role="tablist" aria-label="Conversion direction">
           <button
             type="button"
@@ -79,14 +114,6 @@ export default function YamlToJsonClient() {
           </button>
         </div>
       </div>
-      <textarea
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        placeholder={placeholder}
-        className="tb-v2-tool-textarea"
-        style={{ fontFamily: 'var(--f-mono)' }}
-        aria-label={`${inputLbl} input`}
-      />
 
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">{outputLbl}</span>
