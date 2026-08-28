@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const EXAMPLE = `Our team is committed to delivering high quality results on every project. We believe in delivering high quality results because our customers deserve nothing less.
 
@@ -55,13 +56,11 @@ function findDuplicatePhrases(text: string): Phrase[] {
 }
 
 export default function DuplicatePhraseDetectorClient() {
-  const [input, setInput] = useState(EXAMPLE);
+  const [input, setInput] = useState('');
   const [copied, setCopied] = useState(false);
 
   const phrases = useMemo(() => findDuplicatePhrases(input), [input]);
   const totalWords = useMemo(() => normalizeWords(input).length, [input]);
-
-  const loadExample = () => setInput(EXAMPLE);
 
   const outputText = useMemo(
     () => phrases.map(p => `"${p.phrase}" (${p.count}x, ${p.words} words)`).join('\n'),
@@ -78,8 +77,18 @@ export default function DuplicatePhraseDetectorClient() {
   return (
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Text</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+        <span className="tb-v2-tool-label">Text to Analyze</span>
+        <ToolExampleClearActions
+          onExample={() => {
+            setInput(EXAMPLE);
+            setCopied(false);
+          }}
+          onClear={() => {
+            setInput('');
+            setCopied(false);
+          }}
+          canClear={input.length > 0}
+        />
       </div>
       <textarea
         value={input}
@@ -96,7 +105,9 @@ export default function DuplicatePhraseDetectorClient() {
         </button>
       </div>
       <div className="tb-v2-tool-output-body">
-        {totalWords < MIN_WORDS * 2 ? (
+        {!input.trim() ? (
+          <p className="tb-v2-empty">Paste text or load the example to scan for repeated phrases of 3+ words.</p>
+        ) : totalWords < MIN_WORDS * 2 ? (
           <p className="tb-v2-empty">Enter at least a few sentences of text to scan for repeated phrases.</p>
         ) : phrases.length === 0 ? (
           <p className="tb-v2-empty">No repeated phrases of {MIN_WORDS}+ words found.</p>

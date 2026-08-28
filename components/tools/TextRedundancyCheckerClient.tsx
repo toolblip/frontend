@@ -1,13 +1,17 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+
+const EXAMPLE =
+  'In order to finish the report, we need to do each and every review on a daily basis. The team made new and innovative changes due to the fact that the old process was simple and easy to ignore.';
 
 const fillerPhrases = [
   'in order to', 'due to the fact that', 'at this point in time', 'in the event that',
   'for the purpose of', 'in spite of the fact that', 'with the exception of',
   'a large number of', 'in close proximity to', 'on a daily basis', 'each and every',
   'one and the same', 'paid the price of', 'strict and precise', 'new and innovative',
-  'old and outdated', 'true and accurate', 'simple and easy'
+  'old and outdated', 'true and accurate', 'simple and easy',
 ];
 
 function checkRedundancy(text: string): { phrase: string; count: number; indices: number[] }[] {
@@ -44,46 +48,79 @@ function checkRedundancy(text: string): { phrase: string; count: number; indices
 export default function TextRedundancyCheckerClient() {
   const [text, setText] = useState('');
   const [results, setResults] = useState<{ phrase: string; count: number; indices: number[] }[]>([]);
+  const [analyzed, setAnalyzed] = useState(false);
 
   const analyze = () => {
     setResults(checkRedundancy(text));
-  };
-
-  const clear = () => {
-    setText('');
-    setResults([]);
+    setAnalyzed(true);
   };
 
   return (
-    <div>
+    <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text to Analyze</span>
+        <ToolExampleClearActions
+          onExample={() => {
+            setText(EXAMPLE);
+            setResults([]);
+            setAnalyzed(false);
+          }}
+          onClear={() => {
+            setText('');
+            setResults([]);
+            setAnalyzed(false);
+          }}
+          canClear={text.length > 0 || results.length > 0}
+        />
       </div>
       <textarea
         value={text}
-        onChange={(e) => setText(e.target.value)}
+        onChange={(e) => {
+          setText(e.target.value);
+          setResults([]);
+          setAnalyzed(false);
+        }}
         placeholder="Paste text to check for redundancy and filler phrases..."
         className="tb-v2-tool-textarea"
-        style={{ minHeight: 150 }}
+        rows={6}
         aria-label="Text input for redundancy checking"
       />
 
-      <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-        <button type="button" onClick={analyze} className="tb-v2-copy-btn" style={{ flex: 1 }}>Analyze</button>
-        <button type="button" onClick={clear} className="tb-v2-copy-btn" style={{ flex: 1 }}>Clear</button>
+      <div className="tb-v2-toolbar">
+        <button type="button" onClick={analyze} className="tb-v2-btn tb-v2-btn-primary">
+          Analyze
+        </button>
       </div>
 
-      {results.length > 0 && (
+      {!analyzed && !text && (
+        <div className="tb-v2-tool-output-body">
+          <div className="tb-v2-empty">Paste text or load the example, then click Analyze to find filler phrases and repeated words.</div>
+        </div>
+      )}
+
+      {analyzed && results.length > 0 && (
         <>
-          <div className="tb-v2-tool-output-head" style={{ marginTop: 16 }}>
+          <div className="tb-v2-tool-output-head">
             <span className="tb-v2-tool-label">Found Issues ({results.length})</span>
           </div>
-          <div className="tb-v2-tool-output-body" style={{ marginTop: 8 }}>
+          <div className="tb-v2-tool-output-body">
             <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
               {results.map((result, i) => (
-                <div key={i} style={{ padding: 10, background: 'var(--tb-bg-secondary)', borderRadius: 6, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: 13 }}>{result.phrase}</span>
-                  <span style={{ fontSize: 12, color: 'var(--tb-accent)', fontWeight: 600 }}>×{result.count}</span>
+                <div
+                  key={i}
+                  style={{
+                    padding: 12,
+                    background: 'var(--surface-2)',
+                    border: '1px solid var(--line)',
+                    borderRadius: 'var(--radius-sm)',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    gap: 12,
+                  }}
+                >
+                  <span style={{ fontSize: 13.5 }}>{result.phrase}</span>
+                  <span style={{ fontSize: 12, color: 'var(--red)', fontWeight: 600, flexShrink: 0 }}>×{result.count}</span>
                 </div>
               ))}
             </div>
@@ -91,21 +128,18 @@ export default function TextRedundancyCheckerClient() {
         </>
       )}
 
-      {results.length === 0 && text.length > 50 && (
-        <div className="tb-v2-tool-output-head" style={{ marginTop: 16 }}>
-          <span className="tb-v2-tool-label">Result</span>
-        </div>
-      )}
-      <div className="tb-v2-tool-output-body" style={{ marginTop: 8 }}>
-        {text.length > 50 && results.length === 0 && (
-          <div style={{ padding: 16, background: 'var(--tb-bg-secondary)', borderRadius: 8, textAlign: 'center' }}>
-            <span style={{ color: '#22c55e', fontWeight: 500 }}>✓ No redundancy detected</span>
+      {analyzed && results.length === 0 && text.length > 0 && (
+        <>
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">Result</span>
           </div>
-        )}
-        {text.length <= 50 && text.length > 0 && (
-          <span style={{ color: 'var(--tb-text-secondary)' }}>Enter more text to analyze</span>
-        )}
-      </div>
+          <div className="tb-v2-tool-output-body">
+            <div className="tb-v2-empty">
+              <span className="tb-v2-status tb-v2-status-ok">No redundancy detected</span>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }

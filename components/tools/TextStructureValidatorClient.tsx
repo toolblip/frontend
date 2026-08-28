@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const EXAMPLE_TEXT = `# Getting Started
 
@@ -117,13 +118,15 @@ export default function TextStructureValidatorClient() {
   const [text, setText] = useState('');
   const result = useMemo(() => analyze(text), [text]);
 
-  const loadExample = () => setText(EXAMPLE_TEXT);
-
   return (
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Enter Markdown-style text</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+        <ToolExampleClearActions
+          onExample={() => setText(EXAMPLE_TEXT)}
+          onClear={() => setText('')}
+          canClear={text.length > 0}
+        />
       </div>
       <textarea
         value={text}
@@ -133,13 +136,16 @@ export default function TextStructureValidatorClient() {
         rows={12}
       />
 
+      {!result ? (
+        <div className="tb-v2-tool-output-body">
+          <div className="tb-v2-empty">Paste Markdown-style content or load the example to validate headings, paragraphs, and lists.</div>
+        </div>
+      ) : (
+        <>
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">Structure Report</span>
       </div>
       <div className="tb-v2-tool-output-body">
-        {!result ? (
-          <div className="tb-v2-empty">Paste some content to check its structure.</div>
-        ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             <div>
               <div className="tb-v2-section-title" style={{ marginBottom: 8 }}>Checks</div>
@@ -194,8 +200,9 @@ export default function TextStructureValidatorClient() {
               </div>
             </div>
           </div>
-        )}
       </div>
+        </>
+      )}
     </div>
   );
 }

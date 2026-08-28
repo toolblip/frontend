@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 // Curated marketing "power words" — terms studies on headline copywriting
 // consistently flag as boosting click-through (urgency, exclusivity, ease).
@@ -158,6 +159,11 @@ export default function HeadlineAnalyzerClient() {
     setCopied(false);
   };
 
+  const clearInput = () => {
+    setInput('');
+    setCopied(false);
+  };
+
   const summary = hasInput
     ? [
         `Headline: ${input.trim()}`,
@@ -183,9 +189,11 @@ export default function HeadlineAnalyzerClient() {
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Headline</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
-          Load Example
-        </button>
+        <ToolExampleClearActions
+          onExample={loadExample}
+          onClear={clearInput}
+          canClear={input.length > 0}
+        />
       </div>
       <textarea
         value={input}
@@ -194,6 +202,12 @@ export default function HeadlineAnalyzerClient() {
         placeholder="Type or paste a headline to analyze..."
         rows={3}
       />
+
+      {!hasInput && (
+        <div className="tb-v2-tool-output-body">
+          <div className="tb-v2-empty">Paste a headline or load the example to see word count, power words, and overall score.</div>
+        </div>
+      )}
 
       {hasInput && (
         <>

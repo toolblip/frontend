@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 interface CollocationRule {
   pattern: RegExp;
@@ -50,50 +51,70 @@ function analyze(text: string): Finding[] {
   return findings;
 }
 
-const EXAMPLE = "I did a mistake yesterday and I need to make my homework. She is married with a doctor and depends of her family. It's strong rain outside.";
+const EXAMPLE =
+  "I did a mistake yesterday and I need to make my homework. She is married with a doctor and depends of her family. It's strong rain outside.";
 
 export default function EnglishCollocationsCheckerClient() {
   const [input, setInput] = useState('');
 
   const findings = useMemo(() => analyze(input), [input]);
-
-  const loadExample = () => setInput(EXAMPLE);
+  const hasInput = input.trim().length > 0;
 
   return (
-    <div>
+    <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text to Check</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+        <ToolExampleClearActions
+          onExample={() => setInput(EXAMPLE)}
+          onClear={() => setInput('')}
+          canClear={input.length > 0}
+        />
       </div>
       <textarea
         value={input}
-        onChange={e => setInput(e.target.value)}
+        onChange={(e) => setInput(e.target.value)}
         placeholder="Paste a sentence or paragraph to check for common collocation errors..."
         rows={6}
         className="tb-v2-tool-textarea"
       />
 
-      <div className="tb-v2-tool-output-head">
-        <span className="tb-v2-tool-label">Collocation Issues</span>
-      </div>
-      <div className="tb-v2-tool-output-body">
-        {!input.trim() ? (
-          <p className="tb-v2-empty">Enter text above to check for common word-pairing errors.</p>
-        ) : findings.length === 0 ? (
-          <div className="tb-v2-banner">No common collocation errors detected.</div>
-        ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            {findings.map((f, i) => (
-              <div key={i} className="tb-v2-banner-err">
-                <div style={{ fontFamily: 'var(--f-mono)', fontSize: 13 }}>
-                  "{f.sample}" ({f.count}x) &rarr; <strong>{f.rule.correct}</strong>
-                </div>
-                <div style={{ fontSize: 12, color: 'var(--fg-2)', marginTop: 4 }}>{f.rule.note}</div>
-              </div>
-            ))}
+      {!hasInput && (
+        <div className="tb-v2-tool-output-body">
+          <div className="tb-v2-empty">Paste text or load the example to check common English word pairings.</div>
+        </div>
+      )}
+
+      {hasInput && (
+        <>
+          <div className="tb-v2-tool-output-head">
+            <span className="tb-v2-tool-label">
+              Collocation Issues{findings.length > 0 ? ` (${findings.length})` : ''}
+            </span>
           </div>
-        )}
-      </div>
+          <div className="tb-v2-tool-output-body">
+            {findings.length === 0 ? (
+              <div className="tb-v2-empty">
+                <span className="tb-v2-status tb-v2-status-ok">No common collocation errors detected</span>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {findings.map((f, i) => (
+                  <div
+                    key={i}
+                    className="tb-v2-banner tb-v2-banner-err"
+                    style={{ flexDirection: 'column', alignItems: 'flex-start' }}
+                  >
+                    <div style={{ fontFamily: 'var(--f-mono)', fontSize: 13 }}>
+                      &ldquo;{f.sample}&rdquo; ({f.count}x) &rarr; <strong>{f.rule.correct}</strong>
+                    </div>
+                    <div style={{ fontSize: 12, color: 'var(--fg-2)', marginTop: 4 }}>{f.rule.note}</div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </>
+      )}
     </div>
   );
 }
