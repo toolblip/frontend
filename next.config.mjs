@@ -135,6 +135,13 @@ const nextConfig = {
       { source: '/tools/length-weight-converter', destination: '/tools/all-in-one-unit-converter', permanent: true },
       { source: '/tools/rgb-to-hex-express', destination: '/tools/rgb-to-hex', permanent: true },
       { source: '/tools/rgb-to-hex-new', destination: '/tools/rgb-to-hex', permanent: true },
+      // Color RGB converters: -express/-new clones → clean canonical slugs.
+      // HexToRgbExpressClient and HexToRgbNewClient were byte-identical;
+      // HexToRgbClient (hex-to-rgb) is the better live+RGBA UI. hsl-to-rgb-new
+      // was a second HSL→RGB page alongside hsl-to-rgb.
+      { source: '/tools/hex-to-rgb-express', destination: '/tools/hex-to-rgb', permanent: true },
+      { source: '/tools/hex-to-rgb-new', destination: '/tools/hex-to-rgb', permanent: true },
+      { source: '/tools/hsl-to-rgb-new', destination: '/tools/hsl-to-rgb', permanent: true },
       { source: '/tools/youtube-to-text', destination: '/tools/speech-to-text', permanent: true },
 
       // Verified functionally broken (family-verification pass): the

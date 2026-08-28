@@ -519,15 +519,11 @@ import HexToDecimalConverterClient from '@/components/tools/HexToDecimalConverte
 import HexToHslClient from '@/components/tools/HexToHslClient';
 import HexToHsvClient from '@/components/tools/HexToHsvClient';
 import HexToNamedColorClient from '@/components/tools/HexToNamedColorClient';
-import HexToRgbExpressClient from '@/components/tools/HexToRgbExpressClient';
-import HexToRgbNewClient from '@/components/tools/HexToRgbNewClient';
 import HexToRgbaClient from '@/components/tools/HexToRgbaClient';
 import HmacGeneratorClient from '@/components/tools/HmacGeneratorClient';
 import HomoglyphDetectorClient from '@/components/tools/HomoglyphDetectorClient';
 import HreflangTagGeneratorClient from '@/components/tools/HreflangTagGeneratorClient';
 import HslToHexClient from '@/components/tools/HslToHexClient';
-import HslToRgbExpressClient from '@/components/tools/HslToRgbExpressClient';
-import HslToRgbNewClient from '@/components/tools/HslToRgbNewClient';
 import HsvToHexClient from '@/components/tools/HsvToHexClient';
 import HtmlAttributeEncoderClient from '@/components/tools/HtmlAttributeEncoderClient';
 import HtmlEncoderDecoderClient from '@/components/tools/HtmlEncoderDecoderClient';
@@ -817,6 +813,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'chart-maker':
       return <ChartMakerClient />;
     case 'hex-to-rgb':
+    case 'hex-to-rgb-express':
+    case 'hex-to-rgb-new':
       return <HexToRgbClient />;
     case 'rgb-to-hex':
       return <RgbToHexClient />;
@@ -1057,6 +1055,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'hex-to-decimal':
       return <HexToDecimalClient />;
     case 'hsl-to-rgb':
+    case 'hsl-to-rgb-express':
+    case 'hsl-to-rgb-new':
       return <HslToRgbClient />;
     case 'htaccess-redirect-generator':
       return <HtaccessRedirectGeneratorClient />;
@@ -1753,10 +1753,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <HexToHsvClient />;
     case 'hex-to-named-color':
       return <HexToNamedColorClient />;
-    case 'hex-to-rgb-express':
-      return <HexToRgbExpressClient />;
-    case 'hex-to-rgb-new':
-      return <HexToRgbNewClient />;
     case 'hex-to-rgba':
       return <HexToRgbaClient />;
     case 'hmac-generator':
@@ -1767,10 +1763,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <HreflangTagGeneratorClient />;
     case 'hsl-to-hex':
       return <HslToHexClient />;
-    case 'hsl-to-rgb-express':
-      return <HslToRgbExpressClient />;
-    case 'hsl-to-rgb-new':
-      return <HslToRgbNewClient />;
     case 'hsv-to-hex':
       return <HsvToHexClient />;
     case 'html-attribute-encoder':
@@ -2717,8 +2709,9 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'regex-tester-x': return <RegexTesterClient />;
     case 'regex-tester-xl': return <RegexTesterClient />;
     case 'rgb-hsl-color-picker': return <ColorPickerHexRgbHslClient />;
-    case 'rgb-to-hex-express': return <HexToRgbExpressClient />;
-    case 'rgb-to-hex-new': return <HexToRgbNewClient />;
+    case 'rgb-to-hex-express':
+    case 'rgb-to-hex-new':
+      return <RgbToHexClient />;
     case 'rgba-color-picker': return <ColorPicker2025Client />;
     case 'rgba-to-hex': return <HexToRgbaClient />;
     case 'rgba-to-hsl': return <RgbaToHslConverterClient />;
