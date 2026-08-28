@@ -1,6 +1,10 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+
+const EXAMPLE =
+  'The quick brown fox jumps over the lazy dog. The Dog barks, and the Fox runs away into the woods near the river.';
 
 export default function WordAlphabetizerClient() {
   const [input, setInput] = useState('');
@@ -9,7 +13,7 @@ export default function WordAlphabetizerClient() {
 
   const words = useMemo(() => {
     const tokens = (input.match(/[A-Za-z0-9'-]+/g) || [])
-      .map(w => w.replace(/^['-]+|['-]+$/g, ''))
+      .map((w) => w.replace(/^['-]+|['-]+$/g, ''))
       .filter(Boolean);
 
     const seen = new Set<string>();
@@ -22,12 +26,10 @@ export default function WordAlphabetizerClient() {
       }
     }
 
-    return unique.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: caseInsensitive ? 'base' : 'variant' }));
+    return unique.sort((a, b) =>
+      a.localeCompare(b, undefined, { sensitivity: caseInsensitive ? 'base' : 'variant' })
+    );
   }, [input, caseInsensitive]);
-
-  const loadExample = () => {
-    setInput('The quick brown fox jumps over the lazy dog. The Dog barks, and the Fox runs away into the woods near the river.');
-  };
 
   const copyAll = () => {
     navigator.clipboard.writeText(words.join('\n')).catch(() => {});
@@ -38,14 +40,24 @@ export default function WordAlphabetizerClient() {
   return (
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Text</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+        <span className="tb-v2-tool-label">Enter your text</span>
+        <ToolExampleClearActions
+          onExample={() => {
+            setInput(EXAMPLE);
+            setCopied(false);
+          }}
+          onClear={() => {
+            setInput('');
+            setCopied(false);
+          }}
+          canClear={input.length > 0}
+        />
       </div>
       <textarea
         className="tb-v2-tool-textarea"
         placeholder="Paste any text to extract and alphabetize its unique words..."
         value={input}
-        onChange={e => setInput(e.target.value)}
+        onChange={(e) => setInput(e.target.value)}
         rows={6}
       />
 
@@ -54,21 +66,28 @@ export default function WordAlphabetizerClient() {
           <input
             type="checkbox"
             checked={caseInsensitive}
-            onChange={e => setCaseInsensitive(e.target.checked)}
+            onChange={(e) => setCaseInsensitive(e.target.checked)}
           />
           Case-insensitive dedupe (treat &quot;Fox&quot; and &quot;fox&quot; as the same word)
         </label>
       </div>
 
       <div className="tb-v2-tool-output-head">
-        <span className="tb-v2-tool-label">{words.length} Unique Word{words.length === 1 ? '' : 's'}</span>
-        <button type="button" onClick={copyAll} disabled={words.length === 0} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
+        <span className="tb-v2-tool-label">
+          {words.length} Unique Word{words.length === 1 ? '' : 's'}
+        </span>
+        <button
+          type="button"
+          onClick={copyAll}
+          disabled={words.length === 0}
+          className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+        >
           {copied ? 'Copied' : 'Copy All'}
         </button>
       </div>
       <div className="tb-v2-tool-output-body">
         {words.length === 0 ? (
-          <p className="tb-v2-empty">Enter text to extract and alphabetize its unique words.</p>
+          <div className="tb-v2-empty">Paste text or load the example to extract and alphabetize unique words.</div>
         ) : (
           <div className="tb-v2-tool-pre" style={{ maxHeight: 360 }}>
             {words.join('\n')}
