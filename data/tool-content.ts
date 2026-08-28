@@ -4308,7 +4308,7 @@ Cairo`, note: `Same list, flipped. Use this for a reverse leaderboard or log.` }
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "toml-to-json": {
-    description: `A Rust project's Cargo.toml or a Python project's pyproject.toml holds configuration that a JavaScript-based build tool or script often can't read directly, since TOML and JSON are both structured formats but not remotely the same syntax, and a tool expecting JSON has no way to parse TOML without an actual conversion first. This tool converts a TOML config file into formatted JSON with validation included, all directly in the browser with nothing uploaded anywhere. Useful for feeding a Rust or a Python project's TOML configuration into a JavaScript tool or script that only reads JSON, converting an unfamiliar TOML file into JSON's more universally recognized syntax just to read its structure more easily, or validating a TOML file's syntax while getting a JSON version out of the same pass.`,
+    description: `A Rust project's Cargo.toml or a Python project's pyproject.toml holds configuration that a JavaScript-based build tool or script often can't read directly, since TOML and JSON are both structured formats but not remotely the same syntax. This TOML-JSON converter turns either format into the other in live side-by-side panes, all in the browser with nothing uploaded. Useful for feeding TOML config into a JSON-only tool, or rewriting JSON config as TOML for Cargo or pyproject files.`,
     examples: [
 
     ],
