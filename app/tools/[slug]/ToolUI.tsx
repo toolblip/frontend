@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import type { Tool } from '@/data/tools';
 
 
@@ -3068,11 +3069,11 @@ export default function ToolClient({ tool }: { tool: Tool }) {
     <div className="max-w-3xl mx-auto px-4 py-8">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-6">
-        <a href="/" className="hover:text-red-600 dark:hover:text-red-400 transition-colors">Home</a>
+        <Link href="/" className="hover:text-red-600 dark:hover:text-red-400 transition-colors">Home</Link>
         <span>/</span>
-        <a href="/tools" className="hover:text-red-600 dark:hover:text-red-400 transition-colors">Tools</a>
+        <Link href="/tools" className="hover:text-red-600 dark:hover:text-red-400 transition-colors">Tools</Link>
         <span>/</span>
-        <a href={tool.category === 'Image' ? '/tools/images' : `/tools?category=${encodeURIComponent(tool.category)}`} className="hover:text-red-600 dark:hover:text-red-400 transition-colors">{tool.category}</a>
+        <Link href={tool.category === 'Image' ? '/tools/images' : `/tools?category=${encodeURIComponent(tool.category)}`} className="hover:text-red-600 dark:hover:text-red-400 transition-colors">{tool.category}</Link>
         <span>/</span>
         <span className="text-gray-900 dark:text-white">{tool.name}</span>
       </nav>

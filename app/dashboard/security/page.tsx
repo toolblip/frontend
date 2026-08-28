@@ -1,12 +1,12 @@
 "use client";
 export const dynamic = "force-dynamic";
 
-import { useState, useEffect } from "react";
-import { useAuth } from "@/app/providers/auth-provider";
+import { useState } from "react";
+import { useRequireAuth } from "@/lib/hooks/useRequireAuth";
 import { useRouter } from "next/navigation";
 
 export default function SecurityPage() {
-  const { user, token, logout, loading: authLoading } = useAuth();
+  const { user, token, logout, loading: authLoading } = useRequireAuth();
   const router = useRouter();
 
   const [passwordMessage, setPasswordMessage] = useState("");
@@ -15,37 +15,6 @@ export default function SecurityPage() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
-  // Redirect to login if not authenticated
-  useEffect(() => {
-    async function restoreSession() {
-      if (authLoading || token) return;
-      for (let attempt = 0; attempt < 2; attempt += 1) {
-        try {
-          const res = await fetch("/api/auth/me", { credentials: "include" });
-          if (res.ok) {
-            const data = await res.json();
-            if (data.user && data.token) {
-              // We need login but it's not destructured — use the token from auth
-              return;
-            }
-          }
-        } catch {
-          // retry once
-        }
-        await new Promise((resolve) => setTimeout(resolve, 250));
-      }
-      const params = new URLSearchParams(window.location.search);
-      const currentPath = window.location.pathname;
-      const currentNext = params.get("next");
-      const nextPath =
-        (currentPath === "/login" || currentPath === "/signup") && currentNext && currentNext.startsWith("/") && !currentNext.startsWith("//")
-          ? currentNext
-          : `${currentPath}${window.location.search}`;
-      router.replace(`/login?next=${encodeURIComponent(nextPath)}`);
-    }
-    restoreSession();
-  }, [authLoading, token, router]);
 
   function redirectToLoginPreservingCurrentLocation() {
     const params = new URLSearchParams(window.location.search);

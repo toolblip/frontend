@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { Tool } from '@/data/tools';
 import { ToolUI } from './[slug]/ToolUI';
 import ToolEngagementBar from '@/components/tools/ToolEngagementBar';
@@ -18,11 +19,11 @@ export default function ToolDetailView({ tool }: { tool: Tool }) {
     <div data-testid="tool-detail-shell" className="tb-v2-tool-page">
       <div className="tb-v2-container">
         <nav className="tb-v2-breadcrumb">
-          <a href="/">Home</a>
+          <Link href="/">Home</Link>
           <span className="tb-v2-breadcrumb-sep">/</span>
-          <a href="/tools">Tools</a>
+          <Link href="/tools">Tools</Link>
           <span className="tb-v2-breadcrumb-sep">/</span>
-          <a href={getCategoryPath(tool.category)}>{tool.category}</a>
+          <Link href={getCategoryPath(tool.category)}>{tool.category}</Link>
           <span className="tb-v2-breadcrumb-sep">/</span>
           <span>{tool.name}</span>
         </nav>

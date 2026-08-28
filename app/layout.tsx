@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
 import Script from "next/script";
 import { Inter, Fraunces, Nunito, JetBrains_Mono, Noto_Sans_Bengali } from "next/font/google";
@@ -8,6 +8,7 @@ import ThemeProvider from "@/components/ThemeProvider";
 import TopLoader from "@/components/TopLoader";
 import Shell from "@/components/v2/Shell";
 import { AuthProvider } from "./providers/auth-provider";
+import PwaProvider from "./providers/pwa-provider";
 import "./globals.css";
 
 const inter = Inter({
@@ -42,6 +43,7 @@ const notoBengali = Noto_Sans_Bengali({
 });
 
 export const metadata: Metadata = {
+  applicationName: "Toolblip",
   title: {
     default: "Toolblip - Free Online Developer Tools",
     template: "%s",
@@ -49,18 +51,37 @@ export const metadata: Metadata = {
   description:
     "Free browser-based tools: word counter, JSON formatter, Base64, URL encoder, UUID generator, and more. 100% client-side, no uploads, no account needed.",
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://toolblip.com"),
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Toolblip",
+  },
+  formatDetection: {
+    telephone: false,
+  },
   openGraph: {
     type: "website",
     siteName: "Toolblip",
   },
   icons: {
-    icon: "/favicon.svg",
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
     shortcut: "/favicon.svg",
-    apple: "/favicon.svg",
+    apple: "/icons/icon-192.png",
   },
   twitter: {
     card: "summary_large_image",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)", color: "#1a1a1f" },
+    { media: "(prefers-color-scheme: light)", color: "#1a1a1f" },
+  ],
 };
 
 export default function RootLayout({
@@ -102,14 +123,16 @@ export default function RootLayout({
         </a>
 
         <ThemeProvider>
-          <AuthProvider>
-            <Suspense fallback={null}>
-              <TopLoader />
-            </Suspense>
-            <Shell>{children}</Shell>
-            <Analytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
-            <CookieBanner />
-          </AuthProvider>
+          <PwaProvider>
+            <AuthProvider>
+              <Suspense fallback={null}>
+                <TopLoader />
+              </Suspense>
+              <Shell>{children}</Shell>
+              <Analytics measurementId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
+              <CookieBanner />
+            </AuthProvider>
+          </PwaProvider>
         </ThemeProvider>
       </body>
     </html>

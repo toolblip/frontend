@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useAuth } from '@/app/providers/auth-provider';
 import {
   FREE_PLAN_CTA_LABEL,
@@ -110,7 +111,8 @@ function buildPlanFeatures(plan: Plan): PlanFeature[] {
 }
 
 export default function PricingClient() {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
+  const router = useRouter();
   const [billing, setBilling] = useState<BillingCycle>('monthly');
   const [loading, setLoading] = useState<string | null>(null);
   const [trialLoading, setTrialLoading] = useState<string | null>(null);
@@ -118,7 +120,8 @@ export default function PricingClient() {
   const [plans, setPlans] = useState<Plan[]>([]);
   const [plansLoading, setPlansLoading] = useState(true);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [userIsPro, setUserIsPro] = useState(false);
+
+  const userIsPro = Boolean(user?.is_pro);
 
   useEffect(() => {
     fetch(`${API_BASE}/api/plans`)
@@ -140,40 +143,18 @@ export default function PricingClient() {
     }
   }, []);
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const token = localStorage.getItem('toolblip_token');
-    if (!token) return;
-    fetch(`${API_BASE}/api/auth/me`, {
-      headers: { Authorization: `Bearer ${token}`, Accept: 'application/json' },
-    })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((data) => {
-        if (data?.user?.is_pro) setUserIsPro(true);
-      })
-      .catch(() => {});
-  }, []);
-
-  // Auth lives in an httpOnly cookie session (see auth-provider / /api/auth/me),
-  // not in localStorage. Resolve the session at click time so an already
-  // signed-in user is routed straight into the dashboard checkout flow instead
-  // of being bounced back through login/signup.
+  // Auth lives in AuthProvider (httpOnly cookie → /api/auth/me once on mount).
   async function isAuthenticated(): Promise<boolean> {
     if (user) return true;
-    try {
-      const res = await fetch('/api/auth/me', { credentials: 'include' });
-      if (!res.ok) return false;
-      const data = await res.json();
-      return Boolean(data?.user);
-    } catch {
-      return false;
-    }
+    // Shares AuthProvider's in-flight /me restore (no parallel clear race)
+    const refreshed = await refreshUser();
+    return Boolean(refreshed);
   }
 
   async function handleFreePlan() {
     const onboardingNext = '/dashboard?plan=free';
     const loggedIn = await isAuthenticated();
-    window.location.href = loggedIn ? onboardingNext : `/signup?next=${encodeURIComponent(onboardingNext)}`;
+    router.push(loggedIn ? onboardingNext : `/signup?next=${encodeURIComponent(onboardingNext)}`);
   }
 
   async function handleUpgrade(plan: Plan) {
@@ -185,7 +166,7 @@ export default function PricingClient() {
       if (!loggedIn) {
         // Not authenticated — redirect to login, return to pricing after
         const pricingReturn = `/dashboard?plan=${plan.tier}&billing=${billing}`;
-        window.location.href = `/login?next=${encodeURIComponent(pricingReturn)}`;
+        router.push(`/login?next=${encodeURIComponent(pricingReturn)}`);
         return;
       }
 
@@ -219,7 +200,7 @@ export default function PricingClient() {
 
       if (!loggedIn) {
         const pricingReturn = `/dashboard?plan=${plan.tier}&billing=${billing}`;
-        window.location.href = `/login?next=${encodeURIComponent(pricingReturn)}`;
+        router.push(`/login?next=${encodeURIComponent(pricingReturn)}`);
         return;
       }
 
@@ -236,8 +217,8 @@ export default function PricingClient() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to start free trial');
 
-      // Trial started — redirect to dashboard
-      window.location.href = '/dashboard?trial=started';
+      // Trial started — soft-nav to dashboard
+      router.push('/dashboard?trial=started');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {

@@ -1,3 +1,5 @@
+import { withSerwist } from '@serwist/turbopack';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // '127.0.0.1' covers plain localhost dev; the Tailscale hostname/wildcard
@@ -690,4 +692,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withSerwist(nextConfig);

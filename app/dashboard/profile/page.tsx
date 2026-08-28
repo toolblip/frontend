@@ -3,12 +3,10 @@ export const dynamic = "force-dynamic";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useAuth } from "@/app/providers/auth-provider";
-import { useRouter } from "next/navigation";
+import { useRequireAuth } from "@/lib/hooks/useRequireAuth";
 
 export default function ProfilePage() {
-  const { user, token, login, logout, loading: authLoading } = useAuth();
-  const router = useRouter();
+  const { user, token, login, logout, loading: authLoading } = useRequireAuth();
 
   const [profileName, setProfileName] = useState("");
   const [profileEmail, setProfileEmail] = useState("");
@@ -19,37 +17,6 @@ export default function ProfilePage() {
   const [acceptedOnboardingTerms, setAcceptedOnboardingTerms] = useState(false);
   const [acceptingTerms, setAcceptingTerms] = useState(false);
   const [termsError, setTermsError] = useState("");
-
-  // Redirect to login if not authenticated
-  useEffect(() => {
-    async function restoreSession() {
-      if (authLoading || token) return;
-      for (let attempt = 0; attempt < 2; attempt += 1) {
-        try {
-          const res = await fetch("/api/auth/me", { credentials: "include" });
-          if (res.ok) {
-            const data = await res.json();
-            if (data.user && data.token) {
-              login(data.user, data.token);
-              return;
-            }
-          }
-        } catch {
-          // retry once
-        }
-        await new Promise((resolve) => setTimeout(resolve, 250));
-      }
-      const params = new URLSearchParams(window.location.search);
-      const currentPath = window.location.pathname;
-      const currentNext = params.get("next");
-      const nextPath =
-        (currentPath === "/login" || currentPath === "/signup") && currentNext && currentNext.startsWith("/") && !currentNext.startsWith("//")
-          ? currentNext
-          : `${currentPath}${window.location.search}`;
-      router.replace(`/login?next=${encodeURIComponent(nextPath)}`);
-    }
-    restoreSession();
-  }, [authLoading, token, login, router]);
 
   useEffect(() => {
     if (!user) return;

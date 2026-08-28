@@ -3,7 +3,7 @@ export const dynamic = "force-dynamic";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useAuth } from "@/app/providers/auth-provider";
+import { useRequireAuth } from "@/lib/hooks/useRequireAuth";
 import { useRouter } from "next/navigation";
 import {
   sortPricingPlans,
@@ -78,7 +78,7 @@ function checklistStorageKey(userId: number | string) {
 }
 
 export default function AccountPage() {
-  const { user, token, login, logout, loading: authLoading } = useAuth();
+  const { user, token, login, logout, loading: authLoading } = useRequireAuth();
   const router = useRouter();
 
   const {
@@ -212,30 +212,6 @@ export default function AccountPage() {
         : `${currentPath}${window.location.search}`;
     router.replace(`/login?next=${encodeURIComponent(nextPath)}`);
   }
-
-  // Redirect to login if not authenticated
-  useEffect(() => {
-    async function restoreCookieSessionBeforeRedirect() {
-      if (authLoading || token) return;
-      for (let attempt = 0; attempt < 2; attempt += 1) {
-        try {
-          const res = await fetch("/api/auth/me", { credentials: "include" });
-          if (res.ok) {
-            const data = await res.json();
-            if (data.user && data.token) {
-              login(data.user, data.token);
-              return;
-            }
-          }
-        } catch {
-          // retry once
-        }
-        await new Promise((resolve) => setTimeout(resolve, 250));
-      }
-      redirectToLoginPreservingCurrentLocation();
-    }
-    restoreCookieSessionBeforeRedirect();
-  }, [authLoading, token, login, router]);
 
   // Onboarding flow initialization
   useEffect(() => {
