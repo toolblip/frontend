@@ -190,6 +190,7 @@ export default function SponsorsClient() {
   const checkoutStatus = searchParams.get('checkout');
 
   const [board, setBoard] = useState<SponsorsLeaderboardResponse | null>(null);
+  const [boardLoading, setBoardLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
   const [url, setUrl] = useState('');
@@ -210,11 +211,26 @@ export default function SponsorsClient() {
   const [rulesOpen, setRulesOpen] = useState(false);
 
   // Shared by the initial mount fetch and the manual Refresh button — always
-  // swallows errors the same way: a failed fetch just leaves the board as it
-  // was (the empty-board state covers a fetch failure the same as a
-  // genuinely empty one), never a scary error for what's meant to be a
-  // low-stakes background refresh.
-  const loadLeaderboard = () => fetchSponsorsLeaderboard().then(setBoard).catch(() => {});
+  // swallows errors the same way: keep any previous board on refresh failure;
+  // first-load failure falls through to the empty-board state (never a stuck
+  // skeleton or a scary error for a low-stakes background refresh).
+  const loadLeaderboard = () =>
+    fetchSponsorsLeaderboard()
+      .then(setBoard)
+      .catch(() => {
+        setBoard((prev) =>
+          prev ?? {
+            period: '',
+            period_ends_at: '',
+            min_bid_cents: 100,
+            page: 1,
+            per_page: 50,
+            total: 0,
+            data: [],
+          },
+        );
+      })
+      .finally(() => setBoardLoading(false));
 
   useEffect(() => {
     loadLeaderboard();
@@ -436,8 +452,8 @@ export default function SponsorsClient() {
           <h2 style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>
             Leaderboard
           </h2>
-          <div className="tb-v2-sponsor-table" aria-busy={board === null}>
-            {board === null && (
+          <div className="tb-v2-sponsor-table" aria-busy={boardLoading}>
+            {boardLoading && (
               <>
                 {[1, 2, 3].map((n) => (
                   <div
@@ -448,7 +464,7 @@ export default function SponsorsClient() {
                 ))}
               </>
             )}
-            {board !== null && rows.length === 0 && (
+            {!boardLoading && rows.length === 0 && (
               <div className="tb-v2-sponsor-empty-board">
                 <p>No bid yet.</p>
                 <button type="button" className="tb-v2-btn tb-v2-btn-primary" onClick={focusBidInput}>
@@ -456,14 +472,14 @@ export default function SponsorsClient() {
                 </button>
               </div>
             )}
-            {board !== null &&
+            {!boardLoading &&
               rows
                 .filter((r) => r.rank <= 3)
                 .map((row) => (
                   <SponsorRow key={row.id} row={row} onClaim={handleClaim} minBidDollars={minBidDollars} />
                 ))}
           </div>
-          {board !== null && rows.some((r) => r.rank > 3) && (
+          {!boardLoading && rows.some((r) => r.rank > 3) && (
             <div className="tb-v2-sponsor-flat-list">
               {rows.filter((r) => r.rank > 3).map((row) => (
                 <SponsorRow key={row.id} row={row} onClaim={handleClaim} minBidDollars={minBidDollars} />
@@ -475,7 +491,7 @@ export default function SponsorsClient() {
               type="button"
               className="tb-v2-btn tb-v2-btn-sm tb-v2-sponsor-refresh-btn"
               onClick={refreshLeaderboard}
-              disabled={refreshing || board === null}
+              disabled={refreshing || boardLoading}
             >
               <IconRefresh className="tb-v2-ic" aria-hidden="true" />
               Refresh

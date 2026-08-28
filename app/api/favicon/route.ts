@@ -35,33 +35,36 @@ export async function GET(request: NextRequest) {
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 8000);
-    const res = await fetch(upstream, {
-      signal: controller.signal,
-      headers: {
-        Accept: 'image/*,*/*;q=0.8',
-        'User-Agent': 'ToolblipFavicon/1.0',
-      },
-      next: { revalidate: 60 * 60 * 24 },
-    });
-    clearTimeout(timeout);
+    try {
+      const res = await fetch(upstream, {
+        signal: controller.signal,
+        headers: {
+          Accept: 'image/*,*/*;q=0.8',
+          'User-Agent': 'ToolblipFavicon/1.0',
+        },
+        next: { revalidate: 60 * 60 * 24 },
+      });
 
-    if (!res.ok) {
-      return new NextResponse('Upstream error', { status: 502 });
+      if (!res.ok) {
+        return new NextResponse('Upstream error', { status: 502 });
+      }
+
+      const contentType = res.headers.get('content-type') || 'image/png';
+      if (!contentType.startsWith('image/')) {
+        return new NextResponse('Not an image', { status: 502 });
+      }
+
+      const body = await res.arrayBuffer();
+      return new NextResponse(body, {
+        status: 200,
+        headers: {
+          'Content-Type': contentType,
+          'Cache-Control': 'public, max-age=86400, s-maxage=86400',
+        },
+      });
+    } finally {
+      clearTimeout(timeout);
     }
-
-    const contentType = res.headers.get('content-type') || 'image/png';
-    if (!contentType.startsWith('image/')) {
-      return new NextResponse('Not an image', { status: 502 });
-    }
-
-    const body = await res.arrayBuffer();
-    return new NextResponse(body, {
-      status: 200,
-      headers: {
-        'Content-Type': contentType,
-        'Cache-Control': 'public, max-age=86400, s-maxage=86400',
-      },
-    });
   } catch (err) {
     console.error('Favicon proxy error:', err);
     return new NextResponse('Fetch failed', { status: 502 });
