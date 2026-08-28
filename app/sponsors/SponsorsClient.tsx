@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { IconRefresh, IconX } from '@/components/v2/icons';
-import SponsorAvatar from '@/components/v2/SponsorAvatar';
+import SponsorAvatar, { sponsorFaviconSrc } from '@/components/v2/SponsorAvatar';
 import {
   apiPath,
   displayIdentity,
@@ -398,7 +398,7 @@ export default function SponsorsClient() {
                 <IconX className="tb-v2-ic tb-v2-sponsor-bid-icon" aria-hidden="true" />
               ) : previewDomain && !faviconError ? (
                 <img
-                  src={`https://unavatar.io/${previewDomain}`}
+                  src={sponsorFaviconSrc(previewDomain, 64)}
                   alt=""
                   className="tb-v2-sponsor-bid-favicon"
                   onError={() => setFaviconError(true)}
@@ -436,8 +436,19 @@ export default function SponsorsClient() {
           <h2 style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0,0,0,0)' }}>
             Leaderboard
           </h2>
-          <div className="tb-v2-sponsor-table">
-            {rows.length === 0 && (
+          <div className="tb-v2-sponsor-table" aria-busy={board === null}>
+            {board === null && (
+              <>
+                {[1, 2, 3].map((n) => (
+                  <div
+                    key={n}
+                    className="tb-v2-sponsor-row-skeleton tb-v2-sponsor-row-skeleton-card"
+                    aria-hidden="true"
+                  />
+                ))}
+              </>
+            )}
+            {board !== null && rows.length === 0 && (
               <div className="tb-v2-sponsor-empty-board">
                 <p>No bid yet.</p>
                 <button type="button" className="tb-v2-btn tb-v2-btn-primary" onClick={focusBidInput}>
@@ -445,11 +456,14 @@ export default function SponsorsClient() {
                 </button>
               </div>
             )}
-            {rows.filter((r) => r.rank <= 3).map((row) => (
-              <SponsorRow key={row.id} row={row} onClaim={handleClaim} minBidDollars={minBidDollars} />
-            ))}
+            {board !== null &&
+              rows
+                .filter((r) => r.rank <= 3)
+                .map((row) => (
+                  <SponsorRow key={row.id} row={row} onClaim={handleClaim} minBidDollars={minBidDollars} />
+                ))}
           </div>
-          {rows.some((r) => r.rank > 3) && (
+          {board !== null && rows.some((r) => r.rank > 3) && (
             <div className="tb-v2-sponsor-flat-list">
               {rows.filter((r) => r.rank > 3).map((row) => (
                 <SponsorRow key={row.id} row={row} onClaim={handleClaim} minBidDollars={minBidDollars} />
@@ -461,7 +475,7 @@ export default function SponsorsClient() {
               type="button"
               className="tb-v2-btn tb-v2-btn-sm tb-v2-sponsor-refresh-btn"
               onClick={refreshLeaderboard}
-              disabled={refreshing}
+              disabled={refreshing || board === null}
             >
               <IconRefresh className="tb-v2-ic" aria-hidden="true" />
               Refresh

@@ -3625,6 +3625,18 @@ textarea.tb-v2-meta-input { resize: vertical; min-height: 56px; font-family: var
   background: var(--surface-2);
 }
 
+.tb-v2-sponsor-row-skeleton {
+  height: 72px;
+  border-radius: var(--radius, 14px);
+  border: 1px solid var(--line);
+  background: linear-gradient(90deg, var(--surface) 25%, var(--surface-2) 37%, var(--surface) 63%);
+  background-size: 400% 100%;
+  animation: tb-v2-sponsor-shimmer 1.4s ease infinite;
+}
+.tb-v2-sponsor-row-skeleton-card {
+  height: 96px;
+}
+
 /* Just a positioning context now — the row's actual layout lives on the
    .tb-v2-sponsor-row-link anchor inside it, so the claim badge (its other
    child) can be an absolutely-positioned sibling instead of nesting a
