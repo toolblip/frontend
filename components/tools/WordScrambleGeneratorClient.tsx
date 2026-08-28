@@ -1,6 +1,9 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+
+const EXAMPLE = 'apple\nbanana\nelephant\nkeyboard';
 
 function shuffleChars(chars: string[]): string[] {
   const arr = chars.slice();
@@ -44,11 +47,7 @@ export default function WordScrambleGeneratorClient() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input, wholeText, version]);
 
-  const loadExample = () => {
-    setInput('apple\nbanana\nelephant\nkeyboard');
-  };
-
-  const rescramble = () => setVersion(v => v + 1);
+  const rescramble = () => setVersion((v) => v + 1);
 
   const copyAll = () => {
     navigator.clipboard.writeText(scrambled).catch(() => {});
@@ -58,7 +57,11 @@ export default function WordScrambleGeneratorClient() {
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">{wholeText ? 'Text' : 'Words (one per line)'}</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+        <ToolExampleClearActions
+          onExample={() => setInput(EXAMPLE)}
+          onClear={() => setInput('')}
+          canClear={input.length > 0}
+        />
       </div>
       <textarea
         className="tb-v2-tool-textarea"

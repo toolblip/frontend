@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const MAX_RESULTS = 2000;
+const EXAMPLE = 'apple\nbanana\ncherry\nmango\npeach';
 
 function parseWords(raw: string): string[] {
   return raw
@@ -94,10 +96,6 @@ export default function WordCombinationsGeneratorClient() {
     return generateCombinations(words, size, ordered, MAX_RESULTS);
   }, [words, size, ordered]);
 
-  const loadExample = () => {
-    setInput('apple\nbanana\ncherry\nmango\npeach');
-  };
-
   const copyAll = () => {
     navigator.clipboard.writeText(results.join('\n')).catch(() => {});
     setCopied(true);
@@ -108,7 +106,11 @@ export default function WordCombinationsGeneratorClient() {
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Word List (one per line or comma separated)</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+        <ToolExampleClearActions
+          onExample={() => setInput(EXAMPLE)}
+          onClear={() => setInput('')}
+          canClear={input.length > 0}
+        />
       </div>
       <textarea
         className="tb-v2-tool-textarea"
