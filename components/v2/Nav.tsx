@@ -11,6 +11,7 @@ import {
   IconType, IconClock, IconDice, IconGlobe, IconLink, IconFile,
   IconZap, IconShield, IconGift, IconCommand, IconHelp, IconUtil,
 } from './icons';
+import InstallAppMoreRow from './InstallAppMoreRow';
 import { CAT_META } from '@/lib/v2/categoryMeta';
 import { tools } from '@/data/tools';
 import { getCategoryPath, getToolPath, getToolPathBySlug } from '@/lib/tool-path';
@@ -174,6 +175,7 @@ function MegaMenu({ which, onClose }: { which: string; onClose: () => void }) {
                   </Link>
                 );
               })}
+              {col.label === 'Product' && <InstallAppMoreRow onClose={onClose} />}
             </div>
           ))}
         </div>
@@ -524,6 +526,10 @@ export default function Nav({ onOpenSearch }: Props) {
                         </Link>
                       )),
                     )}
+                    <InstallAppMoreRow
+                      variant="mobile"
+                      onClose={() => setMobileOpen(false)}
+                    />
                   </>
                 )}
               </div>
