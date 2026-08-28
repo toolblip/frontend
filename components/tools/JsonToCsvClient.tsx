@@ -1,23 +1,11 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 import ToolContextControls from '@/components/tools/ToolContextControls';
 import { useToolContext } from '@/components/tools/useToolContext';
 
-const EXAMPLES = [
-  {
-    label: 'Users',
-    data: '[{"name": "John", "age": 30, "email": "john@example.com"}, {"name": "Jane", "age": 25, "email": "jane@example.com"}]',
-  },
-  {
-    label: 'Products',
-    data: '[{"id": 1, "name": "Laptop", "price": 999, "inStock": true}, {"id": 2, "name": "Phone", "price": 699, "inStock": false}]',
-  },
-  {
-    label: 'Employees',
-    data: '[{"name": "Alice", "department": "Engineering", "salary": 120000}, {"name": "Bob", "department": "Marketing", "salary": 85000}]',
-  },
-];
+const EXAMPLE = `[{"name": "John", "age": 30, "email": "john@example.com"}, {"name": "Jane", "age": 25, "email": "jane@example.com"}]`;
 
 function jsonToCsv(json: string): string {
   const data = JSON.parse(json);
@@ -41,58 +29,53 @@ function jsonToCsv(json: string): string {
   return csvRows.join('\n');
 }
 
+function convert(input: string): { result: string; error: string } {
+  if (!input.trim()) return { result: '', error: '' };
+  try {
+    return { result: jsonToCsv(input), error: '' };
+  } catch {
+    return {
+      result: '',
+      error: 'Invalid JSON. Ensure it is an array of objects: [{...}, {...}]',
+    };
+  }
+}
+
 type JsonToCsvContext = { delimiter: string };
 
 export default function JsonToCsvClient() {
   const [input, setInput] = useState('');
-  const [output, setOutput] = useState('');
-  const [error, setError] = useState('');
   const [copied, setCopied] = useState(false);
-  const [showExamples, setShowExamples] = useState(false);
 
   const toolContext = useToolContext<JsonToCsvContext>('json-to-csv');
 
-  const convert = useCallback(() => {
-    setError('');
-    setOutput('');
-    if (!input.trim()) return;
-    try {
-      setOutput(jsonToCsv(input));
-    } catch (e) {
-      setError('Invalid JSON. Ensure it is an array of objects: [{...}, {...}]');
-    }
-  }, [input]);
+  const { result, error } = useMemo(() => convert(input), [input]);
 
-  const copy = useCallback(() => {
-    navigator.clipboard.writeText(output);
+  const rowCount = useMemo(() => {
+    if (!result) return 0;
+    return result.split('\n').length - 1;
+  }, [result]);
+
+  const copy = () => {
+    if (!result) return;
+    navigator.clipboard.writeText(result).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
-  }, [output]);
+  };
 
-  const download = useCallback(() => {
-    const blob = new Blob([output], { type: 'text/csv' });
+  const download = () => {
+    if (!result) return;
+    const blob = new Blob([result], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = 'data.csv';
     a.click();
     URL.revokeObjectURL(url);
-  }, [output]);
-
-  const loadExample = (data: string) => {
-    setInput(data);
-    setOutput('');
-    setError('');
-    setShowExamples(false);
   };
 
-  const rowCount = useMemo(() => {
-    if (!output) return 0;
-    return output.split('\n').length - 1;
-  }, [output]);
-
   return (
-    <div>
+    <div className="tb-v2-tool-card">
       <ToolContextControls
         isPaid={toolContext.isPaid}
         hasSaved={toolContext.hasSaved}
@@ -103,35 +86,12 @@ export default function JsonToCsvClient() {
 
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">JSON Input</span>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <button
-            type="button"
-            onClick={() => setShowExamples(!showExamples)}
-            className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm"
-          >
-            📋 Examples
-          </button>
-        </div>
+        <ToolExampleClearActions
+          onExample={() => setInput(EXAMPLE)}
+          onClear={() => setInput('')}
+          canClear={input.length > 0}
+        />
       </div>
-
-      {showExamples && (
-        <div className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg mb-3 border border-gray-200 dark:border-gray-700">
-          <div className="text-xs font-medium text-gray-500 dark:text-gray-400 mb-2">Load an example:</div>
-          <div className="flex flex-wrap gap-2">
-            {EXAMPLES.map((ex) => (
-              <button
-                key={ex.label}
-                type="button"
-                onClick={() => loadExample(ex.data)}
-                className="px-3 py-1.5 text-sm bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-              >
-                {ex.label}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
       <textarea
         value={input}
         onChange={(e) => setInput(e.target.value)}
@@ -139,46 +99,33 @@ export default function JsonToCsvClient() {
         className="tb-v2-tool-textarea"
         style={{ fontFamily: 'var(--f-mono)', fontSize: 13 }}
         rows={6}
+        aria-label="JSON input"
       />
 
-      <button
-        onClick={convert}
-        className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg w-full"
-      >
-        Convert JSON → CSV
-      </button>
-
-      {error && (
-        <div className="p-4 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-xl">
-          <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-        </div>
-      )}
-
-      {output && (
-        <>
-          <div className="tb-v2-tool-output-head">
-            <span className="tb-v2-tool-label">CSV Output ({rowCount} rows)</span>
-            <div className="flex gap-2">
-              <button onClick={download} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm">
-                ⬇️ Download
-              </button>
-              <button onClick={copy} className="tb-v2-copy-btn">
-                {copied ? 'Copied!' : 'Copy'}
-              </button>
-            </div>
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">
+          CSV Output{result ? ` (${rowCount} rows)` : ''}
+        </span>
+        {result ? (
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <button type="button" onClick={download} className="tb-v2-mode-tab">
+              Download
+            </button>
+            <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
+              {copied ? 'Copied' : 'Copy'}
+            </button>
           </div>
-          <div className="tb-v2-tool-output-body">
-            <pre className="tb-v2-tool-pre text-sm">{output}</pre>
-          </div>
-        </>
-      )}
-
-      {!input && !output && (
-        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-          <div className="text-4xl mb-2">📊</div>
-          <p>Paste JSON array above to convert to CSV</p>
-        </div>
-      )}
+        ) : null}
+      </div>
+      <div className="tb-v2-tool-output-body">
+        {error ? (
+          <p className="tb-v2-error" role="alert">
+            {error}
+          </p>
+        ) : (
+          <pre className="tb-v2-tool-pre">{result || ' - '}</pre>
+        )}
+      </div>
     </div>
   );
 }

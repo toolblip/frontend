@@ -1,14 +1,19 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useMemo, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+
+const EXAMPLE = `name,age,city
+John,30,NYC
+Jane,25,LA`;
 
 function csvToJson(csv: string): string {
   const lines = csv.trim().split('\n');
   if (lines.length < 2) return '[]';
-  
+
   const headers = lines[0].split(',').map(h => h.trim().replace(/^["']|["']$/g, ''));
   const data: Record<string, string | number>[] = [];
-  
+
   for (let i = 1; i < lines.length; i++) {
     const values = lines[i].split(',').map(v => v.trim().replace(/^["']|["']$/g, ''));
     const row: Record<string, string | number> = {};
@@ -18,81 +23,91 @@ function csvToJson(csv: string): string {
     });
     data.push(row);
   }
-  
+
   return JSON.stringify(data, null, 2);
+}
+
+function convert(input: string): { result: string; error: string } {
+  if (!input.trim()) return { result: '', error: '' };
+  try {
+    return { result: csvToJson(input), error: '' };
+  } catch {
+    return {
+      result: '',
+      error: 'Invalid CSV format. Ensure you have headers and rows separated by commas.',
+    };
+  }
 }
 
 export default function CsvToJsonClient() {
   const [input, setInput] = useState('');
-  const [output, setOutput] = useState('');
-  const [error, setError] = useState('');
+  const [copied, setCopied] = useState(false);
 
-  const convert = useCallback(() => {
-    setError('');
-    setOutput('');
-    if (!input.trim()) return;
-    try {
-      setOutput(csvToJson(input));
-    } catch {
-      setError('Invalid CSV format. Ensure you have headers and rows separated by commas.');
-    }
-  }, [input]);
+  const { result, error } = useMemo(() => convert(input), [input]);
 
-  const copy = useCallback((text: string) => {
-    navigator.clipboard.writeText(text).catch(() => {});
-  }, []);
+  const copy = () => {
+    if (!result) return;
+    navigator.clipboard.writeText(result).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
 
-  const swap = useCallback(() => {
-    setInput(output);
-    setOutput('');
-    setError('');
-  }, [output]);
+  const swap = () => {
+    if (!result) return;
+    setInput(result);
+  };
 
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
-      <div className="space-y-2">
-        <div className="flex justify-between items-center">
-          <label className="tb-v2-tool-label">CSV Input</label>
-          {output && (
-            <button onClick={swap} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm" style={{color:"var(--red)",fontSize:12}}>
-              Use output as input ↕
-            </button>
-          )}
-        </div>
-        <textarea
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="name,age,city&#10;John,30,NYC&#10;Jane,25,LA"
-          className="tb-v2-tool-textarea"
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">CSV Input</span>
+        <ToolExampleClearActions
+          onExample={() => setInput(EXAMPLE)}
+          onClear={() => setInput('')}
+          canClear={input.length > 0}
         />
       </div>
+      <textarea
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder={"name,age,city\nJohn,30,NYC\nJane,25,LA"}
+        className="tb-v2-tool-textarea"
+        style={{ fontFamily: 'var(--f-mono)' }}
+        aria-label="CSV input"
+      />
 
-      <button
-        onClick={convert}
-        className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg"
-      >
-        Convert CSV → JSON
-      </button>
-
-      {error && (
-        <div className="bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded-xl p-4">
-          <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+      {result ? (
+        <div
+          style={{
+            display: 'flex',
+            gap: 8,
+            padding: '8px 20px',
+            borderTop: '1px solid var(--line)',
+          }}
+        >
+          <button type="button" onClick={swap} className="tb-v2-mode-tab">
+            Use output as input ↕
+          </button>
         </div>
-      )}
+      ) : null}
 
-      {output && (
-        <div className="space-y-2">
-          <div className="flex justify-between items-center">
-            <label className="tb-v2-tool-label">JSON Output</label>
-            <button onClick={() => copy(output)} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm" style={{color:"var(--red)",fontSize:12}}>
-              Copy
-            </button>
-          </div>
-          <pre className="w-full h-60 px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white font-mono text-sm overflow-auto">
-            {output}
-          </pre>
-        </div>
-      )}
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">JSON Output</span>
+        {result ? (
+          <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
+            {copied ? 'Copied' : 'Copy'}
+          </button>
+        ) : null}
+      </div>
+      <div className="tb-v2-tool-output-body">
+        {error ? (
+          <p className="tb-v2-error" role="alert">
+            {error}
+          </p>
+        ) : (
+          <pre className="tb-v2-tool-pre">{result || ' - '}</pre>
+        )}
+      </div>
     </div>
   );
 }
