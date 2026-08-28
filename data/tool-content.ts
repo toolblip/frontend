@@ -1534,15 +1534,8 @@ WCAG AA: Pass (large text)`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "hex-to-rgb-express": {
+  "hex-to-rgb": {
     description: `Not every color conversion happens as part of picking a color visually or building a full palette, sometimes there's already an exact hex value in hand, copied from a design file or a style guide, and the only actual need is the matching RGB and RGBA numbers to paste into a canvas drawing call or an inline style, quickly, without opening a broader color tool built around exploration. This tool converts HEX color codes into RGB and RGBA formats with a live preview, built for a fast, single-value conversion rather than a color-picking or palette-building workflow. Useful for converting an exact hex value from a style guide into RGB for a canvas API call, getting RGBA with a specific alpha channel for a semi-transparent overlay, or checking a hex code's RGB equivalent quickly without a full color-picking interface.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "hex-to-rgb-new": {
-    description: `A HEX value from a design system's style guide is exactly what CSS wants, but a canvas API or a JavaScript color library usually needs the individual red, green, and blue channels as separate numbers between 0 and 255, and turning a solid color into a semi-transparent overlay means adding a fourth alpha value HEX doesn't carry at all. This tool converts a HEX color into its RGB channel values and, with an alpha value added, into RGBA, ready for a canvas call or a color library that expects numeric channels rather than a hex string. Useful for pulling RGB channel values out of a design system's HEX color for a canvas drawing call, turning a solid brand color into a semi-transparent RGBA overlay, or converting a HEX value into the numeric format a JavaScript animation library actually expects.`,
     examples: [
 
     ],
@@ -1592,13 +1585,6 @@ WCAG AA: Pass (large text)`
   },
   "hsl-to-rgb": {
     description: `Picking a color by rotating its hue, nudging it a little more toward orange or a little more toward blue while keeping the same brightness and intensity, is how HSL actually represents color, as a position on a wheel rather than three separate channels mixed together, which makes it the more intuitive format for a designer choosing a shade but not the format a stylesheet or an image file actually stores. This tool converts an HSL value into both RGB and hex, showing a live preview swatch so the converted color can be checked visually rather than trusted on faith. Useful for translating a hue picked on a color wheel into the RGB values a canvas element expects, converting an HSL variable from a design tool into the hex code a stylesheet needs, or confirming a converted shade actually looks right before using it.`,
-    examples: [
-
-    ],
-    features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
-  },
-  "hsl-to-rgb-new": {
-    description: `Hue, saturation, and lightness map onto how a person actually thinks about adjusting a color, rotate the hue for a different shade, raise the saturation for more vividness, lower the lightness to darken it, an intuitive model most design tools expose through HSL sliders, but code still generally needs that same color as RGB or hex once it leaves the design tool and lands in a stylesheet. This tool converts HSL color values into RGB and HEX with a live preview, bridging a design tool's slider-based color model and the formats a codebase actually consumes. Useful for converting an HSL value read off a design tool's color picker into RGB or HEX for a stylesheet, checking what a specific hue-saturation-lightness combination looks like as a hex code, or translating a programmatically generated HSL color, from cycling a hue for a chart palette, into RGB for rendering.`,
     examples: [
 
     ],
