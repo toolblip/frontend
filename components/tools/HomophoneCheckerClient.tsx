@@ -1,6 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+
+const EXAMPLE =
+  "Your going to loose the game if you past the ball to their team. Its raining whether we stay or go.";
 
 interface HomophoneGroup {
   words: string[];
@@ -110,33 +114,46 @@ function checkHomophones(text: string): Issue[] {
 export default function HomophoneCheckerClient() {
   const [text, setText] = useState('');
   const [issues, setIssues] = useState<Issue[]>([]);
+  const [checked, setChecked] = useState(false);
 
   const analyze = () => {
     setIssues(checkHomophones(text));
-  };
-
-  const clear = () => {
-    setText('');
-    setIssues([]);
+    setChecked(true);
   };
 
   return (
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text to Check</span>
+        <ToolExampleClearActions
+          onExample={() => {
+            setText(EXAMPLE);
+            setIssues([]);
+            setChecked(false);
+          }}
+          onClear={() => {
+            setText('');
+            setIssues([]);
+            setChecked(false);
+          }}
+          canClear={text.length > 0 || issues.length > 0}
+        />
       </div>
       <textarea
         value={text}
-        onChange={(e) => setText(e.target.value)}
+        onChange={(e) => {
+          setText(e.target.value);
+          setIssues([]);
+          setChecked(false);
+        }}
         placeholder="Paste text to check for common homophone errors (there/their/they're, your/you're, its/it's, etc.)..."
         className="tb-v2-tool-textarea"
         style={{ minHeight: 150 }}
         aria-label="Text input for homophone checking"
       />
 
-      <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-        <button type="button" onClick={analyze} className="tb-v2-copy-btn" style={{ flex: 1 }}>Check</button>
-        <button type="button" onClick={clear} className="tb-v2-copy-btn" style={{ flex: 1 }}>Clear</button>
+      <div style={{ display: 'flex', gap: 8, marginTop: 12, padding: '0 20px' }}>
+        <button type="button" onClick={analyze} className="tb-v2-btn tb-v2-btn-primary">Check</button>
       </div>
 
       {issues.length > 0 && (
@@ -191,7 +208,7 @@ export default function HomophoneCheckerClient() {
         </>
       )}
 
-      {issues.length === 0 && text.length > 20 && (
+      {issues.length === 0 && checked && text.length > 20 && (
         <>
           <div className="tb-v2-tool-output-head" style={{ marginTop: 16 }}>
             <span className="tb-v2-tool-label">Result</span>

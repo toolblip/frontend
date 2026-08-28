@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 interface Issue {
   type: string;
@@ -47,14 +48,7 @@ export default function GrammarScoreCheckerClient() {
   });
   const [copied, setCopied] = useState(false);
 
-  const loadExample = () => {
-    setInput(EXAMPLE_TEXT);
-    setAnalyzed(false);
-    setIssues([]);
-  };
-
-  const clear = () => {
-    setInput('');
+  const resetAnalysis = () => {
     setAnalyzed(false);
     setIssues([]);
   };
@@ -249,13 +243,24 @@ export default function GrammarScoreCheckerClient() {
 
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
-          Load Example
-        </button>
+        <ToolExampleClearActions
+          onExample={() => {
+            setInput(EXAMPLE_TEXT);
+            resetAnalysis();
+          }}
+          onClear={() => {
+            setInput('');
+            resetAnalysis();
+          }}
+          canClear={input.length > 0 || analyzed}
+        />
       </div>
       <textarea
         value={input}
-        onChange={(e) => setInput(e.target.value)}
+        onChange={(e) => {
+          setInput(e.target.value);
+          resetAnalysis();
+        }}
         placeholder="Paste or type your text here..."
         className="tb-v2-input"
         rows={10}
@@ -269,11 +274,6 @@ export default function GrammarScoreCheckerClient() {
         >
           Check Text
         </button>
-        {(input || analyzed) && (
-          <button type="button" onClick={clear} className="tb-v2-btn">
-            Clear
-          </button>
-        )}
       </div>
 
       {!analyzed && !input && (

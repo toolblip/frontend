@@ -1,6 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+
+const EXAMPLE =
+  'The quarterly report was written by the intern. Several errors were found during review and the deadline was missed.';
 
 interface PassiveVoiceOccurrence {
   sentence: string;
@@ -101,14 +105,15 @@ export default function PassiveVoiceDetectorClient() {
 
   const occurrences = detectPassiveVoice(text);
 
-  const clear = () => {
-    setText('');
-  };
-
   return (
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text to Analyze</span>
+        <ToolExampleClearActions
+          onExample={() => setText(EXAMPLE)}
+          onClear={() => setText('')}
+          canClear={text.length > 0}
+        />
       </div>
       <textarea
         value={text}
@@ -119,8 +124,7 @@ export default function PassiveVoiceDetectorClient() {
         aria-label="Text input for passive voice detection"
       />
 
-      <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-        <button type="button" onClick={clear} className="tb-v2-copy-btn" style={{ flex: 1 }}>Clear</button>
+      <div style={{ display: 'flex', gap: 8, marginTop: 12, padding: '0 20px 12px' }}>
         <label style={{ 
           display: 'flex', 
           alignItems: 'center', 
