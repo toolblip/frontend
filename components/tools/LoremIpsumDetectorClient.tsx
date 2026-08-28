@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 // The standard "Lorem ipsum dolor sit amet..." filler text, traced back to
 // Cicero's De Finibus. Matching individual words against this list is what
@@ -60,9 +61,11 @@ export default function LoremIpsumDetectorClient() {
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Document text</span>
-        <button type="button" onClick={() => setInput(EXAMPLE)} className="tb-v2-btn-sm">
-          Load Example
-        </button>
+        <ToolExampleClearActions
+          onExample={() => setInput(EXAMPLE)}
+          onClear={() => setInput('')}
+          canClear={input.length > 0}
+        />
       </div>
       <textarea
         value={input}

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 interface Issue {
   message: string;
@@ -30,6 +31,12 @@ export default function GrammarCheckerV2Client() {
   const [error, setError] = useState('');
   const [checked, setChecked] = useState(false);
 
+  const resetResults = () => {
+    setChecked(false);
+    setIssues([]);
+    setError('');
+  };
+
   const checkGrammar = async () => {
     if (!text.trim()) return;
     setLoading(true);
@@ -56,14 +63,7 @@ export default function GrammarCheckerV2Client() {
     if (!issue.replacements.length) return;
     const fixed = text.slice(0, issue.offset) + issue.replacements[0].value + text.slice(issue.offset + issue.length);
     setText(fixed);
-    setIssues(prev => prev.filter(i => i !== issue));
-  };
-
-  const loadExample = () => {
-    setText(EXAMPLE_TEXT);
-    setChecked(false);
-    setIssues([]);
-    setError('');
+    setIssues((prev) => prev.filter((i) => i !== issue));
   };
 
   const groups = issues.reduce<Record<string, Issue[]>>((acc, issue) => {
@@ -77,11 +77,24 @@ export default function GrammarCheckerV2Client() {
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Enter your text</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+        <ToolExampleClearActions
+          onExample={() => {
+            setText(EXAMPLE_TEXT);
+            resetResults();
+          }}
+          onClear={() => {
+            setText('');
+            resetResults();
+          }}
+          canClear={text.length > 0}
+        />
       </div>
       <textarea
         value={text}
-        onChange={e => setText(e.target.value)}
+        onChange={(e) => {
+          setText(e.target.value);
+          resetResults();
+        }}
         placeholder="Type or paste your text here to check for grammar, spelling, and punctuation issues..."
         className="tb-v2-tool-textarea"
         rows={6}
@@ -89,6 +102,7 @@ export default function GrammarCheckerV2Client() {
 
       <div className="tb-v2-toolbar">
         <button
+          type="button"
           onClick={checkGrammar}
           disabled={loading || !text.trim()}
           className="tb-v2-btn tb-v2-btn-primary"
@@ -115,7 +129,7 @@ export default function GrammarCheckerV2Client() {
               <div className="tb-v2-empty">No issues found. Your text looks good.</div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-                {categoryNames.map(category => (
+                {categoryNames.map((category) => (
                   <div key={category}>
                     <div className="tb-v2-section-title" style={{ marginBottom: 8 }}>
                       {category} ({groups[category].length})
@@ -126,7 +140,12 @@ export default function GrammarCheckerV2Client() {
                         return (
                           <div
                             key={i}
-                            style={{ border: '1px solid var(--line)', borderRadius: 'var(--radius-sm)', padding: 12, background: 'var(--surface)' }}
+                            style={{
+                              border: '1px solid var(--line)',
+                              borderRadius: 'var(--radius-sm)',
+                              padding: 12,
+                              background: 'var(--surface)',
+                            }}
                           >
                             <p style={{ fontSize: 13.5, color: 'var(--fg-0)', fontWeight: 600, margin: 0 }}>{issue.message}</p>
                             <p
@@ -142,19 +161,16 @@ export default function GrammarCheckerV2Client() {
                               }}
                             >
                               {before}
-                              <mark style={{ background: 'var(--red-tint)', color: 'var(--red)', borderRadius: 3, padding: '0 2px' }}>{mark}</mark>
+                              <mark style={{ background: 'var(--red-tint)', color: 'var(--red)', borderRadius: 3, padding: '0 2px' }}>
+                                {mark}
+                              </mark>
                               {after}
                             </p>
                             {issue.replacements.length > 0 && (
                               <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
                                 <span style={{ fontSize: 11.5, color: 'var(--fg-3)' }}>Fix:</span>
                                 {issue.replacements.slice(0, 3).map((r, j) => (
-                                  <button
-                                    key={j}
-                                    type="button"
-                                    onClick={() => applyFix(issue)}
-                                    className="tb-v2-copy-btn"
-                                  >
+                                  <button key={j} type="button" onClick={() => applyFix(issue)} className="tb-v2-copy-btn">
                                     {r.value || '(remove)'}
                                   </button>
                                 ))}

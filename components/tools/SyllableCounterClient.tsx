@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import { SYLLABLE_COUNTER_EXAMPLE } from '@/components/tools/reading-stats-example';
 import { countSyllables } from '@/lib/count-syllables';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 interface WordSyllable {
   word: string;
@@ -52,9 +53,11 @@ export default function SyllableCounterClient() {
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Enter words or text</span>
-        <button type="button" onClick={() => setInput(SYLLABLE_COUNTER_EXAMPLE)} className="tb-v2-btn-sm">
-          Load Example
-        </button>
+        <ToolExampleClearActions
+          onExample={() => setInput(SYLLABLE_COUNTER_EXAMPLE)}
+          onClear={() => setInput('')}
+          canClear={input.length > 0}
+        />
       </div>
       <textarea
         value={input}

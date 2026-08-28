@@ -1,6 +1,10 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+
+const EXAMPLE =
+  'Toolblip helps developers format JSON, count words, and test regex patterns. Paste any draft here to see live word and character stats.';
 
 export default function WordCounterClient() {
   const [input, setInput] = useState('');
@@ -41,7 +45,11 @@ Speaking time: ${stats.speakingTime} min`;
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text</span>
-        <span className="text-xs text-gray-500">{input.length > 0 ? `${input.length} chars` : ''}</span>
+        <ToolExampleClearActions
+          onExample={() => setInput(EXAMPLE)}
+          onClear={() => setInput('')}
+          canClear={input.length > 0}
+        />
       </div>
 
       <textarea

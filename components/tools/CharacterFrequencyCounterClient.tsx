@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 function formatChar(char: string): { display: string; title: string } {
   if (char === ' ') return { display: '␣', title: 'Space' };
@@ -53,9 +54,11 @@ export default function CharacterFrequencyCounterClient() {
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
-          Load Example
-        </button>
+        <ToolExampleClearActions
+          onExample={loadExample}
+          onClear={() => setText('')}
+          canClear={text.length > 0}
+        />
       </div>
 
       <textarea

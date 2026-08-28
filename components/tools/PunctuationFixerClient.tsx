@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const PUNCTUATION_EXAMPLE = 'This  is  messy . She waited here ! Then she left .';
 
@@ -40,7 +41,11 @@ export default function PunctuationFixerClient() {
       </div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+        <ToolExampleClearActions
+          onExample={loadExample}
+          onClear={() => { setInput(''); setOutput(''); }}
+          canClear={input.length > 0}
+        />
       </div>
       <textarea value={input} onChange={e => setInput(e.target.value)} rows={5} placeholder="Paste text with extra spaces or a gap before punctuation…" className="w-full rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-y" />
       <button type="button" onClick={() => process()} className="w-full bg-blue-600 hover:bg-blue-500 text-white font-medium py-2.5 rounded-lg transition-colors text-sm">Fix Punctuation</button>

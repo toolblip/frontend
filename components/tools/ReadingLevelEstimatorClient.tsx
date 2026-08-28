@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const EXAMPLE_TEXT =
   "The quick brown fox jumps over the lazy dog. Reading level estimation uses simple heuristics like sentence length and syllable counts to approximate how difficult a passage is to understand. It is not a perfect measure, but it gives a useful starting point for writers.";
@@ -77,7 +78,11 @@ export default function ReadingLevelEstimatorClient() {
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Enter your text</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+        <ToolExampleClearActions
+          onExample={loadExample}
+          onClear={() => setText('')}
+          canClear={text.length > 0}
+        />
       </div>
       <textarea
         value={text}

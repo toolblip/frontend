@@ -6,6 +6,7 @@ import {
   formatSortedLines,
   type SortMode,
 } from '@/lib/text-sort';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 export default function TextSorterClient() {
   const [input, setInput] = useState('');
@@ -56,13 +57,11 @@ export default function TextSorterClient() {
             <label className="tb-v2-tool-label" htmlFor="text-sorter-input">
               Input (one item per line, or a single space- or comma-separated line)
             </label>
-            <button
-              type="button"
-              onClick={() => setInput(TEXT_SORTER_EXAMPLE)}
-              className="tb-v2-btn-sm"
-            >
-              Load Example
-            </button>
+            <ToolExampleClearActions
+              onExample={() => setInput(TEXT_SORTER_EXAMPLE)}
+              onClear={() => setInput('')}
+              canClear={input.length > 0}
+            />
           </div>
           <textarea
             id="text-sorter-input"

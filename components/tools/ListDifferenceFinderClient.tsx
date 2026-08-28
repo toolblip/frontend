@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const EXAMPLE_A = 'apple\nbanana\ncherry\ndate\nelderberry';
 const EXAMPLE_B = 'banana\ncherry\nfig\ngrape';
@@ -106,7 +107,11 @@ export default function ListDifferenceFinderClient() {
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Compare two lists</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+        <ToolExampleClearActions
+          onExample={loadExample}
+          onClear={() => { setTextA(''); setTextB(''); }}
+          canClear={textA.length > 0 || textB.length > 0}
+        />
       </div>
       <div className="tb-v2-grid-2">
         <div style={{ padding: 16 }}>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 function countParagraphs(text: string): number {
   const paragraphs = text.split(/\n\s*\n/).filter(p => p.trim().length > 0);
@@ -15,6 +16,12 @@ function countSentences(text: string): number {
 function countWords(text: string): number {
   return text.split(/\s+/).filter(w => w.length > 0).length;
 }
+
+const EXAMPLE = `First paragraph with a few sentences. It sets the scene.
+
+Second paragraph continues the idea. Blank lines separate the blocks.
+
+Third paragraph wraps up the sample.`;
 
 export default function ParagraphCounterClient() {
   const [text, setText] = useState('');
@@ -46,6 +53,11 @@ export default function ParagraphCounterClient() {
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text to Analyze</span>
+        <ToolExampleClearActions
+          onExample={() => setText(EXAMPLE)}
+          onClear={clear}
+          canClear={text.length > 0}
+        />
       </div>
       <textarea
         value={text}
@@ -56,9 +68,6 @@ export default function ParagraphCounterClient() {
         aria-label="Text input for paragraph counting"
       />
 
-      <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-        <button type="button" onClick={clear} className="tb-v2-copy-btn" style={{ flex: 1 }}>Clear</button>
-      </div>
 
       {text.length > 0 && (
         <>

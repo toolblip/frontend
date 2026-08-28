@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 export default function CharacterCounterClient() {
   const [input, setInput] = useState('');
@@ -22,9 +23,11 @@ export default function CharacterCounterClient() {
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text</span>
-        <button type="button" onClick={() => setInput('The quick brown fox jumps over 2 lazy dogs.')} className="tb-v2-btn-sm">
-          Load Example
-        </button>
+        <ToolExampleClearActions
+          onExample={() => setInput('The quick brown fox jumps over 2 lazy dogs.')}
+          onClear={() => setInput('')}
+          canClear={input.length > 0}
+        />
       </div>
       <textarea value={input} onChange={e => setInput(e.target.value)} placeholder="Enter text to count characters..." className="tb-v2-tool-textarea" />
       {!input && <p className="tb-v2-empty">Type or paste text above to see live character counts.</p>}

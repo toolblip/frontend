@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const EXAMPLE = `Our product helps teams ship faster and build better software. Many companies trust our platform every day.
 
@@ -93,16 +94,11 @@ export default function TextUniquenessCheckerClient() {
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text to Check</span>
-        <div style={{ display: 'flex', gap: 8 }}>
-          <button type="button" onClick={() => setText(EXAMPLE)} className="tb-v2-btn-sm">
-            Load Example
-          </button>
-          {text && (
-            <button type="button" onClick={clear} className="tb-v2-btn-sm">
-              Clear
-            </button>
-          )}
-        </div>
+        <ToolExampleClearActions
+          onExample={() => setText(EXAMPLE)}
+          onClear={clear}
+          canClear={text.length > 0}
+        />
       </div>
       <textarea
         value={text}
