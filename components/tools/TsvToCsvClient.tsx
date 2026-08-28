@@ -1,17 +1,15 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
-
-type Mode = 't2c' | 'c2t';
-
-const EXAMPLE_TSV = `name\tage\tcity
-John\t30\tNYC
-Jane\t25\tLA`;
 
 const EXAMPLE_CSV = `name,age,city
 John,30,NYC
 Jane,25,LA`;
+
+const EXAMPLE_TSV = `name\tage\tcity
+John\t30\tNYC
+Jane\t25\tLA`;
 
 function splitCsvLine(line: string): string[] {
   const cells: string[] = [];
@@ -60,97 +58,112 @@ function csvToTsv(input: string): string {
     .join('\n');
 }
 
-function convert(input: string, mode: Mode): string {
-  if (!input.trim()) return '';
-  return mode === 't2c' ? tsvToCsv(input) : csvToTsv(input);
-}
-
 export default function TsvToCsvClient() {
-  const [input, setInput] = useState('');
-  const [mode, setMode] = useState<Mode>('t2c');
-  const [copied, setCopied] = useState(false);
+  const [csv, setCsv] = useState('');
+  const [tsv, setTsv] = useState('');
+  const [copiedCsv, setCopiedCsv] = useState(false);
+  const [copiedTsv, setCopiedTsv] = useState(false);
 
-  const result = useMemo(() => convert(input, mode), [input, mode]);
+  const applyCsv = useCallback((text: string) => {
+    setCsv(text);
+    setTsv(csvToTsv(text));
+  }, []);
 
-  const copy = () => {
-    if (!result) return;
-    navigator.clipboard.writeText(result).catch(() => {});
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  };
+  const applyTsv = useCallback((text: string) => {
+    setTsv(text);
+    setCsv(tsvToCsv(text));
+  }, []);
 
-  const swap = () => {
-    if (!result) return;
-    setInput(result);
-    setMode((m) => (m === 't2c' ? 'c2t' : 't2c'));
-  };
+  const clearAll = useCallback(() => {
+    setCsv('');
+    setTsv('');
+  }, []);
 
-  const inputLbl = mode === 't2c' ? 'TSV' : 'CSV';
-  const outputLbl = mode === 't2c' ? 'CSV' : 'TSV';
+  const copyCsv = useCallback(() => {
+    if (!csv) return;
+    navigator.clipboard.writeText(csv).catch(() => {});
+    setCopiedCsv(true);
+    setTimeout(() => setCopiedCsv(false), 1500);
+  }, [csv]);
+
+  const copyTsv = useCallback(() => {
+    if (!tsv) return;
+    navigator.clipboard.writeText(tsv).catch(() => {});
+    setCopiedTsv(true);
+    setTimeout(() => setCopiedTsv(false), 1500);
+  }, [tsv]);
 
   return (
     <div className="tb-v2-tool-card">
-      <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">{inputLbl}</span>
+      <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
+        <span className="tb-v2-tool-label">CSV ↔ TSV</span>
         <ToolExampleClearActions
-          onExample={() => setInput(mode === 't2c' ? EXAMPLE_TSV : EXAMPLE_CSV)}
-          onClear={() => setInput('')}
-          canClear={input.length > 0}
+          onExample={() => applyCsv(EXAMPLE_CSV)}
+          onClear={clearAll}
+          canClear={csv.length > 0 || tsv.length > 0}
         />
       </div>
-      <textarea
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        placeholder={mode === 't2c' ? 'Paste TSV data here...' : 'Paste CSV data here...'}
-        className="tb-v2-tool-textarea"
-        style={{ minHeight: 120, fontFamily: 'var(--f-mono)' }}
-        aria-label={`${inputLbl} input`}
-      />
 
-      <div
-        style={{
-          display: 'flex',
-          gap: 8,
-          flexWrap: 'wrap',
-          padding: '12px 20px',
-          borderTop: '1px solid var(--line)',
-        }}
-      >
-        <div className="tb-v2-mode-tabs" role="tablist" aria-label="Conversion direction">
-          <button
-            type="button"
-            role="tab"
-            aria-selected={mode === 't2c'}
-            onClick={() => setMode('t2c')}
-            className={`tb-v2-mode-tab ${mode === 't2c' ? 'on' : ''}`}
-          >
-            TSV → CSV
-          </button>
-          <button
-            type="button"
-            role="tab"
-            aria-selected={mode === 'c2t'}
-            onClick={() => setMode('c2t')}
-            className={`tb-v2-mode-tab ${mode === 'c2t' ? 'on' : ''}`}
-          >
-            CSV → TSV
-          </button>
-          <button type="button" onClick={swap} className="tb-v2-mode-tab" disabled={!result} aria-label="Swap">
-            ⇅ Swap
-          </button>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-0 divide-y divide-[var(--line)] md:divide-y-0 md:divide-x">
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: 280 }}>
+          <div className="tb-v2-tool-input-head">
+            <span className="tb-v2-tool-label">CSV</span>
+            <button
+              type="button"
+              onClick={copyCsv}
+              disabled={!csv}
+              className={`tb-v2-copy-btn ${copiedCsv ? 'done' : ''}`}
+            >
+              {copiedCsv ? 'Copied' : 'Copy'}
+            </button>
+          </div>
+          <textarea
+            value={csv}
+            onChange={(e) => applyCsv(e.target.value)}
+            placeholder={EXAMPLE_CSV}
+            className="tb-v2-tool-textarea"
+            style={{
+              flex: 1,
+              minHeight: 220,
+              fontFamily: 'var(--f-mono)',
+              border: 'none',
+              borderRadius: 0,
+              resize: 'vertical',
+            }}
+            aria-label="CSV input"
+            spellCheck={false}
+          />
         </div>
-      </div>
 
-      <div className="tb-v2-tool-output-head">
-        <span className="tb-v2-tool-label">{outputLbl}</span>
-        {result ? (
-          <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
-            {copied ? 'Copied' : 'Copy'}
-          </button>
-        ) : null}
-      </div>
-      <div className="tb-v2-tool-output-body">
-        <pre className="tb-v2-tool-pre">{result || ' - '}</pre>
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: 280 }}>
+          <div className="tb-v2-tool-input-head">
+            <span className="tb-v2-tool-label">TSV</span>
+            <button
+              type="button"
+              onClick={copyTsv}
+              disabled={!tsv}
+              className={`tb-v2-copy-btn ${copiedTsv ? 'done' : ''}`}
+            >
+              {copiedTsv ? 'Copied' : 'Copy'}
+            </button>
+          </div>
+          <textarea
+            value={tsv}
+            onChange={(e) => applyTsv(e.target.value)}
+            placeholder={EXAMPLE_TSV}
+            className="tb-v2-tool-textarea"
+            style={{
+              flex: 1,
+              minHeight: 220,
+              fontFamily: 'var(--f-mono)',
+              border: 'none',
+              borderRadius: 0,
+              resize: 'vertical',
+            }}
+            aria-label="TSV input"
+            spellCheck={false}
+          />
+        </div>
       </div>
     </div>
   );
