@@ -1,6 +1,21 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+
+const EXAMPLE = 'How to Bake Sourdough Bread at Home';
+
+function toSlug(input: string, separator: string, lowercase: boolean, trim: boolean): string {
+  let s = input;
+  if (trim) s = s.trim();
+  if (lowercase) s = s.toLowerCase();
+  s = s.replace(/[^a-z0-9\s-]/gi, ' ').replace(/\s+/g, ' ').replace(/-+/g, '-');
+  s = s.replace(/\s+/g, separator === '.' ? '.' : separator === '_' ? '_' : '-');
+  if (separator !== '-') s = s.replace(/-/g, separator);
+  s = s.replace(new RegExp(`${separator === '.' ? '\\.' : separator}+`, 'g'), separator);
+  s = s.replace(new RegExp(`^${separator === '.' ? '\\.' : separator}|${separator === '.' ? '\\.' : separator}$`, 'g'), '');
+  return s;
+}
 
 export default function TextToSlugClient() {
   const [input, setInput] = useState('');
@@ -10,16 +25,23 @@ export default function TextToSlugClient() {
   const [slug, setSlug] = useState('');
   const [copied, setCopied] = useState(false);
 
-  const makeSlug = useCallback(() => {
-    let s = input;
-    if (trim) s = s.trim();
-    if (lowercase) s = s.toLowerCase();
-    // Replace non-alphanumeric with separator, collapse multiple
-    s = s.replace(/[^a-z0-9\s-]/gi, ' ').replace(/\s+/g, ' ').replace(/-+/g, '-');
-    if (separator !== '-') s = s.replace(/-/g, separator);
-    if (separator === '_') s = s.replace(/-+/g, '_');
-    setSlug(s);
-  }, [input, separator, lowercase, trim]);
+  const makeSlug = useCallback(
+    (raw?: string) => {
+      const value = raw ?? input;
+      setSlug(toSlug(value, separator, lowercase, trim));
+    },
+    [input, separator, lowercase, trim],
+  );
+
+  const loadExample = () => {
+    setInput(EXAMPLE);
+    setSlug(toSlug(EXAMPLE, separator, lowercase, trim));
+  };
+
+  const clear = () => {
+    setInput('');
+    setSlug('');
+  };
 
   const copy = () => {
     if (!slug) return;
@@ -29,9 +51,14 @@ export default function TextToSlugClient() {
   };
 
   return (
-    <div>
+    <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text</span>
+        <ToolExampleClearActions
+          onExample={loadExample}
+          onClear={clear}
+          canClear={input.length > 0 || slug.length > 0}
+        />
       </div>
       <textarea
         value={input}
@@ -41,37 +68,55 @@ export default function TextToSlugClient() {
         aria-label="Text input"
       />
 
-      <div style={{ display: 'flex', gap: 8, marginTop: 12, marginBottom: 12, flexWrap: 'wrap', alignItems: 'center' }}>
+      <div
+        style={{
+          display: 'flex',
+          gap: 8,
+          padding: '12px 20px',
+          flexWrap: 'wrap',
+          alignItems: 'center',
+          borderTop: '1px solid var(--line)',
+        }}
+      >
         <label style={{ fontSize: 13, color: 'var(--tb-text-secondary)' }}>Separator:</label>
-        <select value={separator} onChange={(e) => setSeparator(e.target.value)} className="tb-v2-tool-select" style={{ width: 80 }}>
+        <select
+          value={separator}
+          onChange={(e) => setSeparator(e.target.value)}
+          className="tb-v2-select"
+          style={{ width: 80 }}
+        >
           <option value="-">-</option>
           <option value="_">_</option>
           <option value=".">.</option>
         </select>
-        <label style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 13 }}>
+        <label className="tb-v2-checkbox-row">
           <input type="checkbox" checked={lowercase} onChange={(e) => setLowercase(e.target.checked)} />
           lowercase
         </label>
-        <label style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 13 }}>
+        <label className="tb-v2-checkbox-row">
           <input type="checkbox" checked={trim} onChange={(e) => setTrim(e.target.checked)} />
           trim
         </label>
-        <button type="button" onClick={makeSlug} className="tb-v2-primary-btn" style={{ flex: 1 }}>Generate</button>
+        <button type="button" onClick={() => makeSlug()} className="tb-v2-primary-btn" style={{ flex: 1 }}>
+          Generate
+        </button>
       </div>
 
-      {slug && (
-        <>
-          <div className="tb-v2-tool-output-head">
-            <span className="tb-v2-tool-label">Slug</span>
-            <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
-              {copied ? 'Copied' : 'Copy'}
-            </button>
-          </div>
-          <div className="tb-v2-tool-output-body">
-            <code style={{ fontFamily: 'var(--f-mono)', fontSize: 16, wordBreak: 'break-all' }}>{slug}</code>
-          </div>
-        </>
-      )}
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">Slug</span>
+        {slug ? (
+          <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
+            {copied ? 'Copied' : 'Copy'}
+          </button>
+        ) : null}
+      </div>
+      <div className="tb-v2-tool-output-body">
+        {slug ? (
+          <code style={{ fontFamily: 'var(--f-mono)', fontSize: 16, wordBreak: 'break-all' }}>{slug}</code>
+        ) : (
+          <div className="tb-v2-empty">Enter text and click Generate, or load Examples</div>
+        )}
+      </div>
     </div>
   );
 }
