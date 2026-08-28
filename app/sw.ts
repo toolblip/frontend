@@ -37,6 +37,19 @@ const runtimeCaching: RuntimeCaching[] = [
       sameOrigin && (request.method !== 'GET' || isAuthOrAccountPath(url.pathname)),
     handler: new NetworkOnly(),
   },
+  // Sponsor favicons (google s2 / gstatic / unavatar) and other third-party
+  // images must not go through Serwist's cross-origin NetworkFirst — redirects
+  // and opaque responses intermittently fail and SponsorAvatar falls back to
+  // the letter tile.
+  {
+    matcher: ({ request, sameOrigin }) =>
+      !sameOrigin &&
+      (request.destination === 'image' ||
+        request.destination === 'font' ||
+        /\.(?:png|jpe?g|gif|webp|svg|ico)(?:$|\?)/i.test(request.url) ||
+        /(?:google\.com\/s2\/favicons|gstatic\.com\/favicon|unavatar\.io)/i.test(request.url)),
+    handler: new NetworkOnly(),
+  },
   {
     matcher: ({ url, sameOrigin }) =>
       sameOrigin &&
