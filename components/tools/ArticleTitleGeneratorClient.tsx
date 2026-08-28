@@ -1,6 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+
+const EXAMPLE_TOPIC = 'remote team productivity';
 
 const TITLE_TEMPLATES = [
   (topic: string) => `How to ${topic}: The Ultimate Guide`,
@@ -25,13 +28,23 @@ export default function ArticleTitleGeneratorClient() {
   const [titles, setTitles] = useState<string[]>([]);
   const [copiedIdx, setCopiedIdx] = useState<number | null>(null);
 
-  const generate = () => {
-    if (!topic.trim()) return;
+  const generate = (raw?: string) => {
+    const value = (raw ?? topic).trim();
+    if (!value) return;
 
     const shuffled = [...TITLE_TEMPLATES].sort(() => Math.random() - 0.5);
     const selected = shuffled.slice(0, 5);
-    
-    setTitles(selected.map(template => template(topic.trim())));
+    setTitles(selected.map((template) => template(value)));
+  };
+
+  const loadExample = () => {
+    setTopic(EXAMPLE_TOPIC);
+    generate(EXAMPLE_TOPIC);
+  };
+
+  const clear = () => {
+    setTopic('');
+    setTitles([]);
   };
 
   const copyTitle = (title: string, idx: number) => {
@@ -41,64 +54,73 @@ export default function ArticleTitleGeneratorClient() {
   };
 
   return (
-    <div>
+    <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Article Topic</span>
-        <button type="button" onClick={() => setTopic('remote team productivity')} className="tb-v2-btn-sm">
-          Load Example
+        <ToolExampleClearActions
+          onExample={loadExample}
+          onClear={clear}
+          canClear={topic.length > 0 || titles.length > 0}
+        />
+      </div>
+      <div style={{ padding: '12px 20px' }}>
+        <input
+          type="text"
+          value={topic}
+          onChange={(e) => setTopic(e.target.value)}
+          placeholder="Enter your article topic..."
+          className="tb-v2-input"
+          style={{ marginBottom: 12 }}
+        />
+        <button
+          type="button"
+          onClick={() => generate()}
+          disabled={!topic.trim()}
+          className="tb-v2-btn tb-v2-btn-primary"
+          style={{ width: '100%' }}
+        >
+          Generate Title Ideas
         </button>
       </div>
-      <input
-        type="text"
-        value={topic}
-        onChange={(e) => setTopic(e.target.value)}
-        placeholder="Enter your article topic..."
-        className="tb-v2-input"
-        style={{ marginBottom: 12 }}
-      />
 
-      <button type="button" onClick={generate} disabled={!topic.trim()} className="tb-v2-btn tb-v2-btn-primary" style={{ width: '100%' }}>
-        Generate Title Ideas
-      </button>
-
-      {titles.length === 0 && (
-        <p className="tb-v2-empty" style={{ marginTop: 16 }}>
-          Enter a topic above to get five headline variations you can copy individually.
-        </p>
-      )}
-      {titles.length > 0 && (
-        <>
-          <div className="tb-v2-tool-output-head" style={{ marginTop: 16 }}>
-            <span className="tb-v2-tool-label">Title Ideas</span>
-          </div>
-          <div className="tb-v2-tool-output-body">
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              {titles.map((title, idx) => (
-                <div key={idx} style={{
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">Title Ideas</span>
+      </div>
+      <div className="tb-v2-tool-output-body">
+        {titles.length === 0 ? (
+          <p className="tb-v2-empty">
+            Enter a topic above to get five headline variations you can copy individually.
+          </p>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {titles.map((title, idx) => (
+              <div
+                key={idx}
+                style={{
                   padding: '10px 12px',
                   background: 'var(--tb-bg-primary)',
                   borderRadius: 8,
-                  border: '1px solid var(--tb-bg-secondary)',
+                  border: '1px solid var(--line)',
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  gap: 8
-                }}>
-                  <span style={{ fontSize: 14, lineHeight: 1.4 }}>{title}</span>
-                  <button
-                    type="button"
-                    onClick={() => copyTitle(title, idx)}
-                    className="tb-v2-copy-btn"
-                    style={{ flexShrink: 0, fontSize: 11 }}
-                  >
-                    {copiedIdx === idx ? 'Copied' : 'Copy'}
-                  </button>
-                </div>
-              ))}
-            </div>
+                  gap: 8,
+                }}
+              >
+                <span style={{ fontSize: 14, lineHeight: 1.4 }}>{title}</span>
+                <button
+                  type="button"
+                  onClick={() => copyTitle(title, idx)}
+                  className="tb-v2-copy-btn"
+                  style={{ flexShrink: 0, fontSize: 11 }}
+                >
+                  {copiedIdx === idx ? 'Copied' : 'Copy'}
+                </button>
+              </div>
+            ))}
           </div>
-        </>
-      )}
+        )}
+      </div>
     </div>
   );
 }
