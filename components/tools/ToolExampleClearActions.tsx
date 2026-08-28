@@ -9,10 +9,7 @@ type Props = {
   clearLabel?: string;
 };
 
-/**
- * Shared Examples (accent) + Clear (muted) actions for tool input headers.
- * Use two colors so the primary action stands out from reset.
- */
+/** Shared Examples (red text link) + Clear (muted text link) for tool input headers. */
 export default function ToolExampleClearActions({
   onExample,
   onClear,
@@ -21,17 +18,15 @@ export default function ToolExampleClearActions({
   clearLabel = 'Clear',
 }: Props) {
   return (
-    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-      <button type="button" onClick={onExample} className="tb-v2-btn tb-v2-btn-sm tb-v2-btn-primary">
-        {exampleLabel}
-      </button>
+    <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
       <button
         type="button"
-        onClick={onClear}
-        disabled={!canClear}
-        className="tb-v2-btn tb-v2-btn-sm"
-        style={{ opacity: canClear ? 1 : 0.45 }}
+        onClick={onExample}
+        className="tb-v2-tool-text-action tb-v2-tool-text-action-accent"
       >
+        {exampleLabel}
+      </button>
+      <button type="button" onClick={onClear} disabled={!canClear} className="tb-v2-tool-text-action">
         {clearLabel}
       </button>
     </div>
