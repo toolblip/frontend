@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const DEFAULT_PALETTE = ['#fde68a', '#a7f3d0', '#bfdbfe', '#fbcfe8', '#ddd6fe', '#fecaca', '#fed7aa', '#c7d2fe'];
 
@@ -92,11 +93,22 @@ export default function TextHighlighterClient() {
     setKeywordsInput('fox\ndog\nquickly');
   };
 
+  const clearAll = () => {
+    setText('');
+    setKeywordsInput('');
+    setColorOverrides({});
+    setCopied(false);
+  };
+
   return (
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Text</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+        <span className="tb-v2-tool-label">Enter your text</span>
+        <ToolExampleClearActions
+          onExample={loadExample}
+          onClear={clearAll}
+          canClear={text.length > 0 || keywordsInput.length > 0}
+        />
       </div>
       <textarea
         className="tb-v2-tool-textarea"

@@ -1,6 +1,9 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+
+const EXAMPLE = 'P@ssw0rd 2026!';
 
 interface VarietyResult {
   hasUppercase: boolean;
@@ -69,19 +72,18 @@ export default function CharacterVarietyCheckerClient() {
       varietyLabel,
       missingTypes,
       uniqueChars,
-      totalChars
+      totalChars,
     };
   }, [text]);
 
-  const getScoreColor = (score: number): string => {
-    if (score >= 80) return '#27ae60';
-    if (score >= 60) return '#2ecc71';
-    if (score >= 40) return '#f39c12';
-    if (score >= 20) return '#e67e22';
-    return '#e74c3c';
-  };
-
-  const loadExample = () => setText('P@ssw0rd 2026!');
+  const scoreStatus =
+    !result
+      ? ''
+      : result.varietyScore >= 80
+        ? 'tb-v2-status-ok'
+        : result.varietyScore >= 40
+          ? 'tb-v2-status-warn'
+          : 'tb-v2-status-err';
 
   const copyToClipboard = (content: string) => {
     navigator.clipboard.writeText(content).catch(() => {});
@@ -90,14 +92,21 @@ export default function CharacterVarietyCheckerClient() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Text</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
-          Load Example
-        </button>
+        <span className="tb-v2-tool-label">Enter your text</span>
+        <ToolExampleClearActions
+          onExample={() => {
+            setText(EXAMPLE);
+            setCopied(false);
+          }}
+          onClear={() => {
+            setText('');
+            setCopied(false);
+          }}
+          canClear={text.length > 0}
+        />
       </div>
-
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
@@ -107,77 +116,72 @@ export default function CharacterVarietyCheckerClient() {
         aria-label="Text input"
       />
 
-      {!result && (
-        <p className="tb-v2-empty">Enter text above to score its character variety and see a full breakdown.</p>
-      )}
-
-      {result && (
-        <>
-          <div className="tb-v2-tool-output-body" style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '3.5rem', fontWeight: 700, color: getScoreColor(result.varietyScore) }}>
-              {result.varietyScore}
-            </div>
-            <div style={{ fontSize: '1.1rem', color: getScoreColor(result.varietyScore), fontWeight: 600 }}>
-              {result.varietyLabel}
-            </div>
+      {!result ? (
+        <div className="tb-v2-tool-output-body">
+          <div className="tb-v2-empty">
+            Paste text or load the example to score character variety (upper, lower, digits, specials).
           </div>
-
-          <div className="tb-v2-grid-2">
-            <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-800 text-center">
-              <div className="text-2xl font-bold text-gray-800 dark:text-gray-200">{result.totalChars}</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">Total Characters</div>
+        </div>
+      ) : (
+        <>
+          <div className="tb-v2-stats-grid">
+            <div className="tb-v2-stat-pill">
+              <span className="tb-v2-stat-pill-val">{result.varietyScore}</span>
+              <span className="tb-v2-stat-pill-lbl">Score / 100</span>
             </div>
-            <div className="p-3 rounded-lg bg-gray-50 dark:bg-gray-800 text-center">
-              <div className="text-2xl font-bold text-gray-800 dark:text-gray-200">{result.uniqueChars}</div>
-              <div className="text-xs text-gray-500 dark:text-gray-400">Unique Characters</div>
+            <div className="tb-v2-stat-pill">
+              <span className="tb-v2-stat-pill-val">{result.totalChars}</span>
+              <span className="tb-v2-stat-pill-lbl">Total chars</span>
+            </div>
+            <div className="tb-v2-stat-pill">
+              <span className="tb-v2-stat-pill-val">{result.uniqueChars}</span>
+              <span className="tb-v2-stat-pill-lbl">Unique chars</span>
+            </div>
+            <div className="tb-v2-stat-pill">
+              <span className="tb-v2-stat-pill-val">
+                <span className={`tb-v2-status ${scoreStatus}`}>{result.varietyLabel}</span>
+              </span>
+              <span className="tb-v2-stat-pill-lbl">Label</span>
             </div>
           </div>
 
           <div className="tb-v2-tool-output-head">
             <span className="tb-v2-tool-label">Character Types</span>
+            <button
+              type="button"
+              onClick={() => copyToClipboard(JSON.stringify(result, null, 2))}
+              className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+            >
+              {copied ? 'Copied' : 'Copy JSON'}
+            </button>
           </div>
           <div className="tb-v2-tool-output-body">
-            <div className="flex flex-col gap-1.5 text-sm">
-              <div className="flex items-center gap-2" style={{ color: result.hasUppercase ? '#27ae60' : '#e74c3c' }}>
-                <span>{result.hasUppercase ? '✓' : '✗'}</span>
-                <span>Uppercase Letters (A-Z)</span>
-              </div>
-              <div className="flex items-center gap-2" style={{ color: result.hasLowercase ? '#27ae60' : '#e74c3c' }}>
-                <span>{result.hasLowercase ? '✓' : '✗'}</span>
-                <span>Lowercase Letters (a-z)</span>
-              </div>
-              <div className="flex items-center gap-2" style={{ color: result.hasDigits ? '#27ae60' : '#e74c3c' }}>
-                <span>{result.hasDigits ? '✓' : '✗'}</span>
-                <span>Digits (0-9)</span>
-              </div>
-              <div className="flex items-center gap-2" style={{ color: result.hasSpecial ? '#27ae60' : '#e74c3c' }}>
-                <span>{result.hasSpecial ? '✓' : '✗'}</span>
-                <span>Special Characters (!@#$%...)</span>
-              </div>
-              <div className="flex items-center gap-2" style={{ color: result.hasSpaces ? '#27ae60' : '#95a5a6' }}>
-                <span>{result.hasSpaces ? '✓' : '○'}</span>
-                <span>Whitespace</span>
-              </div>
-              <div className="flex items-center gap-2" style={{ color: result.hasLetters ? '#27ae60' : '#95a5a6' }}>
-                <span>{result.hasLetters ? '✓' : '○'}</span>
-                <span>Letters (alphabetic)</span>
-              </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, fontSize: 13.5 }}>
+              {(
+                [
+                  ['Uppercase letters (A-Z)', result.hasUppercase],
+                  ['Lowercase letters (a-z)', result.hasLowercase],
+                  ['Digits (0-9)', result.hasDigits],
+                  ['Special characters', result.hasSpecial],
+                  ['Whitespace', result.hasSpaces],
+                  ['Letters (alphabetic)', result.hasLetters],
+                ] as const
+              ).map(([label, ok]) => (
+                <div key={label} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                  <span className={`tb-v2-status ${ok ? 'tb-v2-status-ok' : 'tb-v2-status-err'}`}>
+                    {ok ? 'Yes' : 'No'}
+                  </span>
+                  <span>{label}</span>
+                </div>
+              ))}
             </div>
+
+            {result.missingTypes.length > 0 && (
+              <div className="tb-v2-banner tb-v2-banner-err" style={{ marginTop: 14 }}>
+                Missing: {result.missingTypes.join(', ')}
+              </div>
+            )}
           </div>
-
-          {result.missingTypes.length > 0 && (
-            <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300 text-sm">
-              Missing: {result.missingTypes.join(', ')}
-            </div>
-          )}
-
-          <button
-            type="button"
-            onClick={() => copyToClipboard(JSON.stringify(result, null, 2))}
-            className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
-          >
-            {copied ? 'Copied' : 'Copy Analysis as JSON'}
-          </button>
         </>
       )}
     </div>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type Mode = 'paragraph' | 'whole';
 
@@ -49,6 +50,12 @@ export default function TextSentenceShufflerClient() {
     setOutput('');
   };
 
+  const clearAll = () => {
+    setText('');
+    setOutput('');
+    setCopied(false);
+  };
+
   const reshuffle = () => {
     setOutput(shuffleText(text, mode));
   };
@@ -64,7 +71,11 @@ export default function TextSentenceShufflerClient() {
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Enter your text</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+        <ToolExampleClearActions
+          onExample={loadExample}
+          onClear={clearAll}
+          canClear={text.length > 0 || output.length > 0}
+        />
       </div>
       <textarea
         value={text}
