@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 interface Issue {
   message: string;
@@ -99,11 +100,11 @@ export default function GrammarCheckerProClient() {
     setIssues(prev => prev.filter(i => i !== issue));
   };
 
-  const loadExample = () => {
-    setText(EXAMPLE_TEXT);
+  const resetResults = () => {
     setChecked(false);
     setIssues([]);
     setError('');
+    setFilter('All');
   };
 
   const categoryOf = (issue: Issue): Filter => {
@@ -130,7 +131,17 @@ export default function GrammarCheckerProClient() {
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Enter your text</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+        <ToolExampleClearActions
+          onExample={() => {
+            setText(EXAMPLE_TEXT);
+            resetResults();
+          }}
+          onClear={() => {
+            setText('');
+            resetResults();
+          }}
+          canClear={text.length > 0}
+        />
       </div>
       <textarea
         value={text}

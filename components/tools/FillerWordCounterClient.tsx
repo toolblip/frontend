@@ -1,6 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+
+const EXAMPLE =
+  "So, like, basically, um, you know, I literally think it's actually fine, right?";
 
 const FILLER_WORDS = [
   'um', 'uh', 'like', 'you know', 'basically', 'actually', 'seriously', 
@@ -31,17 +35,23 @@ export default function FillerWordCounterClient() {
     setResults(countFillerWords(text));
   };
 
-  const clear = () => {
-    setText('');
-    setResults([]);
-  };
-
   const totalFillerWords = results.reduce((sum, r) => sum + r.count, 0);
 
   return (
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text to Analyze</span>
+        <ToolExampleClearActions
+          onExample={() => {
+            setText(EXAMPLE);
+            setResults([]);
+          }}
+          onClear={() => {
+            setText('');
+            setResults([]);
+          }}
+          canClear={text.length > 0}
+        />
       </div>
       <textarea
         value={text}
@@ -52,9 +62,8 @@ export default function FillerWordCounterClient() {
         aria-label="Text input for filler word counting"
       />
 
-      <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-        <button type="button" onClick={analyze} className="tb-v2-copy-btn" style={{ flex: 1 }}>Analyze</button>
-        <button type="button" onClick={clear} className="tb-v2-copy-btn" style={{ flex: 1 }}>Clear</button>
+      <div style={{ marginTop: 12, padding: '0 20px' }}>
+        <button type="button" onClick={analyze} className="tb-v2-btn tb-v2-btn-primary">Analyze</button>
       </div>
 
       {results.length > 0 && (

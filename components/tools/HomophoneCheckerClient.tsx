@@ -1,6 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+
+const EXAMPLE =
+  "Your going to loose the game if you past the ball to their team. Its raining whether we stay or go.";
 
 interface HomophoneGroup {
   words: string[];
@@ -115,15 +119,21 @@ export default function HomophoneCheckerClient() {
     setIssues(checkHomophones(text));
   };
 
-  const clear = () => {
-    setText('');
-    setIssues([]);
-  };
-
   return (
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text to Check</span>
+        <ToolExampleClearActions
+          onExample={() => {
+            setText(EXAMPLE);
+            setIssues([]);
+          }}
+          onClear={() => {
+            setText('');
+            setIssues([]);
+          }}
+          canClear={text.length > 0}
+        />
       </div>
       <textarea
         value={text}
@@ -134,9 +144,8 @@ export default function HomophoneCheckerClient() {
         aria-label="Text input for homophone checking"
       />
 
-      <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-        <button type="button" onClick={analyze} className="tb-v2-copy-btn" style={{ flex: 1 }}>Check</button>
-        <button type="button" onClick={clear} className="tb-v2-copy-btn" style={{ flex: 1 }}>Clear</button>
+      <div style={{ display: 'flex', gap: 8, marginTop: 12, padding: '0 20px' }}>
+        <button type="button" onClick={analyze} className="tb-v2-btn tb-v2-btn-primary">Check</button>
       </div>
 
       {issues.length > 0 && (
