@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type Mode = 'encode' | 'decode';
 
@@ -36,6 +37,8 @@ export default function UnicodeEscapeEncoderClient() {
     setInput(EXAMPLE_TEXT);
   };
 
+  const clear = () => setInput('');
+
   const swap = () => {
     setMode((m) => (m === 'encode' ? 'decode' : 'encode'));
     setInput(output || (mode === 'encode' ? EXAMPLE_ESCAPED : EXAMPLE_TEXT));
@@ -49,35 +52,39 @@ export default function UnicodeEscapeEncoderClient() {
   };
 
   return (
-    <div>
+    <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">{mode === 'encode' ? 'Text' : 'Escaped String'}</span>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <div className="tb-v2-mode-tabs" role="group" aria-label="Mode">
-            <button
-              type="button"
-              onClick={() => setMode('encode')}
-              className={`tb-v2-mode-tab ${mode === 'encode' ? 'on' : ''}`}
-              aria-pressed={mode === 'encode'}
-            >
-              Encode
-            </button>
-            <button
-              type="button"
-              onClick={() => setMode('decode')}
-              className={`tb-v2-mode-tab ${mode === 'decode' ? 'on' : ''}`}
-              aria-pressed={mode === 'decode'}
-            >
-              Decode
-            </button>
-          </div>
-          <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+        <ToolExampleClearActions onExample={loadExample} onClear={clear} canClear={input.length > 0} />
+      </div>
+      <div style={{ padding: '8px 20px 0' }}>
+        <div className="tb-v2-mode-tabs" role="group" aria-label="Mode">
+          <button
+            type="button"
+            onClick={() => setMode('encode')}
+            className={`tb-v2-mode-tab ${mode === 'encode' ? 'on' : ''}`}
+            aria-pressed={mode === 'encode'}
+          >
+            Encode
+          </button>
+          <button
+            type="button"
+            onClick={() => setMode('decode')}
+            className={`tb-v2-mode-tab ${mode === 'decode' ? 'on' : ''}`}
+            aria-pressed={mode === 'decode'}
+          >
+            Decode
+          </button>
         </div>
       </div>
       <textarea
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        placeholder={mode === 'encode' ? 'Enter text to encode, e.g. Hello, 世界! 🚀' : 'Enter escaped string, e.g. \\u0048\\u0065\\u006c\\u006c\\u006f'}
+        placeholder={
+          mode === 'encode'
+            ? 'Enter text to encode, e.g. Hello, 世界! 🚀'
+            : 'Enter escaped string, e.g. \\u0048\\u0065\\u006c\\u006c\\u006f'
+        }
         className="tb-v2-tool-textarea"
         aria-label={mode === 'encode' ? 'Text to encode' : 'Escaped string to decode'}
       />
@@ -85,7 +92,12 @@ export default function UnicodeEscapeEncoderClient() {
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">{mode === 'encode' ? 'Escaped Output' : 'Decoded Text'}</span>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button type="button" onClick={swap} className="tb-v2-btn-sm" disabled={!input}>
+          <button
+            type="button"
+            onClick={swap}
+            className="tb-v2-btn tb-v2-btn-sm"
+            disabled={!input}
+          >
             Use as {mode === 'encode' ? 'Decode' : 'Encode'} Input
           </button>
           <button
@@ -101,10 +113,14 @@ export default function UnicodeEscapeEncoderClient() {
       <div className="tb-v2-tool-output-body">
         {!output ? (
           <p className="tb-v2-empty">
-            {mode === 'encode' ? 'Enter text above to see its Unicode escape sequences.' : 'Enter a \\uXXXX escaped string above to decode it.'}
+            {mode === 'encode'
+              ? 'Enter text above to see its Unicode escape sequences.'
+              : 'Enter a \\uXXXX escaped string above to decode it.'}
           </p>
         ) : (
-          <pre className="tb-v2-tool-pre" style={{ wordBreak: 'break-all', whiteSpace: 'pre-wrap' }}>{output}</pre>
+          <pre className="tb-v2-tool-pre" style={{ wordBreak: 'break-all', whiteSpace: 'pre-wrap' }}>
+            {output}
+          </pre>
         )}
       </div>
     </div>

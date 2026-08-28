@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const POS_STRONG = [
   'excellent', 'amazing', 'outstanding', 'wonderful', 'fantastic', 'superb', 'brilliant', 'perfect',
@@ -127,20 +128,24 @@ export default function SentimentAnalyzerClient() {
 
   const result = useMemo(() => analyze(input), [input]);
 
-  const loadExample = () => {
-    setInput("This product is absolutely amazing and the support team was incredibly helpful. However, the shipping was slow and the packaging was not great at all.");
-  };
+  const EXAMPLE =
+    'This product is absolutely amazing and the support team was incredibly helpful. However, the shipping was slow and the packaging was not great at all.';
 
-  const positiveMatches = result.matches.filter(m => m.weight > 0);
-  const negativeMatches = result.matches.filter(m => m.weight < 0);
+  const positiveMatches = result.matches.filter((m) => m.weight > 0);
+  const negativeMatches = result.matches.filter((m) => m.weight < 0);
 
-  const labelColor = result.label === 'positive' ? '#16a34a' : result.label === 'negative' ? '#dc2626' : 'var(--fg-2)';
+  const labelColor =
+    result.label === 'positive' ? '#16a34a' : result.label === 'negative' ? '#dc2626' : 'var(--fg-2)';
 
   return (
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+        <ToolExampleClearActions
+          onExample={() => setInput(EXAMPLE)}
+          onClear={() => setInput('')}
+          canClear={input.length > 0}
+        />
       </div>
       <textarea
         className="tb-v2-tool-textarea"

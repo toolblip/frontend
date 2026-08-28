@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 interface EmojiInfo {
   emoji: string;
@@ -81,6 +82,7 @@ const emojiData: EmojiInfo[] = [
 ];
 
 const categories = ['All', 'Smileys', 'Gestures', 'Symbols', 'Travel', 'Objects', 'People', 'Nature'];
+const EXAMPLE = 'laugh';
 
 export default function EmojiFinderClient() {
   const [search, setSearch] = useState('');
@@ -88,10 +90,11 @@ export default function EmojiFinderClient() {
   const [copiedEmoji, setCopiedEmoji] = useState<string | null>(null);
 
   const filteredEmojis = useMemo(() => {
-    return emojiData.filter(emoji => {
-      const matchesSearch = search === '' || 
+    return emojiData.filter((emoji) => {
+      const matchesSearch =
+        search === '' ||
         emoji.name.toLowerCase().includes(search.toLowerCase()) ||
-        emoji.keywords.some(k => k.toLowerCase().includes(search.toLowerCase()));
+        emoji.keywords.some((k) => k.toLowerCase().includes(search.toLowerCase()));
       const matchesCategory = category === 'All' || emoji.category === category;
       return matchesSearch && matchesCategory;
     });
@@ -100,15 +103,26 @@ export default function EmojiFinderClient() {
   const handleCopy = (emoji: string) => {
     navigator.clipboard.writeText(emoji).catch(() => {});
     setCopiedEmoji(emoji);
-    setTimeout(() => setCopiedEmoji(prev => (prev === emoji ? null : prev)), 1200);
+    setTimeout(() => setCopiedEmoji((prev) => (prev === emoji ? null : prev)), 1200);
   };
 
   return (
-    <div className="" style={{padding:"20px"}}>
-      <h1 className="text-2xl font-bold mb-6">Emoji Finder</h1>
-
-      <div className="mb-4">
-        <label className="tb-v2-tool-label" style={{marginBottom:8}}>Search emojis</label>
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Search emojis</span>
+        <ToolExampleClearActions
+          onExample={() => {
+            setSearch(EXAMPLE);
+            setCategory('All');
+          }}
+          onClear={() => {
+            setSearch('');
+            setCategory('All');
+          }}
+          canClear={search.length > 0 || category !== 'All'}
+        />
+      </div>
+      <div style={{ padding: '12px 20px' }}>
         <input
           type="text"
           value={search}
@@ -118,48 +132,60 @@ export default function EmojiFinderClient() {
         />
       </div>
 
-      <div className="mb-6 flex flex-wrap gap-2">
-        {categories.map(cat => (
-          <button
-            key={cat}
-            onClick={() => setCategory(cat)}
-            className={`px-3 py-1 rounded-full text-sm transition ${
-              category === cat
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
-
-      {filteredEmojis.length > 0 && (
-        <div className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}>
-          <p className="text-sm">
-            <strong>{filteredEmojis.length}</strong> emojis found
-          </p>
+      <div style={{ padding: '0 20px 16px', display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+        <div className="tb-v2-mode-tabs" role="group" aria-label="Category">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              type="button"
+              onClick={() => setCategory(cat)}
+              className={`tb-v2-mode-tab ${category === cat ? 'on' : ''}`}
+            >
+              {cat}
+            </button>
+          ))}
         </div>
-      )}
-
-      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-        {filteredEmojis.map((emoji, i) => (
-          <button
-            key={i}
-            onClick={() => handleCopy(emoji.emoji)}
-            className="p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-500 transition text-center group"
-          >
-            <div className="text-3xl mb-2">{emoji.emoji}</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400 group-hover:text-blue-500 truncate">
-              {copiedEmoji === emoji.emoji ? 'Copied' : emoji.name}
-            </div>
-          </button>
-        ))}
       </div>
 
-      {filteredEmojis.length === 0 && (
-        <p className="tb-v2-empty">No emojis found matching your search.</p>
-      )}
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">
+          {filteredEmojis.length} emoji{filteredEmojis.length === 1 ? '' : 's'}
+        </span>
+      </div>
+      <div className="tb-v2-tool-output-body">
+        {filteredEmojis.length === 0 ? (
+          <p className="tb-v2-empty">No emojis found matching your search.</p>
+        ) : (
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(100px, 1fr))',
+              gap: 10,
+            }}
+          >
+            {filteredEmojis.map((emoji, i) => (
+              <button
+                key={i}
+                type="button"
+                onClick={() => handleCopy(emoji.emoji)}
+                style={{
+                  padding: 12,
+                  background: 'var(--surface-2)',
+                  border: '1px solid var(--line)',
+                  borderRadius: 8,
+                  textAlign: 'center',
+                  cursor: 'pointer',
+                }}
+              >
+                <div style={{ fontSize: 28, marginBottom: 6 }}>{emoji.emoji}</div>
+                <div style={{ fontSize: 11, color: 'var(--fg-2)', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  {copiedEmoji === emoji.emoji ? 'Copied' : emoji.name}
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
