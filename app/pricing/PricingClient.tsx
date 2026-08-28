@@ -111,7 +111,7 @@ function buildPlanFeatures(plan: Plan): PlanFeature[] {
 }
 
 export default function PricingClient() {
-  const { user, loading: authLoading, refreshUser } = useAuth();
+  const { user, refreshUser } = useAuth();
   const router = useRouter();
   const [billing, setBilling] = useState<BillingCycle>('monthly');
   const [loading, setLoading] = useState<string | null>(null);
@@ -146,11 +146,9 @@ export default function PricingClient() {
   // Auth lives in AuthProvider (httpOnly cookie → /api/auth/me once on mount).
   async function isAuthenticated(): Promise<boolean> {
     if (user) return true;
-    if (authLoading) {
-      const refreshed = await refreshUser();
-      return Boolean(refreshed);
-    }
-    return false;
+    // Shares AuthProvider's in-flight /me restore (no parallel clear race)
+    const refreshed = await refreshUser();
+    return Boolean(refreshed);
   }
 
   async function handleFreePlan() {

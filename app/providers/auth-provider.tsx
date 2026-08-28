@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, useCallback, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, useRef, ReactNode } from "react";
 
 type User = { id: number; name: string; email: string; [key: string]: unknown };
 
@@ -19,28 +19,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const userRef = useRef<User | null>(null);
+  const inflightRef = useRef<Promise<User | null> | null>(null);
+
+  useEffect(() => {
+    userRef.current = user;
+  }, [user]);
 
   const refreshUser = useCallback(async (): Promise<User | null> => {
-    try {
-      const res = await fetch("/api/auth/me", {
-        credentials: "include",
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.user) {
-          setUser(data.user);
-          setToken(data.token || "");
-          return data.user as User;
+    if (inflightRef.current) return inflightRef.current;
+
+    const run = (async (): Promise<User | null> => {
+      try {
+        const res = await fetch("/api/auth/me", {
+          credentials: "include",
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.user) {
+            setUser(data.user);
+            setToken(data.token || "");
+            return data.user as User;
+          }
+          setUser(null);
+          setToken(null);
+          return null;
         }
+        // Definitive unauth only — keep existing session on 5xx/network flakes
+        if (res.status === 401 || res.status === 403) {
+          setUser(null);
+          setToken(null);
+          return null;
+        }
+        return userRef.current;
+      } catch {
+        return userRef.current;
+      } finally {
+        inflightRef.current = null;
       }
-      setUser(null);
-      setToken(null);
-      return null;
-    } catch {
-      setUser(null);
-      setToken(null);
-      return null;
-    }
+    })();
+
+    inflightRef.current = run;
+    return run;
   }, []);
 
   // Restore session once on mount

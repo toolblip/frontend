@@ -2,7 +2,7 @@
 /// <reference lib="webworker" />
 import { defaultCache } from '@serwist/turbopack/worker';
 import type { PrecacheEntry, RuntimeCaching, SerwistGlobalConfig } from 'serwist';
-import { CacheFirst, ExpirationPlugin, NetworkOnly, Serwist } from 'serwist';
+import { CacheFirst, ExpirationPlugin, NetworkFirst, NetworkOnly, Serwist } from 'serwist';
 
 declare global {
   interface WorkerGlobalScope extends SerwistGlobalConfig {
@@ -20,6 +20,9 @@ const authAndAccountPaths = [
   '/login',
   '/signup',
   '/pricing',
+  '/forgot-password',
+  '/reset-password',
+  '/verify-email',
 ];
 
 function isAuthOrAccountPath(pathname: string): boolean {
@@ -59,12 +62,13 @@ const runtimeCaching: RuntimeCaching[] = [
         url.pathname === '/tools' ||
         url.pathname === '/' ||
         url.pathname.startsWith('/blog')),
-    handler: new CacheFirst({
+    handler: new NetworkFirst({
       cacheName: 'pages',
+      networkTimeoutSeconds: 3,
       plugins: [
         new ExpirationPlugin({
           maxEntries: 80,
-          maxAgeSeconds: 60 * 60 * 24 * 14,
+          maxAgeSeconds: 60 * 60 * 24 * 7,
         }),
       ],
     }),

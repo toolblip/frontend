@@ -8,7 +8,7 @@ export default function PwaProvider({ children }: { children: React.ReactNode })
       swUrl="/serwist/sw.js"
       disable={process.env.NODE_ENV === 'development'}
       cacheOnNavigation
-      reloadOnOnline
+      reloadOnOnline={false}
     >
       {children}
     </SerwistProvider>

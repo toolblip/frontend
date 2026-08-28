@@ -2,13 +2,13 @@
 export const dynamic = "force-dynamic";
 
 import Link from "next/link";
-import { useAuth } from "@/app/providers/auth-provider";
+import { useRequireAuth } from "@/lib/hooks/useRequireAuth";
 import { useSubscription } from "@/lib/hooks/useSubscription";
 import { BillingSection } from "@/components/dashboard/BillingSection";
 import { InvoicesSection } from "@/components/dashboard/InvoicesSection";
 
 export default function SubscriptionPage() {
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading } = useRequireAuth();
   const {
     subscription,
     subscriptionError,
