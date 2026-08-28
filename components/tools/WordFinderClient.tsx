@@ -1,8 +1,10 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const RESULT_CAP = 500;
+const EXAMPLE_LETTERS = 'listen';
 
 function buildLetterCounts(letters: string): Map<string, number> {
   const counts = new Map<string, number>();
@@ -101,10 +103,39 @@ export default function WordFinderClient() {
     navigator.clipboard.writeText(results.join('\n')).catch(() => {});
   };
 
+  const loadExample = () => {
+    setLetters(EXAMPLE_LETTERS);
+    setPattern('');
+    setMinLen('4');
+    setMaxLen('6');
+    setResults(null);
+    setTotalMatches(0);
+  };
+
+  const clearAll = () => {
+    setLetters('');
+    setPattern('');
+    setMinLen('');
+    setMaxLen('');
+    setResults(null);
+    setTotalMatches(0);
+  };
+
   return (
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Available Letters</span>
+        <ToolExampleClearActions
+          onExample={loadExample}
+          onClear={clearAll}
+          canClear={
+            letters.length > 0 ||
+            pattern.length > 0 ||
+            minLen.length > 0 ||
+            maxLen.length > 0 ||
+            !!results
+          }
+        />
       </div>
       <div style={{ padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 14 }}>
         {loadError && (

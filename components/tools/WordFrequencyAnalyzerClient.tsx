@@ -1,6 +1,10 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+
+const EXAMPLE =
+  'Search engine optimization helps websites rank higher in search results. Good SEO practices include keyword research, on page optimization, and quality content. Search engine optimization is an ongoing process that requires monitoring search rankings and adjusting your SEO strategy over time.';
 
 interface WordCount {
   word: string;
@@ -8,24 +12,25 @@ interface WordCount {
   percentage: number;
 }
 
+const COMMON_WORDS = new Set([
+  'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'i',
+  'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at',
+  'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she',
+  'or', 'an', 'will', 'my', 'one', 'all', 'would', 'there', 'their', 'what',
+  'so', 'up', 'out', 'if', 'about', 'who', 'get', 'which', 'go', 'me',
+  'when', 'make', 'can', 'like', 'time', 'no', 'just', 'him', 'know', 'take',
+  'people', 'into', 'year', 'your', 'good', 'some', 'could', 'them', 'see', 'other',
+  'than', 'then', 'now', 'look', 'only', 'come', 'its', 'over', 'think', 'also',
+  'back', 'after', 'use', 'two', 'how', 'our', 'work', 'first', 'well', 'way',
+  'even', 'new', 'want', 'because', 'any', 'these', 'give', 'day', 'most', 'us',
+]);
+
 export default function WordFrequencyAnalyzerClient() {
   const [text, setText] = useState('');
   const [excludeCommon, setExcludeCommon] = useState(true);
   const [minLength, setMinLength] = useState(0);
   const [sortBy, setSortBy] = useState<'count' | 'alphabetical'>('count');
-
-  const commonWords = new Set([
-    'the', 'be', 'to', 'of', 'and', 'a', 'in', 'that', 'have', 'i',
-    'it', 'for', 'not', 'on', 'with', 'he', 'as', 'you', 'do', 'at',
-    'this', 'but', 'his', 'by', 'from', 'they', 'we', 'say', 'her', 'she',
-    'or', 'an', 'will', 'my', 'one', 'all', 'would', 'there', 'their', 'what',
-    'so', 'up', 'out', 'if', 'about', 'who', 'get', 'which', 'go', 'me',
-    'when', 'make', 'can', 'like', 'time', 'no', 'just', 'him', 'know', 'take',
-    'people', 'into', 'year', 'your', 'good', 'some', 'could', 'them', 'see', 'other',
-    'than', 'then', 'now', 'look', 'only', 'come', 'its', 'over', 'think', 'also',
-    'back', 'after', 'use', 'two', 'how', 'our', 'work', 'first', 'well', 'way',
-    'even', 'new', 'want', 'because', 'any', 'these', 'give', 'day', 'most', 'us',
-  ]);
+  const [copied, setCopied] = useState(false);
 
   const wordCounts = useMemo<WordCount[]>(() => {
     if (!text.trim()) return [];
@@ -34,50 +39,62 @@ export default function WordFrequencyAnalyzerClient() {
       .toLowerCase()
       .replace(/[^a-zA-Z\s]/g, '')
       .split(/\s+/)
-      .filter(w => w.length >= minLength)
-      .filter(w => !excludeCommon || !commonWords.has(w));
+      .filter((w) => w.length >= minLength)
+      .filter((w) => !excludeCommon || !COMMON_WORDS.has(w));
 
     const counts: Record<string, number> = {};
-    words.forEach(word => {
+    words.forEach((word) => {
       counts[word] = (counts[word] || 0) + 1;
     });
 
-    const total = words.length;
-    const result: WordCount[] = Object.entries(counts)
+    const total = words.length || 1;
+    return Object.entries(counts)
       .map(([word, count]) => ({
         word,
         count,
         percentage: Math.round((count / total) * 100 * 10) / 10,
       }))
-      .sort((a, b) => sortBy === 'count' ? b.count - a.count : a.word.localeCompare(b.word));
-
-    return result;
+      .sort((a, b) =>
+        sortBy === 'count' ? b.count - a.count : a.word.localeCompare(b.word),
+      );
   }, [text, excludeCommon, minLength, sortBy]);
 
   const handleCopy = () => {
-    const output = wordCounts
-      .map(w => `${w.word}: ${w.count} (${w.percentage}%)`)
-      .join('\n');
-    navigator.clipboard.writeText(output);
+    const output = wordCounts.map((w) => `${w.word}: ${w.count} (${w.percentage}%)`).join('\n');
+    navigator.clipboard.writeText(output).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div className="" style={{padding:"20px"}}>
-      <h1 className="text-2xl font-bold mb-6">Word Frequency Analyzer</h1>
-
-      <div className="mb-4">
-        <label className="tb-v2-tool-label" style={{marginBottom:8}}>Enter text</label>
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          className="tb-v2-input"
-          placeholder="Paste or type your text here..."
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Enter text</span>
+        <ToolExampleClearActions
+          onExample={() => setText(EXAMPLE)}
+          onClear={() => setText('')}
+          canClear={text.length > 0}
         />
       </div>
+      <textarea
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        className="tb-v2-tool-textarea"
+        placeholder="Paste or type your text here..."
+        rows={6}
+      />
 
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: 16,
+          padding: '16px 20px',
+          borderTop: '1px solid var(--line)',
+        }}
+      >
         <div>
-          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Min word length</label>
+          <label className="tb-v2-tool-label">Min word length</label>
           <input
             type="number"
             value={minLength}
@@ -88,78 +105,71 @@ export default function WordFrequencyAnalyzerClient() {
           />
         </div>
         <div>
-          <label className="tb-v2-tool-label" style={{marginBottom:8}}>Sort by</label>
+          <label className="tb-v2-tool-label">Sort by</label>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as 'count' | 'alphabetical')}
-            className="tb-v2-input"
+            className="tb-v2-select"
           >
             <option value="count">Frequency</option>
             <option value="alphabetical">Alphabetical</option>
           </select>
         </div>
-        <div className="flex items-center pt-6">
-          <label className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              checked={excludeCommon}
-              onChange={(e) => setExcludeCommon(e.target.checked)}
-              className="rounded"
-            />
-            <span className="text-sm">Exclude common words</span>
-          </label>
-        </div>
+      </div>
+      <div style={{ padding: '0 20px 16px' }}>
+        <label className="tb-v2-checkbox-row">
+          <input
+            type="checkbox"
+            checked={excludeCommon}
+            onChange={(e) => setExcludeCommon(e.target.checked)}
+          />
+          Exclude common words
+        </label>
       </div>
 
-      {wordCounts.length > 0 && (
-        <div className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}>
-          <p className="text-sm">
-            <strong>{wordCounts.length}</strong> unique words found
-          </p>
-        </div>
-      )}
-
-      {wordCounts.length > 0 && (
-        <div className="mt-6">
-          <div className="flex justify-between items-center mb-2">
-            <label className="block text-sm font-medium">Word Frequencies</label>
-            <button
-              onClick={handleCopy}
-              className="text-sm text-blue-500 hover:text-blue-600"
-            >
-              Copy
-            </button>
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">
+          {wordCounts.length > 0
+            ? `${wordCounts.length} unique words`
+            : 'Word Frequencies'}
+        </span>
+        {wordCounts.length > 0 ? (
+          <button type="button" onClick={handleCopy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
+            {copied ? 'Copied' : 'Copy'}
+          </button>
+        ) : null}
+      </div>
+      <div className="tb-v2-tool-output-body">
+        {!text.trim() ? (
+          <p className="tb-v2-empty">Paste text or load the example to see word frequencies.</p>
+        ) : wordCounts.length === 0 ? (
+          <div className="tb-v2-banner tb-v2-banner-warn">
+            No words match the current filters. Try adjusting the minimum word length or disabling
+            exclude common words.
           </div>
-          <div className="tb-v2-section" style={{padding:16,background:"var(--surface-2)"}}>
-            <table className="w-full text-sm">
-              <thead className="sticky top-0 bg-gray-100 dark:bg-gray-700">
-                <tr>
-                  <th className="text-left py-2 px-2">Word</th>
-                  <th className="text-right py-2 px-2">Count</th>
-                  <th className="text-right py-2 px-2">%</th>
+        ) : (
+          <table style={{ width: '100%', fontSize: 13, borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ textAlign: 'left', color: 'var(--fg-2)', fontSize: 11, textTransform: 'uppercase' }}>
+                <th style={{ padding: '4px 8px 4px 0' }}>Word</th>
+                <th style={{ padding: '4px 8px', textAlign: 'right' }}>Count</th>
+                <th style={{ padding: '4px 0', textAlign: 'right' }}>%</th>
+              </tr>
+            </thead>
+            <tbody>
+              {wordCounts.map((item) => (
+                <tr key={item.word} style={{ borderTop: '1px solid var(--line)' }}>
+                  <td style={{ padding: '5px 8px 5px 0', fontFamily: 'var(--f-mono)' }}>{item.word}</td>
+                  <td style={{ padding: '5px 8px', textAlign: 'right' }}>{item.count}</td>
+                  <td style={{ padding: '5px 0', textAlign: 'right', color: 'var(--fg-2)' }}>
+                    {item.percentage}%
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {wordCounts.map((item, i) => (
-                  <tr key={i} className="border-t border-gray-200 dark:border-gray-600">
-                    <td className="py-2 px-2 font-mono">{item.word}</td>
-                    <td className="py-2 px-2 text-right">{item.count}</td>
-                    <td className="py-2 px-2 text-right text-gray-500">{item.percentage}%</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {text && wordCounts.length === 0 && (
-        <div className="tb-v2-banner tb-v2-banner-warn">
-          <p className="text-sm text-yellow-700 dark:text-yellow-400">
-            No words match the current filters. Try adjusting the minimum word length or disabling "exclude common words".
-          </p>
-        </div>
-      )}
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
     </div>
   );
 }

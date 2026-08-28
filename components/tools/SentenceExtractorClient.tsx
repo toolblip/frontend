@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const ABBREVIATIONS = [
   'mr', 'mrs', 'ms', 'dr', 'prof', 'sr', 'jr', 'st', 'ave', 'blvd', 'inc', 'ltd', 'co',
@@ -9,6 +10,9 @@ const ABBREVIATIONS = [
 // A marker string that should never occur in real input text - used to temporarily
 // mask periods we don't want to split on, then restored to a real period afterwards.
 const PLACEHOLDER = 'ZZZDOTZZZ';
+
+const EXAMPLE =
+  'Mr. Smith visited the U.S. last year. He measured exactly 3.14 meters. Was it worth the trip? Yes!';
 
 function splitSentences(text: string): string[] {
   if (!text.trim()) return [];
@@ -69,6 +73,11 @@ export default function SentenceExtractorClient() {
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Text</span>
+        <ToolExampleClearActions
+          onExample={() => setInput(EXAMPLE)}
+          onClear={() => setInput('')}
+          canClear={input.length > 0}
+        />
       </div>
       <textarea
         className="tb-v2-tool-textarea"
