@@ -252,12 +252,15 @@ export default function GrammarScoreCheckerClient() {
             setInput('');
             resetAnalysis();
           }}
-          canClear={input.length > 0}
+          canClear={input.length > 0 || analyzed}
         />
       </div>
       <textarea
         value={input}
-        onChange={(e) => setInput(e.target.value)}
+        onChange={(e) => {
+          setInput(e.target.value);
+          resetAnalysis();
+        }}
         placeholder="Paste or type your text here..."
         className="tb-v2-input"
         rows={10}

@@ -114,9 +114,11 @@ function checkHomophones(text: string): Issue[] {
 export default function HomophoneCheckerClient() {
   const [text, setText] = useState('');
   const [issues, setIssues] = useState<Issue[]>([]);
+  const [checked, setChecked] = useState(false);
 
   const analyze = () => {
     setIssues(checkHomophones(text));
+    setChecked(true);
   };
 
   return (
@@ -127,17 +129,23 @@ export default function HomophoneCheckerClient() {
           onExample={() => {
             setText(EXAMPLE);
             setIssues([]);
+            setChecked(false);
           }}
           onClear={() => {
             setText('');
             setIssues([]);
+            setChecked(false);
           }}
-          canClear={text.length > 0}
+          canClear={text.length > 0 || issues.length > 0}
         />
       </div>
       <textarea
         value={text}
-        onChange={(e) => setText(e.target.value)}
+        onChange={(e) => {
+          setText(e.target.value);
+          setIssues([]);
+          setChecked(false);
+        }}
         placeholder="Paste text to check for common homophone errors (there/their/they're, your/you're, its/it's, etc.)..."
         className="tb-v2-tool-textarea"
         style={{ minHeight: 150 }}
@@ -200,7 +208,7 @@ export default function HomophoneCheckerClient() {
         </>
       )}
 
-      {issues.length === 0 && text.length > 20 && (
+      {issues.length === 0 && checked && text.length > 20 && (
         <>
           <div className="tb-v2-tool-output-head" style={{ marginTop: 16 }}>
             <span className="tb-v2-tool-label">Result</span>

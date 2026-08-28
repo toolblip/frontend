@@ -30,9 +30,11 @@ function countFillerWords(text: string): { word: string; count: number }[] {
 export default function FillerWordCounterClient() {
   const [text, setText] = useState('');
   const [results, setResults] = useState<{ word: string; count: number }[]>([]);
+  const [analyzed, setAnalyzed] = useState(false);
 
   const analyze = () => {
     setResults(countFillerWords(text));
+    setAnalyzed(true);
   };
 
   const totalFillerWords = results.reduce((sum, r) => sum + r.count, 0);
@@ -45,17 +47,23 @@ export default function FillerWordCounterClient() {
           onExample={() => {
             setText(EXAMPLE);
             setResults([]);
+            setAnalyzed(false);
           }}
           onClear={() => {
             setText('');
             setResults([]);
+            setAnalyzed(false);
           }}
-          canClear={text.length > 0}
+          canClear={text.length > 0 || results.length > 0}
         />
       </div>
       <textarea
         value={text}
-        onChange={(e) => setText(e.target.value)}
+        onChange={(e) => {
+          setText(e.target.value);
+          setResults([]);
+          setAnalyzed(false);
+        }}
         placeholder="Paste text to count filler words (um, uh, like, you know, basically, etc.)..."
         className="tb-v2-tool-textarea"
         style={{ minHeight: 150 }}
@@ -93,7 +101,7 @@ export default function FillerWordCounterClient() {
         </>
       )}
 
-      {results.length === 0 && text.length > 20 && (
+      {results.length === 0 && analyzed && text.length > 20 && (
         <>
           <div className="tb-v2-tool-output-head" style={{ marginTop: 16 }}>
             <span className="tb-v2-tool-label">Result</span>
