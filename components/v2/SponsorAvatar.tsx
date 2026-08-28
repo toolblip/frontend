@@ -10,11 +10,10 @@ function avatarColor(seed: string): string {
   return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
 }
 
-/** Google's favicon proxy — bigger and more reliable than unavatar for a
- * plain site icon. Not used for X handles, which have no real "favicon";
- * unavatar's per-profile image is the only sensible source there. */
-function faviconUrl(domain: string, size = 256): string {
-  return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=${size}`;
+/** Same-origin proxy — see app/api/favicon/route.ts. Avoids Serwist breaking
+ * Google/unavatar cross-origin image redirects for returning PWA clients. */
+export function sponsorFaviconSrc(domain: string, size = 128): string {
+  return `/api/favicon?domain=${encodeURIComponent(domain)}&sz=${size}`;
 }
 
 export default function SponsorAvatar({
@@ -29,8 +28,8 @@ export default function SponsorAvatar({
   className?: string;
 }) {
   const [error, setError] = useState(false);
-  const isHandle = domain.startsWith('x.com/');
   const sizeStyle: React.CSSProperties | undefined = sizePx ? { width: sizePx, height: sizePx } : undefined;
+  const fetchSize = sizePx ? Math.min(256, Math.max(64, Math.round(sizePx * 2))) : 128;
 
   if (error) {
     return (
@@ -42,7 +41,7 @@ export default function SponsorAvatar({
 
   return (
     <img
-      src={isHandle ? `https://unavatar.io/${domain}` : faviconUrl(domain)}
+      src={sponsorFaviconSrc(domain, fetchSize)}
       alt=""
       className={className}
       style={sizeStyle}
