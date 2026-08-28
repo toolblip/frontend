@@ -203,7 +203,12 @@ const nextConfig = {
       // slug.
       { source: '/tools/word-freq-express', destination: '/tools/word-freq', permanent: true },
       { source: '/tools/html-plaintext-express', destination: '/tools/html-plaintext', permanent: true },
-      { source: '/tools/tsv-json-express', destination: '/tools/tsv-json', permanent: true },
+      { source: '/tools/tsv-json-express', destination: '/tools/csv-to-json', permanent: true },
+      { source: '/tools/tsv-json', destination: '/tools/csv-to-json', permanent: true },
+      { source: '/tools/json-to-yaml', destination: '/tools/yaml-to-json', permanent: true },
+      { source: '/tools/json-to-xml', destination: '/tools/xml-to-json', permanent: true },
+      { source: '/tools/json-to-csv', destination: '/tools/csv-to-json', permanent: true },
+      { source: '/tools/csv-to-tsv', destination: '/tools/tsv-to-csv', permanent: true },
       { source: '/tools/image-rotate-tool', destination: '/tools/images/image-rotate', permanent: true },
       { source: '/tools/image-flip-tool', destination: '/tools/images/image-flip', permanent: true },
       { source: '/tools/html-to-plain-text-tool', destination: '/tools/html-to-plain-text', permanent: true },
@@ -248,7 +253,7 @@ const nextConfig = {
       // to the homepage.
       { source: '/tools/mp4-to-avi', destination: '/', permanent: true },
       { source: '/tools/webp-to-gif', destination: '/tools/images/image-format-converter', permanent: true },
-      { source: '/tools/json-to-tsv', destination: '/tools/json-to-csv', permanent: true },
+      { source: '/tools/json-to-tsv', destination: '/tools/csv-to-json', permanent: true },
 
       // These tool pages were removed: they only shipped as non-functional
       // stubs or fabricated-data placeholders and would need paid third-party
