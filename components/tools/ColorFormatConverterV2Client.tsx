@@ -1,141 +1,374 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
-function parseColor(input: string): { r: number; g: number; b: number } | null {
-  input = input.trim().toLowerCase();
+type Rgba = { r: number; g: number; b: number; a: number };
 
-  // HEX
-  const hexMatch = input.match(/^#?([a-f0-9]{6}|[a-f0-9]{3})$/);
-  if (hexMatch) {
-    let hex = hexMatch[1];
-    if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+function clamp(n: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, n));
+}
+
+function rgbToHsl(r: number, g: number, b: number) {
+  r /= 255;
+  g /= 255;
+  b /= 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  let h = 0;
+  let s = 0;
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r:
+        h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+        break;
+      case g:
+        h = ((b - r) / d + 2) / 6;
+        break;
+      case b:
+        h = ((r - g) / d + 4) / 6;
+        break;
+    }
+  }
+  return {
+    h: Math.round(h * 360),
+    s: Math.round(s * 100),
+    l: Math.round(l * 100),
+  };
+}
+
+function hslToRgb(h: number, s: number, l: number) {
+  h = ((h % 360) + 360) % 360;
+  s = clamp(s, 0, 100) / 100;
+  l = clamp(l, 0, 100) / 100;
+  const hue2rgb = (p: number, q: number, t: number) => {
+    if (t < 0) t += 1;
+    if (t > 1) t -= 1;
+    if (t < 1 / 6) return p + (q - p) * 6 * t;
+    if (t < 1 / 2) return q;
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+    return p;
+  };
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+  const p = 2 * l - q;
+  const hh = h / 360;
+  return {
+    r: Math.round(hue2rgb(p, q, hh + 1 / 3) * 255),
+    g: Math.round(hue2rgb(p, q, hh) * 255),
+    b: Math.round(hue2rgb(p, q, hh - 1 / 3) * 255),
+  };
+}
+
+function rgbToHsv(r: number, g: number, b: number) {
+  r /= 255;
+  g /= 255;
+  b /= 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const d = max - min;
+  let h = 0;
+  const s = max === 0 ? 0 : d / max;
+  const v = max;
+  if (d !== 0) {
+    switch (max) {
+      case r:
+        h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+        break;
+      case g:
+        h = ((b - r) / d + 2) / 6;
+        break;
+      case b:
+        h = ((r - g) / d + 4) / 6;
+        break;
+    }
+  }
+  return {
+    h: Math.round(h * 360),
+    s: Math.round(s * 100),
+    v: Math.round(v * 100),
+  };
+}
+
+function hsvToRgb(h: number, s: number, v: number) {
+  h = ((h % 360) + 360) % 360 / 360;
+  s = clamp(s, 0, 100) / 100;
+  v = clamp(v, 0, 100) / 100;
+  const i = Math.floor(h * 6);
+  const f = h * 6 - i;
+  const p = v * (1 - s);
+  const q = v * (1 - f * s);
+  const t = v * (1 - (1 - f) * s);
+  let r = 0;
+  let g = 0;
+  let b = 0;
+  switch (i % 6) {
+    case 0:
+      r = v;
+      g = t;
+      b = p;
+      break;
+    case 1:
+      r = q;
+      g = v;
+      b = p;
+      break;
+    case 2:
+      r = p;
+      g = v;
+      b = t;
+      break;
+    case 3:
+      r = p;
+      g = q;
+      b = v;
+      break;
+    case 4:
+      r = t;
+      g = p;
+      b = v;
+      break;
+    default:
+      r = v;
+      g = p;
+      b = q;
+      break;
+  }
+  return {
+    r: Math.round(r * 255),
+    g: Math.round(g * 255),
+    b: Math.round(b * 255),
+  };
+}
+
+function rgbToCmyk(r: number, g: number, b: number) {
+  const rr = r / 255;
+  const gg = g / 255;
+  const bb = b / 255;
+  const k = 1 - Math.max(rr, gg, bb);
+  if (k === 1) return { c: 0, m: 0, y: 0, k: 100 };
+  return {
+    c: Math.round(((1 - rr - k) / (1 - k)) * 100),
+    m: Math.round(((1 - gg - k) / (1 - k)) * 100),
+    y: Math.round(((1 - bb - k) / (1 - k)) * 100),
+    k: Math.round(k * 100),
+  };
+}
+
+function cmykToRgb(c: number, m: number, y: number, k: number) {
+  c /= 100;
+  m /= 100;
+  y /= 100;
+  k /= 100;
+  return {
+    r: Math.round(255 * (1 - c) * (1 - k)),
+    g: Math.round(255 * (1 - m) * (1 - k)),
+    b: Math.round(255 * (1 - y) * (1 - k)),
+  };
+}
+
+function aToByte(a: number) {
+  return Math.round(clamp(a, 0, 1) * 255);
+}
+
+function formatHex(c: Rgba) {
+  return `#${[c.r, c.g, c.b]
+    .map((v) => clamp(Math.round(v), 0, 255).toString(16).padStart(2, '0'))
+    .join('')}`;
+}
+
+function formatHex8(c: Rgba) {
+  return `${formatHex(c)}${aToByte(c.a).toString(16).padStart(2, '0')}`;
+}
+
+function parseColor(input: string): Rgba | null {
+  const raw = input.trim().toLowerCase();
+  if (!raw) return null;
+
+  const hex = raw.match(/^#?([a-f0-9]{3}|[a-f0-9]{6}|[a-f0-9]{8})$/i);
+  if (hex) {
+    let h = hex[1];
+    if (h.length === 3) h = h.split('').map((c) => c + c).join('');
+    const hasAlpha = h.length === 8;
     return {
-      r: parseInt(hex.slice(0, 2), 16),
-      g: parseInt(hex.slice(2, 4), 16),
-      b: parseInt(hex.slice(4, 6), 16),
+      r: parseInt(h.slice(0, 2), 16),
+      g: parseInt(h.slice(2, 4), 16),
+      b: parseInt(h.slice(4, 6), 16),
+      a: hasAlpha ? parseInt(h.slice(6, 8), 16) / 255 : 1,
     };
   }
 
-  // RGB
-  const rgbMatch = input.match(/rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/);
-  if (rgbMatch) {
-    return { r: +rgbMatch[1], g: +rgbMatch[2], b: +rgbMatch[3] };
+  const rgba = raw.match(/^rgba?\s*\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)(?:\s*,\s*([\d.]+))?\s*\)$/);
+  if (rgba) {
+    return {
+      r: clamp(+rgba[1], 0, 255),
+      g: clamp(+rgba[2], 0, 255),
+      b: clamp(+rgba[3], 0, 255),
+      a: rgba[4] !== undefined ? clamp(+rgba[4], 0, 1) : 1,
+    };
   }
 
-  // HSL
-  const hslMatch = input.match(/hsl\s*\(\s*(\d+)\s*,\s*(\d+)%?\s*,\s*(\d+)%?\s*\)/);
-  if (hslMatch) {
-    const h = +hslMatch[1] / 360, s = +hslMatch[2] / 100, l = +hslMatch[3] / 100;
-    const hue2rgb = (p: number, q: number, t: number) => {
-      if (t < 0) t += 1; if (t > 1) t -= 1;
-      if (t < 1/6) return p + (q - p) * 6 * t;
-      if (t < 1/2) return q;
-      if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-      return p;
-    };
-    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-    const p = 2 * l - q;
-    const r = Math.round(hue2rgb(p, q, h + 1/3) * 255);
-    const g = Math.round(hue2rgb(p, q, h) * 255);
-    const b = Math.round(hue2rgb(p, q, h - 1/3) * 255);
-    return { r, g, b };
+  const hsla = raw.match(/^hsla?\s*\(\s*([\d.]+)\s*,\s*([\d.]+)%?\s*,\s*([\d.]+)%?(?:\s*,\s*([\d.]+))?\s*\)$/);
+  if (hsla) {
+    const rgb = hslToRgb(+hsla[1], +hsla[2], +hsla[3]);
+    return { ...rgb, a: hsla[4] !== undefined ? clamp(+hsla[4], 0, 1) : 1 };
+  }
+
+  const hsv = raw.match(/^hsva?\s*\(\s*([\d.]+)\s*,\s*([\d.]+)%?\s*,\s*([\d.]+)%?(?:\s*,\s*([\d.]+))?\s*\)$/);
+  if (hsv) {
+    const rgb = hsvToRgb(+hsv[1], +hsv[2], +hsv[3]);
+    return { ...rgb, a: hsv[4] !== undefined ? clamp(+hsv[4], 0, 1) : 1 };
+  }
+
+  const cmyk = raw.match(/^cmyk\s*\(\s*([\d.]+)%?\s*,\s*([\d.]+)%?\s*,\s*([\d.]+)%?\s*,\s*([\d.]+)%?\s*\)$/);
+  if (cmyk) {
+    return { ...cmykToRgb(+cmyk[1], +cmyk[2], +cmyk[3], +cmyk[4]), a: 1 };
   }
 
   return null;
 }
 
-function toHex(c: { r: number; g: number; b: number }): string {
-  return '#' + [c.r, c.g, c.b].map(v => v.toString(16).padStart(2, '0')).join('');
-}
-
-function toHsl(c: { r: number; g: number; b: number }): string {
-  const r = c.r / 255, g = c.g / 255, b = c.b / 255;
-  const max = Math.max(r, g, b), min = Math.min(r, g, b);
-  let h = 0, s = 0;
-  const l = (max + min) / 2;
-  if (max !== min) {
-    const d = max - min;
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-    switch (max) {
-      case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
-      case g: h = ((b - r) / d + 2) / 6; break;
-      case b: h = ((r - g) / d + 4) / 6; break;
-    }
-  }
-  return `hsl(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
-}
-
-function toRgb(c: { r: number; g: number; b: number }): string {
-  return `rgb(${c.r}, ${c.g}, ${c.b})`;
-}
-
-function toCmyk(c: { r: number; g: number; b: number }): string {
-  const r = c.r / 255, g = c.g / 255, b = c.b / 255;
-  const k = 1 - Math.max(r, g, b);
-  if (k === 1) return `cmyk(0%, 0%, 0%, 100%)`;
-  const c2 = (1 - r - k) / (1 - k);
-  const m = (1 - g - k) / (1 - k);
-  const y = (1 - b - k) / (1 - k);
-  return `cmyk(${Math.round(c2 * 100)}%, ${Math.round(m * 100)}%, ${Math.round(y * 100)}%, ${Math.round(k * 100)}%)`;
-}
+const EXAMPLE = 'rgba(52, 152, 219, 0.85)';
 
 export default function ColorFormatConverterV2Client() {
-  const [input, setInput] = useState('#e74c3c');
-  const [parsed, setParsed] = useState<{ r: number; g: number; b: number } | null>(null);
+  const [input, setInput] = useState('#3498db');
+  const [alpha, setAlpha] = useState(1);
   const [copied, setCopied] = useState('');
 
-  useEffect(() => {
-    setParsed(parseColor(input));
-  }, [input]);
+  const parsed = useMemo(() => parseColor(input), [input]);
+  const color: Rgba | null = parsed
+    ? { ...parsed, a: input.toLowerCase().includes('a(') || /#[a-f0-9]{8}$/i.test(input.trim()) ? parsed.a : alpha }
+    : null;
 
-  const loadExample = () => setInput('hsl(204, 70%, 53%)');
+  const formats = useMemo(() => {
+    if (!color) return [];
+    const hsl = rgbToHsl(color.r, color.g, color.b);
+    const hsv = rgbToHsv(color.r, color.g, color.b);
+    const cmyk = rgbToCmyk(color.r, color.g, color.b);
+    const a = Number(color.a.toFixed(2));
+    return [
+      { label: 'HEX', value: formatHex(color).toUpperCase() },
+      { label: 'HEX8', value: formatHex8(color).toUpperCase() },
+      { label: 'RGB', value: `rgb(${color.r}, ${color.g}, ${color.b})` },
+      { label: 'RGBA', value: `rgba(${color.r}, ${color.g}, ${color.b}, ${a})` },
+      { label: 'HSL', value: `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)` },
+      { label: 'HSLA', value: `hsla(${hsl.h}, ${hsl.s}%, ${hsl.l}%, ${a})` },
+      { label: 'HSV', value: `hsv(${hsv.h}, ${hsv.s}%, ${hsv.v}%)` },
+      { label: 'CMYK', value: `cmyk(${cmyk.c}%, ${cmyk.m}%, ${cmyk.y}%, ${cmyk.k}%)` },
+    ];
+  }, [color]);
 
-  const copy = (label: string, v: string) => {
-    navigator.clipboard.writeText(v).catch(() => {});
+  const swatchHex = color ? formatHex(color) : '#000000';
+  const pickerValue = /^#[0-9a-fA-F]{6}$/.test(swatchHex) ? swatchHex : '#3498db';
+
+  const copy = (label: string, value: string) => {
+    navigator.clipboard.writeText(value).catch(() => {});
     setCopied(label);
     setTimeout(() => setCopied(''), 1500);
   };
 
-  const formats = parsed ? [
-    { label: 'HEX', value: toHex(parsed) },
-    { label: 'RGB', value: toRgb(parsed) },
-    { label: 'HSL', value: toHsl(parsed) },
-    { label: 'CMYK', value: toCmyk(parsed) },
-    { label: 'HEX8', value: toHex(parsed) + 'ff' },
-  ] : [];
+  const onPicker = (hex: string) => {
+    setInput(hex);
+    setAlpha(1);
+  };
+
+  const onAlpha = (value: number) => {
+    setAlpha(value);
+    if (!parsed) return;
+    const next = { ...parsed, a: value };
+    setInput(`rgba(${next.r}, ${next.g}, ${next.b}, ${Number(value.toFixed(2))})`);
+  };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="tb-v2-section" style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '16px 20px' }}>
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Color Format Converter V2</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
-          Load Example
-        </button>
+        <span className="tb-v2-tool-label">Color</span>
+        <ToolExampleClearActions
+          onExample={() => {
+            setInput(EXAMPLE);
+            setAlpha(0.85);
+          }}
+          onClear={() => {
+            setInput('');
+            setAlpha(1);
+          }}
+          canClear={Boolean(input)}
+        />
       </div>
-      <p style={{ fontSize: 13, color: 'var(--tb-text-secondary)' }}>Supports HEX, RGB, and HSL input formats.</p>
 
-      <input
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        className="tb-v2-input"
-        style={{ fontFamily: 'var(--f-mono)' }}
-        placeholder="#e74c3c"
-      />
+      <p style={{ fontSize: 13, color: 'var(--tb-text-secondary)', margin: 0 }}>
+        Paste HEX, RGB, RGBA, HSL, HSLA, HSV, or CMYK. Pick a color or adjust alpha. All formats update live.
+      </p>
 
-      {parsed ? (
+      <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+        <input
+          type="color"
+          value={pickerValue}
+          onChange={(e) => onPicker(e.target.value)}
+          aria-label="Pick color"
+          style={{ width: 44, height: 44, borderRadius: 8, border: '1px solid var(--tb-border)', cursor: 'pointer', padding: 0 }}
+        />
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          className="tb-v2-input"
+          style={{ fontFamily: 'var(--f-mono)', flex: 1 }}
+          placeholder="#3498db or rgba(52, 152, 219, 0.85)"
+          spellCheck={false}
+        />
+      </div>
+
+      <div>
+        <label className="tb-v2-tool-label" style={{ display: 'block', marginBottom: 6 }}>
+          Alpha ({Number(alpha.toFixed(2))})
+        </label>
+        <input
+          type="range"
+          min={0}
+          max={1}
+          step={0.01}
+          value={alpha}
+          onChange={(e) => onAlpha(+e.target.value)}
+          className="tb-v2-range"
+          style={{ width: '100%' }}
+        />
+      </div>
+
+      {color ? (
         <>
-          <div className="w-full h-24 rounded-lg border flex items-center justify-center text-xl font-bold" style={{ backgroundColor: toHex(parsed), color: parsed.r * 0.299 + parsed.g * 0.587 + parsed.b * 0.114 > 150 ? '#000' : '#fff' }}>
-            {toHex(parsed).toUpperCase()}
+          <div
+            className="w-full h-24 rounded-lg border flex items-center justify-center text-lg font-mono font-semibold"
+            style={{
+              backgroundColor: `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`,
+              color: color.r * 0.299 + color.g * 0.587 + color.b * 0.114 > 150 ? '#111' : '#fff',
+            }}
+          >
+            {formatHex(color).toUpperCase()}
           </div>
 
-          <div className="flex flex-col gap-2">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {formats.map(({ label, value }) => (
-              <div key={label} className="flex items-center justify-between p-3 bg-gray-50 rounded border">
+              <div
+                key={label}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: 12,
+                  padding: '10px 12px',
+                  borderRadius: 8,
+                  border: '1px solid var(--tb-border)',
+                  background: 'var(--tb-bg-elevated, transparent)',
+                }}
+              >
                 <div>
-                  <span className="text-xs text-gray-400">{label}</span>
-                  <div className="font-mono">{value}</div>
+                  <div style={{ fontSize: 11, color: 'var(--tb-text-secondary)' }}>{label}</div>
+                  <div className="font-mono" style={{ fontSize: 14 }}>
+                    {value}
+                  </div>
                 </div>
                 <button
                   type="button"
@@ -149,9 +382,9 @@ export default function ColorFormatConverterV2Client() {
           </div>
         </>
       ) : input ? (
-        <p className="tb-v2-empty">Could not parse color. Try: #ff0000, rgb(255,0,0), hsl(0,100%,50%)</p>
+        <p className="tb-v2-empty">Could not parse color. Try #ff0000, rgb(255,0,0), hsl(0,100%,50%), or cmyk(0%,100%,100%,0%).</p>
       ) : (
-        <p className="tb-v2-empty">Enter a color above to convert it to HEX, RGB, HSL, and CMYK.</p>
+        <p className="tb-v2-empty">Enter or pick a color to see HEX, RGB, RGBA, HSL, HSLA, HSV, and CMYK.</p>
       )}
     </div>
   );

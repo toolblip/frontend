@@ -487,7 +487,7 @@ Output: Hello World!`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "color-format-converter": {
-    description: `A color rarely lives in just one format for long, a HEX code from a design file needs to become RGB for a canvas API, or HSL for an easy lightness adjustment, or CMYK before a print vendor will accept it, and juggling all of that by hand invites a typo in a value that looks like it should just work. This tool takes a color in HEX, RGB, RGBA, HSL, HSLA, or CMYK and converts it into every other format at once, with a live preview showing the actual color rather than trusting the numbers alone. Useful for pulling a HEX value from a design tool and getting the RGBA equivalent for a CSS variable, checking what a designer's CMYK print swatch looks like as an on-screen HEX code, or converting an HSL value with an adjusted lightness back into RGB for code.`,
+    description: `A color rarely lives in just one format for long, a HEX code from a design file needs to become RGB for a canvas API, or HSL for an easy lightness adjustment, or CMYK before a print vendor will accept it, and juggling all of that by hand invites a typo in a value that looks like it should just work. This tool takes a color in HEX, RGB, RGBA, HSL, HSLA, HSV, or CMYK and converts it into every other format at once, with a color picker, alpha control, and a live preview. Useful for pulling a HEX value from a design tool and getting the RGBA equivalent for a CSS variable, checking what a designer's CMYK print swatch looks like as an on-screen HEX code, or converting an HSL value with an adjusted lightness back into RGB for code.`,
     examples: [
 
     ],

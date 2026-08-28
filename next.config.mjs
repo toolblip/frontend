@@ -135,15 +135,32 @@ const nextConfig = {
       // to a YouTube-transcription feature nothing in the catalog has.
       { source: '/tools/text-combinations-generator', destination: '/tools/word-combinations', permanent: true },
       { source: '/tools/length-weight-converter', destination: '/tools/all-in-one-unit-converter', permanent: true },
-      { source: '/tools/rgb-to-hex-express', destination: '/tools/rgb-to-hex', permanent: true },
-      { source: '/tools/rgb-to-hex-new', destination: '/tools/rgb-to-hex', permanent: true },
-      // Color RGB converters: -express/-new clones → clean canonical slugs.
-      // HexToRgbExpressClient and HexToRgbNewClient were byte-identical;
-      // HexToRgbClient (hex-to-rgb) is the better live+RGBA UI. hsl-to-rgb-new
-      // was a second HSL→RGB page alongside hsl-to-rgb.
-      { source: '/tools/hex-to-rgb-express', destination: '/tools/hex-to-rgb', permanent: true },
-      { source: '/tools/hex-to-rgb-new', destination: '/tools/hex-to-rgb', permanent: true },
-      { source: '/tools/hsl-to-rgb-new', destination: '/tools/hsl-to-rgb', permanent: true },
+      // Color format family → one hub (color-format-converter). Pairwise
+      // converters and format pickers were the same product under many URLs.
+      { source: '/tools/rgb-to-hex-express', destination: '/tools/color-format-converter', permanent: true },
+      { source: '/tools/rgb-to-hex-new', destination: '/tools/color-format-converter', permanent: true },
+      { source: '/tools/rgb-to-hex', destination: '/tools/color-format-converter', permanent: true },
+      { source: '/tools/hex-to-rgb-express', destination: '/tools/color-format-converter', permanent: true },
+      { source: '/tools/hex-to-rgb-new', destination: '/tools/color-format-converter', permanent: true },
+      { source: '/tools/hex-to-rgb', destination: '/tools/color-format-converter', permanent: true },
+      { source: '/tools/hex-to-rgba', destination: '/tools/color-format-converter', permanent: true },
+      { source: '/tools/hex-to-hsl', destination: '/tools/color-format-converter', permanent: true },
+      { source: '/tools/hsl-to-hex', destination: '/tools/color-format-converter', permanent: true },
+      { source: '/tools/hsl-to-rgb', destination: '/tools/color-format-converter', permanent: true },
+      { source: '/tools/hsl-to-rgb-express', destination: '/tools/color-format-converter', permanent: true },
+      { source: '/tools/hsl-to-rgb-new', destination: '/tools/color-format-converter', permanent: true },
+      { source: '/tools/hex-to-hsv', destination: '/tools/color-format-converter', permanent: true },
+      { source: '/tools/hsv-to-hex', destination: '/tools/color-format-converter', permanent: true },
+      { source: '/tools/hex-to-cmyk', destination: '/tools/color-format-converter', permanent: true },
+      { source: '/tools/cmyk-to-rgb', destination: '/tools/color-format-converter', permanent: true },
+      { source: '/tools/cmyk-to-rgb-tool', destination: '/tools/color-format-converter', permanent: true },
+      { source: '/tools/rgba-to-hsl', destination: '/tools/color-format-converter', permanent: true },
+      { source: '/tools/rgba-to-hsl-converter', destination: '/tools/color-format-converter', permanent: true },
+      { source: '/tools/color-format-picker', destination: '/tools/color-format-converter', permanent: true },
+      { source: '/tools/rgb-hsl-color-picker', destination: '/tools/color-format-converter', permanent: true },
+      { source: '/tools/hex-color-picker', destination: '/tools/color-format-converter', permanent: true },
+      { source: '/tools/rgba-color-picker', destination: '/tools/color-format-converter', permanent: true },
+      { source: '/tools/hex-rgb-hsl-color-picker', destination: '/tools/color-format-converter', permanent: true },
       { source: '/tools/youtube-to-text', destination: '/tools/speech-to-text', permanent: true },
 
       // Verified functionally broken (family-verification pass): the
