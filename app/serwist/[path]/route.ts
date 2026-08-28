@@ -15,5 +15,6 @@ export const { dynamic, dynamicParams, revalidate, generateStaticParams, GET } =
   createSerwistRoute({
     additionalPrecacheEntries,
     swSrc: 'app/sw.ts',
+    // Alpine (Railway) can use native esbuild; wasm is the fallback if native fails.
     useNativeEsbuild: true,
   });
