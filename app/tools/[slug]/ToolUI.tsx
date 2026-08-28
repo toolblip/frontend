@@ -427,6 +427,7 @@ import EditClient from '@/components/tools/EditClient';
 import EncodingsRefClient from '@/components/tools/EncodingsRefClient';
 import EncodingsReferenceClient from '@/components/tools/EncodingsReferenceClient';
 import CollocationsCheckerClient from '@/components/tools/CollocationsCheckerClient';
+import EnglishCollocationsCheckerClient from '@/components/tools/EnglishCollocationsCheckerClient';
 import EnglishCollocationsUniqueClient from '@/components/tools/EnglishCollocationsUniqueClient';
 import EnglishDictionaryClient from '@/components/tools/EnglishDictionaryClient';
 import EnvParserClient from '@/components/tools/EnvParserClient';
@@ -1552,7 +1553,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'general-unit-converter':
       return <AllInOneUnitConverterClient />;
     case 'english-collocations-checker':
-      return <CollocationsCheckerClient />;
+      return <EnglishCollocationsCheckerClient />;
     case 'english-collocations-unique':
       return <EnglishCollocationsUniqueClient />;
     case 'english-dictionary':
