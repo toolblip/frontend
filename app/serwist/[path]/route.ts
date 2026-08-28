@@ -23,9 +23,9 @@ const serwistRoute = createSerwistRoute({
 // leaves Cloudflare/Next serving a stale SW after deploys (sponsor favicon
 // NetworkOnly rules never reached clients). next.config headers alone do not
 // override that — set no-store on the response and force a dynamic render.
+// dynamicParams must be a compile-time boolean literal (not re-exported).
 export const dynamic = 'force-dynamic';
-export const dynamicParams = serwistRoute.dynamicParams;
-export const generateStaticParams = serwistRoute.generateStaticParams;
+export const dynamicParams = false;
 
 const NO_STORE = 'no-cache, no-store, must-revalidate, max-age=0';
 
