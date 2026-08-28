@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const loremWords = [
   'lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit',
@@ -12,7 +13,7 @@ const loremWords = [
   'occaecat', 'cupidatat', 'non', 'proident', 'sunt', 'culpa', 'qui', 'officia',
   'deserunt', 'mollit', 'anim', 'id', 'est', 'laborum', 'ac', 'ante', 'arcu',
   'libero', 'rutrum', 'arcu', 'vitae', 'auctor', 'massa', 'turpis', 'magna',
-  'sit', 'amet', 'praesent', 'vestibulum', 'massa', 'eget', 'ante', 'bibendum'
+  'sit', 'amet', 'praesent', 'vestibulum', 'massa', 'eget', 'ante', 'bibendum',
 ];
 
 function generateText(wordCount: number): string {
@@ -29,8 +30,8 @@ export default function FakeTextGeneratorClient() {
   const [text, setText] = useState('');
   const [copied, setCopied] = useState(false);
 
-  const generate = () => {
-    setText(generateText(wordCount));
+  const generate = (n = wordCount) => {
+    setText(generateText(n));
   };
 
   const copy = () => {
@@ -43,18 +44,25 @@ export default function FakeTextGeneratorClient() {
   const wordCountOptions = [10, 25, 50, 100, 200, 500];
 
   return (
-    <div>
+    <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Word Count</span>
+        <ToolExampleClearActions
+          onExample={() => {
+            setWordCount(50);
+            generate(50);
+          }}
+          onClear={() => setText('')}
+          canClear={text.length > 0}
+        />
       </div>
-      <div className="tb-v2-tool-output-body" style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginTop: 8 }}>
+      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', padding: '12px 20px' }}>
         {wordCountOptions.map((opt) => (
           <button
             key={opt}
             type="button"
             onClick={() => setWordCount(opt)}
             className={`tb-v2-mode-tab ${wordCount === opt ? 'on' : ''}`}
-            style={{ padding: '4px 12px', fontSize: 13 }}
           >
             {opt}
           </button>
@@ -66,26 +74,28 @@ export default function FakeTextGeneratorClient() {
           value={wordCount}
           onChange={(e) => setWordCount(Math.max(1, Math.min(1000, parseInt(e.target.value) || 1)))}
           className="tb-v2-tool-textarea"
-          style={{ width: 80, textAlign: 'center' }}
+          style={{ width: 80, minHeight: 36, textAlign: 'center' }}
         />
       </div>
-      <button type="button" onClick={generate} className="tb-v2-copy-btn" style={{ width: '100%', marginTop: 12 }}>
-        Generate Text
-      </button>
+      <div style={{ padding: '0 20px 16px' }}>
+        <button type="button" onClick={() => generate()} className="tb-v2-primary-btn" style={{ width: '100%' }}>
+          Generate Text
+        </button>
+      </div>
 
-      <div className="tb-v2-tool-output-head" style={{ marginTop: 16 }}>
+      <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">Generated Text</span>
         {text && (
-          <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`} style={{ padding: '4px 12px', fontSize: 12 }}>
+          <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
             {copied ? 'Copied' : 'Copy'}
           </button>
         )}
       </div>
-      <div className="tb-v2-tool-output-body" style={{ marginTop: 8 }}>
+      <div className="tb-v2-tool-output-body">
         {text ? (
           <p style={{ lineHeight: 1.8, whiteSpace: 'pre-wrap' }}>{text}</p>
         ) : (
-          <span style={{ color: 'var(--tb-text-secondary)' }}>Click Generate to create text</span>
+          <div className="tb-v2-empty">Click Examples or Generate to create text</div>
         )}
       </div>
     </div>

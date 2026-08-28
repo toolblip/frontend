@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const subjects = ['The cat', 'A developer', 'The weather', 'This tool', 'An algorithm', 'The user', 'A function', 'The system'];
 const verbs = ['generates', 'processes', 'validates', 'converts', 'calculates', 'analyzes', 'transforms', 'formats'];
@@ -9,9 +10,12 @@ const adverbs = ['today', 'easily', 'smoothly', 'perfectly', 'efficiently', 'ins
 
 function generateSentence(): string {
   const patterns = [
-    () => `${subjects[Math.floor(Math.random() * subjects.length)]} ${verbs[Math.floor(Math.random() * verbs.length)]} ${objects[Math.floor(Math.random() * objects.length)]}.`,
-    () => `${subjects[Math.floor(Math.random() * subjects.length)]} ${adverbs[Math.floor(Math.random() * adverbs.length)]} ${verbs[Math.floor(Math.random() * verbs.length)]} ${objects[Math.floor(Math.random() * objects.length)]}.`,
-    () => `${verbs[Math.floor(Math.random() * verbs.length)]} ${objects[Math.floor(Math.random() * objects.length)]} ${adverbs[Math.floor(Math.random() * adverbs.length)]} with ${subjects[Math.floor(Math.random() * subjects.length)].toLowerCase()}.`,
+    () =>
+      `${subjects[Math.floor(Math.random() * subjects.length)]} ${verbs[Math.floor(Math.random() * verbs.length)]} ${objects[Math.floor(Math.random() * objects.length)]}.`,
+    () =>
+      `${subjects[Math.floor(Math.random() * subjects.length)]} ${adverbs[Math.floor(Math.random() * adverbs.length)]} ${verbs[Math.floor(Math.random() * verbs.length)]} ${objects[Math.floor(Math.random() * objects.length)]}.`,
+    () =>
+      `${verbs[Math.floor(Math.random() * verbs.length)]} ${objects[Math.floor(Math.random() * objects.length)]} ${adverbs[Math.floor(Math.random() * adverbs.length)]} with ${subjects[Math.floor(Math.random() * subjects.length)].toLowerCase()}.`,
   ];
   return patterns[Math.floor(Math.random() * patterns.length)]();
 }
@@ -21,8 +25,8 @@ export default function RandomSentenceGeneratorClient() {
   const [sentences, setSentences] = useState<string[]>([]);
   const [copied, setCopied] = useState(false);
 
-  const generate = () => {
-    const results = Array.from({ length: Math.min(Math.max(1, count), 50) }, () => generateSentence());
+  const generate = (n = count) => {
+    const results = Array.from({ length: Math.min(Math.max(1, n), 50) }, () => generateSentence());
     setSentences(results);
   };
 
@@ -34,11 +38,19 @@ export default function RandomSentenceGeneratorClient() {
   };
 
   return (
-    <div>
+    <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Number of Sentences</span>
+        <ToolExampleClearActions
+          onExample={() => {
+            setCount(5);
+            generate(5);
+          }}
+          onClear={() => setSentences([])}
+          canClear={sentences.length > 0}
+        />
       </div>
-      <div className="tb-v2-tool-output-body" style={{ display: 'flex', gap: 12, alignItems: 'center', marginTop: 8 }}>
+      <div style={{ display: 'flex', gap: 12, alignItems: 'center', padding: '12px 20px' }}>
         <input
           type="number"
           min="1"
@@ -46,32 +58,40 @@ export default function RandomSentenceGeneratorClient() {
           value={count}
           onChange={(e) => setCount(Math.max(1, Math.min(50, parseInt(e.target.value) || 1)))}
           className="tb-v2-tool-textarea"
-          style={{ width: 80, textAlign: 'center' }}
+          style={{ width: 80, minHeight: 40, textAlign: 'center' }}
         />
-        <button type="button" onClick={generate} className="tb-v2-copy-btn" style={{ flex: 1 }}>
+        <button type="button" onClick={() => generate()} className="tb-v2-primary-btn" style={{ flex: 1 }}>
           Generate
         </button>
       </div>
 
-      <div className="tb-v2-tool-output-head" style={{ marginTop: 16 }}>
+      <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">Generated Sentences</span>
         {sentences.length > 0 && (
-          <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`} style={{ padding: '4px 12px', fontSize: 12 }}>
+          <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
             {copied ? 'Copied' : 'Copy All'}
           </button>
         )}
       </div>
-      <div className="tb-v2-tool-output-body" style={{ marginTop: 8 }}>
+      <div className="tb-v2-tool-output-body">
         {sentences.length > 0 ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {sentences.map((sentence, i) => (
-              <div key={i} style={{ padding: '8px 12px', background: 'var(--tb-bg-secondary)', borderRadius: 6, lineHeight: 1.5 }}>
+              <div
+                key={i}
+                style={{
+                  padding: '8px 12px',
+                  background: 'var(--tb-bg-secondary)',
+                  borderRadius: 6,
+                  lineHeight: 1.5,
+                }}
+              >
                 {sentence}
               </div>
             ))}
           </div>
         ) : (
-          <span style={{ color: 'var(--tb-text-secondary)' }}>Click Generate to create sentences</span>
+          <div className="tb-v2-empty">Click Examples or Generate to create sentences</div>
         )}
       </div>
     </div>

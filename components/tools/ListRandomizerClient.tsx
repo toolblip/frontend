@@ -1,6 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+
+const EXAMPLE = 'apple\nbanana\ncherry\nmango\npeach\nkiwi';
 
 export default function ListRandomizerClient() {
   const [input, setInput] = useState('');
@@ -16,11 +19,22 @@ export default function ListRandomizerClient() {
     return a;
   };
 
-  const randomize = () => {
-    const lines = input.split('\n').filter(l => l.trim());
+  const randomize = (raw?: string) => {
+    const source = raw ?? input;
+    const lines = source.split('\n').filter((l) => l.trim());
     if (!lines.length) return;
     const items = unique ? [...new Set(lines)] : lines;
     setOutput(shuffle(items));
+  };
+
+  const loadExample = () => {
+    setInput(EXAMPLE);
+    randomize(EXAMPLE);
+  };
+
+  const clear = () => {
+    setInput('');
+    setOutput([]);
   };
 
   const copy = () => {
@@ -29,38 +43,50 @@ export default function ListRandomizerClient() {
   };
 
   return (
-    <div>
-      <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Input List</span></div>
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Input List</span>
+        <ToolExampleClearActions
+          onExample={loadExample}
+          onClear={clear}
+          canClear={input.length > 0 || output.length > 0}
+        />
+      </div>
       <textarea
         value={input}
-        onChange={e => setInput(e.target.value)}
+        onChange={(e) => setInput(e.target.value)}
         placeholder="Enter one item per line..."
         className="tb-v2-tool-textarea"
         style={{ minHeight: 120 }}
       />
-      <div className="tb-v2-tool-output-body" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-        <label style={{ display: 'flex', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
-          <input type="checkbox" checked={unique} onChange={e => setUnique(e.target.checked)} />
-          <span style={{ fontSize: 13 }}>Remove duplicates before shuffling</span>
+      <div style={{ padding: '12px 20px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+        <label className="tb-v2-checkbox-row">
+          <input type="checkbox" checked={unique} onChange={(e) => setUnique(e.target.checked)} />
+          Remove duplicates before shuffling
         </label>
-        <div style={{ display: 'flex', gap: 10 }}>
-          <button onClick={randomize} className="tb-v2-btn-primary">Shuffle</button>
-          <button onClick={() => { setInput(''); setOutput([]); }} className="tb-v2-btn-primary" style={{ background: 'var(--tb-bg-secondary)', color: 'var(--tb-text)' }}>Clear</button>
-        </div>
+        <button type="button" onClick={() => randomize()} className="tb-v2-primary-btn">
+          Shuffle
+        </button>
       </div>
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">Randomized</span>
-        {output.length > 0 && <button type="button" onClick={copy} className="tb-v2-copy-btn">Copy</button>}
+        {output.length > 0 && (
+          <button type="button" onClick={copy} className="tb-v2-copy-btn">
+            Copy
+          </button>
+        )}
       </div>
       <div className="tb-v2-tool-output-body">
         {output.length > 0 ? (
           <ol style={{ margin: 0, paddingLeft: 20, display: 'flex', flexDirection: 'column', gap: 3 }}>
             {output.map((item, i) => (
-              <li key={i} style={{ fontSize: 14, color: 'var(--tb-text)' }}>{item}</li>
+              <li key={i} style={{ fontSize: 14, color: 'var(--tb-text)' }}>
+                {item}
+              </li>
             ))}
           </ol>
         ) : (
-          <div style={{ color: 'var(--tb-text-secondary)', fontSize: 14 }}>Enter items and click Shuffle</div>
+          <div className="tb-v2-empty">Enter items and click Shuffle, or load Examples</div>
         )}
       </div>
     </div>

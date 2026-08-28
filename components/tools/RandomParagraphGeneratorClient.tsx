@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
-const topics = ['technology', 'software', 'development', 'tools', 'automation', 'performance', 'design', 'testing'];
 const sentenceTemplates = [
   'This {adj} approach helps {verb} {noun} effectively.',
   '{noun} is essential for {adj} {noun} development.',
@@ -36,8 +36,8 @@ export default function RandomParagraphGeneratorClient() {
   const [result, setResult] = useState('');
   const [copied, setCopied] = useState(false);
 
-  const generate = () => {
-    const output = Array.from({ length: paragraphs }, () => generateParagraph(sentencesPerParagraph)).join('\n\n');
+  const generate = (paraCount = paragraphs, sentCount = sentencesPerParagraph) => {
+    const output = Array.from({ length: paraCount }, () => generateParagraph(sentCount)).join('\n\n');
     setResult(output);
   };
 
@@ -49,13 +49,31 @@ export default function RandomParagraphGeneratorClient() {
   };
 
   return (
-    <div>
+    <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Configuration</span>
+        <ToolExampleClearActions
+          onExample={() => {
+            setParagraphs(3);
+            setSentencesPerParagraph(5);
+            generate(3, 5);
+          }}
+          onClear={() => setResult('')}
+          canClear={result.length > 0}
+        />
       </div>
-      <div className="tb-v2-tool-output-body" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 8 }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr',
+          gap: 12,
+          padding: '12px 20px',
+        }}
+      >
         <div>
-          <label style={{ fontSize: 11, color: 'var(--tb-text-secondary)', display: 'block', marginBottom: 4 }}>Paragraphs</label>
+          <label style={{ fontSize: 11, color: 'var(--tb-text-secondary)', display: 'block', marginBottom: 4 }}>
+            Paragraphs
+          </label>
           <input
             type="number"
             min="1"
@@ -63,43 +81,51 @@ export default function RandomParagraphGeneratorClient() {
             value={paragraphs}
             onChange={(e) => setParagraphs(Math.max(1, Math.min(20, parseInt(e.target.value) || 1)))}
             className="tb-v2-tool-textarea"
-            style={{ textAlign: 'center' }}
+            style={{ minHeight: 40, textAlign: 'center' }}
           />
         </div>
         <div>
-          <label style={{ fontSize: 11, color: 'var(--tb-text-secondary)', display: 'block', marginBottom: 4 }}>Sentences/Para</label>
+          <label style={{ fontSize: 11, color: 'var(--tb-text-secondary)', display: 'block', marginBottom: 4 }}>
+            Sentences/Para
+          </label>
           <input
             type="number"
             min="1"
             max="20"
             value={sentencesPerParagraph}
-            onChange={(e) => setSentencesPerParagraph(Math.max(1, Math.min(20, parseInt(e.target.value) || 1)))}
+            onChange={(e) =>
+              setSentencesPerParagraph(Math.max(1, Math.min(20, parseInt(e.target.value) || 1)))
+            }
             className="tb-v2-tool-textarea"
-            style={{ textAlign: 'center' }}
+            style={{ minHeight: 40, textAlign: 'center' }}
           />
         </div>
       </div>
-      <button type="button" onClick={generate} className="tb-v2-copy-btn" style={{ width: '100%', marginTop: 12 }}>
-        Generate Paragraphs
-      </button>
+      <div style={{ padding: '0 20px 16px' }}>
+        <button type="button" onClick={() => generate()} className="tb-v2-primary-btn" style={{ width: '100%' }}>
+          Generate Paragraphs
+        </button>
+      </div>
 
-      <div className="tb-v2-tool-output-head" style={{ marginTop: 16 }}>
+      <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">Output</span>
         {result && (
-          <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`} style={{ padding: '4px 12px', fontSize: 12 }}>
+          <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
             {copied ? 'Copied' : 'Copy'}
           </button>
         )}
       </div>
-      <div className="tb-v2-tool-output-body" style={{ marginTop: 8 }}>
+      <div className="tb-v2-tool-output-body">
         {result ? (
           <div style={{ whiteSpace: 'pre-wrap', lineHeight: 1.7 }}>
             {result.split('\n\n').map((para, i) => (
-              <p key={i} style={{ marginBottom: 16 }}>{para}</p>
+              <p key={i} style={{ marginBottom: 16 }}>
+                {para}
+              </p>
             ))}
           </div>
         ) : (
-          <span style={{ color: 'var(--tb-text-secondary)' }}>Click Generate to create paragraphs</span>
+          <div className="tb-v2-empty">Click Examples or Generate to create paragraphs</div>
         )}
       </div>
     </div>
