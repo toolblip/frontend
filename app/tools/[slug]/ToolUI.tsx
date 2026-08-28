@@ -872,6 +872,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'timestamp-converter':
       return <TimestampConverterClient />;
     case 'toml-to-json':
+    case 'json-to-toml':
       return <TomlToJsonClient />;
     case 'tsv-to-csv':
       return <TsvToCsvClient />;

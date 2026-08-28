@@ -203,7 +203,10 @@ const nextConfig = {
       // slug.
       { source: '/tools/word-freq-express', destination: '/tools/word-freq', permanent: true },
       { source: '/tools/html-plaintext-express', destination: '/tools/html-plaintext', permanent: true },
-      { source: '/tools/tsv-json-express', destination: '/tools/tsv-json', permanent: true },
+      { source: '/tools/tsv-json-express', destination: '/tools/csv-to-json', permanent: true },
+      { source: '/tools/json-to-toml', destination: '/tools/toml-to-json', permanent: true },
+      { source: '/tools/json-toml-converter', destination: '/tools/toml-to-json', permanent: true },
+      { source: '/tools/toml-json-converter', destination: '/tools/toml-to-json', permanent: true },
       { source: '/tools/image-rotate-tool', destination: '/tools/images/image-rotate', permanent: true },
       { source: '/tools/image-flip-tool', destination: '/tools/images/image-flip', permanent: true },
       { source: '/tools/html-to-plain-text-tool', destination: '/tools/html-to-plain-text', permanent: true },
