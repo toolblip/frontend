@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 interface ColorStop {
   id: number;
@@ -41,15 +42,17 @@ export default function GradientGeneratorClient() {
     setTimeout(() => setCopied(false), 1500);
   }, [css]);
 
-  const loadExample = () => {
-    setType('linear');
-    setAngle(45);
-    setStops([
-      { id: nextId++, color: '#F97316', position: 0 },
-      { id: nextId++, color: '#DB2777', position: 50 },
-      { id: nextId++, color: '#7C3AED', position: 100 },
-    ]);
-  };
+  const DEFAULT_STOPS: ColorStop[] = [
+    { id: 1, color: '#58D65D', position: 0 },
+    { id: 2, color: '#0EA5E9', position: 100 },
+  ];
+
+  const canClear =
+    type !== 'linear' ||
+    angle !== 135 ||
+    stops.length !== 2 ||
+    stops[0]?.color.toLowerCase() !== '#58d65d' ||
+    stops[1]?.color.toLowerCase() !== '#0ea5e9';
 
   const updateStop = (id: number, patch: Partial<ColorStop>) => {
     setStops((prev) => prev.map((s) => (s.id === id ? { ...s, ...patch } : s)));
@@ -68,15 +71,29 @@ export default function GradientGeneratorClient() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="tb-v2-tool-input-head">
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
         <span className="tb-v2-tool-label">Gradient Generator</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
-          Load Example
-        </button>
+        <ToolExampleClearActions
+          onExample={() => {
+            setType('linear');
+            setAngle(45);
+            setStops([
+              { id: nextId++, color: '#F97316', position: 0 },
+              { id: nextId++, color: '#DB2777', position: 50 },
+              { id: nextId++, color: '#7C3AED', position: 100 },
+            ]);
+          }}
+          onClear={() => {
+            setType('linear');
+            setAngle(135);
+            setStops(DEFAULT_STOPS.map((s) => ({ ...s, id: nextId++ })));
+          }}
+          canClear={canClear}
+        />
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="tb-v2-section" style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '16px 20px' }}>
         {/* Type toggle */}
         <div className="flex items-center gap-2">
           <button
