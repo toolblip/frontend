@@ -126,42 +126,56 @@ function jsonToTomlText(input: string): { text: string; error: string } {
 }
 
 export default function TomlToJsonClient() {
-  const [toml, setToml] = useState('');
   const [json, setJson] = useState('');
-  const [tomlError, setTomlError] = useState('');
+  const [toml, setToml] = useState('');
   const [jsonError, setJsonError] = useState('');
-  const [copiedToml, setCopiedToml] = useState(false);
+  const [tomlError, setTomlError] = useState('');
   const [copiedJson, setCopiedJson] = useState(false);
+  const [copiedToml, setCopiedToml] = useState(false);
+
+  // Keep the opposite pane on parse errors so mid-typing does not wipe output.
+  const applyJson = useCallback((text: string) => {
+    setJson(text);
+    if (!text.trim()) {
+      setToml('');
+      setTomlError('');
+      setJsonError('');
+      return;
+    }
+    const { text: converted, error } = jsonToTomlText(text);
+    if (error) {
+      setJsonError(error);
+      return;
+    }
+    setToml(converted);
+    setTomlError('');
+    setJsonError('');
+  }, []);
 
   const applyToml = useCallback((text: string) => {
     setToml(text);
+    if (!text.trim()) {
+      setJson('');
+      setJsonError('');
+      setTomlError('');
+      return;
+    }
     const { text: converted, error } = tomlToJsonText(text);
+    if (error) {
+      setTomlError(error);
+      return;
+    }
     setJson(converted);
-    setJsonError(error);
-    setTomlError('');
-  }, []);
-
-  const applyJson = useCallback((text: string) => {
-    setJson(text);
-    const { text: converted, error } = jsonToTomlText(text);
-    setToml(converted);
-    setTomlError(error);
     setJsonError('');
+    setTomlError('');
   }, []);
 
   const clearAll = useCallback(() => {
-    setToml('');
     setJson('');
-    setTomlError('');
+    setToml('');
     setJsonError('');
+    setTomlError('');
   }, []);
-
-  const copyToml = useCallback(() => {
-    if (!toml) return;
-    navigator.clipboard.writeText(toml).catch(() => {});
-    setCopiedToml(true);
-    setTimeout(() => setCopiedToml(false), 1500);
-  }, [toml]);
 
   const copyJson = useCallback(() => {
     if (!json) return;
@@ -170,53 +184,25 @@ export default function TomlToJsonClient() {
     setTimeout(() => setCopiedJson(false), 1500);
   }, [json]);
 
+  const copyToml = useCallback(() => {
+    if (!toml) return;
+    navigator.clipboard.writeText(toml).catch(() => {});
+    setCopiedToml(true);
+    setTimeout(() => setCopiedToml(false), 1500);
+  }, [toml]);
+
   return (
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
-        <span className="tb-v2-tool-label">TOML-JSON Converter</span>
+        <span className="tb-v2-tool-label">JSON-TOML Converter</span>
         <ToolExampleClearActions
-          onExample={() => applyToml(EXAMPLE_TOML)}
+          onExample={() => applyJson(EXAMPLE_JSON)}
           onClear={clearAll}
-          canClear={toml.length > 0 || json.length > 0}
+          canClear={json.length > 0 || toml.length > 0}
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-0 divide-y divide-[var(--line)] md:divide-y-0 md:divide-x">
-        <div style={{ display: 'flex', flexDirection: 'column', minHeight: 280 }}>
-          <div className="tb-v2-tool-input-head">
-            <span className="tb-v2-tool-label">TOML</span>
-            <button
-              type="button"
-              onClick={copyToml}
-              disabled={!toml}
-              className={`tb-v2-copy-btn ${copiedToml ? 'done' : ''}`}
-            >
-              {copiedToml ? 'Copied' : 'Copy'}
-            </button>
-          </div>
-          <textarea
-            value={toml}
-            onChange={(e) => applyToml(e.target.value)}
-            placeholder={EXAMPLE_TOML}
-            className="tb-v2-tool-textarea"
-            style={{
-              flex: 1,
-              minHeight: 220,
-              fontFamily: 'var(--f-mono)',
-              border: 'none',
-              borderRadius: 0,
-              resize: 'vertical',
-            }}
-            aria-label="TOML input"
-            spellCheck={false}
-          />
-          {tomlError ? (
-            <p className="tb-v2-error" role="alert" style={{ margin: '0 16px 12px' }}>
-              {tomlError}
-            </p>
-          ) : null}
-        </div>
-
         <div style={{ display: 'flex', flexDirection: 'column', minHeight: 280 }}>
           <div className="tb-v2-tool-input-head">
             <span className="tb-v2-tool-label">JSON</span>
@@ -248,6 +234,41 @@ export default function TomlToJsonClient() {
           {jsonError ? (
             <p className="tb-v2-error" role="alert" style={{ margin: '0 16px 12px' }}>
               {jsonError}
+            </p>
+          ) : null}
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: 280 }}>
+          <div className="tb-v2-tool-input-head">
+            <span className="tb-v2-tool-label">TOML</span>
+            <button
+              type="button"
+              onClick={copyToml}
+              disabled={!toml}
+              className={`tb-v2-copy-btn ${copiedToml ? 'done' : ''}`}
+            >
+              {copiedToml ? 'Copied' : 'Copy'}
+            </button>
+          </div>
+          <textarea
+            value={toml}
+            onChange={(e) => applyToml(e.target.value)}
+            placeholder={EXAMPLE_TOML}
+            className="tb-v2-tool-textarea"
+            style={{
+              flex: 1,
+              minHeight: 220,
+              fontFamily: 'var(--f-mono)',
+              border: 'none',
+              borderRadius: 0,
+              resize: 'vertical',
+            }}
+            aria-label="TOML input"
+            spellCheck={false}
+          />
+          {tomlError ? (
+            <p className="tb-v2-error" role="alert" style={{ margin: '0 16px 12px' }}>
+              {tomlError}
             </p>
           ) : null}
         </div>

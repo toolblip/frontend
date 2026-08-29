@@ -4307,8 +4307,8 @@ Cairo`, note: `Same list, flipped. Use this for a reverse leaderboard or log.` }
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "toml-to-json": {
-    description: `A Rust project's Cargo.toml or a Python project's pyproject.toml holds configuration that a JavaScript-based build tool or script often can't read directly, since TOML and JSON are both structured formats but not remotely the same syntax. This TOML-JSON converter turns either format into the other in live side-by-side panes, all in the browser with nothing uploaded. Useful for feeding TOML config into a JSON-only tool, or rewriting JSON config as TOML for Cargo or pyproject files.`,
+  "json-to-toml": {
+    description: `A Rust project's Cargo.toml or a Python project's pyproject.toml holds configuration that a JavaScript-based build tool or script often can't read directly, since TOML and JSON are both structured formats but not remotely the same syntax. This JSON-TOML converter turns either format into the other in live side-by-side panes, all in the browser with nothing uploaded. Useful for rewriting JSON config as TOML for Cargo or pyproject files, or feeding TOML config into a JSON-only tool.`,
     examples: [
 
     ],
