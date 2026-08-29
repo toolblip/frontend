@@ -897,7 +897,7 @@ WCAG AA: Pass (large text)`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "csv-to-tsv": {
+  "csv-tsv-converter": {
     description: `Convert between CSV and TSV with live side-by-side panes. Paste CSV on the left and TSV updates on the right, or paste TSV on the right and CSV updates on the left with proper quoting for commas and newlines.`,
     examples: [
 
@@ -2116,7 +2116,7 @@ Output: {"name":"John","age":30}`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "json-to-csv": {
+  "json-csv-converter": {
     description: `Convert between JSON and CSV with live side-by-side panes. Paste a JSON array of objects on the left and CSV updates on the right, or paste CSV on the right and JSON updates on the left. Header detection and numeric type inference run in your browser.`,
     examples: [
 
@@ -2186,14 +2186,14 @@ Output: {"name":"John","age":30}`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "json-to-xml": {
+  "json-xml-converter": {
     description: `Convert between JSON and XML with live side-by-side panes. Paste JSON on the left and XML updates on the right, or paste XML on the right and JSON updates on the left. Choose the XML root name when converting from JSON. Attributes use @ prefixes; conversion runs in your browser.`,
     examples: [
 
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "json-to-yaml": {
+  "json-yaml-converter": {
     description: `Convert between JSON and YAML with live side-by-side panes. Paste JSON on the left and YAML updates on the right, or paste YAML on the right and JSON updates on the left. Pretty-printed output for Kubernetes manifests, Compose files, and CI configs — nothing leaves your browser.`,
     examples: [
 
@@ -4307,7 +4307,7 @@ Cairo`, note: `Same list, flipped. Use this for a reverse leaderboard or log.` }
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "json-to-toml": {
+  "json-toml-converter": {
     description: `A Rust project's Cargo.toml or a Python project's pyproject.toml holds configuration that a JavaScript-based build tool or script often can't read directly, since TOML and JSON are both structured formats but not remotely the same syntax. This JSON-TOML converter turns either format into the other in live side-by-side panes, all in the browser with nothing uploaded. Useful for rewriting JSON config as TOML for Cargo or pyproject files, or feeding TOML config into a JSON-only tool.`,
     examples: [
 
