@@ -713,10 +713,20 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <JsonFormatterClient />;
     case 'json-validator':
       return <JsonValidatorClient />;
+    case 'json-to-yaml':
     case 'yaml-to-json':
       return <YamlToJsonClient />;
+    case 'json-to-xml':
     case 'xml-to-json':
       return <XmlToJsonClient />;
+    case 'json-to-csv':
+    case 'csv-to-json':
+    case 'tsv-json':
+    case 'json-to-tsv':
+      return <CsvToJsonClient />;
+    case 'csv-to-tsv':
+    case 'tsv-to-csv':
+      return <TsvToCsvClient />;
     case 'xml-formatter':
       return <XmlFormatterClient />;
     case 'uuid-generator':
@@ -771,8 +781,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <LoremIpsumGeneratorClient />;
     case 'jwt-decoder':
       return <JwtDecoderClient />;
-    case 'json-to-yaml':
-      return <YamlToJsonClient />;
     case 'js-minifier':
       return <JsMinifierClient />;
     case 'image-resizer':
@@ -875,8 +883,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'toml-to-json':
     case 'toml-to-json-v2':
       return <TomlToJsonClient />;
-    case 'tsv-to-csv':
-      return <TsvToCsvClient />;
     case 'typo-checker':
       return <TypoCheckerClient />;
     case 'unicode-character-inspector':
@@ -1011,10 +1017,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <CssValidatorClient />;
     case 'curl-generator':
       return <CurlGeneratorClient />;
-    case 'csv-to-json':
-      return <CsvToJsonClient />;
-    case 'csv-to-tsv':
-      return <TsvToCsvClient />;
     case 'curl-to-python':
       return <CurlToPythonClient />;
     case 'decimal-to-binary':
@@ -1093,8 +1095,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <JsonPathTesterClient />;
     case 'json-schema-validator':
       return <JsonSchemaValidatorClient />;
-    case 'json-to-csv':
-      return <CsvToJsonClient />;
     case 'json-to-html-table':
       return <JsonToHtmlTableClient />;
     case 'json-to-markdown-table':
@@ -1103,8 +1103,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <JsonToPythonClient />;
     case 'json-to-typescript':
       return <JsonToTypescriptClient />;
-    case 'json-to-xml':
-      return <XmlToJsonClient />;
     case 'keyword-density-checker':
       return <KeywordDensityCheckerClient />;
     case 'length-converter':
@@ -2034,8 +2032,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <JsonValidatorClient />;
     case 'json-graph-visualizer':
       return <JsonGraphVisualizerClient />;
-    case 'json-to-tsv':
-      return <JsonToCsvClient />;
     case 'json-to-html':
       return <JsonToHtmlTableClient />;
     case 'json-to-markdown':
@@ -2048,8 +2044,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <XmlFormatterClient />;
     case 'xml-prettifier':
       return <XmlFormatterClient />;
-    case 'xml-to-json-v2':
-      return <XmlToJsonClient />;
     case 'xml-to-yaml':
       return <XmlToJsonClient />;
     case 'yaml-to-xml':
@@ -2426,16 +2420,11 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'json-schema-gen-express': return <JsonSchemaGenExpressClient />;
     case 'json-schema-generator': return <JsonLdGeneratorClient />;
     case 'json-schema-viewer': return <JsonSchemaValidatorClient />;
-    case 'json-to-csv-v2': return <CsvToJsonClient />;
     case 'json-to-go-struct': return <CsvToJsonClient />;
     case 'json-to-php-array': return <CsvToJsonClient />;
     case 'json-to-typescript-interface': return <JsonToTypescriptClient />;
     case 'json-to-typescript-types': return <JsonToTypescriptClient />;
     case 'json-to-url-encoded': return <CsvToJsonClient />;
-    case 'json-to-xml-v2': return <JsonToXmlClient />;
-    case 'json-to-yaml-v2': return <JsonToYamlClient />;
-    case 'json-xml-express': return <JsonToXmlClient />;
-    case 'json-yaml-express': return <JsonToYamlClient />;
     case 'jwt-decode-tool': return <DecodeToolClient />;
     case 'jwt-decoder-2025': return <JwtDecoderClient />;
     case 'jwt-decoder-adv': return <JwtDecoderClient />;
@@ -2838,12 +2827,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'time-duration-calculator': return <TimeDurationCalculatorClient />; // real time arithmetic, not a reading-speed estimator
     case 'time-zone-tool': return <TimeZoneConverterClient />;
     case 'title-case-converter': return <CaseConverterClient />;
-    case 'tsv-json-express':
-    case 'tsv-json':
-    case 'tsv-to-json-v2':
-      return <CsvToJsonClient />;
-    case 'tsv-to-csv-v2':
-      return <TsvToCsvClient />;
     case 'unit-converter-2025': return <UnitConverterClient />;
     case 'unit-converter-advanced': return <UnitConverterClient />;
     case 'unit-converter-browser': return <UnitConverterClient />;
@@ -2891,11 +2874,8 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'word-complexity-analyzer': return <WordFrequencyAnalyzerClient />;
     case 'word-density-analyzer': return <WordFrequencyAnalyzerClient />;
     case 'word-frequency-table': return <WordFrequencyAnalyzerClient />;
-    case 'xml-json-express': return <XmlToJsonClient />;
     case 'xml-sitemap-parser': return <XmlSitemapGeneratorClient />;
     case 'xml-to-excel': return <ExcelToXmlClient />;
-    case 'yaml-json-express': return <YamlToJsonClient />;
-    case 'yaml-to-json-v2': return <JsonToYamlClient />;
     case 'yaml-to-toml': return <JsonToYamlClient />;
     case 'yaml-to-toml-v2': return <JsonToYamlClient />;
     case 'youtube-to-text': return <AudioToTextClient />;
