@@ -68,9 +68,10 @@ export default function ColorPaletteExtractorClient() {
 
       for (let i = 0; i < imageData.length; i += 4) {
         if (imageData[i + 3] < 128) continue;
-        const r = Math.round(imageData[i] / 8) * 8;
-        const g = Math.round(imageData[i + 1] / 8) * 8;
-        const b = Math.round(imageData[i + 2] / 8) * 8;
+        // Floor buckets stay ≤248 — Math.round(255/8)*8 === 256 breaks hex (3 digits).
+        const r = Math.floor(imageData[i] / 8) * 8;
+        const g = Math.floor(imageData[i + 1] / 8) * 8;
+        const b = Math.floor(imageData[i + 2] / 8) * 8;
         const hex = '#' + [r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('');
         colorMap[hex] = (colorMap[hex] || 0) + 1;
       }
