@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type PaletteType = 'complementary' | 'analogous' | 'triadic' | 'tetradic' | 'split-complementary' | 'monochromatic';
 
@@ -144,11 +145,6 @@ export default function ColorPaletteGeneratorClient() {
     }
   };
 
-  const loadExample = () => {
-    setBaseColorValue('#9b59b6');
-    setPaletteType('triadic');
-  };
-
   const copyToClipboard = async (color: string, index: number) => {
     try {
       await navigator.clipboard.writeText(color);
@@ -159,14 +155,25 @@ export default function ColorPaletteGeneratorClient() {
     }
   };
 
+  const canClear = baseColor.toLowerCase() !== '#3498db' || paletteType !== 'complementary';
+
   return (
-    <div className="flex flex-col gap-4">
-      <div className="tb-v2-tool-input-head">
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
         <span className="tb-v2-tool-label">Color Palette Generator</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
-          Load Example
-        </button>
+        <ToolExampleClearActions
+          onExample={() => {
+            setBaseColorValue('#9b59b6');
+            setPaletteType('triadic');
+          }}
+          onClear={() => {
+            setBaseColorValue('#3498db');
+            setPaletteType('complementary');
+          }}
+          canClear={canClear}
+        />
       </div>
+      <div className="tb-v2-section" style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '16px 20px' }}>
 
       <div>
         <label className="tb-v2-tool-label" style={{ marginBottom: 8, display: 'block' }}>Base Color</label>
@@ -326,6 +333,7 @@ export default function ColorPaletteGeneratorClient() {
           <p><strong>Split Complementary:</strong> Base color plus two adjacent to its complement, less tension than complementary.</p>
           <p><strong>Monochromatic:</strong> Single hue with varying saturation and lightness for cohesive look.</p>
         </div>
+      </div>
       </div>
     </div>
   );

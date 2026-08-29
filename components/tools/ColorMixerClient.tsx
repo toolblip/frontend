@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 interface ColorInput {
   hex: string;
@@ -207,6 +208,17 @@ export default function ColorMixerClient() {
     setHexDrafts(scheme.colors);
   };
 
+  const DEFAULT_COLORS: ColorInput[] = [
+    { hex: '#ff0000', weight: 1 },
+    { hex: '#0000ff', weight: 1 },
+  ];
+
+  const canClear =
+    colors.length !== 2 ||
+    colors[0]?.hex.toLowerCase() !== '#ff0000' ||
+    colors[1]?.hex.toLowerCase() !== '#0000ff' ||
+    blendMode !== 'additive';
+
   const copyResult = () => {
     navigator.clipboard.writeText(resultColor.toUpperCase()).catch(() => {});
     setCopied(true);
@@ -214,14 +226,21 @@ export default function ColorMixerClient() {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="tb-v2-tool-input-head">
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
         <span className="tb-v2-tool-label">Color Mixer</span>
-        <button type="button" onClick={() => loadPreset(presetSchemes[0])} className="tb-v2-btn-sm">
-          Load Example
-        </button>
+        <ToolExampleClearActions
+          onExample={() => loadPreset(presetSchemes[3])}
+          onClear={() => {
+            setColors(DEFAULT_COLORS);
+            setHexDrafts(['#ff0000', '#0000ff']);
+            setBlendMode('additive');
+          }}
+          canClear={canClear}
+        />
       </div>
 
+      <div className="tb-v2-section" style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '16px 20px' }}>
       <div>
         <div className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Blend Mode</div>
         <div className="tb-v2-mode-tabs">
@@ -379,6 +398,7 @@ export default function ColorMixerClient() {
             <strong>Average mixing</strong> blends colors naturally by averaging their RGB values, giving more weight to colors with higher weights.
           </p>
         </div>
+      </div>
       </div>
     </div>
   );
