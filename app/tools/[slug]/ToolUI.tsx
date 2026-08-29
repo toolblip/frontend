@@ -871,8 +871,9 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <TimeZoneConverterClient />;
     case 'timestamp-converter':
       return <TimestampConverterClient />;
-    case 'toml-to-json':
     case 'json-to-toml':
+    case 'toml-to-json':
+    case 'toml-to-json-v2':
       return <TomlToJsonClient />;
     case 'tsv-to-csv':
       return <TsvToCsvClient />;
@@ -2837,7 +2838,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'time-duration-calculator': return <TimeDurationCalculatorClient />; // real time arithmetic, not a reading-speed estimator
     case 'time-zone-tool': return <TimeZoneConverterClient />;
     case 'title-case-converter': return <CaseConverterClient />;
-    case 'toml-to-json-v2': return <TomlToJsonClient />;
     case 'tsv-json-express':
     case 'tsv-json':
     case 'tsv-to-json-v2':

@@ -1806,10 +1806,10 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What tip percentages are available?', a: 'Six preset buttons, 5%, 10%, 15%, 18%, 20%, and 25%, plus a custom number field if you need a specific percentage outside those presets.' },
     { q: 'How is the per-person amount calculated?', a: 'It adds your tip amount to the bill for a total, then divides that total by the number of people set with the plus and minus buttons next to "Split Between".' },
   ],
-  'toml-to-json': [
+  'json-to-toml': [
+    { q: 'Does it convert both ways?', a: 'Yes. Paste or type JSON on the left and TOML updates on the right; paste or type TOML on the right and JSON updates on the left. Incomplete text shows an error without wiping the other pane.' },
     { q: 'What TOML syntax can it parse?', a: '[section] headers, key = value lines, double or single quoted strings, true/false booleans, and plain numbers, each converted to the matching JSON type of string, boolean, or number.' },
-    { q: 'What happens to lines it cannot parse?', a: 'Blank lines and lines starting with # are skipped, and any line without an = sign is silently ignored rather than converted, so simple key-value pairs and section headers convert most reliably.' },
-    { q: 'Does it support nested tables or arrays?', a: 'No, it only handles single-level [section] tables and flat key = value pairs, TOML arrays, inline tables, and multi-line strings are not parsed.' },
+    { q: 'Does it support nested tables or arrays?', a: 'It handles single-level [section] tables and flat key = value pairs. TOML arrays, inline tables, and multi-line strings are not supported yet.' },
   ],
   'tsv-to-csv': [
     { q: 'How does it handle cells that contain commas or quotes?', a: 'Any cell containing a comma, double quote, or newline gets wrapped in double quotes, with existing double quotes doubled, so the resulting CSV stays valid even when your TSV data has punctuation inside fields.' },
