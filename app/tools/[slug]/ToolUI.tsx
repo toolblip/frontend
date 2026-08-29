@@ -2011,7 +2011,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'color-contrast-ratio':
       return <ContrastCheckerClient />;
     case 'wcag-contrast-checker':
-      return <ContrastCheckerClient />;
+      return <ContrastCheckerClient title="WCAG Contrast Checker" />;
     case 'accessibility-contrast-checker':
       return <ContrastCheckerClient />;
     case 'contrast-tool':
@@ -2875,7 +2875,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'volume-unit-converter': return <UnitConverterClient />;
     case 'vsd-to-pdf': return <ExcelToPdfClient />;
     case 'vsdx-to-pdf': return <ExcelToPdfClient />;
-    case 'wcag-contrast-auditor': return <ColorContrastAuditorClient />;
+    case 'wcag-contrast-auditor': return <ColorContrastAuditorClient title="WCAG Contrast Auditor" />;
     case 'webp-to-gif': return <AviToGifClient />;
     case 'weight-converter-express': return <WeightConverterClient />;
     case 'wifi-qr-code-generator': return <QrCodeGeneratorClient />;
