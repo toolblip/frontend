@@ -1527,8 +1527,8 @@ WCAG AA: Pass (large text)`
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
-  "hex-to-named-color": {
-    description: `A hex code like #DC143C communicates nothing on its own to someone reading it in a design spec or a code review, while the actual name crimson does, which is exactly the gap between a color a program can render precisely and a color a person can picture and discuss without pulling up a swatch. This tool converts a hex code into the nearest CSS named color, crimson, turquoise, ivory, and hundreds of others, translating a numeric value into a word an actual person recognizes. Useful for writing more readable CSS with a named color instead of a hex string wherever precision doesn't actually matter, describing a color verbally in a design handoff document without attaching a swatch, or figuring out what an unfamiliar hex value from an old stylesheet is actually supposed to look like.`,
+  "hex-named-color-converter": {
+    description: `A hex code like #DC143C communicates nothing on its own in a design review, while the name crimson does — and the reverse is just as common when someone says “use tomato” and you need the exact hex for a stylesheet. This tool converts both ways between HEX and CSS named colors in live side-by-side panes: pick or type a hex to find the nearest name, or pick a name to get its hex instantly. Useful for writing readable CSS with named colors, turning a verbal color name into a paste-ready hex, or checking what an unfamiliar hex is closest to in the CSS named-color set.`,
     examples: [
 
     ],

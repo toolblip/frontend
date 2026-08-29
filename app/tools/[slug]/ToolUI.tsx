@@ -1758,7 +1758,9 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <HexToHslClient />;
     case 'hex-to-hsv':
       return <HexToHsvClient />;
+    case 'hex-named-color-converter':
     case 'hex-to-named-color':
+    case 'named-to-hex':
       return <HexToNamedColorClient />;
     case 'hex-to-rgba':
       return <HexToRgbaClient />;
