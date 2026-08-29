@@ -383,7 +383,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does the converter support YAML anchors and references?', a: 'Yes. Anchors (&name) and aliases (*name) are resolved when converting to JSON. Going from JSON back to YAML produces a flat document  -  JSON has no anchor concept, so duplicated values are simply written out in full.' },
     { q: 'Is my YAML uploaded anywhere?', a: 'No. Conversion runs in your browser using js-yaml. Config files often contain secrets and infrastructure details; nothing is sent over the network.' },
   ],
-  'json-to-yaml': [
+  'json-yaml-converter': [
     { q: 'Does it convert both ways?', a: 'Yes. Paste or type JSON on the left and YAML updates on the right; paste or type YAML on the right and JSON updates on the left. Incomplete text shows an error without wiping the other pane.' },
     { q: 'How is the YAML output formatted?', a: 'YAML output uses 2-space indentation, no document markers, and 80-character line width  -  the defaults for js-yaml and the format most teams use for config files.' },
     { q: 'Does the converter handle nested arrays and objects?', a: 'Yes. Arbitrarily nested JSON structures convert cleanly into YAML\'s indentation-based format.' },
@@ -397,7 +397,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What about XML namespaces and CDATA?', a: 'Prefixed element names (like ns:tag) are preserved as-is in the JSON keys. CDATA sections collapse to plain text content during parsing.' },
     { q: 'Is the XML uploaded somewhere?', a: 'No. The tool uses the browser\'s built-in DOMParser; no parsing happens on a server.' },
   ],
-  'json-to-xml': [
+  'json-xml-converter': [
     { q: 'Does it convert both ways?', a: 'Yes. Paste JSON on the left and XML updates on the right; paste XML on the right and JSON updates on the left. Incomplete text shows an error without wiping the other pane.' },
     { q: 'How does it decide what becomes an XML attribute instead of a child element?', a: 'Any key that starts with an @ symbol is written as an attribute on its parent element, for example "@id" becomes id="...", while every other key becomes a nested child element.' },
     { q: 'Can I change the name of the outermost XML tag?', a: 'Yes, an XML root field in the header lets you type any tag name. Changing it re-converts from the current JSON.' },
@@ -943,13 +943,13 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does it infer data types automatically?', a: 'Yes, any value that parses as a number is output as a JSON number rather than a string, for example 30 becomes 30 not "30".' },
     { q: 'How are column headers detected?', a: 'The first line of CSV is split into headers automatically, quotes around header names are stripped, and each later line is mapped to those header keys.' },
   ],
-  'json-to-csv': [
+  'json-csv-converter': [
     { q: 'Does it convert both ways?', a: 'Yes. Paste or type JSON on the left and CSV updates on the right; paste or type CSV on the right and JSON updates on the left. Incomplete text shows an error without wiping the other pane.' },
     { q: 'What JSON shape does it expect?', a: 'An array of objects. The keys of the first object become CSV headers; each object becomes one row.' },
     { q: 'Does it infer data types from CSV?', a: 'Yes. Numeric-looking cells become JSON numbers; everything else stays a string.' },
     { q: 'Is my data uploaded anywhere?', a: 'No. Conversion runs entirely in your browser.' },
   ],
-  'csv-to-tsv': [
+  'csv-tsv-converter': [
     { q: 'Does it convert both ways?', a: 'Yes. Paste CSV on the left and TSV updates on the right; paste TSV on the right and CSV updates on the left.' },
     { q: 'How does it handle cells that contain commas or quotes?', a: 'When converting TSV to CSV, any cell containing a comma, double quote, or newline gets wrapped in double quotes, with existing double quotes doubled.' },
     { q: 'Does it require a header row?', a: 'No. Every line converts the same way whether or not the first line is a header.' },
@@ -1819,7 +1819,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What tip percentages are available?', a: 'Six preset buttons, 5%, 10%, 15%, 18%, 20%, and 25%, plus a custom number field if you need a specific percentage outside those presets.' },
     { q: 'How is the per-person amount calculated?', a: 'It adds your tip amount to the bill for a total, then divides that total by the number of people set with the plus and minus buttons next to "Split Between".' },
   ],
-  'json-to-toml': [
+  'json-toml-converter': [
     { q: 'Does it convert both ways?', a: 'Yes. Paste or type JSON on the left and TOML updates on the right; paste or type TOML on the right and JSON updates on the left. Incomplete text shows an error without wiping the other pane.' },
     { q: 'What TOML syntax can it parse?', a: '[section] headers, key = value lines, double or single quoted strings, true/false booleans, and plain numbers, each converted to the matching JSON type of string, boolean, or number.' },
     { q: 'Does it support nested tables or arrays?', a: 'It handles single-level [section] tables and flat key = value pairs. TOML arrays, inline tables, and multi-line strings are not supported yet.' },

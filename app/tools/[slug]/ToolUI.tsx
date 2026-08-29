@@ -713,17 +713,21 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <JsonFormatterClient />;
     case 'json-validator':
       return <JsonValidatorClient />;
+    case 'json-yaml-converter':
     case 'json-to-yaml':
     case 'yaml-to-json':
       return <YamlToJsonClient />;
+    case 'json-xml-converter':
     case 'json-to-xml':
     case 'xml-to-json':
       return <XmlToJsonClient />;
+    case 'json-csv-converter':
     case 'json-to-csv':
     case 'csv-to-json':
     case 'tsv-json':
     case 'json-to-tsv':
       return <CsvToJsonClient />;
+    case 'csv-tsv-converter':
     case 'csv-to-tsv':
     case 'tsv-to-csv':
       return <TsvToCsvClient />;
@@ -879,6 +883,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <TimeZoneConverterClient />;
     case 'timestamp-converter':
       return <TimestampConverterClient />;
+    case 'json-toml-converter':
     case 'json-to-toml':
     case 'toml-to-json':
     case 'toml-to-json-v2':
