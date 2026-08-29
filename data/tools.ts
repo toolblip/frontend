@@ -748,10 +748,6 @@ const TOOL_SLUG_ALIASES: Record<string, string> = {
   'user-agent-parser-v2': 'user-agent-parser',
   'weight-converter-express': 'weight-converter',
   'word-frequency-analyzer': 'word-freq-express',
-  'xml-json-express': 'json-to-xml',
-  'xml-to-json-v2': 'json-to-xml',
-  'yaml-json-express': 'json-to-yaml',
-  'yaml-to-json-v2': 'json-to-yaml',
 };
 
 export const tools: Tool[] = [
