@@ -191,7 +191,7 @@ function nameToHex(name: string): string | null {
   for (const [hex, n] of Object.entries(HEX_TO_NAME)) {
     if (n.toLowerCase() === needle) return hex;
   }
-  // Grey/Gray aliases
+  // Grey/Gray + Cyan/Magenta aliases (same hex as Aqua/Fuchsia)
   if (needle === 'grey') return nameToHex('Gray');
   if (needle === 'darkgrey') return nameToHex('DarkGray');
   if (needle === 'lightgrey') return nameToHex('LightGray');
@@ -199,6 +199,8 @@ function nameToHex(name: string): string | null {
   if (needle === 'slategrey') return nameToHex('SlateGray');
   if (needle === 'darkslategrey') return nameToHex('DarkSlateGray');
   if (needle === 'lightslategrey') return nameToHex('LightSlateGray');
+  if (needle === 'cyan') return '#00FFFF';
+  if (needle === 'magenta') return '#FF00FF';
   return null;
 }
 
