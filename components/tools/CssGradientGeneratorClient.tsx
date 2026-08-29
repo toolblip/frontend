@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type GradientType = 'linear' | 'radial' | 'conic';
 
@@ -57,19 +58,26 @@ function presetGradient(preset: PresetDef): string {
   return `conic-gradient(from ${preset.angle}deg, ${stopStr})`;
 }
 
+const DEFAULT_STOPS = [
+  { color: '#7c3aed', position: 0 },
+  { color: '#06b6d4', position: 100 },
+];
+const EXAMPLE_PRESET = PRESETS[0]; // Sunset
+
 export default function CssGradientGeneratorClient() {
   const [type, setType] = useState<GradientType>('linear');
   const [angle, setAngle] = useState(135);
-  const [stops, setStops] = useState<ColorStop[]>(() =>
-    makeStops([
-      { color: '#7c3aed', position: 0 },
-      { color: '#06b6d4', position: 100 },
-    ])
-  );
+  const [stops, setStops] = useState<ColorStop[]>(() => makeStops(DEFAULT_STOPS));
   const [copied, setCopied] = useState(false);
 
   const gradient = buildGradient(type, angle, stops);
   const cssLine = `background: ${gradient};`;
+
+  const resetDefault = useCallback(() => {
+    setType('linear');
+    setAngle(135);
+    setStops(makeStops(DEFAULT_STOPS));
+  }, []);
 
   const updateStopColor = useCallback((id: string, color: string) => {
     setStops(prev => prev.map(s => (s.id === id ? { ...s, color } : s)));
@@ -107,7 +115,16 @@ export default function CssGradientGeneratorClient() {
   const clampAngle = (val: number) => Math.min(360, Math.max(0, val));
 
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
+        <span className="tb-v2-tool-label">CSS Gradient Generator</span>
+        <ToolExampleClearActions
+          onExample={() => applyPreset(EXAMPLE_PRESET)}
+          onClear={resetDefault}
+          canClear
+        />
+      </div>
+      <div className="tb-v2-section" style={{ display: 'flex', flexDirection: 'column', gap: 20, padding: 20 }}>
       {/* Gradient type selector */}
       <div className="tb-v2-mode-tabs">
         {GRADIENT_TYPES.map(t => (
@@ -268,6 +285,7 @@ export default function CssGradientGeneratorClient() {
             </button>
           ))}
         </div>
+      </div>
       </div>
     </div>
   );

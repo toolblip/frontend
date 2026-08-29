@@ -4,6 +4,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { useSubscription } from '@/hooks/useSubscription';
 import { FileSizeError, UpgradeNotice } from '@/components/FileSizeGuard';
 import { convertHeicIfNeeded } from '@/lib/heic';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 interface RGB {
   r: number;
@@ -81,8 +82,8 @@ export default function EraseColorClient() {
     }
   };
 
-  const loadSample = (e: React.MouseEvent) => {
-    e.stopPropagation();
+  const loadSample = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
     const src = '/samples/tool-sample.png';
     setSelectedFile(null);
     const img = new Image();
@@ -171,7 +172,16 @@ export default function EraseColorClient() {
   };
 
   return (
-    <div className="tb-v2-section" style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '16px 20px' }}>
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
+        <span className="tb-v2-tool-label">Erase Color from Image</span>
+        <ToolExampleClearActions
+          onExample={() => loadSample()}
+          onClear={clearAll}
+          canClear={Boolean(originalImage)}
+        />
+      </div>
+      <div className="tb-v2-section" style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '16px 20px' }}>
       {!originalImage ? (
         <div
           className="border-2 border-dashed border-gray-700 hover:border-red-600 rounded-xl p-12 text-center transition-colors cursor-pointer"
@@ -186,12 +196,6 @@ export default function EraseColorClient() {
             <>
               <p className="text-gray-400 text-sm">Drag & drop an image, or click to browse</p>
               <p className="text-gray-600 text-xs mt-1">PNG, JPG, WebP, GIF, HEIC</p>
-              <button
-                onClick={loadSample}
-                className="text-xs text-red-700 dark:text-red-400 underline hover:no-underline mt-3"
-              >
-                Or try a sample image
-              </button>
               {sampleError && (
                 <p className="text-xs text-amber-500 mt-2">Couldn&apos;t load the sample image, try again.</p>
               )}
@@ -284,6 +288,7 @@ export default function EraseColorClient() {
           )}
         </div>
       )}
+      </div>
     </div>
   );
 }
