@@ -66,12 +66,12 @@ export default function TsvToCsvClient() {
 
   const applyCsv = useCallback((text: string) => {
     setCsv(text);
-    setTsv(csvToTsv(text));
+    setTsv(text.trim() ? csvToTsv(text) : '');
   }, []);
 
   const applyTsv = useCallback((text: string) => {
     setTsv(text);
-    setCsv(tsvToCsv(text));
+    setCsv(text.trim() ? tsvToCsv(text) : '');
   }, []);
 
   const clearAll = useCallback(() => {
@@ -96,7 +96,7 @@ export default function TsvToCsvClient() {
   return (
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
-        <span className="tb-v2-tool-label">CSV ↔ TSV</span>
+        <span className="tb-v2-tool-label">CSV-TSV Converter</span>
         <ToolExampleClearActions
           onExample={() => applyCsv(EXAMPLE_CSV)}
           onClear={clearAll}

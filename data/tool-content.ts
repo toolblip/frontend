@@ -898,7 +898,7 @@ WCAG AA: Pass (large text)`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "csv-to-tsv": {
-    description: `A CSV field containing its own comma, an address like '123 Main St, Apt 4', needs quoting to stay one field instead of splitting into two, and not every parser downstream actually handles that quoting consistently, which is exactly the ambiguity TSV sidesteps since a tab character almost never shows up naturally inside an actual data value. This tool converts a CSV file into TSV by replacing commas with tab characters, producing a format less prone to that specific parsing ambiguity. Useful for converting a CSV file whose own field values contain commas into a format that won't get misread downstream, preparing data for a tool or a database that specifically expects tab-delimited input, or avoiding a broken import caused by a comma sitting inside a quoted field that a parser mishandled.`,
+    description: `Convert between CSV and TSV with live side-by-side panes. Paste CSV on the left and TSV updates on the right, or paste TSV on the right and CSV updates on the left with proper quoting for commas and newlines.`,
     examples: [
 
     ],
@@ -2117,7 +2117,7 @@ Output: {"name":"John","age":30}`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "json-to-csv": {
-    description: `A JSON array of flat objects maps onto CSV easily enough, but the moment an object has a nested field, an address object inside a user record, an array of tags inside a product, there's no single obvious way to represent that in a format that only understands flat rows and columns, which is a decision this conversion actually has to make rather than something that translates itself automatically. This tool converts JSON into CSV with custom delimiter, header, and quoting options, handling that flattening decision explicitly rather than silently dropping or mangling nested data. Useful for exporting a JSON API response into a CSV a spreadsheet can open cleanly, converting nested JSON data into flat columns with a sensible naming scheme instead of losing the nested fields entirely, or generating a CSV with the exact delimiter and quoting style a specific downstream tool expects.`,
+    description: `Convert between JSON and CSV with live side-by-side panes. Paste a JSON array of objects on the left and CSV updates on the right, or paste CSV on the right and JSON updates on the left. Header detection and numeric type inference run in your browser.`,
     examples: [
 
     ],
@@ -2187,14 +2187,14 @@ Output: {"name":"John","age":30}`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "json-to-xml": {
-    description: `JSON has no concept of a root element or an attribute the way XML does, so converting one into the other means actually deciding things a JSON structure never specifies on its own, what the outer element should be named, and whether a given property becomes a nested child element or an XML attribute instead. This tool converts JSON into XML with a configurable root element, attribute prefixes, and indentation, making those structural decisions explicit rather than guessing at a fixed, one-size-fits-all default. Useful for converting a JSON API response into XML for an older SOAP-based system that only accepts that format, choosing whether a specific property becomes an XML attribute instead of a nested element to match a particular schema, or naming a custom root element to match exactly what a receiving system expects.`,
+    description: `Convert between JSON and XML with live side-by-side panes. Paste JSON on the left and XML updates on the right, or paste XML on the right and JSON updates on the left. Choose the XML root name when converting from JSON. Attributes use @ prefixes; conversion runs in your browser.`,
     examples: [
 
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "json-to-yaml": {
-    description: `Kubernetes manifests, GitHub Actions workflows, and docker-compose files all expect YAML specifically, not JSON, and a deeply nested JSON structure with its braces and quotes on every line is also just genuinely harder to scan by eye than YAML's cleaner, indentation-based layout. This tool converts JSON into clean YAML with an adjustable indent and a flow mode option, running entirely in the browser so nothing gets uploaded anywhere. Useful for converting a JSON API response into the YAML format a Kubernetes manifest or a CI pipeline config specifically requires, turning a deeply nested JSON structure into something actually easier to read at a glance, or switching to flow mode for a compact, JSON-like YAML style when that's what a specific tool actually expects.`,
+    description: `Convert between JSON and YAML with live side-by-side panes. Paste JSON on the left and YAML updates on the right, or paste YAML on the right and JSON updates on the left. Pretty-printed output for Kubernetes manifests, Compose files, and CI configs — nothing leaves your browser.`,
     examples: [
 
     ],
