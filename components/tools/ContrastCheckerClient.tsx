@@ -34,7 +34,7 @@ function wcagLevel(ratio: number): { level: string; color: string; desc: string 
   return { level: 'Fail', color: 'text-red-600 dark:text-red-400', desc: 'Insufficient contrast' };
 }
 
-export default function ContrastCheckerClient() {
+export default function ContrastCheckerClient({ title = 'Contrast Checker' }: { title?: string }) {
   const [fg, setFg] = useState(DEFAULT_FG);
   const [bg, setBg] = useState(DEFAULT_BG);
 
@@ -50,7 +50,7 @@ export default function ContrastCheckerClient() {
   return (
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
-        <span className="tb-v2-tool-label">Contrast Checker</span>
+        <span className="tb-v2-tool-label">{title}</span>
         <ToolExampleClearActions
           onExample={() => {
             setFg(EXAMPLE_FG);
