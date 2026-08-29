@@ -1,6 +1,7 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 interface FilterDef {
   id: string;
@@ -8,6 +9,8 @@ interface FilterDef {
   description: string;
   matrix: number[][] | null;
 }
+
+const SAMPLE_SRC = '/samples/tool-sample.png';
 
 const filters: FilterDef[] = [
   {
@@ -58,13 +61,14 @@ export default function ColorBlindnessSimulatorClient() {
   const [dimensions, setDimensions] = useState<{ width: number; height: number } | null>(null);
   const [error, setError] = useState('');
   const [processing, setProcessing] = useState(false);
+  const [pendingImg, setPendingImg] = useState<HTMLImageElement | null>(null);
 
   const sourceCanvasRef = useRef<HTMLCanvasElement>(null);
   const canvasMapRef = useRef<Record<string, HTMLCanvasElement | null>>({});
 
   function processImage(img: HTMLImageElement) {
     const sourceCanvas = sourceCanvasRef.current;
-    if (!sourceCanvas) return;
+    if (!sourceCanvas) return false;
 
     const width = img.naturalWidth;
     const height = img.naturalHeight;
@@ -72,19 +76,19 @@ export default function ColorBlindnessSimulatorClient() {
     sourceCanvas.width = width;
     sourceCanvas.height = height;
     const sourceCtx = sourceCanvas.getContext('2d');
-    if (!sourceCtx) return;
+    if (!sourceCtx) return false;
 
     sourceCtx.drawImage(img, 0, 0, width, height);
     const imageData = sourceCtx.getImageData(0, 0, width, height);
     const original = imageData.data;
 
-    filters.forEach((filter) => {
+    for (const filter of filters) {
       const canvas = canvasMapRef.current[filter.id];
-      if (!canvas) return;
+      if (!canvas) return false;
       canvas.width = width;
       canvas.height = height;
       const ctx = canvas.getContext('2d');
-      if (!ctx) return;
+      if (!ctx) return false;
 
       const output = ctx.createImageData(width, height);
       const outData = output.data;
@@ -110,9 +114,65 @@ export default function ColorBlindnessSimulatorClient() {
       }
 
       ctx.putImageData(output, 0, 0);
-    });
+    }
 
     setDimensions({ width, height });
+    return true;
+  }
+
+  // Draw after filter canvases mount (imageSrc truthy) — avoids canvas-mount race.
+  useEffect(() => {
+    if (!imageSrc || !pendingImg) return;
+    const img = pendingImg;
+    let cancelled = false;
+
+    const run = () => {
+      if (cancelled) return;
+      try {
+        const ok = processImage(img);
+        if (!ok) {
+          // Refs may not be attached yet on the first paint; try once more.
+          requestAnimationFrame(() => {
+            if (cancelled) return;
+            try {
+              if (!processImage(img)) setError('Could not process that image.');
+            } catch {
+              setError('Could not process that image.');
+            } finally {
+              setProcessing(false);
+              setPendingImg(null);
+            }
+          });
+          return;
+        }
+      } catch {
+        setError('Could not process that image.');
+      }
+      setProcessing(false);
+      setPendingImg(null);
+    };
+
+    run();
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- process once per pending load
+  }, [imageSrc, pendingImg]);
+
+  function loadFromSrc(src: string, name: string) {
+    setError('');
+    setProcessing(true);
+    setFileName(name);
+    const img = new Image();
+    img.onload = () => {
+      setImageSrc(src);
+      setPendingImg(img);
+    };
+    img.onerror = () => {
+      setError('Could not load that image.');
+      setProcessing(false);
+    };
+    img.src = src;
   }
 
   function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -134,12 +194,7 @@ export default function ColorBlindnessSimulatorClient() {
       const img = new Image();
       img.onload = () => {
         setImageSrc(src);
-        try {
-          processImage(img);
-        } catch {
-          setError('Could not process that image.');
-        }
-        setProcessing(false);
+        setPendingImg(img);
       };
       img.onerror = () => {
         setError('Could not load that image.');
@@ -152,19 +207,35 @@ export default function ColorBlindnessSimulatorClient() {
       setProcessing(false);
     };
     reader.readAsDataURL(file);
+    e.target.value = '';
+  }
+
+  function clearAll() {
+    setImageSrc(null);
+    setFileName('');
+    setDimensions(null);
+    setError('');
+    setProcessing(false);
+    setPendingImg(null);
   }
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="tb-v2-tool-input-head">
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
         <span className="tb-v2-tool-label">Color Blindness Simulator</span>
+        <ToolExampleClearActions
+          onExample={() => loadFromSrc(SAMPLE_SRC, 'tool-sample.png')}
+          onClear={clearAll}
+          canClear={Boolean(imageSrc)}
+        />
       </div>
-      <p style={{ fontSize: 13, color: 'var(--tb-text-secondary)' }}>
-        Upload an image to see how it appears to people with different types of color vision
-        deficiency. Everything runs in your browser — the image is never uploaded to a server.
-      </p>
 
-      <div className="tb-v2-tool-card">
+      <div className="tb-v2-section" style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 20 }}>
+        <p style={{ fontSize: 13, color: 'var(--tb-text-secondary)', margin: 0 }}>
+          Upload an image to see how it appears to people with different types of color vision
+          deficiency. Everything runs in your browser — the image is never uploaded to a server.
+        </p>
+
         <label
           className="block w-full p-8 border-2 border-dashed rounded-xl cursor-pointer text-center hover:border-indigo-400 transition-colors"
           style={{ borderColor: 'var(--tb-border)' }}
@@ -174,64 +245,61 @@ export default function ColorBlindnessSimulatorClient() {
             {fileName ? fileName : 'Click to upload an image'}
           </span>
         </label>
-        {error && <p style={{ fontSize: 12, color: '#ef4444', marginTop: 8 }}>{error}</p>}
+        {error && <p style={{ fontSize: 12, color: '#ef4444', margin: 0 }}>{error}</p>}
         {processing && (
-          <p style={{ fontSize: 13, color: 'var(--tb-text-secondary)', marginTop: 8 }}>
-            Processing image…
-          </p>
+          <p style={{ fontSize: 13, color: 'var(--tb-text-secondary)', margin: 0 }}>Processing image…</p>
         )}
-      </div>
 
-      {/* Hidden canvas used only to read source pixel data */}
-      <canvas ref={sourceCanvasRef} className="hidden" />
+        <canvas ref={sourceCanvasRef} className="hidden" />
 
-      {!imageSrc && !processing && (
-        <div className="tb-v2-section text-center" style={{ padding: '32px 16px' }}>
-          <p style={{ color: 'var(--tb-text-secondary)' }}>
-            No image uploaded yet. Choose an image above to see simulated results.
-          </p>
-        </div>
-      )}
+        {!imageSrc && !processing && (
+          <div className="text-center" style={{ padding: '24px 16px' }}>
+            <p style={{ color: 'var(--tb-text-secondary)', margin: 0 }}>
+              No image yet. Use Examples or upload an image above.
+            </p>
+          </div>
+        )}
 
-      {imageSrc && (
-        <div className="tb-v2-section">
-          <h3 className="tb-v2-section-title">
-            Results {dimensions ? `(${dimensions.width}×${dimensions.height})` : ''}
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div
-              className="tb-v2-section"
-              style={{ borderTop: 'none', border: '1px solid var(--tb-border)', borderRadius: 8 }}
-            >
-              <p className="font-semibold text-sm mb-1">Original</p>
-              <p className="text-xs text-gray-500 mb-2">Normal color vision</p>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={imageSrc}
-                alt="Original"
-                style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 6 }}
-              />
-            </div>
-
-            {filters.map((filter) => (
+        {imageSrc && (
+          <div>
+            <h3 className="tb-v2-section-title" style={{ marginBottom: 12 }}>
+              Results {dimensions ? `(${dimensions.width}×${dimensions.height})` : ''}
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               <div
-                key={filter.id}
                 className="tb-v2-section"
                 style={{ borderTop: 'none', border: '1px solid var(--tb-border)', borderRadius: 8 }}
               >
-                <p className="font-semibold text-sm mb-1">{filter.name}</p>
-                <p className="text-xs text-gray-500 mb-2">{filter.description}</p>
-                <canvas
-                  ref={(el) => {
-                    canvasMapRef.current[filter.id] = el;
-                  }}
+                <p className="font-semibold text-sm mb-1">Original</p>
+                <p className="text-xs text-gray-500 mb-2">Normal color vision</p>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={imageSrc}
+                  alt="Original"
                   style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 6 }}
                 />
               </div>
-            ))}
+
+              {filters.map((filter) => (
+                <div
+                  key={filter.id}
+                  className="tb-v2-section"
+                  style={{ borderTop: 'none', border: '1px solid var(--tb-border)', borderRadius: 8 }}
+                >
+                  <p className="font-semibold text-sm mb-1">{filter.name}</p>
+                  <p className="text-xs text-gray-500 mb-2">{filter.description}</p>
+                  <canvas
+                    ref={(el) => {
+                      canvasMapRef.current[filter.id] = el;
+                    }}
+                    style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 6 }}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

@@ -288,6 +288,7 @@ import ColorFormatConverterV2Client from '@/components/tools/ColorFormatConverte
 import ColorFormatPickerClient from '@/components/tools/ColorFormatPickerClient';
 import ColorHarmonyExpressClient from '@/components/tools/ColorHarmonyExpressClient';
 import ColorHarmonyGeneratorClient from '@/components/tools/ColorHarmonyGeneratorClient';
+import RandomColorGeneratorClient from '@/components/tools/RandomColorGeneratorClient';
 import ColorHarmonyNewClient from '@/components/tools/ColorHarmonyNewClient';
 import ColorLuminanceCalculatorClient from '@/components/tools/ColorLuminanceCalculatorClient';
 import ColorLuminanceCheckerClient from '@/components/tools/ColorLuminanceCheckerClient';
@@ -2623,7 +2624,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'port-checker-tool': return <ContrastCheckerToolClient />;
     case 'pressure-unit-converter': return <UnitConverterClient />;
     case 'qr-code': return <QrCodeGeneratorClient />;
-    case 'random-color-generator': return <ColorHarmonyGeneratorClient />;
+    case 'random-color-generator': return <RandomColorGeneratorClient />;
     case 'random-id-generator': return <RandomIdGeneratorClient />; // real alphanumeric ID generator, not the fraction tool
     case 'random-mac-generator': return <MacAddressGeneratorClient />;
     case 'random-password-generator': return <PasswordGeneratorClient />;
