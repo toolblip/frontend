@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 function getLuminance(hex: string): number {
   const rgb = parseInt(hex.replace('#', ''), 16);
   const r = ((rgb >> 16) & 255) / 255;
   const g = ((rgb >> 8) & 255) / 255;
   const b = (rgb & 255) / 255;
-  const toLinear = (c: number) => c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  const toLinear = (c: number) => (c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4));
   return 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
 }
 
@@ -31,6 +32,7 @@ function isValidHex(hex: string): boolean {
 }
 
 const DEFAULT_COLORS = ['#000000', '#ffffff', '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+const EXAMPLE_COLORS = ['#1a1a1f', '#ffffff', '#d93030', '#58d65d', '#3b82f6', '#f59e0b'];
 
 export default function ColorContrastMatrixClient() {
   const [colors, setColors] = useState<string[]>(DEFAULT_COLORS);
@@ -53,132 +55,156 @@ export default function ColorContrastMatrixClient() {
   };
 
   const removeColor = (c: string) => {
-    if (colors.length > 2) setColors(colors.filter(x => x !== c));
+    if (colors.length > 2) setColors(colors.filter((x) => x !== c));
   };
 
-  const loadExample = () => {
+  const clearAll = () => {
     setColors(DEFAULT_COLORS);
     setNewColor('');
     setColorError(false);
   };
 
+  const canClear =
+    JSON.stringify(colors) !== JSON.stringify(DEFAULT_COLORS) || newColor.length > 0;
+
   const copyCell = (fg: string, bg: string) => {
     const key = `${fg}|${bg}`;
-    navigator.clipboard.writeText(`${fg} on ${bg}: ${getContrastRatio(fg, bg).toFixed(2)}:1`).catch(() => {});
+    navigator.clipboard
+      .writeText(`${fg} on ${bg}: ${getContrastRatio(fg, bg).toFixed(2)}:1`)
+      .catch(() => {});
     setCopiedCell(key);
     setTimeout(() => setCopiedCell(''), 1000);
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="tb-v2-tool-input-head">
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
         <span className="tb-v2-tool-label">Color Contrast Matrix</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
-          Load Example
-        </button>
+        <ToolExampleClearActions
+          onExample={() => {
+            setColors(EXAMPLE_COLORS);
+            setNewColor('');
+            setColorError(false);
+          }}
+          onClear={clearAll}
+          canClear={canClear}
+        />
       </div>
 
-      <div>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={newColor}
-            onChange={(e) => { setNewColor(e.target.value); setColorError(false); }}
-            onKeyDown={(e) => e.key === 'Enter' && addColor()}
-            className="tb-v2-input flex-1"
-            style={{ fontFamily: 'var(--f-mono)' }}
-            placeholder="#ff0000"
-          />
-          <button type="button" onClick={addColor} className="tb-v2-btn tb-v2-btn-primary">
-            Add Color
-          </button>
+      <div className="tb-v2-section" style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: 20 }}>
+        <div>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={newColor}
+              onChange={(e) => {
+                setNewColor(e.target.value);
+                setColorError(false);
+              }}
+              onKeyDown={(e) => e.key === 'Enter' && addColor()}
+              className="tb-v2-input flex-1"
+              style={{ fontFamily: 'var(--f-mono)' }}
+              placeholder="#ff0000"
+            />
+            <button type="button" onClick={addColor} className="tb-v2-btn tb-v2-btn-primary">
+              Add Color
+            </button>
+          </div>
+          {colorError && (
+            <p style={{ fontSize: 12, color: '#ef4444', marginTop: 6 }}>
+              Enter a valid 6-digit hex color (e.g., #3366FF).
+            </p>
+          )}
         </div>
-        {colorError && <p style={{ fontSize: 12, color: '#ef4444', marginTop: 6 }}>Enter a valid 6-digit hex color (e.g., #3366FF).</p>}
-      </div>
 
-      <p style={{ fontSize: 12, color: 'var(--tb-text-secondary)' }}>Click a cell to copy its contrast ratio. Right-click a header swatch to remove it below.</p>
+        <p style={{ fontSize: 12, color: 'var(--tb-text-secondary)', margin: 0 }}>
+          Click a cell to copy its contrast ratio.
+        </p>
 
-      <div className="overflow-x-auto">
-        <table className="border-collapse text-sm">
-          <thead>
-            <tr>
-              <th className="p-2 border bg-gray-100"></th>
-              {colors.map(c => (
-                <th key={c} className="p-2 border">
-                  <div className="flex flex-col items-center gap-1">
-                    <div className="w-8 h-8 rounded border" style={{ backgroundColor: c }} />
-                    <span className="font-mono text-xs">{c}</span>
-                  </div>
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {colors.map(fg => (
-              <tr key={fg}>
-                <td className="p-2 border bg-gray-100">
-                  <div className="flex flex-col items-center gap-1">
-                    <div className="w-8 h-8 rounded border" style={{ backgroundColor: fg }} />
-                    <span className="font-mono text-xs">{fg}</span>
-                  </div>
-                </td>
-                {colors.map(bg => (
-                  <td key={bg} className="p-1 border">
-                    {fg === bg ? (
-                      <div className="w-12 h-12 flex items-center justify-center text-gray-400"> - </div>
-                    ) : (
-                      <div
-                        className={`w-12 h-12 flex items-center justify-center rounded font-bold text-xs cursor-pointer ${getRatioClass(getContrastRatio(fg, bg))}`}
-                        title={`${fg} on ${bg} - click to copy`}
-                        onClick={() => copyCell(fg, bg)}
-                      >
-                        {copiedCell === `${fg}|${bg}` ? 'Copied' : getContrastRatio(fg, bg).toFixed(1)}
-                      </div>
-                    )}
-                  </td>
+        <div className="overflow-x-auto">
+          <table className="border-collapse text-sm">
+            <thead>
+              <tr>
+                <th className="p-2 border bg-gray-100"></th>
+                {colors.map((c) => (
+                  <th key={c} className="p-2 border">
+                    <div className="flex flex-col items-center gap-1">
+                      <div className="w-8 h-8 rounded border" style={{ backgroundColor: c }} />
+                      <span className="font-mono text-xs">{c}</span>
+                    </div>
+                  </th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {colors.map((fg) => (
+                <tr key={fg}>
+                  <td className="p-2 border bg-gray-100">
+                    <div className="flex flex-col items-center gap-1">
+                      <div className="w-8 h-8 rounded border" style={{ backgroundColor: fg }} />
+                      <span className="font-mono text-xs">{fg}</span>
+                    </div>
+                  </td>
+                  {colors.map((bg) => (
+                    <td key={bg} className="p-1 border">
+                      {fg === bg ? (
+                        <div className="w-12 h-12 flex items-center justify-center text-gray-400">—</div>
+                      ) : (
+                        <div
+                          className={`w-12 h-12 flex items-center justify-center rounded font-bold text-xs cursor-pointer ${getRatioClass(getContrastRatio(fg, bg))}`}
+                          title={`${fg} on ${bg} — click to copy`}
+                          onClick={() => copyCell(fg, bg)}
+                        >
+                          {copiedCell === `${fg}|${bg}` ? 'Copied' : getContrastRatio(fg, bg).toFixed(1)}
+                        </div>
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-      {colors.length > 2 && (
-        <div>
-          <p className="tb-v2-tool-label" style={{ marginBottom: 8 }}>Remove Colors</p>
-          <div className="flex gap-2 flex-wrap">
-            {colors.map(c => (
-              <button
-                key={c}
-                type="button"
-                onClick={() => removeColor(c)}
-                className="flex items-center gap-1 px-2 py-1 rounded border text-xs font-mono"
-              >
-                <span className="w-3 h-3 rounded" style={{ backgroundColor: c }} />
-                {c}
-                <span aria-hidden>x</span>
-              </button>
-            ))}
+        {colors.length > 2 && (
+          <div>
+            <p className="tb-v2-tool-label" style={{ marginBottom: 8 }}>
+              Remove Colors
+            </p>
+            <div className="flex gap-2 flex-wrap">
+              {colors.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => removeColor(c)}
+                  className="flex items-center gap-1 px-2 py-1 rounded border text-xs font-mono"
+                >
+                  <span className="w-3 h-3 rounded" style={{ backgroundColor: c }} />
+                  {c}
+                  <span aria-hidden>×</span>
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      <div className="flex gap-4 text-sm flex-wrap">
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded bg-green-500"></div>
-          <span>AAA (7:1+)</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded bg-green-300"></div>
-          <span>AA (4.5:1+)</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded bg-yellow-300"></div>
-          <span>AA Large (3:1+)</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-6 h-6 rounded bg-red-400"></div>
-          <span>Fail (&lt;3:1)</span>
+        <div className="flex gap-4 text-sm flex-wrap">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded bg-green-500" />
+            <span>AAA (7:1+)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded bg-green-300" />
+            <span>AA (4.5:1+)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded bg-yellow-300" />
+            <span>AA Large (3:1+)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded bg-red-400" />
+            <span>Fail (&lt;3:1)</span>
+          </div>
         </div>
       </div>
     </div>
