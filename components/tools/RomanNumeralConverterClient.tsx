@@ -3,8 +3,7 @@
 import { useCallback, useState } from 'react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
-const EXAMPLE_NUMBER = '2024';
-const EXAMPLE_ROMAN = 'MMXXIV';
+const EXAMPLE_NUMBER = String(new Date().getFullYear());
 
 function toRoman(num: number): { roman: string; error: string } {
   if (!Number.isFinite(num) || num <= 0 || num > 3999) {
@@ -42,6 +41,8 @@ function fromRoman(roman: string): { number: string; error: string } {
   }
   return { number: String(result), error: '' };
 }
+
+const EXAMPLE_ROMAN = toRoman(parseInt(EXAMPLE_NUMBER, 10)).roman;
 
 export default function RomanNumeralConverterClient() {
   const [number, setNumber] = useState('');
