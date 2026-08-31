@@ -1,54 +1,112 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
-function rot13Char(c: string): string {
-  const code = c.charCodeAt(0);
-  if (code >= 65 && code <= 90) return String.fromCharCode(((code - 65 + 13) % 26) + 65);
-  if (code >= 97 && code <= 122) return String.fromCharCode(((code - 97 + 13) % 26) + 97);
-  return c;
+const EXAMPLE_PLAIN = 'Hello, World!';
+
+function rot13(text: string): string {
+  return text.replace(/[a-zA-Z]/g, (char) => {
+    const base = char <= 'Z' ? 65 : 97;
+    return String.fromCharCode(((char.charCodeAt(0) - base + 13) % 26) + base);
+  });
 }
 
 export default function Rot13CipherClient() {
-  const [input, setInput] = useState('');
-  const [mode, setMode] = useState<'encode' | 'decode'>('encode');
+  const [plain, setPlain] = useState('');
+  const [encoded, setEncoded] = useState('');
+  const [copiedPlain, setCopiedPlain] = useState(false);
+  const [copiedEncoded, setCopiedEncoded] = useState(false);
 
-  const output = input.split('').map(c => {
-    const encoded = rot13Char(c);
-    return mode === 'decode' ? rot13Char(encoded) : encoded;
-  }).join('');
+  const applyPlain = useCallback((raw: string) => {
+    setPlain(raw);
+    setEncoded(raw ? rot13(raw) : '');
+  }, []);
 
-  const copy = () => {
-    if (!output) return;
-    navigator.clipboard.writeText(output).catch(() => {});
+  const applyEncoded = useCallback((raw: string) => {
+    setEncoded(raw);
+    setPlain(raw ? rot13(raw) : '');
+  }, []);
+
+  const copy = (value: string, which: 'plain' | 'encoded') => {
+    if (!value) return;
+    navigator.clipboard.writeText(value).catch(() => {});
+    if (which === 'plain') {
+      setCopiedPlain(true);
+      setTimeout(() => setCopiedPlain(false), 1500);
+    } else {
+      setCopiedEncoded(true);
+      setTimeout(() => setCopiedEncoded(false), 1500);
+    }
   };
 
   return (
-    <div>
-      <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Input</span>
-        <div className="tb-v2-mode-tabs" role="group">
-          <button type="button" onClick={() => setMode('encode')} className={`tb-v2-mode-tab ${mode === 'encode' ? 'on' : ''}`}>Encode</button>
-          <button type="button" onClick={() => setMode('decode')} className={`tb-v2-mode-tab ${mode === 'decode' ? 'on' : ''}`}>Decode</button>
-        </div>
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
+        <span className="tb-v2-tool-label">ROT13 Cipher</span>
+        <ToolExampleClearActions
+          exampleCount={1}
+          onExample={() => applyPlain(EXAMPLE_PLAIN)}
+          onClear={() => {
+            setPlain('');
+            setEncoded('');
+          }}
+          canClear={Boolean(plain || encoded)}
+        />
       </div>
-      <textarea
-        value={input}
-        onChange={e => setInput(e.target.value)}
-        placeholder="Type or paste text to ROT13..."
-        className="tb-v2-tool-textarea"
-        style={{ minHeight: 100 }}
-      />
-      <div className="tb-v2-tool-output-head">
-        <span className="tb-v2-tool-label">Output</span>
-        {output && <button type="button" onClick={copy} className="tb-v2-copy-btn">Copy</button>}
-      </div>
-      <div className="tb-v2-tool-output-body">
-        <div style={{ fontFamily: 'var(--f-mono)', fontSize: 16, color: 'var(--tb-accent)', wordBreak: 'break-all' }}>
-          {output || ' - '}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-0 divide-y divide-[var(--line)] md:divide-y-0 md:divide-x">
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: 280 }}>
+          <div className="tb-v2-tool-input-head">
+            <span className="tb-v2-tool-label">Plain text</span>
+            <button
+              type="button"
+              onClick={() => copy(plain, 'plain')}
+              disabled={!plain}
+              className={`tb-v2-copy-btn ${copiedPlain ? 'done' : ''}`}
+            >
+              {copiedPlain ? 'Copied' : 'Copy'}
+            </button>
+          </div>
+          <textarea
+            value={plain}
+            onChange={(e) => applyPlain(e.target.value)}
+            placeholder={EXAMPLE_PLAIN}
+            className="tb-v2-tool-textarea"
+            style={{ flex: 1, minHeight: 220, border: 'none', borderRadius: 0, resize: 'vertical' }}
+            aria-label="Plain text input"
+            spellCheck={false}
+          />
         </div>
-        <div style={{ marginTop: 8, fontSize: 12, color: 'var(--tb-text-secondary)' }}>
-          ROT13 replaces each letter with the 13th letter after it. Since the alphabet has 26 letters, encoding and decoding produce the same result.
+
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: 280 }}>
+          <div className="tb-v2-tool-input-head">
+            <span className="tb-v2-tool-label">ROT13 encoded</span>
+            <button
+              type="button"
+              onClick={() => copy(encoded, 'encoded')}
+              disabled={!encoded}
+              className={`tb-v2-copy-btn ${copiedEncoded ? 'done' : ''}`}
+            >
+              {copiedEncoded ? 'Copied' : 'Copy'}
+            </button>
+          </div>
+          <textarea
+            value={encoded}
+            onChange={(e) => applyEncoded(e.target.value)}
+            placeholder="Encoded output appears here…"
+            className="tb-v2-tool-textarea"
+            style={{
+              flex: 1,
+              minHeight: 220,
+              fontFamily: 'var(--f-mono)',
+              border: 'none',
+              borderRadius: 0,
+              resize: 'vertical',
+            }}
+            aria-label="ROT13 encoded input"
+            spellCheck={false}
+          />
         </div>
       </div>
     </div>
