@@ -1,6 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+
+const EXAMPLE_TS = '1704067200'; // 2024-01-01 00:00:00 UTC
 
 export default function UnixTimestampConverterClient() {
   const [timestamp, setTimestamp] = useState('');
@@ -14,28 +17,63 @@ export default function UnixTimestampConverterClient() {
     if (isNaN(n)) return '';
     try {
       return new Date(n * 1000).toISOString().replace('T', ' ').replace(/\.\d{3}Z$/, ' UTC');
-    } catch { return ''; }
+    } catch {
+      return '';
+    }
   };
 
   const convertToTimestamp = (date: string) => {
     try {
       return Math.floor(new Date(date).getTime() / 1000);
-    } catch { return null; }
+    } catch {
+      return null;
+    }
   };
 
-  const handleNow = () => {
+  const loadExample = () => {
+    setMode('toDate');
+    setTimestamp(EXAMPLE_TS);
+    setDateInput('');
+  };
+
+  const clearAll = () => {
+    setTimestamp('');
+    setDateInput('');
+    setMode('toDate');
+  };
+
+  const useNow = () => {
+    setMode('toDate');
     setTimestamp(String(now));
     setDateInput(new Date().toISOString().slice(0, 19).replace('T', ' '));
   };
 
   return (
-    <div>
+    <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Converter</span>
-        <div className="tb-v2-mode-tabs" role="group">
-          <button type="button" onClick={() => setMode('toDate')} className={`tb-v2-mode-tab ${mode === 'toDate' ? 'on' : ''}`}>TS → Date</button>
-          <button type="button" onClick={() => setMode('toTimestamp')} className={`tb-v2-mode-tab ${mode === 'toTimestamp' ? 'on' : ''}`}>Date → TS</button>
-        </div>
+        <span className="tb-v2-tool-label">Unix Timestamp Converter</span>
+        <ToolExampleClearActions
+          exampleCount={1}
+          onExample={loadExample}
+          onClear={clearAll}
+          canClear={Boolean(timestamp || dateInput)}
+        />
+      </div>
+      <div className="tb-v2-mode-tabs" role="group" style={{ padding: '0 20px 12px' }}>
+        <button
+          type="button"
+          onClick={() => setMode('toDate')}
+          className={`tb-v2-mode-tab ${mode === 'toDate' ? 'on' : ''}`}
+        >
+          TS → Date
+        </button>
+        <button
+          type="button"
+          onClick={() => setMode('toTimestamp')}
+          className={`tb-v2-mode-tab ${mode === 'toTimestamp' ? 'on' : ''}`}
+        >
+          Date → TS
+        </button>
       </div>
       <div className="tb-v2-tool-output-body" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {mode === 'toDate' ? (
@@ -43,43 +81,51 @@ export default function UnixTimestampConverterClient() {
             <input
               type="number"
               value={timestamp}
-              onChange={e => setTimestamp(e.target.value)}
+              onChange={(e) => setTimestamp(e.target.value)}
               placeholder={`e.g. ${now}`}
               className="tb-v2-tool-textarea"
               style={{ width: '100%', minHeight: 44, resize: 'none', fontFamily: 'var(--f-mono)' }}
             />
-            <button type="button" onClick={handleNow} className="tb-v2-mode-tab" style={{ alignSelf: 'flex-start' }}>Use current time</button>
+            <button type="button" onClick={useNow} className="tb-v2-mode-tab" style={{ alignSelf: 'flex-start' }}>
+              Use current time
+            </button>
           </>
         ) : (
           <input
             type="datetime-local"
             value={dateInput}
-            onChange={e => setDateInput(e.target.value)}
+            onChange={(e) => setDateInput(e.target.value)}
             className="tb-v2-tool-textarea"
             style={{ width: '100%', minHeight: 44, resize: 'none', fontFamily: 'var(--f-mono)' }}
           />
         )}
       </div>
-      <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">Result</span></div>
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">Result</span>
+      </div>
       <div className="tb-v2-tool-output-body">
         {mode === 'toDate' ? (
           timestamp ? (
             <div style={{ fontFamily: 'var(--f-mono)', fontSize: 15 }}>
-              <div style={{ color: 'var(--tb-text)', marginBottom: 6 }}>{convertToDate(timestamp) || 'Invalid timestamp'}</div>
+              <div style={{ color: 'var(--tb-text)', marginBottom: 6 }}>
+                {convertToDate(timestamp) || 'Invalid timestamp'}
+              </div>
               <div style={{ fontSize: 12, color: 'var(--tb-text-secondary)' }}>
-                Local: {timestamp ? new Date(parseInt(timestamp) * 1000).toString() : ' - '}
+                Local: {new Date(parseInt(timestamp) * 1000).toString()}
               </div>
             </div>
-          ) : <div style={{ color: 'var(--tb-text-secondary)', fontSize: 14 }}>Enter a Unix timestamp</div>
+          ) : (
+            <div style={{ color: 'var(--tb-text-secondary)', fontSize: 14 }}>Enter a Unix timestamp or use Example.</div>
+          )
+        ) : dateInput ? (
+          <div style={{ fontFamily: 'var(--f-mono)', fontSize: 15 }}>
+            <div style={{ color: 'var(--tb-text)' }}>{convertToTimestamp(dateInput) ?? 'Invalid date'}</div>
+            <div style={{ fontSize: 12, color: 'var(--tb-text-secondary)', marginTop: 6 }}>
+              {dateInput} → {convertToTimestamp(dateInput)} seconds since epoch
+            </div>
+          </div>
         ) : (
-          dateInput ? (
-            <div style={{ fontFamily: 'var(--f-mono)', fontSize: 15 }}>
-              <div style={{ color: 'var(--tb-text)' }}>{convertToTimestamp(dateInput) ?? 'Invalid date'}</div>
-              <div style={{ fontSize: 12, color: 'var(--tb-text-secondary)', marginTop: 6 }}>
-                {dateInput} → {convertToTimestamp(dateInput)} seconds since epoch
-              </div>
-            </div>
-          ) : <div style={{ color: 'var(--tb-text-secondary)', fontSize: 14 }}>Enter a date/time</div>
+          <div style={{ color: 'var(--tb-text-secondary)', fontSize: 14 }}>Enter a date/time</div>
         )}
       </div>
     </div>
