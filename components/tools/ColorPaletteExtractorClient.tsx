@@ -121,6 +121,7 @@ export default function ColorPaletteExtractorClient() {
       <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
         <span className="tb-v2-tool-label">Color Palette Extractor</span>
         <ToolExampleClearActions
+          exampleCount={1}
           onExample={loadExample}
           onClear={clearAll}
           canClear={Boolean(imageUrl || colors.length)}
@@ -195,7 +196,7 @@ export default function ColorPaletteExtractorClient() {
         )}
 
         {!loading && colors.length === 0 && !error && (
-          <div className="tb-v2-empty">Enter an image URL, upload a file, or use Examples.</div>
+          <div className="tb-v2-empty">Enter an image URL, upload a file, or use Example.</div>
         )}
       </div>
     </div>
