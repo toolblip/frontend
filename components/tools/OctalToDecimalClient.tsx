@@ -1,93 +1,118 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useMemo, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
-function octalToDecimal(octal: string): string {
-  const cleaned = octal.replace(/^0o/i, '').replace(/\s+/g, '');
-  if (!/^[0-7]+$/.test(cleaned)) return '';
-  return parseInt(cleaned, 8).toString(10);
-}
-
-function octalToBinary(octal: string): string {
-  const cleaned = octal.replace(/^0o/i, '').replace(/\s+/g, '');
-  if (!/^[0-7]+$/.test(cleaned)) return '';
-  return parseInt(cleaned, 8).toString(2);
-}
-
-function octalToHex(octal: string): string {
-  const cleaned = octal.replace(/^0o/i, '').replace(/\s+/g, '');
-  if (!/^[0-7]+$/.test(cleaned)) return '';
-  return parseInt(cleaned, 8).toString(16).toUpperCase();
+function parseOctal(raw: string): number | null {
+  const cleaned = raw.replace(/^0o/i, '').replace(/\s+/g, '');
+  if (!cleaned) return null;
+  if (!/^[0-7]+$/.test(cleaned)) return null;
+  const n = parseInt(cleaned, 8);
+  return Number.isNaN(n) ? null : n;
 }
 
 export default function OctalToDecimalClient() {
   const [input, setInput] = useState('');
-  const [results, setResults] = useState<{ decimal: string; binary: string; hex: string } | null>(null);
+  const [copied, setCopied] = useState<string | null>(null);
 
-  const process = useCallback(() => {
-    if (!input.trim()) { setResults(null); return; }
-    const decimal = octalToDecimal(input);
-    if (!decimal) { setResults(null); return; }
-    setResults({
-      decimal,
-      binary: octalToBinary(input),
-      hex: octalToHex(input),
-    });
+  const results = useMemo(() => {
+    const trimmed = input.trim();
+    if (!trimmed) return { value: null as number | null, error: '' };
+    const value = parseOctal(trimmed);
+    if (value === null) return { value: null, error: 'Use digits 0–7 (optional 0o prefix).' };
+    return { value, error: '' };
   }, [input]);
 
-  const copy = useCallback((text: string) => {
+  const copy = (key: string, text: string) => {
     navigator.clipboard.writeText(text).catch(() => {});
-  }, []);
+    setCopied(key);
+    setTimeout(() => setCopied(null), 1500);
+  };
+
+  const rows =
+    results.value === null
+      ? []
+      : [
+          { key: 'decimal', label: 'Decimal', value: String(results.value) },
+          { key: 'binary', label: 'Binary', value: results.value.toString(2) },
+          { key: 'hex', label: 'Hexadecimal', value: results.value.toString(16).toUpperCase() },
+        ];
 
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
-      <div className="space-y-2">
-        <label className="tb-v2-tool-label">Octal Number</label>
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Octal</span>
+        <ToolExampleClearActions
+          exampleCount={1}
+          onExample={() => setInput('77')}
+          onClear={() => setInput('')}
+          canClear={input.length > 0}
+        />
+      </div>
+      <div style={{ padding: '0 20px 12px' }}>
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Enter octal (e.g., 77, 0o77)..."
-          className="w-full px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white font-mono text-sm placeholder-gray-400 focus:outline-none focus:border-red-500"
+          placeholder="77 or 0o77"
+          className="tb-v2-input"
+          style={{ fontFamily: 'var(--f-mono)' }}
+          aria-label="Octal number"
+          spellCheck={false}
         />
+        {results.error ? (
+          <p className="tb-v2-empty" style={{ marginTop: 8, color: 'var(--red)' }}>
+            {results.error}
+          </p>
+        ) : null}
       </div>
 
-      <button
-        onClick={process}
-        className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg"
-      >
-        Convert
-      </button>
-
-      {results && (
-        <div className="space-y-3">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {[
-              { label: 'Decimal', value: results.decimal },
-              { label: 'Binary', value: results.binary, prefix: '0b' },
-              { label: 'Hexadecimal', value: results.hex, prefix: '0x' },
-            ].map(({ label, value, prefix }) => (
-              <div key={label} className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">{label}</span>
-                  <button onClick={() => copy(prefix ? prefix + value : value)} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm" style={{color:"var(--red)",fontSize:12}}>
-                    Copy
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">Converted</span>
+      </div>
+      <div className="tb-v2-tool-output-body">
+        {rows.length === 0 ? (
+          <p className="tb-v2-empty">Enter octal or use Example.</p>
+        ) : (
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
+              gap: 10,
+            }}
+          >
+            {rows.map((r) => (
+              <div
+                key={r.key}
+                className="tb-v2-stat-pill"
+                style={{ alignItems: 'flex-start', textAlign: 'left', overflow: 'hidden' }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                    gap: 8,
+                    marginBottom: 6,
+                  }}
+                >
+                  <span style={{ fontSize: 11, color: 'var(--fg-2)' }}>{r.label}</span>
+                  <button
+                    type="button"
+                    onClick={() => copy(r.key, r.value)}
+                    className={`tb-v2-copy-btn ${copied === r.key ? 'done' : ''}`}
+                  >
+                    {copied === r.key ? 'Copied' : 'Copy'}
                   </button>
                 </div>
-                <div className="font-mono text-sm text-gray-900 dark:text-white">
-                  {prefix ? prefix + value : value}
+                <div style={{ fontFamily: 'var(--f-mono)', fontWeight: 600, wordBreak: 'break-all' }}>
+                  {r.value}
                 </div>
               </div>
             ))}
           </div>
-        </div>
-      )}
-
-      {!results && input.length > 0 && (
-        <p className="text-sm text-red-600 dark:text-red-400">
-          Invalid octal. Use digits 0-7 (optional 0o prefix).
-        </p>
-      )}
+        )}
+      </div>
     </div>
   );
 }

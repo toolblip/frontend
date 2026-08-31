@@ -1,93 +1,118 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useMemo, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
-function binaryToDecimal(binary: string): string {
-  const cleaned = binary.replace(/\s+/g, '');
-  if (!/^[01]+$/.test(cleaned)) return '';
-  return parseInt(cleaned, 2).toString(10);
-}
-
-function binaryToHex(binary: string): string {
-  const cleaned = binary.replace(/\s+/g, '');
-  if (!/^[01]+$/.test(cleaned)) return '';
-  return parseInt(cleaned, 2).toString(16).toUpperCase();
-}
-
-function binaryToOctal(binary: string): string {
-  const cleaned = binary.replace(/\s+/g, '');
-  if (!/^[01]+$/.test(cleaned)) return '';
-  return parseInt(cleaned, 2).toString(8);
+function parseBinary(raw: string): number | null {
+  const cleaned = raw.replace(/\s+/g, '');
+  if (!cleaned) return null;
+  if (!/^[01]+$/.test(cleaned)) return null;
+  const n = parseInt(cleaned, 2);
+  return Number.isNaN(n) ? null : n;
 }
 
 export default function BinaryToDecimalClient() {
   const [input, setInput] = useState('');
-  const [results, setResults] = useState<{ decimal: string; hex: string; octal: string } | null>(null);
+  const [copied, setCopied] = useState<string | null>(null);
 
-  const process = useCallback(() => {
-    if (!input.trim()) { setResults(null); return; }
-    const decimal = binaryToDecimal(input);
-    if (!decimal) { setResults(null); return; }
-    setResults({
-      decimal,
-      hex: binaryToHex(input),
-      octal: binaryToOctal(input),
-    });
+  const results = useMemo(() => {
+    const trimmed = input.trim();
+    if (!trimmed) return { value: null as number | null, error: '' };
+    const value = parseBinary(trimmed);
+    if (value === null) return { value: null, error: 'Use only 0 and 1.' };
+    return { value, error: '' };
   }, [input]);
 
-  const copy = useCallback((text: string) => {
+  const copy = (key: string, text: string) => {
     navigator.clipboard.writeText(text).catch(() => {});
-  }, []);
+    setCopied(key);
+    setTimeout(() => setCopied(null), 1500);
+  };
+
+  const rows =
+    results.value === null
+      ? []
+      : [
+          { key: 'decimal', label: 'Decimal', value: String(results.value) },
+          { key: 'hex', label: 'Hexadecimal', value: results.value.toString(16).toUpperCase() },
+          { key: 'octal', label: 'Octal', value: results.value.toString(8) },
+        ];
 
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
-      <div className="space-y-2">
-        <label className="tb-v2-tool-label">Binary Number</label>
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Binary</span>
+        <ToolExampleClearActions
+          exampleCount={1}
+          onExample={() => setInput('101010')}
+          onClear={() => setInput('')}
+          canClear={input.length > 0}
+        />
+      </div>
+      <div style={{ padding: '0 20px 12px' }}>
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Enter binary (e.g., 101010)..."
-          className="w-full px-4 py-3 bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white font-mono text-sm placeholder-gray-400 focus:outline-none focus:border-red-500"
+          placeholder="101010"
+          className="tb-v2-input"
+          style={{ fontFamily: 'var(--f-mono)' }}
+          aria-label="Binary number"
+          spellCheck={false}
         />
+        {results.error ? (
+          <p className="tb-v2-empty" style={{ marginTop: 8, color: 'var(--red)' }}>
+            {results.error}
+          </p>
+        ) : null}
       </div>
 
-      <button
-        onClick={process}
-        className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg"
-      >
-        Convert
-      </button>
-
-      {results && (
-        <div className="space-y-3">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            {[
-              { label: 'Decimal', value: results.decimal },
-              { label: 'Hexadecimal', value: results.hex, prefix: '0x' },
-              { label: 'Octal', value: results.octal, prefix: '0o' },
-            ].map(({ label, value, prefix }) => (
-              <div key={label} className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">{label}</span>
-                  <button onClick={() => copy(prefix ? prefix + value : value)} className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm" style={{color:"var(--red)",fontSize:12}}>
-                    Copy
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">Converted</span>
+      </div>
+      <div className="tb-v2-tool-output-body">
+        {rows.length === 0 ? (
+          <p className="tb-v2-empty">Enter binary or use Example.</p>
+        ) : (
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))',
+              gap: 10,
+            }}
+          >
+            {rows.map((r) => (
+              <div
+                key={r.key}
+                className="tb-v2-stat-pill"
+                style={{ alignItems: 'flex-start', textAlign: 'left', overflow: 'hidden' }}
+              >
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                    gap: 8,
+                    marginBottom: 6,
+                  }}
+                >
+                  <span style={{ fontSize: 11, color: 'var(--fg-2)' }}>{r.label}</span>
+                  <button
+                    type="button"
+                    onClick={() => copy(r.key, r.value)}
+                    className={`tb-v2-copy-btn ${copied === r.key ? 'done' : ''}`}
+                  >
+                    {copied === r.key ? 'Copied' : 'Copy'}
                   </button>
                 </div>
-                <div className="font-mono text-sm text-gray-900 dark:text-white">
-                  {prefix ? prefix + value : value}
+                <div style={{ fontFamily: 'var(--f-mono)', fontWeight: 600, wordBreak: 'break-all' }}>
+                  {r.value}
                 </div>
               </div>
             ))}
           </div>
-        </div>
-      )}
-
-      {!results && input.length > 0 && (
-        <p className="text-sm text-red-600 dark:text-red-400">
-          Invalid binary. Use only 0 and 1.
-        </p>
-      )}
+        )}
+      </div>
     </div>
   );
 }
