@@ -119,6 +119,7 @@ export default function CssGradientGeneratorClient() {
       <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
         <span className="tb-v2-tool-label">CSS Gradient Generator</span>
         <ToolExampleClearActions
+          exampleCount={1}
           onExample={() => applyPreset(EXAMPLE_PRESET)}
           onClear={resetDefault}
           canClear

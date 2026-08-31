@@ -137,6 +137,7 @@ export default function DominantColorExtractorClient() {
       <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
         <span className="tb-v2-tool-label">Dominant Color Extractor</span>
         <ToolExampleClearActions
+          exampleCount={1}
           onExample={() => {
             setError('');
             processImage(SAMPLE);
@@ -193,7 +194,7 @@ export default function DominantColorExtractorClient() {
       </div>
       <div className="tb-v2-tool-output-body">
         {colors.length === 0 ? (
-          <p className="tb-v2-empty">Upload an image or use Examples to extract dominant colors.</p>
+          <p className="tb-v2-empty">Upload an image or use Example to extract dominant colors.</p>
         ) : (
           <div
             style={{

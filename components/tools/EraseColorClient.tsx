@@ -176,6 +176,7 @@ export default function EraseColorClient() {
       <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
         <span className="tb-v2-tool-label">Erase Color from Image</span>
         <ToolExampleClearActions
+          exampleCount={1}
           onExample={() => loadSample()}
           onClear={clearAll}
           canClear={Boolean(originalImage)}
