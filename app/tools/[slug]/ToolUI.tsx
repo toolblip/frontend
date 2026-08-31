@@ -531,12 +531,9 @@ import HtmlAttributeEncoderClient from '@/components/tools/HtmlAttributeEncoderC
 import HtmlEncoderDecoderClient from '@/components/tools/HtmlEncoderDecoderClient';
 import HtmlLivePreviewClient from '@/components/tools/HtmlLivePreviewClient';
 import HtmlMarkdownExpressClient from '@/components/tools/HtmlMarkdownExpressClient';
-import HtmlPlaintextExpressClient from '@/components/tools/HtmlPlaintextExpressClient';
 import HtmlTableToJsonClient from '@/components/tools/HtmlTableToJsonClient';
 import HtmlToJsxClient from '@/components/tools/HtmlToJsxClient';
 import HtmlToMarkdownV2Client from '@/components/tools/HtmlToMarkdownV2Client';
-import HtmlToPlainTextToolClient from '@/components/tools/HtmlToPlainTextToolClient';
-import HtmlToPlainTextV2Client from '@/components/tools/HtmlToPlainTextV2Client';
 import HttpHeaders2025Client from '@/components/tools/HttpHeaders2025Client';
 import HttpHeadersAnalyzerClient from '@/components/tools/HttpHeadersAnalyzerClient';
 import HttpHeadersBrowserClient from '@/components/tools/HttpHeadersBrowserClient';
@@ -1079,8 +1076,6 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <HtmlTableGeneratorClient />;
     case 'html-to-markdown':
       return <HtmlToMarkdownClient />;
-    case 'html-to-plain-text':
-      return <HtmlToPlainTextClient />;
     case 'html-validator':
       return <HtmlValidatorClient />;
     case 'image-metadata-viewer':
@@ -1782,20 +1777,18 @@ export function ToolUI({ tool }: { tool: Tool }) {
       return <HtmlLivePreviewClient />;
     case 'html-markdown-express':
       return <HtmlMarkdownExpressClient />;
-    case 'html-plaintext-express': return <HtmlPlaintextExpressClient />; // legacy alias, redirected via next.config.mjs
-    case 'html-plaintext': return <HtmlPlaintextExpressClient />;
+    case 'html-plaintext-express':
+    case 'html-plaintext':
+    case 'html-to-plain-text-tool':
+    case 'html-to-plain-text-v2':
+    case 'html-to-plain-text':
+      return <HtmlToPlainTextClient />;
     case 'html-table-to-json':
       return <HtmlTableToJsonClient />;
     case 'html-to-jsx':
       return <HtmlToJsxClient />;
     case 'html-to-markdown-v2':
       return <HtmlToMarkdownV2Client />;
-    // 'html-to-plain-text' renders HtmlToPlainTextClient (defined earlier,
-    // ~line 1225) — it uses DOMParser, which is more robust than this
-    // component's regex-based tag stripping.
-    case 'html-to-plain-text-tool': return <HtmlToPlainTextToolClient />; // legacy alias, redirected via next.config.mjs
-    case 'html-to-plain-text-v2':
-      return <HtmlToPlainTextV2Client />;
     case 'http-headers-2025':
       return <HttpHeaders2025Client />;
     case 'http-headers-analyzer':
