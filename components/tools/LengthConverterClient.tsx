@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useMemo, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const UNITS = ['meters', 'kilometers', 'centimeters', 'millimeters', 'miles', 'yards', 'feet', 'inches'];
 const FACTORS: Record<string, number> = {
@@ -14,34 +15,52 @@ const FACTORS: Record<string, number> = {
   inches: 0.0254,
 };
 
-export default function LengthConverterClient() {
-  const [input, setInput] = useState('1');
-  const [fromUnit, setFromUnit] = useState('meters');
-  const [results, setResults] = useState<{ unit: string; value: string }[]>([]);
+const EXAMPLE_VALUE = '100';
+const EXAMPLE_UNIT = 'meters';
 
-  const convert = useCallback(() => {
+function formatValue(n: number): string {
+  return n.toFixed(6).replace(/\.?0+$/, '');
+}
+
+export default function LengthConverterClient() {
+  const [input, setInput] = useState('');
+  const [fromUnit, setFromUnit] = useState('meters');
+
+  const results = useMemo(() => {
     const val = parseFloat(input);
-    if (isNaN(val)) return;
+    if (input.trim() === '' || isNaN(val)) return [];
     const base = val * FACTORS[fromUnit];
-    const converted = UNITS.map(u => ({
+    return UNITS.map((u) => ({
       unit: u,
-      value: (base / FACTORS[u]).toFixed(6).replace(/\.?0+$/, '')
+      value: formatValue(base / FACTORS[u]),
     }));
-    setResults(converted);
   }, [input, fromUnit]);
 
   return (
-    <div>
+    <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Input</span>
+        <span className="tb-v2-tool-label">Length</span>
+        <ToolExampleClearActions
+          exampleCount={1}
+          onExample={() => {
+            setInput(EXAMPLE_VALUE);
+            setFromUnit(EXAMPLE_UNIT);
+          }}
+          onClear={() => {
+            setInput('');
+            setFromUnit('meters');
+          }}
+          canClear={input.length > 0}
+        />
       </div>
-      <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+      <div style={{ display: 'flex', gap: 8, marginBottom: 12, padding: '0 20px' }}>
         <input
           type="number"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           className="tb-v2-tool-input"
           style={{ width: 120 }}
+          placeholder={EXAMPLE_VALUE}
           aria-label="Length value"
         />
         <select
@@ -51,26 +70,29 @@ export default function LengthConverterClient() {
           style={{ flex: 1 }}
           aria-label="From unit"
         >
-          {UNITS.map(u => <option key={u} value={u}>{u}</option>)}
+          {UNITS.map((u) => (
+            <option key={u} value={u}>
+              {u}
+            </option>
+          ))}
         </select>
-        <button type="button" onClick={convert} className="tb-v2-primary-btn">Convert</button>
       </div>
 
-      {results.length > 0 && (
-        <>
-          <div className="tb-v2-tool-output-head">
-            <span className="tb-v2-tool-label">All Units</span>
-          </div>
-          <div className="tb-v2-tool-output-body">
-            {results.map((r, i) => (
-              <div key={i} style={{ display: 'flex', gap: 12, marginBottom: 6, fontSize: 13 }}>
-                <span style={{ minWidth: 100, color: 'var(--tb-text-secondary)' }}>{r.unit}</span>
-                <code style={{ fontFamily: 'var(--f-mono)' }}>{r.value}</code>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">All units</span>
+      </div>
+      <div className="tb-v2-tool-output-body">
+        {results.length === 0 ? (
+          <p className="tb-v2-empty">Enter a length or use Example.</p>
+        ) : (
+          results.map((r) => (
+            <div key={r.unit} style={{ display: 'flex', gap: 12, marginBottom: 6, fontSize: 13 }}>
+              <span style={{ minWidth: 100, color: 'var(--tb-text-secondary)' }}>{r.unit}</span>
+              <code style={{ fontFamily: 'var(--f-mono)' }}>{r.value}</code>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 }
