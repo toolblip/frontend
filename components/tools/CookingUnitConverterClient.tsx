@@ -125,11 +125,32 @@ export default function CookingUnitConverterClient() {
         {!results ? (
           <p className="tb-v2-empty">Enter a value or use Example.</p>
         ) : (
-          <div className="tb-v2-stats-grid">
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+              gap: 10,
+            }}
+          >
             {(Object.keys(UNIT_LABELS) as CookingUnit[]).map((u) => (
-              <div key={u} className="tb-v2-stat-pill">
-                <div style={{ fontSize: 11, color: 'var(--fg-2)' }}>{UNIT_LABELS[u]}</div>
-                <div style={{ fontFamily: 'var(--f-mono)', fontWeight: 600 }}>{formatValue(results[u])}</div>
+              <div
+                key={u}
+                className="tb-v2-stat-pill"
+                style={{ alignItems: 'flex-start', textAlign: 'left', overflow: 'hidden' }}
+              >
+                <div style={{ fontSize: 11, color: 'var(--fg-2)', lineHeight: 1.35, marginBottom: 6 }}>
+                  {UNIT_LABELS[u]}
+                </div>
+                <div
+                  style={{
+                    fontFamily: 'var(--f-mono)',
+                    fontWeight: 600,
+                    fontSize: 15,
+                    wordBreak: 'break-all',
+                  }}
+                >
+                  {formatValue(results[u])}
+                </div>
               </div>
             ))}
           </div>
