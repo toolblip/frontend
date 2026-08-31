@@ -1,20 +1,28 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const EXAMPLE_BINARY = '01001000 01100101 01101100 01101100 01101111';
+const EXAMPLE_TEXT = 'Hello';
 
-function binaryToText(binary: string): string {
+function binaryToText(binary: string): { text: string; error: string } {
   const cleaned = binary.replace(/\s+/g, '');
-  if (!/^[01]+$/.test(cleaned)) {
-    throw new Error('Binary input must contain only 0s and 1s');
+  if (!cleaned) return { text: '', error: '' };
+  if (!/^[01]*$/.test(cleaned)) {
+    return { text: '', error: 'Binary must contain only 0s and 1s' };
   }
-  const bytes = cleaned.match(/.{1,8}/g) || [];
-  return bytes.map((b) => String.fromCharCode(parseInt(b, 2))).join('');
+  const byteLen = Math.floor(cleaned.length / 8) * 8;
+  if (byteLen === 0) return { text: '', error: '' };
+  const bytes = cleaned.slice(0, byteLen).match(/.{8}/g) ?? [];
+  return {
+    text: bytes.map((b) => String.fromCharCode(parseInt(b, 2))).join(''),
+    error: '',
+  };
 }
 
 function textToBinary(text: string): string {
+  if (!text) return '';
   return text
     .split('')
     .map((c) => c.charCodeAt(0).toString(2).padStart(8, '0'))
@@ -22,149 +30,139 @@ function textToBinary(text: string): string {
 }
 
 export default function BinaryToTextClient() {
-  const [input, setInput] = useState('');
-  const [mode, setMode] = useState<'toText' | 'toBinary'>('toText');
-  const [output, setOutput] = useState('');
-  const [error, setError] = useState('');
-  const [copied, setCopied] = useState(false);
+  const [binary, setBinary] = useState('');
+  const [text, setText] = useState('');
+  const [binaryError, setBinaryError] = useState('');
+  const [copiedBinary, setCopiedBinary] = useState(false);
+  const [copiedText, setCopiedText] = useState(false);
 
-  const process = useCallback(
-    (raw: string, activeMode: 'toText' | 'toBinary') => {
-      setError('');
-      if (!raw.trim()) {
-        setOutput('');
-        return;
-      }
-      try {
-        setOutput(activeMode === 'toText' ? binaryToText(raw) : textToBinary(raw));
-      } catch (err) {
-        setOutput('');
-        setError(err instanceof Error ? err.message : 'Conversion failed');
-      }
-    },
-    []
-  );
+  const applyBinary = useCallback((raw: string) => {
+    setBinary(raw);
+    if (!raw.trim()) {
+      setText('');
+      setBinaryError('');
+      return;
+    }
+    const { text: converted, error } = binaryToText(raw);
+    if (error) {
+      setBinaryError(error);
+      return;
+    }
+    setText(converted);
+    setBinaryError('');
+  }, []);
+
+  const applyText = useCallback((raw: string) => {
+    setText(raw);
+    if (!raw) {
+      setBinary('');
+      setBinaryError('');
+      return;
+    }
+    setBinary(textToBinary(raw));
+    setBinaryError('');
+  }, []);
 
   const loadExample = useCallback(() => {
-    setMode('toText');
-    setInput(EXAMPLE_BINARY);
-    process(EXAMPLE_BINARY, 'toText');
-  }, [process]);
+    applyBinary(EXAMPLE_BINARY);
+  }, [applyBinary]);
 
   const clearAll = useCallback(() => {
-    setInput('');
-    setOutput('');
-    setError('');
-    setMode('toText');
+    setBinary('');
+    setText('');
+    setBinaryError('');
   }, []);
 
-  const copy = useCallback((text: string) => {
+  const copyBinary = useCallback(() => {
+    if (!binary) return;
+    navigator.clipboard.writeText(binary).catch(() => {});
+    setCopiedBinary(true);
+    setTimeout(() => setCopiedBinary(false), 1500);
+  }, [binary]);
+
+  const copyText = useCallback(() => {
+    if (!text) return;
     navigator.clipboard.writeText(text).catch(() => {});
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
-  }, []);
-
-  const swap = useCallback(() => {
-    setInput(output);
-    setOutput('');
-    setError('');
-    setMode(mode === 'toText' ? 'toBinary' : 'toText');
-  }, [output, mode]);
+    setCopiedText(true);
+    setTimeout(() => setCopiedText(false), 1500);
+  }, [text]);
 
   return (
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
-        <span className="tb-v2-tool-label">Binary ↔ Text</span>
+        <span className="tb-v2-tool-label">Binary-Text Converter</span>
         <ToolExampleClearActions
           exampleCount={1}
           onExample={loadExample}
           onClear={clearAll}
-          canClear={input.length > 0 || output.length > 0}
+          canClear={binary.length > 0 || text.length > 0}
         />
       </div>
-      <div className="tb-v2-section" style={{ display: 'flex', flexDirection: 'column', gap: 20, padding: 20 }}>
-        <div className="tb-v2-mode-tabs">
-          {(['toText', 'toBinary'] as const).map((m) => (
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-0 divide-y divide-[var(--line)] md:divide-y-0 md:divide-x">
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: 280 }}>
+          <div className="tb-v2-tool-input-head">
+            <span className="tb-v2-tool-label">Binary</span>
             <button
-              key={m}
               type="button"
-              onClick={() => {
-                setMode(m);
-                setOutput('');
-                setError('');
-              }}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                mode === m
-                  ? 'bg-red-600 text-white'
-                  : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-              }`}
+              onClick={copyBinary}
+              disabled={!binary}
+              className={`tb-v2-copy-btn ${copiedBinary ? 'done' : ''}`}
             >
-              {m === 'toText' ? 'Binary → Text' : 'Text → Binary'}
+              {copiedBinary ? 'Copied' : 'Copy'}
             </button>
-          ))}
+          </div>
+          <textarea
+            value={binary}
+            onChange={(e) => applyBinary(e.target.value)}
+            placeholder={EXAMPLE_BINARY}
+            className="tb-v2-tool-textarea"
+            style={{
+              flex: 1,
+              minHeight: 220,
+              fontFamily: 'var(--f-mono)',
+              border: 'none',
+              borderRadius: 0,
+              resize: 'vertical',
+            }}
+            aria-label="Binary input"
+            spellCheck={false}
+          />
+          {binaryError ? (
+            <p className="tb-v2-error" role="alert" style={{ margin: '0 16px 12px' }}>
+              {binaryError}
+            </p>
+          ) : null}
         </div>
 
-        <div className="space-y-2">
-          <span className="tb-v2-tool-label">
-            {mode === 'toText' ? 'Binary input' : 'Text input'}
-          </span>
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: 280 }}>
+          <div className="tb-v2-tool-input-head">
+            <span className="tb-v2-tool-label">Text</span>
+            <button
+              type="button"
+              onClick={copyText}
+              disabled={!text}
+              className={`tb-v2-copy-btn ${copiedText ? 'done' : ''}`}
+            >
+              {copiedText ? 'Copied' : 'Copy'}
+            </button>
+          </div>
           <textarea
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder={
-              mode === 'toText'
-                ? 'Enter binary (e.g. 01001000 01100101)...'
-                : 'Enter text to convert...'
-            }
+            value={text}
+            onChange={(e) => applyText(e.target.value)}
+            placeholder={EXAMPLE_TEXT}
             className="tb-v2-tool-textarea"
+            style={{
+              flex: 1,
+              minHeight: 220,
+              border: 'none',
+              borderRadius: 0,
+              resize: 'vertical',
+            }}
+            aria-label="Text input"
+            spellCheck={false}
           />
         </div>
-
-        <button
-          type="button"
-          onClick={() => process(input, mode)}
-          disabled={!input.trim()}
-          className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg"
-        >
-          Convert
-        </button>
-
-        {error && (
-          <div className="p-3 bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300 rounded-lg text-sm">
-            {error}
-          </div>
-        )}
-
-        {!output && !error && (
-          <p className="tb-v2-empty">Enter binary or text above, or use Example.</p>
-        )}
-
-        {output && (
-          <div className="space-y-2">
-            <div className="flex justify-between items-center">
-              <span className="tb-v2-tool-label">Output</span>
-              <div className="tb-v2-mode-tabs">
-                <button
-                  type="button"
-                  onClick={swap}
-                  className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm"
-                  style={{ color: 'var(--red)', fontSize: 12 }}
-                >
-                  Swap ↕
-                </button>
-                <button
-                  type="button"
-                  onClick={() => copy(output)}
-                  className="tb-v2-btn tb-v2-btn-ghost tb-v2-btn-sm"
-                  style={{ color: 'var(--red)', fontSize: 12 }}
-                >
-                  {copied ? 'Copied' : 'Copy'}
-                </button>
-              </div>
-            </div>
-            <div className="tb-v2-tool-pre">{output}</div>
-          </div>
-        )}
       </div>
     </div>
   );
