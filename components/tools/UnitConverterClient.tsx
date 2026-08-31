@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type Category = 'length' | 'weight' | 'temperature';
 
@@ -41,52 +42,89 @@ export default function UnitConverterClient() {
   const current = convList[selected];
   const result = convert(parseFloat(value) || 0, current);
 
+  const loadExample = () => {
+    setCategory('length');
+    setSelected(0);
+    setValue('100');
+  };
+
+  const clearAll = () => {
+    setCategory('length');
+    setSelected(0);
+    setValue('');
+  };
+
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
-      <div className="tb-v2-mode-tabs">
-        {(['length', 'weight', 'temperature'] as Category[]).map(cat => (
-          <button
-            key={cat}
-            onClick={() => { setCategory(cat); setSelected(0); }}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-              category === cat
-                ? 'bg-red-600 text-white'
-                : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-            }`}
-          >
-            {cat.charAt(0).toUpperCase() + cat.slice(1)}
-          </button>
-        ))}
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
+        <span className="tb-v2-tool-label">Unit Converter</span>
+        <ToolExampleClearActions
+          exampleCount={1}
+          onExample={loadExample}
+          onClear={clearAll}
+          canClear={value.length > 0}
+        />
       </div>
-      <div className="tb-v2-mode-tabs">
-        {convList.map((conv, i) => (
-          <button
-            key={i}
-            onClick={() => setSelected(i)}
-            className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
-              selected === i
-                ? 'bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900'
-                : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-            }`}
-          >
-            {conv.from} → {conv.to}
-          </button>
-        ))}
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
-        <div>
-          <label className="tb-v2-tool-label" style={{marginBottom:6}}>{current.from}</label>
-          <input
-            type="number"
-            value={value}
-            onChange={e => setValue(e.target.value)}
-            className="w-full bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 text-lg focus:outline-none focus:border-red-500"
-          />
+      <div className="tb-v2-section" style={{ display: 'flex', flexDirection: 'column', gap: 16, padding: '16px 20px' }}>
+        <div className="tb-v2-mode-tabs">
+          {(['length', 'weight', 'temperature'] as Category[]).map((cat) => (
+            <button
+              key={cat}
+              type="button"
+              onClick={() => {
+                setCategory(cat);
+                setSelected(0);
+              }}
+              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                category === cat
+                  ? 'bg-red-600 text-white'
+                  : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+              }`}
+            >
+              {cat.charAt(0).toUpperCase() + cat.slice(1)}
+            </button>
+          ))}
         </div>
-        <div>
-          <label className="tb-v2-tool-label" style={{marginBottom:6}}>{current.to}</label>
-          <div className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-lg px-4 py-3 text-lg font-medium">
-            {isNaN(result) ? result.toFixed(4) : result.toFixed(6).replace(/\.?0+$/, '')}
+        <div className="tb-v2-mode-tabs">
+          {convList.map((conv, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={() => setSelected(i)}
+              className={`px-3 py-1.5 rounded-full text-sm transition-colors ${
+                selected === i
+                  ? 'bg-gray-800 dark:bg-gray-200 text-white dark:text-gray-900'
+                  : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+              }`}
+            >
+              {conv.from} → {conv.to}
+            </button>
+          ))}
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+          <div>
+            <label className="tb-v2-tool-label" style={{ marginBottom: 6 }}>
+              {current.from}
+            </label>
+            <input
+              type="number"
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              className="tb-v2-input w-full text-lg"
+              placeholder="Enter a value"
+            />
+          </div>
+          <div>
+            <label className="tb-v2-tool-label" style={{ marginBottom: 6 }}>
+              {current.to}
+            </label>
+            <div className="tb-v2-input w-full text-lg font-medium" style={{ background: 'var(--bg-2)' }}>
+              {value.trim()
+                ? isNaN(result)
+                  ? result.toFixed(4)
+                  : result.toFixed(6).replace(/\.?0+$/, '')
+                : '—'}
+            </div>
           </div>
         </div>
       </div>
