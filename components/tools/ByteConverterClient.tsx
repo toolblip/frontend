@@ -1,150 +1,142 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
-const units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB'];
-const factors: Record<string, number> = {
+const UNITS = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB'] as const;
+type Unit = (typeof UNITS)[number];
+
+const FACTORS: Record<Unit, number> = {
   Bytes: 1,
   KB: 1024,
-  MB: 1024 * 1024,
-  GB: 1024 * 1024 * 1024,
-  TB: 1024 * 1024 * 1024 * 1024,
-  PB: 1024 * 1024 * 1024 * 1024 * 1024,
+  MB: 1024 ** 2,
+  GB: 1024 ** 3,
+  TB: 1024 ** 4,
+  PB: 1024 ** 5,
 };
+
+const EXAMPLE_VALUE = '1048576';
+const EXAMPLE_FROM: Unit = 'Bytes';
+
+function formatResult(n: number): string {
+  return n.toLocaleString('en-US', {
+    maximumFractionDigits: 6,
+    minimumFractionDigits: 0,
+  });
+}
 
 export default function ByteConverterClient() {
   const [value, setValue] = useState('');
-  const [fromUnit, setFromUnit] = useState('Bytes');
-  const [toUnit, setToUnit] = useState('MB');
-  const [results, setResults] = useState<Record<string, string>>({});
+  const [fromUnit, setFromUnit] = useState<Unit>('Bytes');
+  const [highlight, setHighlight] = useState<Unit>('MB');
 
-  const convert = () => {
+  const results = useMemo(() => {
     const num = parseFloat(value);
-    if (isNaN(num) || num < 0) {
-      setResults({});
-      return;
-    }
-
-    const fromFactor = factors[fromUnit];
-    const bytes = num * fromFactor;
-
-    const converted: Record<string, string> = {};
-    units.forEach(unit => {
-      const result = bytes / factors[unit];
-      if (result >= 0.000001 || result === 0) {
-        converted[unit] = result.toLocaleString('en-US', {
-          maximumFractionDigits: 6,
-          minimumFractionDigits: 0,
-        });
-      }
+    if (value.trim() === '' || isNaN(num) || num < 0) return null;
+    const bytes = num * FACTORS[fromUnit];
+    const converted: Record<Unit, string> = {} as Record<Unit, string>;
+    UNITS.forEach((unit) => {
+      converted[unit] = formatResult(bytes / FACTORS[unit]);
     });
-
-    setResults(converted);
-  };
-
-  const handleValueChange = (val: string) => {
-    setValue(val);
-    if (val === '') {
-      setResults({});
-    }
-  };
-
-  const loadExample = () => {
-    setValue('1048576');
-    setFromUnit('Bytes');
-    setToUnit('MB');
-    setResults({});
-  };
+    return converted;
+  }, [value, fromUnit]);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Byte value</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
-          Load Example
-        </button>
+        <span className="tb-v2-tool-label">Byte size</span>
+        <ToolExampleClearActions
+          exampleCount={1}
+          onExample={() => {
+            setValue(EXAMPLE_VALUE);
+            setFromUnit(EXAMPLE_FROM);
+            setHighlight('MB');
+          }}
+          onClear={() => {
+            setValue('');
+            setFromUnit('Bytes');
+            setHighlight('MB');
+          }}
+          canClear={value.length > 0}
+        />
       </div>
 
-      <input
-        type="number"
-        value={value}
-        onChange={(e) => handleValueChange(e.target.value)}
-        onKeyDown={(e) => e.key === 'Enter' && convert()}
-        placeholder="Enter numeric value"
-        className="tb-v2-input"
-        min="0"
-        aria-label="Byte value"
-      />
+      <div style={{ padding: '0 20px 16px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+        <input
+          type="number"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Enter numeric value"
+          className="tb-v2-input"
+          min="0"
+          aria-label="Byte value"
+        />
 
-      <div className="tb-v2-grid-2">
-        <div>
-          <label className="tb-v2-tool-label" style={{ display: 'block', marginBottom: 6 }}>From</label>
-          <select
-            value={fromUnit}
-            onChange={(e) => setFromUnit(e.target.value)}
-            className="tb-v2-select"
-            aria-label="Source unit"
-          >
-            {units.map(unit => (
-              <option key={unit} value={unit}>{unit}</option>
-            ))}
-          </select>
-        </div>
-
-        <div>
-          <label className="tb-v2-tool-label" style={{ display: 'block', marginBottom: 6 }}>To (highlighted)</label>
-          <select
-            value={toUnit}
-            onChange={(e) => setToUnit(e.target.value)}
-            className="tb-v2-select"
-            aria-label="Target unit"
-          >
-            {units.map(unit => (
-              <option key={unit} value={unit}>{unit}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-
-      <button
-        type="button"
-        onClick={convert}
-        className="tb-v2-btn tb-v2-btn-primary"
-        disabled={!value}
-      >
-        Convert
-      </button>
-
-      {Object.keys(results).length === 0 && (
-        <p className="tb-v2-empty">
-          Enter a value above to see it converted across every byte unit at once.
-        </p>
-      )}
-
-      {Object.keys(results).length > 0 && (
-        <>
-          <div className="tb-v2-tool-output-head">
-            <span className="tb-v2-tool-label">Conversion Results</span>
-          </div>
-          <div className="tb-v2-tool-output-body">
-            <div className="tb-v2-grid-3">
-              {Object.entries(results).map(([unit, result]) => (
-                <div
-                  key={unit}
-                  className={`p-3 rounded-lg text-center ${
-                    unit === toUnit
-                      ? 'bg-indigo-50 dark:bg-indigo-900/30 ring-1 ring-indigo-400'
-                      : 'bg-gray-50 dark:bg-gray-800'
-                  }`}
-                >
-                  <div className="text-xs text-gray-500 dark:text-gray-400">{unit}</div>
-                  <div className="text-sm font-semibold text-gray-800 dark:text-gray-200 break-all">{result}</div>
-                </div>
+        <div className="tb-v2-grid-2">
+          <div>
+            <label className="tb-v2-tool-label" style={{ display: 'block', marginBottom: 6 }}>
+              From
+            </label>
+            <select
+              value={fromUnit}
+              onChange={(e) => setFromUnit(e.target.value as Unit)}
+              className="tb-v2-select"
+              aria-label="Source unit"
+            >
+              {UNITS.map((unit) => (
+                <option key={unit} value={unit}>
+                  {unit}
+                </option>
               ))}
-            </div>
+            </select>
           </div>
-        </>
-      )}
+          <div>
+            <label className="tb-v2-tool-label" style={{ display: 'block', marginBottom: 6 }}>
+              Highlight
+            </label>
+            <select
+              value={highlight}
+              onChange={(e) => setHighlight(e.target.value as Unit)}
+              className="tb-v2-select"
+              aria-label="Highlighted unit"
+            >
+              {UNITS.map((unit) => (
+                <option key={unit} value={unit}>
+                  {unit}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">All units</span>
+      </div>
+      <div className="tb-v2-tool-output-body">
+        {!results ? (
+          <p className="tb-v2-empty">Enter a value or use Example.</p>
+        ) : (
+          <div className="tb-v2-grid-3">
+            {UNITS.map((unit) => (
+              <div
+                key={unit}
+                className="p-3 rounded-lg text-center"
+                style={
+                  unit === highlight
+                    ? { background: 'color-mix(in srgb, var(--red) 12%, transparent)', outline: '1px solid var(--red)' }
+                    : { background: 'var(--surface-2)' }
+                }
+              >
+                <div className="text-xs" style={{ color: 'var(--tb-text-secondary)' }}>
+                  {unit}
+                </div>
+                <div className="text-sm font-semibold break-all">{results[unit]}</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

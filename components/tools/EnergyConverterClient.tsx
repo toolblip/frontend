@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type Unit = 'J' | 'kJ' | 'cal' | 'kcal' | 'Wh' | 'kWh' | 'BTU' | 'ftlb';
 
@@ -33,72 +34,90 @@ function formatNumber(n: number): string {
 }
 
 export default function EnergyConverterClient() {
-  const [value, setValue] = useState('1');
+  const [value, setValue] = useState('');
   const [fromUnit, setFromUnit] = useState<Unit>('kWh');
   const [copied, setCopied] = useState(false);
 
-  const numericValue = useMemo(() => {
-    const n = parseFloat(value);
-    return isNaN(n) ? null : n;
-  }, [value]);
-
   const results = useMemo(() => {
-    if (numericValue === null) return null;
-    const joules = numericValue * TO_JOULES[fromUnit];
+    if (!value.trim()) return null;
+    const n = parseFloat(value);
+    if (isNaN(n)) return null;
+    const joules = n * TO_JOULES[fromUnit];
     const out: Record<Unit, number> = {} as Record<Unit, number>;
-    (Object.keys(TO_JOULES) as Unit[]).forEach(u => {
+    (Object.keys(TO_JOULES) as Unit[]).forEach((u) => {
       out[u] = joules / TO_JOULES[u];
     });
     return out;
-  }, [numericValue, fromUnit]);
-
-  const loadExample = () => {
-    setValue('2.5');
-    setFromUnit('kWh');
-  };
+  }, [value, fromUnit]);
 
   const copyAll = () => {
     if (!results) return;
-    const text = (Object.keys(results) as Unit[]).map(u => `${UNIT_LABELS[u]}: ${formatNumber(results[u])}`).join('\n');
+    const text = (Object.keys(results) as Unit[])
+      .map((u) => `${UNIT_LABELS[u]}: ${formatNumber(results[u])}`)
+      .join('\n');
     navigator.clipboard.writeText(text).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div>
+    <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">Energy Value</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+        <span className="tb-v2-tool-label">Energy</span>
+        <ToolExampleClearActions
+          exampleCount={1}
+          onExample={() => {
+            setValue('2.5');
+            setFromUnit('kWh');
+          }}
+          onClear={() => {
+            setValue('');
+            setFromUnit('kWh');
+          }}
+          canClear={value.length > 0}
+        />
       </div>
-      <div className="tb-v2-grid-2">
+      <div className="tb-v2-grid-2" style={{ padding: '0 20px 12px' }}>
         <input
           type="number"
           value={value}
-          onChange={e => setValue(e.target.value)}
-          placeholder="Enter a value..."
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Enter a value…"
           className="tb-v2-input"
           style={{ fontFamily: 'var(--f-mono)' }}
+          aria-label="Energy value"
         />
-        <select value={fromUnit} onChange={e => setFromUnit(e.target.value as Unit)} className="tb-v2-input">
-          {(Object.keys(UNIT_LABELS) as Unit[]).map(u => (
-            <option key={u} value={u}>{UNIT_LABELS[u]}</option>
+        <select
+          value={fromUnit}
+          onChange={(e) => setFromUnit(e.target.value as Unit)}
+          className="tb-v2-input"
+          aria-label="Energy unit"
+        >
+          {(Object.keys(UNIT_LABELS) as Unit[]).map((u) => (
+            <option key={u} value={u}>
+              {UNIT_LABELS[u]}
+            </option>
           ))}
         </select>
       </div>
 
       <div className="tb-v2-tool-output-head">
-        <span className="tb-v2-tool-label">Converted Values</span>
-        <button type="button" onClick={copyAll} disabled={!results} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
-          {copied ? 'Copied' : 'Copy All'}
+        <span className="tb-v2-tool-label">All units</span>
+        <button
+          type="button"
+          onClick={copyAll}
+          disabled={!results}
+          className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+        >
+          {copied ? 'Copied' : 'Copy all'}
         </button>
       </div>
       <div className="tb-v2-tool-output-body">
         {!results ? (
-          <p className="tb-v2-empty">Enter a numeric value to see conversions.</p>
+          <p className="tb-v2-empty">Enter a value or use Example.</p>
         ) : (
           <div className="tb-v2-stats-grid">
-            {(Object.keys(UNIT_LABELS) as Unit[]).map(u => (
+            {(Object.keys(UNIT_LABELS) as Unit[]).map((u) => (
               <div key={u} className="tb-v2-stat-pill">
                 <div style={{ fontSize: 11, color: 'var(--fg-2)' }}>{UNIT_LABELS[u]}</div>
                 <div style={{ fontFamily: 'var(--f-mono)', fontWeight: 600 }}>{formatNumber(results[u])}</div>
