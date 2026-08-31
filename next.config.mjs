@@ -202,7 +202,9 @@ const nextConfig = {
       // to, so this 404s directly instead of chaining through a removed
       // slug.
       { source: '/tools/word-freq-express', destination: '/tools/word-freq', permanent: true },
-      { source: '/tools/html-plaintext-express', destination: '/tools/html-plaintext', permanent: true },
+      { source: '/tools/html-plaintext-express', destination: '/tools/html-to-plain-text', permanent: true },
+      { source: '/tools/html-plaintext', destination: '/tools/html-to-plain-text', permanent: true },
+      { source: '/tools/html-to-plain-text-v2', destination: '/tools/html-to-plain-text', permanent: true },
       { source: '/tools/tsv-json-express', destination: '/tools/json-csv-converter', permanent: true },
       { source: '/tools/json-to-yaml', destination: '/tools/json-yaml-converter', permanent: true },
       { source: '/tools/yaml-to-json', destination: '/tools/json-yaml-converter', permanent: true },
