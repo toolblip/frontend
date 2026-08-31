@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type Mode = 'toScientific' | 'toDecimal';
 
@@ -41,34 +42,54 @@ interface SciToDecResult {
   steps: string[];
 }
 
+function parseDecimal(input: string): number | null {
+  const trimmed = input.trim();
+  if (!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$/.test(trimmed)) return null;
+  const value = Number(trimmed);
+  return Number.isFinite(value) ? value : null;
+}
+
 function parseScientific(input: string): { mantissa: number; exponent: number } | null {
   const trimmed = input.trim();
 
   // e/E notation: 1.23e5, -1.23E-5
   const eMatch = trimmed.match(/^([+-]?\d*\.?\d+)\s*[eE]\s*([+-]?\d+)$/);
   if (eMatch) {
-    return { mantissa: Number(eMatch[1]), exponent: Number(eMatch[2]) };
+    const mantissa = Number(eMatch[1]);
+    const exponent = Number(eMatch[2]);
+    return Number.isFinite(mantissa) && Number.isFinite(exponent) ? { mantissa, exponent } : null;
   }
 
   // × 10^ notation: 1.23 × 10^5, 1.23 x 10^-5, 1.23*10^5
   const timesMatch = trimmed.match(/^([+-]?\d*\.?\d+)\s*[×x*]\s*10\s*\^?\s*([+-]?\d+)$/i);
   if (timesMatch) {
-    return { mantissa: Number(timesMatch[1]), exponent: Number(timesMatch[2]) };
+    const mantissa = Number(timesMatch[1]);
+    const exponent = Number(timesMatch[2]);
+    return Number.isFinite(mantissa) && Number.isFinite(exponent) ? { mantissa, exponent } : null;
   }
 
   return null;
 }
 
-function scientificToDecimal(mantissa: number, exponent: number): SciToDecResult {
+function formatDecimal(value: number): string {
+  return value.toLocaleString('en-US', {
+    maximumFractionDigits: 20,
+    notation: 'standard',
+    useGrouping: false,
+  });
+}
+
+function scientificToDecimal(mantissa: number, exponent: number): SciToDecResult | null {
   const decimalValue = mantissa * Math.pow(10, exponent);
+  if (!Number.isFinite(decimalValue)) return null;
   const steps: string[] = [
     `Start with ${mantissa} × 10^${exponent}.`,
     exponent >= 0
       ? `Move the decimal point right ${exponent} place(s).`
       : `Move the decimal point left ${Math.abs(exponent)} place(s).`,
-    `Result: ${decimalValue}`,
+    `Result: ${formatDecimal(decimalValue)}`,
   ];
-  return { mantissa, exponent, decimal: String(decimalValue), steps };
+  return { mantissa, exponent, decimal: formatDecimal(decimalValue), steps };
 }
 
 export default function ScientificNotationConverterClient() {
@@ -77,8 +98,8 @@ export default function ScientificNotationConverterClient() {
 
   const decResult = useMemo(() => {
     if (mode !== 'toScientific' || !input.trim()) return null;
-    const n = Number(input.trim());
-    if (isNaN(n) || !isFinite(n)) return null;
+    const n = parseDecimal(input);
+    if (n === null) return null;
     return decimalToScientific(n);
   }, [mode, input]);
 
@@ -89,7 +110,7 @@ export default function ScientificNotationConverterClient() {
   const sciResult = useMemo(() => {
     if (mode !== 'toDecimal' || !input.trim()) return null;
     const parsed = parseScientific(input);
-    if (!parsed || isNaN(parsed.mantissa) || isNaN(parsed.exponent)) return null;
+    if (!parsed) return null;
     return scientificToDecimal(parsed.mantissa, parsed.exponent);
   }, [mode, input]);
 
@@ -97,31 +118,43 @@ export default function ScientificNotationConverterClient() {
     ? 'Enter a value like 1.23e5, 1.23E-5, or 1.23 × 10^5'
     : null;
 
-  const loadExample = () => {
-    if (mode === 'toScientific') setInput('602214076000000000000000');
-    else setInput('6.022 × 10^23');
-  };
+  const loadExample = () => setInput(mode === 'toScientific' ? '0.0000000000667' : '4.5 × 10^7');
+
+  const clear = () => setInput('');
 
   return (
     <div>
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">{mode === 'toScientific' ? 'Decimal Number' : 'Scientific Notation'}</span>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <div className="tb-v2-mode-tabs" role="group" aria-label="Mode">
-            <button type="button" onClick={() => setMode('toScientific')} className={`tb-v2-mode-tab ${mode === 'toScientific' ? 'on' : ''}`} aria-pressed={mode === 'toScientific'}>Decimal → Scientific</button>
-            <button type="button" onClick={() => setMode('toDecimal')} className={`tb-v2-mode-tab ${mode === 'toDecimal' ? 'on' : ''}`} aria-pressed={mode === 'toDecimal'}>Scientific → Decimal</button>
-          </div>
-          <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+        <span className="tb-v2-tool-label">Scientific Notation</span>
+        <ToolExampleClearActions
+          exampleCount={1}
+          onExample={loadExample}
+          onClear={clear}
+          canClear={Boolean(input.trim())}
+        />
+      </div>
+
+      <div style={{ padding: '16px 20px 0' }}>
+        <div className="tb-v2-mode-tabs" role="group" aria-label="Conversion mode">
+          <button type="button" onClick={() => setMode('toScientific')} className={`tb-v2-mode-tab ${mode === 'toScientific' ? 'on' : ''}`} aria-pressed={mode === 'toScientific'}>Decimal to scientific</button>
+          <button type="button" onClick={() => setMode('toDecimal')} className={`tb-v2-mode-tab ${mode === 'toDecimal' ? 'on' : ''}`} aria-pressed={mode === 'toDecimal'}>Scientific to decimal</button>
         </div>
       </div>
-      <input
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        placeholder={mode === 'toScientific' ? 'e.g. 12345 or -0.00042' : 'e.g. 1.23e5 or 1.23 × 10^5'}
-        className="tb-v2-input"
-        style={{ fontFamily: 'var(--f-mono)' }}
-      />
+      <div style={{ padding: '12px 20px 20px' }}>
+        <label className="tb-v2-tool-label" htmlFor="scientific-notation-input">
+          {mode === 'toScientific' ? 'Decimal number' : 'Scientific notation'}
+        </label>
+        <input
+          id="scientific-notation-input"
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder={mode === 'toScientific' ? 'e.g. 12345 or -0.00042' : 'e.g. 1.23e5 or 1.23 × 10^5'}
+          className="tb-v2-input"
+          style={{ fontFamily: 'var(--f-mono)', marginTop: 6 }}
+          aria-label={mode === 'toScientific' ? 'Decimal number' : 'Scientific notation'}
+        />
+      </div>
 
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">Result</span>

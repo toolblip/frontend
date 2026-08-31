@@ -43,6 +43,7 @@ import ReadabilityScoreClient from '@/components/tools/ReadabilityScoreClient';
 import QrCodeGeneratorClient from '@/components/tools/QrCodeGeneratorClient';
 import PercentageDifferenceClient from '@/components/tools/PercentageDifferenceClient';
 import PercentageCalculatorClient from '@/components/tools/PercentageCalculatorClient';
+import TipCalculatorClient from '@/components/tools/TipCalculatorClient';
 import PasswordGeneratorClient from '@/components/tools/PasswordGeneratorClient';
 import NumberBaseConverterClient from '@/components/tools/NumberBaseConverterClient';
 import MetaTagGeneratorClient from '@/components/tools/MetaTagGeneratorClient';
@@ -2283,7 +2284,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'percentage-decrease':
       return <PercentageCalculatorClient />;
     case 'tip-calculator':
-      return <PercentageCalculatorClient />;
+      return <TipCalculatorClient />;
     case 'markup-calculator':
       return <PercentageCalculatorClient />;
     case 'password-generator-v2':

@@ -1,157 +1,314 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+
+type Operator = 'add' | 'subtract' | 'multiply' | 'divide';
+
+interface Fraction {
+  num: number;
+  den: number;
+}
+
+interface Calculation {
+  result: Fraction;
+  steps: string[];
+}
+
+const OPERATORS: Operator[] = ['add', 'subtract', 'multiply', 'divide'];
 
 function gcd(a: number, b: number): number {
   a = Math.abs(a);
   b = Math.abs(b);
-  while (b) {
-    const t = b;
-    b = a % b;
-    a = t;
+  while (b !== 0) {
+    [a, b] = [b, a % b];
   }
   return a;
 }
 
-function simplify(numerator: number, denominator: number): { num: number; den: number } {
-  if (denominator === 0) return { num: numerator, den: 1 };
-  const g = gcd(numerator, denominator);
-  return { num: numerator / g, den: denominator / g };
+function lcm(a: number, b: number): number {
+  return Math.abs(a * b) / gcd(a, b);
+}
+
+function parseInteger(value: string): number | null {
+  if (!value.trim()) return null;
+  const parsed = Number(value);
+  return Number.isInteger(parsed) ? parsed : null;
+}
+
+function simplify(numerator: number, denominator: number): Fraction {
+  const sign = denominator < 0 ? -1 : 1;
+  const num = numerator * sign;
+  const den = Math.abs(denominator);
+  if (num === 0) return { num: 0, den: 1 };
+  const divisor = gcd(num, den);
+  return { num: num / divisor, den: den / divisor };
+}
+
+function formatFraction(fraction: Fraction): string {
+  return `${fraction.num}/${fraction.den}`;
+}
+
+function formatMixed(fraction: Fraction): string {
+  if (fraction.num === 0) return '0';
+  const sign = fraction.num < 0 ? '-' : '';
+  const absoluteNumerator = Math.abs(fraction.num);
+  if (absoluteNumerator < fraction.den) return formatFraction(fraction);
+
+  const whole = Math.floor(absoluteNumerator / fraction.den);
+  const remainder = absoluteNumerator % fraction.den;
+  return remainder === 0
+    ? `${sign}${whole}`
+    : `${sign}${whole} ${remainder}/${fraction.den}`;
+}
+
+function formatDecimal(fraction: Fraction): string {
+  return (fraction.num / fraction.den).toFixed(6).replace(/\.?0+$/, '');
+}
+
+function operatorSymbol(operator: Operator): string {
+  return operator === 'add' ? '+' : operator === 'subtract' ? '-' : operator === 'multiply' ? '*' : '/';
+}
+
+function calculate(first: Fraction, second: Fraction, operator: Operator): Calculation | null {
+  if (operator === 'divide' && second.num === 0) return null;
+
+  const symbol = operatorSymbol(operator);
+  const steps: string[] = [];
+  let raw: Fraction;
+
+  if (operator === 'add' || operator === 'subtract') {
+    const commonDenominator = lcm(first.den, second.den);
+    const firstNumerator = first.num * (commonDenominator / first.den);
+    const secondNumerator = second.num * (commonDenominator / second.den);
+    const rawNumerator = operator === 'add'
+      ? firstNumerator + secondNumerator
+      : firstNumerator - secondNumerator;
+    raw = { num: rawNumerator, den: commonDenominator };
+    steps.push(`Common denominator: ${commonDenominator}.`);
+    steps.push(`${firstNumerator}/${commonDenominator} ${symbol} ${secondNumerator}/${commonDenominator} = ${formatFraction(raw)}.`);
+  } else if (operator === 'multiply') {
+    raw = { num: first.num * second.num, den: first.den * second.den };
+    steps.push(`Multiply the numerators and denominators: ${first.num} * ${second.num} / (${first.den} * ${second.den}).`);
+    steps.push(`Before simplifying: ${formatFraction(raw)}.`);
+  } else {
+    raw = { num: first.num * second.den, den: first.den * second.num };
+    steps.push(`Multiply by the reciprocal: ${formatFraction(first)} * ${second.den}/${second.num}.`);
+    steps.push(`Before simplifying: ${formatFraction(raw)}.`);
+  }
+
+  const result = simplify(raw.num, raw.den);
+  if (result.num !== raw.num || result.den !== raw.den) {
+    steps.push(`Simplify ${formatFraction(raw)} to ${formatFraction(result)}.`);
+  }
+
+  return { result, steps };
 }
 
 export default function FractionCalculatorClient() {
-  const [num1, setNum1] = useState('1');
-  const [den1, setDen1] = useState('4');
-  const [num2, setNum2] = useState('1');
-  const [den2, setDen2] = useState('2');
-  const [operator, setOperator] = useState<'add' | 'subtract' | 'multiply' | 'divide'>('add');
+  const [num1, setNum1] = useState('');
+  const [den1, setDen1] = useState('');
+  const [num2, setNum2] = useState('');
+  const [den2, setDen2] = useState('');
+  const [operator, setOperator] = useState<Operator>('add');
+  const [copied, setCopied] = useState(false);
 
-  const n1 = parseInt(num1) || 0;
-  const d1 = parseInt(den1) || 1;
-  const n2 = parseInt(num2) || 0;
-  const d2 = parseInt(den2) || 1;
+  const firstNumerator = parseInteger(num1);
+  const firstDenominator = parseInteger(den1);
+  const secondNumerator = parseInteger(num2);
+  const secondDenominator = parseInteger(den2);
 
-  let resultNum = 0;
-  let resultDen = 1;
+  const error =
+    (num1 || den1 || num2 || den2) &&
+    (firstNumerator === null ||
+      firstDenominator === null ||
+      secondNumerator === null ||
+      secondDenominator === null)
+      ? 'Enter whole numbers for both fractions.'
+      : firstDenominator === 0 || secondDenominator === 0
+        ? 'Denominators cannot be zero.'
+        : operator === 'divide' && secondNumerator === 0
+          ? 'You cannot divide by zero.'
+          : null;
 
-  switch (operator) {
-    case 'add':
-      resultNum = n1 * d2 + n2 * d1;
-      resultDen = d1 * d2;
-      break;
-    case 'subtract':
-      resultNum = n1 * d2 - n2 * d1;
-      resultDen = d1 * d2;
-      break;
-    case 'multiply':
-      resultNum = n1 * n2;
-      resultDen = d1 * d2;
-      break;
-    case 'divide':
-      resultNum = n1 * d2;
-      resultDen = d2 ? d1 * n2 : 1;
-      break;
-  }
+  const calculation = useMemo(() => {
+    if (
+      firstNumerator === null ||
+      firstDenominator === null ||
+      secondNumerator === null ||
+      secondDenominator === null ||
+      firstDenominator === 0 ||
+      secondDenominator === 0
+    ) {
+      return null;
+    }
 
-  const simplified = simplify(resultNum, resultDen);
-  const decimal = resultDen !== 0 ? (resultNum / resultDen).toFixed(6) : 'undefined';
+    return calculate(
+      simplify(firstNumerator, firstDenominator),
+      simplify(secondNumerator, secondDenominator),
+      operator,
+    );
+  }, [firstDenominator, firstNumerator, operator, secondDenominator, secondNumerator]);
+
+  const loadExample = () => {
+    setNum1('1');
+    setDen1('3');
+    setNum2('1');
+    setDen2('4');
+    setOperator('add');
+  };
+
+  const clear = () => {
+    setNum1('');
+    setDen1('');
+    setNum2('');
+    setDen2('');
+    setOperator('add');
+    setCopied(false);
+  };
+
+  const copyResult = () => {
+    if (!calculation) return;
+    const { result } = calculation;
+    navigator.clipboard
+      .writeText(`${formatFraction(result)} (${formatDecimal(result)})`)
+      .catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
 
   return (
-    <div className="tb-v2-card">
-      <div className="tb-v2-card-header">
-        <h2 className="tb-v2-card-title">Fraction Calculator</h2>
-        <p className="tb-v2-card-description">Add, subtract, multiply, or divide fractions</p>
+    <div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Fraction Calculator</span>
+        <ToolExampleClearActions
+          exampleCount={1}
+          onExample={loadExample}
+          onClear={clear}
+          canClear={Boolean(num1 || den1 || num2 || den2 || operator !== 'add')}
+        />
       </div>
 
-      <div className="space-y-4 mb-6">
-        <div className="flex items-center gap-4">
-          <div className="flex-1">
+      <div style={{ padding: 20 }}>
+        <div className="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)_auto_minmax(0,1fr)] gap-3 items-center">
+          <div className="flex flex-col gap-2">
+            <label className="tb-v2-tool-label" htmlFor="fraction-num-1">First fraction</label>
             <input
+              id="fraction-num-1"
               type="number"
+              step="1"
               value={num1}
-              onChange={(e) => setNum1(e.target.value)}
-              className="tb-v2-input w-full text-center"
-              placeholder="Num"
+              onChange={(event) => setNum1(event.target.value)}
+              className="tb-v2-input text-center"
+              placeholder="1"
+              aria-label="First fraction numerator"
             />
-            <div className="border-b-2 border-gray-400 my-1" />
+            <div style={{ borderTop: '2px solid var(--line-2)' }} />
             <input
               type="number"
+              step="1"
               value={den1}
-              onChange={(e) => setDen1(e.target.value)}
-              className="tb-v2-input w-full text-center"
-              placeholder="Den"
+              onChange={(event) => setDen1(event.target.value)}
+              className="tb-v2-input text-center"
+              placeholder="3"
+              aria-label="First fraction denominator"
             />
           </div>
 
-          <div className="flex flex-col gap-2">
-            {(['add', 'subtract', 'multiply', 'divide'] as const).map((op) => (
+          <div className="tb-v2-mode-tabs sm:flex-col" role="group" aria-label="Fraction operation">
+            {OPERATORS.map((op) => (
               <button
+                type="button"
                 key={op}
                 onClick={() => setOperator(op)}
-                className={`px-3 py-2 rounded text-sm font-medium transition-colors ${
-                  operator === op
-                    ? 'tb-v2-button-primary'
-                    : 'tb-v2-button-secondary'
-                }`}
+                className={`tb-v2-mode-tab ${operator === op ? 'on' : ''}`}
+                aria-pressed={operator === op}
+                aria-label={op}
               >
-                {op === 'add' ? '+' : op === 'subtract' ? '−' : op === 'multiply' ? '×' : '÷'}
+                {operatorSymbol(op)}
               </button>
             ))}
           </div>
 
-          <div className="flex-1">
+          <div className="flex flex-col gap-2">
+            <label className="tb-v2-tool-label" htmlFor="fraction-num-2">Second fraction</label>
             <input
+              id="fraction-num-2"
               type="number"
+              step="1"
               value={num2}
-              onChange={(e) => setNum2(e.target.value)}
-              className="tb-v2-input w-full text-center"
-              placeholder="Num"
+              onChange={(event) => setNum2(event.target.value)}
+              className="tb-v2-input text-center"
+              placeholder="1"
+              aria-label="Second fraction numerator"
             />
-            <div className="border-b-2 border-gray-400 my-1" />
+            <div style={{ borderTop: '2px solid var(--line-2)' }} />
             <input
               type="number"
+              step="1"
               value={den2}
-              onChange={(e) => setDen2(e.target.value)}
-              className="tb-v2-input w-full text-center"
-              placeholder="Den"
+              onChange={(event) => setDen2(event.target.value)}
+              className="tb-v2-input text-center"
+              placeholder="4"
+              aria-label="Second fraction denominator"
             />
           </div>
 
-          <div className="text-3xl font-bold">=</div>
+          <div className="text-2xl font-bold text-center" aria-hidden="true">=</div>
 
-          <div className="flex-1">
-            <div className="tb-v2-input w-full text-center bg-gray-50 py-2">
-              <span className="text-2xl font-bold">{simplified.num}</span>
+          <div className="flex flex-col gap-2" aria-label="Fraction result">
+            <span className="tb-v2-tool-label">Result</span>
+            <div className="tb-v2-input text-center" style={{ fontFamily: 'var(--f-mono)', minHeight: 44 }}>
+              {calculation ? calculation.result.num : '-'}
             </div>
-            <div className="border-b-2 border-gray-400 my-1" />
-            <div className="tb-v2-input w-full text-center bg-gray-50 py-2">
-              <span className="text-2xl font-bold">{simplified.den}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="tb-v2-card p-4 bg-gray-50">
-        <div className="grid grid-cols-2 gap-4 text-center">
-          <div>
-            <div className="text-xs text-gray-500 mb-1">Decimal</div>
-            <div className="font-mono text-lg">{decimal}</div>
-          </div>
-          <div>
-            <div className="text-xs text-gray-500 mb-1">Mixed Number</div>
-            <div className="font-mono text-lg">
-              {Math.abs(simplified.num) >= Math.abs(simplified.den)
-                ? `${Math.floor(simplified.num / simplified.den)} ${Math.abs(simplified.num % simplified.den)}/${Math.abs(simplified.den)}`
-                : `${simplified.num}/${simplified.den}`}
+            <div style={{ borderTop: '2px solid var(--line-2)' }} />
+            <div className="tb-v2-input text-center" style={{ fontFamily: 'var(--f-mono)', minHeight: 44 }}>
+              {calculation ? calculation.result.den : '-'}
             </div>
           </div>
         </div>
+
+        {error && <p className="tb-v2-error" role="alert" style={{ marginTop: 12 }}>{error}</p>}
       </div>
 
-      <div className="mt-4 text-center text-sm text-gray-500">
-        <p>
-          {n1}/{d1} {operator} {n2}/{d2} = {simplified.num}/{simplified.den}
-        </p>
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">Solution</span>
+        <button
+          type="button"
+          onClick={copyResult}
+          disabled={!calculation}
+          className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+        >
+          {copied ? 'Copied' : 'Copy'}
+        </button>
+      </div>
+      <div className="tb-v2-tool-output-body">
+        {calculation ? (
+          <div className="flex flex-col gap-4">
+            <div className="tb-v2-stats-grid" style={{ padding: 0, borderTop: 0, background: 'transparent' }}>
+              <div className="tb-v2-stat-pill">
+                <span className="tb-v2-stat-pill-val">{formatFraction(calculation.result)}</span>
+                <span className="tb-v2-stat-pill-lbl">Simplified</span>
+              </div>
+              <div className="tb-v2-stat-pill">
+                <span className="tb-v2-stat-pill-val">{formatDecimal(calculation.result)}</span>
+                <span className="tb-v2-stat-pill-lbl">Decimal</span>
+              </div>
+              <div className="tb-v2-stat-pill">
+                <span className="tb-v2-stat-pill-val">{formatMixed(calculation.result)}</span>
+                <span className="tb-v2-stat-pill-lbl">Mixed number</span>
+              </div>
+            </div>
+            <div>
+              <span className="tb-v2-tool-label">Step by step</span>
+              <ol style={{ marginTop: 8, paddingLeft: 20, color: 'var(--fg-1)', lineHeight: 1.7 }}>
+                {calculation.steps.map((step, index) => <li key={index}>{step}</li>)}
+              </ol>
+            </div>
+          </div>
+        ) : (
+          <p className="tb-v2-empty">Enter two fractions or use Example to solve one.</p>
+        )}
       </div>
     </div>
   );
