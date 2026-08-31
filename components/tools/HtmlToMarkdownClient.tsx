@@ -1,75 +1,64 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+
+const EXAMPLE = `<h1>Hello Toolblip</h1>
+<p>Convert <strong>HTML</strong> to <em>Markdown</em> with a <a href="https://toolblip.com">link</a>.</p>
+<ul>
+  <li>First item</li>
+  <li>Second item</li>
+</ul>`;
 
 function htmlToMarkdown(html: string): string {
   if (!html.trim()) return '';
 
   let md = html;
 
-  // Replace common HTML elements with Markdown
-  // Headings
-  md = md.replace(/<h1[^>]*>(.*?)<\/h1>/gi, '# $1\n\n');
-  md = md.replace(/<h2[^>]*>(.*?)<\/h2>/gi, '## $1\n\n');
-  md = md.replace(/<h3[^>]*>(.*?)<\/h3>/gi, '### $1\n\n');
-  md = md.replace(/<h4[^>]*>(.*?)<\/h4>/gi, '#### $1\n\n');
-  md = md.replace(/<h5[^>]*>(.*?)<\/h5>/gi, '##### $1\n\n');
-  md = md.replace(/<h6[^>]*>(.*?)<\/h6>/gi, '###### $1\n\n');
+  md = md.replace(/<h1[^>]*>([\s\S]*?)<\/h1>/gi, '# $1\n\n');
+  md = md.replace(/<h2[^>]*>([\s\S]*?)<\/h2>/gi, '## $1\n\n');
+  md = md.replace(/<h3[^>]*>([\s\S]*?)<\/h3>/gi, '### $1\n\n');
+  md = md.replace(/<h4[^>]*>([\s\S]*?)<\/h4>/gi, '#### $1\n\n');
+  md = md.replace(/<h5[^>]*>([\s\S]*?)<\/h5>/gi, '##### $1\n\n');
+  md = md.replace(/<h6[^>]*>([\s\S]*?)<\/h6>/gi, '###### $1\n\n');
 
-  // Bold and italic
-  md = md.replace(/<strong[^>]*>(.*?)<\/strong>/gi, '**$1**');
-  md = md.replace(/<b[^>]*>(.*?)<\/b>/gi, '**$1**');
-  md = md.replace(/<em[^>]*>(.*?)<\/em>/gi, '*$1*');
-  md = md.replace(/<i[^>]*>(.*?)<\/i>/gi, '*$1*');
+  md = md.replace(/<strong[^>]*>([\s\S]*?)<\/strong>/gi, '**$1**');
+  md = md.replace(/<b[^>]*>([\s\S]*?)<\/b>/gi, '**$1**');
+  md = md.replace(/<em[^>]*>([\s\S]*?)<\/em>/gi, '*$1*');
+  md = md.replace(/<i[^>]*>([\s\S]*?)<\/i>/gi, '*$1*');
 
-  // Links
-  md = md.replace(/<a[^>]*href=["']([^"']*)["'][^>]*>(.*?)<\/a>/gi, '[$2]($1)');
+  md = md.replace(/<a[^>]*href=["']([^"']*)["'][^>]*>([\s\S]*?)<\/a>/gi, '[$2]($1)');
 
-  // Images
   md = md.replace(/<img[^>]*src=["']([^"']*)["'][^>]*alt=["']([^"']*)["'][^>]*>/gi, '![$2]($1)');
   md = md.replace(/<img[^>]*alt=["']([^"']*)["'][^>]*src=["']([^"']*)["'][^>]*>/gi, '![$1]($2)');
   md = md.replace(/<img[^>]*src=["']([^"']*)["'][^>]*>/gi, '![]($1)');
 
-  // Code blocks and inline code
-  md = md.replace(/<code[^>]*>(.*?)<\/code>/gi, '`$1`');
   md = md.replace(/<pre[^>]*><code[^>]*>([\s\S]*?)<\/code><\/pre>/gi, '```\n$1\n```');
   md = md.replace(/<pre[^>]*>([\s\S]*?)<\/pre>/gi, '```\n$1\n```');
+  md = md.replace(/<code[^>]*>([\s\S]*?)<\/code>/gi, '`$1`');
 
-  // Blockquotes
-  md = md.replace(/<blockquote[^>]*>(.*?)<\/blockquote>/gi, '> $1\n\n');
+  md = md.replace(/<blockquote[^>]*>([\s\S]*?)<\/blockquote>/gi, '> $1\n\n');
 
-  // Unordered lists
-  md = md.replace(/<ul[^>]*>([\s\S]*?)<\/ul>/gi, (match, content) => {
-    return content.replace(/<li[^>]*>(.*?)<\/li>/gi, '- $1\n').trim() + '\n\n';
+  md = md.replace(/<ul[^>]*>([\s\S]*?)<\/ul>/gi, (_match, content: string) => {
+    return content.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, '- $1\n').trim() + '\n\n';
   });
 
-  // Ordered lists
-  md = md.replace(/<ol[^>]*>([\s\S]*?)<\/ol>/gi, (match, content) => {
+  md = md.replace(/<ol[^>]*>([\s\S]*?)<\/ol>/gi, (_match, content: string) => {
     let index = 0;
-    return content.replace(/<li[^>]*>(.*?)<\/li>/gi, () => `${++index}. $1\n`).trim() + '\n\n';
+    return content.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, () => `${++index}. $1\n`).trim() + '\n\n';
   });
 
-  // Horizontal rules
   md = md.replace(/<hr[^>]*>/gi, '\n---\n\n');
-
-  // Line breaks
   md = md.replace(/<br[^>]*>/gi, '\n');
-
-  // Paragraphs - wrap in newlines
-  md = md.replace(/<p[^>]*>(.*?)<\/p>/gi, '$1\n\n');
-
-  // Remove remaining HTML tags
+  md = md.replace(/<p[^>]*>([\s\S]*?)<\/p>/gi, '$1\n\n');
   md = md.replace(/<[^>]+>/g, '');
 
-  // Decode HTML entities
   md = md.replace(/&amp;/g, '&');
   md = md.replace(/&lt;/g, '<');
   md = md.replace(/&gt;/g, '>');
   md = md.replace(/&quot;/g, '"');
   md = md.replace(/&#39;/g, "'");
   md = md.replace(/&nbsp;/g, ' ');
-
-  // Clean up multiple blank lines
   md = md.replace(/\n{3,}/g, '\n\n');
 
   return md.trim();
@@ -77,13 +66,9 @@ function htmlToMarkdown(html: string): string {
 
 export default function HtmlToMarkdownClient() {
   const [input, setInput] = useState('');
-  const [output, setOutput] = useState('');
   const [copied, setCopied] = useState(false);
 
-  const handleConvert = (html: string) => {
-    setInput(html);
-    setOutput(htmlToMarkdown(html));
-  };
+  const output = useMemo(() => htmlToMarkdown(input), [input]);
 
   const copy = () => {
     if (!output) return;
@@ -93,34 +78,47 @@ export default function HtmlToMarkdownClient() {
   };
 
   return (
-    <div>
+    <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
-        <span className="tb-v2-tool-label">HTML Input</span>
+        <span className="tb-v2-tool-label">HTML</span>
+        <ToolExampleClearActions
+          exampleCount={1}
+          onExample={() => setInput(EXAMPLE)}
+          onClear={() => setInput('')}
+          canClear={input.length > 0}
+        />
       </div>
       <textarea
         value={input}
-        onChange={(e) => handleConvert(e.target.value)}
-        placeholder="Paste your HTML here..."
+        onChange={(e) => setInput(e.target.value)}
+        placeholder="Paste HTML…"
         className="tb-v2-tool-textarea"
-        style={{ fontFamily: 'var(--f-mono)' }}
+        style={{ fontFamily: 'var(--f-mono)', minHeight: 160 }}
         aria-label="HTML input"
+        spellCheck={false}
       />
 
       <div className="tb-v2-tool-output-head">
-        <span className="tb-v2-tool-label">Markdown Output</span>
+        <span className="tb-v2-tool-label">Markdown</span>
+        <button
+          type="button"
+          onClick={copy}
+          disabled={!output}
+          className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+        >
+          {copied ? 'Copied' : 'Copy'}
+        </button>
       </div>
-      <div className="tb-v2-tool-output-body" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-        <pre className="tb-v2-hash-val" style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
-          {output || ' - '}
-        </pre>
-        {output && (
-          <button
-            type="button"
-            onClick={copy}
-            className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+      <div className="tb-v2-tool-output-body">
+        {!output ? (
+          <p className="tb-v2-empty">Paste HTML or use Example.</p>
+        ) : (
+          <pre
+            className="tb-v2-hash-val"
+            style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0 }}
           >
-            {copied ? 'Copied' : 'Copy'}
-          </button>
+            {output}
+          </pre>
         )}
       </div>
     </div>
