@@ -1,310 +1,395 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
-type Mode = 'basic' | 'change' | 'tip';
+type Mode = 'percentage' | 'change' | 'discount' | 'tip' | 'markup';
 
 interface BasicResult {
   part: number;
   whole: number;
-  percent: number;
+  percentage: number;
 }
 
 interface ChangeResult {
-  oldVal: number;
-  newVal: number;
-  diff: number;
-  pctChange: number;
+  oldValue: number;
+  newValue: number;
+  difference: number;
+  percentage: number;
+}
+
+interface DiscountResult {
+  price: number;
+  percentage: number;
+  savings: number;
+  finalPrice: number;
 }
 
 interface TipResult {
+  bill: number;
+  percentage: number;
+  people: number;
   tip: number;
   total: number;
   perPerson: number;
 }
 
+interface MarkupResult {
+  cost: number;
+  percentage: number;
+  markup: number;
+  sellingPrice: number;
+}
+
+const MODES: { value: Mode; label: string }[] = [
+  { value: 'percentage', label: 'Percent of' },
+  { value: 'change', label: 'Change' },
+  { value: 'discount', label: 'Discount' },
+  { value: 'tip', label: 'Tip' },
+  { value: 'markup', label: 'Markup' },
+];
+
+const TIP_PRESETS = [10, 15, 18, 20, 25];
+
+function parseFinite(value: string): number | null {
+  if (!value.trim()) return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function formatNumber(value: number, maximumFractionDigits = 2): string {
+  return value.toLocaleString('en-US', { maximumFractionDigits });
+}
+
+function formatCurrency(value: number): string {
+  return `$${value.toFixed(2)}`;
+}
+
 export default function PercentageCalculatorClient() {
-  const [mode, setMode] = useState<Mode>('basic');
+  const [mode, setMode] = useState<Mode>('percentage');
 
-  // Basic mode
-  const [basicPart, setBasicPart] = useState('');
-  const [basicWhole, setBasicWhole] = useState('');
+  const [part, setPart] = useState('');
+  const [whole, setWhole] = useState('');
+  const [oldValue, setOldValue] = useState('');
+  const [newValue, setNewValue] = useState('');
+  const [price, setPrice] = useState('');
+  const [discountPercent, setDiscountPercent] = useState('');
+  const [bill, setBill] = useState('');
+  const [tipPercent, setTipPercent] = useState('18');
+  const [tipPeople, setTipPeople] = useState('1');
+  const [cost, setCost] = useState('');
+  const [markupPercent, setMarkupPercent] = useState('');
+  const [copied, setCopied] = useState(false);
 
-  // Change mode
-  const [changeOld, setChangeOld] = useState('');
-  const [changeNew, setChangeNew] = useState('');
+  const basicResult = useMemo<BasicResult | null>(() => {
+    const partValue = parseFinite(part);
+    const wholeValue = parseFinite(whole);
+    if (partValue === null || wholeValue === null || wholeValue === 0) return null;
+    return { part: partValue, whole: wholeValue, percentage: (partValue / wholeValue) * 100 };
+  }, [part, whole]);
 
-  // Tip mode
-  const [billAmount, setBillAmount] = useState('');
-  const [tipPct, setTipPct] = useState(15);
-  const [numPeople, setNumPeople] = useState(1);
+  const changeResult = useMemo<ChangeResult | null>(() => {
+    const oldNumber = parseFinite(oldValue);
+    const newNumber = parseFinite(newValue);
+    if (oldNumber === null || newNumber === null || oldNumber === 0) return null;
+    const difference = newNumber - oldNumber;
+    return { oldValue: oldNumber, newValue: newNumber, difference, percentage: (difference / oldNumber) * 100 };
+  }, [newValue, oldValue]);
 
-  const basic = useMemo((): BasicResult | null => {
-    const p = parseFloat(basicPart);
-    const w = parseFloat(basicWhole);
-    if (isNaN(p) || isNaN(w) || w === 0) return null;
-    return { part: p, whole: w, percent: (p / w) * 100 };
-  }, [basicPart, basicWhole]);
+  const discountResult = useMemo<DiscountResult | null>(() => {
+    const priceValue = parseFinite(price);
+    const percentage = parseFinite(discountPercent);
+    if (priceValue === null || priceValue <= 0 || percentage === null || percentage < 0 || percentage > 100) return null;
+    const savings = priceValue * (percentage / 100);
+    return { price: priceValue, percentage, savings, finalPrice: priceValue - savings };
+  }, [discountPercent, price]);
 
-  const change = useMemo((): ChangeResult | null => {
-    const o = parseFloat(changeOld);
-    const n = parseFloat(changeNew);
-    if (isNaN(o) || isNaN(n) || o === 0) return null;
-    const diff = n - o;
-    return { oldVal: o, newVal: n, diff, pctChange: (diff / o) * 100 };
-  }, [changeOld, changeNew]);
+  const tipResult = useMemo<TipResult | null>(() => {
+    const billValue = parseFinite(bill);
+    const percentage = parseFinite(tipPercent);
+    const people = parseFinite(tipPeople);
+    if (
+      billValue === null ||
+      billValue <= 0 ||
+      percentage === null ||
+      percentage < 0 ||
+      percentage > 100 ||
+      people === null ||
+      !Number.isInteger(people) ||
+      people < 1
+    ) return null;
+    const tip = billValue * (percentage / 100);
+    const total = billValue + tip;
+    return { bill: billValue, percentage, people, tip, total, perPerson: total / people };
+  }, [bill, tipPeople, tipPercent]);
 
-  const tip = useMemo((): TipResult | null => {
-    const b = parseFloat(billAmount);
-    if (isNaN(b) || b <= 0 || tipPct <= 0 || numPeople <= 0) return null;
-    const tipAmt = b * (tipPct / 100);
-    const total = b + tipAmt;
-    return { tip: tipAmt, total, perPerson: total / numPeople };
-  }, [billAmount, tipPct, numPeople]);
+  const markupResult = useMemo<MarkupResult | null>(() => {
+    const costValue = parseFinite(cost);
+    const percentage = parseFinite(markupPercent);
+    if (costValue === null || costValue <= 0 || percentage === null || percentage < 0) return null;
+    const markup = costValue * (percentage / 100);
+    return { cost: costValue, percentage, markup, sellingPrice: costValue + markup };
+  }, [cost, markupPercent]);
 
-  const presets = [5, 10, 15, 18, 20, 25];
+  const invalidInput =
+    mode === 'percentage'
+      ? Boolean((part.trim() || whole.trim()) && (!basicResult || parseFinite(whole) === 0))
+      : mode === 'change'
+        ? Boolean((oldValue.trim() || newValue.trim()) && (!changeResult || parseFinite(oldValue) === 0))
+          : mode === 'discount'
+            ? Boolean((price.trim() || discountPercent.trim()) && !discountResult)
+          : mode === 'tip'
+            ? Boolean((bill.trim() || tipPercent !== '18' || tipPeople !== '1') && !tipResult)
+            : Boolean((cost.trim() || markupPercent.trim()) && !markupResult);
+
+  const clear = () => {
+    setMode('percentage');
+    setPart('');
+    setWhole('');
+    setOldValue('');
+    setNewValue('');
+    setPrice('');
+    setDiscountPercent('');
+    setBill('');
+    setTipPercent('18');
+    setTipPeople('1');
+    setCost('');
+    setMarkupPercent('');
+    setCopied(false);
+  };
+
+  const loadExample = () => {
+    switch (mode) {
+      case 'percentage':
+        setPart('15');
+        setWhole('80');
+        break;
+      case 'change':
+        setOldValue('50');
+        setNewValue('65');
+        break;
+      case 'discount':
+        setPrice('129.99');
+        setDiscountPercent('25');
+        break;
+      case 'tip':
+        setBill('64');
+        setTipPercent('18');
+        setTipPeople('1');
+        break;
+      case 'markup':
+        setCost('80');
+        setMarkupPercent('30');
+        break;
+    }
+  };
+
+  const hasInput = Boolean(
+    part || whole || oldValue || newValue || price || discountPercent || bill || cost || markupPercent ||
+      tipPercent !== '18' || tipPeople !== '1' || mode !== 'percentage',
+  );
+
+  const currentResult =
+    mode === 'percentage'
+      ? basicResult
+      : mode === 'change'
+        ? changeResult
+        : mode === 'discount'
+          ? discountResult
+          : mode === 'tip'
+            ? tipResult
+            : markupResult;
+
+  const copyResult = () => {
+    let text = '';
+    if (mode === 'percentage' && basicResult) {
+      text = `${formatNumber(basicResult.part)} is ${formatNumber(basicResult.percentage)}% of ${formatNumber(basicResult.whole)}`;
+    } else if (mode === 'change' && changeResult) {
+      text = `${formatNumber(changeResult.percentage)}% change (${formatNumber(changeResult.oldValue)} to ${formatNumber(changeResult.newValue)})`;
+    } else if (mode === 'discount' && discountResult) {
+      text = `Save ${formatCurrency(discountResult.savings)}; final price ${formatCurrency(discountResult.finalPrice)}`;
+    } else if (mode === 'tip' && tipResult) {
+      text = `Tip ${formatCurrency(tipResult.tip)}; total ${formatCurrency(tipResult.total)}; each ${formatCurrency(tipResult.perPerson)}`;
+    } else if (mode === 'markup' && markupResult) {
+      text = `Markup ${formatCurrency(markupResult.markup)}; selling price ${formatCurrency(markupResult.sellingPrice)}`;
+    }
+    if (!text) return;
+    navigator.clipboard.writeText(text).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
 
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
-      {/* Mode tabs */}
-      <div className="flex gap-2 border-b border-gray-700 pb-4">
-        {([['basic', 'Basic %'], ['change', 'Change'], ['tip', 'Tip']] as [Mode, string][]).map(([m, label]) => (
-          <button
-            key={m}
-            onClick={() => setMode(m)}
-            className={`text-sm px-4 py-1.5 rounded-full transition-colors ${
-              mode === m
-                ? 'bg-red-600 text-black font-medium'
-                : 'bg-gray-800 text-gray-400 hover:text-white'
-            }`}
-          >
-            {label}
-          </button>
-        ))}
+    <div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Percentage Calculator</span>
+        <ToolExampleClearActions
+          exampleCount={1}
+          onExample={loadExample}
+          onClear={clear}
+          canClear={hasInput}
+        />
       </div>
 
-      {/* ── Basic % ─────────────────────────────────── */}
-      {mode === 'basic' && (
-        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs text-gray-500 uppercase tracking-wide font-medium mb-2">
-                Part (value)
-              </label>
-              <input
-                type="number"
-                value={basicPart}
-                onChange={e => setBasicPart(e.target.value)}
-                placeholder="e.g. 25"
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-gray-100 text-lg focus:outline-none focus:border-red-500 placeholder-gray-600"
-              />
-            </div>
-            <div>
-              <label className="block text-xs text-gray-500 uppercase tracking-wide font-medium mb-2">
-                Whole (total)
-              </label>
-              <input
-                type="number"
-                value={basicWhole}
-                onChange={e => setBasicWhole(e.target.value)}
-                placeholder="e.g. 200"
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-gray-100 text-lg focus:outline-none focus:border-red-500 placeholder-gray-600"
-              />
-            </div>
+      <div style={{ padding: '16px 20px 0' }}>
+        <div className="tb-v2-mode-tabs" role="group" aria-label="Percentage calculation type">
+          {MODES.map((item) => (
+            <button
+              type="button"
+              key={item.value}
+              onClick={() => setMode(item.value)}
+              className={`tb-v2-mode-tab ${mode === item.value ? 'on' : ''}`}
+              aria-pressed={mode === item.value}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {mode === 'percentage' && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" style={{ padding: '16px 20px 20px' }}>
+          <div className="flex flex-col gap-1">
+            <label className="tb-v2-tool-label" htmlFor="percentage-part">Part</label>
+            <input id="percentage-part" type="number" value={part} onChange={(event) => setPart(event.target.value)} className="tb-v2-input" placeholder="15" aria-label="Part value" />
           </div>
-
-          {basic && (
-            <div className="bg-gray-800 border border-gray-700 rounded-xl p-6">
-              <div className="text-center">
-                <div className="text-5xl font-bold text-red-400 mb-1">
-                  {basic.percent.toFixed(2)}%
-                </div>
-                <p className="text-gray-400 text-sm mt-2">
-                  {basic.part.toLocaleString()} is {basic.percent.toFixed(2)}% of {basic.whole.toLocaleString()}
-                </p>
-              </div>
-              <div className="mt-5 h-3 bg-gray-700 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-red-500 rounded-full transition-all duration-500"
-                  style={{ width: `${Math.min(100, basic.percent)}%` }}
-                />
-              </div>
-              <div className="flex justify-between text-xs text-gray-500 mt-1">
-                <span>0%</span>
-                <span>100%</span>
-              </div>
-            </div>
-          )}
-
-          {!basic && (basicPart || basicWhole) && (
-            <p className="text-center text-gray-500 text-sm">Enter both values to calculate.</p>
-          )}
+          <div className="flex flex-col gap-1">
+            <label className="tb-v2-tool-label" htmlFor="percentage-whole">Whole</label>
+            <input id="percentage-whole" type="number" value={whole} onChange={(event) => setWhole(event.target.value)} className="tb-v2-input" placeholder="80" aria-label="Whole value" />
+          </div>
         </div>
       )}
 
-      {/* ── % Change ─────────────────────────────────── */}
       {mode === 'change' && (
-        <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:16,padding:"16px 20px"}}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs text-gray-500 uppercase tracking-wide font-medium mb-2">
-                Old Value
-              </label>
-              <input
-                type="number"
-                value={changeOld}
-                onChange={e => setChangeOld(e.target.value)}
-                placeholder="e.g. 50"
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-gray-100 text-lg focus:outline-none focus:border-red-500 placeholder-gray-600"
-              />
-            </div>
-            <div>
-              <label className="block text-xs text-gray-500 uppercase tracking-wide font-medium mb-2">
-                New Value
-              </label>
-              <input
-                type="number"
-                value={changeNew}
-                onChange={e => setChangeNew(e.target.value)}
-                placeholder="e.g. 65"
-                className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-gray-100 text-lg focus:outline-none focus:border-red-500 placeholder-gray-600"
-              />
-            </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" style={{ padding: '16px 20px 20px' }}>
+          <div className="flex flex-col gap-1">
+            <label className="tb-v2-tool-label" htmlFor="percentage-old">Old value</label>
+            <input id="percentage-old" type="number" value={oldValue} onChange={(event) => setOldValue(event.target.value)} className="tb-v2-input" placeholder="50" aria-label="Old value" />
           </div>
-
-          {change && (
-            <div className="bg-gray-800 border border-gray-700 rounded-xl p-6">
-              <div className="grid grid-cols-3 gap-4 text-center">
-                <div>
-                  <div className={`text-2xl font-bold ${change.diff >= 0 ? 'text-red-400' : 'text-red-400'}`}>
-                    {change.diff >= 0 ? '+' : ''}{change.diff.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-                  </div>
-                  <div className="text-xs text-gray-500 mt-1">Difference</div>
-                </div>
-                <div>
-                  <div className={`text-2xl font-bold ${change.pctChange >= 0 ? 'text-red-400' : 'text-red-400'}`}>
-                    {change.pctChange >= 0 ? '+' : ''}{change.pctChange.toFixed(2)}%
-                  </div>
-                  <div className="text-xs text-gray-500 mt-1">% Change</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-gray-200">
-                    {change.newVal.toLocaleString(undefined, { maximumFractionDigits: 2 })}
-                  </div>
-                  <div className="text-xs text-gray-500 mt-1">New Value</div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {!change && (changeOld || changeNew) && (
-            <p className="text-center text-gray-500 text-sm">Enter both values to calculate.</p>
-          )}
+          <div className="flex flex-col gap-1">
+            <label className="tb-v2-tool-label" htmlFor="percentage-new">New value</label>
+            <input id="percentage-new" type="number" value={newValue} onChange={(event) => setNewValue(event.target.value)} className="tb-v2-input" placeholder="65" aria-label="New value" />
+          </div>
         </div>
       )}
 
-      {/* ── Tip Calculator ────────────────────────────── */}
-      {mode === 'tip' && (
-        <div className="space-y-5">
-          {/* Bill amount */}
-          <div>
-            <label className="block text-xs text-gray-500 uppercase tracking-wide font-medium mb-2">
-              Bill Amount ($)
-            </label>
-            <input
-              type="number"
-              value={billAmount}
-              onChange={e => setBillAmount(e.target.value)}
-              placeholder="0.00"
-              className="w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2.5 text-gray-100 text-lg focus:outline-none focus:border-red-500 placeholder-gray-600"
-            />
+      {mode === 'discount' && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" style={{ padding: '16px 20px 20px' }}>
+          <div className="flex flex-col gap-1">
+            <label className="tb-v2-tool-label" htmlFor="percentage-price">Original price</label>
+            <input id="percentage-price" type="number" min="0" step="0.01" value={price} onChange={(event) => setPrice(event.target.value)} className="tb-v2-input" placeholder="129.99" aria-label="Original price" />
           </div>
+          <div className="flex flex-col gap-1">
+            <label className="tb-v2-tool-label" htmlFor="percentage-discount">Discount percentage</label>
+            <input id="percentage-discount" type="number" min="0" max="100" step="0.1" value={discountPercent} onChange={(event) => setDiscountPercent(event.target.value)} className="tb-v2-input" placeholder="25" aria-label="Discount percentage" />
+          </div>
+        </div>
+      )}
 
-          {/* Tip % presets */}
-          <div>
-            <label className="block text-xs text-gray-500 uppercase tracking-wide font-medium mb-2">
-              Tip Percentage
-            </label>
-            <div className="flex flex-wrap gap-2 mb-3">
-              {presets.map(p => (
-                <button
-                  key={p}
-                  onClick={() => setTipPct(p)}
-                  className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                    tipPct === p
-                      ? 'bg-red-600 text-black'
-                      : 'bg-gray-800 text-gray-400 hover:text-white border border-gray-700'
-                  }`}
-                >
-                  {p}%
+      {mode === 'tip' && (
+        <div className="flex flex-col gap-5" style={{ padding: '16px 20px 20px' }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="flex flex-col gap-1">
+              <label className="tb-v2-tool-label" htmlFor="percentage-bill">Bill amount</label>
+              <input id="percentage-bill" type="number" min="0" step="0.01" value={bill} onChange={(event) => setBill(event.target.value)} className="tb-v2-input" placeholder="64.00" aria-label="Bill amount" />
+            </div>
+            <div className="flex flex-col gap-1">
+              <label className="tb-v2-tool-label" htmlFor="percentage-tip-people">People</label>
+              <input id="percentage-tip-people" type="number" min="1" step="1" value={tipPeople} onChange={(event) => setTipPeople(event.target.value)} className="tb-v2-input" placeholder="1" aria-label="Number of people" />
+            </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <label className="tb-v2-tool-label" htmlFor="percentage-tip">Tip percentage</label>
+            <div className="flex flex-wrap items-center gap-2">
+              {TIP_PRESETS.map((preset) => (
+                <button type="button" key={preset} onClick={() => setTipPercent(String(preset))} className={`tb-v2-mode-tab ${tipPercent === String(preset) ? 'on' : ''}`}>
+                  {preset}%
                 </button>
               ))}
-              <input
-                type="number"
-                min={1}
-                max={100}
-                value={tipPct}
-                onChange={e => setTipPct(Math.max(1, Math.min(100, Number(e.target.value))))}
-                className="w-20 bg-gray-800 border border-gray-700 rounded-lg px-2 py-1.5 text-sm text-center text-gray-100 focus:outline-none focus:border-red-500"
-              />
+              <input id="percentage-tip" type="number" min="0" max="100" step="0.5" value={tipPercent} onChange={(event) => setTipPercent(event.target.value)} className="tb-v2-input text-center" style={{ width: 88 }} aria-label="Tip percentage" />
+              <span className="text-sm" style={{ color: 'var(--fg-2)' }}>%</span>
             </div>
           </div>
-
-          {/* Number of people */}
-          <div>
-            <label className="block text-xs text-gray-500 uppercase tracking-wide font-medium mb-2">
-              Split Between
-            </label>
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setNumPeople(n => Math.max(1, n - 1))}
-                className="w-10 h-10 bg-gray-800 border border-gray-700 rounded-lg text-gray-400 hover:text-white transition-colors text-xl flex items-center justify-center"
-              >
-                −
-              </button>
-              <input
-                type="number"
-                min={1}
-                value={numPeople}
-                onChange={e => setNumPeople(Math.max(1, Number(e.target.value)))}
-                className="w-20 bg-gray-800 border border-gray-700 rounded-lg px-2 py-1.5 text-sm text-center text-gray-100 focus:outline-none focus:border-red-500"
-              />
-              <button
-                onClick={() => setNumPeople(n => n + 1)}
-                className="w-10 h-10 bg-gray-800 border border-gray-700 rounded-lg text-gray-400 hover:text-white transition-colors text-xl flex items-center justify-center"
-              >
-                +
-              </button>
-              <span className="text-gray-500 text-sm">people</span>
-            </div>
-          </div>
-
-          {tip && (
-            <div className="bg-gray-800 border border-gray-700 rounded-xl p-6">
-              <div className="grid grid-cols-3 gap-4 text-center">
-                <div>
-                  <div className="text-2xl font-bold text-red-400">
-                    ${tip.tip.toFixed(2)}
-                  </div>
-                  <div className="text-xs text-gray-500 mt-1">Tip</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-gray-200">
-                    ${tip.total.toFixed(2)}
-                  </div>
-                  <div className="text-xs text-gray-500 mt-1">Total</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-red-400">
-                    ${tip.perPerson.toFixed(2)}
-                  </div>
-                  <div className="text-xs text-gray-500 mt-1">Per Person</div>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       )}
+
+      {mode === 'markup' && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" style={{ padding: '16px 20px 20px' }}>
+          <div className="flex flex-col gap-1">
+            <label className="tb-v2-tool-label" htmlFor="percentage-cost">Cost</label>
+            <input id="percentage-cost" type="number" min="0" step="0.01" value={cost} onChange={(event) => setCost(event.target.value)} className="tb-v2-input" placeholder="80.00" aria-label="Cost" />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="tb-v2-tool-label" htmlFor="percentage-markup">Markup percentage</label>
+            <input id="percentage-markup" type="number" min="0" step="0.1" value={markupPercent} onChange={(event) => setMarkupPercent(event.target.value)} className="tb-v2-input" placeholder="30" aria-label="Markup percentage" />
+          </div>
+        </div>
+      )}
+
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">Result</span>
+        <button
+          type="button"
+          onClick={copyResult}
+          disabled={!currentResult}
+          className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+        >
+          {copied ? 'Copied' : 'Copy'}
+        </button>
+      </div>
+      <div className="tb-v2-tool-output-body">
+        {invalidInput ? (
+          <p className="tb-v2-error" role="alert">
+            {mode === 'percentage'
+              ? 'Enter a part and a non-zero whole.'
+              : mode === 'change'
+                ? 'Enter an old value and a new value; the old value cannot be zero.'
+                : mode === 'discount'
+                  ? 'Enter a positive price and a discount from 0 to 100.'
+                  : mode === 'tip'
+                    ? 'Enter a positive bill, a tip from 0 to 100, and at least one person.'
+                    : 'Enter a positive cost and a non-negative markup.'}
+          </p>
+        ) : mode === 'percentage' && basicResult ? (
+          <div className="flex flex-col gap-4">
+            <div className="tb-v2-stats-grid" style={{ padding: 0, borderTop: 0, background: 'transparent' }}>
+              <div className="tb-v2-stat-pill"><span className="tb-v2-stat-pill-val">{formatNumber(basicResult.percentage)}%</span><span className="tb-v2-stat-pill-lbl">Percentage</span></div>
+            </div>
+            <p className="text-sm" style={{ color: 'var(--fg-2)' }}>
+              Formula: {formatNumber(basicResult.part)} / {formatNumber(basicResult.whole)} x 100 = {formatNumber(basicResult.percentage)}%
+            </p>
+            <div style={{ height: 8, borderRadius: 999, background: 'var(--surface-3)', overflow: 'hidden' }}>
+              <div style={{ height: '100%', width: `${Math.max(0, Math.min(100, basicResult.percentage))}%`, background: 'var(--red)', borderRadius: 999 }} />
+            </div>
+          </div>
+        ) : mode === 'change' && changeResult ? (
+          <div className="flex flex-col gap-4">
+            <div className="tb-v2-stats-grid" style={{ padding: 0, borderTop: 0, background: 'transparent' }}>
+              <div className="tb-v2-stat-pill"><span className="tb-v2-stat-pill-val">{changeResult.percentage >= 0 ? '+' : ''}{formatNumber(changeResult.percentage)}%</span><span className="tb-v2-stat-pill-lbl">Change</span></div>
+              <div className="tb-v2-stat-pill"><span className="tb-v2-stat-pill-val">{changeResult.difference >= 0 ? '+' : ''}{formatNumber(changeResult.difference)}</span><span className="tb-v2-stat-pill-lbl">Difference</span></div>
+            </div>
+            <p className="text-sm" style={{ color: 'var(--fg-2)' }}>Formula: ({formatNumber(changeResult.newValue)} - {formatNumber(changeResult.oldValue)}) / {formatNumber(changeResult.oldValue)} x 100</p>
+          </div>
+        ) : mode === 'discount' && discountResult ? (
+          <div className="tb-v2-stats-grid" style={{ padding: 0, borderTop: 0, background: 'transparent' }}>
+            <div className="tb-v2-stat-pill"><span className="tb-v2-stat-pill-val">{formatCurrency(discountResult.savings)}</span><span className="tb-v2-stat-pill-lbl">You save</span></div>
+            <div className="tb-v2-stat-pill"><span className="tb-v2-stat-pill-val">{formatCurrency(discountResult.finalPrice)}</span><span className="tb-v2-stat-pill-lbl">Final price</span></div>
+          </div>
+        ) : mode === 'tip' && tipResult ? (
+          <div className="tb-v2-stats-grid" style={{ padding: 0, borderTop: 0, background: 'transparent' }}>
+            <div className="tb-v2-stat-pill"><span className="tb-v2-stat-pill-val">{formatCurrency(tipResult.tip)}</span><span className="tb-v2-stat-pill-lbl">Tip</span></div>
+            <div className="tb-v2-stat-pill"><span className="tb-v2-stat-pill-val">{formatCurrency(tipResult.total)}</span><span className="tb-v2-stat-pill-lbl">Total</span></div>
+            <div className="tb-v2-stat-pill"><span className="tb-v2-stat-pill-val">{formatCurrency(tipResult.perPerson)}</span><span className="tb-v2-stat-pill-lbl">Each ({tipResult.people})</span></div>
+          </div>
+        ) : mode === 'markup' && markupResult ? (
+          <div className="tb-v2-stats-grid" style={{ padding: 0, borderTop: 0, background: 'transparent' }}>
+            <div className="tb-v2-stat-pill"><span className="tb-v2-stat-pill-val">{formatCurrency(markupResult.markup)}</span><span className="tb-v2-stat-pill-lbl">Markup</span></div>
+            <div className="tb-v2-stat-pill"><span className="tb-v2-stat-pill-val">{formatCurrency(markupResult.sellingPrice)}</span><span className="tb-v2-stat-pill-lbl">Selling price</span></div>
+          </div>
+        ) : (
+          <p className="tb-v2-empty">Enter values or use Example to calculate.</p>
+        )}
+      </div>
     </div>
   );
 }
