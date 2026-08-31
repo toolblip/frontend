@@ -1,132 +1,203 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const EXAMPLE_TS = '1704067200'; // 2024-01-01 00:00:00 UTC
 
+function pad2(n: number) {
+  return String(n).padStart(2, '0');
+}
+
+function toDatetimeLocal(d: Date): string {
+  return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}T${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
+}
+
+function timestampToDate(raw: string): { date: string; error: string } {
+  const trimmed = raw.trim();
+  if (!trimmed) return { date: '', error: '' };
+  if (!/^\d+$/.test(trimmed)) {
+    return { date: '', error: 'Timestamp must contain digits only' };
+  }
+  const n = parseInt(trimmed, 10);
+  const d = new Date(n * 1000);
+  if (isNaN(d.getTime())) {
+    return { date: '', error: 'Invalid timestamp' };
+  }
+  return { date: toDatetimeLocal(d), error: '' };
+}
+
+function dateToTimestamp(raw: string): { ts: string; error: string } {
+  if (!raw) return { ts: '', error: '' };
+  const d = new Date(raw);
+  if (isNaN(d.getTime())) {
+    return { ts: '', error: 'Invalid date' };
+  }
+  return { ts: String(Math.floor(d.getTime() / 1000)), error: '' };
+}
+
 export default function UnixTimestampConverterClient() {
   const [timestamp, setTimestamp] = useState('');
   const [dateInput, setDateInput] = useState('');
-  const [mode, setMode] = useState<'toDate' | 'toTimestamp'>('toDate');
+  const [timestampError, setTimestampError] = useState('');
+  const [dateError, setDateError] = useState('');
+  const [copiedTs, setCopiedTs] = useState(false);
+  const [copiedDate, setCopiedDate] = useState(false);
 
-  const now = Math.floor(Date.now() / 1000);
-
-  const convertToDate = (ts: string) => {
-    const n = parseInt(ts);
-    if (isNaN(n)) return '';
-    try {
-      return new Date(n * 1000).toISOString().replace('T', ' ').replace(/\.\d{3}Z$/, ' UTC');
-    } catch {
-      return '';
+  const applyTimestamp = useCallback((raw: string) => {
+    setTimestamp(raw);
+    if (!raw.trim()) {
+      setDateInput('');
+      setTimestampError('');
+      setDateError('');
+      return;
     }
-  };
-
-  const convertToTimestamp = (date: string) => {
-    try {
-      return Math.floor(new Date(date).getTime() / 1000);
-    } catch {
-      return null;
+    const { date, error } = timestampToDate(raw);
+    if (error) {
+      setTimestampError(error);
+      return;
     }
-  };
+    setDateInput(date);
+    setTimestampError('');
+    setDateError('');
+  }, []);
 
-  const loadExample = () => {
-    setMode('toDate');
-    setTimestamp(EXAMPLE_TS);
-    setDateInput('');
-  };
+  const applyDate = useCallback((raw: string) => {
+    setDateInput(raw);
+    if (!raw) {
+      setTimestamp('');
+      setTimestampError('');
+      setDateError('');
+      return;
+    }
+    const { ts, error } = dateToTimestamp(raw);
+    if (error) {
+      setDateError(error);
+      return;
+    }
+    setTimestamp(ts);
+    setTimestampError('');
+    setDateError('');
+  }, []);
 
-  const clearAll = () => {
+  const loadExample = useCallback(() => {
+    applyTimestamp(EXAMPLE_TS);
+  }, [applyTimestamp]);
+
+  const clearAll = useCallback(() => {
     setTimestamp('');
     setDateInput('');
-    setMode('toDate');
-  };
+    setTimestampError('');
+    setDateError('');
+  }, []);
 
-  const useNow = () => {
-    setMode('toDate');
-    setTimestamp(String(now));
-    setDateInput(new Date().toISOString().slice(0, 19).replace('T', ' '));
-  };
+  const useNow = useCallback(() => {
+    const ts = String(Math.floor(Date.now() / 1000));
+    applyTimestamp(ts);
+  }, [applyTimestamp]);
+
+  const copyTimestamp = useCallback(() => {
+    if (!timestamp) return;
+    navigator.clipboard.writeText(timestamp).catch(() => {});
+    setCopiedTs(true);
+    setTimeout(() => setCopiedTs(false), 1500);
+  }, [timestamp]);
+
+  const copyDate = useCallback(() => {
+    if (!dateInput) return;
+    navigator.clipboard.writeText(dateInput).catch(() => {});
+    setCopiedDate(true);
+    setTimeout(() => setCopiedDate(false), 1500);
+  }, [dateInput]);
+
+  const localPreview =
+    timestamp && /^\d+$/.test(timestamp.trim()) && !isNaN(parseInt(timestamp, 10))
+      ? new Date(parseInt(timestamp, 10) * 1000).toString()
+      : '';
 
   return (
     <div className="tb-v2-tool-card">
-      <div className="tb-v2-tool-input-head">
+      <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
         <span className="tb-v2-tool-label">Unix Timestamp Converter</span>
-        <ToolExampleClearActions
-          exampleCount={1}
-          onExample={loadExample}
-          onClear={clearAll}
-          canClear={Boolean(timestamp || dateInput)}
-        />
-      </div>
-      <div className="tb-v2-mode-tabs" role="group" style={{ padding: '0 20px 12px' }}>
-        <button
-          type="button"
-          onClick={() => setMode('toDate')}
-          className={`tb-v2-mode-tab ${mode === 'toDate' ? 'on' : ''}`}
-        >
-          TS → Date
-        </button>
-        <button
-          type="button"
-          onClick={() => setMode('toTimestamp')}
-          className={`tb-v2-mode-tab ${mode === 'toTimestamp' ? 'on' : ''}`}
-        >
-          Date → TS
-        </button>
-      </div>
-      <div className="tb-v2-tool-output-body" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {mode === 'toDate' ? (
-          <>
-            <input
-              type="number"
-              value={timestamp}
-              onChange={(e) => setTimestamp(e.target.value)}
-              placeholder={`e.g. ${now}`}
-              className="tb-v2-tool-textarea"
-              style={{ width: '100%', minHeight: 44, resize: 'none', fontFamily: 'var(--f-mono)' }}
-            />
-            <button type="button" onClick={useNow} className="tb-v2-mode-tab" style={{ alignSelf: 'flex-start' }}>
-              Use current time
-            </button>
-          </>
-        ) : (
-          <input
-            type="datetime-local"
-            value={dateInput}
-            onChange={(e) => setDateInput(e.target.value)}
-            className="tb-v2-tool-textarea"
-            style={{ width: '100%', minHeight: 44, resize: 'none', fontFamily: 'var(--f-mono)' }}
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+          <button type="button" onClick={useNow} className="tb-v2-tool-text-action">
+            Now
+          </button>
+          <ToolExampleClearActions
+            exampleCount={1}
+            onExample={loadExample}
+            onClear={clearAll}
+            canClear={Boolean(timestamp || dateInput)}
           />
-        )}
+        </div>
       </div>
-      <div className="tb-v2-tool-output-head">
-        <span className="tb-v2-tool-label">Result</span>
-      </div>
-      <div className="tb-v2-tool-output-body">
-        {mode === 'toDate' ? (
-          timestamp ? (
-            <div style={{ fontFamily: 'var(--f-mono)', fontSize: 15 }}>
-              <div style={{ color: 'var(--tb-text)', marginBottom: 6 }}>
-                {convertToDate(timestamp) || 'Invalid timestamp'}
-              </div>
-              <div style={{ fontSize: 12, color: 'var(--tb-text-secondary)' }}>
-                Local: {new Date(parseInt(timestamp) * 1000).toString()}
-              </div>
-            </div>
-          ) : (
-            <div style={{ color: 'var(--tb-text-secondary)', fontSize: 14 }}>Enter a Unix timestamp or use Example.</div>
-          )
-        ) : dateInput ? (
-          <div style={{ fontFamily: 'var(--f-mono)', fontSize: 15 }}>
-            <div style={{ color: 'var(--tb-text)' }}>{convertToTimestamp(dateInput) ?? 'Invalid date'}</div>
-            <div style={{ fontSize: 12, color: 'var(--tb-text-secondary)', marginTop: 6 }}>
-              {dateInput} → {convertToTimestamp(dateInput)} seconds since epoch
-            </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-0 divide-y divide-[var(--line)] md:divide-y-0 md:divide-x">
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: 200 }}>
+          <div className="tb-v2-tool-input-head">
+            <span className="tb-v2-tool-label">Unix timestamp (seconds)</span>
+            <button
+              type="button"
+              onClick={copyTimestamp}
+              disabled={!timestamp}
+              className={`tb-v2-copy-btn ${copiedTs ? 'done' : ''}`}
+            >
+              {copiedTs ? 'Copied' : 'Copy'}
+            </button>
           </div>
-        ) : (
-          <div style={{ color: 'var(--tb-text-secondary)', fontSize: 14 }}>Enter a date/time</div>
-        )}
+          <div style={{ padding: '0 16px 16px' }}>
+            <input
+              type="text"
+              inputMode="numeric"
+              value={timestamp}
+              onChange={(e) => applyTimestamp(e.target.value)}
+              placeholder={EXAMPLE_TS}
+              className="tb-v2-tool-input"
+              style={{ width: '100%', fontFamily: 'var(--f-mono)' }}
+              aria-label="Unix timestamp input"
+              spellCheck={false}
+            />
+            {localPreview ? (
+              <p style={{ fontSize: 12, color: 'var(--tb-text-secondary)', margin: '8px 0 0' }}>
+                Local: {localPreview}
+              </p>
+            ) : null}
+            {timestampError ? (
+              <p className="tb-v2-error" role="alert" style={{ margin: '8px 0 0' }}>
+                {timestampError}
+              </p>
+            ) : null}
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: 200 }}>
+          <div className="tb-v2-tool-input-head">
+            <span className="tb-v2-tool-label">Date & time</span>
+            <button
+              type="button"
+              onClick={copyDate}
+              disabled={!dateInput}
+              className={`tb-v2-copy-btn ${copiedDate ? 'done' : ''}`}
+            >
+              {copiedDate ? 'Copied' : 'Copy'}
+            </button>
+          </div>
+          <div style={{ padding: '0 16px 16px' }}>
+            <input
+              type="datetime-local"
+              value={dateInput}
+              onChange={(e) => applyDate(e.target.value)}
+              className="tb-v2-tool-input"
+              style={{ width: '100%', fontFamily: 'var(--f-mono)' }}
+              aria-label="Date and time input"
+            />
+            {dateError ? (
+              <p className="tb-v2-error" role="alert" style={{ margin: '8px 0 0' }}>
+                {dateError}
+              </p>
+            ) : null}
+          </div>
+        </div>
       </div>
     </div>
   );
