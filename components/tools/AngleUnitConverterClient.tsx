@@ -1,134 +1,147 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type AngleUnit = 'deg' | 'rad' | 'grad' | 'arcmin';
 
-const UNIT_ICONS: Record<AngleUnit, string> = {
-  deg: '📐',
-  rad: '🔄',
-  grad: '📊',
-  arcmin: '🔍',
-};
-
-const unitLabels: Record<AngleUnit, string> = {
-  deg: 'Degrees (°)',
-  rad: 'Radians (rad)',
-  grad: 'Gradians (grad)',
-  arcmin: 'Arcminutes (′)',
-};
-
-const conversions: Record<AngleUnit, number> = {
-  deg: 1,
-  rad: 180 / Math.PI,
-  grad: 0.9,
-  arcmin: 1 / 60,
+const unitInfo: Record<AngleUnit, { label: string; short: string; toDegrees: number }> = {
+  deg: { label: 'Degrees (°)', short: '°', toDegrees: 1 },
+  rad: { label: 'Radians (rad)', short: 'rad', toDegrees: 180 / Math.PI },
+  grad: { label: 'Gradians (grad)', short: 'grad', toDegrees: 0.9 },
+  arcmin: { label: 'Arcminutes (′)', short: '′', toDegrees: 1 / 60 },
 };
 
 export default function AngleUnitConverterClient() {
-  const [inputValue, setInputValue] = useState('45');
+  const [inputValue, setInputValue] = useState('');
   const [fromUnit, setFromUnit] = useState<AngleUnit>('deg');
   const [toUnit, setToUnit] = useState<AngleUnit>('rad');
   const [copied, setCopied] = useState(false);
 
-  const convert = (): number => {
-    const value = parseFloat(inputValue) || 0;
-    return (value * conversions[fromUnit]) / conversions[toUnit];
-  };
+  const convert = (value = parseFloat(inputValue) || 0, from = fromUnit, to = toUnit): number =>
+    (value * unitInfo[from].toDegrees) / unitInfo[to].toDegrees;
 
   const formatResult = (value: number): string => {
     if (Math.abs(value) < 0.0001 && value !== 0) return value.toExponential(6);
     return value.toLocaleString(undefined, { maximumFractionDigits: 6 });
   };
 
+  const result = inputValue.trim() === '' || isNaN(parseFloat(inputValue)) ? null : convert();
+
   const swap = () => {
+    const next = result === null ? inputValue : formatResult(result);
     setFromUnit(toUnit);
     setToUnit(fromUnit);
-    setInputValue(formatResult(convert()));
+    setInputValue(next);
   };
 
   const copy = () => {
-    const result = convert();
-    const fromLabel = unitLabels[fromUnit].split(' ')[0];
-    const toLabel = unitLabels[toUnit].split(' ')[0];
-    navigator.clipboard.writeText(`${inputValue} ${fromLabel} = ${formatResult(result)} ${toLabel}`);
+    if (result === null) return;
+    navigator.clipboard
+      .writeText(
+        `${inputValue} ${unitInfo[fromUnit].short} = ${formatResult(result)} ${unitInfo[toUnit].short}`,
+      )
+      .catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div>
-      {/* Converter */}
-      <div className="grid grid-cols-[1fr,auto,1fr] gap-3 items-end">
-        <div>
-          <label className="tb-v2-tool-label">From</label>
-          <input
-            type="number"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            className="tb-v2-input mb-2"
-          />
-          <select
-            value={fromUnit}
-            onChange={(e) => setFromUnit(e.target.value as AngleUnit)}
-            className="tb-v2-input"
-          >
-            {Object.entries(unitLabels).map(([value, label]) => (
-              <option key={value} value={value}>{UNIT_ICONS[value as AngleUnit]} {label}</option>
-            ))}
-          </select>
-        </div>
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
+        <span className="tb-v2-tool-label">Angle</span>
+        <ToolExampleClearActions
+          exampleCount={1}
+          onExample={() => {
+            setInputValue('45');
+            setFromUnit('deg');
+            setToUnit('rad');
+          }}
+          onClear={() => {
+            setInputValue('');
+            setFromUnit('deg');
+            setToUnit('rad');
+          }}
+          canClear={inputValue.length > 0}
+        />
+      </div>
 
-        <button
-          onClick={swap}
-          className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 mb-1"
-          title="Swap units"
-        >
-          ⇄
-        </button>
-
-        <div>
-          <label className="tb-v2-tool-label">To</label>
-          <div className="tb-v2-input mb-2 text-center text-2xl font-bold text-indigo-600 dark:text-indigo-400" style={{ minHeight: 44 }}>
-            {formatResult(convert())}
+      <div style={{ padding: 20 }}>
+        <div className="grid grid-cols-[1fr,auto,1fr] gap-3 items-end">
+          <div>
+            <label className="tb-v2-tool-label">From</label>
+            <input
+              type="number"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              className="tb-v2-input mb-2"
+              placeholder="45"
+              aria-label="Angle value"
+            />
+            <select
+              value={fromUnit}
+              onChange={(e) => setFromUnit(e.target.value as AngleUnit)}
+              className="tb-v2-input"
+              aria-label="From angle unit"
+            >
+              {Object.entries(unitInfo).map(([value, info]) => (
+                <option key={value} value={value}>
+                  {info.label}
+                </option>
+              ))}
+            </select>
           </div>
-          <select
-            value={toUnit}
-            onChange={(e) => setToUnit(e.target.value as AngleUnit)}
-            className="tb-v2-input"
-          >
-            {Object.entries(unitLabels).map(([value, label]) => (
-              <option key={value} value={value}>{UNIT_ICONS[value as AngleUnit]} {label}</option>
-            ))}
-          </select>
+
+          <button type="button" onClick={swap} className="tb-v2-mode-tab mb-1" title="Swap units">
+            ⇄
+          </button>
+
+          <div>
+            <label className="tb-v2-tool-label">To</label>
+            <div
+              className="tb-v2-input mb-2 text-center text-2xl font-bold"
+              style={{ minHeight: 44, color: 'var(--red)' }}
+            >
+              {result === null ? '—' : formatResult(result)}
+            </div>
+            <select
+              value={toUnit}
+              onChange={(e) => setToUnit(e.target.value as AngleUnit)}
+              className="tb-v2-input"
+              aria-label="To angle unit"
+            >
+              {Object.entries(unitInfo).map(([value, info]) => (
+                <option key={value} value={value}>
+                  {info.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
-      {/* Summary */}
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">Result</span>
-        <button onClick={copy} className="tb-v2-copy-btn">
-          {copied ? 'Copied!' : 'Copy'}
+        <button
+          type="button"
+          onClick={copy}
+          disabled={result === null}
+          className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+        >
+          {copied ? 'Copied' : 'Copy'}
         </button>
       </div>
-      <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl text-center">
-        <span className="text-lg">
-          <strong>{inputValue}</strong> {unitLabels[fromUnit].split(' ')[0]}
-          {' = '}
-          <strong className="text-indigo-600 dark:text-indigo-400">{formatResult(convert())}</strong>
-          {' '}{unitLabels[toUnit].split(' ')[0]}
-        </span>
-      </div>
-
-      {/* Quick reference */}
-      <div>
-        <label className="tb-v2-tool-label">Quick Reference</label>
-        <div className="grid grid-cols-2 gap-2 text-sm">
-          <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">1° = π/180 rad</div>
-          <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">1 rad ≈ 57.3°</div>
-          <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">1° = 1.111 grad</div>
-          <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">1° = 60 arcmin</div>
-        </div>
+      <div className="tb-v2-tool-output-body" style={{ textAlign: 'center' }}>
+        {result === null ? (
+          <p className="tb-v2-empty">Enter an angle or use Example.</p>
+        ) : (
+          <span style={{ fontSize: 16 }}>
+            <strong>{inputValue}</strong> {unitInfo[fromUnit].short}
+            {' = '}
+            <strong style={{ color: 'var(--red)' }}>{formatResult(result)}</strong>{' '}
+            {unitInfo[toUnit].short}
+          </span>
+        )}
       </div>
     </div>
   );

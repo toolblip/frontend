@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type Category = 'length' | 'weight' | 'temperature';
 
@@ -25,7 +26,17 @@ const lengthLabels: Record<LengthUnit, string> = {
   mi: 'Miles (mi)',
 };
 
-// Value of 1 unit expressed in meters (base unit)
+const lengthShort: Record<LengthUnit, string> = {
+  mm: 'mm',
+  cm: 'cm',
+  m: 'm',
+  km: 'km',
+  in: 'in',
+  ft: 'ft',
+  yd: 'yd',
+  mi: 'mi',
+};
+
 const lengthToMeters: Record<LengthUnit, number> = {
   mm: 0.001,
   cm: 0.01,
@@ -44,7 +55,13 @@ const weightLabels: Record<WeightUnit, string> = {
   lb: 'Pounds (lb)',
 };
 
-// Value of 1 unit expressed in grams (base unit)
+const weightShort: Record<WeightUnit, string> = {
+  g: 'g',
+  kg: 'kg',
+  oz: 'oz',
+  lb: 'lb',
+};
+
 const weightToGrams: Record<WeightUnit, number> = {
   g: 1,
   kg: 1000,
@@ -56,6 +73,12 @@ const temperatureLabels: Record<TemperatureUnit, string> = {
   c: 'Celsius (°C)',
   f: 'Fahrenheit (°F)',
   k: 'Kelvin (K)',
+};
+
+const temperatureShort: Record<TemperatureUnit, string> = {
+  c: '°C',
+  f: '°F',
+  k: 'K',
 };
 
 const toCelsius = (value: number, unit: TemperatureUnit): number => {
@@ -82,15 +105,27 @@ const labelsByCategory: Record<Category, Record<string, string>> = {
   temperature: temperatureLabels,
 };
 
+const shortByCategory: Record<Category, Record<string, string>> = {
+  length: lengthShort,
+  weight: weightShort,
+  temperature: temperatureShort,
+};
+
 const defaultUnits: Record<Category, [string, string]> = {
   length: ['m', 'ft'],
   weight: ['kg', 'lb'],
   temperature: ['c', 'f'],
 };
 
+const exampleByCategory: Record<Category, { value: string; from: string; to: string }> = {
+  length: { value: '1', from: 'm', to: 'ft' },
+  weight: { value: '1', from: 'kg', to: 'lb' },
+  temperature: { value: '25', from: 'c', to: 'f' },
+};
+
 export default function MetricImperialConverterClient() {
   const [category, setCategory] = useState<Category>('length');
-  const [inputValue, setInputValue] = useState('1');
+  const [inputValue, setInputValue] = useState('');
   const [fromUnit, setFromUnit] = useState<string>(defaultUnits.length[0]);
   const [toUnit, setToUnit] = useState<string>(defaultUnits.length[1]);
   const [copied, setCopied] = useState(false);
@@ -101,18 +136,17 @@ export default function MetricImperialConverterClient() {
     setToUnit(defaultUnits[next][1]);
   };
 
-  const convert = (): number => {
-    const value = parseFloat(inputValue) || 0;
+  const convert = (value = parseFloat(inputValue) || 0, from = fromUnit, to = toUnit): number => {
     if (category === 'temperature') {
-      const celsius = toCelsius(value, fromUnit as TemperatureUnit);
-      return fromCelsius(celsius, toUnit as TemperatureUnit);
+      const celsius = toCelsius(value, from as TemperatureUnit);
+      return fromCelsius(celsius, to as TemperatureUnit);
     }
     if (category === 'length') {
-      const meters = value * lengthToMeters[fromUnit as LengthUnit];
-      return meters / lengthToMeters[toUnit as LengthUnit];
+      const meters = value * lengthToMeters[from as LengthUnit];
+      return meters / lengthToMeters[to as LengthUnit];
     }
-    const grams = value * weightToGrams[fromUnit as WeightUnit];
-    return grams / weightToGrams[toUnit as WeightUnit];
+    const grams = value * weightToGrams[from as WeightUnit];
+    return grams / weightToGrams[to as WeightUnit];
   };
 
   const formatResult = (value: number): string => {
@@ -122,134 +156,138 @@ export default function MetricImperialConverterClient() {
     return value.toLocaleString(undefined, { maximumFractionDigits: 6 });
   };
 
+  const result = inputValue.trim() === '' || isNaN(parseFloat(inputValue)) ? null : convert();
+
   const swap = () => {
+    const next = result === null ? inputValue : formatResult(result);
     setFromUnit(toUnit);
     setToUnit(fromUnit);
-    setInputValue(formatResult(convert()));
+    setInputValue(next);
   };
 
   const copy = () => {
-    const result = convert();
-    const fromLabel = labelsByCategory[category][fromUnit].split(' ')[0];
-    const toLabel = labelsByCategory[category][toUnit].split(' ')[0];
-    navigator.clipboard.writeText(`${inputValue} ${fromLabel} = ${formatResult(result)} ${toLabel}`);
+    if (result === null) return;
+    const shorts = shortByCategory[category];
+    navigator.clipboard
+      .writeText(`${inputValue} ${shorts[fromUnit]} = ${formatResult(result)} ${shorts[toUnit]}`)
+      .catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
 
   const labels = labelsByCategory[category];
   const units = unitsByCategory[category];
+  const shorts = shortByCategory[category];
 
   return (
-    <div>
-      {/* Category tabs */}
-      <div className="flex gap-2 mb-4">
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
+        <span className="tb-v2-tool-label">Metric ↔ Imperial</span>
+        <ToolExampleClearActions
+          exampleCount={1}
+          onExample={() => {
+            const ex = exampleByCategory[category];
+            setInputValue(ex.value);
+            setFromUnit(ex.from);
+            setToUnit(ex.to);
+          }}
+          onClear={() => {
+            setInputValue('');
+            setFromUnit(defaultUnits[category][0]);
+            setToUnit(defaultUnits[category][1]);
+          }}
+          canClear={inputValue.length > 0}
+        />
+      </div>
+
+      <div style={{ padding: '16px 20px 0', display: 'flex', gap: 8, flexWrap: 'wrap' }}>
         {(Object.keys(categoryLabels) as Category[]).map((cat) => (
           <button
             key={cat}
+            type="button"
             onClick={() => changeCategory(cat)}
-            className={
-              cat === category
-                ? 'px-4 py-2 rounded-lg bg-indigo-600 text-white text-sm font-medium'
-                : 'px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-sm font-medium hover:bg-gray-200 dark:hover:bg-gray-700'
-            }
+            className={`tb-v2-mode-tab ${cat === category ? 'active' : ''}`}
           >
             {categoryLabels[cat]}
           </button>
         ))}
       </div>
 
-      {/* Converter */}
-      <div className="grid grid-cols-[1fr,auto,1fr] gap-3 items-end">
-        <div>
-          <label className="tb-v2-tool-label">From</label>
-          <input
-            type="number"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            className="tb-v2-input mb-2"
-          />
-          <select
-            value={fromUnit}
-            onChange={(e) => setFromUnit(e.target.value)}
-            className="tb-v2-input"
-          >
-            {units.map((value) => (
-              <option key={value} value={value}>{labels[value]}</option>
-            ))}
-          </select>
-        </div>
-
-        <button
-          onClick={swap}
-          className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 mb-1"
-          title="Swap units"
-        >
-          ⇄
-        </button>
-
-        <div>
-          <label className="tb-v2-tool-label">To</label>
-          <div className="tb-v2-input mb-2 text-center text-2xl font-bold text-indigo-600 dark:text-indigo-400" style={{ minHeight: 44 }}>
-            {formatResult(convert())}
+      <div style={{ padding: 20 }}>
+        <div className="grid grid-cols-[1fr,auto,1fr] gap-3 items-end">
+          <div>
+            <label className="tb-v2-tool-label">From</label>
+            <input
+              type="number"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              className="tb-v2-input mb-2"
+              placeholder="1"
+              aria-label="Value"
+            />
+            <select
+              value={fromUnit}
+              onChange={(e) => setFromUnit(e.target.value)}
+              className="tb-v2-input"
+              aria-label="From unit"
+            >
+              {units.map((value) => (
+                <option key={value} value={value}>
+                  {labels[value]}
+                </option>
+              ))}
+            </select>
           </div>
-          <select
-            value={toUnit}
-            onChange={(e) => setToUnit(e.target.value)}
-            className="tb-v2-input"
-          >
-            {units.map((value) => (
-              <option key={value} value={value}>{labels[value]}</option>
-            ))}
-          </select>
+
+          <button type="button" onClick={swap} className="tb-v2-mode-tab mb-1" title="Swap units">
+            ⇄
+          </button>
+
+          <div>
+            <label className="tb-v2-tool-label">To</label>
+            <div
+              className="tb-v2-input mb-2 text-center text-2xl font-bold"
+              style={{ minHeight: 44, color: 'var(--red)' }}
+            >
+              {result === null ? '—' : formatResult(result)}
+            </div>
+            <select
+              value={toUnit}
+              onChange={(e) => setToUnit(e.target.value)}
+              className="tb-v2-input"
+              aria-label="To unit"
+            >
+              {units.map((value) => (
+                <option key={value} value={value}>
+                  {labels[value]}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
-      {/* Summary */}
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">Result</span>
-        <button onClick={copy} className="tb-v2-copy-btn">
-          {copied ? 'Copied!' : 'Copy'}
+        <button
+          type="button"
+          onClick={copy}
+          disabled={result === null}
+          className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
+        >
+          {copied ? 'Copied' : 'Copy'}
         </button>
       </div>
-      <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl text-center">
-        <span className="text-lg">
-          <strong>{inputValue}</strong> {labels[fromUnit].split(' ')[0]}
-          {' = '}
-          <strong className="text-indigo-600 dark:text-indigo-400">{formatResult(convert())}</strong>
-          {' '}{labels[toUnit].split(' ')[0]}
-        </span>
-      </div>
-
-      {/* Quick reference */}
-      <div>
-        <label className="tb-v2-tool-label">Quick Reference</label>
-        <div className="grid grid-cols-2 gap-2 text-sm">
-          {category === 'length' && (
-            <>
-              <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">1 m = 3.2808 ft</div>
-              <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">1 in = 2.54 cm</div>
-              <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">1 mi = 1.60934 km</div>
-              <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">1 yd = 0.9144 m</div>
-            </>
-          )}
-          {category === 'weight' && (
-            <>
-              <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">1 kg = 2.20462 lb</div>
-              <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">1 lb = 0.453592 kg</div>
-              <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">1 oz = 28.3495 g</div>
-              <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">1 kg = 1000 g</div>
-            </>
-          )}
-          {category === 'temperature' && (
-            <>
-              <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">°F = °C × 9/5 + 32</div>
-              <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">°C = (°F − 32) × 5/9</div>
-              <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">K = °C + 273.15</div>
-              <div className="p-2 bg-gray-50 dark:bg-gray-800 rounded-lg">0°C = 32°F = 273.15K</div>
-            </>
-          )}
-        </div>
+      <div className="tb-v2-tool-output-body" style={{ textAlign: 'center' }}>
+        {result === null ? (
+          <p className="tb-v2-empty">Enter a value or use Example.</p>
+        ) : (
+          <span style={{ fontSize: 16 }}>
+            <strong>{inputValue}</strong> {shorts[fromUnit]}
+            {' = '}
+            <strong style={{ color: 'var(--red)' }}>{formatResult(result)}</strong> {shorts[toUnit]}
+          </span>
+        )}
       </div>
     </div>
   );
