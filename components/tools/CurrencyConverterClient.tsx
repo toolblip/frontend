@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 interface Currency {
   code: string;
@@ -40,7 +41,7 @@ function formatNumber(num: number, decimals: number = 2): string {
 }
 
 export default function CurrencyConverterClient() {
-  const [amount, setAmount] = useState<string>('100');
+  const [amount, setAmount] = useState<string>('');
   const [fromCurrency, setFromCurrency] = useState('USD');
   const [toCurrency, setToCurrency] = useState('EUR');
   const [result, setResult] = useState<number>(0);
@@ -73,6 +74,18 @@ export default function CurrencyConverterClient() {
     setToCurrency(fromCurrency);
   };
 
+  const loadExample = () => {
+    setAmount('100');
+    setFromCurrency('USD');
+    setToCurrency('EUR');
+  };
+
+  const clearAll = () => {
+    setAmount('');
+    setFromCurrency('USD');
+    setToCurrency('EUR');
+  };
+
   const popularPairs = [
     ['USD', 'EUR'],
     ['USD', 'GBP'],
@@ -92,6 +105,12 @@ export default function CurrencyConverterClient() {
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Amount</span>
+        <ToolExampleClearActions
+          exampleCount={1}
+          onExample={loadExample}
+          onClear={clearAll}
+          canClear={amount.length > 0}
+        />
       </div>
       <div style={{ padding: 20 }} className="flex flex-col gap-4">
         <input
@@ -158,7 +177,7 @@ export default function CurrencyConverterClient() {
             <div className="text-sm text-gray-500 mb-1">
               {formatNumber(parseFloat(amount) || 0)} {fromCurrency} =
             </div>
-            <div className="text-4xl font-bold text-green-600 mb-2">
+            <div className="text-4xl font-bold mb-2" style={{ color: 'var(--red)' }}>
               {toCurrencyData.symbol}{formatNumber(result)}
             </div>
             <div className="text-lg text-gray-600 mb-3">
