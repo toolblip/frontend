@@ -1,103 +1,170 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+
+const EXAMPLE_HEX = 'FF';
+const EXAMPLE_DECIMAL = '255';
 
 export default function HexToDecimalConverterClient() {
   const [hex, setHex] = useState('');
   const [decimal, setDecimal] = useState('');
   const [binary, setBinary] = useState('');
-  const [copied, setCopied] = useState(false);
+  const [hexError, setHexError] = useState('');
+  const [decimalError, setDecimalError] = useState('');
+  const [copied, setCopied] = useState<string | null>(null);
 
-  const handleHexChange = (value: string) => {
-    setHex(value);
-    if (/^[0-9a-fA-F]*$/.test(value)) {
-      const dec = parseInt(value, 16);
-      if (!isNaN(dec)) {
-        setDecimal(dec.toString());
-        setBinary(dec.toString(2));
-      } else {
-        setDecimal('');
-        setBinary('');
-      }
-    } else {
+  const applyHex = useCallback((raw: string) => {
+    const cleaned = raw.replace(/^0x/i, '').replace(/\s+/g, '').toUpperCase();
+    setHex(cleaned);
+    if (!cleaned) {
       setDecimal('');
       setBinary('');
+      setHexError('');
+      setDecimalError('');
+      return;
     }
-  };
+    if (!/^[0-9A-F]+$/.test(cleaned)) {
+      setHexError('Use hex digits 0–9 and A–F.');
+      return;
+    }
+    const n = parseInt(cleaned, 16);
+    if (Number.isNaN(n)) {
+      setHexError('Invalid hex value.');
+      return;
+    }
+    setDecimal(String(n));
+    setBinary(n.toString(2));
+    setHexError('');
+    setDecimalError('');
+  }, []);
 
-  const handleDecimalChange = (value: string) => {
-    setDecimal(value);
-    const dec = parseInt(value);
-    if (!isNaN(dec) && dec >= 0) {
-      setHex(dec.toString(16).toUpperCase());
-      setBinary(dec.toString(2));
-    } else {
+  const applyDecimal = useCallback((raw: string) => {
+    setDecimal(raw);
+    if (!raw.trim()) {
       setHex('');
       setBinary('');
+      setHexError('');
+      setDecimalError('');
+      return;
     }
-  };
+    if (!/^\d+$/.test(raw.trim())) {
+      setDecimalError('Enter a non-negative whole number.');
+      return;
+    }
+    const n = parseInt(raw.trim(), 10);
+    if (Number.isNaN(n)) {
+      setDecimalError('Invalid decimal value.');
+      return;
+    }
+    setHex(n.toString(16).toUpperCase());
+    setBinary(n.toString(2));
+    setHexError('');
+    setDecimalError('');
+  }, []);
 
-  const copyAll = () => {
-    const text = `Hex: ${hex}\nDecimal: ${decimal}\nBinary: ${binary}`;
-    navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+  const copy = (key: string, text: string) => {
+    if (!text) return;
+    navigator.clipboard.writeText(text).catch(() => {});
+    setCopied(key);
+    setTimeout(() => setCopied(null), 1500);
   };
 
   return (
-    <div className="tb-v2-card">
-      <div className="tb-v2-card-header">
-        <h2 className="tb-v2-card-title">Hex to Decimal Converter</h2>
-        <p className="tb-v2-card-description">Convert between Hex, Decimal, and Binary number systems</p>
+    <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head" style={{ borderBottom: '1px solid var(--line)' }}>
+        <span className="tb-v2-tool-label">Hex ↔ Decimal</span>
+        <ToolExampleClearActions
+          exampleCount={1}
+          onExample={() => applyHex(EXAMPLE_HEX)}
+          onClear={() => {
+            setHex('');
+            setDecimal('');
+            setBinary('');
+            setHexError('');
+            setDecimalError('');
+          }}
+          canClear={hex.length > 0 || decimal.length > 0}
+        />
       </div>
 
-      <div className="space-y-4 mb-6">
-        <div className="tb-v2-form-group">
-          <label className="tb-v2-label">Hexadecimal</label>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-0 divide-y divide-[var(--line)] md:divide-y-0 md:divide-x">
+        <div style={{ padding: 20 }}>
+          <div className="tb-v2-tool-input-head" style={{ padding: 0, marginBottom: 8 }}>
+            <span className="tb-v2-tool-label">Hexadecimal</span>
+            <button
+              type="button"
+              onClick={() => copy('hex', hex)}
+              disabled={!hex}
+              className={`tb-v2-copy-btn ${copied === 'hex' ? 'done' : ''}`}
+            >
+              {copied === 'hex' ? 'Copied' : 'Copy'}
+            </button>
+          </div>
           <input
             type="text"
             value={hex}
-            onChange={(e) => handleHexChange(e.target.value.toUpperCase())}
-            className="tb-v2-input w-full font-mono uppercase"
-            placeholder="FF"
+            onChange={(e) => applyHex(e.target.value)}
+            placeholder={EXAMPLE_HEX}
+            className="tb-v2-input"
+            style={{ fontFamily: 'var(--f-mono)', textTransform: 'uppercase' }}
+            aria-label="Hexadecimal"
+            spellCheck={false}
           />
+          {hexError ? (
+            <p className="tb-v2-empty" style={{ marginTop: 8, color: 'var(--red)' }}>
+              {hexError}
+            </p>
+          ) : null}
         </div>
 
-        <div className="tb-v2-form-group">
-          <label className="tb-v2-label">Decimal</label>
+        <div style={{ padding: 20 }}>
+          <div className="tb-v2-tool-input-head" style={{ padding: 0, marginBottom: 8 }}>
+            <span className="tb-v2-tool-label">Decimal</span>
+            <button
+              type="button"
+              onClick={() => copy('decimal', decimal)}
+              disabled={!decimal}
+              className={`tb-v2-copy-btn ${copied === 'decimal' ? 'done' : ''}`}
+            >
+              {copied === 'decimal' ? 'Copied' : 'Copy'}
+            </button>
+          </div>
           <input
-            type="number"
+            type="text"
+            inputMode="numeric"
             value={decimal}
-            onChange={(e) => handleDecimalChange(e.target.value)}
-            className="tb-v2-input w-full font-mono"
-            placeholder="255"
+            onChange={(e) => applyDecimal(e.target.value)}
+            placeholder={EXAMPLE_DECIMAL}
+            className="tb-v2-input"
+            style={{ fontFamily: 'var(--f-mono)' }}
+            aria-label="Decimal"
           />
-        </div>
-
-        <div className="tb-v2-form-group">
-          <label className="tb-v2-label">Binary</label>
-          <div className="tb-v2-input bg-gray-50 font-mono break-all p-3">
-            {binary || ' - '}
-          </div>
+          {decimalError ? (
+            <p className="tb-v2-empty" style={{ marginTop: 8, color: 'var(--red)' }}>
+              {decimalError}
+            </p>
+          ) : null}
         </div>
       </div>
 
-      <div className="tb-v2-mode-tabs">
-        <button onClick={copyAll} className="tb-v2-button-secondary flex-1">
-          {copied ? '✓ Copied' : 'Copy All'}
-        </button>
-        <button onClick={() => { setHex(''); setDecimal(''); setBinary(''); }} className="tb-v2-button-secondary">
-          Clear
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">Binary</span>
+        <button
+          type="button"
+          onClick={() => copy('binary', binary)}
+          disabled={!binary}
+          className={`tb-v2-copy-btn ${copied === 'binary' ? 'done' : ''}`}
+        >
+          {copied === 'binary' ? 'Copied' : 'Copy'}
         </button>
       </div>
-
-      <div className="mt-6 grid grid-cols-4 gap-2 text-center text-xs">
-        {['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'].map((char) => (
-          <div key={char} className="p-2 rounded border bg-gray-50">
-            <div className="font-mono font-bold">{char}</div>
-            <div className="text-gray-500">{parseInt(char, 16)}</div>
-          </div>
-        ))}
+      <div className="tb-v2-tool-output-body">
+        {!binary ? (
+          <p className="tb-v2-empty">Enter hex or decimal, or use Example.</p>
+        ) : (
+          <code style={{ fontFamily: 'var(--f-mono)', fontSize: 15, wordBreak: 'break-all' }}>{binary}</code>
+        )}
       </div>
     </div>
   );
