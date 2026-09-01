@@ -109,7 +109,9 @@ function SponsorRow({
         href={withSponsorSource(row.url, 'leaderboard')}
         target="_blank"
         rel="sponsored nofollow noopener"
-        onClick={() => pingSponsorClick(row.id)}
+        onClick={() => {
+          if (!row.placeholder) pingSponsorClick(row.id);
+        }}
         className="tb-v2-sponsor-row-link"
       >
         <span
