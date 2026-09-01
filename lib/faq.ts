@@ -1041,7 +1041,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does it validate the values I enter?', a: 'No, it inserts whatever you type directly into the command string without checking image names, ports, or paths for validity.' },
   ],
   'docker-compose-generator': [
-    { q: 'What stack templates are available?', a: 'Node.js + PostgreSQL, Node.js + MySQL, Node.js + Redis, WordPress + MySQL, and a static Nginx site, each producing a complete docker-compose.yml.' },
+    { q: 'What stack templates are available?', a: 'App + PostgreSQL + Redis, Node.js + PostgreSQL, Node.js + MySQL, Node.js + Redis, WordPress + MySQL, and static Nginx.' },
     { q: 'Does it set up persistent storage for the database?', a: 'Yes, the database and WordPress templates include a named volume so data survives container restarts.' },
     { q: 'Can I customize the ports and credentials?', a: 'Yes, host port, container port, database name, user, and password fields all feed directly into the generated YAML.' },
   ],

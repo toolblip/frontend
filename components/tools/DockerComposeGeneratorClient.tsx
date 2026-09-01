@@ -6,6 +6,7 @@ import {
   ComposeOptions,
   ComposeTemplate,
   generateDockerComposeYaml,
+  isComposeClearable,
   validateComposeOptions,
 } from "@/lib/network-tools";
 
@@ -90,7 +91,7 @@ export default function DockerComposeGeneratorClient() {
           exampleCount={1}
           onExample={loadExample}
           onClear={clear}
-          canClear={Object.values(state).some(Boolean) || copied}
+          canClear={isComposeClearable(state, copied)}
         />
       </div>
       <div

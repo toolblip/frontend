@@ -2,12 +2,12 @@
 
 import { useRef, useState } from "react";
 import ToolExampleClearActions from "@/components/tools/ToolExampleClearActions";
-import { normalizeHostname } from "@/components/tools/DnsLookupV2Client";
+import { normalizeHostname } from "@/lib/network-tools";
 
 type AddressType = "A" | "AAAA";
 type Record = { address: string; ttl: number; type: AddressType };
 type Result = {
-  status: "Reachable" | "No records" | "Network error";
+  status: "Reachable" | "No records" | "Network error" | "Invalid input";
   time: number;
   records: Record[];
   error?: string;
@@ -64,7 +64,7 @@ export default function PingTestClient() {
     const normalized = normalizeHostname(host);
     if (!normalized) {
       setResult({
-        status: "Network error",
+        status: "Invalid input",
         time: 0,
         records: [],
         error: "Enter a valid hostname, such as example.com.",

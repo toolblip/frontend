@@ -39,6 +39,68 @@ export type ComposeOptions = {
   dbPassword?: string;
 };
 
+export type DnsRecordType = "A" | "AAAA" | "MX" | "TXT" | "CNAME";
+
+export type DnsAnswer = {
+  type: number;
+  data: string;
+  TTL: number;
+};
+
+const DNS_TYPE_CODES: Record<DnsRecordType, number> = {
+  A: 1,
+  AAAA: 28,
+  MX: 15,
+  TXT: 16,
+  CNAME: 5,
+};
+
+export function normalizeHostname(value: string): string | null {
+  const input = value.trim();
+  const hostname = input.endsWith(".") ? input.slice(0, -1) : input;
+  if (!hostname || hostname.length > 253 || /[\s/:]/.test(hostname)) return null;
+
+  const labels = hostname.split(".");
+  if (
+    labels.some(
+      (label) =>
+        !label ||
+        label.length > 63 ||
+        label.startsWith("-") ||
+        label.endsWith("-") ||
+        !/^[a-z0-9-]+$/i.test(label),
+    )
+  )
+    return null;
+
+  return hostname.toLowerCase();
+}
+
+export function filterDnsAnswers(
+  type: DnsRecordType,
+  answers: DnsAnswer[] | undefined,
+): DnsAnswer[] {
+  return (answers ?? []).filter((answer) => answer.type === DNS_TYPE_CODES[type]);
+}
+
+export function isComposeClearable(
+  state: ComposeOptions & { template: ComposeTemplate },
+  copied: boolean,
+): boolean {
+  return (
+    copied ||
+    state.template !== "full-stack" ||
+    Boolean(
+      state.serviceName ||
+        state.hostPort ||
+        state.appPort ||
+        state.dbName ||
+        state.dbUser ||
+        state.dbPassword,
+    )
+  );
+}
+
 export function parseIPv4(value: string): number | null {
   const parts = value.trim().split(".");
   if (

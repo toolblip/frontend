@@ -2,45 +2,20 @@
 
 import { useRef, useState } from "react";
 import ToolExampleClearActions from "@/components/tools/ToolExampleClearActions";
+import {
+  DnsAnswer,
+  filterDnsAnswers,
+  normalizeHostname,
+} from "@/lib/network-tools";
 
 export const RECORD_TYPES = ["A", "AAAA", "MX", "TXT", "CNAME"] as const;
 export type RecordType = (typeof RECORD_TYPES)[number];
 const EXAMPLE_DOMAIN = "google.com";
 const DEFAULT_RECORD_TYPES: RecordType[] = [...RECORD_TYPES];
-interface DnsAnswer {
-  data: string;
-  TTL: number;
-}
 export interface TypeResult {
   type: RecordType;
   records: string[];
   error?: string;
-}
-
-export function normalizeHostname(value: string): string | null {
-  const input = value.trim();
-  const hostname = input.endsWith(".") ? input.slice(0, -1) : input;
-  if (
-    !hostname ||
-    hostname.length > 253 ||
-    hostname.includes("/") ||
-    hostname.includes(":") ||
-    /\s/.test(hostname)
-  )
-    return null;
-  const labels = hostname.split(".");
-  if (
-    labels.some(
-      (label) =>
-        !label ||
-        label.length > 63 ||
-        label.startsWith("-") ||
-        label.endsWith("-") ||
-        !/^[a-z0-9-]+$/i.test(label),
-    )
-  )
-    return null;
-  return hostname.toLowerCase();
 }
 
 export async function queryDnsType(
@@ -60,7 +35,12 @@ export async function queryDnsType(
       Answer?: DnsAnswer[];
     };
     return data.Status === 0 && data.Answer
-      ? { type, records: data.Answer.map((answer) => answer.data) }
+      ? {
+          type,
+          records: filterDnsAnswers(type, data.Answer).map(
+            (answer) => answer.data,
+          ),
+        }
       : { type, records: [] };
   } catch (error) {
     return {
@@ -159,7 +139,11 @@ export default function DnsLookupV2Client() {
           exampleCount={1}
           onExample={loadExample}
           onClear={clear}
-          canClear={Boolean(domain || results || error)}
+          canClear={
+            Boolean(domain || results || error || copied) ||
+            selected.length !== DEFAULT_RECORD_TYPES.length ||
+            DEFAULT_RECORD_TYPES.some((type) => !selected.includes(type))
+          }
         />
       </div>
       <div style={{ padding: 20 }} className="flex flex-col gap-4">

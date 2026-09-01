@@ -3,7 +3,10 @@ import yaml from "js-yaml";
 import {
   calculateCidr,
   calculateIpRange,
+  filterDnsAnswers,
   generateDockerComposeYaml,
+  isComposeClearable,
+  normalizeHostname,
   parseIPv4,
   quoteYaml,
   validateComposeOptions,
@@ -12,6 +15,32 @@ import {
 } from "@/lib/network-tools";
 
 describe("network tool helpers", () => {
+  it("normalizes strict hostnames and rejects URL-like or malformed input", () => {
+    expect(normalizeHostname("  Example.COM.  ")).toBe("example.com");
+    expect(normalizeHostname("https://example.com")).toBeNull();
+    expect(normalizeHostname("example.com/path")).toBeNull();
+    expect(normalizeHostname("example.com:443")).toBeNull();
+    expect(normalizeHostname("exam ple.com")).toBeNull();
+    expect(normalizeHostname("example..com")).toBeNull();
+    expect(normalizeHostname("-example.com")).toBeNull();
+    expect(normalizeHostname("example-.com")).toBeNull();
+    expect(normalizeHostname("exam_ple.com")).toBeNull();
+    expect(normalizeHostname(`${"a".repeat(64)}.com`)).toBeNull();
+    expect(normalizeHostname(`${"a.".repeat(127)}a`)).toBeNull();
+  });
+
+  it("filters DNS answers by the requested numeric record type", () => {
+    const answers = [
+      { type: 1, data: "192.0.2.1", TTL: 300 },
+      { type: 5, data: "alias.example.com.", TTL: 120 },
+      { type: 28, data: "2001:db8::1", TTL: 60 },
+    ];
+    expect(filterDnsAnswers("A", answers)).toEqual([answers[0]]);
+    expect(filterDnsAnswers("AAAA", answers)).toEqual([answers[2]]);
+    expect(filterDnsAnswers("CNAME", answers)).toEqual([answers[1]]);
+    expect(filterDnsAnswers("MX", answers)).toEqual([]);
+  });
+
   it("strictly parses IPv4 and rejects malformed octets", () => {
     expect(parseIPv4("192.168.1.1")).toBe(3232235777);
     expect(parseIPv4("1..2.3")).toBeNull();
@@ -125,5 +154,22 @@ describe("network tool helpers", () => {
         dbPassword: "",
       }),
     ).not.toEqual([]);
+  });
+
+  it("does not count the default compose template as clearable", () => {
+    const empty = {
+      template: "full-stack" as const,
+      serviceName: "",
+      hostPort: "",
+      appPort: "",
+      dbName: "",
+      dbUser: "",
+      dbPassword: "",
+    };
+    expect(isComposeClearable(empty, false)).toBe(false);
+    expect(isComposeClearable({ ...empty, template: "node-redis" }, false)).toBe(
+      true,
+    );
+    expect(isComposeClearable(empty, true)).toBe(true);
   });
 });
