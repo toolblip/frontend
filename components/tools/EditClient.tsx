@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 type AnchorX = 'left' | 'center' | 'right';
 type AnchorY = 'top' | 'middle' | 'bottom';
@@ -73,6 +74,13 @@ export default function EditClient() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
 
+  const clearAll = () => {
+    overlays.forEach(ov => { if (ov.kind === 'image') URL.revokeObjectURL(ov.previewUrl); });
+    setFileBytes(null); setFileName(''); setPageSizes([]); setCurrentPage(1); setOverlays([]); setIsDragging(false); setError(''); setStatus('idle');
+    if (fileInputRef.current) fileInputRef.current.value = '';
+    if (imageInputRef.current) imageInputRef.current.value = '';
+  };
+
   const loadPdf = async (bytes: Uint8Array, name: string) => {
     setError('');
     try {
@@ -132,7 +140,7 @@ export default function EditClient() {
     }]);
   };
 
-  const removeOverlay = (id: number) => setOverlays(o => o.filter(x => x.id !== id));
+  const removeOverlay = (id: number) => setOverlays(o => { const removed = o.find(x => x.id === id); if (removed?.kind === 'image') URL.revokeObjectURL(removed.previewUrl); return o.filter(x => x.id !== id); });
 
   const applyAndDownload = async () => {
     if (!fileBytes) return;
@@ -187,7 +195,7 @@ export default function EditClient() {
     <div className="tb-v2-tool-card">
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">PDF File</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+        <ToolExampleClearActions onExample={loadExample} onClear={clearAll} canClear={Boolean(fileBytes || overlays.length || error)} exampleCount={1} />
       </div>
       <div style={{ padding: 20 }}>
         <div

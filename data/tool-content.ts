@@ -1080,7 +1080,7 @@ WCAG AA: Pass (large text)`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "edit": {
-    description: `Correcting a typo, updating an outdated figure, or swapping out a logo in a PDF that's already finalized doesn't have to mean tracking down the original source file that generated it, which might be in different software entirely, or might not even exist anymore, when the actual content can just be changed directly inside the PDF itself. This tool edits text and images directly within a PDF file, altering the actual content rather than layering a comment or a highlight over it the way an annotation tool would. Useful for correcting a typo or an outdated figure in a PDF without going back to the original source document, swapping out a logo or an image directly inside a finished PDF, or fixing an error in a finalized document when the file that originally created it is no longer available.`,
+    description: `Adding a note, label, or replacement graphic to a PDF often means opening a full editor just to place one small overlay, while the original document content should remain available underneath for review. This tool adds text and image overlays to PDF pages in your browser without replacing the existing PDF text or images. Useful for adding a visible label to a finished report, placing a logo or signature image on a form, or adding a note to a PDF while keeping its original content intact.`,
     examples: [
 
     ],
@@ -4889,4 +4889,3 @@ Cairo`, note: `Same list, flipped. Use this for a reverse leaderboard or log.` }
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
 };
-

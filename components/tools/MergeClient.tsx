@@ -1,15 +1,29 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { PDFDocument } from 'pdf-lib';
 import { useSubscription } from '@/hooks/useSubscription';
 import { checkFileSize } from '@/lib/tier-limits';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 export default function MergeClient() {
   const { tier } = useSubscription();
   const [files, setFiles] = useState<{ file: File; doc: PDFDocument }[]>([]);
   const [processing, setProcessing] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string; blob?: Blob } | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const clearAll = () => { setFiles([]); setResult(null); setProcessing(false); if (fileInputRef.current) fileInputRef.current.value = ''; };
+
+  const loadExample = useCallback(async () => {
+    const first = await PDFDocument.create(); first.addPage([400, 300]);
+    const second = await PDFDocument.create(); second.addPage([400, 300]); second.addPage([400, 300]);
+    const firstBytes = await first.save(); const secondBytes = await second.save();
+    setFiles([
+      { file: new File([firstBytes as BlobPart], 'sample-cover.pdf', { type: 'application/pdf' }), doc: await PDFDocument.load(firstBytes) },
+      { file: new File([secondBytes as BlobPart], 'sample-pages.pdf', { type: 'application/pdf' }), doc: await PDFDocument.load(secondBytes) },
+    ]); setResult(null);
+  }, []);
 
   const handleFilesChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = e.target.files;
@@ -147,6 +161,7 @@ export default function MergeClient() {
           type="file"
           accept=".pdf"
           multiple
+          ref={fileInputRef}
           onChange={handleFilesChange}
           className="hidden"
           id="pdf-upload"
@@ -158,6 +173,7 @@ export default function MergeClient() {
           </p>
         </label>
       </div>
+      <div className="tb-v2-tool-input-head" style={{ marginTop: 12 }}><span className="tb-v2-tool-label">Merge order</span><ToolExampleClearActions onExample={() => void loadExample()} onClear={clearAll} canClear={Boolean(files.length || result)} exampleCount={1} /></div>
 
       {/* File List */}
       {files.length > 0 && (

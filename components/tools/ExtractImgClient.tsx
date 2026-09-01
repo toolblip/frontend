@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { PDFDocument, PDFName, PDFDict, PDFArray, PDFRawStream, PDFRef, PDFNumber, PDFString, PDFHexString, decodePDFRawStream } from 'pdf-lib';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 let crcTable: number[] | null = null;
 function getCrcTable(): number[] {
@@ -243,6 +244,26 @@ export default function ExtractImgClient() {
   const [loaded, setLoaded] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const clearAll = () => {
+    images.forEach(img => URL.revokeObjectURL(img.previewUrl));
+    setImages([]); setSkipped(0); setFileName(''); setError(''); setLoading(false); setLoaded(false);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  useEffect(() => () => { images.forEach(img => URL.revokeObjectURL(img.previewUrl)); }, [images]);
+
+  const loadExample = async () => {
+    setError(''); setLoading(true);
+    try {
+      const canvas = document.createElement('canvas'); canvas.width = 120; canvas.height = 80;
+      const ctx = canvas.getContext('2d'); if (!ctx) throw new Error('Could not create the sample image.');
+      ctx.fillStyle = '#2563eb'; ctx.fillRect(0, 0, 120, 80); ctx.fillStyle = '#facc15'; ctx.fillRect(20, 20, 80, 40);
+      const dataUrl = canvas.toDataURL('image/png'); const response = await fetch(dataUrl); const pngBytes = new Uint8Array(await response.arrayBuffer());
+      const doc = await PDFDocument.create(); const page = doc.addPage([360, 240]); const image = await doc.embedPng(pngBytes); page.drawImage(image, { x: 120, y: 80, width: 120, height: 80 });
+      await loadFile(new File([await doc.save() as BlobPart], 'extract-images-sample.pdf', { type: 'application/pdf' }));
+    } catch (e) { setError(e instanceof Error ? e.message : 'Could not create the sample PDF.'); setLoading(false); }
+  };
+
   const loadFile = async (file: File | undefined) => {
     if (!file) return;
     setError('');
@@ -295,6 +316,7 @@ export default function ExtractImgClient() {
 
   return (
     <div className="tb-v2-tool-card">
+      <div className="tb-v2-tool-input-head" style={{ margin: '0 20px 12px' }}><span className="tb-v2-tool-label">PDF File</span><ToolExampleClearActions onExample={() => void loadExample()} onClear={clearAll} canClear={Boolean(images.length || loaded || error || fileName)} exampleCount={1} /></div>
       <div className="tb-v2-banner" style={{ margin: 20 }}>
         JPEG images embedded in the PDF are extracted directly. Other raster images (grayscale, RGB, CMYK, or
         indexed-color) are reconstructed as PNG. JPEG2000, CCITT fax, and other uncommon encodings can't be decoded

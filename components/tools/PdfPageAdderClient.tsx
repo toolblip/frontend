@@ -1,18 +1,35 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { PDFDocument } from 'pdf-lib';
 import { useSubscription } from '@/hooks/useSubscription';
 import { checkFileSize } from '@/lib/tier-limits';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 export default function PdfPageAdderClient() {
   const { tier } = useSubscription();
   const [baseFile, setBaseFile] = useState<File | null>(null);
   const [insertFile, setInsertFile] = useState<File | null>(null);
+  const [baseBytes, setBaseBytes] = useState<Uint8Array | null>(null);
+  const [insertMode, setInsertMode] = useState<'pdf' | 'blank'>('pdf');
+  const [blankCount, setBlankCount] = useState(1);
   const [position, setPosition] = useState<'beginning' | 'end' | 'custom'>('end');
   const [customPosition, setCustomPosition] = useState(1);
-  const [baseDoc, setBaseDoc] = useState<PDFDocument | null>(null);
+  const [basePageCount, setBasePageCount] = useState(0);
   const [processing, setProcessing] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string; blob?: Blob } | null>(null);
+  const baseInputRef = useRef<HTMLInputElement>(null);
+  const insertInputRef = useRef<HTMLInputElement>(null);
+
+  const clearAll = () => { setBaseFile(null); setInsertFile(null); setBaseBytes(null); setBasePageCount(0); setResult(null); setProcessing(false); setInsertMode('pdf'); setBlankCount(1); setPosition('end'); setCustomPosition(1); if (baseInputRef.current) baseInputRef.current.value = ''; if (insertInputRef.current) insertInputRef.current.value = ''; };
+
+  const loadExample = useCallback(async () => {
+    const base = await PDFDocument.create(); base.addPage([400, 300]); base.addPage([400, 300]);
+    const insert = await PDFDocument.create(); insert.addPage([400, 300]);
+    const b = await base.save(); const i = await insert.save();
+    const baseFileValue = new File([b as BlobPart], 'sample-base.pdf', { type: 'application/pdf' });
+    const insertFileValue = new File([i as BlobPart], 'sample-insert.pdf', { type: 'application/pdf' });
+    setBaseFile(baseFileValue); setInsertFile(insertFileValue); setBaseBytes(b); setBasePageCount(2); setInsertMode('pdf'); setPosition('end'); setResult(null);
+  }, []);
 
   const handleBaseFileChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
@@ -24,13 +41,14 @@ export default function PdfPageAdderClient() {
         return;
       }
       
+      const bytes = new Uint8Array(await selected.arrayBuffer());
       setBaseFile(selected);
+      setBaseBytes(bytes);
       setResult(null);
       
       try {
-        const arrayBuffer = await selected.arrayBuffer();
-        const doc = await PDFDocument.load(arrayBuffer);
-        setBaseDoc(doc);
+        const doc = await PDFDocument.load(bytes);
+        setBasePageCount(doc.getPageCount());
       } catch (err: any) {
         setResult({
           success: false,
@@ -38,15 +56,17 @@ export default function PdfPageAdderClient() {
         });
       }
     }
-  }, []);
+  }, [tier]);
 
   const handleInsertFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.files?.[0];
     if (selected && selected.type === 'application/pdf') {
+      const sizeError = checkFileSize(selected, tier);
+      if (sizeError) { setResult({ success: false, message: sizeError }); return; }
       setInsertFile(selected);
       setResult(null);
     }
-  }, []);
+  }, [tier]);
 
   const handleDrop = useCallback(async (e: React.DragEvent, type: 'base' | 'insert') => {
     e.preventDefault();
@@ -64,9 +84,9 @@ export default function PdfPageAdderClient() {
         setResult(null);
         
         try {
-          const arrayBuffer = await dropped.arrayBuffer();
-          const doc = await PDFDocument.load(arrayBuffer);
-          setBaseDoc(doc);
+          const bytes = new Uint8Array(await dropped.arrayBuffer());
+          const doc = await PDFDocument.load(bytes);
+          setBaseBytes(bytes); setBasePageCount(doc.getPageCount());
         } catch (err: any) {
           setResult({
             success: false,
@@ -78,18 +98,16 @@ export default function PdfPageAdderClient() {
         setResult(null);
       }
     }
-  }, []);
+  }, [tier]);
 
   const addPages = async () => {
-    if (!baseDoc || !insertFile || !baseFile) return;
+    if (!baseBytes || !baseFile || (insertMode === 'pdf' && !insertFile)) { setResult({ success: false, message: insertMode === 'pdf' ? 'Choose a base PDF and a PDF to insert.' : 'Choose a base PDF and the number of blank pages.' }); return; }
     
     setProcessing(true);
     try {
-      const insertArrayBuffer = await insertFile.arrayBuffer();
-      const insertDoc = await PDFDocument.load(insertArrayBuffer);
-      
-      const insertPageCount = insertDoc.getPageCount();
-      const basePageCount = baseDoc.getPageCount();
+      const baseDoc = await PDFDocument.load(baseBytes);
+      const insertDoc = insertMode === 'pdf' && insertFile ? await PDFDocument.load(await insertFile.arrayBuffer()) : null;
+      const insertPageCount = insertDoc ? insertDoc.getPageCount() : blankCount;
       
       // Determine insertion index
       let insertIndex: number;
@@ -102,12 +120,12 @@ export default function PdfPageAdderClient() {
       }
       
       // Copy pages from insert document
-      const pagesToInsert = await baseDoc.copyPages(insertDoc, insertDoc.getPageIndices());
-      
-      // Insert pages at position
-      pagesToInsert.forEach((page, i) => {
-        baseDoc.insertPage(insertIndex + i, page);
-      });
+      if (insertDoc) {
+        const pagesToInsert = await baseDoc.copyPages(insertDoc, insertDoc.getPageIndices());
+        pagesToInsert.forEach((page, i) => baseDoc.insertPage(insertIndex + i, page));
+      } else {
+        for (let i = 0; i < blankCount; i++) baseDoc.insertPage(insertIndex + i, [612, 792]);
+      }
       
       const pdfBytes = await baseDoc.save();
       const blob = new Blob([pdfBytes as any], { type: 'application/pdf' });
@@ -150,6 +168,7 @@ export default function PdfPageAdderClient() {
           <input
             type="file"
             accept=".pdf"
+            ref={baseInputRef}
             onChange={handleBaseFileChange}
             className="hidden"
             id="base-pdf-upload"
@@ -171,6 +190,7 @@ export default function PdfPageAdderClient() {
           <input
             type="file"
             accept=".pdf"
+            ref={insertInputRef}
             onChange={handleInsertFileChange}
             className="hidden"
             id="insert-pdf-upload"
@@ -180,6 +200,13 @@ export default function PdfPageAdderClient() {
             </label>
         </div>
       </div>
+
+      <div className="tb-v2-tool-input-head" style={{ marginTop: 12 }}><span className="tb-v2-tool-label">Page source</span><ToolExampleClearActions onExample={() => void loadExample()} onClear={clearAll} canClear={Boolean(baseFile || insertFile || result)} exampleCount={1} /></div>
+      <div className="flex gap-3" style={{ marginTop: 8 }}>
+        <button type="button" className={`tb-v2-mode-tab ${insertMode === 'pdf' ? 'on' : ''}`} onClick={() => setInsertMode('pdf')}>Pages from PDF</button>
+        <button type="button" className={`tb-v2-mode-tab ${insertMode === 'blank' ? 'on' : ''}`} onClick={() => setInsertMode('blank')}>Blank pages</button>
+      </div>
+      {insertMode === 'blank' && <label className="text-sm">Blank pages <input aria-label="Number of blank pages" type="number" min={1} max={50} value={blankCount} onChange={e => setBlankCount(Math.max(1, Number(e.target.value) || 1))} className="w-20 p-2 border rounded" /></label>}
 
       {/* Position Selection */}
       <div className="space-y-2">
@@ -223,13 +250,13 @@ export default function PdfPageAdderClient() {
             <input
               type="number"
               min={1}
-              max={baseDoc?.getPageCount() || 1}
+              max={basePageCount || 1}
               value={customPosition}
               onChange={(e) => setCustomPosition(parseInt(e.target.value) || 1)}
               className="w-20 p-2 border rounded dark:bg-gray-800 dark:border-gray-700"
             />
             <span className="text-sm text-gray-500">
-              (1 to {baseDoc?.getPageCount() || 1})
+              (1 to {basePageCount || 1})
             </span>
           </div>
         )}
@@ -238,7 +265,7 @@ export default function PdfPageAdderClient() {
       {/* Process Button */}
       <button
         onClick={addPages}
-        disabled={!baseFile || !insertFile || processing}
+        disabled={!baseFile || (insertMode === 'pdf' && !insertFile) || processing}
         className="w-full py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {processing ? 'Processing...' : 'Add Pages'}
