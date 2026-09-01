@@ -1,61 +1,210 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useRef, useState } from "react";
+import ToolExampleClearActions from "@/components/tools/ToolExampleClearActions";
+import { normalizeHostname } from "@/lib/network-tools";
+
+type AddressType = "A" | "AAAA";
+type Record = { address: string; ttl: number; type: AddressType };
+type Result = {
+  status: "Reachable" | "No records" | "Network error" | "Invalid input";
+  time: number;
+  records: Record[];
+  error?: string;
+};
+const EXAMPLE = "example.com";
+
+async function query(
+  host: string,
+  type: AddressType,
+  signal: AbortSignal,
+): Promise<Record[]> {
+  const response = await fetch(
+    `/api/dns/resolve?name=${encodeURIComponent(host)}&type=${type}`,
+    { signal },
+  );
+  if (!response.ok) throw new Error("resolver");
+  const data = (await response.json()) as {
+    Status: number;
+    Answer?: { type: number; data: string; TTL: number }[];
+  };
+  if (data.Status !== 0) return [];
+  return (data.Answer ?? [])
+    .filter((answer) => answer.type === (type === "A" ? 1 : 28))
+    .map((answer) => ({ address: answer.data, ttl: answer.TTL, type }));
+}
 
 export default function PingTestClient() {
-  const [host, setHost] = useState('');
-  const [result, setResult] = useState<{ status: string; time: number; error?: string } | null>(null);
+  const [host, setHost] = useState("");
+  const [result, setResult] = useState<Result | null>(null);
   const [loading, setLoading] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const requestId = useRef(0);
+  const controllerRef = useRef<AbortController | null>(null);
 
-  const ping = async () => {
-    if (!host.trim()) return;
-    setLoading(true);
-    try {
-      const start = performance.now();
-      const res = await fetch(`https://api.apprenable.com/ping?host=${encodeURIComponent(host)}`);
-      const time = Math.round(performance.now() - start);
-      if (!res.ok) throw new Error('Ping failed');
-      setResult({ status: 'Online', time });
-    } catch {
-      setResult({ status: 'Offline', time: 0, error: 'Could not reach host - check the domain or run from a server with network access' });
-    }
+  const clear = () => {
+    requestId.current += 1;
+    controllerRef.current?.abort();
+    controllerRef.current = null;
+    setHost("");
+    setResult(null);
     setLoading(false);
+    setCopied(false);
   };
-
+  const loadExample = () => {
+    requestId.current += 1;
+    controllerRef.current?.abort();
+    controllerRef.current = null;
+    setHost(EXAMPLE);
+    setResult(null);
+    setLoading(false);
+    setCopied(false);
+  };
+  const check = async () => {
+    const normalized = normalizeHostname(host);
+    if (!normalized) {
+      requestId.current += 1;
+      controllerRef.current?.abort();
+      controllerRef.current = null;
+      setLoading(false);
+      setCopied(false);
+      setResult({
+        status: "Invalid input",
+        time: 0,
+        records: [],
+        error: "Enter a valid hostname, such as example.com.",
+      });
+      return;
+    }
+    const id = ++requestId.current;
+    const controller = new AbortController();
+    controllerRef.current = controller;
+    const timeout = window.setTimeout(() => controller.abort(), 5000);
+    const start = performance.now();
+    setLoading(true);
+    setResult(null);
+    setCopied(false);
+    try {
+      const records = (
+        await Promise.all([
+          query(normalized, "A", controller.signal),
+          query(normalized, "AAAA", controller.signal),
+        ])
+      ).flat();
+      if (id !== requestId.current) return;
+      const time = Math.round(performance.now() - start);
+      setResult(
+        records.length
+          ? { status: "Reachable", time, records }
+          : {
+              status: "No records",
+              time,
+              records,
+              error: `No A or AAAA records were returned for ${normalized}.`,
+            },
+      );
+    } catch (error) {
+      if (id !== requestId.current) return;
+      setResult({
+        status: "Network error",
+        time: Math.round(performance.now() - start),
+        records: [],
+        error:
+          error instanceof DOMException && error.name === "AbortError"
+            ? "The DNS check timed out after 5 seconds."
+            : "The DNS check could not reach the resolver.",
+      });
+    } finally {
+      window.clearTimeout(timeout);
+      if (id === requestId.current) {
+        controllerRef.current = null;
+        setLoading(false);
+      }
+    }
+  };
+  const copy = async () => {
+    if (!result) return;
+    const text =
+      result.records
+        .map(
+          (record) => `${record.type}: ${record.address} (TTL ${record.ttl}s)`,
+        )
+        .join("\n") || `${result.status}: ${result.error ?? ""}`;
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1500);
+    } catch {
+      setCopied(false);
+    }
+  };
   return (
     <div>
-      <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Host</span></div>
-      <div style={{ display: 'flex', gap: 8 }}>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">DNS Check</span>
+        <ToolExampleClearActions
+          exampleCount={1}
+          onExample={loadExample}
+          onClear={clear}
+          canClear={Boolean(host || result)}
+        />
+      </div>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", padding: 20 }}>
         <input
           type="text"
           value={host}
-          onChange={e => setHost(e.target.value)}
-          placeholder="example.com or 8.8.8.8"
-          className="tb-v2-tool-textarea"
-          style={{ flex: 1, minHeight: 44, resize: 'none' }}
-          onKeyDown={e => e.key === 'Enter' && ping()}
+          onChange={(event) => setHost(event.target.value)}
+          placeholder="example.com"
+          className="tb-v2-input"
+          style={{ flex: "1 1 220px" }}
+          onKeyDown={(event) => event.key === "Enter" && check()}
+          aria-label="Hostname"
         />
-        <button onClick={ping} disabled={loading} className="tb-v2-btn-primary" style={{ minWidth: 80 }}>
-          {loading ? '...' : 'Ping'}
+        <button
+          type="button"
+          onClick={check}
+          disabled={loading}
+          className="tb-v2-btn tb-v2-btn-primary"
+        >
+          {loading ? "Checking" : "Check DNS"}
         </button>
       </div>
-      <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">Result</span></div>
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">Result</span>
+        {result && (
+          <button
+            type="button"
+            onClick={copy}
+            className={`tb-v2-copy-btn ${copied ? "done" : ""}`}
+          >
+            {copied ? "Copied" : "Copy"}
+          </button>
+        )}
+      </div>
       <div className="tb-v2-tool-output-body">
         {result ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div style={{
-              width: 44, height: 44, borderRadius: '50%',
-              background: result.status === 'Online' ? '#10b98120' : '#ef444420',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22
-            }}>{result.status === 'Online' ? '✅' : '❌'}</div>
-            <div>
-              <div style={{ fontWeight: 600, color: result.status === 'Online' ? '#10b981' : '#ef4444' }}>{result.status}</div>
-              {result.time > 0 && <div style={{ fontSize: 13, color: 'var(--tb-text-secondary)' }}>Response time: {result.time}ms</div>}
-              {result.error && <div style={{ fontSize: 12, color: 'var(--tb-text-secondary)' }}>{result.error}</div>}
+          <div>
+            <strong>{result.status}</strong>
+            <div style={{ color: "var(--tb-text-secondary)", marginTop: 6 }}>
+              {result.error ?? `DNS records returned in ${result.time}ms.`}
             </div>
+            {result.records.map((record) => (
+              <div
+                key={`${record.type}-${record.address}`}
+                style={{ fontFamily: "var(--f-mono)", marginTop: 8 }}
+              >
+                {record.type}: {record.address}{" "}
+                <span style={{ color: "var(--tb-text-secondary)" }}>
+                  TTL {record.ttl}s
+                </span>
+              </div>
+            ))}
           </div>
         ) : (
-          <div style={{ color: 'var(--tb-text-secondary)', fontSize: 14 }}>Enter a host and click Ping</div>
+          <p className="tb-v2-empty">
+            Checks A and AAAA records through Google DNS-over-HTTPS. It does not
+            send an ICMP ping.
+          </p>
         )}
       </div>
     </div>

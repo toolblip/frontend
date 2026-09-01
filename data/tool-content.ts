@@ -1955,7 +1955,7 @@ WCAG AA: Pass (large text)`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "ip-range-calculator": {
-    description: `A DHCP scope or a firewall rule is sometimes defined as two endpoints, a starting address and an ending address, rather than a single CIDR block, and converting that kind of start-to-end range into a usable count and network boundary is a different calculation than the CIDR notation math most subnet tools are actually built around. This tool calculates the usable IP count, broadcast address, and network range directly from two IP addresses marking a range's start and end, rather than requiring the input to already be expressed as CIDR notation. Useful for figuring out how many addresses actually fall within a DHCP scope defined by a start and end IP, converting a firewall rule's IP range into its broadcast address and boundaries, or working with network documentation that specifies ranges as two endpoints rather than a single CIDR block.`,
+    description: `A DHCP scope or firewall rule is often defined by a starting and ending IPv4 address rather than CIDR notation. This tool counts every address in that range inclusively and calculates the smallest single CIDR block that encloses both endpoints, including its network address, broadcast address, and netmask. Use it to size address pools, interpret endpoint-based network rules, or translate an arbitrary IPv4 range into its smallest enclosing network.`,
     examples: [
 
     ],
@@ -2939,7 +2939,7 @@ Result: 847291`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "ping-test": {
-    description: `Confirming a server is actually reachable and reasonably responsive is the first thing worth checking before troubleshooting a slow site any further, and doing that without opening a terminal or having command-line access at all is exactly what a browser-based check makes possible. This tool pings any host and shows its response time, TTL, and status directly from the browser, giving a quick reachability check without requiring a terminal. Useful for confirming a specific server is actually reachable before digging into a slow site's deeper cause, comparing response times to a couple of different servers or regions to see which one responds faster, or running a quick network health check from a browser when command-line access isn't available at all.`,
+    description: `Browsers cannot send an ICMP ping directly, so this tool performs a bounded DNS-over-HTTPS check instead. Enter a hostname to query its A and AAAA records through Google DNS, see the resolver response time, and inspect each returned address and TTL. Use it to confirm that a hostname currently resolves without opening a terminal; it does not test server reachability or network latency.`,
     examples: [
 
     ],

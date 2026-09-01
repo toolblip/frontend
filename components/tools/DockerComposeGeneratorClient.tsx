@@ -1,228 +1,176 @@
-'use client';
+"use client";
 
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from "react";
+import ToolExampleClearActions from "@/components/tools/ToolExampleClearActions";
+import {
+  ComposeOptions,
+  ComposeTemplate,
+  generateDockerComposeYaml,
+  isComposeClearable,
+  validateComposeOptions,
+} from "@/lib/network-tools";
 
-type Template = 'node-postgres' | 'node-mysql' | 'node-redis' | 'wordpress-mysql' | 'nginx-static';
-
-const TEMPLATE_LABELS: Record<Template, string> = {
-  'node-postgres': 'Node.js + PostgreSQL',
-  'node-mysql': 'Node.js + MySQL',
-  'node-redis': 'Node.js + Redis',
-  'wordpress-mysql': 'WordPress + MySQL',
-  'nginx-static': 'Nginx (Static Site)',
+const TEMPLATES: Record<ComposeTemplate, string> = {
+  "full-stack": "App + PostgreSQL + Redis",
+  "node-postgres": "Node.js + PostgreSQL",
+  "node-mysql": "Node.js + MySQL",
+  "node-redis": "Node.js + Redis",
+  "wordpress-mysql": "WordPress + MySQL",
+  "nginx-static": "Nginx (Static Site)",
 };
-
-const NEEDS_DB: Record<Template, boolean> = {
-  'node-postgres': true,
-  'node-mysql': true,
-  'node-redis': false,
-  'wordpress-mysql': true,
-  'nginx-static': false,
+const EMPTY_STATE: ComposeOptions & { template: ComposeTemplate } = {
+  template: "full-stack",
+  serviceName: "",
+  hostPort: "",
+  appPort: "",
+  dbName: "",
+  dbUser: "",
+  dbPassword: "",
 };
-
-const NEEDS_APP_PORT: Record<Template, boolean> = {
-  'node-postgres': true,
-  'node-mysql': true,
-  'node-redis': true,
-  'wordpress-mysql': false,
-  'nginx-static': false,
+const EXAMPLE_STATE: ComposeOptions & { template: ComposeTemplate } = {
+  template: "full-stack",
+  serviceName: "app",
+  hostPort: "3000",
+  appPort: "3000",
+  dbName: "appdb",
+  dbUser: "appuser",
+  dbPassword: "changeme",
 };
-
-function generateYaml(template: Template, opts: { serviceName: string; hostPort: string; appPort: string; dbName: string; dbUser: string; dbPassword: string }): string {
-  const { serviceName, hostPort, appPort, dbName, dbUser, dbPassword } = opts;
-
-  switch (template) {
-    case 'node-postgres':
-      return `version: '3.8'
-services:
-  ${serviceName}:
-    build: .
-    ports:
-      - "${hostPort}:${appPort}"
-    environment:
-      - DATABASE_URL=postgres://${dbUser}:${dbPassword}@db:5432/${dbName}
-    depends_on:
-      - db
-  db:
-    image: postgres:16
-    environment:
-      - POSTGRES_USER=${dbUser}
-      - POSTGRES_PASSWORD=${dbPassword}
-      - POSTGRES_DB=${dbName}
-    volumes:
-      - db_data:/var/lib/postgresql/data
-volumes:
-  db_data:
-`;
-    case 'node-mysql':
-      return `version: '3.8'
-services:
-  ${serviceName}:
-    build: .
-    ports:
-      - "${hostPort}:${appPort}"
-    environment:
-      - DATABASE_URL=mysql://${dbUser}:${dbPassword}@db:3306/${dbName}
-    depends_on:
-      - db
-  db:
-    image: mysql:8
-    environment:
-      - MYSQL_DATABASE=${dbName}
-      - MYSQL_USER=${dbUser}
-      - MYSQL_PASSWORD=${dbPassword}
-      - MYSQL_ROOT_PASSWORD=${dbPassword}
-    volumes:
-      - db_data:/var/lib/mysql
-volumes:
-  db_data:
-`;
-    case 'node-redis':
-      return `version: '3.8'
-services:
-  ${serviceName}:
-    build: .
-    ports:
-      - "${hostPort}:${appPort}"
-    environment:
-      - REDIS_URL=redis://cache:6379
-    depends_on:
-      - cache
-  cache:
-    image: redis:7-alpine
-    volumes:
-      - redis_data:/data
-volumes:
-  redis_data:
-`;
-    case 'wordpress-mysql':
-      return `version: '3.8'
-services:
-  wordpress:
-    image: wordpress:latest
-    ports:
-      - "${hostPort}:80"
-    environment:
-      - WORDPRESS_DB_HOST=db
-      - WORDPRESS_DB_USER=${dbUser}
-      - WORDPRESS_DB_PASSWORD=${dbPassword}
-      - WORDPRESS_DB_NAME=${dbName}
-    volumes:
-      - wp_content:/var/www/html
-    depends_on:
-      - db
-  db:
-    image: mysql:8
-    environment:
-      - MYSQL_DATABASE=${dbName}
-      - MYSQL_USER=${dbUser}
-      - MYSQL_PASSWORD=${dbPassword}
-      - MYSQL_ROOT_PASSWORD=${dbPassword}
-    volumes:
-      - db_data:/var/lib/mysql
-volumes:
-  wp_content:
-  db_data:
-`;
-    case 'nginx-static':
-      return `version: '3.8'
-services:
-  web:
-    image: nginx:alpine
-    ports:
-      - "${hostPort}:80"
-    volumes:
-      - ./html:/usr/share/nginx/html:ro
-`;
-  }
-}
 
 export default function DockerComposeGeneratorClient() {
-  const [template, setTemplate] = useState<Template>('node-postgres');
-  const [serviceName, setServiceName] = useState('app');
-  const [hostPort, setHostPort] = useState('3000');
-  const [appPort, setAppPort] = useState('3000');
-  const [dbName, setDbName] = useState('appdb');
-  const [dbUser, setDbUser] = useState('appuser');
-  const [dbPassword, setDbPassword] = useState('changeme');
+  const [state, setState] = useState(EMPTY_STATE);
   const [copied, setCopied] = useState(false);
-
-  const loadExample = () => {
-    setTemplate('node-postgres');
-    setServiceName('app');
-    setHostPort('3000');
-    setAppPort('3000');
-    setDbName('appdb');
-    setDbUser('appuser');
-    setDbPassword('changeme');
-  };
-
-  const yaml = useMemo(
-    () => generateYaml(template, { serviceName, hostPort, appPort, dbName, dbUser, dbPassword }),
-    [template, serviceName, hostPort, appPort, dbName, dbUser, dbPassword]
+  const update = (key: keyof typeof state, value: string) =>
+    setState((current) => ({ ...current, [key]: value }));
+  const errors = useMemo(
+    () => validateComposeOptions(state.template, state),
+    [state],
   );
-
-  const copy = () => {
-    navigator.clipboard.writeText(yaml).catch(() => {});
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+  const yaml = useMemo(
+    () =>
+      errors.length === 0
+        ? generateDockerComposeYaml(state.template, state)
+        : "# Enter valid values to generate Compose YAML.",
+    [errors.length, state],
+  );
+  const loadExample = () => {
+    setState(EXAMPLE_STATE);
+    setCopied(false);
   };
-
+  const clear = () => {
+    setState(EMPTY_STATE);
+    setCopied(false);
+  };
+  const copy = async () => {
+    if (errors.length > 0) return;
+    try {
+      await navigator.clipboard.writeText(yaml);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1500);
+    } catch {
+      setCopied(false);
+    }
+  };
+  const databaseTemplate = [
+    "full-stack",
+    "node-postgres",
+    "node-mysql",
+    "wordpress-mysql",
+  ].includes(state.template);
+  const appPortTemplate = [
+    "full-stack",
+    "node-postgres",
+    "node-mysql",
+    "node-redis",
+  ].includes(state.template);
   return (
-    <div className="tb-v2-tool-card">
+    <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Template</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+        <ToolExampleClearActions
+          exampleCount={1}
+          onExample={loadExample}
+          onClear={clear}
+          canClear={isComposeClearable(state, copied)}
+        />
       </div>
-      <div style={{ padding: 20 }} className="flex flex-col gap-4">
-        <select value={template} onChange={e => setTemplate(e.target.value as Template)} className="tb-v2-input">
-          {(Object.keys(TEMPLATE_LABELS) as Template[]).map(t => (
-            <option key={t} value={t}>{TEMPLATE_LABELS[t]}</option>
+      <div
+        style={{
+          padding: 20,
+          display: "flex",
+          flexDirection: "column",
+          gap: 14,
+        }}
+      >
+        <select
+          value={state.template}
+          onChange={(event) => update("template", event.target.value)}
+          className="tb-v2-input"
+          aria-label="Compose template"
+        >
+          {Object.entries(TEMPLATES).map(([key, label]) => (
+            <option key={key} value={key}>
+              {label}
+            </option>
           ))}
         </select>
-
-        {template !== 'wordpress-mysql' && template !== 'nginx-static' && (
-          <div className="flex flex-col gap-1">
-            <label className="tb-v2-tool-label">Service Name</label>
-            <input type="text" value={serviceName} onChange={e => setServiceName(e.target.value)} className="tb-v2-input" placeholder="app" />
-          </div>
+        {!["wordpress-mysql", "nginx-static"].includes(state.template) && (
+          <input
+            value={state.serviceName}
+            onChange={(event) => update("serviceName", event.target.value)}
+            className="tb-v2-input"
+            placeholder="Service name (app)"
+            aria-label="Service name"
+          />
         )}
-
-        <div style={{ display: 'flex', gap: 12 }}>
-          <div className="flex flex-col gap-1" style={{ flex: 1 }}>
-            <label className="tb-v2-tool-label">Host Port</label>
-            <input type="text" value={hostPort} onChange={e => setHostPort(e.target.value)} className="tb-v2-input" placeholder="3000" />
-          </div>
-          {NEEDS_APP_PORT[template] && (
-            <div className="flex flex-col gap-1" style={{ flex: 1 }}>
-              <label className="tb-v2-tool-label">Container Port</label>
-              <input type="text" value={appPort} onChange={e => setAppPort(e.target.value)} className="tb-v2-input" placeholder="3000" />
-            </div>
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+          <input
+            value={state.hostPort}
+            onChange={(event) => update("hostPort", event.target.value)}
+            className="tb-v2-input"
+            placeholder="Host port"
+            aria-label="Host port"
+            style={{ flex: 1 }}
+          />
+          {appPortTemplate && (
+            <input
+              value={state.appPort}
+              onChange={(event) => update("appPort", event.target.value)}
+              className="tb-v2-input"
+              placeholder="Container port"
+              aria-label="Container port"
+              style={{ flex: 1 }}
+            />
           )}
         </div>
-
-        {NEEDS_DB[template] && (
-          <div style={{ display: 'flex', gap: 12 }}>
-            <div className="flex flex-col gap-1" style={{ flex: 1 }}>
-              <label className="tb-v2-tool-label">DB Name</label>
-              <input type="text" value={dbName} onChange={e => setDbName(e.target.value)} className="tb-v2-input" />
-            </div>
-            <div className="flex flex-col gap-1" style={{ flex: 1 }}>
-              <label className="tb-v2-tool-label">DB User</label>
-              <input type="text" value={dbUser} onChange={e => setDbUser(e.target.value)} className="tb-v2-input" />
-            </div>
-            <div className="flex flex-col gap-1" style={{ flex: 1 }}>
-              <label className="tb-v2-tool-label">DB Password</label>
-              <input type="text" value={dbPassword} onChange={e => setDbPassword(e.target.value)} className="tb-v2-input" />
-            </div>
+        {databaseTemplate && (
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+            {(["dbName", "dbUser", "dbPassword"] as const).map((key) => (
+              <input
+                key={key}
+                value={state[key] ?? ""}
+                onChange={(event) => update(key, event.target.value)}
+                className="tb-v2-input"
+                placeholder={key}
+                aria-label={key}
+                style={{ flex: "1 1 180px" }}
+              />
+            ))}
           </div>
         )}
+        {errors.length > 0 && (
+          <div style={{ color: "#ef4444", fontSize: 13 }}>{errors[0]}</div>
+        )}
       </div>
-
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">docker-compose.yml</span>
-        <button type="button" onClick={copy} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
-          {copied ? 'Copied' : 'Copy'}
+        <button
+          type="button"
+          onClick={copy}
+          disabled={errors.length > 0}
+          className={`tb-v2-copy-btn ${copied ? "done" : ""}`}
+        >
+          {copied ? "Copied" : "Copy"}
         </button>
       </div>
       <div className="tb-v2-tool-output-body">
