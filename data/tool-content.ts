@@ -33,9 +33,20 @@ const TOOL_CONTENT: Record<string, ToolContent> = {
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "add-pages": {
-    description: `Reordering pages that already exist in a document and inserting brand new content into it are two genuinely different operations, dragging page 6 ahead of page 4 doesn't add anything new to the file, while dropping in a blank page for handwritten notes or copying in a page from an entirely different PDF does, and a tool built for one doesn't necessarily handle the other well. This tool adds blank pages or pages copied from another PDF at a specific position within an existing document, inserting new content rather than just reordering what's already there. Useful for inserting a blank page for notes between two existing pages in a report, copying a signature page from one PDF into a specific spot in another, or adding several new pages to a document without rebuilding the whole file from scratch.`,
+    description: `Reordering pages that already exist in a document and inserting brand new content into it are two genuinely different operations, dragging page 6 ahead of page 4 doesn't add anything new to the file, while dropping in a blank page for handwritten notes or copying in a page from an entirely different PDF does, and a tool built for one doesn't necessarily handle the other well. This tool adds blank pages or pages copied from another PDF at a specific position within an existing document, leaving the existing pages in their original order. Useful for inserting a blank page for notes between two existing pages in a report, copying a signature page from one PDF into a specific spot in another, or adding several new pages to a document without rebuilding the whole file from scratch.`,
     examples: [
-
+      {
+        title: 'Insert a blank notes page',
+        code: `Input: report.pdf, insert blank page after page 4
+Output: report.pdf (now 11 pages, blank page at position 5)`,
+        note: 'Adds new content at a specific position while leaving existing pages in order.',
+      },
+      {
+        title: 'Copy a page from another PDF',
+        code: `Input: contract.pdf, insert page 3 of signatures.pdf at the end
+Output: contract.pdf with the signature page appended`,
+        note: 'Brings in content from a separate file rather than rebuilding the document.',
+      },
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
@@ -95,9 +106,20 @@ const TOOL_CONTENT: Record<string, ToolContent> = {
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "annotate": {
-    description: `Leaving feedback on a shared draft and actually changing the document's content are two different operations that shouldn't be confused, a reviewer highlighting a paragraph and dropping a comment on it needs the original text to stay exactly as it was, attributable, removable, and separate from the document itself rather than merged into it permanently. This tool adds comments, highlights, and annotations to a PDF without altering its underlying content, keeping review markup separate from the document it's attached to. Useful for leaving feedback on a shared draft that multiple reviewers need to see without touching the original wording, highlighting a specific clause in a contract for discussion before anyone edits it, or marking up a document for review while keeping the actual content completely unchanged.`,
+    description: `Leaving feedback on a shared draft and actually changing the document's content are two different operations that shouldn't be confused, a reviewer highlighting a paragraph and adding a comment needs the original text to stay visible underneath the markup. This tool draws text comments, highlights, and rectangles over a PDF page without replacing its underlying content. Useful for leaving feedback on a shared draft, highlighting a specific clause in a contract for discussion before anyone edits it, or marking up a document for review while keeping the actual text intact.`,
     examples: [
-
+      {
+        title: 'Leave feedback without editing the original',
+        code: `Input: draft.pdf, comment: "Clarify this paragraph" on page 3
+Output: draft-annotated.pdf (original text unchanged)`,
+        note: 'Keeps the original wording visible beneath the review markup.',
+      },
+      {
+        title: 'Highlight a clause for discussion',
+        code: `Input: contract.pdf, highlight: paragraph 4.2
+Output: contract-annotated.pdf`,
+        note: 'Marks a specific section without altering the underlying text.',
+      },
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
@@ -1080,9 +1102,20 @@ WCAG AA: Pass (large text)`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "edit": {
-    description: `Correcting a typo, updating an outdated figure, or swapping out a logo in a PDF that's already finalized doesn't have to mean tracking down the original source file that generated it, which might be in different software entirely, or might not even exist anymore, when the actual content can just be changed directly inside the PDF itself. This tool edits text and images directly within a PDF file, altering the actual content rather than layering a comment or a highlight over it the way an annotation tool would. Useful for correcting a typo or an outdated figure in a PDF without going back to the original source document, swapping out a logo or an image directly inside a finished PDF, or fixing an error in a finalized document when the file that originally created it is no longer available.`,
+    description: `Adding a note, label, or replacement graphic to a PDF often means opening a full editor just to place one small overlay, while the original document content should remain available underneath for review. This tool adds text and image overlays to PDF pages in your browser without replacing the existing PDF text or images. Useful for adding a visible label to a finished report, placing a logo or signature image on a form, or adding a note to a PDF while keeping its original content intact.`,
     examples: [
-
+      {
+        title: 'Add a review note to a finalized PDF',
+        code: `Input: contract.pdf, text overlay: "Check clause 4" on page 3
+Output: contract-edited.pdf`,
+        note: 'Adds a visible note while leaving the original wording underneath.',
+      },
+      {
+        title: 'Place a new logo on a finished PDF',
+        code: `Input: brochure.pdf, image overlay: new-logo.png on page 1
+Output: brochure-updated.pdf`,
+        note: 'Places a replacement graphic without needing the original source file.',
+      },
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
@@ -1185,9 +1218,20 @@ WCAG AA: Pass (large text)`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "extract-img": {
-    description: `A PDF report with embedded photos or charts holds each image as a separate object inside the file's structure, and getting one of those images back out usually means an awkward screenshot-and-crop rather than actually recovering the original embedded file at its full quality. This tool pulls every image embedded in a PDF out directly, downloadable individually or bundled together as a ZIP, rather than requiring a screenshot workaround that loses quality and adds unnecessary cropping. Useful for recovering a photo or chart embedded in a PDF report without the quality loss a screenshot would introduce, pulling every image out of a PDF at once instead of extracting each one individually, or getting a specific graphic back out of a document where the original image file is otherwise nowhere to be found.`,
+    description: `A PDF report with embedded photos or charts holds each image as a separate object inside the file's structure, and getting one of those images back out usually means an awkward screenshot-and-crop rather than actually recovering the original embedded file at its full quality. This tool pulls common embedded JPEG and raster images out directly, downloadable individually or bundled together as a ZIP, while reporting uncommon encodings it can't decode. Useful for recovering a photo or chart embedded in a PDF report without the quality loss a screenshot would introduce, pulling supported images out of a PDF at once instead of extracting each one individually, or getting a specific graphic back out of a document where the original image file is otherwise nowhere to be found.`,
     examples: [
-
+      {
+        title: 'Pull supported images out of a PDF report',
+        code: `Input: annual-report.pdf (photos and charts)
+Output: image files, bundled as report-images.zip`,
+        note: 'Recovers supported embedded images instead of using a cropped screenshot.',
+      },
+      {
+        title: 'Extract one specific graphic',
+        code: `Input: presentation.pdf, page 4
+Output: chart-page4.png`,
+        note: 'Gets a supported embedded graphic back from the document.',
+      },
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
@@ -2519,7 +2563,18 @@ Cause: Trailing comma`
   "merge": {
     description: `Combining several PDFs into one document by hand usually means opening each file separately and manually copying pages across, an error-prone process for anything beyond two or three short files, especially once the pages need to end up in a specific order pulled from multiple different sources rather than just appended one after another. This tool merges multiple PDF files into a single document, combining pages from different sources in whatever order they're actually needed rather than a fixed append-only sequence. Useful for combining several scanned documents into one PDF for a single submission, merging a cover letter, a resume, and a portfolio into one file for a job application, or assembling pages pulled from multiple source PDFs into one document in a specific intended order.`,
     examples: [
-
+      {
+        title: 'Combine scanned documents for one submission',
+        code: `Input: page1.pdf, page2.pdf, page3.pdf
+Output: submission-combined.pdf`,
+        note: 'Merges several files into one without manual page copying.',
+      },
+      {
+        title: 'Assemble an application packet in a specific order',
+        code: `Input: cover-letter.pdf, resume.pdf, portfolio.pdf
+Output: application-packet.pdf (in that order)`,
+        note: 'Preserves the order shown in the merge list.',
+      },
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
@@ -4889,4 +4944,3 @@ Cairo`, note: `Same list, flipped. Use this for a reverse leaderboard or log.` }
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
 };
-

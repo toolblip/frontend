@@ -78,17 +78,17 @@ const FIX_BATCH_44: Record<string, FixBatchEntry> = {
   },
 
   'extract-img': {
-    description: `A PDF report with embedded photos or charts holds each image as a separate object inside the file's structure, and getting one of those images back out usually means an awkward screenshot-and-crop rather than actually recovering the original embedded file at its full quality. This tool pulls every image embedded in a PDF out directly, downloadable individually or bundled together as a ZIP, rather than requiring a screenshot workaround that loses quality and adds unnecessary cropping. Useful for recovering a photo or chart embedded in a PDF report without the quality loss a screenshot would introduce, pulling every image out of a PDF at once instead of extracting each one individually, or getting a specific graphic back out of a document where the original image file is otherwise nowhere to be found.`,
+    description: `A PDF report with embedded photos or charts holds each image as a separate object inside the file's structure, and getting one of those images back out usually means an awkward screenshot-and-crop rather than actually recovering the original embedded file at its full quality. This tool pulls common embedded JPEG and raster images out directly, downloadable individually or bundled together as a ZIP, while reporting uncommon encodings it can't decode. Useful for recovering a photo or chart embedded in a PDF report without the quality loss a screenshot would introduce, pulling supported images out of a PDF at once instead of extracting each one individually, or getting a specific graphic back out of a document where the original image file is otherwise nowhere to be found.`,
     examples: [
       {
-        title: 'Pull every image out of a PDF report',
-        code: `Input: annual-report.pdf (8 embedded photos and charts)\nOutput: 8 image files, bundled as report-images.zip`,
-        note: 'Recovers the original embedded files at full quality instead of a cropped screenshot.',
+        title: 'Pull supported images out of a PDF report',
+        code: `Input: annual-report.pdf (photos and charts)\nOutput: image files, bundled as report-images.zip`,
+        note: 'Recovers supported embedded images instead of using a cropped screenshot.',
       },
       {
         title: 'Extract one specific graphic',
         code: `Input: presentation.pdf, page 4\nOutput: chart-page4.png`,
-        note: 'Gets the original image file back rather than a screenshot workaround.',
+        note: 'Gets a supported embedded graphic back from the document.',
       },
     ],
   },

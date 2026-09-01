@@ -62,7 +62,7 @@ const FIX_BATCH_93: Record<string, FixBatchEntry> = {
   },
 
   annotate: {
-    description: `Leaving feedback on a shared draft and actually changing the document's content are two different operations that shouldn't be confused, a reviewer highlighting a paragraph and dropping a comment on it needs the original text to stay exactly as it was, attributable, removable, and separate from the document itself rather than merged into it permanently. This tool adds comments, highlights, and annotations to a PDF without altering its underlying content, keeping review markup separate from the document it's attached to. Useful for leaving feedback on a shared draft that multiple reviewers need to see without touching the original wording, highlighting a specific clause in a contract for discussion before anyone edits it, or marking up a document for review while keeping the actual content completely unchanged.`,
+    description: `Leaving feedback on a shared draft and actually changing the document's content are two different operations that shouldn't be confused, a reviewer highlighting a paragraph and adding a comment needs the original text to stay visible underneath the markup. This tool draws text comments, highlights, and rectangles over a PDF page without replacing its underlying content. Useful for leaving feedback on a shared draft, highlighting a specific clause in a contract for discussion before anyone edits it, or marking up a document for review while keeping the actual text intact.`,
     examples: [
       {
         title: 'Leave feedback without editing the original',
