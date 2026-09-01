@@ -94,17 +94,17 @@ const FIX_BATCH_89: Record<string, FixBatchEntry> = {
   },
 
   unlock: {
-    description: `A PDF encrypted with a password you set yourself years ago and have since forgotten has no "forgot password" recovery flow the way a website login does, and a document inherited from an old project where the original creator is long gone is just as stuck, while some PDFs aren't actually encrypted at all, they only carry an owner password restricting printing or copying, a weaker protection that never required knowing anything to remove in the first place. This tool removes password protection from a PDF, unlocking a file you have the right to access rather than bypassing security on someone else's protected document. Useful for recovering access to your own PDF after forgetting a password you set yourself, removing print or copy restrictions from a document that was never actually encrypted, or unlocking an old file inherited from a project where the original password is no longer available.`,
+    description: `A PDF you have permission to use can still be inconvenient when it asks for a password every time it opens or carries restrictions that no longer serve a purpose. This tool unlocks an accessible PDF in your browser: files that open normally are re-saved, and files that require an opening password are rendered into a new password-free PDF when you provide the current password. The password-protected path produces a flattened document, so the visible pages are preserved but the original text and form structure aren't editable.`,
     examples: [
       {
-        title: 'Recover access to your own forgotten-password PDF',
-        code: `Input: old-report.pdf (password: "correct password supplied")\nOutput: old-report-unlocked.pdf`,
-        note: 'Removes encryption once the correct password is provided.',
+        title: 'Unlock a PDF with its current password',
+        code: `Input: old-report.pdf, password: "correct password supplied"\nOutput: old-report-unlocked.pdf`,
+        note: 'Creates a password-free, flattened copy after the current password is accepted.',
       },
       {
-        title: 'Remove restrictions with no real encryption',
-        code: `Input: handout.pdf (owner password restricts printing only)\nOutput: handout-unlocked.pdf (printing enabled)`,
-        note: 'Strips a restriction-only protection that never required a password to open the file.',
+        title: 'Re-save a PDF that opens normally',
+        code: `Input: handout.pdf (no opening password)\nOutput: handout-unlocked.pdf`,
+        note: 'Re-saves the accessible PDF locally without its existing permission metadata.',
       },
     ],
   },

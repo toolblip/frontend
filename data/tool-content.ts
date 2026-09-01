@@ -51,8 +51,18 @@ Output: contract.pdf with the signature page appended`,
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "delete-pages": {
-    description: `Removing specific pages from a PDF is a different operation from splitting or merging, those create new files from parts of the original, while deletion modifies the existing document by taking pages out entirely, and the result needs to preserve all the remaining pages exactly as they were without reordering or reshuffling anything. This tool lets you select individual pages to delete from a PDF, showing page previews so you can identify which ones to remove, then produces a new file with only the pages you kept. Useful for removing blank pages from a scanned document, taking out an accidentally included page from a report, or stripping out pages that contain sensitive information before sharing a PDF with others.`,
+    description: `Removing specific pages from a PDF is a different operation from splitting or merging, those create new files from parts of the original, while deletion modifies the existing document by taking pages out entirely, and the result needs to preserve all the remaining pages in their original order. This tool lets you select individual page tiles to delete from a PDF, then produces a new file with only the pages you kept. Useful for removing blank pages from a scanned document, taking out an accidentally included page from a report, or stripping out pages that contain sensitive information before sharing a PDF with others.`,
     examples: [
+      {
+        title: 'Remove blank pages from a scan',
+        code: `Input: scanned-report.pdf (pages 2 and 7 are blank)\nOutput: scanned-report-edited.pdf (blank pages removed)`,
+        note: 'Selects only the unwanted pages and keeps the rest in order.',
+      },
+      {
+        title: 'Remove a sensitive page before sharing',
+        code: `Input: application.pdf, delete page 4\nOutput: application-edited.pdf`,
+        note: 'Leaves the selected page out of the downloadable copy.',
+      },
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
@@ -2938,9 +2948,18 @@ Result: 847291`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "pdf-password-remover": {
-    description: `A password on a PDF usually exists because the contents are actually sensitive, which makes uploading that same protected file to a server just to strip the password a strange contradiction, sending something you specifically locked down to a third party purely to unlock it. This tool removes password protection entirely inside the browser, so a genuinely sensitive document never actually leaves your device during the process that's supposed to make it more accessible, not less secure. Useful for removing a password from a document you'd rather not upload anywhere even for a moment, unlocking a sensitive file without contradicting the exact reason it was password-protected in the first place, or processing a batch of protected documents without any of them touching a server.`,
+    description: `A PDF you have permission to use can still be inconvenient when it asks for a password every time it opens or carries restrictions that no longer serve a purpose. This tool unlocks an accessible PDF in your browser: files that open normally are re-saved, and files that require an opening password are rendered into a new password-free PDF when you provide the current password. The password-protected path produces a flattened document, so the visible pages are preserved but the original text and form structure aren't editable.`,
     examples: [
-
+      {
+        title: 'Unlock a PDF with its current password',
+        code: `Input: old-report.pdf, password: "correct password supplied"\nOutput: old-report-unlocked.pdf`,
+        note: 'Creates a password-free, flattened copy after the current password is accepted.',
+      },
+      {
+        title: 'Re-save a PDF that opens normally',
+        code: `Input: handout.pdf (no opening password)\nOutput: handout-unlocked.pdf`,
+        note: 'Re-saves the accessible PDF locally without its existing permission metadata.',
+      },
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
@@ -3359,7 +3378,16 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
   "rearrange": {
     description: `Fixing a scanned document where the pages landed out of order, or one where a page ended up upside down, means either rescanning from scratch or opening a full PDF editor just to move and rotate a handful of pages, both heavier than the actual fix requires when the content itself is already fine. This tool reorders, rotates, and reorganizes PDF pages through a drag-and-drop interface, built for restructuring an existing document's page order rather than editing the content on any individual page. Useful for fixing a scanned document's pages that came out in the wrong order, rotating a page that landed sideways or upside down without touching the rest of the file, or reorganizing a multi-source PDF's pages into the sequence they were actually meant to be read in.`,
     examples: [
-
+      {
+        title: 'Fix a scanned document with pages out of order',
+        code: `Input: scan.pdf (pages: 3, 1, 2, 4)\nOutput: scan-reordered.pdf (pages: 1, 2, 3, 4)`,
+        note: 'Restructures page order without editing page content.',
+      },
+      {
+        title: 'Rotate one sideways page',
+        code: `Input: report.pdf, page 5: rotate 90 degrees\nOutput: report-reordered.pdf (page 5 corrected)`,
+        note: 'Fixes one page without changing the rest of the order.',
+      },
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
@@ -3812,9 +3840,18 @@ Output: xn--85bp0auq.xn--54b7fta0cc`
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "sign": {
-    description: `A contract that needs an actual signature doesn't have to mean printing it out, signing it by hand, and scanning it back in, when a signature can just as easily be drawn directly with a mouse or a finger, typed out in a script-style font, or uploaded once as an image and reused across multiple documents from then on. This tool adds a signature to a PDF through drawing, typing, or uploading it, giving three different ways to actually get a signature onto a document depending on what's fastest for the situation. Useful for signing a contract or an agreement digitally without printing and scanning it back in, uploading a signature image once and reusing it consistently across several documents, or quickly typing a signature in a cursive-style font for a lower-stakes document that doesn't need a hand-drawn mark.`,
+    description: `A contract that needs a visual signature doesn't have to mean printing it out, signing it by hand, and scanning it back in, when a signature can be drawn directly with a mouse or a finger, typed in a script-style font, or uploaded as an image. This tool places one visual signature on a selected page of a PDF, then lets you position and size it before downloading the result. It doesn't create a cryptographic digital signature or legal e-signature certificate.`,
     examples: [
-
+      {
+        title: 'Sign a contract by hand on a touchscreen',
+        code: `Input: contract.pdf, signature: drawn\nOutput: contract-signed.pdf`,
+        note: 'Adds a visual signature without printing and scanning the document.',
+      },
+      {
+        title: 'Place a saved signature image',
+        code: `Input: contract.pdf, signature-image.png\nOutput: contract-signed.pdf (signature on the selected page)`,
+        note: 'Places a consistent signature image on one PDF page.',
+      },
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
@@ -4482,9 +4519,18 @@ Cairo`, note: `Same list, flipped. Use this for a reverse leaderboard or log.` }
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "unlock": {
-    description: `A PDF encrypted with a password you set yourself years ago and have since forgotten has no "forgot password" recovery flow the way a website login does, and a document inherited from an old project where the original creator is long gone is just as stuck, while some PDFs aren't actually encrypted at all, they only carry an owner password restricting printing or copying, a weaker protection that never required knowing anything to remove in the first place. This tool removes password protection from a PDF, unlocking a file you have the right to access rather than bypassing security on someone else's protected document. Useful for recovering access to your own PDF after forgetting a password you set yourself, removing print or copy restrictions from a document that was never actually encrypted, or unlocking an old file inherited from a project where the original password is no longer available.`,
+    description: `A PDF you have permission to use can still be inconvenient when it asks for a password every time it opens or carries restrictions that no longer serve a purpose. This tool unlocks an accessible PDF in your browser: files that open normally are re-saved, and files that require an opening password are rendered into a new password-free PDF when you provide the current password. The password-protected path produces a flattened document, so the visible pages are preserved but the original text and form structure aren't editable.`,
     examples: [
-
+      {
+        title: 'Unlock a PDF with its current password',
+        code: `Input: old-report.pdf, password: "correct password supplied"\nOutput: old-report-unlocked.pdf`,
+        note: 'Creates a password-free, flattened copy after the current password is accepted.',
+      },
+      {
+        title: 'Re-save a PDF that opens normally',
+        code: `Input: handout.pdf (no opening password)\nOutput: handout-unlocked.pdf`,
+        note: 'Re-saves the accessible PDF locally without its existing permission metadata.',
+      },
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
@@ -4678,9 +4724,18 @@ Cairo`, note: `Same list, flipped. Use this for a reverse leaderboard or log.` }
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },
   "watermark": {
-    description: `A contract draft or a confidential report often needs to be marked clearly across every single page before it goes anywhere outside a small group, not just the first page, since a recipient screenshotting or forwarding just one page should still see it's a draft, not a final version, and applying that consistently across a hundred-page document by hand isn't realistic. This tool adds a text or image watermark across every page of a PDF at once, whether that's a diagonal "DRAFT" stamp, a company logo, or a "CONFIDENTIAL" marking, without disrupting the document's existing selectable text. Useful for stamping "CONFIDENTIAL" across an entire document before sharing it externally, marking every page of a draft contract so an out-of-context screenshot still reads as unfinished, or branding a document with a logo watermark before distributing it publicly.`,
+    description: `A contract draft or a confidential report often needs to be marked clearly across every single page before it goes anywhere outside a small group, not just the first page, since a recipient screenshotting or forwarding just one page should still see it's a draft, not a final version. This tool adds a visible text or image watermark across every page of a PDF, with opacity, rotation, and sizing controls, without encrypting the file or restricting access. Useful for stamping "CONFIDENTIAL" across an entire document before sharing it externally, marking every page of a draft contract so an out-of-context screenshot still reads as unfinished, or branding a document with a logo before distributing it publicly.`,
     examples: [
-
+      {
+        title: 'Stamp DRAFT across every page',
+        code: `Input: contract.pdf (42 pages), watermark: "DRAFT", diagonal, 30% opacity\nOutput: contract-draft.pdf (every page stamped)`,
+        note: 'Applies the same visible mark across every page, not just the first.',
+      },
+      {
+        title: 'Brand a document with a logo watermark',
+        code: `Input: proposal.pdf, watermark: company-logo.png\nOutput: proposal-watermarked.pdf`,
+        note: 'Keeps the document readable underneath the logo watermark.',
+      },
     ],
     features: ["Clean interface", "Fast processing", "No signup required", "Works offline"]
   },

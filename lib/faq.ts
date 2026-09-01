@@ -1015,9 +1015,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does it convert to octal too?', a: 'Yes, alongside hexadecimal and binary, an octal result is shown even though it is not mentioned in the tool\'s name.' },
   ],
   'delete-pages': [
-    { q: 'How do I choose which pages to remove?', a: 'Click any page thumbnail to mark it for deletion, or use Select All / Deselect All to toggle every page at once.' },
+    { q: 'How do I choose which pages to remove?', a: 'Click any page tile to mark it for deletion, or use Select All / Deselect All to toggle every page at once.' },
     { q: 'Can I delete every page in the document?', a: 'No, the tool blocks deleting all pages since that would leave an empty PDF, at least one page must remain.' },
-    { q: 'Does it re-render or compress the remaining pages?', a: 'No, remaining pages are copied directly into a new PDF document with pdf-lib, preserving their original content exactly.' },
+    { q: 'Does it re-render or compress the remaining pages?', a: 'The remaining pages are copied into a new PDF in their original order. Page content is kept, but document-level metadata and some interactive features may not carry over.' },
   ],
   'discount-calculator': [
     { q: 'Can it apply two discounts in sequence?', a: 'Yes. The optional Additional Discount is applied to the already-reduced price, so 30% followed by 10% produces a 37% combined discount rather than 40%.' },
@@ -1439,6 +1439,31 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I change the order of the PDFs before merging?', a: 'Yes, each file in the list has up and down arrows to reorder it, so pages appear in your merged document in whatever sequence you choose.' },
     { q: 'What happens if I select a non-PDF file?', a: 'It is silently skipped, only files with a PDF mime type are added to the merge list, so dragging in a mixed folder only picks up the PDFs.' },
     { q: 'How do I know the merge worked correctly?', a: 'The result message reports the exact combined page count, calculated by copying every source PDF\'s pages in order into the new document with pdf-lib.' },
+  ],
+  'rearrange': [
+    { q: 'How do I change the page order?', a: 'Drag a page row to a new position, or use its Up and Down buttons. The saved PDF follows the displayed order.' },
+    { q: 'Can I rotate one page without rotating the others?', a: 'Yes, Rotate adds 90 degrees to the selected page only. Repeat it to reach 180 or 270 degrees.' },
+    { q: 'Does it edit the content inside a page?', a: 'No, it rearranges and rotates whole pages. Pages are copied into a new PDF, so document-level metadata may not carry over.' },
+  ],
+  'sign': [
+    { q: 'What signature methods are supported?', a: 'Draw a signature with a mouse, trackpad, or finger, type a name in a script-style font, or upload a PNG or JPG signature image.' },
+    { q: 'Can I choose which page receives the signature?', a: 'Yes, select a page and set the signature position and size in PDF points before signing.' },
+    { q: 'Is this a legal or cryptographic digital signature?', a: 'No. The tool places a visual signature image on the PDF. It does not create a certificate-based digital signature or guarantee legal acceptance.' },
+  ],
+  'unlock': [
+    { q: 'Can it unlock a PDF that asks for a password?', a: 'Yes, provide the current opening password. The browser renders the visible pages into a new password-free PDF.' },
+    { q: 'What happens to a password-protected PDF\'s text and forms?', a: 'The password-protected path creates a flattened PDF. The pages remain visible, but the original selectable text and interactive form structure are not preserved.' },
+    { q: 'Are my PDF or password uploaded?', a: 'No. PDF parsing, password handling, and output generation happen locally in your browser.' },
+  ],
+  'pdf-password-remover': [
+    { q: 'Can it unlock a PDF that asks for a password?', a: 'Yes, provide the current opening password. The browser renders the visible pages into a new password-free PDF.' },
+    { q: 'What happens to a password-protected PDF\'s text and forms?', a: 'The password-protected path creates a flattened PDF. The pages remain visible, but the original selectable text and interactive form structure are not preserved.' },
+    { q: 'Are my PDF or password uploaded?', a: 'No. PDF parsing, password handling, and output generation happen locally in your browser.' },
+  ],
+  'watermark': [
+    { q: 'Can I use text or an image as the watermark?', a: 'Yes, choose Text for a typed mark such as CONFIDENTIAL, or Image for a PNG or JPG logo.' },
+    { q: 'Does the watermark appear on every page?', a: 'Yes, the selected watermark is applied to every page. Opacity, rotation, and image width can be adjusted before processing.' },
+    { q: 'Does a watermark protect a PDF from access?', a: 'No. It is a visible label or deterrent, not encryption, access control, or a replacement for document permissions.' },
   ],
   'meta-description-checker': [
     { q: 'What character range counts as ideal?', a: '120 to 160 characters shows a green optimal-range badge, under 120 or over 160 shows a warning message telling you how many characters to add or trim.' },

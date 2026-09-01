@@ -30,7 +30,7 @@ const FIX_BATCH_43: Record<string, FixBatchEntry> = {
   },
 
   'pdf-password-remover': {
-    description: `A password on a PDF usually exists because the contents are actually sensitive, which makes uploading that same protected file to a server just to strip the password a strange contradiction, sending something you specifically locked down to a third party purely to unlock it. This tool removes password protection entirely inside the browser, so a genuinely sensitive document never actually leaves your device during the process that's supposed to make it more accessible, not less secure. Useful for removing a password from a document you'd rather not upload anywhere even for a moment, unlocking a sensitive file without contradicting the exact reason it was password-protected in the first place, or processing a batch of protected documents without any of them touching a server.`,
+    description: `A PDF you have permission to use can still be inconvenient when it asks for a password every time it opens or carries restrictions that no longer serve a purpose. This tool unlocks an accessible PDF in your browser: files that open normally are re-saved, and files that require an opening password are rendered into a new password-free PDF when you provide the current password. The password-protected path produces a flattened document, so the visible pages are preserved but the original text and form structure aren't editable.`,
     examples: [
       {
         title: 'Remove a password without uploading the file',
@@ -38,9 +38,9 @@ const FIX_BATCH_43: Record<string, FixBatchEntry> = {
         note: 'Never sends the sensitive document to a server during the process.',
       },
       {
-        title: 'Process a batch of protected documents privately',
-        code: `Input: 5 password-protected contracts\nOutput: 5 unlocked PDFs, none uploaded anywhere`,
-        note: 'Keeps sensitive files local throughout the entire batch.',
+        title: 'Re-save a PDF that opens normally',
+        code: `Input: handout.pdf (no opening password)\nOutput: handout-unlocked.pdf`,
+        note: 'Re-saves the accessible PDF locally without its existing permission metadata.',
       },
     ],
   },
