@@ -606,9 +606,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Is this a legally binding contract template?', a: 'The generated document includes a disclaimer that it\'s provided for informational purposes only and isn\'t legal advice, since requirements for a valid bill of sale vary by state and item type.' },
   ],
   'bill-splitter': [
-    { q: 'How is the tip calculated?', a: 'Either as a percentage of the bill using one of the quick-select buttons (10, 15, 18, 20, or 25 percent) or as a custom flat tip amount you type in directly, whichever you set last.' },
-    { q: 'What if people want to split unevenly?', a: 'The tool divides the bill plus tip equally across the number of people you enter, it doesn\'t support assigning different amounts per person or itemized splitting.' },
-    { q: 'Can I copy the breakdown to share with the group?', a: 'Yes. Copy Summary puts the bill total, tip amount, grand total, and per-person share on your clipboard as plain text, ready to paste into a chat.' },
+    { q: 'How are tax and tip calculated?', a: 'Both are calculated from the pre-tax subtotal. In equal mode that subtotal is divided across the group first; in custom mode each person gets tax and tip based on their own amount.' },
+    { q: 'What if people want to split unevenly?', a: 'Choose Enter each share and enter the pre-tax amount for every person. The output keeps each person\'s share separate instead of dividing the whole bill evenly.' },
+    { q: 'What does round each share up do?', a: 'It rounds every calculated share up to the next whole dollar and shows the exact pre-rounding total so the group can see the difference.' },
   ],
   'bin-hex-dec-converter': [
     { q: 'Do I need to convert one pair of bases at a time?', a: 'No. Pick a single input base and enter a number, and the result shows all three: binary, decimal, and hexadecimal, at once, rather than making you choose a separate output base each time.' },
@@ -1020,8 +1020,9 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Does it re-render or compress the remaining pages?', a: 'No, remaining pages are copied directly into a new PDF document with pdf-lib, preserving their original content exactly.' },
   ],
   'discount-calculator': [
-    { q: 'Can it factor in sales tax as well as the discount?', a: 'Yes, an optional Sales Tax field applies tax to the price after the discount, so the Final Price reflects both adjustments.' },
-    { q: 'What exactly counts as "Total Savings"?', a: 'Just the discount amount taken off the original price, tax is shown separately since it is an addition rather than a saving.' },
+    { q: 'Can it apply two discounts in sequence?', a: 'Yes. The optional Additional Discount is applied to the already-reduced price, so 30% followed by 10% produces a 37% combined discount rather than 40%.' },
+    { q: 'Can it factor in sales tax as well as the discounts?', a: 'Yes, an optional Sales Tax field applies tax after all discounts, so the Final Price reflects both adjustments.' },
+    { q: 'What exactly counts as "Total Savings"?', a: 'The total amount removed from the original price by both discounts. Tax is shown separately since it is an addition rather than a saving.' },
     { q: 'Does it accept discounts entered as a decimal like 0.25 instead of 25?', a: 'No, the Discount Percentage field expects a whole percent value like 25, not a decimal fraction.' },
   ],
   'dns-lookup-v2': [
@@ -1536,7 +1537,7 @@ const OVERRIDES: Record<string, FAQ[]> = {
   ],
   'random-fraction-generator': [
     { q: 'How are the fractions simplified?', a: 'A Euclidean GCD calculation reduces each numerator and denominator down to lowest terms before displaying it, so 24/36 shows up as 2/3.' },
-    { q: 'What range do the numerator and denominator come from?', a: 'Both are random whole numbers between 1 and 99, generated independently before simplification.' },
+    { q: 'Can I choose a custom range?', a: 'Yes. Enter decimal endpoints or fraction endpoints such as 1/2 and 5/6, then choose Fractions, Decimals, or Mixed numbers for the generated values.' },
     { q: 'Does it show the decimal value too?', a: 'Yes, each fraction is listed alongside its decimal equivalent, rounded to 6 places with trailing zeros trimmed off.' },
   ],
   'random-ip-address': [
@@ -1978,4 +1979,3 @@ export function getFaqs(tool: Tool): FAQ[] {
 export function hasFaqOverride(slug: string): boolean {
   return slug in OVERRIDES;
 }
-
