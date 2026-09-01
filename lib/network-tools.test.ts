@@ -7,6 +7,7 @@ import {
   generateDockerComposeYaml,
   isComposeClearable,
   normalizeHostname,
+  validateDnsQuery,
   parseIPv4,
   quoteYaml,
   validateComposeOptions,
@@ -39,6 +40,16 @@ describe("network tool helpers", () => {
     expect(filterDnsAnswers("AAAA", answers)).toEqual([answers[2]]);
     expect(filterDnsAnswers("CNAME", answers)).toEqual([answers[1]]);
     expect(filterDnsAnswers("MX", answers)).toEqual([]);
+  });
+
+  it("validates DNS query parameters and returns normalized input", () => {
+    expect(validateDnsQuery("  Example.COM.  ", "AAAA")).toEqual({
+      name: "example.com",
+      type: "AAAA",
+    });
+    expect(validateDnsQuery(null, "A")).toBeNull();
+    expect(validateDnsQuery("example.com", "a")).toBeNull();
+    expect(validateDnsQuery("example.com/path", "TXT")).toBeNull();
   });
 
   it("strictly parses IPv4 and rejects malformed octets", () => {

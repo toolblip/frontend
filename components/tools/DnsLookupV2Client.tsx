@@ -26,7 +26,7 @@ export async function queryDnsType(
   const timeout = window.setTimeout(() => controller.abort(), 5000);
   try {
     const response = await fetch(
-      `https://dns.google/resolve?name=${encodeURIComponent(domain)}&type=${type}`,
+      `/api/dns/resolve?name=${encodeURIComponent(domain)}&type=${type}`,
       { signal: controller.signal },
     );
     if (!response.ok) throw new Error("resolver");

@@ -20,7 +20,7 @@ async function query(
   signal: AbortSignal,
 ): Promise<Record[]> {
   const response = await fetch(
-    `https://dns.google/resolve?name=${encodeURIComponent(host)}&type=${type}`,
+    `/api/dns/resolve?name=${encodeURIComponent(host)}&type=${type}`,
     { signal },
   );
   if (!response.ok) throw new Error("resolver");

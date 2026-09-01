@@ -76,6 +76,15 @@ export function normalizeHostname(value: string): string | null {
   return hostname.toLowerCase();
 }
 
+export function validateDnsQuery(
+  name: string | null,
+  type: string | null,
+): { name: string; type: DnsRecordType } | null {
+  if (!name || !type || !Object.hasOwn(DNS_TYPE_CODES, type)) return null;
+  const normalized = normalizeHostname(name);
+  return normalized ? { name: normalized, type: type as DnsRecordType } : null;
+}
+
 export function filterDnsAnswers(
   type: DnsRecordType,
   answers: DnsAnswer[] | undefined,
