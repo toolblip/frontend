@@ -268,17 +268,21 @@ export function validateComposeOptions(
 function databaseEnvironment(options: ComposeOptions, mysql: boolean): string {
   const lines = mysql
     ? [
-        `      - MYSQL_DATABASE=${quoteYaml(options.dbName ?? "")}`,
-        `      - MYSQL_USER=${quoteYaml(options.dbUser ?? "")}`,
-        `      - MYSQL_PASSWORD=${quoteYaml(options.dbPassword ?? "")}`,
-        `      - MYSQL_ROOT_PASSWORD=${quoteYaml(options.dbPassword ?? "")}`,
+        composeEnvironmentEntry("MYSQL_DATABASE", options.dbName ?? ""),
+        composeEnvironmentEntry("MYSQL_USER", options.dbUser ?? ""),
+        composeEnvironmentEntry("MYSQL_PASSWORD", options.dbPassword ?? ""),
+        composeEnvironmentEntry("MYSQL_ROOT_PASSWORD", options.dbPassword ?? ""),
       ]
     : [
-        `      - POSTGRES_USER=${quoteYaml(options.dbUser ?? "")}`,
-        `      - POSTGRES_PASSWORD=${quoteYaml(options.dbPassword ?? "")}`,
-        `      - POSTGRES_DB=${quoteYaml(options.dbName ?? "")}`,
+        composeEnvironmentEntry("POSTGRES_USER", options.dbUser ?? ""),
+        composeEnvironmentEntry("POSTGRES_PASSWORD", options.dbPassword ?? ""),
+        composeEnvironmentEntry("POSTGRES_DB", options.dbName ?? ""),
       ];
   return `    environment:\n${lines.join("\n")}\n`;
+}
+
+function composeEnvironmentEntry(key: string, value: string): string {
+  return `      - ${quoteYaml(`${key}=${value}`)}`;
 }
 
 export function generateDockerComposeYaml(
@@ -292,15 +296,15 @@ export function generateDockerComposeYaml(
 
   switch (template) {
     case "full-stack":
-      return `version: '3.8'\nservices:\n  ${appName}:\n    build: .\n    ports:\n${ports}    environment:\n      - DATABASE_URL=${quoteYaml(databaseUrl("postgres", 5432))}\n    depends_on:\n      - db\n      - cache\n  db:\n    image: postgres:16\n${databaseEnvironment(options, false)}    volumes:\n      - db_data:/var/lib/postgresql/data\n  cache:\n    image: redis:7-alpine\n    volumes:\n      - redis_data:/data\nvolumes:\n  db_data:\n  redis_data:\n`;
+      return `version: '3.8'\nservices:\n  ${appName}:\n    build: .\n    ports:\n${ports}    environment:\n${composeEnvironmentEntry("DATABASE_URL", databaseUrl("postgres", 5432))}\n    depends_on:\n      - db\n      - cache\n  db:\n    image: postgres:16\n${databaseEnvironment(options, false)}    volumes:\n      - db_data:/var/lib/postgresql/data\n  cache:\n    image: redis:7-alpine\n    volumes:\n      - redis_data:/data\nvolumes:\n  db_data:\n  redis_data:\n`;
     case "node-postgres":
-      return `version: '3.8'\nservices:\n  ${appName}:\n    build: .\n    ports:\n${ports}    environment:\n      - DATABASE_URL=${quoteYaml(databaseUrl("postgres", 5432))}\n    depends_on:\n      - db\n  db:\n    image: postgres:16\n${databaseEnvironment(options, false)}    volumes:\n      - db_data:/var/lib/postgresql/data\nvolumes:\n  db_data:\n`;
+      return `version: '3.8'\nservices:\n  ${appName}:\n    build: .\n    ports:\n${ports}    environment:\n${composeEnvironmentEntry("DATABASE_URL", databaseUrl("postgres", 5432))}\n    depends_on:\n      - db\n  db:\n    image: postgres:16\n${databaseEnvironment(options, false)}    volumes:\n      - db_data:/var/lib/postgresql/data\nvolumes:\n  db_data:\n`;
     case "node-mysql":
-      return `version: '3.8'\nservices:\n  ${appName}:\n    build: .\n    ports:\n${ports}    environment:\n      - DATABASE_URL=${quoteYaml(databaseUrl("mysql", 3306))}\n    depends_on:\n      - db\n  db:\n    image: mysql:8\n${databaseEnvironment(options, true)}    volumes:\n      - db_data:/var/lib/mysql\nvolumes:\n  db_data:\n`;
+      return `version: '3.8'\nservices:\n  ${appName}:\n    build: .\n    ports:\n${ports}    environment:\n${composeEnvironmentEntry("DATABASE_URL", databaseUrl("mysql", 3306))}\n    depends_on:\n      - db\n  db:\n    image: mysql:8\n${databaseEnvironment(options, true)}    volumes:\n      - db_data:/var/lib/mysql\nvolumes:\n  db_data:\n`;
     case "node-redis":
-      return `version: '3.8'\nservices:\n  ${appName}:\n    build: .\n    ports:\n${ports}    environment:\n      - REDIS_URL=redis://cache:6379\n    depends_on:\n      - cache\n  cache:\n    image: redis:7-alpine\n    volumes:\n      - redis_data:/data\nvolumes:\n  redis_data:\n`;
+      return `version: '3.8'\nservices:\n  ${appName}:\n    build: .\n    ports:\n${ports}    environment:\n${composeEnvironmentEntry("REDIS_URL", "redis://cache:6379")}\n    depends_on:\n      - cache\n  cache:\n    image: redis:7-alpine\n    volumes:\n      - redis_data:/data\nvolumes:\n  redis_data:\n`;
     case "wordpress-mysql":
-      return `version: '3.8'\nservices:\n  wordpress:\n    image: wordpress:latest\n    ports:\n      - ${quoteYaml(`${options.hostPort}:80`)}\n    environment:\n      - WORDPRESS_DB_HOST=db\n      - WORDPRESS_DB_USER=${quoteYaml(options.dbUser ?? "")}\n      - WORDPRESS_DB_PASSWORD=${quoteYaml(options.dbPassword ?? "")}\n      - WORDPRESS_DB_NAME=${quoteYaml(options.dbName ?? "")}\n    volumes:\n      - wp_content:/var/www/html\n    depends_on:\n      - db\n  db:\n    image: mysql:8\n${databaseEnvironment(options, true)}    volumes:\n      - db_data:/var/lib/mysql\nvolumes:\n  wp_content:\n  db_data:\n`;
+      return `version: '3.8'\nservices:\n  wordpress:\n    image: wordpress:latest\n    ports:\n      - ${quoteYaml(`${options.hostPort}:80`)}\n    environment:\n${composeEnvironmentEntry("WORDPRESS_DB_HOST", "db")}\n${composeEnvironmentEntry("WORDPRESS_DB_USER", options.dbUser ?? "")}\n${composeEnvironmentEntry("WORDPRESS_DB_PASSWORD", options.dbPassword ?? "")}\n${composeEnvironmentEntry("WORDPRESS_DB_NAME", options.dbName ?? "")}\n    volumes:\n      - wp_content:/var/www/html\n    depends_on:\n      - db\n  db:\n    image: mysql:8\n${databaseEnvironment(options, true)}    volumes:\n      - db_data:/var/lib/mysql\nvolumes:\n  wp_content:\n  db_data:\n`;
     case "nginx-static":
       return `version: '3.8'\nservices:\n  web:\n    image: nginx:alpine\n    ports:\n      - ${quoteYaml(`${options.hostPort}:80`)}\n    volumes:\n      - ./html:/usr/share/nginx/html:ro\n`;
   }

@@ -144,7 +144,73 @@ describe("network tool helpers", () => {
     expect(mysql).toContain(
       "mysql://app%3Auser:p%40ss%3Aword%231@db:3306/app%23db",
     );
-    expect(mysql).toContain('MYSQL_ROOT_PASSWORD="p@ss:word#1"');
+
+    const parsed = yaml.load(mysql) as {
+      services: Record<string, { environment: string[] }>;
+    };
+    expect(parsed.services.api.environment).toContain(
+      "DATABASE_URL=mysql://app%3Auser:p%40ss%3Aword%231@db:3306/app%23db",
+    );
+    expect(parsed.services.db.environment).toContain(
+      "MYSQL_ROOT_PASSWORD=p@ss:word#1",
+    );
+    for (const environment of [
+      parsed.services.api.environment,
+      parsed.services.db.environment,
+    ]) {
+      expect(environment.every((entry) => !entry.includes('"'))).toBe(true);
+    }
+
+    const postgres = yaml.load(
+      generateDockerComposeYaml("node-postgres", options),
+    ) as { services: Record<string, { environment: string[] }> };
+    expect(postgres.services.db.environment).toContain(
+      "POSTGRES_PASSWORD=p@ss:word#1",
+    );
+    const redis = yaml.load(
+      generateDockerComposeYaml("node-redis", options),
+    ) as { services: Record<string, { environment: string[] }> };
+    expect(redis.services.api.environment).toEqual([
+      "REDIS_URL=redis://cache:6379",
+    ]);
+  });
+
+  it("keeps all compose environment list entries free of YAML quote artifacts", () => {
+    const options = {
+      serviceName: "api",
+      hostPort: "3000",
+      appPort: "3000",
+      dbName: "app#db",
+      dbUser: "app:user",
+      dbPassword: "p@ss:word#1",
+    };
+    const templates = [
+      "full-stack",
+      "node-postgres",
+      "node-mysql",
+      "node-redis",
+      "wordpress-mysql",
+    ] as const;
+
+    for (const template of templates) {
+      const document = yaml.load(generateDockerComposeYaml(template, options)) as {
+        services: Record<string, { environment?: string[] }>;
+      };
+      const environments = Object.values(document.services)
+        .map((service) => service.environment ?? [])
+        .flat();
+      expect(environments.every((entry) => !entry.includes('"'))).toBe(true);
+    }
+
+    const wordpress = yaml.load(
+      generateDockerComposeYaml("wordpress-mysql", options),
+    ) as { services: Record<string, { environment: string[] }> };
+    expect(wordpress.services.wordpress.environment).toContain(
+      "WORDPRESS_DB_PASSWORD=p@ss:word#1",
+    );
+    expect(wordpress.services.wordpress.environment).toContain(
+      "WORDPRESS_DB_USER=app:user",
+    );
   });
 
   it("validates only fields used by the selected compose template", () => {
