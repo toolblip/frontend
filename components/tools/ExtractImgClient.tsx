@@ -243,49 +243,59 @@ export default function ExtractImgClient() {
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const loadVersionRef = useRef(0);
 
   const clearAll = () => {
+    loadVersionRef.current += 1;
     images.forEach(img => URL.revokeObjectURL(img.previewUrl));
-    setImages([]); setSkipped(0); setFileName(''); setError(''); setLoading(false); setLoaded(false);
+    setImages([]); setSkipped(0); setFileName(''); setError(''); setLoading(false); setLoaded(false); setIsDragging(false);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   useEffect(() => () => { images.forEach(img => URL.revokeObjectURL(img.previewUrl)); }, [images]);
 
   const loadExample = async () => {
+    const requestId = ++loadVersionRef.current;
     setError(''); setLoading(true);
     try {
       const canvas = document.createElement('canvas'); canvas.width = 120; canvas.height = 80;
       const ctx = canvas.getContext('2d'); if (!ctx) throw new Error('Could not create the sample image.');
       ctx.fillStyle = '#2563eb'; ctx.fillRect(0, 0, 120, 80); ctx.fillStyle = '#facc15'; ctx.fillRect(20, 20, 80, 40);
-      const dataUrl = canvas.toDataURL('image/png'); const response = await fetch(dataUrl); const pngBytes = new Uint8Array(await response.arrayBuffer());
+      const pngBlob = await new Promise<Blob>((resolve, reject) => canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('Could not create the sample image.')), 'image/png'));
+      const pngBytes = new Uint8Array(await pngBlob.arrayBuffer());
       const doc = await PDFDocument.create(); const page = doc.addPage([360, 240]); const image = await doc.embedPng(pngBytes); page.drawImage(image, { x: 120, y: 80, width: 120, height: 80 });
-      await loadFile(new File([await doc.save() as BlobPart], 'extract-images-sample.pdf', { type: 'application/pdf' }));
-    } catch (e) { setError(e instanceof Error ? e.message : 'Could not create the sample PDF.'); setLoading(false); }
+      if (requestId === loadVersionRef.current) await loadFile(new File([await doc.save() as BlobPart], 'extract-images-sample.pdf', { type: 'application/pdf' }), requestId);
+    } catch (e) { if (requestId === loadVersionRef.current) { setError(e instanceof Error ? e.message : 'Could not create the sample PDF.'); setLoading(false); } }
   };
 
-  const loadFile = async (file: File | undefined) => {
+  const loadFile = async (file: File | undefined, requestId = ++loadVersionRef.current) => {
     if (!file) return;
     setError('');
     setImages([]);
     setSkipped(0);
+    setFileName('');
     setLoaded(false);
     if (!/\.pdf$/i.test(file.name)) {
       setError('Please choose a file with a .pdf extension.');
+      setLoading(false);
       return;
     }
     setLoading(true);
     try {
       const buffer = await file.arrayBuffer();
       const { images: found, skipped: skippedCount } = await extractImages(new Uint8Array(buffer));
+      if (requestId !== loadVersionRef.current) {
+        found.forEach(img => URL.revokeObjectURL(img.previewUrl));
+        return;
+      }
       setFileName(file.name);
       setImages(found);
       setSkipped(skippedCount);
       setLoaded(true);
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Could not read this PDF file.');
+      if (requestId === loadVersionRef.current) setError(e instanceof Error ? e.message : 'Could not read this PDF file.');
     } finally {
-      setLoading(false);
+      if (requestId === loadVersionRef.current) setLoading(false);
     }
   };
 

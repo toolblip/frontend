@@ -45,10 +45,12 @@ function hexToRgb01(hex: string): [number, number, number] {
 }
 
 function markerPercent(anchorX: AnchorX, anchorY: AnchorY, offsetX: number, offsetY: number, w: number, h: number) {
-  const xPct = anchorX === 'left' ? (offsetX / w) * 100 : anchorX === 'right' ? 100 - (offsetX / w) * 100 : 50;
-  const yPct = anchorY === 'top' ? (offsetY / h) * 100 : anchorY === 'bottom' ? 100 - (offsetY / h) * 100 : 50;
+  const xPct = anchorX === 'left' ? (offsetX / w) * 100 : anchorX === 'right' ? 100 - (offsetX / w) * 100 : 50 + (offsetX / w) * 100;
+  const yPct = anchorY === 'top' ? (offsetY / h) * 100 : anchorY === 'bottom' ? 100 - (offsetY / h) * 100 : 50 + (offsetY / h) * 100;
   return { xPct, yPct };
 }
+
+const isPdfFile = (file: File) => file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
 
 let nextOverlayId = 1;
 
@@ -73,19 +75,29 @@ export default function EditClient() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
+  const loadVersionRef = useRef(0);
 
-  const clearAll = () => {
+  const resetDocument = () => {
     overlays.forEach(ov => { if (ov.kind === 'image') URL.revokeObjectURL(ov.previewUrl); });
     setFileBytes(null); setFileName(''); setPageSizes([]); setCurrentPage(1); setOverlays([]); setIsDragging(false); setError(''); setStatus('idle');
+  };
+
+  const clearAll = () => {
+    loadVersionRef.current += 1;
+    resetDocument();
+    setDraftText('New text'); setDraftFontSize(24); setDraftColor('#111111'); setAnchorX('left'); setAnchorY('top'); setOffsetX(40); setOffsetY(40); setImageWidthPt(150);
     if (fileInputRef.current) fileInputRef.current.value = '';
     if (imageInputRef.current) imageInputRef.current.value = '';
   };
 
-  const loadPdf = async (bytes: Uint8Array, name: string) => {
+  const loadPdf = async (bytes: Uint8Array, name: string, requestId = ++loadVersionRef.current) => {
+    resetDocument();
     setError('');
     try {
       const doc = await PDFDocument.load(bytes);
       const sizes = doc.getPages().map(p => p.getSize());
+      if (sizes.length === 0) throw new Error('The PDF has no pages.');
+      if (requestId !== loadVersionRef.current) return;
       setFileBytes(bytes);
       setFileName(name);
       setPageSizes(sizes);
@@ -93,14 +105,25 @@ export default function EditClient() {
       setOverlays([]);
       setStatus('idle');
     } catch {
-      setError('Could not read this file as a PDF. Make sure it is a valid, unencrypted PDF.');
+      if (requestId === loadVersionRef.current) setError('Could not read this file as a PDF. Make sure it is a valid, unencrypted PDF.');
     }
   };
 
   const handleFile = async (file: File | undefined) => {
     if (!file) return;
-    const buffer = await file.arrayBuffer();
-    await loadPdf(new Uint8Array(buffer), file.name);
+    const requestId = ++loadVersionRef.current;
+    resetDocument();
+    if (!isPdfFile(file)) {
+      setError('Please choose a PDF file.');
+      return;
+    }
+    try {
+      const buffer = await file.arrayBuffer();
+      if (requestId !== loadVersionRef.current) return;
+      await loadPdf(new Uint8Array(buffer), file.name, requestId);
+    } catch {
+      if (requestId === loadVersionRef.current) setError('Could not read the selected PDF file.');
+    }
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -110,13 +133,14 @@ export default function EditClient() {
   };
 
   const loadExample = async () => {
+    const requestId = ++loadVersionRef.current;
     const doc = await PDFDocument.create();
     const page = doc.addPage([612, 792]);
     const font = await doc.embedFont(StandardFonts.Helvetica);
     page.drawText('Sample PDF Document', { x: 60, y: 720, size: 22, font });
     page.drawText('This is a placeholder page for practicing edits.', { x: 60, y: 690, size: 12, font, color: rgb(0.4, 0.4, 0.4) });
     const bytes = await doc.save();
-    await loadPdf(bytes, 'sample.pdf');
+    if (requestId === loadVersionRef.current) await loadPdf(bytes, 'sample.pdf', requestId);
   };
 
   const addTextOverlay = () => {
@@ -125,22 +149,26 @@ export default function EditClient() {
       id: nextOverlayId++, kind: 'text', page: currentPage, text: draftText,
       fontSize: draftFontSize, color: draftColor, anchorX, anchorY, offsetX, offsetY,
     }]);
+    setStatus('idle');
   };
 
   const handleImageFile = async (file: File | undefined) => {
     if (!file || !fileBytes) return;
+    const requestId = loadVersionRef.current;
     const format = file.type === 'image/png' ? 'png' : (file.type === 'image/jpeg' ? 'jpg' : null);
     if (!format) { setError('Image overlays must be a PNG or JPG file.'); return; }
     const buffer = await file.arrayBuffer();
+    if (requestId !== loadVersionRef.current || !fileBytes) return;
     const bytes = new Uint8Array(buffer);
     const previewUrl = URL.createObjectURL(file);
     setOverlays(o => [...o, {
       id: nextOverlayId++, kind: 'image', page: currentPage, bytes, format, previewUrl,
       widthPt: imageWidthPt, anchorX, anchorY, offsetX, offsetY,
     }]);
+    setStatus('idle');
   };
 
-  const removeOverlay = (id: number) => setOverlays(o => { const removed = o.find(x => x.id === id); if (removed?.kind === 'image') URL.revokeObjectURL(removed.previewUrl); return o.filter(x => x.id !== id); });
+  const removeOverlay = (id: number) => { setOverlays(o => { const removed = o.find(x => x.id === id); if (removed?.kind === 'image') URL.revokeObjectURL(removed.previewUrl); return o.filter(x => x.id !== id); }); setStatus('idle'); };
 
   const applyAndDownload = async () => {
     if (!fileBytes) return;
@@ -158,8 +186,8 @@ export default function EditClient() {
 
         if (ov.kind === 'text') {
           const textWidth = font.widthOfTextAtSize(ov.text, ov.fontSize);
-          const x = ov.anchorX === 'left' ? ov.offsetX : ov.anchorX === 'right' ? width - ov.offsetX - textWidth : (width - textWidth) / 2;
-          const y = ov.anchorY === 'top' ? height - ov.offsetY - ov.fontSize : ov.anchorY === 'bottom' ? ov.offsetY : (height - ov.fontSize) / 2;
+          const x = ov.anchorX === 'left' ? ov.offsetX : ov.anchorX === 'right' ? width - ov.offsetX - textWidth : (width - textWidth) / 2 + ov.offsetX;
+          const y = ov.anchorY === 'top' ? height - ov.offsetY - ov.fontSize : ov.anchorY === 'bottom' ? ov.offsetY : (height - ov.fontSize) / 2 - ov.offsetY;
           const [r, g, b] = hexToRgb01(ov.color);
           page.drawText(ov.text, { x, y, size: ov.fontSize, font, color: rgb(r, g, b) });
         } else {
@@ -167,8 +195,8 @@ export default function EditClient() {
           const scale = ov.widthPt / img.width;
           const drawWidth = ov.widthPt;
           const drawHeight = img.height * scale;
-          const x = ov.anchorX === 'left' ? ov.offsetX : ov.anchorX === 'right' ? width - ov.offsetX - drawWidth : (width - drawWidth) / 2;
-          const y = ov.anchorY === 'top' ? height - ov.offsetY - drawHeight : ov.anchorY === 'bottom' ? ov.offsetY : (height - drawHeight) / 2;
+          const x = ov.anchorX === 'left' ? ov.offsetX : ov.anchorX === 'right' ? width - ov.offsetX - drawWidth : (width - drawWidth) / 2 + ov.offsetX;
+          const y = ov.anchorY === 'top' ? height - ov.offsetY - drawHeight : ov.anchorY === 'bottom' ? ov.offsetY : (height - drawHeight) / 2 - ov.offsetY;
           page.drawImage(img, { x, y, width: drawWidth, height: drawHeight });
         }
       }

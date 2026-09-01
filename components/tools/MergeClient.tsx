@@ -6,38 +6,48 @@ import { useSubscription } from '@/hooks/useSubscription';
 import { checkFileSize } from '@/lib/tier-limits';
 import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
+const isPdfFile = (file: File) =>
+  file.type === 'application/pdf' || /\.pdf$/i.test(file.name);
+
 export default function MergeClient() {
   const { tier } = useSubscription();
   const [files, setFiles] = useState<{ file: File; doc: PDFDocument }[]>([]);
   const [processing, setProcessing] = useState(false);
   const [result, setResult] = useState<{ success: boolean; message: string; blob?: Blob } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const loadVersionRef = useRef(0);
 
-  const clearAll = () => { setFiles([]); setResult(null); setProcessing(false); if (fileInputRef.current) fileInputRef.current.value = ''; };
+  const clearAll = () => { loadVersionRef.current += 1; setFiles([]); setResult(null); setProcessing(false); if (fileInputRef.current) fileInputRef.current.value = ''; };
 
   const loadExample = useCallback(async () => {
+    const requestId = ++loadVersionRef.current;
     const first = await PDFDocument.create(); first.addPage([400, 300]);
     const second = await PDFDocument.create(); second.addPage([400, 300]); second.addPage([400, 300]);
     const firstBytes = await first.save(); const secondBytes = await second.save();
+    if (requestId !== loadVersionRef.current) return;
     setFiles([
       { file: new File([firstBytes as BlobPart], 'sample-cover.pdf', { type: 'application/pdf' }), doc: await PDFDocument.load(firstBytes) },
       { file: new File([secondBytes as BlobPart], 'sample-pages.pdf', { type: 'application/pdf' }), doc: await PDFDocument.load(secondBytes) },
-    ]); setResult(null);
+    ]); setProcessing(false); setResult(null);
   }, []);
 
   const handleFilesChange = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (processing) return;
     const selectedFiles = e.target.files;
     if (!selectedFiles || selectedFiles.length === 0) return;
+    const requestId = ++loadVersionRef.current;
     
     const newFiles: { file: File; doc: PDFDocument }[] = [];
     
     for (let i = 0; i < selectedFiles.length; i++) {
+      if (requestId !== loadVersionRef.current) return;
       const file = selectedFiles[i];
-      if (file.type !== 'application/pdf') continue;
+      if (!isPdfFile(file)) continue;
       
       // Check file size against tier limit
       const sizeError = checkFileSize(file, tier);
       if (sizeError) {
+        if (requestId !== loadVersionRef.current) return;
         setResult({ success: false, message: `${file.name}: ${sizeError}` });
         return;
       }
@@ -45,8 +55,10 @@ export default function MergeClient() {
       try {
         const arrayBuffer = await file.arrayBuffer();
         const doc = await PDFDocument.load(arrayBuffer);
+        if (requestId !== loadVersionRef.current) return;
         newFiles.push({ file, doc });
       } catch (err: any) {
+        if (requestId !== loadVersionRef.current) return;
         setResult({
           success: false,
           message: `Error loading ${file.name}: ${err.message}`,
@@ -55,24 +67,33 @@ export default function MergeClient() {
       }
     }
     
+    if (newFiles.length === 0) {
+      setResult({ success: false, message: 'Choose at least one PDF file.' });
+      return;
+    }
+    if (requestId !== loadVersionRef.current) return;
     setFiles(prev => [...prev, ...newFiles]);
     setResult(null);
-  }, [tier]);
+  }, [processing, tier]);
 
   const handleDrop = useCallback(async (e: React.DragEvent) => {
     e.preventDefault();
+    if (processing) return;
     const droppedFiles = e.dataTransfer.files;
     if (!droppedFiles || droppedFiles.length === 0) return;
+    const requestId = ++loadVersionRef.current;
     
     const newFiles: { file: File; doc: PDFDocument }[] = [];
     
     for (let i = 0; i < droppedFiles.length; i++) {
+      if (requestId !== loadVersionRef.current) return;
       const file = droppedFiles[i];
-      if (file.type !== 'application/pdf') continue;
+      if (!isPdfFile(file)) continue;
       
       // Check file size against tier limit
       const sizeError = checkFileSize(file, tier);
       if (sizeError) {
+        if (requestId !== loadVersionRef.current) return;
         setResult({ success: false, message: `${file.name}: ${sizeError}` });
         return;
       }
@@ -80,8 +101,10 @@ export default function MergeClient() {
       try {
         const arrayBuffer = await file.arrayBuffer();
         const doc = await PDFDocument.load(arrayBuffer);
+        if (requestId !== loadVersionRef.current) return;
         newFiles.push({ file, doc });
       } catch (err: any) {
+        if (requestId !== loadVersionRef.current) return;
         setResult({
           success: false,
           message: `Error loading ${file.name}: ${err.message}`,
@@ -90,20 +113,31 @@ export default function MergeClient() {
       }
     }
     
+    if (newFiles.length === 0) {
+      setResult({ success: false, message: 'Drop at least one PDF file.' });
+      return;
+    }
+    if (requestId !== loadVersionRef.current) return;
     setFiles(prev => [...prev, ...newFiles]);
     setResult(null);
-  }, [tier]);
+  }, [processing, tier]);
 
   const removeFile = (index: number) => {
+    if (processing) return;
     setFiles(prev => prev.filter((_, i) => i !== index));
+    setResult(null);
   };
 
   const moveFile = (from: number, to: number) => {
-    if (to < 0 || to >= files.length) return;
-    const newFiles = [...files];
-    const [moved] = newFiles.splice(from, 1);
-    newFiles.splice(to, 0, moved);
-    setFiles(newFiles);
+    if (processing) return;
+    setFiles(prev => {
+      if (to < 0 || to >= prev.length) return prev;
+      const newFiles = [...prev];
+      const [moved] = newFiles.splice(from, 1);
+      newFiles.splice(to, 0, moved);
+      return newFiles;
+    });
+    setResult(null);
   };
 
   const mergePDFs = async () => {
@@ -112,6 +146,7 @@ export default function MergeClient() {
       return;
     }
     
+    const requestId = ++loadVersionRef.current;
     setProcessing(true);
     try {
       const mergedDoc = await PDFDocument.create();
@@ -123,6 +158,7 @@ export default function MergeClient() {
       
       const pdfBytes = await mergedDoc.save();
       const blob = new Blob([pdfBytes as any], { type: 'application/pdf' });
+      if (requestId !== loadVersionRef.current) return;
       
       setResult({
         success: true,
@@ -130,12 +166,13 @@ export default function MergeClient() {
         blob,
       });
     } catch (err: any) {
+      if (requestId !== loadVersionRef.current) return;
       setResult({
         success: false,
         message: `Error: ${err.message}`,
       });
     } finally {
-      setProcessing(false);
+      if (requestId === loadVersionRef.current) setProcessing(false);
     }
   };
 
@@ -163,6 +200,7 @@ export default function MergeClient() {
           multiple
           ref={fileInputRef}
           onChange={handleFilesChange}
+          disabled={processing}
           className="hidden"
           id="pdf-upload"
         />
@@ -200,21 +238,28 @@ export default function MergeClient() {
                 
                 <div className="flex items-center gap-2">
                   <button
+                    type="button"
                     onClick={() => moveFile(index, index - 1)}
-                    disabled={index === 0}
+                    disabled={index === 0 || processing}
+                    aria-label={`Move ${f.file.name} up`}
                     className="p-1 text-gray-500 hover:text-gray-700 disabled:opacity-30"
                   >
                     ↑
                   </button>
                   <button
+                    type="button"
                     onClick={() => moveFile(index, index + 1)}
-                    disabled={index === files.length - 1}
+                    disabled={index === files.length - 1 || processing}
+                    aria-label={`Move ${f.file.name} down`}
                     className="p-1 text-gray-500 hover:text-gray-700 disabled:opacity-30"
                   >
                     ↓
                   </button>
                   <button
+                    type="button"
                     onClick={() => removeFile(index)}
+                    disabled={processing}
+                    aria-label={`Remove ${f.file.name}`}
                     className="p-1 text-red-500 hover:text-red-700"
                   >
                     ✕
@@ -225,6 +270,7 @@ export default function MergeClient() {
           </div>
           
           <button
+            type="button"
             onClick={mergePDFs}
             disabled={files.length < 2 || processing}
             className="w-full py-3 bg-indigo-500 text-white rounded-lg hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed"
