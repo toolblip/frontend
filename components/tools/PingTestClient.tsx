@@ -1,63 +1,16 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+
+type Result = { status: 'Reachable' | 'No records' | 'Network error'; time: number; records: { address: string; ttl: number }[]; error?: string };
+const EXAMPLE = 'example.com';
+function normalizeHost(value: string): string | null { const trimmed = value.trim().replace(/^https?:\/\//i, '').split('/')[0].replace(/\.$/, '').toLowerCase(); return trimmed && /^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)*[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/.test(trimmed) ? trimmed : null; }
+async function query(host: string, type: 'A' | 'AAAA', signal: AbortSignal) { const response = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(host)}&type=${type}`, { signal }); if (!response.ok) throw new Error('resolver'); const data = await response.json() as { Status: number; Answer?: { data: string; TTL: number }[] }; return data.Status === 0 ? (data.Answer ?? []).map(answer => ({ address: answer.data, ttl: answer.TTL })) : []; }
 
 export default function PingTestClient() {
-  const [host, setHost] = useState('');
-  const [result, setResult] = useState<{ status: string; time: number; error?: string } | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  const ping = async () => {
-    if (!host.trim()) return;
-    setLoading(true);
-    try {
-      const start = performance.now();
-      const res = await fetch(`https://api.apprenable.com/ping?host=${encodeURIComponent(host)}`);
-      const time = Math.round(performance.now() - start);
-      if (!res.ok) throw new Error('Ping failed');
-      setResult({ status: 'Online', time });
-    } catch {
-      setResult({ status: 'Offline', time: 0, error: 'Could not reach host - check the domain or run from a server with network access' });
-    }
-    setLoading(false);
-  };
-
-  return (
-    <div>
-      <div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">Host</span></div>
-      <div style={{ display: 'flex', gap: 8 }}>
-        <input
-          type="text"
-          value={host}
-          onChange={e => setHost(e.target.value)}
-          placeholder="example.com or 8.8.8.8"
-          className="tb-v2-tool-textarea"
-          style={{ flex: 1, minHeight: 44, resize: 'none' }}
-          onKeyDown={e => e.key === 'Enter' && ping()}
-        />
-        <button onClick={ping} disabled={loading} className="tb-v2-btn-primary" style={{ minWidth: 80 }}>
-          {loading ? '...' : 'Ping'}
-        </button>
-      </div>
-      <div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">Result</span></div>
-      <div className="tb-v2-tool-output-body">
-        {result ? (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div style={{
-              width: 44, height: 44, borderRadius: '50%',
-              background: result.status === 'Online' ? '#10b98120' : '#ef444420',
-              display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 22
-            }}>{result.status === 'Online' ? '✅' : '❌'}</div>
-            <div>
-              <div style={{ fontWeight: 600, color: result.status === 'Online' ? '#10b981' : '#ef4444' }}>{result.status}</div>
-              {result.time > 0 && <div style={{ fontSize: 13, color: 'var(--tb-text-secondary)' }}>Response time: {result.time}ms</div>}
-              {result.error && <div style={{ fontSize: 12, color: 'var(--tb-text-secondary)' }}>{result.error}</div>}
-            </div>
-          </div>
-        ) : (
-          <div style={{ color: 'var(--tb-text-secondary)', fontSize: 14 }}>Enter a host and click Ping</div>
-        )}
-      </div>
-    </div>
-  );
+  const [host, setHost] = useState(''); const [result, setResult] = useState<Result | null>(null); const [loading, setLoading] = useState(false);
+  const clear = () => { setHost(''); setResult(null); };
+  const check = async () => { const normalized = normalizeHost(host); if (!normalized) { setResult({ status: 'Network error', time: 0, records: [], error: 'Enter a valid hostname such as example.com.' }); return; } setLoading(true); setResult(null); const controller = new AbortController(); const timeout = window.setTimeout(() => controller.abort(), 5000); const start = performance.now(); try { const answers = (await Promise.all([query(normalized, 'A', controller.signal), query(normalized, 'AAAA', controller.signal)])).flat(); const time = Math.round(performance.now() - start); setResult(answers.length ? { status: 'Reachable', time, records: answers } : { status: 'No records', time, records: [], error: `No A or AAAA records were returned for ${normalized}.` }); } catch (error) { setResult({ status: 'Network error', time: Math.round(performance.now() - start), records: [], error: error instanceof DOMException && error.name === 'AbortError' ? 'The DNS/HTTP check timed out after 5 seconds.' : 'The DNS/HTTP check could not reach the resolver.' }); } finally { window.clearTimeout(timeout); setLoading(false); } };
+  return <div><div className="tb-v2-tool-input-head"><span className="tb-v2-tool-label">DNS / HTTP Reachability Check</span><ToolExampleClearActions exampleCount={1} onExample={() => { setHost(EXAMPLE); setResult(null); }} onClear={clear} canClear={Boolean(host || result)} /></div><div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', padding: 20 }}><input type="text" value={host} onChange={e => setHost(e.target.value)} placeholder="example.com" className="tb-v2-input" style={{ flex: '1 1 220px' }} onKeyDown={e => e.key === 'Enter' && check()} aria-label="Hostname" /><button type="button" onClick={check} disabled={loading} className="tb-v2-btn tb-v2-btn-primary">{loading ? 'Checking…' : 'Check'}</button></div><div className="tb-v2-tool-output-head"><span className="tb-v2-tool-label">Result</span></div><div className="tb-v2-tool-output-body">{result ? <div><strong>{result.status}</strong><div style={{ color: 'var(--tb-text-secondary)', marginTop: 6 }}>{result.error ?? `DNS records returned in ${result.time}ms.`}</div>{result.records.map((record, i) => <div key={`${record.address}-${i}`} style={{ fontFamily: 'var(--f-mono)', marginTop: 8 }}>{record.address} <span style={{ color: 'var(--tb-text-secondary)' }}>TTL {record.ttl}s</span></div>)}</div> : <p className="tb-v2-empty">Checks DNS A and AAAA records through Google DNS-over-HTTPS; it does not send an ICMP ping.</p>}</div></div>;
 }

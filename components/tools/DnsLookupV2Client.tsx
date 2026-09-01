@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 const RECORD_TYPES = ['A', 'AAAA', 'MX', 'TXT', 'CNAME'] as const;
 type RecordType = typeof RECORD_TYPES[number];
@@ -22,15 +23,18 @@ interface TypeResult {
 
 async function queryType(domain: string, type: RecordType): Promise<TypeResult> {
   try {
-    const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(domain)}&type=${type}`);
+    const controller = new AbortController();
+    const timeout = window.setTimeout(() => controller.abort(), 5000);
+    const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(domain)}&type=${type}`, { signal: controller.signal });
+    window.clearTimeout(timeout);
     if (!res.ok) throw new Error('API error');
     const data: { Status: number; Answer?: DnsAnswer[] } = await res.json();
     if (data.Status !== 0 || !data.Answer || data.Answer.length === 0) {
       return { type, records: [] };
     }
     return { type, records: data.Answer.map(a => a.data) };
-  } catch {
-    return { type, records: [], error: 'Lookup failed' };
+  } catch (error) {
+    return { type, records: [], error: error instanceof DOMException && error.name === 'AbortError' ? 'Lookup timed out' : 'Lookup failed' };
   }
 }
 
@@ -49,10 +53,11 @@ export default function DnsLookupV2Client() {
     setDomain(EXAMPLE_DOMAIN);
     setSelected(['A', 'AAAA', 'MX', 'TXT', 'CNAME']);
   };
+  const clear = () => { setDomain(''); setSelected([]); setResults(null); setCopied(false); };
 
   const lookup = async () => {
     const target = domain.trim();
-    if (!target || selected.length === 0) return;
+    if (!target || selected.length === 0 || !/^(?=.{1,253}$)[a-z0-9.-]+$/i.test(target) || target.includes('..')) { setResults([{ type: selected[0] ?? 'A', records: [], error: 'Enter a valid domain and select at least one record type.' }]); return; }
     setLoading(true);
     setResults(null);
     const all = await Promise.all(selected.map(t => queryType(target, t)));
@@ -75,10 +80,10 @@ export default function DnsLookupV2Client() {
   };
 
   return (
-    <div className="tb-v2-tool-card">
+    <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Domain</span>
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">Load Example</button>
+        <ToolExampleClearActions exampleCount={1} onExample={loadExample} onClear={clear} canClear={Boolean(domain || results)} />
       </div>
       <div style={{ padding: 20 }} className="flex flex-col gap-4">
         <div style={{ display: 'flex', gap: 8 }}>

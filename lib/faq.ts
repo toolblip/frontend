@@ -676,8 +676,8 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'Can I save the chart as an image?', a: 'Yes, the finished chart downloads as a PNG generated directly from the canvas.' },
   ],
   'cidr-calculator': [
-    { q: 'What does it calculate from a CIDR block?', a: 'The network address, subnet mask, wildcard mask, broadcast address, first and last usable host, and total usable host count, all computed from real bitwise operations on the address and prefix you enter.' },
-    { q: 'Does it handle /31 and /32 subnets correctly?', a: 'Yes, those are handled as their real-world special cases: /31 as a point-to-point link with no usable host range, and /32 as a single host address, rather than applying the general host-count formula that would give a wrong answer for either.' },
+    { q: 'What does it calculate from a CIDR block?', a: 'It calculates the network, subnet mask, wildcard mask, broadcast address, first and last host, total addresses, and usable host count from the IPv4 address and prefix.' },
+    { q: 'Does it handle /31 and /32 subnets correctly?', a: 'Yes. /31 reports two usable point-to-point addresses, while /32 reports one address, instead of applying the ordinary network-and-broadcast subtraction.' },
     { q: 'Do I need to enter the subnet mask separately?', a: 'No, entering an address with its CIDR prefix (like 192.168.1.0/24) is enough, the subnet mask and every other value are derived from that prefix automatically.' },
   ],
   'circle-crop': [
@@ -1044,6 +1044,16 @@ const OVERRIDES: Record<string, FAQ[]> = {
     { q: 'What stack templates are available?', a: 'Node.js + PostgreSQL, Node.js + MySQL, Node.js + Redis, WordPress + MySQL, and a static Nginx site, each producing a complete docker-compose.yml.' },
     { q: 'Does it set up persistent storage for the database?', a: 'Yes, the database and WordPress templates include a named volume so data survives container restarts.' },
     { q: 'Can I customize the ports and credentials?', a: 'Yes, host port, container port, database name, user, and password fields all feed directly into the generated YAML.' },
+  ],
+  'ping-test': [
+    { q: 'Is this a real ICMP ping?', a: 'No. Browsers cannot send ICMP directly here, so the tool performs a bounded DNS-over-HTTPS check for A and AAAA records and reports the resolver response time, addresses, and TTL.' },
+    { q: 'What does no records mean?', a: 'No records means the DNS resolver responded successfully but returned no A or AAAA address for the hostname. A network error or timeout is shown separately.' },
+    { q: 'Does it support an IP address?', a: 'Enter a hostname such as example.com. This browser-safe check is designed for DNS names rather than ICMP host probing.' },
+  ],
+  'ip-range-calculator': [
+    { q: 'What does the IP range calculator include?', a: 'It counts every address inclusively and shows the first and last input, the smallest enclosing CIDR and netmask, the enclosing network address, and its broadcast address.' },
+    { q: 'How are arbitrary ranges handled?', a: 'The range must contain valid IPv4 addresses with the start at or before the end. The enclosing CIDR is the smallest single block containing both endpoints, even when it includes addresses outside the entered range.' },
+    { q: 'Are leading zeros accepted in IPv4 input?', a: 'No. Strict dotted-quad input is used so malformed octets, empty sections, and trailing characters are rejected instead of being interpreted ambiguously.' },
   ],
   'domain-age-checker': [
     { q: 'Where does the registration data come from?', a: 'A live RDAP query to rdap.org, not cached WHOIS data.' },
