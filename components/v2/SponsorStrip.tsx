@@ -111,7 +111,9 @@ function SlotCard({
         href={withSponsorSource(slot.url, 'strip')}
         target="_blank"
         rel="sponsored nofollow noopener"
-        onClick={() => pingSponsorClick(slot.id)}
+        onClick={() => {
+          if (!slot.placeholder) pingSponsorClick(slot.id);
+        }}
         className="tb-v2-sponsor-card"
         data-testid={primary ? 'sponsor-strip-primary' : 'sponsor-strip-slot'}
       >

@@ -8,6 +8,7 @@ export interface SponsorSlot {
   clicks: number;
   balance_cents: number;
   last_bid_at: string | null;
+  placeholder?: boolean;
 }
 
 export interface SponsorsTopResponse {
@@ -27,7 +28,7 @@ export interface SponsorsLeaderboardResponse {
   data: SponsorSlot[];
 }
 
-const CACHE_KEY = "tb_sponsors_top_v2";
+const CACHE_KEY = "tb_sponsors_top_v3";
 const CACHE_TTL_MS = 60_000;
 
 /**
