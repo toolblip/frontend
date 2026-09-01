@@ -1,135 +1,256 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+import { useRef, useState } from "react";
+import ToolExampleClearActions from "@/components/tools/ToolExampleClearActions";
 
-const RECORD_TYPES = ['A', 'AAAA', 'MX', 'TXT', 'CNAME'] as const;
-type RecordType = typeof RECORD_TYPES[number];
-
-const EXAMPLE_DOMAIN = 'google.com';
-
+export const RECORD_TYPES = ["A", "AAAA", "MX", "TXT", "CNAME"] as const;
+export type RecordType = (typeof RECORD_TYPES)[number];
+const EXAMPLE_DOMAIN = "google.com";
+const DEFAULT_RECORD_TYPES: RecordType[] = [...RECORD_TYPES];
 interface DnsAnswer {
-  name: string;
-  type: number;
-  TTL: number;
   data: string;
+  TTL: number;
 }
-
-interface TypeResult {
+export interface TypeResult {
   type: RecordType;
   records: string[];
   error?: string;
 }
 
-async function queryType(domain: string, type: RecordType): Promise<TypeResult> {
+export function normalizeHostname(value: string): string | null {
+  const input = value.trim();
+  const hostname = input.endsWith(".") ? input.slice(0, -1) : input;
+  if (
+    !hostname ||
+    hostname.length > 253 ||
+    hostname.includes("/") ||
+    hostname.includes(":") ||
+    /\s/.test(hostname)
+  )
+    return null;
+  const labels = hostname.split(".");
+  if (
+    labels.some(
+      (label) =>
+        !label ||
+        label.length > 63 ||
+        label.startsWith("-") ||
+        label.endsWith("-") ||
+        !/^[a-z0-9-]+$/i.test(label),
+    )
+  )
+    return null;
+  return hostname.toLowerCase();
+}
+
+export async function queryDnsType(
+  domain: string,
+  type: RecordType,
+): Promise<TypeResult> {
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 5000);
   try {
-    const controller = new AbortController();
-    const timeout = window.setTimeout(() => controller.abort(), 5000);
-    const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(domain)}&type=${type}`, { signal: controller.signal });
-    window.clearTimeout(timeout);
-    if (!res.ok) throw new Error('API error');
-    const data: { Status: number; Answer?: DnsAnswer[] } = await res.json();
-    if (data.Status !== 0 || !data.Answer || data.Answer.length === 0) {
-      return { type, records: [] };
-    }
-    return { type, records: data.Answer.map(a => a.data) };
+    const response = await fetch(
+      `https://dns.google/resolve?name=${encodeURIComponent(domain)}&type=${type}`,
+      { signal: controller.signal },
+    );
+    if (!response.ok) throw new Error("resolver");
+    const data = (await response.json()) as {
+      Status: number;
+      Answer?: DnsAnswer[];
+    };
+    return data.Status === 0 && data.Answer
+      ? { type, records: data.Answer.map((answer) => answer.data) }
+      : { type, records: [] };
   } catch (error) {
-    return { type, records: [], error: error instanceof DOMException && error.name === 'AbortError' ? 'Lookup timed out' : 'Lookup failed' };
+    return {
+      type,
+      records: [],
+      error:
+        error instanceof DOMException && error.name === "AbortError"
+          ? "Lookup timed out."
+          : "Lookup failed.",
+    };
+  } finally {
+    window.clearTimeout(timeout);
   }
 }
 
 export default function DnsLookupV2Client() {
-  const [domain, setDomain] = useState('');
-  const [selected, setSelected] = useState<RecordType[]>(['A', 'AAAA', 'MX', 'TXT', 'CNAME']);
+  const [domain, setDomain] = useState("");
+  const [selected, setSelected] = useState<RecordType[]>(DEFAULT_RECORD_TYPES);
   const [results, setResults] = useState<TypeResult[] | null>(null);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
-
-  const toggleType = (t: RecordType) => {
-    setSelected(prev => (prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]));
+  const requestId = useRef(0);
+  const clear = () => {
+    requestId.current += 1;
+    setDomain("");
+    setSelected([...DEFAULT_RECORD_TYPES]);
+    setResults(null);
+    setError("");
+    setLoading(false);
+    setCopied(false);
   };
-
   const loadExample = () => {
+    requestId.current += 1;
     setDomain(EXAMPLE_DOMAIN);
-    setSelected(['A', 'AAAA', 'MX', 'TXT', 'CNAME']);
+    setSelected([...DEFAULT_RECORD_TYPES]);
+    setResults(null);
+    setError("");
+    setLoading(false);
+    setCopied(false);
   };
-  const clear = () => { setDomain(''); setSelected([]); setResults(null); setCopied(false); };
-
+  const toggleType = (type: RecordType) =>
+    setSelected((current) =>
+      current.includes(type)
+        ? current.filter((item) => item !== type)
+        : [...current, type],
+    );
   const lookup = async () => {
-    const target = domain.trim();
-    if (!target || selected.length === 0 || !/^(?=.{1,253}$)[a-z0-9.-]+$/i.test(target) || target.includes('..')) { setResults([{ type: selected[0] ?? 'A', records: [], error: 'Enter a valid domain and select at least one record type.' }]); return; }
+    const target = normalizeHostname(domain);
+    if (!target) {
+      setResults(null);
+      setError("Enter a valid hostname, such as example.com.");
+      return;
+    }
+    if (selected.length === 0) {
+      setResults(null);
+      setError("Select at least one record type.");
+      return;
+    }
+    const id = ++requestId.current;
     setLoading(true);
     setResults(null);
-    const all = await Promise.all(selected.map(t => queryType(target, t)));
-    setResults(all);
-    setLoading(false);
+    setError("");
+    setCopied(false);
+    const all = await Promise.all(
+      selected.map((type) => queryDnsType(target, type)),
+    );
+    if (id === requestId.current) {
+      setResults(all);
+      setLoading(false);
+    }
   };
-
-  const outputText = results
-    ? results
-        .filter(r => r.records.length > 0)
-        .map(r => `${r.type}:\n${r.records.map(d => `  ${d}`).join('\n')}`)
-        .join('\n\n')
-    : '';
-
-  const copy = () => {
+  const outputText =
+    results
+      ?.filter((result) => result.records.length > 0)
+      .map(
+        (result) =>
+          `${result.type}:\n${result.records.map((record) => `  ${record}`).join("\n")}`,
+      )
+      .join("\n\n") ?? "";
+  const copy = async () => {
     if (!outputText) return;
-    navigator.clipboard.writeText(outputText).catch(() => {});
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    try {
+      await navigator.clipboard.writeText(outputText);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1500);
+    } catch {
+      setCopied(false);
+    }
   };
-
   return (
     <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Domain</span>
-        <ToolExampleClearActions exampleCount={1} onExample={loadExample} onClear={clear} canClear={Boolean(domain || results)} />
+        <ToolExampleClearActions
+          exampleCount={1}
+          onExample={loadExample}
+          onClear={clear}
+          canClear={Boolean(domain || results || error)}
+        />
       </div>
       <div style={{ padding: 20 }} className="flex flex-col gap-4">
-        <div style={{ display: 'flex', gap: 8 }}>
+        <div style={{ display: "flex", gap: 8 }}>
           <input
             type="text"
             value={domain}
-            onChange={e => setDomain(e.target.value)}
+            onChange={(event) => setDomain(event.target.value)}
             placeholder="example.com"
             className="tb-v2-input"
             style={{ flex: 1 }}
-            onKeyDown={e => e.key === 'Enter' && lookup()}
+            onKeyDown={(event) => event.key === "Enter" && lookup()}
+            aria-label="Domain"
           />
-          <button onClick={lookup} disabled={loading || !domain.trim() || selected.length === 0} className="tb-v2-btn tb-v2-btn-primary" style={{ minWidth: 90 }}>
-            {loading ? '...' : 'Lookup All'}
+          <button
+            type="button"
+            onClick={lookup}
+            disabled={loading || !domain.trim() || selected.length === 0}
+            className="tb-v2-btn tb-v2-btn-primary"
+            style={{ minWidth: 90 }}
+          >
+            {loading ? "Looking up" : "Lookup All"}
           </button>
         </div>
         <div>
           <label className="tb-v2-tool-label">Record Types</label>
-          <div className="tb-v2-mode-tabs" role="group" style={{ marginTop: 8 }}>
-            {RECORD_TYPES.map(t => (
-              <button key={t} type="button" onClick={() => toggleType(t)} className={`tb-v2-mode-tab ${selected.includes(t) ? 'on' : ''}`}>{t}</button>
+          <div
+            className="tb-v2-mode-tabs"
+            role="group"
+            style={{ marginTop: 8 }}
+          >
+            {RECORD_TYPES.map((type) => (
+              <button
+                key={type}
+                type="button"
+                onClick={() => toggleType(type)}
+                className={`tb-v2-mode-tab ${selected.includes(type) ? "on" : ""}`}
+              >
+                {type}
+              </button>
             ))}
           </div>
         </div>
       </div>
-
+      {error && (
+        <div style={{ color: "#ef4444", padding: "0 20px 12px", fontSize: 13 }}>
+          {error}
+        </div>
+      )}
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">Results by Type</span>
-        <button type="button" onClick={copy} disabled={!outputText} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
-          {copied ? 'Copied' : 'Copy'}
+        <button
+          type="button"
+          onClick={copy}
+          disabled={!outputText}
+          className={`tb-v2-copy-btn ${copied ? "done" : ""}`}
+        >
+          {copied ? "Copied" : "Copy"}
         </button>
       </div>
       <div className="tb-v2-tool-output-body">
         {!results ? (
-          <p className="tb-v2-empty">Enter a domain and pick record types to query them all at once.</p>
+          <p className="tb-v2-empty">
+            Enter a hostname to query its A, AAAA, MX, TXT, and CNAME records.
+          </p>
         ) : (
           <div className="flex flex-col gap-3">
-            {results.map(r => (
-              <div key={r.type} className="tb-v2-tool-pre" style={{ padding: '10px 14px' }}>
-                <div style={{ fontWeight: 700, marginBottom: r.records.length ? 6 : 0 }}>{r.type}</div>
-                {r.error ? (
-                  <div style={{ color: 'var(--red, #dc2626)' }}>{r.error}</div>
-                ) : r.records.length === 0 ? (
-                  <div style={{ color: 'var(--fg-2)' }}>No records found</div>
+            {results.map((result) => (
+              <div
+                key={result.type}
+                className="tb-v2-tool-pre"
+                style={{ padding: "10px 14px" }}
+              >
+                <div
+                  style={{
+                    fontWeight: 700,
+                    marginBottom: result.records.length ? 6 : 0,
+                  }}
+                >
+                  {result.type}
+                </div>
+                {result.error ? (
+                  <div style={{ color: "var(--red, #dc2626)" }}>
+                    {result.error}
+                  </div>
+                ) : result.records.length === 0 ? (
+                  <div style={{ color: "var(--fg-2)" }}>No records found</div>
                 ) : (
-                  r.records.map((d, i) => <div key={i}>{d}</div>)
+                  result.records.map((record, index) => (
+                    <div key={`${record}-${index}`}>{record}</div>
+                  ))
                 )}
               </div>
             ))}
