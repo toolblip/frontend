@@ -63,6 +63,11 @@ export default function PingTestClient() {
   const check = async () => {
     const normalized = normalizeHostname(host);
     if (!normalized) {
+      requestId.current += 1;
+      controllerRef.current?.abort();
+      controllerRef.current = null;
+      setLoading(false);
+      setCopied(false);
       setResult({
         status: "Invalid input",
         time: 0,

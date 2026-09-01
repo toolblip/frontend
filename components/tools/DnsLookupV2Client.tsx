@@ -91,13 +91,19 @@ export default function DnsLookupV2Client() {
   const lookup = async () => {
     const target = normalizeHostname(domain);
     if (!target) {
+      requestId.current += 1;
       setResults(null);
       setError("Enter a valid hostname, such as example.com.");
+      setLoading(false);
+      setCopied(false);
       return;
     }
     if (selected.length === 0) {
+      requestId.current += 1;
       setResults(null);
       setError("Select at least one record type.");
+      setLoading(false);
+      setCopied(false);
       return;
     }
     const id = ++requestId.current;
