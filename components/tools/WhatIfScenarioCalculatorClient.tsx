@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
 
 interface Variable {
   id: number;
@@ -10,7 +11,8 @@ interface Variable {
 
 // ---- Hand-rolled recursive-descent expression parser (no eval / new Function) ----
 // Grammar: expr := term (('+' | '-') term)*
-//          term := factor (('*' | '/') factor)*
+//          term := power (('*' | '/') power)*
+//          power := factor ('^' power)?
 //          factor := NUMBER | IDENT | '(' expr ')' | ('-' | '+') factor
 
 type Token = { type: 'num'; value: number } | { type: 'ident'; value: string } | { type: 'op'; value: string };
@@ -41,7 +43,7 @@ function tokenize(src: string): Token[] {
       i = j;
       continue;
     }
-    if ('+-*/()'.includes(ch)) {
+    if ('+-*/()^'.includes(ch)) {
       tokens.push({ type: 'op', value: ch });
       i++;
       continue;
@@ -85,12 +87,12 @@ class Parser {
   }
 
   parseTerm(): number {
-    let value = this.parseFactor();
+    let value = this.parsePower();
     for (;;) {
       const t = this.peek();
       if (t && t.type === 'op' && (t.value === '*' || t.value === '/')) {
         this.next();
-        const rhs = this.parseFactor();
+        const rhs = this.parsePower();
         if (t.value === '/') {
           if (rhs === 0) throw new Error('Division by zero');
           value = value / rhs;
@@ -100,6 +102,16 @@ class Parser {
       } else {
         break;
       }
+    }
+    return value;
+  }
+
+  parsePower(): number {
+    const value = this.parseFactor();
+    const t = this.peek();
+    if (t && t.type === 'op' && t.value === '^') {
+      this.next();
+      return value ** this.parsePower();
     }
     return value;
   }
@@ -133,6 +145,7 @@ function evaluateFormula(formula: string, vars: Record<string, number>): number 
     const leftover = parser.peek();
     throw new Error(`Unexpected token "${leftover && 'value' in leftover ? leftover.value : ''}"`);
   }
+  if (!Number.isFinite(result)) throw new Error('Result is not a finite number');
   return result;
 }
 
@@ -145,6 +158,7 @@ export default function WhatIfScenarioCalculatorClient() {
     { id: nextId++, name: 'discount', value: '0.1' },
   ]);
   const [formula, setFormula] = useState('price * quantity * (1 - discount)');
+  const [copied, setCopied] = useState(false);
 
   const varMap = useMemo(() => {
     const map: Record<string, number> = {};
@@ -178,11 +192,43 @@ export default function WhatIfScenarioCalculatorClient() {
     setVariables(vs => [...vs, { id: nextId++, name: `var${vs.length + 1}`, value: '0' }]);
   };
 
+  const loadExample = () => {
+    setVariables([
+      { id: nextId++, name: 'price', value: '40' },
+      { id: nextId++, name: 'volume', value: '500' },
+    ]);
+    setFormula('price * volume');
+    setCopied(false);
+  };
+
+  const clear = () => {
+    setVariables([]);
+    setFormula('');
+    setCopied(false);
+  };
+
+  const hasInput = variables.length > 0 || Boolean(formula.trim());
+
+  const copyResult = () => {
+    if (result === null) return;
+    navigator.clipboard.writeText(String(result)).catch(() => {});
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1500);
+  };
+
   return (
-    <div className="tb-v2-tool-card">
+    <div>
       <div className="tb-v2-tool-input-head">
         <span className="tb-v2-tool-label">Variables</span>
-        <button type="button" onClick={addVar} className="tb-v2-btn-sm">+ Add Variable</button>
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+          <ToolExampleClearActions
+            exampleCount={1}
+            onExample={loadExample}
+            onClear={clear}
+            canClear={hasInput}
+          />
+          <button type="button" onClick={addVar} className="tb-v2-btn-sm">+ Add Variable</button>
+        </div>
       </div>
       <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 10 }}>
         {variables.map(v => (
@@ -230,7 +276,7 @@ export default function WhatIfScenarioCalculatorClient() {
           style={{ fontFamily: 'var(--f-mono)' }}
         />
         <p style={{ fontSize: 11.5, color: 'var(--fg-3)', marginTop: 6 }}>
-          Supports + − × ÷ and parentheses over your variable names. No code execution — just arithmetic.
+           Supports +, -, *, /, ^, and parentheses over your variable names. No code execution, just arithmetic.
         </p>
       </div>
 
@@ -238,6 +284,9 @@ export default function WhatIfScenarioCalculatorClient() {
 
       <div className="tb-v2-tool-output-head">
         <span className="tb-v2-tool-label">Result</span>
+        <button type="button" onClick={copyResult} disabled={result === null} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
+          {copied ? 'Copied' : 'Copy'}
+        </button>
       </div>
       <div className="tb-v2-tool-output-body">
         {result === null ? (

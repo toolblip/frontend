@@ -65,8 +65,12 @@ function formatCurrency(value: number): string {
   return `$${value.toFixed(2)}`;
 }
 
-export default function PercentageCalculatorClient() {
-  const [mode, setMode] = useState<Mode>('percentage');
+type Props = {
+  initialMode?: Mode;
+};
+
+export default function PercentageCalculatorClient({ initialMode = 'percentage' }: Props) {
+  const [mode, setMode] = useState<Mode>(initialMode);
 
   const [part, setPart] = useState('');
   const [whole, setWhole] = useState('');
@@ -143,7 +147,7 @@ export default function PercentageCalculatorClient() {
             : Boolean((cost.trim() || markupPercent.trim()) && !markupResult);
 
   const clear = () => {
-    setMode('percentage');
+    setMode(initialMode);
     setPart('');
     setWhole('');
     setOldValue('');
@@ -165,8 +169,8 @@ export default function PercentageCalculatorClient() {
         setWhole('80');
         break;
       case 'change':
-        setOldValue('50');
-        setNewValue('65');
+        setOldValue('100');
+        setNewValue('150');
         break;
       case 'discount':
         setPrice('129.99');
@@ -186,7 +190,7 @@ export default function PercentageCalculatorClient() {
 
   const hasInput = Boolean(
     part || whole || oldValue || newValue || price || discountPercent || bill || cost || markupPercent ||
-      tipPercent !== '18' || tipPeople !== '1' || mode !== 'percentage',
+      tipPercent !== '18' || tipPeople !== '1' || mode !== initialMode,
   );
 
   const currentResult =

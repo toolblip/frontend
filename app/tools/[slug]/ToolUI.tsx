@@ -2885,7 +2885,7 @@ export function ToolUI({ tool }: { tool: Tool }) {
     case 'jwt-tool': return <JwtDecoderClient />;
     case 'metadata': return <ImageMetadataViewerClient />;
     case 'pdf-password-remover': return <PdfPasswordRemoverClient />;
-    case 'percentage-change-calc': return <PercentageCalculatorClient />;
+    case 'percentage-change-calc': return <PercentageCalculatorClient initialMode="change" />;
     case 'readability-dg': return <ReadabilityScoreClient />;
     case 'readability-expander': return <ReadabilityScoreClient />;
     case 'readability-grade-tool': return <ReadabilityScoreClient />;

@@ -1,158 +1,293 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
+import ToolExampleClearActions from '@/components/tools/ToolExampleClearActions';
+
+type SplitMode = 'equal' | 'custom';
+
+interface Share {
+  base: number;
+  tax: number;
+  tip: number;
+  exact: number;
+  amount: number;
+}
+
+function parseFinite(value: string): number | null {
+  if (!value.trim()) return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function formatCurrency(value: number): string {
+  return `$${value.toFixed(2)}`;
+}
 
 export default function BillSplitterClient() {
+  const [splitMode, setSplitMode] = useState<SplitMode>('equal');
   const [billAmount, setBillAmount] = useState('');
-  const [people, setPeople] = useState(2);
-  const [tipPercent, setTipPercent] = useState(15);
-  const [customTip, setCustomTip] = useState('');
+  const [people, setPeople] = useState('2');
+  const [personAmounts, setPersonAmounts] = useState(['', '']);
+  const [taxPercent, setTaxPercent] = useState('0');
+  const [tipPercent, setTipPercent] = useState('15');
+  const [roundUp, setRoundUp] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  const tipAmount = useMemo(() => {
-    const amount = parseFloat(billAmount) || 0;
-    const tip = customTip ? parseFloat(customTip) : (amount * tipPercent / 100);
-    return tip;
-  }, [billAmount, tipPercent, customTip]);
+  const count = parseFinite(people);
+  const tax = parseFinite(taxPercent);
+  const tip = parseFinite(tipPercent);
+  const validCount = count !== null && Number.isInteger(count) && count >= 1 && count <= 100;
+  const customValues = validCount
+    ? Array.from({ length: count }, (_, index) => parseFinite(personAmounts[index] ?? ''))
+    : null;
+  const customSubtotal = customValues && customValues.every((value): value is number => value !== null && value >= 0)
+    ? customValues.reduce((sum, value) => sum + value, 0)
+    : null;
+  const equalSubtotal = parseFinite(billAmount);
 
-  const totalAmount = useMemo(() => {
-    return (parseFloat(billAmount) || 0) + tipAmount;
-  }, [billAmount, tipAmount]);
+  const hasInput = Boolean(
+    billAmount ||
+      personAmounts.some((amount) => amount) ||
+      splitMode !== 'equal' ||
+      people !== '2' ||
+      taxPercent !== '0' ||
+      tipPercent !== '15' ||
+      roundUp,
+  );
 
-  const perPerson = useMemo(() => {
-    return people > 0 ? totalAmount / people : 0;
-  }, [totalAmount, people]);
+  const invalidInput = hasInput && (
+    !validCount ||
+    tax === null ||
+    tax < 0 ||
+    tax > 100 ||
+    tip === null ||
+    tip < 0 ||
+    tip > 100 ||
+    (splitMode === 'equal'
+      ? equalSubtotal === null || equalSubtotal <= 0
+      : customSubtotal === null || customSubtotal <= 0)
+  );
+  const hasValidSubtotal = splitMode === 'equal'
+    ? equalSubtotal !== null && equalSubtotal > 0
+    : customSubtotal !== null && customSubtotal > 0;
 
-  const handleReset = () => {
-    setBillAmount('');
-    setPeople(2);
-    setTipPercent(15);
-    setCustomTip('');
+  const calculation = !invalidInput && hasValidSubtotal && validCount && tax !== null && tip !== null
+    ? (() => {
+        const bases = splitMode === 'equal'
+          ? Array.from({ length: count }, () => (equalSubtotal ?? 0) / count)
+          : (customValues ?? []).map((value) => value ?? 0);
+        const shares: Share[] = bases.map((base) => {
+          const taxAmount = base * (tax / 100);
+          const tipAmount = base * (tip / 100);
+          const exact = base + taxAmount + tipAmount;
+          return {
+            base,
+            tax: taxAmount,
+            tip: tipAmount,
+            exact,
+            amount: roundUp ? Math.ceil(Number(exact.toFixed(2))) : exact,
+          };
+        });
+        return {
+          subtotal: bases.reduce((sum, base) => sum + base, 0),
+          tax: shares.reduce((sum, share) => sum + share.tax, 0),
+          tip: shares.reduce((sum, share) => sum + share.tip, 0),
+          exactTotal: shares.reduce((sum, share) => sum + share.exact, 0),
+          total: shares.reduce((sum, share) => sum + share.amount, 0),
+          shares,
+        };
+      })()
+    : null;
+
+  const setPeopleCount = (value: string) => {
+    setPeople(value);
+    const nextCount = Number(value);
+    if (Number.isInteger(nextCount) && nextCount >= 1 && nextCount <= 100) {
+      setPersonAmounts((current) => Array.from({ length: nextCount }, (_, index) => current[index] ?? ''));
+    }
+  };
+
+  const updatePersonAmount = (index: number, value: string) => {
+    setPersonAmounts((current) => {
+      const next = [...current];
+      next[index] = value;
+      return next;
+    });
   };
 
   const loadExample = () => {
-    setBillAmount('86.40');
-    setPeople(4);
-    setTipPercent(20);
-    setCustomTip('');
+    setSplitMode('custom');
+    setBillAmount('');
+    setPeople('2');
+    setPersonAmounts(['32', '18']);
+    setTaxPercent('8');
+    setTipPercent('20');
+    setRoundUp(false);
+    setCopied(false);
+  };
+
+  const clear = () => {
+    setSplitMode('equal');
+    setBillAmount('');
+    setPeople('2');
+    setPersonAmounts(['', '']);
+    setTaxPercent('0');
+    setTipPercent('15');
+    setRoundUp(false);
+    setCopied(false);
   };
 
   const copySummary = () => {
-    const summary = `Bill: $${(parseFloat(billAmount) || 0).toFixed(2)}\nTip (${customTip ? `${customTip}%` : `${tipPercent}%`}): $${tipAmount.toFixed(2)}\nTotal: $${totalAmount.toFixed(2)}\nPer person (${people}): $${perPerson.toFixed(2)}`;
-    navigator.clipboard.writeText(summary).catch(() => {});
+    if (!calculation || count === null || tax === null || tip === null) return;
+    const lines = [
+      `Subtotal: ${formatCurrency(calculation.subtotal)}`,
+      `Tax (${tax}%): ${formatCurrency(calculation.tax)}`,
+      `Tip (${tip}%): ${formatCurrency(calculation.tip)}`,
+      ...calculation.shares.map((share, index) => `Person ${index + 1}: ${formatCurrency(share.amount)}`),
+      `Total: ${formatCurrency(calculation.total)}`,
+    ];
+    navigator.clipboard.writeText(lines.join('\n')).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <div className="tb-v2-section" style={{display:"flex",flexDirection:"column",gap:20,padding:"20px"}}>
-      <div className="flex justify-end">
-        <button type="button" onClick={loadExample} className="tb-v2-btn-sm">
-          Load Example
-        </button>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <label className="tb-v2-tool-label mb-2">Bill Amount ($)</label>
-          <input
-            type="number"
-            value={billAmount}
-            onChange={(e) => setBillAmount(e.target.value)}
-            placeholder="0.00"
-            min="0"
-            step="0.01"
-            className="tb-v2-tool-input w-full"
-          />
-        </div>
-        <div>
-          <label className="tb-v2-tool-label mb-2">Number of People</label>
-          <input
-            type="number"
-            value={people}
-            onChange={(e) => setPeople(Math.max(1, parseInt(e.target.value) || 1))}
-            min="1"
-            className="tb-v2-tool-input w-full"
-          />
-        </div>
+    <div>
+      <div className="tb-v2-tool-input-head">
+        <span className="tb-v2-tool-label">Bill Splitter</span>
+        <ToolExampleClearActions
+          exampleCount={1}
+          onExample={loadExample}
+          onClear={clear}
+          canClear={hasInput}
+        />
       </div>
 
-      <div>
-        <label className="tb-v2-tool-label mb-2">Tip Percentage</label>
-        <div className="flex gap-2 flex-wrap">
-          {[10, 15, 18, 20, 25].map((tip) => (
-            <button
-              key={tip}
-              type="button"
-              onClick={() => { setTipPercent(tip); setCustomTip(''); }}
-              className={`tb-v2-btn ${tipPercent === tip && !customTip ? 'tb-v2-btn-primary' : ''}`}
-            >
-              {tip}%
-            </button>
-          ))}
-          <div className="flex items-center gap-1">
+      <div style={{ padding: 20 }}>
+        <div className="tb-v2-mode-tabs" role="group" aria-label="Bill split mode">
+          <button type="button" onClick={() => setSplitMode('equal')} className={`tb-v2-mode-tab ${splitMode === 'equal' ? 'on' : ''}`} aria-pressed={splitMode === 'equal'}>
+            Split equally
+          </button>
+          <button type="button" onClick={() => setSplitMode('custom')} className={`tb-v2-mode-tab ${splitMode === 'custom' ? 'on' : ''}`} aria-pressed={splitMode === 'custom'}>
+            Enter each share
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4" style={{ marginTop: 16 }}>
+          {splitMode === 'equal' ? (
+            <div className="flex flex-col gap-1">
+              <label className="tb-v2-tool-label" htmlFor="bill-splitter-total">Bill subtotal</label>
+              <input
+                id="bill-splitter-total"
+                type="number"
+                min="0"
+                step="0.01"
+                value={billAmount}
+                onChange={(event) => setBillAmount(event.target.value)}
+                className="tb-v2-input"
+                placeholder="100.00"
+                aria-label="Bill subtotal"
+              />
+            </div>
+          ) : (
+            <div className="sm:col-span-2">
+              <span className="tb-v2-tool-label">Pre-tax amount for each person</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" style={{ marginTop: 8 }}>
+                {Array.from({ length: validCount ? count : 2 }, (_, index) => (
+                  <div className="flex items-center gap-2" key={index}>
+                    <label className="text-sm" htmlFor={`bill-splitter-person-${index + 1}`} style={{ minWidth: 62, color: 'var(--fg-2)' }}>Person {index + 1}</label>
+                    <input
+                      id={`bill-splitter-person-${index + 1}`}
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={personAmounts[index] ?? ''}
+                      onChange={(event) => updatePersonAmount(index, event.target.value)}
+                      className="tb-v2-input"
+                      placeholder="0.00"
+                      aria-label={`Person ${index + 1} pre-tax amount`}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+          <div className="flex flex-col gap-1">
+            <label className="tb-v2-tool-label" htmlFor="bill-splitter-people">Number of people</label>
             <input
+              id="bill-splitter-people"
               type="number"
-              value={customTip}
-              onChange={(e) => { setCustomTip(e.target.value); setTipPercent(0); }}
-              placeholder="Custom"
-              min="0"
-              className="tb-v2-tool-input w-20"
+              min="1"
+              max="100"
+              step="1"
+              value={people}
+              onChange={(event) => setPeopleCount(event.target.value)}
+              className="tb-v2-input"
+              aria-label="Number of people"
             />
-            <span className="text-gray-500 dark:text-gray-400">%</span>
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="tb-v2-tool-label" htmlFor="bill-splitter-tax">Sales tax</label>
+            <div className="flex items-center gap-2">
+              <input id="bill-splitter-tax" type="number" min="0" max="100" step="0.1" value={taxPercent} onChange={(event) => setTaxPercent(event.target.value)} className="tb-v2-input" placeholder="8" aria-label="Sales tax percentage" />
+              <span className="text-sm" style={{ color: 'var(--fg-2)' }}>%</span>
+            </div>
+          </div>
+          <div className="flex flex-col gap-1">
+            <label className="tb-v2-tool-label" htmlFor="bill-splitter-tip">Tip</label>
+            <div className="flex flex-wrap items-center gap-2">
+              {[10, 15, 18, 20, 25].map((preset) => (
+                <button type="button" key={preset} onClick={() => setTipPercent(String(preset))} className={`tb-v2-mode-tab ${tipPercent === String(preset) ? 'on' : ''}`}>
+                  {preset}%
+                </button>
+              ))}
+              <input id="bill-splitter-tip" type="number" min="0" max="100" step="0.5" value={tipPercent} onChange={(event) => setTipPercent(event.target.value)} className="tb-v2-input text-center" style={{ width: 82 }} aria-label="Tip percentage" />
+              <span className="text-sm" style={{ color: 'var(--fg-2)' }}>%</span>
+            </div>
           </div>
         </div>
+
+        <label className="flex items-center gap-2 text-sm" style={{ marginTop: 16, color: 'var(--fg-1)' }}>
+          <input type="checkbox" checked={roundUp} onChange={(event) => setRoundUp(event.target.checked)} />
+          Round each share up to the next whole dollar
+        </label>
+        <p className="text-xs" style={{ color: 'var(--fg-2)', marginTop: 6 }}>
+          Tax and tip are calculated from each pre-tax amount.
+        </p>
       </div>
 
-      <div className="bg-gradient-to-br from-red-50 to-pink-50 dark:from-red-950/30 dark:to-pink-950/30 border border-red-200 dark:border-red-800 rounded-2xl p-6 space-y-4">
-        <div className="flex justify-between items-center">
-          <span className="text-gray-600 dark:text-gray-400">Bill</span>
-          <span className="text-xl font-semibold text-gray-900 dark:text-white">
-            ${(parseFloat(billAmount) || 0).toFixed(2)}
-          </span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-gray-600 dark:text-gray-400">Tip ({customTip ? `${customTip}%` : `${tipPercent}%`})</span>
-          <span className="text-xl font-semibold text-gray-900 dark:text-white">
-            ${tipAmount.toFixed(2)}
-          </span>
-        </div>
-        <div className="border-t border-red-200 dark:border-red-700 pt-2">
-          <div className="flex justify-between items-center">
-            <span className="text-gray-600 dark:text-gray-400">Total</span>
-            <span className="text-2xl font-bold text-red-600 dark:text-red-400">
-              ${totalAmount.toFixed(2)}
-            </span>
+      <div className="tb-v2-tool-output-head">
+        <span className="tb-v2-tool-label">Split result</span>
+        <button type="button" onClick={copySummary} disabled={!calculation} className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}>
+          {copied ? 'Copied' : 'Copy'}
+        </button>
+      </div>
+      <div className="tb-v2-tool-output-body">
+        {invalidInput ? (
+          <p className="tb-v2-error" role="alert">Enter a positive subtotal or non-negative amounts for each person with a positive total, plus valid tax, tip, and people values.</p>
+        ) : calculation && tax !== null && tip !== null ? (
+          <div className="flex flex-col gap-4">
+            <div className="tb-v2-stats-grid" style={{ padding: 0, borderTop: 0, background: 'transparent' }}>
+              <div className="tb-v2-stat-pill"><span className="tb-v2-stat-pill-val">{formatCurrency(calculation.subtotal)}</span><span className="tb-v2-stat-pill-lbl">Subtotal</span></div>
+              <div className="tb-v2-stat-pill"><span className="tb-v2-stat-pill-val">{formatCurrency(calculation.total)}</span><span className="tb-v2-stat-pill-lbl">{roundUp ? 'Collected total' : 'Total'}</span></div>
+            </div>
+            <div className="flex flex-col gap-2">
+              <div className="flex justify-between text-sm" style={{ color: 'var(--fg-2)' }}><span>Tax ({tax}%)</span><span>{formatCurrency(calculation.tax)}</span></div>
+              <div className="flex justify-between text-sm" style={{ color: 'var(--fg-2)' }}><span>Tip ({tip}%)</span><span>{formatCurrency(calculation.tip)}</span></div>
+              <div className="tb-v2-tool-label" style={{ marginTop: 8 }}>Share breakdown</div>
+              {calculation.shares.map((share, index) => (
+                <div key={index} className="flex items-center justify-between gap-3 rounded-lg border border-gray-200 dark:border-gray-800 px-3 py-2 text-sm">
+                  <span>Person {index + 1}</span>
+                  <span style={{ color: 'var(--fg-2)' }}>{formatCurrency(share.base)} + {formatCurrency(share.tax + share.tip)}</span>
+                  <strong>{formatCurrency(share.amount)}</strong>
+                </div>
+              ))}
+            </div>
+            {roundUp && <p className="text-xs" style={{ color: 'var(--fg-2)' }}>Exact total before rounding: {formatCurrency(calculation.exactTotal)}. The rounded shares collect {formatCurrency(calculation.total)}.</p>}
           </div>
-        </div>
-        <div className="bg-white dark:bg-gray-800 rounded-xl p-4 text-center">
-          <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Per Person ({people} {people === 1 ? 'person' : 'people'})</p>
-          <p className="text-4xl font-bold text-gray-900 dark:text-white">
-            ${perPerson.toFixed(2)}
-          </p>
-        </div>
-      </div>
-
-      <div className="flex gap-2">
-        <button
-          type="button"
-          onClick={copySummary}
-          className={`tb-v2-copy-btn ${copied ? 'done' : ''}`}
-          style={{ flex: 1, textAlign: 'center' }}
-        >
-          {copied ? 'Copied' : 'Copy Summary'}
-        </button>
-        <button
-          type="button"
-          onClick={handleReset}
-          className="tb-v2-btn"
-          style={{ flex: 1 }}
-        >
-          Reset
-        </button>
-      </div>
-
-      <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 text-sm text-gray-600 dark:text-gray-400">
-        <strong>Tip Guide:</strong> 10-15% for adequate service, 15-20% for good service, 20%+ for excellent service. Adjust based on your experience!
+        ) : (
+          <p className="tb-v2-empty">Enter a subtotal or use Example to split the bill.</p>
+        )}
       </div>
     </div>
   );
