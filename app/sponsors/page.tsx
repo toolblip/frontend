@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { Suspense } from 'react';
 import SponsorsClient from './SponsorsClient';
 
@@ -33,6 +34,11 @@ export default function SponsorsPage() {
   return (
     <Suspense>
       <SponsorsClient />
+      <p style={{ textAlign: 'center', fontSize: 12, marginTop: 8, marginBottom: 24 }}>
+        <Link href="/sponsors/archive" style={{ color: 'var(--fg-2)', textDecoration: 'underline' }}>
+          View the monthly archive
+        </Link>
+      </p>
     </Suspense>
   );
 }
