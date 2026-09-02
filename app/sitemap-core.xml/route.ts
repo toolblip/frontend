@@ -23,6 +23,7 @@ export async function GET(): Promise<Response> {
     { url: `${baseUrl}/blog`, lastModified: STATIC_PAGES_LAST_MODIFIED, changeFrequency: 'weekly', priority: 0.7 },
     { url: `${baseUrl}/pricing`, lastModified: STATIC_PAGES_LAST_MODIFIED, changeFrequency: 'monthly', priority: 0.6 },
     { url: `${baseUrl}/sponsors`, lastModified: STATIC_PAGES_LAST_MODIFIED, changeFrequency: 'daily', priority: 0.6 },
+    { url: `${baseUrl}/sponsors/archive`, lastModified: STATIC_PAGES_LAST_MODIFIED, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${baseUrl}/about`, lastModified: STATIC_PAGES_LAST_MODIFIED, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${baseUrl}/seo`, lastModified: STATIC_PAGES_LAST_MODIFIED, changeFrequency: 'monthly', priority: 0.5 },
     { url: `${baseUrl}/api-docs`, lastModified: STATIC_PAGES_LAST_MODIFIED, changeFrequency: 'monthly', priority: 0.5 },

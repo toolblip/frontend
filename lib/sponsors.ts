@@ -28,6 +28,16 @@ export interface SponsorsLeaderboardResponse {
   data: SponsorSlot[];
 }
 
+export interface SponsorsArchivePeriod {
+  period: string;
+  closed_at: string | null;
+  slots: SponsorSlot[];
+}
+
+export interface SponsorsArchiveResponse {
+  data: SponsorsArchivePeriod[];
+}
+
 const CACHE_KEY = "tb_sponsors_top_v3";
 const CACHE_TTL_MS = 60_000;
 
@@ -81,6 +91,14 @@ export async function fetchSponsorsLeaderboard(page = 1): Promise<SponsorsLeader
     headers: { Accept: "application/json" },
   });
   if (!res.ok) throw new Error("Failed to load the sponsors leaderboard");
+  return res.json();
+}
+
+export async function fetchSponsorsArchive(): Promise<SponsorsArchiveResponse> {
+  const res = await fetch(apiPath("/api/sponsors/archive"), {
+    headers: { Accept: "application/json" },
+  });
+  if (!res.ok) throw new Error("Failed to load the sponsors archive");
   return res.json();
 }
 
