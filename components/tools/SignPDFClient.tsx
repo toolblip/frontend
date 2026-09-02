@@ -48,6 +48,7 @@ export default function SignPDFClient() {
   const signatureLoadVersionRef = useRef(0);
 
   const invalidateResult = () => {
+    loadVersionRef.current += 1;
     setResultBlob(null);
     setMessage('');
     setStatus('idle');
@@ -67,13 +68,15 @@ export default function SignPDFClient() {
     setUploadedDataUrl('');
     setUploadedMime('image/png');
     setHasDrawing(false);
-    clearDrawCanvas();
+    clearDrawCanvas(true);
     if (fileRef.current) fileRef.current.value = '';
     if (sigFileRef.current) sigFileRef.current.value = '';
   };
 
-  const loadFile = useCallback(async (f: File | undefined, requestId = ++loadVersionRef.current) => {
-    if (!f) return;
+  const loadFile = useCallback(async (f: File | undefined, requestId?: number) => {
+    if (!f || status === 'processing') return;
+    const currentRequestId = requestId ?? ++loadVersionRef.current;
+    if (currentRequestId !== loadVersionRef.current) return;
     setFile(null);
     setFileBytes(null);
     setPageCount(0);
@@ -95,33 +98,36 @@ export default function SignPDFClient() {
       const bytes = new Uint8Array(await f.arrayBuffer());
       const pdfDoc = await PDFDocument.load(bytes);
       if (pdfDoc.getPageCount() === 0) throw new Error('The PDF has no pages.');
-      if (requestId !== loadVersionRef.current) return;
+      if (currentRequestId !== loadVersionRef.current) return;
       setFile(f);
       setFileBytes(bytes);
       setPageCount(pdfDoc.getPageCount());
       setPageIndex(0);
       setStatus('idle');
     } catch {
-      if (requestId === loadVersionRef.current) {
+      if (currentRequestId === loadVersionRef.current) {
         setStatus('error');
         setMessage('Could not read this file as a valid PDF.');
       }
     }
-  }, [tier]);
+  }, [status, tier]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (status === 'processing') return;
     const f = e.target.files?.[0];
     void loadFile(f);
   };
 
   const onDrop = (e: React.DragEvent) => {
     e.preventDefault();
+    if (status === 'processing') return;
     setIsDragging(false);
     const f = e.dataTransfer.files?.[0];
     void loadFile(f);
   };
 
   const loadExample = useCallback(async () => {
+    if (status === 'processing') return;
     const requestId = ++loadVersionRef.current;
     try {
       const doc = await PDFDocument.create();
@@ -143,7 +149,7 @@ export default function SignPDFClient() {
         setMessage('Could not create the sample PDF.');
       }
     }
-  }, [loadFile]);
+  }, [loadFile, status]);
 
   // Draw-mode canvas handlers
   const getCanvasPoint = (e: React.PointerEvent<HTMLCanvasElement>) => {
@@ -172,6 +178,10 @@ export default function SignPDFClient() {
 
   const onPointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (!drawingRef.current) return;
+    if (status === 'processing') {
+      drawingRef.current = false;
+      return;
+    }
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -189,7 +199,8 @@ export default function SignPDFClient() {
     drawingRef.current = false;
   };
 
-  const clearDrawCanvas = () => {
+  const clearDrawCanvas = (force = false) => {
+    if (status === 'processing' && !force) return;
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
     if (canvas && ctx) {
@@ -218,9 +229,10 @@ export default function SignPDFClient() {
     ctx.font = 'italic 42px "Brush Script MT", "Segoe Script", cursive';
     ctx.textBaseline = 'middle';
     ctx.fillText(typedText || ' ', 16, canvas.height / 2);
-  }, [typedText, mode]);
+  }, [typedText, mode, file, pageCount]);
 
   const handleSigFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (status === 'processing') return;
     const f = e.target.files?.[0];
     if (!f) return;
     const requestId = ++signatureLoadVersionRef.current;
@@ -329,15 +341,17 @@ export default function SignPDFClient() {
           onExample={() => void loadExample()}
           onClear={clearAll}
           canClear={Boolean(file || resultBlob || message)}
+          exampleDisabled={status === 'processing'}
           exampleCount={1}
         />
       </div>
       {!file && (
         <div
-          onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+          onDragOver={(e) => { if (status !== 'processing') { e.preventDefault(); setIsDragging(true); } }}
           onDragLeave={() => setIsDragging(false)}
           onDrop={onDrop}
-          onClick={() => fileRef.current?.click()}
+          onClick={() => { if (status !== 'processing') fileRef.current?.click(); }}
+          aria-disabled={status === 'processing'}
           className={`tb-v2-dropzone ${
             isDragging
               ? 'border-indigo-400 bg-indigo-50 dark:bg-indigo-900/20'
@@ -350,7 +364,7 @@ export default function SignPDFClient() {
         </div>
       )}
 
-      <input ref={fileRef} type="file" accept="application/pdf,.pdf" onChange={handleFileChange} className="hidden" />
+      <input ref={fileRef} type="file" accept="application/pdf,.pdf" onChange={handleFileChange} disabled={status === 'processing'} className="hidden" />
 
       {file && (
         <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-xl flex items-center justify-between">
@@ -368,7 +382,8 @@ export default function SignPDFClient() {
             <label className="tb-v2-tool-label">Page to sign</label>
             <select
               value={pageIndex}
-               onChange={e => { invalidateResult(); setPageIndex(Number(e.target.value)); }}
+              disabled={status === 'processing'}
+              onChange={e => { if (status !== 'processing') { invalidateResult(); setPageIndex(Number(e.target.value)); } }}
               className="tb-v2-select"
             >
               {Array.from({ length: pageCount }, (_, i) => (
@@ -382,7 +397,8 @@ export default function SignPDFClient() {
               <button
                 key={m}
                 type="button"
-                onClick={() => { invalidateResult(); setMode(m); }}
+                onClick={() => { if (status !== 'processing') { invalidateResult(); setMode(m); } }}
+                disabled={status === 'processing'}
                 className={`tb-v2-btn-sm ${mode === m ? 'tb-v2-btn-primary' : ''}`}
               >
                 {m === 'draw' ? 'Draw' : m === 'type' ? 'Type' : 'Upload'}
@@ -401,9 +417,10 @@ export default function SignPDFClient() {
                 onPointerUp={onPointerUp}
                 onPointerLeave={onPointerUp}
                 onPointerCancel={onPointerUp}
+                aria-disabled={status === 'processing'}
                 className="border border-gray-300 dark:border-gray-600 rounded-lg bg-white touch-none w-full max-w-[400px]"
               />
-              <button type="button" onClick={clearDrawCanvas} className="tb-v2-btn-sm mt-2">Clear</button>
+              <button type="button" onClick={() => clearDrawCanvas()} disabled={status === 'processing'} className="tb-v2-btn-sm mt-2">Clear</button>
             </div>
           )}
 
@@ -413,7 +430,8 @@ export default function SignPDFClient() {
                 type="text"
                 value={typedText}
                 maxLength={80}
-                onChange={e => { invalidateResult(); setTypedText(e.target.value); }}
+                onChange={e => { if (status !== 'processing') { invalidateResult(); setTypedText(e.target.value); } }}
+                disabled={status === 'processing'}
                 placeholder="Type your name..."
                 className="tb-v2-input"
               />
@@ -428,7 +446,7 @@ export default function SignPDFClient() {
 
           {mode === 'upload' && (
             <div className="mt-3">
-              <button type="button" onClick={() => sigFileRef.current?.click()} className="tb-v2-btn-sm">
+              <button type="button" onClick={() => { if (status !== 'processing') sigFileRef.current?.click(); }} disabled={status === 'processing'} className="tb-v2-btn-sm">
                 Choose signature image (PNG/JPG)
               </button>
               <input
@@ -436,6 +454,7 @@ export default function SignPDFClient() {
                 type="file"
                 accept="image/png,image/jpeg,.png,.jpg,.jpeg"
                 onChange={handleSigFileChange}
+                disabled={status === 'processing'}
                 className="hidden"
               />
               {uploadedDataUrl && (
@@ -448,19 +467,19 @@ export default function SignPDFClient() {
           <div className="tb-v2-grid-2 mt-4">
             <div>
               <label className="tb-v2-tool-label">Position X (pt from left)</label>
-               <input type="number" min={0} value={posX} onChange={e => { invalidateResult(); setPosX(Number(e.target.value) || 0); }} className="tb-v2-input" />
+              <input type="number" min={0} value={posX} disabled={status === 'processing'} onChange={e => { if (status !== 'processing') { invalidateResult(); setPosX(Number(e.target.value) || 0); } }} className="tb-v2-input" />
             </div>
             <div>
               <label className="tb-v2-tool-label">Position Y (pt from bottom)</label>
-               <input type="number" min={0} value={posY} onChange={e => { invalidateResult(); setPosY(Number(e.target.value) || 0); }} className="tb-v2-input" />
+              <input type="number" min={0} value={posY} disabled={status === 'processing'} onChange={e => { if (status !== 'processing') { invalidateResult(); setPosY(Number(e.target.value) || 0); } }} className="tb-v2-input" />
             </div>
             <div>
               <label className="tb-v2-tool-label">Width (pt)</label>
-               <input type="number" min={1} value={sigWidth} onChange={e => { invalidateResult(); setSigWidth(Number(e.target.value) || 1); }} className="tb-v2-input" />
+              <input type="number" min={1} value={sigWidth} disabled={status === 'processing'} onChange={e => { if (status !== 'processing') { invalidateResult(); setSigWidth(Number(e.target.value) || 1); } }} className="tb-v2-input" />
             </div>
             <div>
               <label className="tb-v2-tool-label">Height (pt)</label>
-               <input type="number" min={1} value={sigHeight} onChange={e => { invalidateResult(); setSigHeight(Number(e.target.value) || 1); }} className="tb-v2-input" />
+              <input type="number" min={1} value={sigHeight} disabled={status === 'processing'} onChange={e => { if (status !== 'processing') { invalidateResult(); setSigHeight(Number(e.target.value) || 1); } }} className="tb-v2-input" />
             </div>
           </div>
 

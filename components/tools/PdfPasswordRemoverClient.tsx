@@ -29,7 +29,7 @@ async function flattenPdfWithPassword(bytes: Uint8Array, password: string): Prom
       canvas.height = Math.ceil(viewport.height);
       const context = canvas.getContext('2d');
       if (!context) throw new Error('Could not create a PDF canvas.');
-      await sourcePage.render({ canvas: canvas, canvasContext: context, viewport }).promise;
+      await sourcePage.render({ canvas: canvas, canvasContext: context, viewport, intent: 'print' }).promise;
       const png = await new Promise<Blob>((resolve, reject) => {
         canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error('Could not render a PDF page.')), 'image/png');
       });
@@ -57,6 +57,14 @@ export default function PdfPasswordRemoverClient() {
   const [result, setResult] = useState<{ message: string; blob?: Blob } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const loadVersionRef = useRef(0);
+  const isProcessing = processing;
+
+  const invalidateResult = () => {
+    loadVersionRef.current += 1;
+    setResult(null);
+    setError('');
+    setProcessing(false);
+  };
 
   const clearAll = () => {
     loadVersionRef.current += 1;
@@ -71,8 +79,10 @@ export default function PdfPasswordRemoverClient() {
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  const loadFile = useCallback(async (selected: File | undefined, requestId = ++loadVersionRef.current) => {
-    if (!selected) return;
+  const loadFile = useCallback(async (selected: File | undefined, requestId?: number) => {
+    if (!selected || processing) return;
+    const currentRequestId = requestId ?? ++loadVersionRef.current;
+    if (currentRequestId !== loadVersionRef.current) return;
     setFile(null);
     setFileBytes(null);
     setResult(null);
@@ -96,11 +106,11 @@ export default function PdfPasswordRemoverClient() {
       bytes = loadedBytes;
       const doc = await PDFDocument.load(loadedBytes, { ignoreEncryption: true });
       if (doc.getPageCount() === 0) throw new Error('The PDF has no pages.');
-      if (requestId !== loadVersionRef.current) return;
+      if (currentRequestId !== loadVersionRef.current) return;
       setFile(selected);
       setFileBytes(loadedBytes);
     } catch {
-      if (requestId === loadVersionRef.current) {
+      if (currentRequestId === loadVersionRef.current) {
         const header = bytes ? new TextDecoder().decode(bytes.subarray(0, 5)) : '';
         if (bytes && header === '%PDF-') {
           // pdf-lib cannot inspect encrypted files, but PDF.js can try the password later.
@@ -111,11 +121,12 @@ export default function PdfPasswordRemoverClient() {
         }
       }
     } finally {
-      if (requestId === loadVersionRef.current) setLoading(false);
+      if (currentRequestId === loadVersionRef.current) setLoading(false);
     }
-  }, [tier]);
+  }, [processing, tier]);
 
   const loadExample = useCallback(async () => {
+    if (processing) return;
     const requestId = ++loadVersionRef.current;
     try {
       const doc = await PDFDocument.create();
@@ -132,7 +143,7 @@ export default function PdfPasswordRemoverClient() {
     } catch {
       if (requestId === loadVersionRef.current) setError('Could not create the sample PDF.');
     }
-  }, [loadFile]);
+  }, [loadFile, processing]);
 
   const removePassword = async () => {
     if (!fileBytes || !file || processing) return;
@@ -182,21 +193,24 @@ export default function PdfPasswordRemoverClient() {
           onExample={() => void loadExample()}
           onClear={clearAll}
           canClear={Boolean(file || result || error || password)}
+          exampleDisabled={isProcessing}
           exampleCount={1}
         />
       </div>
       <div style={{ padding: 20 }}>
         <div
           className="tb-v2-dropzone"
-          onClick={() => fileInputRef.current?.click()}
-          onDragOver={(event) => event.preventDefault()}
-          onDragEnter={() => setIsDragging(true)}
+          onClick={() => { if (!isProcessing) fileInputRef.current?.click(); }}
+          onDragOver={(event) => { if (!isProcessing) event.preventDefault(); }}
+          onDragEnter={() => { if (!isProcessing) setIsDragging(true); }}
           onDragLeave={() => setIsDragging(false)}
           onDrop={(event) => {
             event.preventDefault();
+            if (isProcessing) return;
             setIsDragging(false);
             void loadFile(event.dataTransfer.files?.[0]);
           }}
+          aria-disabled={isProcessing}
           style={isDragging ? { borderColor: 'var(--accent)' } : undefined}
         >
           <span style={{ fontSize: 28 }}>PDF</span>
@@ -207,6 +221,7 @@ export default function PdfPasswordRemoverClient() {
             type="file"
             accept="application/pdf,.pdf"
             onChange={(event) => void loadFile(event.target.files?.[0])}
+            disabled={isProcessing}
             style={{ display: 'none' }}
           />
         </div>
@@ -225,7 +240,8 @@ export default function PdfPasswordRemoverClient() {
             id="unlock-password"
             type="password"
             value={password}
-            onChange={(event) => { setPassword(event.target.value); setResult(null); setError(''); }}
+            onChange={(event) => { if (!isProcessing) { invalidateResult(); setPassword(event.target.value); } }}
+            disabled={isProcessing}
             placeholder="Enter the current PDF password"
             className="tb-v2-input"
             style={{ marginTop: 8 }}

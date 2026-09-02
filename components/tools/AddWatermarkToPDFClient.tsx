@@ -14,6 +14,57 @@ const isPdfFile = (file: File) =>
 const isImageFile = (file: File) =>
   file.type === 'image/png' || file.type === 'image/jpeg' || /\.(png|jpe?g)$/i.test(file.name);
 
+const unsupportedTextMessage =
+  'Watermark text contains characters unsupported by the built-in WinAnsi font. Use basic Latin text or an image watermark.';
+
+type WatermarkLayout = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  scale: number;
+};
+
+function getRotatedBounds(width: number, height: number, angle: number) {
+  const radians = (angle * Math.PI) / 180;
+  const cos = Math.cos(radians);
+  const sin = Math.sin(radians);
+  const corners = [
+    [0, 0],
+    [width * cos, width * sin],
+    [-height * sin, height * cos],
+    [width * cos - height * sin, width * sin + height * cos],
+  ];
+  const xValues = corners.map(([x]) => x);
+  const yValues = corners.map(([, y]) => y);
+  const minX = Math.min(...xValues);
+  const maxX = Math.max(...xValues);
+  const minY = Math.min(...yValues);
+  const maxY = Math.max(...yValues);
+  return { minX, maxX, minY, maxY, width: maxX - minX, height: maxY - minY };
+}
+
+function fitRotatedWatermark(
+  contentWidth: number,
+  contentHeight: number,
+  pageWidth: number,
+  pageHeight: number,
+  angle: number,
+): WatermarkLayout {
+  const bounds = getRotatedBounds(contentWidth, contentHeight, angle);
+  const scale = Math.min(1, pageWidth / bounds.width, pageHeight / bounds.height);
+  const width = contentWidth * scale;
+  const height = contentHeight * scale;
+  const fittedBounds = getRotatedBounds(width, height, angle);
+  return {
+    width,
+    height,
+    scale,
+    x: pageWidth / 2 - (fittedBounds.minX + fittedBounds.maxX) / 2,
+    y: pageHeight / 2 - (fittedBounds.minY + fittedBounds.maxY) / 2,
+  };
+}
+
 export default function AddWatermarkToPDFClient() {
   const { tier } = useSubscription();
   const [file, setFile] = useState<File | null>(null);
@@ -33,11 +84,13 @@ export default function AddWatermarkToPDFClient() {
   const fileRef = useRef<HTMLInputElement>(null);
   const imageRef = useRef<HTMLInputElement>(null);
   const loadVersionRef = useRef(0);
+  const isProcessing = status === 'processing';
 
   const invalidateResult = () => {
+    loadVersionRef.current += 1;
     setResultBlob(null);
     setMessage('');
-    if (status === 'done' || status === 'error') setStatus('idle');
+    setStatus('idle');
   };
 
   const clearAll = () => {
@@ -60,8 +113,10 @@ export default function AddWatermarkToPDFClient() {
     if (imageRef.current) imageRef.current.value = '';
   };
 
-  const loadFile = useCallback(async (selected: File | undefined, requestId = ++loadVersionRef.current) => {
-    if (!selected) return;
+  const loadFile = useCallback(async (selected: File | undefined, requestId?: number) => {
+    if (!selected || status === 'processing') return;
+    const currentRequestId = requestId ?? ++loadVersionRef.current;
+    if (currentRequestId !== loadVersionRef.current) return;
     setFile(null);
     setFileBytes(null);
     setResultBlob(null);
@@ -82,19 +137,20 @@ export default function AddWatermarkToPDFClient() {
       const bytes = new Uint8Array(await selected.arrayBuffer());
       const doc = await PDFDocument.load(bytes);
       if (doc.getPageCount() === 0) throw new Error('The PDF has no pages.');
-      if (requestId !== loadVersionRef.current) return;
+      if (currentRequestId !== loadVersionRef.current) return;
       setFile(selected);
       setFileBytes(bytes);
       setStatus('idle');
     } catch {
-      if (requestId === loadVersionRef.current) {
+      if (currentRequestId === loadVersionRef.current) {
         setStatus('error');
         setMessage('Could not read this file as a valid PDF.');
       }
     }
-  }, [tier]);
+  }, [status, tier]);
 
   const loadExample = useCallback(async () => {
+    if (status === 'processing') return;
     const requestId = ++loadVersionRef.current;
     try {
       const doc = await PDFDocument.create();
@@ -116,10 +172,10 @@ export default function AddWatermarkToPDFClient() {
         setMessage('Could not create the sample PDF.');
       }
     }
-  }, [loadFile]);
+  }, [loadFile, status]);
 
   const handleImageFile = async (selected: File | undefined) => {
-    if (!selected) return;
+    if (!selected || status === 'processing') return;
     const requestId = ++loadVersionRef.current;
     setImageFile(null);
     setImageBytes(null);
@@ -168,6 +224,11 @@ export default function AddWatermarkToPDFClient() {
       if (mode === 'text') {
         const font = await doc.embedFont(StandardFonts.HelveticaBold);
         const text = watermarkText.trim();
+        try {
+          font.encodeText(text);
+        } catch {
+          throw new Error(unsupportedTextMessage);
+        }
         for (const page of doc.getPages()) {
           const { width, height } = page.getSize();
           const maxTextWidth = Math.min(width, height) * 0.72;
@@ -177,10 +238,14 @@ export default function AddWatermarkToPDFClient() {
             maxTextWidth / Math.max(1, font.widthOfTextAtSize(text, 1)),
           ));
           const textWidth = font.widthOfTextAtSize(text, fontSize);
+          const layout = fitRotatedWatermark(textWidth, fontSize, width, height, safeRotation);
+          const fittedFontSize = fontSize * layout.scale;
+          const fittedTextWidth = font.widthOfTextAtSize(text, fittedFontSize);
+          const fittedLayout = fitRotatedWatermark(fittedTextWidth, fittedFontSize, width, height, safeRotation);
           page.drawText(text, {
-            x: width / 2 - textWidth / 2,
-            y: height / 2 - fontSize / 2,
-            size: fontSize,
+            x: fittedLayout.x,
+            y: fittedLayout.y,
+            size: fittedFontSize,
             font,
             color: rgb(0.55, 0.55, 0.55),
             opacity: safeOpacity,
@@ -195,11 +260,12 @@ export default function AddWatermarkToPDFClient() {
           const drawHeight = drawWidth * (image.height / image.width);
           const boundedHeight = Math.min(drawHeight, height * 0.8);
           const boundedWidth = boundedHeight < drawHeight ? boundedHeight * (image.width / image.height) : drawWidth;
+          const layout = fitRotatedWatermark(boundedWidth, boundedHeight, width, height, safeRotation);
           page.drawImage(image, {
-            x: width / 2 - boundedWidth / 2,
-            y: height / 2 - boundedHeight / 2,
-            width: boundedWidth,
-            height: boundedHeight,
+            x: layout.x,
+            y: layout.y,
+            width: layout.width,
+            height: layout.height,
             opacity: safeOpacity,
             rotate: degrees(safeRotation),
           });
@@ -210,10 +276,12 @@ export default function AddWatermarkToPDFClient() {
       setResultBlob(new Blob([bytes as BlobPart], { type: 'application/pdf' }));
       setStatus('done');
       setMessage(`Watermark added to all ${doc.getPageCount()} pages.`);
-    } catch {
+    } catch (caught) {
       if (requestId === loadVersionRef.current) {
         setStatus('error');
-        setMessage('Could not add the watermark.');
+        setMessage(caught instanceof Error && caught.message === unsupportedTextMessage
+          ? unsupportedTextMessage
+          : 'Could not add the watermark.');
       }
     }
   };
@@ -236,20 +304,23 @@ export default function AddWatermarkToPDFClient() {
           onExample={() => void loadExample()}
           onClear={clearAll}
           canClear={Boolean(file || imageFile || resultBlob || message)}
+          exampleDisabled={status === 'processing'}
           exampleCount={1}
         />
       </div>
       <div style={{ padding: 20 }}>
         <div
           className="tb-v2-dropzone"
-          onDragOver={(event) => { event.preventDefault(); setIsDragging(true); }}
+          onDragOver={(event) => { if (!isProcessing) { event.preventDefault(); setIsDragging(true); } }}
           onDragLeave={() => setIsDragging(false)}
           onDrop={(event) => {
             event.preventDefault();
+            if (isProcessing) return;
             setIsDragging(false);
             void loadFile(event.dataTransfer.files?.[0]);
           }}
-          onClick={() => fileRef.current?.click()}
+          onClick={() => { if (!isProcessing) fileRef.current?.click(); }}
+          aria-disabled={isProcessing}
           style={isDragging ? { borderColor: 'var(--accent)' } : undefined}
         >
           <span style={{ fontSize: 28 }}>PDF</span>
@@ -260,6 +331,7 @@ export default function AddWatermarkToPDFClient() {
             type="file"
             accept="application/pdf,.pdf"
             onChange={(event) => void loadFile(event.target.files?.[0])}
+            disabled={isProcessing}
             style={{ display: 'none' }}
           />
         </div>
@@ -275,33 +347,33 @@ export default function AddWatermarkToPDFClient() {
           <div className="tb-v2-option-group" style={{ marginTop: 14 }}>
             <span className="tb-v2-tool-label">Watermark type</span>
             <div className="tb-v2-mode-tabs" style={{ marginTop: 8 }}>
-              <button type="button" onClick={() => { invalidateResult(); setMode('text'); }} className={`tb-v2-mode-tab ${mode === 'text' ? 'on' : ''}`}>Text</button>
-              <button type="button" onClick={() => { invalidateResult(); setMode('image'); }} className={`tb-v2-mode-tab ${mode === 'image' ? 'on' : ''}`}>Image</button>
+              <button type="button" onClick={() => { if (!isProcessing) { invalidateResult(); setMode('text'); } }} disabled={isProcessing} className={`tb-v2-mode-tab ${mode === 'text' ? 'on' : ''}`}>Text</button>
+              <button type="button" onClick={() => { if (!isProcessing) { invalidateResult(); setMode('image'); } }} disabled={isProcessing} className={`tb-v2-mode-tab ${mode === 'image' ? 'on' : ''}`}>Image</button>
             </div>
           </div>
           {mode === 'text' ? (
             <label className="tb-v2-tool-label" style={{ display: 'block', marginTop: 14 }}>
               Watermark text
-              <input type="text" value={watermarkText} maxLength={120} onChange={(event) => { invalidateResult(); setWatermarkText(event.target.value); }} className="tb-v2-input" style={{ marginTop: 8 }} placeholder="CONFIDENTIAL" />
+              <input type="text" value={watermarkText} maxLength={120} disabled={isProcessing} onChange={(event) => { if (!isProcessing) { invalidateResult(); setWatermarkText(event.target.value); } }} className="tb-v2-input" style={{ marginTop: 8 }} placeholder="CONFIDENTIAL" />
             </label>
           ) : (
             <div style={{ marginTop: 14 }}>
               <span className="tb-v2-tool-label">Watermark image</span>
-              <button type="button" onClick={() => imageRef.current?.click()} className="tb-v2-btn-sm" style={{ display: 'block', marginTop: 8 }}>{imageFile?.name || 'Choose PNG or JPG'}</button>
-              <input ref={imageRef} type="file" accept="image/png,image/jpeg,.png,.jpg,.jpeg" onChange={(event) => void handleImageFile(event.target.files?.[0])} style={{ display: 'none' }} />
+              <button type="button" onClick={() => { if (!isProcessing) imageRef.current?.click(); }} disabled={isProcessing} className="tb-v2-btn-sm" style={{ display: 'block', marginTop: 8 }}>{imageFile?.name || 'Choose PNG or JPG'}</button>
+              <input ref={imageRef} type="file" accept="image/png,image/jpeg,.png,.jpg,.jpeg" onChange={(event) => void handleImageFile(event.target.files?.[0])} disabled={isProcessing} style={{ display: 'none' }} />
             </div>
           )}
           <div className="tb-v2-grid-2" style={{ marginTop: 14 }}>
             <label className="tb-v2-tool-label">Opacity
-              <input type="number" min={0.05} max={1} step={0.05} value={opacity} onChange={(event) => { invalidateResult(); setOpacity(Math.max(0.05, Math.min(1, Number(event.target.value) || 0.35))); }} className="tb-v2-input" style={{ marginTop: 8 }} />
+              <input type="number" min={0.05} max={1} step={0.05} value={opacity} disabled={isProcessing} onChange={(event) => { if (!isProcessing) { invalidateResult(); setOpacity(Math.max(0.05, Math.min(1, Number(event.target.value) || 0.35))); } }} className="tb-v2-input" style={{ marginTop: 8 }} />
             </label>
             <label className="tb-v2-tool-label">Rotation (degrees)
-              <input type="number" min={-180} max={180} value={rotation} onChange={(event) => { invalidateResult(); setRotation(Math.max(-180, Math.min(180, Number(event.target.value) || 0))); }} className="tb-v2-input" style={{ marginTop: 8 }} />
+              <input type="number" min={-180} max={180} value={rotation} disabled={isProcessing} onChange={(event) => { if (!isProcessing) { invalidateResult(); setRotation(Math.max(-180, Math.min(180, Number(event.target.value) || 0))); } }} className="tb-v2-input" style={{ marginTop: 8 }} />
             </label>
           </div>
           {mode === 'image' && (
             <label className="tb-v2-tool-label" style={{ display: 'block', marginTop: 14 }}>Image width (% of page)
-              <input type="number" min={10} max={80} value={imageScale} onChange={(event) => { invalidateResult(); setImageScale(Math.max(10, Math.min(80, Number(event.target.value) || 42))); }} className="tb-v2-input" style={{ marginTop: 8 }} />
+              <input type="number" min={10} max={80} value={imageScale} disabled={isProcessing} onChange={(event) => { if (!isProcessing) { invalidateResult(); setImageScale(Math.max(10, Math.min(80, Number(event.target.value) || 42))); } }} className="tb-v2-input" style={{ marginTop: 8 }} />
             </label>
           )}
           <button type="button" onClick={() => void process()} disabled={status === 'processing'} className="tb-v2-btn tb-v2-btn-primary tb-v2-btn-lg" style={{ width: '100%', marginTop: 16 }}>
